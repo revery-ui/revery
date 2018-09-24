@@ -66,3 +66,4 @@ _build/
 # install files
 *.install
 
+**/.merlin
