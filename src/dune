@@ -1,4 +1,4 @@
 (library
     (name Revery)
     (public_name Revery)
-    (libraries EsyGlfw))
+    (libraries Reglfw))

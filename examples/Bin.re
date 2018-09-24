@@ -1,3 +1,3 @@
 open Revery;
 
-Window.create ();
+let _ = Window.create ("test", 800, 600);
