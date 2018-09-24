@@ -1,0 +1,7 @@
+(executable
+    (name Bin)
+    (public_name Bin)
+    (js_of_ocaml)
+    (libraries
+        Revery
+            ))

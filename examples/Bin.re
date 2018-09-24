@@ -1,0 +1,3 @@
+open Revery;
+
+Window.create ();

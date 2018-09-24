@@ -1,0 +1,3 @@
+(library
+    (name Revery)
+    (public_name Revery))
