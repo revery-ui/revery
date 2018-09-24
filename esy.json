@@ -19,9 +19,11 @@
     "@opam/lwt_ppx": "^1.1.0"
   },
   "resolutions": {
-    "reason-glfw": "github:bryphe/reason-glfw",
-    "reason-gl-matrix": "github:bryphe/reason-gl-matrix",
-    "reason-reactify": "github:bryphe/reason-reactify",
+    "reason-glfw": "github:bryphe/reason-glfw#1293fe5",
+    "reason-gl-matrix": "github:bryphe/reason-gl-matrix#24499b2",
+    "reason-reactify": "github:bryphe/reason-reactify#678f145",
+    "esy-cmake": "github:bryphe/esy-cmake#8afd4a1",
+    "@opam/menhir": "20171013",
     "@esy-ocaml/esy-installer": "0.0.1",
     "@opam/re": "1.8.0"
   },
