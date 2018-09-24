@@ -1,0 +1,31 @@
+{
+  "name": "revery",
+  "version": "0.0.1",
+  "esy": {
+    "build": ["dune build"],
+    "buildsInSource": "_build"
+  },
+  "dependencies": {
+    "@opam/dune": "*",
+    "@esy-ocaml/reason": "*",
+    "reason-glfw": "*",
+    "reason-gl-matrix": "*",
+    "reason-reactify": "*",
+    "ocaml": "~4.6.0",
+    "@opam/js_of_ocaml": "*",
+    "@opam/js_of_ocaml-compiler": "*",
+    "@opam/js_of_ocaml-lwt": "*",
+    "@opam/lwt": "^4.0.0",
+    "@opam/lwt_ppx": "^1.1.0"
+  },
+  "resolutions": {
+    "reason-glfw": "github:bryphe/reason-glfw",
+    "reason-gl-matrix": "github:bryphe/reason-gl-matrix",
+    "reason-reactify": "github:bryphe/reason-reactify",
+    "@esy-ocaml/esy-installer": "0.0.1",
+    "@opam/re": "1.8.0"
+  },
+  "devDependencies": {
+    "ocaml": "~4.6.0"
+  }
+}
