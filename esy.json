@@ -14,7 +14,7 @@
     "@opam/js_of_ocaml": "*"
   },
   "resolutions": {
-    "reason-glfw": "github:bryphe/reason-glfw#1293fe5",
+    "reason-glfw": "github:bryphe/reason-glfw#dba4488",
     "reason-gl-matrix": "github:bryphe/reason-gl-matrix#24499b2",
     "reason-reactify": "github:bryphe/reason-reactify#a62c8e4",
     "esy-cmake": "github:bryphe/esy-cmake#8afd4a1",
