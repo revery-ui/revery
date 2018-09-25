@@ -1,5 +1,5 @@
 {
-  "hash": "8a66902a4a80f437ce6f26c948619a39",
+  "hash": "d01dd9df3419402f9844a0633785faa8",
   "root": "revery@path:.",
   "node": {
     "revery@path:.": {
@@ -16,7 +16,7 @@
         "@opam/js_of_ocaml-compiler@opam:3.2.1",
         "@opam/js_of_ocaml-lwt@opam:3.2.1", "ocaml@4.6.6",
         "reason-gl-matrix@github:bryphe/reason-gl-matrix#24499b2",
-        "reason-glfw@github:bryphe/reason-glfw#4d40156",
+        "reason-glfw@github:bryphe/reason-glfw#82ea419",
         "reason-reactify@github:bryphe/reason-reactify#a62c8e4"
       ]
     },
@@ -47,11 +47,11 @@
         "@opam/lwt@opam:4.1.0", "ocaml@4.6.6", "refmterr@3.1.7"
       ]
     },
-    "reason-glfw@github:bryphe/reason-glfw#4d40156": {
+    "reason-glfw@github:bryphe/reason-glfw#82ea419": {
       "record": {
         "name": "reason-glfw",
-        "version": "github:bryphe/reason-glfw#4d40156",
-        "source": "github:bryphe/reason-glfw#4d40156",
+        "version": "github:bryphe/reason-glfw#82ea419",
+        "source": "github:bryphe/reason-glfw#82ea419",
         "files": [],
         "opam": null
       },
