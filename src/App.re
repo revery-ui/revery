@@ -10,6 +10,7 @@ class app = {
 
 let web_loop = () => {
 /* TODO */
+/* Js.Unsafe.fun_call(Js.Unsafe.js_expr("console.log"), [||]); */
 ();
 };
 
@@ -40,6 +41,10 @@ let start = (initFunc) => {
     };
 
     initFunc(appInstance);
+
+    let appLoop = () => {
+
+    };
 
     loop();
 };
