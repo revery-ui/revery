@@ -2,20 +2,26 @@ open Reglfw.Glfw;
 
 class app = {
     as _this;
+    val windows = ref([]);
     pub createWindow = (s) => {
-        let w = Window.create(s, 800, 600);
+        let w = new Window.window(s);
+        windows := [w, ...windows^];
         w;
-    }
+    };
+
+    pub getWindows = windows^;
 }
 
-let web_loop = () => {
+let web_loop = (loop) => {
 /* TODO */
 /* Js.Unsafe.fun_call(Js.Unsafe.js_expr("console.log"), [||]); */
+loop();
 ();
 };
 
-let native_loop = () => {
+let native_loop = (loop) => {
     while (1 > 0) {
+        loop();
         glfwPollEvents();
     };
 };
@@ -40,11 +46,14 @@ let start = (initFunc) => {
     | Other(_) => web_loop
     };
 
+    let _ = glfwInit();
+
     initFunc(appInstance);
 
     let appLoop = () => {
-
+        print_endline ("app loop");
+        List.iter((w) => w#render(), appInstance#getWindows);
     };
 
-    loop();
+    loop(appLoop);
 };
