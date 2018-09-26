@@ -1,3 +1,9 @@
 open Revery;
 
-let _ = Window.create ("test", 800, 600);
+let init = (app) => {
+    let _ = app#createWindow("test");
+};
+
+/* Js.Unsafe.fun_call(Js.Unsafe.js_expr("console.log"), [||]); */
+
+App.start(init);

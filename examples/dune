@@ -3,5 +3,6 @@
     (public_name Bin)
     (js_of_ocaml)
     (libraries
+        js_of_ocaml
         Revery
             ))
