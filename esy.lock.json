@@ -1,5 +1,5 @@
 {
-  "hash": "d01dd9df3419402f9844a0633785faa8",
+  "hash": "7cee57e249e10e60991a8110ca529db5",
   "root": "revery@path:.",
   "node": {
     "revery@path:.": {
@@ -11,10 +11,11 @@
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.3", "@opam/dune@opam:1.2.1",
+        "@esy-ocaml/reason@3.3.3", "@opam/dune@opam:1.3.0",
         "@opam/js_of_ocaml@opam:3.2.0",
         "@opam/js_of_ocaml-compiler@opam:3.2.1",
-        "@opam/js_of_ocaml-lwt@opam:3.2.1", "ocaml@4.6.6",
+        "@opam/js_of_ocaml-lwt@opam:3.2.1", "@opam/lwt@opam:4.1.0",
+        "@opam/lwt_ppx@opam:1.2.1", "ocaml@4.6.6",
         "reason-gl-matrix@github:bryphe/reason-gl-matrix#24499b2",
         "reason-glfw@github:bryphe/reason-glfw#82ea419",
         "reason-reactify@github:bryphe/reason-reactify#a62c8e4"
@@ -43,7 +44,7 @@
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.3", "@opam/dune@opam:1.2.1",
+        "@esy-ocaml/reason@3.3.3", "@opam/dune@opam:1.3.0",
         "@opam/lwt@opam:4.1.0", "ocaml@4.6.6", "refmterr@3.1.7"
       ]
     },
@@ -56,7 +57,7 @@
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.3", "@opam/dune@opam:1.2.1",
+        "@esy-ocaml/reason@3.3.3", "@opam/dune@opam:1.3.0",
         "@opam/js_of_ocaml-compiler@opam:3.2.1", "@opam/lwt@opam:4.1.0",
         "@opam/lwt_ppx@opam:1.2.1",
         "esy-cmake@github:bryphe/esy-cmake#8afd4a1",
@@ -73,7 +74,7 @@
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.3", "@opam/dune@opam:1.2.1",
+        "@esy-ocaml/reason@3.3.3", "@opam/dune@opam:1.3.0",
         "@opam/js_of_ocaml-compiler@opam:3.2.1", "ocaml@4.6.6",
         "refmterr@3.1.7"
       ]
@@ -364,7 +365,7 @@
         }
       },
       "dependencies": [
-        "@esy-ocaml/substs@0.0.1", "@opam/dune@opam:1.2.1",
+        "@esy-ocaml/substs@0.0.1", "@opam/dune@opam:1.3.0",
         "@opam/result@opam:1.3", "ocaml@4.6.6"
       ]
     },
@@ -585,7 +586,7 @@
         }
       },
       "dependencies": [
-        "@esy-ocaml/substs@0.0.1", "@opam/dune@opam:1.2.1",
+        "@esy-ocaml/substs@0.0.1", "@opam/dune@opam:1.3.0",
         "@opam/ocamlfind@opam:1.8.0", "ocaml@4.6.6"
       ]
     },
@@ -609,18 +610,18 @@
         "ocaml@4.6.6"
       ]
     },
-    "@opam/dune@opam:1.2.1": {
+    "@opam/dune@opam:1.3.0": {
       "record": {
         "name": "@opam/dune",
-        "version": "opam:1.2.1",
+        "version": "opam:1.3.0",
         "source":
-          "archive:https://github.com/ocaml/dune/releases/download/1.2.1/dune-1.2.1.tbz#md5:f96bdf1a893a2178c2ad9c388439bd18",
+          "archive:https://github.com/ocaml/dune/releases/download/1.3.0/dune-1.3.0.tbz#md5:d7c926bd6b7549cb54d5463aaccf0c91",
         "files": [],
         "opam": {
           "name": "dune",
-          "version": "1.2.1",
+          "version": "1.3.0",
           "opam":
-            "opam-version: \"2.0\"\nname: \"dune\"\nversion: \"1.2.1\"\nsynopsis: \"Fast, portable and opinionated build system\"\ndescription: \"\"\"\ndune is a build system that was designed to simplify the release of\nJane Street packages. It reads metadata from \"dune\" files following a\nvery simple s-expression syntax.\n\ndune is fast, it has very low-overhead and support parallel builds on\nall platforms. It has no system dependencies, all you need to build\ndune and packages using dune is OCaml. You don't need or make or bash\nas long as the packages themselves don't use bash explicitly.\n\ndune supports multi-package development by simply dropping multiple\nrepositories into the same directory.\n\nIt also supports multi-context builds, such as building against\nseveral opam roots/switches simultaneously. This helps maintaining\npackages across several versions of OCaml and gives cross-compilation\nfor free.\"\"\"\nmaintainer: \"opensource@janestreet.com\"\nauthors: \"Jane Street Group, LLC <opensource@janestreet.com>\"\nlicense: \"MIT\"\nhomepage: \"https://github.com/ocaml/dune\"\nbug-reports: \"https://github.com/ocaml/dune/issues\"\ndepends: [\n  \"ocaml\" {>= \"4.02.3\"}\n]\nconflicts: [\n  \"jbuilder\" {!= \"transition\"}\n]\nbuild: [\n  [\"ocaml\" \"configure.ml\" \"--libdir\" lib] {opam-version < \"2\"}\n  [\"ocaml\" \"bootstrap.ml\"]\n  [\"./boot.exe\" \"--release\" \"--subst\"] {pinned}\n  [\"./boot.exe\" \"--release\" \"-j\" jobs]\n]\ndev-repo: \"git+https://github.com/ocaml/dune.git\"\nurl {\n  src: \"https://github.com/ocaml/dune/releases/download/1.2.1/dune-1.2.1.tbz\"\n  checksum: \"md5=f96bdf1a893a2178c2ad9c388439bd18\"\n}",
+            "opam-version: \"2.0\"\nname: \"dune\"\nversion: \"1.3.0\"\nsynopsis: \"Fast, portable and opinionated build system\"\ndescription: \"\"\"\ndune is a build system that was designed to simplify the release of\nJane Street packages. It reads metadata from \"dune\" files following a\nvery simple s-expression syntax.\n\ndune is fast, it has very low-overhead and support parallel builds on\nall platforms. It has no system dependencies, all you need to build\ndune and packages using dune is OCaml. You don't need or make or bash\nas long as the packages themselves don't use bash explicitly.\n\ndune supports multi-package development by simply dropping multiple\nrepositories into the same directory.\n\nIt also supports multi-context builds, such as building against\nseveral opam roots/switches simultaneously. This helps maintaining\npackages across several versions of OCaml and gives cross-compilation\nfor free.\"\"\"\nmaintainer: \"opensource@janestreet.com\"\nauthors: \"Jane Street Group, LLC <opensource@janestreet.com>\"\nlicense: \"MIT\"\nhomepage: \"https://github.com/ocaml/dune\"\nbug-reports: \"https://github.com/ocaml/dune/issues\"\ndepends: [\n  \"ocaml\" {>= \"4.02\"}\n]\nconflicts: [\n  \"jbuilder\" {!= \"transition\"}\n]\nbuild: [\n  [\"ocaml\" \"configure.ml\" \"--libdir\" lib] {opam-version < \"2\"}\n  [\"ocaml\" \"bootstrap.ml\"]\n  [\"./boot.exe\" \"--release\" \"--subst\"] {pinned}\n  [\"./boot.exe\" \"--release\" \"-j\" jobs]\n]\ndev-repo: \"git+https://github.com/ocaml/dune.git\"\nurl {\n  src: \"https://github.com/ocaml/dune/releases/download/1.3.0/dune-1.3.0.tbz\"\n  checksum: \"md5=d7c926bd6b7549cb54d5463aaccf0c91\"\n}",
           "override": {
             "build": [
               [ "ocaml", "bootstrap.ml" ],
@@ -661,11 +662,11 @@
           "name": "conf-which",
           "version": "1",
           "opam":
-            "opam-version: \"2.0\"\nname: \"conf-which\"\nversion: \"1\"\nsynopsis: \"Virtual package relying on which\"\ndescription:\n  \"This package can only install if the which program is installed on the system.\"\nmaintainer: \"unixjunkie@sdf.org\"\nauthors: \"Carlo Wood\"\nlicense: \"GPL-2+\"\nhomepage: \"http://www.gnu.org/software/which/\"\nbug-reports: \"https://github.com/ocaml/opam-repository/issues\"\ndepends: [\"ocaml\"]\nbuild: [\"which\" \"which\"]\ndepexts: [\n  [\"which\"] {os-distribution = \"centos\"}\n  [\"which\"] {os-distribution = \"fedora\"}\n  [\"which\"] {os-distribution = \"opensuse\"}\n  [\"debianutils\"] {os-distribution = \"debian\"}\n  [\"debianutils\"] {os-distribution = \"ubuntu\"}\n  [\"which\"] {os-distribution = \"nixos\"}\n  [\"which\"] {os-distribution = \"archlinux\"}\n]",
+            "opam-version: \"2.0\"\nname: \"conf-which\"\nversion: \"1\"\nsynopsis: \"Virtual package relying on which\"\ndescription:\n  \"This package can only install if the which program is installed on the system.\"\nmaintainer: \"unixjunkie@sdf.org\"\nauthors: \"Carlo Wood\"\nlicense: \"GPL-2+\"\nhomepage: \"http://www.gnu.org/software/which/\"\nbug-reports: \"https://github.com/ocaml/opam-repository/issues\"\nbuild: [\"which\" \"which\"]\ndepexts: [\n  [\"which\"] {os-distribution = \"centos\"}\n  [\"which\"] {os-distribution = \"fedora\"}\n  [\"which\"] {os-distribution = \"opensuse\"}\n  [\"debianutils\"] {os-distribution = \"debian\"}\n  [\"debianutils\"] {os-distribution = \"ubuntu\"}\n  [\"which\"] {os-distribution = \"nixos\"}\n  [\"which\"] {os-distribution = \"archlinux\"}\n]",
           "override": null
         }
       },
-      "dependencies": [ "@esy-ocaml/substs@0.0.1", "ocaml@4.6.6" ]
+      "dependencies": [ "@esy-ocaml/substs@0.0.1" ]
     },
     "@opam/conf-m4@opam:1": {
       "record": {
@@ -677,11 +678,11 @@
           "name": "conf-m4",
           "version": "1",
           "opam":
-            "opam-version: \"2.0\"\nname: \"conf-m4\"\nversion: \"1\"\nsynopsis: \"Virtual package relying on m4\"\ndescription:\n  \"This package can only install if the m4 binary is installed on the system.\"\nmaintainer: \"tim@gfxmonk.net\"\nlicense: \"GPL-3\"\nhomepage: \"http://www.gnu.org/software/m4/m4.html\"\nbug-reports: \"https://github.com/ocaml/opam-repository/issues\"\ndepends: [\"ocaml\"]\nbuild: [\"sh\" \"-exc\" \"echo | m4\"]\ndepexts: [\n  [\"m4\"] {os-distribution = \"debian\"}\n  [\"m4\"] {os-distribution = \"ubuntu\"}\n  [\"m4\"] {os-distribution = \"fedora\"}\n  [\"m4\"] {os-distribution = \"rhel\"}\n  [\"m4\"] {os-distribution = \"centos\"}\n  [\"m4\"] {os-distribution = \"alpine\"}\n  [\"m4\"] {os-distribution = \"nixos\"}\n  [\"m4\"] {os-distribution = \"opensuse\"}\n  [\"m4\"] {os-distribution = \"oraclelinux\"}\n  [\"m4\"] {os-distribution = \"archlinux\"}\n]",
+            "opam-version: \"2.0\"\nname: \"conf-m4\"\nversion: \"1\"\nsynopsis: \"Virtual package relying on m4\"\ndescription:\n  \"This package can only install if the m4 binary is installed on the system.\"\nmaintainer: \"tim@gfxmonk.net\"\nauthors: \"GNU Project\"\nlicense: \"GPL-3\"\nhomepage: \"http://www.gnu.org/software/m4/m4.html\"\nbug-reports: \"https://github.com/ocaml/opam-repository/issues\"\nbuild: [\"sh\" \"-exc\" \"echo | m4\"]\ndepexts: [\n  [\"m4\"] {os-distribution = \"debian\"}\n  [\"m4\"] {os-distribution = \"ubuntu\"}\n  [\"m4\"] {os-distribution = \"fedora\"}\n  [\"m4\"] {os-distribution = \"rhel\"}\n  [\"m4\"] {os-distribution = \"centos\"}\n  [\"m4\"] {os-distribution = \"alpine\"}\n  [\"m4\"] {os-distribution = \"nixos\"}\n  [\"m4\"] {os-distribution = \"opensuse\"}\n  [\"m4\"] {os-distribution = \"oraclelinux\"}\n  [\"m4\"] {os-distribution = \"archlinux\"}\n]",
           "override": null
         }
       },
-      "dependencies": [ "@esy-ocaml/substs@0.0.1", "ocaml@4.6.6" ]
+      "dependencies": [ "@esy-ocaml/substs@0.0.1" ]
     },
     "@opam/cmdliner@opam:1.0.2": {
       "record": {
