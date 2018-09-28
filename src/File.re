@@ -1,22 +1,11 @@
-open Reglfw.Glfw;
 
-class window (name: string) = {
-    as _this;
+type byteArray = Bigarray.Array1.t(int, Bigarray.int8_unsigned_elt, Bigarray.c_layout);
 
-    val w = glfwCreateWindow(800, 600, name);
+external open_sync_raw: (string) => byteArray = "caml_open_sync_raw";
 
-    pub render = () => {
-        glfwMakeContextCurrent(w);
-        glClearColor(0.39, 0.58, 0.93, 1.0);
-        glfwSwapBuffers(w);
-    }
-}
 
-/* type window = Glfw.window; */
-
-/* let create = (name, width, height) => { */
-/*     let _ = Glfw.glfwInit(); */
-/*     let w = Glfw.glfwCreateWindow(width, height, name); */
-/*     print_endline("Hello, world!"); */
-/*     w; */
-/* }; */
+let openSync = (p) => {
+    open_sync_raw(p);
+    /* let ret = [|1, 2, 3|]; */
+    /* Bigarray.Array1.of_array(Bigarray.Int8_unsigned, Bigarray.C_layout, ret); */
+};

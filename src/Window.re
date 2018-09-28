@@ -9,7 +9,8 @@ class window (name: string) = {
         glfwMakeContextCurrent(w);
         glClearColor(0.39, 0.58, 0.93, 1.0);
         glfwSwapBuffers(w);
-    }
+    };
+
 }
 
 /* type window = Glfw.window; */

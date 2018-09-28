@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "esy b",
+    "build:js": "esy b dune build examples/Bin.bc.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

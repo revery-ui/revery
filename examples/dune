@@ -6,3 +6,6 @@
         js_of_ocaml
         Revery
             ))
+(install
+    (section bin)
+    (files binary.dat index.html Bin.bc.js))

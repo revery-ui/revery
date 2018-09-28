@@ -51,7 +51,6 @@ let start = (initFunc) => {
     initFunc(appInstance);
 
     let appLoop = () => {
-        print_endline ("app loop");
         List.iter((w) => w#render(), appInstance#getWindows);
     };
 
