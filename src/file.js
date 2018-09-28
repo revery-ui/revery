@@ -1,34 +1,51 @@
-// Provides: caml_open_sync_raw
-function caml_open_sync_raw(fileName) {
+// Provides: caml_thread_create
+function caml_thread_create() { }
 
+// Provides: caml_thread_initialize
+function caml_thread_initialize() { }
+
+// Provides: caml_mutex_new
+function caml_mutex_new() { }
+
+// Provides: lwt_unix_iov_max
+function lwt_unix_iov_max() { }
+
+// Provides: lwt_unix_init_notification
+function lwt_unix_init_notification() { }
+
+// Provides: lwt_unix_init_signals
+function lwt_unix_init_signals() { }
+
+// Provides: lwt_unix_set_signal
+function lwt_unix_set_signal() { }
+
+// Provides: lwt_unix_system_byte_order
+function lwt_unix_system_byte_order() { }
+
+// Provides: lwt_unix_get_page_size
+function lwt_unix_get_page_size() { }
+
+// Provides: caml_open_sync_raw
+function caml_open_sync_raw(fileName, onSuccess, onFailure) {
     var f = caml_js_from_string(fileName);
     console.log(f);
     var data = new Uint8Array([17, 211, 2]);
 
     var result = null;
 
-    function reqListener () {
-        console.log('loaded');
-
+    function onSuccess () {
         var res = new Uint8Array(oReq.response);
-        console.dir(res);
-    }
+        var ba = caml_ba_create_from(res, null, 0, 0, 0, [res.length])
+        onSuccess(ba);
+    };
+
+    function onFailure () {
+        onFailure(caml_js_to_string("failed to load file: " + f));   
+    };
 
     var oReq = new XMLHttpRequest();
-    oReq.addEventListener("load", reqListener);
+    oReq.addEventListener("load", onSuccess, onFailure);
     oReq.responseType = "arraybuffer"
-    oReq.open("GET", "binary.dat", true);
+    oReq.open("GET", fileName, true);
     oReq.send();
-
-    // var str = oReq.response;
-
-    var ab = new ArrayBuffer(5);
-    var bufView = new Uint8Array(ab);
-    var ret = new Uint8Array(ab);
-
-    console.dir(typeof oReq.response);
-
-    console.dir(ret);
-
-    return caml_ba_create_from(ret, null, 0, 0, 0, [ret.length])
 }

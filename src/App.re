@@ -23,6 +23,7 @@ let native_loop = (loop) => {
     while (1 > 0) {
         loop();
         glfwPollEvents();
+        Unix.sleepf(1. /. 240.);
     };
 };
 
@@ -47,8 +48,7 @@ let start = (initFunc) => {
     };
 
     let _ = glfwInit();
-
-    initFunc(appInstance);
+    let _ = initFunc(appInstance);
 
     let appLoop = () => {
         List.iter((w) => w#render(), appInstance#getWindows);
