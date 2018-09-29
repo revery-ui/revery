@@ -1,4 +1,6 @@
 (library
     (name Revery)
     (public_name Revery)
-    (libraries Reglfw))
+    (js_of_ocaml (javascript_files file.js))
+    (cxx_names file)
+    (libraries lwt lwt.unix reglfw))

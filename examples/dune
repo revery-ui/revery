@@ -1,8 +1,12 @@
 (executable
     (name Bin)
+    (preprocess (pps lwt_ppx))
     (public_name Bin)
     (js_of_ocaml)
     (libraries
         js_of_ocaml
         Revery
             ))
+(install
+    (section bin)
+    (files binary.dat index.html Bin.bc.js))

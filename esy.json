@@ -10,8 +10,13 @@
     "reason-glfw": "*",
     "reason-gl-matrix": "*",
     "reason-reactify": "*",
-    "ocaml": "~4.6.0",
-    "@opam/js_of_ocaml": "*"
+    "@opam/lwt": "^4.0.0",
+    "@opam/lwt_ppx": "^1.1.0",
+    "@opam/js_of_ocaml": "*",
+    "@opam/js_of_ocaml-lwt": "*"
+  },
+  "peerDependencies": {
+    "ocaml": "~4.6.0"
   },
   "resolutions": {
     "reason-glfw": "github:bryphe/reason-glfw#82ea419",
@@ -25,7 +30,6 @@
   "devDependencies": {
     "ocaml": "~4.6.0",
     "@opam/dune": "*",
-    "@opam/js_of_ocaml-compiler": "*",
-    "@opam/js_of_ocaml-lwt": "*"
+    "@opam/js_of_ocaml-compiler": "*"
   }
 }
