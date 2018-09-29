@@ -8,6 +8,18 @@ type failureFunction = (string) => unit;
 
 external open_sync_raw: (string, successFunction, failureFunction) => unit = "caml_open_sync_raw";
 
+let (p, r) = Lwt.task();
+
+let someTestCallback = (s) => {
+    print_endline ("callback from thread: " ++ s);
+    Lwt.wakeup_later(r, "yo!")
+};
+Callback.register("test_callback", someTestCallback);
+
+let getPromise = () => p;
+
+external caml_test_thread : unit => unit = "caml_test_thread";
+
 let openAsync = (p) => {
     let (promise, resolver) = Lwt.task();
 

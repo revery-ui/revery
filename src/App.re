@@ -23,7 +23,7 @@ let native_loop = (loop) => {
     while (1 > 0) {
         loop();
         glfwPollEvents();
-        Unix.sleepf(1. /. 240.);
+        Unix.sleepf(0.);
     };
 };
 

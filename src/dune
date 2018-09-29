@@ -3,4 +3,5 @@
     (public_name Revery)
     (js_of_ocaml (javascript_files file.js))
     (cxx_names file)
+    (library_flags ("-cclib" "-lpthread"))
     (libraries lwt lwt.unix reglfw))

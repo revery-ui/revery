@@ -4,8 +4,12 @@
 #include <caml/bigarray.h>
 #include <caml/memory.h>
 #include <caml/alloc.h>
+#include <caml/threads.h>
 #include <caml/callback.h>
 
+#include <pthread.h>
+
+#include <unistd.h>
 #include <string.h>
 
 extern "C" {
@@ -34,5 +38,23 @@ extern "C" {
         }
 
         CAMLreturn(Val_unit);
+    }
+
+    void *myThreadFun(void *vargp) {
+        caml_c_thread_register();
+        sleep(5);
+        caml_acquire_runtime_system();
+        caml_callback(*caml_named_value("test_callback"), caml_copy_string("from c THREAD"));
+        caml_release_runtime_system();
+        printf("c - from thread\n");
+        caml_c_thread_unregister();
+        return NULL;
+    }
+
+    CAMLprim value
+    caml_test_thread() {
+        pthread_t thread_id;
+        pthread_create(&thread_id, NULL, myThreadFun, NULL);
+        return Val_unit;
     }
 }
