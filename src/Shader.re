@@ -23,7 +23,7 @@ type shaderDataType =
 | Mat4
 | Sampler2D;
 
-type shaderUsage =
+type shaderUniformUsage =
 | VertexShader
 | FragmentShader
 | VertexAndFragmentShader
@@ -36,7 +36,7 @@ type shaderAttribute = {
 
 type shaderUniform = {
     dataType: shaderDataType,
-    usage: shaderUsage,
+    usage: shaderUniformUsage,
     name: string
 };
 
@@ -58,7 +58,6 @@ type shaderCompilationResult =
 | ShaderCompilationFailure(string);
 
 let compile = (shader: uncompiledShader) => {
-
     let (uniforms, attributes, varying, vs, fs) = shader;
 
     let vertexShader = glCreateShader(Glfw.GL_VERTEX_SHADER);
