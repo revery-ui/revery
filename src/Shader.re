@@ -116,7 +116,6 @@ type shaderCompilationResult =
 let compile = (shader: uncompiledShader) => {
     let (uniforms, attributes, varying, vs, fs) = shader;
 
-    print_endline("creating shaders");
     let vertexShader = glCreateShader(Glfw.GL_VERTEX_SHADER);
     let fragmentShader = glCreateShader(Glfw.GL_FRAGMENT_SHADER);
 

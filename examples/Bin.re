@@ -5,7 +5,6 @@ open Revery;
 open Revery.Shader;
 
 let init = (app) => {
-    print_endline ("init");
     let w = app#createWindow("test");
 
     let attribute: list(ShaderAttribute.t) = [{
@@ -27,9 +26,7 @@ let init = (app) => {
     |};
 
     let shader = Shader.create(~attributes=attribute, ~uniforms=[], ~varying=[], ~vertexShader=vsShader, ~fragmentShader=fsShader);
-    print_endline ("shader create");
     let result = Shader.compile(shader);
-    print_endline ("shader compile");
 
     let startWindow = (s: Shader.CompiledShader.t) => {
         w#setRenderCallback(() => {
@@ -60,8 +57,6 @@ let init = (app) => {
     | ShaderCompilationSuccess(s) => startWindow(s)
     | ShaderCompilationFailure(v) => print_endline("Failed to compile: " ++ v)
     }
-
-    print_endline ("after window");
 
     Lwt.return ();
 };
