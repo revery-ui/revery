@@ -6,7 +6,7 @@ let init = (app) => {
     let _ = app#createWindow("test");
 
     let attribute = [{
-        dataType: Vector3,
+        dataType: ShaderDataType.Vector3,
         name: "aVertexPosition",
         channel: Position,
     }];

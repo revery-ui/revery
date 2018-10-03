@@ -10,18 +10,47 @@ type vertexChannel =
 | Color
 | TextureCoordinate;
 
-type shaderPrecision =
-| Default
-| Low
-| Medium
-| High;
+module ShaderPrecision {
+    type t =
+    | Default
+    | Low
+    | Medium
+    | High;
 
-type shaderDataType =
-| Vector2
-| Vector3
-| Vector4
-| Mat4
-| Sampler2D;
+    let toString = (v) => {
+        switch((Environment.webGL, v)) {
+        | (false, _) => ""
+        | (true, p) => switch(p) {
+            | Default => ""
+            | Low => "lowp"
+            | Medium => "mediump"
+            | High => "highp"
+            };
+        };
+    };
+}
+
+
+module ShaderDataType {
+    type t =
+    | Float
+    | Vector2
+    | Vector3
+    | Vector4
+    | Mat4
+    | Sampler2D;
+
+    let toString = (v) => {
+        switch(v) {
+        | Float => "float"
+        | Vector2 => "vec2"
+        | Vector3 => "vec3"
+        | Vector4 => "vec4"
+        | Mat4 => "mat4"
+        | Sampler2D => "sampler2D"
+        };
+    };
+}
 
 type shaderUniformUsage =
 | VertexShader
@@ -30,19 +59,19 @@ type shaderUniformUsage =
 
 type shaderAttribute = {
     channel: vertexChannel,
-    dataType: shaderDataType,
+    dataType: ShaderDataType.t,
     name: string
 };
 
 type shaderUniform = {
-    dataType: shaderDataType,
+    dataType: ShaderDataType.t,
     usage: shaderUniformUsage,
     name: string
 };
 
 type shaderVarying = {
-    dataType: shaderDataType,
-    precision: shaderPrecision,
+    dataType: ShaderDataType.t,
+    precision: ShaderPrecision.t,
     name: string
 };
 
