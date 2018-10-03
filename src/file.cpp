@@ -29,7 +29,7 @@ extern "C" {
 
             long dims[1];
             dims[0] = lSize;
-            value ba = caml_ba_alloc(CAML_BA_UINT8 | CAML_BA_C_LAYOUT, 1, pData, (long long int *)dims);
+            value ba = caml_ba_alloc(CAML_BA_UINT8 | CAML_BA_C_LAYOUT, 1, pData, (intnat*)dims);
             caml_callback(vSuccess, ba);
         }
 
