@@ -11,7 +11,7 @@ let init = (app) => {
         channel: Position,
     }];
 
-    let _ = Shader.create(~attributes=attribute, ~uniforms=[], ~varying=[], "a", "b");
+    let _ = Shader.create(~attributes=attribute, ~uniforms=[], ~varying=[], ~vertexShader="a", ~fragmentShader="b");
 
     Lwt.return ();
 };

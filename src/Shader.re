@@ -50,7 +50,7 @@ type uncompiledShader = (list(shaderUniform), list(shaderAttribute), list(shader
 type compiledShader = (list(shaderUniform), list(shaderAttribute), list(shaderVarying), Glfw.program);
 
 let create = (~uniforms: list(shaderUniform), ~attributes: list(shaderAttribute), ~varying: list(shaderVarying), ~vertexShader: vertexShaderSource, ~fragmentShader: fragmentShaderSource) => {
-    (uniforms, attributes, varying, vertexShaderSource, fragmentShaderSource);
+    (uniforms, attributes, varying, vertexShader, fragmentShader);
 };
 
 type shaderCompilationResult = 
@@ -71,12 +71,16 @@ let compile = (shader: uncompiledShader) => {
 
     let linkProgram = (vs, fs) => {
         let program = glCreateProgram();   
-        let _ = glAttachShader(program, vs);
-        let _ = glAttachShader(program, fs);
+        let () = glAttachShader(program, vs);
+        let () = glAttachShader(program, fs);
         /* TODO: Errors! */
-        let _ = glLinkProgram(program);
+        let result = glLinkProgram(program);
 
-        ShaderCompilationSuccess((uniforms, attributes, varying, program));
+        switch (result) {
+        | LinkSuccess => ShaderCompilationSuccess((uniforms, attributes, varying, program))
+        | LinkFailure(v) => ShaderCompilationFailure(v)
+        }
+
     };
 
     switch ((vsResult, fsResult)) {
