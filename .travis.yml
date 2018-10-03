@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+- 8
+os:
+- linux
+- osx
+install:
+- npm install --global esy@0.2.11
+- travis_wait 40 esy install
+script:
+- esy build
+cache:
+    timeout: 360
+    directories:
+      - '$HOME/.esy/i'
+      - '$HOME/.esy/source-tarballs'
