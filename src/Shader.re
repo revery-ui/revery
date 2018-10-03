@@ -106,7 +106,10 @@ module CompiledShader {
         Hashtbl.find(dict, a)
     };
 
-
+    let use = (s: t) => {
+       let (_, _, _, p, _) = s; 
+       glUseProgram(p);
+    };
 }
 
 type shaderCompilationResult = 

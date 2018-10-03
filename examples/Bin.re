@@ -27,11 +27,6 @@ let init = (app) => {
 
     let shader = Shader.create(~attributes=attribute, ~uniforms=[], ~varying=[], ~vertexShader=vsShader, ~fragmentShader=fsShader);
     let result = Shader.compile(shader);
-
-    let startWindow = (s: Shader.CompiledShader.t) => {
-        w#setRenderCallback(() => {
-            glClearColor(1.0, 0.0, 0.0, 1.0);
-
             let positions = [|
              -0.5, -0.5, 0.0,
             0.5, -0.5, 0.0,
@@ -44,9 +39,20 @@ let init = (app) => {
             let vArray = Float32Array.of_array(positions);
             let vb = glCreateBuffer();
             glBindBuffer(GL_ARRAY_BUFFER, vb);
+
+    let startWindow = (s: Shader.CompiledShader.t) => {
+        w#setRenderCallback(() => {
+            glClearColor(1.0, 0.0, 0.0, 1.0);
+            glClearDepth(1.0);
+            glEnable(GL_DEPTH_TEST);
+            glDepthFunc(GL_LEQUAL);
+
+            CompiledShader.use(s);
+
             glBufferData(GL_ARRAY_BUFFER, vArray, GL_STATIC_DRAW);
 
             let loc = CompiledShader.attributeNameToLocation(s, "aVertexPosition");
+            glBindBuffer(GL_ARRAY_BUFFER, vb);
             glVertexAttribPointer(loc, 3, GL_FLOAT, false);
             glEnableVertexAttribArray(loc);
             glDrawArrays(GL_TRIANGLES, 0, 6);
