@@ -1,3 +1,4 @@
+open Reglfw;
 open Reglfw.Glfw;
 open Revery;
 
@@ -6,12 +7,6 @@ open Revery.Shader;
 let init = (app) => {
     print_endline ("init");
     let w = app#createWindow("test");
-
-    w#setRenderCallback(() => {
-        glClearColor(1.0, 0.0, 0.0, 1.0);
-    });
-
-    print_endline ("after window");
 
     let attribute: list(ShaderAttribute.t) = [{
         dataType: ShaderDataType.Vector3,
@@ -36,10 +31,37 @@ let init = (app) => {
     let result = Shader.compile(shader);
     print_endline ("shader compile");
 
+    let startWindow = (s: Shader.CompiledShader.t) => {
+        w#setRenderCallback(() => {
+            glClearColor(1.0, 0.0, 0.0, 1.0);
+
+            let positions = [|
+             -0.5, -0.5, 0.0,
+            0.5, -0.5, 0.0,
+            -0.5, 0.5, 0.0,
+            0.5, -0.5, 0.0,
+            0.5, 0.5, 0.0,
+            -0.5, 0.5, 0.0
+            |];
+
+            let vArray = Float32Array.of_array(positions);
+            let vb = glCreateBuffer();
+            glBindBuffer(GL_ARRAY_BUFFER, vb);
+            glBufferData(GL_ARRAY_BUFFER, vArray, GL_STATIC_DRAW);
+
+            let loc = CompiledShader.attributeNameToLocation(s, "aVertexPosition");
+            glVertexAttribPointer(loc, 3, GL_FLOAT, false);
+            glEnableVertexAttribArray(loc);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        })
+    };
+
     switch (result) {
-    | ShaderCompilationSuccess(_) => print_endline ("Shader compiled successfully!")
-    | ShaderCompilationFailure(s) => print_endline ("Shader compilation failed: " ++ s);
+    | ShaderCompilationSuccess(s) => startWindow(s)
+    | ShaderCompilationFailure(v) => print_endline("Failed to compile: " ++ v)
     }
+
+    print_endline ("after window");
 
     Lwt.return ();
 };

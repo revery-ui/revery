@@ -83,7 +83,6 @@ type shaderVarying = {
 };
 
 type uncompiledShader = (list(shaderUniform), list(ShaderAttribute.t), list(shaderVarying), vertexShaderSource, fragmentShaderSource); 
-type compiledShader = (list(shaderUniform), list(ShaderAttribute.t), list(shaderVarying), Glfw.program);
 
 let generateAttributeVertexShaderBlock = (attributes: list(ShaderAttribute.t)) => {
     let strs: list(string) = List.map((s) => ShaderAttribute.toString(s), attributes);
@@ -97,8 +96,21 @@ let create = (~uniforms: list(shaderUniform), ~attributes: list(ShaderAttribute.
     (uniforms, attributes, varying, vertexShader, fragmentShader);
 };
 
+module CompiledShader {
+    type attributeNameToLocation = Hashtbl.t(string, attribLocation);
+
+    type t = (list(shaderUniform), list(ShaderAttribute.t), list(shaderVarying), Glfw.program, attributeNameToLocation);
+
+    let attributeNameToLocation = (s: t, a: string) => {
+        let (_, _, _, _, dict) = s;
+        Hashtbl.find(dict, a)
+    };
+
+
+}
+
 type shaderCompilationResult = 
-| ShaderCompilationSuccess(compiledShader)
+| ShaderCompilationSuccess(CompiledShader.t)
 | ShaderCompilationFailure(string);
 
 let compile = (shader: uncompiledShader) => {
@@ -108,7 +120,6 @@ let compile = (shader: uncompiledShader) => {
     let vertexShader = glCreateShader(Glfw.GL_VERTEX_SHADER);
     let fragmentShader = glCreateShader(Glfw.GL_FRAGMENT_SHADER);
 
-    print_endline("shader source");
     let () = glShaderSource(vertexShader, vs);
     let () = glShaderSource(fragmentShader, fs);
 
@@ -123,7 +134,19 @@ let compile = (shader: uncompiledShader) => {
         let result = glLinkProgram(program);
 
         switch (result) {
-        | LinkSuccess => ShaderCompilationSuccess((uniforms, attributes, varying, program))
+        | LinkSuccess => {
+            let attributeNameToLocation: CompiledShader.attributeNameToLocation = Hashtbl.create(List.length(attributes));
+
+            let addAttributeToHash = (attr: ShaderAttribute.t) => {
+                let loc = glGetAttribLocation(program, attr.name);
+                print_endline ("adding: " ++ attr.name);
+                Hashtbl.add(attributeNameToLocation, attr.name, loc)
+            };
+
+            List.iter(addAttributeToHash, attributes);
+
+            ShaderCompilationSuccess((uniforms, attributes, varying, program, attributeNameToLocation))
+        }
         | LinkFailure(v) => ShaderCompilationFailure(v)
         }
 
@@ -136,3 +159,4 @@ let compile = (shader: uncompiledShader) => {
        | (CompilationFailure(v1), CompilationFailure(v2)) => ShaderCompilationFailure(v1 ++ v2)
     }
 };
+
