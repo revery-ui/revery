@@ -5,6 +5,7 @@ class app = {
     val windows = ref([]);
     pub createWindow = (s) => {
         let w = new Window.window(s);
+        w#render();
         windows := [w, ...windows^];
         w;
     };

@@ -57,11 +57,18 @@ type shaderUniformUsage =
 | FragmentShader
 | VertexAndFragmentShader
 
-type shaderAttribute = {
-    channel: vertexChannel,
-    dataType: ShaderDataType.t,
-    name: string
-};
+
+module ShaderAttribute {
+    type t = {
+        channel: vertexChannel,
+        dataType: ShaderDataType.t,
+        name: string
+    };
+
+    let toString = (a) => {
+        "attribute " ++ ShaderDataType.toString(a.dataType) ++ " " ++ a.name ++ ";"
+    };
+}
 
 type shaderUniform = {
     dataType: ShaderDataType.t,
@@ -75,10 +82,18 @@ type shaderVarying = {
     name: string
 };
 
-type uncompiledShader = (list(shaderUniform), list(shaderAttribute), list(shaderVarying), vertexShaderSource, fragmentShaderSource); 
-type compiledShader = (list(shaderUniform), list(shaderAttribute), list(shaderVarying), Glfw.program);
+type uncompiledShader = (list(shaderUniform), list(ShaderAttribute.t), list(shaderVarying), vertexShaderSource, fragmentShaderSource); 
+type compiledShader = (list(shaderUniform), list(ShaderAttribute.t), list(shaderVarying), Glfw.program);
 
-let create = (~uniforms: list(shaderUniform), ~attributes: list(shaderAttribute), ~varying: list(shaderVarying), ~vertexShader: vertexShaderSource, ~fragmentShader: fragmentShaderSource) => {
+let generateAttributeVertexShaderBlock = (attributes: list(ShaderAttribute.t)) => {
+    let strs: list(string) = List.map((s) => ShaderAttribute.toString(s), attributes);
+    List.fold_left((prev, cur) => prev ++ "\n" ++ cur, "", strs);
+};
+
+let create = (~uniforms: list(shaderUniform), ~attributes: list(ShaderAttribute.t), ~varying: list(shaderVarying), ~vertexShader: vertexShaderSource, ~fragmentShader: fragmentShaderSource) => {
+
+    let vertexShader = generateAttributeVertexShaderBlock(attributes) ++ vertexShader;
+
     (uniforms, attributes, varying, vertexShader, fragmentShader);
 };
 
@@ -89,9 +104,11 @@ type shaderCompilationResult =
 let compile = (shader: uncompiledShader) => {
     let (uniforms, attributes, varying, vs, fs) = shader;
 
+    print_endline("creating shaders");
     let vertexShader = glCreateShader(Glfw.GL_VERTEX_SHADER);
     let fragmentShader = glCreateShader(Glfw.GL_FRAGMENT_SHADER);
 
+    print_endline("shader source");
     let () = glShaderSource(vertexShader, vs);
     let () = glShaderSource(fragmentShader, fs);
 
@@ -102,7 +119,7 @@ let compile = (shader: uncompiledShader) => {
         let program = glCreateProgram();   
         let () = glAttachShader(program, vs);
         let () = glAttachShader(program, fs);
-        /* TODO: Errors! */
+
         let result = glLinkProgram(program);
 
         switch (result) {
