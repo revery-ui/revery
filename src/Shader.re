@@ -49,7 +49,7 @@ type shaderVarying = {
 type uncompiledShader = (list(shaderUniform), list(shaderAttribute), list(shaderVarying), vertexShaderSource, fragmentShaderSource); 
 type compiledShader = (list(shaderUniform), list(shaderAttribute), list(shaderVarying), Glfw.program);
 
-let create = (uniforms: list(shaderUniform), attributes: list(shaderAttribute), varying: list(shaderVarying), vertexShaderSource: vertexShaderSource, fragmentShaderSource: fragmentShaderSource) => {
+let create = (~uniforms: list(shaderUniform), ~attributes: list(shaderAttribute), ~varying: list(shaderVarying), ~vertexShader: vertexShaderSource, ~fragmentShader: fragmentShaderSource) => {
     (uniforms, attributes, varying, vertexShaderSource, fragmentShaderSource);
 };
 
