@@ -1,4 +1,3 @@
-open Reglfw;
 open Reglfw.Glfw;
 open Revery;
 
@@ -69,8 +68,6 @@ let init = app => {
       glDepthFunc(GL_LEQUAL);
 
       CompiledShader.use(s);
-
-      glBufferData(GL_ARRAY_BUFFER, vArray, GL_STATIC_DRAW);
 
       VertexBuffer.attach(positionBuffer, s);
 
