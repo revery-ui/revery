@@ -4,11 +4,14 @@ open Reglfw.Glfw;
 type vertexShaderSource = string;
 type fragmentShaderSource = string;
 
-type vertexChannel = 
-| Position
-| Normal
-| Color
-| TextureCoordinate;
+module VertexChannel {
+    type t = 
+    | Position
+    | Normal
+    | Color
+    | TextureCoordinate
+    | Custom(string);
+}
 
 module ShaderPrecision {
     type t =
@@ -60,7 +63,7 @@ type shaderUniformUsage =
 
 module ShaderAttribute {
     type t = {
-        channel: vertexChannel,
+        channel: VertexChannel.t,
         dataType: ShaderDataType.t,
         name: string
     };
@@ -98,16 +101,22 @@ let create = (~uniforms: list(shaderUniform), ~attributes: list(ShaderAttribute.
 
 module CompiledShader {
     type attributeNameToLocation = Hashtbl.t(string, attribLocation);
+    type attributeChannelToLocation = Hashtbl.t(VertexChannel.t, attribLocation);
 
-    type t = (list(shaderUniform), list(ShaderAttribute.t), list(shaderVarying), Glfw.program, attributeNameToLocation);
+    type t = (list(shaderUniform), list(ShaderAttribute.t), list(shaderVarying), Glfw.program, attributeNameToLocation, attributeChannelToLocation);
 
     let attributeNameToLocation = (s: t, a: string) => {
-        let (_, _, _, _, dict) = s;
+        let (_, _, _, _, dict, _) = s;
         Hashtbl.find(dict, a)
     };
 
+    let attributeChannelToLocation = (s: t, a: VertexChannel.t) => {
+        let (_, _, _, _, _, dict) = s;
+        Hashtbl.find(dict, a);
+    };
+
     let use = (s: t) => {
-       let (_, _, _, p, _) = s; 
+       let (_, _, _, p, _, _) = s; 
        glUseProgram(p);
     };
 }
@@ -138,16 +147,18 @@ let compile = (shader: uncompiledShader) => {
         switch (result) {
         | LinkSuccess => {
             let attributeNameToLocation: CompiledShader.attributeNameToLocation = Hashtbl.create(List.length(attributes));
+            let attributeChannelToLocation: CompiledShader.attributeChannelToLocation = Hashtbl.create(List.length(attributes));
 
             let addAttributeToHash = (attr: ShaderAttribute.t) => {
                 let loc = glGetAttribLocation(program, attr.name);
                 print_endline ("adding: " ++ attr.name);
                 Hashtbl.add(attributeNameToLocation, attr.name, loc)
+                Hashtbl.add(attributeChannelToLocation, attr.channel, loc);
             };
 
             List.iter(addAttributeToHash, attributes);
 
-            ShaderCompilationSuccess((uniforms, attributes, varying, program, attributeNameToLocation))
+            ShaderCompilationSuccess((uniforms, attributes, varying, program, attributeNameToLocation, attributeChannelToLocation));
         }
         | LinkFailure(v) => ShaderCompilationFailure(v)
         }
