@@ -1,4 +1,3 @@
-open Reglfw;
 open Reglfw.Glfw;
 open Revery;
 
@@ -58,9 +57,8 @@ let init = app => {
     0.0,
   |];
 
-  let vArray = Float32Array.of_array(positions);
-  let vb = glCreateBuffer();
-  glBindBuffer(GL_ARRAY_BUFFER, vb);
+  let positionBuffer = VertexBuffer.create(GL_FLOAT, 3, Shader.VertexChannel.Position);
+  VertexBuffer.setData(positionBuffer, positions);
 
   let startWindow = (s: Shader.CompiledShader.t) =>
     w#setRenderCallback(() => {
@@ -71,12 +69,8 @@ let init = app => {
 
       CompiledShader.use(s);
 
-      glBufferData(GL_ARRAY_BUFFER, vArray, GL_STATIC_DRAW);
+      VertexBuffer.attach(positionBuffer, s);
 
-      let loc = CompiledShader.attributeNameToLocation(s, "aVertexPosition");
-      glBindBuffer(GL_ARRAY_BUFFER, vb);
-      glVertexAttribPointer(loc, 3, GL_FLOAT, false);
-      glEnableVertexAttribArray(loc);
       glDrawArrays(GL_TRIANGLES, 0, 6);
     });
 
