@@ -1,0 +1,18 @@
+platform:
+    - x64
+
+cache:
+    - C:\Users\appveyor\.esy\i
+    - C:\Users\appveyor\.esy\source-tarballs
+
+install:
+    # The x64 is required as a workaround for esy/esy#412
+    - ps: Install-Product node 8 x64
+    - npm install -g esy@0.2.11
+    # Retry is necessary due to esy/esy#413 and esy/esy#414
+    - appveyor-retry esy install
+
+build_script:
+    - esy build
+
+test: off

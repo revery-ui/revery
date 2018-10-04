@@ -1,0 +1,30 @@
+language: node_js
+
+matrix:
+  include:
+  - os: linux
+    sudo: required
+    dist: trusty
+    node_js: 8
+    addons:
+      apt:
+        packages:
+           - libxrandr-dev
+           - libxinerama-dev
+           - libxcursor-dev
+           - libxi-dev
+           - libegl1-mesa-dev
+           - mesa-utils
+  - os: osx # OSX 10.12
+    node_js: 8
+
+install:
+- npm install --global esy@0.2.11
+- travis_wait 40 esy install
+script:
+- travis_wait 40 esy build
+cache:
+    timeout: 360
+    directories:
+      - '$HOME/.esy/i'
+      - '$HOME/.esy/source-tarballs'
