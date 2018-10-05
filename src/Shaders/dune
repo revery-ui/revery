@@ -1,0 +1,4 @@
+(library
+    (name Revery_Shaders)
+    (public_name Revery_Shaders)
+    (libraries lwt lwt.unix reglfw))

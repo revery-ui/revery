@@ -1,76 +1,48 @@
 open Reglfw.Glfw;
 open Revery;
-
-open Revery.Shader;
+open Revery_Shaders;
+open Revery_Shaders.Shader;
 
 let init = app => {
   let w = app#createWindow("test");
 
-  let attribute: list(ShaderAttribute.t) = [
-    {
-      dataType: ShaderDataType.Vector3,
-      name: "aVertexPosition",
-      channel: Position,
-    },
-  ];
-
-  let vsShader = {|
-    void main() {
-       gl_Position = vec4(aVertexPosition, 1.0);
-    }
-    |};
-
-  let fsShader = {|
-    void main() {
-        gl_FragColor = vec4(1.0);
-    }
-    |};
-
-  let shader =
-    Shader.create(
-      ~attributes=attribute,
-      ~uniforms=[],
-      ~varying=[],
-      ~vertexShader=vsShader,
-      ~fragmentShader=fsShader,
-    );
-  let result = Shader.compile(shader);
+  let basicShader = Revery_Shaders.BasicShader.create();
 
   let positions = [|
-    (-0.5), (-0.5), 0.0,
-    0.5, (-0.5), 0.0,
-    0.5, 0.5, 0.0,
-    (-0.5), 0.5, 0.0,
+    (-0.5),
+    (-0.5),
+    0.0,
+    0.5,
+    (-0.5),
+    0.0,
+    0.5,
+    0.5,
+    0.0,
+    (-0.5),
+    0.5,
+    0.0,
   |];
 
-  let indices = [|
-  0, 1, 2,
-  0, 2, 3
-  |];
+  let indices = [|0, 1, 2, 0, 2, 3|];
 
-  let positionBuffer = VertexBuffer.create(GL_FLOAT, 3, Shader.VertexChannel.Position);
+  let positionBuffer =
+    VertexBuffer.create(GL_FLOAT, 3, Shader.VertexChannel.Position);
   VertexBuffer.setData(positionBuffer, positions);
 
   let indexBuffer = IndexBuffer.create();
   IndexBuffer.setData(indexBuffer, indices);
 
-  let startWindow = (s: Shader.CompiledShader.t) =>
-    w#setRenderCallback(() => {
-      glClearColor(1.0, 0.0, 0.0, 1.0);
-      glClearDepth(1.0);
-      glEnable(GL_DEPTH_TEST);
-      glDepthFunc(GL_LEQUAL);
+  w#setRenderCallback(() => {
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClearDepth(1.0);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 
-      CompiledShader.use(s);
+    CompiledShader.use(basicShader);
 
-      VertexBuffer.attach(positionBuffer, s);
-      IndexBuffer.draw(indexBuffer);
-    });
-
-  switch (result) {
-  | ShaderCompilationSuccess(s) => startWindow(s)
-  | ShaderCompilationFailure(v) => print_endline("Failed to compile: " ++ v)
-  };
+    VertexBuffer.attach(positionBuffer, basicShader);
+    IndexBuffer.draw(indexBuffer);
+  });
 
   Lwt.return();
 };
