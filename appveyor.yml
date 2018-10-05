@@ -2,7 +2,7 @@ platform:
     - x64
 
 cache:
-    - C:\Users\appveyor\.esy\i
+    - C:\Users\appveyor\.esy\3_\i
     - C:\Users\appveyor\.esy\source-tarballs
 
 install:
