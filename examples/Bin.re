@@ -15,12 +15,6 @@ let init = app => {
     0.5,
     (-0.5),
     0.0,
-    (-0.5),
-    0.5,
-    0.0,
-    0.5,
-    (-0.5),
-    0.0,
     0.5,
     0.5,
     0.0,
@@ -29,21 +23,26 @@ let init = app => {
     0.0,
   |];
 
-  let positionBuffer = VertexBuffer.create(GL_FLOAT, 3, Shader.VertexChannel.Position);
+  let indices = [|0, 1, 2, 0, 2, 3|];
+
+  let positionBuffer =
+    VertexBuffer.create(GL_FLOAT, 3, Shader.VertexChannel.Position);
   VertexBuffer.setData(positionBuffer, positions);
 
-    w#setRenderCallback(() => {
-      glClearColor(1.0, 0.0, 0.0, 1.0);
-      glClearDepth(1.0);
-      glEnable(GL_DEPTH_TEST);
-      glDepthFunc(GL_LEQUAL);
+  let indexBuffer = IndexBuffer.create();
+  IndexBuffer.setData(indexBuffer, indices);
 
-      CompiledShader.use(basicShader);
+  w#setRenderCallback(() => {
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClearDepth(1.0);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 
-      VertexBuffer.attach(positionBuffer, basicShader);
+    CompiledShader.use(basicShader);
 
-      glDrawArrays(GL_TRIANGLES, 0, 6);
-    });
+    VertexBuffer.attach(positionBuffer, basicShader);
+    IndexBuffer.draw(indexBuffer);
+  });
 
   Lwt.return();
 };
