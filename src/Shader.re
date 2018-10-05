@@ -121,9 +121,7 @@ module CompiledShader {
     };
 }
 
-type shaderCompilationResult = 
-| ShaderCompilationSuccess(CompiledShader.t)
-| ShaderCompilationFailure(string);
+exception ShaderCompilationException(string);
 
 let compile = (shader: uncompiledShader) => {
     let (uniforms, attributes, varying, vs, fs) = shader;
@@ -158,18 +156,18 @@ let compile = (shader: uncompiledShader) => {
 
             List.iter(addAttributeToHash, attributes);
 
-            ShaderCompilationSuccess((uniforms, attributes, varying, program, attributeNameToLocation, attributeChannelToLocation));
+            (uniforms, attributes, varying, program, attributeNameToLocation, attributeChannelToLocation);
         }
-        | LinkFailure(v) => ShaderCompilationFailure(v)
+        | LinkFailure(v) => raise ShaderCompilationException(v);
         }
 
     };
 
     switch ((vsResult, fsResult)) {
        | (CompilationSuccess, CompilationSuccess) => linkProgram(vertexShader, fragmentShader)
-       | (CompilationFailure(v), CompilationSuccess) => ShaderCompilationFailure(v)
-       | (CompilationSuccess, CompilationFailure(v)) => ShaderCompilationFailure(v)
-       | (CompilationFailure(v1), CompilationFailure(v2)) => ShaderCompilationFailure(v1 ++ v2)
+       | (CompilationFailure(v), CompilationSuccess) => raise ShaderCompilationException(v)
+       | (CompilationSuccess, CompilationFailure(v)) => raise ShaderCompilationException(v)
+       | (CompilationFailure(v1), CompilationFailure(v2)) => raise ShaderCompilationException(v1 ++ v2)
     }
 };
 
