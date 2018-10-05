@@ -37,28 +37,22 @@ let init = app => {
   let result = Shader.compile(shader);
 
   let positions = [|
-    (-0.5),
-    (-0.5),
-    0.0,
-    0.5,
-    (-0.5),
-    0.0,
-    (-0.5),
-    0.5,
-    0.0,
-    0.5,
-    (-0.5),
-    0.0,
-    0.5,
-    0.5,
-    0.0,
-    (-0.5),
-    0.5,
-    0.0,
+    (-0.5), (-0.5), 0.0,
+    0.5, (-0.5), 0.0,
+    0.5, 0.5, 0.0,
+    (-0.5), 0.5, 0.0,
+  |];
+
+  let indices = [|
+  0, 1, 2,
+  0, 2, 3
   |];
 
   let positionBuffer = VertexBuffer.create(GL_FLOAT, 3, Shader.VertexChannel.Position);
   VertexBuffer.setData(positionBuffer, positions);
+
+  let indexBuffer = IndexBuffer.create();
+  IndexBuffer.setData(indexBuffer, indices);
 
   let startWindow = (s: Shader.CompiledShader.t) =>
     w#setRenderCallback(() => {
@@ -70,8 +64,7 @@ let init = app => {
       CompiledShader.use(s);
 
       VertexBuffer.attach(positionBuffer, s);
-
-      glDrawArrays(GL_TRIANGLES, 0, 6);
+      IndexBuffer.draw(indexBuffer);
     });
 
   switch (result) {
