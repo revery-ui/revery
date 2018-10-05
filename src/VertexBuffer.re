@@ -1,6 +1,6 @@
 open Reglfw;
 
-open Shader;
+open Revery_Shaders.Shader;
 
 type t = {
     buffer: Glfw.buffer,

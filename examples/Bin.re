@@ -1,12 +1,12 @@
 open Reglfw.Glfw;
 open Revery;
-
-open Revery.Shader;
+open Revery_Shaders;
+open Revery_Shaders.Shader;
 
 let init = app => {
   let w = app#createWindow("test");
 
-  let basicShader = Shaders.BasicShader.create();
+  let basicShader = Revery_Shaders.BasicShader.create();
 
   let positions = [|
     (-0.5),

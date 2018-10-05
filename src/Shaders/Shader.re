@@ -158,16 +158,16 @@ let compile = (shader: uncompiledShader) => {
 
             (uniforms, attributes, varying, program, attributeNameToLocation, attributeChannelToLocation);
         }
-        | LinkFailure(v) => raise ShaderCompilationException(v);
+        | LinkFailure(v) => raise(ShaderCompilationException(v))
         }
 
     };
 
     switch ((vsResult, fsResult)) {
        | (CompilationSuccess, CompilationSuccess) => linkProgram(vertexShader, fragmentShader)
-       | (CompilationFailure(v), CompilationSuccess) => raise ShaderCompilationException(v)
-       | (CompilationSuccess, CompilationFailure(v)) => raise ShaderCompilationException(v)
-       | (CompilationFailure(v1), CompilationFailure(v2)) => raise ShaderCompilationException(v1 ++ v2)
+       | (CompilationFailure(v), CompilationSuccess) => raise(ShaderCompilationException(v))
+       | (CompilationSuccess, CompilationFailure(v)) => raise(ShaderCompilationException(v))
+       | (CompilationFailure(v1), CompilationFailure(v2)) => raise(ShaderCompilationException(v1 ++ v2))
     }
 };
 

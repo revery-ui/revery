@@ -6,6 +6,8 @@
  * solid color!
  */
 
+open Shader;
+
 let attribute: list(ShaderAttribute.t) = [
 {
   dataType: ShaderDataType.Vector3,
