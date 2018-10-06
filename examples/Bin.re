@@ -7,10 +7,12 @@ open Revery.Geometry;
 let init = app => {
   let w = app#createWindow("test");
 
-  let basicShader = Revery_Shaders.BasicShader.create();
+  let basicShader = BasicShader.create();
 
-  let positions = [|
-    (-0.5),
+  let gb = Geometry.Builder.create();
+  Geometry.Builder.addVertexChannel(gb, GL_FLOAT, 3, VertexChannel.Position,
+[|
+    (-0.3),
     (-0.5),
     0.0,
     0.5,
@@ -22,16 +24,12 @@ let init = app => {
     (-0.5),
     0.5,
     0.0,
-  |];
+  |]
+);
 
-  let indices = [|0, 1, 2, 0, 2, 3|];
+  Geometry.Builder.setIndices(gb, [|0, 1, 2, 0, 2, 3|]);
+  let geo = Geometry.Builder.toGeometry(gb);
 
-  let positionBuffer =
-    VertexBuffer.create(GL_FLOAT, 3, Shader.VertexChannel.Position);
-  VertexBuffer.setData(positionBuffer, positions);
-
-  let indexBuffer = IndexBuffer.create();
-  IndexBuffer.setData(indexBuffer, indices);
 
   w#setRenderCallback(() => {
     glClearColor(1.0, 0.0, 0.0, 1.0);
@@ -41,8 +39,7 @@ let init = app => {
 
     CompiledShader.use(basicShader);
 
-    VertexBuffer.attach(positionBuffer, basicShader);
-    IndexBuffer.draw(indexBuffer);
+    Geometry.Geometry.draw(geo, basicShader);
   });
 
   Lwt.return();

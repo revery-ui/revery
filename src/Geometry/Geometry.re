@@ -60,4 +60,21 @@ module Builder = {
             }
         }
     }
+
+    let setIndices = (builder: t, indices: array(int)) => {
+        /* TODO: Throw if there is already an indexbuffer */
+        let ib = IndexBuffer.create();
+        IndexBuffer.setData(ib, indices);
+
+        builder.indexBuffer := Some(ib);
+    }
+
+    let toGeometry = (builder: t) => {
+        let geo: Geometry.t = {
+            vertexBuffers: builder.vertexBuffers^,
+            indexBuffer: builder.indexBuffer^,
+            vertexCount: builder.vertexCount^,
+        }
+        geo
+    }
 }
