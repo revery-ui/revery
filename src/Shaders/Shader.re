@@ -107,12 +107,12 @@ module CompiledShader {
 
     let attributeNameToLocation = (s: t, a: string) => {
         let (_, _, _, _, dict, _) = s;
-        Hashtbl.find(dict, a)
+        Hashtbl.find_opt(dict, a)
     };
 
     let attributeChannelToLocation = (s: t, a: VertexChannel.t) => {
         let (_, _, _, _, _, dict) = s;
-        Hashtbl.find(dict, a);
+        Hashtbl.find_opt(dict, a);
     };
 
     let use = (s: t) => {

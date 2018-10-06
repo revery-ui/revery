@@ -27,7 +27,12 @@ let attach = (vb: t, shader: CompiledShader.t) => {
     let { buffer, glType, elementCount, channel } = vb;
 
     let loc = CompiledShader.attributeChannelToLocation(shader, channel);
-    Glfw.glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    Glfw.glVertexAttribPointer(loc, elementCount, glType, false);
-    Glfw.glEnableVertexAttribArray(loc);
+    switch (loc) {
+    | Some(l) => {
+        Glfw.glBindBuffer(GL_ARRAY_BUFFER, buffer);
+        Glfw.glVertexAttribPointer(l, elementCount, glType, false);
+        Glfw.glEnableVertexAttribArray(l);
+        };
+    | None => ()
+    }
 };
