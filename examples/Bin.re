@@ -8,11 +8,10 @@ let init = app => {
 
   let basicShader = BasicShader.create();
 
-  let quad = Geometry.Quad.create();
+  let quad = Geometry.Cube.create();
 
 
   w#setRenderCallback(() => {
-    glClearColor(1.0, 0.0, 0.0, 1.0);
     glClearDepth(1.0);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
