@@ -2,7 +2,7 @@
   "name": "revery",
   "version": "0.0.1",
   "esy": {
-    "build": ["dune build -j4"],
+    "build": ["dune build --root . -j4"],
     "buildsInSource": "_build"
   },
   "dependencies": {

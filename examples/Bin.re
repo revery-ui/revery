@@ -9,8 +9,8 @@ let init = app => {
 
   let basicShader = BasicShader.create();
 
-  let gb = Geometry.Builder.create();
-  Geometry.Builder.addVertexChannel(gb, GL_FLOAT, 3, VertexChannel.Position,
+  let gb = Builder.create();
+  Builder.addVertexChannel(gb, GL_FLOAT, 3, VertexChannel.Position,
 [|
     (-0.3),
     (-0.5),
@@ -27,8 +27,8 @@ let init = app => {
   |]
 );
 
-  Geometry.Builder.setIndices(gb, [|0, 1, 2, 0, 2, 3|]);
-  let geo = Geometry.Builder.toGeometry(gb);
+  Builder.setIndices(gb, [|0, 1, 2, 0, 2, 3|]);
+  let geo = Builder.toGeometry(gb);
 
 
   w#setRenderCallback(() => {
@@ -39,7 +39,7 @@ let init = app => {
 
     CompiledShader.use(basicShader);
 
-    Geometry.Geometry.draw(geo, basicShader);
+    Geometry.draw(geo, basicShader);
   });
 
   Lwt.return();
