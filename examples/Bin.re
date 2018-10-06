@@ -1,8 +1,8 @@
 open Reglfw.Glfw;
 open Revery;
-open Revery_Shaders;
-open Revery_Shaders.Shader;
-open Revery_Geometry;
+open Revery.Shaders;
+open Revery.Shaders.Shader;
+open Revery.Geometry;
 
 let init = app => {
   let w = app#createWindow("test");

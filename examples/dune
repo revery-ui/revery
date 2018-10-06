@@ -7,8 +7,6 @@
     (libraries
         js_of_ocaml
         Revery
-        Revery_Geometry
-        Revery_Shaders
             ))
 (install
     (section bin)
