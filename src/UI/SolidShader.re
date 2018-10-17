@@ -11,7 +11,7 @@ let attribute: list(ShaderAttribute.t) = [
 {
   dataType: ShaderDataType.Vector2,
   name: "aTexCoord",
-  channel: Position,
+  channel: TextureCoordinate,
 }];
 
 let uniform: list(ShaderUniform.t) = [{
@@ -37,7 +37,7 @@ let varying: list(ShaderVarying.t) = [{
 
 let vsShader = {|
     void main() {
-       vec4 pos = vec4(uPosition.x + (aTexCoord.x * uPosition.z), uPosition.y + (aTexCoord.y * uPosition.w), 0.1, 1.0);
+       vec4 pos = vec4(uPosition.x + (aTexCoord.x * uPosition.z), uPosition.y + (aTexCoord.y * uPosition.w), 1, 1.0);
        gl_Position = uProjection * pos;
        vColor = uColor;
     }
