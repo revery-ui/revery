@@ -2,7 +2,6 @@ open Reglm;
 open Reglfw.Glfw;
 open Revery;
 open Revery.Shaders;
-open Revery.Shaders.Shader;
 
 let init = app => {
   let w = app#createWindow("test");
@@ -10,7 +9,6 @@ let init = app => {
   let basicShader = BasicShader.create();
 
   let quad = Geometry.Cube.create();
-
 
   w#setRenderCallback(() => {
     glClearDepth(1.0);

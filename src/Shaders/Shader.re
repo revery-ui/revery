@@ -161,20 +161,24 @@ module CompiledShader {
         Hashtbl.find_opt(u, name);
     };
 
-    let setUniform3fv = (s: t, name: string, v: Vec3.t) => {
+    let _setUniformIfAvailable = (s, name, f) => {
         let uLoc = uniformNameToLocation(s, name);
         switch (uLoc) {
-        | Some(u) => glUniform3fv(u, v)
+        | Some(u) => f(u)
         | None => ()
         };
     };
 
+    let setUniform3fv = (s: t, name: string, v: Vec3.t) => {
+        _setUniformIfAvailable(s, name, (u) => glUniform3fv(u, v));
+    };
+
     let setUniform4f = (s: t, name: string, x: float, y: float, z: float, w: float) => {
-        let uLoc = uniformNameToLocation(s, name);
-        switch (uLoc) {
-        | Some(u) => glUniform4f(u, x, y, z, w);
-        | None => ()
-        };
+        _setUniformIfAvailable(s, name, (u) => glUniform4f(u, x, y, z, w));
+    };
+
+    let setUniformMatrix4fv = (s: t, name: string, m: Mat4.t) => {
+        _setUniformIfAvailable(s, name, (u) => glUniformMatrix4fv(u, m));
     };
 
     let use = (s: t) => {
