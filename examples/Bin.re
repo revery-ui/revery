@@ -1,10 +1,6 @@
-open Reglm;
+/* open Reglm; */
 open Reglfw.Glfw;
 open Revery;
-<<<<<<< HEAD
-=======
-open Revery.Shaders;
->>>>>>> master
 
 open Flex;
 
