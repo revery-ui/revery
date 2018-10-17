@@ -1,5 +1,6 @@
 open Reglfw;
 open Reglfw.Glfw;
+open Reglm;
 
 type vertexShaderSource = string;
 type fragmentShaderSource = string;
@@ -55,11 +56,6 @@ module ShaderDataType {
     };
 }
 
-type shaderUniformUsage =
-| VertexShader
-| FragmentShader
-| VertexAndFragmentShader
-
 
 module ShaderAttribute {
     type t = {
@@ -73,28 +69,72 @@ module ShaderAttribute {
     };
 }
 
-type shaderUniform = {
-    dataType: ShaderDataType.t,
-    usage: shaderUniformUsage,
-    name: string
-};
+module ShaderUniform {
+    type shaderUniformUsage =
+    | VertexShader
+    | FragmentShader
+    | VertexAndFragmentShader
 
-type shaderVarying = {
-    dataType: ShaderDataType.t,
-    precision: ShaderPrecision.t,
-    name: string
-};
+    type t = {
+        dataType: ShaderDataType.t,
+        usage: shaderUniformUsage,
+        name: string
+    };
 
-type uncompiledShader = (list(shaderUniform), list(ShaderAttribute.t), list(shaderVarying), vertexShaderSource, fragmentShaderSource); 
+    let toString = (u) => {
+        "uniform " ++ ShaderDataType.toString(u.dataType) ++ " " ++ u.name ++ ";"
+    };
+}
 
-let generateAttributeVertexShaderBlock = (attributes: list(ShaderAttribute.t)) => {
-    let strs: list(string) = List.map((s) => ShaderAttribute.toString(s), attributes);
+
+module ShaderVarying {
+    type t = {
+        dataType: ShaderDataType.t,
+        precision: ShaderPrecision.t,
+        name: string
+    };
+
+    let toString = (v) => {
+        "varying " ++ ShaderPrecision.toString(v.precision) ++ " " ++ ShaderDataType.toString(v.dataType) ++ " " ++ v.name ++ ";"
+    };
+}
+
+type uncompiledShader = (list(ShaderUniform.t), list(ShaderAttribute.t), list(ShaderVarying.t), vertexShaderSource, fragmentShaderSource); 
+
+type blockGenerator('a) = 'a => string
+let generateBlock = (f:blockGenerator('a), l: list('a)) => {
+    let strs: list(string) = List.map(f, l);
     List.fold_left((prev, cur) => prev ++ "\n" ++ cur, "", strs);
 };
 
-let create = (~uniforms: list(shaderUniform), ~attributes: list(ShaderAttribute.t), ~varying: list(shaderVarying), ~vertexShader: vertexShaderSource, ~fragmentShader: fragmentShaderSource) => {
+let generateAttributeVertexShaderBlock = (attributes: list(ShaderAttribute.t)) => {
+    generateBlock(ShaderAttribute.toString, attributes);
+};
 
-    let vertexShader = generateAttributeVertexShaderBlock(attributes) ++ vertexShader;
+let generateUniformVertexShaderBlock = (uniforms: list(ShaderUniform.t)) => {
+    let vertexUniforms = List.filter((u: ShaderUniform.t) => u.usage != FragmentShader, uniforms);
+    generateBlock(ShaderUniform.toString, vertexUniforms);
+};
+
+let generateUniformPixelShaderBlock = (uniforms: list(ShaderUniform.t)) => {
+    let pixelUniforms = List.filter((u: ShaderUniform.t) => u.usage != VertexShader, uniforms);
+    generateBlock(ShaderUniform.toString, pixelUniforms);
+};
+
+let generateVaryingBlock = (varying: list(ShaderVarying.t)) => {
+    generateBlock(ShaderVarying.toString, varying);
+};
+
+let create = (~uniforms: list(ShaderUniform.t), ~attributes: list(ShaderAttribute.t), ~varying: list(ShaderVarying.t), ~vertexShader: vertexShaderSource, ~fragmentShader: fragmentShaderSource) => {
+
+    let vertexShader = generateAttributeVertexShaderBlock(attributes) 
+                       ++ generateUniformVertexShaderBlock(uniforms)
+                       ++ generateVaryingBlock(varying)
+                       ++ vertexShader;
+
+    let fragmentShader = generateUniformPixelShaderBlock(uniforms)
+                         ++ generateVaryingBlock(varying)
+                         ++ fragmentShader;
 
     (uniforms, attributes, varying, vertexShader, fragmentShader);
 };
@@ -102,21 +142,47 @@ let create = (~uniforms: list(shaderUniform), ~attributes: list(ShaderAttribute.
 module CompiledShader {
     type attributeNameToLocation = Hashtbl.t(string, attribLocation);
     type attributeChannelToLocation = Hashtbl.t(VertexChannel.t, attribLocation);
+    type uniformNameToLocation = Hashtbl.t(string, uniformLocation);
 
-    type t = (list(shaderUniform), list(ShaderAttribute.t), list(shaderVarying), Glfw.program, attributeNameToLocation, attributeChannelToLocation);
+    type t = (list(ShaderUniform.t), list(ShaderAttribute.t), list(ShaderVarying.t), Glfw.program, attributeNameToLocation, attributeChannelToLocation, uniformNameToLocation);
 
     let attributeNameToLocation = (s: t, a: string) => {
-        let (_, _, _, _, dict, _) = s;
+        let (_, _, _, _, dict, _, _) = s;
         Hashtbl.find_opt(dict, a)
     };
 
     let attributeChannelToLocation = (s: t, a: VertexChannel.t) => {
-        let (_, _, _, _, _, dict) = s;
+        let (_, _, _, _, _, dict, _) = s;
         Hashtbl.find_opt(dict, a);
     };
 
+    let uniformNameToLocation = (s: t, name: string) => {
+        let (_, _, _, _, _, _, u) = s;
+        Hashtbl.find_opt(u, name);
+    };
+
+    let _setUniformIfAvailable = (s, name, f) => {
+        let uLoc = uniformNameToLocation(s, name);
+        switch (uLoc) {
+        | Some(u) => f(u)
+        | None => ()
+        };
+    };
+
+    let setUniform3fv = (s: t, name: string, v: Vec3.t) => {
+        _setUniformIfAvailable(s, name, (u) => glUniform3fv(u, v));
+    };
+
+    let setUniform4f = (s: t, name: string, x: float, y: float, z: float, w: float) => {
+        _setUniformIfAvailable(s, name, (u) => glUniform4f(u, x, y, z, w));
+    };
+
+    let setUniformMatrix4fv = (s: t, name: string, m: Mat4.t) => {
+        _setUniformIfAvailable(s, name, (u) => glUniformMatrix4fv(u, m));
+    };
+
     let use = (s: t) => {
-       let (_, _, _, p, _, _) = s; 
+       let (_, _, _, p, _, _, _) = s; 
        glUseProgram(p);
     };
 }
@@ -147,6 +213,8 @@ let compile = (shader: uncompiledShader) => {
             let attributeNameToLocation: CompiledShader.attributeNameToLocation = Hashtbl.create(List.length(attributes));
             let attributeChannelToLocation: CompiledShader.attributeChannelToLocation = Hashtbl.create(List.length(attributes));
 
+            let uniformNameToLocation: CompiledShader.uniformNameToLocation = Hashtbl.create(List.length(uniforms));
+
             let addAttributeToHash = (attr: ShaderAttribute.t) => {
                 let loc = glGetAttribLocation(program, attr.name);
                 print_endline ("adding: " ++ attr.name);
@@ -154,9 +222,16 @@ let compile = (shader: uncompiledShader) => {
                 Hashtbl.add(attributeChannelToLocation, attr.channel, loc);
             };
 
-            List.iter(addAttributeToHash, attributes);
+            let addUniformToHash = (uniform: ShaderUniform.t) => {
+                let uloc = glGetUniformLocation(program, uniform.name);
+                print_endline("adding uniform: " ++ uniform.name);
+                Hashtbl.add(uniformNameToLocation, uniform.name, uloc);
+            };
 
-            (uniforms, attributes, varying, program, attributeNameToLocation, attributeChannelToLocation);
+            List.iter(addAttributeToHash, attributes);
+            List.iter(addUniformToHash, uniforms);
+
+            (uniforms, attributes, varying, program, attributeNameToLocation, attributeChannelToLocation, uniformNameToLocation);
         }
         | LinkFailure(v) => raise(ShaderCompilationException(v))
         }
