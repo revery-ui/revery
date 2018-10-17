@@ -20,7 +20,7 @@
     "ocaml": "~4.6.0"
   },
   "resolutions": {
-    "reason-glfw": "github:bryphe/reason-glfw#d84cdb9",
+    "reason-glfw": "github:bryphe/reason-glfw#883e1b6",
     "reason-gl-matrix": "github:bryphe/reason-gl-matrix#0ae52c1",
     "reason-reactify": "github:bryphe/reason-reactify#a62c8e4",
     "esy-cmake": "github:bryphe/esy-cmake#5a40a8e",

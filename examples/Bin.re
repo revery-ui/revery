@@ -1,5 +1,10 @@
+open Reglm;
 open Reglfw.Glfw;
 open Revery;
+<<<<<<< HEAD
+=======
+open Revery.Shaders;
+>>>>>>> master
 
 open Flex;
 
@@ -17,7 +22,6 @@ module LayoutSupport = Layout.LayoutSupport;
 
 let init = app => {
   let w = app#createWindow("test");
-
 
   w#setRenderCallback(() => {
     glClearDepth(1.0);
@@ -43,7 +47,6 @@ let init = app => {
     rootNode#addChild(new UI.viewNode())
     
     rootNode#draw(0);
-
   });
 
   Lwt.return();
