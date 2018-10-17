@@ -1,7 +1,3 @@
-let render = () => {
-    print_endline("Hello, world!");
-};
-
 open Reglm;
 
 module Shaders = Revery_Shaders;
@@ -80,4 +76,9 @@ let layout = (node) => {
     let rootLayoutNode = node#toLayoutNode();
     Layout.layoutNode(rootLayoutNode);
     /* Layout.printCssNode(rootLayoutNode); */
+};
+
+let render = (node) => {
+    layout(node);
+    node#draw(0);
 };

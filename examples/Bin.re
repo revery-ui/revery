@@ -15,17 +15,6 @@ let init = app => {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
-
-    UI.render();
-
-    /* let rootStyle = {...LayoutSupport.defaultStyle, width: 800*64, height: 600*64}; */
-
-    /* let rootContext = {contents: 0}; */
-    /* let rootChild = LayoutSupport.createNode(~withChildren=[||], ~andStyle=rootStyle, rootContext); */
-    /* Layout.layoutNode(rootChild, Encoding.cssUndefined, Encoding.cssUndefined, Ltr); */
-
-    /* LayoutPrint.printCssNode((rootChild, {printLayout: true, printChildren: true, printStyle: true})); */
-
     let rootNode = new UI.viewNode("root", Vec3.create(0.0, 0.0, 0.0));
     rootNode#setStyle({...Layout.defaultStyle, width: 800, height: 600});
     let child1 = new UI.viewNode("child1", Vec3.create(1.0, 0.0, 0.0));
@@ -38,9 +27,7 @@ let init = app => {
     rootNode#addChild(child1);
     rootNode#addChild(child2);
     
-    UI.layout(rootNode);
-    rootNode#draw(0);
-
+    UI.render(rootNode);
   });
 
   Lwt.return();
