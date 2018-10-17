@@ -11,4 +11,4 @@
 (install
     (section bin)
     (package Revery)
-    (files binary.dat index.html Bin.bc.js))
+    (files binary.dat index.html Bin.bc.js gl-matrix-min.js))
