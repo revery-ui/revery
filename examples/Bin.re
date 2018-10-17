@@ -1,3 +1,4 @@
+open Reglm;
 open Reglfw.Glfw;
 open Revery;
 open Revery.Shaders;
@@ -17,6 +18,7 @@ let init = app => {
     glDepthFunc(GL_LEQUAL);
 
     CompiledShader.use(basicShader);
+    CompiledShader.setUniform3fv(basicShader, "uColor", Vec3.create(1.0, 0.0, 1.0));
 
     Geometry.draw(quad, basicShader);
   });

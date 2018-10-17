@@ -163,12 +163,18 @@ module CompiledShader {
 
     let setUniform3fv = (s: t, name: string, v: Vec3.t) => {
         let uLoc = uniformNameToLocation(s, name);
-        glUniform3fv(uLoc, v);
+        switch (uLoc) {
+        | Some(u) => glUniform3fv(u, v)
+        | None => ()
+        };
     };
 
     let setUniform4f = (s: t, name: string, x: float, y: float, z: float, w: float) => {
         let uLoc = uniformNameToLocation(s, name);
-        glUniform4f(uLoc, x, y, z, w);
+        switch (uLoc) {
+        | Some(u) => glUniform4f(u, x, y, z, w);
+        | None => ()
+        };
     };
 
     let use = (s: t) => {
