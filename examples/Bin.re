@@ -1,7 +1,5 @@
 open Reglfw.Glfw;
 open Revery;
-open Revery.Shaders;
-open Revery.Shaders.Shader;
 
 open Flex;
 
@@ -20,19 +18,13 @@ module LayoutSupport = Layout.LayoutSupport;
 let init = app => {
   let w = app#createWindow("test");
 
-  let basicShader = BasicShader.create();
-
-  let quad = Geometry.Cube.create();
-
 
   w#setRenderCallback(() => {
     glClearDepth(1.0);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
-    CompiledShader.use(basicShader);
-
-    Geometry.draw(quad, basicShader);
+    UI.render();
 
     let rootStyle = {...LayoutSupport.defaultStyle, width: 800*64, height: 600*64};
 
@@ -41,6 +33,16 @@ let init = app => {
     Layout.layoutNode(rootChild, Encoding.cssUndefined, Encoding.cssUndefined, Ltr);
 
     LayoutPrint.printCssNode((rootChild, {printLayout: true, printChildren: true, printStyle: true}));
+
+    let rootNode = new UI.viewNode();
+    let child1 = new UI.node("child1");
+    let child2 = new UI.node("child2");
+
+    rootNode#addChild(child1);
+    rootNode#addChild(child2);
+    rootNode#addChild(new UI.viewNode())
+    
+    rootNode#draw(0);
 
   });
 
