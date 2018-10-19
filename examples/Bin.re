@@ -26,10 +26,13 @@ let init = app => {
 
     let child3 = new UI.textNode("child3", "HELLO WORLD", Vec3.create(1.0, 1.0, 1.0));
 
+    let child4 = new UI.viewNode("child4", Vec3.create(1.0, 1.0, 1.0));
+    child4#setStyle({...Layout.defaultStyle, width: 200, height: 200});
+
     rootNode#addChild(child1);
     rootNode#addChild(child2);
-
     rootNode#addChild(child3);
+    rootNode#addChild(child4);
     
     UI.render(rootNode);
   });

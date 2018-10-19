@@ -4,6 +4,7 @@ open Reglfw.Glfw;
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 module Layout = Layout;
+module LayoutTypes = Layout.LayoutTypes;
 
 open Fontkit;
 
@@ -32,9 +33,17 @@ class node (name: string) = {
         _children := List.append(_children^, [n]);
     };
 
+    pub getMeasureFunction = () => {
+        None;
+    };
+
     pub toLayoutNode = () => {
         let childNodes = List.map((c) => c#toLayoutNode(), _children^);
-        let node = Layout.createNode(Array.of_list(childNodes), _style^);
+        let node = switch (_this#getMeasureFunction()) {
+        | None => Layout.createNode(Array.of_list(childNodes), _style^);
+        | Some(m) => Layout.createNodeWithMeasure(Array.of_list(childNodes), _style^, m);
+        };
+
         _layoutNode := node;
         node;
     };
@@ -129,6 +138,14 @@ class textNode (name: string, text: string, color: Vec3.t) = {
         }, shapedText);
 
         _super#draw(layer);
+    };
+
+    pub! getMeasureFunction = () => {
+        let measure = (_mode, _width, _widthMeasureMode, _height, _heightMeasureMode) => {
+                let ret: Layout.LayoutTypes.dimensions = { LayoutTypes.width: 200, height: 200 };
+                ret;
+        };
+        Some(measure);
     };
 };
 
