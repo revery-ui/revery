@@ -7,6 +7,7 @@
     (libraries
         js_of_ocaml
         Revery
+        flex
             ))
 (install
     (section bin)

@@ -13,7 +13,8 @@
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/js_of_ocaml": "*",
-    "@opam/js_of_ocaml-lwt": "*"
+    "@opam/js_of_ocaml-lwt": "*",
+    "flex": "*"
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"
@@ -23,6 +24,7 @@
     "reason-gl-matrix": "github:bryphe/reason-gl-matrix#0ae52c1",
     "reason-reactify": "github:bryphe/reason-reactify#a62c8e4",
     "esy-cmake": "github:bryphe/esy-cmake#5a40a8e",
+    "flex": "github:bryphe/flex#a73c134",
     "@opam/menhir": "20171013",
     "@esy-ocaml/esy-installer": "0.0.1",
     "@opam/re": "1.8.0"
@@ -30,6 +32,7 @@
   "devDependencies": {
     "ocaml": "~4.6.0",
     "@opam/dune": "*",
-    "@opam/js_of_ocaml-compiler": "*"
+    "@opam/js_of_ocaml-compiler": "*",
+    "flex": "^1.1.1"
   }
 }

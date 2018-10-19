@@ -3,4 +3,4 @@
     (public_name Revery)
     (js_of_ocaml (javascript_files file.js))
     (cxx_names file)
-    (libraries lwt lwt.unix reglfw Revery_Shaders Revery_Geometry))
+    (libraries lwt lwt.unix reglfw Revery_Shaders Revery_Geometry Revery_UI))

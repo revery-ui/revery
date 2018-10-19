@@ -1,5 +1,5 @@
 {
-  "hash": "eaf7723ea20ea8e9f48df4427b70e9b5",
+  "hash": "ce9d2feac388890ad9ad7d6dfb93ffee",
   "root": "root@path:./esy.json",
   "node": {
     "root@path:./esy.json": {
@@ -15,7 +15,8 @@
         "@opam/js_of_ocaml@opam:3.2.0",
         "@opam/js_of_ocaml-compiler@opam:3.2.1",
         "@opam/js_of_ocaml-lwt@opam:3.2.1", "@opam/lwt@opam:4.1.0",
-        "@opam/lwt_ppx@opam:1.2.1", "ocaml@4.6.7",
+        "@opam/lwt_ppx@opam:1.2.1", "flex@github:bryphe/flex#a73c134",
+        "ocaml@4.6.7",
         "reason-gl-matrix@github:bryphe/reason-gl-matrix#0ae52c1",
         "reason-glfw@github:bryphe/reason-glfw#883e1b6",
         "reason-reactify@github:bryphe/reason-reactify#a62c8e4"
@@ -91,6 +92,18 @@
         "opam": null
       },
       "dependencies": []
+    },
+    "flex@github:bryphe/flex#a73c134": {
+      "record": {
+        "name": "flex",
+        "version": "github:bryphe/flex#a73c134",
+        "source": "github:bryphe/flex#a73c134",
+        "files": [],
+        "opam": null
+      },
+      "dependencies": [
+        "@esy-ocaml/reason@3.3.3", "@opam/dune@opam:1.4.0", "refmterr@3.1.7"
+      ]
     },
     "esy-cmake@github:bryphe/esy-cmake#5a40a8e": {
       "record": {
