@@ -1,5 +1,5 @@
 {
-  "hash": "ce9d2feac388890ad9ad7d6dfb93ffee",
+  "hash": "60f794242b9974a81484050965c5adbd",
   "root": "root@path:./esy.json",
   "node": {
     "root@path:./esy.json": {
@@ -16,7 +16,7 @@
         "@opam/js_of_ocaml-compiler@opam:3.2.1",
         "@opam/js_of_ocaml-lwt@opam:3.2.1", "@opam/lwt@opam:4.1.0",
         "@opam/lwt_ppx@opam:1.2.1", "flex@github:bryphe/flex#a73c134",
-        "ocaml@4.6.7",
+        "ocaml@4.6.7", "reason-fontkit@github:bryphe/reason-fontkit#1826064",
         "reason-gl-matrix@github:bryphe/reason-gl-matrix#0ae52c1",
         "reason-glfw@github:bryphe/reason-glfw#883e1b6",
         "reason-reactify@github:bryphe/reason-reactify#a62c8e4"
@@ -82,6 +82,23 @@
         "refmterr@3.1.7"
       ]
     },
+    "reason-fontkit@github:bryphe/reason-fontkit#1826064": {
+      "record": {
+        "name": "reason-fontkit",
+        "version": "github:bryphe/reason-fontkit#1826064",
+        "source": "github:bryphe/reason-fontkit#1826064",
+        "files": [],
+        "opam": null
+      },
+      "dependencies": [
+        "@esy-ocaml/reason@3.3.3", "@opam/dune@opam:1.4.0",
+        "esy-cmake@github:bryphe/esy-cmake#5a40a8e",
+        "esy-freetype2@github:bryphe/esy-freetype2#bdce79aa3",
+        "esy-harfbuzz@github:bryphe/esy-harfbuzz#b9fcbe3",
+        "reason-gl-matrix@github:bryphe/reason-gl-matrix#0ae52c1",
+        "reason-glfw@github:bryphe/reason-glfw#883e1b6", "refmterr@3.1.7"
+      ]
+    },
     "ocaml@4.6.7": {
       "record": {
         "name": "ocaml",
@@ -104,6 +121,26 @@
       "dependencies": [
         "@esy-ocaml/reason@3.3.3", "@opam/dune@opam:1.4.0", "refmterr@3.1.7"
       ]
+    },
+    "esy-harfbuzz@github:bryphe/esy-harfbuzz#b9fcbe3": {
+      "record": {
+        "name": "esy-harfbuzz",
+        "version": "github:bryphe/esy-harfbuzz#b9fcbe3",
+        "source": "github:bryphe/esy-harfbuzz#b9fcbe3",
+        "files": [],
+        "opam": null
+      },
+      "dependencies": []
+    },
+    "esy-freetype2@github:bryphe/esy-freetype2#bdce79aa3": {
+      "record": {
+        "name": "esy-freetype2",
+        "version": "github:bryphe/esy-freetype2#bdce79aa3",
+        "source": "github:bryphe/esy-freetype2#bdce79aa3",
+        "files": [],
+        "opam": null
+      },
+      "dependencies": [ "esy-cmake@github:bryphe/esy-cmake#5a40a8e" ]
     },
     "esy-cmake@github:bryphe/esy-cmake#5a40a8e": {
       "record": {
