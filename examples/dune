@@ -12,4 +12,4 @@
 (install
     (section bin)
     (package Revery)
-    (files binary.dat index.html Bin.bc.js gl-matrix-min.js))
+    (files Roboto-Regular.ttf binary.dat index.html Bin.bc.js gl-matrix-min.js))

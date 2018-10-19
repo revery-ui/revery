@@ -130,11 +130,11 @@ let create = (~uniforms: list(ShaderUniform.t), ~attributes: list(ShaderAttribut
     let vertexShader = generateAttributeVertexShaderBlock(attributes) 
                        ++ generateUniformVertexShaderBlock(uniforms)
                        ++ generateVaryingBlock(varying)
-                       ++ vertexShader;
+                       ++ "void main() {\n" ++ vertexShader ++ "}\n";
 
     let fragmentShader = generateUniformPixelShaderBlock(uniforms)
                          ++ generateVaryingBlock(varying)
-                         ++ fragmentShader;
+                         ++ "void main() {\n" ++ fragmentShader ++ "}\n";
 
     (uniforms, attributes, varying, vertexShader, fragmentShader);
 };

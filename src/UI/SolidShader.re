@@ -36,17 +36,13 @@ let varying: list(ShaderVarying.t) = [{
 
 
 let vsShader = {|
-    void main() {
-       vec4 pos = vec4(uPosition.x + (aTexCoord.x * uPosition.z), uPosition.y + (aTexCoord.y * uPosition.w), 1, 1.0);
-       gl_Position = uProjection * pos;
-       vColor = uColor;
-    }
+   vec4 pos = vec4(uPosition.x + (aTexCoord.x * uPosition.z), uPosition.y + (aTexCoord.y * uPosition.w), 1, 1.0);
+   gl_Position = uProjection * pos;
+   vColor = uColor;
 |};
 
 let fsShader = {|
-    void main() {
-        gl_FragColor = vec4(vColor, 1.0);
-    }
+    gl_FragColor = vec4(vColor, 1.0);
 |};
 
 let create = () => {
