@@ -31,6 +31,7 @@
     "flex": "github:bryphe/flex#a73c134",
     "@opam/menhir": "20171013",
     "@esy-ocaml/esy-installer": "0.0.1",
+    "refmterr": "github:bryphe/BetterErrors#76500c2",
     "@opam/re": "1.8.0"
   },
   "devDependencies": {
