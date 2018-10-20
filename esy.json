@@ -21,8 +21,8 @@
     "ocaml": "~4.6.0"
   },
   "resolutions": {
-    "reason-fontkit": "github:bryphe/reason-fontkit#70d5dd7",
-    "reason-glfw": "github:bryphe/reason-glfw#c4db4fb",
+    "reason-fontkit": "github:bryphe/reason-fontkit#9e4358e",
+    "reason-glfw": "github:bryphe/reason-glfw#8fa7ac0",
     "reason-gl-matrix": "github:bryphe/reason-gl-matrix#20ba66e",
     "reason-reactify": "github:bryphe/reason-reactify#a62c8e4",
     "esy-cmake": "github:esy-packages/esy-cmake#1a72dab",
