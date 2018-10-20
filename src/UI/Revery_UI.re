@@ -1,5 +1,4 @@
 open Reglm;
-open Reglfw.Glfw;
 
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
@@ -102,23 +101,16 @@ class textNode (name: string, text: string, color: Vec3.t) = {
 
         let dimensions = _super#measurements();
 
-        glPixelStorei(GL_PACK_ALIGNMENT, 1);
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", color);
 
         let render = (s: Fontkit.fk_shape, x: float, y: float) => {
-            let glyph = Fontkit.renderGlyph(font, s.codepoint);
+            let glyph = FontRenderer.getGlyph(font, s.codepoint);
 
-            let {image, width, height, bearingX, bearingY, advance, _} = glyph;
+            let {width, height, bearingX, bearingY, advance, _} = glyph;
 
-            let texture = glCreateTexture();
-            glBindTexture(GL_TEXTURE_2D, texture);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexImage2D(GL_TEXTURE_2D, GL_UNSIGNED_BYTE, image);
+            let _ = FontRenderer.getTexture(font, s.codepoint);
+            /* TODO: Bind texture */
 
-            Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", color);
             Shaders.CompiledShader.setUniform4f(textureShader, "uPosition", 
                 x +. float_of_int(bearingX),
                 y -. (float_of_int(height) -. float_of_int(bearingY)),
@@ -142,7 +134,8 @@ class textNode (name: string, text: string, color: Vec3.t) = {
 
     pub! getMeasureFunction = () => {
         let measure = (_mode, _width, _widthMeasureMode, _height, _heightMeasureMode) => {
-                let ret: Layout.LayoutTypes.dimensions = { LayoutTypes.width: 200, height: 200 };
+                let d = FontRenderer.measure(font, text);
+                let ret: Layout.LayoutTypes.dimensions = { LayoutTypes.width: d.width, height: d.height };
                 ret;
         };
         Some(measure);
@@ -152,7 +145,6 @@ class textNode (name: string, text: string, color: Vec3.t) = {
 let layout = (node) => {
     let rootLayoutNode = node#toLayoutNode();
     Layout.layoutNode(rootLayoutNode);
-    /* Layout.printCssNode(rootLayoutNode); */
 };
 
 let render = (node) => {
