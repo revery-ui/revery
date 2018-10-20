@@ -25,7 +25,7 @@
     "reason-glfw": "github:bryphe/reason-glfw#883e1b6",
     "reason-gl-matrix": "github:bryphe/reason-gl-matrix#0ae52c1",
     "reason-reactify": "github:bryphe/reason-reactify#a62c8e4",
-    "esy-cmake": "github:bryphe/esy-cmake#5a40a8e",
+    "esy-cmake": "github:esy-packages/esy-cmake#1a72dab",
     "esy-freetype2": "github:bryphe/esy-freetype2#bdce79aa3",
     "esy-harfbuzz": "github:bryphe/esy-harfbuzz#b9fcbe3",
     "flex": "github:bryphe/flex#a73c134",

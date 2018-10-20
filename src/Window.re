@@ -1,35 +1,33 @@
 open Reglfw.Glfw;
 
-class window (name: string) = {
-    as _this;
+type windowRenderCallback = unit => unit;
 
-    val w = glfwCreateWindow(800, 600, name);
+type t = {
+    glfwWindow: window,
+    render: ref(option(windowRenderCallback)),
+};
 
-    val renderCallback = ref(None);
+let create = (name: string) => {
+    let w = glfwCreateWindow(800, 600, name);
+    let ret: t = {
+        glfwWindow: w,
+        render: ref(None),
+    };
+    ret;
+};
 
-    pub setRenderCallback = (rc) => {
-        renderCallback := Some(rc);
+let render = (w: t) => {
+    glfwMakeContextCurrent(w.glfwWindow);
+    glClearColor(0.39, 0.58, 0.93, 1.0);
+
+    switch(w.render^) {
+    | None => ()
+    | Some(r) => r();
     };
 
-    pub render = () => {
-        glfwMakeContextCurrent(w);
-        glClearColor(0.39, 0.58, 0.93, 1.0);
+    glfwSwapBuffers(w.glfwWindow);
+};
 
-        switch(renderCallback^) {
-        | None => ()
-        | Some(r) => r();
-        };
-
-        glfwSwapBuffers(w);
-    };
-
-}
-
-/* type window = Glfw.window; */
-
-/* let create = (name, width, height) => { */
-/*     let _ = Glfw.glfwInit(); */
-/*     let w = Glfw.glfwCreateWindow(width, height, name); */
-/*     print_endline("Hello, world!"); */
-/*     w; */
-/* }; */
+let setRenderCallback = (w: t, callback: windowRenderCallback) => {
+    w.render := Some(callback);
+};

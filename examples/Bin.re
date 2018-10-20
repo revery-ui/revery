@@ -6,9 +6,10 @@ open Revery;
 open UI;
 
 let init = app => {
-  let w = app#createWindow("test");
 
-  w#setRenderCallback(() => {
+  let w = App.createWindow(app, "test");
+
+  Window.setRenderCallback(w, () => {
     glViewport(0, 0, 800, 600);
 
     glClearDepth(1.0);

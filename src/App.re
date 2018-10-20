@@ -1,26 +1,33 @@
 open Reglfw.Glfw;
 
-class app = {
-    as _this;
-    val windows = ref([]);
-    pub createWindow = (s) => {
-        let w = new Window.window(s);
-        w#render();
-        windows := [w, ...windows^];
-        w;
-    };
+type t = {
+    windows: ref(list(Window.t))
+};
 
-    pub getWindows = windows^;
-}
+type appInitFunc = (t) => unit;
+
+let appInstance = {
+    windows: ref([]),
+};
+
+let getWindows = (app: t) => {
+    app.windows^
+};
+
+let createWindow = (app: t, windowName) => {
+    let w = Window.create(windowName);
+    Window.render(w)
+    app.windows := [w, ...appInstance.windows^];
+    w;
+};
 
 let start = (initFunc) => {
 
-    let appInstance = new app;
     let _ = glfwInit();
     let _ = initFunc(appInstance);
 
     let appLoop = (_t: float) => {
-        List.iter((w) => w#render(), appInstance#getWindows);
+        List.iter((w) => Window.render(w), getWindows(appInstance));
         glfwPollEvents();
         Unix.sleepf(1. /. 100.);
         false
