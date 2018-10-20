@@ -22,7 +22,7 @@
   },
   "resolutions": {
     "reason-fontkit": "github:bryphe/reason-fontkit#1826064",
-    "reason-glfw": "github:bryphe/reason-glfw#883e1b6",
+    "reason-glfw": "github:bryphe/reason-glfw#3813da4",
     "reason-gl-matrix": "github:bryphe/reason-gl-matrix#0ae52c1",
     "reason-reactify": "github:bryphe/reason-reactify#a62c8e4",
     "esy-cmake": "github:esy-packages/esy-cmake#1a72dab",
