@@ -1,25 +1,23 @@
 open Reglfw.Glfw;
 
-type appInstance = {
-    windows: ref(list(Window.window))
+type t = {
+    windows: ref(list(Window.t))
 };
 
-type t = appInstance;
-
-type appInitFunc = (appInstance) => unit;
+type appInitFunc = (t) => unit;
 
 let appInstance = {
     windows: ref([]),
 };
 
-let getWindows = (appInstance) => {
-    appInstance.windows^
+let getWindows = (app: t) => {
+    app.windows^
 };
 
-let createWindow = (appInstance, windowName) => {
-    let w = new Window.window(windowName);
-    w#render();
-    appInstance.windows := [w, ...appInstance.windows^];
+let createWindow = (app: t, windowName) => {
+    let w = Window.create(windowName);
+    Window.render(w)
+    app.windows := [w, ...appInstance.windows^];
     w;
 };
 
@@ -29,7 +27,7 @@ let start = (initFunc) => {
     let _ = initFunc(appInstance);
 
     let appLoop = (_t: float) => {
-        List.iter((w) => w#render(), getWindows(appInstance));
+        List.iter((w) => Window.render(w), getWindows(appInstance));
         glfwPollEvents();
         Unix.sleepf(1. /. 100.);
         false

@@ -9,7 +9,7 @@ let init = app => {
 
   let w = App.createWindow(app, "test");
 
-  w#setRenderCallback(() => {
+  Window.setRenderCallback(w, () => {
     glViewport(0, 0, 800, 600);
 
     glClearDepth(1.0);
