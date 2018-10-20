@@ -6,7 +6,8 @@ open Revery;
 open UI;
 
 let init = app => {
-  let w = app#createWindow("test");
+
+  let w = App.createWindow(app, "test");
 
   w#setRenderCallback(() => {
     glViewport(0, 0, 800, 600);
