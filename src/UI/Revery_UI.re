@@ -20,7 +20,6 @@ class node (name: string) = {
     };
 
     pub measurements = () => {
-        Layout.printCssNode(_layoutNode^);
         (_layoutNode^).layout;
     };
 
