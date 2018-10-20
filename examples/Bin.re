@@ -27,8 +27,8 @@ let init = app => {
 
     let child3 = new UI.textNode("child3", "HELLO WORLD", Vec3.create(1.0, 1.0, 1.0));
 
-    let child4 = new UI.viewNode("child4", Vec3.create(1.0, 1.0, 1.0));
-    child4#setStyle({...Layout.defaultStyle, width: 200, height: 200});
+    let child4 = new UI.imageNode("child4", "outrun-logo.png");
+    child4#setStyle({...Layout.defaultStyle, width: 128, height: 32});
 
     rootNode#addChild(child1);
     rootNode#addChild(child2);

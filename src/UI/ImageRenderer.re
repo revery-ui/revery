@@ -1,7 +1,6 @@
 
 open Reglfw;
 open Reglfw.Glfw;
-open Fontkit;
 
 type t = {
     mutable hasLoaded: bool,
@@ -13,7 +12,7 @@ type t = {
 let getTexture = (imagePath: string) => {
     /* TODO: Support url paths? */
 
-    let initialImage = Image.fromColor(255, 0, 0, 0);
+    let initialImage = Image.fromColor(255, 0, 0, 255);
 
     /* Create an initial texture container */
     let texture = glCreateTexture();
@@ -28,14 +27,11 @@ let getTexture = (imagePath: string) => {
 
     let success = (img) => {
         glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D, img);
+        /* glTexImage2D(GL_TEXTURE_2D, img); */
+        Lwt.return ();
     };
 
-    let failure = (msg) => {
-        print_endline ("[WARNING] Unable to load texture: " ++ imagePath  ++ " | " ++ msg);
-    };
-
-    Lwt.bind(imageLoadPromise, success, failure);
+    let _  = Lwt.bind(imageLoadPromise, success);
 
     texture
 };

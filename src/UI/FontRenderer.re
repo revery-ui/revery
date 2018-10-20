@@ -24,7 +24,7 @@ let getTexture = (font: Fontkit.fk_face, codepoint: int) => {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, GL_UNSIGNED_BYTE, image);
+    glTexImage2D(GL_TEXTURE_2D, image);
     texture
 };
 
