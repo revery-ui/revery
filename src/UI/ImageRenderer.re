@@ -27,7 +27,7 @@ let getTexture = (imagePath: string) => {
 
     let success = (img) => {
         glBindTexture(GL_TEXTURE_2D, texture);
-        /* glTexImage2D(GL_TEXTURE_2D, img); */
+        glTexImage2D(GL_TEXTURE_2D, img);
         Lwt.return ();
     };
 

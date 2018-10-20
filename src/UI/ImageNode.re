@@ -25,6 +25,8 @@ class imageNode (name: string, imagePath: string) = {
         Shaders.CompiledShader.use(textureShader);
         let projection = Mat4.create();
 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         Mat4.ortho(projection, 0.0, 800.0, 600.0, 0.0, -0.01, -100.0);
         Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", projection);
 
@@ -42,5 +44,6 @@ class imageNode (name: string, imagePath: string) = {
         );
 
         Geometry.draw(_quad, textureShader);
+        glDisable(GL_BLEND);
     };
 };
