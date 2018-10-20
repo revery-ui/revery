@@ -1,4 +1,3 @@
-open Reglm;
 open Color;
 
 let red = rgb(1.0, 0.0, 0.0);
