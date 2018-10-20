@@ -1,4 +1,5 @@
 
+open Reglfw;
 open Reglfw.Glfw;
 open Fontkit;
 
@@ -12,6 +13,8 @@ type t = {
 let getTexture = (imagePath: string) => {
     /* TODO: Support url paths? */
 
+    let initialImage = Image.fromColor(255, 0, 0, 0);
+
     /* Create an initial texture container */
     let texture = glCreateTexture();
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -19,7 +22,7 @@ let getTexture = (imagePath: string) => {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, image);
+    glTexImage2D(GL_TEXTURE_2D, initialImage);
 
     let imageLoadPromise = Image.load(imagePath);
 
