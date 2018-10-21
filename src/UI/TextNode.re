@@ -14,7 +14,7 @@ class textNode (name: string, text: string, color: Vec3.t) = {
     as _this;
 
     val _quad = Geometry.Cube.create();
-    val textureShader = TextureShader.create();
+    val textureShader = FontShader.create();
     val font = Fontkit.load("Roboto-Regular.ttf", 24);
 
     inherit (class node)(name) as _super;

@@ -1,5 +1,5 @@
 {
-  "hash": "78cc2200775103127c44ad9f64168eef",
+  "hash": "9233d5862ec5fb44069f860be2d9a489",
   "root": "root@path:./esy.json",
   "node": {
     "root@path:./esy.json": {
@@ -16,9 +16,9 @@
         "@opam/js_of_ocaml-compiler@opam:3.2.1",
         "@opam/js_of_ocaml-lwt@opam:3.2.1", "@opam/lwt@opam:4.1.0",
         "@opam/lwt_ppx@opam:1.2.1", "flex@github:bryphe/flex#a73c134",
-        "ocaml@4.6.7", "reason-fontkit@github:bryphe/reason-fontkit#1826064",
+        "ocaml@4.6.7", "reason-fontkit@github:bryphe/reason-fontkit#9e4358e",
         "reason-gl-matrix@github:bryphe/reason-gl-matrix#20ba66e",
-        "reason-glfw@github:bryphe/reason-glfw#883e1b6",
+        "reason-glfw@github:bryphe/reason-glfw#8fa7ac0",
         "reason-reactify@github:bryphe/reason-reactify#a62c8e4"
       ]
     },
@@ -49,11 +49,11 @@
         "refmterr@github:bryphe/BetterErrors#76500c2"
       ]
     },
-    "reason-glfw@github:bryphe/reason-glfw#883e1b6": {
+    "reason-glfw@github:bryphe/reason-glfw#8fa7ac0": {
       "record": {
         "name": "reason-glfw",
-        "version": "github:bryphe/reason-glfw#883e1b6",
-        "source": "github:bryphe/reason-glfw#883e1b6",
+        "version": "github:bryphe/reason-glfw#8fa7ac0",
+        "source": "github:bryphe/reason-glfw#8fa7ac0",
         "files": [],
         "opam": null
       },
@@ -82,11 +82,11 @@
         "refmterr@github:bryphe/BetterErrors#76500c2"
       ]
     },
-    "reason-fontkit@github:bryphe/reason-fontkit#1826064": {
+    "reason-fontkit@github:bryphe/reason-fontkit#9e4358e": {
       "record": {
         "name": "reason-fontkit",
-        "version": "github:bryphe/reason-fontkit#1826064",
-        "source": "github:bryphe/reason-fontkit#1826064",
+        "version": "github:bryphe/reason-fontkit#9e4358e",
+        "source": "github:bryphe/reason-fontkit#9e4358e",
         "files": [],
         "opam": null
       },
@@ -96,7 +96,7 @@
         "esy-freetype2@github:bryphe/esy-freetype2#bdce79aa3",
         "esy-harfbuzz@github:bryphe/esy-harfbuzz#b9fcbe3",
         "reason-gl-matrix@github:bryphe/reason-gl-matrix#20ba66e",
-        "reason-glfw@github:bryphe/reason-glfw#883e1b6",
+        "reason-glfw@github:bryphe/reason-glfw#8fa7ac0",
         "refmterr@github:bryphe/BetterErrors#76500c2"
       ]
     },

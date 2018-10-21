@@ -5,6 +5,7 @@ module LayoutTypes = Layout.LayoutTypes;
 
 class viewNode = ViewNode.viewNode;
 class textNode = TextNode.textNode;
+class imageNode = ImageNode.imageNode;
 
 let layout = (node) => {
     let rootLayoutNode = node#toLayoutNode();
