@@ -9,18 +9,17 @@ open Fontkit;
 
 open Revery_Core;
 
-open Node;
 open ViewNode;
 
 
 class textNode (name: string, text: string) = {
     as _this;
 
-    val _quad = Geometry.Cube.create();
+    val quad = Geometry.Cube.create();
     val textureShader = FontShader.create();
     val font = Fontkit.load("Roboto-Regular.ttf", 24);
 
-    inherit (class node)(name) as _super;
+    inherit (class viewNode)(name) as _super;
             
     pub! draw = (layer: int) => {
         /* Draw background first */
@@ -48,11 +47,11 @@ class textNode (name: string, text: string) = {
 
             Shaders.CompiledShader.setUniform4f(textureShader, "uPosition", 
                 x +. float_of_int(bearingX),
-                y -. (float_of_int(height) -. float_of_int(bearingY)),
+                y +. float_of_int(dimensions.height) -. float_of_int(bearingY),
                 float_of_int(width),
                 float_of_int(height));
 
-            Geometry.draw(_quad, textureShader);
+            Geometry.draw(quad, textureShader);
 
             x +. float_of_int(advance) /. 64.0;
         };
