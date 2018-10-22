@@ -4,18 +4,19 @@ module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 module Style = Style;
-module Components = Components;
 
 class viewNode = ViewNode.viewNode;
 class textNode = TextNode.textNode;
 class imageNode = ImageNode.imageNode;
-
 
 module UiReact = Reactify.Make(UiReconciler);
 
 open UiReconciler;
 let view = (~children, ~style=Style.defaultStyle, ()) => 
     UiReact.primitiveComponent(View(style), ~children);
+
+let image = (~children, ~style=Style.defaultStyle, ~src="", ()) => 
+    UiReact.primitiveComponent(Image(style, src), ~children);
 
 type uiContainer = {
     rootNode: viewNode,
