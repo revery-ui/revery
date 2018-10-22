@@ -1,5 +1,5 @@
 {
-  "hash": "9233d5862ec5fb44069f860be2d9a489",
+  "hash": "8f5fffc724c99c995eb0a4c59a4ca2f6",
   "root": "root@path:./esy.json",
   "node": {
     "root@path:./esy.json": {
@@ -11,7 +11,7 @@
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.5", "@opam/dune@opam:1.4.0",
+        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.4.0",
         "@opam/js_of_ocaml@opam:3.2.0",
         "@opam/js_of_ocaml-compiler@opam:3.2.1",
         "@opam/js_of_ocaml-lwt@opam:3.2.1", "@opam/lwt@opam:4.1.0",
@@ -19,7 +19,7 @@
         "ocaml@4.6.7", "reason-fontkit@github:bryphe/reason-fontkit#9e4358e",
         "reason-gl-matrix@github:bryphe/reason-gl-matrix#20ba66e",
         "reason-glfw@github:bryphe/reason-glfw#8fa7ac0",
-        "reason-reactify@github:bryphe/reason-reactify#a62c8e4"
+        "reason-reactify@github:bryphe/reason-reactify#fce2e20"
       ]
     },
     "refmterr@github:bryphe/BetterErrors#76500c2": {
@@ -31,20 +31,20 @@
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.5", "@opam/jbuilder@opam:transition",
+        "@esy-ocaml/reason@3.3.7", "@opam/jbuilder@opam:transition",
         "@opam/re@opam:1.8.0", "ocaml@4.6.7"
       ]
     },
-    "reason-reactify@github:bryphe/reason-reactify#a62c8e4": {
+    "reason-reactify@github:bryphe/reason-reactify#fce2e20": {
       "record": {
         "name": "reason-reactify",
-        "version": "github:bryphe/reason-reactify#a62c8e4",
-        "source": "github:bryphe/reason-reactify#a62c8e4",
+        "version": "github:bryphe/reason-reactify#fce2e20",
+        "source": "github:bryphe/reason-reactify#fce2e20",
         "files": [],
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.5", "@opam/dune@opam:1.4.0",
+        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.4.0",
         "@opam/lwt@opam:4.1.0", "ocaml@4.6.7",
         "refmterr@github:bryphe/BetterErrors#76500c2"
       ]
@@ -58,7 +58,7 @@
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.5", "@opam/dune@opam:1.4.0",
+        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.4.0",
         "@opam/js_of_ocaml@opam:3.2.0",
         "@opam/js_of_ocaml-compiler@opam:3.2.1",
         "@opam/js_of_ocaml-lwt@opam:3.2.1", "@opam/lwt@opam:4.1.0",
@@ -77,7 +77,7 @@
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.5", "@opam/dune@opam:1.4.0",
+        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.4.0",
         "@opam/js_of_ocaml-compiler@opam:3.2.1", "ocaml@4.6.7",
         "refmterr@github:bryphe/BetterErrors#76500c2"
       ]
@@ -91,7 +91,7 @@
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.5", "@opam/dune@opam:1.4.0",
+        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.4.0",
         "esy-cmake@github:esy-packages/esy-cmake#1a72dab",
         "esy-freetype2@github:bryphe/esy-freetype2#bdce79aa3",
         "esy-harfbuzz@github:bryphe/esy-harfbuzz#b9fcbe3",
@@ -120,7 +120,7 @@
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.5", "@opam/dune@opam:1.4.0",
+        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.4.0",
         "refmterr@github:bryphe/BetterErrors#76500c2"
       ]
     },
@@ -813,12 +813,12 @@
       },
       "dependencies": []
     },
-    "@esy-ocaml/reason@3.3.5": {
+    "@esy-ocaml/reason@3.3.7": {
       "record": {
         "name": "@esy-ocaml/reason",
-        "version": "3.3.5",
+        "version": "3.3.7",
         "source":
-          "archive:https://registry.npmjs.org/@esy-ocaml/reason/-/reason-3.3.5.tgz#sha1:be17c1c2733b67044244ae508874bb6ef6032b7e",
+          "archive:https://registry.npmjs.org/@esy-ocaml/reason/-/reason-3.3.7.tgz#sha1:4d75b8876807c4178c6fff2359962066bb69d944",
         "files": [],
         "opam": null
       },
