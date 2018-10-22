@@ -9,8 +9,11 @@ type primitives =
     | Image;
 
 
+type node = Node.node;
+
 let createInstance = (_prim) => {
     print_endline ("create instance");
+    new Node.node("test");
 };
 
 let appendChild = (_parent, _child) => {
@@ -25,7 +28,7 @@ let updateInstance = () => {
     print_endline ("updateElement");
 };
 
-let replaceChild = () => {
+let replaceChild = (parent, oldChild, newChild) => {
     removeChild(parent, oldChild);
     appendChild(parent, newChild);
 };

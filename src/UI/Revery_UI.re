@@ -2,6 +2,7 @@ module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
+module Style = Style;
 
 class viewNode = ViewNode.viewNode;
 class textNode = TextNode.textNode;
@@ -11,12 +12,13 @@ module UiReact = Reactify.Make(UiReconciler);
 
 type uiContainer = {
     rootNode: viewNode,
-    container: Reactify.
+    container: UiReact.container,
 };
 
 let create = () => {
      let rootNode = new viewNode ("root");
      let container = UiReact.createContainer(rootNode);
+     container
 };
 
 let layout = (node) => {
@@ -24,10 +26,8 @@ let layout = (node) => {
     Layout.layoutNode(rootLayoutNode);
 };
 
-let render = (node) => {
-
+let render = (rootNode) => {
     /* Reconcile latest UI */
-
     layout(rootNode);
-    node#draw(0);
+    rootNode#draw(0);
 };

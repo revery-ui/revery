@@ -1,5 +1,7 @@
 open Layout;
 
+open Revery_Core;
+
 type t = {
     backgroundColor: Color.t,
     color: Color.t,
@@ -15,13 +17,14 @@ type t = {
 let make = (
     ~backgroundColor: Color.t = Colors.black,
     ~color: Color.t = Colors.white,
-    ~width: Encoding.cssUndefined,
-    ~height: Encoding.cssUndefined,
-    ~position: LayoutTypes.positionType,
-    ~top: Encoding.cssUndefined,
-    ~bottom: Encoding.cssUndefined,
-    ~left: Encoding.cssUndefined,
-    ~right: Encoding.cssUndefined,
+    ~width=Encoding.cssUndefined,
+    ~height=Encoding.cssUndefined,
+    ~position=LayoutTypes.Relative,
+    ~top=Encoding.cssUndefined,
+    ~bottom=Encoding.cssUndefined,
+    ~left=Encoding.cssUndefined,
+    ~right=Encoding.cssUndefined,
+    _unit: unit
 ) => {
 
     let ret: t = {
@@ -34,24 +37,23 @@ let make = (
         bottom,
         left,
         right,
-        width,
-        height
     };
 
     ret;
 };
 
-let defaultStyle = make();
+let defaultStyle = make( () );
 
-let toLayoutNode = (style: t) => {
-    let ret = {...Layout.defaultStyle,
-                position,
-                top,
-                left,
-                bottom,
-                right,
-                width,
-                height
+let toLayoutNode = (s: t) => {
+    let ret: LayoutTypes.cssStyle = {
+                ...LayoutSupport.defaultStyle,
+                /* position: s.position, */
+                top: s.top,
+                left: s.left,
+                bottom: s.bottom,
+                right: s.right,
+                width: s.width,
+                height: s.height
             };
     ret;
 };
