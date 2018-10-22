@@ -7,10 +7,13 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Fontkit;
 
+open Revery_Core;
+
 open Node;
 open ViewNode;
 
-class textNode (name: string, text: string, color: Vec3.t) = {
+
+class textNode (name: string, text: string) = {
     as _this;
 
     val _quad = Geometry.Cube.create();
@@ -31,7 +34,9 @@ class textNode (name: string, text: string, color: Vec3.t) = {
 
         let dimensions = _super#measurements();
 
-        Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", color);
+        let color = _super#getStyle().color;
+
+        Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", Color.toVec3(color));
 
         let render = (s: Fontkit.fk_shape, x: float, y: float) => {
             let glyph = FontRenderer.getGlyph(font, s.codepoint);

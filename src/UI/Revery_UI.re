@@ -18,6 +18,9 @@ let view = (~children, ~style=Style.defaultStyle, ()) =>
 let image = (~children, ~style=Style.defaultStyle, ~src="", ()) => 
     UiReact.primitiveComponent(Image(style, src), ~children);
 
+let text = (~children: list(string), ~style=Style.defaultStyle, ()) =>
+    UiReact.primitiveComponent(Text(style, List.hd(children)), ~children=[]);
+
 type uiContainer = {
     rootNode: viewNode,
     container: UiReact.container,

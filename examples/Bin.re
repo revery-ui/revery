@@ -13,6 +13,7 @@ let init = app => {
         <view style=(Style.make(~width=100, ~height=100, ~backgroundColor=Colors.blue, ()))>
             <view style=(Style.make(~width=10, ~height=10, ~backgroundColor=Colors.red, ())) />
             <image src="outrun-logo.png" style=(Style.make(~width=128, ~height=64, ())) />
+            <text>"Hello World!"</text>
             <view style=(Style.make(~width=25, ~height=25, ~backgroundColor=Colors.green, ())) />
         </view>);
   });
