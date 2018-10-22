@@ -10,10 +10,12 @@ class viewNode = ViewNode.viewNode;
 class textNode = TextNode.textNode;
 class imageNode = ImageNode.imageNode;
 
+
 module UiReact = Reactify.Make(UiReconciler);
 
-let view = (~children, ()) => 
-    UiReact.primitiveComponent(View, ~children);
+open UiReconciler;
+let view = (~children, ~style=Style.defaultStyle, ()) => 
+    UiReact.primitiveComponent(View(style), ~children);
 
 type uiContainer = {
     rootNode: viewNode,
@@ -32,13 +34,7 @@ let layout = (node) => {
     Layout.layoutNode(rootLayoutNode);
 };
 
-let render = (rootNode) => {
-    /* Reconcile latest UI */
-    layout(rootNode);
-    rootNode#draw(0);
-};
-
-let render2 = (container: uiContainer, component: UiReact.component) => {
+let render = (container: uiContainer, component: UiReact.component) => {
     let { rootNode, container } = container;
     UiReact.updateContainer(container, component);
 

@@ -6,7 +6,7 @@
 open Revery_Core;
 
 type primitives = 
-    | View
+    | View(Style.t)
     | Text
     | Image;
 
@@ -15,11 +15,17 @@ type node = Node.node;
 
 let createInstance = (prim) => {
     let node = switch (prim) {
-    | View => new ViewNode.viewNode("test")
-    | _ => new Node.node("test");
+    | View(_style) => 
+        let view = new ViewNode.viewNode("test")
+        view#setStyle(_style);
+        view;
+    | _ => 
+        let n = new Node.node("test");
+        n#setStyle(Style.make(~width=50, ~height=50, ~backgroundColor=(Color.rgb(0.0, 1.0, 1.0)), ()));
+        n;
     };
 
-    node#setStyle(Style.make(~width=50, ~height=50, ~backgroundColor=(Color.rgb(0.0, 1.0, 1.0)), ()));
+
     node
 };
 
