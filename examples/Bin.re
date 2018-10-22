@@ -16,26 +16,30 @@ let init = app => {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
-    let rootNode = new UI.viewNode("root", Vec3.create(0.0, 0.0, 0.0));
-    rootNode#setStyle({...Layout.defaultStyle, width: 800, height: 600});
-    let child1 = new UI.viewNode("child1", Vec3.create(1.0, 0.0, 0.0));
+    let rootNode = new UI.viewNode("root"));
+    let style = Style.make(~backgroundColor=Colors.black, ~width=800, ~height=600);
+    rootNode#setStyle(style);
 
-    child1#setStyle({...Layout.defaultStyle, width: 100, height: 100});
+    let child1 = new UI.viewNode("child1"));
+    child1#setStyle(Style.make(~width=100, ~height=200, ~backgroundColor=Colors.red));
 
     let child2 = new UI.viewNode("child2", Vec3.create(0.0, 1.0, 1.0));
-    child2#setStyle({...Layout.defaultStyle, width: 200, height: 200});
+    child2#setStyle(Style.make(~width=100, ~height=200, ~backgroundColor=Colors.green));
 
-    let child3 = new UI.textNode("child3", "HELLO WORLD", Vec3.create(1.0, 1.0, 1.0));
+    /* let child3 = new UI.textNode("child3", "HELLO WORLD", Vec3.create(1.0, 1.0, 1.0)); */
 
-    let child4 = new UI.imageNode("child4", "outrun-logo.png");
-    child4#setStyle({...Layout.defaultStyle, width: 128, height: 32});
+    /* let child4 = new UI.imageNode("child4", "outrun-logo.png"); */
+    /* child4#setStyle({...Layout.defaultStyle, width: 128, height: 32}); */
 
     rootNode#addChild(child1);
     rootNode#addChild(child2);
-    rootNode#addChild(child3);
-    rootNode#addChild(child4);
+    /* rootNode#addChild(child3); */
+    /* rootNode#addChild(child4); */
     
     UI.render(rootNode);
+
+    /* UI.render(<View name="root" />) */
+    
   });
 
   Lwt.return();
