@@ -28,10 +28,6 @@ class viewNode (name: string) = {
 
         let dimensions = _super#measurements();
 
-        print_endline ("** NODE: " ++ name ++ " **");
-        print_endline ("-width: " ++ string_of_int(dimensions.width));
-        print_endline ("-height: " ++ string_of_int(dimensions.height));
-
         Shaders.CompiledShader.setUniform3fv(solidShader, "uColor", Color.toVec3(style.backgroundColor));
         Shaders.CompiledShader.setUniform4f(solidShader, "uPosition", 
             float_of_int(dimensions.left),
