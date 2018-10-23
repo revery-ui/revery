@@ -5,19 +5,16 @@ module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
-open Fontkit;
-
 open Revery_Core;
 
 open ViewNode;
-
 
 class textNode (name: string, text: string) = {
     as _this;
 
     val quad = Geometry.Cube.create();
     val textureShader = FontShader.create();
-    val font = Fontkit.load("Roboto-Regular.ttf", 24);
+    val font = FontCache.load("Roboto-Regular.ttf", 24);
 
     inherit (class viewNode)(name) as _super;
             
