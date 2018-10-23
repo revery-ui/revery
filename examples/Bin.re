@@ -1,44 +1,22 @@
-/* open Reglm; */
-open Reglm;
-open Reglfw.Glfw;
 open Revery;
-
-open UI;
+open Revery.Core;
+open Revery.UI;
 
 let init = app => {
 
   let w = App.createWindow(app, "test");
 
+  let ui = UI.create();
+
   Window.setRenderCallback(w, () => {
-    glViewport(0, 0, 800, 600);
-
-    glClearDepth(1.0);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-
-    let rootNode = new UI.viewNode("root", Vec3.create(0.0, 0.0, 0.0));
-    rootNode#setStyle({...Layout.defaultStyle, width: 800, height: 600});
-    let child1 = new UI.viewNode("child1", Vec3.create(1.0, 0.0, 0.0));
-
-    child1#setStyle({...Layout.defaultStyle, width: 100, height: 100});
-
-    let child2 = new UI.viewNode("child2", Vec3.create(0.0, 1.0, 1.0));
-    child2#setStyle({...Layout.defaultStyle, width: 200, height: 200});
-
-    let child3 = new UI.textNode("child3", "HELLO WORLD", Vec3.create(1.0, 1.0, 1.0));
-
-    let child4 = new UI.imageNode("child4", "outrun-logo.png");
-    child4#setStyle({...Layout.defaultStyle, width: 128, height: 32});
-
-    rootNode#addChild(child1);
-    rootNode#addChild(child2);
-    rootNode#addChild(child3);
-    rootNode#addChild(child4);
-    
-    UI.render(rootNode);
+    UI.render(ui,
+        <view style=(Style.make(~width=100, ~height=100, ~backgroundColor=Colors.blue, ()))>
+            <view style=(Style.make(~width=10, ~height=10, ~backgroundColor=Colors.red, ())) />
+            <image src="outrun-logo.png" style=(Style.make(~width=128, ~height=64, ())) />
+            <text style=(Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ()))>"Hellop Worldq!"</text>
+            <view style=(Style.make(~width=25, ~height=25, ~backgroundColor=Colors.green, ())) />
+        </view>);
   });
-
-  Lwt.return();
 };
 
 App.start(init);

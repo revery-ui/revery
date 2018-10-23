@@ -22,6 +22,10 @@ let rgb = (r: float, g: float, b: float) => {
     c
 }
 
+let toVec3 = (color: t) => {
+    Vec3.create(color.r, color.g, color.b);
+};
+
 let toVec4 = (color: t) => {
     Vec4.create(color.r, color.g, color.b, color.a);
 };

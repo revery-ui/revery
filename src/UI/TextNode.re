@@ -7,17 +7,19 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Fontkit;
 
-open Node;
+open Revery_Core;
+
 open ViewNode;
 
-class textNode (name: string, text: string, color: Vec3.t) = {
+
+class textNode (name: string, text: string) = {
     as _this;
 
-    val _quad = Geometry.Cube.create();
+    val quad = Geometry.Cube.create();
     val textureShader = FontShader.create();
     val font = Fontkit.load("Roboto-Regular.ttf", 24);
 
-    inherit (class node)(name) as _super;
+    inherit (class viewNode)(name) as _super;
             
     pub! draw = (layer: int) => {
         /* Draw background first */
@@ -31,7 +33,9 @@ class textNode (name: string, text: string, color: Vec3.t) = {
 
         let dimensions = _super#measurements();
 
-        Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", color);
+        let color = _super#getStyle().color;
+
+        Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", Color.toVec3(color));
 
         let render = (s: Fontkit.fk_shape, x: float, y: float) => {
             let glyph = FontRenderer.getGlyph(font, s.codepoint);
@@ -43,11 +47,11 @@ class textNode (name: string, text: string, color: Vec3.t) = {
 
             Shaders.CompiledShader.setUniform4f(textureShader, "uPosition", 
                 x +. float_of_int(bearingX),
-                y -. (float_of_int(height) -. float_of_int(bearingY)),
+                y +. float_of_int(dimensions.height) -. float_of_int(bearingY),
                 float_of_int(width),
                 float_of_int(height));
 
-            Geometry.draw(_quad, textureShader);
+            Geometry.draw(quad, textureShader);
 
             x +. float_of_int(advance) /. 64.0;
         };
