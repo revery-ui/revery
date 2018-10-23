@@ -14,7 +14,7 @@ class textNode (name: string, text: string) = {
 
     val quad = Geometry.Cube.create();
     val textureShader = FontShader.create();
-    val font = FontCache.load("Roboto-Regular.ttf", 24);
+    val font = Fontkit.load("Roboto-Regular.ttf", 24);
 
     inherit (class viewNode)(name) as _super;
             
