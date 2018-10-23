@@ -29,9 +29,10 @@ class textNode (name: string, text: string) = {
         Mat4.ortho(projection, 0.0, 800.0, 600.0, 0.0, -0.01, -100.0);
         Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", projection);
 
+        let style = _super#getStyle();
+        let font = FontCache.load(style.fontFamily, style.fontSize);
         let dimensions = _super#measurements();
-
-        let color = _super#getStyle().color;
+        let color = style.color;
 
         Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", Color.toVec3(color));
 
