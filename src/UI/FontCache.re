@@ -7,11 +7,10 @@ let _cache: t = Hashtbl.create(100);
 let load = (fontName: string, size: int) => {
     let ret: Fontkit.fk_face = switch (Hashtbl.find_opt(_cache, (fontName, size))) {
     | Some(fk) => fk
-    | None => 
-        print_endline ("Loading cached font: " ++ fontName);
+    | None =>
         let fk = Fontkit.load(fontName, size)
         Hashtbl.add(_cache, (fontName, size), fk);
         fk
     }
     ret
-}
+};

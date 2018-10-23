@@ -5,6 +5,7 @@ module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
+open Fontkit;
 open Revery_Core;
 
 open ViewNode;
@@ -14,7 +15,7 @@ class textNode (name: string, text: string) = {
 
     val quad = Geometry.Cube.create();
     val textureShader = FontShader.create();
-    val font = Fontkit.load("Roboto-Regular.ttf", 24);
+    val font = FontCache.load("Roboto-Regular.ttf", 24);
 
     inherit (class viewNode)(name) as _super;
             
@@ -35,7 +36,7 @@ class textNode (name: string, text: string) = {
         Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", Color.toVec3(color));
 
         let render = (s: Fontkit.fk_shape, x: float, y: float) => {
-            let glyph = FontRenderer.getGlyph(font, s.codepoint);
+            let glyph: fk_glyph = FontRenderer.getGlyph(font, s.codepoint);
 
             let {width, height, bearingX, bearingY, advance, _} = glyph;
 
