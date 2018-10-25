@@ -217,14 +217,12 @@ let compile = (shader: uncompiledShader) => {
 
             let addAttributeToHash = (attr: ShaderAttribute.t) => {
                 let loc = glGetAttribLocation(program, attr.name);
-                print_endline ("adding: " ++ attr.name);
                 Hashtbl.add(attributeNameToLocation, attr.name, loc)
                 Hashtbl.add(attributeChannelToLocation, attr.channel, loc);
             };
 
             let addUniformToHash = (uniform: ShaderUniform.t) => {
                 let uloc = glGetUniformLocation(program, uniform.name);
-                print_endline("adding uniform: " ++ uniform.name);
                 Hashtbl.add(uniformNameToLocation, uniform.name, uloc);
             };
 

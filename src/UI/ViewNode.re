@@ -16,14 +16,14 @@ class viewNode (name: string) = {
 
 
     inherit (class node(renderPass))(name) as _super;
-            
+
     pub! draw = (pass: renderPass, layer: int) => {
         switch (pass) {
         | SolidPass(m) => {
-            let style = _super#getStyle();
-
             Shaders.CompiledShader.use(solidShader);
             Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uProjection", m);
+
+            let style = _super#getStyle();
             let dimensions = _super#measurements();
 
             /* print_endline ("** NODE: " ++ name ++ " **"); */

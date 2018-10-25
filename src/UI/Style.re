@@ -2,6 +2,8 @@ open Layout;
 
 open Revery_Core;
 
+type fontFamily = string;
+
 type t = {
     backgroundColor: Color.t,
     color: Color.t,
@@ -12,6 +14,8 @@ type t = {
     bottom: int,
     left: int,
     right: int,
+    fontFamily: fontFamily,
+    fontSize: int,
 };
 
 let make = (
@@ -24,6 +28,8 @@ let make = (
     ~bottom=Encoding.cssUndefined,
     ~left=Encoding.cssUndefined,
     ~right=Encoding.cssUndefined,
+    ~fontFamily="",
+    ~fontSize=Encoding.cssUndefined,
     _unit: unit
 ) => {
 
@@ -37,6 +43,8 @@ let make = (
         bottom,
         left,
         right,
+        fontFamily,
+        fontSize,
     };
 
     ret;

@@ -4,19 +4,16 @@ module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
 open Fontkit;
-
 open Revery_Core;
 
 open ViewNode;
 open RenderPass;
-
 
 class textNode (name: string, text: string) = {
     as _this;
 
     val quad = Geometry.Cube.create();
     val textureShader = FontShader.create();
-    val font = Fontkit.load("Roboto-Regular.ttf", 24);
 
     inherit (class viewNode)(name) as _super;
             
@@ -29,9 +26,10 @@ class textNode (name: string, text: string) = {
             Shaders.CompiledShader.use(textureShader);
             Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", m);
 
+            let style = _super#getStyle();
+            let font = FontCache.load(style.fontFamily, style.fontSize);
             let dimensions = _super#measurements();
-            let color = _super#getStyle().color;
-
+            let color = style.color;
             Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", Color.toVec3(color));
 
             let render = (s: Fontkit.fk_shape, x: float, y: float) => {
@@ -65,6 +63,10 @@ class textNode (name: string, text: string) = {
 
     pub! getMeasureFunction = () => {
         let measure = (_mode, _width, _widthMeasureMode, _height, _heightMeasureMode) => {
+                /* TODO: Cache font locally in variable */
+                let style = _super#getStyle();
+                let font = FontCache.load(style.fontFamily, style.fontSize);
+
                 let d = FontRenderer.measure(font, text);
                 let ret: Layout.LayoutTypes.dimensions = { LayoutTypes.width: d.width, height: d.height };
                 ret;

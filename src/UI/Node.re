@@ -26,12 +26,10 @@ class node ('a) (_name: string) = {
 
     pub addChild = (n: node('a)) => {
         _children := List.append(_children^, [n]);
-        print_endline ("Child count after add: " ++ string_of_int(List.length(_children^)));
     };
 
     pub removeChild = (n: node('a)) => {
         _children := List.filter((c) => c != n, _children^);
-        print_endline ("Child count after remove: " ++ string_of_int(List.length(_children^)));
     };
 
     pub getMeasureFunction = () => {
