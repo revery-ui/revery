@@ -37,6 +37,7 @@
   "devDependencies": {
     "ocaml": "~4.6.0",
     "@opam/dune": "*",
+    "@opam/merlin": "*",
     "@opam/js_of_ocaml-compiler": "*",
     "flex": "^1.1.1"
   }

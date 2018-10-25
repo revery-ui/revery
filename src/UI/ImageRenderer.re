@@ -9,14 +9,14 @@ type t = {
     mutable height: int,
 };
 
-type cache = Hashtbl.t(string, t);
+type cache = Hashtbl.t(string, texture);
 
 let _cache: cache = Hashtbl.create(100);
 
 let getTexture = (imagePath: string) => {
     /* TODO: Support url paths? */
 
-    let cacheResult = Hashtbl.find_opt(imagePath);
+    let cacheResult = Hashtbl.find_opt(_cache, imagePath);
 
     let ret = switch (cacheResult) {
     | Some(r) => r
@@ -41,11 +41,8 @@ let getTexture = (imagePath: string) => {
         };
 
         let _  = Lwt.bind(imageLoadPromise, success);
-
+        Hashtbl.add(_cache, imagePath, texture);
         texture
-
-        Hashtbl.add(imagePath, texture);
-
         }
     };
 
