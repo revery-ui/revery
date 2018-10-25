@@ -11,7 +11,7 @@ let init = app => {
   Window.setRenderCallback(w, () => {
     UI.render(ui,
         <view style=(Style.make(~width=100, ~height=100, ~backgroundColor=Colors.blue, ()))>
-            <view style=(Style.make(~width=10, ~height=10, ~backgroundColor=Colors.red, ())) />
+            <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=0, ~width=10, ~height=10, ~backgroundColor=Colors.red, ())) />
             <image src="outrun-logo.png" style=(Style.make(~width=128, ~height=64, ())) />
             <text style=(Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ()))>"Hellop Worldq!"</text>
             <view style=(Style.make(~width=25, ~height=25, ~backgroundColor=Colors.green, ())) />

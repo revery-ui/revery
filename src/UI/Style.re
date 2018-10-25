@@ -47,7 +47,7 @@ let defaultStyle = make( () );
 let toLayoutNode = (s: t) => {
     let ret: LayoutTypes.cssStyle = {
                 ...LayoutSupport.defaultStyle,
-                /* position: s.position, */
+                position: s.position,
                 top: s.top,
                 left: s.left,
                 bottom: s.bottom,

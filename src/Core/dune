@@ -1,4 +1,5 @@
 (library
     (name Revery_Core)
     (public_name Revery_Core)
+    (js_of_ocaml (javascript_files file.js))
     (libraries lwt lwt.unix reglfw flex fontkit))

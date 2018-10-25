@@ -8,6 +8,8 @@ type t = {
     backgroundColor: ref(Color.t),
     glfwWindow: window,
     render: ref(option(windowRenderCallback)),
+    mutable width: int,
+    mutable height: int,
 };
 
 let create = (name: string) => {
@@ -16,7 +18,14 @@ let create = (name: string) => {
         backgroundColor: ref(Colors.cornflowerBlue),
         glfwWindow: w,
         render: ref(None),
+        width: 800,
+        height: 600,
     };
+
+    glfwSetFramebufferSizeCallback((w, width, height) => {
+        ret.width = width;
+        ret.height = height;
+    });
     ret;
 };
 
@@ -37,6 +46,19 @@ let render = (w: t) => {
 
     glfwSwapBuffers(w.glfwWindow);
 };
+
+type windowSize = {
+    width: int,
+    height: int,
+}
+
+let getSize = (w: t) => {
+    let r: windowSize = {
+        width: w.width,
+        height: w.height;
+    };
+    r
+}
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) => {
     w.render := Some(callback);
