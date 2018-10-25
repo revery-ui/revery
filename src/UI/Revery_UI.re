@@ -1,5 +1,6 @@
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
+module Window = Revery_Core.Winodw;
 
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
@@ -24,12 +25,13 @@ let text = (~children: list(string), ~style=Style.defaultStyle, ()) =>
 type uiContainer = {
     rootNode: viewNode,
     container: UiReact.container,
+    window: Window.t,
 };
 
-let create = () => {
+let create = (window: Window.t) => {
      let rootNode = new viewNode ("root");
      let container = UiReact.createContainer(rootNode);
-     let ret: uiContainer = { rootNode, container };
+     let ret: uiContainer = { window, rootNode, container };
     ret;
 };
 
@@ -41,6 +43,9 @@ let layout = (node) => {
 let render = (container: uiContainer, component: UiReact.component) => {
     let { rootNode, container } = container;
     UiReact.updateContainer(container, component);
+
+    let size = Window.getSize(container.window);
+    rootNode.setStyle(Style.make(~width=size.width, ~height=size.width, ()));
 
     layout(rootNode);
     rootNode#draw(0);
