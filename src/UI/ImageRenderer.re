@@ -9,29 +9,45 @@ type t = {
     mutable height: int,
 };
 
+type cache = Hashtbl.t(string, t);
+
+let _cache: cache = Hashtbl.create(100);
+
 let getTexture = (imagePath: string) => {
     /* TODO: Support url paths? */
 
-    let initialImage = Image.fromColor(255, 0, 0, 255);
+    let cacheResult = Hashtbl.find_opt(imagePath);
 
-    /* Create an initial texture container */
-    let texture = glCreateTexture();
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, initialImage);
+    let ret = switch (cacheResult) {
+    | Some(r) => r
+    | None => {
+        let initialImage = Image.fromColor(255, 0, 0, 255);
 
-    let imageLoadPromise = Image.load(imagePath);
-
-    let success = (img) => {
+        /* Create an initial texture container */
+        let texture = glCreateTexture();
         glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D, img);
-        Lwt.return ();
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, initialImage);
+
+        let imageLoadPromise = Image.load(imagePath);
+
+        let success = (img) => {
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glTexImage2D(GL_TEXTURE_2D, img);
+            Lwt.return ();
+        };
+
+        let _  = Lwt.bind(imageLoadPromise, success);
+
+        texture
+
+        Hashtbl.add(imagePath, texture);
+
+        }
     };
 
-    let _  = Lwt.bind(imageLoadPromise, success);
-
-    texture
+    ret;
 };
