@@ -27,10 +27,6 @@ let start = (initFunc) => {
     let _ = initFunc(appInstance);
 
     let appLoop = (_t: float) => {
-        glViewport(0, 0, 800, 600);
-        glClearDepth(1.0);
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LEQUAL);
 
         List.iter((w) => Window.render(w), getWindows(appInstance));
         glfwPollEvents();

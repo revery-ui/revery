@@ -1,7 +1,5 @@
 open Reglfw.Glfw;
 
-open Revery_Core;
-
 type windowRenderCallback = unit => unit;
 
 type t = {
@@ -22,7 +20,8 @@ let create = (name: string) => {
         height: 600,
     };
 
-    glfwSetFramebufferSizeCallback((w, width, height) => {
+    glfwSetFramebufferSizeCallback(w, (_w, width, height) => {
+        print_endline ("WIDTH: " ++ string_of_int(width));
         ret.width = width;
         ret.height = height;
     });
@@ -35,6 +34,11 @@ let setBackgroundColor = (w: t, color: Color.t) => {
 
 let render = (w: t) => {
     glfwMakeContextCurrent(w.glfwWindow);
+
+    glViewport(0, 0, w.width, w.height);
+    glClearDepth(1.0);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 
     let color = w.backgroundColor^;
     glClearColor(color.r, color.g, color.b, color.a);
@@ -55,7 +59,7 @@ type windowSize = {
 let getSize = (w: t) => {
     let r: windowSize = {
         width: w.width,
-        height: w.height;
+        height: w.height,
     };
     r
 }

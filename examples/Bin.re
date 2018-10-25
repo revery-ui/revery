@@ -6,7 +6,7 @@ let init = app => {
 
   let w = App.createWindow(app, "test");
 
-  let ui = UI.create();
+  let ui = UI.create(w);
 
   Window.setRenderCallback(w, () => {
     UI.render(ui,

@@ -1,6 +1,6 @@
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
-module Window = Revery_Core.Winodw;
+module Window = Revery_Core.Window;
 
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
@@ -41,11 +41,11 @@ let layout = (node) => {
 };
 
 let render = (container: uiContainer, component: UiReact.component) => {
-    let { rootNode, container } = container;
+    let { rootNode, container, window } = container;
     UiReact.updateContainer(container, component);
 
-    let size = Window.getSize(container.window);
-    rootNode.setStyle(Style.make(~width=size.width, ~height=size.width, ()));
+    let size = Window.getSize(window);
+    rootNode#setStyle(Style.make(~width=size.width, ~height=size.width, ()));
 
     layout(rootNode);
     rootNode#draw(0);
