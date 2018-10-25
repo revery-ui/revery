@@ -1,5 +1,3 @@
-open Reglm;
-
 open Revery_Core;
 
 module Shaders = Revery_Shaders;
@@ -8,6 +6,7 @@ module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
 open Node;
+open RenderPass;
 
 class viewNode (name: string) = {
     as _this;
@@ -16,30 +15,33 @@ class viewNode (name: string) = {
     val solidShader = SolidShader.create();
 
 
-    inherit (class node)(name) as _super;
+    inherit (class node(renderPass))(name) as _super;
             
-    pub! draw = (layer: int) => {
-        Shaders.CompiledShader.use(solidShader);
-        let projection = Mat4.create();
-        Mat4.ortho(projection, 0.0, 800.0, 600.0, 0.0, -0.01, -100.0);
-        Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uProjection", projection);
+    pub! draw = (pass: renderPass, layer: int) => {
+        switch (pass) {
+        | SolidPass(m) => {
+            let style = _super#getStyle();
 
-        let style = _super#getStyle();
+            Shaders.CompiledShader.use(solidShader);
+            Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uProjection", m);
+            let dimensions = _super#measurements();
 
-        let dimensions = _super#measurements();
+            /* print_endline ("** NODE: " ++ name ++ " **"); */
+            /* print_endline ("-left: " ++ string_of_int(dimensions.left)); */
+            /* print_endline ("-top: " ++ string_of_int(dimensions.top)); */
+            /* print_endline ("-width: " ++ string_of_int(dimensions.width)); */
+            /* print_endline ("-height: " ++ string_of_int(dimensions.height)); */
 
-        print_endline ("** NODE: " ++ name ++ " **");
-        print_endline ("-width: " ++ string_of_int(dimensions.width));
-        print_endline ("-height: " ++ string_of_int(dimensions.height));
+            Shaders.CompiledShader.setUniform3fv(solidShader, "uColor", Color.toVec3(style.backgroundColor));
+            Shaders.CompiledShader.setUniform4f(solidShader, "uPosition", 
+                float_of_int(dimensions.left),
+                float_of_int(dimensions.top),
+                float_of_int(dimensions.width),
+                float_of_int(dimensions.height));
+            Geometry.draw(_quad, solidShader);
+        }
+        };
 
-        Shaders.CompiledShader.setUniform3fv(solidShader, "uColor", Color.toVec3(style.backgroundColor));
-        Shaders.CompiledShader.setUniform4f(solidShader, "uPosition", 
-            float_of_int(dimensions.left),
-            float_of_int(dimensions.top),
-            float_of_int(dimensions.width),
-            float_of_int(dimensions.height));
-        Geometry.draw(_quad, solidShader);
-
-        _super#draw(layer);
+        _super#draw(pass, layer);
     };
 };

@@ -1,5 +1,3 @@
-open Reglm;
-
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 module Layout = Layout;
@@ -10,6 +8,7 @@ open Fontkit;
 open Revery_Core;
 
 open ViewNode;
+open RenderPass;
 
 
 class textNode (name: string, text: string) = {
@@ -21,47 +20,47 @@ class textNode (name: string, text: string) = {
 
     inherit (class viewNode)(name) as _super;
             
-    pub! draw = (layer: int) => {
+    pub! draw = (pass: renderPass, layer: int) => {
         /* Draw background first */
-        _super#draw(layer);
+        _super#draw(pass, layer);
 
-        Shaders.CompiledShader.use(textureShader);
-        let projection = Mat4.create();
+        switch (pass) {
+        | SolidPass(m) => {
+            Shaders.CompiledShader.use(textureShader);
+            Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", m);
 
-        Mat4.ortho(projection, 0.0, 800.0, 600.0, 0.0, -0.01, -100.0);
-        Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", projection);
+            let dimensions = _super#measurements();
+            let color = _super#getStyle().color;
 
-        let dimensions = _super#measurements();
+            Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", Color.toVec3(color));
 
-        let color = _super#getStyle().color;
+            let render = (s: Fontkit.fk_shape, x: float, y: float) => {
+                let glyph = FontRenderer.getGlyph(font, s.codepoint);
 
-        Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", Color.toVec3(color));
+                let {width, height, bearingX, bearingY, advance, _} = glyph;
 
-        let render = (s: Fontkit.fk_shape, x: float, y: float) => {
-            let glyph = FontRenderer.getGlyph(font, s.codepoint);
+                let _ = FontRenderer.getTexture(font, s.codepoint);
+                /* TODO: Bind texture */
 
-            let {width, height, bearingX, bearingY, advance, _} = glyph;
+                Shaders.CompiledShader.setUniform4f(textureShader, "uPosition", 
+                    x +. float_of_int(bearingX),
+                    y +. float_of_int(dimensions.height) -. float_of_int(bearingY),
+                    float_of_int(width),
+                    float_of_int(height));
 
-            let _ = FontRenderer.getTexture(font, s.codepoint);
-            /* TODO: Bind texture */
+                Geometry.draw(quad, textureShader);
 
-            Shaders.CompiledShader.setUniform4f(textureShader, "uPosition", 
-                x +. float_of_int(bearingX),
-                y +. float_of_int(dimensions.height) -. float_of_int(bearingY),
-                float_of_int(width),
-                float_of_int(height));
+                x +. float_of_int(advance) /. 64.0;
+            };
 
-            Geometry.draw(quad, textureShader);
-
-            x +. float_of_int(advance) /. 64.0;
+            let shapedText = Fontkit.fk_shape(font, text);
+            let startX = ref(float_of_int(dimensions.left));
+            Array.iter(s => {
+                let nextPosition = render(s, startX^, float_of_int(dimensions.top));
+                startX := nextPosition;
+            }, shapedText);
+            }
         };
-
-        let shapedText = Fontkit.fk_shape(font, text);
-        let startX = ref(float_of_int(dimensions.left));
-        Array.iter(s => {
-            let nextPosition = render(s, startX^, float_of_int(dimensions.top));
-            startX := nextPosition;
-        }, shapedText);
     };
 
     pub! getMeasureFunction = () => {

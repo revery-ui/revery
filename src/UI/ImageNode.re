@@ -8,6 +8,7 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Node;
 open ViewNode;
+open RenderPass;
 
 class imageNode (name: string, imagePath: string) = {
     as _this;
@@ -16,34 +17,38 @@ class imageNode (name: string, imagePath: string) = {
     val textureShader = TextureShader.create();
     val texture = ImageRenderer.getTexture(imagePath);
 
-    inherit (class node)(name) as _super;
+    inherit (class node(renderPass))(name) as _super;
             
-    pub! draw = (layer: int) => {
+    pub! draw = (pass: renderPass, layer: int) => {
         /* Draw background first */
-        _super#draw(layer);
+        _super#draw(pass, layer);
 
-        Shaders.CompiledShader.use(textureShader);
-        let projection = Mat4.create();
+        switch (pass) {
+        | SolidPass(m) => {
+            Shaders.CompiledShader.use(textureShader);
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        Mat4.ortho(projection, 0.0, 800.0, 600.0, 0.0, -0.01, -100.0);
-        Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", projection);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", m);
 
-        let dimensions = _super#measurements();
+            let dimensions = _super#measurements();
 
-        Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", Vec3.create(1.0, 1.0, 1.0));
+            Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", Vec3.create(1.0, 1.0, 1.0));
 
-        glBindTexture(GL_TEXTURE_2D, texture);
+            glBindTexture(GL_TEXTURE_2D, texture);
 
-        Shaders.CompiledShader.setUniform4f(textureShader, "uPosition", 
-            float_of_int(dimensions.left),
-            float_of_int(dimensions.top),
-            float_of_int(dimensions.width),
-            float_of_int(dimensions.height)
-        );
+            Shaders.CompiledShader.setUniform4f(textureShader, "uPosition", 
+                float_of_int(dimensions.left),
+                float_of_int(dimensions.top),
+                float_of_int(dimensions.width),
+                float_of_int(dimensions.height)
+            );
 
-        Geometry.draw(_quad, textureShader);
-        glDisable(GL_BLEND);
+            Geometry.draw(_quad, textureShader);
+            glDisable(GL_BLEND);
+
+        }
+        };
+
     };
 };
