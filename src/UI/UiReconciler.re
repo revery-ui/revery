@@ -3,13 +3,15 @@
  * This implements a reconciler for our UI primitives
  */
 
+open RenderPass;
+
 type primitives = 
     | View(Style.t)
     | Text(Style.t, string)
     | Image(Style.t, string);
 
 
-type node = Node.node;
+type node = Node.node(renderPass);
 
 let createInstance = (prim) => {
     let node = switch (prim) {
