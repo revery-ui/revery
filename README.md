@@ -1,4 +1,4 @@
-# Revery
+# Revery 
 
 Build __native__, _high-performance_, __cross-platform__ desktop apps with [reason](https://reasonml.github.io/)!
 
