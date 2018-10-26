@@ -50,6 +50,10 @@ A major value prop of Electron is that you can build for all platforms at once. 
 
 Performance should be at the forefront, and not a compromise - we need to develop and build benchmarks that help ensure top-notch performance and start-up time.
 
+- __Type-safe, functional code__
+
+We might have some dirty mutable objects for performance - but our high-level API should be purely functional. You should be able to follow the React model of modelling your UI as a _pure function_ of application state -> UI.
+
 ## Quickstart
 
 TODO
