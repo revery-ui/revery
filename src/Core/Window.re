@@ -32,6 +32,10 @@ let setBackgroundColor = (w: t, color: Color.t) => {
     w.backgroundColor := color;
 }
 
+let setSize = (w: t, width: int, height: int) => {
+    glfwSetWindowSize(w.glfwWindow, width, height);
+};
+
 let render = (w: t) => {
     glfwMakeContextCurrent(w.glfwWindow);
 
