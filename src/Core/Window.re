@@ -33,7 +33,7 @@ let setBackgroundColor = (w: t, color: Color.t) => {
 }
 
 let setSize = (w: t, width: int, height: int) => {
-    glfwSetWindowSize(w.window);
+    glfwSetWindowSize(w.glfwWindow, width, height);
 };
 
 let render = (w: t) => {
