@@ -1,7 +1,6 @@
 open Reglfw.Glfw;
 
 type windowRenderCallback = unit => unit;
-
 type t = {
     backgroundColor: ref(Color.t),
     glfwWindow: window,
@@ -70,4 +69,22 @@ let getSize = (w: t) => {
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) => {
     w.render := Some(callback);
+};
+
+type keyPressEvent = {
+    codepoint: int,
+    character: string
+};
+
+type windowKeyPressCallback = (keyPressEvent) => unit;
+let setKeyPressCallback = (w: t, windowKeyPressCallback) => {
+    glfwSetCharCallback(w.glfwWindow, (_, codepoint) => {
+       let uchar = Uchar.of_int(codepoint);
+       let character = switch (Uchar.is_char(uchar)) {
+       | true => String.make(1, Uchar.to_char(uchar))
+       | _ => ""
+       };
+      let evt: keyPressEvent = { codepoint, character };
+      windowKeyPressCallback(evt);
+    });
 };
