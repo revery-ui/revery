@@ -26,6 +26,7 @@ function lwt_unix_system_byte_order() { }
 function lwt_unix_get_page_size() { }
 
 // Provides: caml_open_sync_raw
+// Requires: caml_ba_create_from, caml_js_from_string, caml_js_to_string
 function caml_open_sync_raw(fileName, onSuccess, onFailure) {
     var f = caml_js_from_string(fileName);
     console.log(f);
