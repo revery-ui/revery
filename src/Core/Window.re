@@ -2,7 +2,7 @@ open Reglfw.Glfw;
 
 type windowRenderCallback = unit => unit;
 type t = {
-    backgroundColor: ref(Color.t),
+    mutable backgroundColor: Color.t,
     glfwWindow: window,
     render: ref(option(windowRenderCallback)),
     mutable width: int,
@@ -13,7 +13,10 @@ type windowCreateOptions = {
     resizable: bool,
     visible: bool,
     maximized: bool,
-    decorated: bool
+    decorated: bool,
+    width: int,
+    height: int,
+    backgroundColor: Color.t,
 };
 
 let defaultCreateOptions = {
@@ -21,6 +24,9 @@ let defaultCreateOptions = {
     visible: true,
     maximized: false,
     decorated: true
+    width: 800,
+    height: 600,
+    color: Colors.cornflowerBlue,
 };
 
 let create = (name: string, options: windowCreateOptions) => {
@@ -30,18 +36,17 @@ let create = (name: string, options: windowCreateOptions) => {
     glfwWindowHint(GLFW_MAXIMIZED, options.maximized);
     glfwWindowHint(GLFW_DECORATED, options.decorated);
 
-    let w = glfwCreateWindow(800, 600, name);
+    let w = glfwCreateWindow(options.width, options.height, name);
     glfwMakeContextCurrent(w);
     let ret: t = {
-        backgroundColor: ref(Colors.cornflowerBlue),
+        backgroundColor: options.color,
         glfwWindow: w,
         render: ref(None),
-        width: 800,
-        height: 600,
+        width: options.width,
+        height: options.height,
     };
 
     glfwSetFramebufferSizeCallback(w, (_w, width, height) => {
-        print_endline ("WIDTH: " ++ string_of_int(width));
         ret.width = width;
         ret.height = height;
     });
@@ -64,7 +69,7 @@ let render = (w: t) => {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
-    let color = w.backgroundColor^;
+    let color = w.backgroundColor;
     glClearColor(color.r, color.g, color.b, color.a);
 
     switch(w.render^) {
