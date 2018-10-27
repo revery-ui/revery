@@ -23,10 +23,10 @@ let defaultCreateOptions = {
     resizable: true,
     visible: true,
     maximized: false,
-    decorated: true
+    decorated: true,
     width: 800,
     height: 600,
-    color: Colors.cornflowerBlue,
+    backgroundColor: Colors.cornflowerBlue,
 };
 
 let create = (name: string, options: windowCreateOptions) => {
@@ -39,7 +39,7 @@ let create = (name: string, options: windowCreateOptions) => {
     let w = glfwCreateWindow(options.width, options.height, name);
     glfwMakeContextCurrent(w);
     let ret: t = {
-        backgroundColor: options.color,
+        backgroundColor: options.backgroundColor,
         glfwWindow: w,
         render: ref(None),
         width: options.width,
@@ -54,11 +54,15 @@ let create = (name: string, options: windowCreateOptions) => {
 };
 
 let setBackgroundColor = (w: t, color: Color.t) => {
-    w.backgroundColor := color;
+    w.backgroundColor = color;
 }
 
 let setSize = (w: t, width: int, height: int) => {
     glfwSetWindowSize(w.glfwWindow, width, height);
+};
+
+let setPos = (w: t, x: int, y: int) => {
+    glfwSetWindowPos(w.glfwWindow, x, y);
 };
 
 let render = (w: t) => {
