@@ -41,10 +41,26 @@ let reducer = (s: state, a: action) => {
 
 let init = app => {
 
+  let width = 800;
+  let height = 600;
+
   let w = App.createWindow(app, "test", ~createOptions={
     ...Window.defaultCreateOptions,
     decorated: false,
+    visible: false,
+    width,
+    height,
   });
+
+  /* Figure out current monitor dimensions, so we can center it! */
+  let monitor = Monitor.getPrimaryMonitor();
+  let monitorSize = Monitor.getSize(monitor);
+
+  /* IMO, it's more visually pleasing to have the UI pop up centered */
+  let upwardsOffset = 100;
+
+  Window.setPos(w, (monitorSize.width - width) / 2, ((monitorSize.height - height) / 2) - upwardsOffset);
+  Window.show(w);
 
   let ui = UI.create(w);
 

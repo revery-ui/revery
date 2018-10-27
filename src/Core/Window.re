@@ -84,6 +84,14 @@ let render = (w: t) => {
     glfwSwapBuffers(w.glfwWindow);
 };
 
+let show = (w) => {
+    glfwShowWindow(w.glfwWindow);
+};
+
+let hide = (w) => {
+    glfwHideWindow(w.glfwWindow);
+};
+
 type windowSize = {
     width: int,
     height: int,
