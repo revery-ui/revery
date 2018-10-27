@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "esy": {
     "build": ["dune build --root . -j4"],
-    "buildsInSource": "_build"
+    "buildsInSource": "_build",
+    "install": ["esy-installer"]
   },
   "dependencies": {
     "@esy-ocaml/reason": "*",
