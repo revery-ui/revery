@@ -41,7 +41,10 @@ let reducer = (s: state, a: action) => {
 
 let init = app => {
 
-  let w = App.createWindow(app, "test");
+  let w = App.createWindow(app, "test", ~createOptions={
+    ...Window.defaultCreateOptions,
+    decorated: false,
+  });
 
   let ui = UI.create(w);
 

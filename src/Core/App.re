@@ -31,9 +31,9 @@ let dispatch = (app: t('s, 'a), action: 'a) => {
     app.state = newState;
 };
 
-let createWindow = (app: t('s, 'a), windowName) => {
-    let w = Window.create(windowName);
-    Window.render(w)
+let createWindow = (~createOptions=Window.defaultCreateOptions, app: t('s, 'a), windowName) => {
+    let w = Window.create(windowName, createOptions);
+    /* Window.render(w) */
     app.windows = [w, ...app.windows];
     w;
 };

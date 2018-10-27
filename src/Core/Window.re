@@ -9,8 +9,29 @@ type t = {
     mutable height: int,
 };
 
-let create = (name: string) => {
+type windowCreateOptions = {
+    resizable: bool,
+    visible: bool,
+    maximized: bool,
+    decorated: bool
+};
+
+let defaultCreateOptions = {
+    resizable: true,
+    visible: true,
+    maximized: false,
+    decorated: true
+};
+
+let create = (name: string, options: windowCreateOptions) => {
+    glfwDefaultWindowHints();
+    glfwWindowHint(GLFW_RESIZABLE, options.resizable);
+    glfwWindowHint(GLFW_VISIBLE, options.visible);
+    glfwWindowHint(GLFW_MAXIMIZED, options.maximized);
+    glfwWindowHint(GLFW_DECORATED, options.decorated);
+
     let w = glfwCreateWindow(800, 600, name);
+    glfwMakeContextCurrent(w);
     let ret: t = {
         backgroundColor: ref(Colors.cornflowerBlue),
         glfwWindow: w,
