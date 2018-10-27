@@ -1,8 +1,8 @@
-(executable
-    (name Bin)
+(executables
+    (name Bin Autocomplete)
     (preprocess (pps lwt_ppx))
     (package Revery)
-    (public_name Bin)
+    (public_name Bin Autocomplete)
     (js_of_ocaml)
     (libraries
         js_of_ocaml
