@@ -5,6 +5,7 @@
     "build": ["dune build --root . -j4"],
     "buildsInSource": "_build",
     "install": [
+        "esy-installer Revery.install",
         "esy-installer Revery_Core.install",
         "esy-installer Revery_Geometry.install",
         "esy-installer Revery_Shaders.install",
