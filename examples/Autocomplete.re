@@ -2,6 +2,8 @@ open Revery;
 open Revery.Core;
 open Revery.UI;
 
+/* Define our app state */
+
 type item = {
     name: string,
     description: string
@@ -11,10 +13,6 @@ type state = {
     text: string,
     items: list(item)
 };
-
-type action =
-| UpdateText(string)
-| SetItems(list(item));
 
 let createItem = (name, description) => {
     let ret: item = {name, description}
@@ -30,7 +28,14 @@ let initialState: state = {
     ]
 };
 
-let update = (a) => a;
+/* Define the operations we allow on our app state */
+
+type action =
+| UpdateText(string)
+| SetItems(list(item));
+
+
+/* And the results of those actions on our app state, via a reducer */
 
 let reducer = (s: state, a: action) => {
     switch (a) {
@@ -39,6 +44,7 @@ let reducer = (s: state, a: action) => {
     };
 };
 
+/* Helper method... There's no string.indexOf equivalent in the OCaml stdlib, surprisingly! */
 let contains = (s1, s2) => {
   let re = Str.regexp_string(s2);
 
@@ -52,6 +58,7 @@ let contains = (s1, s2) => {
   };
 }
 
+/* A selector to get the set of items, based on our filter text */
 let filterItems = (filterText: string, items: list(item)) => {
     let ft = String.lowercase_ascii(filterText);
 
@@ -94,12 +101,13 @@ let init = app => {
 
   /* let smallerTextStyle = Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=12, ()); */
 
+  /* Listen to key press events, and coerce them into actions */
   Window.setKeyPressCallback(w, (keyEvent) => {
     App.dispatch(app, UpdateText(keyEvent.character));
   });
 
+  /* Render function - where the magic happens! */
   Window.setRenderCallback(w, () => {
-
     let state = App.getState(app);
 
     let filteredItems = filterItems(state.text, state.items);

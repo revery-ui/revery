@@ -6,7 +6,7 @@
     (js_of_ocaml)
     (libraries
         js_of_ocaml
-        Str
+        str
         Revery
         flex
             ))
