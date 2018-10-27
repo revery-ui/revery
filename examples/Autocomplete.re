@@ -39,6 +39,32 @@ let reducer = (s: state, a: action) => {
     };
 };
 
+let contains = (s1, s2) => {
+  let re = Str.regexp_string(s2);
+
+  try (
+    {
+      ignore(Str.search_forward(re, s1, 0));
+      true;
+    }
+  ) {
+  | Not_found => false
+  };
+}
+
+let filterItems = (filterText: string, items: list(item)) => {
+    let ft = String.lowercase_ascii(filterText);
+
+    let f = (i) => {
+        let normalizedName = String.lowercase_ascii(i.name);
+        let normalizedDescription = String.lowercase_ascii(i.description);
+        
+        contains(normalizedName, ft) || contains(normalizedDescription, ft)
+    };
+
+    List.filter(f, items);
+};
+
 let init = app => {
 
   let width = 800;
@@ -76,7 +102,8 @@ let init = app => {
 
     let state = App.getState(app);
 
-    let items = List.map((i) => <text style=(textHeaderStyle)>{i.name}</text>, state.items);
+    let filteredItems = filterItems(state.text, state.items);
+    let items = List.map((i) => <text style=(textHeaderStyle)>{i.name}</text>, filteredItems);
 
     UI.render(ui,
         <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=10, ~top=10, ~left=10, ~right=10, ~backgroundColor=Colors.blue, ()))>
