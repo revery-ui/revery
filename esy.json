@@ -22,7 +22,7 @@
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/js_of_ocaml": "*",
     "@opam/js_of_ocaml-lwt": "*",
-    "flex": "1.2.1",
+    "flex": "^1.2.2",
     "reason-reactify": "^0.1.1"
   },
   "peerDependencies": {
@@ -38,8 +38,7 @@
     "@opam/menhir": "20171013",
     "@esy-ocaml/esy-installer": "0.0.1",
     "refmterr": "github:bryphe/BetterErrors#76500c2",
-    "@opam/re": "1.8.0",
-    "flex": "1.2.1"
+    "@opam/re": "1.8.0"
   },
   "devDependencies": {
     "ocaml": "~4.6.0",
