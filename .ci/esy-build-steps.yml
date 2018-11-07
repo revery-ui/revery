@@ -7,4 +7,3 @@ steps:
   - script: npm install -g esy@0.3.4
   - script: esy install
   - script: esy build
-  - script: esy b dune runtest test
