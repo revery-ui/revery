@@ -22,6 +22,10 @@
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/js_of_ocaml": "*",
     "@opam/js_of_ocaml-lwt": "*",
+    "reason-gl-matrix": "^0.2.0",
+    "esy-cmake": "^0.3.1",
+    "esy-freetype2": "^0.1.0",
+    "esy-harfbuzz": "^0.1.1",
     "flex": "*"
   },
   "peerDependencies": {
@@ -30,11 +34,7 @@
   "resolutions": {
     "reason-fontkit": "github:bryphe/reason-fontkit#9e4358e",
     "reason-glfw": "github:bryphe/reason-glfw#34bee3d",
-    "reason-gl-matrix": "github:bryphe/reason-gl-matrix#20ba66e",
     "reason-reactify": "github:bryphe/reason-reactify#fce2e20",
-    "esy-cmake": "github:esy-packages/esy-cmake#1a72dab",
-    "esy-freetype2": "github:bryphe/esy-freetype2#bdce79aa3",
-    "esy-harfbuzz": "github:bryphe/esy-harfbuzz#b9fcbe3",
     "flex": "github:bryphe/flex#a73c134",
     "@opam/menhir": "20171013",
     "@esy-ocaml/esy-installer": "0.0.1",
