@@ -1,7 +1,7 @@
 (executables
     (names HelloWorld Autocomplete)
     (preprocess (pps lwt_ppx))
-    (package Revery)
+    (package Revery_Examples)
     (public_names HelloWorld Autocomplete)
     (js_of_ocaml)
     (libraries
