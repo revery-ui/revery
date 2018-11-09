@@ -22,7 +22,7 @@
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/js_of_ocaml": "*",
     "@opam/js_of_ocaml-lwt": "*",
-    "flex": "*"
+    "flex": "^1.2.2"
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"
@@ -35,7 +35,6 @@
     "esy-cmake": "github:esy-packages/esy-cmake#1a72dab",
     "esy-freetype2": "github:bryphe/esy-freetype2#bdce79aa3",
     "esy-harfbuzz": "github:bryphe/esy-harfbuzz#b9fcbe3",
-    "flex": "github:bryphe/flex#a73c134",
     "@opam/menhir": "20171013",
     "@esy-ocaml/esy-installer": "0.0.1",
     "refmterr": "github:bryphe/BetterErrors#76500c2",
@@ -46,7 +45,6 @@
     "@opam/merlin": "*",
     "@opam/dune": "*",
     "@opam/merlin": "*",
-    "@opam/js_of_ocaml-compiler": "*",
-    "flex": "^1.1.1"
+    "@opam/js_of_ocaml-compiler": "*"
   }
 }
