@@ -115,8 +115,8 @@ let init = app => {
 
     UI.render(ui,
         <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=10, ~top=10, ~left=10, ~right=10, ~backgroundColor=Colors.blue, ()))>
+            <text style=(textHeaderStyle)>{state.text ++ "|"}</text>
             <view style=(Style.make(~position=LayoutTypes.Relative, ()))>...items</view>
-            <text style=(textHeaderStyle)>{state.text}</text>
         </view>);
   });
 };
