@@ -74,7 +74,7 @@ let filterItems = (filterText: string, items: list(item)) => {
 
 let init = app => {
 
-  let width = 800;
+  let width = 400;
   let height = 600;
 
   let w = App.createWindow(app, "test", ~createOptions={
@@ -89,13 +89,10 @@ let init = app => {
   let monitor = Monitor.getPrimaryMonitor();
   let monitorSize = Monitor.getSize(monitor);
 
-  /* IMO, it's more visually pleasing to have the UI pop up centered */
-  let upwardsOffset = 100;
-
-  Window.setPos(w, (monitorSize.width - width) / 2, ((monitorSize.height - height) / 2) - upwardsOffset);
+  Window.setPos(w, (monitorSize.width - width) / 2, ((monitorSize.height - height) / 2));
   Window.show(w);
 
-  let ui = UI.create(w);
+  let ui = UI.create(w, ~createOptions={ autoSize: true });
 
   let textHeaderStyle = Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=24, ~height=30, ());
 
@@ -103,7 +100,6 @@ let init = app => {
 
   /* Listen to key press events, and coerce them into actions */
   let _ = Event.subscribe(w.onKeyPress, (keyEvent) => {
-    print_endline("CHARACTER: " ++ keyEvent.character);
      App.dispatch(app, UpdateText(keyEvent.character));
   })
 
@@ -114,10 +110,8 @@ let init = app => {
     let filteredItems = filterItems(state.text, state.items);
     let items = List.map((i) => <text style=(textHeaderStyle)>{i.name}</text>, filteredItems);
 
-    print_endline ("NEW STATE TEXT: " ++ state.text);
-
     UI.render(ui,
-        <view style=(Style.make(~backgroundColor=Colors.blue,~width=350, ()))>
+        <view style=(Style.make(~backgroundColor=Colors.blue,~width=width, ()))>
             <view style=(Style.make(~height=50, ()))>
             <text style=(textHeaderStyle)>{state.text}</text>
             </view>

@@ -5,7 +5,6 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Fontkit;
 open Revery_Core;
-open Reglm;
 
 open ViewNode;
 open RenderPass;
@@ -19,7 +18,7 @@ class textNode (name: string, text: string) = {
 
     inherit (class viewNode)(name) as _super;
             
-    pub! draw = (pass: renderPass, layer: int, world: Mat4.t) => {
+    pub! draw = (pass: renderPass, layer: int) => {
         /* Draw background first */
         _super#draw(pass, layer);
 

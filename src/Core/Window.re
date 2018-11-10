@@ -47,7 +47,7 @@ let defaultCreateOptions = {
     decorated: true,
     width: 800,
     height: 600,
-    backgroundColor: Colors.cornflowerBlue,
+    backgroundColor: Colors.cornflowerBlue
 };
 
 let render = (w: t) => {
