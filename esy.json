@@ -17,13 +17,12 @@
     "reason-fontkit": "*",
     "reason-glfw": "*",
     "reason-gl-matrix": "*",
-    "reason-reactify": "*",
+    "reason-reactify": "^1.0.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/js_of_ocaml": "*",
     "@opam/js_of_ocaml-lwt": "*",
-    "flex": "*",
-    "reason-reactify": "^0.1.1"
+    "flex": "*"
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"
