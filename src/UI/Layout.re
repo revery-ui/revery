@@ -19,4 +19,4 @@ let defaultStyle = LayoutSupport.defaultStyle;
 let createNode = (children, style) => LayoutSupport.createNode(~withChildren=children, ~andStyle=style, rootContext);
 let createNodeWithMeasure = (children, style, measure) => LayoutSupport.createNode(~withChildren=children, ~andStyle=style, ~andMeasure=measure, rootContext);
 let layoutNode = (node) => Layout.layoutNode(node, Encoding.cssUndefined, Encoding.cssUndefined, Ltr);
-let printCssNode = (root) => LayoutPrint.printCssNode((root, {printLayout: true, printChildren: false, printStyle: true}));
+let printCssNode = (root) => LayoutPrint.printCssNode((root, {printLayout: true, printChildren: true, printStyle: true}));

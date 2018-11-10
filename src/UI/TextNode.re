@@ -73,6 +73,7 @@ class textNode (name: string, text: string) = {
                 let font = FontCache.load(style.fontFamily, style.fontSize);
 
                 let d = FontRenderer.measure(font, text);
+                print_endline ("Measured width: " ++ string_of_int(d.width));
                 let ret: Layout.LayoutTypes.dimensions = { LayoutTypes.width: d.width, height: d.height };
                 ret;
         };

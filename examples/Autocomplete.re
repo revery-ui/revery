@@ -74,7 +74,7 @@ let filterItems = (filterText: string, items: list(item)) => {
 
 let init = app => {
 
-  let width = 800;
+  let width = 400;
   let height = 600;
 
   let w = App.createWindow(app, "test", ~createOptions={
@@ -89,15 +89,12 @@ let init = app => {
   let monitor = Monitor.getPrimaryMonitor();
   let monitorSize = Monitor.getSize(monitor);
 
-  /* IMO, it's more visually pleasing to have the UI pop up centered */
-  let upwardsOffset = 100;
-
-  Window.setPos(w, (monitorSize.width - width) / 2, ((monitorSize.height - height) / 2) - upwardsOffset);
+  Window.setPos(w, (monitorSize.width - width) / 2, ((monitorSize.height - height) / 2));
   Window.show(w);
 
-  let ui = UI.create(w);
+  let ui = UI.create(w, ~createOptions={ autoSize: true });
 
-  let textHeaderStyle = Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=24, ());
+  let textHeaderStyle = Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=24, ~height=30, ());
 
   /* let smallerTextStyle = Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=12, ()); */
 
@@ -114,9 +111,11 @@ let init = app => {
     let items = List.map((i) => <text style=(textHeaderStyle)>{i.name}</text>, filteredItems);
 
     UI.render(ui,
-        <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=10, ~top=10, ~left=10, ~right=10, ~backgroundColor=Colors.blue, ()))>
-            <view style=(Style.make(~position=LayoutTypes.Relative, ()))>...items</view>
+        <view style=(Style.make(~backgroundColor=Colors.blue,~width=width, ()))>
+            <view style=(Style.make(~height=50, ()))>
             <text style=(textHeaderStyle)>{state.text}</text>
+            </view>
+            <view style=(Style.make(()))>...items</view>
         </view>);
   });
 };

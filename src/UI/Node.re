@@ -5,13 +5,13 @@ module LayoutTypes = Layout.LayoutTypes;
 
 class node ('a) (_name: string) = {
     as _this;
-    
+
     val _children: ref(list(node('a))) = ref([]);
     val _style = ref(Style.defaultStyle);
     val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
 
     pub draw = (pass: 'a, layer: int) => {
-        List.iter((c) => c#draw(pass, layer + 1), _children^)
+        List.iter((c) => c#draw(pass, layer + 1), _children^);
     };
 
     pub measurements = () => {
