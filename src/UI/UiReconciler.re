@@ -25,15 +25,22 @@ let createInstance = (prim) => {
         img
     | Text(style, text) =>
         let text = new TextNode.textNode("test", text);
-        text#setStyle(style)
-        text
+        text#setStyle(style);
+        (text :> node);
     };
 
     node
 };
 
-let updateInstance = (_parent: node, _oldPrim: primitives, _newPrim: primitives) => {
-    print_endline ("TODO: updateElement");
+let updateInstance = (n: node, _oldPrim: primitives, newPrim: primitives) => {
+    switch (newPrim) {
+    | Text(style, text) => 
+        /* TODO: Is there a way to downcast properly here, from Node -> TextNode ? */
+        let tn: TextNode.textNode = Obj.magic(n);
+        tn#setStyle(style);
+        tn#setText(text);
+    | _ => ()
+    }
 };
 
 let appendChild = (parent: node, child: node) => {

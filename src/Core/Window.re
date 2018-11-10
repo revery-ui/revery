@@ -1,5 +1,22 @@
 open Reglfw.Glfw;
 
+module Event = Reactify.Event;
+
+type keyPressEvent = {
+    codepoint: int,
+    character: string
+};
+
+type keyEvent = {
+    key: Key.t,
+    scancode: int,
+    altKey: bool,
+    ctrlKey: bool,
+    shiftKey: bool,
+    superKey: bool,
+    isRepeat: bool,
+};
+
 type windowRenderCallback = unit => unit;
 type t = {
     mutable backgroundColor: Color.t,
@@ -7,6 +24,10 @@ type t = {
     render: ref(option(windowRenderCallback)),
     mutable width: int,
     mutable height: int,
+
+    onKeyPress: Event.t(keyPressEvent),
+    onKeyDown: Event.t(keyEvent),
+    onKeyUp: Event.t(keyEvent),
 };
 
 type windowCreateOptions = {
@@ -26,43 +47,7 @@ let defaultCreateOptions = {
     decorated: true,
     width: 800,
     height: 600,
-    backgroundColor: Colors.cornflowerBlue,
-};
-
-let create = (name: string, options: windowCreateOptions) => {
-    glfwDefaultWindowHints();
-    glfwWindowHint(GLFW_RESIZABLE, options.resizable);
-    glfwWindowHint(GLFW_VISIBLE, options.visible);
-    glfwWindowHint(GLFW_MAXIMIZED, options.maximized);
-    glfwWindowHint(GLFW_DECORATED, options.decorated);
-
-    let w = glfwCreateWindow(options.width, options.height, name);
-    glfwMakeContextCurrent(w);
-    let ret: t = {
-        backgroundColor: options.backgroundColor,
-        glfwWindow: w,
-        render: ref(None),
-        width: options.width,
-        height: options.height,
-    };
-
-    glfwSetFramebufferSizeCallback(w, (_w, width, height) => {
-        ret.width = width;
-        ret.height = height;
-    });
-    ret;
-};
-
-let setBackgroundColor = (w: t, color: Color.t) => {
-    w.backgroundColor = color;
-}
-
-let setSize = (w: t, width: int, height: int) => {
-    glfwSetWindowSize(w.glfwWindow, width, height);
-};
-
-let setPos = (w: t, x: int, y: int) => {
-    glfwSetWindowPos(w.glfwWindow, x, y);
+    backgroundColor: Colors.cornflowerBlue
 };
 
 let render = (w: t) => {
@@ -82,6 +67,112 @@ let render = (w: t) => {
     };
 
     glfwSwapBuffers(w.glfwWindow);
+};
+
+let create = (name: string, options: windowCreateOptions) => {
+    glfwDefaultWindowHints();
+    glfwWindowHint(GLFW_RESIZABLE, options.resizable);
+    glfwWindowHint(GLFW_VISIBLE, options.visible);
+    glfwWindowHint(GLFW_MAXIMIZED, options.maximized);
+    glfwWindowHint(GLFW_DECORATED, options.decorated);
+
+    let w = glfwCreateWindow(options.width, options.height, name);
+    glfwMakeContextCurrent(w);
+    let ret: t = {
+        backgroundColor: options.backgroundColor,
+        glfwWindow: w,
+        render: ref(None),
+        width: options.width,
+        height: options.height,
+        onKeyPress: Event.create(),
+        onKeyDown: Event.create(),
+        onKeyUp: Event.create(),
+    };
+
+    glfwSetFramebufferSizeCallback(w, (_w, width, height) => {
+        ret.width = width;
+        ret.height = height;
+        render(ret);
+    });
+
+    glfwSetCharCallback(w, (_, codepoint) => {
+       let uchar = Uchar.of_int(codepoint);
+       let character = switch (Uchar.is_char(uchar)) {
+       | true => String.make(1, Uchar.to_char(uchar))
+       | _ => ""
+       };
+      let keyPressEvent: keyPressEvent = {
+            codepoint,
+            character,
+      };
+      Event.dispatch(ret.onKeyPress, keyPressEvent);
+    });
+
+    glfwSetKeyCallback(w, (_w, key, scancode, buttonState, m) => {
+        let evt: keyEvent = {
+            key,
+            scancode,
+            ctrlKey: Modifier.isControlPressed(m),
+            shiftKey: Modifier.isShiftPressed(m),
+            altKey: Modifier.isAltPressed(m),
+            superKey: Modifier.isSuperPressed(m),
+            isRepeat: buttonState == GLFW_REPEAT,
+        };
+
+        switch (buttonState) {
+        | GLFW_PRESS => Event.dispatch(ret.onKeyDown, evt)
+        | GLFW_REPEAT => Event.dispatch(ret.onKeyDown, evt)
+        | GLFW_RELEASE => Event.dispatch(ret.onKeyUp, evt)
+        }
+    });
+
+    glfwSetCharCallback(w, (_, codepoint) => {
+       let uchar = Uchar.of_int(codepoint);
+       let character = switch (Uchar.is_char(uchar)) {
+       | true => String.make(1, Uchar.to_char(uchar))
+       | _ => ""
+       };
+      let keyPressEvent: keyPressEvent = {
+            codepoint,
+            character,
+      };
+      Event.dispatch(ret.onKeyPress, keyPressEvent);
+    });
+
+    glfwSetKeyCallback(w, (_w, key, scancode, buttonState, m) => {
+        let evt: keyEvent = {
+            key,
+            scancode,
+            ctrlKey: Modifier.isControlPressed(m),
+            shiftKey: Modifier.isShiftPressed(m),
+            altKey: Modifier.isAltPressed(m),
+            superKey: Modifier.isSuperPressed(m),
+            isRepeat: buttonState == GLFW_REPEAT,
+        };
+
+        switch (buttonState) {
+        | GLFW_PRESS => Event.dispatch(ret.onKeyDown, evt)
+        | GLFW_REPEAT => Event.dispatch(ret.onKeyDown, evt)
+        | GLFW_RELEASE => Event.dispatch(ret.onKeyUp, evt)
+        }
+    });
+    ret;
+};
+
+let setBackgroundColor = (w: t, color: Color.t) => {
+    w.backgroundColor = color;
+}
+
+let setSize = (w: t, width: int, height: int) => {
+    if (width != w.width || height != w.height) {
+        glfwSetWindowSize(w.glfwWindow, width, height);
+        w.width = width;
+        w.height = height;
+    }
+};
+
+let setPos = (w: t, x: int, y: int) => {
+    glfwSetWindowPos(w.glfwWindow, x, y);
 };
 
 let show = (w) => {
@@ -107,22 +198,4 @@ let getSize = (w: t) => {
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) => {
     w.render := Some(callback);
-};
-
-type keyPressEvent = {
-    codepoint: int,
-    character: string
-};
-
-type windowKeyPressCallback = (keyPressEvent) => unit;
-let setKeyPressCallback = (w: t, windowKeyPressCallback) => {
-    glfwSetCharCallback(w.glfwWindow, (_, codepoint) => {
-       let uchar = Uchar.of_int(codepoint);
-       let character = switch (Uchar.is_char(uchar)) {
-       | true => String.make(1, Uchar.to_char(uchar))
-       | _ => ""
-       };
-      let evt: keyPressEvent = { codepoint, character };
-      windowKeyPressCallback(evt);
-    });
 };
