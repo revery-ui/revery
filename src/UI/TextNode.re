@@ -12,6 +12,7 @@ open RenderPass;
 class textNode (name: string, text: string) = {
     as _this;
 
+    val mutable text = text;
     val quad = Geometry.Cube.create();
     val textureShader = FontShader.create();
 
@@ -59,6 +60,10 @@ class textNode (name: string, text: string) = {
             }, shapedText);
             }
         };
+    };
+
+    pub setText = (t) => {
+        text = t;
     };
 
     pub! getMeasureFunction = () => {
