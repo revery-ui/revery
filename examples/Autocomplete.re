@@ -103,7 +103,6 @@ let init = app => {
 
   /* Listen to key press events, and coerce them into actions */
   let _ = Event.subscribe(w.onKeyPress, (keyEvent) => {
-    print_endline("CHARACTER: " ++ keyEvent.character);
      App.dispatch(app, UpdateText(keyEvent.character));
   })
 
@@ -113,8 +112,6 @@ let init = app => {
 
     let filteredItems = filterItems(state.text, state.items);
     let items = List.map((i) => <text style=(textHeaderStyle)>{i.name}</text>, filteredItems);
-
-    print_endline ("NEW STATE TEXT: " ++ state.text);
 
     UI.render(ui,
         <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=10, ~top=10, ~left=10, ~right=10, ~backgroundColor=Colors.blue, ()))>
