@@ -16,7 +16,7 @@
     "@esy-ocaml/reason": "*",
     "reason-fontkit": "*",
     "reason-glfw": "*",
-    "reason-gl-matrix": "*",
+    "reason-gl-matrix": "^0.2.0",
     "reason-reactify": "^1.0.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
@@ -31,8 +31,7 @@
   },
   "resolutions": {
     "reason-fontkit": "github:bryphe/reason-fontkit#9e4358e",
-    "reason-glfw": "github:bryphe/reason-glfw#34bee3d",
-    "reason-gl-matrix": "github:bryphe/reason-gl-matrix#20ba66e",
+    "reason-glfw": "github:bryphe/reason-glfw#23e93cc",
     "esy-cmake": "github:esy-packages/esy-cmake#1a72dab",
     "esy-freetype2": "github:bryphe/esy-freetype2#bdce79aa3",
     "esy-harfbuzz": "github:bryphe/esy-harfbuzz#b9fcbe3",
