@@ -28,7 +28,7 @@ let text = (~children: list(string), ~style=Style.defaultStyle, ()) =>
 
 type uiContainer = {
     rootNode: viewNode,
-    container: UiReact.container,
+    container: UiReact.t,
     window: Window.t,
 };
 
