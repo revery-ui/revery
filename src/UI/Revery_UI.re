@@ -57,5 +57,6 @@ let render = (container: uiContainer, component: UiReact.component) => {
     let renderPass = SolidPass(_projection);
 
     layout(rootNode);
-    rootNode#draw(renderPass, 0);
+    let m = Mat4.create();
+    rootNode#draw(renderPass, 0, m);
 };
