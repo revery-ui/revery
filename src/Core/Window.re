@@ -125,6 +125,37 @@ let create = (name: string, options: windowCreateOptions) => {
         | GLFW_RELEASE => Event.dispatch(ret.onKeyUp, evt)
         }
     });
+
+    glfwSetCharCallback(w, (_, codepoint) => {
+       let uchar = Uchar.of_int(codepoint);
+       let character = switch (Uchar.is_char(uchar)) {
+       | true => String.make(1, Uchar.to_char(uchar))
+       | _ => ""
+       };
+      let keyPressEvent: keyPressEvent = {
+            codepoint,
+            character,
+      };
+      Event.dispatch(ret.onKeyPress, keyPressEvent);
+    });
+
+    glfwSetKeyCallback(w, (_w, key, scancode, buttonState, m) => {
+        let evt: keyEvent = {
+            key,
+            scancode,
+            ctrlKey: Modifier.isControlPressed(m),
+            shiftKey: Modifier.isShiftPressed(m),
+            altKey: Modifier.isAltPressed(m),
+            superKey: Modifier.isSuperPressed(m),
+            isRepeat: buttonState == GLFW_REPEAT,
+        };
+
+        switch (buttonState) {
+        | GLFW_PRESS => Event.dispatch(ret.onKeyDown, evt)
+        | GLFW_REPEAT => Event.dispatch(ret.onKeyDown, evt)
+        | GLFW_RELEASE => Event.dispatch(ret.onKeyUp, evt)
+        }
+    });
     ret;
 };
 
