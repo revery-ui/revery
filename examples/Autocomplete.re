@@ -102,9 +102,9 @@ let init = app => {
   /* let smallerTextStyle = Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=12, ()); */
 
   /* Listen to key press events, and coerce them into actions */
-  Window.setKeyPressCallback(w, (keyEvent) => {
-    App.dispatch(app, UpdateText(keyEvent.character));
-  });
+  let _ = Event.subscribe(w.onKeyPress, (keyEvent) => {
+     App.dispatch(app, UpdateText(keyEvent.character));
+  })
 
   /* Render function - where the magic happens! */
   Window.setRenderCallback(w, () => {
