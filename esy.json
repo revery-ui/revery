@@ -22,7 +22,9 @@
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/js_of_ocaml": "*",
     "@opam/js_of_ocaml-lwt": "*",
-    "flex": "*"
+    "@opam/dune": "*",
+    "flex": "*",
+    "@opam/js_of_ocaml-compiler": "*"
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"
@@ -42,9 +44,6 @@
   },
   "devDependencies": {
     "ocaml": "~4.6.0",
-    "@opam/merlin": "*",
-    "@opam/dune": "*",
-    "@opam/merlin": "*",
-    "@opam/js_of_ocaml-compiler": "*"
+    "@opam/merlin": "*"
   }
 }
