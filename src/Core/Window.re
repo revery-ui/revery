@@ -50,6 +50,25 @@ let defaultCreateOptions = {
     backgroundColor: Colors.cornflowerBlue,
 };
 
+let render = (w: t) => {
+    glfwMakeContextCurrent(w.glfwWindow);
+
+    glViewport(0, 0, w.width, w.height);
+    glClearDepth(1.0);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+
+    let color = w.backgroundColor;
+    glClearColor(color.r, color.g, color.b, color.a);
+
+    switch(w.render^) {
+    | None => ()
+    | Some(r) => r();
+    };
+
+    glfwSwapBuffers(w.glfwWindow);
+};
+
 let create = (name: string, options: windowCreateOptions) => {
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_RESIZABLE, options.resizable);
@@ -73,6 +92,7 @@ let create = (name: string, options: windowCreateOptions) => {
     glfwSetFramebufferSizeCallback(w, (_w, width, height) => {
         ret.width = width;
         ret.height = height;
+        render(ret);
     });
 
     glfwSetCharCallback(w, (_, codepoint) => {
@@ -113,30 +133,15 @@ let setBackgroundColor = (w: t, color: Color.t) => {
 }
 
 let setSize = (w: t, width: int, height: int) => {
-    glfwSetWindowSize(w.glfwWindow, width, height);
+    if (width != w.width || height != w.height) {
+        glfwSetWindowSize(w.glfwWindow, width, height);
+        w.width = width;
+        w.height = height;
+    }
 };
 
 let setPos = (w: t, x: int, y: int) => {
     glfwSetWindowPos(w.glfwWindow, x, y);
-};
-
-let render = (w: t) => {
-    glfwMakeContextCurrent(w.glfwWindow);
-
-    glViewport(0, 0, w.width, w.height);
-    glClearDepth(1.0);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-
-    let color = w.backgroundColor;
-    glClearColor(color.r, color.g, color.b, color.a);
-
-    switch(w.render^) {
-    | None => ()
-    | Some(r) => r();
-    };
-
-    glfwSwapBuffers(w.glfwWindow);
 };
 
 let show = (w) => {

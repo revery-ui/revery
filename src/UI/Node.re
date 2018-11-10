@@ -3,6 +3,10 @@ module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
+/* open Reglfw.Glfw; */
+
+open Reglm;
+
 class node ('a) (_name: string) = {
     as _this;
     
@@ -10,8 +14,14 @@ class node ('a) (_name: string) = {
     val _style = ref(Style.defaultStyle);
     val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
 
-    pub draw = (pass: 'a, layer: int) => {
-        List.iter((c) => c#draw(pass, layer + 1), _children^)
+    pub draw = (pass: 'a, layer: int, transform: Mat4.t) => {
+        let dimensions = (_layoutNode^).layout;
+
+        let m = Mat4.create();
+        Mat4.fromTranslation(m, Vec3.create(dimensions.left, dimensions.top, 0.0));
+        Mat4.multiply(m, m, transform);
+
+        List.iter((c) => c#draw(pass, layer + 1, m), _children^);
     };
 
     pub measurements = () => {

@@ -97,7 +97,7 @@ let init = app => {
 
   let ui = UI.create(w);
 
-  let textHeaderStyle = Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=24, ());
+  let textHeaderStyle = Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=24, ~height=30, ());
 
   /* let smallerTextStyle = Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=12, ()); */
 
@@ -117,9 +117,11 @@ let init = app => {
     print_endline ("NEW STATE TEXT: " ++ state.text);
 
     UI.render(ui,
-        <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=10, ~top=10, ~left=10, ~right=10, ~backgroundColor=Colors.blue, ()))>
-            <view style=(Style.make(~position=LayoutTypes.Relative, ()))>...items</view>
+        <view style=(Style.make(~backgroundColor=Colors.blue,~width=350, ()))>
+            <view style=(Style.make(~height=50, ()))>
             <text style=(textHeaderStyle)>{state.text}</text>
+            </view>
+            <view style=(Style.make(()))>...items</view>
         </view>);
   });
 };

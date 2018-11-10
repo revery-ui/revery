@@ -5,6 +5,7 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Fontkit;
 open Revery_Core;
+open Reglm;
 
 open ViewNode;
 open RenderPass;
@@ -18,7 +19,7 @@ class textNode (name: string, text: string) = {
 
     inherit (class viewNode)(name) as _super;
             
-    pub! draw = (pass: renderPass, layer: int) => {
+    pub! draw = (pass: renderPass, layer: int, world: Mat4.t) => {
         /* Draw background first */
         _super#draw(pass, layer);
 
@@ -73,6 +74,7 @@ class textNode (name: string, text: string) = {
                 let font = FontCache.load(style.fontFamily, style.fontSize);
 
                 let d = FontRenderer.measure(font, text);
+                print_endline ("Measured width: " ++ string_of_int(d.width));
                 let ret: Layout.LayoutTypes.dimensions = { LayoutTypes.width: d.width, height: d.height };
                 ret;
         };
