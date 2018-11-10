@@ -5,3 +5,5 @@ let module Window = Window;
 let module App = App;
 let module Time = Time;
 let module Monitor = Monitor;
+
+let module Event = Reactify.Event;

@@ -1,5 +1,22 @@
 open Reglfw.Glfw;
 
+module Event = Reactify.Event;
+
+type keyPressEvent = {
+    codepoint: int,
+    character: string
+};
+
+type keyEvent = {
+    key: Key.t,
+    scancode: int,
+    altKey: bool,
+    ctrlKey: bool,
+    shiftKey: bool,
+    superKey: bool,
+    isRepeat: bool,
+};
+
 type windowRenderCallback = unit => unit;
 type t = {
     mutable backgroundColor: Color.t,
@@ -7,6 +24,10 @@ type t = {
     render: ref(option(windowRenderCallback)),
     mutable width: int,
     mutable height: int,
+
+    onKeyPress: Event.t(keyPressEvent),
+    onKeyDown: Event.t(keyEvent),
+    onKeyUp: Event.t(keyEvent),
 };
 
 type windowCreateOptions = {
@@ -44,11 +65,45 @@ let create = (name: string, options: windowCreateOptions) => {
         render: ref(None),
         width: options.width,
         height: options.height,
+        onKeyPress: Event.create(),
+        onKeyDown: Event.create(),
+        onKeyUp: Event.create(),
     };
 
     glfwSetFramebufferSizeCallback(w, (_w, width, height) => {
         ret.width = width;
         ret.height = height;
+    });
+
+    glfwSetCharCallback(w, (_, codepoint) => {
+       let uchar = Uchar.of_int(codepoint);
+       let character = switch (Uchar.is_char(uchar)) {
+       | true => String.make(1, Uchar.to_char(uchar))
+       | _ => ""
+       };
+      let keyPressEvent: keyPressEvent = {
+            codepoint,
+            character,
+      };
+      Event.dispatch(ret.onKeyPress, keyPressEvent);
+    });
+
+    glfwSetKeyCallback(w, (_w, key, scancode, buttonState, m) => {
+        let evt: keyEvent = {
+            key,
+            scancode,
+            ctrlKey: Modifier.isControlPressed(m),
+            shiftKey: Modifier.isShiftPressed(m),
+            altKey: Modifier.isAltPressed(m),
+            superKey: Modifier.isSuperPressed(m),
+            isRepeat: buttonState == GLFW_REPEAT,
+        };
+
+        switch (buttonState) {
+        | GLFW_PRESS => Event.dispatch(ret.onKeyDown, evt)
+        | GLFW_REPEAT => Event.dispatch(ret.onKeyDown, evt)
+        | GLFW_RELEASE => Event.dispatch(ret.onKeyUp, evt)
+        }
     });
     ret;
 };
@@ -107,22 +162,4 @@ let getSize = (w: t) => {
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) => {
     w.render := Some(callback);
-};
-
-type keyPressEvent = {
-    codepoint: int,
-    character: string
-};
-
-type windowKeyPressCallback = (keyPressEvent) => unit;
-let setKeyPressCallback = (w: t, windowKeyPressCallback) => {
-    glfwSetCharCallback(w.glfwWindow, (_, codepoint) => {
-       let uchar = Uchar.of_int(codepoint);
-       let character = switch (Uchar.is_char(uchar)) {
-       | true => String.make(1, Uchar.to_char(uchar))
-       | _ => ""
-       };
-      let evt: keyPressEvent = { codepoint, character };
-      windowKeyPressCallback(evt);
-    });
 };

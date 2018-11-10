@@ -5,7 +5,8 @@ type reducer('s, 'a) = ('s, 'a) => 's;
 type t('s, 'a) = {
     reducer: reducer('s, 'a),
     mutable state: 's,
-    mutable windows: list(Window.t)
+    mutable windows: list(Window.t),
+    mutable needsRender: bool
 };
 
 /* If no state is specified, just use unit! */
@@ -29,6 +30,7 @@ let getState = (app: t('s, 'a)) => {
 let dispatch = (app: t('s, 'a), action: 'a) => {
     let newState = app.reducer(app.state, action);
     app.state = newState;
+    app.needsRender = true;
 };
 
 let createWindow = (~createOptions=Window.defaultCreateOptions, app: t('s, 'a), windowName) => {
@@ -43,16 +45,20 @@ let startWithState: startFunc('s, 'a) = (initialState: 's, reducer: reducer('s, 
         reducer: reducer,
         state: initialState,
         windows: [],
+        needsRender: true,
     };
 
     let _ = glfwInit();
     let _ = initFunc(appInstance);
 
     let appLoop = (_t: float) => {
-
-        List.iter((w) => Window.render(w), getWindows(appInstance));
         glfwPollEvents();
-        Unix.sleepf(1. /. 100.);
+        if (appInstance.needsRender) {
+            List.iter((w) => Window.render(w), getWindows(appInstance));
+            appInstance.needsRender = false;
+        } else {
+            Unix.sleepf(1. /. 100.);
+        };
         false
     };
 
