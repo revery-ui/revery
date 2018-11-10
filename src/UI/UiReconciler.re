@@ -32,16 +32,16 @@ let createInstance = (prim) => {
     node
 };
 
+let updateInstance = (_parent: node, _oldPrim: primitives, _newPrim: primitives) => {
+    print_endline ("TODO: updateElement");
+};
+
 let appendChild = (parent: node, child: node) => {
     parent#addChild(child);
 };
 
 let removeChild = (parent: node, child: node) => {
     parent#removeChild(child);
-};
-
-let updateInstance = () => {
-    print_endline ("TODO: updateElement");
 };
 
 let replaceChild = (parent: node, newChild: node, oldChild: node) => {
