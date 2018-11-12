@@ -4,6 +4,7 @@ module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
 open Fontkit;
+open Reglm;
 open Revery_Core;
 
 open ViewNode;
@@ -18,13 +19,15 @@ class textNode (name: string, text: string) = {
 
     inherit (class viewNode)(name) as _super;
             
-    pub! draw = (pass: renderPass, layer: int) => {
+    pub! draw = (pass: renderPass, layer: int, world: Mat4.t) => {
         /* Draw background first */
-        _super#draw(pass, layer);
+        _super#draw(pass, layer, world);
 
         switch (pass) {
         | SolidPass(m) => {
             Shaders.CompiledShader.use(textureShader);
+    
+            Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uWorld", world);
             Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", m);
 
             let style = _super#getStyle();

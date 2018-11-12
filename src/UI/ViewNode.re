@@ -5,6 +5,7 @@ module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
+open Reglm;
 open Node;
 open RenderPass;
 
@@ -17,10 +18,11 @@ class viewNode (name: string) = {
 
     inherit (class node(renderPass))(name) as _super;
 
-    pub! draw = (pass: renderPass, layer: int) => {
+    pub! draw = (pass: renderPass, layer: int, world: Mat4.t) => {
         switch (pass) {
         | SolidPass(m) => {
             Shaders.CompiledShader.use(solidShader);
+            Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uWorld", world);
             Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uProjection", m);
 
             let style = _super#getStyle();
@@ -42,6 +44,6 @@ class viewNode (name: string) = {
         }
         };
 
-        _super#draw(pass, layer);
+        _super#draw(pass, layer, world);
     };
 };

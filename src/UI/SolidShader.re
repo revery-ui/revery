@@ -24,6 +24,10 @@ let uniform: list(ShaderUniform.t) = [{
     usage: VertexShader,
 }, {
     dataType: ShaderDataType.Mat4,
+    name: "uWorld",
+    usage: VertexShader,
+}, {
+    dataType: ShaderDataType.Mat4,
     name: "uProjection",
     usage: VertexShader,
 }];
@@ -37,7 +41,7 @@ let varying: list(ShaderVarying.t) = [{
 
 let vsShader = {|
    vec4 pos = vec4(uPosition.x + (aTexCoord.x * uPosition.z), uPosition.y + (aTexCoord.y * uPosition.w), 1, 1.0);
-   gl_Position = uProjection * pos;
+   gl_Position = uProjection * uWorld * pos;
    vColor = uColor;
 |};
 
