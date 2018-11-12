@@ -56,7 +56,7 @@ We might have some dirty mutable objects for performance - but our high-level AP
 
 ## Quickstart
 
-Check out [revery-quick-start](https://github.com/bryphe/revery) to get up and running with your own Revery app!
+Check out [revery-quick-start](https://github.com/bryphe/revery-quick-start) to get up and running with your own Revery app!
 
 ## API Example
 
