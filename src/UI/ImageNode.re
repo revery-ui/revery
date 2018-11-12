@@ -19,9 +19,9 @@ class imageNode (name: string, imagePath: string) = {
 
     inherit (class node(renderPass))(name) as _super;
             
-    pub! draw = (pass: renderPass, layer: int) => {
+    pub! draw = (pass: renderPass, layer: int, world: Mat4.t) => {
         /* Draw background first */
-        _super#draw(pass, layer);
+        _super#draw(pass, layer, world);
 
         switch (pass) {
         | SolidPass(m) => {
@@ -29,6 +29,7 @@ class imageNode (name: string, imagePath: string) = {
 
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uWorld", world);
             Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", m);
 
             let dimensions = _super#measurements();

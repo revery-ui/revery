@@ -133,7 +133,7 @@ let init = app => {
     UI.render(ui,
         <view style=(Style.make(~backgroundColor=Colors.blue,~width=width, ()))>
             <view style=(Style.make(~height=50, ()))>
-            <text style=(textHeaderStyle)>{state.text}</text>
+                <text style=(textHeaderStyle)>{state.text ++ "|"}</text>
             </view>
             <view style=(Style.make(()))>...items</view>
         </view>);
