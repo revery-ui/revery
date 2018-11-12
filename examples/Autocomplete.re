@@ -45,7 +45,7 @@ let reducer = (s: state, a: action) => {
     switch (a) {
     | UpdateText(t) => { ...s, text: s.text ++ t}
     | SetItems(i) => { ...s, items: i }
-    | Backspace => { ...s, text: String.sub(0, String.len(s.text) - 1)}
+    | Backspace => { ...s, text: String.sub(s.text, 0, String.length(s.text) - 1)}
     | ClearWord => { ...s, text: "" }
     };
 };
