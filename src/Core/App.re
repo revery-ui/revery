@@ -27,6 +27,10 @@ let getState = (app: t('s, 'a)) => {
     app.state
 };
 
+let quit = (code: int) => {
+    exit(code);
+};
+
 let dispatch = (app: t('s, 'a), action: 'a) => {
     let newState = app.reducer(app.state, action);
     app.state = newState;

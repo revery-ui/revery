@@ -2,6 +2,8 @@ open Revery;
 open Revery.Core;
 open Revery.UI;
 
+module Glfw = Reglfw.Glfw;
+
 /* Define our app state */
 
 type item = {
@@ -32,8 +34,10 @@ let initialState: state = {
 
 type action =
 | UpdateText(string)
-| SetItems(list(item));
-
+| SetItems(list(item))
+/* These actions should be baked into an input control! */
+| Backspace
+| ClearWord;
 
 /* And the results of those actions on our app state, via a reducer */
 
@@ -41,6 +45,7 @@ let reducer = (s: state, a: action) => {
     switch (a) {
     | UpdateText(t) => { ...s, text: s.text ++ t}
     | SetItems(i) => { ...s, items: i }
+    | _ => { ...s, text: ""}
     };
 };
 
@@ -101,7 +106,19 @@ let init = app => {
   /* Listen to key press events, and coerce them into actions */
   let _ = Event.subscribe(w.onKeyPress, (keyEvent) => {
      App.dispatch(app, UpdateText(keyEvent.character));
-  })
+  });
+
+  /* Listen to key down events, and coerce them into actions, too */
+  let _ = Event.subscribe(w.onKeyDown, (keyEvent) => {
+    /* TODO: Can we implement this API w/o GLFW leaking through? */
+    if (keyEvent.key == Glfw.Key.GLFW_KEY_BACKSPACE) {
+        print_endline ("Backspace pressed");
+        App.dispatch(app, Backspace);
+    } else if (keyEvent.key == Glfw.Key.GLFW_KEY_ESCAPE) {
+        print_endline ("Escape pressed");
+        App.quit(0);
+    };
+  });
 
   /* Render function - where the magic happens! */
   Window.setRenderCallback(w, () => {

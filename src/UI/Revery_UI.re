@@ -51,7 +51,6 @@ let create = (~createOptions=defaultUiContainerOptions, window: Window.t) => {
 let layout = (node) => {
     let rootLayoutNode = node#toLayoutNode();
     Layout.layoutNode(rootLayoutNode);
-    Layout.printCssNode(rootLayoutNode);
 };
 
 let _projection = Mat4.create();
