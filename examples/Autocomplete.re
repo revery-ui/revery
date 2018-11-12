@@ -45,7 +45,8 @@ let reducer = (s: state, a: action) => {
     switch (a) {
     | UpdateText(t) => { ...s, text: s.text ++ t}
     | SetItems(i) => { ...s, items: i }
-    | _ => { ...s, text: ""}
+    | Backspace => { ...s, text: String.sub(0, String.len(s.text) - 1)}
+    | ClearWord => { ...s, text: "" }
     };
 };
 
@@ -112,12 +113,14 @@ let init = app => {
   let _ = Event.subscribe(w.onKeyDown, (keyEvent) => {
     /* TODO: Can we implement this API w/o GLFW leaking through? */
     if (keyEvent.key == Glfw.Key.GLFW_KEY_BACKSPACE) {
-        print_endline ("Backspace pressed");
+        App.dispatch(app, Backspace);
+    } else if (keyEvent.key == Glfw.Key.GLFW_KEY_H && keyEvent.ctrlKey) {
         App.dispatch(app, Backspace);
     } else if (keyEvent.key == Glfw.Key.GLFW_KEY_ESCAPE) {
-        print_endline ("Escape pressed");
         App.quit(0);
-    };
+    } else if (keyEvent.key == Glfw.Key.GLFW_KEY_W && keyEvent.ctrlKey) {
+        App.dispatch(app, ClearWord)
+    }
   });
 
   /* Render function - where the magic happens! */
