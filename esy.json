@@ -31,7 +31,7 @@
   },
   "resolutions": {
     "reason-fontkit": "github:bryphe/reason-fontkit#9e4358e",
-    "reason-glfw": "github:bryphe/reason-glfw#23e93cc",
+    "reason-glfw": "github:bryphe/reason-glfw#df48c80",
     "esy-cmake": "github:esy-packages/esy-cmake#1a72dab",
     "esy-freetype2": "github:bryphe/esy-freetype2#bdce79aa3",
     "esy-harfbuzz": "github:bryphe/esy-harfbuzz#b9fcbe3",
