@@ -1,6 +1,6 @@
 {
   "name": "revery",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "esy": {
     "build": ["dune build --root . -j4"],
     "buildsInSource": "_build",

@@ -1,7 +1,7 @@
 {
   "name": "revery",
-  "version": "0.0.1",
-  "description": "Game/Graphics toolkit built with Reason",
+  "version": "0.1.0",
+  "description": "App toolkit built with Reason",
   "main": "index.js",
   "scripts": {
     "build": "esy b",
