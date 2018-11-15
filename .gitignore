@@ -33,7 +33,8 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
+# missing trailing slash since it's a symlink with esy
+node_modules
 jspm_packages/
 
 # TypeScript v1 declaration files
@@ -62,6 +63,7 @@ typings/
 
 # dune build folder
 _build/
+_esy/
 
 # install files
 *.install
