@@ -6,4 +6,8 @@ steps:
       versionSpec: '8.9'
   - script: npm install -g esy@0.3.4
   - script: esy install
+    continueOnError: true
+  - script: esy install
+    continueOnError: true
+  - script: esy install
   - script: esy build
