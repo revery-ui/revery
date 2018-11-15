@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "^3.3.7",
-    "reason-fontkit": "*",
+    "reason-fontkit": "^1.0.0",
     "reason-glfw": "^1.0.0",
     "reason-gl-matrix": "^0.2.0",
     "reason-reactify": "^1.0.1",
@@ -28,9 +28,6 @@
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"
-  },
-  "resolutions": {
-    "reason-fontkit": "github:bryphe/reason-fontkit#7f146d3"
   },
   "devDependencies": {
     "ocaml": "~4.6.0",
