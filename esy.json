@@ -13,16 +13,16 @@
     ]
   },
   "dependencies": {
-    "@esy-ocaml/reason": "*",
+    "@esy-ocaml/reason": "^3.3.7",
     "reason-fontkit": "*",
-    "reason-glfw": "*",
+    "reason-glfw": "^1.0.0",
     "reason-gl-matrix": "^0.2.0",
     "reason-reactify": "^1.0.1",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/js_of_ocaml": "*",
     "@opam/js_of_ocaml-lwt": "*",
-    "@opam/dune": "*",
+    "@opam/dune": "^1.5.0",
     "flex": "^1.2.2",
     "@opam/js_of_ocaml-compiler": "*"
   },
@@ -30,15 +30,7 @@
     "ocaml": "~4.6.0"
   },
   "resolutions": {
-    "reason-fontkit": "github:bryphe/reason-fontkit#9e4358e",
-    "reason-glfw": "github:bryphe/reason-glfw#df48c80",
-    "esy-cmake": "github:esy-packages/esy-cmake#1a72dab",
-    "esy-freetype2": "github:bryphe/esy-freetype2#bdce79aa3",
-    "esy-harfbuzz": "github:bryphe/esy-harfbuzz#b9fcbe3",
-    "@opam/menhir": "20171013",
-    "@esy-ocaml/esy-installer": "0.0.1",
-    "refmterr": "github:bryphe/BetterErrors#76500c2",
-    "@opam/re": "1.8.0"
+    "reason-fontkit": "github:bryphe/reason-fontkit#7f146d3"
   },
   "devDependencies": {
     "ocaml": "~4.6.0",
