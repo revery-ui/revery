@@ -70,7 +70,6 @@ let setSize = (w: t, width: int, height: int) =>
     if (w.isRendering) {
       w.requestedWidth = Some(width);
       w.requestedHeight = Some(height);
-      print_endline("Queing render");
     } else {
       glfwSetWindowSize(w.glfwWindow, width, height);
       w.width = width;
