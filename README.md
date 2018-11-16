@@ -41,10 +41,11 @@ Today, [Electron](https://electronjs.org/) is one of the most popular tools for 
 
 Revery is kind of like super-fast, _native_ Electron - with a bundled React, Redux, and a fast build system - all ready to go!
 
-Revery is built with [reasonml](https://reasonml.github.io), which is a javascript-like syntax on top of OCaml. This means that the language is accessible JS developers. Your apps are compiled to native code with the Reason / OCaml toolchain - with __instant startup__ and __performance comparable to native C code.__ Revery also features GPU-accelerated rendering. The compiler itself is fast, too!
+Revery is built with [reasonml](https://reasonml.github.io), which is a javascript-like syntax on top of [OCaml](https://ocaml.org) This means that the language is accessible to JS developers.
 
-Revery is an experiment - can we provide a great developer experience and help teams be productive, without making sacrifices on performance? Revery is built with [reasonml](https://reasonml.github.io), which is a javascript-like syntax on top of OCaml - meaning that Revery is accessible to JS developers. 
+Your apps are compiled to native code with the Reason / OCaml toolchain - with __instant startup__ and __performance comparable to native C code.__ Revery also features GPU-accelerated rendering. The compiler itself is fast, too!
 
+Revery is an experiment - can we provide a great developer experience and help teams be productive, without making sacrifices on performance?
 ### Design Decisions
 
 - __Consistent cross-platform behavior__
@@ -69,7 +70,7 @@ Check out [revery-quick-start](https://github.com/bryphe/revery-quick-start) to 
 
 Here's a super simple Revery app, demonstrating the basic API surface:
 
-```
+```ocaml
 open Revery;
 open Revery.Core;
 open Revery.UI;
@@ -164,13 +165,14 @@ Revery is provided under the [MIT License](LICENSE).
 We'd love your help, and welcome PRs and contributions.
 
 Some ideas for getting started:
-- Help us build example apps
-- Help us implement missing features
-- Help us log bugs
+- Help us build example apps,
+- Help us implement missing features,
+- Help us [log bugs and open issues](https://github.com/bryphe/revery/issues/new).
 
 ## Special Thanks
 
 `revery` would not be possible without a bunch of cool tech:
+- [ocaml](https://ocaml.org) made the other tools possible - thanks Inria!
 - [reasonml](https://reasonml.github.io) made revery possible - thanks @jordwalke!
 - [flex](https://github.com/jordwalke/flex) by @jordwalke
 - [reason-reactify](https://github.com/bryphe/reason-reactify)
