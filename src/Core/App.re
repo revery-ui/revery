@@ -58,8 +58,10 @@ let startWithState: startFunc('s, 'a) = (initialState: 's, reducer: reducer('s, 
     let appLoop = (_t: float) => {
         glfwPollEvents();
         if (appInstance.needsRender) {
-            List.iter((w) => Window.render(w), getWindows(appInstance));
-            appInstance.needsRender = false;
+            Performance.bench("renderWindows", () => {
+                List.iter((w) => Window.render(w), getWindows(appInstance));
+                appInstance.needsRender = false;
+            });
         } else {
             Unix.sleepf(1. /. 100.);
         };
