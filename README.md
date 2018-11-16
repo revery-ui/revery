@@ -1,3 +1,6 @@
+[![Build Status](https://bryphe.visualstudio.com/revery/_apis/build/status/build)](https://bryphe.visualstudio.com/revery/_build/latest?definitionId=2)
+[![npm version](https://badge.fury.io/js/revery.svg)](https://badge.fury.io/js/revery)
+
 # Revery 
 
 Build __native__, _high-performance_, __cross-platform__ desktop apps with [reason](https://reasonml.github.io/)!
