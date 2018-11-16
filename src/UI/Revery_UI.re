@@ -3,6 +3,7 @@ open Reglm;
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 module Window = Revery_Core.Window;
+module Performance = Revery_Core.Performance;
 
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
@@ -57,7 +58,10 @@ let _projection = Mat4.create();
 
 let render = (container: uiContainer, component: UiReact.component) => {
     let { rootNode, container, window, options } = container;
-    UiReact.updateContainer(container, component);
+
+    Performance.bench("updateContainer", () => {
+        UiReact.updateContainer(container, component);
+    });
 
     let size = switch (options.autoSize) {
     | false => {
@@ -83,5 +87,7 @@ let render = (container: uiContainer, component: UiReact.component) => {
     let renderPass = SolidPass(_projection);
 
     let m = Mat4.create();
+    Performance.bench("draw", () => {
     rootNode#draw(renderPass, 0, m);
+    });
 };
