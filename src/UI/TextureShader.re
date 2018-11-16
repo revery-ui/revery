@@ -30,7 +30,7 @@ let fsShader = {|
     gl_FragColor = texture2D(uSampler, vTexCoord);
 |};
 
-let create = () => {
+let create = lazy () => {
   let shader =
     Shader.create(
       ~attributes=attribute,

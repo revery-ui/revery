@@ -1,6 +1,6 @@
 open Revery_Shaders.Shader;
 
-let create = () => {
+let create = lazy () => {
   let positions = [|
     /* Front face */
     (-0.5),

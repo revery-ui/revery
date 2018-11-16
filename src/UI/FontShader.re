@@ -31,7 +31,7 @@ let fsShader = {|
     gl_FragColor = vec4(vColor * t.a, t.a);
 |};
 
-let create = () => {
+let create = lazy () => {
   let shader =
     Shader.create(
       ~attributes=attribute,
