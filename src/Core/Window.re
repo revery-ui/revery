@@ -42,6 +42,7 @@ type windowCreateOptions = {
     width: int,
     height: int,
     backgroundColor: Color.t,
+    vsync: bool,
 };
 
 let defaultCreateOptions = {
@@ -52,6 +53,7 @@ let defaultCreateOptions = {
     width: 800,
     height: 600,
     backgroundColor: Colors.cornflowerBlue
+    vsync: false,
 };
 
 let isDirty = (w: t) => {
@@ -117,6 +119,13 @@ let create = (name: string, options: windowCreateOptions) => {
     glfwWindowHint(GLFW_VISIBLE, options.visible);
     glfwWindowHint(GLFW_MAXIMIZED, options.maximized);
     glfwWindowHint(GLFW_DECORATED, options.decorated);
+
+    let swap = switch(options.vsync) {
+    | true => 1
+    | false => 0
+    };
+
+    glfwSwapInterval(swap);
 
     let w = glfwCreateWindow(options.width, options.height, name);
     glfwMakeContextCurrent(w);
