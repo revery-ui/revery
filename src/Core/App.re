@@ -60,8 +60,14 @@ let startWithState: startFunc('s, 'a) = (initialState: 's, reducer: reducer('s, 
         if (appInstance.needsRender) {
             Performance.bench("renderWindows", () => {
                 List.iter((w) => Window.render(w), getWindows(appInstance));
-                appInstance.needsRender = false;
+                appInstance.needsRender = List.fold_left((prev, w) => {
+                    prev || Window.isDirty(w)
+                }, false, getWindows(appInstance));
+
+                
             });
+
+            
         } else {
             Unix.sleepf(1. /. 100.);
         };

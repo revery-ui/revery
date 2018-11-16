@@ -63,12 +63,11 @@ let render = (container: uiContainer, component: UiReact.component) => {
         UiReact.updateContainer(container, component);
     });
 
-    let size = switch (options.autoSize) {
+    switch (options.autoSize) {
     | false => {
         let size = Window.getSize(window);
         rootNode#setStyle(Style.make(~position=LayoutTypes.Relative,~width=size.width, ~height=size.height, ()));
         layout(rootNode);
-        size
     }
     | true => {
         rootNode#setStyle(Style.make(()));
@@ -79,9 +78,10 @@ let render = (container: uiContainer, component: UiReact.component) => {
             height: measurements.height,
         };
         Window.setSize(window, size.width, size.height);
-        size
     }
     }
+
+    let size = Window.getSize(window);
 
     Mat4.ortho(_projection, 0.0, float_of_int(size.width), float_of_int(size.height), 0.0, -0.01, -100.0);
     let renderPass = SolidPass(_projection);

@@ -25,6 +25,10 @@ type t = {
     mutable width: int,
     mutable height: int,
 
+    mutable isRendering: bool,
+    mutable requestedWidth: option(int),
+    mutable requestedHeight: option(int),
+
     onKeyPress: Event.t(keyPressEvent),
     onKeyDown: Event.t(keyEvent),
     onKeyUp: Event.t(keyEvent),
@@ -50,7 +54,44 @@ let defaultCreateOptions = {
     backgroundColor: Colors.cornflowerBlue
 };
 
+let isDirty = (w: t) => {
+    switch ((w.requestedWidth, w.requestedHeight)) {
+    | (Some(_), _) => true
+    | (_, Some(_)) => true
+    | _ => false
+    };
+};
+
+let setSize = (w: t, width: int, height: int) => {
+    if (width != w.width || height != w.height) {
+        /*
+         *  Don't resize in the middle of a render -
+         *  we'll queue up the render operation for next time.
+         */
+        if (w.isRendering) {
+            w.requestedWidth = Some(width);
+            w.requestedHeight = Some(height);
+            print_endline ("Queing render");
+        } else {
+            glfwSetWindowSize(w.glfwWindow, width, height);
+            w.width = width;
+            w.height = height;
+            w.requestedWidth = None;
+            w.requestedHeight = None;
+        }
+    }
+};
+
+let _resizeIfNecessary = (w: t) => {
+    switch ((w.requestedWidth, w.requestedHeight)) {
+    | (Some(width), Some(height)) => setSize(w, width, height)
+    | _ => ()
+    }
+};
+
 let render = (w: t) => {
+    _resizeIfNecessary(w);
+    w.isRendering = true;
     glfwMakeContextCurrent(w.glfwWindow);
 
     glViewport(0, 0, w.width, w.height);
@@ -67,6 +108,7 @@ let render = (w: t) => {
     };
 
     glfwSwapBuffers(w.glfwWindow);
+    w.isRendering = false;
 };
 
 let create = (name: string, options: windowCreateOptions) => {
@@ -78,12 +120,18 @@ let create = (name: string, options: windowCreateOptions) => {
 
     let w = glfwCreateWindow(options.width, options.height, name);
     glfwMakeContextCurrent(w);
+
     let ret: t = {
         backgroundColor: options.backgroundColor,
         glfwWindow: w,
         render: ref(None),
         width: options.width,
         height: options.height,
+
+        isRendering: false,
+        requestedWidth: None,
+        requestedHeight: None,
+
         onKeyPress: Event.create(),
         onKeyDown: Event.create(),
         onKeyUp: Event.create(),
@@ -162,14 +210,6 @@ let create = (name: string, options: windowCreateOptions) => {
 let setBackgroundColor = (w: t, color: Color.t) => {
     w.backgroundColor = color;
 }
-
-let setSize = (w: t, width: int, height: int) => {
-    if (width != w.width || height != w.height) {
-        glfwSetWindowSize(w.glfwWindow, width, height);
-        w.width = width;
-        w.height = height;
-    }
-};
 
 let setPos = (w: t, x: int, y: int) => {
     glfwSetWindowPos(w.glfwWindow, x, y);
