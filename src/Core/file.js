@@ -29,13 +29,12 @@ function lwt_unix_get_page_size() { }
 // Requires: caml_ba_create_from, caml_js_from_string, caml_js_to_string
 function caml_open_sync_raw(fileName, onSuccess, onFailure) {
     var f = caml_js_from_string(fileName);
-    console.log(f);
-    var data = new Uint8Array([17, 211, 2]);
+    var data = new joo_global_object.Uint8Array([17, 211, 2]);
 
     var result = null;
 
     function onSuccess () {
-        var res = new Uint8Array(oReq.response);
+        var res = new joo_global_object.Uint8Array(oReq.response);
         var ba = caml_ba_create_from(res, null, 0, 0, 0, [res.length])
         onSuccess(ba);
     };
