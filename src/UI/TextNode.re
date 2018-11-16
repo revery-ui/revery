@@ -14,8 +14,8 @@ class textNode (name: string, text: string) = {
     as _this;
 
     val mutable text = text;
-    val quad = Geometry.Cube.create();
-    val textureShader = FontShader.create();
+    val quad = Assets.quad();
+    val textureShader = Assets.fontShader();
 
     inherit (class viewNode)(name) as _super;
             

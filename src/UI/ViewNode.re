@@ -12,9 +12,8 @@ open RenderPass;
 class viewNode (name: string) = {
     as _this;
 
-    val _quad = Geometry.Cube.create();
-    val solidShader = SolidShader.create();
-
+    val _quad = Assets.quad();
+    val solidShader = Assets.solidShader();
 
     inherit (class node(renderPass))(name) as _super;
 

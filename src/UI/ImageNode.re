@@ -13,8 +13,8 @@ open RenderPass;
 class imageNode (name: string, imagePath: string) = {
     as _this;
 
-    val _quad = Geometry.Cube.create();
-    val textureShader = TextureShader.create();
+    val _quad = Assets.quad();
+    val textureShader = Assets.textureShader();
     val texture = ImageRenderer.getTexture(imagePath);
 
     inherit (class node(renderPass))(name) as _super;
