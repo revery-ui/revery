@@ -2,20 +2,46 @@
   "name": "revery",
   "version": "0.1.0",
   "description": "App toolkit built with Reason",
-  "main": "index.js",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bryphe/revery/issues"
+  },
   "scripts": {
     "build": "esy b",
     "build:js": "esy b dune build examples/Bin.bc.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bryphe/revery.git"
+  "homepage": "https://github.com/bryphe/revery#readme",
+  "esy": {
+    "build": ["dune build --root . -j4"],
+    "buildsInSource": "_build",
+    "install": [
+        "esy-installer Revery.install",
+        "esy-installer Revery_Core.install",
+        "esy-installer Revery_Geometry.install",
+        "esy-installer Revery_Shaders.install",
+        "esy-installer Revery_UI.install"
+    ]
   },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/bryphe/revery/issues"
+  "dependencies": {
+    "@esy-ocaml/reason": "^3.3.7",
+    "reason-fontkit": "^1.0.0",
+    "reason-glfw": "^1.0.0",
+    "reason-gl-matrix": "^0.2.0",
+    "reason-reactify": "^1.0.1",
+    "@opam/lwt": "^4.0.0",
+    "@opam/lwt_ppx": "^1.1.0",
+    "@opam/js_of_ocaml": "*",
+    "@opam/js_of_ocaml-lwt": "*",
+    "@opam/dune": "^1.5.0",
+    "flex": "^1.2.2",
+    "@opam/js_of_ocaml-compiler": "*"
   },
-  "homepage": "https://github.com/bryphe/revery#readme"
+  "peerDependencies": {
+    "ocaml": "~4.6.0"
+  },
+  "devDependencies": {
+    "ocaml": "~4.6.0",
+    "@opam/merlin": "*"
+  }
 }
