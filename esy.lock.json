@@ -1,5 +1,5 @@
 {
-  "hash": "401145ba72de5f2dd1cdd44f195397b9",
+  "hash": "b6a9f8e680bbfbff84c94226de65580e",
   "root": "root@path:./package.json",
   "node": {
     "root@path:./package.json": {
@@ -11,90 +11,109 @@
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.5.1",
+        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.6.0",
         "@opam/js_of_ocaml@opam:3.2.0",
         "@opam/js_of_ocaml-compiler@opam:3.2.1",
         "@opam/js_of_ocaml-lwt@opam:3.2.1", "@opam/lwt@opam:4.1.0",
         "@opam/lwt_ppx@opam:1.2.1", "@opam/merlin@opam:3.2.2", "flex@1.2.2",
-        "ocaml@4.6.9", "reason-fontkit@1.0.0", "reason-gl-matrix@0.2.0",
-        "reason-glfw@1.0.0", "reason-reactify@1.1.0"
+        "ocaml@4.6.9", "reason-fontkit@1.1.0", "reason-gl-matrix@0.2.1",
+        "reason-glfw@3.2.1002", "reason-reactify@2.1.0", "rejest@1.2.0"
       ]
     },
-    "refmterr@3.1.9": {
+    "rejest@1.2.0": {
       "record": {
-        "name": "refmterr",
-        "version": "3.1.9",
+        "name": "rejest",
+        "version": "1.2.0",
         "source":
-          "archive:https://registry.npmjs.org/refmterr/-/refmterr-3.1.9.tgz#sha1:03d4679c564fb1d1de28d1c0ce8b1fb934406bac",
+          "archive:https://registry.npmjs.org/rejest/-/rejest-1.2.0.tgz#sha1:bfa2fe9de6d8ab7da36cf1a14fd56589be5b1f49",
         "files": [],
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.7", "@opam/jbuilder@opam:transition",
+        "@esy-ocaml/reason@3.3.7", "@opam/chalk@opam:1.0",
+        "@opam/dune@opam:1.6.0", "@opam/js_of_ocaml@opam:3.2.0",
+        "@opam/js_of_ocaml-compiler@opam:3.2.1",
+        "@opam/js_of_ocaml-lwt@opam:3.2.1", "@opam/lambda-term@opam:1.13",
+        "@opam/lwt@opam:4.1.0", "@opam/lwt_ppx@opam:1.2.1", "ocaml@4.6.9",
+        "refmterr@3.1.10"
+      ]
+    },
+    "refmterr@3.1.10": {
+      "record": {
+        "name": "refmterr",
+        "version": "3.1.10",
+        "source":
+          "archive:https://registry.npmjs.org/refmterr/-/refmterr-3.1.10.tgz#sha1:7c3e238022acb5de4e2254ab506d70eee13c0a46",
+        "files": [],
+        "opam": null
+      },
+      "dependencies": [
+        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.6.0",
         "@opam/re@opam:1.7.3", "ocaml@4.6.9"
       ]
     },
-    "reason-reactify@1.1.0": {
+    "reason-reactify@2.1.0": {
       "record": {
         "name": "reason-reactify",
-        "version": "1.1.0",
+        "version": "2.1.0",
         "source":
-          "archive:https://registry.npmjs.org/reason-reactify/-/reason-reactify-1.1.0.tgz#sha1:53bf2c8c052e1969f3892fe06229b89729c0a497",
+          "archive:https://registry.npmjs.org/reason-reactify/-/reason-reactify-2.1.0.tgz#sha1:d1ce518b9e4fc6024899a819af03c86985f13a17",
         "files": [],
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.5.1",
+        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.6.0",
+        "@opam/js_of_ocaml-compiler@opam:3.2.1",
         "@opam/lambda-term@opam:1.13", "@opam/lwt@opam:4.1.0", "ocaml@4.6.9",
-        "refmterr@3.1.9"
+        "refmterr@3.1.10", "rejest@1.2.0"
       ]
     },
-    "reason-glfw@1.0.0": {
+    "reason-glfw@3.2.1002": {
       "record": {
         "name": "reason-glfw",
-        "version": "1.0.0",
+        "version": "3.2.1002",
         "source":
-          "archive:https://registry.npmjs.org/reason-glfw/-/reason-glfw-1.0.0.tgz#sha1:03a75d9cf98b8e61274aa2366894cb56b961f472",
+          "archive:https://registry.npmjs.org/reason-glfw/-/reason-glfw-3.2.1002.tgz#sha1:eb2d51fdfdbe48adc78613e05923878649331be0",
         "files": [],
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.5.1",
+        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.6.0",
         "@opam/js_of_ocaml@opam:3.2.0",
         "@opam/js_of_ocaml-compiler@opam:3.2.1",
         "@opam/js_of_ocaml-lwt@opam:3.2.1", "@opam/lwt@opam:4.1.0",
         "@opam/lwt_ppx@opam:1.2.1", "esy-cmake@0.3.3",
-        "reason-gl-matrix@0.2.0", "refmterr@3.1.9"
+        "reason-gl-matrix@0.2.1", "refmterr@3.1.10"
       ]
     },
-    "reason-gl-matrix@0.2.0": {
+    "reason-gl-matrix@0.2.1": {
       "record": {
         "name": "reason-gl-matrix",
-        "version": "0.2.0",
+        "version": "0.2.1",
         "source":
-          "archive:https://registry.npmjs.org/reason-gl-matrix/-/reason-gl-matrix-0.2.0.tgz#sha1:97055cd181d05f75220a623765c0bb01515fabb6",
+          "archive:https://registry.npmjs.org/reason-gl-matrix/-/reason-gl-matrix-0.2.1.tgz#sha1:c2ff80ea339d5f1bed57aa9ae3c41c009310d3b9",
         "files": [],
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.5.1",
+        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.6.0",
         "@opam/js_of_ocaml-compiler@opam:3.2.1", "ocaml@4.6.9",
-        "refmterr@3.1.9"
+        "refmterr@3.1.10", "rejest@1.2.0"
       ]
     },
-    "reason-fontkit@1.0.0": {
+    "reason-fontkit@1.1.0": {
       "record": {
         "name": "reason-fontkit",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "source":
-          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-1.0.0.tgz#sha1:52d5b892066fd76a4c230e56450845230bc7363a",
+          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-1.1.0.tgz#sha1:31603ee54820808b2c9eb8cd84b519755e4778ad",
         "files": [],
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.5.1",
+        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.6.0",
         "esy-cmake@0.3.3", "esy-freetype2@2.9.1001", "esy-harfbuzz@1.9.1",
-        "reason-gl-matrix@0.2.0", "reason-glfw@1.0.0", "refmterr@3.1.9"
+        "reason-gl-matrix@0.2.1", "reason-glfw@3.2.1002", "refmterr@3.1.10"
       ]
     },
     "ocaml@4.6.9": {
@@ -118,7 +137,7 @@
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.5.1", "refmterr@3.1.9"
+        "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.6.0", "refmterr@3.1.10"
       ]
     },
     "esy-harfbuzz@1.9.1": {
@@ -441,7 +460,7 @@
         }
       },
       "dependencies": [
-        "@esy-ocaml/substs@0.0.1", "@opam/dune@opam:1.5.1",
+        "@esy-ocaml/substs@0.0.1", "@opam/dune@opam:1.6.0",
         "@opam/result@opam:1.3", "ocaml@4.6.9"
       ]
     },
@@ -495,7 +514,7 @@
         }
       },
       "dependencies": [
-        "@esy-ocaml/substs@0.0.1", "@opam/dune@opam:1.5.1",
+        "@esy-ocaml/substs@0.0.1", "@opam/dune@opam:1.6.0",
         "@opam/ocamlfind@opam:1.8.0", "@opam/yojson@opam:1.4.1",
         "ocaml@4.6.9"
       ]
@@ -741,7 +760,7 @@
         }
       },
       "dependencies": [
-        "@esy-ocaml/substs@0.0.1", "@opam/dune@opam:1.5.1", "ocaml@4.6.9"
+        "@esy-ocaml/substs@0.0.1", "@opam/dune@opam:1.6.0", "ocaml@4.6.9"
       ]
     },
     "@opam/easy-format@opam:1.3.1": {
@@ -764,18 +783,18 @@
         "ocaml@4.6.9"
       ]
     },
-    "@opam/dune@opam:1.5.1": {
+    "@opam/dune@opam:1.6.0": {
       "record": {
         "name": "@opam/dune",
-        "version": "opam:1.5.1",
+        "version": "opam:1.6.0",
         "source":
-          "archive:https://github.com/ocaml/dune/releases/download/1.5.1/dune-1.5.1.tbz#md5:071ff387b85e08bdfd49dee728dc8358",
+          "archive:https://github.com/ocaml/dune/releases/download/1.6.0/dune-1.6.0.tbz#md5:ac99a0ece781c84117772219f5a39007",
         "files": [],
         "opam": {
           "name": "dune",
-          "version": "1.5.1",
+          "version": "1.6.0",
           "opam":
-            "opam-version: \"2.0\"\nname: \"dune\"\nversion: \"1.5.1\"\nsynopsis: \"Fast, portable and opinionated build system\"\ndescription: \"\"\"\ndune is a build system that was designed to simplify the release of\nJane Street packages. It reads metadata from \"dune\" files following a\nvery simple s-expression syntax.\n\ndune is fast, it has very low-overhead and support parallel builds on\nall platforms. It has no system dependencies, all you need to build\ndune and packages using dune is OCaml. You don't need or make or bash\nas long as the packages themselves don't use bash explicitly.\n\ndune supports multi-package development by simply dropping multiple\nrepositories into the same directory.\n\nIt also supports multi-context builds, such as building against\nseveral opam roots/switches simultaneously. This helps maintaining\npackages across several versions of OCaml and gives cross-compilation\nfor free.\"\"\"\nmaintainer: \"opensource@janestreet.com\"\nauthors: \"Jane Street Group, LLC <opensource@janestreet.com>\"\nlicense: \"MIT\"\nhomepage: \"https://github.com/ocaml/dune\"\nbug-reports: \"https://github.com/ocaml/dune/issues\"\ndepends: [\n  \"ocaml\" {>= \"4.02\"}\n]\nconflicts: [\n  \"jbuilder\" {!= \"transition\"}\n]\nbuild: [\n  [\"ocaml\" \"configure.ml\" \"--libdir\" lib] {opam-version < \"2\"}\n  [\"ocaml\" \"bootstrap.ml\"]\n  [\"./boot.exe\" \"--release\" \"--subst\"] {pinned}\n  [\"./boot.exe\" \"--release\" \"-j\" jobs]\n]\ndev-repo: \"git+https://github.com/ocaml/dune.git\"\nurl {\n  src: \"https://github.com/ocaml/dune/releases/download/1.5.1/dune-1.5.1.tbz\"\n  checksum: \"md5=071ff387b85e08bdfd49dee728dc8358\"\n}",
+            "opam-version: \"2.0\"\nname: \"dune\"\nversion: \"1.6.0\"\nsynopsis: \"Fast, portable and opinionated build system\"\ndescription: \"\"\"\ndune is a build system that was designed to simplify the release of\nJane Street packages. It reads metadata from \"dune\" files following a\nvery simple s-expression syntax.\n\ndune is fast, it has very low-overhead and support parallel builds on\nall platforms. It has no system dependencies, all you need to build\ndune and packages using dune is OCaml. You don't need or make or bash\nas long as the packages themselves don't use bash explicitly.\n\ndune supports multi-package development by simply dropping multiple\nrepositories into the same directory.\n\nIt also supports multi-context builds, such as building against\nseveral opam roots/switches simultaneously. This helps maintaining\npackages across several versions of OCaml and gives cross-compilation\nfor free.\"\"\"\nmaintainer: \"opensource@janestreet.com\"\nauthors: \"Jane Street Group, LLC <opensource@janestreet.com>\"\nlicense: \"MIT\"\nhomepage: \"https://github.com/ocaml/dune\"\nbug-reports: \"https://github.com/ocaml/dune/issues\"\ndepends: [\n  \"ocaml\" {>= \"4.02\"}\n  \"base-unix\"\n  \"base-threads\"\n]\nconflicts: [\n  \"jbuilder\" {!= \"transition\"}\n  \"odoc\" {< \"1.3.0\"}\n]\nbuild: [\n  [\"ocaml\" \"configure.ml\" \"--libdir\" lib] {opam-version < \"2\"}\n  [\"ocaml\" \"bootstrap.ml\"]\n  [\"./boot.exe\" \"--release\" \"--subst\"] {pinned}\n  [\"./boot.exe\" \"--release\" \"-j\" jobs]\n]\ndev-repo: \"git+https://github.com/ocaml/dune.git\"\nurl {\n  src: \"https://github.com/ocaml/dune/releases/download/1.6.0/dune-1.6.0.tbz\"\n  checksum: \"md5=ac99a0ece781c84117772219f5a39007\"\n}",
           "override": {
             "build": [
               [ "ocaml", "bootstrap.ml" ],
@@ -784,7 +803,10 @@
           }
         }
       },
-      "dependencies": [ "@esy-ocaml/substs@0.0.1", "ocaml@4.6.9" ]
+      "dependencies": [
+        "@esy-ocaml/substs@0.0.1", "@opam/base-threads@opam:base",
+        "@opam/base-unix@opam:base", "ocaml@4.6.9"
+      ]
     },
     "@opam/cppo@opam:1.6.5": {
       "record": {
@@ -859,6 +881,26 @@
         "@opam/topkg@opam:1.0.0", "ocaml@4.6.9"
       ]
     },
+    "@opam/chalk@opam:1.0": {
+      "record": {
+        "name": "@opam/chalk",
+        "version": "opam:1.0",
+        "source":
+          "archive:https://github.com/nickzuber/chalk/archive/v1.0.tar.gz#md5:c685f3024e5a4e74c86b4d9ce67ae34f",
+        "files": [],
+        "opam": {
+          "name": "chalk",
+          "version": "1.0",
+          "opam":
+            "opam-version: \"2.0\"\nname: \"chalk\"\nversion: \"1.0\"\nsynopsis: \"Composable and simple terminal highlighting package\"\ndescription: \"\"\"\nComposable and simple terminal highlighting package. Very simple API;\nand example usage could be as follows:\n\n```ocaml\nlet some_string = \"Hello world!\"\n  |> Chalk.red\n  |> Chalk.bold\n  |> Chalk.underline\n```\"\"\"\nmaintainer: \"Nick Zuber <zuber.nicholas@gmail.com>\"\nauthors: \"Nick Zuber <zuber.nicholas@gmail.com>\"\nlicense: \"MIT\"\nhomepage: \"https://github.com/nickzuber/chalk\"\nbug-reports: \"https://github.com/nickzuber/chalk/issues\"\ndepends: [\"ocaml\" \"ocamlfind\"]\nflags: light-uninstall\nbuild: [make \"build\"]\ninstall: [make \"build\"]\nremove: [\"ocamlfind\" \"remove\" \"chalk\"]\ndev-repo: \"git+ssh://git@github.com/nickzuber/chalk.git\"\nurl {\n  src: \"https://github.com/nickzuber/chalk/archive/v1.0.tar.gz\"\n  checksum: \"md5=c685f3024e5a4e74c86b4d9ce67ae34f\"\n}",
+          "override": null
+        }
+      },
+      "dependencies": [
+        "@esy-ocaml/substs@0.0.1", "@opam/ocamlfind@opam:1.8.0",
+        "ocaml@4.6.9"
+      ]
+    },
     "@opam/camomile@opam:1.0.1": {
       "record": {
         "name": "@opam/camomile",
@@ -916,6 +958,22 @@
       },
       "dependencies": [ "@esy-ocaml/substs@0.0.1" ]
     },
+    "@opam/base-threads@opam:base": {
+      "record": {
+        "name": "@opam/base-threads",
+        "version": "opam:base",
+        "source": "no-source:",
+        "files": [],
+        "opam": {
+          "name": "base-threads",
+          "version": "base",
+          "opam":
+            "opam-version: \"2.0\"\nname: \"base-threads\"\nversion: \"base\"\nsynopsis: \"\"\ndescription: \"Threads library distributed with the OCaml compiler\"\nmaintainer: \"https://github.com/ocaml/opam-repository/issues\"",
+          "override": null
+        }
+      },
+      "dependencies": [ "@esy-ocaml/substs@0.0.1" ]
+    },
     "@opam/base-bytes@opam:base": {
       "record": {
         "name": "@opam/base-bytes",
@@ -956,7 +1014,7 @@
         "opam": null
       },
       "dependencies": [
-        "@opam/dune@opam:1.5.1", "@opam/menhir@opam:20181113",
+        "@opam/dune@opam:1.6.0", "@opam/menhir@opam:20181113",
         "@opam/merlin-extend@opam:0.3",
         "@opam/ocaml-migrate-parsetree@opam:1.1.0",
         "@opam/ocamlfind@opam:1.8.0", "@opam/result@opam:1.3", "ocaml@4.6.9"
