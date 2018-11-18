@@ -3,27 +3,40 @@ open Revery.UI;
 open Revery.Core;
 
 let init = app => {
-  let width = 1200;
-  let height = 1000;
+  let monitor = Monitor.getPrimaryMonitor() |> Monitor.getSize;
+  let width = monitor.width * 80 / 100;
+  let centerX = monitor.width / 2 - width / 2;
+  let height = monitor.height - 100;
+
   let w =
     App.createWindow(
       app,
-      "flex-test",
+      "flexbox-example",
       ~createOptions={...Window.defaultCreateOptions, width, height},
     );
+
+  Window.setPos(w, centerX, 0);
 
   let ui = UI.create(w);
 
   let parentWidth = width - 10;
   let childWidth = width - 100;
 
-  let parentStyles = (direction: 't) =>
+  let parentStyles =
+      (
+        ~alignment=LayoutTypes.AlignAuto,
+        ~direction=LayoutTypes.Row,
+        ~justify=LayoutTypes.JustifyCenter,
+        (),
+      ) =>
     Style.make(
       ~backgroundColor=Colors.green,
       ~position=LayoutTypes.Relative,
       ~width=parentWidth,
       ~height=200,
-      ~alignItems=direction,
+      ~alignItems=alignment,
+      ~justifyContent=justify,
+      ~flexDirection=direction,
       (),
     );
 
@@ -45,32 +58,85 @@ let init = app => {
       (),
     );
 
-  Window.setRenderCallback(w, () =>
-    UI.render(
-      ui,
-      <view>
-        <view style={parentStyles(LayoutTypes.AlignAuto)}>
+  let parentColumnStyle = parentStyles(~direction=LayoutTypes.Column);
+  let headerStyle =
+    Style.make(
+      ~fontSize=60,
+      ~fontFamily="Roboto-Regular.ttf",
+      ~color=Colors.white,
+      (),
+    );
+
+  let horizontalStyles =
+    <view>
+      <text style=headerStyle> "Flex Direction Row" </text>
+      <view style={parentColumnStyle(~alignment=LayoutTypes.AlignAuto, ())}>
+        <view style=childStyles>
           <text style=defaultTextStyles> "Default Flex" </text>
-          <view style=childStyles />
         </view>
-        <view style={parentStyles(LayoutTypes.AlignCenter)}>
-          <text style=defaultTextStyles> "Flex Direction: Center" </text>
-          <view style=childStyles />
+      </view>
+      <view style={parentColumnStyle(~alignment=LayoutTypes.AlignCenter, ())}>
+        <view style=childStyles>
+          <text style=defaultTextStyles> "Center" </text>
         </view>
-        <view style={parentStyles(LayoutTypes.AlignFlexStart)}>
-          <text style=defaultTextStyles> "Flex Direction: Flex Start" </text>
-          <view style=childStyles />
+      </view>
+      <view
+        style={parentColumnStyle(~alignment=LayoutTypes.AlignFlexStart, ())}>
+        <view style=childStyles>
+          <text style=defaultTextStyles> "Flex Start" </text>
         </view>
-        <view style={parentStyles(LayoutTypes.AlignFlexEnd)}>
-          <text style=defaultTextStyles> "Flex Direction: Flex End" </text>
-          <view style=childStyles />
+      </view>
+      <view
+        style={parentColumnStyle(~alignment=LayoutTypes.AlignFlexEnd, ())}>
+        <view style=childStyles>
+          <text style=defaultTextStyles> "Flex End" </text>
         </view>
-        <view style={parentStyles(LayoutTypes.AlignStretch)}>
-          <text style=defaultTextStyles> "Flex Direction: Flex Stretch" </text>
-          <view style=childStyles />
+      </view>
+      <view
+        style={parentColumnStyle(~alignment=LayoutTypes.AlignStretch, ())}>
+        <view style=childStyles>
+          <text style=defaultTextStyles> "Flex Stretch" </text>
         </view>
-      </view>,
-    )
+      </view>
+    </view>;
+
+  let verticalStyles =
+    <view>
+      <text style=headerStyle> "Flex Direction Column" </text>
+      <view
+        style={parentStyles(
+          ~direction=LayoutTypes.Column,
+          ~justify=LayoutTypes.JustifyFlexStart,
+          (),
+        )}>
+        <view style=childStyles>
+          <text style=defaultTextStyles> "Align Flex Start" </text>
+        </view>
+      </view>
+      <view
+        style={parentStyles(
+          ~direction=LayoutTypes.Column,
+          ~justify=LayoutTypes.JustifyCenter,
+          (),
+        )}>
+        <view style=childStyles>
+          <text style=defaultTextStyles> "Align Flex Center" </text>
+        </view>
+      </view>
+      <view
+        style={parentStyles(
+          ~direction=LayoutTypes.Column,
+          ~justify=LayoutTypes.JustifyFlexEnd,
+          (),
+        )}>
+        <view style=childStyles>
+          <text style=defaultTextStyles> "Align Flex End" </text>
+        </view>
+      </view>
+    </view>;
+
+  Window.setRenderCallback(w, () =>
+    UI.render(ui, <view> horizontalStyles verticalStyles </view>)
   );
 };
 
