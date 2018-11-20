@@ -1,5 +1,7 @@
 open Reglm;
 
+open Reglfw.Glfw;
+
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 module Window = Revery_Core.Window;
@@ -98,8 +100,19 @@ let render = (container: uiContainer, component: UiReact.component) => {
     -0.01,
     -100.0,
   );
-  let renderPass = SolidPass(_projection);
-
   let m = Mat4.create();
-  Performance.bench("draw", () => rootNode#draw(renderPass, 0, m));
+
+  Performance.bench("draw", () => {
+    /* Do a first pass for all 'opaque' geometry */
+    /* This helps reduce the overhead for the more expensive alpha pass, next */
+    let solidPass = SolidPass(_projection);
+    rootNode#draw(solidPass, 0, m);
+
+    /* Render all geometry that requires an alpha */
+    let alphaPass = AlphaPass(_projection);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    rootNode#draw(alphaPass, 0, m);
+    glDisable(GL_BLEND);
+  });
 };

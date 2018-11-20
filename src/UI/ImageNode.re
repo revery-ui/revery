@@ -24,11 +24,9 @@ class imageNode (name: string, imagePath: string) = {
         _super#draw(pass, layer, world);
 
         switch (pass) {
-        | SolidPass(m) => {
+        | AlphaPass(m) => {
             Shaders.CompiledShader.use(textureShader);
 
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uWorld", world);
             Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", m);
 
@@ -46,9 +44,8 @@ class imageNode (name: string, imagePath: string) = {
             );
 
             Geometry.draw(_quad, textureShader);
-            glDisable(GL_BLEND);
-
         }
+        | _  => ()
         };
 
     };

@@ -52,6 +52,7 @@ class viewNode (name: string) = {
         float_of_int(dimensions.height),
       );
       Geometry.draw(_quad, solidShader);
+    | _ => ()
     };
 
     _super#draw(pass, layer, world);
