@@ -21,7 +21,7 @@ class textNode (name: string, text: string) = {
     _super#draw(pass, layer, world);
 
     switch (pass) {
-    | SolidPass(m) =>
+    | AlphaPass(m) =>
       Shaders.CompiledShader.use(textureShader);
 
       Shaders.CompiledShader.setUniformMatrix4fv(
@@ -77,6 +77,7 @@ class textNode (name: string, text: string) = {
         },
         shapedText,
       );
+    | _ => ();
     };
   };
   pub setText = t => text = t;
