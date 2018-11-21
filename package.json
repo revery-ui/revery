@@ -37,6 +37,9 @@
     "flex": "^1.2.2",
     "@opam/js_of_ocaml-compiler": "*"
   },
+  "resolutions": {
+    "reason-glfw": "github:bryphe/reason-glfw#872e340"
+  },
   "peerDependencies": {
     "ocaml": "~4.6.0"
   },
