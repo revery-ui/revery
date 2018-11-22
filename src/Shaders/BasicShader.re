@@ -1,30 +1,29 @@
 /**
  * Basic Shader
- * 
+ *
  * Simple shader demonstrating usage of attributes, uniforms, and varying parameters.
  */
-
 open Shader;
 
 let attribute: list(ShaderAttribute.t) = [
-{
-  dataType: ShaderDataType.Vector3,
-  name: "aVertexPosition",
-  channel: Position,
-}];
-
-let uniform: list(ShaderUniform.t) = [{
+  {
     dataType: ShaderDataType.Vector3,
-    name: "uColor",
-    usage: VertexShader,
-}];
+    name: "aVertexPosition",
+    channel: Position,
+  },
+];
 
-let varying: list(ShaderVarying.t) = [{
+let uniform: list(ShaderUniform.t) = [
+  {dataType: ShaderDataType.Vector3, name: "uColor", usage: VertexShader},
+];
+
+let varying: list(ShaderVarying.t) = [
+  {
     dataType: ShaderDataType.Vector3,
     name: "vColor",
     precision: ShaderPrecision.Low,
-}];
-
+  },
+];
 
 let vsShader = {|
    gl_Position = vec4(aVertexPosition, 1.0);
@@ -40,7 +39,7 @@ let create = () => {
     Shader.create(
       ~attributes=attribute,
       ~uniforms=uniform,
-      ~varying=varying,
+      ~varying,
       ~vertexShader=vsShader,
       ~fragmentShader=fsShader,
     );

@@ -38,6 +38,7 @@
     "@opam/js_of_ocaml-compiler": "*"
   },
   "resolutions": {
+    "reason-glfw": "github:bryphe/reason-glfw#55c2b56",
     "reason-fontkit": "github:bryphe/reason-fontkit#5b405be"
   },
   "peerDependencies": {
