@@ -26,7 +26,7 @@
   "dependencies": {
     "@esy-ocaml/reason": "^3.3.7",
     "reason-fontkit": "^1.0.0",
-    "reason-glfw": "^1.0.0",
+    "reason-glfw": "^3.2.1001",
     "reason-gl-matrix": "^0.2.0",
     "reason-reactify": "^1.0.1",
     "@opam/lwt": "^4.0.0",
@@ -36,6 +36,9 @@
     "@opam/dune": "^1.5.0",
     "flex": "^1.2.2",
     "@opam/js_of_ocaml-compiler": "*"
+  },
+  "resolutions": {
+    "reason-fontkit": "github:bryphe/reason-fontkit#5b405be"
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"
