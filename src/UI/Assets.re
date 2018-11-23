@@ -1,9 +1,8 @@
 /**
  * Assets
- * 
+ *
  * Lazily initialized assets to be re-used across frames
  */
-
 module Lazy = Revery_Core.Lazy;
 module Geometry = Revery_Geometry;
 

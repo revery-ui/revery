@@ -77,7 +77,7 @@ class textNode (name: string, text: string) = {
         },
         shapedText,
       );
-    | _ => ();
+    | _ => ()
     };
   };
   pub setText = t => text = t;

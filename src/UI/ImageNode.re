@@ -11,42 +11,51 @@ open ViewNode;
 open RenderPass;
 
 class imageNode (name: string, imagePath: string) = {
-    as _this;
+  as _this;
+  val _quad = Assets.quad();
+  val textureShader = Assets.textureShader();
+  val texture = ImageRenderer.getTexture(imagePath);
+  inherit (class node(renderPass))(name) as _super;
+  pub! draw = (pass: renderPass, layer: int, world: Mat4.t) => {
+    /* Draw background first */
+    _super#draw(pass, layer, world);
 
-    val _quad = Assets.quad();
-    val textureShader = Assets.textureShader();
-    val texture = ImageRenderer.getTexture(imagePath);
+    switch (pass) {
+    | AlphaPass(m) =>
+      Shaders.CompiledShader.use(textureShader);
 
-    inherit (class node(renderPass))(name) as _super;
-            
-    pub! draw = (pass: renderPass, layer: int, world: Mat4.t) => {
-        /* Draw background first */
-        _super#draw(pass, layer, world);
+      Shaders.CompiledShader.setUniformMatrix4fv(
+        textureShader,
+        "uWorld",
+        world,
+      );
+      Shaders.CompiledShader.setUniformMatrix4fv(
+        textureShader,
+        "uProjection",
+        m,
+      );
 
-        switch (pass) {
-        | AlphaPass(m) => {
-            Shaders.CompiledShader.use(textureShader);
+      let dimensions = _super#measurements();
 
-            Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uWorld", world);
-            Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", m);
+      Shaders.CompiledShader.setUniform3fv(
+        textureShader,
+        "uColor",
+        Vec3.create(1.0, 1.0, 1.0),
+      );
 
-            let dimensions = _super#measurements();
+      glBindTexture(GL_TEXTURE_2D, texture);
 
-            Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", Vec3.create(1.0, 1.0, 1.0));
+      Shaders.CompiledShader.setUniform4f(
+        textureShader,
+        "uPosition",
+        float_of_int(dimensions.left),
+        float_of_int(dimensions.top),
+        float_of_int(dimensions.width),
+        float_of_int(dimensions.height),
+      );
 
-            glBindTexture(GL_TEXTURE_2D, texture);
-
-            Shaders.CompiledShader.setUniform4f(textureShader, "uPosition", 
-                float_of_int(dimensions.left),
-                float_of_int(dimensions.top),
-                float_of_int(dimensions.width),
-                float_of_int(dimensions.height)
-            );
-
-            Geometry.draw(_quad, textureShader);
-        }
-        | _  => ()
-        };
-
+      Geometry.draw(_quad, textureShader);
+    | _ => ()
     };
+  };
 };

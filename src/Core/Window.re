@@ -58,14 +58,14 @@ let defaultCreateOptions = {
 
 let isDirty = (w: t) =>
   if (w.shouldRender()) {
-      true
+    true;
   } else {
-      switch (w.requestedWidth, w.requestedHeight) {
-      | (Some(_), _) => true
-      | (_, Some(_)) => true
-      | _ => false
-      };
-  }
+    switch (w.requestedWidth, w.requestedHeight) {
+    | (Some(_), _) => true
+    | (_, Some(_)) => true
+    | _ => false
+    };
+  };
 
 let setSize = (w: t, width: int, height: int) =>
   if (width != w.width || height != w.height) {
@@ -243,9 +243,8 @@ let getSize = (w: t) => {
   r;
 };
 
-let setRenderCallback = (w: t, callback: windowRenderCallback) => 
+let setRenderCallback = (w: t, callback: windowRenderCallback) =>
   w.render = callback;
 
-let setShouldRenderCallback = (w: t, callback: windowShouldRenderCallback) => {
-    w.shouldRender = callback;
-}
+let setShouldRenderCallback = (w: t, callback: windowShouldRenderCallback) =>
+  w.shouldRender = callback;

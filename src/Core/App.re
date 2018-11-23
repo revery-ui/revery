@@ -39,13 +39,12 @@ let createWindow =
   w;
 };
 
-let _anyWindowsDirty = (app: t('s, 'a)) => {
-    List.fold_left(
-      (prev, w) => prev || Window.isDirty(w),
-      false,
-      getWindows(app),
-    );
-};
+let _anyWindowsDirty = (app: t('s, 'a)) =>
+  List.fold_left(
+    (prev, w) => prev || Window.isDirty(w),
+    false,
+    getWindows(app),
+  );
 
 let startWithState: startFunc('s, 'a) =
   (
