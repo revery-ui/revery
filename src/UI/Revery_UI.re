@@ -10,6 +10,7 @@ module Performance = Revery_Core.Performance;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 module Style = Style;
+module Transform = Transform;
 
 open RenderPass;
 
