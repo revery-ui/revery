@@ -2,8 +2,6 @@ open Revery;
 open Revery.Core;
 open Revery.UI;
 
-open Reglm;
-
 let init = app => {
 
   let w = App.createWindow(app, "test");
