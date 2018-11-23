@@ -45,7 +45,7 @@ class textNode (name: string, text: string) = {
         Color.toVec3(color),
       );
 
-      let render = (s: Fontkit.fk_shape, x: float, y: float) => {
+      let render = (s: Fontkit.fk_shape, x: float, _y: float) => {
         let glyph = FontRenderer.getGlyph(font, s.codepoint);
 
         let {width, height, bearingX, bearingY, advance, _} = glyph;
@@ -53,14 +53,19 @@ class textNode (name: string, text: string) = {
         let _ = FontRenderer.getTexture(font, s.codepoint);
         /* TODO: Bind texture */
 
-        Shaders.CompiledShader.setUniform4f(
-          textureShader,
-          "uPosition",
-          x +. float_of_int(bearingX),
-          y +. float_of_int(dimensions.height) -. float_of_int(bearingY),
-          float_of_int(width),
-          float_of_int(height),
-        );
+        let _derp = width;
+        let _derp2 = height;
+        let _derp3 = bearingX;
+        let _derp4 = bearingY;
+
+        /* Shaders.CompiledShader.setUniform4f( */
+        /*   textureShader, */
+        /*   "uPosition", */
+        /*   x +. float_of_int(bearingX), */
+        /*   y +. float_of_int(dimensions.height) -. float_of_int(bearingY), */
+        /*   float_of_int(width), */
+        /*   float_of_int(height), */
+        /* ); */
 
         Geometry.draw(quad, textureShader);
 

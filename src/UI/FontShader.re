@@ -7,7 +7,11 @@
 open Revery_Shaders;
 open Revery_Shaders.Shader;
 
-let attribute: list(ShaderAttribute.t) = SolidShader.attribute;
+let attribute: list(ShaderAttribute.t) = SolidShader.attribute@[{
+    dataType: ShaderDataType.Vector2,
+    name: "aTexCoord",
+    channel: TextureCoordinate,
+}];
 
 let uniform: list(ShaderUniform.t) = SolidShader.uniform @ [{
     dataType: ShaderDataType.Sampler2D,

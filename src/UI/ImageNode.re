@@ -19,30 +19,24 @@ class imageNode (name: string, imagePath: string) = {
 
     inherit (class node(renderPass))(name) as _super;
             
-    pub! draw = (pass: renderPass, layer: int, world: Mat4.t) => {
+    pub! draw = (pass: renderPass, layer: int, w: Mat4.t) => {
         /* Draw background first */
-        _super#draw(pass, layer, world);
+        _super#draw(pass, layer, w);
 
         switch (pass) {
         | AlphaPass(m) => {
             Shaders.CompiledShader.use(textureShader);
 
+            let localTransform = _super#getLocalTransform();
+            let world = Mat4.create();
+            Mat4.multiply(world, w, localTransform);
+
             Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uWorld", world);
             Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", m);
-
-            let dimensions = _super#measurements();
 
             Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", Vec3.create(1.0, 1.0, 1.0));
 
             glBindTexture(GL_TEXTURE_2D, texture);
-
-            Shaders.CompiledShader.setUniform4f(textureShader, "uPosition", 
-                float_of_int(dimensions.left),
-                float_of_int(dimensions.top),
-                float_of_int(dimensions.width),
-                float_of_int(dimensions.height)
-            );
-
             Geometry.draw(_quad, textureShader);
         }
         | _  => ()
