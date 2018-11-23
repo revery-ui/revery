@@ -12,9 +12,9 @@ type t =
   | TranslateX(float)
   | TranslateY(float);
 
-let right = Vec3.create(1., 0., 0.);
-let up = Vec3.create(0., 1., 0.);
-let forward = Vec3.create(0., 0., -1.);
+let right = Vec3.right();
+let up = Vec3.up();
+let forward = Vec3.forward();
 
 let _toMat4 = t => {
   let m = Mat4.create();
@@ -22,7 +22,13 @@ let _toMat4 = t => {
   | RotateX(a) => Mat4.fromRotation(m, a, right)
   | RotateY(a) => Mat4.fromRotation(m, a, up)
   | RotateZ(a) => Mat4.fromRotation(m, a, forward)
-  | _ => ()
+  | Rotate(a) => Mat4.fromRotation(m, a, forward)
+  | Scale(a) => Mat4.fromScaling(m, Vec3.create(a, a, a))
+  | ScaleX(a) => Mat4.fromScaling(m, Vec3.create(a, 1., 1.))
+  | ScaleY(a) => Mat4.fromScaling(m, Vec3.create(1., a, 1.))
+  | ScaleZ(a) => Mat4.fromScaling(m, Vec3.create(1., 1., a))
+  | TranslateX(a) => Mat4.fromTranslation(m, Vec3.create(a, 0., 0.))
+  | TranslateY(a) => Mat4.fromTranslation(m, Vec3.create(0., a, 0.))
   };
   m;
 };

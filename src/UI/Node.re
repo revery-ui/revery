@@ -22,17 +22,11 @@ class node ('a) (_name: string) = {
       ),
     );
     Mat4.multiply(matrix, m, matrix);
-    List.iter(
-      c => {
-        c#draw(pass, layer + 1, matrix);
-      },
-      _children^,
-    );
+    List.iter(c => c#draw(pass, layer + 1, matrix), _children^);
   };
   pub measurements = () => _layoutNode^.layout;
   pub setStyle = style => _style := style;
   pub getStyle = () => _style^;
-
   pub getLocalTransform = () => {
     let dimensions = _this#measurements();
     let left = float_of_int(dimensions.left);
@@ -56,7 +50,6 @@ class node ('a) (_name: string) = {
     Mat4.multiply(world, translateTransform, world);
     world;
   };
-
   pub addChild = (n: node('a)) => _children := List.append(_children^, [n]);
   pub removeChild = (n: node('a)) =>
     _children := List.filter(c => c != n, _children^);

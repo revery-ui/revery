@@ -12,12 +12,11 @@ let init = app => {
 
   let textHeaderStyle = Style.make(~backgroundColor=Colors.red, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=24, ());
 
-  let smallerTextStyle = Style.make(~backgroundColor=Colors.red, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=36, ());
+  let smallerTextStyle = Style.make(~backgroundColor=Colors.red, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=18, ());
 
   Window.setShouldRenderCallback(w, () => true);
 
   Window.setRenderCallback(w, () => {
-      print_endline(" RenderY: " ++ string_of_float(Time.getElapsedTime()));
     UI.render(ui,
         <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=50, ~top=50, ~left=50, ~right=50, ~backgroundColor=Colors.blue, ()))>
             <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=0, ~width=10, ~height=10, ~backgroundColor=Colors.red, ())) />
