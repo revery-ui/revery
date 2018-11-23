@@ -1,4 +1,4 @@
-open Reglfw.Glfw;
+open Reglfw;
 
 module Event = Reactify.Event;
 
@@ -8,7 +8,7 @@ type keyPressEvent = {
 };
 
 type keyEvent = {
-  key: Key.t,
+  key: Glfw.Key.t,
   scancode: int,
   altKey: bool,
   ctrlKey: bool,
@@ -18,10 +18,12 @@ type keyEvent = {
 };
 
 type windowRenderCallback = unit => unit;
+type windowShouldRenderCallback = unit => bool;
 type t = {
   mutable backgroundColor: Color.t,
-  glfwWindow: Window.t,
-  render: ref(option(windowRenderCallback)),
+  glfwWindow: Glfw.Window.t,
+  mutable render: windowRenderCallback,
+  mutable shouldRender: windowShouldRenderCallback,
   mutable width: int,
   mutable height: int,
   mutable isRendering: bool,
@@ -55,10 +57,14 @@ let defaultCreateOptions = {
 };
 
 let isDirty = (w: t) =>
-  switch (w.requestedWidth, w.requestedHeight) {
-  | (Some(_), _) => true
-  | (_, Some(_)) => true
-  | _ => false
+  if (w.shouldRender()) {
+    true;
+  } else {
+    switch (w.requestedWidth, w.requestedHeight) {
+    | (Some(_), _) => true
+    | (_, Some(_)) => true
+    | _ => false
+    };
   };
 
 let setSize = (w: t, width: int, height: int) =>
@@ -71,7 +77,7 @@ let setSize = (w: t, width: int, height: int) =>
       w.requestedWidth = Some(width);
       w.requestedHeight = Some(height);
     } else {
-      glfwSetWindowSize(w.glfwWindow, width, height);
+      Glfw.glfwSetWindowSize(w.glfwWindow, width, height);
       w.width = width;
       w.height = height;
       w.requestedWidth = None;
@@ -88,44 +94,46 @@ let _resizeIfNecessary = (w: t) =>
 let render = (w: t) => {
   _resizeIfNecessary(w);
   w.isRendering = true;
-  glfwMakeContextCurrent(w.glfwWindow);
+  Glfw.glfwMakeContextCurrent(w.glfwWindow);
 
-  glViewport(0, 0, w.width, w.height);
-  glClearDepth(1.0);
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LEQUAL);
+  Glfw.glViewport(0, 0, w.width, w.height);
+  /* glClearDepth(1.0); */
+  /* glEnable(GL_DEPTH_TEST); */
+  /* glDepthFunc(GL_LEQUAL); */
+
+  Glfw.glDisable(GL_DEPTH_TEST);
 
   let color = w.backgroundColor;
-  glClearColor(color.r, color.g, color.b, color.a);
+  Glfw.glClearColor(color.r, color.g, color.b, color.a);
 
-  switch (w.render^) {
-  | None => ()
-  | Some(r) => r()
-  };
+  w.render();
 
-  glfwSwapBuffers(w.glfwWindow);
+  Glfw.glfwSwapBuffers(w.glfwWindow);
   w.isRendering = false;
 };
 
 let create = (name: string, options: windowCreateOptions) => {
-  glfwDefaultWindowHints();
-  glfwWindowHint(GLFW_RESIZABLE, options.resizable);
-  glfwWindowHint(GLFW_VISIBLE, options.visible);
-  glfwWindowHint(GLFW_MAXIMIZED, options.maximized);
-  glfwWindowHint(GLFW_DECORATED, options.decorated);
+  Glfw.glfwDefaultWindowHints();
+  Glfw.glfwWindowHint(GLFW_RESIZABLE, options.resizable);
+  Glfw.glfwWindowHint(GLFW_VISIBLE, options.visible);
+  Glfw.glfwWindowHint(GLFW_MAXIMIZED, options.maximized);
+  Glfw.glfwWindowHint(GLFW_DECORATED, options.decorated);
 
   switch (options.vsync) {
-  | false => glfwSwapInterval(0)
+  | false => Glfw.glfwSwapInterval(0)
   | _ => ()
   };
 
-  let w = glfwCreateWindow(options.width, options.height, name);
-  glfwMakeContextCurrent(w);
+  let w = Glfw.glfwCreateWindow(options.width, options.height, name);
+  Glfw.glfwMakeContextCurrent(w);
 
   let ret: t = {
     backgroundColor: options.backgroundColor,
     glfwWindow: w,
-    render: ref(None),
+
+    render: () => (),
+    shouldRender: () => false,
+
     width: options.width,
     height: options.height,
 
@@ -138,7 +146,7 @@ let create = (name: string, options: windowCreateOptions) => {
     onKeyUp: Event.create(),
   };
 
-  glfwSetFramebufferSizeCallback(
+  Glfw.glfwSetFramebufferSizeCallback(
     w,
     (_w, width, height) => {
       ret.width = width;
@@ -147,7 +155,7 @@ let create = (name: string, options: windowCreateOptions) => {
     },
   );
 
-  glfwSetCharCallback(
+  Glfw.glfwSetCharCallback(
     w,
     (_, codepoint) => {
       let uchar = Uchar.of_int(codepoint);
@@ -161,16 +169,16 @@ let create = (name: string, options: windowCreateOptions) => {
     },
   );
 
-  glfwSetKeyCallback(
+  Glfw.glfwSetKeyCallback(
     w,
     (_w, key, scancode, buttonState, m) => {
       let evt: keyEvent = {
         key,
         scancode,
-        ctrlKey: Modifier.isControlPressed(m),
-        shiftKey: Modifier.isShiftPressed(m),
-        altKey: Modifier.isAltPressed(m),
-        superKey: Modifier.isSuperPressed(m),
+        ctrlKey: Glfw.Modifier.isControlPressed(m),
+        shiftKey: Glfw.Modifier.isShiftPressed(m),
+        altKey: Glfw.Modifier.isAltPressed(m),
+        superKey: Glfw.Modifier.isSuperPressed(m),
         isRepeat: buttonState == GLFW_REPEAT,
       };
 
@@ -182,7 +190,7 @@ let create = (name: string, options: windowCreateOptions) => {
     },
   );
 
-  glfwSetCharCallback(
+  Glfw.glfwSetCharCallback(
     w,
     (_, codepoint) => {
       let uchar = Uchar.of_int(codepoint);
@@ -196,16 +204,16 @@ let create = (name: string, options: windowCreateOptions) => {
     },
   );
 
-  glfwSetKeyCallback(
+  Glfw.glfwSetKeyCallback(
     w,
     (_w, key, scancode, buttonState, m) => {
       let evt: keyEvent = {
         key,
         scancode,
-        ctrlKey: Modifier.isControlPressed(m),
-        shiftKey: Modifier.isShiftPressed(m),
-        altKey: Modifier.isAltPressed(m),
-        superKey: Modifier.isSuperPressed(m),
+        ctrlKey: Glfw.Modifier.isControlPressed(m),
+        shiftKey: Glfw.Modifier.isShiftPressed(m),
+        altKey: Glfw.Modifier.isAltPressed(m),
+        superKey: Glfw.Modifier.isSuperPressed(m),
         isRepeat: buttonState == GLFW_REPEAT,
       };
 
@@ -221,11 +229,11 @@ let create = (name: string, options: windowCreateOptions) => {
 
 let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
 
-let setPos = (w: t, x: int, y: int) => glfwSetWindowPos(w.glfwWindow, x, y);
+let setPos = (w: t, x: int, y: int) => Glfw.glfwSetWindowPos(w.glfwWindow, x, y);
 
-let show = w => glfwShowWindow(w.glfwWindow);
+let show = w => Glfw.glfwShowWindow(w.glfwWindow);
 
-let hide = w => glfwHideWindow(w.glfwWindow);
+let hide = w => Glfw.glfwHideWindow(w.glfwWindow);
 
 type windowSize = {
   width: int,
@@ -238,4 +246,7 @@ let getSize = (w: t) => {
 };
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) =>
-  w.render := Some(callback);
+  w.render = callback;
+
+let setShouldRenderCallback = (w: t, callback: windowShouldRenderCallback) =>
+  w.shouldRender = callback;

@@ -37,6 +37,8 @@ class node ('a) (_name: string) = {
     let scaleTransform = Mat4.create();
     Mat4.fromScaling(scaleTransform, Vec3.create(width, height, 1.0));
 
+    let animationTransform = Transform.toMat4(_this#getStyle().transform);
+
     let translateTransform = Mat4.create();
     Mat4.fromTranslation(
       translateTransform,
@@ -44,7 +46,8 @@ class node ('a) (_name: string) = {
     );
 
     let world = Mat4.create();
-    Mat4.multiply(world, translateTransform, scaleTransform);
+    Mat4.multiply(world, animationTransform, scaleTransform);
+    Mat4.multiply(world, translateTransform, world);
     world;
   };
   pub addChild = (n: node('a)) => _children := List.append(_children^, [n]);

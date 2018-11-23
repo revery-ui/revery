@@ -17,6 +17,7 @@ type t = {
   right: int,
   fontFamily,
   fontSize: int,
+  transform: list(Transform.t),
 };
 
 let make =
@@ -33,6 +34,7 @@ let make =
       ~right=Encoding.cssUndefined,
       ~fontFamily="",
       ~fontSize=Encoding.cssUndefined,
+      ~transform=[],
       _unit: unit,
     ) => {
   let ret: t = {
@@ -48,6 +50,7 @@ let make =
     right,
     fontFamily,
     fontSize,
+    transform,
   };
 
   ret;
