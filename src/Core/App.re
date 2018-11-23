@@ -1,4 +1,4 @@
-open Reglfw.Glfw;
+open Reglfw;
 
 type reducer('s, 'a) = ('s, 'a) => 's;
 
@@ -52,11 +52,11 @@ let startWithState: startFunc('s, 'a) =
       needsRender: true,
     };
 
-    let _ = glfwInit();
+    let _ = Glfw.glfwInit();
     let _ = initFunc(appInstance);
 
     let appLoop = (_t: float) => {
-      glfwPollEvents();
+      Glfw.glfwPollEvents();
       if (appInstance.needsRender) {
         Performance.bench("renderWindows", () => {
           List.iter(w => Window.render(w), getWindows(appInstance));
@@ -73,7 +73,7 @@ let startWithState: startFunc('s, 'a) =
       false;
     };
 
-    glfwRenderLoop(appLoop);
+    Glfw.glfwRenderLoop(appLoop);
   };
 
 let start = (initFunc: appInitFunc(unit, unit)) =>

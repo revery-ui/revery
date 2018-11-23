@@ -20,7 +20,7 @@ type keyEvent = {
 type windowRenderCallback = unit => unit;
 type t = {
   mutable backgroundColor: Color.t,
-  glfwWindow: window,
+  glfwWindow: Window.t,
   render: ref(option(windowRenderCallback)),
   mutable width: int,
   mutable height: int,
