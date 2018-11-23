@@ -11,36 +11,43 @@ open ViewNode;
 open RenderPass;
 
 class imageNode (name: string, imagePath: string) = {
-    as _this;
+  as _this;
+  val _quad = Assets.quad();
+  val textureShader = Assets.textureShader();
+  val texture = ImageRenderer.getTexture(imagePath);
+  inherit (class node(renderPass))(name) as _super;
+  pub! draw = (pass: renderPass, layer: int, w: Mat4.t) => {
+    /* Draw background first */
+    _super#draw(pass, layer, w);
 
-    val _quad = Assets.quad();
-    val textureShader = Assets.textureShader();
-    val texture = ImageRenderer.getTexture(imagePath);
+    switch (pass) {
+    | AlphaPass(m) =>
+      Shaders.CompiledShader.use(textureShader);
 
-    inherit (class node(renderPass))(name) as _super;
-            
-    pub! draw = (pass: renderPass, layer: int, w: Mat4.t) => {
-        /* Draw background first */
-        _super#draw(pass, layer, w);
+      let localTransform = _super#getLocalTransform();
+      let world = Mat4.create();
+      Mat4.multiply(world, w, localTransform);
 
-        switch (pass) {
-        | AlphaPass(m) => {
-            Shaders.CompiledShader.use(textureShader);
+      Shaders.CompiledShader.setUniformMatrix4fv(
+        textureShader,
+        "uWorld",
+        world,
+      );
+      Shaders.CompiledShader.setUniformMatrix4fv(
+        textureShader,
+        "uProjection",
+        m,
+      );
 
-            let localTransform = _super#getLocalTransform();
-            let world = Mat4.create();
-            Mat4.multiply(world, w, localTransform);
+      Shaders.CompiledShader.setUniform3fv(
+        textureShader,
+        "uColor",
+        Vec3.create(1.0, 1.0, 1.0),
+      );
 
-            Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uWorld", world);
-            Shaders.CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", m);
-
-            Shaders.CompiledShader.setUniform3fv(textureShader, "uColor", Vec3.create(1.0, 1.0, 1.0));
-
-            glBindTexture(GL_TEXTURE_2D, texture);
-            Geometry.draw(_quad, textureShader);
-        }
-        | _  => ()
-        };
-
+      glBindTexture(GL_TEXTURE_2D, texture);
+      Geometry.draw(_quad, textureShader);
+    | _ => ()
     };
+  };
 };

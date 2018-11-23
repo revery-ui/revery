@@ -41,7 +41,14 @@ class textNode (name: string, text: string) = {
       );
 
       let outerTransform = Mat4.create();
-      Mat4.fromTranslation(outerTransform, Vec3.create(float_of_int(dimensions.left), float_of_int(dimensions.top) +. float_of_int(dimensions.height), 0.0));
+      Mat4.fromTranslation(
+        outerTransform,
+        Vec3.create(
+          float_of_int(dimensions.left),
+          float_of_int(dimensions.top) +. float_of_int(dimensions.height),
+          0.0,
+        ),
+      );
 
       let render = (s: Fontkit.fk_shape, x: float) => {
         let glyph = FontRenderer.getGlyph(font, s.codepoint);
@@ -51,24 +58,34 @@ class textNode (name: string, text: string) = {
         let _ = FontRenderer.getTexture(font, s.codepoint);
         /* TODO: Bind texture */
 
-        let  glyphTransform = Mat4.create();
-        Mat4.fromTranslation(glyphTransform, Vec3.create(x +. float_of_int(bearingX) +. (float_of_int(width) /. 2.), (float_of_int(height) *. 0.5) -. float_of_int(bearingY), 0.0));
+        let glyphTransform = Mat4.create();
+        Mat4.fromTranslation(
+          glyphTransform,
+          Vec3.create(
+            x +. float_of_int(bearingX) +. float_of_int(width) /. 2.,
+            float_of_int(height) *. 0.5 -. float_of_int(bearingY),
+            0.0,
+          ),
+        );
 
         let scaleTransform = Mat4.create();
-        Mat4.fromScaling(scaleTransform, Vec3.create(float_of_int(width), float_of_int(height), 1.0));
+        Mat4.fromScaling(
+          scaleTransform,
+          Vec3.create(float_of_int(width), float_of_int(height), 1.0),
+        );
 
         let local = Mat4.create();
         Mat4.multiply(local, glyphTransform, scaleTransform);
 
         let xform = Mat4.create();
         Mat4.multiply(xform, outerTransform, local);
-        Mat4.multiply(xform, world, xform)
+        Mat4.multiply(xform, world, xform);
 
-          Shaders.CompiledShader.setUniformMatrix4fv(
-            textureShader,
-            "uWorld",
-            xform,
-          );
+        Shaders.CompiledShader.setUniformMatrix4fv(
+          textureShader,
+          "uWorld",
+          xform,
+        );
 
         Geometry.draw(quad, textureShader);
 
@@ -79,13 +96,12 @@ class textNode (name: string, text: string) = {
       let startX = ref(0.);
       Array.iter(
         s => {
-          let nextPosition =
-            render(s, startX^);
+          let nextPosition = render(s, startX^);
           startX := nextPosition;
         },
         shapedText,
       );
-    | _ => ();
+    | _ => ()
     };
   };
   pub setText = t => text = t;
