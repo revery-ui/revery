@@ -2,6 +2,8 @@ open Revery;
 open Revery.Core;
 open Revery.UI;
 
+open Reglm;
+
 let init = app => {
 
   let w = App.createWindow(app, "test");
@@ -12,11 +14,14 @@ let init = app => {
 
   let smallerTextStyle = Style.make(~backgroundColor=Colors.red, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=12, ());
 
+  Window.setShouldRenderCallback(w, () => true);
+
   Window.setRenderCallback(w, () => {
+      print_endline(" Render: " ++ string_of_float(Time.getElapsedTime()));
     UI.render(ui,
-        <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=10, ~top=10, ~left=10, ~right=10, ~backgroundColor=Colors.blue, ()))>
+        <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=50, ~top=50, ~left=50, ~right=50, ~backgroundColor=Colors.blue, ()))>
             <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=0, ~width=10, ~height=10, ~backgroundColor=Colors.red, ())) />
-            <image src="outrun-logo.png" style=(Style.make(~width=128, ~height=64, ())) />
+            <image src="outrun-logo.png" style=(Style.make(~width=128, ~height=64, ~transform=[RotateY(Angle.from_radians(Time.getElapsedTime()))], ())) />
             <text style=(textHeaderStyle)>"Hello World!"</text>
             <text style=(smallerTextStyle)>"Welcome to revery"</text>
             <view style=(Style.make(~width=25, ~height=25, ~backgroundColor=Colors.green, ())) />

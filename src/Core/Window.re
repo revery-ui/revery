@@ -18,10 +18,12 @@ type keyEvent = {
 };
 
 type windowRenderCallback = unit => unit;
+type windowShouldRenderCallback = unit => bool;
 type t = {
   mutable backgroundColor: Color.t,
   glfwWindow: window,
-  render: ref(option(windowRenderCallback)),
+  mutable render: windowRenderCallback,
+  mutable shouldRender: windowShouldRenderCallback,
   mutable width: int,
   mutable height: int,
   mutable isRendering: bool,
@@ -55,11 +57,15 @@ let defaultCreateOptions = {
 };
 
 let isDirty = (w: t) =>
-  switch (w.requestedWidth, w.requestedHeight) {
-  | (Some(_), _) => true
-  | (_, Some(_)) => true
-  | _ => false
-  };
+  if (w.shouldRender()) {
+      true
+  } else {
+      switch (w.requestedWidth, w.requestedHeight) {
+      | (Some(_), _) => true
+      | (_, Some(_)) => true
+      | _ => false
+      };
+  }
 
 let setSize = (w: t, width: int, height: int) =>
   if (width != w.width || height != w.height) {
@@ -91,17 +97,14 @@ let render = (w: t) => {
   glfwMakeContextCurrent(w.glfwWindow);
 
   glViewport(0, 0, w.width, w.height);
-  glClearDepth(1.0);
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LEQUAL);
+  /* glClearDepth(1.0); */
+  /* glEnable(GL_DEPTH_TEST); */
+  /* glDepthFunc(GL_LEQUAL); */
 
   let color = w.backgroundColor;
   glClearColor(color.r, color.g, color.b, color.a);
 
-  switch (w.render^) {
-  | None => ()
-  | Some(r) => r()
-  };
+  w.render();
 
   glfwSwapBuffers(w.glfwWindow);
   w.isRendering = false;
@@ -125,7 +128,10 @@ let create = (name: string, options: windowCreateOptions) => {
   let ret: t = {
     backgroundColor: options.backgroundColor,
     glfwWindow: w,
-    render: ref(None),
+
+    render: () => (),
+    shouldRender: () => false,
+
     width: options.width,
     height: options.height,
 
@@ -237,5 +243,9 @@ let getSize = (w: t) => {
   r;
 };
 
-let setRenderCallback = (w: t, callback: windowRenderCallback) =>
-  w.render := Some(callback);
+let setRenderCallback = (w: t, callback: windowRenderCallback) => 
+  w.render = callback;
+
+let setShouldRenderCallback = (w: t, callback: windowShouldRenderCallback) => {
+    w.shouldRender = callback;
+}

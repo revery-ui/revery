@@ -16,8 +16,15 @@ class node ('a) (_name: string) = {
         let dimensions = (_layoutNode^).layout;
         let matrix = Mat4.create();
         Mat4.fromTranslation(matrix, Vec3.create(float_of_int(dimensions.left), float_of_int(dimensions.top), 0.));
-        Mat4.multiply(matrix, m, matrix);
-        List.iter((c) => c#draw(pass, layer + 1, matrix), _children^)
+        List.iter((c) => {
+                let s: Style.t = c#getStyle();
+                let xform = Transform.toMat4(s.transform);
+                Mat4.multiply(xform, xform, matrix);
+                Mat4.multiply(xform, xform, m);
+                /* Mat4.multiply(xform, matrix, xform); */
+                /* Mat4.multiply(xform, m, xform); */
+                c#draw(pass, layer + 1, xform);
+        }, _children^)
     };
 
     pub measurements = () => {

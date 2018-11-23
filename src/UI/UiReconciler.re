@@ -39,6 +39,9 @@ let updateInstance = (n: node, _oldPrim: primitives, newPrim: primitives) => {
         let tn: TextNode.textNode = Obj.magic(n);
         tn#setStyle(style);
         tn#setText(text);
+    | Image(style, _src) => 
+        let imageNode: ImageNode.imageNode = Obj.magic(n);
+        imageNode#setStyle(style);
     | _ => ()
     }
 };

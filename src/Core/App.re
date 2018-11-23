@@ -39,6 +39,14 @@ let createWindow =
   w;
 };
 
+let _anyWindowsDirty = (app: t('s, 'a)) => {
+    List.fold_left(
+      (prev, w) => prev || Window.isDirty(w),
+      false,
+      getWindows(app),
+    );
+};
+
 let startWithState: startFunc('s, 'a) =
   (
     initialState: 's,
@@ -57,15 +65,10 @@ let startWithState: startFunc('s, 'a) =
 
     let appLoop = (_t: float) => {
       glfwPollEvents();
-      if (appInstance.needsRender) {
+      if (appInstance.needsRender || _anyWindowsDirty(appInstance)) {
         Performance.bench("renderWindows", () => {
           List.iter(w => Window.render(w), getWindows(appInstance));
-          appInstance.needsRender =
-            List.fold_left(
-              (prev, w) => prev || Window.isDirty(w),
-              false,
-              getWindows(appInstance),
-            );
+          appInstance.needsRender = false;
         });
       } else {
         Unix.sleepf(1. /. 100.);
