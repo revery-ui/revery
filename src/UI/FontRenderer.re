@@ -41,7 +41,7 @@ let measure = (font: Fontkit.fk_face, text: string) => {
 
     Array.iter(shape => {
         let {height, bearingY, advance, _} = getGlyph(font, shape.codepoint);
-        let top = height + bearingY;
+        let top = -bearingY;
         let bottom = top + height;
 
         if (height > 0) {

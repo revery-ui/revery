@@ -30,6 +30,24 @@ class node ('a) (_name: string) = {
 
     pub getStyle = () => _style^;
 
+    pub getLocalTransform = () => {
+      let dimensions = _this#measurements();
+      let left = float_of_int(dimensions.left);
+      let top = float_of_int(dimensions.top);
+      let width = float_of_int(dimensions.width);
+      let height = float_of_int(dimensions.height);
+
+      let scaleTransform = Mat4.create();
+      Mat4.fromScaling(scaleTransform, Vec3.create(width, height, 1.0));
+
+      let translateTransform = Mat4.create();
+      Mat4.fromTranslation(translateTransform, Vec3.create(left +. width /. 2., top +. height /. 2., 1.0));
+
+      let world = Mat4.create();
+      Mat4.multiply(world, translateTransform, scaleTransform);
+      world;
+    };
+
     pub addChild = (n: node('a)) => {
         _children := List.append(_children^, [n]);
     };

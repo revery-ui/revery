@@ -10,17 +10,13 @@ open Revery_Shaders.Shader;
 let attribute: list(ShaderAttribute.t) = [
 {
   dataType: ShaderDataType.Vector2,
-  name: "aTexCoord",
-  channel: TextureCoordinate,
+  name: "aPosition",
+  channel: Position,
 }];
 
 let uniform: list(ShaderUniform.t) = [{
     dataType: ShaderDataType.Vector3,
     name: "uColor",
-    usage: VertexShader,
-}, {
-    dataType: ShaderDataType.Vector4,
-    name: "uPosition",
     usage: VertexShader,
 }, {
     dataType: ShaderDataType.Mat4,
@@ -40,7 +36,7 @@ let varying: list(ShaderVarying.t) = [{
 
 
 let vsShader = {|
-   vec4 pos = vec4(uPosition.x + (aTexCoord.x * uPosition.z), uPosition.y + (aTexCoord.y * uPosition.w), 1, 1.0);
+   vec4 pos = vec4(aPosition.x, aPosition.y, 1.0, 1.0);
    gl_Position = uProjection * uWorld * pos;
    vColor = uColor;
 |};

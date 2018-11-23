@@ -10,7 +10,7 @@ let init = app => {
 
   let textHeaderStyle = Style.make(~backgroundColor=Colors.red, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=24, ());
 
-  let smallerTextStyle = Style.make(~backgroundColor=Colors.red, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=12, ());
+  let smallerTextStyle = Style.make(~backgroundColor=Colors.red, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=36, ());
 
   Window.setRenderCallback(w, () => {
     UI.render(ui,
