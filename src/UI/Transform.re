@@ -12,9 +12,9 @@ type t =
   | TranslateX(float)
   | TranslateY(float);
 
-let right = Vec3.right();
-let up = Vec3.up();
-let forward = Vec3.forward();
+let right = Vec3.create(1., 0., 0.);
+let up = Vec3.create(0., 1., 0.);
+let forward = Vec3.create(0., 0., -1.);
 
 let _toMat4 = t => {
   let m = Mat4.create();

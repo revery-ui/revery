@@ -21,15 +21,10 @@ class node ('a) (_name: string) = {
         0.,
       ),
     );
+    Mat4.multiply(matrix, m, matrix);
     List.iter(
       c => {
-        let s: Style.t = c#getStyle();
-        let xform = Transform.toMat4(s.transform);
-        Mat4.multiply(xform, xform, matrix);
-        Mat4.multiply(xform, xform, m);
-        /* Mat4.multiply(xform, matrix, xform); */
-        /* Mat4.multiply(xform, m, xform); */
-        c#draw(pass, layer + 1, xform);
+        c#draw(pass, layer + 1, matrix);
       },
       _children^,
     );
@@ -48,6 +43,8 @@ class node ('a) (_name: string) = {
     let scaleTransform = Mat4.create();
     Mat4.fromScaling(scaleTransform, Vec3.create(width, height, 1.0));
 
+    let animationTransform = Transform.toMat4(_this#getStyle().transform);
+
     let translateTransform = Mat4.create();
     Mat4.fromTranslation(
       translateTransform,
@@ -55,7 +52,8 @@ class node ('a) (_name: string) = {
     );
 
     let world = Mat4.create();
-    Mat4.multiply(world, translateTransform, scaleTransform);
+    Mat4.multiply(world, animationTransform, scaleTransform);
+    Mat4.multiply(world, translateTransform, world);
     world;
   };
 

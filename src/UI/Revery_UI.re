@@ -98,8 +98,8 @@ let render = (container: uiContainer, component: UiReact.component) => {
     float_of_int(size.width),
     float_of_int(size.height),
     0.0,
-    -0.01,
-    -100.0,
+    1000.0,
+    -1000.0,
   );
   let m = Mat4.create();
 

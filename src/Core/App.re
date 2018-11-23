@@ -63,7 +63,7 @@ let startWithState: startFunc('s, 'a) =
     let _ = initFunc(appInstance);
 
     let appLoop = (_t: float) => {
-      glfwPollEvents();
+      Glfw.glfwPollEvents();
       if (appInstance.needsRender || _anyWindowsDirty(appInstance)) {
         Performance.bench("renderWindows", () => {
           List.iter(w => Window.render(w), getWindows(appInstance));
