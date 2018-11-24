@@ -8,6 +8,11 @@ jobs:
 - job: Linux
   pool:
     vmImage: 'Ubuntu 16.04'
+
+  variables:
+    ESY__CACHE_INSTALL_PATH: /home/vsts/.esy/3_____________________________________________________________________/i/
+    ESY__CACHE_SOURCE_TARBALL_PATH: /home/vsts/.esy/source-tarballs
+
   steps:
   - script: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libegl1-mesa-dev mesa-utils mesa-utils-extra ragel
   - template: esy-build-steps.yml
@@ -15,6 +20,11 @@ jobs:
 - job: MacOS
   pool:
     vmImage: 'macOS 10.13'
+
+  variables:
+    ESY__CACHE_INSTALL_PATH: /Users/vsts/.esy/3____________________________________________________________________/i/
+    ESY__CACHE_SOURCE_TARBALL_PATH: /Users/vsts/.esy/source-tarballs
+
   steps:
   - script: brew update
   - script: brew install libpng
@@ -23,7 +33,13 @@ jobs:
 - job: Windows
   pool:
     vmImage: 'vs2017-win2016'
+
+  variables:
+    ESY__CACHE_INSTALL_PATH: C:\Users\VssAdministrator\.esy\3_\i
+    ESY__CACHE_SOURCE_TARBALL_PATH: C:\Users\VssAdministrator\.esy\source-tarballs
+
   steps:
+  - template: restore-build-cache.yml
   - template: esy-build-steps.yml
 
 - job: Release

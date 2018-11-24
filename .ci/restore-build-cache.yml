@@ -1,0 +1,39 @@
+# Steps for restoring project cache
+
+steps:
+  - task: DownloadBuildArtifacts@0
+    displayName: 'Cache: Restore source-tarballs'
+    inputs:
+        buildType: 'specific'
+        project: 'revery'
+        pipeline: 'bryphe.revery'
+        branchName: 'refs/heads/master'
+        buildVersionToDownload: 'latestFromBranch'
+        downloadType: 'single'
+        artifactName: 'build-cache-$(Agent.OS)-source-tarballs'
+        downloadPath: '$(System.ArtifactsDirectory)'
+    continueOnError: true
+
+  - task: CopyFiles@2
+    inputs:
+        sourceFolder: '$(System.ArtifactsDirectory)\build-cache-$(Agent.OS)-source-tarballs'
+        targetFolder: '$(ESY__CACHE_SOURCE_TARBALL_PATH)'
+
+  - task: DownloadBuildArtifacts@0
+    displayName: 'Cache: Restore install'
+    inputs:
+        buildType: 'specific'
+        project: 'revery'
+        pipeline: 'bryphe.revery'
+        branchName: 'refs/heads/master'
+        buildVersionToDownload: 'latestFromBranch'
+        downloadType: 'single'
+        artifactName: 'build-cache-$(Agent.OS)-install'
+        downloadPath: '$(System.ArtifactsDirectory)'
+    continueOnError: true
+
+  - task: CopyFiles@2
+    inputs:
+        sourceFolder: '$(System.ArtifactsDirectory)\build-cache-$(Agent.OS)-install'
+        targetFolder: '$(ESY__CACHE_INSTALL_PATH)'
+    continueOnError: true
