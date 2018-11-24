@@ -1,0 +1,20 @@
+# Steps for publishing project cache
+
+steps:
+  - task: PublishBuildArtifacts@1
+    displayName: 'Cache: Upload source tarballs'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    inputs:
+        pathToPublish: '$(ESY__CACHE_SOURCE_TARBALL_PATH)'
+        artifactName: 'cache-$(Agent.OS)-source-tarballs'
+        parallel: true
+        parallelCount: 8
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Cache: Upload install folder'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    inputs:
+        pathToPublish: '$(ESY__CACHE_INSTALL_PATH)'
+        artifactName: 'cache-$(Agent.OS)-install'
+        parallel: true
+        parallelCount: 8
