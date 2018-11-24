@@ -34,7 +34,6 @@
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/js_of_ocaml": "*",
     "@opam/js_of_ocaml-lwt": "*",
-    "@opam/dune": "^1.5.0",
     "flex": "^1.2.2",
     "@opam/js_of_ocaml-compiler": "*"
   },
@@ -43,6 +42,8 @@
   },
   "devDependencies": {
     "ocaml": "~4.6.0",
-    "@opam/merlin": "*"
+    "@opam/merlin": "*",
+    "@opam/dune": "^1.5.0",
+    "rejest": "^1.2.0"
   }
 }
