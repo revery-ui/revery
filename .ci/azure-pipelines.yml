@@ -41,6 +41,7 @@ jobs:
   steps:
   - template: restore-build-cache.yml
   - template: esy-build-steps.yml
+  - template: publish-build-cache.yml
 
 - job: Release
   displayName: Release
