@@ -1,0 +1,9 @@
+(executable
+    (name Test)
+    (libraries
+        rejest
+            ))
+
+(alias
+    (name runtest)
+    (action (run ./Test.exe)))
