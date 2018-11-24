@@ -102,7 +102,6 @@ let init = app => {
   let monitor = Monitor.getPrimaryMonitor();
   let monitorSize = Monitor.getSize(monitor);
 
-  print_endline ("Hello, world");
   Window.setPos(w, (monitorSize.width - width) / 2, ((monitorSize.height - height) / 2));
   Window.show(w);
 
