@@ -1,17 +1,20 @@
 open Reglfw.Glfw;
 open Fontkit;
 
-let getGlyph = (font: Fontkit.fk_face, codepoint: int) =>
-  /* TODO: Cache */
-  Fontkit.renderGlyph(font, codepoint);
+open Revery_Core;
 
-let getTexture = (font: Fontkit.fk_face, codepoint: int) => {
+
+let _getGlyph = Memoize.make(((font: Fontkit.fk_face, codepoint: int)) =>
+  Fontkit.renderGlyph(font, codepoint));
+
+let getGlyph = (font: Fontkit.fk_face, codepoint: int) => _getGlyph((font, codepoint));
+
+
+let _getTexture = ((font: Fontkit.fk_face, codepoint: int)) => {
   let glyph = getGlyph(font, codepoint);
 
   let {image, _} = glyph;
 
-  /* TODO: */
-  /* - Cache textures */
   /* - Create texture atlas */
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -25,6 +28,9 @@ let getTexture = (font: Fontkit.fk_face, codepoint: int) => {
   glTexImage2D(GL_TEXTURE_2D, image);
   texture;
 };
+
+let _memoizedGetTexture = Memoize.make(_getTexture);
+let getTexture = (font: Fontkit.fk_face, codepoint: int) => _memoizedGetTexture((font, codepoint));
 
 type dimensions = {
   width: int,

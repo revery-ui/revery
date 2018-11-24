@@ -5,6 +5,7 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Fontkit;
 open Reglm;
+open Reglfw;
 open Revery_Core;
 
 open ViewNode;
@@ -55,7 +56,11 @@ class textNode (name: string, text: string) = {
 
         let {width, height, bearingX, bearingY, advance, _} = glyph;
 
-        let _ = FontRenderer.getTexture(font, s.codepoint);
+        Glfw.glPixelStorei(GL_PACK_ALIGNMENT, 1);
+        Glfw.glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+        let texture = FontRenderer.getTexture(font, s.codepoint);
+        Glfw.glBindTexture(GL_TEXTURE_2D, texture);
         /* TODO: Bind texture */
 
         let glyphTransform = Mat4.create();
