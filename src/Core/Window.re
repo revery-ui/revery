@@ -24,7 +24,6 @@ type t = {
   glfwWindow: Glfw.Window.t,
   mutable render: windowRenderCallback,
   mutable shouldRender: windowShouldRenderCallback,
-
   /* Note we separate the _Window_ width / height
    * and the _framebuffer_ width/height
    * Some more info here: http://www.glfw.org/docs/latest/window_guide.html
@@ -33,7 +32,6 @@ type t = {
   mutable height: int,
   mutable framebufferWidth: int,
   mutable framebufferHeight: int,
-
   mutable isRendering: bool,
   mutable requestedWidth: option(int),
   mutable requestedHeight: option(int),
@@ -76,10 +74,10 @@ let isDirty = (w: t) =>
   };
 
 let _updateFramebuffer = (w: t) => {
-    let size = Glfw.glfwGetFramebufferSize(w.glfwWindow);
-    w.framebufferWidth = size.width;
-    w.framebufferHeight = size.height;
-}
+  let size = Glfw.glfwGetFramebufferSize(w.glfwWindow);
+  w.framebufferWidth = size.width;
+  w.framebufferHeight = size.height;
+};
 
 let setSize = (w: t, width: int, height: int) =>
   if (width != w.width || height != w.height) {
@@ -248,7 +246,8 @@ let create = (name: string, options: windowCreateOptions) => {
 
 let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
 
-let setPos = (w: t, x: int, y: int) => Glfw.glfwSetWindowPos(w.glfwWindow, x, y);
+let setPos = (w: t, x: int, y: int) =>
+  Glfw.glfwSetWindowPos(w.glfwWindow, x, y);
 
 let show = w => Glfw.glfwShowWindow(w.glfwWindow);
 
@@ -264,16 +263,20 @@ let getSize = (w: t) => {
   r;
 };
 
-let getFramebufferSize =  (w: t) => {
- let r: windowSize = {width: w.framebufferWidth, height: w.framebufferHeight};   
- r;
+let getFramebufferSize = (w: t) => {
+  let r: windowSize = {
+    width: w.framebufferWidth,
+    height: w.framebufferHeight,
+  };
+  r;
 };
 
 let getDevicePixelRatio = (w: t) => {
-    let windowSizeInScreenCoordinates = getSize(w);
-    let windowSizeInPixels = getFramebufferSize(w);
+  let windowSizeInScreenCoordinates = getSize(w);
+  let windowSizeInPixels = getFramebufferSize(w);
 
-    float_of_int(windowSizeInPixels.width) /. float_of_int(windowSizeInScreenCoordinates.width);
+  float_of_int(windowSizeInPixels.width)
+  /. float_of_int(windowSizeInScreenCoordinates.width);
 };
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) =>
