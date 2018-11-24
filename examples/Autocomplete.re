@@ -88,7 +88,7 @@ let filterItems = (filterText: string, items: list(item)) => {
 let init = app => {
 
   let width = 400;
-  let height = 600;
+  let height = 1;
 
   let w = App.createWindow(app, "test", ~createOptions={
     ...Window.defaultCreateOptions,
@@ -102,6 +102,7 @@ let init = app => {
   let monitor = Monitor.getPrimaryMonitor();
   let monitorSize = Monitor.getSize(monitor);
 
+  print_endline ("Hello, world");
   Window.setPos(w, (monitorSize.width - width) / 2, ((monitorSize.height - height) / 2));
   Window.show(w);
 
