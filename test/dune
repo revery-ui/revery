@@ -1,0 +1,10 @@
+(executable
+    (name TestRunner)
+    (libraries
+        rejest
+        Revery_Core_Test
+            ))
+
+(alias
+    (name runtest)
+    (action (run ./TestRunner.exe)))

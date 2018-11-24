@@ -1,0 +1,5 @@
+(library
+    (name Revery_Core_Test)
+    (library_flags (-linkall))
+    (modules (:standard))
+    (libraries Revery_Core rejest))
