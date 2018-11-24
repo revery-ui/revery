@@ -6,7 +6,7 @@ steps:
     inputs:
         buildType: 'specific'
         project: 'revery'
-        pipeline: 'bryphe.revery'
+        pipeline: 'build'
         branchName: 'refs/heads/master'
         buildVersionToDownload: 'latestFromBranch'
         downloadType: 'single'
@@ -24,7 +24,7 @@ steps:
     inputs:
         buildType: 'specific'
         project: 'revery'
-        pipeline: 'bryphe.revery'
+        pipeline: 'build'
         branchName: 'refs/heads/master'
         buildVersionToDownload: 'latestFromBranch'
         downloadType: 'single'
