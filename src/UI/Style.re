@@ -17,6 +17,13 @@ type t = {
   right: int,
   fontFamily,
   fontSize: int,
+  marginTop: int,
+  marginLeft: int,
+  marginRight: int,
+  marginBottom: int,
+  margin: int,
+  marginVertical: int,
+  marginHorizontal: int,
   transform: list(Transform.t),
 };
 
@@ -34,6 +41,13 @@ let make =
       ~right=Encoding.cssUndefined,
       ~fontFamily="",
       ~fontSize=Encoding.cssUndefined,
+      ~marginTop= Encoding.cssUndefined,
+      ~marginLeft= Encoding.cssUndefined,
+      ~marginRight= Encoding.cssUndefined,
+      ~marginBottom= Encoding.cssUndefined,
+      ~margin= Encoding.cssUndefined,
+      ~marginVertical=Encoding.cssUndefined,
+      ~marginHorizontal=Encoding.cssUndefined,
       ~transform=[],
       _unit: unit,
     ) => {
@@ -51,6 +65,13 @@ let make =
     fontFamily,
     fontSize,
     transform,
+    marginTop,
+    marginLeft,
+    marginRight,
+    marginBottom,
+    margin,
+    marginVertical,
+    marginHorizontal,
   };
 
   ret;
@@ -69,6 +90,13 @@ let toLayoutNode = (s: t) => {
     right: s.right,
     width: s.width,
     height: s.height,
+    marginTop: s.marginTop,
+    marginLeft: s.marginLeft,
+    marginRight: s.marginRight,
+    marginBottom: s.marginBottom,
+    margin: s.margin,
+    marginVertical: s.marginVertical,
+    marginHorizontal: s.marginHorizontal,
   };
   ret;
 };
