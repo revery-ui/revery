@@ -10,7 +10,7 @@ class node ('a) (_name: string) = {
   val _children: ref(list(node('a))) = ref([]);
   val _style = ref(Style.defaultStyle);
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
-  pub draw = (pass: 'a, layer: int, m: Mat4.t) => {
+  pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let dimensions = _layoutNode^.layout;
     let matrix = Mat4.create();
     Mat4.fromTranslation(
@@ -21,8 +21,8 @@ class node ('a) (_name: string) = {
         0.,
       ),
     );
-    Mat4.multiply(matrix, m, matrix);
-    List.iter(c => c#draw(pass, layer + 1, matrix), _children^);
+    let localContext = NodeDrawContext.inherit(parentContext, matrix, getStyle().opacity);
+    List.iter(c => c#draw(pass, localContext), _children^);
   };
   pub measurements = () => _layoutNode^.layout;
   pub setStyle = style => _style := style;

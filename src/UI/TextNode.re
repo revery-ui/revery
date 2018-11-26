@@ -17,9 +17,9 @@ class textNode (name: string, text: string) = {
   val quad = Assets.quad();
   val textureShader = Assets.fontShader();
   inherit (class viewNode)(name) as _super;
-  pub! draw = (pass: renderPass, layer: int, world: Mat4.t) => {
+  pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
     /* Draw background first */
-    _super#draw(pass, layer, world);
+    _super#draw(pass, parentContext);
 
     switch (pass) {
     | AlphaPass(m) =>
@@ -84,7 +84,7 @@ class textNode (name: string, text: string) = {
 
         let xform = Mat4.create();
         Mat4.multiply(xform, outerTransform, local);
-        Mat4.multiply(xform, world, xform);
+        Mat4.multiply(xform, parentContext.transform, xform);
 
         Shaders.CompiledShader.setUniformMatrix4fv(
           textureShader,

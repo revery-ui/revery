@@ -16,9 +16,9 @@ class imageNode (name: string, imagePath: string) = {
   val textureShader = Assets.textureShader();
   val texture = ImageRenderer.getTexture(imagePath);
   inherit (class node(renderPass))(name) as _super;
-  pub! draw = (pass: renderPass, layer: int, w: Mat4.t) => {
+  pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
     /* Draw background first */
-    _super#draw(pass, layer, w);
+    _super#draw(pass, parentContext);
 
     switch (pass) {
     | AlphaPass(m) =>
@@ -26,7 +26,7 @@ class imageNode (name: string, imagePath: string) = {
 
       let localTransform = _super#getLocalTransform();
       let world = Mat4.create();
-      Mat4.multiply(world, w, localTransform);
+      Mat4.multiply(world, parentContext.transform, localTransform);
 
       Shaders.CompiledShader.setUniformMatrix4fv(
         textureShader,

@@ -14,7 +14,7 @@ class viewNode (name: string) = {
   val _quad = Assets.quad();
   val solidShader = Assets.solidShader();
   inherit (class node(renderPass))(name) as _super;
-  pub! draw = (pass: renderPass, layer: int, w: Mat4.t) => {
+  pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
     switch (pass) {
     | SolidPass(m) =>
       Shaders.CompiledShader.use(solidShader);
@@ -28,7 +28,7 @@ class viewNode (name: string) = {
 
       let world = Mat4.create();
       let localTransform = _super#getLocalTransform();
-      Mat4.multiply(world, w, localTransform);
+      Mat4.multiply(world, parentContext.transform, localTransform);
 
       Shaders.CompiledShader.setUniformMatrix4fv(
         solidShader,
