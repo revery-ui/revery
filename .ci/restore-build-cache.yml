@@ -6,7 +6,7 @@ steps:
     inputs:
         buildType: 'specific'
         project: 'revery'
-        pipeline: 'build'
+        pipeline: '$(Build.DefinitionName)'
         branchName: 'refs/heads/master'
         buildVersionToDownload: 'latestFromBranch'
         downloadType: 'single'
@@ -25,7 +25,7 @@ steps:
     inputs:
         buildType: 'specific'
         project: 'revery'
-        pipeline: 'build'
+        pipeline: '$(Build.DefinitionName)'
         branchName: 'refs/heads/master'
         buildVersionToDownload: 'latestFromBranch'
         downloadType: 'single'
