@@ -88,7 +88,7 @@ let filterItems = (filterText: string, items: list(item)) => {
 let init = app => {
 
   let width = 400;
-  let height = 600;
+  let height = 1;
 
   let w = App.createWindow(app, "test", ~createOptions={
     ...Window.defaultCreateOptions,
