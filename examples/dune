@@ -1,8 +1,8 @@
 (executables
-    (names Bin Autocomplete)
+    (names Bin Autocomplete Clock)
     (preprocess (pps lwt_ppx))
     (package Revery)
-    (public_names Bin Autocomplete)
+    (public_names Bin Autocomplete Clock)
     (js_of_ocaml)
     (libraries
         js_of_ocaml
@@ -13,4 +13,4 @@
 (install
     (section bin)
     (package Revery)
-    (files Roboto-Regular.ttf binary.dat index.html Bin.bc.js gl-matrix-min.js outrun-logo.png))
+    (files Roboto-Regular.ttf binary.dat index.html Bin.bc.js gl-matrix-min.js outrun-logo.png second_hand.png minute_hand.png hour_hand.png))
