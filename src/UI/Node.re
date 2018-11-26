@@ -8,7 +8,7 @@ open Reglm;
 class node ('a) (_name: string) = {
   as _this;
   val _children: ref(list(node('a))) = ref([]);
-  val _style = ref(Style.defaultStyle);
+  val _style: ref(Style.t) = ref(Style.defaultStyle);
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let dimensions = _layoutNode^.layout;
@@ -21,7 +21,8 @@ class node ('a) (_name: string) = {
         0.,
       ),
     );
-    let localContext = NodeDrawContext.inherit(parentContext, matrix, getStyle().opacity);
+    let style: Style.t = _this#getStyle();
+    let localContext = NodeDrawContext.createFromParent(parentContext, matrix, style.opacity);
     List.iter(c => c#draw(pass, localContext), _children^);
   };
   pub measurements = () => _layoutNode^.layout;

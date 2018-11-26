@@ -18,6 +18,7 @@ type t = {
   fontFamily,
   fontSize: int,
   transform: list(Transform.t),
+  opacity: float,
 };
 
 let make =
@@ -35,6 +36,7 @@ let make =
       ~fontFamily="",
       ~fontSize=Encoding.cssUndefined,
       ~transform=[],
+      ~opacity=1.0,
       _unit: unit,
     ) => {
   let ret: t = {
@@ -51,6 +53,7 @@ let make =
     fontFamily,
     fontSize,
     transform,
+    opacity,
   };
 
   ret;

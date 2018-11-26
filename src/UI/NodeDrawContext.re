@@ -20,12 +20,12 @@ let create = (transform: Mat4.t, zIndex: int, opacity: float) => {
     ret;
 };
 
-let inherit = (parentContext: t, localTransform: Mat4.t, localOpacity: float) => {
+let createFromParent = (parentContext: t, localTransform: Mat4.t, localOpacity: float) => {
     let transform = Mat4.create();
     Mat4.multiply(transform, parentContext.transform, localTransform);
 
-    let zIndex = transform.zIndex + 1;
-    let opacity = transform.opacity *. localOpacity;
+    let zIndex = parentContext.zIndex + 1;
+    let opacity = parentContext.opacity *. localOpacity;
 
     let ret: t = {
         transform,

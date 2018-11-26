@@ -46,6 +46,6 @@ class viewNode (name: string) = {
     | _ => ()
     };
 
-    _super#draw(pass, layer, w);
+    _super#draw(pass, parentContext);
   };
 };
