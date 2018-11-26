@@ -5,7 +5,7 @@ steps:
     displayName: 'Cache: Restore source-tarballs'
     inputs:
         buildType: 'specific'
-        project: 'revery'
+        project: '$(System.TeamProject)'
         pipeline: '$(Build.DefinitionName)'
         branchName: 'refs/heads/master'
         buildVersionToDownload: 'latestFromBranch'
@@ -24,7 +24,7 @@ steps:
     displayName: 'Cache: Restore install'
     inputs:
         buildType: 'specific'
-        project: 'revery'
+        project: '$(System.TeamProject)'
         pipeline: '$(Build.DefinitionName)'
         branchName: 'refs/heads/master'
         buildVersionToDownload: 'latestFromBranch'

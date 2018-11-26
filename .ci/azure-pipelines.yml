@@ -15,6 +15,8 @@ jobs:
 
   steps:
   - script: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libegl1-mesa-dev mesa-utils mesa-utils-extra ragel
+  - script: echo $(Build.DefinitionName)
+  - script: echo $(System.TeamProject)
   - template: esy-build-steps.yml
   - template: publish-build-cache.yml
 
