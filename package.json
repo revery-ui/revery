@@ -38,6 +38,9 @@
     "@opam/js_of_ocaml-compiler": "*",
     "rejest": "^1.2.0"
   },
+  "resolutions": {
+    "@opam/cmdliner": "1.0.2"
+  },
   "peerDependencies": {
     "ocaml": "~4.6.0"
   },

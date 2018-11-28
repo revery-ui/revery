@@ -67,9 +67,11 @@ let render = (container: uiContainer, component: UiReact.component) => {
     UiReact.updateContainer(container, component)
   );
 
+  let size = Window.getFramebufferSize(window);
+  let pixelRatio = Window.getDevicePixelRatio(window);
+
   switch (options.autoSize) {
   | false =>
-    let size = Window.getSize(window);
     rootNode#setStyle(
       Style.make(
         ~position=LayoutTypes.Relative,
@@ -87,10 +89,8 @@ let render = (container: uiContainer, component: UiReact.component) => {
       width: measurements.width,
       height: measurements.height,
     };
-    Window.setSize(window, size.width, size.height);
+    Window.setSize(window, size.width / int_of_float(pixelRatio), size.height * int_of_float(pixelRatio));
   };
-
-  let size = Window.getSize(window);
 
   Mat4.ortho(
     _projection,

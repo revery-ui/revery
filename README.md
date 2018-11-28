@@ -122,14 +122,14 @@ Some tentative work we need to do, in no particular order:
     - [ ] Input handling
     - [ ] Animations
     - [ ] Gestures
-    - [ ] Transforms
+    - [x] Transforms
     - [ ] Compositing / Container
     - [ ] zIndex / layers
 - UI Components
     - [x] View
     - [x] Image
     - [x] Text
-    - [ ] TextInput
+    - [ ] Input
     - [ ] Button
     - [ ] Slider
     - [ ] Checkbox
@@ -152,7 +152,7 @@ Some tentative work we need to do, in no particular order:
     - [ ] MP3 file playback
     - [ ] 3D / Spatial Audio
 - Example apps
-    - [ ] Quickstart / Hello World
+    - [x] [Quickstart](https://github.com/bryphe/revery-quick-start) / Hello World
     - [ ] Calculator
     - [ ] Todo List
 

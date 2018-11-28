@@ -24,8 +24,14 @@ type t = {
   glfwWindow: Glfw.Window.t,
   mutable render: windowRenderCallback,
   mutable shouldRender: windowShouldRenderCallback,
+  /* Note we separate the _Window_ width / height
+   * and the _framebuffer_ width/height
+   * Some more info here: http://www.glfw.org/docs/latest/window_guide.html
+   */
   mutable width: int,
   mutable height: int,
+  mutable framebufferWidth: int,
+  mutable framebufferHeight: int,
   mutable isRendering: bool,
   mutable requestedWidth: option(int),
   mutable requestedHeight: option(int),
@@ -67,6 +73,12 @@ let isDirty = (w: t) =>
     };
   };
 
+let _updateFramebuffer = (w: t) => {
+  let size = Glfw.glfwGetFramebufferSize(w.glfwWindow);
+  w.framebufferWidth = size.width;
+  w.framebufferHeight = size.height;
+};
+
 let setSize = (w: t, width: int, height: int) =>
   if (width != w.width || height != w.height) {
     /*
@@ -82,6 +94,7 @@ let setSize = (w: t, width: int, height: int) =>
       w.height = height;
       w.requestedWidth = None;
       w.requestedHeight = None;
+      _updateFramebuffer(w);
     };
   };
 
@@ -96,7 +109,7 @@ let render = (w: t) => {
   w.isRendering = true;
   Glfw.glfwMakeContextCurrent(w.glfwWindow);
 
-  Glfw.glViewport(0, 0, w.width, w.height);
+  Glfw.glViewport(0, 0, w.framebufferWidth, w.framebufferHeight);
   /* glClearDepth(1.0); */
   /* glEnable(GL_DEPTH_TEST); */
   /* glDepthFunc(GL_LEQUAL); */
@@ -127,6 +140,8 @@ let create = (name: string, options: windowCreateOptions) => {
   let w = Glfw.glfwCreateWindow(options.width, options.height, name);
   Glfw.glfwMakeContextCurrent(w);
 
+  let fbSize = Glfw.glfwGetFramebufferSize(w);
+
   let ret: t = {
     backgroundColor: options.backgroundColor,
     glfwWindow: w,
@@ -136,6 +151,8 @@ let create = (name: string, options: windowCreateOptions) => {
 
     width: options.width,
     height: options.height,
+    framebufferWidth: fbSize.width,
+    framebufferHeight: fbSize.height,
 
     isRendering: false,
     requestedWidth: None,
@@ -229,7 +246,8 @@ let create = (name: string, options: windowCreateOptions) => {
 
 let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
 
-let setPos = (w: t, x: int, y: int) => Glfw.glfwSetWindowPos(w.glfwWindow, x, y);
+let setPos = (w: t, x: int, y: int) =>
+  Glfw.glfwSetWindowPos(w.glfwWindow, x, y);
 
 let show = w => Glfw.glfwShowWindow(w.glfwWindow);
 
@@ -243,6 +261,22 @@ type windowSize = {
 let getSize = (w: t) => {
   let r: windowSize = {width: w.width, height: w.height};
   r;
+};
+
+let getFramebufferSize = (w: t) => {
+  let r: windowSize = {
+    width: w.framebufferWidth,
+    height: w.framebufferHeight,
+  };
+  r;
+};
+
+let getDevicePixelRatio = (w: t) => {
+  let windowSizeInScreenCoordinates = getSize(w);
+  let windowSizeInPixels = getFramebufferSize(w);
+
+  float_of_int(windowSizeInPixels.width)
+  /. float_of_int(windowSizeInScreenCoordinates.width);
 };
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) =>
