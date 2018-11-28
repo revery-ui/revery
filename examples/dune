@@ -13,4 +13,4 @@
 (install
     (section bin)
     (package Revery)
-    (files Roboto-Regular.ttf binary.dat index.html Bin.bc.js gl-matrix-min.js outrun-logo.png second_hand.png minute_hand.png hour_hand.png))
+    (files Roboto-Regular.ttf binary.dat index.html Bin.bc.js gl-matrix-min.js outrun-logo.png))
