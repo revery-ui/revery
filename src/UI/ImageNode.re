@@ -24,6 +24,7 @@ class imageNode (name: string, imagePath: string) = {
     | AlphaPass(m) =>
       Shaders.CompiledShader.use(textureShader);
 
+      let opacity = _super#getStyle().opacity *. parentContext.opacity;
       let localTransform = _super#getLocalTransform();
       let world = Mat4.create();
       Mat4.multiply(world, parentContext.transform, localTransform);
@@ -42,7 +43,7 @@ class imageNode (name: string, imagePath: string) = {
       Shaders.CompiledShader.setUniform3fv(
         textureShader,
         "uColor",
-        Vec3.create(1.0, 1.0, 1.0),
+        Vec4.create(1.0, 1.0, 1.0, opacity),
       );
 
       glBindTexture(GL_TEXTURE_2D, texture);

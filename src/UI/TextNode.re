@@ -32,13 +32,14 @@ class textNode (name: string, text: string) = {
       );
 
       let style = _super#getStyle();
+      let opacity = style.opacity *. parentContext.opacity;
       let font = FontCache.load(style.fontFamily, style.fontSize);
       let dimensions = _super#measurements();
-      let color = style.color;
+      let color = Color.multiplyAlpha(style.color, opacity);;
       Shaders.CompiledShader.setUniform3fv(
         textureShader,
         "uColor",
-        Color.toVec3(color),
+        Color.toVec4(color),
       );
 
       let outerTransform = Mat4.create();

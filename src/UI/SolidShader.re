@@ -18,7 +18,7 @@ let uniform: list(ShaderUniform.t) = [
 
 let varying: list(ShaderVarying.t) = [
   {
-    dataType: ShaderDataType.Vector3,
+    dataType: ShaderDataType.Vector4,
     name: "vColor",
     precision: ShaderPrecision.Low,
   },
@@ -31,7 +31,7 @@ let vsShader = {|
 |};
 
 let fsShader = {|
-    gl_FragColor = vec4(vColor, 1.0);
+    gl_FragColor = vColor;
 |};
 
 let create = () => {

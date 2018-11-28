@@ -17,6 +17,14 @@ let rgb = (r: float, g: float, b: float) => {
   c;
 };
 
+let multiplyAlpha = (opacity: float, color: t) => {
+    let ret: t = {
+    ...color,
+    a: opacity *. color.a,
+    };
+    ret;
+};
+
 let toVec3 = (color: t) => Vec3.create(color.r, color.g, color.b);
 
 let toVec4 = (color: t) => Vec4.create(color.r, color.g, color.b, color.a);
