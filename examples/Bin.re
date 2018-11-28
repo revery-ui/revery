@@ -10,7 +10,7 @@ let init = app => {
 
   let textHeaderStyle = Style.make(~backgroundColor=Colors.red, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=24, ~marginHorizontal=12, ());
 
-  let smallerTextStyle = Style.make(~backgroundColor=Colors.red, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=18, ~marginVertical=24, ());
+  let smallerTextStyle = Style.make(~backgroundColor=Colors.red, ~color=Colors.white, ~opacity=0.5, ~fontFamily="Roboto-Regular.ttf", ~fontSize=18, ~marginVertical=24, ());
 
   Window.setShouldRenderCallback(w, () => true);
 
@@ -21,7 +21,7 @@ let init = app => {
             <image src="outrun-logo.png" style=(Style.make(~width=128, ~height=64, ~transform=[RotateX(Angle.from_radians(Time.getElapsedTime()))], ())) />
             <text style=(textHeaderStyle)>"Hello World!"</text>
             <text style=(smallerTextStyle)>"Welcome to revery"</text>
-            <view style=(Style.make(~width=25, ~height=25, ~backgroundColor=Colors.green, ())) />
+            <view style=(Style.make(~width=25, ~height=25, ~opacity=sin(Time.getElapsedTime()), ~backgroundColor=Colors.green, ())) />
         </view>);
   });
 };

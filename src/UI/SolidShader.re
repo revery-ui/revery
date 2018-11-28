@@ -11,7 +11,7 @@ let attribute: list(ShaderAttribute.t) = [
 ];
 
 let uniform: list(ShaderUniform.t) = [
-  {dataType: ShaderDataType.Vector3, name: "uColor", usage: VertexShader},
+  {dataType: ShaderDataType.Vector4, name: "uColor", usage: VertexShader},
   {dataType: ShaderDataType.Mat4, name: "uWorld", usage: VertexShader},
   {dataType: ShaderDataType.Mat4, name: "uProjection", usage: VertexShader},
 ];
