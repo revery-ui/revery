@@ -40,7 +40,7 @@ class imageNode (name: string, imagePath: string) = {
         m,
       );
 
-      Shaders.CompiledShader.setUniform3fv(
+      Shaders.CompiledShader.setUniform4fv(
         textureShader,
         "uColor",
         Vec4.create(1.0, 1.0, 1.0, opacity),
