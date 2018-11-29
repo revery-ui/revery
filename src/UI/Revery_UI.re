@@ -7,6 +7,7 @@ module Geometry = Revery_Geometry;
 module Window = Revery_Core.Window;
 module Performance = Revery_Core.Performance;
 
+module Animation = Animation;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 module Style = Style;
