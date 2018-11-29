@@ -106,14 +106,17 @@ let render = (container: uiContainer, component: UiReact.component) => {
   Performance.bench("draw", () => {
     /* Do a first pass for all 'opaque' geometry */
     /* This helps reduce the overhead for the more expensive alpha pass, next */
+
+    let drawContext = NodeDrawContext.create(m, 0, 1.0);
+
     let solidPass = SolidPass(_projection);
-    rootNode#draw(solidPass, 0, m);
+    rootNode#draw(solidPass, drawContext);
 
     /* Render all geometry that requires an alpha */
     let alphaPass = AlphaPass(_projection);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    rootNode#draw(alphaPass, 0, m);
+    rootNode#draw(alphaPass, drawContext);
     glDisable(GL_BLEND);
   });
 };

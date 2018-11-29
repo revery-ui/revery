@@ -11,14 +11,14 @@ let attribute: list(ShaderAttribute.t) = [
 ];
 
 let uniform: list(ShaderUniform.t) = [
-  {dataType: ShaderDataType.Vector3, name: "uColor", usage: VertexShader},
+  {dataType: ShaderDataType.Vector4, name: "uColor", usage: VertexShader},
   {dataType: ShaderDataType.Mat4, name: "uWorld", usage: VertexShader},
   {dataType: ShaderDataType.Mat4, name: "uProjection", usage: VertexShader},
 ];
 
 let varying: list(ShaderVarying.t) = [
   {
-    dataType: ShaderDataType.Vector3,
+    dataType: ShaderDataType.Vector4,
     name: "vColor",
     precision: ShaderPrecision.Low,
   },
@@ -31,7 +31,7 @@ let vsShader = {|
 |};
 
 let fsShader = {|
-    gl_FragColor = vec4(vColor, 1.0);
+    gl_FragColor = vColor;
 |};
 
 let create = () => {

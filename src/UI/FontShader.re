@@ -42,7 +42,7 @@ let vsShader = SolidShader.vsShader ++ "\n" ++ {|
 
 let fsShader = {|
     vec4 t = texture2D(uSampler, vTexCoord);
-    gl_FragColor = vec4(vColor.r, vColor.g, vColor.b, t.a);
+    gl_FragColor = vec4(vColor.r, vColor.g, vColor.b, t.a * vColor.a);
 |};
 
 let create = () => {

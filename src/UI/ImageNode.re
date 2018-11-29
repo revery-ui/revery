@@ -16,17 +16,18 @@ class imageNode (name: string, imagePath: string) = {
   val textureShader = Assets.textureShader();
   val texture = ImageRenderer.getTexture(imagePath);
   inherit (class node(renderPass))(name) as _super;
-  pub! draw = (pass: renderPass, layer: int, w: Mat4.t) => {
+  pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
     /* Draw background first */
-    _super#draw(pass, layer, w);
+    _super#draw(pass, parentContext);
 
     switch (pass) {
     | AlphaPass(m) =>
       Shaders.CompiledShader.use(textureShader);
 
+      let opacity = _super#getStyle().opacity *. parentContext.opacity;
       let localTransform = _super#getLocalTransform();
       let world = Mat4.create();
-      Mat4.multiply(world, w, localTransform);
+      Mat4.multiply(world, parentContext.transform, localTransform);
 
       Shaders.CompiledShader.setUniformMatrix4fv(
         textureShader,
@@ -39,10 +40,10 @@ class imageNode (name: string, imagePath: string) = {
         m,
       );
 
-      Shaders.CompiledShader.setUniform3fv(
+      Shaders.CompiledShader.setUniform4fv(
         textureShader,
         "uColor",
-        Vec3.create(1.0, 1.0, 1.0),
+        Vec4.create(1.0, 1.0, 1.0, opacity),
       );
 
       glBindTexture(GL_TEXTURE_2D, texture);

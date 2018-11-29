@@ -25,6 +25,7 @@ type t = {
   marginVertical: int,
   marginHorizontal: int,
   transform: list(Transform.t),
+  opacity: float,
 };
 
 let make =
@@ -49,6 +50,7 @@ let make =
       ~marginVertical=Encoding.cssUndefined,
       ~marginHorizontal=Encoding.cssUndefined,
       ~transform=[],
+      ~opacity=1.0,
       _unit: unit,
     ) => {
   let ret: t = {
@@ -72,6 +74,7 @@ let make =
     margin,
     marginVertical,
     marginHorizontal,
+    opacity,
   };
 
   ret;
