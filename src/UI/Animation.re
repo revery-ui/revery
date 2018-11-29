@@ -103,6 +103,16 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
         }
     };
 
+    let getAnimationCount = () => {
+        List.length(activeAnimations^);
+    };
+
+    let anyActiveAnimations = () => {
+        let t = Time.to_float_seconds(AnimationTickerImpl.time());
+        let anims = List.filter(hasStarted(t), activeAnimations^);   
+        List.length(anims) > 0
+    };
+
     let start = (animationValue: animationValue, animationOptions: animationOptions) => {
        let animation: animation = {
            delay: Time.to_float_seconds(animationOptions.delay),
@@ -115,10 +125,13 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
        };
 
        activeAnimations := List.append(activeAnimations^, [animation]);
+       animation
     }
 
     let tick = (t: float) => {
         List.iter(tickAnimation(t), activeAnimations^);
+
+        activeAnimations := List.filter((a) => !isComplete(t, a), activeAnimations^);
     };
 
     Event.subscribe(AnimationTickerImpl.tick, (t) => {
@@ -126,11 +139,3 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
         print_endline("TICK: " ++ Time.show(t));
     })
 };
-
-/* NEXT STEPS: Simple ticker, tests */
-/* Animated.start(floatValue, options); */
-/* TestAnimationTicker.tick(0.5); */
-/* Delay too */
-
-/* useAnimation(Animated.value(0), ) */
-/* start  */

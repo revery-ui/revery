@@ -47,4 +47,50 @@ test("Animation", () => {
           expect(myTestValue.current).toBe(0.1);
       });
   });
+  test("simple animation", () => {
+       module TestTicker = MakeTicker();
+       module Animated = Animation.Make(TestTicker);
+
+       let myAnimation = Animated.start(Animated.floatValue(0.), {
+        duration: Animation.Time.Seconds(2.),
+        delay: Animation.Time.Seconds(0.),
+        toValue: 10.,
+        repeat: false,
+       });
+
+       TestTicker.simulateTick(Animation.Time.Seconds(1.));
+       expect(myAnimation.value.current).toBe(5.);
+  });
+
+  test("animation that repeats", () => {
+       module TestTicker = MakeTicker();
+       module Animated = Animation.Make(TestTicker);
+
+       let myAnimation = Animated.start(Animated.floatValue(0.), {
+        duration: Animation.Time.Seconds(2.),
+        delay: Animation.Time.Seconds(0.),
+        toValue: 10.,
+        repeat: true,
+       });
+
+       TestTicker.simulateTick(Animation.Time.Seconds(3.));
+       expect(myAnimation.value.current).toBe(5.);
+  });
+
+  test("animations are cleaned up", () => {
+       module TestTicker = MakeTicker();
+       module Animated = Animation.Make(TestTicker);
+
+       let _myAnimation = Animated.start(Animated.floatValue(0.), {
+        duration: Animation.Time.Seconds(1.),
+        delay: Animation.Time.Seconds(0.),
+        toValue: 10.,
+        repeat: false,
+       });
+
+       TestTicker.simulateTick(Animation.Time.Seconds(3.));
+
+       expect(Animated.anyActiveAnimations()).toBe(false);
+       expect(Animated.getAnimationCount()).toBe(0);
+  });
 });
