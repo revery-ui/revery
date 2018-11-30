@@ -9,11 +9,11 @@ module MakeTicker = () => {
 
     let time = () => _currentTime^;
 
-    let tick: Event.t(Animation.Time.t) = Event.create();
+    let onTick: Event.t(Animation.Time.t) = Event.create();
 
     let simulateTick = (time: Animation.Time.t)  => {
         _currentTime := time;
-        Event.dispatch(tick, time);
+        Event.dispatch(onTick, time);
     };
 };
 

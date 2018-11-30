@@ -1,27 +1,12 @@
 module Event = Reactify.Event;
 
-module Time {
-    type t = 
-    | Seconds(float)
-    | Milliseconds(float);
-
-    let to_float_seconds = (v: t) => {
-        switch (v) {
-        | Seconds(x) => x
-        | Milliseconds(x) => x /. 1000.;
-        }
-    }
-
-    let show = (v: t) => {
-        string_of_float(to_float_seconds(v)) ++ "s";
-    };
-}
+open Revery_Core;
 
 
 module type AnimationTicker = {
     let time: unit => Time.t;
 
-    let tick: Event.t(Time.t);
+    let onTick: Event.t(Time.t);
 };
 
 module Make = (AnimationTickerImpl: AnimationTicker) => {
@@ -128,14 +113,17 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
        animation
     }
 
+    let cancel = (anim: animation) => {
+        activeAnimations := List.filter((a) => a == anim, activeAnimations^);
+    };
+
     let tick = (t: float) => {
         List.iter(tickAnimation(t), activeAnimations^);
 
         activeAnimations := List.filter((a) => !isComplete(t, a), activeAnimations^);
     };
 
-    Event.subscribe(AnimationTickerImpl.tick, (t) => {
+    Event.subscribe(AnimationTickerImpl.onTick, (t) => {
         tick(Time.to_float_seconds(t));
-        print_endline("TICK: " ++ Time.show(t));
     })
 };

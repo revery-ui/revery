@@ -2,26 +2,63 @@ open Revery;
 open Revery.Core;
 open Revery.UI;
 
+module Logo = (val component((render, ~children, ()) => {
+    render(() => {
+            let rotation = useAnimation(Animated.floatValue(0.), {
+                toValue: 6.28,
+                duration: Seconds(8.),
+                delay: Seconds(1.0),
+                repeat: true
+            });
+
+            let rotationY = useAnimation(Animated.floatValue(0.), {
+                toValue: 6.28,
+                duration: Seconds(4.),
+                delay: Seconds(0.5),
+                repeat: true,
+            });
+
+            <image src="outrun-logo.png" style=(Style.make(~width=512, ~height=256, ~transform=[RotateY(Angle.from_radians(rotationY)), RotateX(Angle.from_radians(rotation))], ())) />
+    }, ~children);
+}));
+
+module AnimatedText = (val component((render, ~delay, ~textContent, ~children, ()) => {
+  render(() => {
+
+      let opacity: float = useAnimation(Animated.floatValue(0.), {
+        toValue: 1.0,
+        duration: Seconds(1.),
+        delay: Seconds(delay),
+        repeat: false,
+      });
+
+      let translate: float = useAnimation(Animated.floatValue(-100.), {
+        toValue: 0.,
+        duration: Seconds(2.),
+        delay: Seconds(delay),
+        repeat: false,
+      });
+
+      let textHeaderStyle = Style.make(~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=24, ~marginHorizontal=12, ~opacity=opacity, ~transform=[TranslateY(translate)], ());
+
+      <text style=(textHeaderStyle)>{textContent}</text>
+  }, ~children);
+}));
+
 let init = app => {
 
-  let w = App.createWindow(app, "test");
+  let w = App.createWindow(app, "Welcome to Revery!");
 
   let ui = UI.create(w);
 
-  let textHeaderStyle = Style.make(~backgroundColor=Colors.red, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=24, ~marginHorizontal=12, ());
-
-  let smallerTextStyle = Style.make(~backgroundColor=Colors.red, ~color=Colors.white, ~opacity=0.5, ~fontFamily="Roboto-Regular.ttf", ~fontSize=18, ~marginVertical=24, ());
-
-  Window.setShouldRenderCallback(w, () => true);
-
   Window.setRenderCallback(w, () => {
     UI.render(ui,
-        <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=50, ~top=50, ~left=50, ~right=50, ~backgroundColor=Colors.blue, ()))>
-            <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=0, ~width=10, ~height=10, ~backgroundColor=Colors.red, ())) />
-            <image src="outrun-logo.png" style=(Style.make(~width=128, ~height=64, ~transform=[RotateX(Angle.from_radians(Time.getElapsedTime()))], ())) />
-            <text style=(textHeaderStyle)>"Hello World!"</text>
-            <text style=(smallerTextStyle)>"Welcome to revery"</text>
-            <view style=(Style.make(~width=25, ~height=25, ~opacity=sin(Time.getElapsedTime()), ~backgroundColor=Colors.green, ())) />
+
+        <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=0, ~top=0, ~left=0, ~right=0, ()))>
+            <Logo />
+            <AnimatedText delay=0.0 textContent="Welcome" />
+            <AnimatedText delay=0.5 textContent="to" />
+            <AnimatedText delay=1. textContent="Revery" />
         </view>);
   });
 };
