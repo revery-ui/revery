@@ -38,13 +38,13 @@
     "@opam/js_of_ocaml-compiler": "*",
     "@reason-native/test-runner": "*",
     "@reason-native/chalk": "*",
-    "@reason-native/file-context-printer": "facebookexperimental/reason-native:file-context-printer.json#1b0f213"
+    "@reason-native/file-context-printer": "bryphe/reason-native:file-context-printer.json#970a686"
   },
   "resolutions": {
     "@opam/cmdliner": "1.0.2",
-    "@reason-native/test-runner": "facebookexperimental/reason-native:test-runner.json#1b0f213",
-    "@reason-native/file-context-printer": "facebookexperimental/reason-native:file-context-printer.json#1b0f213",
-    "@reason-native/chalk": "facebookexperimental/reason-native:chalk.json#1b0f213"
+    "@reason-native/test-runner": "bryphe/reason-native:test-runner.json#970a686",
+    "@reason-native/file-context-printer": "bryphe/reason-native:file-context-printer.json#970a686",
+    "@reason-native/chalk": "bryphe/reason-native:chalk.json#970a686"
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"
