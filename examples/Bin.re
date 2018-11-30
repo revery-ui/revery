@@ -1,5 +1,6 @@
 open Revery;
 open Revery.Core;
+open Revery.Math;
 open Revery.UI;
 
 let init = app => {

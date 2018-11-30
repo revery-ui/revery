@@ -1,0 +1,4 @@
+(library
+    (name Revery_Math)
+    (public_name Revery_Math)
+    (libraries reglm))
