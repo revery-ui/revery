@@ -36,10 +36,15 @@
     "@opam/js_of_ocaml-lwt": "*",
     "flex": "^1.2.2",
     "@opam/js_of_ocaml-compiler": "*",
-    "rejest": "^1.2.0"
+    "@reason-native/test-runner": "*",
+    "@reason-native/chalk": "*",
+    "@reason-native/file-context-printer": "facebookexperimental/reason-native:file-context-printer.json#1b0f213"
   },
   "resolutions": {
-    "@opam/cmdliner": "1.0.2"
+    "@opam/cmdliner": "1.0.2",
+    "@reason-native/test-runner": "facebookexperimental/reason-native:test-runner.json#1b0f213",
+    "@reason-native/file-context-printer": "facebookexperimental/reason-native:file-context-printer.json#1b0f213",
+    "@reason-native/chalk": "facebookexperimental/reason-native:chalk.json#1b0f213"
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"
