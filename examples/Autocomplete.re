@@ -7,55 +7,53 @@ module Glfw = Reglfw.Glfw;
 /* Define our app state */
 
 type item = {
-    name: string,
-    description: string
+  name: string,
+  description: string,
 };
 
 type state = {
-    text: string,
-    items: list(item)
+  text: string,
+  items: list(item),
 };
 
 let createItem = (name, description) => {
-    let ret: item = {name, description}
-    ret;
-}
+  let ret: item = {name, description};
+  ret;
+};
 
 let initialState: state = {
-    text: "",
-    items: [
-        createItem("Item 1", "Item 1 Description"),
-        createItem("Item 2", "Item 2 Description"),
-        createItem("Item 3", "Item 3 Description")
-    ]
+  text: "",
+  items: [
+    createItem("Item 1", "Item 1 Description"),
+    createItem("Item 2", "Item 2 Description"),
+    createItem("Item 3", "Item 3 Description"),
+  ],
 };
 
 /* Define the operations we allow on our app state */
 
 type action =
-| UpdateText(string)
-| SetItems(list(item))
-/* These actions should be baked into an input control! */
-| Backspace
-| ClearWord;
+  | UpdateText(string)
+  | SetItems(list(item))
+  /* These actions should be baked into an input control! */
+  | Backspace
+  | ClearWord;
 
 /* And the results of those actions on our app state, via a reducer */
 
-let reducer = (s: state, a: action) => {
-    switch (a) {
-    | UpdateText(t) => { ...s, text: s.text ++ t}
-    | SetItems(i) => { ...s, items: i }
-    | Backspace => {
-      let length = String.length(s.text);
-      if (length > 0) {
-        { ...s, text: String.sub(s.text, 0, length - 1) }
-      } else {
-        s
-      }
-    }
-    | ClearWord => { ...s, text: "" }
+let reducer = (s: state, a: action) =>
+  switch (a) {
+  | UpdateText(t) => {...s, text: s.text ++ t}
+  | SetItems(i) => {...s, items: i}
+  | Backspace =>
+    let length = String.length(s.text);
+    if (length > 0) {
+      {...s, text: String.sub(s.text, 0, length - 1)};
+    } else {
+      s;
     };
-};
+  | ClearWord => {...s, text: ""}
+  };
 
 /* Helper method... There's no string.indexOf equivalent in the OCaml stdlib, surprisingly! */
 let contains = (s1, s2) => {
@@ -69,82 +67,109 @@ let contains = (s1, s2) => {
   ) {
   | Not_found => false
   };
-}
+};
 
 /* A selector to get the set of items, based on our filter text */
 let filterItems = (filterText: string, items: list(item)) => {
-    let ft = String.lowercase_ascii(filterText);
+  let ft = String.lowercase_ascii(filterText);
 
-    let f = (i) => {
-        let normalizedName = String.lowercase_ascii(i.name);
-        let normalizedDescription = String.lowercase_ascii(i.description);
-        
-        contains(normalizedName, ft) || contains(normalizedDescription, ft)
-    };
+  let f = i => {
+    let normalizedName = String.lowercase_ascii(i.name);
+    let normalizedDescription = String.lowercase_ascii(i.description);
 
-    List.filter(f, items);
+    contains(normalizedName, ft) || contains(normalizedDescription, ft);
+  };
+
+  List.filter(f, items);
 };
 
 let init = app => {
-
   let width = 400;
   let height = 1;
 
-  let w = App.createWindow(app, "test", ~createOptions={
-    ...Window.defaultCreateOptions,
-    decorated: false,
-    visible: false,
-    width,
-    height,
-  });
+  let w =
+    App.createWindow(
+      app,
+      "test",
+      ~createOptions={
+        ...Window.defaultCreateOptions,
+        decorated: false,
+        visible: false,
+        width,
+        height,
+      },
+    );
 
   /* Figure out current monitor dimensions, so we can center it! */
   let monitor = Monitor.getPrimaryMonitor();
   let monitorSize = Monitor.getSize(monitor);
 
-  Window.setPos(w, (monitorSize.width - width) / 2, ((monitorSize.height - height) / 2));
+  Window.setPos(
+    w,
+    (monitorSize.width - width) / 2,
+    (monitorSize.height - height) / 2,
+  );
   Window.show(w);
 
-  let ui = UI.create(w, ~createOptions={ autoSize: true });
+  let ui = UI.create(w, ~createOptions={autoSize: true});
 
-  let textHeaderStyle = Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=24, ~height=30, ());
+  let textHeaderStyle =
+    Style.make(
+      ~backgroundColor=Colors.black,
+      ~color=Colors.white,
+      ~fontFamily="Roboto-Regular.ttf",
+      ~fontSize=24,
+      ~height=30,
+      (),
+    );
 
   /* let smallerTextStyle = Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=12, ()); */
 
   /* Listen to key press events, and coerce them into actions */
-  let _ = Event.subscribe(w.onKeyPress, (keyEvent) => {
-     App.dispatch(app, UpdateText(keyEvent.character));
-  });
+  let _ =
+    Event.subscribe(w.onKeyPress, keyEvent =>
+      App.dispatch(app, UpdateText(keyEvent.character))
+    );
 
   /* Listen to key down events, and coerce them into actions, too */
-  let _ = Event.subscribe(w.onKeyDown, (keyEvent) => {
-    /* TODO: Can we implement this API w/o GLFW leaking through? */
-    if (keyEvent.key == Glfw.Key.GLFW_KEY_BACKSPACE) {
+  let _ =
+    Event.subscribe(w.onKeyDown, keyEvent =>
+      /* TODO: Can we implement this API w/o GLFW leaking through? */
+      if (keyEvent.key == Glfw.Key.GLFW_KEY_BACKSPACE) {
         App.dispatch(app, Backspace);
-    } else if (keyEvent.key == Glfw.Key.GLFW_KEY_H && keyEvent.ctrlKey) {
+      } else if (keyEvent.key == Glfw.Key.GLFW_KEY_H && keyEvent.ctrlKey) {
         App.dispatch(app, Backspace);
-    } else if (keyEvent.key == Glfw.Key.GLFW_KEY_ESCAPE) {
+      } else if (keyEvent.key == Glfw.Key.GLFW_KEY_ESCAPE) {
         App.quit(0);
-    } else if (keyEvent.key == Glfw.Key.GLFW_KEY_W && keyEvent.ctrlKey) {
-        App.dispatch(app, ClearWord)
-    }
-  });
+      } else if (keyEvent.key == Glfw.Key.GLFW_KEY_W && keyEvent.ctrlKey) {
+        App.dispatch(app, ClearWord);
+      }
+    );
 
   /* Render function - where the magic happens! */
-  Window.setRenderCallback(w, () => {
-    let state = App.getState(app);
+  Window.setRenderCallback(
+    w,
+    () => {
+      let state = App.getState(app);
 
-    let filteredItems = filterItems(state.text, state.items);
-    let items = List.map((i) => <text style=(textHeaderStyle)>{i.name}</text>, filteredItems);
+      let filteredItems = filterItems(state.text, state.items);
+      let items =
+        List.map(
+          i => <text style=textHeaderStyle> {i.name} </text>,
+          filteredItems,
+        );
 
-    UI.render(ui,
-        <view style=(Style.make(~backgroundColor=Colors.blue,~width=width, ()))>
-            <view style=(Style.make(~height=50, ()))>
-                <text style=(textHeaderStyle)>{state.text ++ "|"}</text>
-            </view>
-            <view style=(Style.make(()))>...items</view>
-        </view>);
-  });
+      UI.render(
+        ui,
+        <view style={Style.make(~backgroundColor=Colors.blue, ~width, ())}>
+          <view style={Style.make(~height=50, ())}>
+            <text style=textHeaderStyle> {state.text ++ "|"} </text>
+          </view>
+          <view style={Style.make()> ...items </view>
+        </view>,
+      );
+    },
+  );
 };
 
 App.startWithState(initialState, reducer, init);

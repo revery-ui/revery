@@ -3,12 +3,13 @@ open Fontkit;
 
 open Revery_Core;
 
+let _getGlyph =
+  Memoize.make(((font: Fontkit.fk_face, codepoint: int)) =>
+    Fontkit.renderGlyph(font, codepoint)
+  );
 
-let _getGlyph = Memoize.make(((font: Fontkit.fk_face, codepoint: int)) =>
-  Fontkit.renderGlyph(font, codepoint));
-
-let getGlyph = (font: Fontkit.fk_face, codepoint: int) => _getGlyph((font, codepoint));
-
+let getGlyph = (font: Fontkit.fk_face, codepoint: int) =>
+  _getGlyph((font, codepoint));
 
 let _getTexture = ((font: Fontkit.fk_face, codepoint: int)) => {
   let glyph = getGlyph(font, codepoint);
@@ -30,7 +31,8 @@ let _getTexture = ((font: Fontkit.fk_face, codepoint: int)) => {
 };
 
 let _memoizedGetTexture = Memoize.make(_getTexture);
-let getTexture = (font: Fontkit.fk_face, codepoint: int) => _memoizedGetTexture((font, codepoint));
+let getTexture = (font: Fontkit.fk_face, codepoint: int) =>
+  _memoizedGetTexture((font, codepoint));
 
 type dimensions = {
   width: int,

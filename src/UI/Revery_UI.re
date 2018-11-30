@@ -98,7 +98,11 @@ let render = (container: uiContainer, component: UiReact.component) => {
       width: measurements.width,
       height: measurements.height,
     };
-    Window.setSize(window, size.width / int_of_float(pixelRatio), size.height * int_of_float(pixelRatio));
+    Window.setSize(
+      window,
+      size.width / int_of_float(pixelRatio),
+      size.height * int_of_float(pixelRatio),
+    );
   };
 
   Mat4.ortho(

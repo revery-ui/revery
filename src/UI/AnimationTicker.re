@@ -10,6 +10,4 @@ let onTick: Event.t(Time.t) = Event.create();
 
 let time = () => Time.getTime();
 
-let tick = () => {
-    Event.dispatch(onTick, time());        
-}
+let tick = () => Event.dispatch(onTick, time());

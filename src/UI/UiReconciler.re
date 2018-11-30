@@ -37,7 +37,7 @@ let updateInstance = (n: node, _oldPrim: primitives, newPrim: primitives) =>
   | View(style) =>
     /* TODO: Is there a way to downcast properly here, from Node -> ViewNode ? */
     let vn: ViewNode.viewNode = Obj.magic(n);
-    vn#setStyle(style)
+    vn#setStyle(style);
   | Text(style, text) =>
     /* TODO: Is there a way to downcast properly here, from Node -> TextNode ? */
     let tn: TextNode.textNode = Obj.magic(n);

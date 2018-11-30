@@ -22,7 +22,8 @@ class node ('a) (_name: string) = {
       ),
     );
     let style: Style.t = _this#getStyle();
-    let localContext = NodeDrawContext.createFromParent(parentContext, matrix, style.opacity);
+    let localContext =
+      NodeDrawContext.createFromParent(parentContext, matrix, style.opacity);
     List.iter(c => c#draw(pass, localContext), _children^);
   };
   pub measurements = () => _layoutNode^.layout;
