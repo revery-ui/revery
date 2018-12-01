@@ -1,10 +1,10 @@
 (executable
-    (name TestRunner)
+    (name TestRunnerTest)
     (libraries
-        rejest
+        test-runner.lib
         Revery_Core_Test
             ))
 
 (alias
     (name runtest)
-    (action (run ./TestRunner.exe)))
+    (action (run ./TestRunnerTest.exe)))
