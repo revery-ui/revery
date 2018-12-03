@@ -12,7 +12,22 @@ class node ('a) (_name: string) = {
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let dimensions = _layoutNode^.layout;
-    let matrix = Mat4.create();
+    let transform = _this#getTransform();
+    let style: Style.t = _this#getStyle();
+    let localContext = NodeDrawContext.createFromParent(parentContext, transform, style.opacity);
+    List.iter(c => c#draw(pass, localContext), _children^);
+  };
+  pub measurements = () => _layoutNode^.layout;
+  pub setStyle = style => _style := style;
+  pub getStyle = () => _style^;
+  /* Get world transform */
+  /* pub getWorldTransform = () => { */
+  /*    let matrix = Mat4.create(); */ 
+  /*    Mat4.multiply(matrix, ) */
+  /* }; */
+  /* Get the transform to be applied to children */
+  pub getTransform = () => {
+    let matrix = _this#getLocalTransform();
     Mat4.fromTranslation(
       matrix,
       Vec3.create(
@@ -21,13 +36,7 @@ class node ('a) (_name: string) = {
         0.,
       ),
     );
-    let style: Style.t = _this#getStyle();
-    let localContext = NodeDrawContext.createFromParent(parentContext, matrix, style.opacity);
-    List.iter(c => c#draw(pass, localContext), _children^);
   };
-  pub measurements = () => _layoutNode^.layout;
-  pub setStyle = style => _style := style;
-  pub getStyle = () => _style^;
   pub getLocalTransform = () => {
     let dimensions = _this#measurements();
     let left = float_of_int(dimensions.left);
@@ -50,6 +59,10 @@ class node ('a) (_name: string) = {
     Mat4.multiply(world, animationTransform, scaleTransform);
     Mat4.multiply(world, translateTransform, world);
     world;
+  };
+  pub hitTest = (p: Vec2.t) => {
+    /* TODO: Implement hit test against transforms */
+    false;
   };
   pub addChild = (n: node('a)) => _children := List.append(_children^, [n]);
   pub removeChild = (n: node('a)) =>
