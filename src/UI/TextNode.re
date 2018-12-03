@@ -11,12 +11,12 @@ open Revery_Core;
 open ViewNode;
 open RenderPass;
 
-class textNode (name: string, text: string) = {
+class textNode (text: string) = {
   as _this;
   val mutable text = text;
   val quad = Assets.quad();
   val textureShader = Assets.fontShader();
-  inherit (class viewNode)(name) as _super;
+  inherit (class viewNode)() as _super;
   pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
     /* Draw background first */
     _super#draw(pass, parentContext);

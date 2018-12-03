@@ -5,13 +5,12 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Reglm;
 
-class node ('a) (_name: string) = {
+class node ('a) () = {
   as _this;
   val _children: ref(list(node('a))) = ref([]);
   val _style: ref(Style.t) = ref(Style.defaultStyle);
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
-    let dimensions = _layoutNode^.layout;
     let transform = _this#getTransform();
     let style: Style.t = _this#getStyle();
     let localContext = NodeDrawContext.createFromParent(parentContext, transform, style.opacity);
@@ -27,6 +26,7 @@ class node ('a) (_name: string) = {
   /* }; */
   /* Get the transform to be applied to children */
   pub getTransform = () => {
+    let dimensions = _layoutNode^.layout;
     let matrix = _this#getLocalTransform();
     Mat4.fromTranslation(
       matrix,
@@ -36,6 +36,7 @@ class node ('a) (_name: string) = {
         0.,
       ),
     );
+    matrix
   };
   pub getLocalTransform = () => {
     let dimensions = _this#measurements();
@@ -60,13 +61,14 @@ class node ('a) (_name: string) = {
     Mat4.multiply(world, translateTransform, world);
     world;
   };
-  pub hitTest = (p: Vec2.t) => {
+  pub hitTest = (_p: Vec2.t) => {
     /* TODO: Implement hit test against transforms */
     false;
   };
   pub addChild = (n: node('a)) => _children := List.append(_children^, [n]);
   pub removeChild = (n: node('a)) =>
     _children := List.filter(c => c != n, _children^);
+  pub getChildren = () => _children^;
   pub getMeasureFunction = () => None;
   pub toLayoutNode = () => {
     let childNodes = List.map(c => c#toLayoutNode(), _children^);

@@ -14,6 +14,7 @@ module Transform = Transform;
 
 open RenderPass;
 
+class node = class Node.node(RenderPass.t);
 class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
 class imageNode = class ImageNode.imageNode;
@@ -42,7 +43,7 @@ type uiContainer = {
 };
 
 let create = (~createOptions=defaultUiContainerOptions, window: Window.t) => {
-  let rootNode = (new viewNode)("root");
+  let rootNode = (new viewNode)();
   let container = UiReact.createContainer(rootNode);
   let ret: uiContainer = {
     window,

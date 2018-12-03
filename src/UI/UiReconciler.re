@@ -16,15 +16,15 @@ let createInstance = prim => {
   let node =
     switch (prim) {
     | View(style) =>
-      let view = (new ViewNode.viewNode)("test");
+      let view = (new ViewNode.viewNode)();
       view#setStyle(style);
       view;
     | Image(style, src) =>
-      let img = (new ImageNode.imageNode)("test", src);
+      let img = (new ImageNode.imageNode)(src);
       img#setStyle(style);
       img;
     | Text(style, text) =>
-      let text = (new TextNode.textNode)("test", text);
+      let text = (new TextNode.textNode)(text);
       text#setStyle(style);
       (text :> node);
     };
