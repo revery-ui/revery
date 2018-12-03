@@ -10,6 +10,7 @@ class node ('a) () = {
   val _children: ref(list(node('a))) = ref([]);
   val _style: ref(Style.t) = ref(Style.defaultStyle);
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
+  val _parent: ref(option(node('a))) = ref(None);
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let transform = _this#getTransform();
     let style: Style.t = _this#getStyle();
@@ -65,9 +66,17 @@ class node ('a) () = {
     /* TODO: Implement hit test against transforms */
     false;
   };
-  pub addChild = (n: node('a)) => _children := List.append(_children^, [n]);
-  pub removeChild = (n: node('a)) =>
+  pub addChild = (n: node('a)) => {
+      _children := List.append(_children^, [n]);
+      n#_setParent(Some(_this :> node('a)));
+      /* n#_parent := Some(_this); */
+  };
+  pub removeChild = (n: node('a)) => {
     _children := List.filter(c => c != n, _children^);
+      n#_setParent(None);
+    /* n#_parent := None; */
+  };
+  pub getParent = () => _parent^;
   pub getChildren = () => _children^;
   pub getMeasureFunction = () => None;
   pub toLayoutNode = () => {
@@ -86,5 +95,9 @@ class node ('a) () = {
 
     _layoutNode := node;
     node;
+  };
+  /* TODO: This should really be private - it should never be explicitly set */
+  pub _setParent = (n: option(node('a))) => {
+    _parent := n;
   };
 };
