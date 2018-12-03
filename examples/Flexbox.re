@@ -53,14 +53,16 @@ let init = app => {
     Style.make(
       ~fontSize=40,
       ~fontFamily="Roboto-Regular.ttf",
-      ~color=Colors.blue,
-      ~backgroundColor=Colors.green,
+      ~color=Colors.white,
+      ~backgroundColor=Colors.blue,
       (),
     );
 
   let parentColumnStyle = parentStyles(~direction=LayoutTypes.Column);
   let headerStyle =
     Style.make(
+      ~marginTop=50,
+      ~marginBottom=50,
       ~fontSize=60,
       ~fontFamily="Roboto-Regular.ttf",
       ~color=Colors.white,
