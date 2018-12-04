@@ -5,10 +5,16 @@ steps:
     inputs:
       versionSpec: '8.9'
   - script: npm install -g esy@0.3.4
+    displayName: 'npm install -g esy@0.3.4'
   - script: esy install
+    displayName: 'esy install'
     continueOnError: true
   - script: esy install
+    displayName: 'esy install'
     continueOnError: true
   - script: esy install
+    displayName: 'esy install'
   - script: esy build
+    displayName: 'esy build'
   - script: esy b dune runtest
+    displayName: 'esy b dune runtest'
