@@ -28,7 +28,7 @@ jobs:
 
   steps:
   - script: brew update
-  - script: brew install libpng
+  - script: brew install libpng ragel
   - template: esy-build-steps.yml
   - template: publish-build-cache.yml
 
