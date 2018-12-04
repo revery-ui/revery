@@ -13,8 +13,7 @@ class node ('a) (()) = {
   val _parent: ref(option(node('a))) = ref(None);
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
-    let matrix = _this#getTransform();
-    let localContext = NodeDrawContext.createFromParent(parentContext, matrix, style.opacity);
+    let localContext = NodeDrawContext.createFromParent(parentContext, style.opacity);
     List.iter(c => c#draw(pass, localContext), _children^);
   };
   pub measurements = () => _layoutNode^.layout;

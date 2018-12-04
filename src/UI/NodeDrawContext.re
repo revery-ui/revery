@@ -3,8 +3,6 @@
  *
  * This is context that is passed from parent -> child nodes when redrawing the scene
  */
-open Reglm;
-
 type t = {
     zIndex: int,
     opacity: float

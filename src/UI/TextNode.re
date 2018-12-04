@@ -85,7 +85,7 @@ class textNode (text: string) = {
 
         let xform = Mat4.create();
         Mat4.multiply(xform, outerTransform, local);
-        Mat4.multiply(xform, parentContext.transform, xform);
+        Mat4.multiply(xform, _this#getWorldTransform(), xform);
 
         Shaders.CompiledShader.setUniformMatrix4fv(
           textureShader,
