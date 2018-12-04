@@ -6,6 +6,7 @@
 name: $(Build.SourceVersion)
 jobs:
 - job: Linux
+  timeoutInMinutes: 0
   pool:
     vmImage: 'Ubuntu 16.04'
 
@@ -19,6 +20,7 @@ jobs:
   - template: publish-build-cache.yml
 
 - job: MacOS
+  timeoutInMinutes: 0
   pool:
     vmImage: 'macOS 10.13'
 
@@ -33,6 +35,7 @@ jobs:
   - template: publish-build-cache.yml
 
 - job: Windows
+  timeoutInMinutes: 0
   pool:
     vmImage: 'vs2017-win2016'
 
@@ -44,19 +47,3 @@ jobs:
   - template: restore-build-cache.yml
   - template: esy-build-steps.yml
   - template: publish-build-cache.yml
-
-- job: Release
-  displayName: Release
-  dependsOn:
-      - Linux
-      - MacOS
-      - Windows
-  condition: succeeded()
-  pool:
-     vmImage: ubuntu-16.04
-  steps:
-    - task: PublishBuildArtifacts@1
-      displayName: 'Release Package'
-      inputs:
-          PathtoPublish: '.'
-          ArtifictName: npm-package
