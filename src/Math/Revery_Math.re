@@ -2,3 +2,5 @@
 include Reglm;
 
 let pi = 4.0 *. atan(1.);
+
+module BoundingBox2d = BoundingBox2d;
