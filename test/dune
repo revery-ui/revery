@@ -3,6 +3,7 @@
     (libraries
         rejest
         Revery_Core_Test
+        Revery_Math_Test
         Revery_UI_Test
             ))
 
