@@ -10,12 +10,12 @@ open Node;
 open ViewNode;
 open RenderPass;
 
-class imageNode (name: string, imagePath: string) = {
+class imageNode (imagePath: string) = {
   as _this;
   val _quad = Assets.quad();
   val textureShader = Assets.textureShader();
   val texture = ImageRenderer.getTexture(imagePath);
-  inherit (class node(renderPass))(name) as _super;
+  inherit (class node(renderPass))() as _super;
   pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
     /* Draw background first */
     _super#draw(pass, parentContext);

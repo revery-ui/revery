@@ -9,11 +9,11 @@ open Reglm;
 open Node;
 open RenderPass;
 
-class viewNode (name: string) = {
+class viewNode () = {
   as _this;
   val _quad = Assets.quad();
   val solidShader = Assets.solidShader();
-  inherit (class node(renderPass))(name) as _super;
+  inherit (class node(renderPass))() as _super;
   pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
     switch (pass) {
     | AlphaPass(m) =>

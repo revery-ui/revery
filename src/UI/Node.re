@@ -5,11 +5,12 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Reglm;
 
-class node ('a) (_name: string) = {
+class node ('a) (()) = {
   as _this;
   val _children: ref(list(node('a))) = ref([]);
   val _style: ref(Style.t) = ref(Style.defaultStyle);
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
+  val _parent: ref(option(node('a))) = ref(None);
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let dimensions = _layoutNode^.layout;
     let matrix = Mat4.create();
@@ -52,9 +53,19 @@ class node ('a) (_name: string) = {
     Mat4.multiply(world, translateTransform, world);
     world;
   };
-  pub addChild = (n: node('a)) => _children := List.append(_children^, [n]);
-  pub removeChild = (n: node('a)) =>
+  pub hitTest = (_p: Vec2.t) =>
+    /* TODO: Implement hit test against transforms */
+    false;
+  pub addChild = (n: node('a)) => {
+    _children := List.append(_children^, [n]);
+    n#_setParent(Some((_this :> node('a))));
+  };
+  pub removeChild = (n: node('a)) => {
     _children := List.filter(c => c != n, _children^);
+    n#_setParent(None);
+  };
+  pub getParent = () => _parent^;
+  pub getChildren = () => _children^;
   pub getMeasureFunction = () => None;
   pub toLayoutNode = () => {
     let childNodes = List.map(c => c#toLayoutNode(), _children^);
@@ -73,4 +84,6 @@ class node ('a) (_name: string) = {
     _layoutNode := node;
     node;
   };
+  /* TODO: This should really be private - it should never be explicitly set */
+  pub _setParent = (n: option(node('a))) => _parent := n;
 };
