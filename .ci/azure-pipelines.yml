@@ -44,6 +44,6 @@ jobs:
     ESY__CACHE_SOURCE_TARBALL_PATH: C:\Users\VssAdministrator\.esy\source-tarballs
 
   steps:
-  - template: restore-build-cache.yml
+  # - template: restore-build-cache.yml
   - template: esy-build-steps.yml
   - template: publish-build-cache.yml
