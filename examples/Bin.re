@@ -74,7 +74,7 @@ module AnimatedText = (
             /*     }, */
             /*   ); */
 
-            let containerStyle = Style.make(~transform=[TranslateY(translate)], ());
+            /* let containerStyle = Style.make(~transform=[TranslateY(translate)], ()); */
 
             let textHeaderStyle =
               Style.make(
