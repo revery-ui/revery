@@ -5,38 +5,19 @@ open Revery_Core;
 
 module MakeTicker = () => {
 
-    let _currentTime: ref(Animation.Time.t) = ref(Animation.Time.Seconds(0.));
+    let _currentTime: ref(Time.t) = ref(Time.Seconds(0.));
 
     let time = () => _currentTime^;
 
-    let onTick: Event.t(Animation.Time.t) = Event.create();
+    let onTick: Event.t(Time.t) = Event.create();
 
-    let simulateTick = (time: Animation.Time.t)  => {
+    let simulateTick = (time: Time.t)  => {
         _currentTime := time;
         Event.dispatch(onTick, time);
     };
 };
 
 test("Animation", () => {
-  test("Math", () => {
-      test("clamp", () => {
-         module TestTicker = MakeTicker();
-         module Animated = Animation.Make(TestTicker);
-
-         expect(Animated.clamp(-1., 0., 1.)).toBe(0.) ;
-         expect(Animated.clamp(2., 0., 1.)).toBe(1.) ;
-         expect(Animated.clamp(0.5, 0., 1.)).toBe(0.5) ;
-      });
-
-      test("interpolate", () => {
-          module TestTicker = MakeTicker();
-          module Animated = Animation.Make(TestTicker);
-
-          expect(Animated.interpolate(0., 100., 200.)).toBe(100.);
-          expect(Animated.interpolate(0.5, 100., 200.)).toBe(150.);
-          expect(Animated.interpolate(1., -2., 0.)).toBe(0.);
-      });
-  });
   test("floatValue", () => {
       test("Initial value set", () => {
 
@@ -52,13 +33,13 @@ test("Animation", () => {
        module Animated = Animation.Make(TestTicker);
 
        let myAnimation = Animated.start(Animated.floatValue(0.), {
-        duration: Animation.Time.Seconds(2.),
-        delay: Animation.Time.Seconds(0.),
+        duration: Time.Seconds(2.),
+        delay: Time.Seconds(0.),
         toValue: 10.,
         repeat: false,
        });
 
-       TestTicker.simulateTick(Animation.Time.Seconds(1.));
+       TestTicker.simulateTick(Time.Seconds(1.));
        expect(myAnimation.value.current).toBe(5.);
   });
 
@@ -67,13 +48,13 @@ test("Animation", () => {
        module Animated = Animation.Make(TestTicker);
 
        let myAnimation = Animated.start(Animated.floatValue(0.), {
-        duration: Animation.Time.Seconds(2.),
-        delay: Animation.Time.Seconds(0.),
+        duration: Time.Seconds(2.),
+        delay: Time.Seconds(0.),
         toValue: 10.,
         repeat: true,
        });
 
-       TestTicker.simulateTick(Animation.Time.Seconds(3.));
+       TestTicker.simulateTick(Time.Seconds(3.));
        expect(myAnimation.value.current).toBe(5.);
   });
 
@@ -82,13 +63,13 @@ test("Animation", () => {
        module Animated = Animation.Make(TestTicker);
 
        let _myAnimation = Animated.start(Animated.floatValue(0.), {
-        duration: Animation.Time.Seconds(1.),
-        delay: Animation.Time.Seconds(0.),
+        duration: Time.Seconds(1.),
+        delay: Time.Seconds(0.),
         toValue: 10.,
         repeat: false,
        });
 
-       TestTicker.simulateTick(Animation.Time.Seconds(3.));
+       TestTicker.simulateTick(Time.Seconds(3.));
 
        expect(Animated.anyActiveAnimations()).toBe(false);
        expect(Animated.getAnimationCount()).toBe(0);

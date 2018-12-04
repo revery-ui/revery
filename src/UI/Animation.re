@@ -1,6 +1,7 @@
 module Event = Reactify.Event;
 
 open Revery_Core;
+open Revery_Math;
 
 module type AnimationTicker = {
   let time: unit => Time.t;
@@ -19,15 +20,6 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     toValue: float,
     value: animationValue,
     repeat: bool,
-  };
-
-  let clamp = (f: float, min: float, max: float) =>
-    f < min ? min : f > max ? max : f;
-
-  let interpolate = (t: float, fromValue: float, toValue: float) => {
-    let t = clamp(t, 0., 1.);
-
-    fromValue +. (toValue -. fromValue) *. t;
   };
 
   let activeAnimations: ref(list(animation)) = ref([]);
