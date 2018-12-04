@@ -35,7 +35,10 @@ class node ('a) (()) = {
   };
   pub getWorldTransform = () => {
       let local = _this#getTransform();
-      let world = _parent#getWorldTransform();
+      let world = switch (_parent^) {
+      | None => Mat4.create() 
+      | Some(p) => p#getWorldTransform();
+      };
       let matrix = Mat4.create();
       Mat4.multiply(matrix, world, local);
       matrix;
