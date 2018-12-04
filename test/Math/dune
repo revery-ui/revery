@@ -1,0 +1,5 @@
+(library
+    (name Revery_Math_Test)
+    (library_flags (-linkall))
+    (modules (:standard))
+    (libraries Revery_Math rejest))
