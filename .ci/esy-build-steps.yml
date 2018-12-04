@@ -8,6 +8,12 @@ steps:
     displayName: 'npm install -g esy@0.4.3'
   - script: esy install
     displayName: 'esy install'
+    continueOnError: true
+  - script: esy install
+    displayName: 'esy install'
+    continueOnError: true
+  - script: esy install
+    displayName: 'esy install'
   - script: esy build
     displayName: 'esy build'
   - script: esy b dune runtest
