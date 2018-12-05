@@ -12,7 +12,6 @@ open RenderPass;
 
 class imageNode (imagePath: string) = {
   as _this;
-  /* val _quad = Assets.quad(); */
   val textureShader = Assets.textureShader();
   val texture = ImageRenderer.getTexture(imagePath);
   inherit (class node(renderPass))() as _super;
