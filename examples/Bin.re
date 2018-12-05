@@ -62,19 +62,16 @@ module AnimatedText = (
                 },
               );
 
-            /* TODO: Transforms on text don't work yet */
-            /* let translate: float = */
-            /*   useAnimation( */
-            /*     Animated.floatValue(-100.), */
-            /*     { */
-            /*       toValue: 0., */
-            /*       duration: Seconds(2.), */
-            /*       delay: Seconds(delay), */
-            /*       repeat: false, */
-            /*     }, */
-            /*   ); */
-
-            /* let containerStyle = Style.make(~transform=[TranslateY(translate)], ()); */
+            let translate: float =
+              useAnimation(
+                Animated.floatValue(100.),
+                {
+                  toValue: 0.,
+                  duration: Seconds(2.),
+                  delay: Seconds(delay),
+                  repeat: false,
+                },
+              );
 
             let textHeaderStyle =
               Style.make(
@@ -83,7 +80,7 @@ module AnimatedText = (
                 ~fontSize=24,
                 ~marginHorizontal=8,
                 ~opacity,
-                /* ~transform=[TranslateY(translate)], */
+                ~transform=[TranslateY(translate)],
                 (),
               );
 
@@ -112,10 +109,11 @@ let init = app => {
           (),
         )}>
         <Logo />
-        <view style={Style.make(~flexDirection=Row,~alignItems=AlignFlexEnd, ())}>
-        <AnimatedText delay=0.0 textContent="Welcome" />
-        <AnimatedText delay=0.5 textContent="to" />
-        <AnimatedText delay=1. textContent="Revery" />
+        <view
+          style={Style.make(~flexDirection=Row, ~alignItems=AlignFlexEnd, ())}>
+          <AnimatedText delay=0.0 textContent="Welcome" />
+          <AnimatedText delay=0.5 textContent="to" />
+          <AnimatedText delay=1. textContent="Revery" />
         </view>
       </view>,
     )

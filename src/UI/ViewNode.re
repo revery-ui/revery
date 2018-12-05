@@ -5,18 +5,23 @@ module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
-open Reglm;
+/* open Reglm; */
 open Node;
 open RenderPass;
 
 class viewNode (()) = {
   as _this;
-  val _quad = Assets.quad();
   val solidShader = Assets.solidShader();
   inherit (class node(renderPass))() as _super;
   pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
     switch (pass) {
     | AlphaPass(m) =>
+      let dimensions = _this#measurements();
+      let width = float_of_int(dimensions.width);
+      let height = float_of_int(dimensions.height);
+      let quad =
+        Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
+
       Shaders.CompiledShader.use(solidShader);
       Shaders.CompiledShader.setUniformMatrix4fv(
         solidShader,
@@ -27,9 +32,7 @@ class viewNode (()) = {
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
 
-      let world = Mat4.create();
-      let localTransform = _this#getLocalTransform();
-      Mat4.multiply(world, _this#getWorldTransform(), localTransform);
+      let world = _this#getWorldTransform();
 
       Shaders.CompiledShader.setUniformMatrix4fv(
         solidShader,
@@ -45,7 +48,7 @@ class viewNode (()) = {
         Color.toVec4(c),
       );
 
-      Geometry.draw(_quad, solidShader);
+      Geometry.draw(quad, solidShader);
     | _ => ()
     };
 

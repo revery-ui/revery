@@ -31,6 +31,13 @@ class node ('a) (()) = {
         0.,
       ),
     );
+    let animationTransform =
+      Transform.toMat4(
+        float_of_int(dimensions.width) /. 2.,
+        float_of_int(dimensions.height) /. 2.,
+        _this#getStyle().transform,
+      );
+    Mat4.multiply(matrix, matrix, animationTransform);
     matrix;
   };
   pub getWorldTransform = () => {
@@ -43,29 +50,6 @@ class node ('a) (()) = {
     let matrix = Mat4.create();
     Mat4.multiply(matrix, world, xform);
     matrix;
-  };
-  pub getLocalTransform = () => {
-    let dimensions = _this#measurements();
-    /* let left = float_of_int(dimensions.left); */
-    /* let top = float_of_int(dimensions.top); */
-    let width = float_of_int(dimensions.width);
-    let height = float_of_int(dimensions.height);
-
-    let scaleTransform = Mat4.create();
-    Mat4.fromScaling(scaleTransform, Vec3.create(width, height, 1.0));
-
-    let animationTransform = Transform.toMat4(_this#getStyle().transform);
-
-    let translateTransform = Mat4.create();
-    Mat4.fromTranslation(
-      translateTransform,
-      Vec3.create(width /. 2., height /. 2., 1.0),
-    );
-
-    let world = Mat4.create();
-    Mat4.multiply(world, animationTransform, scaleTransform);
-    Mat4.multiply(world, translateTransform, world);
-    world;
   };
   pub hitTest = (_p: Vec2.t) =>
     /* TODO: Implement hit test against transforms */
