@@ -6,6 +6,8 @@ module App = App;
 module Time = Time;
 module Monitor = Monitor;
 
+module Environment = Environment;
+
 module Event = Reactify.Event;
 
 module Performance = Performance;
