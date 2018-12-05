@@ -45,11 +45,7 @@ class textNode (text: string) = {
       let outerTransform = Mat4.create();
       Mat4.fromTranslation(
         outerTransform,
-        Vec3.create(
-          0.0,
-          float_of_int(dimensions.height),
-          0.0,
-        ),
+        Vec3.create(0.0, float_of_int(dimensions.height), 0.0),
       );
 
       let render = (s: Fontkit.fk_shape, x: float) => {
