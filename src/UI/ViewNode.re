@@ -9,7 +9,7 @@ open Reglm;
 open Node;
 open RenderPass;
 
-class viewNode () = {
+class viewNode (()) = {
   as _this;
   val _quad = Assets.quad();
   val solidShader = Assets.solidShader();
@@ -28,8 +28,8 @@ class viewNode () = {
       let opacity = style.opacity *. parentContext.opacity;
 
       let world = Mat4.create();
-      let localTransform = _super#getLocalTransform();
-      Mat4.multiply(world, parentContext.transform, localTransform);
+      let localTransform = _this#getLocalTransform();
+      Mat4.multiply(world, _this#getWorldTransform(), localTransform);
 
       Shaders.CompiledShader.setUniformMatrix4fv(
         solidShader,
