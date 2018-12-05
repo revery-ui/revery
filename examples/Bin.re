@@ -62,7 +62,6 @@ module AnimatedText = (
                 },
               );
 
-            /* TODO: Transforms on text don't work yet */
             let translate: float =
               useAnimation(
                 Animated.floatValue(100.),
