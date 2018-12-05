@@ -1,0 +1,27 @@
+opam-version: "2.0"
+maintainer:   "dev@ocsigen.org"
+authors:      "Ocsigen team"
+bug-reports:  "https://github.com/ocsigen/js_of_ocaml/issues"
+homepage:     "http://ocsigen.org/js_of_ocaml"
+dev-repo:     "git+https://github.com/ocsigen/js_of_ocaml.git"
+
+name: "js_of_ocaml-ppx"
+
+build: [["jbuilder" "build" "-p" name "-j" jobs]]
+
+depends: [
+  "ocaml" {>= "4.02.0"}
+  "jbuilder" {build & >= "1.0+beta17"}
+  "ocaml-migrate-parsetree"
+  "ppx_tools_versioned"
+  "js_of_ocaml" {>= "3.0"}
+]
+conflicts: [
+  "ppx_tools_versioned"     {<="5.0beta0"}
+]
+
+synopsis: "Compiler from OCaml bytecode to Javascript"
+url {
+  src: "https://github.com/ocsigen/js_of_ocaml/archive/3.2.0.tar.gz"
+  checksum: "md5=5f7d6121f2b549b5ee83a625a142219b"
+}

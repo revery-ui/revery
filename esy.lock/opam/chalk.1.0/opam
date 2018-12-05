@@ -1,0 +1,27 @@
+opam-version: "2.0"
+maintainer: "Nick Zuber <zuber.nicholas@gmail.com>"
+authors: "Nick Zuber <zuber.nicholas@gmail.com>"
+homepage: "https://github.com/nickzuber/chalk"
+bug-reports: "https://github.com/nickzuber/chalk/issues"
+license: "MIT"
+dev-repo: "git+ssh://git@github.com/nickzuber/chalk.git"
+build: [make "build"]
+install: [make "build"]
+remove: ["ocamlfind" "remove" "chalk"]
+depends: ["ocaml" "ocamlfind"]
+synopsis: "Composable and simple terminal highlighting package"
+description: """
+Composable and simple terminal highlighting package. Very simple API;
+and example usage could be as follows:
+
+```ocaml
+let some_string = "Hello world!"
+  |> Chalk.red
+  |> Chalk.bold
+  |> Chalk.underline
+```"""
+flags: light-uninstall
+url {
+  src: "https://github.com/nickzuber/chalk/archive/v1.0.tar.gz"
+  checksum: "md5=c685f3024e5a4e74c86b4d9ce67ae34f"
+}
