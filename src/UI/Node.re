@@ -31,7 +31,12 @@ class node ('a) (()) = {
         0.,
       ),
     );
-    let animationTransform = Transform.toMat4(float_of_int(dimensions.width) /. 2., float_of_int(dimensions.height) /. 2., _this#getStyle().transform);
+    let animationTransform =
+      Transform.toMat4(
+        float_of_int(dimensions.width) /. 2.,
+        float_of_int(dimensions.height) /. 2.,
+        _this#getStyle().transform,
+      );
     Mat4.multiply(matrix, matrix, animationTransform);
     matrix;
   };

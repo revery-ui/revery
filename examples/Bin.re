@@ -109,10 +109,11 @@ let init = app => {
           (),
         )}>
         <Logo />
-        <view style={Style.make(~flexDirection=Row,~alignItems=AlignFlexEnd, ())}>
-        <AnimatedText delay=0.0 textContent="Welcome" />
-        <AnimatedText delay=0.5 textContent="to" />
-        <AnimatedText delay=1. textContent="Revery" />
+        <view
+          style={Style.make(~flexDirection=Row, ~alignItems=AlignFlexEnd, ())}>
+          <AnimatedText delay=0.0 textContent="Welcome" />
+          <AnimatedText delay=0.5 textContent="to" />
+          <AnimatedText delay=1. textContent="Revery" />
         </view>
       </view>,
     )

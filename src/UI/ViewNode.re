@@ -16,12 +16,12 @@ class viewNode (()) = {
   pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
     switch (pass) {
     | AlphaPass(m) =>
-
       let dimensions = _this#measurements();
       let width = float_of_int(dimensions.width);
       let height = float_of_int(dimensions.height);
-      let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
-      
+      let quad =
+        Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
+
       Shaders.CompiledShader.use(solidShader);
       Shaders.CompiledShader.setUniformMatrix4fv(
         solidShader,

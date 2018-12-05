@@ -27,7 +27,8 @@ class imageNode (imagePath: string) = {
       let dimensions = _this#measurements();
       let width = float_of_int(dimensions.width);
       let height = float_of_int(dimensions.height);
-      let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
+      let quad =
+        Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
 
       let opacity = _super#getStyle().opacity *. parentContext.opacity;
 

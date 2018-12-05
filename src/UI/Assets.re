@@ -11,7 +11,16 @@ let solidShader = Lazy.make(() => SolidShader.create());
 let fontShader = Lazy.make(() => FontShader.create());
 let textureShader = Lazy.make(() => TextureShader.create());
 
-let _createQuad = ((minX, minY, maxX, maxY)) => Geometry.Quad.create(minX, minY, maxX, maxY);
+let _createQuad = ((minX, minY, maxX, maxY)) =>
+  Geometry.Quad.create(minX, minY, maxX, maxY);
 let _memoizedCreateQuad = Memoize.make(_createQuad);
 
-let quad = (~minX:float=-0.5, ~minY:float=-0.5, ~maxX:float=0.5, ~maxY:float=0.5, ()) => _memoizedCreateQuad((minX, minY, maxX, maxY));
+let quad =
+    (
+      ~minX: float=(-0.5),
+      ~minY: float=(-0.5),
+      ~maxX: float=0.5,
+      ~maxY: float=0.5,
+      (),
+    ) =>
+  _memoizedCreateQuad((minX, minY, maxX, maxY));

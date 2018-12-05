@@ -17,16 +17,19 @@ let up = Vec3.up();
 let forward = Vec3.forward();
 
 let _rotateWithOrigin = (x: float, y: float, angle, axis, m: Mat4.t) => {
-   let preTranslate = Mat4.create();
-   let postTranslate = Mat4.create();
-   let rotation = Mat4.create();
+  let preTranslate = Mat4.create();
+  let postTranslate = Mat4.create();
+  let rotation = Mat4.create();
 
-   Mat4.fromTranslation(preTranslate, Vec3.create((-1. *. x), (-1. *. y), 0.));
-   Mat4.fromRotation(rotation, angle, axis);
-   Mat4.fromTranslation(postTranslate, Vec3.create(x, y, 0.));
+  Mat4.fromTranslation(
+    preTranslate,
+    Vec3.create((-1.) *. x, (-1.) *. y, 0.),
+  );
+  Mat4.fromRotation(rotation, angle, axis);
+  Mat4.fromTranslation(postTranslate, Vec3.create(x, y, 0.));
 
-   Mat4.multiply(m, rotation, preTranslate);
-   Mat4.multiply(m, postTranslate, m);
+  Mat4.multiply(m, rotation, preTranslate);
+  Mat4.multiply(m, postTranslate, m);
 };
 
 let _toMat4 = (originX: float, originY: float, t) => {
