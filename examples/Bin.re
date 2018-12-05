@@ -102,6 +102,8 @@ let init = app => {
       <view
         style={Style.make(
           ~position=LayoutTypes.Absolute,
+          ~justifyContent=LayoutTypes.JustifyCenter,
+          ~alignItems=LayoutTypes.AlignCenter,
           ~bottom=0,
           ~top=0,
           ~left=0,
