@@ -12,7 +12,7 @@ open RenderPass;
 
 class imageNode (imagePath: string) = {
   as _this;
-  val _quad = Assets.quad();
+  /* val _quad = Assets.quad(); */
   val textureShader = Assets.textureShader();
   val texture = ImageRenderer.getTexture(imagePath);
   inherit (class node(renderPass))() as _super;
@@ -24,8 +24,14 @@ class imageNode (imagePath: string) = {
     | AlphaPass(m) =>
       Shaders.CompiledShader.use(textureShader);
 
+      let dimensions = _this#measurements();
+      let width = float_of_int(dimensions.width);
+      let height = float_of_int(dimensions.height);
+      let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
+
       let opacity = _super#getStyle().opacity *. parentContext.opacity;
       let localTransform = _super#getLocalTransform();
+
       let world = Mat4.create();
       Mat4.multiply(world, parentContext.transform, localTransform);
 
@@ -47,7 +53,7 @@ class imageNode (imagePath: string) = {
       );
 
       glBindTexture(GL_TEXTURE_2D, texture);
-      Geometry.draw(_quad, textureShader);
+      Geometry.draw(quad, textureShader);
     | _ => ()
     };
   };
