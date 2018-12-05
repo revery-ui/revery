@@ -6,3 +6,9 @@ let isNative =
   };
 
 let webGL = !isNative;
+
+let sleep = (t: Time.t) =>
+  /* No-op in JS */
+  if (isNative) {
+    Unix.sleepf(Time.to_float_seconds(t));
+  };

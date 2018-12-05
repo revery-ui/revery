@@ -115,13 +115,12 @@ let render = (container: uiContainer, component: UiReact.component) => {
     1000.0,
     -1000.0,
   );
-  let m = Mat4.create();
 
   Performance.bench("draw", () => {
     /* Do a first pass for all 'opaque' geometry */
     /* This helps reduce the overhead for the more expensive alpha pass, next */
 
-    let drawContext = NodeDrawContext.create(m, 0, 1.0);
+    let drawContext = NodeDrawContext.create(0, 1.0);
 
     let solidPass = SolidPass(_projection);
     rootNode#draw(solidPass, drawContext);

@@ -33,7 +33,7 @@ class imageNode (imagePath: string) = {
       let localTransform = _super#getLocalTransform();
 
       let world = Mat4.create();
-      Mat4.multiply(world, parentContext.transform, localTransform);
+      Mat4.multiply(world, _this#getWorldTransform(), localTransform);
 
       Shaders.CompiledShader.setUniformMatrix4fv(
         textureShader,

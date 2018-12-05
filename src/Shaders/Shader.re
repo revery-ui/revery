@@ -5,6 +5,8 @@ open Reglm;
 type vertexShaderSource = string;
 type fragmentShaderSource = string;
 
+module Environment = Revery_Core.Environment;
+
 module VertexChannel = {
   type t =
     | Position
@@ -212,7 +214,7 @@ module CompiledShader = {
     _setUniformIfAvailable(s, name, u => glUniform4f(u, x, y, z, w));
 
   let setUniform4fv = (s: t, name: string, v: Vec4.t) =>
-     _setUniformIfAvailable(s, name, u => glUniform4fv(u, v));
+    _setUniformIfAvailable(s, name, u => glUniform4fv(u, v));
 
   let setUniformMatrix4fv = (s: t, name: string, m: Mat4.t) =>
     _setUniformIfAvailable(s, name, u => glUniformMatrix4fv(u, m));
