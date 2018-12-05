@@ -5,6 +5,8 @@ open Reglm;
 type vertexShaderSource = string;
 type fragmentShaderSource = string;
 
+module Environment = Revery_Core.Environment;
+
 module VertexChannel = {
   type t =
     | Position
