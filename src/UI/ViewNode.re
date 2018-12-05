@@ -5,7 +5,7 @@ module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
-open Reglm;
+/* open Reglm; */
 open Node;
 open RenderPass;
 
@@ -32,9 +32,7 @@ class viewNode (()) = {
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
 
-      let world = Mat4.create();
-      let localTransform = _this#getLocalTransform();
-      Mat4.multiply(world, _this#getWorldTransform(), localTransform);
+      let world = _this#getWorldTransform();
 
       Shaders.CompiledShader.setUniformMatrix4fv(
         solidShader,

@@ -31,6 +31,8 @@ class node ('a) (()) = {
         0.,
       ),
     );
+    let animationTransform = Transform.toMat4(_this#getStyle().transform);
+    Mat4.multiply(matrix, matrix, animationTransform);
     matrix;
   };
   pub getWorldTransform = () => {
@@ -43,10 +45,6 @@ class node ('a) (()) = {
     let matrix = Mat4.create();
     Mat4.multiply(matrix, world, xform);
     matrix;
-  };
-  pub getLocalTransform = () => {
-    let animationTransform = Transform.toMat4(_this#getStyle().transform);
-    animationTransform;
   };
   pub hitTest = (_p: Vec2.t) =>
     /* TODO: Implement hit test against transforms */

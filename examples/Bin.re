@@ -63,28 +63,25 @@ module AnimatedText = (
               );
 
             /* TODO: Transforms on text don't work yet */
-            /* let translate: float = */
-            /*   useAnimation( */
-            /*     Animated.floatValue(-100.), */
-            /*     { */
-            /*       toValue: 0., */
-            /*       duration: Seconds(2.), */
-            /*       delay: Seconds(delay), */
-            /*       repeat: false, */
-            /*     }, */
-            /*   ); */
-
-            /* let containerStyle = Style.make(~transform=[TranslateY(translate)], ()); */
+            let translate: float =
+              useAnimation(
+                Animated.floatValue(100.),
+                {
+                  toValue: 0.,
+                  duration: Seconds(2.),
+                  delay: Seconds(delay),
+                  repeat: false,
+                },
+              );
 
             let textHeaderStyle =
               Style.make(
                 ~color=Colors.white,
-                ~backgroundColor=Colors.red,
                 ~fontFamily="Roboto-Regular.ttf",
                 ~fontSize=24,
                 ~marginHorizontal=8,
                 ~opacity,
-                /* ~transform=[TranslateY(translate)], */
+                ~transform=[TranslateY(translate)],
                 (),
               );
 

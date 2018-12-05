@@ -30,10 +30,8 @@ class imageNode (imagePath: string) = {
       let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
 
       let opacity = _super#getStyle().opacity *. parentContext.opacity;
-      let localTransform = _super#getLocalTransform();
 
-      let world = Mat4.create();
-      Mat4.multiply(world, _this#getWorldTransform(), localTransform);
+      let world = _this#getWorldTransform();
 
       Shaders.CompiledShader.setUniformMatrix4fv(
         textureShader,
