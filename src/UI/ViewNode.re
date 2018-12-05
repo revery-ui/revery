@@ -9,7 +9,7 @@ open Reglm;
 open Node;
 open RenderPass;
 
-class viewNode () = {
+class viewNode (()) = {
   as _this;
   val _quad = Assets.quad();
   val solidShader = Assets.solidShader();

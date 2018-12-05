@@ -13,7 +13,8 @@ class node ('a) (()) = {
   val _parent: ref(option(node('a))) = ref(None);
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
-    let localContext = NodeDrawContext.createFromParent(parentContext, style.opacity);
+    let localContext =
+      NodeDrawContext.createFromParent(parentContext, style.opacity);
     List.iter(c => c#draw(pass, localContext), _children^);
   };
   pub measurements = () => _layoutNode^.layout;
@@ -33,14 +34,15 @@ class node ('a) (()) = {
     matrix;
   };
   pub getWorldTransform = () => {
-      let local = _this#getTransform();
-      let world = switch (_parent^) {
-      | None => Mat4.create() 
-      | Some(p) => p#getWorldTransform();
+    let local = _this#getTransform();
+    let world =
+      switch (_parent^) {
+      | None => Mat4.create()
+      | Some(p) => p#getWorldTransform()
       };
-      let matrix = Mat4.create();
-      Mat4.multiply(matrix, world, local);
-      matrix;
+    let matrix = Mat4.create();
+    Mat4.multiply(matrix, world, local);
+    matrix;
   };
   pub getLocalTransform = () => {
     let dimensions = _this#measurements();
