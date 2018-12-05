@@ -26,5 +26,3 @@ let createFromParent = (parentContext: t, localOpacity: float) => {
     };
     ret;
 };
-
-

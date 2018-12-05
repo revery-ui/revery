@@ -7,10 +7,15 @@ module Geometry = Revery_Geometry;
 module Window = Revery_Core.Window;
 module Performance = Revery_Core.Performance;
 
+module Animated = Animated;
+module Animation = Animation;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 module Style = Style;
 module Transform = Transform;
+
+/* Expose hooks as part of the public API */
+include Hooks;
 
 open RenderPass;
 
@@ -19,9 +24,9 @@ class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
 class imageNode = class ImageNode.imageNode;
 
-module UiReact = Reactify.Make(UiReconciler);
-
 open UiReconciler;
+let component = UiReact.component;
+
 let view = (~children, ~style=Style.defaultStyle, ()) =>
   UiReact.primitiveComponent(View(style), ~children);
 
@@ -51,6 +56,8 @@ let create = (~createOptions=defaultUiContainerOptions, window: Window.t) => {
     container,
     options: createOptions,
   };
+
+  Window.setShouldRenderCallback(window, () => Animated.anyActiveAnimations());
   ret;
 };
 
@@ -63,6 +70,8 @@ let _projection = Mat4.create();
 
 let render = (container: uiContainer, component: UiReact.component) => {
   let {rootNode, container, window, options} = container;
+
+  AnimationTicker.tick();
 
   Performance.bench("updateContainer", () =>
     UiReact.updateContainer(container, component)
@@ -90,7 +99,11 @@ let render = (container: uiContainer, component: UiReact.component) => {
       width: measurements.width,
       height: measurements.height,
     };
-    Window.setSize(window, size.width / int_of_float(pixelRatio), size.height * int_of_float(pixelRatio));
+    Window.setSize(
+      window,
+      size.width / int_of_float(pixelRatio),
+      size.height * int_of_float(pixelRatio),
+    );
   };
 
   Mat4.ortho(

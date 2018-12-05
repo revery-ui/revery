@@ -39,7 +39,7 @@ class textNode (text: string) = {
       Shaders.CompiledShader.setUniform4fv(
         textureShader,
         "uColor",
-        Color.toVec4(color)
+        Color.toVec4(color),
       );
 
       let outerTransform = Mat4.create();
