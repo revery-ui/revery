@@ -4,10 +4,14 @@
  * Lazily initialized assets to be re-used across frames
  */
 module Lazy = Revery_Core.Lazy;
+module Memoize = Revery_Core.Memoize;
 module Geometry = Revery_Geometry;
 
 let solidShader = Lazy.make(() => SolidShader.create());
 let fontShader = Lazy.make(() => FontShader.create());
 let textureShader = Lazy.make(() => TextureShader.create());
 
-let quad = Lazy.make(() => Geometry.Quad.create());
+let _createQuad = ((minX, minY, maxX, maxY)) => Geometry.Quad.create(minX, minY, maxX, maxY);
+let _memoizedCreateQuad = Memoize.make(_createQuad);
+
+let quad = (~minX:float=-0.5, ~minY:float=-0.5, ~maxX:float=0.5, ~maxY:float=0.5, ()) => _memoizedCreateQuad((minX, minY, maxX, maxY));
