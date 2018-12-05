@@ -70,7 +70,7 @@ let startWithState: startFunc('s, 'a) =
           appInstance.needsRender = false;
         });
       } else {
-        sleep(Milliseconds(1.));
+        Environment.sleep(Milliseconds(1.));
       };
       false;
     };
