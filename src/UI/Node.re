@@ -46,8 +46,8 @@ class node ('a) (()) = {
   };
   pub getLocalTransform = () => {
     let dimensions = _this#measurements();
-    let left = float_of_int(dimensions.left);
-    let top = float_of_int(dimensions.top);
+    /* let left = float_of_int(dimensions.left); */
+    /* let top = float_of_int(dimensions.top); */
     let width = float_of_int(dimensions.width);
     let height = float_of_int(dimensions.height);
 
@@ -59,7 +59,7 @@ class node ('a) (()) = {
     let translateTransform = Mat4.create();
     Mat4.fromTranslation(
       translateTransform,
-      Vec3.create(left +. width /. 2., top +. height /. 2., 1.0),
+      Vec3.create(width /. 2., height /. 2., 1.0),
     );
 
     let world = Mat4.create();

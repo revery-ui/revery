@@ -46,8 +46,8 @@ class textNode (text: string) = {
       Mat4.fromTranslation(
         outerTransform,
         Vec3.create(
-          float_of_int(dimensions.left),
-          float_of_int(dimensions.top) +. float_of_int(dimensions.height),
+          0.0,
+          float_of_int(dimensions.height),
           0.0,
         ),
       );
