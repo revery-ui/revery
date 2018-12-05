@@ -1,0 +1,25 @@
+opam-version: "2.0"
+maintainer:   "dev@ocsigen.org"
+authors:      "Ocsigen team"
+bug-reports:  "https://github.com/ocsigen/js_of_ocaml/issues"
+homepage:     "http://ocsigen.org/js_of_ocaml"
+dev-repo:     "git+https://github.com/ocsigen/js_of_ocaml.git"
+
+name: "js_of_ocaml-lwt"
+
+build: [["jbuilder" "build" "-p" name "-j" jobs]]
+
+depends: [
+  "ocaml" {>= "4.02.0"}
+  "jbuilder" {build & >= "1.0+beta17"}
+  "lwt" {>= "2.4.4"}
+  "js_of_ocaml" {>= "3.2"}
+  "js_of_ocaml-ppx"
+]
+depopts: [ "graphics" "lwt_log" ]
+
+synopsis: "Compiler from OCaml bytecode to Javascript"
+url {
+  src: "https://github.com/ocsigen/js_of_ocaml/archive/3.2.1.tar.gz"
+  checksum: "md5=5ebfb1bf85dc90e45e0f7ca71a9053b4"
+}
