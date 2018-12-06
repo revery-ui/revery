@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "^3.3.7",
-    "reason-glfw": "^3.2.1002",
+    "reason-glfw": "*",
     "reason-fontkit": "^1.1.0",
     "reason-gl-matrix": "^0.2.0",
     "reason-reactify": "^2.1.0",
@@ -39,6 +39,7 @@
     "rejest": "^1.2.0"
   },
   "resolutions": {
+    "reason-glfw": "bryphe/reason-glfw#025685c",
     "@opam/cmdliner": "1.0.2"
   },
   "peerDependencies": {
