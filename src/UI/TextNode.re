@@ -33,7 +33,7 @@ class textNode (text: string) = {
 
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
-      let font = FontCache.load(style.fontFamily, style.fontSize);
+      let font = FontCache.load(style.fontFamily, style.fontSize * parentContext.pixelRatio);
       let dimensions = _super#measurements();
       let color = Color.multiplyAlpha(opacity, style.color);
       Shaders.CompiledShader.setUniform4fv(
@@ -107,12 +107,12 @@ class textNode (text: string) = {
     };
   };
   pub setText = t => text = t;
-  pub! getMeasureFunction = () => {
+  pub! getMeasureFunction = (pixelRatio) => {
     let measure =
         (_mode, _width, _widthMeasureMode, _height, _heightMeasureMode) => {
       /* TODO: Cache font locally in variable */
       let style = _super#getStyle();
-      let font = FontCache.load(style.fontFamily, style.fontSize);
+      let font = FontCache.load(style.fontFamily, style.fontSize * pixelRatio);
 
       let d = FontRenderer.measure(font, text);
       let ret: Layout.LayoutTypes.dimensions = {

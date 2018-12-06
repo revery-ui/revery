@@ -88,26 +88,33 @@ let make =
 
 let defaultStyle = make();
 
-let toLayoutNode = (s: t) => {
+let scale = (v: int, scaleFactor: int) => {
+    switch (v == Encoding.cssUndefined) {
+    | true => Encoding.cssUndefined
+    | false => scaleFactor * v
+    };
+}
+
+let toLayoutNode = (s: t, scaleFactor: int) => {
   let ret: LayoutTypes.cssStyle = {
     ...LayoutSupport.defaultStyle,
     positionType: s.position,
-    top: s.top,
-    left: s.left,
-    bottom: s.bottom,
+    top: scale(s.top, scaleFactor),
+    left: scale(s.left, scaleFactor),
+    bottom: scale(s.bottom, scaleFactor),
     flexDirection: s.flexDirection,
     alignItems: s.alignItems,
     justifyContent: s.justifyContent,
-    right: s.right,
-    width: s.width,
-    height: s.height,
-    marginTop: s.marginTop,
-    marginLeft: s.marginLeft,
-    marginRight: s.marginRight,
-    marginBottom: s.marginBottom,
-    margin: s.margin,
-    marginVertical: s.marginVertical,
-    marginHorizontal: s.marginHorizontal,
+    right: scale(s.right, scaleFactor),
+    width: scale(s.width, scaleFactor),    
+    height: scale(s.height, scaleFactor),
+    marginTop: scale(s.marginTop, scaleFactor),
+    marginLeft: scale(s.marginLeft, scaleFactor),
+    marginRight: scale(s.marginRight, scaleFactor),
+    marginBottom: scale(s.marginBottom, scaleFactor),
+    margin: scale(s.margin, scaleFactor),
+    marginVertical: scale(s.marginVertical, scaleFactor),
+    marginHorizontal: scale(s.marginHorizontal, scaleFactor),
   };
   ret;
 };
