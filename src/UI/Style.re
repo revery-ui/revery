@@ -88,12 +88,8 @@ let make =
 
 let defaultStyle = make();
 
-let scale = (v: int, scaleFactor: int) => {
-    switch (v == Encoding.cssUndefined) {
-    | true => Encoding.cssUndefined
-    | false => scaleFactor * v
-    };
-}
+let scale = (v: int, scaleFactor: int) =>
+  v == Encoding.cssUndefined ? Encoding.cssUndefined : scaleFactor * v;
 
 let toLayoutNode = (s: t, scaleFactor: int) => {
   let ret: LayoutTypes.cssStyle = {
@@ -106,7 +102,7 @@ let toLayoutNode = (s: t, scaleFactor: int) => {
     alignItems: s.alignItems,
     justifyContent: s.justifyContent,
     right: scale(s.right, scaleFactor),
-    width: scale(s.width, scaleFactor),    
+    width: scale(s.width, scaleFactor),
     height: scale(s.height, scaleFactor),
     marginTop: scale(s.marginTop, scaleFactor),
     marginLeft: scale(s.marginLeft, scaleFactor),
