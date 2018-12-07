@@ -1,29 +1,29 @@
-open Rejest;
+open TestFramework;
 
 open Revery_UI;
 
-test("NodeTests", () => {
+describe("NodeTests", ({test, _}) => {
 
-    test("no children initially", () => {
+    test("no children initially", ({expect}) => {
         let node = new node();
 
-        expect(List.length(node#getChildren())).toBe(0);
+        expect.int(List.length(node#getChildren())).toBe(0);
     });
 
-    test("add / remove child", () => {
+    test("add / remove child", ({expect}) => {
         let parentNode = new node();
         let childNode = new node();
 
-        expect(childNode#getParent()).toBe(None);
+        expect.bool(childNode#getParent() == None).toBe(true);
 
         parentNode#addChild(childNode);
 
-        expect(List.length(parentNode#getChildren())).toBe(1);
-        expect(childNode#getParent()).toBe(Some(parentNode));
+        expect.int(List.length(parentNode#getChildren())).toBe(1);
+        expect.bool(childNode#getParent() == Some(parentNode)).toBe(true);
 
         parentNode#removeChild(childNode);
 
-        expect(List.length(parentNode#getChildren())).toBe(0);
-        expect(childNode#getParent()).toBe(None);
+        expect.int(List.length(parentNode#getChildren())).toBe(0);
+        expect.bool(childNode#getParent() == None).toBe(true);
     });
 });

@@ -1,7 +1,7 @@
-open Rejest;
-
 open Revery_UI;
 open Revery_Core;
+
+open TestFramework;
 
 module MakeTicker = (()) => {
   let _currentTime: ref(Time.t) = ref(Time.Seconds(0.));
@@ -16,18 +16,18 @@ module MakeTicker = (()) => {
   };
 };
 
-test("Animation", () => {
-  test("floatValue", () =>
-    test("Initial value set", () => {
+describe("Animation", ({describe, _}) => {
+  describe("floatValue", ({test, _}) =>
+    test("Initial value set", ({expect}) => {
       module TestTicker =
         MakeTicker({});
       module Animated = Animation.Make(TestTicker);
 
       let myTestValue = Animated.floatValue(0.1);
-      expect(myTestValue.current).toBe(0.1);
+      expect.float(myTestValue.current).toBe(0.1);
     })
   );
-  test("simple animation", () => {
+  test("simple animation", ({expect}) => {
     module TestTicker =
       MakeTicker({});
     module Animated = Animation.Make(TestTicker);
@@ -44,10 +44,10 @@ test("Animation", () => {
       );
 
     TestTicker.simulateTick(Time.Seconds(1.));
-    expect(myAnimation.value.current).toBe(5.);
+    expect.float(myAnimation.value.current).toBe(5.);
   });
 
-  test("animation that repeats", () => {
+  test("animation that repeats", ({expect}) => {
     module TestTicker =
       MakeTicker({});
     module Animated = Animation.Make(TestTicker);
@@ -64,10 +64,10 @@ test("Animation", () => {
       );
 
     TestTicker.simulateTick(Time.Seconds(3.));
-    expect(myAnimation.value.current).toBe(5.);
+    expect.float(myAnimation.value.current).toBe(5.);
   });
 
-  test("animations are cleaned up", () => {
+  test("animations are cleaned up", ({expect}) => {
     module TestTicker =
       MakeTicker({});
     module Animated = Animation.Make(TestTicker);
@@ -85,7 +85,7 @@ test("Animation", () => {
 
     TestTicker.simulateTick(Time.Seconds(3.));
 
-    expect(Animated.anyActiveAnimations()).toBe(false);
-    expect(Animated.getAnimationCount()).toBe(0);
+    expect.bool(Animated.anyActiveAnimations()).toBe(false);
+    expect.int(Animated.getAnimationCount()).toBe(0);
   });
 });

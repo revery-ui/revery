@@ -1,5 +1,5 @@
 (library
     (name Revery_UI_Test)
-    (library_flags (-linkall))
+    (library_flags (-linkall -g))
     (modules (:standard))
-    (libraries Revery_UI rejest))
+    (libraries Revery_UI rely.lib))

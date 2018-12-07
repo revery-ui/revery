@@ -36,7 +36,7 @@
     "@opam/js_of_ocaml-lwt": "*",
     "flex": "^1.2.2",
     "@opam/js_of_ocaml-compiler": "*",
-    "rejest": "^1.2.0"
+    "@reason-native/rely": "*"
   },
   "resolutions": {
     "@opam/cmdliner": "1.0.2"

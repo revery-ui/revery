@@ -2,34 +2,34 @@ open Rejest;
 
 open Revery_Math;
 
-test("BoundingBox2d", () => {
-  test("isPointInside", () => {
+describe("BoundingBox2d", ({test, describe}) => {
+  test("isPointInside", ({expect}) => {
     let bbox =
       BoundingBox2d.create(Vec2.create(0., 0.), Vec2.create(400., 600.));
 
-    expect(BoundingBox2d.isPointInside(bbox, Vec2.create(1., 1.))).toBe(
+    expect.bool(BoundingBox2d.isPointInside(bbox, Vec2.create(1., 1.))).toBe(
       true,
     );
-    expect(BoundingBox2d.isPointInside(bbox, Vec2.create(400., 600.))).toBe(
+    expect.bool(BoundingBox2d.isPointInside(bbox, Vec2.create(400., 600.))).toBe(
       true,
     );
-    expect(BoundingBox2d.isPointInside(bbox, Vec2.create(399., 599.))).toBe(
+    expect.bool(BoundingBox2d.isPointInside(bbox, Vec2.create(399., 599.))).toBe(
       true,
     );
 
-    expect(BoundingBox2d.isPointInside(bbox, Vec2.create(401., 599.))).toBe(
+    expect.bool(BoundingBox2d.isPointInside(bbox, Vec2.create(401., 599.))).toBe(
       false,
     );
-    expect(BoundingBox2d.isPointInside(bbox, Vec2.create(399., 601.))).toBe(
+    expect.bool(BoundingBox2d.isPointInside(bbox, Vec2.create(399., 601.))).toBe(
       false,
     );
-    expect(BoundingBox2d.isPointInside(bbox, Vec2.create(-1., -1.))).toBe(
+    expect.bool(BoundingBox2d.isPointInside(bbox, Vec2.create(-1., -1.))).toBe(
       false,
     );
   });
 
-  test("transform", () => {
-    test("translate", () => {
+  describe("transform", ({test, _}) => {
+    test("translate", ({expect}) => {
       let bbox =
         BoundingBox2d.create(Vec2.create(0., 0.), Vec2.create(400., 600.));
 
@@ -44,14 +44,14 @@ test("BoundingBox2d", () => {
       let maxX = Vec2.get_x(tbbox.max);
       let maxY = Vec2.get_y(tbbox.max);
 
-      expect(minX).toBe(100.);
-      expect(minY).toBe(200.);
+      expect.float(minX).toBe(100.);
+      expect.float(minY).toBe(200.);
 
-      expect(maxX).toBe(500.);
-      expect(maxY).toBe(800.);
+      expect.float(maxX).toBe(500.);
+      expect.float(maxY).toBe(800.);
     });
 
-    test("scale", () => {
+    test("scale", ({expect}) => {
       let bbox =
         BoundingBox2d.create(Vec2.create(0., 0.), Vec2.create(100., 200.));
       let scale = Mat4.create();
@@ -65,11 +65,11 @@ test("BoundingBox2d", () => {
       let maxX = Vec2.get_x(tbbox.max);
       let maxY = Vec2.get_y(tbbox.max);
 
-      expect(minX).toBe(-200.);
-      expect(minY).toBe(-600.);
+      expect.float(minX).toBe(-200.);
+      expect.float(minY).toBe(-600.);
 
-      expect(maxX).toBe(0.);
-      expect(maxY).toBe(0.);
+      expect.float(maxX).toBe(0.);
+      expect.float(maxY).toBe(0.);
     });
   });
 });
