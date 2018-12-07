@@ -64,12 +64,12 @@ class node ('a) (()) = {
   };
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
-  pub getMeasureFunction = () => None;
-  pub toLayoutNode = () => {
-    let childNodes = List.map(c => c#toLayoutNode(), _children^);
-    let layoutStyle = Style.toLayoutNode(_style^);
+  pub getMeasureFunction = (_pixelRatio: int) => None;
+  pub toLayoutNode = (pixelRatio: int) => {
+    let childNodes = List.map(c => c#toLayoutNode(pixelRatio), _children^);
+    let layoutStyle = Style.toLayoutNode(_style^, pixelRatio);
     let node =
-      switch (_this#getMeasureFunction()) {
+      switch (_this#getMeasureFunction(pixelRatio)) {
       | None => Layout.createNode(Array.of_list(childNodes), layoutStyle)
       | Some(m) =>
         Layout.createNodeWithMeasure(

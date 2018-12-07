@@ -6,17 +6,19 @@
 type t = {
   zIndex: int,
   opacity: float,
+  pixelRatio: int,
 };
 
-let create = (zIndex: int, opacity: float) => {
-  let ret: t = {zIndex, opacity};
+let create = (pixelRatio: int, zIndex: int, opacity: float) => {
+  let ret: t = {zIndex, opacity, pixelRatio};
   ret;
 };
 
 let createFromParent = (parentContext: t, localOpacity: float) => {
   let zIndex = parentContext.zIndex + 1;
   let opacity = parentContext.opacity *. localOpacity;
+  let pixelRatio = parentContext.pixelRatio;
 
-  let ret: t = {zIndex, opacity};
+  let ret: t = {zIndex, opacity, pixelRatio};
   ret;
 };

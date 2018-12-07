@@ -19,8 +19,8 @@ let init = app => {
 
   let ui = UI.create(w);
 
-  let parentWidth = width - 10;
-  let childWidth = width - 100;
+  let parentWidth = width - 5;
+  let childWidth = width - 50;
 
   let parentStyles =
       (
@@ -33,7 +33,7 @@ let init = app => {
       ~backgroundColor=Colors.green,
       ~position=LayoutTypes.Relative,
       ~width=parentWidth,
-      ~height=200,
+      ~height=100,
       ~alignItems=alignment,
       ~justifyContent=justify,
       ~flexDirection=direction,
@@ -45,13 +45,13 @@ let init = app => {
       ~backgroundColor=Colors.blue,
       ~position=LayoutTypes.Relative,
       ~width=childWidth,
-      ~height=80,
+      ~height=40,
       (),
     );
 
   let defaultTextStyles =
     Style.make(
-      ~fontSize=40,
+      ~fontSize=20,
       ~fontFamily="Roboto-Regular.ttf",
       ~color=Colors.white,
       ~backgroundColor=Colors.blue,
@@ -61,9 +61,9 @@ let init = app => {
   let parentColumnStyle = parentStyles(~direction=LayoutTypes.Column);
   let headerStyle =
     Style.make(
-      ~marginTop=50,
-      ~marginBottom=50,
-      ~fontSize=60,
+      ~marginTop=25,
+      ~marginBottom=25,
+      ~fontSize=30,
       ~fontFamily="Roboto-Regular.ttf",
       ~color=Colors.white,
       (),
