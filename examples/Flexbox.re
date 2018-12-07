@@ -17,8 +17,6 @@ let init = app => {
 
   Window.setPos(w, centerX, 0);
 
-  let ui = UI.create(w);
-
   let parentWidth = width - 5;
   let childWidth = width - 50;
 
@@ -106,46 +104,40 @@ let init = app => {
     <view>
       <text style=headerStyle> "Flex Direction Column" </text>
       <view
-        style={
-          parentStyles(
-            ~direction=LayoutTypes.Column,
-            ~justify=LayoutTypes.JustifyFlexStart,
-            (),
-          )
-        }>
+        style={parentStyles(
+          ~direction=LayoutTypes.Column,
+          ~justify=LayoutTypes.JustifyFlexStart,
+          (),
+        )}>
         <view style=childStyles>
           <text style=defaultTextStyles> "Align Flex Start" </text>
         </view>
       </view>
       <view
-        style={
-          parentStyles(
-            ~direction=LayoutTypes.Column,
-            ~justify=LayoutTypes.JustifyCenter,
-            (),
-          )
-        }>
+        style={parentStyles(
+          ~direction=LayoutTypes.Column,
+          ~justify=LayoutTypes.JustifyCenter,
+          (),
+        )}>
         <view style=childStyles>
           <text style=defaultTextStyles> "Align Flex Center" </text>
         </view>
       </view>
       <view
-        style={
-          parentStyles(
-            ~direction=LayoutTypes.Column,
-            ~justify=LayoutTypes.JustifyFlexEnd,
-            (),
-          )
-        }>
+        style={parentStyles(
+          ~direction=LayoutTypes.Column,
+          ~justify=LayoutTypes.JustifyFlexEnd,
+          (),
+        )}>
         <view style=childStyles>
           <text style=defaultTextStyles> "Align Flex End" </text>
         </view>
       </view>
     </view>;
 
-  Window.setRenderCallback(w, () =>
-    UI.render(ui, <view> horizontalStyles verticalStyles </view>)
-  );
+  let render = () => <view> horizontalStyles verticalStyles </view>;
+
+  UI.start(w, render);
 };
 
 App.start(init);

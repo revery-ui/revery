@@ -47,23 +47,11 @@ type uiContainer = {
   options: uiContainerOptions,
 };
 
-let create = (~createOptions=defaultUiContainerOptions, window: Window.t) => {
-  let rootNode = (new viewNode)();
-  let container = UiReact.createContainer(rootNode);
-  let ret: uiContainer = {
-    window,
-    rootNode,
-    container,
-    options: createOptions,
-  };
-
-  Window.setShouldRenderCallback(window, () => Animated.anyActiveAnimations());
-  ret;
-};
+type renderFunction = unit => UiReact.component;
 
 let _projection = Mat4.create();
 
-let render = (container: uiContainer, component: UiReact.component) => {
+let _render = (container: uiContainer, component: UiReact.component) => {
   let {rootNode, container, window, options} = container;
 
   AnimationTicker.tick();
@@ -123,4 +111,24 @@ let render = (container: uiContainer, component: UiReact.component) => {
     rootNode#draw(alphaPass, drawContext);
     glDisable(GL_BLEND);
   });
+};
+
+let start =
+    (
+      ~createOptions=defaultUiContainerOptions,
+      window: Window.t,
+      render: renderFunction,
+    ) => {
+  let rootNode = (new viewNode)();
+  let container = UiReact.createContainer(rootNode);
+  let ui: uiContainer = {window, rootNode, container, options: createOptions};
+
+  Window.setShouldRenderCallback(window, () => Animated.anyActiveAnimations());
+  Window.setRenderCallback(
+    window,
+    () => {
+      let component = render();
+      _render(ui, component);
+    },
+  );
 };

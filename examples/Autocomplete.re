@@ -111,8 +111,6 @@ let init = app => {
   );
   Window.show(w);
 
-  let ui = UI.create(w, ~createOptions={autoSize: true});
-
   let textHeaderStyle =
     Style.make(
       ~backgroundColor=Colors.black,
@@ -133,43 +131,39 @@ let init = app => {
 
   /* Listen to key down events, and coerce them into actions, too */
   let _ =
-    Event.subscribe(w.onKeyDown, keyEvent =>
+    Event.subscribe(w.onKeyDown, keyEvent
       /* TODO: Can we implement this API w/o GLFW leaking through? */
-      if (keyEvent.key == Glfw.Key.GLFW_KEY_BACKSPACE) {
-        App.dispatch(app, Backspace);
-      } else if (keyEvent.key == Glfw.Key.GLFW_KEY_H && keyEvent.ctrlKey) {
-        App.dispatch(app, Backspace);
-      } else if (keyEvent.key == Glfw.Key.GLFW_KEY_ESCAPE) {
-        App.quit(0);
-      } else if (keyEvent.key == Glfw.Key.GLFW_KEY_W && keyEvent.ctrlKey) {
-        App.dispatch(app, ClearWord);
-      }
-    );
-
-  /* Render function - where the magic happens! */
-  Window.setRenderCallback(
-    w,
-    () => {
-      let state = App.getState(app);
-
-      let filteredItems = filterItems(state.text, state.items);
-      let items =
-        List.map(
-          i => <text style=textHeaderStyle> {i.name} </text>,
-          filteredItems,
-        );
-
-      UI.render(
-        ui,
-        <view style={Style.make(~backgroundColor=Colors.blue, ~width, ())}>
-          <view style={Style.make(~height=50, ())}>
-            <text style=textHeaderStyle> {state.text ++ "|"} </text>
-          </view>
-          <view style={Style.make()}> ...items </view>
-        </view>,
+      =>
+        if (keyEvent.key == Glfw.Key.GLFW_KEY_BACKSPACE) {
+          App.dispatch(app, Backspace);
+        } else if (keyEvent.key == Glfw.Key.GLFW_KEY_H && keyEvent.ctrlKey) {
+          App.dispatch(app, Backspace);
+        } else if (keyEvent.key == Glfw.Key.GLFW_KEY_ESCAPE) {
+          App.quit(0);
+        } else if (keyEvent.key == Glfw.Key.GLFW_KEY_W && keyEvent.ctrlKey) {
+          App.dispatch(app, ClearWord);
+        }
       );
-    },
-  );
+
+  let render = () => {
+    let state = App.getState(app);
+
+    let filteredItems = filterItems(state.text, state.items);
+    let items =
+      List.map(
+        i => <text style=textHeaderStyle> {i.name} </text>,
+        filteredItems,
+      );
+
+    <view style={Style.make(~backgroundColor=Colors.blue, ~width, ())}>
+      <view style={Style.make(~height=50, ())}>
+        <text style=textHeaderStyle> {state.text ++ "|"} </text>
+      </view>
+      <view style={Style.make()}> ...items </view>
+    </view>;
+  };
+
+  UI.start(~createOptions={autoSize: true}, w, render);
 };
 
 App.startWithState(initialState, reducer, init);

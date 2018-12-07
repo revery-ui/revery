@@ -92,34 +92,30 @@ module AnimatedText = (
 );
 
 let init = app => {
-  let w = App.createWindow(app, "Welcome to Revery!");
+  let win = App.createWindow(app, "Welcome to Revery!");
 
-  let ui = UI.create(w);
-
-  Window.setRenderCallback(w, () =>
-    UI.render(
-      ui,
+  let render = () =>
+    <view
+      style={Style.make(
+        ~position=LayoutTypes.Absolute,
+        ~justifyContent=LayoutTypes.JustifyCenter,
+        ~alignItems=LayoutTypes.AlignCenter,
+        ~bottom=0,
+        ~top=0,
+        ~left=0,
+        ~right=0,
+        (),
+      )}>
+      <Logo />
       <view
-        style={Style.make(
-          ~position=LayoutTypes.Absolute,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~alignItems=LayoutTypes.AlignCenter,
-          ~bottom=0,
-          ~top=0,
-          ~left=0,
-          ~right=0,
-          (),
-        )}>
-        <Logo />
-        <view
-          style={Style.make(~flexDirection=Row, ~alignItems=AlignFlexEnd, ())}>
-          <AnimatedText delay=0.0 textContent="Welcome" />
-          <AnimatedText delay=0.5 textContent="to" />
-          <AnimatedText delay=1. textContent="Revery" />
-        </view>
-      </view>,
-    )
-  );
+        style={Style.make(~flexDirection=Row, ~alignItems=AlignFlexEnd, ())}>
+        <AnimatedText delay=0.0 textContent="Welcome" />
+        <AnimatedText delay=0.5 textContent="to" />
+        <AnimatedText delay=1. textContent="Revery" />
+      </view>
+    </view>;
+
+  UI.start(win, render);
 };
 
 App.start(init);
