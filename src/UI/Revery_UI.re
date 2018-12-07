@@ -61,11 +61,6 @@ let create = (~createOptions=defaultUiContainerOptions, window: Window.t) => {
   ret;
 };
 
-let layout = (node, pixelRatio) => {
-  let rootLayoutNode = node#toLayoutNode(pixelRatio);
-  Layout.layoutNode(rootLayoutNode);
-};
-
 let _projection = Mat4.create();
 
 let render = (container: uiContainer, component: UiReact.component) => {
@@ -90,10 +85,10 @@ let render = (container: uiContainer, component: UiReact.component) => {
         (),
       ),
     );
-    layout(rootNode, pixelRatio);
+    Layout.layout(rootNode, pixelRatio);
   | true =>
     rootNode#setStyle(Style.make());
-    layout(rootNode, pixelRatio);
+    Layout.layout(rootNode, pixelRatio);
     let measurements = rootNode#measurements();
     let size: Window.windowSize = {
       width: measurements.width,
