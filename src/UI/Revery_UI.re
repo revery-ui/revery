@@ -113,19 +113,22 @@ let _render = (container: uiContainer, component: UiReact.component) => {
   });
 };
 
-let start = (~createOptions=defaultUiContainerOptions, window: Window.t, render: renderFunction) => {
+let start =
+    (
+      ~createOptions=defaultUiContainerOptions,
+      window: Window.t,
+      render: renderFunction,
+    ) => {
   let rootNode = (new viewNode)();
   let container = UiReact.createContainer(rootNode);
-  let ui: uiContainer = {
-    window,
-    rootNode,
-    container,
-    options: createOptions,
-  };
+  let ui: uiContainer = {window, rootNode, container, options: createOptions};
 
   Window.setShouldRenderCallback(window, () => Animated.anyActiveAnimations());
-  Window.setRenderCallback(window, () => {
+  Window.setRenderCallback(
+    window,
+    () => {
       let component = render();
-      _render(ui, component)
-  });
+      _render(ui, component);
+    },
+  );
 };

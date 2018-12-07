@@ -131,35 +131,36 @@ let init = app => {
 
   /* Listen to key down events, and coerce them into actions, too */
   let _ =
-    Event.subscribe(w.onKeyDown, keyEvent =>
+    Event.subscribe(w.onKeyDown, keyEvent
       /* TODO: Can we implement this API w/o GLFW leaking through? */
-      if (keyEvent.key == Glfw.Key.GLFW_KEY_BACKSPACE) {
-        App.dispatch(app, Backspace);
-      } else if (keyEvent.key == Glfw.Key.GLFW_KEY_H && keyEvent.ctrlKey) {
-        App.dispatch(app, Backspace);
-      } else if (keyEvent.key == Glfw.Key.GLFW_KEY_ESCAPE) {
-        App.quit(0);
-      } else if (keyEvent.key == Glfw.Key.GLFW_KEY_W && keyEvent.ctrlKey) {
-        App.dispatch(app, ClearWord);
-      }
-    );
+      =>
+        if (keyEvent.key == Glfw.Key.GLFW_KEY_BACKSPACE) {
+          App.dispatch(app, Backspace);
+        } else if (keyEvent.key == Glfw.Key.GLFW_KEY_H && keyEvent.ctrlKey) {
+          App.dispatch(app, Backspace);
+        } else if (keyEvent.key == Glfw.Key.GLFW_KEY_ESCAPE) {
+          App.quit(0);
+        } else if (keyEvent.key == Glfw.Key.GLFW_KEY_W && keyEvent.ctrlKey) {
+          App.dispatch(app, ClearWord);
+        }
+      );
 
   let render = () => {
-      let state = App.getState(app);
+    let state = App.getState(app);
 
-      let filteredItems = filterItems(state.text, state.items);
-      let items =
-        List.map(
-          i => <text style=textHeaderStyle> {i.name} </text>,
-          filteredItems,
-        );
+    let filteredItems = filterItems(state.text, state.items);
+    let items =
+      List.map(
+        i => <text style=textHeaderStyle> {i.name} </text>,
+        filteredItems,
+      );
 
-        <view style={Style.make(~backgroundColor=Colors.blue, ~width, ())}>
-          <view style={Style.make(~height=50, ())}>
-            <text style=textHeaderStyle> {state.text ++ "|"} </text>
-          </view>
-          <view style={Style.make()}> ...items </view>
-        </view>
+    <view style={Style.make(~backgroundColor=Colors.blue, ~width, ())}>
+      <view style={Style.make(~height=50, ())}>
+        <text style=textHeaderStyle> {state.text ++ "|"} </text>
+      </view>
+      <view style={Style.make()> ...items </view>
+    </view>;
   };
 
   UI.start(~createOptions={autoSize: true}, w, render);
