@@ -64,10 +64,10 @@ module AnimatedText = (
 
             let translate: float =
               useAnimation(
-                Animated.floatValue(100.),
+                Animated.floatValue(50.),
                 {
                   toValue: 0.,
-                  duration: Seconds(2.),
+                  duration: Seconds(0.5),
                   delay: Seconds(delay),
                   repeat: false,
                 },
