@@ -67,6 +67,26 @@ test("Animation", () => {
     expect(myAnimation.value.current).toBe(5.);
   });
 
+  test("animation with delay", () => {
+    module TestTicker =
+      MakeTicker({});
+    module Animated = Animation.Make(TestTicker);
+
+    let myAnimation =
+      Animated.start(
+        Animated.floatValue(0.),
+        {
+          duration: Time.Seconds(2.),
+          delay: Time.Seconds(1.),
+          toValue: 10.,
+          repeat: false,
+        },
+      );
+
+    TestTicker.simulateTick(Time.Seconds(2.));
+    expect(myAnimation.value.current).toBe(5.);
+  });
+
   test("animations are cleaned up", () => {
     module TestTicker =
       MakeTicker({});

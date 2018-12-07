@@ -38,7 +38,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
 
   let getLocalTime = (clock: float, anim: animation) => {
     let adjustedStart = anim.startTime +. anim.delay;
-    let endTime = anim.startTime +. anim.duration;
+    let endTime = adjustedStart +. anim.duration;
     (clock -. adjustedStart) /. (endTime -. adjustedStart);
   };
 
