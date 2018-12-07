@@ -54,7 +54,11 @@ class node ('a) (()) = {
   pub hitTest = (p: Vec2.t) => {
     let dimensions = _layoutNode^.layout;
     let min = Vec2.create(0., 0.);
-    let max = Vec2.create(float_of_int(dimensions.width), float_of_int(dimensions.height));
+    let max =
+      Vec2.create(
+        float_of_int(dimensions.width),
+        float_of_int(dimensions.height),
+      );
     let b = BoundingBox2d.create(min, max);
     let bbox = BoundingBox2d.transform(b, _this#getWorldTransform());
 
