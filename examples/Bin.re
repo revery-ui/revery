@@ -92,13 +92,9 @@ module AnimatedText = (
 );
 
 let init = app => {
-  let w = App.createWindow(app, "Welcome to Revery!");
+  let win = App.createWindow(app, "Welcome to Revery!");
 
-  let ui = UI.create(w);
-
-  Window.setRenderCallback(w, () =>
-    UI.render(
-      ui,
+  let render = () => {
       <view
         style={Style.make(
           ~position=LayoutTypes.Absolute,
@@ -117,9 +113,10 @@ let init = app => {
           <AnimatedText delay=0.5 textContent="to" />
           <AnimatedText delay=1. textContent="Revery" />
         </view>
-      </view>,
-    )
-  );
+      </view>
+  };
+
+  UI.start(win, render);
 };
 
 App.start(init);

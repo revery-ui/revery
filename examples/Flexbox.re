@@ -17,8 +17,6 @@ let init = app => {
 
   Window.setPos(w, centerX, 0);
 
-  let ui = UI.create(w);
-
   let parentWidth = width - 5;
   let childWidth = width - 50;
 
@@ -143,9 +141,11 @@ let init = app => {
       </view>
     </view>;
 
-  Window.setRenderCallback(w, () =>
-    UI.render(ui, <view> horizontalStyles verticalStyles </view>)
-  );
+  let render = () => {
+    <view> horizontalStyles verticalStyles </view>
+  };
+
+  UI.start(w, render);
 };
 
 App.start(init);

@@ -111,8 +111,6 @@ let init = app => {
   );
   Window.show(w);
 
-  let ui = UI.create(w, ~createOptions={autoSize: true});
-
   let textHeaderStyle =
     Style.make(
       ~backgroundColor=Colors.black,
@@ -146,10 +144,7 @@ let init = app => {
       }
     );
 
-  /* Render function - where the magic happens! */
-  Window.setRenderCallback(
-    w,
-    () => {
+  let render = () => {
       let state = App.getState(app);
 
       let filteredItems = filterItems(state.text, state.items);
@@ -159,17 +154,15 @@ let init = app => {
           filteredItems,
         );
 
-      UI.render(
-        ui,
         <view style={Style.make(~backgroundColor=Colors.blue, ~width, ())}>
           <view style={Style.make(~height=50, ())}>
             <text style=textHeaderStyle> {state.text ++ "|"} </text>
           </view>
           <view style={Style.make()}> ...items </view>
-        </view>,
-      );
-    },
-  );
+        </view>
+  };
+
+  UI.start(~createOptions={autoSize: true}, w, render);
 };
 
 App.startWithState(initialState, reducer, init);
