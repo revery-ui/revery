@@ -7,11 +7,11 @@ dev-repo:     "git+https://github.com/ocsigen/js_of_ocaml.git"
 
 name: "js_of_ocaml-lwt"
 
-build: [["jbuilder" "build" "-p" name "-j" jobs]]
+build: [["dune" "build" "-p" name "-j" jobs]]
 
 depends: [
   "ocaml" {>= "4.02.0"}
-  "jbuilder" {build & >= "1.0+beta17"}
+  "dune" {build & >= "1.2"}
   "lwt" {>= "2.4.4"}
   "js_of_ocaml" {>= "3.2"}
   "js_of_ocaml-ppx"
@@ -20,6 +20,6 @@ depopts: [ "graphics" "lwt_log" ]
 
 synopsis: "Compiler from OCaml bytecode to Javascript"
 url {
-  src: "https://github.com/ocsigen/js_of_ocaml/archive/3.2.1.tar.gz"
-  checksum: "md5=5ebfb1bf85dc90e45e0f7ca71a9053b4"
+  src: "https://github.com/ocsigen/js_of_ocaml/archive/3.3.0.tar.gz"
+  checksum: "md5=438051f64e307edbda42f250a3d9cef1"
 }
