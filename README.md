@@ -79,26 +79,23 @@ open Revery.UI;
 let init = app => {
 
   /* Create a window! */
-  let w = App.createWindow(app, "test");
-
-  /* Create a UI 'container' */
-  let ui = UI.create(w);
+  let win = App.createWindow(app, "test");
 
   /* Set up some styles */
   let textHeaderStyle = Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=24, ());
 
-  /* Set up our render function */
-  Window.setRenderCallback(w, () => {
+  /* Set up render function */
+  let render = () => {
+      <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=10, ~top=10, ~left=10, ~right=10, ~backgroundColor=Colors.blue, ()))>
+          <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=0, ~width=10, ~height=10, ~backgroundColor=Colors.red, ())) />
+          <image src="logo.png" style=(Style.make(~width=128, ~height=64, ())) />
+          <text style=(textHeaderStyle)>"Hello World!"</text>
+          <view style=(Style.make(~width=25, ~height=25, ~backgroundColor=Colors.green, ())) />
+      </view>
+   };
 
-    /* This is where we render the UI - if you've used React or ReasonReact, it should look familiar */
-    UI.render(ui,
-        <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=10, ~top=10, ~left=10, ~right=10, ~backgroundColor=Colors.blue, ()))>
-            <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=0, ~width=10, ~height=10, ~backgroundColor=Colors.red, ())) />
-            <image src="logo.png" style=(Style.make(~width=128, ~height=64, ())) />
-            <text style=(textHeaderStyle)>"Hello World!"</text>
-            <view style=(Style.make(~width=25, ~height=25, ~backgroundColor=Colors.green, ())) />
-        </view>);
-  });
+  /* Start the UI */
+  UI.start(win, render);
 };
 
 /* Let's get this party started! */
