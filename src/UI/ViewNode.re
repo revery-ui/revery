@@ -5,7 +5,7 @@ module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
-/* open Reglm; */
+open Reglm;
 open Node;
 open RenderPass;
 
@@ -231,6 +231,41 @@ class viewNode (()) = {
 
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
+      /* Before drawing the node if there is box shadow we should make a first pass */
+
+      Shaders.CompiledShader.use(solidShader);
+      Shaders.CompiledShader.setUniformMatrix4fv(
+        solidShader,
+        "uProjection",
+        m,
+      );
+
+      let style = _super#getStyle();
+      let opacity = style.opacity *. parentContext.opacity;
+
+      let world =
+        switch (style.boxShadow) {
+        | None => _this#getWorldTransform()
+        | Boxshadow(offsetX, offsetY, _, _, _) =>
+          let shadowTransform = Mat4.create();
+          Mat4.fromTranslation(
+            shadowTransform,
+            Vec3.create(offsetX, offsetY, 0.),
+          );
+          let transformation = Mat4.create();
+          Mat4.multiply(
+            transformation,
+            _this#getWorldTransform(),
+            shadowTransform,
+          );
+          transformation;
+        };
+
+      Shaders.CompiledShader.setUniformMatrix4fv(
+        solidShader,
+        "uWorld",
+        world,
+      );
 
       let mainQuad =
         Assets.quad(~minX=0., ~maxX=width, ~minY=0., ~maxY=height, ());

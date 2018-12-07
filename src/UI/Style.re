@@ -50,6 +50,7 @@ type t = {
   borderVertical: Border.t,
   transform: list(Transform.t),
   opacity: float,
+  boxShadow,
 };
 
 let make =
@@ -87,6 +88,7 @@ let make =
       ~borderVertical=Border.make(),
       ~transform=[],
       ~opacity=1.0,
+      ~boxShadow=None,
       _unit: unit,
     ) => {
   let ret: t = {
@@ -123,6 +125,7 @@ let make =
     borderHorizontal,
     borderVertical,
     opacity,
+    boxShadow,
   };
 
   ret;
