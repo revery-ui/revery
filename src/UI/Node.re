@@ -3,7 +3,7 @@ module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
-open Reglm;
+open Revery_Math;
 
 class node ('a) (()) = {
   as _this;
@@ -51,9 +51,19 @@ class node ('a) (()) = {
     Mat4.multiply(matrix, world, xform);
     matrix;
   };
-  pub hitTest = (_p: Vec2.t) =>
-    /* TODO: Implement hit test against transforms */
-    false;
+  pub hitTest = (p: Vec2.t) => {
+    let dimensions = _layoutNode^.layout;
+    let min = Vec2.create(0., 0.);
+    let max =
+      Vec2.create(
+        float_of_int(dimensions.width),
+        float_of_int(dimensions.height),
+      );
+    let b = BoundingBox2d.create(min, max);
+    let bbox = BoundingBox2d.transform(b, _this#getWorldTransform());
+
+    BoundingBox2d.isPointInside(bbox, p);
+  };
   pub addChild = (n: node('a)) => {
     _children := List.append(_children^, [n]);
     n#_setParent(Some((_this :> node('a))));
