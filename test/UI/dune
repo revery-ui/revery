@@ -2,4 +2,4 @@
     (name Revery_UI_Test)
     (library_flags (-linkall))
     (modules (:standard))
-    (libraries Revery_UI rejest))
+    (libraries Revery_UI Revery_Math rejest))

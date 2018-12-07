@@ -29,7 +29,6 @@ let createNodeWithMeasure = (children, style, measure) =>
     ~andMeasure=measure,
     rootContext,
   );
-
 let layout = (node, pixelRatio) => {
   let layoutNode = node#toLayoutNode(pixelRatio);
   Layout.layoutNode(layoutNode, Encoding.cssUndefined, Encoding.cssUndefined, Ltr);
