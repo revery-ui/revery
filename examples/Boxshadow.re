@@ -39,7 +39,7 @@ let init = app => {
       ~position=LayoutTypes.Relative,
       ~width=100,
       ~height=80,
-      ~boxShadow=Boxshadow(0.5, 0.5, 0., 0., Colors.white),
+      ~boxShadow=Boxshadow(5., 5., 0., 0., Colors.white),
       (),
     );
 

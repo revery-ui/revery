@@ -247,15 +247,19 @@ class viewNode (()) = {
         switch (style.boxShadow) {
         | None => _this#getWorldTransform()
         | Boxshadow(offsetX, offsetY, _, _, color) =>
+          let realWorld = _this#getWorldTransform();
+
           let shadowTransform = Mat4.create();
           Mat4.fromTranslation(
             shadowTransform,
             Vec3.create(offsetX, offsetY, 0.),
           );
-          let transformation = Mat4.create();
+
+          let shadowWorldTransform = Mat4.create();
+
           Mat4.multiply(
-            transformation,
-            _this#getWorldTransform(),
+            shadowWorldTransform,
+            realWorld,
             shadowTransform,
           );
           Shaders.CompiledShader.setUniform4fv(
@@ -263,9 +267,15 @@ class viewNode (()) = {
             "uColor",
             Color.toVec4(color),
           );
+          Shaders.CompiledShader.setUniformMatrix4fv(
+            solidShader,  
+            "uWorld",
+            shadowWorldTransform,
+          )
           Geometry.draw(quad, solidShader);
-          transformation;
+          realWorld;
         };
+
       Shaders.CompiledShader.setUniformMatrix4fv(
         solidShader,
         "uWorld",
