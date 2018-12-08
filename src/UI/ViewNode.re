@@ -218,6 +218,30 @@ let renderBorders =
   innerWorld;
 };
 
+let renderShadow = (~x, ~y, ~quad, ~color, ~shader, ~world) => {
+  let shadowTransform = Mat4.create();
+  Mat4.fromTranslation(shadowTransform, Vec3.create(x, y, 0.));
+
+  let shadowWorldTransform = Mat4.create();
+
+  Mat4.multiply(shadowWorldTransform, world, shadowTransform);
+
+  Shaders.CompiledShader.setUniform4fv(
+    shader,
+    "uColor",
+    Color.toVec4(color),
+  );
+
+  Shaders.CompiledShader.setUniformMatrix4fv(
+    shader,
+    "uWorld",
+    shadowWorldTransform,
+  );
+
+  Geometry.draw(quad, shader);
+  world;
+};
+
 class viewNode (()) = {
   as _this;
   val solidShader = Assets.solidShader();
@@ -247,33 +271,18 @@ class viewNode (()) = {
         switch (style.boxShadow) {
         | None => _this#getWorldTransform()
         | Boxshadow(offsetX, offsetY, _, _, color) =>
-          let realWorld = _this#getWorldTransform();
-
-          let shadowTransform = Mat4.create();
-          Mat4.fromTranslation(
-            shadowTransform,
-            Vec3.create(offsetX, offsetY, 0.),
-          );
-
-          let shadowWorldTransform = Mat4.create();
-
-          Mat4.multiply(
-            shadowWorldTransform,
-            realWorld,
-            shadowTransform,
-          );
-          Shaders.CompiledShader.setUniform4fv(
-            solidShader,
-            "uColor",
-            Color.toVec4(color),
-          );
-          Shaders.CompiledShader.setUniformMatrix4fv(
-            solidShader,  
-            "uWorld",
-            shadowWorldTransform,
+          _this#getWorldTransform()
+          |> (
+            w =>
+              renderShadow(
+                ~x=offsetX,
+                ~y=offsetY,
+                ~quad,
+                ~color,
+                ~shader=solidShader,
+                ~world=w,
+              )
           )
-          Geometry.draw(quad, solidShader);
-          realWorld;
         };
 
       Shaders.CompiledShader.setUniformMatrix4fv(

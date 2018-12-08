@@ -20,13 +20,14 @@ let init = app => {
   let ui = UI.create(w);
 
   let parentWidth = width - 10;
+  let parentHeight = height / 2;
 
   let parentStyles =
     Style.make(
       ~backgroundColor=Colors.green,
       ~position=LayoutTypes.Relative,
       ~width=parentWidth,
-      ~height=400,
+      ~height=parentHeight,
       ~alignItems=LayoutTypes.AlignCenter,
       ~justifyContent=LayoutTypes.JustifyCenter,
       ~flexDirection=LayoutTypes.Column,
@@ -37,9 +38,9 @@ let init = app => {
     Style.make(
       ~backgroundColor=Colors.blue,
       ~position=LayoutTypes.Relative,
-      ~width=100,
-      ~height=80,
-      ~boxShadow=Boxshadow(5., 5., 0., 0., Colors.white),
+      ~width=300,
+      ~height=280,
+      ~boxShadow=Boxshadow(-10., 10., 0., 0., Colors.black),
       (),
     );
 
