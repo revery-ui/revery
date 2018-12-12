@@ -8,11 +8,11 @@ module LayoutTypes = Layout.LayoutTypes;
 open Reglm;
 open Node;
 open RenderPass;
+open Style;
+open Style.Border;
 
 let renderBorders =
     (~style, ~width, ~height, ~opacity, ~solidShader, ~m, ~world) => {
-  open Style;
-  open Style.Border;
   let borderStyle = (side, axis, border) =>
     Layout.Encoding.(
       if (side.width !== cssUndefined) {
@@ -207,7 +207,6 @@ let renderBorders =
       Geometry.draw(bottomRightTri, solidShader);
     };
   };
-  open Reglm;
   let translate = Mat4.create();
   Mat4.fromTranslation(
     translate,
@@ -218,7 +217,7 @@ let renderBorders =
   innerWorld;
 };
 
-let renderShadow = (~x, ~y, ~quad, ~color, ~shader, ~world) => {
+let renderShadow = (~x, ~y, ~quad, ~color, ~world) => {
   let shadowTransform = Mat4.create();
   Mat4.fromTranslation(shadowTransform, Vec3.create(x, y, 0.));
 
@@ -226,19 +225,28 @@ let renderShadow = (~x, ~y, ~quad, ~color, ~shader, ~world) => {
 
   Mat4.multiply(shadowWorldTransform, world, shadowTransform);
 
+  /* Draw gradient on each side of shadow quad */
+  let gradientShader = Assets.gradientShader();
+
+  Shaders.CompiledShader.setUniformMatrix4fv(
+    gradientShader,
+    "uWorld",
+    shadowWorldTransform,
+  );
+
   Shaders.CompiledShader.setUniform4fv(
-    shader,
+    gradientShader,
     "uColor",
     Color.toVec4(color),
   );
 
   Shaders.CompiledShader.setUniformMatrix4fv(
-    shader,
+    gradientShader,
     "uWorld",
     shadowWorldTransform,
   );
 
-  Geometry.draw(quad, shader);
+  Geometry.draw(quad, gradientShader);
   world;
 };
 
@@ -273,15 +281,8 @@ class viewNode (()) = {
         | Boxshadow(offsetX, offsetY, _, _, color) =>
           _this#getWorldTransform()
           |> (
-            w =>
-              renderShadow(
-                ~x=offsetX,
-                ~y=offsetY,
-                ~quad,
-                ~color,
-                ~shader=solidShader,
-                ~world=w,
-              )
+            world =>
+              renderShadow(~x=offsetX, ~y=offsetY, ~quad, ~color, ~world)
           )
         };
 
