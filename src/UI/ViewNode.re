@@ -217,36 +217,46 @@ let renderBorders =
   innerWorld;
 };
 
-let renderShadow = (~x, ~y, ~quad, ~color, ~world) => {
+/* FIXME: Currently the Gradient shader overwrites the solidShader */
+let renderShadow =
+    (~xShadowOffset, ~yShadowOffset, ~width, ~height, ~color, ~world, ~m) => {
   let shadowTransform = Mat4.create();
-  Mat4.fromTranslation(shadowTransform, Vec3.create(x, y, 0.));
+  let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
+
+  Mat4.fromTranslation(
+    shadowTransform,
+    Vec3.create(xShadowOffset, yShadowOffset, 0.),
+  );
 
   let shadowWorldTransform = Mat4.create();
 
   Mat4.multiply(shadowWorldTransform, world, shadowTransform);
 
   /* Draw gradient on each side of shadow quad */
-  let gradientShader = Assets.gradientShader();
+  let grShader = Assets.gradientShader();
+
+  Shaders.CompiledShader.use(grShader);
+  Shaders.CompiledShader.setUniformMatrix4fv(grShader, "uProjection", m);
 
   Shaders.CompiledShader.setUniformMatrix4fv(
-    gradientShader,
+    grShader,
     "uWorld",
     shadowWorldTransform,
   );
 
   Shaders.CompiledShader.setUniform4fv(
-    gradientShader,
+    grShader,
     "uColor",
     Color.toVec4(color),
   );
 
   Shaders.CompiledShader.setUniformMatrix4fv(
-    gradientShader,
+    grShader,
     "uWorld",
     shadowWorldTransform,
   );
 
-  Geometry.draw(quad, gradientShader);
+  Geometry.draw(quad, grShader);
   world;
 };
 
@@ -282,9 +292,24 @@ class viewNode (()) = {
           _this#getWorldTransform()
           |> (
             world =>
-              renderShadow(~x=offsetX, ~y=offsetY, ~quad, ~color, ~world)
+              renderShadow(
+                ~xShadowOffset=offsetX,
+                ~yShadowOffset=offsetY,
+                ~width,
+                ~height,
+                ~color,
+                ~world,
+                ~m,
+              )
           )
         };
+
+      Shaders.CompiledShader.use(solidShader);
+      Shaders.CompiledShader.setUniformMatrix4fv(
+        solidShader,
+        "uProjection",
+        m,
+      );
 
       Shaders.CompiledShader.setUniformMatrix4fv(
         solidShader,

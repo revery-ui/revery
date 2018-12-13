@@ -16,9 +16,15 @@ let attributes: list(ShaderAttribute.t) =
     },
   ];
 
-let vsShader = SolidShader.vsShader ++ "\n" ++ {|
-   vTexCoord = aTexCoord;
-|};
+let uniform: list(ShaderUniform.t) =
+  SolidShader.uniform
+  @ [
+    {
+      dataType: ShaderDataType.Sampler2D,
+      name: "uSampler",
+      usage: FragmentShader,
+    },
+  ];
 
 let varying =
   SolidShader.varying
@@ -30,9 +36,13 @@ let varying =
     },
   ];
 
+let vsShader = SolidShader.vsShader ++ "\n" ++ {|
+  vTexCoord = aTexCoord;
+|};
+
 let fsShader = {|
-  if (vTexCoord.x < 0.2) {
-    float grad = vTexCoord.x / 0.2;
+  if (vTexCoord.x < 0.1) {
+    float grad = vTexCoord.x / 0.1;
     gl_FragColor = vec4(1.0, 0.0, 0.0, grad * grad);
   } else {
     gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
@@ -44,9 +54,9 @@ let create = _blur => {
     Shader.create(
       ~attributes,
       ~varying,
+      ~uniforms=uniform,
       ~vertexShader=vsShader,
       ~fragmentShader=fsShader,
-      ~uniforms=SolidShader.uniform,
     );
   Shader.compile(shader);
 };
