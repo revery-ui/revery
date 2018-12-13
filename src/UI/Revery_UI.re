@@ -123,6 +123,10 @@ let start =
   let container = UiReact.createContainer(rootNode);
   let ui: uiContainer = {window, rootNode, container, options: createOptions};
 
+  let _ = Reactify.Event.subscribe(FontCache.onFontLoaded, () => {
+    Window.render(window);
+  });
+
   Window.setShouldRenderCallback(window, () => Animated.anyActiveAnimations());
   Window.setRenderCallback(
     window,
