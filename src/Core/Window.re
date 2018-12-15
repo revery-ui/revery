@@ -8,7 +8,7 @@ type keyPressEvent = {
 };
 
 type keyEvent = {
-  key: Glfw.Key.t,
+  key: Key.t,
   scancode: int,
   altKey: bool,
   ctrlKey: bool,
@@ -190,7 +190,7 @@ let create = (name: string, options: windowCreateOptions) => {
     w,
     (_w, key, scancode, buttonState, m) => {
       let evt: keyEvent = {
-        key,
+        key: Key.convert(key),
         scancode,
         ctrlKey: Glfw.Modifier.isControlPressed(m),
         shiftKey: Glfw.Modifier.isShiftPressed(m),
@@ -225,7 +225,7 @@ let create = (name: string, options: windowCreateOptions) => {
     w,
     (_w, key, scancode, buttonState, m) => {
       let evt: keyEvent = {
-        key,
+        key: Key.convert(key),
         scancode,
         ctrlKey: Glfw.Modifier.isControlPressed(m),
         shiftKey: Glfw.Modifier.isShiftPressed(m),
