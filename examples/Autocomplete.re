@@ -2,8 +2,6 @@ open Revery;
 open Revery.Core;
 open Revery.UI;
 
-module Glfw = Reglfw.Glfw;
-
 /* Define our app state */
 
 type item = {
@@ -132,15 +130,14 @@ let init = app => {
   /* Listen to key down events, and coerce them into actions, too */
   let _ =
     Event.subscribe(w.onKeyDown, keyEvent
-      /* TODO: Can we implement this API w/o GLFW leaking through? */
       =>
-        if (keyEvent.key == Glfw.Key.GLFW_KEY_BACKSPACE) {
+        if (keyEvent.key == Key.KEY_BACKSPACE) {
           App.dispatch(app, Backspace);
-        } else if (keyEvent.key == Glfw.Key.GLFW_KEY_H && keyEvent.ctrlKey) {
+        } else if (keyEvent.key == Key.KEY_H && keyEvent.ctrlKey) {
           App.dispatch(app, Backspace);
-        } else if (keyEvent.key == Glfw.Key.GLFW_KEY_ESCAPE) {
+        } else if (keyEvent.key == Key.KEY_ESCAPE) {
           App.quit(0);
-        } else if (keyEvent.key == Glfw.Key.GLFW_KEY_W && keyEvent.ctrlKey) {
+        } else if (keyEvent.key == Key.KEY_W && keyEvent.ctrlKey) {
           App.dispatch(app, ClearWord);
         }
       );

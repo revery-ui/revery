@@ -1,5 +1,6 @@
 module Color = Color;
 module Colors = Colors;
+module Key = Key;
 
 module Window = Window;
 module App = App;
