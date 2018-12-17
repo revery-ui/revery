@@ -22,33 +22,35 @@ class viewNode (()) = {
       let quad =
         Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
 
-      Shaders.CompiledShader.use(solidShader);
-      Shaders.CompiledShader.setUniformMatrix4fv(
-        solidShader,
-        "uProjection",
-        m,
-      );
-
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
 
-      let world = _this#getWorldTransform();
-
-      Shaders.CompiledShader.setUniformMatrix4fv(
-        solidShader,
-        "uWorld",
-        world,
-      );
-
       let c = Color.multiplyAlpha(opacity, style.backgroundColor);
 
-      Shaders.CompiledShader.setUniform4fv(
-        solidShader,
-        "uColor",
-        Color.toVec4(c),
-      );
+      /* Only render if _not_ transparent */
+      if (c.a > 0.001) {
+        let world = _this#getWorldTransform();
 
-      Geometry.draw(quad, solidShader);
+        Shaders.CompiledShader.use(solidShader);
+        Shaders.CompiledShader.setUniformMatrix4fv(
+          solidShader,
+          "uProjection",
+          m,
+        );
+        Shaders.CompiledShader.setUniformMatrix4fv(
+          solidShader,
+          "uWorld",
+          world,
+        );
+
+        Shaders.CompiledShader.setUniform4fv(
+          solidShader,
+          "uColor",
+          Color.toVec4(c),
+        );
+
+        Geometry.draw(quad, solidShader);
+      };
     | _ => ()
     };
 

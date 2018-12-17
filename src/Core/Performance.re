@@ -18,7 +18,7 @@ let bench =
           ++ "[PERF: "
           ++ name
           ++ "]: "
-          ++ string_of_float((endTime -. startTime) /. 1000.)
+          ++ string_of_float((endTime -. startTime) *. 1000.)
           ++ "ms",
         );
         nestingLevel := nestingLevel^ - 1;
