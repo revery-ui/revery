@@ -217,9 +217,18 @@ let renderBorders =
   innerWorld;
 };
 
-/* FIXME: Currently the Gradient shader overwrites the solidShader */
 let renderShadow =
-    (~xShadowOffset, ~yShadowOffset, ~width, ~height, ~color, ~world, ~m) => {
+    (
+      ~xShadowOffset,
+      ~yShadowOffset,
+      ~blurRadius as _,
+      ~spreadRadius as _,
+      ~width,
+      ~height,
+      ~color,
+      ~world,
+      ~m,
+    ) => {
   let shadowTransform = Mat4.create();
   let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
 
@@ -287,14 +296,23 @@ class viewNode (()) = {
 
       let world =
         switch (style.boxShadow) {
-        | None => _this#getWorldTransform()
-        | Boxshadow(offsetX, offsetY, _, _, color) =>
+        | {
+            xOffset: 0.,
+            yOffset: 0.,
+            blurRadius: 0.,
+            spreadRadius: 0.,
+            color: _,
+          } =>
+          _this#getWorldTransform()
+        | {xOffset, yOffset, blurRadius, spreadRadius, color} =>
           _this#getWorldTransform()
           |> (
             world =>
               renderShadow(
-                ~xShadowOffset=offsetX,
-                ~yShadowOffset=offsetY,
+                ~xShadowOffset=xOffset,
+                ~yShadowOffset=yOffset,
+                ~blurRadius,
+                ~spreadRadius,
                 ~width,
                 ~height,
                 ~color,

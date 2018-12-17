@@ -40,7 +40,13 @@ let init = app => {
       ~position=LayoutTypes.Relative,
       ~width=300,
       ~height=280,
-      ~boxShadow=Boxshadow(-10., 10., 0., 0., Colors.black),
+      ~boxShadow=
+        Style.BoxShadow.make(
+          ~yOffset=-10.,
+          ~xOffset=10.,
+          ~color=Colors.black,
+          (),
+        ),
       (),
     );
 

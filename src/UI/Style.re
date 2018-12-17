@@ -16,6 +16,31 @@ module Border = {
   };
 };
 
+module BoxShadow = {
+  type properties = {
+    xOffset: float,
+    yOffset: float,
+    blurRadius: float,
+    spreadRadius: float,
+    color: Color.t,
+  };
+  let make =
+      (
+        ~xOffset=0.0,
+        ~yOffset=0.0,
+        ~blurRadius=0.0,
+        ~spreadRadius=0.0,
+        ~color=Colors.black,
+        (),
+      ) => {
+    color,
+    xOffset,
+    yOffset,
+    blurRadius,
+    spreadRadius,
+  };
+};
+
 type t = {
   backgroundColor: Color.t,
   color: Color.t,
@@ -50,7 +75,7 @@ type t = {
   borderVertical: Border.t,
   transform: list(Transform.t),
   opacity: float,
-  boxShadow,
+  boxShadow: BoxShadow.properties,
 };
 
 let make =
@@ -88,7 +113,14 @@ let make =
       ~borderVertical=Border.make(),
       ~transform=[],
       ~opacity=1.0,
-      ~boxShadow=None,
+      ~boxShadow=BoxShadow.make(
+                   ~xOffset=0.0,
+                   ~yOffset=0.0,
+                   ~blurRadius=0.0,
+                   ~spreadRadius=0.0,
+                   ~color=Colors.black,
+                   (),
+                 ),
       _unit: unit,
     ) => {
   let ret: t = {

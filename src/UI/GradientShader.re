@@ -40,23 +40,25 @@ let vsShader = SolidShader.vsShader ++ "\n" ++ {|
   vTexCoord = aTexCoord;
 |};
 
-let fsShader = {|
+let fsShader = _blur => {|
+  float grad = vTexCoord.x / 0.1;
   if (vTexCoord.x < 0.1) {
-    float grad = vTexCoord.x / 0.1;
-    gl_FragColor = vec4(1.0, 0.0, 0.0, grad * grad);
+    gl_FragColor = vec4(0.0, 0.0, 0.0, grad * grad);
+  } else if (vTexCoord.y < 0.1) {
+    gl_FragColor = vec4(0.0, 0.0, 0.0, grad * grad);
   } else {
-    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
   }
 |};
 
-let create = _blur => {
+let create = blur => {
   let shader =
     Shader.create(
       ~attributes,
       ~varying,
       ~uniforms=uniform,
       ~vertexShader=vsShader,
-      ~fragmentShader=fsShader,
+      ~fragmentShader=fsShader(blur),
     );
   Shader.compile(shader);
 };
