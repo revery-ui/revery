@@ -40,15 +40,22 @@ let vsShader = SolidShader.vsShader ++ "\n" ++ {|
   vTexCoord = aTexCoord;
 |};
 
-let fsShader = _blur => {|
-  float grad = vTexCoord.x / 0.1;
-  if (vTexCoord.x < 0.1) {
-    gl_FragColor = vec4(0.0, 0.0, 0.0, grad * grad);
-  } else if (vTexCoord.y < 0.1) {
-    gl_FragColor = vec4(0.0, 0.0, 0.0, grad * grad);
-  } else {
-    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-  }
+let convertBlurRadius = blur =>
+  blur |> string_of_float |> (b => "float amount = " ++ b ++ ";\n");
+
+let fsShader = blur =>
+  convertBlurRadius(blur)
+  ++ {|
+  float leftEdgeAmount = smoothstep(0.0, amount, vTexCoord.x);
+  float rightEdgeAmount = smoothstep(0.0, amount, 1.0 - vTexCoord.x);
+
+  float topEdgeAmount = smoothstep(0.0, amount, vTexCoord.y);
+  float bottomEdgeAmount = smoothstep(0.0, amount, 1.0 - vTexCoord.y);
+  float horizontalBlur = min(leftEdgeAmount, rightEdgeAmount);
+  float verticalBlur = min(topEdgeAmount, bottomEdgeAmount);
+
+  float blur = horizontalBlur * verticalBlur;
+  gl_FragColor = vec4(1.0, 0.0, 0.0, blur);
 |};
 
 let create = blur => {
