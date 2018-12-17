@@ -27,7 +27,7 @@ class viewNode (()) = {
 
       let c = Color.multiplyAlpha(opacity, style.backgroundColor);
 
-      /* Don't render anything if it isn't transparent! */
+      /* Only render if _not_ transparent */
       if (c.a > 0.001) {
         let world = _this#getWorldTransform();
 
