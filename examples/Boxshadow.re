@@ -44,7 +44,7 @@ let init = app => {
         Style.BoxShadow.make(
           ~yOffset=-10.,
           ~xOffset=10.,
-          ~blurRadius=0.1,
+          ~blurRadius=10.0,
           ~color=Colors.black,
           (),
         ),

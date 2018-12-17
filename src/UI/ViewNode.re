@@ -242,7 +242,7 @@ let renderShadow =
   Mat4.multiply(shadowWorldTransform, world, shadowTransform);
 
   /* Draw gradient on each side of shadow quad */
-  let grShader = Assets.gradientShader(blurRadius);
+  let grShader = Assets.gradientShader(~blur=blurRadius, ~height, ~width);
 
   Shaders.CompiledShader.use(grShader);
   Shaders.CompiledShader.setUniformMatrix4fv(grShader, "uProjection", m);
