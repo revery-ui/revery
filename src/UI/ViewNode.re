@@ -29,28 +29,28 @@ class viewNode (()) = {
 
       /* Don't render anything if it isn't transparent! */
       if (c.a > 0.001) {
-          let world = _this#getWorldTransform();
+        let world = _this#getWorldTransform();
 
-          Shaders.CompiledShader.use(solidShader);
-          Shaders.CompiledShader.setUniformMatrix4fv(
-            solidShader,
-            "uProjection",
-            m,
-          );
-          Shaders.CompiledShader.setUniformMatrix4fv(
-            solidShader,
-            "uWorld",
-            world,
-          );
+        Shaders.CompiledShader.use(solidShader);
+        Shaders.CompiledShader.setUniformMatrix4fv(
+          solidShader,
+          "uProjection",
+          m,
+        );
+        Shaders.CompiledShader.setUniformMatrix4fv(
+          solidShader,
+          "uWorld",
+          world,
+        );
 
-          Shaders.CompiledShader.setUniform4fv(
-            solidShader,
-            "uColor",
-            Color.toVec4(c),
-          );
+        Shaders.CompiledShader.setUniform4fv(
+          solidShader,
+          "uColor",
+          Color.toVec4(c),
+        );
 
-          Geometry.draw(quad, solidShader);
-      }
+        Geometry.draw(quad, solidShader);
+      };
     | _ => ()
     };
 
