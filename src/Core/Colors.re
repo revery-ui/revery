@@ -1,5 +1,8 @@
 open Color;
 
+let transparentWhite = rgba(1.0, 1.0, 1.0, 0.0);
+let transparentBlack = rgba(0., 0., 0., 0.);
+
 let aliceBlue = rgb(0.94, 0.97, 1.0);
 let antiqueWhite = rgb(0.98, 0.92, 0.84);
 let aqua = rgb(0.0, 1.0, 1.0);

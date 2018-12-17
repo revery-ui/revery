@@ -35,7 +35,7 @@ type t = {
 
 let make =
     (
-      ~backgroundColor: Color.t=Colors.black,
+      ~backgroundColor: Color.t=Colors.transparentBlack,
       ~color: Color.t=Colors.white,
       ~width=Encoding.cssUndefined,
       ~height=Encoding.cssUndefined,
