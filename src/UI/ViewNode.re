@@ -219,8 +219,8 @@ let renderBorders =
 
 let renderShadow =
     (
-      ~xShadowOffset,
-      ~yShadowOffset,
+      ~xOffset,
+      ~yOffset,
       ~blurRadius,
       ~spreadRadius as _,
       ~width,
@@ -232,17 +232,15 @@ let renderShadow =
   let shadowTransform = Mat4.create();
   let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
 
-  Mat4.fromTranslation(
-    shadowTransform,
-    Vec3.create(xShadowOffset, yShadowOffset, 0.),
-  );
+  Mat4.fromTranslation(shadowTransform, Vec3.create(xOffset, yOffset, 0.));
 
   let shadowWorldTransform = Mat4.create();
 
   Mat4.multiply(shadowWorldTransform, world, shadowTransform);
 
   /* Draw gradient on each side of shadow quad */
-  let grShader = Assets.gradientShader(~blur=blurRadius, ~height, ~width);
+  let grShader =
+    Assets.gradientShader(~blur=blurRadius, ~height, ~width, ~color);
 
   Shaders.CompiledShader.use(grShader);
   Shaders.CompiledShader.setUniformMatrix4fv(grShader, "uProjection", m);
@@ -309,8 +307,8 @@ class viewNode (()) = {
           |> (
             world =>
               renderShadow(
-                ~xShadowOffset=xOffset,
-                ~yShadowOffset=yOffset,
+                ~xOffset,
+                ~yOffset,
                 ~blurRadius,
                 ~spreadRadius,
                 ~width,
