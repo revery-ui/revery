@@ -1,4 +1,4 @@
-open Color;
+open Color_wrapper;
 
 let transparentWhite = rgba(1.0, 1.0, 1.0, 0.0);
 let transparentBlack = rgba(0., 0., 0., 0.);
