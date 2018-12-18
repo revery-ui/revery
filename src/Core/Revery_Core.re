@@ -1,4 +1,4 @@
-module Color = Color;
+module Color = Color_wrapper;
 module Colors = Colors;
 module Key = Key;
 
