@@ -8,7 +8,7 @@ build: [["which" "which"]]
 depexts: [
   ["which"] {os-distribution = "centos"}
   ["which"] {os-distribution = "fedora"}
-  ["which"] {os-distribution = "opensuse"}
+  ["which"] {os-family = "suse"}
   ["debianutils"] {os-distribution = "debian"}
   ["debianutils"] {os-distribution = "ubuntu"}
   ["which"] {os-distribution = "nixos"}
