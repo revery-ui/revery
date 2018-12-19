@@ -24,11 +24,12 @@ class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
 class imageNode = class ImageNode.imageNode;
 
+module NodeEvents = NodeEvents;
 open UiReconciler;
 let component = UiReact.component;
 
-let view = (~children, ~style=Style.defaultStyle, ~onMouseDown=NodeEvents.eventNoop, ()) =>
-  UiReact.primitiveComponent(View(style, NodeEvents.make(~onMouseDown, ())), ~children);
+let view = (~children, ~style=Style.defaultStyle, ~onMouseDown=NodeEvents.eventNoop, ~onMouseUp=NodeEvents.eventNoop, ~onMouseMove=NodeEvents.eventNoop, ()) =>
+  UiReact.primitiveComponent(View(style, NodeEvents.make(~onMouseDown, ~onMouseMove, ~onMouseUp, ())), ~children);
 
 let image = (~children, ~style=Style.defaultStyle, ~src="", ()) =>
   UiReact.primitiveComponent(Image(style, src), ~children);
@@ -44,6 +45,7 @@ type uiContainer = {
   rootNode: viewNode,
   container: UiReact.t,
   window: Window.t,
+  mouseCursor: Mouse.Cursor.t,
   options: uiContainerOptions,
 };
 
@@ -52,7 +54,7 @@ type renderFunction = unit => UiReact.component;
 let _projection = Mat4.create();
 
 let _render = (container: uiContainer, component: UiReact.component) => {
-  let {rootNode, container, window, options} = container;
+  let {rootNode, container, window, options, _} = container;
 
   AnimationTicker.tick();
 
@@ -121,7 +123,13 @@ let start =
     ) => {
   let rootNode = (new viewNode)();
   let container = UiReact.createContainer(rootNode);
-  let ui: uiContainer = {window, rootNode, container, options: createOptions};
+  let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
+  let ui: uiContainer = {window, rootNode, container, mouseCursor, options: createOptions};
+
+  let _ = Revery_Core.Event.subscribe(window.onMouseMove, (m) => {
+    let evt: NodeEvents.mouseMoveEventParams =  { mouseX: m.mouseX, mouseY: m.mouseY };
+    Mouse.dispatch(mouseCursor,  NodeEvents.MouseMove(evt), rootNode);
+  });
 
   Window.setShouldRenderCallback(window, () => Animated.anyActiveAnimations());
   Window.setRenderCallback(

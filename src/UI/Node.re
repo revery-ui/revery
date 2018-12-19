@@ -22,6 +22,7 @@ class node ('a) (()) = {
   pub setStyle = style => _style := style;
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;
+  pub getEvents = () => _events^;
   pub getTransform = () => {
     let dimensions = _layoutNode^.layout;
     let matrix = Mat4.create();
@@ -77,6 +78,12 @@ class node ('a) (()) = {
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
   pub getMeasureFunction = (_pixelRatio: int) => None;
+  pub handleEvent = (evt: NodeEvents.mouseEvent) => {
+    let _ = switch (evt) {
+    | MouseMove(c) => _this#getEvents().onMouseMove(c);
+    | _ => Continue;
+    };
+  };
   pub toLayoutNode = (pixelRatio: int) => {
     let childNodes = List.map(c => c#toLayoutNode(pixelRatio), _children^);
     let layoutStyle = Style.toLayoutNode(_style^, pixelRatio);

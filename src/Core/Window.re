@@ -18,6 +18,11 @@ type keyEvent = {
   isRepeat: bool,
 };
 
+type mouseMoveEvent = {
+  mouseX: float,
+  mouseY: float,
+};
+
 type windowRenderCallback = unit => unit;
 type windowShouldRenderCallback = unit => bool;
 type t = {
@@ -39,6 +44,7 @@ type t = {
   onKeyPress: Event.t(keyPressEvent),
   onKeyDown: Event.t(keyEvent),
   onKeyUp: Event.t(keyEvent),
+  onMouseMove: Event.t(mouseMoveEvent),
 };
 
 type windowCreateOptions = {
@@ -162,6 +168,7 @@ let create = (name: string, options: windowCreateOptions) => {
     onKeyPress: Event.create(),
     onKeyDown: Event.create(),
     onKeyUp: Event.create(),
+    onMouseMove: Event.create(),
   };
 
   Glfw.glfwSetFramebufferSizeCallback(
@@ -241,6 +248,18 @@ let create = (name: string, options: windowCreateOptions) => {
       | GLFW_RELEASE => Event.dispatch(ret.onKeyUp, evt)
       };
     },
+  );
+
+  Glfw.glfwSetCursorPosCallback(
+    w,
+    (_w, x: float, y: float) => {
+        let evt: mouseMoveEvent = {
+            mouseX: x,
+            mouseY: y,
+        };
+
+        Event.dispatch(ret.onMouseMove, evt);
+    }
   );
   ret;
 };

@@ -5,34 +5,35 @@
 type eventResult =
 | Continue;
 
-type commonMouseEvent = {
-    xPos: float,   
-    yPos: float,
+type mouseMoveEventParams = {
+    mouseX: float,   
+    mouseY: float,
 };
 
-type mouseDownEvent = commonMouseEvent;
-type mouseMoveEvent = commonMouseEvent;
+type mouseButtonEventParams = mouseMoveEventParams;
 
 type mouseEvent = 
-| MouseDown(commonMouseEvent)
-| MouseMove(commonMouseEvent)
-| MouseUp(commonMouseEvent)
+| MouseDown(mouseButtonEventParams)
+| MouseMove(mouseMoveEventParams)
+| MouseUp(mouseButtonEventParams)
 
 
-type mouseDownHandler = (mouseDownEvent) => eventResult;
-type mouseMoveHandler = (mouseDownEvent) => eventResult;
+type mouseButtonHandler = (mouseButtonEventParams) => eventResult;
+type mouseMoveHandler = (mouseMoveEventParams) => eventResult;
 
 type t = {
-    onMouseDown: mouseDownHandler,
+    onMouseDown: mouseButtonHandler,
     onMouseMove: mouseMoveHandler,
+    onMouseUp: mouseButtonHandler,
 };
 
 let eventNoop = (_evt) => Continue;
 
-let make = (~onMouseDown: mouseDownHandler=eventNoop,~onMouseMove:mouseMoveHandler=eventNoop, _unit: unit) => {
+let make = (~onMouseDown: mouseButtonHandler=eventNoop,~onMouseMove:mouseMoveHandler=eventNoop, ~onMouseUp:mouseButtonHandler=eventNoop, _unit: unit) => {
     let ret: t = {
         onMouseDown,
         onMouseMove,
+        onMouseUp,
     };
     ret;
 };

@@ -22,9 +22,9 @@ module Cursor {
 
 let getPositionFromMouseEvent = (evt: mouseEvent) => {
     switch (evt) {
-    | MouseDown(c) => Vec2.create(c.xPos, c.yPos)
-    | MouseMove(c) => Vec2.create(c.xPos, c.yPos)
-    | MouseUp(c) => Vec2.create(c.xPos, c.yPos)
+    | MouseDown(c) => Vec2.create(c.mouseX, c.mouseY)
+    | MouseMove(c) => Vec2.create(c.mouseX, c.mouseY)
+    | MouseUp(c) => Vec2.create(c.mouseX, c.mouseY)
     }
 }
 
@@ -41,5 +41,9 @@ let dispatch = (_cursor: Cursor.t, evt: mouseEvent, node: Node.node('a)) => {
    };
 
    Node.iter(collect, node);
+
+   print_endline ("dispatch - " ++ string_of_int(List.length(nodes^)) ++ " impacted");
+
+   List.iter((n) => n#handleEvent(evt), nodes^);
 };
 

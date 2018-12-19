@@ -94,6 +94,21 @@ module AnimatedText = (
 let init = app => {
   let win = App.createWindow(app, "Welcome to Revery!");
 
+  let onMouseMove = (_evt) => {
+    print_endline ("mouse move over view"); 
+    NodeEvents.Continue;
+  };
+
+  let onMouseDown = (_evt) => {
+    print_endline ("mouse down!"); 
+    NodeEvents.Continue;
+  };
+
+  let onMouseUp = (_evt) => {
+    print_endline ("mouse up!");
+    NodeEvents.Continue;
+  };
+
   let render = () =>
     <view
       style={Style.make(
@@ -107,7 +122,7 @@ let init = app => {
         (),
       )}>
       <Logo />
-      <view
+      <view onMouseMove onMouseDown onMouseUp
         style={Style.make(~flexDirection=Row, ~alignItems=AlignFlexEnd, ())}>
         <AnimatedText delay=0.0 textContent="Welcome" />
         <AnimatedText delay=0.5 textContent="to" />
