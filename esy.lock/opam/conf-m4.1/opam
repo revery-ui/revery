@@ -13,7 +13,7 @@ depexts: [
   ["m4"] {os-distribution = "centos"}
   ["m4"] {os-distribution = "alpine"}
   ["m4"] {os-distribution = "nixos"}
-  ["m4"] {os-distribution = "opensuse"}
+  ["m4"] {os-family = "suse"}
   ["m4"] {os-distribution = "oraclelinux"}
   ["m4"] {os-distribution = "archlinux"}
 ]
