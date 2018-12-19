@@ -289,9 +289,6 @@ class viewNode (()) = {
         m,
       );
 
-      let style = _super#getStyle();
-      let opacity = style.opacity *. parentContext.opacity;
-
       let world =
         switch (style.boxShadow) {
         | {

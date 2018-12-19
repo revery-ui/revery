@@ -8,16 +8,14 @@ let init = app => {
   let centerX = monitor.width / 2 - width / 2;
   let height = monitor.height - 100;
 
-  let w =
+  let win =
     App.createWindow(
       app,
       "box-shadow-example",
       ~createOptions={...Window.defaultCreateOptions, width, height},
     );
 
-  Window.setPos(w, centerX, 0);
-
-  let ui = UI.create(w);
+  Window.setPos(win, centerX, 0);
 
   let parentWidth = width - 10;
   let parentHeight = height / 2;
@@ -51,11 +49,8 @@ let init = app => {
       (),
     );
 
-  Window.setRenderCallback(w, () =>
-    UI.render(
-      ui,
-      <view style=parentStyles> <view style=childStyles /> </view>,
-    )
+  UI.start(win, () =>
+    <view style=parentStyles> <view style=childStyles /> </view>
   );
 };
 
