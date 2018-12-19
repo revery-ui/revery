@@ -7,6 +7,11 @@ module Logo = (
   val component((render, ~children, ()) =>
         render(
           () => {
+            let (opacity, setOpacity) = useState(1.0);
+
+            let onMouseDown = (_) => { setOpacity(0.5); NodeEvents.Continue; };
+            let onMouseUp = (_) => { setOpacity(1.0); NodeEvents.Continue; };
+
             let rotation =
               useAnimation(
                 Animated.floatValue(0.),
@@ -29,18 +34,20 @@ module Logo = (
                 },
               );
 
+            <view onMouseDown onMouseUp>
             <image
               src="outrun-logo.png"
               style={Style.make(
                 ~width=512,
                 ~height=256,
+                ~opacity=opacity,
                 ~transform=[
                   RotateY(Angle.from_radians(rotationY)),
                   RotateX(Angle.from_radians(rotation)),
                 ],
                 (),
               )}
-            />;
+            /></view>;
           },
           ~children,
         )
@@ -94,21 +101,6 @@ module AnimatedText = (
 let init = app => {
   let win = App.createWindow(app, "Welcome to Revery!");
 
-  let onMouseMove = (_evt) => {
-    print_endline ("mouse move over view"); 
-    NodeEvents.Continue;
-  };
-
-  let onMouseDown = (_evt) => {
-    print_endline ("mouse down!"); 
-    NodeEvents.Continue;
-  };
-
-  let onMouseUp = (_evt) => {
-    print_endline ("mouse up!");
-    NodeEvents.Continue;
-  };
-
   let render = () =>
     <view
       style={Style.make(
@@ -122,7 +114,7 @@ let init = app => {
         (),
       )}>
       <Logo />
-      <view onMouseMove onMouseDown onMouseUp
+      <view
         style={Style.make(~flexDirection=Row, ~alignItems=AlignFlexEnd, ())}>
         <AnimatedText delay=0.0 textContent="Welcome" />
         <AnimatedText delay=0.5 textContent="to" />

@@ -1,4 +1,5 @@
 /* Mouse Input */
+open Revery_Core;
 open Revery_Math;
 
 open NodeEvents;
@@ -18,18 +19,37 @@ module Cursor {
         };
         ret;
     };
-}
 
-let getPositionFromMouseEvent = (evt: mouseEvent) => {
-    switch (evt) {
-    | MouseDown(c) => Vec2.create(c.mouseX, c.mouseY)
-    | MouseMove(c) => Vec2.create(c.mouseX, c.mouseY)
-    | MouseUp(c) => Vec2.create(c.mouseX, c.mouseY)
+    let toVec2 = (c) => {
+        Vec2.create(c.x^, c.y^)
+    };
+
+    let set = (c, v: Vec2.t) => {
+        c.x := Vec2.get_x(v); 
+        c.y := Vec2.get_y(v); 
     }
 }
 
-let dispatch = (_cursor: Cursor.t, evt: mouseEvent, node: Node.node('a)) => {
-   let pos =getPositionFromMouseEvent(evt);
+let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) => {
+    switch (evt) {
+    | InternalMouseDown(_) => Cursor.toVec2(c)
+    | InternalMouseMove(e) => Vec2.create(e.mouseX, e.mouseY)
+    | InternalMouseUp(_) => Cursor.toVec2(c)
+    }
+}
+
+let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) => {
+   switch (evt) {
+   | InternalMouseDown(evt) => MouseDown({mouseX: c.x^, mouseY: c.y^, button: evt.button})
+   | InternalMouseUp(evt) => MouseUp({mouseX: c.x^, mouseY: c.y^, button: evt.button})
+   | InternalMouseMove(evt) => MouseMove({mouseX: evt.mouseX, mouseY: evt.mouseY})
+   };
+};
+
+let dispatch = (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node('a)) => {
+   let pos = getPositionFromMouseEvent(cursor, evt);
+
+   let eventToSend = internalToExternalEvent(cursor, evt);
 
    let isNodeImpacted = (n) => n#hitTest(pos); 
 
@@ -44,6 +64,8 @@ let dispatch = (_cursor: Cursor.t, evt: mouseEvent, node: Node.node('a)) => {
 
    print_endline ("dispatch - " ++ string_of_int(List.length(nodes^)) ++ " impacted");
 
-   List.iter((n) => n#handleEvent(evt), nodes^);
+   List.iter((n) => n#handleEvent(eventToSend), nodes^);
+
+   Cursor.set(cursor, pos);
 };
 

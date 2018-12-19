@@ -22,3 +22,7 @@ type mouseButtonEvent = {
   button: MouseButton.t,
 };
 
+type internalMouseEvents = 
+| InternalMouseDown(mouseButtonEvent)
+| InternalMouseMove(mouseMoveEvent)
+| InternalMouseUp(mouseButtonEvent);

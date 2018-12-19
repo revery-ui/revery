@@ -1,6 +1,7 @@
 module Color = Color_wrapper;
 module Colors = Colors;
 module Key = Key;
+module MouseButton = MouseButton;
 
 module Window = Window;
 module App = App;
@@ -10,6 +11,7 @@ module Monitor = Monitor;
 module Environment = Environment;
 
 module Event = Reactify.Event;
+module Events = Events;
 
 module Performance = Performance;
 

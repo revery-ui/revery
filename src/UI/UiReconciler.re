@@ -13,7 +13,6 @@ type primitives =
 type node = Node.node(renderPass);
 
 let createInstance = prim => {
-    print_endline ("createInstance");
   let node =
     switch (prim) {
     | View(style, events) =>

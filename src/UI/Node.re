@@ -80,8 +80,10 @@ class node ('a) (()) = {
   pub getMeasureFunction = (_pixelRatio: int) => None;
   pub handleEvent = (evt: NodeEvents.mouseEvent) => {
     let _ = switch (evt) {
+    | MouseDown(c) => _this#getEvents().onMouseDown(c);
     | MouseMove(c) => _this#getEvents().onMouseMove(c);
-    | _ => Continue;
+    | MouseUp(c) => _this#getEvents().onMouseUp(c);
+    /* | _ => Continue; */
     };
   };
   pub toLayoutNode = (pixelRatio: int) => {

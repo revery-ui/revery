@@ -2,21 +2,26 @@
 
 /* A collection of event handlers to be used by the Nodes */
 
+open Revery_Core;
+
 type eventResult =
 | Continue;
 
 type mouseMoveEventParams = {
-    mouseX: float,   
+    mouseX: float,
     mouseY: float,
 };
 
-type mouseButtonEventParams = mouseMoveEventParams;
+type mouseButtonEventParams = {
+    mouseX: float,
+    mouseY: float,
+    button: MouseButton.t,
+};
 
 type mouseEvent = 
 | MouseDown(mouseButtonEventParams)
 | MouseMove(mouseMoveEventParams)
-| MouseUp(mouseButtonEventParams)
-
+| MouseUp(mouseButtonEventParams);
 
 type mouseButtonHandler = (mouseButtonEventParams) => eventResult;
 type mouseMoveHandler = (mouseMoveEventParams) => eventResult;
