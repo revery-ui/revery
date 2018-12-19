@@ -4,6 +4,23 @@ open Revery_Core;
 
 type fontFamily = string;
 
+module Border = {
+  type t = {
+    color: Color.t,
+    width: int,
+  };
+
+  let make =
+      (
+        ~color=Colors.black,
+        ~width=0,
+        ()
+      ) => {
+    color,
+    width,
+ };
+};
+
 type t = {
   backgroundColor: Color.t,
   color: Color.t,
@@ -29,6 +46,13 @@ type t = {
   margin: int,
   marginVertical: int,
   marginHorizontal: int,
+  borderTop: Border.t,
+  borderLeft: Border.t,
+  borderRight: Border.t,
+  borderBottom: Border.t,
+  border: Border.t,
+  borderHorizontal: Border.t,
+  borderVertical: Border.t,
   transform: list(Transform.t),
   opacity: float,
 };
@@ -59,6 +83,13 @@ let make =
       ~margin=Encoding.cssUndefined,
       ~marginVertical=Encoding.cssUndefined,
       ~marginHorizontal=Encoding.cssUndefined,
+      ~borderTop=Border.make(()),
+      ~borderLeft=Border.make(()),
+      ~borderRight=Border.make(()),
+      ~borderBottom=Border.make(()),
+      ~border=Border.make(()),
+      ~borderHorizontal=Border.make(()),
+      ~borderVertical=Border.make(()),
       ~transform=[],
       ~opacity=1.0,
       _unit: unit,
@@ -89,6 +120,13 @@ let make =
     margin,
     marginVertical,
     marginHorizontal,
+    borderTop,
+    borderLeft,
+    borderRight,
+    borderBottom,
+    border,
+    borderHorizontal,
+    borderVertical,
     opacity,
   };
 
@@ -123,6 +161,13 @@ let toLayoutNode = (s: t, scaleFactor: int) => {
     margin: scale(s.margin, scaleFactor),
     marginVertical: scale(s.marginVertical, scaleFactor),
     marginHorizontal: scale(s.marginHorizontal, scaleFactor),
+    borderTop: scale(s.borderTop.width, scaleFactor),
+    borderLeft: scale(s.borderLeft.width, scaleFactor),
+    borderRight: scale(s.borderRight.width, scaleFactor),
+    borderBottom: scale(s.borderBottom.width, scaleFactor),
+    border: scale(s.border.width, scaleFactor),
+    borderHorizontal: scale(s.borderHorizontal.width, scaleFactor),
+    borderVertical: scale(s.borderVertical.width, scaleFactor),
   };
   ret;
 };
