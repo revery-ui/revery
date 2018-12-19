@@ -280,14 +280,6 @@ class viewNode (()) = {
 
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
-      /* Before drawing the node if there is box shadow we should make a first pass */
-
-      Shaders.CompiledShader.use(solidShader);
-      Shaders.CompiledShader.setUniformMatrix4fv(
-        solidShader,
-        "uProjection",
-        m,
-      );
 
       let world =
         switch (style.boxShadow) {
@@ -317,38 +309,26 @@ class viewNode (()) = {
           )
         };
 
-      Shaders.CompiledShader.use(solidShader);
-      Shaders.CompiledShader.setUniformMatrix4fv(
-        solidShader,
-        "uProjection",
-        m,
-      );
-
-      Shaders.CompiledShader.setUniformMatrix4fv(
-        solidShader,
-        "uWorld",
-        world,
-      );
-
       let mainQuad =
         Assets.quad(~minX=0., ~maxX=width, ~minY=0., ~maxY=height, ());
 
       let c = Color.multiplyAlpha(opacity, style.backgroundColor);
 
-      let world = _this#getWorldTransform();
-      let borderedWorld =
-        renderBorders(
-          ~style,
-          ~width,
-          ~height,
-          ~opacity,
-          ~solidShader,
-          ~m,
-          ~world,
-        );
-
       /* Only render if _not_ transparent */
       if (c.a > 0.001) {
+        let world = _this#getWorldTransform();
+
+        let borderedWorld =
+          renderBorders(
+            ~style,
+            ~width,
+            ~height,
+            ~opacity,
+            ~solidShader,
+            ~m,
+            ~world,
+          );
+
         Shaders.CompiledShader.use(solidShader);
         Shaders.CompiledShader.setUniformMatrix4fv(
           solidShader,
