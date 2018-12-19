@@ -27,8 +27,8 @@ class imageNode = class ImageNode.imageNode;
 open UiReconciler;
 let component = UiReact.component;
 
-let view = (~children, ~style=Style.defaultStyle, ()) =>
-  UiReact.primitiveComponent(View(style), ~children);
+let view = (~children, ~style=Style.defaultStyle, ~onMouseDown=NodeEvents.eventNoop, ()) =>
+  UiReact.primitiveComponent(View(style, NodeEvents.make(~onMouseDown, ())), ~children);
 
 let image = (~children, ~style=Style.defaultStyle, ~src="", ()) =>
   UiReact.primitiveComponent(Image(style, src), ~children);
