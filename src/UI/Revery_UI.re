@@ -22,23 +22,16 @@ let useReducer = UiReact.useReducer;
 
 open RenderPass;
 
-/* class node = class Node.node(RenderPass.t); */
+class node = class Node.node(RenderPass.t);
 class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
 class imageNode = class ImageNode.imageNode;
 
+module Mouse = Mouse;
 module NodeEvents = NodeEvents;
-open UiReconciler;
 let component = UiReact.component;
 
-let view = (~children, ~style=Style.defaultStyle, ~onMouseDown=NodeEvents.eventNoop, ~onMouseUp=NodeEvents.eventNoop, ~onMouseMove=NodeEvents.eventNoop, ()) =>
-  UiReact.primitiveComponent(View(style, NodeEvents.make(~onMouseDown, ~onMouseMove, ~onMouseUp, ())), ~children);
-
-let image = (~children, ~style=Style.defaultStyle, ~src="", ()) =>
-  UiReact.primitiveComponent(Image(style, src), ~children);
-
-let text = (~children: list(string), ~style=Style.defaultStyle, ()) =>
-  UiReact.primitiveComponent(Text(style, List.hd(children)), ~children=[]);
+include Primitives;
 
 type uiContainerOptions = {autoSize: bool};
 

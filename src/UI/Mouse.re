@@ -61,11 +61,7 @@ let dispatch = (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.no
    };
 
    Node.iter(collect, node);
-
-   print_endline ("dispatch - " ++ string_of_int(List.length(nodes^)) ++ " impacted");
-
    List.iter((n) => n#handleEvent(eventToSend), nodes^);
-
    Cursor.set(cursor, pos);
 };
 

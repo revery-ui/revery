@@ -83,7 +83,6 @@ class node ('a) (()) = {
     | MouseDown(c) => _this#getEvents().onMouseDown(c);
     | MouseMove(c) => _this#getEvents().onMouseMove(c);
     | MouseUp(c) => _this#getEvents().onMouseUp(c);
-    /* | _ => Continue; */
     };
   };
   pub toLayoutNode = (pixelRatio: int) => {
