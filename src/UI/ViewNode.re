@@ -32,6 +32,7 @@ let renderBorders(~style, ~width, ~height, ~opacity, ~solidShader, ~m, ~world) {
   let topBorderQuad =
     Assets.quad(~minX=leftBorderWidth, ~minY=0.,
                 ~maxX=leftBorderWidth +. width, ~maxY=topBorderWidth, ());
+
   let leftTopTri =
     Assets.tri(0., topBorderWidth, leftBorderWidth, topBorderWidth, 0., 0.);
   let topLeftTri =
@@ -107,8 +108,12 @@ let renderBorders(~style, ~width, ~height, ~opacity, ~solidShader, ~m, ~world) {
     Color.toVec4(tbc),
   );
   Geometry.draw(topBorderQuad, solidShader);
-  Geometry.draw(topLeftTri, solidShader);
-  Geometry.draw(topRightTri, solidShader);
+  if (topBorderWidth > 0. && leftBorderWidth > 0.) {
+    Geometry.draw(topLeftTri, solidShader);
+  };
+  if (topBorderWidth > 0. && rightBorderWidth > 0.) {
+    Geometry.draw(topRightTri, solidShader);
+  };
 
   Shaders.CompiledShader.setUniform4fv(
     solidShader,
@@ -116,8 +121,12 @@ let renderBorders(~style, ~width, ~height, ~opacity, ~solidShader, ~m, ~world) {
      Color.toVec4(lbc),
   );
   Geometry.draw(leftBorderQuad, solidShader);
-  Geometry.draw(leftTopTri, solidShader);
-  Geometry.draw(leftBottomTri, solidShader);
+  if (topBorderWidth > 0. && leftBorderWidth > 0.) {
+    Geometry.draw(leftTopTri, solidShader);
+  };
+  if (bottomBorderWidth > 0. && leftBorderWidth > 0.) {
+    Geometry.draw(leftBottomTri, solidShader);
+  };
 
   Shaders.CompiledShader.setUniform4fv(
     solidShader,
@@ -125,8 +134,12 @@ let renderBorders(~style, ~width, ~height, ~opacity, ~solidShader, ~m, ~world) {
     Color.toVec4(rbc),
   );
   Geometry.draw(rightBorderQuad, solidShader);
-  Geometry.draw(rightTopTri, solidShader);
-  Geometry.draw(rightBottomTri, solidShader);
+  if (topBorderWidth > 0. && rightBorderWidth > 0.) {
+    Geometry.draw(rightTopTri, solidShader);
+  };
+  if (bottomBorderWidth > 0. && rightBorderWidth > 0.) {
+    Geometry.draw(rightBottomTri, solidShader);
+  };
 
   Shaders.CompiledShader.setUniform4fv(
     solidShader,
@@ -134,8 +147,12 @@ let renderBorders(~style, ~width, ~height, ~opacity, ~solidShader, ~m, ~world) {
     Color.toVec4(bbc),
   );
   Geometry.draw(bottomBorderQuad, solidShader);
-  Geometry.draw(bottomLeftTri, solidShader);
-  Geometry.draw(bottomRightTri, solidShader);
+  if (bottomBorderWidth > 0. && leftBorderWidth > 0.) {
+    Geometry.draw(bottomLeftTri, solidShader);
+  };
+  if (bottomBorderWidth > 0. && rightBorderWidth > 0.) {
+    Geometry.draw(bottomRightTri, solidShader);
+  };
 
   open Reglm;
   let translate = Mat4.create();

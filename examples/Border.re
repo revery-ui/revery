@@ -31,7 +31,7 @@ let init = app => {
       ~top=0,
       ~width=30,
       ~height=30,
-      ~border=Style.Border.make(~color=Colors.black, ~width=3, ()),
+      ~borderHorizontal=Style.Border.make(~color=Colors.black, ~width=3, ()),
       (),
     );
 
