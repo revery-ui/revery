@@ -7,6 +7,11 @@ module Logo = (
   val component((render, ~children, ()) =>
         render(
           () => {
+            let (opacity, setOpacity) = useState(1.0);
+
+            let onMouseDown = _ => setOpacity(0.5);
+            let onMouseUp = _ => setOpacity(1.0);
+
             let rotation =
               useAnimation(
                 Animated.floatValue(0.),
@@ -29,18 +34,21 @@ module Logo = (
                 },
               );
 
-            <image
-              src="outrun-logo.png"
-              style={Style.make(
-                ~width=512,
-                ~height=256,
-                ~transform=[
-                  RotateY(Angle.from_radians(rotationY)),
-                  RotateX(Angle.from_radians(rotation)),
-                ],
-                (),
-              )}
-            />;
+            <view onMouseDown onMouseUp>
+              <image
+                src="outrun-logo.png"
+                style={Style.make(
+                  ~width=512,
+                  ~height=256,
+                  ~opacity,
+                  ~transform=[
+                    RotateY(Angle.from_radians(rotationY)),
+                    RotateX(Angle.from_radians(rotation)),
+                  ],
+                  (),
+                )}
+              />
+            </view>;
           },
           ~children,
         )

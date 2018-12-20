@@ -3,20 +3,7 @@ open Reglfw;
 module Event = Reactify.Event;
 module Color = Color_wrapper;
 
-type keyPressEvent = {
-  codepoint: int,
-  character: string,
-};
-
-type keyEvent = {
-  key: Key.t,
-  scancode: int,
-  altKey: bool,
-  ctrlKey: bool,
-  shiftKey: bool,
-  superKey: bool,
-  isRepeat: bool,
-};
+open Events;
 
 type windowRenderCallback = unit => unit;
 type windowShouldRenderCallback = unit => bool;
@@ -39,6 +26,9 @@ type t = {
   onKeyPress: Event.t(keyPressEvent),
   onKeyDown: Event.t(keyEvent),
   onKeyUp: Event.t(keyEvent),
+  onMouseUp: Event.t(mouseButtonEvent),
+  onMouseMove: Event.t(mouseMoveEvent),
+  onMouseDown: Event.t(mouseButtonEvent),
 };
 
 type windowCreateOptions = {
@@ -162,6 +152,10 @@ let create = (name: string, options: windowCreateOptions) => {
     onKeyPress: Event.create(),
     onKeyDown: Event.create(),
     onKeyUp: Event.create(),
+
+    onMouseMove: Event.create(),
+    onMouseUp: Event.create(),
+    onMouseDown: Event.create(),
   };
 
   Glfw.glfwSetFramebufferSizeCallback(
@@ -240,6 +234,27 @@ let create = (name: string, options: windowCreateOptions) => {
       | GLFW_REPEAT => Event.dispatch(ret.onKeyDown, evt)
       | GLFW_RELEASE => Event.dispatch(ret.onKeyUp, evt)
       };
+    },
+  );
+
+  Glfw.glfwSetMouseButtonCallback(
+    w,
+    (_w, mouseButton, buttonState, _modifier) => {
+      let evt: mouseButtonEvent = {button: MouseButton.convert(mouseButton)};
+      switch (buttonState) {
+      | GLFW_PRESS => Event.dispatch(ret.onMouseDown, evt)
+      | GLFW_REPEAT => Event.dispatch(ret.onMouseDown, evt)
+      | GLFW_RELEASE => Event.dispatch(ret.onMouseUp, evt)
+      };
+    },
+  );
+
+  Glfw.glfwSetCursorPosCallback(
+    w,
+    (_w, x: float, y: float) => {
+      let evt: mouseMoveEvent = {mouseX: x, mouseY: y};
+
+      Event.dispatch(ret.onMouseMove, evt);
     },
   );
   ret;
