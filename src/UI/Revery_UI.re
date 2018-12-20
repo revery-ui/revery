@@ -17,6 +17,9 @@ module Transform = Transform;
 /* Expose hooks as part of the public API */
 include Hooks;
 
+let useState = UiReact.useState;
+let useReducer = UiReact.useReducer;
+
 open RenderPass;
 
 class node = class Node.node(RenderPass.t);
@@ -24,17 +27,11 @@ class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
 class imageNode = class ImageNode.imageNode;
 
-open UiReconciler;
+module Mouse = Mouse;
+module NodeEvents = NodeEvents;
 let component = UiReact.component;
 
-let view = (~children, ~style=Style.defaultStyle, ()) =>
-  UiReact.primitiveComponent(View(style), ~children);
-
-let image = (~children, ~style=Style.defaultStyle, ~src="", ()) =>
-  UiReact.primitiveComponent(Image(style, src), ~children);
-
-let text = (~children: list(string), ~style=Style.defaultStyle, ()) =>
-  UiReact.primitiveComponent(Text(style, List.hd(children)), ~children=[]);
+include Primitives;
 
 type uiContainerOptions = {autoSize: bool};
 
@@ -44,6 +41,7 @@ type uiContainer = {
   rootNode: viewNode,
   container: UiReact.t,
   window: Window.t,
+  mouseCursor: Mouse.Cursor.t,
   options: uiContainerOptions,
 };
 
@@ -52,7 +50,7 @@ type renderFunction = unit => UiReact.component;
 let _projection = Mat4.create();
 
 let _render = (container: uiContainer, component: UiReact.component) => {
-  let {rootNode, container, window, options} = container;
+  let {rootNode, container, window, options, _} = container;
 
   AnimationTicker.tick();
 
@@ -121,7 +119,45 @@ let start =
     ) => {
   let rootNode = (new viewNode)();
   let container = UiReact.createContainer(rootNode);
-  let ui: uiContainer = {window, rootNode, container, options: createOptions};
+  let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
+  let ui: uiContainer = {
+    window,
+    rootNode,
+    container,
+    mouseCursor,
+    options: createOptions,
+  };
+
+  let _ =
+    Revery_Core.Event.subscribe(
+      window.onMouseMove,
+      m => {
+        let evt =
+          Revery_Core.Events.InternalMouseMove({
+            mouseX: m.mouseX,
+            mouseY: m.mouseY,
+          });
+        Mouse.dispatch(mouseCursor, evt, rootNode);
+      },
+    );
+
+  let _ =
+    Revery_Core.Event.subscribe(
+      window.onMouseDown,
+      m => {
+        let evt = Revery_Core.Events.InternalMouseDown({button: m.button});
+        Mouse.dispatch(mouseCursor, evt, rootNode);
+      },
+    );
+
+  let _ =
+    Revery_Core.Event.subscribe(
+      window.onMouseUp,
+      m => {
+        let evt = Revery_Core.Events.InternalMouseUp({button: m.button});
+        Mouse.dispatch(mouseCursor, evt, rootNode);
+      },
+    );
 
   Window.setShouldRenderCallback(window, () => Animated.anyActiveAnimations());
   Window.setRenderCallback(
