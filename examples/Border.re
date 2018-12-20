@@ -23,7 +23,31 @@ let init = app => {
       (),
     );
 
-  let render = () => <view style=defaultStyle></view>;
+  let innerStyle =
+    Style.make(
+      ~backgroundColor=Colors.yellow,
+      ~position=LayoutTypes.Relative,
+      ~left=0,
+      ~top=0,
+      ~width=30,
+      ~height=30,
+      ~border=Style.Border.make(~color=Colors.black, ~width=3, ()),
+      (),
+    );
+
+  let textStyle =
+    Style.make(
+      ~fontSize=20,
+      ~fontFamily="Roboto-Regular.ttf",
+      ~color=Colors.black,
+      (),
+    );
+
+  let render = () =>
+    <view style=defaultStyle>
+      <text style=textStyle> "WELCOME TO REVERY!" </text>
+      <view style=innerStyle> </view>
+    </view>;
 
   UI.start(w, render);
 };
