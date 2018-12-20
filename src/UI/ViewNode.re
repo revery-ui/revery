@@ -12,10 +12,14 @@ open RenderPass;
 let renderBorders(~style, ~width, ~height, ~opacity, ~solidShader, ~m, ~world) {
   let borderStyle = (side, axis, border) => {
     open Style.Border;
-    switch (side.width, axis.width, border.width) {
-    | (0, 0, x) => (float(x), border.color)
-    | (0, x, _) => (float(x), axis.color)
-    | (x, _, _) => (float(x), side.color)
+    if (side.width !== Layout.Encoding.cssUndefined) {
+      (float(side.width), side.color);
+    } else if (axis.width !== Layout.Encoding.cssUndefined) {
+      (float(axis.width), axis.color);
+    } else if (border.width !== Layout.Encoding.cssUndefined) {
+      (float(border.width), border.color);
+    } else {
+      (0., Colors.black);
     };
   };
 
@@ -158,8 +162,9 @@ let renderBorders(~style, ~width, ~height, ~opacity, ~solidShader, ~m, ~world) {
   let translate = Mat4.create();
   Mat4.fromTranslation(translate,
                        Vec3.create(leftBorderWidth, topBorderWidth, 0.));
-  Mat4.multiply(world, translate, world);
-  world;
+  let innerWorld = Mat4.create();
+  Mat4.multiply(innerWorld, translate, world);
+  innerWorld;
 };
 
 class viewNode (()) = {

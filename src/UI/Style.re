@@ -13,7 +13,7 @@ module Border = {
   let make =
       (
         ~color=Colors.black,
-        ~width=0,
+        ~width=Encoding.cssUndefined,
         ()
       ) => {
     color,

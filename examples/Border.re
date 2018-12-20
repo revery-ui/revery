@@ -19,6 +19,7 @@ let init = app => {
       ~height=200,
       ~border=Style.Border.make(~width=15, ~color=Colors.red, ()),
       ~borderHorizontal=Style.Border.make(~width=8, ~color=Colors.blue, ()),
+      ~borderTop=Style.Border.make(~width=15, ~color=Colors.red, ()),
       ~borderLeft=Style.Border.make(~width=30, ~color=Colors.green, ()),
       (),
     );
@@ -45,8 +46,8 @@ let init = app => {
 
   let render = () =>
     <view style=defaultStyle>
-      <text style=textStyle> "WELCOME TO REVERY!" </text>
       <view style=innerStyle> </view>
+      <text style=textStyle> "WELCOME TO REVERY!" </text>
     </view>;
 
   UI.start(w, render);
