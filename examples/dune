@@ -1,8 +1,8 @@
 (executables
-    (names Bin Autocomplete Flexbox)
+    (names Bin Autocomplete Flexbox Border)
     (preprocess (pps lwt_ppx))
     (package Revery)
-    (public_names Bin Autocomplete Flexbox)
+    (public_names Bin Autocomplete Flexbox Border)
     (js_of_ocaml)
     (libraries
         js_of_ocaml
