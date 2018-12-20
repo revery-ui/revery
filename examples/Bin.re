@@ -9,8 +9,8 @@ module Logo = (
           () => {
             let (opacity, setOpacity) = useState(1.0);
 
-            let onMouseDown = (_) => { setOpacity(0.5); NodeEvents.Continue; };
-            let onMouseUp = (_) => { setOpacity(1.0); NodeEvents.Continue; };
+            let onMouseDown = (_) => { setOpacity(0.5); };
+            let onMouseUp = (_) => { setOpacity(1.0); };
 
             let rotation =
               useAnimation(
