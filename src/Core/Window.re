@@ -161,6 +161,15 @@ let create = (name: string, options: windowCreateOptions) => {
   Glfw.glfwSetFramebufferSizeCallback(
     w,
     (_w, width, height) => {
+      ret.framebufferWidth = width;
+      ret.framebufferHeight = height;
+      render(ret);
+    },
+  );
+
+  Glfw.glfwSetWindowSizeCallback(
+    w,
+    (_w, width, height) => {
       ret.width = width;
       ret.height = height;
       render(ret);
