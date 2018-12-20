@@ -79,11 +79,13 @@ class node ('a) (()) = {
   pub getChildren = () => _children^;
   pub getMeasureFunction = (_pixelRatio: int) => None;
   pub handleEvent = (evt: NodeEvents.mouseEvent) => {
-    let _ = switch (evt) {
-    | MouseDown(c) => _this#getEvents().onMouseDown(c);
-    | MouseMove(c) => _this#getEvents().onMouseMove(c);
-    | MouseUp(c) => _this#getEvents().onMouseUp(c);
-    };
+    let _ =
+      switch (evt) {
+      | MouseDown(c) => _this#getEvents().onMouseDown(c)
+      | MouseMove(c) => _this#getEvents().onMouseMove(c)
+      | MouseUp(c) => _this#getEvents().onMouseUp(c)
+      };
+    ();
   };
   pub toLayoutNode = (pixelRatio: int) => {
     let childNodes = List.map(c => c#toLayoutNode(pixelRatio), _children^);
@@ -107,11 +109,11 @@ class node ('a) (()) = {
 };
 
 let iter = (f, node: node('a)) => {
-  let rec apply = (node) => {
+  let rec apply = node => {
     f(node);
 
     let children = node#getChildren();
-    List.iter(apply, children)
+    List.iter(apply, children);
   };
 
   apply(node);

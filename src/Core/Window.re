@@ -240,25 +240,22 @@ let create = (name: string, options: windowCreateOptions) => {
   Glfw.glfwSetMouseButtonCallback(
     w,
     (_w, mouseButton, buttonState, _modifier) => {
-        let evt: mouseButtonEvent = { button: MouseButton.convert(mouseButton) };
-       switch(buttonState) {
-       | GLFW_PRESS => Event.dispatch(ret.onMouseDown, evt)
-       | GLFW_REPEAT => Event.dispatch(ret.onMouseDown, evt)
-       | GLFW_RELEASE => Event.dispatch(ret.onMouseUp, evt)
-       };
-    }
+      let evt: mouseButtonEvent = {button: MouseButton.convert(mouseButton)};
+      switch (buttonState) {
+      | GLFW_PRESS => Event.dispatch(ret.onMouseDown, evt)
+      | GLFW_REPEAT => Event.dispatch(ret.onMouseDown, evt)
+      | GLFW_RELEASE => Event.dispatch(ret.onMouseUp, evt)
+      };
+    },
   );
 
   Glfw.glfwSetCursorPosCallback(
     w,
     (_w, x: float, y: float) => {
-        let evt: mouseMoveEvent = {
-            mouseX: x,
-            mouseY: y,
-        };
+      let evt: mouseMoveEvent = {mouseX: x, mouseY: y};
 
-        Event.dispatch(ret.onMouseMove, evt);
-    }
+      Event.dispatch(ret.onMouseMove, evt);
+    },
   );
   ret;
 };

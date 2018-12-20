@@ -9,8 +9,8 @@ module Logo = (
           () => {
             let (opacity, setOpacity) = useState(1.0);
 
-            let onMouseDown = (_) => { setOpacity(0.5); };
-            let onMouseUp = (_) => { setOpacity(1.0); };
+            let onMouseDown = _ => setOpacity(0.5);
+            let onMouseUp = _ => setOpacity(1.0);
 
             let rotation =
               useAnimation(
@@ -35,19 +35,20 @@ module Logo = (
               );
 
             <view onMouseDown onMouseUp>
-            <image
-              src="outrun-logo.png"
-              style={Style.make(
-                ~width=512,
-                ~height=256,
-                ~opacity=opacity,
-                ~transform=[
-                  RotateY(Angle.from_radians(rotationY)),
-                  RotateX(Angle.from_radians(rotation)),
-                ],
-                (),
-              )}
-            /></view>;
+              <image
+                src="outrun-logo.png"
+                style={Style.make(
+                  ~width=512,
+                  ~height=256,
+                  ~opacity,
+                  ~transform=[
+                    RotateY(Angle.from_radians(rotationY)),
+                    RotateX(Angle.from_radians(rotation)),
+                  ],
+                  (),
+                )}
+              />
+            </view>;
           },
           ~children,
         )

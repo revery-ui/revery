@@ -120,22 +120,44 @@ let start =
   let rootNode = (new viewNode)();
   let container = UiReact.createContainer(rootNode);
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
-  let ui: uiContainer = {window, rootNode, container, mouseCursor, options: createOptions};
+  let ui: uiContainer = {
+    window,
+    rootNode,
+    container,
+    mouseCursor,
+    options: createOptions,
+  };
 
-  let _ = Revery_Core.Event.subscribe(window.onMouseMove, (m) => {
-    let evt =  Revery_Core.Events.InternalMouseMove({ mouseX: m.mouseX, mouseY: m.mouseY });
-    Mouse.dispatch(mouseCursor, evt, rootNode);
-  });
+  let _ =
+    Revery_Core.Event.subscribe(
+      window.onMouseMove,
+      m => {
+        let evt =
+          Revery_Core.Events.InternalMouseMove({
+            mouseX: m.mouseX,
+            mouseY: m.mouseY,
+          });
+        Mouse.dispatch(mouseCursor, evt, rootNode);
+      },
+    );
 
-  let _ = Revery_Core.Event.subscribe(window.onMouseDown, (m) => {
-    let evt = Revery_Core.Events.InternalMouseDown({button: m.button}); 
-    Mouse.dispatch(mouseCursor, evt, rootNode);
-  });
+  let _ =
+    Revery_Core.Event.subscribe(
+      window.onMouseDown,
+      m => {
+        let evt = Revery_Core.Events.InternalMouseDown({button: m.button});
+        Mouse.dispatch(mouseCursor, evt, rootNode);
+      },
+    );
 
-  let _ = Revery_Core.Event.subscribe(window.onMouseUp, (m) => {
-    let evt = Revery_Core.Events.InternalMouseUp({button: m.button}); 
-    Mouse.dispatch(mouseCursor, evt, rootNode);
-  });
+  let _ =
+    Revery_Core.Event.subscribe(
+      window.onMouseUp,
+      m => {
+        let evt = Revery_Core.Events.InternalMouseUp({button: m.button});
+        Mouse.dispatch(mouseCursor, evt, rootNode);
+      },
+    );
 
   Window.setShouldRenderCallback(window, () => Animated.anyActiveAnimations());
   Window.setRenderCallback(
