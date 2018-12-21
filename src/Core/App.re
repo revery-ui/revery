@@ -47,13 +47,15 @@ let _anyWindowsDirty = (app: t('s, 'a)) =>
   );
 
 let _checkAndCloseWindows = (app: t('s, 'a)) => {
-   let currentWindows = getWindows(app);
-   let windowsToClose = List.filter((w) => Window.shouldClose(w), currentWindows);
-   let windowsToKeep = List.filter((w) => !Window.shouldClose(w), currentWindows);
+  let currentWindows = getWindows(app);
+  let windowsToClose =
+    List.filter(w => Window.shouldClose(w), currentWindows);
+  let windowsToKeep =
+    List.filter(w => !Window.shouldClose(w), currentWindows);
 
-   List.iter((w) => Glfw.glfwDestroyWindow(window), windowsToClose);
-   app.windows = windowsToKeep;
-}
+  List.iter(w => Glfw.glfwDestroyWindow(window), windowsToClose);
+  app.windows = windowsToKeep;
+};
 
 let startWithState: startFunc('s, 'a) =
   (
