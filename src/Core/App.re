@@ -53,7 +53,7 @@ let _checkAndCloseWindows = (app: t('s, 'a)) => {
   let windowsToKeep =
     List.filter(w => !Window.shouldClose(w), currentWindows);
 
-  List.iter(w => Glfw.glfwDestroyWindow(window), windowsToClose);
+  List.iter(w => Window.destroyWindow(window), windowsToClose);
   app.windows = windowsToKeep;
 };
 

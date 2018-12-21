@@ -304,6 +304,8 @@ let getDevicePixelRatio = (w: t) => {
   /. float_of_int(windowSizeInScreenCoordinates.width);
 };
 
+let destroyWindow = (w: t) => Glfw.glfwDestroyWindow(w.glfwWindow);
+
 let shouldClose = (w: t) => Glfw.glfwWindowShouldClose(w.glfwWindow);
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) =>
