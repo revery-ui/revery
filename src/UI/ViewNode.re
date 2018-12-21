@@ -222,7 +222,7 @@ let renderShadow =
       ~xOffset,
       ~yOffset,
       ~blurRadius,
-      ~spreadRadius as _,
+      ~spreadRadius,
       ~width,
       ~height,
       ~color,
@@ -230,7 +230,16 @@ let renderShadow =
       ~m,
     ) => {
   let shadowTransform = Mat4.create();
-  let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
+
+  // Widen the size of the shadow based on the spread specified
+  let quad =
+    Assets.quad(
+      ~minX=0.,
+      ~minY=0.,
+      ~maxX=width +. spreadRadius,
+      ~maxY=height +. spreadRadius,
+      (),
+    );
 
   Mat4.fromTranslation(shadowTransform, Vec3.create(xOffset, yOffset, 0.));
 
@@ -238,9 +247,13 @@ let renderShadow =
 
   Mat4.multiply(shadowWorldTransform, world, shadowTransform);
 
-  /* Draw gradient on each side of shadow quad */
   let grShader =
-    Assets.gradientShader(~blur=blurRadius, ~height, ~width, ~color);
+    Assets.gradientShader(
+      ~width,
+      ~height,
+      ~color,
+      ~blur=blurRadius,
+    );
 
   Shaders.CompiledShader.use(grShader);
   Shaders.CompiledShader.setUniformMatrix4fv(grShader, "uProjection", m);

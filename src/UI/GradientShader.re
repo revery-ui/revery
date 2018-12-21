@@ -51,8 +51,8 @@ let convertBlurRadius = (blur, height, width) => {
   ++ ";\n";
 };
 
-let fsShader = (blur, height, width, _color) =>
-  convertBlurRadius(blur, height, width)
+let createFragmentShader = (~blur, ~height, ~width, ~color) =>
+  convertBlurRadius(~blur, ~height, ~width, ~color)
   ++ {|
   float leftEdgeAmount = smoothstep(0.0, amountX, vTexCoord.x);
   float rightEdgeAmount = smoothstep(0.0, amountX, 1.0 - vTexCoord.x);
@@ -73,7 +73,7 @@ let create = (~blur, ~height, ~width, ~color) => {
       ~varying,
       ~uniforms=uniform,
       ~vertexShader=vsShader,
-      ~fragmentShader=fsShader(blur, height, width, color),
+      ~fragmentShader=createFragmentShader(~blur, ~height, ~width, ~color),
     );
   Shader.compile(shader);
 };

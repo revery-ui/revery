@@ -9,7 +9,7 @@ module Geometry = Revery_Geometry;
 
 let solidShader = Lazy.make(() => SolidShader.create());
 let fontShader = Lazy.make(() => FontShader.create());
-let gradientShader = (~blur, ~height, ~width, ~color) =>
+let gradientShader = (~height, ~width, ~color, ~blur) =>
   Lazy.make(() => GradientShader.create(~blur, ~height, ~width, ~color), ());
 let textureShader = Lazy.make(() => TextureShader.create());
 

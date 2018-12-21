@@ -44,6 +44,7 @@ let init = app => {
           ~xOffset=10.,
           ~blurRadius=10.0,
           ~color=Colors.black,
+          ~spreadRadius=20.,
           (),
         ),
       (),
