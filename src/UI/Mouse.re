@@ -36,7 +36,7 @@ let capturedEventStateInstance: capturedEventState = {
     onMouseUp: ref(None),
 };
 
-let setCapture = (~onMouseDown:option(mouseButtonHandler)=None, ~onMouseMove:option(mouseMoveHandler)=None, ~onMouseUp:option(mouseButtonHandler)=None, ()) => {
+let setCapture = (~onMouseDown=?, ~onMouseMove=?, ~onMouseUp=?, ()) => {
    capturedEventStateInstance.onMouseDown := onMouseDown; 
    capturedEventStateInstance.onMouseMove := onMouseMove;
    capturedEventStateInstance.onMouseUp := onMouseUp;
