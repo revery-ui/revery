@@ -48,7 +48,7 @@ test("Mouse", () => {
       expect(count^).toBe(0);
     });
   });
-  test("setCapture/releaseCapture", () => {
+  test("setCapture/releaseCapture", () =>
     test("captured events override dispatching to node", () => {
       let cursor = Mouse.Cursor.make();
 
@@ -80,7 +80,6 @@ test("Mouse", () => {
 
       expect(nodeCount^).toBe(1);
       expect(captureCount^).toBe(1);
-    });
-  });
+    })
+  );
 });
-
