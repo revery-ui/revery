@@ -231,7 +231,7 @@ let renderShadow =
     ) => {
   let shadowTransform = Mat4.create();
 
-  // Widen the size of the shadow based on the spread specified
+  /* Widen the size of the shadow based on the spread specified */
   let quad =
     Assets.quad(
       ~minX=0.,
@@ -248,12 +248,7 @@ let renderShadow =
   Mat4.multiply(shadowWorldTransform, world, shadowTransform);
 
   let grShader =
-    Assets.gradientShader(
-      ~width,
-      ~height,
-      ~color,
-      ~blur=blurRadius,
-    );
+    Assets.gradientShader(~width, ~height, ~color, ~blur=blurRadius);
 
   Shaders.CompiledShader.use(grShader);
   Shaders.CompiledShader.setUniformMatrix4fv(grShader, "uProjection", m);
