@@ -53,7 +53,7 @@ let _checkAndCloseWindows = (app: t('s, 'a)) => {
   let windowsToKeep =
     List.filter(w => !Window.shouldClose(w), currentWindows);
 
-  List.iter(w => Window.destroyWindow(window), windowsToClose);
+  List.iter(w => Window.destroyWindow(w), windowsToClose);
   app.windows = windowsToKeep;
 };
 
@@ -75,6 +75,8 @@ let startWithState: startFunc('s, 'a) =
 
     let appLoop = (_t: float) => {
       Glfw.glfwPollEvents();
+
+      _checkAndCloseWindows(appInstance);
 
       if (appInstance.needsRender || _anyWindowsDirty(appInstance)) {
         Performance.bench("renderWindows", () => {
