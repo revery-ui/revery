@@ -40,19 +40,29 @@ let vsShader = SolidShader.vsShader ++ "\n" ++ {|
   vTexCoord = aTexCoord;
 |};
 
-let convertBlurRadius = (blur, height, width) => {
+/* let colorStr = */
+/*   "vec3 color = " */
+/*   ++ string_of_int(color.r) */
+/*   ++ string_of_int(color.g) */
+/*   ++ string_of_int(color.a) */
+/*   ++ ";\n"; */
+
+let updateShader = (~blur, ~height, ~width, ~color as _) => {
   let amountX = string_of_float(blur /. width);
   let amountY = string_of_float(blur /. height);
-  "float amountX = "
-  ++ amountX
-  ++ ";\n"
-  ++ "float amountY = "
-  ++ amountY
-  ++ ";\n";
+
+  let amountStr =
+    "float amountX = "
+    ++ amountX
+    ++ ";\n"
+    ++ "float amountY = "
+    ++ amountY
+    ++ ";\n";
+  amountStr;
 };
 
 let createFragmentShader = (~blur, ~height, ~width, ~color) =>
-  convertBlurRadius(~blur, ~height, ~width, ~color)
+  updateShader(~blur, ~height, ~width, ~color)
   ++ {|
   float leftEdgeAmount = smoothstep(0.0, amountX, vTexCoord.x);
   float rightEdgeAmount = smoothstep(0.0, amountX, 1.0 - vTexCoord.x);

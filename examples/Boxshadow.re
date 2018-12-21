@@ -22,7 +22,6 @@ let init = app => {
 
   let parentStyles =
     Style.make(
-      ~backgroundColor=Colors.green,
       ~position=LayoutTypes.Relative,
       ~width=parentWidth,
       ~height=parentHeight,
@@ -42,9 +41,9 @@ let init = app => {
         Style.BoxShadow.make(
           ~yOffset=-10.,
           ~xOffset=10.,
-          ~blurRadius=10.0,
+          ~blurRadius=20.,
           ~color=Colors.black,
-          ~spreadRadius=20.,
+          ~spreadRadius=15.,
           (),
         ),
       (),

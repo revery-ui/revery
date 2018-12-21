@@ -231,13 +231,17 @@ let renderShadow =
     ) => {
   let shadowTransform = Mat4.create();
 
-  /* Widen the size of the shadow based on the spread specified */
+  /* Widen the size of the shadow based on the spread specified
+      OR based on the blur radius
+     */
+  let sizeModifier = spreadRadius +. blurRadius;
+
   let quad =
     Assets.quad(
       ~minX=0.,
       ~minY=0.,
-      ~maxX=width +. spreadRadius,
-      ~maxY=height +. spreadRadius,
+      ~maxX=width +. sizeModifier,
+      ~maxY=height +. sizeModifier,
       (),
     );
 
