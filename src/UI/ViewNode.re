@@ -240,19 +240,23 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
 
   Mat4.multiply(shadowWorldTransform, world, shadowTransform);
 
-  let grShader =
+  let gradientShader =
     Assets.gradientShader(~width, ~height, ~color, ~blur=blurRadius);
 
-  Shaders.CompiledShader.use(grShader);
-  Shaders.CompiledShader.setUniformMatrix4fv(grShader, "uProjection", m);
+  Shaders.CompiledShader.use(gradientShader);
+  Shaders.CompiledShader.setUniformMatrix4fv(
+    gradientShader,
+    "uProjection",
+    m,
+  );
 
   Shaders.CompiledShader.setUniformMatrix4fv(
-    grShader,
+    gradientShader,
     "uWorld",
     shadowWorldTransform,
   );
 
-  Geometry.draw(quad, grShader);
+  Geometry.draw(quad, gradientShader);
   world;
 };
 

@@ -51,7 +51,7 @@ let updateShader = (~blur, ~height, ~width, ~color) => {
     ++ ","
     ++ string_of_float(color.g)
     ++ ","
-    ++ string_of_float(color.a)
+    ++ string_of_float(color.b)
     ++ ")"
     ++ ";\n";
 
