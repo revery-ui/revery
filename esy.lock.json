@@ -1,5 +1,5 @@
 {
-  "hash": "e906af4f92a134fae4554a295b80620b",
+  "hash": "1ecbbfe4e0b422f97dd40feb55569841",
   "root": "root@path:./package.json",
   "node": {
     "root@path:./package.json": {
@@ -17,7 +17,7 @@
         "@opam/js_of_ocaml-lwt@opam:3.3.0", "@opam/lwt@opam:4.1.0",
         "@opam/lwt_ppx@opam:1.2.1", "@opam/merlin@opam:3.2.2", "flex@1.2.2",
         "ocaml@4.6.9", "reason-fontkit@1.1.0", "reason-gl-matrix@0.2.1",
-        "reason-glfw@3.2.1005", "reason-reactify@2.1.0", "rejest@1.2.0"
+        "reason-glfw@3.2.1007", "reason-reactify@2.2.0", "rejest@1.2.0"
       ]
     },
     "rejest@1.2.0": {
@@ -52,12 +52,12 @@
         "@opam/re@opam:1.7.3", "ocaml@4.6.9"
       ]
     },
-    "reason-reactify@2.1.0": {
+    "reason-reactify@2.2.0": {
       "record": {
         "name": "reason-reactify",
-        "version": "2.1.0",
+        "version": "2.2.0",
         "source":
-          "archive:https://registry.npmjs.org/reason-reactify/-/reason-reactify-2.1.0.tgz#sha1:d1ce518b9e4fc6024899a819af03c86985f13a17",
+          "archive:https://registry.npmjs.org/reason-reactify/-/reason-reactify-2.2.0.tgz#sha1:4bdfb41ffc0afa16e68bd7331adb4cf68510e5c4",
         "files": [],
         "opam": null
       },
@@ -68,12 +68,12 @@
         "refmterr@3.1.10", "rejest@1.2.0"
       ]
     },
-    "reason-glfw@3.2.1005": {
+    "reason-glfw@3.2.1007": {
       "record": {
         "name": "reason-glfw",
-        "version": "3.2.1005",
+        "version": "3.2.1007",
         "source":
-          "archive:https://registry.npmjs.org/reason-glfw/-/reason-glfw-3.2.1005.tgz#sha1:0dbc79eec0e94b9ce96817f546b0e4041020afe2",
+          "archive:https://registry.npmjs.org/reason-glfw/-/reason-glfw-3.2.1007.tgz#sha1:37fb8afcfcf547827646205005ceac4b36a4e052",
         "files": [],
         "opam": null
       },
@@ -113,7 +113,7 @@
       "dependencies": [
         "@esy-ocaml/reason@3.3.7", "@opam/dune@opam:1.6.2",
         "esy-cmake@0.3.3", "esy-freetype2@2.9.1001", "esy-harfbuzz@1.9.1",
-        "reason-gl-matrix@0.2.1", "reason-glfw@3.2.1005", "refmterr@3.1.10"
+        "reason-gl-matrix@0.2.1", "reason-glfw@3.2.1007", "refmterr@3.1.10"
       ]
     },
     "ocaml@4.6.9": {
@@ -450,13 +450,30 @@
         "version": "opam:1.1.0",
         "source":
           "archive:https://github.com/ocaml-ppx/ocaml-migrate-parsetree/releases/download/v1.1.0/ocaml-migrate-parsetree-1.1.0.tbz#md5:7dd4808e27af98065f63604c9658d311",
-        "files": [],
+        "files": [
+          {
+            "name": "ocaml-migrate-parsetree.1.1.0.patch",
+            "content":
+              "--- ./src/migrate_parsetree_driver.ml\n+++ ./src/migrate_parsetree_driver.ml\n@@ -371,9 +371,14 @@ let load_file file =\n       | Intf fn ->\n         (fn, Intf (Parse.interface lexbuf)))\n \n-let with_output output ~f =\n+let with_output ?bin output ~f =\n   match output with\n-  | None -> f stdout\n+  | None ->\n+      begin match bin with\n+      | Some bin -> set_binary_mode_out stdout bin\n+      | None -> ()\n+      end;\n+      f stdout\n   | Some fn -> with_file_out fn ~f\n \n type output_mode =\n@@ -416,7 +421,7 @@ let process_file ~config ~output ~output_mode ~embed_errors file =\n   in\n   match output_mode with\n   | Dump_ast ->\n-    with_output output ~f:(fun oc ->\n+    with_output ~bin:true output ~f:(fun oc ->\n       let ast =\n         match ast with\n         | Intf (_, sg) -> Ast_io.Intf ((module OCaml_current), sg)\n"
+          }
+        ],
         "opam": {
           "name": "ocaml-migrate-parsetree",
           "version": "1.1.0",
           "opam":
             "opam-version: \"2.0\"\nname: \"ocaml-migrate-parsetree\"\nversion: \"1.1.0\"\nsynopsis: \"\"\ndescription: \"\"\"\nConvert OCaml parsetrees between different versions \n\nThis library converts parsetrees, outcometree and ast mappers between different OCaml versions.\nHigh-level functions help making PPX rewriters independent of a compiler version.\"\"\"\nmaintainer: \"frederic.bour@lakaban.net\"\nauthors: [\n  \"Frédéric Bour <frederic.bour@lakaban.net>\"\n  \"Jérémie Dimino <jeremie@dimino.org>\"\n]\nlicense: \"LGPL-2.1\"\ntags: [\"syntax\" \"org:ocamllabs\"]\nhomepage: \"https://github.com/ocaml-ppx/ocaml-migrate-parsetree\"\ndoc: \"https://ocaml-ppx.github.io/ocaml-migrate-parsetree/\"\nbug-reports: \"https://github.com/ocaml-ppx/ocaml-migrate-parsetree/issues\"\ndepends: [\n  \"result\"\n  \"dune\" {build}\n  \"ocaml\" {>= \"4.02.0\"}\n]\nbuild: [\"jbuilder\" \"build\" \"-p\" name \"-j\" jobs]\ndev-repo: \"git+https://github.com/ocaml-ppx/ocaml-migrate-parsetree.git\"\nurl {\n  src:\n    \"https://github.com/ocaml-ppx/ocaml-migrate-parsetree/releases/download/v1.1.0/ocaml-migrate-parsetree-1.1.0.tbz\"\n  checksum: \"md5=7dd4808e27af98065f63604c9658d311\"\n}",
-          "override": null
+          "override": {
+            "build": [
+              [
+                "bash", "-c",
+                "#{os == 'windows' ? 'patch -p1 < ocaml-migrate-parsetree.1.1.0.patch' : 'true'}"
+              ],
+              [
+                "jbuilder", "build", "-p", "ocaml-migrate-parsetree", "-j",
+                "4"
+              ]
+            ]
+          }
         }
       },
       "dependencies": [
