@@ -35,15 +35,15 @@ let init = app => {
     Style.make(
       ~backgroundColor=Colors.blue,
       ~position=LayoutTypes.Relative,
-      ~width=300,
-      ~height=280,
+      ~width=500,
+      ~height=480,
       ~boxShadow=
         Style.BoxShadow.make(
           ~yOffset=-10.,
           ~xOffset=10.,
-          ~blurRadius=20.,
+          ~blurRadius=40.,
           ~color=Colors.black,
-          ~spreadRadius=15.,
+          ~spreadRadius=20.,
           (),
         ),
       (),

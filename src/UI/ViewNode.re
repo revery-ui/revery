@@ -10,6 +10,7 @@ open Node;
 open RenderPass;
 open Style;
 open Style.Border;
+open Style.BoxShadow;
 
 let renderBorders =
     (~style, ~width, ~height, ~opacity, ~solidShader, ~m, ~world) => {
@@ -217,23 +218,11 @@ let renderBorders =
   innerWorld;
 };
 
-let renderShadow =
-    (
-      ~xOffset,
-      ~yOffset,
-      ~blurRadius,
-      ~spreadRadius,
-      ~width,
-      ~height,
-      ~color,
-      ~world,
-      ~m,
-    ) => {
+let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
+  let {spreadRadius, blurRadius, xOffset, yOffset, color} = boxShadow;
   let shadowTransform = Mat4.create();
 
-  /* Widen the size of the shadow based on the spread specified
-      OR based on the blur radius
-     */
+  /* Widen the size of the shadow based on the spread or blur radius specified */
   let sizeModifier = spreadRadius +. blurRadius;
 
   let quad =
@@ -256,18 +245,6 @@ let renderShadow =
 
   Shaders.CompiledShader.use(grShader);
   Shaders.CompiledShader.setUniformMatrix4fv(grShader, "uProjection", m);
-
-  Shaders.CompiledShader.setUniformMatrix4fv(
-    grShader,
-    "uWorld",
-    shadowWorldTransform,
-  );
-
-  Shaders.CompiledShader.setUniform4fv(
-    grShader,
-    "uColor",
-    Color.toVec4(color),
-  );
 
   Shaders.CompiledShader.setUniformMatrix4fv(
     grShader,
@@ -303,22 +280,9 @@ class viewNode (()) = {
             color: _,
           } =>
           _this#getWorldTransform()
-        | {xOffset, yOffset, blurRadius, spreadRadius, color} =>
+        | boxShadow =>
           _this#getWorldTransform()
-          |> (
-            world =>
-              renderShadow(
-                ~xOffset,
-                ~yOffset,
-                ~blurRadius,
-                ~spreadRadius,
-                ~width,
-                ~height,
-                ~color,
-                ~world,
-                ~m,
-              )
-          )
+          |> (world => renderShadow(~boxShadow, ~width, ~height, ~world, ~m))
         };
 
       let mainQuad =

@@ -40,16 +40,20 @@ let vsShader = SolidShader.vsShader ++ "\n" ++ {|
   vTexCoord = aTexCoord;
 |};
 
-/* let colorStr = */
-/*   "vec3 color = " */
-/*   ++ string_of_int(color.r) */
-/*   ++ string_of_int(color.g) */
-/*   ++ string_of_int(color.a) */
-/*   ++ ";\n"; */
-
-let updateShader = (~blur, ~height, ~width, ~color as _) => {
+let updateShader = (~blur, ~height, ~width, ~color) => {
   let amountX = string_of_float(blur /. width);
   let amountY = string_of_float(blur /. height);
+  open Color.Rgba';
+  let colorStr =
+    "vec3 uShadowColor = "
+    ++ "vec3("
+    ++ string_of_float(color.r)
+    ++ ","
+    ++ string_of_float(color.g)
+    ++ ","
+    ++ string_of_float(color.a)
+    ++ ")"
+    ++ ";\n";
 
   let amountStr =
     "float amountX = "
@@ -58,7 +62,7 @@ let updateShader = (~blur, ~height, ~width, ~color as _) => {
     ++ "float amountY = "
     ++ amountY
     ++ ";\n";
-  amountStr;
+  amountStr ++ colorStr;
 };
 
 let createFragmentShader = (~blur, ~height, ~width, ~color) =>
@@ -73,7 +77,7 @@ let createFragmentShader = (~blur, ~height, ~width, ~color) =>
   float verticalBlur = min(topEdgeAmount, bottomEdgeAmount);
 
   float blur = horizontalBlur * verticalBlur;
-  gl_FragColor = vec4(1.0, 0.0, 0.0, blur);
+  gl_FragColor = vec4(uShadowColor, blur);
 |};
 
 let create = (~blur, ~height, ~width, ~color) => {
