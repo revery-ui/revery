@@ -33,13 +33,23 @@ let component = UiReact.component;
 
 include Primitives;
 
+type uiContainerOptions = {autoSize: bool};
+
+let defaultUiContainerOptions: uiContainerOptions = {autoSize: false};
+
+type uiContainer = {
+  rootNode: viewNode,
+  container: UiReact.t,
+  window: Window.t,
+  mouseCursor: Mouse.Cursor.t,
+  options: uiContainerOptions,
+};
+
 type renderFunction = unit => UiReact.component;
 
 let _projection = Mat4.create();
 
-open UiContainer;
-
-let _render = (container: UiContainer.t, component: UiReact.component) => {
+let _render = (container: uiContainer, component: UiReact.component) => {
   let {rootNode, container, window, options, _} = container;
 
   AnimationTicker.tick();
@@ -103,20 +113,20 @@ let _render = (container: UiContainer.t, component: UiReact.component) => {
 
 let start =
     (
-      ~createOptions=UiContainer.Options.default,
+      ~createOptions=defaultUiContainerOptions,
       window: Window.t,
       render: renderFunction,
     ) => {
   let rootNode = (new viewNode)();
   let container = UiReact.createContainer(rootNode);
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
-  let ui = UiContainer.create(
+  let ui: uiContainer = {
     window,
     rootNode,
     container,
     mouseCursor,
-    createOptions,
-  );
+    options: createOptions,
+  };
 
   let _ =
     Revery_Core.Event.subscribe(
