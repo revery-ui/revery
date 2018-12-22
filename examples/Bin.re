@@ -20,6 +20,7 @@ module Logo = (
                   duration: Seconds(8.),
                   delay: Seconds(1.0),
                   repeat: true,
+                  easing: Animated.linear,
                 },
               );
 
@@ -31,6 +32,7 @@ module Logo = (
                   duration: Seconds(4.),
                   delay: Seconds(0.5),
                   repeat: true,
+                  easing: Animated.linear,
                 },
               );
 
@@ -67,6 +69,7 @@ module AnimatedText = (
                   duration: Seconds(1.),
                   delay: Seconds(delay),
                   repeat: false,
+                  easing: Animated.linear,
                 },
               );
 
@@ -78,6 +81,7 @@ module AnimatedText = (
                   duration: Seconds(0.5),
                   delay: Seconds(delay),
                   repeat: false,
+                  easing: Animated.linear,
                 },
               );
 
