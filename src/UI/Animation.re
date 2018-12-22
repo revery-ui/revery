@@ -20,6 +20,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     toValue: float,
     value: animationValue,
     repeat: bool,
+    easing: (float) => float,
   };
 
   let activeAnimations: ref(list(animation)) = ref([]);
@@ -58,7 +59,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   };
 
   let tickAnimation = (clock: float, anim: animation) => {
-    let t = getLocalTime(clock, anim);
+    let t = animation.easing(getLocalTime(clock, anim));
 
     /* If the anim is set to repeat and the time has expired, restart */
     if (anim.repeat && t > 1.) {
@@ -90,6 +91,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       value: animationValue,
       startTime: Time.to_float_seconds(AnimationTickerImpl.time()),
       startValue: animationValue.current,
+      easing: animationOptions.easing;
     };
 
     activeAnimations := List.append(activeAnimations^, [animation]);
