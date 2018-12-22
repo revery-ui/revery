@@ -91,7 +91,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       value: animationValue,
       startTime: Time.to_float_seconds(AnimationTickerImpl.time()),
       startValue: animationValue.current,
-      easing: animationOptions.easing;
+      easing: animationOptions.easing,
     };
 
     activeAnimations := List.append(activeAnimations^, [animation]);
