@@ -1,7 +1,3 @@
-open Reglm;
-
-open Reglfw.Glfw;
-
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 module Window = Revery_Core.Window;
@@ -20,8 +16,6 @@ include Hooks;
 let useState = UiReact.useState;
 let useReducer = UiReact.useReducer;
 
-open RenderPass;
-
 class node = class Node.node(RenderPass.t);
 class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
@@ -35,71 +29,7 @@ include Primitives;
 
 type renderFunction = unit => UiReact.component;
 
-let _projection = Mat4.create();
-
 open UiContainer;
-
-let _render = (container: UiContainer.t, component: UiReact.component) => {
-  let {rootNode, container, window, options, _} = container;
-
-  AnimationTicker.tick();
-
-  Performance.bench("updateContainer", () =>
-    UiReact.updateContainer(container, component)
-  );
-
-  let size = Window.getFramebufferSize(window);
-  let pixelRatio = int_of_float(Window.getDevicePixelRatio(window));
-
-  switch (options.autoSize) {
-  | false =>
-    rootNode#setStyle(
-      Style.make(
-        ~position=LayoutTypes.Relative,
-        ~width=size.width,
-        ~height=size.height,
-        (),
-      ),
-    );
-    Layout.layout(rootNode, pixelRatio);
-  | true =>
-    rootNode#setStyle(Style.make());
-    Layout.layout(rootNode, pixelRatio);
-    let measurements = rootNode#measurements();
-    let size: Window.windowSize = {
-      width: measurements.width,
-      height: measurements.height,
-    };
-    Window.setSize(window, size.width / pixelRatio, size.height / pixelRatio);
-  };
-
-  Mat4.ortho(
-    _projection,
-    0.0,
-    float_of_int(size.width),
-    float_of_int(size.height),
-    0.0,
-    1000.0,
-    -1000.0,
-  );
-
-  Performance.bench("draw", () => {
-    /* Do a first pass for all 'opaque' geometry */
-    /* This helps reduce the overhead for the more expensive alpha pass, next */
-
-    let drawContext = NodeDrawContext.create(pixelRatio, 0, 1.0);
-
-    let solidPass = SolidPass(_projection);
-    rootNode#draw(solidPass, drawContext);
-
-    /* Render all geometry that requires an alpha */
-    let alphaPass = AlphaPass(_projection);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    rootNode#draw(alphaPass, drawContext);
-    glDisable(GL_BLEND);
-  });
-};
 
 let start =
     (
@@ -154,7 +84,7 @@ let start =
     window,
     () => {
       let component = render();
-      _render(ui, component);
+      UiRender.render(ui, component);
     },
   );
 };
