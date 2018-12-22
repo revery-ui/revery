@@ -66,8 +66,8 @@ let _render = (container: uiContainer, component: UiReact.component) => {
     rootNode#setStyle(
       Style.make(
         ~position=LayoutTypes.Relative,
-        ~width=size.width,
-        ~height=size.height,
+        ~width=size.width / pixelRatio,
+        ~height=size.height / pixelRatio,
         (),
       ),
     );
