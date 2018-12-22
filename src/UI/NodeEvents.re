@@ -20,10 +20,12 @@ type mouseEvent =
   | MouseMove(mouseMoveEventParams)
   | MouseUp(mouseButtonEventParams);
 
+type refCallback('a) = 'a => unit;
 type mouseButtonHandler = mouseButtonEventParams => unit;
 type mouseMoveHandler = mouseMoveEventParams => unit;
 
-type t = {
+type t('a) = {
+  ref: refCallback('a),
   onMouseDown: mouseButtonHandler,
   onMouseMove: mouseMoveHandler,
   onMouseUp: mouseButtonHandler,
@@ -33,13 +35,12 @@ let eventNoop = _evt => ();
 
 let make =
     (
+      ~ref: refCallback('a)=eventNoop,
       ~onMouseDown: mouseButtonHandler=eventNoop,
       ~onMouseMove: mouseMoveHandler=eventNoop,
       ~onMouseUp: mouseButtonHandler=eventNoop,
       _unit: unit,
     ) => {
-  let ret: t = {onMouseDown, onMouseMove, onMouseUp};
+  let ret: t('a) = {ref, onMouseDown, onMouseMove, onMouseUp};
   ret;
 };
-
-let default = make();

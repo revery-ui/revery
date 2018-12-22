@@ -5,12 +5,12 @@
 
 open RenderPass;
 
+type node = Node.node(renderPass);
+
 type primitives =
-  | View(Style.t, NodeEvents.t)
+  | View(Style.t, NodeEvents.t(node))
   | Text(Style.t, string)
   | Image(Style.t, string);
-
-type node = Node.node(renderPass);
 
 let createInstance = prim => {
   let node =

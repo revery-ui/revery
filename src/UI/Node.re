@@ -5,19 +5,31 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Revery_Math;
 
+module UniqueId = {
+    let current = ref(0);
+
+    let getUniqueId = () => {
+        let ret = current^;
+        current := current^ + 1;
+        ret;
+    };
+};
+
 class node ('a) (()) = {
   as _this;
   val _children: ref(list(node('a))) = ref([]);
   val _style: ref(Style.t) = ref(Style.defaultStyle);
-  val _events: ref(NodeEvents.t) = ref(NodeEvents.default);
+  val _events: ref(NodeEvents.t(node('a))) = ref(NodeEvents.make());
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
   val _parent: ref(option(node('a))) = ref(None);
+  val _id: int = UniqueId.getUniqueId();
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let localContext =
       NodeDrawContext.createFromParent(parentContext, style.opacity);
     List.iter(c => c#draw(pass, localContext), _children^);
   };
+  pub getId = () => _id;
   pub measurements = () => _layoutNode^.layout;
   pub setStyle = style => _style := style;
   pub getStyle = () => _style^;
@@ -105,7 +117,17 @@ class node ('a) (()) = {
     node;
   };
   /* TODO: This should really be private - it should never be explicitly set */
-  pub _setParent = (n: option(node('a))) => _parent := n;
+  pub _setParent = (n: option(node('a))) => {
+      _parent := n;
+
+      /* Dispatch ref event if we just got attached */
+      switch(n) {
+      | Some(_) => 
+            let ret = (_this :> node('a));
+            _this#getEvents().ref(ret);  
+      | _ => ();
+      }
+  };
 };
 
 let iter = (f, node: node('a)) => {
