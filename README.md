@@ -21,7 +21,7 @@ npm install -g esy
 
 #### For `macOS` users
 
-If your build takes to much time then is better to pre install some libraries:
+If your build takes too much time then you can pre-install some libraries:
 
 - `brew install cmake`
 - `brew install libpng ragel`
