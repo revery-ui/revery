@@ -166,7 +166,7 @@ Revery is provided under the [MIT License](LICENSE).
 
 ## Contributing
 
-We'd love your help, and welcome PRs and contributions.
+We'd love your help, and welcome PRs and contributions. Join  us on [Discord](https://discord.gg/UvQ2cFn)!
 
 Some ideas for getting started:
 - Help us build example apps,
