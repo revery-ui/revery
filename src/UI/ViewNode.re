@@ -44,7 +44,7 @@ let renderBorders =
   Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uProjection", m);
   Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uWorld", world);
 
-  if (topBorderWidth != 0. && tbc > 0.001) {
+  if (topBorderWidth != 0. && tbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
       solidShader,
       "uColor",
@@ -85,7 +85,7 @@ let renderBorders =
     };
   };
 
-  if (leftBorderWidth != 0. && lbc > 0.001) {
+  if (leftBorderWidth != 0. && lbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
       solidShader,
       "uColor",
@@ -126,7 +126,7 @@ let renderBorders =
     };
   };
 
-  if (rightBorderWidth != 0. && rbc > 0.001) {
+  if (rightBorderWidth != 0. && rbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
       solidShader,
       "uColor",
@@ -167,7 +167,7 @@ let renderBorders =
     };
   };
 
-  if (bottomBorderWidth != 0. && bbc > 0.001) {
+  if (bottomBorderWidth != 0. && bbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
       solidShader,
       "uColor",
