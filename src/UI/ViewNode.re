@@ -257,7 +257,7 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
   );
 
   Geometry.draw(quad, gradientShader);
-  world;
+  ();
 };
 
 class viewNode (()) = {
@@ -274,7 +274,15 @@ class viewNode (()) = {
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
 
-      let world =
+      let mainQuad =
+        Assets.quad(~minX=0., ~maxX=width, ~minY=0., ~maxY=height, ());
+
+      let color = Color.multiplyAlpha(opacity, style.backgroundColor);
+
+      /* Only render if _not_ transparent */
+      if (color.a > 0.001) {
+        let world = _this#getWorldTransform();
+
         switch (style.boxShadow) {
         | {
             xOffset: 0.,
@@ -283,10 +291,8 @@ class viewNode (()) = {
             spreadRadius: 0.,
             color: _,
           } =>
-          _this#getWorldTransform()
-        | boxShadow =>
-          _this#getWorldTransform()
-          |> (world => renderShadow(~boxShadow, ~width, ~height, ~world, ~m))
+          ()
+        | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
         };
 
       let mainQuad =
@@ -324,7 +330,7 @@ class viewNode (()) = {
         Shaders.CompiledShader.setUniform4fv(
           solidShader,
           "uColor",
-          Color.toVec4(c),
+          Color.toVec4(color),
         );
 
         Geometry.draw(mainQuad, solidShader);
