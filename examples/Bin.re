@@ -2,6 +2,7 @@ open Revery;
 open Revery.Core;
 open Revery.Math;
 open Revery.UI;
+open Revery.UI.Components;
 
 module Logo = (
   val component((render, ~children, ()) =>
@@ -99,6 +100,43 @@ module AnimatedText = (
       )
 );
 
+module SimpleButton = (
+  val component((render, ~children, ()) =>
+        render(
+          () => {
+            let (count, setCount) = useState(0);
+
+            let increment = () => setCount(count + 1);
+
+            let wrapperStyle =
+              Style.make(
+                ~backgroundColor=Color.rgba(1., 1., 1., 0.1),
+                ~border=Style.Border.make(~width=2, ~color=Colors.white, ()),
+                ~margin=16,
+                (),
+              );
+
+            let textHeaderStyle =
+              Style.make(
+                ~color=Colors.white,
+                ~fontFamily="Roboto-Regular.ttf",
+                ~fontSize=20,
+                ~margin=4,
+                (),
+              );
+
+            let textContent = "Click me: " ++ string_of_int(count);
+            <Clickable onClick=increment>
+              <view style=wrapperStyle>
+                <text style=textHeaderStyle> textContent </text>
+              </view>
+            </Clickable>;
+          },
+          ~children,
+        )
+      )
+);
+
 let init = app => {
   let win = App.createWindow(app, "Welcome to Revery!");
 
@@ -121,6 +159,7 @@ let init = app => {
         <AnimatedText delay=0.5 textContent="to" />
         <AnimatedText delay=1. textContent="Revery" />
       </view>
+      <SimpleButton />
     </view>;
 
   UI.start(win, render);
