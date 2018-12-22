@@ -6,13 +6,13 @@ module LayoutTypes = Layout.LayoutTypes;
 open Revery_Math;
 
 module UniqueId = {
-    let current = ref(0);
+  let current = ref(0);
 
-    let getUniqueId = () => {
-        let ret = current^;
-        current := current^ + 1;
-        ret;
-    };
+  let getUniqueId = () => {
+    let ret = current^;
+    current := current^ + 1;
+    ret;
+  };
 };
 
 class node ('a) (()) = {
@@ -118,15 +118,15 @@ class node ('a) (()) = {
   };
   /* TODO: This should really be private - it should never be explicitly set */
   pub _setParent = (n: option(node('a))) => {
-      _parent := n;
+    _parent := n;
 
-      /* Dispatch ref event if we just got attached */
-      switch(n) {
-      | Some(_) => 
-            let ret = (_this :> node('a));
-            _this#getEvents().ref(ret);  
-      | _ => ();
-      }
+    /* Dispatch ref event if we just got attached */
+    switch (n) {
+    | Some(_) =>
+      let ret = (_this :> node('a));
+      _this#getEvents().ref(ret);
+    | _ => ()
+    };
   };
 };
 

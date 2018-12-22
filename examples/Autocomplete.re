@@ -129,18 +129,17 @@ let init = app => {
 
   /* Listen to key down events, and coerce them into actions, too */
   let _ =
-    Event.subscribe(w.onKeyDown, keyEvent
-      =>
-        if (keyEvent.key == Key.KEY_BACKSPACE) {
-          App.dispatch(app, Backspace);
-        } else if (keyEvent.key == Key.KEY_H && keyEvent.ctrlKey) {
-          App.dispatch(app, Backspace);
-        } else if (keyEvent.key == Key.KEY_ESCAPE) {
-          App.quit(0);
-        } else if (keyEvent.key == Key.KEY_W && keyEvent.ctrlKey) {
-          App.dispatch(app, ClearWord);
-        }
-      );
+    Event.subscribe(w.onKeyDown, keyEvent =>
+      if (keyEvent.key == Key.KEY_BACKSPACE) {
+        App.dispatch(app, Backspace);
+      } else if (keyEvent.key == Key.KEY_H && keyEvent.ctrlKey) {
+        App.dispatch(app, Backspace);
+      } else if (keyEvent.key == Key.KEY_ESCAPE) {
+        App.quit(0);
+      } else if (keyEvent.key == Key.KEY_W && keyEvent.ctrlKey) {
+        App.dispatch(app, ClearWord);
+      }
+    );
 
   let render = () => {
     let state = App.getState(app);
@@ -156,7 +155,7 @@ let init = app => {
       <view style={Style.make(~height=50, ())}>
         <text style=textHeaderStyle> {state.text ++ "|"} </text>
       </view>
-      <view style={Style.make()}> ...items </view>
+      <view style={Style.make()> ...items </view>
     </view>;
   };
 

@@ -19,7 +19,10 @@ let view =
       (),
     ) =>
   UiReact.primitiveComponent(
-    View(style, NodeEvents.make(~ref, ~onMouseDown, ~onMouseMove, ~onMouseUp, ())),
+    View(
+      style,
+      NodeEvents.make(~ref, ~onMouseDown, ~onMouseMove, ~onMouseUp, ()),
+    ),
     ~children,
   );
 
