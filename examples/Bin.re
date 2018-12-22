@@ -107,18 +107,27 @@ module SimpleButton = (
 
             let increment = () => setCount(count + 1);
 
+            let wrapperStyle = Style.make(
+                ~backgroundColor=Color.rgba(1., 1., 1., 0.1),
+                ~border=Style.Border.make(~width=2, ~color=Colors.white, ()),
+                ~margin=16,
+                ()
+            );
+
             let textHeaderStyle =
               Style.make(
                 ~color=Colors.white,
                 ~fontFamily="Roboto-Regular.ttf",
-                ~fontSize=24,
-                ~marginHorizontal=8,
+                ~fontSize=20,
+                ~margin=4,
                 (),
               );
 
-            let textContent = "CLICK ME: " ++ string_of_int(count);
+            let textContent = "Click me: " ++ string_of_int(count);
             <Clickable onClick={increment}>
-                <text style=textHeaderStyle>textContent</text>
+                <view style=wrapperStyle>
+                    <text style=textHeaderStyle>textContent</text>
+                </view>
             </Clickable>
         }, ~children
         )
@@ -147,6 +156,7 @@ let init = app => {
         <AnimatedText delay=0.5 textContent="to" />
         <AnimatedText delay=1. textContent="Revery" />
       </view>
+      <SimpleButton />
     </view>;
 
   UI.start(win, render);

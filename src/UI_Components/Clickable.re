@@ -10,7 +10,7 @@ open Revery_UI;
 type clickFunction = unit => unit;
 let noop = () => ();
 
-module Clickable = (val component((render, ~onClick:clickFunction=noop, ~children, ()) =>
+include (val component((render, ~onClick:clickFunction=noop, ~children, ()) =>
     render(() => {
 
         let (opacity, setOpacity) = useState(0.8);
