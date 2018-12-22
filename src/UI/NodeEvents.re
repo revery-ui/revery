@@ -24,20 +24,12 @@ type mouseButtonHandler = mouseButtonEventParams => unit;
 type mouseMoveHandler = mouseMoveEventParams => unit;
 
 type t = {
-  onMouseDown: mouseButtonHandler,
-  onMouseMove: mouseMoveHandler,
-  onMouseUp: mouseButtonHandler,
+  onMouseDown: option(mouseButtonHandler),
+  onMouseMove: option(mouseMoveHandler),
+  onMouseUp: option(mouseButtonHandler),
 };
 
-let eventNoop = _evt => ();
-
-let make =
-    (
-      ~onMouseDown: mouseButtonHandler=eventNoop,
-      ~onMouseMove: mouseMoveHandler=eventNoop,
-      ~onMouseUp: mouseButtonHandler=eventNoop,
-      _unit: unit,
-    ) => {
+let make = (~onMouseDown=?, ~onMouseMove=?, ~onMouseUp=?, _unit: unit) => {
   let ret: t = {onMouseDown, onMouseMove, onMouseUp};
   ret;
 };
