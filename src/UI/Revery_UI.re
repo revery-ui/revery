@@ -40,13 +40,14 @@ let start =
   let rootNode = (new viewNode)();
   let container = UiReact.createContainer(rootNode);
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
-  let ui = UiContainer.create(
-    window,
-    rootNode,
-    container,
-    mouseCursor,
-    createOptions,
-  );
+  let ui =
+    UiContainer.create(
+      window,
+      rootNode,
+      container,
+      mouseCursor,
+      createOptions,
+    );
 
   let _ =
     Revery_Core.Event.subscribe(
