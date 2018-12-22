@@ -21,12 +21,12 @@ npm install -g esy
 
 ### Running
 
-After you build, the executables will be available in the `_build\install\default\bin` folder.
+After you build, the executables will be available in the `_esy\default\build\default\examples` folder.
 
-> NOTE: Currently the executables must be run from `install\default\bin`, since the assets are there.
+> NOTE: Currently the executables must be run from `_esy\default\build\default\examples`, since the assets are there.
 
 To run the example app, you can do:
-- `cd _build/install/default/bin`
+- `cd _esy\default\build\default\examples`
 - `./Bin.exe`
 
 ### Tests
