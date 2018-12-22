@@ -10,15 +10,10 @@ module Border = {
     width: int,
   };
 
-  let make =
-      (
-        ~color=Colors.black,
-        ~width=Encoding.cssUndefined,
-        ()
-      ) => {
+  let make = (~color=Colors.black, ~width=Encoding.cssUndefined, ()) => {
     color,
     width,
- };
+  };
 };
 
 type t = {
@@ -83,13 +78,13 @@ let make =
       ~margin=Encoding.cssUndefined,
       ~marginVertical=Encoding.cssUndefined,
       ~marginHorizontal=Encoding.cssUndefined,
-      ~borderTop=Border.make(()),
-      ~borderLeft=Border.make(()),
-      ~borderRight=Border.make(()),
-      ~borderBottom=Border.make(()),
-      ~border=Border.make(()),
-      ~borderHorizontal=Border.make(()),
-      ~borderVertical=Border.make(()),
+      ~borderTop=Border.make(),
+      ~borderLeft=Border.make(),
+      ~borderRight=Border.make(),
+      ~borderBottom=Border.make(),
+      ~border=Border.make(),
+      ~borderHorizontal=Border.make(),
+      ~borderVertical=Border.make(),
       ~transform=[],
       ~opacity=1.0,
       _unit: unit,
