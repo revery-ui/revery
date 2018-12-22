@@ -19,6 +19,13 @@ npm install -g esy
 - `esy install`
 - `esy build`
 
+#### For `macOS` users
+
+If your build takes too much time then you can pre-install some libraries:
+
+- `brew install cmake`
+- `brew install libpng ragel`
+
 ### Running
 
 After you build, the executables will be available in the `_esy\default\build\default\examples` folder.
@@ -26,7 +33,7 @@ After you build, the executables will be available in the `_esy\default\build\de
 > NOTE: Currently the executables must be run from `_esy\default\build\default\examples`, since the assets are there.
 
 To run the example app, you can do:
-- `cd _esy\default\build\default\examples`
+- `cd _esy/default/build/default/examples`
 - `./Bin.exe`
 
 ### Tests
