@@ -29,7 +29,12 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     delay: Time.t,
     toValue: float,
     repeat: bool,
+    easing: (float) => float,
   };
+
+  let linear = (t: float) => t;
+  let quadratic = (t: float) => t *.t;
+  let cubic = (t: float) => t *. t *. t;
 
   let floatValue = (v: float) => {
     let ret = {current: v};
@@ -51,6 +56,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     let t = getLocalTime(clock, anim);
     t > 1. && !anim.repeat;
   };
+
   let tickAnimation = (clock: float, anim: animation) => {
     let t = getLocalTime(clock, anim);
 
