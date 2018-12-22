@@ -59,7 +59,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   };
 
   let tickAnimation = (clock: float, anim: animation) => {
-    let t = animation.easing(getLocalTime(clock, anim));
+    let t = anim.easing(getLocalTime(clock, anim));
 
     /* If the anim is set to repeat and the time has expired, restart */
     if (anim.repeat && t > 1.) {
