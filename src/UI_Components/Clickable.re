@@ -10,21 +10,30 @@ open Revery_UI;
 type clickFunction = unit => unit;
 let noop = () => ();
 
-include (val component((render, ~onClick:clickFunction=noop, ~children, ()) =>
-    render(() => {
+/* The 'include' here makes the component available at the top level */
+include (
+          val component((render, ~onClick: clickFunction=noop, ~children, ()) =>
+                render(
+                  () => {
+                    let (opacity, setOpacity) = useState(0.8);
 
-        let (opacity, setOpacity) = useState(0.8);
+                    /* TODO:
+                     *
+                     * This logic isn't really correct,
+                     * for the case where you hold down the mouse,
+                     * move around (leave the item), and come back.
+                     */
+                    let onMouseDown = _ => setOpacity(1.0);
+                    let onMouseUp = _ => {
+                      setOpacity(0.8);
+                      onClick();
+                    };
 
-        let onMouseDown = _ => setOpacity(1.0);
-        let onMouseUp = _ => {
-            setOpacity(0.8);
-            onClick();
-        };
+                    let style = Style.make(~opacity, ());
 
-        let style = Style.make(~opacity, ());
-
-        <view style onMouseDown onMouseUp>
-            ...children
-        </view>
-        
-    },~children)));
+                    <view style onMouseDown onMouseUp> ...children </view>;
+                  },
+                  ~children,
+                )
+              )
+        );

@@ -101,18 +101,20 @@ module AnimatedText = (
 );
 
 module SimpleButton = (
-    val component((render, ~children, ()) =>
-        render(() => {
+  val component((render, ~children, ()) =>
+        render(
+          () => {
             let (count, setCount) = useState(0);
 
             let increment = () => setCount(count + 1);
 
-            let wrapperStyle = Style.make(
+            let wrapperStyle =
+              Style.make(
                 ~backgroundColor=Color.rgba(1., 1., 1., 0.1),
                 ~border=Style.Border.make(~width=2, ~color=Colors.white, ()),
                 ~margin=16,
-                ()
-            );
+                (),
+              );
 
             let textHeaderStyle =
               Style.make(
@@ -124,14 +126,15 @@ module SimpleButton = (
               );
 
             let textContent = "Click me: " ++ string_of_int(count);
-            <Clickable onClick={increment}>
-                <view style=wrapperStyle>
-                    <text style=textHeaderStyle>textContent</text>
-                </view>
-            </Clickable>
-        }, ~children
+            <Clickable onClick=increment>
+              <view style=wrapperStyle>
+                <text style=textHeaderStyle> textContent </text>
+              </view>
+            </Clickable>;
+          },
+          ~children,
         )
-    )
+      )
 );
 
 let init = app => {
