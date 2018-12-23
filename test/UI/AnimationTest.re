@@ -41,7 +41,7 @@ test("Animation", () => {
           delay: Time.Seconds(0.),
           toValue: 10.,
           repeat: false,
-          easing: Animated.quadratic,
+          easing: Animated.linear,
         },
       );
 
@@ -58,16 +58,16 @@ test("Animation", () => {
       Animated.start(
         Animated.floatValue(0.),
         {
-          duration: Time.Seconds(2.),
+          duration: Time.Seconds(1.),
           delay: Time.Seconds(0.),
-          toValue: 10.,
+          toValue: 1.,
           repeat: false,
-          easing: Animated.linear,
+          easing: Animated.quadratic,
         },
       );
 
-    TestTicker.simulateTick(Time.Seconds(1.));
-    expect(myAnimation.value.current).toBe(5.);
+    TestTicker.simulateTick(Time.Seconds(0.5));
+    expect(myAnimation.value.current).toBe(0.25);
   });
 
   test("animation that repeats", () => {
@@ -79,16 +79,16 @@ test("Animation", () => {
       Animated.start(
         Animated.floatValue(0.),
         {
-          duration: Time.Seconds(1.),
+          duration: Time.Seconds(2.),
           delay: Time.Seconds(0.),
-          toValue: 1.,
+          toValue: 10.,
           repeat: true,
           easing: Animated.linear,
         },
       );
 
-    TestTicker.simulateTick(Time.Seconds(0.5));
-    expect(myAnimation.value.current).toBe(0.25);
+    TestTicker.simulateTick(Time.Seconds(3.));
+    expect(myAnimation.value.current).toBe(5.);
   });
 
   test("animation with delay", () => {
