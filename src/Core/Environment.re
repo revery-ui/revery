@@ -12,3 +12,8 @@ let sleep = (t: Time.t) =>
   if (isNative) {
     Unix.sleepf(Time.to_float_seconds(t));
   };
+
+let getExecutingDirectory = () =>
+  Filename.dirname(Sys.argv[0]) ++ Filename.dir_sep;
+
+let getWorkingDirectory = () => Sys.getcwd();
