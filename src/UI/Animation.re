@@ -20,6 +20,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     toValue: float,
     value: animationValue,
     repeat: bool,
+    easing: (float) => float,
   };
 
   let activeAnimations: ref(list(animation)) = ref([]);
@@ -29,7 +30,23 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     delay: Time.t,
     toValue: float,
     repeat: bool,
+    easing: (float) => float,
   };
+
+  /*y=u0(1−t)3+3u1(1−t)2t+3u2(1−t)t2+u3t3
+    u0, u3 = 0,1; t in [0,1] */
+  let oneDimBezier = (u1:float, u2:float, t:float) => {
+      let term1 = u1 *. (((1. -. t) ** 2.) *. t);
+      let term2 = u2 *. ((1. -. t) *. (t ** 2.));
+      let term3 = t ** 3.;
+      (term1 +. term2) *. 3. +. term3;
+  };
+  let linear = (t: float) => t;
+  let quadratic = (t: float) => t *.t;
+  let cubic = (t: float) => t *. t *. t;
+  let easeIn = oneDimBezier(0., 0.45);
+  let easeOut = oneDimBezier(0.45, 1.);
+  let easeInOut = oneDimBezier(0., 1.);
 
   let floatValue = (v: float) => {
     let ret = {current: v};
@@ -51,8 +68,9 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     let t = getLocalTime(clock, anim);
     t > 1. && !anim.repeat;
   };
+
   let tickAnimation = (clock: float, anim: animation) => {
-    let t = getLocalTime(clock, anim);
+    let t = anim.easing(getLocalTime(clock, anim));
 
     /* If the anim is set to repeat and the time has expired, restart */
     if (anim.repeat && t > 1.) {
@@ -84,6 +102,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       value: animationValue,
       startTime: Time.to_float_seconds(AnimationTickerImpl.time()),
       startValue: animationValue.current,
+      easing: animationOptions.easing,
     };
 
     activeAnimations := List.append(activeAnimations^, [animation]);
