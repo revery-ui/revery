@@ -1,4 +1,4 @@
-[![Build Status](https://bryphe.visualstudio.com/revery/_apis/build/status/build)](https://bryphe.visualstudio.com/revery/_build/latest?definitionId=2)
+[![Build Status](https://dev.azure.com/revery-ui/revery/_apis/build/status/revery-ui.revery?branchName=master)](https://dev.azure.com/revery-ui/revery/_build/latest?definitionId=2?branchName=master)
 [![npm version](https://badge.fury.io/js/revery.svg)](https://badge.fury.io/js/revery)
 
 # Revery
