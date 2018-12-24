@@ -34,19 +34,25 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   };
 
   /*y=u0(1−t)3+3u1(1−t)2t+3u2(1−t)t2+u3t3
-    u0, u3 = 0,1; t in [0,1] */
-  let oneDimBezier = (u1:float, u2:float, t:float) => {
-      let term1 = u1 *. (((1. -. t) ** 2.) *. t);
-      let term2 = u2 *. ((1. -. t) *. (t ** 2.));
-      let term3 = t ** 3.;
-      (term1 +. term2) *. 3. +. term3;
+    u0, u3 = 0,1; t in [0,1] 
+    equivalent to a normal bezier curve where p1x = 1/3 and p2x = 2/3
+   */
+  let genOneDimBezierFunc = (u1:float, u2:float) => {
+    let a = (3. *. (u1 -. u2) +. 1.);
+    let b = (-6. *. u1 +. 3. *. u2);
+    let c = (3. *. u1);
+    let ret = (t: float) => {
+        let t2 = t ** 2.;
+        a *. t2 *. t +. b *. t2 +. c *. t;
+    }
+    ret;
   };
   let linear = (t: float) => t;
   let quadratic = (t: float) => t *.t;
   let cubic = (t: float) => t *. t *. t;
-  let easeIn = oneDimBezier(0., 0.45);
-  let easeOut = oneDimBezier(0.45, 1.);
-  let easeInOut = oneDimBezier(0., 1.);
+  let easeIn = genOneDimBezierFunc(0., 0.45);
+  let easeOut = genOneDimBezierFunc(0.45, 1.);
+  let easeInOut = genOneDimBezierFunc(0., 1.);
 
   let floatValue = (v: float) => {
     let ret = {current: v};
