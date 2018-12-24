@@ -19,10 +19,10 @@ jobs:
 
   steps:
   - script: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libegl1-mesa-dev mesa-utils mesa-utils-extra ragel
-  - template: use-node.yml
-  - template: restore-build-cache.yml
-  - template: esy-build-steps.yml
-  - template: publish-build-cache.yml
+  - template: .ci/use-node.yml
+  - template: .ci/restore-build-cache.yml
+  - template: .ci/esy-build-steps.yml
+  - template: .ci/publish-build-cache.yml
 
 - job: MacOS
   timeoutInMinutes: 0
@@ -39,10 +39,10 @@ jobs:
   steps:
   - script: brew update
   - script: brew install libpng ragel
-  - template: use-node.yml
-  - template: restore-build-cache.yml
-  - template: esy-build-steps.yml
-  - template: publish-build-cache.yml
+  - template: .ci/use-node.yml
+  - template: .ci/restore-build-cache.yml
+  - template: .ci/esy-build-steps.yml
+  - template: .ci/publish-build-cache.yml
 
 - job: Windows
   timeoutInMinutes: 0
@@ -57,7 +57,7 @@ jobs:
     # ESY__NPM_ROOT: /C/npm/prefix/node_modules/esy
 
   steps:
-  - template: use-node.yml
-  - template: restore-build-cache.yml
-  - template: esy-build-steps.yml
-  - template: publish-build-cache.yml
+  - template: .ci/use-node.yml
+  - template: .ci/restore-build-cache.yml
+  - template: .ci/esy-build-steps.yml
+  - template: .ci/publish-build-cache.yml
