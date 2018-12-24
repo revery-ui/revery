@@ -14,6 +14,6 @@ let sleep = (t: Time.t) =>
   };
 
 let getExecutingDirectory = () =>
-  Filename.dirname(Sys.argv[0]) ++ Filename.dir_sep;
+  isNative ? Filename.dirname(Sys.argv[0]) ++ Filename.dir_sep : "";
 
 let getWorkingDirectory = () => Sys.getcwd();
