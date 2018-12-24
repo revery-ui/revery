@@ -1,7 +1,7 @@
 [![Build Status](https://bryphe.visualstudio.com/revery/_apis/build/status/build)](https://bryphe.visualstudio.com/revery/_build/latest?definitionId=2)
 [![npm version](https://badge.fury.io/js/revery.svg)](https://badge.fury.io/js/revery)
 
-# Revery 
+# Revery
 
 Build __native__, _high-performance_, __cross-platform__ desktop apps with [reason](https://reasonml.github.io/)!
 
@@ -25,6 +25,13 @@ If your build takes too much time then you can pre-install some libraries:
 
 - `brew install cmake`
 - `brew install libpng ragel`
+
+#### For `Linux` users
+
+Install the following packages with your package manager of choice:
+
+* `cmake`
+* `ragel`
 
 ### Running
 
@@ -115,7 +122,7 @@ TODO
 
 ## Roadmap
 
-It's early days for `revery` and we still have a lot of work ahead! 
+It's early days for `revery` and we still have a lot of work ahead!
 
 Some tentative work we need to do, in no particular order:
 
@@ -183,7 +190,7 @@ Some ideas for getting started:
     - [Didact's DUI React tutorial](https://engineering.hexacta.com/didact-learning-how-react-works-by-building-it-from-scratch-51007984e5c5)
     - [ReactMini](https://github.com/reasonml/reason-react/tree/master/ReactMini)
 - [reason-glfw](https://github.com/bryphe/reason-glfw)
-    - [GLFW](https://www.glfw.org) - 
+    - [GLFW](https://www.glfw.org) -
     - [stb-image](https://github.com/nothings/stb)
 - [reason-fontkit](https://github.com/bryphe/reason-fontkit)
     - [freetype2](https://www.freetype.org)
