@@ -44,7 +44,7 @@ let renderBorders =
   Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uProjection", m);
   Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uWorld", world);
 
-  if (topBorderWidth != 0.) {
+  if (topBorderWidth != 0. && tbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
       solidShader,
       "uColor",
@@ -85,7 +85,7 @@ let renderBorders =
     };
   };
 
-  if (leftBorderWidth != 0.) {
+  if (leftBorderWidth != 0. && lbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
       solidShader,
       "uColor",
@@ -126,7 +126,7 @@ let renderBorders =
     };
   };
 
-  if (rightBorderWidth != 0.) {
+  if (rightBorderWidth != 0. && rbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
       solidShader,
       "uColor",
@@ -167,7 +167,7 @@ let renderBorders =
     };
   };
 
-  if (bottomBorderWidth != 0.) {
+  if (bottomBorderWidth != 0. && bbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
       solidShader,
       "uColor",
@@ -237,20 +237,20 @@ class viewNode (()) = {
 
       let c = Color.multiplyAlpha(opacity, style.backgroundColor);
 
+      let world = _this#getWorldTransform();
+      let borderedWorld =
+        renderBorders(
+          ~style,
+          ~width,
+          ~height,
+          ~opacity,
+          ~solidShader,
+          ~m,
+          ~world,
+        );
+
       /* Only render if _not_ transparent */
       if (c.a > 0.001) {
-        let world = _this#getWorldTransform();
-        let borderedWorld =
-          renderBorders(
-            ~style,
-            ~width,
-            ~height,
-            ~opacity,
-            ~solidShader,
-            ~m,
-            ~world,
-          );
-
         Shaders.CompiledShader.use(solidShader);
         Shaders.CompiledShader.setUniformMatrix4fv(
           solidShader,
