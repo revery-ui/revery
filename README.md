@@ -1,7 +1,7 @@
-[![Build Status](https://bryphe.visualstudio.com/revery/_apis/build/status/build)](https://bryphe.visualstudio.com/revery/_build/latest?definitionId=2)
+[![Build Status](https://dev.azure.com/revery-ui/revery/_apis/build/status/revery-ui.revery?branchName=master)](https://dev.azure.com/revery-ui/revery/_build/latest?definitionId=2?branchName=master)
 [![npm version](https://badge.fury.io/js/revery.svg)](https://badge.fury.io/js/revery)
 
-# Revery 
+# Revery
 
 Build __native__, _high-performance_, __cross-platform__ desktop apps with [reason](https://reasonml.github.io/)!
 
@@ -25,6 +25,13 @@ If your build takes too much time then you can pre-install some libraries:
 
 - `brew install cmake`
 - `brew install libpng ragel`
+
+#### For `Linux` users
+
+Install the following packages with your package manager of choice:
+
+* `cmake`
+* `ragel`
 
 ### Running
 
@@ -59,7 +66,7 @@ Revery is an experiment - can we provide a great developer experience and help t
 
 A major value prop of Electron is that you can build for all platforms at once. You have great confidence as a developer that your app will look and work the same across different platforms. Revery is the same - aside from platform-specific behavior, if your app looks or behaves differently on another platform, that's a bug! As a consequence, Revery is like [flutter](https://flutter.io) in that it __does not use native widgets__. This means more work for us, but also that we have more predictable functionality cross-platform!
 
-> __NOTE:__ If you're looking for something that does leverage native widgets, check out [briskml](https://github.com/briskml/brisk)
+> __NOTE:__ If you're looking for something that does leverage native widgets, check out [briskml](https://github.com/briskml/brisk). Another alternative is the [cuite](https://github.com/let-def/cuite) OCaml binding for [Qt](https://github.com/let-def/cuite).
 
 - __High performance__
 
@@ -115,7 +122,7 @@ TODO
 
 ## Roadmap
 
-It's early days for `revery` and we still have a lot of work ahead! 
+It's early days for `revery` and we still have a lot of work ahead!
 
 Some tentative work we need to do, in no particular order:
 
@@ -176,14 +183,14 @@ Some ideas for getting started:
 ## Special Thanks
 
 `revery` would not be possible without a bunch of cool tech:
-- [ocaml](https://ocaml.org) made the other tools possible - thanks Inria!
+- [ocaml](https://ocaml.org) made these tools possible - thanks [Inria](https://caml.inria.fr) & [OCaml Labs](http://ocamllabs.io/)!
 - [reasonml](https://reasonml.github.io) made revery possible - thanks @jordwalke!
 - [flex](https://github.com/jordwalke/flex) by @jordwalke
 - [reason-reactify](https://github.com/bryphe/reason-reactify)
     - [Didact's DUI React tutorial](https://engineering.hexacta.com/didact-learning-how-react-works-by-building-it-from-scratch-51007984e5c5)
     - [ReactMini](https://github.com/reasonml/reason-react/tree/master/ReactMini)
 - [reason-glfw](https://github.com/bryphe/reason-glfw)
-    - [GLFW](https://www.glfw.org) - 
+    - [GLFW](https://www.glfw.org) -
     - [stb-image](https://github.com/nothings/stb)
 - [reason-fontkit](https://github.com/bryphe/reason-fontkit)
     - [freetype2](https://www.freetype.org)
@@ -196,3 +203,5 @@ Some ideas for getting started:
 - [react-native](https://facebook.github.io/react-native/)
 - [briskml](https://github.com/briskml/brisk)
 - [elm](https://elm-lang.org/)
+- [cuite](https://github.com/let-def/cuite)
+- [wall](https://github.com/let-def/wall)
