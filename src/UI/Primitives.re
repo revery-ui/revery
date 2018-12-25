@@ -25,8 +25,39 @@ let view =
     ~children,
   );
 
-let image = (~children, ~style=Style.defaultStyle, ~src="", ()) =>
-  UiReact.primitiveComponent(Image(style, src), ~children);
+let image =
+    (
+      ~onMouseDown=?,
+      ~onMouseMove=?,
+      ~onMouseUp=?,
+      ~children,
+      ~style=Style.defaultStyle,
+      ~src="",
+      (),
+    ) =>
+  UiReact.primitiveComponent(
+    Image(
+      style,
+      src,
+      NodeEvents.make(~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ()),
+    ),
+    ~children,
+  );
 
-let text = (~children: list(string), ~style=Style.defaultStyle, ()) =>
-  UiReact.primitiveComponent(Text(style, List.hd(children)), ~children=[]);
+let text =
+    (
+      ~onMouseDown=?,
+      ~onMouseMove=?,
+      ~onMouseUp=?,
+      ~children: list(string),
+      ~style=Style.defaultStyle,
+      (),
+    ) =>
+  UiReact.primitiveComponent(
+    Text(
+      style,
+      List.hd(children),
+      NodeEvents.make(~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ()),
+    ),
+    ~children=[],
+  );
