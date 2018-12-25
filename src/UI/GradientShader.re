@@ -1,7 +1,8 @@
 /**
  * Gradient Shader
  *
- * shader demonstrating which allows for specificying a gradient.
+ * shader which allows for specificying a gradient.
+ * the gradient is used to draw a box shadow
  */
 open Revery_Shaders;
 open Revery_Shaders.Shader;
