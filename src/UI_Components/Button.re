@@ -14,10 +14,10 @@ let textStyle = (~fontSize) =>
     (),
   );
 
-let containerStyle = (~width, ~disabled) =>
+let containerStyle = (~width, ~disabled, ~color) =>
   Style.make(
     ~position=LayoutTypes.Relative,
-    ~backgroundColor=disabled ? Colors.dimGrey : Colors.dodgerBlue,
+    ~backgroundColor=disabled ? Colors.dimGrey : color,
     ~justifyContent=LayoutTypes.JustifyCenter,
     ~alignItems=LayoutTypes.AlignCenter,
     ~border=Style.Border.make(~width=1, ~color=Colors.white, ()),
@@ -33,6 +33,7 @@ include (
                   ~onClick: clickFunction=noop,
                   ~children,
                   ~title,
+                  ~color=Colors.dodgerBlue,
                   ~fontSize=40,
                   ~disabled=false,
                   (),
@@ -44,7 +45,7 @@ include (
                       |> Monitor.getSize
                       |> (({width, _}) => width * 30 / 100);
                     <Clickable onClick>
-                      <view style={containerStyle(~width, ~disabled)}>
+                      <view style={containerStyle(~width, ~disabled, ~color)}>
                         <text style={textStyle(~fontSize)}> title </text>
                       </view>
                     </Clickable>;
