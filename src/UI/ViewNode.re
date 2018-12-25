@@ -222,7 +222,7 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
   let {spreadRadius, blurRadius, xOffset, yOffset, color} = boxShadow;
   let shadowTransform = Mat4.create();
 
-  /* Widen the size of the shadow based on the spread or blur radius specified */
+  /* Widen the size of the shadow based on the spread or blurRadius radius specified */
   let sizeModifier = spreadRadius +. blurRadius;
 
   let quad =
@@ -240,14 +240,26 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
 
   Mat4.multiply(shadowWorldTransform, world, shadowTransform);
 
-  let gradientShader =
-    Assets.gradientShader(~width, ~height, ~color, ~blur=blurRadius);
+  let gradientShader = Assets.gradientShader();
 
   Shaders.CompiledShader.use(gradientShader);
+
   Shaders.CompiledShader.setUniformMatrix4fv(
     gradientShader,
     "uProjection",
     m,
+  );
+
+  Shaders.CompiledShader.setUniform3fv(
+    gradientShader,
+    "uShadowColor",
+    Color.toVec3(color),
+  );
+
+  Shaders.CompiledShader.setUniform2fv(
+    gradientShader,
+    "uShadowAmount",
+    Vec2.create(blurRadius /. width, blurRadius /. height),
   );
 
   Shaders.CompiledShader.setUniformMatrix4fv(

@@ -16,12 +16,22 @@ let attributes: list(ShaderAttribute.t) =
     },
   ];
 
-let uniform: list(ShaderUniform.t) =
+let uniforms: list(ShaderUniform.t) =
   SolidShader.uniform
   @ [
     {
       dataType: ShaderDataType.Sampler2D,
       name: "uSampler",
+      usage: FragmentShader,
+    },
+    {
+      dataType: ShaderDataType.Vector3,
+      name: "uShadowColor",
+      usage: FragmentShader,
+    },
+    {
+      dataType: ShaderDataType.Vector2,
+      name: "uShadowAmount",
       usage: FragmentShader,
     },
   ];
@@ -36,43 +46,17 @@ let varying =
     },
   ];
 
-let vsShader = SolidShader.vsShader ++ "\n" ++ {|
+let vertexShader =
+  SolidShader.vsShader ++ "\n" ++ {|
   vTexCoord = aTexCoord;
 |};
 
-let updateShader = (~blur, ~height, ~width, ~color) => {
-  let amountX = string_of_float(blur /. width);
-  let amountY = string_of_float(blur /. height);
-  open Color.Rgba';
-  let colorStr =
-    "vec3 uShadowColor = "
-    ++ "vec3("
-    ++ string_of_float(color.r)
-    ++ ","
-    ++ string_of_float(color.g)
-    ++ ","
-    ++ string_of_float(color.b)
-    ++ ")"
-    ++ ";\n";
+let fragmentShader = {|
+  float leftEdgeAmount = smoothstep(0.0, uShadowAmount.x, vTexCoord.x);
+  float rightEdgeAmount = smoothstep(0.0, uShadowAmount.x, 1.0 - vTexCoord.x);
 
-  let amountStr =
-    "float amountX = "
-    ++ amountX
-    ++ ";\n"
-    ++ "float amountY = "
-    ++ amountY
-    ++ ";\n";
-  amountStr ++ colorStr;
-};
-
-let createFragmentShader = (~blur, ~height, ~width, ~color) =>
-  updateShader(~blur, ~height, ~width, ~color)
-  ++ {|
-  float leftEdgeAmount = smoothstep(0.0, amountX, vTexCoord.x);
-  float rightEdgeAmount = smoothstep(0.0, amountX, 1.0 - vTexCoord.x);
-
-  float topEdgeAmount = smoothstep(0.0, amountY, vTexCoord.y);
-  float bottomEdgeAmount = smoothstep(0.0, amountY, 1.0 - vTexCoord.y);
+  float topEdgeAmount = smoothstep(0.0, uShadowAmount.y, vTexCoord.y);
+  float bottomEdgeAmount = smoothstep(0.0, uShadowAmount.y, 1.0 - vTexCoord.y);
   float horizontalBlur = min(leftEdgeAmount, rightEdgeAmount);
   float verticalBlur = min(topEdgeAmount, bottomEdgeAmount);
 
@@ -80,14 +64,14 @@ let createFragmentShader = (~blur, ~height, ~width, ~color) =>
   gl_FragColor = vec4(uShadowColor, blur);
 |};
 
-let create = (~blur, ~height, ~width, ~color) => {
+let create = () => {
   let shader =
     Shader.create(
       ~attributes,
       ~varying,
-      ~uniforms=uniform,
-      ~vertexShader=vsShader,
-      ~fragmentShader=createFragmentShader(~blur, ~height, ~width, ~color),
+      ~uniforms,
+      ~vertexShader,
+      ~fragmentShader,
     );
   Shader.compile(shader);
 };
