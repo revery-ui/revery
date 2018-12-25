@@ -222,7 +222,7 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
   let {spreadRadius, blurRadius, xOffset, yOffset, color} = boxShadow;
   let shadowTransform = Mat4.create();
 
-  /* Widen the size of the shadow based on the spread or blurRadius radius specified */
+  /* Widen the size of the shadow based on the spread or blur radius specified */
   let sizeModifier = spreadRadius +. blurRadius;
 
   let quad =
