@@ -1,7 +1,7 @@
 /**
  * Gradient Shader
  *
- * shader which allows for specificying a gradient.
+ * shader used for specificying a gradient.
  * the gradient is used to draw a box shadow
  */
 open Revery_Shaders;
