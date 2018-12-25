@@ -295,6 +295,17 @@ class viewNode (()) = {
       if (color.a > 0.001) {
         let world = _this#getWorldTransform();
 
+        let borderedWorld =
+          renderBorders(
+            ~style,
+            ~width,
+            ~height,
+            ~opacity,
+            ~solidShader,
+            ~m,
+            ~world,
+          );
+
         switch (style.boxShadow) {
         | {
             xOffset: 0.,
@@ -306,26 +317,6 @@ class viewNode (()) = {
           ()
         | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
         };
-
-      let mainQuad =
-        Assets.quad(~minX=0., ~maxX=width, ~minY=0., ~maxY=height, ());
-
-      let c = Color.multiplyAlpha(opacity, style.backgroundColor);
-
-      /* Only render if _not_ transparent */
-      if (c.a > 0.001) {
-        let world = _this#getWorldTransform();
-
-        let borderedWorld =
-          renderBorders(
-            ~style,
-            ~width,
-            ~height,
-            ~opacity,
-            ~solidShader,
-            ~m,
-            ~world,
-          );
 
         Shaders.CompiledShader.use(solidShader);
         Shaders.CompiledShader.setUniformMatrix4fv(
