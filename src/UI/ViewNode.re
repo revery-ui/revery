@@ -5,14 +5,15 @@ module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
-/* open Reglm; */
+open Reglm;
 open Node;
 open RenderPass;
+open Style;
+open Style.Border;
+open Style.BoxShadow;
 
 let renderBorders =
     (~style, ~width, ~height, ~opacity, ~solidShader, ~m, ~world) => {
-  open Style;
-  open Style.Border;
   let borderStyle = (side, axis, border) =>
     Layout.Encoding.(
       if (side.width !== cssUndefined) {
@@ -207,7 +208,6 @@ let renderBorders =
       Geometry.draw(bottomRightTri, solidShader);
     };
   };
-  open Reglm;
   let translate = Mat4.create();
   Mat4.fromTranslation(
     translate,
@@ -216,6 +216,60 @@ let renderBorders =
   let innerWorld = Mat4.create();
   Mat4.multiply(innerWorld, translate, world);
   innerWorld;
+};
+
+let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
+  let {spreadRadius, blurRadius, xOffset, yOffset, color} = boxShadow;
+  let shadowTransform = Mat4.create();
+
+  /* Widen the size of the shadow based on the spread or blur radius specified */
+  let sizeModifier = spreadRadius +. blurRadius;
+
+  let quad =
+    Assets.quad(
+      ~minX=0.,
+      ~minY=0.,
+      ~maxX=width +. sizeModifier,
+      ~maxY=height +. sizeModifier,
+      (),
+    );
+
+  Mat4.fromTranslation(shadowTransform, Vec3.create(xOffset, yOffset, 0.));
+
+  let shadowWorldTransform = Mat4.create();
+
+  Mat4.multiply(shadowWorldTransform, world, shadowTransform);
+
+  let gradientShader = Assets.gradientShader();
+
+  Shaders.CompiledShader.use(gradientShader);
+
+  Shaders.CompiledShader.setUniformMatrix4fv(
+    gradientShader,
+    "uProjection",
+    m,
+  );
+
+  Shaders.CompiledShader.setUniform3fv(
+    gradientShader,
+    "uShadowColor",
+    Color.toVec3(color),
+  );
+
+  Shaders.CompiledShader.setUniform2fv(
+    gradientShader,
+    "uShadowAmount",
+    Vec2.create(blurRadius /. width, blurRadius /. height),
+  );
+
+  Shaders.CompiledShader.setUniformMatrix4fv(
+    gradientShader,
+    "uWorld",
+    shadowWorldTransform,
+  );
+
+  Geometry.draw(quad, gradientShader);
+  ();
 };
 
 class viewNode (()) = {
@@ -235,22 +289,35 @@ class viewNode (()) = {
       let mainQuad =
         Assets.quad(~minX=0., ~maxX=width, ~minY=0., ~maxY=height, ());
 
-      let c = Color.multiplyAlpha(opacity, style.backgroundColor);
-
-      let world = _this#getWorldTransform();
-      let borderedWorld =
-        renderBorders(
-          ~style,
-          ~width,
-          ~height,
-          ~opacity,
-          ~solidShader,
-          ~m,
-          ~world,
-        );
+      let color = Color.multiplyAlpha(opacity, style.backgroundColor);
 
       /* Only render if _not_ transparent */
-      if (c.a > 0.001) {
+      if (color.a > 0.001) {
+        let world = _this#getWorldTransform();
+
+        let borderedWorld =
+          renderBorders(
+            ~style,
+            ~width,
+            ~height,
+            ~opacity,
+            ~solidShader,
+            ~m,
+            ~world,
+          );
+
+        switch (style.boxShadow) {
+        | {
+            xOffset: 0.,
+            yOffset: 0.,
+            blurRadius: 0.,
+            spreadRadius: 0.,
+            color: _,
+          } =>
+          ()
+        | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
+        };
+
         Shaders.CompiledShader.use(solidShader);
         Shaders.CompiledShader.setUniformMatrix4fv(
           solidShader,
@@ -266,7 +333,7 @@ class viewNode (()) = {
         Shaders.CompiledShader.setUniform4fv(
           solidShader,
           "uColor",
-          Color.toVec4(c),
+          Color.toVec4(color),
         );
 
         Geometry.draw(mainQuad, solidShader);
