@@ -39,8 +39,8 @@ type dimensions = {
   height: int,
 };
 
-let shapeFont = ((font, text)) => Fontkit.fk_shape(font, text);
-let _memoizedFontShape = Memoize.make(shapeFont);
+let _shapeFont = ((font, text)) => Fontkit.fk_shape(font, text);
+let _memoizedFontShape = Memoize.make(_shapeFont);
 let shape = (font, text) => _memoizedFontShape((font, text));
 
 let measure = (font: Fontkit.fk_face, text: string) => {
