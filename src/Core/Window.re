@@ -1,21 +1,9 @@
 open Reglfw;
 
 module Event = Reactify.Event;
+module Color = Color_wrapper;
 
-type keyPressEvent = {
-  codepoint: int,
-  character: string,
-};
-
-type keyEvent = {
-  key: Key.t,
-  scancode: int,
-  altKey: bool,
-  ctrlKey: bool,
-  shiftKey: bool,
-  superKey: bool,
-  isRepeat: bool,
-};
+open Events;
 
 type windowRenderCallback = unit => unit;
 type windowShouldRenderCallback = unit => bool;
@@ -38,6 +26,9 @@ type t = {
   onKeyPress: Event.t(keyPressEvent),
   onKeyDown: Event.t(keyEvent),
   onKeyUp: Event.t(keyEvent),
+  onMouseUp: Event.t(mouseButtonEvent),
+  onMouseMove: Event.t(mouseMoveEvent),
+  onMouseDown: Event.t(mouseButtonEvent),
 };
 
 type windowCreateOptions = {
@@ -161,9 +152,22 @@ let create = (name: string, options: windowCreateOptions) => {
     onKeyPress: Event.create(),
     onKeyDown: Event.create(),
     onKeyUp: Event.create(),
+
+    onMouseMove: Event.create(),
+    onMouseUp: Event.create(),
+    onMouseDown: Event.create(),
   };
 
   Glfw.glfwSetFramebufferSizeCallback(
+    w,
+    (_w, width, height) => {
+      ret.framebufferWidth = width;
+      ret.framebufferHeight = height;
+      render(ret);
+    },
+  );
+
+  Glfw.glfwSetWindowSizeCallback(
     w,
     (_w, width, height) => {
       ret.width = width;
@@ -241,6 +245,27 @@ let create = (name: string, options: windowCreateOptions) => {
       };
     },
   );
+
+  Glfw.glfwSetMouseButtonCallback(
+    w,
+    (_w, mouseButton, buttonState, _modifier) => {
+      let evt: mouseButtonEvent = {button: MouseButton.convert(mouseButton)};
+      switch (buttonState) {
+      | GLFW_PRESS => Event.dispatch(ret.onMouseDown, evt)
+      | GLFW_REPEAT => Event.dispatch(ret.onMouseDown, evt)
+      | GLFW_RELEASE => Event.dispatch(ret.onMouseUp, evt)
+      };
+    },
+  );
+
+  Glfw.glfwSetCursorPosCallback(
+    w,
+    (_w, x: float, y: float) => {
+      let evt: mouseMoveEvent = {mouseX: x, mouseY: y};
+
+      Event.dispatch(ret.onMouseMove, evt);
+    },
+  );
   ret;
 };
 
@@ -278,6 +303,10 @@ let getDevicePixelRatio = (w: t) => {
   float_of_int(windowSizeInPixels.width)
   /. float_of_int(windowSizeInScreenCoordinates.width);
 };
+
+let destroyWindow = (w: t) => Glfw.glfwDestroyWindow(w.glfwWindow);
+
+let shouldClose = (w: t) => Glfw.glfwWindowShouldClose(w.glfwWindow);
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) =>
   w.render = callback;

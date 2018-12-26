@@ -26,10 +26,11 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "^3.3.7",
-    "reason-glfw": "^3.2.1003",
-    "reason-fontkit": "^1.1.0",
+    "reason-glfw": "^3.2.1007",
+    "reason-fontkit": "^2.0.0",
     "reason-gl-matrix": "^0.2.0",
-    "reason-reactify": "^2.1.0",
+    "reason-reactify": "^2.2.0",
+    "@opam/color": "^0.2.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/js_of_ocaml": "*",
@@ -41,8 +42,7 @@
   "resolutions": {
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
-    "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-    "reason-fontkit": "link:../reason-fontkit"
+    "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce"
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"

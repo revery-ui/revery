@@ -1,7 +1,3 @@
-open Reglm;
-
-open Reglfw.Glfw;
-
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 module Window = Revery_Core.Window;
@@ -17,111 +13,73 @@ module Transform = Transform;
 /* Expose hooks as part of the public API */
 include Hooks;
 
-open RenderPass;
+let useState = UiReact.useState;
+let useReducer = UiReact.useReducer;
 
 class node = class Node.node(RenderPass.t);
 class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
 class imageNode = class ImageNode.imageNode;
 
-open UiReconciler;
+module Mouse = Mouse;
+module NodeEvents = NodeEvents;
 let component = UiReact.component;
 
-let view = (~children, ~style=Style.defaultStyle, ()) =>
-  UiReact.primitiveComponent(View(style), ~children);
-
-let image = (~children, ~style=Style.defaultStyle, ~src="", ()) =>
-  UiReact.primitiveComponent(Image(style, src), ~children);
-
-let text = (~children: list(string), ~style=Style.defaultStyle, ()) =>
-  UiReact.primitiveComponent(Text(style, List.hd(children)), ~children=[]);
-
-type uiContainerOptions = {autoSize: bool};
-
-let defaultUiContainerOptions: uiContainerOptions = {autoSize: false};
-
-type uiContainer = {
-  rootNode: viewNode,
-  container: UiReact.t,
-  window: Window.t,
-  options: uiContainerOptions,
-};
+include Primitives;
 
 type renderFunction = unit => UiReact.component;
 
-let _projection = Mat4.create();
-
-let _render = (container: uiContainer, component: UiReact.component) => {
-  let {rootNode, container, window, options} = container;
-
-  AnimationTicker.tick();
-
-  Performance.bench("updateContainer", () =>
-    UiReact.updateContainer(container, component)
-  );
-
-  let size = Window.getFramebufferSize(window);
-  let pixelRatio = int_of_float(Window.getDevicePixelRatio(window));
-
-  switch (options.autoSize) {
-  | false =>
-    rootNode#setStyle(
-      Style.make(
-        ~position=LayoutTypes.Relative,
-        ~width=size.width,
-        ~height=size.height,
-        (),
-      ),
-    );
-    Layout.layout(rootNode, pixelRatio);
-  | true =>
-    rootNode#setStyle(Style.make());
-    Layout.layout(rootNode, pixelRatio);
-    let measurements = rootNode#measurements();
-    let size: Window.windowSize = {
-      width: measurements.width,
-      height: measurements.height,
-    };
-    Window.setSize(window, size.width / pixelRatio, size.height / pixelRatio);
-  };
-
-  Mat4.ortho(
-    _projection,
-    0.0,
-    float_of_int(size.width),
-    float_of_int(size.height),
-    0.0,
-    1000.0,
-    -1000.0,
-  );
-
-  Performance.bench("draw", () => {
-    /* Do a first pass for all 'opaque' geometry */
-    /* This helps reduce the overhead for the more expensive alpha pass, next */
-
-    let drawContext = NodeDrawContext.create(pixelRatio, 0, 1.0);
-
-    let solidPass = SolidPass(_projection);
-    rootNode#draw(solidPass, drawContext);
-
-    /* Render all geometry that requires an alpha */
-    let alphaPass = AlphaPass(_projection);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    rootNode#draw(alphaPass, drawContext);
-    glDisable(GL_BLEND);
-  });
-};
+open UiContainer;
 
 let start =
     (
-      ~createOptions=defaultUiContainerOptions,
+      ~createOptions=UiContainer.Options.default,
       window: Window.t,
       render: renderFunction,
     ) => {
   let rootNode = (new viewNode)();
   let container = UiReact.createContainer(rootNode);
-  let ui: uiContainer = {window, rootNode, container, options: createOptions};
+  let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
+  let ui =
+    UiContainer.create(
+      window,
+      rootNode,
+      container,
+      mouseCursor,
+      createOptions,
+    );
+
+  let _ =
+    Revery_Core.Event.subscribe(
+      window.onMouseMove,
+      m => {
+        let pixelRatio = Window.getDevicePixelRatio(window);
+        let evt =
+          Revery_Core.Events.InternalMouseMove({
+            mouseX: m.mouseX *. pixelRatio,
+            mouseY: m.mouseY *. pixelRatio,
+          });
+        Mouse.dispatch(mouseCursor, evt, rootNode);
+      },
+    );
+
+  let _ =
+    Revery_Core.Event.subscribe(
+      window.onMouseDown,
+      m => {
+        let evt = Revery_Core.Events.InternalMouseDown({button: m.button});
+        Mouse.dispatch(mouseCursor, evt, rootNode);
+      },
+    );
+
+  let _ =
+    Revery_Core.Event.subscribe(
+      window.onMouseUp,
+      m => {
+        let evt = Revery_Core.Events.InternalMouseUp({button: m.button});
+        Mouse.dispatch(mouseCursor, evt, rootNode);
+      },
+    );
 
   let _ = Reactify.Event.subscribe(FontCache.onFontLoaded, () => {
     Window.render(window);
@@ -132,7 +90,7 @@ let start =
     window,
     () => {
       let component = render();
-      _render(ui, component);
+      UiRender.render(ui, component);
     },
   );
 };

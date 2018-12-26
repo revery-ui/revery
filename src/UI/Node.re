@@ -9,6 +9,7 @@ class node ('a) (()) = {
   as _this;
   val _children: ref(list(node('a))) = ref([]);
   val _style: ref(Style.t) = ref(Style.defaultStyle);
+  val _events: ref(NodeEvents.t) = ref(NodeEvents.default);
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
   val _parent: ref(option(node('a))) = ref(None);
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
@@ -20,6 +21,8 @@ class node ('a) (()) = {
   pub measurements = () => _layoutNode^.layout;
   pub setStyle = style => _style := style;
   pub getStyle = () => _style^;
+  pub setEvents = events => _events := events;
+  pub getEvents = () => _events^;
   pub getTransform = () => {
     let dimensions = _layoutNode^.layout;
     let matrix = Mat4.create();
@@ -75,6 +78,18 @@ class node ('a) (()) = {
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
   pub getMeasureFunction = (_pixelRatio: int) => None;
+  pub handleEvent = (evt: NodeEvents.mouseEvent) => {
+    let _ =
+      switch (evt, _this#getEvents()) {
+      | (MouseDown(c), {onMouseDown: Some(cb), _}) => cb(c)
+      | (MouseMove(c), {onMouseMove: Some(cb), _}) => cb(c)
+      | (MouseUp(c), {onMouseUp: Some(cb), _}) => cb(c)
+      | (MouseDown(_), _)
+      | (MouseMove(_), _)
+      | (MouseUp(_), _) => ()
+      };
+    ();
+  };
   pub toLayoutNode = (pixelRatio: int) => {
     let childNodes = List.map(c => c#toLayoutNode(pixelRatio), _children^);
     let layoutStyle = Style.toLayoutNode(_style^, pixelRatio);
@@ -94,4 +109,15 @@ class node ('a) (()) = {
   };
   /* TODO: This should really be private - it should never be explicitly set */
   pub _setParent = (n: option(node('a))) => _parent := n;
+};
+
+let iter = (f, node: node('a)) => {
+  let rec apply = node => {
+    f(node);
+
+    let children = node#getChildren();
+    List.iter(apply, children);
+  };
+
+  apply(node);
 };

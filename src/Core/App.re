@@ -46,6 +46,17 @@ let _anyWindowsDirty = (app: t('s, 'a)) =>
     getWindows(app),
   );
 
+let _checkAndCloseWindows = (app: t('s, 'a)) => {
+  let currentWindows = getWindows(app);
+  let windowsToClose =
+    List.filter(w => Window.shouldClose(w), currentWindows);
+  let windowsToKeep =
+    List.filter(w => !Window.shouldClose(w), currentWindows);
+
+  List.iter(w => Window.destroyWindow(w), windowsToClose);
+  app.windows = windowsToKeep;
+};
+
 let startWithState: startFunc('s, 'a) =
   (
     initialState: 's,
@@ -64,6 +75,9 @@ let startWithState: startFunc('s, 'a) =
 
     let appLoop = (_t: float) => {
       Glfw.glfwPollEvents();
+
+      _checkAndCloseWindows(appInstance);
+
       if (appInstance.needsRender || _anyWindowsDirty(appInstance)) {
         Performance.bench("renderWindows", () => {
           List.iter(w => Window.render(w), getWindows(appInstance));
@@ -72,7 +86,7 @@ let startWithState: startFunc('s, 'a) =
       } else {
         Environment.sleep(Milliseconds(1.));
       };
-      false;
+      List.length(getWindows(appInstance)) == 0;
     };
 
     Glfw.glfwRenderLoop(appLoop);
