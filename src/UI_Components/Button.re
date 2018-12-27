@@ -35,8 +35,10 @@ include (
                   (),
                 ) =>
                 render(
-                  () =>
-                    <Clickable onClick>
+                  () => {
+                    /* NOTE:If disabled the button should do nothing */
+                    let fn = disabled ? noop : onClick;
+                    <Clickable onClick=fn>
                       <view
                         style={containerStyle(
                           ~width,
@@ -48,7 +50,8 @@ include (
                           title
                         </text>
                       </view>
-                    </Clickable>,
+                    </Clickable>;
+                  },
                   ~children,
                 )
               )
