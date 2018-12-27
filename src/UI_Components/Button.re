@@ -4,13 +4,8 @@ open Revery_Core;
 type clickFunction = unit => unit;
 let noop = () => ();
 
-let textStyle = (~fontSize) =>
-  Style.make(
-    ~fontSize,
-    ~fontFamily="Roboto-Regular.ttf",
-    ~color=Colors.white,
-    (),
-  );
+let textStyle = (~fontSize, ~fontFamily) =>
+  Style.make(~fontSize, ~fontFamily, ~color=Colors.white, ());
 
 let containerStyle = (~width, ~height, ~disabled, ~color) =>
   Style.make(
@@ -36,6 +31,7 @@ include (
                   ~width=300,
                   ~height=100,
                   ~disabled=false,
+                  ~fontFamily="Roboto-Regular.ttf",
                   (),
                 ) =>
                 render(
@@ -48,7 +44,9 @@ include (
                           ~disabled,
                           ~color,
                         )}>
-                        <text style={textStyle(~fontSize)}> title </text>
+                        <text style={textStyle(~fontSize, ~fontFamily)}>
+                          title
+                        </text>
                       </view>
                     </Clickable>,
                   ~children,
