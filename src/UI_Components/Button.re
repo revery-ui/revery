@@ -39,17 +39,13 @@ include (
                   (),
                 ) =>
                 render(
-                  () => {
-                    let width =
-                      Monitor.getPrimaryMonitor()
-                      |> Monitor.getSize
-                      |> (({width, _}) => width * 30 / 100);
+                  () =>
                     <Clickable onClick>
-                      <view style={containerStyle(~width, ~disabled, ~color)}>
+                      <view
+                        style={containerStyle(~width=300, ~disabled, ~color)}>
                         <text style={textStyle(~fontSize)}> title </text>
                       </view>
-                    </Clickable>;
-                  },
+                    </Clickable>,
                   ~children,
                 )
               )
