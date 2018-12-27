@@ -1,5 +1,6 @@
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
+module MouseCursors = Revery_Core.MouseCursors;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
@@ -12,6 +13,7 @@ class node ('a) (()) = {
   val _events: ref(NodeEvents.t) = ref(NodeEvents.default);
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
   val _parent: ref(option(node('a))) = ref(None);
+  val _depth: ref(int) = ref(0);
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let localContext =
@@ -19,6 +21,7 @@ class node ('a) (()) = {
     List.iter(c => c#draw(pass, localContext), _children^);
   };
   pub measurements = () => _layoutNode^.layout;
+  pub getDepth = () => _depth^;
   pub setStyle = style => _style := style;
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;
@@ -108,7 +111,13 @@ class node ('a) (()) = {
     node;
   };
   /* TODO: This should really be private - it should never be explicitly set */
-  pub _setParent = (n: option(node('a))) => _parent := n;
+  pub _setParent = (n: option(node('a))) => {
+    switch (n) {
+    | Some(node) => _depth := node#getDepth + 1
+    | None => _depth := 0
+    };
+    _parent := n;
+  }
 };
 
 let iter = (f, node: node('a)) => {

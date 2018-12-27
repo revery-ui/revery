@@ -59,7 +59,7 @@ let start =
             mouseX: m.mouseX *. pixelRatio,
             mouseY: m.mouseY *. pixelRatio,
           });
-        Mouse.dispatch(mouseCursor, evt, rootNode);
+        Mouse.dispatch(window, mouseCursor, evt, rootNode);
       },
     );
 
@@ -68,7 +68,7 @@ let start =
       window.onMouseDown,
       m => {
         let evt = Revery_Core.Events.InternalMouseDown({button: m.button});
-        Mouse.dispatch(mouseCursor, evt, rootNode);
+        Mouse.dispatch(window, mouseCursor, evt, rootNode);
       },
     );
 
@@ -77,7 +77,7 @@ let start =
       window.onMouseUp,
       m => {
         let evt = Revery_Core.Events.InternalMouseUp({button: m.button});
-        Mouse.dispatch(mouseCursor, evt, rootNode);
+        Mouse.dispatch(window, mouseCursor, evt, rootNode);
       },
     );
 
