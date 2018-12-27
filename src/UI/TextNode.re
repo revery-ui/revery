@@ -98,7 +98,7 @@ class textNode (text: string) = {
         x +. float_of_int(advance) /. 64.0;
       };
 
-      let shapedText = Fontkit.fk_shape(font, text);
+      let shapedText = FontRenderer.shape(font, text);
       let startX = ref(0.);
       Array.iter(
         s => {
