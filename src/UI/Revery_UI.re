@@ -53,10 +53,11 @@ let start =
     Revery_Core.Event.subscribe(
       window.onMouseMove,
       m => {
+        let pixelRatio = Window.getDevicePixelRatio(window);
         let evt =
           Revery_Core.Events.InternalMouseMove({
-            mouseX: m.mouseX,
-            mouseY: m.mouseY,
+            mouseX: m.mouseX *. pixelRatio,
+            mouseY: m.mouseY *. pixelRatio,
           });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
@@ -79,6 +80,10 @@ let start =
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
+
+  let _ = Reactify.Event.subscribe(FontCache.onFontLoaded, () => {
+    Window.render(window);
+  });
 
   Window.setShouldRenderCallback(window, () => Animated.anyActiveAnimations());
   Window.setRenderCallback(

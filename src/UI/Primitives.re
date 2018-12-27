@@ -10,24 +10,57 @@
 
 let view =
     (
+      ~onMouseDown=?,
+      ~onMouseMove=?,
+      ~onMouseUp=?,
       ~children,
-      ~ref=NodeEvents.eventNoop,
+      ~ref=?,
       ~style=Style.defaultStyle,
-      ~onMouseDown=NodeEvents.eventNoop,
-      ~onMouseUp=NodeEvents.eventNoop,
-      ~onMouseMove=NodeEvents.eventNoop,
       (),
     ) =>
   UiReact.primitiveComponent(
     View(
       style,
-      NodeEvents.make(~ref, ~onMouseDown, ~onMouseMove, ~onMouseUp, ()),
+      NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ()),
     ),
     ~children,
   );
 
-let image = (~children, ~style=Style.defaultStyle, ~src="", ()) =>
-  UiReact.primitiveComponent(Image(style, src), ~children);
+let image =
+    (
+      ~onMouseDown=?,
+      ~onMouseMove=?,
+      ~onMouseUp=?,
+      ~children,
+      ~ref=?,
+      ~style=Style.defaultStyle,
+      ~src="",
+      (),
+    ) =>
+  UiReact.primitiveComponent(
+    Image(
+      style,
+      src,
+      NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ()),
+    ),
+    ~children,
+  );
 
-let text = (~children: list(string), ~style=Style.defaultStyle, ()) =>
-  UiReact.primitiveComponent(Text(style, List.hd(children)), ~children=[]);
+let text =
+    (
+      ~onMouseDown=?,
+      ~onMouseMove=?,
+      ~onMouseUp=?,
+      ~children: list(string),
+      ~ref=?,
+      ~style=Style.defaultStyle,
+      (),
+    ) =>
+  UiReact.primitiveComponent(
+    Text(
+      style,
+      List.hd(children),
+      NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ()),
+    ),
+    ~children=[],
+  );

@@ -92,10 +92,13 @@ class node ('a) (()) = {
   pub getMeasureFunction = (_pixelRatio: int) => None;
   pub handleEvent = (evt: NodeEvents.mouseEvent) => {
     let _ =
-      switch (evt) {
-      | MouseDown(c) => _this#getEvents().onMouseDown(c)
-      | MouseMove(c) => _this#getEvents().onMouseMove(c)
-      | MouseUp(c) => _this#getEvents().onMouseUp(c)
+      switch (evt, _this#getEvents()) {
+      | (MouseDown(c), {onMouseDown: Some(cb), _}) => cb(c)
+      | (MouseMove(c), {onMouseMove: Some(cb), _}) => cb(c)
+      | (MouseUp(c), {onMouseUp: Some(cb), _}) => cb(c)
+      | (MouseDown(_), _)
+      | (MouseMove(_), _)
+      | (MouseUp(_), _) => ()
       };
     ();
   };
@@ -124,7 +127,11 @@ class node ('a) (()) = {
     switch (n) {
     | Some(_) =>
       let ret = (_this :> node('a));
-      _this#getEvents().ref(ret);
+      let maybeRef = _this#getEvents().ref;
+      switch (maybeRef) {
+        | Some(ref) => ref(ret)
+        | None => ()
+      };
     | _ => ()
     };
   };

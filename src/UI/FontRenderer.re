@@ -4,15 +4,15 @@ open Fontkit;
 open Revery_Core;
 
 let _getGlyph =
-  Memoize.make(((font: Fontkit.fk_face, codepoint: int)) =>
-    Fontkit.renderGlyph(font, codepoint)
+  Memoize.make(((font: Fontkit.fk_face, glyphId: int)) =>
+    Fontkit.renderGlyph(font, glyphId)
   );
 
-let getGlyph = (font: Fontkit.fk_face, codepoint: int) =>
-  _getGlyph((font, codepoint));
+let getGlyph = (font: Fontkit.fk_face, glyphId: int) =>
+  _getGlyph((font, glyphId));
 
-let _getTexture = ((font: Fontkit.fk_face, codepoint: int)) => {
-  let glyph = getGlyph(font, codepoint);
+let _getTexture = ((font: Fontkit.fk_face, glyphId: int)) => {
+  let glyph = getGlyph(font, glyphId);
 
   let {image, _} = glyph;
 
@@ -31,23 +31,27 @@ let _getTexture = ((font: Fontkit.fk_face, codepoint: int)) => {
 };
 
 let _memoizedGetTexture = Memoize.make(_getTexture);
-let getTexture = (font: Fontkit.fk_face, codepoint: int) =>
-  _memoizedGetTexture((font, codepoint));
+let getTexture = (font: Fontkit.fk_face, glyphId: int) =>
+  _memoizedGetTexture((font, glyphId));
 
 type dimensions = {
   width: int,
   height: int,
 };
 
+let _shapeFont = ((font, text)) => Fontkit.fk_shape(font, text);
+let _memoizedFontShape = Memoize.make(_shapeFont);
+let shape = (font, text) => _memoizedFontShape((font, text));
+
 let measure = (font: Fontkit.fk_face, text: string) => {
-  let shapedText = Fontkit.fk_shape(font, text);
+  let shapedText = shape(font, text);
   let minY = ref(1000);
   let maxY = ref(-1000);
   let x = ref(0);
 
   Array.iter(
     shape => {
-      let {height, bearingY, advance, _} = getGlyph(font, shape.codepoint);
+      let {height, bearingY, advance, _} = getGlyph(font, shape.glyphId);
       let top = - bearingY;
       let bottom = top + height;
 

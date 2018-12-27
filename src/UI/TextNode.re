@@ -53,14 +53,14 @@ class textNode (text: string) = {
       );
 
       let render = (s: Fontkit.fk_shape, x: float) => {
-        let glyph = FontRenderer.getGlyph(font, s.codepoint);
+        let glyph = FontRenderer.getGlyph(font, s.glyphId);
 
         let {width, height, bearingX, bearingY, advance, _} = glyph;
 
         Glfw.glPixelStorei(GL_PACK_ALIGNMENT, 1);
         Glfw.glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        let texture = FontRenderer.getTexture(font, s.codepoint);
+        let texture = FontRenderer.getTexture(font, s.glyphId);
         Glfw.glBindTexture(GL_TEXTURE_2D, texture);
         /* TODO: Bind texture */
 
@@ -98,7 +98,7 @@ class textNode (text: string) = {
         x +. float_of_int(advance) /. 64.0;
       };
 
-      let shapedText = Fontkit.fk_shape(font, text);
+      let shapedText = FontRenderer.shape(font, text);
       let startX = ref(0.);
       Array.iter(
         s => {
