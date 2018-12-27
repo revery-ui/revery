@@ -1,4 +1,5 @@
 module Event = Reactify.Event;
+
 type fontInfo = (string, int);
 type t = Hashtbl.t(fontInfo, Fontkit.fk_face);
 
@@ -14,6 +15,7 @@ let _isSome = a =>
   };
 
 let load = (fontName: string, size: int) => {
+  let execDir = Revery_Core.Environment.getExecutingDirectory();
   switch (Hashtbl.find_opt(_cache, (fontName, size))) {
   | Some(fk) => fk
   | None =>
@@ -27,7 +29,7 @@ let load = (fontName: string, size: int) => {
         Event.dispatch(onFontLoaded, ());
         Lwt.return();
       };
-      let _ = Lwt.bind(Fontkit.load(fontName, size), success);
+      let _ = Lwt.bind(Fontkit.load(execDir ++ fontName, size), success);
       ();
     };
     Fontkit.dummyFont(size);

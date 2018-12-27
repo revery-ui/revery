@@ -1,5 +1,6 @@
 open Reglfw;
 open Reglfw.Glfw;
+open Revery_Core;
 
 type t = {
   mutable hasLoaded: bool,
@@ -14,8 +15,10 @@ let _cache: cache = Hashtbl.create(100);
 
 let getTexture = (imagePath: string) => {
   /* TODO: Support url paths? */
+  let execDir = Environment.getExecutingDirectory();
+  let relativeImagePath = execDir ++ imagePath;
 
-  let cacheResult = Hashtbl.find_opt(_cache, imagePath);
+  let cacheResult = Hashtbl.find_opt(_cache, relativeImagePath);
 
   let ret =
     switch (cacheResult) {
@@ -32,7 +35,7 @@ let getTexture = (imagePath: string) => {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexImage2D(GL_TEXTURE_2D, initialImage);
 
-      let imageLoadPromise = Image.load(imagePath);
+      let imageLoadPromise = Image.load(relativeImagePath);
 
       let success = img => {
         glBindTexture(GL_TEXTURE_2D, texture);
@@ -41,7 +44,7 @@ let getTexture = (imagePath: string) => {
       };
 
       let _ = Lwt.bind(imageLoadPromise, success);
-      Hashtbl.add(_cache, imagePath, texture);
+      Hashtbl.add(_cache, relativeImagePath, texture);
       texture;
     };
 

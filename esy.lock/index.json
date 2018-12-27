@@ -1,5 +1,5 @@
 {
-  "checksum": "d67f1928a076bac7d158db01adf7c744",
+  "checksum": "6025628be91506a9bbf6833142c7a9e6",
   "root": "revery@link:./package.json",
   "node": {
     "revery@link:./package.json": {
@@ -10,7 +10,7 @@
       "overrides": [],
       "dependencies": [
         "rejest@1.2.0", "reason-reactify@2.2.0", "reason-glfw@3.2.1008",
-        "reason-gl-matrix@0.2.1", "reason-fontkit@2.0.0", "ocaml@4.6.9",
+        "reason-gl-matrix@0.2.1", "reason-fontkit@2.0.1", "ocaml@4.6.9",
         "flex@1.2.2", "@opam/lwt_ppx@opam:1.2.1@3664325b",
         "@opam/lwt@opam:4.1.0@114c53b7",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@6c3e9894",
@@ -122,21 +122,21 @@
       ],
       "devDependencies": []
     },
-    "reason-fontkit@2.0.0": {
-      "id": "reason-fontkit@2.0.0",
+    "reason-fontkit@2.0.1": {
+      "id": "reason-fontkit@2.0.1",
       "name": "reason-fontkit",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-2.0.0.tgz#sha1:0b6c5c02737c68dfb942e145ca50fd8c3ba13e26"
+          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-2.0.1.tgz#sha1:e2214dcc5af919f9b14c989bad8691185ada3a69"
         ]
       },
       "overrides": [],
       "dependencies": [
         "refmterr@3.1.10", "reason-glfw@3.2.1008", "reason-gl-matrix@0.2.1",
-        "ocaml@4.6.9", "esy-harfbuzz@1.9.1003",
-        "esy-freetype2-prebuilt@2.9.1005", "@opam/dune@opam:1.6.2@1683022f",
+        "ocaml@4.6.9", "esy-harfbuzz@1.9.1003", "esy-freetype2@2.9.1001",
+        "esy-cmake@0.3.3", "@opam/dune@opam:1.6.2@1683022f",
         "@esy-ocaml/reason@3.3.7"
       ],
       "devDependencies": []
@@ -186,18 +186,18 @@
       "dependencies": [ "esy-cmake@0.3.3" ],
       "devDependencies": []
     },
-    "esy-freetype2-prebuilt@2.9.1005": {
-      "id": "esy-freetype2-prebuilt@2.9.1005",
-      "name": "esy-freetype2-prebuilt",
-      "version": "2.9.1005",
+    "esy-freetype2@2.9.1001": {
+      "id": "esy-freetype2@2.9.1001",
+      "name": "esy-freetype2",
+      "version": "2.9.1001",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/esy-freetype2-prebuilt/-/esy-freetype2-prebuilt-2.9.1005.tgz#sha1:d2a41195257499617b4a0907fcdc5e5b36dfe6ae"
+          "archive:https://registry.npmjs.org/esy-freetype2/-/esy-freetype2-2.9.1001.tgz#sha1:6b22487d0fa4617822b1f02523eed64c300978c0"
         ]
       },
       "overrides": [],
-      "dependencies": [],
+      "dependencies": [ "esy-cmake@0.3.3" ],
       "devDependencies": []
     },
     "esy-cmake@0.3.3": {
