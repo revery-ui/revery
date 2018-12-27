@@ -76,7 +76,7 @@ type t = {
   transform: list(Transform.t),
   opacity: float,
   boxShadow: BoxShadow.properties,
-  cursor: MouseCursors.t,
+  cursor: option(MouseCursors.t),
 };
 
 let make =
@@ -122,7 +122,7 @@ let make =
                    ~color=Colors.black,
                    (),
                  ),
-      ~cursor=MouseCursors.arrow,
+      ~cursor=None,
       _unit: unit,
     ) => {
   let ret: t = {

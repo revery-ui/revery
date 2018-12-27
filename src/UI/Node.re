@@ -1,6 +1,5 @@
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
-module MouseCursors = Revery_Core.MouseCursors;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
@@ -56,6 +55,13 @@ class node ('a) (()) = {
     let matrix = Mat4.create();
     Mat4.multiply(matrix, world, xform);
     matrix;
+  };
+  pub getCursorStyle = () => {
+    switch (_this#getStyle().cursor, _this#getParent()) {
+      | (None, None) => Revery_Core.MouseCursors.arrow
+      | (None, Some(parent)) => parent#getCursorStyle()
+      | (Some(cursorStyle), _) => cursorStyle
+    };
   };
   pub hitTest = (p: Vec2.t) => {
     let dimensions = _layoutNode^.layout;

@@ -6,6 +6,7 @@
  */
 
 open Revery_UI;
+open Revery_Core;
 
 type clickFunction = unit => unit;
 let noop = () => ();
@@ -23,17 +24,17 @@ include (
                      * for the case where you hold down the mouse,
                      * move around (leave the item), and come back.
                      */
-                    let onMouseMove = _ =>
-                      Mouse.Cursor.setShape(Mouse.Cursor.hand);
                     let onMouseDown = _ => setOpacity(1.0);
                     let onMouseUp = _ => {
                       setOpacity(0.8);
                       onClick();
                     };
 
-                    let style = Style.make(~opacity, ());
+                    let style = Style.make(~opacity,
+                                           ~cursor=Some(MouseCursors.pointer),
+                                           ());
 
-                    <view style onMouseMove onMouseDown onMouseUp> ...children </view>;
+                    <view style onMouseDown onMouseUp> ...children </view>;
                   },
                   ~children,
                 )

@@ -110,13 +110,13 @@ let dispatch =
       };
     Node.iter(collect, node);
     switch (deepestNode^) {
-    | None => ()
-    | Some(node) => {
-      let glfwWin = win.glfwWindow;
-      let cursor = node#getStyle().cursor;
-      let glfwCursor = MouseCursors.toGlfwCursor(cursor);
-      Glfw.glfwSetCursor(glfwWin, glfwCursor);
-    }
+      | None => ()
+      | Some(node) => {
+        let glfwWin = win.glfwWindow;
+        let cursor = node#getCursorStyle();
+        let glfwCursor = MouseCursors.toGlfwCursor(cursor);
+        Glfw.glfwSetCursor(glfwWin, glfwCursor);
+      }
     };
     List.iter(n => n#handleEvent(eventToSend), nodes^);
   };
