@@ -35,13 +35,9 @@ Install the following packages with your package manager of choice:
 
 ### Running
 
-After you build, the executables will be available in the `_build\install\default\bin` folder.
+After you build, the executables will be available in the `_esy\default\build\default\examples` folder.
 
-> NOTE: Currently the executables must be run from `install\default\bin`, since the assets are there.
-
-To run the example app, you can do:
-- `cd _build/default/examples/`
-- `./Bin.exe`
+To run the example app, you can do `esy x Bin.exe`.
 
 ### Tests
 

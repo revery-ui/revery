@@ -62,7 +62,6 @@ typings/
 .next
 
 # dune build folder
-_build/
 _esy/
 
 # install files

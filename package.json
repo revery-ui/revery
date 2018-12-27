@@ -14,7 +14,6 @@
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
     "build": ["dune build --root . -j4"],
-    "buildsInSource": "_build",
     "install": [
         "esy-installer Revery.install",
         "esy-installer Revery_Core.install",
