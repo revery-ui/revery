@@ -4,8 +4,6 @@ open Revery_Core;
 type clickFunction = unit => unit;
 let noop = () => ();
 
-/* TODO: Need to have font in the dir that contains this file,
-   till I find how to import this correctly  */
 let textStyle = (~fontSize) =>
   Style.make(
     ~fontSize,
@@ -14,14 +12,14 @@ let textStyle = (~fontSize) =>
     (),
   );
 
-let containerStyle = (~width, ~disabled, ~color) =>
+let containerStyle = (~width, ~height, ~disabled, ~color) =>
   Style.make(
     ~position=LayoutTypes.Relative,
     ~backgroundColor=disabled ? Colors.dimGrey : color,
     ~justifyContent=LayoutTypes.JustifyCenter,
     ~alignItems=LayoutTypes.AlignCenter,
     ~border=Style.Border.make(~width=1, ~color=Colors.white, ()),
-    ~height=100,
+    ~height,
     ~width,
     (),
   );
@@ -35,6 +33,8 @@ include (
                   ~title,
                   ~color=Colors.dodgerBlue,
                   ~fontSize=40,
+                  ~width=300,
+                  ~height=100,
                   ~disabled=false,
                   (),
                 ) =>
@@ -42,7 +42,12 @@ include (
                   () =>
                     <Clickable onClick>
                       <view
-                        style={containerStyle(~width=300, ~disabled, ~color)}>
+                        style={containerStyle(
+                          ~width,
+                          ~height,
+                          ~disabled,
+                          ~color,
+                        )}>
                         <text style={textStyle(~fontSize)}> title </text>
                       </view>
                     </Clickable>,
