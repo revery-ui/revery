@@ -1,7 +1,6 @@
 open Revery_UI;
 open Revery_Core;
 
-type clickFunction = unit => unit;
 let noop = () => ();
 
 let textStyle = (~fontSize, ~fontFamily) =>
@@ -23,9 +22,9 @@ include (
           val component(
                 (
                   render,
-                  ~onClick: clickFunction=noop,
                   ~children,
                   ~title,
+                  ~onClick=noop,
                   ~color=Colors.dodgerBlue,
                   ~fontSize=40,
                   ~width=300,
@@ -38,19 +37,19 @@ include (
                   () => {
                     /* NOTE:If disabled the button should do nothing */
                     let fn = disabled ? noop : onClick;
-                    <Clickable onClick=fn>
-                      <view
-                        style={containerStyle(
-                          ~width,
-                          ~height,
-                          ~disabled,
-                          ~color,
-                        )}>
+                    <view
+                      style={containerStyle(
+                        ~width,
+                        ~height,
+                        ~disabled,
+                        ~color,
+                      )}>
+                      <Clickable onClick=fn>
                         <text style={textStyle(~fontSize, ~fontFamily)}>
                           title
                         </text>
-                      </view>
-                    </Clickable>;
+                      </Clickable>
+                    </view>;
                   },
                   ~children,
                 )

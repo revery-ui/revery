@@ -7,6 +7,9 @@ module DefaultButtonWithCounter = (
   val component((render, ~children, ~width, ~height, ()) =>
         render(
           () => {
+            let (count, setCount) = useState(0);
+            let increment = () => setCount(count + 1);
+
             let containerStyle =
               Style.make(
                 ~width,
@@ -34,8 +37,6 @@ module DefaultButtonWithCounter = (
                 (),
               );
 
-            let (count, setCount) = useState(0);
-            let increment = () => setCount(count + 1);
             let countStr = string_of_int(count);
             <view style=containerStyle>
               <view style=countContainer>
