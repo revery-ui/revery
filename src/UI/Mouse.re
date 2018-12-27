@@ -4,12 +4,30 @@ open Revery_Math;
 
 open NodeEvents;
 
+open Reglfw;
+
 module Cursor = {
   /* State needed to track on the cursor */
   type t = {
     x: ref(float),
     y: ref(float),
   };
+
+  type shape = Glfw.glfwCursor;
+  let setShape: (Window.t, shape) => unit =
+    Glfw.glfwSetCursor
+  let arrow: shape =
+    Glfw.(glfwCreateStandardCursor(GLFW_ARROW_CURSOR));
+  let ibeam: shape =
+    Glfw.(glfwCreateStandardCursor(GLFW_IBEAM_CURSOR));
+  let crosshair: shape =
+    Glfw.(glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR));
+  let hand: shape =
+    Glfw.(glfwCreateStandardCursor(GLFW_HAND_CURSOR));
+  let hresize: shape =
+    Glfw.(glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR));
+  let vresize: shape =
+    Glfw.(glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR));
 
   let make = () => {
     let ret: t = {x: ref(0.), y: ref(0.)};

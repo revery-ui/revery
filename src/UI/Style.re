@@ -76,6 +76,7 @@ type t = {
   transform: list(Transform.t),
   opacity: float,
   boxShadow: BoxShadow.properties,
+  cursor: Mouse.Cursor.shape,
 };
 
 let make =
