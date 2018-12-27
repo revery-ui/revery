@@ -113,7 +113,7 @@ class node ('a) (()) = {
   /* TODO: This should really be private - it should never be explicitly set */
   pub _setParent = (n: option(node('a))) => {
     switch (n) {
-    | Some(node) => _depth := node#getDepth + 1
+    | Some(node) => _depth := node#getDepth() + 1
     | None => _depth := 0
     };
     _parent := n;

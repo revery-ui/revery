@@ -102,8 +102,8 @@ let dispatch =
     let deepestNode: ref(option(Node.node('a))) = ref(None);
     let collect = n =>
       if (isNodeImpacted(n)) {
-        if (n#getDepth >= maxDepth^) {
-          maxDepth := n#getDepth;
+        if (n#getDepth() >= maxDepth^) {
+          maxDepth := n#getDepth();
           deepestNode := Some(n);
         };
         nodes := List.append(nodes^, [n]);
@@ -111,7 +111,12 @@ let dispatch =
     Node.iter(collect, node);
     switch (deepestNode^) {
     | None => ()
-    | Some(node) => Glfw.glfwSetCursor(win, node#getStyle()#cursor)
+    | Some(node) => {
+      let glfwWin = win.glfwWindow;
+      let cursor = node#getStyle().cursor;
+      let glfwCursor = MouseCursors.toGlfwCursor(cursor);
+      Glfw.glfwSetCursor(glfwWin, glfwCursor);
+    }
     };
     List.iter(n => n#handleEvent(eventToSend), nodes^);
   };
