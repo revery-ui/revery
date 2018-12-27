@@ -129,8 +129,8 @@ class node ('a) (()) = {
       let ret = (_this :> node('a));
       let maybeRef = _this#getEvents().ref;
       switch (maybeRef) {
-        | Some(ref) => ref(ret)
-        | None => ()
+      | Some(ref) => ref(ret)
+      | None => ()
       };
     | _ => ()
     };

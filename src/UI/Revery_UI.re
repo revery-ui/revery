@@ -81,9 +81,10 @@ let start =
       },
     );
 
-  let _ = Reactify.Event.subscribe(FontCache.onFontLoaded, () => {
-    Window.render(window);
-  });
+  let _ =
+    Reactify.Event.subscribe(FontCache.onFontLoaded, () =>
+      Window.render(window)
+    );
 
   Window.setShouldRenderCallback(window, () => Animated.anyActiveAnimations());
   Window.setRenderCallback(
