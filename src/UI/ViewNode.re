@@ -291,33 +291,32 @@ class viewNode (()) = {
 
       let color = Color.multiplyAlpha(opacity, style.backgroundColor);
 
+      let world = _this#getWorldTransform();
+
+      let borderedWorld =
+        renderBorders(
+          ~style,
+          ~width,
+          ~height,
+          ~opacity,
+          ~solidShader,
+          ~m,
+          ~world,
+        );
+
+      switch (style.boxShadow) {
+      | {
+          xOffset: 0.,
+          yOffset: 0.,
+          blurRadius: 0.,
+          spreadRadius: 0.,
+          color: _,
+        } => ()
+      | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
+      };
+
       /* Only render if _not_ transparent */
       if (color.a > 0.001) {
-        let world = _this#getWorldTransform();
-
-        let borderedWorld =
-          renderBorders(
-            ~style,
-            ~width,
-            ~height,
-            ~opacity,
-            ~solidShader,
-            ~m,
-            ~world,
-          );
-
-        switch (style.boxShadow) {
-        | {
-            xOffset: 0.,
-            yOffset: 0.,
-            blurRadius: 0.,
-            spreadRadius: 0.,
-            color: _,
-          } =>
-          ()
-        | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
-        };
-
         Shaders.CompiledShader.use(solidShader);
         Shaders.CompiledShader.setUniformMatrix4fv(
           solidShader,
