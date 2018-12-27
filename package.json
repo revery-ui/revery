@@ -27,7 +27,7 @@
   "dependencies": {
     "@esy-ocaml/reason": "^3.3.7",
     "reason-glfw": "^3.2.1008",
-    "reason-fontkit": "^1.1.0",
+    "reason-fontkit": "^2.0.1",
     "reason-gl-matrix": "^0.2.0",
     "reason-reactify": "^2.2.0",
     "@opam/color": "^0.2.0",
@@ -40,7 +40,9 @@
     "rejest": "^1.2.0"
   },
   "resolutions": {
-    "@opam/cmdliner": "1.0.2"
+    "@opam/cmdliner": "1.0.2",
+    "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
+    "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce"
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"
