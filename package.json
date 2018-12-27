@@ -40,7 +40,8 @@
     "rejest": "^1.2.0"
   },
   "resolutions": {
-    "@opam/cmdliner": "1.0.2"
+    "@opam/cmdliner": "1.0.2",
+    "esy-harfbuzz": "1.9.1004"
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"
