@@ -5,3 +5,4 @@
  */
 
 module Clickable = Clickable;
+module Slider = Slider;

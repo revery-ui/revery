@@ -152,7 +152,6 @@ let init = app => {
         ~right=0,
         (),
       )}>
-      <Logo />
       <view
         ref={r => print_endline("Unique id: " ++ string_of_int(r#getId()))}
         style={Style.make(~flexDirection=Row, ~alignItems=AlignFlexEnd, ())}>
@@ -161,6 +160,7 @@ let init = app => {
         <AnimatedText delay=1. textContent="Revery" />
       </view>
       <SimpleButton />
+      <Slider />
     </view>;
 
   UI.start(win, render);
