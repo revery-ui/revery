@@ -8,10 +8,10 @@ let textStyle = (~fontSize, ~fontFamily) =>
 
 let containerStyle = (~width, ~height, ~disabled, ~color) =>
   Style.make(
-    ~position=LayoutTypes.Relative,
+    ~position=Relative,
     ~backgroundColor=disabled ? Colors.dimGrey : color,
-    ~justifyContent=LayoutTypes.JustifyCenter,
-    ~alignItems=LayoutTypes.AlignCenter,
+    ~justifyContent=JustifyCenter,
+    ~alignItems=AlignCenter,
     ~border=Style.Border.make(~width=1, ~color=Colors.white, ()),
     ~height,
     ~width,
@@ -36,7 +36,7 @@ include (
                 render(
                   () => {
                     /* NOTE:If disabled the button should do nothing */
-                    let fn = disabled ? noop : onClick;
+                    let clickFn = disabled ? noop : onClick;
                     <view
                       style={containerStyle(
                         ~width,
@@ -44,7 +44,7 @@ include (
                         ~disabled,
                         ~color,
                       )}>
-                      <Clickable onClick=fn>
+                      <Clickable onClick=clickFn>
                         <text style={textStyle(~fontSize, ~fontFamily)}>
                           title
                         </text>
