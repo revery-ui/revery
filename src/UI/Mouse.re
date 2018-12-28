@@ -86,7 +86,7 @@ let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
 
 let dispatch =
     (
-     win: Window.t,
+     ~window: option(Window.t) = ?,
      cursor: Cursor.t,
      evt: Events.internalMouseEvents,
      node: Node.node('a),
@@ -111,12 +111,16 @@ let dispatch =
     Node.iter(collect, node);
     switch (deepestNode^) {
       | None => ()
-      | Some(node) => {
-        let glfwWin = win.glfwWindow;
-        let cursor = node#getCursorStyle();
-        let glfwCursor = MouseCursors.toGlfwCursor(cursor);
-        Glfw.glfwSetCursor(glfwWin, glfwCursor);
-      }
+      | Some(node) =>
+        switch (window) {
+          | Some(window) => {
+            let glfwWin = window.glfwWindow;
+            let cursor = node#getCursorStyle();
+            let glfwCursor = MouseCursors.toGlfwCursor(cursor);
+            Glfw.glfwSetCursor(glfwWin, glfwCursor);
+          }
+          | None => ()
+        }
     };
     List.iter(n => n#handleEvent(eventToSend), nodes^);
   };

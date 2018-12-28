@@ -26,7 +26,7 @@ let releaseCapture: unit => unit;
 
 let dispatch:
     (
-     Window.t,
+     ~window: Window.t = ?,
      Cursor.t,
      Events.internalMouseEvents,
      Node.node('a)
