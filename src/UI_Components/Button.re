@@ -34,23 +34,21 @@ include (
                   (),
                 ) =>
                 render(
-                  () => {
+                  () =>
                     /* NOTE:If disabled the button should do nothing */
-                    let clickFn = disabled ? noop : onClick;
-                    <view
-                      style={containerStyle(
-                        ~width,
-                        ~height,
-                        ~disabled,
-                        ~color,
-                      )}>
-                      <Clickable onClick=clickFn>
+                    <Clickable onClick={disabled ? noop : onClick}>
+                      <view
+                        style={containerStyle(
+                          ~width,
+                          ~height,
+                          ~disabled,
+                          ~color,
+                        )}>
                         <text style={textStyle(~fontSize, ~fontFamily)}>
                           title
                         </text>
-                      </Clickable>
-                    </view>;
-                  },
+                      </view>
+                    </Clickable>,
                   ~children,
                 )
               )
