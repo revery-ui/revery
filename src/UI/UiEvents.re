@@ -1,10 +1,9 @@
-open Revery_Core;
-open Events;
 open Node;
+open NodeEvents;
 
 module BubbledEvent = {
   type bubbledEvent = {
-    event: internalMouseEvents,
+    event: mouseEvent,
     shouldPropagate: bool,
     defaultPrevented: bool,
     stopPropagation: unit => unit,
@@ -16,23 +15,21 @@ module BubbledEvent = {
 
   let allEvents = () => events;
 
-  let stopPropagation = (mouseEvent, ()) =>
+  let stopPropagation = (msEvent, ()) =>
     events :=
       List.map(
-        evt =>
-          evt.event == mouseEvent ? {...evt, shouldPropagate: true} : evt,
+        evt => evt.event == msEvent ? {...evt, shouldPropagate: true} : evt,
         events^,
       );
 
-  let preventDefault = (mouseEvent, ()) =>
+  let preventDefault = (msEvent, ()) =>
     events :=
       List.map(
-        evt =>
-          evt.event == mouseEvent ? {...evt, defaultPrevented: true} : evt,
+        evt => evt.event == msEvent ? {...evt, defaultPrevented: true} : evt,
         events^,
       );
 
-  let create = (event: internalMouseEvents) => {
+  let create = (event: mouseEvent) => {
     let wrappedEvent = {
       event,
       shouldPropagate: false,
@@ -44,25 +41,33 @@ module BubbledEvent = {
     /* Check the event doesn't already exist if not add it */
     let contains = (found, elem) => found || elem.event == event;
     let exists = List.fold_left(contains, false, events^);
-    switch (exists) {
-    | false =>
-      events := List.append([], [wrappedEvent]);
-      wrappedEvent;
-    | true => wrappedEvent
-    };
+    exists ?
+      wrappedEvent :
+      {
+        events := List.append([], [wrappedEvent]);
+        wrappedEvent;
+      };
   };
 };
 
-let bubble = (node: node('a), event: internalMouseEvents) => {
-  /* Wrap  event with preventDefault and stopPropagation */
-  let _evt = BubbledEvent.create(event);
-  /* track if default prevent or propagation stopped per module */
-  /* stop traversing node hierarchy if stop propagation is called */
-  let parent = node#getParent();
-  let _grandParent =
-    switch (parent) {
-    | Some(parent) => parent#getParent()
-    | None => None
-    };
+let rec traverseHeirarchy = (node: node('a), bubbled) =>
+  BubbledEvent.(
+    /* track if default prevent or propagation stopped per module
+       stop traversing node hierarchy if stop propagation is called
+        */
+    if (bubbled.shouldPropagate) {
+      node#handleEvent(bubbled.event);
+      let parent = node#getParent();
+      switch (parent) {
+      | Some(parent) => traverseHeirarchy(parent, bubbled)
+      | None => ()
+      };
+    }
+  );
+
+let bubble = (node: node('a), event: mouseEvent) => {
+  /* Wrap event with preventDefault and stopPropagation */
+  let evt = BubbledEvent.create(event);
+  traverseHeirarchy(node, evt);
   ();
 };

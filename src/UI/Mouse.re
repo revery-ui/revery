@@ -2,6 +2,7 @@
 open Revery_Core;
 open Revery_Math;
 
+open UiEvents;
 open NodeEvents;
 
 module Cursor = {
@@ -93,6 +94,7 @@ let dispatch =
   let pos = getPositionFromMouseEvent(cursor, evt);
 
   let eventToSend = internalToExternalEvent(cursor, evt);
+  bubble(node, eventToSend);
 
   if (!handleCapture(eventToSend)) {
     let isNodeImpacted = n => n#hitTest(pos);
