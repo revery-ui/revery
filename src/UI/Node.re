@@ -22,14 +22,14 @@ class node ('a) (()) = {
   val _events: ref(NodeEvents.t(node('a))) = ref(NodeEvents.make());
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
   val _parent: ref(option(node('a))) = ref(None);
-  val _id: int = UniqueId.getUniqueId();
+  val _internalId: int = UniqueId.getUniqueId();
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let localContext =
       NodeDrawContext.createFromParent(parentContext, style.opacity);
     List.iter(c => c#draw(pass, localContext), _children^);
   };
-  pub getId = () => _id;
+  pub getInternalId = () => _internalId;
   pub measurements = () => _layoutNode^.layout;
   pub setStyle = style => _style := style;
   pub getStyle = () => _style^;

@@ -154,7 +154,7 @@ let init = app => {
       )}>
       <Logo />
       <view
-        ref={r => print_endline("Unique id: " ++ string_of_int(r#getId()))}
+        ref={r => print_endline("View internal id:" ++ string_of_int(r#getInternalId()))}
         style={Style.make(~flexDirection=Row, ~alignItems=AlignFlexEnd, ())}>
         <AnimatedText delay=0.0 textContent="Welcome" />
         <AnimatedText delay=0.5 textContent="to" />
