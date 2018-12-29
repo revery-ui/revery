@@ -59,7 +59,7 @@ let start =
             mouseX: m.mouseX *. pixelRatio,
             mouseY: m.mouseY *. pixelRatio,
           });
-        Mouse.dispatch(~window, mouseCursor, evt, rootNode);
+        Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
 
@@ -68,7 +68,7 @@ let start =
       window.onMouseDown,
       m => {
         let evt = Revery_Core.Events.InternalMouseDown({button: m.button});
-        Mouse.dispatch(~window, mouseCursor, evt, rootNode);
+        Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
 
@@ -77,8 +77,17 @@ let start =
       window.onMouseUp,
       m => {
         let evt = Revery_Core.Events.InternalMouseUp({button: m.button});
-        Mouse.dispatch(~window, mouseCursor, evt, rootNode);
+        Mouse.dispatch(mouseCursor, evt, rootNode);
       },
+    );
+
+  let _ =
+    Revery_Core.Event.subscribe(
+      Mouse.onCursorChanged,
+      cursor => {
+        let glfwCursor = Revery_Core.MouseCursors.toGlfwCursor(cursor);
+        Reglfw.Glfw.glfwSetCursor(window.glfwWindow, glfwCursor);
+      }
     );
 
   let _ = Reactify.Event.subscribe(FontCache.onFontLoaded, () => {

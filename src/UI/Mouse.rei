@@ -24,9 +24,10 @@ let setCapture:
 
 let releaseCapture: unit => unit;
 
+let onCursorChanged: Event.t(MouseCursors.t);
+
 let dispatch:
     (
-     ~window: Window.t = ?,
      Cursor.t,
      Events.internalMouseEvents,
      Node.node('a)

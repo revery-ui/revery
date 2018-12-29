@@ -4,8 +4,6 @@ open Revery_Math;
 
 open NodeEvents;
 
-open Reglfw;
-
 module Cursor = {
   /* State needed to track on the cursor */
   type t = {
@@ -84,9 +82,10 @@ let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
     MouseMove({mouseX: evt.mouseX, mouseY: evt.mouseY})
   };
 
+let onCursorChanged: Event.t(MouseCursors.t) = Event.create();
+
 let dispatch =
     (
-     ~window: option(Window.t) = ?,
      cursor: Cursor.t,
      evt: Events.internalMouseEvents,
      node: Node.node('a),
@@ -111,16 +110,10 @@ let dispatch =
     Node.iter(collect, node);
     switch (deepestNode^) {
       | None => ()
-      | Some(node) =>
-        switch (window) {
-          | Some(window) => {
-            let glfwWin = window.glfwWindow;
-            let cursor = node#getCursorStyle();
-            let glfwCursor = MouseCursors.toGlfwCursor(cursor);
-            Glfw.glfwSetCursor(glfwWin, glfwCursor);
-          }
-          | None => ()
-        }
+      | Some(node) => {
+        let cursor = node#getCursorStyle();
+        Event.dispatch(onCursorChanged, cursor);
+      }
     };
     List.iter(n => n#handleEvent(eventToSend), nodes^);
   };
