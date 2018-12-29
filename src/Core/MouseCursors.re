@@ -5,13 +5,29 @@ open Reglfw.Glfw;
    [glfwInit]. Since these are global variables, they WILL be initialized first.
    We could also return a new cursor every time, but this would cause a memory
    leak. */
-type t = Lazy.t(glfwCursor);
+type t = [ `Arrow | `Text | `Pointer | `Crosshair | `HResize | `VResize ];
 
-let toGlfwCursor = (c) => Lazy.force(c);
+let arrow_lazy = lazy(glfwCreateStandardCursor(GLFW_ARROW_CURSOR));
+let text_lazy = lazy(glfwCreateStandardCursor(GLFW_IBEAM_CURSOR));
+let pointer_lazy = lazy(glfwCreateStandardCursor(GLFW_HAND_CURSOR));
+let crosshair_lazy = lazy(glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR));
+let horizontalResize_lazy = lazy(glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR));
+let verticalResize_lazy = lazy(glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR));
 
-let arrow = lazy(glfwCreateStandardCursor(GLFW_ARROW_CURSOR));
-let text = lazy(glfwCreateStandardCursor(GLFW_IBEAM_CURSOR));
-let pointer = lazy(glfwCreateStandardCursor(GLFW_HAND_CURSOR));
-let crosshair = lazy(glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR));
-let horizontalResize = lazy(glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR));
-let verticalResize = lazy(glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR));
+let toGlfwCursor(cursorType) { 
+  switch (cursorType) {
+    | `Arrow => arrow_lazy
+    | `Text => text_lazy
+    | `Pointer => pointer_lazy
+    | `Crosshair => crosshair_lazy
+    | `HResize => horizontalResize_lazy
+    | `VResize => verticalResize_lazy
+  } |> Lazy.force;
+};
+
+let arrow = `Arrow;
+let text = `Text;
+let pointer = `Pointer;
+let crosshair = `Crosshair;
+let horizontalResize = `HResize;
+let verticalResize = `VResize;
