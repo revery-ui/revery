@@ -21,14 +21,16 @@ module BubbledEvent = {
   let stopPropagation = (mouseEvent, ()) =>
     events :=
       List.map(
-        e => e.event == mouseEvent ? {...e, shouldPropagate: true} : e,
+        evt =>
+          evt.event == mouseEvent ? {...evt, shouldPropagate: true} : evt,
         events^,
       );
 
   let preventDefault = (mouseEvent, ()) =>
     events :=
       List.map(
-        e => e.event == mouseEvent ? {...e, defaultPrevented: true} : e,
+        evt =>
+          evt.event == mouseEvent ? {...evt, defaultPrevented: true} : evt,
         events^,
       );
 
