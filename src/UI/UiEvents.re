@@ -2,8 +2,6 @@ open Revery_Core;
 open Events;
 open Node;
 
-type n('a) = node('a);
-
 module BubbledEvent = {
   type bubbledEvent = {
     event: internalMouseEvents,
@@ -55,7 +53,7 @@ module BubbledEvent = {
   };
 };
 
-let bubble = (node: n('a), event: internalMouseEvents) => {
+let bubble = (node: node('a), event: internalMouseEvents) => {
   /* Wrap  event with preventDefault and stopPropagation */
   let _evt = BubbledEvent.create(event);
   /* track if default prevent or propagation stopped per module */
