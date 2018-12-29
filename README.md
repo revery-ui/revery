@@ -35,9 +35,11 @@ Install the following packages with your package manager of choice:
 
 ### Running
 
-After you build, the executables will be available in the `_esy\default\build\default\examples` folder.
+After building, you can run the 'Hello World' example via:
 
-To run the example app, you can do `esy x Bin.exe`.
+- `esy x Hello.exe`
+
+Check out our [examples](https://github.com/revery-ui/revery/tree/master/examples) for more to try!
 
 ### Tests
 
