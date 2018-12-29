@@ -11,9 +11,12 @@ open Revery_UI;
 type clickFunction = unit => unit;
 let noop = () => ();
 
+type valueChangedFunction = (float) => unit;
+let noopValueChanged = (_f) => ();
+
 /* The 'include' here makes the component available at the top level */
 include (
-          val component((render, ~_style=Style.make(()), ~_minimumValue=0., ~_maximumValue=1., ~children, ()) =>
+          val component((render, ~_style=Style.make(()), ~onValueChanged:valueChangedFunction=noopValueChanged, ~_minimumValue=0., ~_maximumValue=1., ~children, ()) =>
                 render(
                   () => {
                     let (ref, _setRef) = useState(None);
@@ -25,8 +28,22 @@ include (
                     };
 
                     let onMouseDown = (_evt) => {
+                               print_endline ("MOUSEDOWN");
                        Mouse.setCapture(
-                           ~onMouseMove=(evt) => { _setOffset(int_of_float(evt.mouseX)); },
+                           ~onMouseMove=(evt) => { 
+                               print_endline ("MOVING: " ++ string_of_float(evt.mouseX));
+                               _setOffset(int_of_float(evt.mouseX)); 
+
+                               switch(ref) {
+                               | Some(_) => print_endline("got ref");
+                               | None => print_endline("no ref");
+                               };
+
+                               /* TODO: Proper calculation */
+                               onValueChanged(evt.mouseX);
+
+
+                           },
                            ~onMouseUp=(_evt) => Mouse.releaseCapture(),
                            ()
                        );
