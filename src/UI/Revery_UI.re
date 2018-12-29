@@ -39,7 +39,7 @@ let start =
     ) => {
   let uiDirty = ref(false);
 
-  let onEndReconcile = (_node) => uiDirty := true;
+  let onEndReconcile = _node => uiDirty := true;
 
   let rootNode = (new viewNode)();
   let container = UiReact.createContainer(~onEndReconcile, rootNode);
@@ -85,11 +85,14 @@ let start =
       },
     );
 
-  let _ = Reactify.Event.subscribe(FontCache.onFontLoaded, () => {
-    Window.render(window);
-  });
+  let _ =
+    Reactify.Event.subscribe(FontCache.onFontLoaded, () =>
+      Window.render(window)
+    );
 
-  Window.setShouldRenderCallback(window, () => uiDirty^ || Animated.anyActiveAnimations());
+  Window.setShouldRenderCallback(window, () =>
+    uiDirty^ || Animated.anyActiveAnimations()
+  );
   Window.setRenderCallback(
     window,
     () => {
