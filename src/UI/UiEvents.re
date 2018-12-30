@@ -29,7 +29,7 @@ module BubbledEvent = {
         events^,
       );
 
-  let create = (event: mouseEvent) => {
+  let make = (event: mouseEvent) => {
     let wrappedEvent = {
       event,
       shouldPropagate: false,
@@ -39,9 +39,13 @@ module BubbledEvent = {
     };
 
     /* Check the event doesn't already exist if not add it */
-    let contains = (found, elem) => found || elem.event == event;
-    let exists = List.fold_left(contains, false, events^);
-    exists ?
+    let alreadyExists =
+      List.fold_left(
+        (found, elem) => found || elem.event == event,
+        false,
+        events^,
+      );
+    alreadyExists ?
       wrappedEvent :
       {
         events := List.append([], [wrappedEvent]);
@@ -67,7 +71,7 @@ let rec traverseHeirarchy = (node: node('a), bubbled) =>
 
 let bubble = (node: node('a), event: mouseEvent) => {
   /* Wrap event with preventDefault and stopPropagation */
-  let evt = BubbledEvent.create(event);
+  let evt = BubbledEvent.make(event);
   traverseHeirarchy(node, evt);
   ();
 };
