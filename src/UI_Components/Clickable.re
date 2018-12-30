@@ -31,7 +31,7 @@ include (
                     };
 
                     let style = Style.make(~opacity,
-                                           ~cursor=Some(MouseCursors.pointer),
+                                           ~cursor=MouseCursors.pointer,
                                            ());
 
                     <view style onMouseDown onMouseUp> ...children </view>;
