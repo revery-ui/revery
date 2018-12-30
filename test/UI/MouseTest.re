@@ -83,24 +83,23 @@ test("Mouse", () => {
     })
   );
   test("onCursorChangedEvent gets dispatched with proper cursor", () => {
-    let cursor = Mouse.Cursor.make();
+    module Cursors = Revery_Core.MouseCursors;
 
     let count = ref(0);
-    let cursor = ref(Cursors.arrow);
-    let f = cur => { count := count^ + 1; cursor := cur };
+    let cursorType = ref(Cursors.arrow);
+    let f = cur => { count := count^ + 1; cursorType := cur };
     let node =
       createNodeWithStyle(Style.make(~width=100, ~cursor=Cursors.text, ~height=100, ()));
-    node#setEvents(NodeEvents.make(~onMouseDown=f, ()));
 
-    let _ = Revery.Core.Event.subscribe(Mouse.onCursorChanged, f);
+    let _ = Revery_Core.Event.subscribe(Mouse.onCursorChanged, f);
 
     Mouse.dispatch(
-      cursor,
+      Mouse.Cursor.make(),
       InternalMouseMove({mouseX: 50., mouseY: 50.}),
       node,
     );
    
     expect(count^).toBe(1);
-    expect(cursor^).toBe(Cursors.text);
+    expect(cursorType^).toBe(Cursors.text);
   });
 });
