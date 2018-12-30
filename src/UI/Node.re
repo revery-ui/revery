@@ -5,20 +5,32 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Revery_Math;
 
+module UniqueId = {
+  let current = ref(0);
+
+  let getUniqueId = () => {
+    let ret = current^;
+    current := current^ + 1;
+    ret;
+  };
+};
+
 class node ('a) (()) = {
   as _this;
   val _children: ref(list(node('a))) = ref([]);
   val _style: ref(Style.t) = ref(Style.defaultStyle);
-  val _events: ref(NodeEvents.t) = ref(NodeEvents.default);
+  val _events: ref(NodeEvents.t(node('a))) = ref(NodeEvents.make());
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
   val _parent: ref(option(node('a))) = ref(None);
   val _depth: ref(int) = ref(0);
+  val _internalId: int = UniqueId.getUniqueId();
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let localContext =
       NodeDrawContext.createFromParent(parentContext, style.opacity);
     List.iter(c => c#draw(pass, localContext), _children^);
   };
+  pub getInternalId = () => _internalId;
   pub measurements = () => _layoutNode^.layout;
   pub getDepth = () => _depth^;
   pub setStyle = style => _style := style;
@@ -118,12 +130,25 @@ class node ('a) (()) = {
   };
   /* TODO: This should really be private - it should never be explicitly set */
   pub _setParent = (n: option(node('a))) => {
+    /* Recalculate the depth of this node */
     switch (n) {
     | Some(node) => _depth := node#getDepth() + 1
     | None => _depth := 0
     };
     _parent := n;
-  }
+
+    /* Dispatch ref event if we just got attached */
+    switch (n) {
+    | Some(_) =>
+      let ret = (_this :> node('a));
+      let maybeRef = _this#getEvents().ref;
+      switch (maybeRef) {
+      | Some(ref) => ref(ret)
+      | None => ()
+      };
+    | _ => ()
+    };
+  };
 };
 
 let iter = (f, node: node('a)) => {
