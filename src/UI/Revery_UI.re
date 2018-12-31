@@ -86,6 +86,15 @@ let start =
     );
 
   let _ =
+    Revery_Core.Event.subscribe(
+      Mouse.onCursorChanged,
+      cursor => {
+        let glfwCursor = Revery_Core.MouseCursors.toGlfwCursor(cursor);
+        Reglfw.Glfw.glfwSetCursor(window.glfwWindow, glfwCursor);
+      }
+    );
+
+  let _ =
     Reactify.Event.subscribe(FontCache.onFontLoaded, () =>
       Window.render(window)
     );

@@ -6,6 +6,7 @@
  */
 
 open Revery_UI;
+open Revery_Core;
 
 type clickFunction = unit => unit;
 let noop = () => ();
@@ -29,7 +30,9 @@ include (
                       onClick();
                     };
 
-                    let style = Style.make(~opacity, ());
+                    let style = Style.make(~opacity,
+                                           ~cursor=MouseCursors.pointer,
+                                           ());
 
                     <view style onMouseDown onMouseUp> ...children </view>;
                   },

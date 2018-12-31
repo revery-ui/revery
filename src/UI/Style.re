@@ -76,6 +76,7 @@ type t = {
   transform: list(Transform.t),
   opacity: float,
   boxShadow: BoxShadow.properties,
+  cursor: option(MouseCursors.t),
 };
 
 let make =
@@ -121,6 +122,7 @@ let make =
                    ~color=Colors.black,
                    (),
                  ),
+      ~cursor = ?,
       _unit: unit,
     ) => {
   let ret: t = {
@@ -158,6 +160,7 @@ let make =
     borderVertical,
     opacity,
     boxShadow,
+    cursor,
   };
 
   ret;
