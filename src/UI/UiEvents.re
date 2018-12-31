@@ -18,7 +18,7 @@ module BubbledEvent = {
   let stopPropagation = (msEvent, ()) =>
     events :=
       List.map(
-        evt => evt.event == msEvent ? {...evt, shouldPropagate: true} : evt,
+        evt => evt.event == msEvent ? {...evt, shouldPropagate: false} : evt,
         events^,
       );
 
@@ -32,7 +32,7 @@ module BubbledEvent = {
   let make = (event: mouseEvent) => {
     let wrappedEvent = {
       event,
-      shouldPropagate: false,
+      shouldPropagate: true,
       defaultPrevented: false,
       stopPropagation: stopPropagation(event),
       preventDefault: preventDefault(event),
