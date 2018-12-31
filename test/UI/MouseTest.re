@@ -1,6 +1,7 @@
 open Rejest;
 
 open Revery_UI;
+open UiEvents;
 
 let createNodeWithStyle = style => {
   let node = (new node)();
@@ -48,6 +49,25 @@ test("Mouse", () => {
       expect(count^).toBe(0);
     });
   });
+
+  test("bubbleEvent", () =>
+    test(
+      "test that state is updated per event when stop propagation is called",
+      () => {
+      let cursor = Mouse.Cursor.make();
+      let testEvent =
+        Mouse.internalToExternalEvent(
+          cursor,
+          InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        );
+      let evt = BubbledEvent.make(testEvent);
+      evt.stopPropagation();
+      let events = BubbledEvent.allEvents();
+      expect(List.length(events^)).toBe(1);
+      /* expect(evt.shouldPropagate).toBe(false); */
+    })
+  );
+
   test("setCapture/releaseCapture", () =>
     test("captured events override dispatching to node", () => {
       let cursor = Mouse.Cursor.make();

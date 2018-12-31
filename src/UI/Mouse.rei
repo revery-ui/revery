@@ -4,31 +4,28 @@ open Revery_Math;
 
 open NodeEvents;
 
-module Cursor {
-    type t;
+module Cursor: {
+  type t;
 
-    let make: unit => t;
+  let make: unit => t;
 
-    let toVec2: t => Vec2.t;
+  let toVec2: t => Vec2.t;
 
-    let set: (t, Vec2.t) => unit;
+  let set: (t, Vec2.t) => unit;
 };
 
 let setCapture:
-    (
-     ~onMouseDown:mouseButtonHandler=?,
-     ~onMouseMove:mouseMoveHandler=?,
-     ~onMouseUp:mouseButtonHandler=?,
-     unit
-    ) => unit;
+  (
+    ~onMouseDown: mouseButtonHandler=?,
+    ~onMouseMove: mouseMoveHandler=?,
+    ~onMouseUp: mouseButtonHandler=?,
+    unit
+  ) =>
+  unit;
 
 let releaseCapture: unit => unit;
 
-let onCursorChanged: Event.t(MouseCursors.t);
+let internalToExternalEvent:
+  (Cursor.t, Events.internalMouseEvents) => mouseEvent;
 
-let dispatch:
-    (
-     Cursor.t,
-     Events.internalMouseEvents,
-     Node.node('a)
-    ) => unit;
+let dispatch: (Cursor.t, Events.internalMouseEvents, Node.node('a)) => unit;
