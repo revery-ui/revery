@@ -37,8 +37,12 @@ let start =
       window: Window.t,
       render: renderFunction,
     ) => {
+  let uiDirty = ref(false);
+
+  let onEndReconcile = _node => uiDirty := true;
+
   let rootNode = (new viewNode)();
-  let container = UiReact.createContainer(rootNode);
+  let container = UiReact.createContainer(~onEndReconcile, rootNode);
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
   let ui =
     UiContainer.create(
@@ -86,12 +90,15 @@ let start =
       Window.render(window)
     );
 
-  Window.setShouldRenderCallback(window, () => Animated.anyActiveAnimations());
+  Window.setShouldRenderCallback(window, () =>
+    uiDirty^ || Animated.anyActiveAnimations()
+  );
   Window.setRenderCallback(
     window,
     () => {
       let component = render();
       UiRender.render(ui, component);
+      uiDirty := false;
     },
   );
 };
