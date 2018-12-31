@@ -62,10 +62,10 @@ test("Mouse", () => {
         );
 
       let evt = BubbledEvent.make(testEvent);
-      evt.stopPropagation();
+      let updated = evt.stopPropagation();
       let events = BubbledEvent.allEvents();
       expect(List.length(events^)).toBe(1);
-      expect(evt.shouldPropagate).toBe(false);
+      expect(updated.shouldPropagate).toBe(false);
     })
   );
 

@@ -7,8 +7,8 @@ module BubbledEvent = {
     event: mouseEvent,
     shouldPropagate: bool,
     defaultPrevented: bool,
-    stopPropagation: unit => unit,
-    preventDefault: unit => unit,
+    stopPropagation: unit => bubbledEvent,
+    preventDefault: unit => bubbledEvent,
   };
 
   /* TODO: find idiomatic way to do this */
@@ -22,26 +22,31 @@ module BubbledEvent = {
 
   let getId = generateId();
 
+  /* FIXME: Should these be updated to be a list of references to bubbled events */
   type t('a) = ref(list(bubbledEvent));
   let events = ref([]);
 
   let allEvents = () => events;
 
-  let stopPropagation = (id, ()) =>
+  let stopPropagation = (id, ()) => {
     events :=
       List.map(
         evt => evt.id == id ? {...evt, shouldPropagate: false} : evt,
         events^,
       );
+    List.find(evt => evt.id == id, events^);
+  };
 
-  let preventDefault = (id, ()) =>
+  let preventDefault = (id, ()) => {
     events :=
       List.map(
         evt => evt.id == id ? {...evt, defaultPrevented: true} : evt,
         events^,
       );
+    List.find(evt => evt.id == id, events^);
+  };
 
-  let make = (event: mouseEvent) => {
+  let make = event => {
     let id = getId();
     let wrappedEvent = {
       id,
