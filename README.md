@@ -37,7 +37,7 @@ Install the following packages with your package manager of choice:
 
 After building, you can run the 'Hello World' example via:
 
-- `esy x Hello.exe`
+- `esy x Hello`
 
 Check out our [examples](https://github.com/revery-ui/revery/tree/master/examples) for more to try!
 
@@ -159,7 +159,6 @@ Some tentative work we need to do, in no particular order:
 - Audio Support
     - [ ] Wav file playback
     - [ ] MP3 file playback
-    - [ ] 3D / Spatial Audio
 - Example apps
     - [x] [Quickstart](https://github.com/bryphe/revery-quick-start) / Hello World
     - [ ] Calculator
