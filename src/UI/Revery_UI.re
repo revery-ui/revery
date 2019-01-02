@@ -26,7 +26,6 @@ class imageNode = class ImageNode.imageNode;
 
 module Mouse = Mouse;
 module NodeEvents = NodeEvents;
-module UiEvents = UiEvents;
 let component = UiReact.component;
 
 include Primitives;
@@ -90,12 +89,12 @@ let start =
     );
 
   let _ =
-    Reactify.Event.subscribe(FontCache.onFontLoaded, () =>
-      Window.render(window)
+    Revery_Core.Event.subscribe(
+      Mouse.onCursorChanged,
       cursor => {
         let glfwCursor = Revery_Core.MouseCursors.toGlfwCursor(cursor);
         Reglfw.Glfw.glfwSetCursor(window.glfwWindow, glfwCursor);
-      }
+      },
     );
 
   let _ =
