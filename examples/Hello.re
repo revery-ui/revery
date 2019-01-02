@@ -114,8 +114,8 @@ module SimpleButton = (
 
             let wrapperStyle =
               Style.make(
-                ~backgroundColor=Color.rgba(1., 1., 1., 0.1),
-                ~border=Style.Border.make(~width=2, ~color=Colors.white, ()),
+                ~backgroundColor=Color.rgba(1., 1., 1., 1.),
+                ~border=Style.Border.make(~width=50, ~color=Colors.orange, ()),
                 ~margin=16,
                 (),
               );
@@ -123,6 +123,7 @@ module SimpleButton = (
             let textHeaderStyle =
               Style.make(
                 ~color=Colors.white,
+                ~backgroundColor=Colors.black,
                 ~fontFamily="Roboto-Regular.ttf",
                 ~fontSize=20,
                 ~margin=4,
@@ -130,10 +131,8 @@ module SimpleButton = (
               );
 
             let textContent = "Click me: " ++ string_of_int(count);
-            <Clickable onClick=increment>
-              <view style=wrapperStyle>
-                <text style=textHeaderStyle> textContent </text>
-              </view>
+            <Clickable style=wrapperStyle onClick=increment>
+              <text style=textHeaderStyle> textContent </text>
             </Clickable>;
           },
           ~children,
