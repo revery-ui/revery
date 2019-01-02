@@ -25,7 +25,4 @@ let setCapture:
 
 let releaseCapture: unit => unit;
 
-let internalToExternalEvent:
-  (Cursor.t, Events.internalMouseEvents) => mouseEvent;
-
 let dispatch: (Cursor.t, Events.internalMouseEvents, Node.node('a)) => unit;
