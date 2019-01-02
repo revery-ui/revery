@@ -21,7 +21,7 @@
         "esy-installer Revery_Math.install",
         "esy-installer Revery_Shaders.install",
         "esy-installer Revery_UI.install",
-        "esy-installer Revery_UI_Coimponents.install"
+        "esy-installer Revery_UI_Components.install"
     ]
   },
   "dependencies": {
