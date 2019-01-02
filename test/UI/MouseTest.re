@@ -54,18 +54,16 @@ test("Mouse", () => {
     test(
       "test that state is updated per event when stop propagation is called",
       () => {
-      let cursor = Mouse.Cursor.make();
-      let testEvent =
-        Mouse.internalToExternalEvent(
-          cursor,
-          InternalMouseMove({mouseX: 50., mouseY: 50.}),
-        );
-
-      let evt = BubbledEvent.make(testEvent);
-      let updated = evt.stopPropagation();
-      let events = BubbledEvent.allEvents();
-      expect(List.length(events^)).toBe(1);
-      expect(updated.shouldPropagate).toBe(false);
+      let evt = BubbledEvent.make(MouseMove({mouseX: 50., mouseY: 50.}));
+      switch (evt) {
+      | Some(e) =>
+        e.stopPropagation();
+        switch (BubbledEvent.activeEvent^) {
+        | Some(ae) => expect(ae.shouldPropagate).toBe(false)
+        | None => ()
+        };
+      | None => ()
+      };
     })
   );
 

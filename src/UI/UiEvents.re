@@ -7,11 +7,10 @@ module BubbledEvent = {
     event: mouseEvent,
     shouldPropagate: bool,
     defaultPrevented: bool,
-    stopPropagation: unit => bubbledEvent,
-    preventDefault: unit => bubbledEvent,
+    stopPropagation: unit => unit,
+    preventDefault: unit => unit,
   };
 
-  /* TODO: find idiomatic way to do this */
   let generateId = () => {
     let id = ref(1);
     () => {
@@ -22,58 +21,44 @@ module BubbledEvent = {
 
   let getId = generateId();
 
-  /* FIXME: Should these be updated to be a list of references to bubbled events */
-  type t('a) = ref(list(bubbledEvent));
-  let events = ref([]);
+  let activeEvent = ref(None);
 
-  let allEvents = () => events;
+  let stopPropagation = (id, ()) =>
+    switch (activeEvent^) {
+    | Some(evt) =>
+      if (id == evt.id) {
+        activeEvent := Some({...evt, shouldPropagate: false});
+      }
+    | None => ()
+    };
 
-  let stopPropagation = (id, ()) => {
-    events :=
-      List.map(
-        evt => evt.id == id ? {...evt, shouldPropagate: false} : evt,
-        events^,
-      );
-    List.find(evt => evt.id == id, events^);
-  };
-
-  let preventDefault = (id, ()) => {
-    events :=
-      List.map(
-        evt => evt.id == id ? {...evt, defaultPrevented: true} : evt,
-        events^,
-      );
-    List.find(evt => evt.id == id, events^);
-  };
+  let preventDefault = (id, ()) =>
+    switch (activeEvent^) {
+    | Some(evt) =>
+      if (id == evt.id) {
+        activeEvent := Some({...evt, defaultPrevented: true});
+      }
+    | None => ()
+    };
 
   let make = event => {
     let id = getId();
-    let wrappedEvent = {
-      id,
-      event,
-      shouldPropagate: true,
-      defaultPrevented: false,
-      stopPropagation: stopPropagation(id),
-      preventDefault: preventDefault(id),
-    };
+    let wrappedEvent =
+      Some({
+        id,
+        event,
+        shouldPropagate: true,
+        defaultPrevented: false,
+        stopPropagation: stopPropagation(id),
+        preventDefault: preventDefault(id),
+      });
 
-    /* Check the event doesn't already exist if not add it */
-    let alreadyExists =
-      List.fold_left(
-        (found, elem) => found || elem.id == id,
-        false,
-        events^,
-      );
-    alreadyExists ?
-      wrappedEvent :
-      {
-        events := List.append([], [wrappedEvent]);
-        wrappedEvent;
-      };
+    activeEvent := wrappedEvent;
+    wrappedEvent;
   };
 };
 
-let rec traverseHeirarchy = (node: node('a), bubbled) =>
+let rec traverseHeirarchy = (node, bubbled) =>
   BubbledEvent.(
     /* track if default prevent or propagation stopped per module
        stop traversing node hierarchy if stop propagation is called
@@ -88,9 +73,11 @@ let rec traverseHeirarchy = (node: node('a), bubbled) =>
     }
   );
 
-let bubble = (node: node('a), event: mouseEvent) => {
+let bubble = (node, event: mouseEvent) => {
   /* Wrap event with preventDefault and stopPropagation */
   let evt = BubbledEvent.make(event);
-  traverseHeirarchy(node, evt);
-  ();
+  switch (evt) {
+  | Some(e) => traverseHeirarchy(node, e)
+  | None => ()
+  };
 };
