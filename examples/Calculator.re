@@ -44,8 +44,10 @@ module Button = (
         ~position=LayoutTypes.Relative,
         ~justifyContent=LayoutTypes.JustifyCenter,
         ~alignItems=LayoutTypes.AlignCenter,
+        /* TODO: Figure out relative sizing */
         ~width=150,
         ~height=120,
+        ~flexGrow=1,
         ~margin=10,
         (),
       );
@@ -70,7 +72,7 @@ module Display = (
     render(() => {
       let viewStyle = Style.make(
         ~backgroundColor=Colors.white,
-        ~height=80,
+        ~height=120,
         ~alignItems=LayoutTypes.AlignStretch,
         ~flexDirection=LayoutTypes.Column,
         ~justifyContent=LayoutTypes.JustifyFlexEnd,
@@ -80,14 +82,14 @@ module Display = (
         ~color=Colors.black,
         ~fontFamily="Roboto-Regular.ttf",
         ~fontSize=20,
-        ~margin=10,
+        ~margin=15,
         ()
       );
       let numStyle = Style.make(
         ~color=Colors.black,
         ~fontFamily="Roboto-Regular.ttf",
         ~fontSize=32,
-        ~margin=10,
+        ~margin=15,
         ()
       );
 
@@ -110,7 +112,7 @@ let showFloat(float) {
   } else {
     string;
   };
-}
+};
 
 module Calculator = (
   val component((render, ~children, ()) =>
@@ -125,8 +127,11 @@ module Calculator = (
       let (curNum, setCurNum) = useState("");
 
       let eval() {
-        /* TODO: Check that there's already some input set */
+        /* TODO: Reorganize this so we display the operator as soon as
+           it gets pressed. */
         let (newDisplay, newResult) = switch (op) {
+        | #operator when curNum == "" =>
+          ("Error: Can't evaluate binary operator without input", result)
         | `Nop => (curNum, float_of_string(curNum))
         | `Add => (display ++ " + " ++ curNum, result +. float_of_string(curNum))
         | `Sub => (display ++ " - " ++ curNum, result -. float_of_string(curNum))
@@ -135,8 +140,7 @@ module Calculator = (
           if (float_of_string(curNum) != 0.) {
             (display ++ " ÷ " ++ curNum, result /. float_of_string(curNum));
           } else {
-            /* TODO: Errors + clear button */
-            ("Error: Divide by zero!", 0.);
+            ("Error: Divide by zero!", result);
           }
         };
         setResult(newResult);
@@ -156,24 +160,37 @@ module Calculator = (
         setCurNum(showFloat(newResult));
       };
 
-      let clear() {
-        setOp(`Nop);
+      let clear(~clearAcc) {
+        if (clearAcc) {
+          setOp(`Nop);
+          setResult(0.);
+          setDisplay("");
+        };
         setCurNum("");
-        setResult(0.);
-        setDisplay("");
+      };
+
+      let negate() {
+        if (curNum != "" && curNum.[0] == '-') {
+          setCurNum(String.sub(curNum, 1, String.length(curNum)));
+        } else {
+          setCurNum("-" ++ curNum);
+        };
       };
 
       let backspace() {
-        setCurNum(String.sub(curNum, 0, String.length(curNum) - 1));
+        if (curNum != "") {
+          setCurNum(String.sub(curNum, 0, String.length(curNum) - 1));
+        };
       };
 
       <Column>
         <Display display curNum />
         <Row>
-          <Button contents="C" onClick=(_ => clear()) />
-          <Button contents="±" onClick=(_ => setCurNum("-" ++ curNum)) />
+          <Button contents="AC" onClick=(_ => clear(~clearAcc=true)) />
+          <Button contents="C" onClick=(_ => clear(~clearAcc=false)) />
+          <Button contents="±" onClick=(_ => negate()) />
+          /* TODO: Switch to a font with a backspace character */
           <Button contents="<=" onClick=(_ => backspace()) />
-          <Button contents="" onClick=(_ => ()) />
         </Row>
         <Row>
           <Button contents="7" onClick=(_ => setCurNum(curNum ++ "7")) />
@@ -194,8 +211,10 @@ module Calculator = (
           <Button contents="-" onClick=(_ => perform(`Sub)) />
         </Row>
         <Row>
-          /* TODO: Only add one decimal */
-          <Button contents="." onClick=(_ => setCurNum(curNum ++ ".")) />
+          <Button contents="."
+                  onClick=(_ => String.contains(curNum, '.')
+                                  ? ()
+                                  : setCurNum(curNum ++ ".")) />
           <Button contents="0" onClick=(_ => setCurNum(curNum ++ "0")) />
           <Button contents="=" onClick=(_ => calculate()) />
           <Button contents="+" onClick=(_ => perform(`Add)) />
