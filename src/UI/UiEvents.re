@@ -20,7 +20,6 @@ module BubbledEvent = {
   };
 
   let getId = generateId();
-
   let activeEvent = ref(None);
 
   let stopPropagation = (id, ()) =>
@@ -58,7 +57,7 @@ module BubbledEvent = {
   };
 };
 
-let rec traverseHeirarchy = (node, bubbled) =>
+let rec traverseHeirarchy = (node: node('a), bubbled) =>
   BubbledEvent.(
     /* track if default prevent or propagation stopped per module
        stop traversing node hierarchy if stop propagation is called
