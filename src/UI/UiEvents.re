@@ -59,9 +59,10 @@ module BubbledEvent = {
 
 let rec traverseHeirarchy = (node: node('a), bubbled) =>
   BubbledEvent.(
-    /* track if default prevent or propagation stopped per module
-       stop traversing node hierarchy if stop propagation is called
-        */
+    /*
+     track if default prevent or propagation stopped per module
+     stop traversing node hierarchy if stop propagation is called
+      */
     if (bubbled.shouldPropagate) {
       node#handleEvent(bubbled.event);
       let parent = node#getParent();

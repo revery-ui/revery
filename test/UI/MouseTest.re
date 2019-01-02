@@ -50,7 +50,7 @@ test("Mouse", () => {
     });
   });
 
-  test("bubbleEvent", () =>
+  test("bubbleEvent", () => {
     test(
       "test that state is updated per event when stop propagation is called",
       () => {
@@ -59,13 +59,29 @@ test("Mouse", () => {
       | Some(e) =>
         e.stopPropagation();
         switch (BubbledEvent.activeEvent^) {
-        | Some(ae) => expect(ae.shouldPropagate).toBe(false)
+        | Some(activeEvent) =>
+          expect(activeEvent.shouldPropagate).toBe(false)
         | None => ()
         };
       | None => ()
       };
-    })
-  );
+    });
+
+    test(
+      "test that state is updated per event when prevent default is called", () => {
+      let evt = BubbledEvent.make(MouseMove({mouseX: 50., mouseY: 50.}));
+      switch (evt) {
+      | Some(e) =>
+        e.preventDefault();
+        switch (BubbledEvent.activeEvent^) {
+        | Some(activeEvent) =>
+          expect(activeEvent.defaultPrevented).toBe(true)
+        | None => ()
+        };
+      | None => ()
+      };
+    });
+  });
 
   test("setCapture/releaseCapture", () =>
     test("captured events override dispatching to node", () => {
