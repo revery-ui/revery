@@ -1,5 +1,5 @@
 {
-  "checksum": "b2678b4bf35936c16957110a3531f1d0",
+  "checksum": "fa064f3105a62b9c36c7ae5cd859b4b6",
   "root": "revery@link:./package.json",
   "node": {
     "revery@link:./package.json": {
@@ -10,8 +10,9 @@
       "overrides": [],
       "dependencies": [
         "rejest@1.2.0@d41d8cd9", "reason-reactify@2.2.0@d41d8cd9",
-        "reason-glfw@3.2.1008@d41d8cd9", "reason-gl-matrix@0.2.1@d41d8cd9",
-        "reason-fontkit@2.0.2@d41d8cd9", "ocaml@4.6.9@d41d8cd9",
+        "reason-glfw@3.2.1009@d41d8cd9",
+        "reason-gl-matrix@0.9.9301@d41d8cd9",
+        "reason-fontkit@2.0.3@d41d8cd9", "ocaml@4.6.9@d41d8cd9",
         "flex@1.2.2@d41d8cd9", "@opam/lwt_ppx@opam:1.2.1@db1172a7",
         "@opam/lwt@opam:4.1.0@111fc2bf",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
@@ -87,20 +88,20 @@
       ],
       "devDependencies": []
     },
-    "reason-glfw@3.2.1008@d41d8cd9": {
-      "id": "reason-glfw@3.2.1008@d41d8cd9",
+    "reason-glfw@3.2.1009@d41d8cd9": {
+      "id": "reason-glfw@3.2.1009@d41d8cd9",
       "name": "reason-glfw",
-      "version": "3.2.1008",
+      "version": "3.2.1009",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-glfw/-/reason-glfw-3.2.1008.tgz#sha1:e8dbe900de5a8800489575420236b315b8554480"
+          "archive:https://registry.npmjs.org/reason-glfw/-/reason-glfw-3.2.1009.tgz#sha1:e2da62e9b9061acfdc398fb355b86a67c5d2c044"
         ]
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.1.10@d41d8cd9", "reason-gl-matrix@0.2.1@d41d8cd9",
-        "ocaml@4.6.9@d41d8cd9", "esy-cmake@0.3.3@d41d8cd9",
+        "refmterr@3.1.10@d41d8cd9", "reason-gl-matrix@0.9.9301@d41d8cd9",
+        "ocaml@4.6.9@d41d8cd9", "esy-cmake@0.3.4@d41d8cd9",
         "@opam/lwt_ppx@opam:1.2.1@db1172a7", "@opam/lwt@opam:4.1.0@111fc2bf",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
         "@opam/js_of_ocaml-compiler@github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce@d41d8cd9",
@@ -110,14 +111,14 @@
       ],
       "devDependencies": []
     },
-    "reason-gl-matrix@0.2.1@d41d8cd9": {
-      "id": "reason-gl-matrix@0.2.1@d41d8cd9",
+    "reason-gl-matrix@0.9.9301@d41d8cd9": {
+      "id": "reason-gl-matrix@0.9.9301@d41d8cd9",
       "name": "reason-gl-matrix",
-      "version": "0.2.1",
+      "version": "0.9.9301",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-gl-matrix/-/reason-gl-matrix-0.2.1.tgz#sha1:c2ff80ea339d5f1bed57aa9ae3c41c009310d3b9"
+          "archive:https://registry.npmjs.org/reason-gl-matrix/-/reason-gl-matrix-0.9.9301.tgz#sha1:20333269ca4b87d71476965461b136f1222bc397"
         ]
       },
       "overrides": [],
@@ -130,22 +131,22 @@
       ],
       "devDependencies": []
     },
-    "reason-fontkit@2.0.2@d41d8cd9": {
-      "id": "reason-fontkit@2.0.2@d41d8cd9",
+    "reason-fontkit@2.0.3@d41d8cd9": {
+      "id": "reason-fontkit@2.0.3@d41d8cd9",
       "name": "reason-fontkit",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-2.0.2.tgz#sha1:8085b0dc67909659ad25143132be4b2cfdcd7ece"
+          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-2.0.3.tgz#sha1:1f813ff8e7f515ac3df72b76b413580c0cdc9b23"
         ]
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.1.10@d41d8cd9", "reason-glfw@3.2.1008@d41d8cd9",
-        "reason-gl-matrix@0.2.1@d41d8cd9", "ocaml@4.6.9@d41d8cd9",
+        "refmterr@3.1.10@d41d8cd9", "reason-glfw@3.2.1009@d41d8cd9",
+        "reason-gl-matrix@0.9.9301@d41d8cd9", "ocaml@4.6.9@d41d8cd9",
         "esy-harfbuzz@1.9.1004@d41d8cd9", "esy-freetype2@2.9.1001@d41d8cd9",
-        "esy-cmake@0.3.3@d41d8cd9", "@opam/dune@opam:1.6.2@7b47a809",
+        "esy-cmake@0.3.4@d41d8cd9", "@opam/dune@opam:1.6.2@7b47a809",
         "@esy-ocaml/reason@github:facebook/reason#ab49908@d41d8cd9"
       ],
       "devDependencies": []
@@ -193,7 +194,7 @@
         ]
       },
       "overrides": [],
-      "dependencies": [ "esy-cmake@0.3.3@d41d8cd9" ],
+      "dependencies": [ "esy-cmake@0.3.4@d41d8cd9" ],
       "devDependencies": []
     },
     "esy-freetype2@2.9.1001@d41d8cd9": {
@@ -207,17 +208,17 @@
         ]
       },
       "overrides": [],
-      "dependencies": [ "esy-cmake@0.3.3@d41d8cd9" ],
+      "dependencies": [ "esy-cmake@0.3.4@d41d8cd9" ],
       "devDependencies": []
     },
-    "esy-cmake@0.3.3@d41d8cd9": {
-      "id": "esy-cmake@0.3.3@d41d8cd9",
+    "esy-cmake@0.3.4@d41d8cd9": {
+      "id": "esy-cmake@0.3.4@d41d8cd9",
       "name": "esy-cmake",
-      "version": "0.3.3",
+      "version": "0.3.4",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/esy-cmake/-/esy-cmake-0.3.3.tgz#sha1:b66b068860905c6832ab140e73c77fa1b9aeeb92"
+          "archive:https://registry.npmjs.org/esy-cmake/-/esy-cmake-0.3.4.tgz#sha1:75ddf29c9247102a799306586bfe9e06e505465d"
         ]
       },
       "overrides": [],
