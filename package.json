@@ -28,7 +28,7 @@
     "@esy-ocaml/reason": "^3.3.7",
     "reason-glfw": "^3.2.1008",
     "reason-fontkit": "^2.0.2",
-    "reason-gl-matrix": "^0.2.0",
+    "reason-gl-matrix": "^0.9.9301",
     "reason-reactify": "^2.2.0",
     "@opam/color": "^0.2.0",
     "@opam/lwt": "^4.0.0",
@@ -44,7 +44,7 @@
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
     "@esy-ocaml/reason": "facebook/reason#ab49908",
-    "reason-gl-matrix": "github:bryphe/reason-gl-matrix#8cefa56"
+    "esy-cmake": "0.3.4"
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"
