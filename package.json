@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "^3.3.7",
-    "reason-glfw": "^3.2.1008",
+    "reason-glfw": "^3.2.1009",
     "reason-fontkit": "^2.0.2",
     "reason-gl-matrix": "^0.9.9301",
     "reason-reactify": "^2.2.0",
@@ -43,8 +43,7 @@
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-    "@esy-ocaml/reason": "facebook/reason#ab49908",
-    "esy-cmake": "0.3.4"
+    "@esy-ocaml/reason": "facebook/reason#ab49908"
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"
