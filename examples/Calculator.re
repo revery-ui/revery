@@ -130,7 +130,7 @@ let showFloat = float => {
   };
 };
 type state = {
-  operator, /* Operator */
+  operator, /* Current operator being applied */
   result: float, /* The actual numerical result */
   display: string, /* The equation displayed */
   number: string /* Current number being typed */
@@ -202,7 +202,7 @@ let reducer = (state, action) =>
       }
   | ClearKeyPressed(ac) =>
     ac ?
-      {...state, operator: `Nop, result: 0., display: ""} :
+      {...state, operator: `Nop, result: 0., display: "", number: ""} :
       {...state, number: ""}
   | DotKeyPressed =>
     String.contains(state.number, '.') ?
