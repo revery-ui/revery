@@ -26,6 +26,7 @@ class imageNode = class ImageNode.imageNode;
 
 module Mouse = Mouse;
 module NodeEvents = NodeEvents;
+module UiEvents = UiEvents;
 let component = UiReact.component;
 
 include Primitives;
