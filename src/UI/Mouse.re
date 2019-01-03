@@ -86,38 +86,20 @@ let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
 let onCursorChanged: Event.t(MouseCursors.t) = Event.create();
 
 let dispatch =
-    (
-     cursor: Cursor.t,
-     evt: Events.internalMouseEvents,
-     node: Node.node('a),
-    ) => {
+    (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node('a)) => {
   let pos = getPositionFromMouseEvent(cursor, evt);
 
   let eventToSend = internalToExternalEvent(cursor, evt);
-  bubble(node, eventToSend);
 
   if (!handleCapture(eventToSend)) {
-    let isNodeImpacted = n => n#hitTest(pos);
-    let nodes: ref(list(Node.node('a))) = ref([]);
-    let maxDepth = ref(-1);
-    let deepestNode: ref(option(Node.node('a))) = ref(None);
-    let collect = n =>
-      if (isNodeImpacted(n)) {
-        if (n#getDepth() >= maxDepth^) {
-          maxDepth := n#getDepth();
-          deepestNode := Some(n);
-        };
-        nodes := List.append(nodes^, [n]);
-      };
-    Node.iter(collect, node);
+    let deepestNode = getDeepestNode(node, pos);
     switch (deepestNode^) {
-      | None => ()
-      | Some(node) => {
-        let cursor = node#getCursorStyle();
-        Event.dispatch(onCursorChanged, cursor);
-      }
+    | None => ()
+    | Some(node) =>
+      bubble(node, eventToSend);
+      let cursor = node#getCursorStyle();
+      Event.dispatch(onCursorChanged, cursor);
     };
-    List.iter(n => n#handleEvent(eventToSend), nodes^);
   };
 
   Cursor.set(cursor, pos);
