@@ -114,8 +114,8 @@ module SimpleButton = (
 
             let wrapperStyle =
               Style.make(
-                ~backgroundColor=Color.rgba(1., 1., 1., 1.),
-                ~border=Style.Border.make(~width=50, ~color=Colors.orange, ()),
+                ~backgroundColor=Color.rgba(1., 1., 1., 0.1),
+                ~border=Style.Border.make(~width=2, ~color=Colors.white, ()),
                 ~margin=16,
                 (),
               );
