@@ -7,9 +7,10 @@ module Row = (
   val component((render, ~children, ()) =>
     render(() => {
       let style = Style.make(
-        ~alignItems=LayoutTypes.AlignStretch,
         ~flexDirection=LayoutTypes.Row,
+        ~alignItems=LayoutTypes.AlignStretch,
         ~justifyContent=LayoutTypes.JustifyCenter,
+        ~flexGrow=1,
         ()
       );
       <view style>
@@ -23,10 +24,11 @@ module Column = (
   val component((render, ~children, ()) =>
     render(() => {
       let style = Style.make(
-        ~alignItems=LayoutTypes.AlignStretch,
         ~flexDirection=LayoutTypes.Column,
+        ~alignItems=LayoutTypes.AlignStretch,
         ~justifyContent=LayoutTypes.JustifyCenter,
         ~backgroundColor=Colors.darkGrey,
+        ~flexGrow=1,
         ()
       );
       <view style>
@@ -40,8 +42,8 @@ module Button = (
   val component((render, ~contents: string, ~onClick, ~children, ()) =>
     render(() => {
       let viewStyle = Style.make(
-        ~backgroundColor=Colors.lightGrey,
         ~position=LayoutTypes.Relative,
+        ~backgroundColor=Colors.lightGrey,
         ~justifyContent=LayoutTypes.JustifyCenter,
         ~alignItems=LayoutTypes.AlignCenter,
         /* TODO: Figure out relative sizing */
@@ -73,9 +75,10 @@ module Display = (
       let viewStyle = Style.make(
         ~backgroundColor=Colors.white,
         ~height=120,
-        ~alignItems=LayoutTypes.AlignStretch,
         ~flexDirection=LayoutTypes.Column,
+        ~alignItems=LayoutTypes.AlignStretch,
         ~justifyContent=LayoutTypes.JustifyFlexEnd,
+        ~flexGrow=2,
         ()
       );
       let displayStyle = Style.make(
@@ -126,19 +129,28 @@ module Calculator = (
       /* Current number being typed */
       let (curNum, setCurNum) = useState("");
 
-      let eval() {
-        /* TODO: Reorganize this so we display the operator as soon as
-           it gets pressed. */
+      let eval(newOp) {
+        /* Figure out what the string for the next operation will be */
+        let newOpString = switch (newOp) {
+        | `Nop => ""
+        | `Add => "+"
+        | `Sub => "-"
+        | `Mul => "×"
+        | `Div => "÷"
+        };
+        /* Split the current display on ! and get everything after (to clear errors) */
+        let partitionedDisplay = String.split_on_char('!', display);
+        let display = List.nth(partitionedDisplay, List.length(partitionedDisplay) - 1);
         let (newDisplay, newResult) = switch (op) {
         | #operator when curNum == "" =>
-          ("Error: Can't evaluate binary operator without input", result)
-        | `Nop => (curNum, float_of_string(curNum))
-        | `Add => (display ++ " + " ++ curNum, result +. float_of_string(curNum))
-        | `Sub => (display ++ " - " ++ curNum, result -. float_of_string(curNum))
-        | `Mul => (display ++ " × " ++ curNum, result *. float_of_string(curNum))
+          ("Error: Can't evaluate binary operator without input!", result)
+        | `Nop => (curNum ++ newOpString, float_of_string(curNum))
+        | `Add => (display ++ curNum ++ newOpString, result +. float_of_string(curNum))
+        | `Sub => (display ++ curNum ++ newOpString, result -. float_of_string(curNum))
+        | `Mul => (display ++ curNum ++ newOpString, result *. float_of_string(curNum))
         | `Div =>
           if (float_of_string(curNum) != 0.) {
-            (display ++ " ÷ " ++ curNum, result /. float_of_string(curNum));
+            (display ++ curNum ++ newOpString, result /. float_of_string(curNum));
           } else {
             ("Error: Divide by zero!", result);
           }
@@ -149,13 +161,13 @@ module Calculator = (
       };
 
       let perform(newOp) {
-        let _newResult = eval();
+        let _newResult = eval(newOp);
         setOp(newOp);
         setCurNum("");
       };
 
       let calculate() {
-        let newResult = eval();
+        let newResult = eval(`Nop);
         setOp(`Nop);
         setCurNum(showFloat(newResult));
       };
@@ -171,7 +183,7 @@ module Calculator = (
 
       let negate() {
         if (curNum != "" && curNum.[0] == '-') {
-          setCurNum(String.sub(curNum, 1, String.length(curNum)));
+          setCurNum(String.sub(curNum, 1, String.length(curNum) - 1));
         } else {
           setCurNum("-" ++ curNum);
         };
