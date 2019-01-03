@@ -62,14 +62,16 @@ let isNodeImpacted = (n, pos) => n#hitTest(pos);
 let getDeepestNode = (node: node('a), pos) => {
   let deepestNode = ref(None);
   let maxDepth = ref(-1);
+
   Node.iter(
-    currentNode =>
-      if (isNodeImpacted(currentNode, pos)) {
-        if (currentNode#getDepth() >= maxDepth^) {
-          maxDepth := currentNode#getDepth();
-          deepestNode := Some(currentNode);
-        };
-      },
+    currentNode => {
+      let nodeIsImpacted = isNodeImpacted(currentNode, pos);
+      let hasLargerDepth = currentNode#getDepth() >= maxDepth^;
+      if (nodeIsImpacted && hasLargerDepth) {
+        maxDepth := currentNode#getDepth();
+        deepestNode := Some(currentNode);
+      };
+    },
     node,
   );
   deepestNode;
