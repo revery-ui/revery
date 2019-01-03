@@ -15,6 +15,9 @@ include Hooks;
 
 let useState = UiReact.useState;
 let useReducer = UiReact.useReducer;
+let useContext = UiReact.useContext;
+let createContext = UiReact.createContext;
+let getProvider = UiReact.getProvider;
 
 class node = class Node.node(RenderPass.t);
 class viewNode = class ViewNode.viewNode;
