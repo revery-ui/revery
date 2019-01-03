@@ -30,9 +30,8 @@ include (
                       onClick();
                     };
 
-                    let style = Style.make(~opacity,
-                                           ~cursor=MouseCursors.pointer,
-                                           ());
+                    let style =
+                      Style.make(~opacity, ~cursor=MouseCursors.pointer, ());
 
                     <view style onMouseDown onMouseUp> ...children </view>;
                   },
