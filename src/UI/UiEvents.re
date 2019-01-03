@@ -80,7 +80,7 @@ let getDeepestNode = (node: node('a), pos) => {
 let rec traverseHeirarchy = (node: node('a), bubbled) =>
   BubbledEvent.(
     /*
-     track if default prevent or propagation stopped per module
+     track if default prevent or propagation stopped per node
      stop traversing node hierarchy if stop propagation is called
       */
     if (bubbled.shouldPropagate) {
