@@ -270,7 +270,10 @@ module Calculator = (
             /* TODO: Pretty sure this isn't supposed to go in the render() function.
                Seems to cause lag the more times we re-render, so I guess this is
                subscribing a ton of times and never unsubscribing. */
-            let _ = Event.subscribe(window.onKeyDown, respondToKeys);
+            useEffect(() => {
+              let unsubscribe = Event.subscribe(window.onKeyDown, respondToKeys);
+              unsubscribe;
+            });
 
             <Column>
               <Display display curNum=number />

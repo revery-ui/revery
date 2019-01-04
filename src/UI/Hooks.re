@@ -2,6 +2,8 @@
 
 open UiReact;
 
+let useEffect = useEffect;
+
 let useAnimation =
     (v: Animated.animationValue, opts: Animated.animationOptions) => {
   let (currentV, _set) = useState(v);
