@@ -45,7 +45,7 @@ module Column = (
 );
 
 module Button = (
-  val component((render, ~contents: string, ~onClick, ~children, ()) =>
+  val component((render, ~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ~children, ()) =>
         render(
           () => {
             let viewStyle =
@@ -64,7 +64,7 @@ module Button = (
             let textStyle =
               Style.make(
                 ~color=Colors.black,
-                ~fontFamily="Roboto-Regular.ttf",
+                ~fontFamily,
                 ~fontSize=32,
                 (),
               );
@@ -292,7 +292,8 @@ module Calculator = (
                 />
                 /* TODO: Switch to a font with a backspace character */
                 <Button
-                  contents="<="
+                  fontFamily="FontAwesome5FreeSolid.otf"
+                  contents={||}
                   onClick={_ => dispatch(BackspaceKeyPressed)}
                 />
               </Row>
