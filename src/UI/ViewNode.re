@@ -36,6 +36,9 @@ let renderBorders =
   let (bottomBorderWidth, bottomBorderColor) =
     borderStyle(style.borderBottom, style.borderVertical, style.border);
 
+  let width = width -. leftBorderWidth -. rightBorderWidth;
+  let height = height -. topBorderWidth -. bottomBorderWidth;
+
   let tbc = Color.multiplyAlpha(opacity, topBorderColor);
   let lbc = Color.multiplyAlpha(opacity, leftBorderColor);
   let rbc = Color.multiplyAlpha(opacity, rightBorderColor);
@@ -208,14 +211,9 @@ let renderBorders =
       Geometry.draw(bottomRightTri, solidShader);
     };
   };
-  let translate = Mat4.create();
-  Mat4.fromTranslation(
-    translate,
-    Vec3.create(leftBorderWidth, topBorderWidth, 0.),
-  );
-  let innerWorld = Mat4.create();
-  Mat4.multiply(innerWorld, translate, world);
-  innerWorld;
+
+  /* Return new minX, minY, maxX, maxY */
+  (leftBorderWidth, topBorderWidth, leftBorderWidth +. width, bottomBorderWidth +. height);
 };
 
 let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
@@ -286,14 +284,9 @@ class viewNode (()) = {
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
 
-      let mainQuad =
-        Assets.quad(~minX=0., ~maxX=width, ~minY=0., ~maxY=height, ());
-
-      let color = Color.multiplyAlpha(opacity, style.backgroundColor);
-
       let world = _this#getWorldTransform();
 
-      let borderedWorld =
+      let (minX, minY, maxX, maxY) =
         renderBorders(
           ~style,
           ~width,
@@ -303,6 +296,11 @@ class viewNode (()) = {
           ~m,
           ~world,
         );
+
+      let mainQuad =
+        Assets.quad(~minX, ~maxX, ~minY, ~maxY, ());
+
+      let color = Color.multiplyAlpha(opacity, style.backgroundColor);
 
       switch (style.boxShadow) {
       | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _} =>
@@ -321,7 +319,7 @@ class viewNode (()) = {
         Shaders.CompiledShader.setUniformMatrix4fv(
           solidShader,
           "uWorld",
-          borderedWorld,
+          world,
         );
 
         Shaders.CompiledShader.setUniform4fv(
