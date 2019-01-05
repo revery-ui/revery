@@ -14,6 +14,10 @@ let noop = () => ();
 type valueChangedFunction = (float) => unit;
 let noopValueChanged = (_f) => ();
 
+type setStateFunction = int => unit;
+
+let latestState: ref(setStateFunction) = ref((_) => ());
+
 /* The 'include' here makes the component available at the top level */
 include (
           val component((render, ~_style=Style.make(()), ~onValueChanged:valueChangedFunction=noopValueChanged, ~_minimumValue=0., ~_maximumValue=1., ~children, ()) =>
@@ -22,9 +26,11 @@ include (
                     let (ref, _setRef) = useState(None);
                     let (curOffset, _setOffset) = useState(0);
 
+                    latestState := _setOffset;
+
                     let setRef = (r) => {
-                        print_endline ("SETTING REF");
-                        _setRef(r)
+                        print_endline ("SETTING REF: " ++ string_of_int(r#getInternalId()));
+                        _setRef(Some(r));
                     };
 
                     let onMouseDown = (_evt) => {
@@ -32,10 +38,10 @@ include (
                        Mouse.setCapture(
                            ~onMouseMove=(evt) => { 
                                print_endline ("MOVING: " ++ string_of_float(evt.mouseX));
-                               _setOffset(int_of_float(evt.mouseX)); 
+                               (latestState^)(int_of_float(evt.mouseX)); 
 
                                switch(ref) {
-                               | Some(_) => print_endline("got ref");
+                               | Some(r) => print_endline("got ref: " ++ string_of_int(r#getInternalId()));
                                | None => print_endline("no ref");
                                };
 
@@ -61,7 +67,7 @@ include (
                         ()
                     );
 
-                    <view onMouseDown style ref={(r) => setRef(Some(r))}> 
+                    <view onMouseDown style ref={(r) => setRef(r)}> 
                         <view style=Style.make(~position=LayoutTypes.Absolute, ~height=25, ~width=15, ~left=curOffset, ~top=0, ~backgroundColor=Colors.yellow, ()) />
                     </view>;
                   },
