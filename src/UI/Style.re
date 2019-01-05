@@ -168,10 +168,10 @@ let make =
 
 let defaultStyle = make();
 
-let scale = (v: int, scaleFactor: int) =>
-  v == Encoding.cssUndefined ? Encoding.cssUndefined : scaleFactor * v;
+let scale = (v: int, scaleFactor: float) =>
+  v == Encoding.cssUndefined ? Encoding.cssUndefined : int_of_float(scaleFactor *. float_of_int(v));
 
-let toLayoutNode = (s: t, scaleFactor: int) => {
+let toLayoutNode = (s: t, scaleFactor: float) => {
   let ret: LayoutTypes.cssStyle = {
     ...LayoutSupport.defaultStyle,
     positionType: s.position,
