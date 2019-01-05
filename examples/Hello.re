@@ -156,7 +156,6 @@ let init = app => {
         ~right=0,
         (),
       )}>
-      <Logo />
       <view
         ref={r => print_endline("View internal id:" ++ string_of_int(r#getInternalId()))}
         style={Style.make(~flexDirection=Row, ~alignItems=AlignFlexEnd, ())}>

@@ -60,12 +60,15 @@ let start =
     Revery_Core.Event.subscribe(
       window.onMouseMove,
       m => {
-        let pixelRatio = Window.getDevicePixelRatio(window);
+        let _pixelRatio = Window.getDevicePixelRatio(window);
+        let pixelRatio = 1.0;
         let evt =
           Revery_Core.Events.InternalMouseMove({
             mouseX: m.mouseX *. pixelRatio,
             mouseY: m.mouseY *. pixelRatio,
           });
+
+        print_endline ("mouseX:  " ++ string_of_float(m.mouseX) ++ " pixelRatio: " ++ string_of_float(pixelRatio));
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
