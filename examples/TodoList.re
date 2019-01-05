@@ -62,6 +62,8 @@ module TodoList = (
             let ({currentInput, todos}, dispatch) =
               useReducer(reducer, {currentInput: "", todos: []});
 
+            print_endline ("TODOS LENGTH: " ++ string_of_int(List.length(todos)));
+
             let response = keyEvent => {
               switch (keyEvent.key) {
               | KEY_ENTER =>
@@ -137,10 +139,13 @@ let init = app => {
   let window = App.createWindow(app, "TodoList");
 
   let render = () => {
+print_endline ("RENDERING");
     <TodoList window />;
   };
 
   Revery.UI.start(window, render);
+  Window.setShouldRenderCallback(window, () => true);
+
 };
 
 App.start(init);
