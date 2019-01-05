@@ -2,6 +2,7 @@ module Color = Color_wrapper;
 module Colors = Colors;
 module Key = Key;
 module MouseButton = MouseButton;
+module MouseCursors = MouseCursors;
 
 module Window = Window;
 module App = App;

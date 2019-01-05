@@ -14,9 +14,21 @@ module Cursor {
     let set: (t, Vec2.t) => unit;
 };
 
-let setCapture: (~onMouseDown:mouseButtonHandler=?, ~onMouseMove:mouseMoveHandler=?, ~onMouseUp:mouseButtonHandler=?, unit) => unit;
+let setCapture:
+    (
+     ~onMouseDown:mouseButtonHandler=?,
+     ~onMouseMove:mouseMoveHandler=?,
+     ~onMouseUp:mouseButtonHandler=?,
+     unit
+    ) => unit;
 
 let releaseCapture: unit => unit;
 
+let onCursorChanged: Event.t(MouseCursors.t);
+
 let dispatch:
-    (Cursor.t, Events.internalMouseEvents, Node.node('a)) => unit;
+    (
+     Cursor.t,
+     Events.internalMouseEvents,
+     Node.node('a)
+    ) => unit;

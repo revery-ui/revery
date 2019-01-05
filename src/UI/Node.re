@@ -22,15 +22,17 @@ class node ('a) (()) = {
   val _events: ref(NodeEvents.t(node('a))) = ref(NodeEvents.make());
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
   val _parent: ref(option(node('a))) = ref(None);
-  val _id: int = UniqueId.getUniqueId();
+  val _depth: ref(int) = ref(0);
+  val _internalId: int = UniqueId.getUniqueId();
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let localContext =
       NodeDrawContext.createFromParent(parentContext, style.opacity);
     List.iter(c => c#draw(pass, localContext), _children^);
   };
-  pub getId = () => _id;
+  pub getInternalId = () => _internalId;
   pub measurements = () => _layoutNode^.layout;
+  pub getDepth = () => _depth^;
   pub setStyle = style => _style := style;
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;
@@ -65,6 +67,13 @@ class node ('a) (()) = {
     let matrix = Mat4.create();
     Mat4.multiply(matrix, world, xform);
     matrix;
+  };
+  pub getCursorStyle = () => {
+    switch (_this#getStyle().cursor, _this#getParent()) {
+      | (None, None) => Revery_Core.MouseCursors.arrow
+      | (None, Some(parent)) => parent#getCursorStyle()
+      | (Some(cursorStyle), _) => cursorStyle
+    };
   };
   pub hitTest = (p: Vec2.t) => {
     let dimensions = _layoutNode^.layout;
@@ -121,6 +130,11 @@ class node ('a) (()) = {
   };
   /* TODO: This should really be private - it should never be explicitly set */
   pub _setParent = (n: option(node('a))) => {
+    /* Recalculate the depth of this node */
+    switch (n) {
+    | Some(node) => _depth := node#getDepth() + 1
+    | None => _depth := 0
+    };
     _parent := n;
 
     /* Dispatch ref event if we just got attached */

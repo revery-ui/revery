@@ -15,6 +15,9 @@ include Hooks;
 
 let useState = UiReact.useState;
 let useReducer = UiReact.useReducer;
+let useContext = UiReact.useContext;
+let createContext = UiReact.createContext;
+let getProvider = UiReact.getProvider;
 
 class node = class Node.node(RenderPass.t);
 class viewNode = class ViewNode.viewNode;
@@ -37,8 +40,12 @@ let start =
       window: Window.t,
       render: renderFunction,
     ) => {
+  let uiDirty = ref(false);
+
+  let onEndReconcile = _node => uiDirty := true;
+
   let rootNode = (new viewNode)();
-  let container = UiReact.createContainer(rootNode);
+  let container = UiReact.createContainer(~onEndReconcile, rootNode);
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
   let ui =
     UiContainer.create(
@@ -82,16 +89,28 @@ let start =
     );
 
   let _ =
+    Revery_Core.Event.subscribe(
+      Mouse.onCursorChanged,
+      cursor => {
+        let glfwCursor = Revery_Core.MouseCursors.toGlfwCursor(cursor);
+        Reglfw.Glfw.glfwSetCursor(window.glfwWindow, glfwCursor);
+      }
+    );
+
+  let _ =
     Reactify.Event.subscribe(FontCache.onFontLoaded, () =>
       Window.render(window)
     );
 
-  Window.setShouldRenderCallback(window, () => Animated.anyActiveAnimations());
+  Window.setShouldRenderCallback(window, () =>
+    uiDirty^ || Animated.anyActiveAnimations()
+  );
   Window.setRenderCallback(
     window,
     () => {
       let component = render();
       UiRender.render(ui, component);
+      uiDirty := false;
     },
   );
 };
