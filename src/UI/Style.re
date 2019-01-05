@@ -168,40 +168,36 @@ let make =
 
 let defaultStyle = make();
 
-let scale = (v: int, scaleFactor: int) =>
-  v == Encoding.cssUndefined ? Encoding.cssUndefined : scaleFactor * v;
-
-let toLayoutNode = (s: t, _scaleFactor: int) => {
-    let scaleFactor = 1;
+let toLayoutNode = (s: t) => {
   let ret: LayoutTypes.cssStyle = {
     ...LayoutSupport.defaultStyle,
     positionType: s.position,
-    top: scale(s.top, scaleFactor),
-    left: scale(s.left, scaleFactor),
-    bottom: scale(s.bottom, scaleFactor),
-    flexBasis: scale(s.flexBasis, scaleFactor),
+    top: s.top,
+    left: s.left,
+    bottom: s.bottom,
+    flexBasis: s.flexBasis,
     flexDirection: s.flexDirection,
     flexGrow: s.flexGrow,
     flexShrink: s.flexShrink,
     alignItems: s.alignItems,
     justifyContent: s.justifyContent,
-    right: scale(s.right, scaleFactor),
-    width: scale(s.width, scaleFactor),
-    height: scale(s.height, scaleFactor),
-    marginTop: scale(s.marginTop, scaleFactor),
-    marginLeft: scale(s.marginLeft, scaleFactor),
-    marginRight: scale(s.marginRight, scaleFactor),
-    marginBottom: scale(s.marginBottom, scaleFactor),
-    margin: scale(s.margin, scaleFactor),
-    marginVertical: scale(s.marginVertical, scaleFactor),
-    marginHorizontal: scale(s.marginHorizontal, scaleFactor),
-    borderTop: scale(s.borderTop.width, scaleFactor),
-    borderLeft: scale(s.borderLeft.width, scaleFactor),
-    borderRight: scale(s.borderRight.width, scaleFactor),
-    borderBottom: scale(s.borderBottom.width, scaleFactor),
-    border: scale(s.border.width, scaleFactor),
-    borderHorizontal: scale(s.borderHorizontal.width, scaleFactor),
-    borderVertical: scale(s.borderVertical.width, scaleFactor),
+    right: s.right,
+    width: s.width,
+    height: s.height,
+    marginTop: s.marginTop,
+    marginLeft: s.marginLeft,
+    marginRight: s.marginRight,
+    marginBottom: s.marginBottom,
+    margin: s.margin,
+    marginVertical: s.marginVertical,
+    marginHorizontal: s.marginHorizontal,
+    borderTop: s.borderTop.width,
+    borderLeft: s.borderLeft.width,
+    borderRight: s.borderRight.width,
+    borderBottom: s.borderBottom.width,
+    border: s.border.width,
+    borderHorizontal: s.borderHorizontal.width,
+    borderVertical: s.borderVertical.width,
   };
   ret;
 };

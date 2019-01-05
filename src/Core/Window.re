@@ -136,10 +136,12 @@ let create = (name: string, options: windowCreateOptions) => {
   Glfw.glfwSetWindowSize(w, options.width, options.height);
 
   let fbSize = Glfw.glfwGetFramebufferSize(w);
-  let size = Glfw.glfwGetWindowSize(w);
 
-  print_endline ("framebuffer size: " ++ string_of_int(fbSize.width));
-  print_endline ("size: " ++ string_of_int(size.width));
+  /*
+   * The window size might not be _exactly_ what the user passed in for options.width/options.height,
+   * if the window exceeds the size of the monitor. It might be clamped in that case, so we need to double-check.
+   */
+  let size = Glfw.glfwGetWindowSize(w);
 
   let ret: t = {
     backgroundColor: options.backgroundColor,
