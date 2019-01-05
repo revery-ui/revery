@@ -5,7 +5,7 @@ open Revery_UI;
 let createNodeWithStyle = style => {
   let node = (new node)();
   node#setStyle(style);
-  Layout.layout(node, 1);
+  Layout.layout(node, 1.0);
   node;
 };
 
