@@ -65,9 +65,9 @@ let isDirty = (w: t) =>
   };
 
 let _updateFramebuffer = (w: t) => {
-    let size = Glfw.glfwGetWindowSize(w.glfwWindow);
-    w.width = size.width;
-    w.height = size.height;
+  let size = Glfw.glfwGetWindowSize(w.glfwWindow);
+  w.width = size.width;
+  w.height = size.height;
 
   let framebufferSize = Glfw.glfwGetFramebufferSize(w.glfwWindow);
   w.framebufferWidth = framebufferSize.width;
