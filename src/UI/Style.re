@@ -16,12 +16,6 @@ module Border = {
   };
 };
 
-module Overflow = {
- type t =
- | Visible
- | Hidden;
-};
-
 module BoxShadow = {
   type properties = {
     xOffset: float,
@@ -72,7 +66,7 @@ type t = {
   margin: int,
   marginVertical: int,
   marginHorizontal: int,
-  overflow: Overflow.t,
+  overflow: LayoutTypes.overflow,
   borderTop: Border.t,
   borderLeft: Border.t,
   borderRight: Border.t,
@@ -95,7 +89,7 @@ let make =
       ~flexBasis=Encoding.cssUndefined,
       ~flexDirection=LayoutTypes.Column,
       ~flexGrow=0,
-      ~flexShrink=1,
+      ~flexShrink=0,
       ~alignItems=LayoutTypes.AlignStretch,
       ~justifyContent=LayoutTypes.JustifyFlexStart,
       ~position=LayoutTypes.Relative,
@@ -112,7 +106,7 @@ let make =
       ~margin=Encoding.cssUndefined,
       ~marginVertical=Encoding.cssUndefined,
       ~marginHorizontal=Encoding.cssUndefined,
-      ~overflow=Overflow.Hidden,
+      ~overflow=LayoutTypes.Visible,
       ~borderTop=Border.make(),
       ~borderLeft=Border.make(),
       ~borderRight=Border.make(),
@@ -210,6 +204,7 @@ let toLayoutNode = (s: t, scaleFactor: int) => {
     border: scale(s.border.width, scaleFactor),
     borderHorizontal: scale(s.borderHorizontal.width, scaleFactor),
     borderVertical: scale(s.borderVertical.width, scaleFactor),
+    overflow: s.overflow,
   };
   ret;
 };

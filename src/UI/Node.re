@@ -26,9 +26,14 @@ class node ('a) (()) = {
   val _internalId: int = UniqueId.getUniqueId();
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
-    let localContext =
-      NodeDrawContext.createFromParent(parentContext, style.opacity);
-    List.iter(c => c#draw(pass, localContext), _children^);
+    let worldTransform = _this#getWorldTransform();
+    let dimensions = _layoutNode^.layout;
+
+    Overflow.render(worldTransform, style.overflow, dimensions, () => {
+        let localContext =
+          NodeDrawContext.createFromParent(parentContext, style.opacity);
+        List.iter(c => c#draw(pass, localContext), _children^);
+    });
   };
   pub getInternalId = () => _internalId;
   pub measurements = () => _layoutNode^.layout;
