@@ -65,9 +65,9 @@ let isDirty = (w: t) =>
   };
 
 let _updateFramebuffer = (w: t) => {
-    /* let size = Glfw.glfwGetWindowSize(w.glfwWindow); */
-    /* w.width = size.width; */
-    /* w.height = size.height; */
+    let size = Glfw.glfwGetWindowSize(w.glfwWindow);
+    w.width = size.width;
+    w.height = size.height;
 
   let framebufferSize = Glfw.glfwGetFramebufferSize(w.glfwWindow);
   w.framebufferWidth = framebufferSize.width;
@@ -133,9 +133,13 @@ let create = (name: string, options: windowCreateOptions) => {
   let w = Glfw.glfwCreateWindow(1, 1, name);
   Glfw.glfwMakeContextCurrent(w);
 
-  Glfw.glfwSetWindowSize(options.width, options.height);
+  Glfw.glfwSetWindowSize(w, options.width, options.height);
 
   let fbSize = Glfw.glfwGetFramebufferSize(w);
+  let size = Glfw.glfwGetWindowSize(w);
+
+  print_endline ("framebuffer size: " ++ string_of_int(fbSize.width));
+  print_endline ("size: " ++ string_of_int(size.width));
 
   let ret: t = {
     backgroundColor: options.backgroundColor,
@@ -144,8 +148,8 @@ let create = (name: string, options: windowCreateOptions) => {
     render: () => (),
     shouldRender: () => false,
 
-    width: options.width,
-    height: options.height,
+    width: size.width,
+    height: size.height,
     framebufferWidth: fbSize.width,
     framebufferHeight: fbSize.height,
 
