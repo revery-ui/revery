@@ -117,7 +117,7 @@ class textNode (text: string) = {
       /* TODO: Cache font locally in variable */
       let style = _super#getStyle();
       let font =
-        FontCache.load(style.fontFamily, style.fontSize * pixelRatio);
+        FontCache.load(style.fontFamily, int_of_float(float_of_int(style.fontSize) *. pixelRatio));
 
       let d = FontRenderer.measure(font, text);
       let ret: Layout.LayoutTypes.dimensions = {
