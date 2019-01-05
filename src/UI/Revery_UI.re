@@ -94,7 +94,7 @@ let start =
       cursor => {
         let glfwCursor = Revery_Core.MouseCursors.toGlfwCursor(cursor);
         Reglfw.Glfw.glfwSetCursor(window.glfwWindow, glfwCursor);
-      }
+      },
     );
 
   let _ =

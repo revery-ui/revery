@@ -29,11 +29,16 @@ class node ('a) (()) = {
     let worldTransform = _this#getWorldTransform();
     let dimensions = _layoutNode^.layout;
 
-    Overflow.render(worldTransform, style.overflow, dimensions, () => {
+    Overflow.render(
+      worldTransform,
+      style.overflow,
+      dimensions,
+      () => {
         let localContext =
           NodeDrawContext.createFromParent(parentContext, style.opacity);
         List.iter(c => c#draw(pass, localContext), _children^);
-    });
+      },
+    );
   };
   pub getInternalId = () => _internalId;
   pub measurements = () => _layoutNode^.layout;
@@ -75,9 +80,9 @@ class node ('a) (()) = {
   };
   pub getCursorStyle = () => {
     switch (_this#getStyle().cursor, _this#getParent()) {
-      | (None, None) => Revery_Core.MouseCursors.arrow
-      | (None, Some(parent)) => parent#getCursorStyle()
-      | (Some(cursorStyle), _) => cursorStyle
+    | (None, None) => Revery_Core.MouseCursors.arrow
+    | (None, Some(parent)) => parent#getCursorStyle()
+    | (Some(cursorStyle), _) => cursorStyle
     };
   };
   pub hitTest = (p: Vec2.t) => {

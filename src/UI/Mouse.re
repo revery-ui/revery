@@ -85,11 +85,7 @@ let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
 let onCursorChanged: Event.t(MouseCursors.t) = Event.create();
 
 let dispatch =
-    (
-     cursor: Cursor.t,
-     evt: Events.internalMouseEvents,
-     node: Node.node('a),
-    ) => {
+    (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node('a)) => {
   let pos = getPositionFromMouseEvent(cursor, evt);
 
   let eventToSend = internalToExternalEvent(cursor, evt);
@@ -109,11 +105,10 @@ let dispatch =
       };
     Node.iter(collect, node);
     switch (deepestNode^) {
-      | None => ()
-      | Some(node) => {
-        let cursor = node#getCursorStyle();
-        Event.dispatch(onCursorChanged, cursor);
-      }
+    | None => ()
+    | Some(node) =>
+      let cursor = node#getCursorStyle();
+      Event.dispatch(onCursorChanged, cursor);
     };
     List.iter(n => n#handleEvent(eventToSend), nodes^);
   };
