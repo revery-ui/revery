@@ -16,6 +16,12 @@ module Border = {
   };
 };
 
+module Overflow = {
+ type t =
+ | Visible
+ | Hidden;
+};
+
 module BoxShadow = {
   type properties = {
     xOffset: float,
@@ -66,6 +72,7 @@ type t = {
   margin: int,
   marginVertical: int,
   marginHorizontal: int,
+  overflow: Overflow.t,
   borderTop: Border.t,
   borderLeft: Border.t,
   borderRight: Border.t,
@@ -105,6 +112,7 @@ let make =
       ~margin=Encoding.cssUndefined,
       ~marginVertical=Encoding.cssUndefined,
       ~marginHorizontal=Encoding.cssUndefined,
+      ~overflow=Overflow.Hidden,
       ~borderTop=Border.make(),
       ~borderLeft=Border.make(),
       ~borderRight=Border.make(),
@@ -151,6 +159,7 @@ let make =
     margin,
     marginVertical,
     marginHorizontal,
+    overflow,
     borderTop,
     borderLeft,
     borderRight,
