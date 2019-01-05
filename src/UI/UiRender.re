@@ -42,10 +42,10 @@ let render = (container: UiContainer.t, component: UiReact.component) => {
         (),
       ),
     );
-    Layout.layout(rootNode);
+    Layout.layout(rootNode, pixelRatio);
   | true =>
     rootNode#setStyle(Style.make());
-    Layout.layout(rootNode);
+    Layout.layout(rootNode, pixelRatio);
     let measurements = rootNode#measurements();
     let size: Window.windowSize = {
       width: measurements.width,

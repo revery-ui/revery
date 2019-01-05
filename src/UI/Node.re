@@ -113,7 +113,7 @@ class node ('a) (()) = {
   };
   pub toLayoutNode = (pixelRatio: int) => {
     let childNodes = List.map(c => c#toLayoutNode(pixelRatio), _children^);
-    let layoutStyle = Style.toLayoutNode(_style^, pixelRatio);
+    let layoutStyle = Style.toLayoutNode(_style^);
     let node =
       switch (_this#getMeasureFunction(pixelRatio)) {
       | None => Layout.createNode(Array.of_list(childNodes), layoutStyle)
