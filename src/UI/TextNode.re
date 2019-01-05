@@ -127,8 +127,8 @@ class textNode (text: string) = {
 
       let d = FontRenderer.measure(font, text);
       let ret: Layout.LayoutTypes.dimensions = {
-        LayoutTypes.width: d.width / pixelRatio,
-        height: d.height / pixelRatio,
+        LayoutTypes.width: int_of_float(float_of_int(d.width) /. pixelRatio),
+        height: int_of_float(float_of_int(d.height) /. pixelRatio),
       };
       ret;
     };
