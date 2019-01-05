@@ -1,6 +1,6 @@
 {
   "name": "revery",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "App toolkit built with Reason",
   "license": "MIT",
   "bugs": {
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "^3.3.7",
-    "reason-glfw": "^3.2.1009",
+    "reason-glfw": "^3.2.1010",
     "reason-fontkit": "^2.0.4",
     "reason-gl-matrix": "^0.9.9301",
     "reason-reactify": "^2.2.0",
