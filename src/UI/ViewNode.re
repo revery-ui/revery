@@ -213,13 +213,47 @@ let renderBorders =
   };
 
   /* Return new minX, minY, maxX, maxY */
-  (leftBorderWidth, topBorderWidth, leftBorderWidth +. width, bottomBorderWidth +. height);
+  (
+    leftBorderWidth,
+    topBorderWidth,
+    leftBorderWidth +. width,
+    bottomBorderWidth +. height,
+  );
+};
+
+let renderInsetShadow = (~boxShadow, ~width, ~height, ~world, ~color, ~m) => {
+  let {blurRadius, color: shadowColor, _} = boxShadow;
+  let insetShader = Assets.insetShader();
+  let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
+  Shaders.CompiledShader.use(insetShader);
+
+  Shaders.CompiledShader.setUniformMatrix4fv(insetShader, "uProjection", m);
+
+  Shaders.CompiledShader.setUniform3fv(
+    insetShader,
+    "uShadowColor",
+    Color.toVec3(shadowColor),
+  );
+
+  Shaders.CompiledShader.setUniform3fv(
+    insetShader,
+    "uBackgroundColor",
+    Color.toVec3(color),
+  );
+
+  Shaders.CompiledShader.setUniform2fv(
+    insetShader,
+    "uShadowAmount",
+    Vec2.create(blurRadius /. width, blurRadius /. height),
+  );
+
+  Shaders.CompiledShader.setUniformMatrix4fv(insetShader, "uWorld", world);
+
+  Geometry.draw(quad, insetShader);
 };
 
 let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
-  let {spreadRadius, blurRadius, xOffset, yOffset, color} = boxShadow;
-  let shadowTransform = Mat4.create();
-
+  let {spreadRadius, blurRadius, xOffset, yOffset, color, _} = boxShadow;
   /* Widen the size of the shadow based on the spread or blur radius specified */
   let sizeModifier = spreadRadius +. blurRadius;
 
@@ -232,9 +266,10 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
       (),
     );
 
-  Mat4.fromTranslation(shadowTransform, Vec3.create(xOffset, yOffset, 0.));
-
+  let shadowTransform = Mat4.create();
   let shadowWorldTransform = Mat4.create();
+
+  Mat4.fromTranslation(shadowTransform, Vec3.create(xOffset, yOffset, 0.));
 
   Mat4.multiply(shadowWorldTransform, world, shadowTransform);
 
@@ -267,7 +302,20 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
   );
 
   Geometry.draw(quad, gradientShader);
-  ();
+};
+
+let renderSolidShader = (~solidShader, ~world, ~m, ~mainQuad, ~color) => {
+  Shaders.CompiledShader.use(solidShader);
+  Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uProjection", m);
+  Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uWorld", world);
+
+  Shaders.CompiledShader.setUniform4fv(
+    solidShader,
+    "uColor",
+    Color.toVec4(color),
+  );
+
+  Geometry.draw(mainQuad, solidShader);
 };
 
 class viewNode (()) = {
@@ -297,38 +345,29 @@ class viewNode (()) = {
           ~world,
         );
 
-      let mainQuad =
-        Assets.quad(~minX, ~maxX, ~minY, ~maxY, ());
+      let mainQuad = Assets.quad(~minX, ~maxX, ~minY, ~maxY, ());
 
       let color = Color.multiplyAlpha(opacity, style.backgroundColor);
 
-      switch (style.boxShadow) {
-      | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _} =>
-        ()
-      | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
-      };
-
       /* Only render if _not_ transparent */
       if (color.a > 0.001) {
-        Shaders.CompiledShader.use(solidShader);
-        Shaders.CompiledShader.setUniformMatrix4fv(
-          solidShader,
-          "uProjection",
-          m,
-        );
-        Shaders.CompiledShader.setUniformMatrix4fv(
-          solidShader,
-          "uWorld",
-          world,
-        );
-
-        Shaders.CompiledShader.setUniform4fv(
-          solidShader,
-          "uColor",
-          Color.toVec4(color),
-        );
-
-        Geometry.draw(mainQuad, solidShader);
+        switch (style.boxShadow) {
+        | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., _} =>
+          ()
+        | {inset: true, _} =>
+          renderSolidShader(~m, ~mainQuad, ~world, ~color, ~solidShader);
+          renderInsetShadow(
+            ~boxShadow=style.boxShadow,
+            ~width,
+            ~height,
+            ~world,
+            ~color,
+            ~m,
+          );
+        | boxShadow =>
+          renderShadow(~boxShadow, ~width, ~height, ~world, ~m);
+          renderSolidShader(~m, ~mainQuad, ~world, ~color, ~solidShader);
+        };
       };
     | _ => ()
     };

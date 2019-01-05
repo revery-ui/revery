@@ -18,7 +18,7 @@ let init = app => {
   Window.setPos(win, centerX, 0);
 
   let parentWidth = width - 10;
-  let parentHeight = height / 2;
+  let parentHeight = height;
 
   let parentStyles =
     Style.make(
@@ -51,8 +51,20 @@ let init = app => {
       (),
     );
 
+  let shadowThree =
+    Style.BoxShadow.make(
+      ~yOffset=10.,
+      ~xOffset=-30.,
+      ~blurRadius=50.,
+      ~color=Colors.green,
+      ~spreadRadius=0.,
+      ~inset=true,
+      (),
+    );
+
   let firstShadow =
     Style.make(
+      ~marginBottom=20,
       ~backgroundColor=Colors.blue,
       ~position=LayoutTypes.Relative,
       ~width=500,
@@ -64,6 +76,7 @@ let init = app => {
 
   let secondShadow =
     Style.make(
+      ~marginBottom=20,
       ~backgroundColor=Colors.red,
       ~position=LayoutTypes.Relative,
       ~width=500,
@@ -72,10 +85,22 @@ let init = app => {
       (),
     );
 
+  let thirdShadow =
+    Style.make(
+      ~marginBottom=20,
+      ~backgroundColor=Colors.red,
+      ~position=LayoutTypes.Relative,
+      ~width=500,
+      ~height=480,
+      ~boxShadow=shadowThree,
+      (),
+    );
+
   UI.start(win, () =>
     <view style=parentStyles>
       <view style=firstShadow />
       <view style=secondShadow />
+      <view style=thirdShadow />
     </view>
   );
 };

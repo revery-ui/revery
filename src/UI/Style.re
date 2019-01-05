@@ -18,6 +18,7 @@ module Border = {
 
 module BoxShadow = {
   type properties = {
+    inset: bool,
     xOffset: float,
     yOffset: float,
     blurRadius: float,
@@ -31,9 +32,11 @@ module BoxShadow = {
         ~blurRadius=0.0,
         ~spreadRadius=0.0,
         ~color=Colors.black,
+        ~inset=false,
         (),
       ) => {
     color,
+    inset,
     xOffset,
     yOffset,
     blurRadius,
@@ -122,7 +125,7 @@ let make =
                    ~color=Colors.black,
                    (),
                  ),
-      ~cursor = ?,
+      ~cursor=?,
       _unit: unit,
     ) => {
   let ret: t = {
