@@ -64,11 +64,11 @@ let start =
         let pixelRatio = 1.0;
         let evt =
           Revery_Core.Events.InternalMouseMove({
-            mouseX: m.mouseX *. pixelRatio,
-            mouseY: m.mouseY *. pixelRatio,
+            mouseX: m.mouseX,
+            mouseY: m.mouseY,
           });
 
-        print_endline ("mouseX:  " ++ string_of_float(m.mouseX) ++ " pixelRatio: " ++ string_of_float(pixelRatio));
+        print_endline ("mouseX:  " ++ string_of_float(m.mouseX) ++ " mouseY: " ++ string_of_float(m.mouseY) ++ " pixelRatio: " ++ string_of_float(pixelRatio));
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
