@@ -13,21 +13,22 @@ open Revery.UI.Components;
       ~alignItems=LayoutTypes.AlignCenter,
       ~justifyContent=LayoutTypes.JustifyCenter,
       ~flexDirection=LayoutTypes.Column,
+      ~backgroundColor=Colors.black,
       (),
     );
 
   let outerBox = Style.make(
-    ~width=100,
-    ~height=100,
+    ~width=75,
+    ~height=75,
     ~overflow=LayoutTypes.Hidden,
     ~backgroundColor=Colors.red,
     (),
   );
 
   let innerBox = Style.make(
-    ~width=200,
-    ~height=200,
-    ~backgroundColor=Colors.green,
+    ~width=150,
+    ~height=150,
+    ~backgroundColor=Color.rgba(0., 1.0, 0., 0.5),
     ()
   );
 
@@ -51,7 +52,7 @@ module Sample = (
           <view style=innerBox />
           </view>
           <view style={Style.make(~marginTop=80, ())}>
-          <Button  title="Toggle overflow" onClick />
+          <Button fontSize=20 height=45 title="Toggle overflow" onClick />
            </view>
         </view>
 

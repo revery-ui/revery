@@ -2,13 +2,31 @@
  * Overflow.re 
  *
  * Utilities for handling overflow clipping
+ * 
  */
 
-/* open Reglfw; */
+open Reglfw;
 
 open Revery_Math;
 
 open Layout;
+
+/*
+ * _startClipRegion / _endClipRegion implement the simplest possible
+ * clipping strategy - which is to just simply set a rectangle on the screen to clip.
+ *
+ * This is provided by the `glScissorRect` API.
+ *
+ * One complication is that our Y-axis is inverted, so we have to transform the Y-coordinate,
+ * which requires knowing the total window height.
+ *
+ * In addition, this naive strategy won't work well for cases where the element is rotated - 
+ * we should pursue some potential alternates to handle those cases:
+ *
+ * - Using a render texture
+ * OR
+ * - Using the stencil buffer
+ */
 
 type renderCallback = unit => unit;
 
@@ -35,13 +53,12 @@ let _startClipRegion = (worldTransform, dimensions: LayoutTypes.cssLayout) => {
 
         ignore((x, width, _height));
 
-        /* Glfw.glEnable(GL_SCISSOR_TEST); */
-        /* Glfw.glScissor(x, 600 - int_of_float(maxY), width, _height); */
+        Glfw.glEnable(GL_SCISSOR_TEST);
+        Glfw.glScissor(x, 600 - int_of_float(maxY), width, _height);
 };
 
 let _endClipRegion = () => {
-        /* Glfw.glDisable(GL_SCISSOR_TEST); */
-    ();
+        Glfw.glDisable(GL_SCISSOR_TEST);
 };
 
 let render = (worldTransform: Mat4.t, overflow: LayoutTypes.overflow, dimensions: LayoutTypes.cssLayout, r: renderCallback) => {
