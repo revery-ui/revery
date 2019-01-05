@@ -14,7 +14,6 @@
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
     "build": ["dune build --root . -j4"],
-    "buildsInSource": "_build",
     "install": [
         "esy-installer Revery.install",
         "esy-installer Revery_Core.install",
@@ -44,8 +43,7 @@
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-    "@esy-ocaml/reason": "facebook/reason#ab49908",
-    "reason-glfw": "github:bryphe/reason-glfw#e01ab0d"
+    "@esy-ocaml/reason": "facebook/reason#ab49908"
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"
