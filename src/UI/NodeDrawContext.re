@@ -10,8 +10,8 @@ type t = {
   screenHeight: int,
 };
 
-let create = (pixelRatio: int, zIndex: int, opacity: float, screenHeight: int,) => {
-  let ret: t = {zIndex, opacity, pixelRatio, screenHeight, };
+let create = (pixelRatio: int, zIndex: int, opacity: float, screenHeight: int) => {
+  let ret: t = {zIndex, opacity, pixelRatio, screenHeight};
   ret;
 };
 
@@ -21,6 +21,6 @@ let createFromParent = (parentContext: t, localOpacity: float) => {
   let pixelRatio = parentContext.pixelRatio;
   let screenHeight = parentContext.screenHeight;
 
-  let ret: t = {zIndex, opacity, pixelRatio, screenHeight };
+  let ret: t = {zIndex, opacity, pixelRatio, screenHeight};
   ret;
 };

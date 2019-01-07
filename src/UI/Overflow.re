@@ -30,7 +30,13 @@ open Layout;
 
 type renderCallback = unit => unit;
 
-let _startClipRegion = (worldTransform, dimensions: LayoutTypes.cssLayout, screenHeight: int, pixelRatio: float) => {
+let _startClipRegion =
+    (
+      worldTransform,
+      dimensions: LayoutTypes.cssLayout,
+      screenHeight: int,
+      pixelRatio: float,
+    ) => {
   let min = Vec2.create(0., 0.);
   let max =
     Vec2.create(
