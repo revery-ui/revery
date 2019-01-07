@@ -30,7 +30,7 @@ open Layout;
 
 type renderCallback = unit => unit;
 
-let _startClipRegion = (worldTransform, dimensions: LayoutTypes.cssLayout) => {
+let _startClipRegion = (worldTransform, dimensions: LayoutTypes.cssLayout, screenHeight: int, pixelRatio: float) => {
   let min = Vec2.create(0., 0.);
   let max =
     Vec2.create(
@@ -45,16 +45,14 @@ let _startClipRegion = (worldTransform, dimensions: LayoutTypes.cssLayout) => {
   let maxX = Vec2.get_x(bbox.max);
   let maxY = Vec2.get_y(bbox.max);
 
-  let x = int_of_float(minX);
-  /* let y = int_of_float(minY); */
+  let x = int_of_float(minX *. pixelRatio);
 
-  let width = int_of_float(maxX -. minX);
-  let _height = int_of_float(maxY -. minY);
-
-  ignore((x, width, _height));
+  let y = int_of_float(pixelRatio *. (float_of_int(screenHeight) -. maxY));
+  let width = int_of_float(pixelRatio *. (maxX -. minX));
+  let height = int_of_float(pixelRatio *. (maxY -. minY));
 
   Glfw.glEnable(GL_SCISSOR_TEST);
-  Glfw.glScissor(x, 600 - int_of_float(maxY), width, _height);
+  Glfw.glScissor(x, y, width, height);
 };
 
 let _endClipRegion = () => {
@@ -66,10 +64,12 @@ let render =
       worldTransform: Mat4.t,
       overflow: LayoutTypes.overflow,
       dimensions: LayoutTypes.cssLayout,
+      screenHeight: int,
+      pixelRatio: float,
       r: renderCallback,
     ) => {
   if (overflow == LayoutTypes.Hidden) {
-    _startClipRegion(worldTransform, dimensions);
+    _startClipRegion(worldTransform, dimensions, screenHeight, pixelRatio);
   };
 
   r();
