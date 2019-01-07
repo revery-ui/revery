@@ -66,6 +66,7 @@ type t = {
   margin: int,
   marginVertical: int,
   marginHorizontal: int,
+  overflow: LayoutTypes.overflow,
   borderTop: Border.t,
   borderLeft: Border.t,
   borderRight: Border.t,
@@ -88,7 +89,7 @@ let make =
       ~flexBasis=Encoding.cssUndefined,
       ~flexDirection=LayoutTypes.Column,
       ~flexGrow=0,
-      ~flexShrink=1,
+      ~flexShrink=0,
       ~alignItems=LayoutTypes.AlignStretch,
       ~justifyContent=LayoutTypes.JustifyFlexStart,
       ~position=LayoutTypes.Relative,
@@ -105,6 +106,7 @@ let make =
       ~margin=Encoding.cssUndefined,
       ~marginVertical=Encoding.cssUndefined,
       ~marginHorizontal=Encoding.cssUndefined,
+      ~overflow=LayoutTypes.Visible,
       ~borderTop=Border.make(),
       ~borderLeft=Border.make(),
       ~borderRight=Border.make(),
@@ -122,7 +124,7 @@ let make =
                    ~color=Colors.black,
                    (),
                  ),
-      ~cursor = ?,
+      ~cursor=?,
       _unit: unit,
     ) => {
   let ret: t = {
@@ -151,6 +153,7 @@ let make =
     margin,
     marginVertical,
     marginHorizontal,
+    overflow,
     borderTop,
     borderLeft,
     borderRight,
@@ -198,6 +201,7 @@ let toLayoutNode = (s: t) => {
     border: s.border.width,
     borderHorizontal: s.borderHorizontal.width,
     borderVertical: s.borderVertical.width,
+    overflow: s.overflow,
   };
   ret;
 };
