@@ -8,12 +8,8 @@ steps:
     displayName: 'npm install -g esy@0.4.9'
   - script: esy install
     displayName: 'esy install'
-    continueOnError: true
-  - script: esy install
-    displayName: 'esy install'
-    continueOnError: true
-  - script: esy install
-    displayName: 'esy install'
+  - script: git diff --exit-code
+    displayName: 'check that `esy.lock` is up-to-date'
   - script: esy build
     displayName: 'esy build'
   - script: esy b dune runtest

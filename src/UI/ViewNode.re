@@ -213,7 +213,12 @@ let renderBorders =
   };
 
   /* Return new minX, minY, maxX, maxY */
-  (leftBorderWidth, topBorderWidth, leftBorderWidth +. width, bottomBorderWidth +. height);
+  (
+    leftBorderWidth,
+    topBorderWidth,
+    leftBorderWidth +. width,
+    bottomBorderWidth +. height,
+  );
 };
 
 let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
@@ -297,8 +302,7 @@ class viewNode (()) = {
           ~world,
         );
 
-      let mainQuad =
-        Assets.quad(~minX, ~maxX, ~minY, ~maxY, ());
+      let mainQuad = Assets.quad(~minX, ~maxX, ~minY, ~maxY, ());
 
       let color = Color.multiplyAlpha(opacity, style.backgroundColor);
 

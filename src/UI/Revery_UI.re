@@ -26,6 +26,7 @@ class imageNode = class ImageNode.imageNode;
 
 module Mouse = Mouse;
 module NodeEvents = NodeEvents;
+module UiEvents = UiEvents;
 let component = UiReact.component;
 
 include Primitives;
@@ -60,11 +61,10 @@ let start =
     Revery_Core.Event.subscribe(
       window.onMouseMove,
       m => {
-        let pixelRatio = Window.getDevicePixelRatio(window);
         let evt =
           Revery_Core.Events.InternalMouseMove({
-            mouseX: m.mouseX *. pixelRatio,
-            mouseY: m.mouseY *. pixelRatio,
+            mouseX: m.mouseX,
+            mouseY: m.mouseY,
           });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
@@ -94,7 +94,7 @@ let start =
       cursor => {
         let glfwCursor = Revery_Core.MouseCursors.toGlfwCursor(cursor);
         Reglfw.Glfw.glfwSetCursor(window.glfwWindow, glfwCursor);
-      }
+      },
     );
 
   let _ =

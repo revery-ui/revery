@@ -26,9 +26,21 @@ class node ('a) (()) = {
   val _internalId: int = UniqueId.getUniqueId();
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
-    let localContext =
-      NodeDrawContext.createFromParent(parentContext, style.opacity);
-    List.iter(c => c#draw(pass, localContext), _children^);
+    let worldTransform = _this#getWorldTransform();
+    let dimensions = _layoutNode^.layout;
+
+    Overflow.render(
+      worldTransform,
+      style.overflow,
+      dimensions,
+      parentContext.screenHeight,
+      float_of_int(parentContext.pixelRatio),
+      () => {
+        let localContext =
+          NodeDrawContext.createFromParent(parentContext, style.opacity);
+        List.iter(c => c#draw(pass, localContext), _children^);
+      },
+    );
   };
   pub getInternalId = () => _internalId;
   pub measurements = () => _layoutNode^.layout;
@@ -70,9 +82,9 @@ class node ('a) (()) = {
   };
   pub getCursorStyle = () => {
     switch (_this#getStyle().cursor, _this#getParent()) {
-      | (None, None) => Revery_Core.MouseCursors.arrow
-      | (None, Some(parent)) => parent#getCursorStyle()
-      | (Some(cursorStyle), _) => cursorStyle
+    | (None, None) => Revery_Core.MouseCursors.arrow
+    | (None, Some(parent)) => parent#getCursorStyle()
+    | (Some(cursorStyle), _) => cursorStyle
     };
   };
   pub hitTest = (p: Vec2.t) => {
@@ -98,7 +110,7 @@ class node ('a) (()) = {
   };
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
-  pub getMeasureFunction = (_pixelRatio: int) => None;
+  pub getMeasureFunction = (_pixelRatio: float) => None;
   pub handleEvent = (evt: NodeEvents.mouseEvent) => {
     let _ =
       switch (evt, _this#getEvents()) {
@@ -111,9 +123,9 @@ class node ('a) (()) = {
       };
     ();
   };
-  pub toLayoutNode = (pixelRatio: int) => {
+  pub toLayoutNode = (pixelRatio: float) => {
     let childNodes = List.map(c => c#toLayoutNode(pixelRatio), _children^);
-    let layoutStyle = Style.toLayoutNode(_style^, pixelRatio);
+    let layoutStyle = Style.toLayoutNode(_style^);
     let node =
       switch (_this#getMeasureFunction(pixelRatio)) {
       | None => Layout.createNode(Array.of_list(childNodes), layoutStyle)
