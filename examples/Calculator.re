@@ -48,17 +48,23 @@ module Button = (
   val component((render, ~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ~children, ()) =>
         render(
           () => {
-            let viewStyle =
+            let clickableStyle =
               Style.make(
                 ~position=LayoutTypes.Relative,
                 ~backgroundColor=Colors.lightGrey,
                 ~justifyContent=LayoutTypes.JustifyCenter,
                 ~alignItems=LayoutTypes.AlignCenter,
-                /* TODO: Figure out relative sizing */
-                ~width=150,
-                ~height=120,
                 ~flexGrow=1,
+                /* Min width */
+                ~width=150,
                 ~margin=10,
+                (),
+              );
+            let viewStyle =
+              Style.make(
+                ~position=LayoutTypes.Relative,
+                ~justifyContent=LayoutTypes.JustifyCenter,
+                ~alignItems=LayoutTypes.AlignCenter,
                 (),
               );
             let textStyle =
@@ -69,7 +75,7 @@ module Button = (
                 (),
               );
 
-            <Clickable onClick>
+            <Clickable style=clickableStyle onClick>
               <view style=viewStyle>
                 <text style=textStyle> contents </text>
               </view>
@@ -90,7 +96,7 @@ module Display = (
                 ~height=120,
                 ~flexDirection=LayoutTypes.Column,
                 ~alignItems=LayoutTypes.AlignStretch,
-                ~justifyContent=LayoutTypes.JustifyFlexEnd,
+                ~justifyContent=LayoutTypes.JustifyFlexStart,
                 ~flexGrow=2,
                 (),
               );
