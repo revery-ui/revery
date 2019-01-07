@@ -28,17 +28,17 @@ let render = (container: UiContainer.t, component: UiReact.component) => {
     UiReact.updateContainer(container, component)
   );
 
-  let size = Window.getFramebufferSize(window);
+  /* Layout */
+  let size = Window.getSize(window);
   let pixelRatio = Window.getDevicePixelRatio(window);
-  let applyRatio = (n) => int_of_float(float_of_int(n) /. pixelRatio); 
-	/* Layout */
+
   switch (options.autoSize) {
   | false =>
     rootNode#setStyle(
       Style.make(
         ~position=LayoutTypes.Relative,
-        ~width=applyRatio(size.width),
-        ~height=applyRatio(size.height),
+        ~width=size.width,
+        ~height=size.height,
         (),
       ),
     );
@@ -51,7 +51,7 @@ let render = (container: UiContainer.t, component: UiReact.component) => {
       width: measurements.width,
       height: measurements.height,
     };
-    Window.setSize(window, applyRatio(size.width), applyRatio(size.height));
+    Window.setSize(window, size.width, size.height);
   };
 
   /* Render */
