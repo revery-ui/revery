@@ -65,9 +65,13 @@ let isDirty = (w: t) =>
   };
 
 let _updateFramebuffer = (w: t) => {
-  let size = Glfw.glfwGetFramebufferSize(w.glfwWindow);
-  w.framebufferWidth = size.width;
-  w.framebufferHeight = size.height;
+  let size = Glfw.glfwGetWindowSize(w.glfwWindow);
+  w.width = size.width;
+  w.height = size.height;
+
+  let framebufferSize = Glfw.glfwGetFramebufferSize(w.glfwWindow);
+  w.framebufferWidth = framebufferSize.width;
+  w.framebufferHeight = framebufferSize.height;
 };
 
 let setSize = (w: t, width: int, height: int) =>
@@ -81,8 +85,6 @@ let setSize = (w: t, width: int, height: int) =>
       w.requestedHeight = Some(height);
     } else {
       Glfw.glfwSetWindowSize(w.glfwWindow, width, height);
-      w.width = width;
-      w.height = height;
       w.requestedWidth = None;
       w.requestedHeight = None;
       _updateFramebuffer(w);
@@ -128,10 +130,18 @@ let create = (name: string, options: windowCreateOptions) => {
   | _ => ()
   };
 
-  let w = Glfw.glfwCreateWindow(options.width, options.height, name);
+  let w = Glfw.glfwCreateWindow(1, 1, name);
   Glfw.glfwMakeContextCurrent(w);
 
+  Glfw.glfwSetWindowSize(w, options.width, options.height);
+
   let fbSize = Glfw.glfwGetFramebufferSize(w);
+
+  /*
+   * The window size might not be _exactly_ what the user passed in for options.width/options.height,
+   * if the window exceeds the size of the monitor. It might be clamped in that case, so we need to double-check.
+   */
+  let size = Glfw.glfwGetWindowSize(w);
 
   let ret: t = {
     backgroundColor: options.backgroundColor,
@@ -140,8 +150,8 @@ let create = (name: string, options: windowCreateOptions) => {
     render: () => (),
     shouldRender: () => false,
 
-    width: options.width,
-    height: options.height,
+    width: size.width,
+    height: size.height,
     framebufferWidth: fbSize.width,
     framebufferHeight: fbSize.height,
 

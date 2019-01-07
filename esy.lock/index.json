@@ -1,5 +1,5 @@
 {
-  "checksum": "db6c88fcf5015e780a5fa19424837e8a",
+  "checksum": "0c521a3e0717de66a3a778a06cb057fa",
   "root": "revery@link:./package.json",
   "node": {
     "revery@link:./package.json": {
@@ -10,7 +10,7 @@
       "overrides": [],
       "dependencies": [
         "rejest@1.2.0@d41d8cd9", "reason-reactify@2.2.0@d41d8cd9",
-        "reason-glfw@3.2.1009@d41d8cd9",
+        "reason-glfw@3.2.1010@d41d8cd9",
         "reason-gl-matrix@0.9.9301@d41d8cd9",
         "reason-fontkit@2.0.4@d41d8cd9", "ocaml@4.6.9@d41d8cd9",
         "flex@1.2.2@d41d8cd9", "@opam/lwt_ppx@opam:1.2.1@db1172a7",
@@ -88,21 +88,22 @@
       ],
       "devDependencies": []
     },
-    "reason-glfw@3.2.1009@d41d8cd9": {
-      "id": "reason-glfw@3.2.1009@d41d8cd9",
+    "reason-glfw@3.2.1010@d41d8cd9": {
+      "id": "reason-glfw@3.2.1010@d41d8cd9",
       "name": "reason-glfw",
-      "version": "3.2.1009",
+      "version": "3.2.1010",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-glfw/-/reason-glfw-3.2.1009.tgz#sha1:e2da62e9b9061acfdc398fb355b86a67c5d2c044"
+          "archive:https://registry.npmjs.org/reason-glfw/-/reason-glfw-3.2.1010.tgz#sha1:87656f538f3c0efc5811128e3edbd5c3f4dc9a44"
         ]
       },
       "overrides": [],
       "dependencies": [
         "refmterr@3.1.10@d41d8cd9", "reason-gl-matrix@0.9.9301@d41d8cd9",
-        "ocaml@4.6.9@d41d8cd9", "esy-cmake@0.3.4@d41d8cd9",
-        "@opam/lwt_ppx@opam:1.2.1@db1172a7", "@opam/lwt@opam:4.1.0@111fc2bf",
+        "ocaml@4.6.9@d41d8cd9", "esy-glfw@3.2.1008@d41d8cd9",
+        "esy-cmake@0.3.4@d41d8cd9", "@opam/lwt_ppx@opam:1.2.1@db1172a7",
+        "@opam/lwt@opam:4.1.0@111fc2bf",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
         "@opam/js_of_ocaml-compiler@github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce@d41d8cd9",
         "@opam/js_of_ocaml@github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce@d41d8cd9",
@@ -143,7 +144,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.1.10@d41d8cd9", "reason-glfw@3.2.1009@d41d8cd9",
+        "refmterr@3.1.10@d41d8cd9", "reason-glfw@3.2.1010@d41d8cd9",
         "reason-gl-matrix@0.9.9301@d41d8cd9", "ocaml@4.6.9@d41d8cd9",
         "esy-harfbuzz@1.9.1004@d41d8cd9", "esy-freetype2@2.9.1001@d41d8cd9",
         "esy-cmake@0.3.4@d41d8cd9", "@opam/dune@opam:1.6.2@7b47a809",
@@ -191,6 +192,20 @@
         "type": "install",
         "source": [
           "archive:https://registry.npmjs.org/esy-harfbuzz/-/esy-harfbuzz-1.9.1004.tgz#sha1:e90b888620a0a812fb66d9f582a58771cf64a5d7"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "esy-cmake@0.3.4@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "esy-glfw@3.2.1008@d41d8cd9": {
+      "id": "esy-glfw@3.2.1008@d41d8cd9",
+      "name": "esy-glfw",
+      "version": "3.2.1008",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/esy-glfw/-/esy-glfw-3.2.1008.tgz#sha1:0f161ccdc9fc9d1c66679739b710ca217708f4b4"
         ]
       },
       "overrides": [],

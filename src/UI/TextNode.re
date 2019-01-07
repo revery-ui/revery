@@ -57,6 +57,12 @@ class textNode (text: string) = {
 
         let {width, height, bearingX, bearingY, advance, _} = glyph;
 
+        let width = width / parentContext.pixelRatio;
+        let height = height / parentContext.pixelRatio;
+        let bearingX = bearingX / parentContext.pixelRatio;
+        let bearingY = bearingY / parentContext.pixelRatio;
+        let advance = advance / parentContext.pixelRatio;
+
         Glfw.glPixelStorei(GL_PACK_ALIGNMENT, 1);
         Glfw.glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -117,12 +123,12 @@ class textNode (text: string) = {
       /* TODO: Cache font locally in variable */
       let style = _super#getStyle();
       let font =
-        FontCache.load(style.fontFamily, style.fontSize * pixelRatio);
+        FontCache.load(style.fontFamily, int_of_float(float_of_int(style.fontSize) *. pixelRatio));
 
       let d = FontRenderer.measure(font, text);
       let ret: Layout.LayoutTypes.dimensions = {
-        LayoutTypes.width: d.width,
-        height: d.height,
+        LayoutTypes.width: int_of_float(float_of_int(d.width) /. pixelRatio),
+        height: int_of_float(float_of_int(d.height) /. pixelRatio),
       };
       ret;
     };

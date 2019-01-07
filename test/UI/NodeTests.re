@@ -32,7 +32,7 @@ test("NodeTests", () => {
       let node = (new node)();
       node#setStyle(Style.make(~width=400, ~height=500, ()));
 
-      Layout.layout(node, 1);
+      Layout.layout(node, 1.0);
 
       expect(node#hitTest(Vec2.create(200., 250.))).toBe(true);
     });
@@ -41,7 +41,7 @@ test("NodeTests", () => {
       let node = (new node)();
       node#setStyle(Style.make(~width=400, ~height=500, ()));
 
-      Layout.layout(node, 1);
+      Layout.layout(node, 1.0);
 
       expect(node#hitTest(Vec2.create(401., 250.))).toBe(false);
     });
@@ -50,7 +50,7 @@ test("NodeTests", () => {
       let node = (new node)();
       node#setStyle(Style.make(~top=5, ~left=5, ~height=2, ~width=2, ()));
 
-      Layout.layout(node, 1);
+      Layout.layout(node, 1.0);
       expect(node#hitTest(Vec2.create(1., 1.))).toBe(false);
       expect(node#hitTest(Vec2.create(6., 6.))).toBe(true);
     });
@@ -65,7 +65,7 @@ test("NodeTests", () => {
       childNode#setStyle(Style.make(~width=25, ~height=25, ()));
       parentNode#addChild(childNode);
 
-      Layout.layout(parentNode, 1);
+      Layout.layout(parentNode, 1.0);
       expect(childNode#hitTest(Vec2.create(0., 0.))).toBe(false);
       expect(childNode#hitTest(Vec2.create(60., 60.))).toBe(true);
     });

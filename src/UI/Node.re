@@ -108,7 +108,7 @@ class node ('a) (()) = {
   };
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
-  pub getMeasureFunction = (_pixelRatio: int) => None;
+  pub getMeasureFunction = (_pixelRatio: float) => None;
   pub handleEvent = (evt: NodeEvents.mouseEvent) => {
     let _ =
       switch (evt, _this#getEvents()) {
@@ -121,9 +121,9 @@ class node ('a) (()) = {
       };
     ();
   };
-  pub toLayoutNode = (pixelRatio: int) => {
+  pub toLayoutNode = (pixelRatio: float) => {
     let childNodes = List.map(c => c#toLayoutNode(pixelRatio), _children^);
-    let layoutStyle = Style.toLayoutNode(_style^, pixelRatio);
+    let layoutStyle = Style.toLayoutNode(_style^);
     let node =
       switch (_this#getMeasureFunction(pixelRatio)) {
       | None => Layout.createNode(Array.of_list(childNodes), layoutStyle)
