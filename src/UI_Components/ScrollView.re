@@ -1,5 +1,5 @@
 open Revery_UI;
-open Revery_Core;
+open Revery_UI.Transform;
 
 include (
           val component(
@@ -12,7 +12,7 @@ include (
                   (),
                 ) =>
                 render(
-                  () =>
+                  () => {
 
                     let innerViewTransform = [
                         TranslateX(-1. *. float_of_int(scrollLeft)),
@@ -23,7 +23,8 @@ include (
                       <view style=Style.make(~transform=innerViewTransform, ())>
                         ...children
                       </view>
-                    </view>,
+                    </view>
+                  },
                   ~children,
                 )
               )

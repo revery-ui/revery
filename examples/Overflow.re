@@ -50,7 +50,17 @@ module Sample = (
             };
 
             <view style=containerStyle>
-              <view style=outerStyle> <view style=innerBox /> </view>
+              <ScrollView scrollTop=50 style=outerStyle> 
+                            <image
+                src="outrun-logo.png"
+                style={Style.make(
+                  ~width=256,
+                  ~height=128,
+                  ~opacity=0.8,
+                  (),
+                )}
+                  />
+            </ScrollView>
               <view style={Style.make(~marginTop=80, ())}>
                 <Button
                   fontSize=20
