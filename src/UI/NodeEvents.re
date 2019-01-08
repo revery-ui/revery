@@ -16,8 +16,8 @@ type mouseButtonEventParams = {
 };
 
 type mouseWheelEventParams = {
-    deltaX: float,
-    deltaY: float,
+  deltaX: float,
+  deltaY: float,
 };
 
 type mouseEvent =
@@ -39,7 +39,15 @@ type t('a) = {
   onMouseWheel: option(mouseWheelHandler),
 };
 
-let make = (~ref=?, ~onMouseDown=?, ~onMouseMove=?, ~onMouseUp=?, ~onMouseWheel=?, _unit: unit) => {
+let make =
+    (
+      ~ref=?,
+      ~onMouseDown=?,
+      ~onMouseMove=?,
+      ~onMouseUp=?,
+      ~onMouseWheel=?,
+      _unit: unit,
+    ) => {
   let ret: t('a) = {ref, onMouseDown, onMouseMove, onMouseUp, onMouseWheel};
   ret;
 };

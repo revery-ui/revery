@@ -167,7 +167,7 @@ let create = (name: string, options: windowCreateOptions) => {
     onMouseMove: Event.create(),
     onMouseUp: Event.create(),
     onMouseDown: Event.create(),
-    onMouseWheel: Event.create()
+    onMouseWheel: Event.create(),
   };
 
   Glfw.glfwSetFramebufferSizeCallback(
@@ -273,8 +273,8 @@ let create = (name: string, options: windowCreateOptions) => {
   Glfw.glfwSetScrollCallback(
     w,
     (_w, deltaX, deltaY) => {
-        let evt: mouseWheelEvent = {deltaX: deltaX, deltaY: deltaY};   
-        Event.dispatch(ret.onMouseWheel, evt);
+      let evt: mouseWheelEvent = {deltaX, deltaY};
+      Event.dispatch(ret.onMouseWheel, evt);
     },
   );
 

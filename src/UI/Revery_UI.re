@@ -89,13 +89,13 @@ let start =
     );
 
   let _ =
-      Revery_Core.Event.subscribe(
+    Revery_Core.Event.subscribe(
       window.onMouseWheel,
       m => {
         let evt = Revery_Core.Events.InternalMouseWheel(m);
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
-      );
+    );
 
   let _ =
     Revery_Core.Event.subscribe(

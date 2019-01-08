@@ -22,7 +22,14 @@ let view =
   UiReact.primitiveComponent(
     View(
       style,
-      NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ()),
+      NodeEvents.make(
+        ~ref?,
+        ~onMouseDown?,
+        ~onMouseMove?,
+        ~onMouseUp?,
+        ~onMouseWheel?,
+        (),
+      ),
     ),
     ~children,
   );
@@ -43,7 +50,14 @@ let image =
     Image(
       style,
       src,
-      NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ()),
+      NodeEvents.make(
+        ~ref?,
+        ~onMouseDown?,
+        ~onMouseMove?,
+        ~onMouseUp?,
+        ~onMouseWheel?,
+        (),
+      ),
     ),
     ~children,
   );
@@ -63,7 +77,14 @@ let text =
     Text(
       style,
       List.hd(children),
-      NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ()),
+      NodeEvents.make(
+        ~ref?,
+        ~onMouseDown?,
+        ~onMouseMove?,
+        ~onMouseUp?,
+        ~onMouseWheel?,
+        (),
+      ),
     ),
     ~children=[],
   );

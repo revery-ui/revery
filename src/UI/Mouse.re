@@ -39,7 +39,8 @@ let capturedEventStateInstance: capturedEventState = {
   onMouseWheel: ref(None),
 };
 
-let setCapture = (~onMouseDown=?, ~onMouseMove=?, ~onMouseUp=?, ~onMouseWheel=?, ()) => {
+let setCapture =
+    (~onMouseDown=?, ~onMouseMove=?, ~onMouseUp=?, ~onMouseWheel=?, ()) => {
   capturedEventStateInstance.onMouseDown := onMouseDown;
   capturedEventStateInstance.onMouseMove := onMouseMove;
   capturedEventStateInstance.onMouseUp := onMouseUp;
@@ -56,7 +57,13 @@ let releaseCapture = () => {
 let handleCapture = (mouseEvent: mouseEvent) => {
   let ce = capturedEventStateInstance;
 
-  switch (ce.onMouseDown^, ce.onMouseMove^, ce.onMouseUp^, ce.onMouseWheel^, mouseEvent) {
+  switch (
+    ce.onMouseDown^,
+    ce.onMouseMove^,
+    ce.onMouseUp^,
+    ce.onMouseWheel^,
+    mouseEvent,
+  ) {
   | (Some(h), _, _, _, MouseDown(evt)) =>
     h(evt);
     true;
