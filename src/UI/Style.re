@@ -115,6 +115,7 @@ let extend = (
   ~borderVertical=style.borderVertical,
   ~transform=style.transform,
   ~opacity=style.opacity,
+  ~overflow=style.overflow,
   ~boxShadow=style.boxShadow,
   ~cursor = ?, 
   _unit: unit,
@@ -153,6 +154,7 @@ let extend = (
     borderHorizontal,
     borderVertical,
     opacity,
+    overflow,
     boxShadow,
     cursor,
   };
