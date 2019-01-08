@@ -11,17 +11,41 @@ module UiReact = Revery_UI.Internal.UiReact;
  */
 
 test("Reconciler", () => {
-  test("no children initially", () => {
-    let viewNode = (new viewNode)();
+  test("reconcile adds a child", () => {
+    let rootNode = (new viewNode)();
 
-    /* let container = UiReact.createContainer(viewNode); */
+    let container = UiReact.createContainer(rootNode);
 
     /* print_endline ("START"); */
 
-    /* UiReact.updateContainer(container, <view />); */
+    UiReact.updateContainer(container, <view />);
 
     /* print_endline ("DONE"); */
     
-    expect(List.length(viewNode#getChildren())).toBe(1);
+    expect(List.length(rootNode#getChildren())).toBe(1);
+  });
+
+  test("ref: returns value of node", () => {
+    let rootNode = (new viewNode)();
+
+    let container = UiReact.createContainer(rootNode);
+
+    /* print_endline ("START"); */
+
+    let referenceNode = ref(None);
+
+    let refCallback = (r) => {
+        referenceNode := Some(r);
+    }
+
+    UiReact.updateContainer(container, <view ref={refCallback}/>);
+
+    switch (referenceNode^) {
+    | Some(r) => {
+       let actualChild = rootNode#firstChild();
+       expect(actualChild#getInternalId()).toBe(r#getInternalId()); 
+    }
+    | None => expect(0).toBe(1);
+    };
   });
 });

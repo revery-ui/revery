@@ -108,6 +108,9 @@ class node ('a) (()) = {
     _children := List.filter(c => c != n, _children^);
     n#_setParent(None);
   };
+
+  pub firstChild = () => List.hd(_children^);
+
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
   pub getMeasureFunction = (_pixelRatio: float) => None;
