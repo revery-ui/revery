@@ -39,9 +39,12 @@ include (
                       onClick();
                     };
 
-                    let style =
-                      Style.make(~opacity, ~cursor=MouseCursors.pointer, ());
-
+                    let style2 = Style.extend(
+                      style, 
+                      ~opacity,
+                      ~cursor=MouseCursors.pointer,
+                      ()
+                    );
                     <view style onMouseDown onMouseUp tabindex onBlur onFocus>
                       ...children
                     </view>;

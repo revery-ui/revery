@@ -31,7 +31,7 @@ let component = UiReact.component;
 
 include Primitives;
 
-type renderFunction = unit => UiReact.component;
+type renderFunction = unit => UiReact.emptyHook;
 
 open UiContainer;
 

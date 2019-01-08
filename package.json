@@ -29,7 +29,7 @@
     "reason-glfw": "^3.2.1010",
     "reason-fontkit": "^2.0.4",
     "reason-gl-matrix": "^0.9.9301",
-    "reason-reactify": "^2.2.0",
+    "reason-reactify": "^2.2.1",
     "@opam/color": "^0.2.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",

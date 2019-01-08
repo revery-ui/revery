@@ -1,5 +1,5 @@
 {
-  "checksum": "0c521a3e0717de66a3a778a06cb057fa",
+  "checksum": "696eaaef30d67e0e27ce68b17baca8ec",
   "root": "revery@link:./package.json",
   "node": {
     "revery@link:./package.json": {
@@ -9,7 +9,7 @@
       "source": { "type": "link", "path": ".", "manifest": "package.json" },
       "overrides": [],
       "dependencies": [
-        "rejest@1.2.0@d41d8cd9", "reason-reactify@2.2.0@d41d8cd9",
+        "rejest@1.2.0@d41d8cd9", "reason-reactify@2.2.1@d41d8cd9",
         "reason-glfw@3.2.1010@d41d8cd9",
         "reason-gl-matrix@0.9.9301@d41d8cd9",
         "reason-fontkit@2.0.4@d41d8cd9", "ocaml@4.6.9@d41d8cd9",
@@ -67,14 +67,14 @@
       ],
       "devDependencies": []
     },
-    "reason-reactify@2.2.0@d41d8cd9": {
-      "id": "reason-reactify@2.2.0@d41d8cd9",
+    "reason-reactify@2.2.1@d41d8cd9": {
+      "id": "reason-reactify@2.2.1@d41d8cd9",
       "name": "reason-reactify",
-      "version": "2.2.0",
+      "version": "2.2.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-reactify/-/reason-reactify-2.2.0.tgz#sha1:4bdfb41ffc0afa16e68bd7331adb4cf68510e5c4"
+          "archive:https://registry.npmjs.org/reason-reactify/-/reason-reactify-2.2.1.tgz#sha1:c8b9c8455d9defd9eab54c8c31df806471b28c4e"
         ]
       },
       "overrides": [],

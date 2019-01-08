@@ -130,10 +130,8 @@ module SimpleButton = (
               );
 
             let textContent = "Click me: " ++ string_of_int(count);
-            <Clickable onClick=increment>
-              <view style=wrapperStyle>
-                <text style=textHeaderStyle> textContent </text>
-              </view>
+            <Clickable style=wrapperStyle onClick=increment>
+              <text style=textHeaderStyle> textContent </text>
             </Clickable>;
           },
           ~children,
