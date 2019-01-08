@@ -1,33 +1,36 @@
 /* https://dom.spec.whatwg.org/#dispatching-events */
-module Make = (T: {type t;}) => {
-	open NodeEvents;
-  let focused: ref(option(Node.node(T.t))) = ref(None);
+open NodeEvents;
 
-	/* Should happen when user clicks anywhere where no focusable node exists */
-	let looseFocus = () => switch (focused^) {
-		| Some(node) => {
-			let _ = node#handleEvent(Blur());
-			focused := None;
-		}
-		| None => ()
-	};
+type handleEvent = event => unit
+type active = {
+	handler: handleEvent,
+	id: int
+}
+type focused = ref(option(active));
+let focused = ref(None);
 
-	let focus = (node: Node.node(T.t)) => {
-		let _ = node#handleEvent(Focus());
-		focused := Some(node);
-	};
-  /* TODO perform checks if a node can be focused ? */
-  let dispatch = (node: Node.node(T.t)) => switch (focused^) {
-		| Some(focused) => {
-			if (node#is(focused)) {
-				()
-			} else {
-				looseFocus();
-				focus(node)
-			}
-		}
-		| None => focus(node)
-	};
+/* Should happen when user clicks anywhere where no focusable node exists */
+let looseFocus = () => switch (focused^) {
+	| Some({ handler, _ }) => {
+		let _ = handler(Blur());
+		focused := None;
+	}
+	| None => ()
 };
 
-include Make({ type t = RenderPass.t });
+let focus = (node: Node.node('a)) => {
+	let _ = node#handleEvent(Focus());
+	focused := Some({ handler: node#handleEvent, id: node#getInternalId() });
+};
+/* TODO perform checks if a node can be focused ? */
+let dispatch = (node: Node.node('a)) => switch (focused^) {
+	| Some({ id, _ }) => {
+		if (node#getInternalId() === id) {
+			()
+		} else {
+			looseFocus();
+			focus(node)
+		}
+	}
+	| None => focus(node)
+};
