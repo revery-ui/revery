@@ -18,7 +18,7 @@ open RenderPass;
 
 let _projection = Mat4.create();
 
-let render = (container: UiContainer.t, component: UiReact.component) => {
+let render = (container: UiContainer.t, component: UiReact.emptyHook) => {
   let {rootNode, container, window, options, _} = container;
 
   AnimationTicker.tick();
