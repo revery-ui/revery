@@ -144,6 +144,7 @@ let init = app => {
 
   let render = () =>
     <view
+      onMouseWheel={(evt) => print_endline ("onMouseWheel: " ++ string_of_float(evt.deltaY))} 
       style={Style.make(
         ~position=LayoutTypes.Absolute,
         ~justifyContent=LayoutTypes.JustifyCenter,

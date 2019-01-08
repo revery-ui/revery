@@ -117,9 +117,11 @@ class node ('a) (()) = {
       | (MouseDown(c), {onMouseDown: Some(cb), _}) => cb(c)
       | (MouseMove(c), {onMouseMove: Some(cb), _}) => cb(c)
       | (MouseUp(c), {onMouseUp: Some(cb), _}) => cb(c)
+      | (MouseWheel(c), {onMouseWheel: Some(cb), _}) => cb(c)
       | (MouseDown(_), _)
       | (MouseMove(_), _)
-      | (MouseUp(_), _) => ()
+      | (MouseUp(_), _)
+      | (MouseWheel(_), _) => ()
       };
     ();
   };
