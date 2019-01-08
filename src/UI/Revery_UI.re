@@ -35,6 +35,10 @@ type renderFunction = unit => UiReact.emptyHook;
 
 open UiContainer;
 
+module Internal = {
+    module UiReact = UiReact;
+};
+
 let start =
     (
       ~createOptions=UiContainer.Options.default,
