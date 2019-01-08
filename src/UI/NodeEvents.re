@@ -15,19 +15,22 @@ type mouseButtonEventParams = {
   button: MouseButton.t,
 };
 
-type mouseEvent =
+/*
+	 Might be usefull to extend in the future
+ */
+type focusEventParams;
+
+type event =
   | MouseDown(mouseButtonEventParams)
   | MouseMove(mouseMoveEventParams)
-  | MouseUp(mouseButtonEventParams);
+  | MouseUp(mouseButtonEventParams)
+	| Blur(focusEventParams)
+	| Focus(focusEventParams)
 
 type refCallback('a) = 'a => unit;
 type mouseButtonHandler = mouseButtonEventParams => unit;
 type mouseMoveHandler = mouseMoveEventParams => unit;
-
-type focusEvent = 
-	| Focus
-	| Blur;
-type focusHandler = unit => unit;
+type focusHandler = focusEventParams => unit;
 
 type t('a) = {
   ref: option(refCallback('a)),

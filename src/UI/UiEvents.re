@@ -4,7 +4,7 @@ open NodeEvents;
 module BubbledEvent = {
   type bubbledEvent = {
     id: int,
-    event: mouseEvent,
+    event: event,
     shouldPropagate: bool,
     defaultPrevented: bool,
     stopPropagation: unit => unit,
@@ -93,7 +93,7 @@ let rec traverseHeirarchy = (node: node('a), bubbled) =>
     }
   );
 
-let bubble = (node, event: mouseEvent) => {
+let bubble = (node, event: event) => {
   /* Wrap event with preventDefault and stopPropagation */
   let evt = BubbledEvent.make(event);
   switch (evt) {
