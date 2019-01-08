@@ -18,7 +18,7 @@ type mouseButtonEventParams = {
 /*
 	 Might be usefull to extend in the future
  */
-type focusEventParams;
+type focusEventParams = unit;
 
 type event =
   | MouseDown(mouseButtonEventParams)
