@@ -46,7 +46,6 @@ class node ('a) (()) = {
     );
   };
   pub getInternalId = () => _internalId;
-  pub is = (node: node('a)) => _this#getInternalId() === node#getInternalId();
 	pub measurements = () => _layoutNode^.layout;
 
 	pub getTabIndex = () => _tabIndex^;
