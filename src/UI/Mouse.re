@@ -85,23 +85,32 @@ let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
 
 let onCursorChanged: Event.t(MouseCursors.t) = Event.create();
 
+let isMouseDownEv =
+  fun
+  | MouseDown(_) => true
+  | _ => false;
+
 let dispatch =
     (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node('a)) => {
   let pos = getPositionFromMouseEvent(cursor, evt);
 
   let eventToSend = internalToExternalEvent(cursor, evt);
 
+  let mouseDown = isMouseDownEv(eventToSend);
+  if (mouseDown) {
+    switch (getFirstFocusable(node, pos)) {
+    | Some(node) => Focus.dispatch(node);print_endline("get");
+    | None => Focus.looseFocus();print_endline("loose");
+    };
+  } else {
+    ();
+  };
+
   if (!handleCapture(eventToSend)) {
     let deepestNode = getDeepestNode(node, pos);
     switch (deepestNode^) {
-    | None => Focus.looseFocus();
+    | None => ()
     | Some(node) =>
-			/* Since focus doesn't bubble it should occur before click event */
-			if (node#canBeFocused()) {
-				Focus.dispatch(node);
-			} else {
-				Focus.looseFocus();
-			};
       bubble(node, eventToSend);
       let cursor = node#getCursorStyle();
       Event.dispatch(onCursorChanged, cursor);
