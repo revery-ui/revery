@@ -15,6 +15,8 @@ module UniqueId = {
   };
 };
 
+type callback = unit => unit;
+
 class node ('a) (()) = {
   as _this;
   val _children: ref(list(node('a))) = ref([]);
@@ -24,6 +26,7 @@ class node ('a) (()) = {
   val _parent: ref(option(node('a))) = ref(None);
   val _depth: ref(int) = ref(0);
   val _internalId: int = UniqueId.getUniqueId();
+  val _queuedEvents: ref(list(callback)) = ref([]);
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
@@ -145,6 +148,16 @@ class node ('a) (()) = {
     _layoutNode := node;
     node;
   };
+  pub _flushEvents = () => {
+    let f = (c) => c();
+    List.iter(f, _queuedEvents^); 
+    _queuedEvents := [];
+
+     List.iter(c => c#_flushEvents(), _children^);
+  };
+  pub _queueEvent = (c: callback) => {
+    _queuedEvents := List.append([c], _queuedEvents^);
+  };
   /* TODO: This should really be private - it should never be explicitly set */
   pub _setParent = (n: option(node('a))) => {
     /* Recalculate the depth of this node */
@@ -160,7 +173,7 @@ class node ('a) (()) = {
       let ret = (_this :> node('a));
       let maybeRef = _this#getEvents().ref;
       switch (maybeRef) {
-      | Some(ref) => ref(ret)
+      | Some(ref) => _this#_queueEvent(() => ref(ret));
       | None => ()
       };
     | _ => ()
