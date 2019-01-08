@@ -130,10 +130,8 @@ let create = (name: string, options: windowCreateOptions) => {
   | _ => ()
   };
 
-  let w = Glfw.glfwCreateWindow(1, 1, name);
+  let w = Glfw.glfwCreateWindow(options.width, options.height, name);
   Glfw.glfwMakeContextCurrent(w);
-
-  Glfw.glfwSetWindowSize(w, options.width, options.height);
 
   let fbSize = Glfw.glfwGetFramebufferSize(w);
 
