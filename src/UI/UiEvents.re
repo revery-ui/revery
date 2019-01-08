@@ -60,7 +60,9 @@ module BubbledEvent = {
 let isNodeImpacted = (n, pos) => n#hitTest(pos);
 
 let rec getFirstFocusable = (node: node('a), pos) =>
-  if (node#canBeFocused() && isNodeImpacted(node, pos)) {
+  if (!isNodeImpacted(node, pos)) {
+    None;
+  } else if (node#canBeFocused()) {
     Some(node);
   } else if (List.length(node#getChildren()) !== 0) {
     checkChildren(node#getChildren(), pos);
