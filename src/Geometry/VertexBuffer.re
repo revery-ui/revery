@@ -31,7 +31,7 @@ let attach = (vb: t, shader: CompiledShader.t) => {
   switch (loc) {
   | Some(l) =>
     Glfw.glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    Glfw.glVertexAttribPointer(l, elementCount, glType, false);
+    Glfw.glVertexAttribPointer(l, elementCount, glType, false, 0, 0);
     Glfw.glEnableVertexAttribArray(l);
   | None => ()
   };

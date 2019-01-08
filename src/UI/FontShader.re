@@ -24,6 +24,16 @@ let uniform: list(ShaderUniform.t) =
       name: "uSampler",
       usage: FragmentShader,
     },
+    {
+      dataType: ShaderDataType.Vector2,
+      name: "uAtlasOrigin",
+      usage: FragmentShader,
+    },
+    {
+      dataType: ShaderDataType.Vector2,
+      name: "uAtlasSize",
+      usage: FragmentShader,
+    },
   ];
 
 let varying =
@@ -41,7 +51,7 @@ let vsShader = SolidShader.vsShader ++ "\n" ++ {|
 |};
 
 let fsShader = {|
-    vec4 t = texture2D(uSampler, vTexCoord);
+    vec4 t = texture2D(uSampler, uAtlasOrigin + uAtlasSize * vTexCoord);
     gl_FragColor = vec4(vColor.r, vColor.g, vColor.b, t.a * vColor.a);
 |};
 

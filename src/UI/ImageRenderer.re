@@ -33,13 +33,13 @@ let getTexture = (imagePath: string) => {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexImage2D(GL_TEXTURE_2D, initialImage);
+      reglfwTexImage2D(GL_TEXTURE_2D, initialImage);
 
       let imageLoadPromise = Image.load(relativeImagePath);
 
       let success = img => {
         glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D, img);
+        reglfwTexImage2D(GL_TEXTURE_2D, img);
         Lwt.return();
       };
 

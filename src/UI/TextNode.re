@@ -5,7 +5,6 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Fontkit;
 open Reglm;
-open Reglfw;
 open Revery_Core;
 
 open ViewNode;
@@ -15,20 +14,20 @@ class textNode (text: string) = {
   as _this;
   val mutable text = text;
   val quad = Assets.quad();
-  val textureShader = Assets.fontShader();
+  val fontShader = Assets.fontShader();
   inherit (class viewNode)() as _super;
   pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
     /* Draw background first */
     _super#draw(pass, parentContext);
 
     switch (pass) {
-    | AlphaPass(m) =>
-      Shaders.CompiledShader.use(textureShader);
+    | AlphaPass(projectionMatrix) =>
+      Shaders.CompiledShader.use(fontShader);
 
       Shaders.CompiledShader.setUniformMatrix4fv(
-        textureShader,
+        fontShader,
         "uProjection",
-        m,
+        projectionMatrix,
       );
 
       let style = _super#getStyle();
@@ -41,7 +40,7 @@ class textNode (text: string) = {
       let dimensions = _super#measurements();
       let color = Color.multiplyAlpha(opacity, style.color);
       Shaders.CompiledShader.setUniform4fv(
-        textureShader,
+        fontShader,
         "uColor",
         Color.toVec4(color),
       );
@@ -55,7 +54,7 @@ class textNode (text: string) = {
       let render = (s: Fontkit.fk_shape, x: float) => {
         let glyph = FontRenderer.getGlyph(font, s.glyphId);
 
-        let {width, height, bearingX, bearingY, advance, _} = glyph;
+        let {bitmap, width, height, bearingX, bearingY, advance, _} = glyph;
 
         let width = width / parentContext.pixelRatio;
         let height = height / parentContext.pixelRatio;
@@ -63,12 +62,22 @@ class textNode (text: string) = {
         let bearingY = bearingY / parentContext.pixelRatio;
         let advance = advance / parentContext.pixelRatio;
 
-        Glfw.glPixelStorei(GL_PACK_ALIGNMENT, 1);
-        Glfw.glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        let atlasGlyph = GlyphAtlas.copyGlyphToAtlas(bitmap);
 
-        let texture = FontRenderer.getTexture(font, s.glyphId);
-        Glfw.glBindTexture(GL_TEXTURE_2D, texture);
-        /* TODO: Bind texture */
+        let atlasOrigin =
+          Vec2.create(atlasGlyph.textureU, atlasGlyph.textureV);
+        Shaders.CompiledShader.setUniform2fv(
+          fontShader,
+          "uAtlasOrigin",
+          atlasOrigin,
+        );
+        let atlasSize =
+          Vec2.create(atlasGlyph.textureWidth, atlasGlyph.textureHeight);
+        Shaders.CompiledShader.setUniform2fv(
+          fontShader,
+          "uAtlasSize",
+          atlasSize,
+        );
 
         let glyphTransform = Mat4.create();
         Mat4.fromTranslation(
@@ -94,12 +103,12 @@ class textNode (text: string) = {
         Mat4.multiply(xform, _this#getWorldTransform(), xform);
 
         Shaders.CompiledShader.setUniformMatrix4fv(
-          textureShader,
+          fontShader,
           "uWorld",
           xform,
         );
 
-        Geometry.draw(quad, textureShader);
+        Geometry.draw(quad, fontShader);
 
         x +. float_of_int(advance) /. 64.0;
       };
