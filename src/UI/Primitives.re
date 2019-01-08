@@ -13,6 +13,9 @@ let view =
       ~onMouseDown=?,
       ~onMouseMove=?,
       ~onMouseUp=?,
+      ~onBlur=?,
+      ~onFocus=?,
+      ~tabindex=?,
       ~children,
       ~ref=?,
       ~style=Style.defaultStyle,
@@ -21,7 +24,16 @@ let view =
   UiReact.primitiveComponent(
     View(
       style,
-      NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ()),
+      NodeEvents.make(
+        ~ref?,
+        ~onMouseDown?,
+        ~onMouseMove?,
+        ~onMouseUp?,
+        ~onFocus?,
+        ~onBlur?,
+        (),
+      ),
+      tabindex,
     ),
     ~children,
   );
