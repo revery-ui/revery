@@ -94,8 +94,14 @@ let dispatch =
   if (!handleCapture(eventToSend)) {
     let deepestNode = getDeepestNode(node, pos);
     switch (deepestNode^) {
-    | None => ()
+    | None => Focus.looseFocus();
     | Some(node) =>
+			/* Since focus doesn't bubble it should occur before click event */
+			if (node#canBeFocused()) {
+				Focus.dispatch(node);
+			} else {
+				Focus.looseFocus();
+			};
       bubble(node, eventToSend);
       let cursor = node#getCursorStyle();
       Event.dispatch(onCursorChanged, cursor);
