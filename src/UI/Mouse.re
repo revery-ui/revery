@@ -49,10 +49,10 @@ let releaseCapture = () => {
   capturedEventStateInstance.onMouseUp := None;
 };
 
-let handleCapture = (mouseEvent: mouseEvent) => {
+let handleCapture = (event: event) => {
   let ce = capturedEventStateInstance;
 
-  switch (ce.onMouseDown^, ce.onMouseMove^, ce.onMouseUp^, mouseEvent) {
+  switch (ce.onMouseDown^, ce.onMouseMove^, ce.onMouseUp^, event) {
   | (Some(h), _, _, MouseDown(evt)) =>
     h(evt);
     true;
