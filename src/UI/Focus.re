@@ -12,14 +12,14 @@ let focused = ref(None);
 /* Should happen when user clicks anywhere where no focusable node exists */
 let looseFocus = () => switch (focused^) {
 	| Some({ handler, _ }) => {
-		let _ = handler(Blur());
+		let _ = handler(Blur);
 		focused := None;
 	}
 	| None => ()
 };
 
 let focus = (node: Node.node('a)) => {
-	let _ = node#handleEvent(Focus());
+	let _ = node#handleEvent(Focus);
 	focused := Some({ handler: node#handleEvent, id: node#getInternalId() });
 };
 /* TODO perform checks if a node can be focused ? */

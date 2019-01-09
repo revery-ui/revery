@@ -124,13 +124,13 @@ class node ('a) (()) = {
       | (MouseDown(_), _)
       | (MouseMove(_), _)
       | (MouseUp(_), _) => ()
-      | (Focus(c), p) =>
+      | (Focus, p) =>
         _this#focus();
         switch (p) {
         | {onFocus: Some(cb), _} => cb(c)
         | _ => ()
         };
-      | (Blur(c), p) =>
+      | (Blur, p) =>
         _this#blur();
         switch (p) {
         | {onBlur: Some(cb), _} => cb(c)

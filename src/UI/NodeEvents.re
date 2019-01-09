@@ -24,8 +24,8 @@ type event =
   | MouseDown(mouseButtonEventParams)
   | MouseMove(mouseMoveEventParams)
   | MouseUp(mouseButtonEventParams)
-	| Blur(focusEventParams)
-	| Focus(focusEventParams)
+	| Blur
+	| Focus
 
 type refCallback('a) = 'a => unit;
 type mouseButtonHandler = mouseButtonEventParams => unit;
