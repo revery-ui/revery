@@ -3,3 +3,7 @@
     (public_name Revery_UI)
     (preprocess (pps lwt_ppx))
     (libraries lwt lwt.unix reglfw flex fontkit reactify Revery_Core Revery_Shaders Revery_Geometry Revery_Math))
+
+(env
+(dev
+ (flags (:standard -warn-error -A))))

@@ -21,7 +21,7 @@ type mouseWheelEventParams = {
 };
 
 /*
-	 Might be usefull to extend in the future
+	 Might be useful to extend in the future
  */
 type focusEventParams = unit;
 
