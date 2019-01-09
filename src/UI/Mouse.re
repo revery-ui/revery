@@ -29,40 +29,54 @@ type capturedEventState = {
   onMouseDown: ref(option(mouseButtonHandler)),
   onMouseMove: ref(option(mouseMoveHandler)),
   onMouseUp: ref(option(mouseButtonHandler)),
+  onMouseWheel: ref(option(mouseWheelHandler)),
 };
 
 let capturedEventStateInstance: capturedEventState = {
   onMouseDown: ref(None),
   onMouseMove: ref(None),
   onMouseUp: ref(None),
+  onMouseWheel: ref(None),
 };
 
-let setCapture = (~onMouseDown=?, ~onMouseMove=?, ~onMouseUp=?, ()) => {
+let setCapture =
+    (~onMouseDown=?, ~onMouseMove=?, ~onMouseUp=?, ~onMouseWheel=?, ()) => {
   capturedEventStateInstance.onMouseDown := onMouseDown;
   capturedEventStateInstance.onMouseMove := onMouseMove;
   capturedEventStateInstance.onMouseUp := onMouseUp;
+  capturedEventStateInstance.onMouseWheel := onMouseWheel;
 };
 
 let releaseCapture = () => {
   capturedEventStateInstance.onMouseDown := None;
   capturedEventStateInstance.onMouseMove := None;
   capturedEventStateInstance.onMouseUp := None;
+  capturedEventStateInstance.onMouseWheel := None;
 };
 
 let handleCapture = (event: event) => {
   let ce = capturedEventStateInstance;
 
-  switch (ce.onMouseDown^, ce.onMouseMove^, ce.onMouseUp^, event) {
-  | (Some(h), _, _, MouseDown(evt)) =>
+  switch (
+    ce.onMouseDown^,
+    ce.onMouseMove^,
+    ce.onMouseUp^,
+    ce.onMouseWheel^,
+    mouseEvent,
+  ) {
+  | (Some(h), _, _, _, MouseDown(evt)) =>
     h(evt);
     true;
-  | (_, Some(h), _, MouseMove(evt)) =>
+  | (_, Some(h), _, _, MouseMove(evt)) =>
     h(evt);
     true;
-  | (_, _, Some(h), MouseUp(evt)) =>
+  | (_, _, Some(h), _, MouseUp(evt)) =>
     h(evt);
     true;
-  | (_, _, _, _) => false
+  | (_, _, _, Some(h), MouseWheel(evt)) =>
+    h(evt);
+    true;
+  | (_, _, _, _, _) => false
   };
 };
 
@@ -71,6 +85,7 @@ let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =
   | InternalMouseDown(_) => Cursor.toVec2(c)
   | InternalMouseMove(e) => Vec2.create(e.mouseX, e.mouseY)
   | InternalMouseUp(_) => Cursor.toVec2(c)
+  | InternalMouseWheel(_) => Cursor.toVec2(c)
   };
 
 let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
@@ -81,6 +96,8 @@ let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
     MouseUp({mouseX: c.x^, mouseY: c.y^, button: evt.button})
   | InternalMouseMove(evt) =>
     MouseMove({mouseX: evt.mouseX, mouseY: evt.mouseY})
+  | InternalMouseWheel(evt) =>
+    MouseWheel({deltaX: evt.deltaX, deltaY: evt.deltaY})
   };
 
 let onCursorChanged: Event.t(MouseCursors.t) = Event.create();

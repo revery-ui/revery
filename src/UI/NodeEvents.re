@@ -15,6 +15,11 @@ type mouseButtonEventParams = {
   button: MouseButton.t,
 };
 
+type mouseWheelEventParams = {
+  deltaX: float,
+  deltaY: float,
+};
+
 /*
 	 Might be usefull to extend in the future
  */
@@ -24,24 +29,38 @@ type event =
   | MouseDown(mouseButtonEventParams)
   | MouseMove(mouseMoveEventParams)
   | MouseUp(mouseButtonEventParams)
+  | MouseWheel(mouseWheelEventParams)
 	| Blur
-	| Focus
+	| Focus;
 
 type refCallback('a) = 'a => unit;
 type mouseButtonHandler = mouseButtonEventParams => unit;
 type mouseMoveHandler = mouseMoveEventParams => unit;
+type mouseWheelHandler = mouseWheelEventParams => unit;
 type focusHandler = focusEventParams => unit;
+
 
 type t('a) = {
   ref: option(refCallback('a)),
   onMouseDown: option(mouseButtonHandler),
   onMouseMove: option(mouseMoveHandler),
   onMouseUp: option(mouseButtonHandler),
-	onFocus: option(focusHandler),
-	onBlur: option(focusHandler)
+  onMouseWheel: option(mouseWheelHandler),
+  onFocus: option(focusHandler),
+	onBlur: option(focusHandler),
 };
 
-let make = (~ref=?, ~onMouseDown=?, ~onMouseMove=?, ~onMouseUp=?, ~onFocus=?, ~onBlur=?, _unit: unit) => {
-  let ret: t('a) = {ref, onMouseDown, onMouseMove, onMouseUp, onFocus, onBlur};
+let make =
+    (
+      ~ref=?,
+      ~onMouseDown=?,
+      ~onMouseMove=?,
+      ~onMouseUp=?,
+      ~onMouseWheel=?,
+      ~onFocus=?,
+      ~onBlur=?,
+      _unit: unit,
+    ) => {
+  let ret: t('a) = {ref, onMouseDown, onMouseMove, onMouseUp, onMouseWheel, onFocus, onBlur};
   ret;
 };

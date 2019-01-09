@@ -13,6 +13,7 @@ let view =
       ~onMouseDown=?,
       ~onMouseMove=?,
       ~onMouseUp=?,
+      ~onMouseWheel=?,
       ~onBlur=?,
       ~onFocus=?,
       ~tabindex=?,
@@ -29,6 +30,7 @@ let view =
         ~onMouseDown?,
         ~onMouseMove?,
         ~onMouseUp?,
+        ~onMouseWheel?,
         ~onFocus?,
         ~onBlur?,
         (),
@@ -43,6 +45,7 @@ let image =
       ~onMouseDown=?,
       ~onMouseMove=?,
       ~onMouseUp=?,
+      ~onMouseWheel=?,
       ~children,
       ~ref=?,
       ~style=Style.defaultStyle,
@@ -53,7 +56,14 @@ let image =
     Image(
       style,
       src,
-      NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ()),
+      NodeEvents.make(
+        ~ref?,
+        ~onMouseDown?,
+        ~onMouseMove?,
+        ~onMouseUp?,
+        ~onMouseWheel?,
+        (),
+      ),
     ),
     ~children,
   );
@@ -63,6 +73,7 @@ let text =
       ~onMouseDown=?,
       ~onMouseMove=?,
       ~onMouseUp=?,
+      ~onMouseWheel=?,
       ~children: list(string),
       ~ref=?,
       ~style=Style.defaultStyle,
@@ -72,7 +83,14 @@ let text =
     Text(
       style,
       List.hd(children),
-      NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ()),
+      NodeEvents.make(
+        ~ref?,
+        ~onMouseDown?,
+        ~onMouseMove?,
+        ~onMouseUp?,
+        ~onMouseWheel?,
+        (),
+      ),
     ),
     ~children=[],
   );
