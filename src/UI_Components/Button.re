@@ -31,8 +31,8 @@ include (
                   ~height=100,
                   ~disabled=false,
                   ~tabindex=0,
-                  ~onFocus=noop,
-                  ~onBlur=noop,
+                  ~onFocus=?,
+                  ~onBlur=?,
                   ~fontFamily="Roboto-Regular.ttf",
                   (),
                 ) =>
@@ -42,8 +42,8 @@ include (
                     <Clickable
                       onClick={disabled ? noop : onClick}
                       tabindex
-                      onFocus
-                      onBlur>
+                      onFocus=?onFocus
+                      onBlur=?onBlur>
                       <view
                         style={containerStyle(
                           ~width,
