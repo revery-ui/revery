@@ -134,4 +134,29 @@ test("Animation", () => {
     expect(Animated.anyActiveAnimations()).toBe(false);
     expect(Animated.getAnimationCount()).toBe(0);
   });
+
+  test("animations can be cancelled", () => {
+    module TestTicker =
+      MakeTicker({});
+    module Animated = Animation.Make(TestTicker);
+
+    let myAnimation =
+      Animated.start(
+        Animated.floatValue(0.),
+        {
+          duration: Time.Seconds(1.),
+          delay: Time.Seconds(0.),
+          toValue: 10.,
+          repeat: false,
+          easing: Animated.linear,
+        },
+      );
+
+    TestTicker.simulateTick(Time.Seconds(0.1));
+
+    Animated.cancel(myAnimation);
+
+    expect(Animated.anyActiveAnimations()).toBe(false);
+    expect(Animated.getAnimationCount()).toBe(0);
+  });
 });
