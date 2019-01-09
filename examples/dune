@@ -1,8 +1,8 @@
 (executables
-    (names Hello Autocomplete Flexbox Border Boxshadow DefaultButton Calculator Overflow)
+    (names Examples Hello Autocomplete Flexbox Border Boxshadow DefaultButton Calculator Overflow)
     (preprocess (pps lwt_ppx))
     (package Revery)
-    (public_names Hello Autocomplete Flexbox Border Boxshadow DefaultButton Calculator Overflow)
+    (public_names Examples Hello Autocomplete Flexbox Border Boxshadow DefaultButton Calculator Overflow)
     (js_of_ocaml)
     (libraries
         js_of_ocaml
