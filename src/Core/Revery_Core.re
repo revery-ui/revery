@@ -15,6 +15,7 @@ module Event = Reactify.Event;
 module Events = Events;
 
 module Performance = Performance;
+module UniqueId = UniqueId;
 
 module Memoize = {
   type t('a, 'b) = 'a => 'b;
