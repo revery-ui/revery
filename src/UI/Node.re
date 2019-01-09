@@ -129,13 +129,13 @@ class node ('a) (()) = {
       | (Focus, p) =>
         _this#focus();
         switch (p) {
-        | {onFocus: Some(cb), _} => cb(c)
+        | {onFocus: Some(cb), _} => cb()
         | _ => ()
         };
       | (Blur, p) =>
         _this#blur();
         switch (p) {
-        | {onBlur: Some(cb), _} => cb(c)
+        | {onBlur: Some(cb), _} => cb()
         | _ => ()
         };
       };
