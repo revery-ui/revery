@@ -100,7 +100,7 @@ let dispatch =
   if (mouseDown) {
     switch (getFirstFocusable(node, pos)) {
     | Some(node) => Focus.dispatch(node)
-    | None => Focus.looseFocus()
+    | None => Focus.loseFocus()
     };
   } else {
     ();

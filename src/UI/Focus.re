@@ -10,7 +10,7 @@ type focused = ref(option(active));
 let focused = ref(None);
 
 /* Should happen when user clicks anywhere where no focusable node exists */
-let looseFocus = () => switch (focused^) {
+let loseFocus = () => switch (focused^) {
 	| Some({ handler, _ }) => {
 		let _ = handler(Blur);
 		focused := None;
@@ -28,7 +28,7 @@ let dispatch = (node: Node.node('a)) => switch (focused^) {
 		if (node#getInternalId() === id) {
 			()
 		} else {
-			looseFocus();
+			loseFocus();
 			focus(node)
 		}
 	}
