@@ -99,8 +99,8 @@ let dispatch =
   let mouseDown = isMouseDownEv(eventToSend);
   if (mouseDown) {
     switch (getFirstFocusable(node, pos)) {
-    | Some(node) => Focus.dispatch(node);print_endline("get");
-    | None => Focus.looseFocus();print_endline("loose");
+    | Some(node) => Focus.dispatch(node)
+    | None => Focus.looseFocus()
     };
   } else {
     ();
