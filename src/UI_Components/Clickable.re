@@ -17,9 +17,10 @@ include (
                 (
                   render,
                   ~onClick: clickFunction=noop,
+                  ~style=Style.defaultStyle,
                   ~tabindex=0,
-                  ~onBlur=noop,
-                  ~onFocus=noop,
+                  ~onBlur=?,
+                  ~onFocus=?,
                   ~children,
                   (),
                 ) =>
@@ -45,7 +46,7 @@ include (
                       ~cursor=MouseCursors.pointer,
                       ()
                     );
-                    <view style onMouseDown onMouseUp tabindex onBlur onFocus>
+                    <view style=style2 onMouseDown onMouseUp onBlur=?onBlur onFocus=?onFocus tabindex >
                       ...children
                     </view>;
                   },
