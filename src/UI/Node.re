@@ -5,7 +5,8 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Revery_Math;
 
-module UniqueId = Revery_Core.UniqueId.Make();
+module UniqueId =
+  Revery_Core.UniqueId.Make({});
 
 class node ('a) (()) = {
   as _this;

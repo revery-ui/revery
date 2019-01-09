@@ -12,8 +12,8 @@ module type AnimationTicker = {
 module Make = (AnimationTickerImpl: AnimationTicker) => {
   type animationValue = {mutable current: float};
 
-  module AnimationId = UniqueId.Make();
-
+  module AnimationId =
+    UniqueId.Make({});
 
   type animation = {
     id: int,

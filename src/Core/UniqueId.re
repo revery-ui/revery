@@ -1,5 +1,4 @@
-
-module Make = () => {
+module Make = (()) => {
   let current = ref(0);
 
   let getUniqueId = () => {
