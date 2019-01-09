@@ -62,7 +62,7 @@ let handleCapture = (event: event) => {
     ce.onMouseMove^,
     ce.onMouseUp^,
     ce.onMouseWheel^,
-    mouseEvent,
+    event,
   ) {
   | (Some(h), _, _, _, MouseDown(evt)) =>
     h(evt);
