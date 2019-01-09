@@ -5,15 +5,7 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Revery_Math;
 
-module UniqueId = {
-  let current = ref(0);
-
-  let getUniqueId = () => {
-    let ret = current^;
-    current := current^ + 1;
-    ret;
-  };
-};
+module UniqueId = Revery_Core.UniqueId.Make();
 
 class node ('a) (()) = {
   as _this;
