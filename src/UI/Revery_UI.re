@@ -29,6 +29,8 @@ module NodeEvents = NodeEvents;
 module UiEvents = UiEvents;
 let component = UiReact.component;
 
+type component = UiReact.emptyHook;
+
 include Primitives;
 
 type renderFunction = unit => UiReact.emptyHook;
@@ -117,8 +119,12 @@ let start =
   Window.setRenderCallback(
     window,
     () => {
+        print_endline ("rendering component...");
       let component = render();
+        print_endline ("rendering component... complete");
+        print_endline ("reconciling...");
       UiRender.render(ui, component);
+        print_endline ("reconciling... complete");
       uiDirty := false;
     },
   );

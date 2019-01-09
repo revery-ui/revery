@@ -1,30 +1,10 @@
-open Revery;
 open Revery.UI;
 open Revery.Core;
-
-let init = app => {
-  let monitor = Monitor.getPrimaryMonitor() |> Monitor.getSize;
-  let width = monitor.width * 80 / 100;
-  let centerX = monitor.width / 2 - width / 2;
-  let height = monitor.height - 100;
-
-  let win =
-    App.createWindow(
-      app,
-      "box-shadow-example",
-      ~createOptions={...Window.defaultCreateOptions, width, height},
-    );
-
-  Window.setPos(win, centerX, 0);
-
-  let parentWidth = width - 10;
-  let parentHeight = height / 2;
 
   let parentStyles =
     Style.make(
       ~position=LayoutTypes.Relative,
-      ~width=parentWidth,
-      ~height=parentHeight,
+      ~flexGrow=1,
       ~alignItems=LayoutTypes.AlignCenter,
       ~justifyContent=LayoutTypes.JustifySpaceBetween,
       ~flexDirection=LayoutTypes.Column,
@@ -72,12 +52,10 @@ let init = app => {
       (),
     );
 
-  UI.start(win, () =>
+let render = () => {
     <view style=parentStyles>
       <view style=firstShadow />
       <view style=secondShadow />
     </view>
-  );
 };
 
-App.start(init);

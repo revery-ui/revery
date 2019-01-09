@@ -54,12 +54,19 @@ let updateInstance = (n: node, _oldPrim: primitives, newPrim: primitives) =>
     imageNode#setEvents(events);
   };
 
-let appendChild = (parent: node, child: node) => parent#addChild(child);
+let appendChild = (parent: node, child: node) => {
+    parent#addChild(child);
+    print_endline ("appendChild");
+};
 
-let removeChild = (parent: node, child: node) => parent#removeChild(child);
+let removeChild = (parent: node, child: node) => {
+    parent#removeChild(child);
+    print_endline ("removeChild");
+};
 
 let replaceChild = (parent: node, newChild: node, oldChild: node) => {
   removeChild(parent, oldChild);
   appendChild(parent, newChild);
+    print_endline ("replaceChild");
   ();
 };

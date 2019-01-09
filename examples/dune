@@ -13,4 +13,4 @@
 (install
     (section bin)
     (package Revery)
-    (files Roboto-Regular.ttf FontAwesome5FreeSolid.otf binary.dat index.html Hello.bc.js gl-matrix-min.js outrun-logo.png))
+    (files Roboto-Regular.ttf FontAwesome5FreeSolid.otf binary.dat index.html Examples.bc.js gl-matrix-min.js outrun-logo.png))

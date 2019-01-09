@@ -29,6 +29,7 @@ let dispatch = (app: t('s, 'a), action: 'a) => {
   let newState = app.reducer(app.state, action);
   app.state = newState;
   app.needsRender = true;
+  print_endline ("New state");
 };
 
 let createWindow =

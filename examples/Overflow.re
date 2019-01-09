@@ -1,4 +1,3 @@
-open Revery;
 open Revery.UI;
 open Revery.Core;
 open Revery.UI.Components;
@@ -66,10 +65,4 @@ module Sample = (
       )
 );
 
-let init = app => {
-  let win = App.createWindow(app, "Welcome to Revery!");
-
-  UI.start(win, () => <Sample />);
-};
-
-App.start(init);
+let render = () => <Sample />

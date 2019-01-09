@@ -314,6 +314,9 @@ let getFramebufferSize = (w: t) => {
   r;
 };
 
+let maximize = (w:t) =>
+    Glfw.glfwMaximizeWindow(w.glfwWindow);
+
 let getDevicePixelRatio = (w: t) => {
   let windowSizeInScreenCoordinates = getSize(w);
   let windowSizeInPixels = getFramebufferSize(w);

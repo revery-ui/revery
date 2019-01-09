@@ -1,4 +1,4 @@
-open Revery;
+/* open Revery; */
 open Revery.Core;
 open Revery.Core.Events;
 open Revery.Core.Window;
@@ -379,14 +379,6 @@ module Calculator = (
       )
 );
 
-let init = app => {
-  let window = App.createWindow(app, "Revery Calculator");
-
-  let render = () => {
-    <Calculator window />;
-  };
-
-  UI.start(window, render);
+let render = (window) => {
+<Calculator window />;
 };
-
-App.start(init);

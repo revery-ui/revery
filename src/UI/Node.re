@@ -105,7 +105,7 @@ class node ('a) (()) = {
     n#_setParent(Some((_this :> node('a))));
   };
   pub removeChild = (n: node('a)) => {
-    _children := List.filter(c => c != n, _children^);
+    _children := List.filter(c => c#getInternalId() != n#getInternalId(), _children^);
     n#_setParent(None);
   };
   pub getParent = () => _parent^;

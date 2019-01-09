@@ -24,8 +24,11 @@ let render = (container: UiContainer.t, component: UiReact.emptyHook) => {
   AnimationTicker.tick();
 
   /* Perform reconciliation */
-  Performance.bench("updateContainer", () =>
+  Performance.bench("updateContainer", () =>{
+                    print_endline ("starting update...");
     UiReact.updateContainer(container, component)
+                    print_endline ("update complete!");
+  }
   );
 
   /* Layout */
