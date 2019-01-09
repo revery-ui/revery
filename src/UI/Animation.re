@@ -12,7 +12,11 @@ module type AnimationTicker = {
 module Make = (AnimationTickerImpl: AnimationTicker) => {
   type animationValue = {mutable current: float};
 
+  module AnimationId =
+    UniqueId.Make({});
+
   type animation = {
+    id: int,
     delay: float,
     mutable startTime: float,
     duration: float,
@@ -101,6 +105,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   let start =
       (animationValue: animationValue, animationOptions: animationOptions) => {
     let animation: animation = {
+      id: AnimationId.getUniqueId(),
       delay: Time.to_float_seconds(animationOptions.delay),
       duration: Time.to_float_seconds(animationOptions.duration),
       toValue: animationOptions.toValue,
@@ -116,7 +121,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   };
 
   let cancel = (anim: animation) =>
-    activeAnimations := List.filter(a => a == anim, activeAnimations^);
+    activeAnimations := List.filter(a => a.id !== anim.id, activeAnimations^);
 
   let tick = (t: float) => {
     List.iter(tickAnimation(t), activeAnimations^);
