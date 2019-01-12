@@ -6,3 +6,4 @@
 
 module Clickable = Clickable;
 module Button = Button;
+module Input = Input;
