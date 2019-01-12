@@ -15,6 +15,7 @@ class textNode (text: string) = {
   val mutable text = text;
   val quad = Assets.quad();
   val fontShader = Assets.fontShader();
+  val glyphAtlas = GlyphAtlas.create();
   inherit (class viewNode)() as _super;
   pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
     /* Draw background first */
@@ -62,7 +63,7 @@ class textNode (text: string) = {
         let bearingY = bearingY / parentContext.pixelRatio;
         let advance = advance / parentContext.pixelRatio;
 
-        let atlasGlyph = GlyphAtlas.copyGlyphToAtlas(bitmap);
+        let atlasGlyph = GlyphAtlas.copyGlyphToAtlas((glyphAtlas, bitmap));
 
         let atlasOrigin =
           Vec2.create(atlasGlyph.textureU, atlasGlyph.textureV);
