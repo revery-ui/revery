@@ -23,9 +23,9 @@ let styles = (~height, ~width) =>
     (),
   );
 
-let textStyles = (~color, ~fontSize) =>
+let textStyles = (~color, ~fontSize, ~hasPlaceholder) =>
   Style.make(
-    ~color,
+    ~color=hasPlaceholder ? Colors.grey : color,
     ~fontFamily="Roboto-Regular.ttf",
     ~fontSize,
     ~alignItems=LayoutTypes.AlignCenter,
@@ -79,13 +79,14 @@ include (
                   ~fontSize=18,
                   ~width=200,
                   ~height=50,
+                  ~placeholder="",
                   ~onSubmit=noop,
                   (),
                 ) =>
                 render(
                   () => {
-                    let ({value, placeholder}, dispatch) =
-                      useReducer(reducer, {value: "", placeholder: ""});
+                    let (state, dispatch) =
+                      useReducer(reducer, {value: "", placeholder});
 
                     useEffect(() =>
                       Event.subscribe(
@@ -113,13 +114,21 @@ include (
                         },
                       );
 
+                    let hasPlaceholder = String.length(state.value) < 1;
                     let content =
-                      String.length(value) < 1 ? placeholder : value;
+                      hasPlaceholder ? state.placeholder : state.value;
 
                     <view style={styles(~height, ~width)}>
-                      <text style={textStyles(~color, ~fontSize)}>
+                      <text
+                        style={textStyles(~color, ~fontSize, ~hasPlaceholder)}>
                         content
                       </text>
+                      /*
+                         TODO:
+                         1. Show and hide cursor based on focus
+                         2. Add Focus
+                         3. Add Mouse events
+                       */
                       <view
                         style={cursorStyles(
                           ~fontSize,

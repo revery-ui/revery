@@ -13,7 +13,7 @@ let containerStyle =
     ~alignItems=LayoutTypes.AlignCenter,
     ~justifyContent=LayoutTypes.JustifyCenter,
     ~flexDirection=LayoutTypes.Column,
-    ~backgroundColor=Colors.dodgerBlue,
+    ~backgroundColor=Colors.white,
     (),
   );
 
@@ -26,11 +26,13 @@ let init = app => {
         height: 1000,
       },
       app,
-      "Welcome to Revery!",
+      "Input Component Example",
     );
 
   UI.start(win, () =>
-    <view style=containerStyle> <Input window=win /> </view>
+    <view style=containerStyle>
+      <Input window=win placeholder="Insert text here" />
+    </view>
   );
 };
 
