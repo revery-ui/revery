@@ -56,18 +56,15 @@ let reducer = (state, action) =>
   | ClearWord => {...state, value: ""}
   };
 
-let handleKeyDown = (~dispatch, ~onSubmit, event: Events.keyEvent) =>
+let handleKeyDown = (~dispatch, event: Events.keyEvent) =>
   switch (event.key) {
   | Key.KEY_BACKSPACE => dispatch(Backspace)
-  | Key.KEY_ENTER => onSubmit(event)
   | _ => ()
   };
 
-let handleKeyPress = (dispatch, event: Events.keyPressEvent) =>
-  String.length(event.character) > 0 ?
-    dispatch(UpdateText(event.character)) : ();
+type changeHandler = (~value: string) => unit;
 
-let noop = _evt => ();
+let noop: changeHandler = (~value as _value) => ();
 
 include (
           val component(
@@ -80,25 +77,32 @@ include (
                   ~width=200,
                   ~height=50,
                   ~placeholder="",
-                  ~onSubmit=noop,
+                  ~onChange=noop,
                   (),
                 ) =>
                 render(
                   () => {
+                    let initialState = {value: "", placeholder};
                     let (state, dispatch) =
-                      useReducer(reducer, {value: "", placeholder});
+                      useReducer(reducer, initialState);
 
                     useEffect(() =>
                       Event.subscribe(
                         window.onKeyPress,
-                        handleKeyPress(dispatch),
+                        event => {
+                          dispatch(UpdateText(event.character));
+                          onChange(~value=state.value);
+                        },
                       )
                     );
 
                     useEffect(() =>
                       Event.subscribe(
                         window.onKeyDown,
-                        handleKeyDown(~dispatch, ~onSubmit),
+                        event => {
+                          handleKeyDown(~dispatch, event);
+                          onChange(~value=state.value);
+                        },
                       )
                     );
 

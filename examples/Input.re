@@ -17,8 +17,36 @@ let containerStyle =
     (),
   );
 
+module Example = (
+  val component((render, ~window, ~children, ()) =>
+        render(
+          () => {
+            let (currentValue, setValue) = useState("");
+            <view style=containerStyle>
+              <text
+                style={Style.make(
+                  ~fontSize=30,
+                  ~fontFamily="Roboto-Regular.ttf",
+                  ~color=Colors.black,
+                  ~marginBottom=30,
+                  (),
+                )}>
+                {"Current Value: " ++ currentValue}
+              </text>
+              <Input
+                window
+                placeholder="Insert text here"
+                onChange={(~value) => setValue(value)}
+              />
+            </view>;
+          },
+          ~children,
+        )
+      )
+);
+
 let init = app => {
-  let win =
+  let window =
     App.createWindow(
       ~createOptions={
         ...Window.defaultCreateOptions,
@@ -29,11 +57,7 @@ let init = app => {
       "Input Component Example",
     );
 
-  UI.start(win, () =>
-    <view style=containerStyle>
-      <Input window=win placeholder="Insert text here" />
-    </view>
-  );
+  UI.start(window, () => <Example window />);
 };
 
 App.start(init);
