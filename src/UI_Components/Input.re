@@ -23,16 +23,19 @@ let styles = (~height, ~width) =>
     (),
   );
 
-let textStyles = (~color, ~fontSize, ~hasPlaceholder) =>
+let textStyles = (~color, ~width, ~fontSize, ~hasPlaceholder) => {
+  let leftOffset = 6;
   Style.make(
     ~color=hasPlaceholder ? Colors.grey : color,
+    ~width=width - leftOffset,
     ~fontFamily="Roboto-Regular.ttf",
     ~fontSize,
     ~alignItems=LayoutTypes.AlignCenter,
     ~justifyContent=LayoutTypes.JustifyFlexStart,
-    ~marginLeft=6,
+    ~marginLeft=leftOffset,
     (),
   );
+};
 
 let cursorStyles =
     (~fontSize, ~backgroundColor, ~opacity, ~containerHeight, ~hasPlaceholder) => {
@@ -174,7 +177,12 @@ include (
 
                     <view style={styles(~height, ~width)}>
                       <text
-                        style={textStyles(~color, ~fontSize, ~hasPlaceholder)}>
+                        style={textStyles(
+                          ~color,
+                          ~fontSize,
+                          ~width,
+                          ~hasPlaceholder,
+                        )}>
                         content
                       </text>
                       /*
