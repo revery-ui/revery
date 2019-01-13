@@ -33,6 +33,10 @@ Install the following packages with your package manager of choice:
 * `cmake`
 * `ragel`
 
+#### For Windows Subsystem for Linux (WSL)
+
+- `sudo apt install libpng-devl libbz2-dev m4 xorg-dev libglu1-mesa-dev`
+
 ### Running
 
 After building, you can run the 'Hello World' example via:
