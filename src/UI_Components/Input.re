@@ -42,6 +42,7 @@ let cursorStyles =
   let verticalAlignPos = (containerHeight - fontSize) / 2;
   let initialStyles =
     Style.make(
+      ~marginLeft=2,
       ~height=fontSize,
       ~width=2,
       ~backgroundColor,
