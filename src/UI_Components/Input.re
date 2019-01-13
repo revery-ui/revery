@@ -30,11 +30,31 @@ let textStyles = (~color, ~fontSize, ~hasPlaceholder) =>
     ~fontSize,
     ~alignItems=LayoutTypes.AlignCenter,
     ~justifyContent=LayoutTypes.JustifyFlexStart,
+    ~marginLeft=6,
     (),
   );
 
-let cursorStyles = (~fontSize, ~backgroundColor, ~opacity) =>
-  Style.make(~height=fontSize, ~width=2, ~backgroundColor, ~opacity, ());
+let cursorStyles =
+    (~fontSize, ~backgroundColor, ~opacity, ~containerHeight, ~hasPlaceholder) => {
+  let verticalAlignPos = (containerHeight - fontSize) / 2;
+  let initialStyles =
+    Style.make(
+      ~height=fontSize,
+      ~width=2,
+      ~backgroundColor,
+      ~opacity,
+      ~cursor=MouseCursors.text,
+    );
+
+  hasPlaceholder ?
+    initialStyles(
+      ~position=LayoutTypes.Absolute,
+      ~top=verticalAlignPos,
+      ~left=5,
+      (),
+    ) :
+    initialStyles();
+};
 
 type state = {
   value: string,
@@ -46,13 +66,18 @@ type action =
   | Backspace
   | ClearWord;
 
+let removeCharacter = word =>
+  String.length(word)
+  |> (length => length > 0 ? String.sub(word, 0, length - 1) : word);
+
+let addCharacter = (word, char) => word ++ char;
+
 let reducer = (state, action) =>
   switch (action) {
-  | UpdateText(t) => {...state, value: state.value ++ t}
+  | UpdateText(t) => {...state, value: addCharacter(state.value, t)}
   | Backspace =>
     let length = String.length(state.value);
-    length > 0 ?
-      {...state, value: String.sub(state.value, 0, length - 1)} : state;
+    length > 0 ? {...state, value: removeCharacter(state.value)} : state;
   | ClearWord => {...state, value: ""}
   };
 
@@ -62,9 +87,7 @@ let handleKeyDown = (~dispatch, event: Events.keyEvent) =>
   | _ => ()
   };
 
-type changeHandler = (~value: string) => unit;
-
-let noop: changeHandler = (~value as _value) => ();
+let noop = (~value as _value) => ();
 
 include (
           val component(
@@ -76,22 +99,42 @@ include (
                   ~fontSize=18,
                   ~width=200,
                   ~height=50,
+                  ~value=None,
                   ~placeholder="",
                   ~onChange=noop,
                   (),
                 ) =>
                 render(
                   () => {
-                    let initialState = {value: "", placeholder};
+                    /*
+                       value is specified as option as it allows a more accurate check as to
+                       whether the component is controlled on uncontrolled. Using a length check
+                       does not work as well as changing the size of the value can lead to incorrect
+                       behaviour.
+                     */
+                    let (inheritedValue, isControlled) =
+                      switch (value) {
+                      | Some(v) => (v, true)
+                      | None => ("", false)
+                      };
+
+                    let initialState = {value: inheritedValue, placeholder};
                     let (state, dispatch) =
                       useReducer(reducer, initialState);
+
+                    let valueToUse =
+                      isControlled ? inheritedValue : state.value;
 
                     useEffect(() =>
                       Event.subscribe(
                         window.onKeyPress,
                         event => {
-                          dispatch(UpdateText(event.character));
-                          onChange(~value=state.value);
+                          if (!isControlled) {
+                            dispatch(UpdateText(event.character));
+                          };
+                          onChange(
+                            ~value=addCharacter(valueToUse, event.character),
+                          );
                         },
                       )
                     );
@@ -100,8 +143,10 @@ include (
                       Event.subscribe(
                         window.onKeyDown,
                         event => {
-                          handleKeyDown(~dispatch, event);
-                          onChange(~value=state.value);
+                          if (!isControlled) {
+                            handleKeyDown(~dispatch, event);
+                          };
+                          onChange(~value=removeCharacter(state.value));
                         },
                       )
                     );
@@ -118,9 +163,10 @@ include (
                         },
                       );
 
-                    let hasPlaceholder = String.length(state.value) < 1;
+                    let hasPlaceholder = String.length(valueToUse) < 1;
+
                     let content =
-                      hasPlaceholder ? state.placeholder : state.value;
+                      hasPlaceholder ? state.placeholder : valueToUse;
 
                     <view style={styles(~height, ~width)}>
                       <text
@@ -129,15 +175,18 @@ include (
                       </text>
                       /*
                          TODO:
-                         1. Show and hide cursor based on focus
-                         2. Add Focus
-                         3. Add Mouse events
+                         1. Passed valued does not update correctly (reconciler?)
+                         2. Show and hide cursor based on focus
+                         3. Add Focus
+                         4. Add Mouse events
                        */
                       <view
                         style={cursorStyles(
+                          ~opacity,
                           ~fontSize,
                           ~backgroundColor=color,
-                          ~opacity,
+                          ~containerHeight=height,
+                          ~hasPlaceholder,
                         )}
                       />
                     </view>;
