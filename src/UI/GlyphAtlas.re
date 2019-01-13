@@ -86,6 +86,32 @@ let copyGlyphTextureToAtlas =
     textureHeight: float_of_int(height) /. float_of_int(textureSizeInPixels),
     variantOffset: 0.,
   };
+  print_endline(
+    "Glyph created: "
+    ++ string_of_int(x)
+    ++ "/"
+    ++ string_of_int(y)
+    ++ "/"
+    ++ string_of_int(width)
+    ++ "/"
+    ++ string_of_int(height)
+    ++ "/"
+    ++ string_of_float(
+         float_of_int(x) /. float_of_int(textureSizeInPixels),
+       )
+    ++ "/"
+    ++ string_of_float(
+         float_of_int(y) /. float_of_int(textureSizeInPixels),
+       )
+    ++ "/"
+    ++ string_of_float(
+         float_of_int(width) /. float_of_int(textureSizeInPixels),
+       )
+    ++ "/"
+    ++ string_of_float(
+         float_of_int(height) /. float_of_int(textureSizeInPixels),
+       ),
+  );
   uploadGlyphAtlas(glyphAtlas);
   atlasGlyph;
 };
