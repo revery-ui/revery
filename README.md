@@ -32,10 +32,13 @@ Install the following packages with your package manager of choice:
 
 * `cmake`
 * `ragel`
+* `libpng-dev`
+* `libbz2-dev`
+* `m4`
 
 #### For Windows Subsystem for Linux (WSL)
 
-- `sudo apt install libpng-devl libbz2-dev m4 xorg-dev libglu1-mesa-dev`
+- `sudo apt install libpng-dev libbz2-dev m4 xorg-dev libglu1-mesa-dev`
 
 ### Running
 
