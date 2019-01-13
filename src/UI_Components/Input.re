@@ -36,6 +36,9 @@ let textStyles = (~color, ~fontSize, ~hasPlaceholder) =>
 
 let cursorStyles =
     (~fontSize, ~backgroundColor, ~opacity, ~containerHeight, ~hasPlaceholder) => {
+  /*
+     calculate the top padding needed to place the cursor centrally
+   */
   let verticalAlignPos = (containerHeight - fontSize) / 2;
   let initialStyles =
     Style.make(
