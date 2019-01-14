@@ -8,8 +8,36 @@ open Revery.UI;
 module Logo {
     let component = React.component("Logo");
 
-    let make = () => component((_: React.Slots.empty) => {
-        <View style={Style.make(~width=200, ~height=200, ~backgroundColor=Colors.red, ())} />
+    let make = () => component((slots) => {
+            let (opacity, setOpacity, _slots: React.Slots.empty) = React.Hooks.useState(1.0, slots);
+
+            prerr_endline ("Logo::render");
+
+            let onMouseDown = _ => {
+                setOpacity(0.5);
+                prerr_endline ("onMouseDown");
+            };
+
+            let onMouseUp = _ => {
+                setOpacity(1.0);
+                prerr_endline ("onMouseUp");
+            };
+
+            <View onMouseDown onMouseUp>
+              <Image
+                src="outrun-logo.png"
+                style={Style.make(
+                  ~width=512,
+                  ~height=256,
+                  ~opacity,
+                  ~transform=[
+                    /* RotateY(Angle.from_radians(rotationY)), */
+                    /* RotateX(Angle.from_radians(rotation)), */
+                  ],
+                  (),
+                )}
+              />
+            </View>;
     });
 
     let createElement = (~children as _, ()) => React.element(make());

@@ -84,6 +84,44 @@ module Text = {
         UiReact.element(make(~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ~ref?, ~style, ~text, UiReact.listToElement(children)));
     }
 };
+
+module Image = {
+    let component = UiReact.nativeComponent("Image");
+
+    let make = (
+      ~onMouseDown=?,
+      ~onMouseMove=?,
+      ~onMouseUp=?,
+      ~onMouseWheel=?,
+      ~ref=?,
+      ~style=Style.defaultStyle,
+      ~src="",
+      children
+    ) => {
+       component((_: UiReact.Slots.empty) => {
+        make: () => {
+            prerr_endline ("Image::make");
+            let events = NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ());
+            let node =  (new ImageNode.imageNode)(src);
+            node#setEvents(events);
+            node#setStyle(style);
+            Obj.magic(node);
+        },
+        configureInstance: (~isFirstRender as _, node) => {
+            prerr_endline ("Image::configureInstance");
+            let events = NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ());
+            node#setEvents(events);
+            node#setStyle(style);
+            node; 
+        },
+        children
+       })
+    };
+
+    let createElement = (~onMouseDown=?, ~onMouseMove=?, ~onMouseUp=?, ~onMouseWheel=?, ~ref=?, ~style=Style.defaultStyle, ~src="", ~children, ()) => {
+        UiReact.element(make(~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ~ref?, ~style, ~src, UiReact.listToElement(children)));
+    }
+};
 /* let view = */
 /*     ( */
 /*       ~onMouseDown=?, */

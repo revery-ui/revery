@@ -18,6 +18,9 @@ open RenderPass;
 
 let _projection = Mat4.create();
 
+let lastUpdate: ref(option(UiReact.RenderedElement.t)) = ref(None);
+let previousElement: ref(option(UiReact.RenderedElement.syntheticElement)) = ref(None);
+
 let render = (container: UiContainer.t, component: UiReact.syntheticElement) => {
   let {rootNode, window, options, _} = container;
 
@@ -28,8 +31,21 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   /*   UiReact.updateContainer(container, component) */
   /* ); */
 
-  let updates = UiReact.RenderedElement.render(rootNode, component);
-  UiReact.RenderedElement.executeHostViewUpdates(updates) |> ignore;
+  let latest = switch(lastUpdate^) {
+      | None => {
+          let updates = UiReact.RenderedElement.render(rootNode, component);
+          UiReact.RenderedElement.executeHostViewUpdates(updates) |> ignore;
+          updates
+      } 
+      | Some(v) => {
+
+          let nextElement = UiReact.RenderedElement.flushPendingUpdates(v); 
+          UiReact.RenderedElement.executeHostViewUpdates(nextElement) |> ignore;
+          nextElement;
+      }
+  };
+  lastUpdate := Some(latest);
+
 
   /* Layout */
   let size = Window.getSize(window);

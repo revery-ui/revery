@@ -128,6 +128,7 @@ let start =
   Window.setRenderCallback(
     window,
     () => {
+        /* prerr_endline ("RENDERING"); */
       let component = render();
       UiRender.render(ui, component);
       uiDirty := false;
