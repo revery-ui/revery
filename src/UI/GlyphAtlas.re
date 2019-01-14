@@ -3,8 +3,8 @@ open Bigarray;
 type t = {
   texture: Reglfw.Glfw.texture,
   pixels: Array2.t(int, int8_unsigned_elt, c_layout),
-  nextX: ref(int),
-  nextY: ref(int),
+  penX: ref(int),
+  penY: ref(int),
 };
 
 let textureSizeInPixels = 1024;
@@ -20,8 +20,8 @@ let create = () => {
         textureSizeInPixels,
         textureSizeInPixels * numChannels,
       ),
-    nextX: ref(0),
-    nextY: ref(0),
+    penX: ref(0),
+    penY: ref(0),
   };
   Array2.fill(glyphAtlas.pixels, 0);
   glyphAtlas;
@@ -66,23 +66,30 @@ let bindGlyphAtlas = (glyphAtlas: t) => {
 
 let copyGlyphTextureToAtlas =
     (glyphAtlas: t, glyphTexture: Array2.t(int, int8_unsigned_elt, c_layout)) => {
-  let {nextX, nextY, pixels: atlasPixels, _} = glyphAtlas;
+  let {penX, penY, pixels: atlasPixels, _} = glyphAtlas;
   let width = Array2.dim2(glyphTexture) / numChannels;
   let height = Array2.dim1(glyphTexture);
-  let nextXInSameLine = nextX^ + width;
-  let x = nextXInSameLine > textureSizeInPixels ? 0 : nextXInSameLine;
+  let glyphWillFitInCurrentLine = penX^ + width <= textureSizeInPixels;
+  let x = glyphWillFitInCurrentLine ? penX^ : 0;
   /* TODO we will probably need to use the complete line height here? */
-  let y = nextXInSameLine > textureSizeInPixels ? nextY^ + height : nextY^;
-  nextX := x + width;
-  nextY := y;
+  let y = glyphWillFitInCurrentLine ? penY^ : penY^ + height;
 
   for (rowIndex in 0 to height - 1) {
+    print_endline(
+      "blitting "
+      ++ string_of_int(width)
+      ++ " pixels in row "
+      ++ string_of_int(rowIndex)
+      ++ " into "
+      ++ string_of_int(x)
+      ++ "/"
+      ++ string_of_int(y + rowIndex),
+    );
     let sourceRow = Array2.slice_left(glyphTexture, rowIndex);
     let destinationRow = Array2.slice_left(atlasPixels, y + rowIndex);
     let destinationRowFragment =
-      Array1.sub(destinationRow, y, width * numChannels);
+      Array1.sub(destinationRow, x, width * numChannels);
     Array1.blit(sourceRow, destinationRowFragment);
-    print_endline("blitting row " ++ string_of_int(rowIndex));
   };
 
   let atlasGlyph: atlasGlyph = {
@@ -121,6 +128,8 @@ let copyGlyphTextureToAtlas =
        ),
   );
   uploadGlyphAtlas(glyphAtlas);
+  penX := x + width;
+  penY := y;
   atlasGlyph;
 };
 
