@@ -57,17 +57,24 @@ let uploadGlyphAtlas = (glyphAtlas: t) => {
   );
 };
 
+let bindGlyphAtlas = (glyphAtlas: t) => {
+  open Reglfw.Glfw;
+  glPixelStorei(GL_PACK_ALIGNMENT, 1);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glBindTexture(GL_TEXTURE_2D, glyphAtlas.texture);
+};
+
 let copyGlyphTextureToAtlas =
     (glyphAtlas: t, glyphTexture: Array2.t(int, int8_unsigned_elt, c_layout)) => {
   let {nextX, nextY, pixels: atlasPixels, _} = glyphAtlas;
   let width = Array2.dim2(glyphTexture) / numChannels;
   let height = Array2.dim1(glyphTexture);
-  let x = nextX^;
-  let y = nextY^;
   let nextXInSameLine = nextX^ + width;
-  nextX := nextXInSameLine > textureSizeInPixels ? 0 : nextXInSameLine;
+  let x = nextXInSameLine > textureSizeInPixels ? 0 : nextXInSameLine;
   /* TODO we will probably need to use the complete line height here? */
-  nextY := nextXInSameLine > textureSizeInPixels ? nextY^ + height : nextY^;
+  let y = nextXInSameLine > textureSizeInPixels ? nextY^ + height : nextY^;
+  nextX := x + width;
+  nextY := y;
 
   for (rowIndex in 0 to height - 1) {
     let sourceRow = Array2.slice_left(glyphTexture, rowIndex);
@@ -75,6 +82,7 @@ let copyGlyphTextureToAtlas =
     let destinationRowFragment =
       Array1.sub(destinationRow, y, width * numChannels);
     Array1.blit(sourceRow, destinationRowFragment);
+    print_endline("blitting row " ++ string_of_int(rowIndex));
   };
 
   let atlasGlyph: atlasGlyph = {

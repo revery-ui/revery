@@ -109,6 +109,7 @@ class textNode (text: string) = {
           xform,
         );
 
+        GlyphAtlas.bindGlyphAtlas(glyphAtlas);
         Geometry.draw(quad, fontShader);
 
         x +. float_of_int(advance) /. 64.0;
@@ -123,6 +124,46 @@ class textNode (text: string) = {
         },
         shapedText,
       );
+      open Bigarray;
+      open Reglfw;
+      let debugImagePixels =
+        Array2.create(
+          int8_unsigned,
+          c_layout,
+          GlyphAtlas.textureSizeInPixels,
+          GlyphAtlas.textureSizeInPixels * 4 /* RGBA */
+        );
+      Array2.fill(debugImagePixels, 0);
+      for (y in 0 to GlyphAtlas.textureSizeInPixels - 1) {
+        for (x in 0 to GlyphAtlas.textureSizeInPixels - 1) {
+          Array2.set(
+            debugImagePixels,
+            y,
+            x * 4,
+            Array2.get(glyphAtlas.pixels, y, x),
+          );
+          Array2.set(
+            debugImagePixels,
+            y,
+            x * 4 + 1,
+            Array2.get(glyphAtlas.pixels, y, x),
+          );
+          Array2.set(
+            debugImagePixels,
+            y,
+            x * 4 + 2,
+            Array2.get(glyphAtlas.pixels, y, x),
+          );
+          Array2.set(
+            debugImagePixels,
+            y,
+            x * 4 + 3,
+            Array2.get(glyphAtlas.pixels, y, x),
+          );
+        };
+      };
+      let debugImage = Image.create(debugImagePixels);
+      Image.save(debugImage, "debugImage.tga");
     | _ => ()
     };
   };
