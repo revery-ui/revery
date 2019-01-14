@@ -1,2 +1,4 @@
-module React = Reactify.Make(UiReconciler);
+open Brisk_core;
+
+module React = ReactCore.Make(UiReconciler.Reconciler);
 include React;

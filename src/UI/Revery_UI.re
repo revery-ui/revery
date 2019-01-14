@@ -11,13 +11,16 @@ module Style = Style;
 module Transform = Transform;
 
 /* Expose hooks as part of the public API */
-include Hooks;
+/* include Hooks; */
 
-let useState = UiReact.useState;
-let useReducer = UiReact.useReducer;
-let useContext = UiReact.useContext;
-let createContext = UiReact.createContext;
-let getProvider = UiReact.getProvider;
+module Hooks = UiReact.Hooks;
+module Slots = UiReact.Slots;
+
+/* let useState = Hooks.useState; */
+/* let useReducer = Hooks.useReducer, */
+/* let useContext = UiReact.useContext; */
+/* let createContext = UiReact.createContext; */
+/* let getProvider = UiReact.getProvider; */
 
 class node = class Node.node(RenderPass.t);
 class viewNode = class ViewNode.viewNode;
@@ -28,10 +31,13 @@ module Mouse = Mouse;
 module NodeEvents = NodeEvents;
 module UiEvents = UiEvents;
 let component = UiReact.component;
+let element = UiReact.element;
+let listToElement = UiReact.listToElement;
+type syntheticElement = UiReact.syntheticElement;
 
 include Primitives;
 
-type renderFunction = unit => UiReact.emptyHook;
+type renderFunction = unit => UiReact.syntheticElement;
 
 open UiContainer;
 
@@ -43,16 +49,16 @@ let start =
     ) => {
   let uiDirty = ref(false);
 
-  let onEndReconcile = _node => uiDirty := true;
+  /* let onEndReconcile = _node => uiDirty := true; */
 
   let rootNode = (new viewNode)();
-  let container = UiReact.createContainer(~onEndReconcile, rootNode);
+  /* let container = UiReact.createContainer(~onEndReconcile, rootNode); */
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
   let ui =
     UiContainer.create(
       window,
       rootNode,
-      container,
+      /* container, */
       mouseCursor,
       createOptions,
     );
@@ -112,7 +118,8 @@ let start =
     );
 
   Window.setShouldRenderCallback(window, () =>
-    uiDirty^ || Animated.anyActiveAnimations()
+    /* uiDirty^ || Animated.anyActiveAnimations() */
+    true
   );
   Window.setRenderCallback(
     window,

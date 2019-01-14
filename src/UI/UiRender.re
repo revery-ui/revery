@@ -18,15 +18,18 @@ open RenderPass;
 
 let _projection = Mat4.create();
 
-let render = (container: UiContainer.t, component: UiReact.emptyHook) => {
-  let {rootNode, container, window, options, _} = container;
+let render = (container: UiContainer.t, component: UiReact.syntheticElement) => {
+  let {rootNode, window, options, _} = container;
 
   AnimationTicker.tick();
 
   /* Perform reconciliation */
-  Performance.bench("updateContainer", () =>
-    UiReact.updateContainer(container, component)
-  );
+  /* Performance.bench("updateContainer", () => */
+  /*   UiReact.updateContainer(container, component) */
+  /* ); */
+
+  let updates = UiReact.RenderedElement.render(rootNode, component);
+  UiReact.RenderedElement.executeHostViewUpdates(updates) |> ignore;
 
   /* Layout */
   let size = Window.getSize(window);
