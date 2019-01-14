@@ -32,6 +32,8 @@ Install the following packages with your package manager of choice:
 
 * `cmake`
 * `ragel`
+
+##### For Ubuntu you may need these additional packages
 * `libpng-dev`
 * `libbz2-dev`
 * `m4`
