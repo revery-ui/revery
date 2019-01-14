@@ -18,11 +18,9 @@ let containerStyle = (~width, ~height, ~disabled, ~color) =>
     (),
   );
 
-include (
-          val component(
-                (
-                  render,
-                  ~children,
+let component = component("Button");
+
+let make = (
                   ~title,
                   ~onClick=noop,
                   ~color=Colors.dodgerBlue,
@@ -32,24 +30,35 @@ include (
                   ~disabled=false,
                   ~fontFamily="Roboto-Regular.ttf",
                   (),
-                ) =>
-                render(
-                  () =>
-                    /* NOTE:If disabled the button should do nothing */
-                    <Clickable onClick={disabled ? noop : onClick}>
-                      <view
-                        style={containerStyle(
-                          ~width,
-                          ~height,
-                          ~disabled,
-                          ~color,
-                        )}>
-                        <text style={textStyle(~fontSize, ~fontFamily)}>
-                          title
-                        </text>
-                      </view>
-                    </Clickable>,
-                  ~children,
-                )
-              )
-        );
+                  /* children, */
+    
+) 
+    => component((_slots: Slots.empty) => {
+        <Clickable onClick={disabled ? noop : onClick}>
+          <View
+            style={containerStyle(
+              ~width,
+              ~height,
+              ~disabled,
+              ~color,
+            )}>
+            <Text style={textStyle(~fontSize, ~fontFamily)}>
+              title
+            </Text>
+          </View>
+        </Clickable>
+});
+
+let createElement = (
+                  ~children as _,
+                  ~title,
+                  ~onClick=noop,
+                  ~color=Colors.dodgerBlue,
+                  ~fontSize=40,
+                  ~width=300,
+                  ~height=100,
+                  ~disabled=false,
+                  ~fontFamily="Roboto-Regular.ttf",
+                  ()) => {
+                   element(make(~title, ~onClick, ~color, ~fontSize, ~width, ~height, ~disabled, ~fontFamily, ()));
+                  };

@@ -37,13 +37,15 @@
     "@opam/js_of_ocaml-lwt": "*",
     "flex": "^1.2.2",
     "@opam/js_of_ocaml-compiler": "*",
-    "rejest": "^1.2.0"
+    "rejest": "^1.2.0",
+    "@brisk/core": "*"
   },
   "resolutions": {
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-    "@esy-ocaml/reason": "facebook/reason#ab49908"
+    "@esy-ocaml/reason": "facebook/reason#ab49908",
+    "@brisk/core": "link:D:/brisk/core"
   },
   "peerDependencies": {
     "ocaml": "~4.6.0"

@@ -35,6 +35,10 @@ let element = UiReact.element;
 let listToElement = UiReact.listToElement;
 type syntheticElement = UiReact.syntheticElement;
 
+module React {
+    include UiReact;
+};
+
 include Primitives;
 
 type renderFunction = unit => UiReact.syntheticElement;

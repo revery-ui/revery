@@ -9,7 +9,7 @@
  */
 
 module View = {
-    let component = UiReact.nativeComponent("view");
+    let component = UiReact.nativeComponent("View");
 
     let make = (
       ~onMouseDown=?,
@@ -43,6 +43,47 @@ module View = {
     }
 };
 
+
+module Text = {
+    let component = UiReact.nativeComponent("Text");
+
+    let make = (
+      ~onMouseDown=?,
+      ~onMouseMove=?,
+      ~onMouseUp=?,
+      ~onMouseWheel=?,
+      ~ref=?,
+      ~style=Style.defaultStyle,
+      ~text="",
+      children
+    ) => {
+       component((_: UiReact.Slots.empty) => {
+        make: () => {
+            let events = NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ());
+            let node =  (new TextNode.textNode)(text);
+            node#setEvents(events);
+            node#setStyle(style);
+            Obj.magic(node);
+        },
+        configureInstance: (~isFirstRender as _, node) => {
+            let events = NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ());
+
+            /* TODO: Proper way to downcast? */
+            let tn: TextNode.textNode = Obj.magic(node);
+
+            tn#setEvents(events);
+            tn#setStyle(style);
+            tn#setText(text);
+            node; 
+        },
+        children
+       })
+    };
+
+    let createElement = (~onMouseDown=?, ~onMouseMove=?, ~onMouseUp=?, ~onMouseWheel=?, ~ref=?, ~style=Style.defaultStyle, ~text="", ~children, ()) => {
+        UiReact.element(make(~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ~ref?, ~style, ~text, UiReact.listToElement(children)));
+    }
+};
 /* let view = */
 /*     ( */
 /*       ~onMouseDown=?, */
