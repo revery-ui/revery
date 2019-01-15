@@ -1,14 +1,14 @@
 open Revery;
 open Revery.Core;
 open Revery.Core.Events;
-open Revery.Core.Window;
+/* open Revery.Core.Window; */
 open Revery.UI;
 open Revery.UI.Components;
 
 module Row {
   let component = React.component("Row");
 
-  let make = (children) => component((_slots: React.Slot.empty) => {
+  let make = (children) => component((_slots: React.Slots.empty) => {
             let style =
               Style.make(
                 ~flexDirection=LayoutTypes.Row,
@@ -26,7 +26,7 @@ module Row {
 module Column {
   let component = React.component("Column");
 
-  let make = (children) => component((_slots: React.Slot.empty) => {
+  let make = (children) => component((_slots: React.Slots.empty) => {
             let style =
               Style.make(
                 ~flexDirection=LayoutTypes.Column,
@@ -45,7 +45,7 @@ module Column {
 module Button {
     let component = React.component("Button");
 
-    let make = (~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ()) => {
+    let make = (~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ()) => (component((_slots: React.Slots.empty) => {
             let clickableStyle =
               Style.make(
                 ~position=LayoutTypes.Relative,
@@ -79,7 +79,7 @@ module Button {
               </View>
             </Clickable>;
         
-    };
+    }));
 
     let createElement = (~fontFamily="Roboto-Regular.ttf", ~contents, ~onClick, ~children as _, ()) => {
         React.element(make(~fontFamily, ~contents, ~onClick, ()));   
@@ -89,7 +89,7 @@ module Button {
 module Display {
     let component = React.component("Display");
 
-    let make = (~display: string, ~curNum: string, ()) => component((_slots: React.Slot.empty) => {
+    let make = (~display: string, ~curNum: string, ()) => component((_slots: React.Slots.empty) => {
             let viewStyle =
               Style.make(
                 ~backgroundColor=Colors.white,
@@ -198,7 +198,7 @@ let eval = (state, newOp) => {
   (newResult, newDisplay);
 };
 
-let reducer = (state, action) =>
+let reducer = (action, state) =>
   switch (action) {
   | BackspaceKeyPressed =>
     state.number == "" ?
@@ -237,16 +237,16 @@ let reducer = (state, action) =>
 module Calculator {
   let component = React.component("Calculator");
 
-  let make = (window) => (component((slots) => {
+  let make = (_window) => component((slots) => {
     
             let ({display, number, _}, dispatch, _slots: React.Slots.empty) =
-              useReducer(
+              React.Hooks.useReducer(
+                ~initialState={operator: `Nop, result: 0., display: "", number: ""},
                 reducer,
-                {operator: `Nop, result: 0., display: "", number: ""},
                 slots,
               );
 
-            let respondToKeys = e => switch(e.key) {
+            let _respondToKeys = e => switch(e.key) {
               | Key.KEY_BACKSPACE =>
                 dispatch(BackspaceKeyPressed)
 
@@ -376,7 +376,7 @@ module Calculator {
                 />
               </Row>
             </Column>;
-  };
+  });
 
   let createElement = (~window, ~children as _, ()) => React.element(make(window));
 };
