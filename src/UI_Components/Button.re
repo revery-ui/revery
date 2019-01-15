@@ -18,7 +18,7 @@ let containerStyle = (~width, ~height, ~disabled, ~color) =>
     (),
   );
 
-let component = component("Button");
+let component = React.component("Button");
 
 let make = (
                   ~title,
@@ -42,9 +42,7 @@ let make = (
               ~disabled,
               ~color,
             )}>
-            <Text style={textStyle(~fontSize, ~fontFamily)}>
-              title
-            </Text>
+            <Text style={textStyle(~fontSize, ~fontFamily)} text={title} />
           </View>
         </Clickable>
 });
@@ -60,5 +58,5 @@ let createElement = (
                   ~disabled=false,
                   ~fontFamily="Roboto-Regular.ttf",
                   ()) => {
-                   element(make(~title, ~onClick, ~color, ~fontSize, ~width, ~height, ~disabled, ~fontFamily, ()));
+                   React.element(make(~title, ~onClick, ~color, ~fontSize, ~width, ~height, ~disabled, ~fontFamily, ()));
                   };

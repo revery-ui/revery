@@ -11,9 +11,9 @@ open Revery_Core;
 type clickFunction = unit => unit;
 let noop = () => ();
 
-let component = component("Clickable");
+let component = React.component("Clickable");
 
-let make = (~style=Style.defaultStyle, ~onClick:clickFunction=noop, children: syntheticElement) => component(slots => {
+let make = (~style=Style.defaultStyle, ~onClick:clickFunction=noop, children: React.syntheticElement) => component(slots => {
         let (opacity, setOpacity, _slots: Slots.empty) = Hooks.useState(0.8, slots);
 
         /* TODO:
@@ -38,4 +38,4 @@ let make = (~style=Style.defaultStyle, ~onClick:clickFunction=noop, children: sy
         <View style=style2 onMouseDown onMouseUp> {children} </View>;
 });
 
-let createElement = (~style=Style.defaultStyle, ~onClick:clickFunction=noop, ~children, ()) => element(make(~style, ~onClick, listToElement(children)));
+let createElement = (~style=Style.defaultStyle, ~onClick:clickFunction=noop, ~children, ()) => React.element(make(~style, ~onClick, React.listToElement(children)));

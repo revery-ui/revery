@@ -30,15 +30,12 @@ class imageNode = class ImageNode.imageNode;
 module Mouse = Mouse;
 module NodeEvents = NodeEvents;
 module UiEvents = UiEvents;
-let component = UiReact.component;
-let element = UiReact.element;
-let listToElement = UiReact.listToElement;
-type syntheticElement = UiReact.syntheticElement;
+/* let component = UiReact.component; */
+/* let element = UiReact.element; */
+/* let listToElement = UiReact.listToElement; */
+/* type syntheticElement = UiReact.syntheticElement; */
 
-module React {
-    include UiReact;
-};
-
+module React  = UiReact;
 include Primitives;
 
 type renderFunction = unit => UiReact.syntheticElement;

@@ -19,7 +19,7 @@ open RenderPass;
 let _projection = Mat4.create();
 
 let lastUpdate: ref(option(UiReact.RenderedElement.t)) = ref(None);
-let previousElement: ref(option(UiReact.RenderedElement.syntheticElement)) = ref(None);
+let previousElement: ref(option(UiReact.syntheticElement)) = ref(None);
 
 let render = (container: UiContainer.t, component: UiReact.syntheticElement) => {
   let {rootNode, window, options, _} = container;

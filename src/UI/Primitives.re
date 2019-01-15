@@ -22,6 +22,7 @@ module View = {
     ) => {
        component((_: UiReact.Slots.empty) => {
         make: () => {
+            prerr_endline("View::make");
             let events = NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ());
             let node =  (new ViewNode.viewNode)();
             node#setEvents(events);
@@ -29,6 +30,7 @@ module View = {
             node;
         },
         configureInstance: (~isFirstRender as _, node) => {
+            prerr_endline("View::configureInstance");
             let events = NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ());
             node#setEvents(events);
             node#setStyle(style);
