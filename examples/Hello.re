@@ -9,7 +9,15 @@ module Logo {
     let component = React.component("Logo");
 
     let make = () => component((slots) => {
-            let (opacity, setOpacity, _slots: React.Slots.empty) = React.Hooks.useState(1.0, slots);
+            let (opacity, setOpacity, slots) = React.Hooks.state(1.0, slots);
+
+            let _slots: Hooks.empty = React.Hooks.effect(OnMount, () => {
+                print_endline ("test hook");
+                None;
+            },
+            slots,
+            );
+
 
             prerr_endline ("Logo::render");
 

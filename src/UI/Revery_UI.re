@@ -114,7 +114,7 @@ let start =
     );
 
   let _ =
-    Reactify.Event.subscribe(FontCache.onFontLoaded, () =>
+    Revery_Core.Event.subscribe(FontCache.onFontLoaded, () =>
       Window.render(window)
     );
 

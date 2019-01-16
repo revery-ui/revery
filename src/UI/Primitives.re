@@ -20,7 +20,7 @@ module View = {
       ~style=Style.defaultStyle,
       children
     ) => {
-       component((_: UiReact.Slots.empty) => {
+       component((_: UiReact.Hooks.empty) => {
         make: () => {
             prerr_endline("View::make");
             let events = NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ());
@@ -59,7 +59,7 @@ module Text = {
       ~text="",
       children
     ) => {
-       component((_: UiReact.Slots.empty) => {
+       component((_: UiReact.Hooks.empty) => {
         make: () => {
             let events = NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ());
             let node =  (new TextNode.textNode)(text);
@@ -100,7 +100,7 @@ module Image = {
       ~src="",
       children
     ) => {
-       component((_: UiReact.Slots.empty) => {
+       component((_: UiReact.Hooks.empty) => {
         make: () => {
             prerr_endline ("Image::make");
             let events = NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ());

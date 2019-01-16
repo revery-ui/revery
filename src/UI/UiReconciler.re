@@ -25,7 +25,7 @@ module Reconciler = {
         parent;
     };
 
-    let markAsStale = () => ();
+    let markAsStale = () => prerr_endline ("MarkAsStale");
 
     let beginChanges = () => ();
     let commitChanges = () => ();

@@ -38,7 +38,7 @@ module Sample {
     let component = React.component("Sample");
 
     let make = () => component((slots) => {
-            let (hidden, setHidden, _slots: React.Slots.empty) = React.Hooks.useState(false, slots);
+            let (hidden, setHidden, _slots: React.Hooks.empty) = React.Hooks.state(false, slots);
 
             let outerStyle = {
               ...outerBox,

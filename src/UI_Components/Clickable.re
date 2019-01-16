@@ -14,7 +14,7 @@ let noop = () => ();
 let component = React.component("Clickable");
 
 let make = (~style=Style.defaultStyle, ~onClick:clickFunction=noop, children: React.syntheticElement) => component(slots => {
-        let (opacity, setOpacity, _slots: Slots.empty) = Hooks.useState(0.8, slots);
+        let (opacity, setOpacity, _slots: Hooks.empty) = Hooks.state(0.8, slots);
 
         /* TODO:
          *

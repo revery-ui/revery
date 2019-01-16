@@ -8,7 +8,7 @@ module DefaultButtonWithCounter {
 
     let make = (~width, ~height, ()) => {
         component((slots) => {
-            let (count, setCount, _slots: React.Slots.empty) = React.Hooks.useState(0, slots);
+            let (count, setCount, _slots: React.Hooks.empty) = React.Hooks.state(0, slots);
             let increment = () => setCount(count + 1);
 
             let containerStyle =

@@ -8,7 +8,7 @@ open Revery.UI.Components;
 module Row {
   let component = React.component("Row");
 
-  let make = (children) => component((_slots: React.Slots.empty) => {
+  let make = (children) => component((_slots: React.Hooks.empty) => {
             let style =
               Style.make(
                 ~flexDirection=LayoutTypes.Row,
@@ -26,7 +26,7 @@ module Row {
 module Column {
   let component = React.component("Column");
 
-  let make = (children) => component((_slots: React.Slots.empty) => {
+  let make = (children) => component((_slots: React.Hooks.empty) => {
             let style =
               Style.make(
                 ~flexDirection=LayoutTypes.Column,
@@ -45,7 +45,7 @@ module Column {
 module Button {
     let component = React.component("Button");
 
-    let make = (~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ()) => (component((_slots: React.Slots.empty) => {
+    let make = (~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ()) => (component((_slots: React.Hooks.empty) => {
             let clickableStyle =
               Style.make(
                 ~position=LayoutTypes.Relative,
@@ -89,7 +89,7 @@ module Button {
 module Display {
     let component = React.component("Display");
 
-    let make = (~display: string, ~curNum: string, ()) => component((_slots: React.Slots.empty) => {
+    let make = (~display: string, ~curNum: string, ()) => component((_slots: React.Hooks.empty) => {
             let viewStyle =
               Style.make(
                 ~backgroundColor=Colors.white,
@@ -239,8 +239,8 @@ module Calculator {
 
   let make = (_window) => component((slots) => {
     
-            let ({display, number, _}, dispatch, _slots: React.Slots.empty) =
-              React.Hooks.useReducer(
+            let ({display, number, _}, dispatch, _slots: React.Hooks.empty) =
+              React.Hooks.reducer(
                 ~initialState={operator: `Nop, result: 0., display: "", number: ""},
                 reducer,
                 slots,
