@@ -10,18 +10,6 @@ module LayoutTypes = Layout.LayoutTypes;
 module Style = Style;
 module Transform = Transform;
 
-/* Expose hooks as part of the public API */
-/* include Hooks; */
-
-module Hooks = UiReact.Hooks;
-module Slots = UiReact.Slots;
-
-/* let useState = Hooks.useState; */
-/* let useReducer = Hooks.useReducer, */
-/* let useContext = UiReact.useContext; */
-/* let createContext = UiReact.createContext; */
-/* let getProvider = UiReact.getProvider; */
-
 class node = class Node.node(RenderPass.t);
 class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
@@ -30,12 +18,11 @@ class imageNode = class ImageNode.imageNode;
 module Mouse = Mouse;
 module NodeEvents = NodeEvents;
 module UiEvents = UiEvents;
-/* let component = UiReact.component; */
-/* let element = UiReact.element; */
-/* let listToElement = UiReact.listToElement; */
-/* type syntheticElement = UiReact.syntheticElement; */
 
 module React  = UiReact;
+module Hooks = UiReact.Hooks;
+module Slots = UiReact.Slots;
+
 include Primitives;
 
 type renderFunction = unit => UiReact.syntheticElement;
@@ -50,16 +37,18 @@ let start =
     ) => {
   let uiDirty = ref(false);
 
-  /* let onEndReconcile = _node => uiDirty := true; */
+  let onStale = () => {
+      uiDirty := true;
+  };
+
+  let _ = Revery_Core.Event.subscribe(React.onStale, onStale);
 
   let rootNode = (new viewNode)();
-  /* let container = UiReact.createContainer(~onEndReconcile, rootNode); */
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
   let ui =
     UiContainer.create(
       window,
       rootNode,
-      /* container, */
       mouseCursor,
       createOptions,
     );
@@ -119,13 +108,12 @@ let start =
     );
 
   Window.setShouldRenderCallback(window, () =>
-    /* uiDirty^ || Animated.anyActiveAnimations() */
-    true
+    uiDirty^ || Animated.anyActiveAnimations()
   );
   Window.setRenderCallback(
     window,
     () => {
-        /* prerr_endline ("RENDERING"); */
+        prerr_endline ("RENDERING");
       let component = render();
       UiRender.render(ui, component);
       uiDirty := false;
