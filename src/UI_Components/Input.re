@@ -188,8 +188,9 @@ include (
                     let valueToUse =
                       isControlled ? inheritedValue : state.value;
 
-                    if (focused) {
-                      useEffect(() =>
+                    useEffect(() =>
+                      !focused ?
+                        () => () :
                         Event.subscribe(
                           window.onKeyPress,
                           event => {
@@ -202,21 +203,21 @@ include (
                             );
                           },
                         )
-                      );
-                    };
+                    );
 
-                    if (focused) {
-                      useEffect(() =>
-                        Event.subscribe(window.onKeyDown, event =>
-                          if (focused) {
+                    useEffect(() =>
+                      !focused ?
+                        () => () :
+                        Event.subscribe(
+                          window.onKeyDown,
+                          event => {
                             if (!isControlled) {
                               handleKeyDown(~dispatch, event);
                             };
                             onChange(~value=removeCharacter(state.value));
-                          }
+                          },
                         )
-                      );
-                    };
+                    );
 
                     let opacity =
                       useAnimation(
@@ -270,7 +271,6 @@ include (
                         ~hasPlaceholder,
                       );
 
-                    print_endline("Focus state " ++ string_of_bool(focused));
                     /*
                        component
                      */
