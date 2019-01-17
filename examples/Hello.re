@@ -5,29 +5,31 @@ open Revery.UI;
 /* open Revery.UI.Components; */
 
 
+let derp = ref(0);
+
 module Logo {
     let component = React.component("Logo");
 
     let make = () => component((slots) => {
-            let (opacity, setOpacity, slots) = React.Hooks.state(1.0, slots);
+            /* let (opacity, setOpacity, slots) = React.Hooks.state(1.0, slots); */
 
+        let opacity = 1.0;
             let _slots: Hooks.empty = React.Hooks.effect(OnMount, () => {
-                print_endline ("test hook");
-                None;
+                derp := derp^ + 1;
+                prerr_endline ("Logo:HOOK " ++ string_of_int(derp^));
+                Some(() => ());
             },
-            slots,
-            );
-
+            slots);
 
             prerr_endline ("Logo::render");
 
             let onMouseDown = _ => {
-                setOpacity(0.5);
+                /* setOpacity(0.5); */
                 prerr_endline ("onMouseDown");
             };
 
             let onMouseUp = _ => {
-                setOpacity(1.0);
+                /* setOpacity(1.0); */
                 prerr_endline ("onMouseUp");
             };
 
@@ -190,20 +192,20 @@ let init = app => {
   let win = App.createWindow(app, "Welcome to Revery!");
 
   let render = () =>
-    <View
-      onMouseWheel={(evt) => print_endline ("onMouseWheel: " ++ string_of_float(evt.deltaY))} 
-      style={Style.make(
-        ~position=LayoutTypes.Absolute,
-        ~justifyContent=LayoutTypes.JustifyCenter,
-        ~alignItems=LayoutTypes.AlignCenter,
-        ~bottom=0,
-        ~top=0,
-        ~left=0,
-        ~right=0,
-        (),
-      )}>
-      <Logo />
-    </View>;
+    /* <View */
+    /*   onMouseWheel={(evt) => print_endline ("onMouseWheel: " ++ string_of_float(evt.deltaY))} */ 
+    /*   style={Style.make( */
+    /*     ~position=LayoutTypes.Absolute, */
+    /*     ~justifyContent=LayoutTypes.JustifyCenter, */
+    /*     ~alignItems=LayoutTypes.AlignCenter, */
+    /*     ~bottom=0, */
+    /*     ~top=0, */
+    /*     ~left=0, */
+    /*     ~right=0, */
+    /*     (), */
+    /*   )}> */
+      <Logo />;
+    /* </View>; */
     /* <View */
     /*   onMouseWheel={(evt) => print_endline ("onMouseWheel: " ++ string_of_float(evt.deltaY))} */ 
     /*   style={Style.make( */

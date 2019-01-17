@@ -41,6 +41,8 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
 
           let nextElement = UiReact.RenderedElement.flushPendingUpdates(v); 
           UiReact.RenderedElement.executeHostViewUpdates(nextElement) |> ignore;
+          /* UiReact.RenderedElement.executeEffects(nextElement); */
+          /* List.iter(f => f(), nextElement.enqueuedEffects); */
           nextElement;
       }
   };
