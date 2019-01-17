@@ -27,9 +27,8 @@
   "dependencies": {
     "@esy-ocaml/reason": "^3.3.7",
     "reason-glfw": "^3.2.1010",
-    "reason-fontkit": "^2.0.4",
+    "reason-fontkit": "^2.0.5",
     "reason-gl-matrix": "^0.9.9301",
-    "reason-reactify": "^2.2.1",
     "@opam/color": "^0.2.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
@@ -37,19 +36,21 @@
     "@opam/js_of_ocaml-lwt": "*",
     "flex": "^1.2.2",
     "@opam/js_of_ocaml-compiler": "*",
-    "rejest": "^1.2.0"
+    "@brisk/core": "*"
   },
   "resolutions": {
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-    "@esy-ocaml/reason": "facebook/reason#ab49908"
+    "@esy-ocaml/reason": "facebook/reason#ab49908",
+    "@brisk/core": "link:D:/brisk/core",
+    "reason-gl-matrix": "github:bryphe/reason-gl-matrix#c1109d7"
   },
   "peerDependencies": {
-    "ocaml": "~4.6.0"
+    "ocaml": "^4.7.0"
   },
   "devDependencies": {
-    "ocaml": "~4.6.0",
+    "ocaml": "^4.7.0",
     "@opam/merlin": "*",
     "@opam/dune": "^1.5.0"
   }

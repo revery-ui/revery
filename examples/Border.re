@@ -41,10 +41,10 @@ let init = app => {
     );
 
   let render = () =>
-    <view style=defaultStyle>
-      <view style=innerStyle />
-      <text style=textStyle> "WELCOME TO REVERY!" </text>
-    </view>;
+    <View style=defaultStyle>
+      <View style=innerStyle />
+      <Text style=textStyle text="Welcome To Revery!" />
+    </View>;
 
   UI.start(w, render);
 };

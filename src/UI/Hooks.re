@@ -1,21 +1,28 @@
 /* Hooks specific to Revery */
 
-open UiReact;
+/* module React = UiReact; */
 
-let useEffect = useEffect;
+let animation =
+    (v: Animated.animationValue, opts: Animated.animationOptions, slots) => {
+  let (currentV, _set, slots) = UiReact.Hooks.state(v, slots);
 
-let useAnimation =
-    (v: Animated.animationValue, opts: Animated.animationOptions) => {
-  let (currentV, _set) = useState(v);
+  let slots =
+    UiReact.Hooks.effect(
+      OnMount,
+      () => {
+        prerr_endline("Starting animation");
+        let anim = Animated.start(v, opts);
 
-  useEffect(
-    ~condition=MountUnmount,
-    () => {
-      let anim = Animated.start(v, opts);
+        Some(
+          () => {
+            prerr_endline("Stopping animation");
+            Animated.cancel(anim);
+          },
+        );
+      },
+      slots,
+    );
 
-      () => Animated.cancel(anim);
-    },
-  );
-
-  currentV.current;
+  /* TODO: Replace this once 'effect' is working */
+  (currentV.current, slots);
 };

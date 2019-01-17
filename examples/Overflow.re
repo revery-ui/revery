@@ -33,11 +33,11 @@ let innerBox =
     (),
   );
 
-module Sample = (
-  val component((render, ~children, ()) =>
-        render(
-          () => {
-            let (hidden, setHidden) = useState(false);
+module Sample {
+    let component = React.component("Sample");
+
+    let make = () => component((slots) => {
+            let (hidden, setHidden, _slots: React.Hooks.empty) = React.Hooks.state(false, slots);
 
             let outerStyle = {
               ...outerBox,
@@ -48,21 +48,20 @@ module Sample = (
               setHidden(!hidden);
             };
 
-            <view style=containerStyle>
-              <view style=outerStyle> <view style=innerBox /> </view>
-              <view style={Style.make(~marginTop=80, ())}>
+            <View style=containerStyle>
+              <View style=outerStyle> <View style=innerBox /> </View>
+              <View style={Style.make(~marginTop=80, ())}>
                 <Button
                   fontSize=20
                   height=45
                   title="Toggle overflow"
                   onClick
                 />
-              </view>
-            </view>;
-          },
-          ~children,
-        )
-      )
-);
+              </View>
+            </View>;
+    });
+
+    let createElement = (~children as _, ()) => React.element(make());
+}
 
 let render = () => <Sample />

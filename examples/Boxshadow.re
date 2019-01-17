@@ -52,10 +52,19 @@ open Revery.Core;
       (),
     );
 
+<<<<<<< HEAD
 let render = () => {
     <view style=parentStyles>
       <view style=firstShadow />
       <view style=secondShadow />
     </view>
+=======
+  UI.start(win, () =>
+    <View style=parentStyles>
+      <View style=firstShadow />
+      <View style=secondShadow />
+    </View>
+  );
+>>>>>>> bryphe/reconciler/integrate-brisk-reconciler
 };
 

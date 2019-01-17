@@ -148,16 +148,16 @@ let init = app => {
     let filteredItems = filterItems(state.text, state.items);
     let items =
       List.map(
-        i => <text style=textHeaderStyle> {i.name} </text>,
+        i => <Text style=textHeaderStyle text={i.name} />,
         filteredItems,
       );
 
-    <view style={Style.make(~backgroundColor=Colors.blue, ~width, ())}>
-      <view style={Style.make(~height=50, ())}>
-        <text style=textHeaderStyle> {state.text ++ "|"} </text>
-      </view>
-      <view style={Style.make()}> ...items </view>
-    </view>;
+    <View style={Style.make(~backgroundColor=Colors.blue, ~width, ())}>
+      <View style={Style.make(~height=50, ())}>
+        <Text style=textHeaderStyle text={state.text ++ "|"} />
+      </View>
+      <View style={Style.make()}> ...items </View>
+    </View>;
   };
 
   UI.start(~createOptions={autoSize: true}, w, render);
