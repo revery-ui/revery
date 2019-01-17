@@ -33,7 +33,7 @@ let make = (
                   /* children, */
     
 ) 
-    => component((_slots: Hooks.empty) => {
+    => component((_slots: React.Hooks.empty) => {
         <Clickable onClick={disabled ? noop : onClick}>
           <View
             style={containerStyle(

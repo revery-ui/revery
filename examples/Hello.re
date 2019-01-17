@@ -1,36 +1,45 @@
 open Revery;
 open Revery.Core;
-/* open Revery.Math; */
+open Revery.Math;
 open Revery.UI;
-/* open Revery.UI.Components; */
-
-
-let derp = ref(0);
+open Revery.UI.Components;
 
 module Logo {
     let component = React.component("Logo");
 
     let make = () => component((slots) => {
-            /* let (opacity, setOpacity, slots) = React.Hooks.state(1.0, slots); */
+            let (opacity, setOpacity, slots) = React.Hooks.state(1.0, slots);
 
-        let opacity = 1.0;
-            let _slots: Hooks.empty = React.Hooks.effect(OnMount, () => {
-                derp := derp^ + 1;
-                prerr_endline ("Logo:HOOK " ++ string_of_int(derp^));
-                Some(() => ());
-            },
-            slots);
+            let (rotation, slots) = Hooks.animation(
+                Animated.floatValue(0.),
+                {
+                  toValue: 6.28,
+                  duration: Seconds(8.),
+                  delay: Seconds(1.0),
+                  repeat: true,
+                  easing: Animated.linear,
+                },
+                slots
+              );
 
-            prerr_endline ("Logo::render");
+            let (rotationY, _slots: React.Hooks.empty) = Hooks.animation(
+                Animated.floatValue(0.),
+                {
+                  toValue: 6.28,
+                  duration: Seconds(4.),
+                  delay: Seconds(0.5),
+                  repeat: true,
+                  easing: Animated.linear,
+                },
+                slots,
+              );
 
             let onMouseDown = _ => {
-                /* setOpacity(0.5); */
-                prerr_endline ("onMouseDown");
+                setOpacity(0.5);
             };
 
             let onMouseUp = _ => {
-                /* setOpacity(1.0); */
-                prerr_endline ("onMouseUp");
+                setOpacity(1.0);
             };
 
             <View onMouseDown onMouseUp>
@@ -41,8 +50,8 @@ module Logo {
                   ~height=256,
                   ~opacity,
                   ~transform=[
-                    /* RotateY(Angle.from_radians(rotationY)), */
-                    /* RotateX(Angle.from_radians(rotation)), */
+                    RotateY(Angle.from_radians(rotationY)),
+                    RotateX(Angle.from_radians(rotation)),
                   ],
                   (),
                 )}
@@ -53,181 +62,113 @@ module Logo {
     let createElement = (~children as _, ()) => React.element(make());
 };
 
-/* module Logo = ( */
-/*   val component((render, ~children, ()) => */
-/*         render( */
-/*           () => { */
-/*             let (opacity, setOpacity) = useState(1.0); */
+module AnimatedText {
+  let component = React.component("AnimatedText");
 
-/*             let onMouseDown = _ => setOpacity(0.5); */
-/*             let onMouseUp = _ => setOpacity(1.0); */
+  let make = (~text, ~delay, ()) => component((slots) => {
+            let (opacity, slots) =
+              Hooks.animation(
+                Animated.floatValue(0.),
+                {
+                  toValue: 1.0,
+                  duration: Seconds(1.),
+                  delay: Seconds(delay),
+                  repeat: false,
+                  easing: Animated.linear,
+                },
+                slots,
+              );
 
-/*             let rotation = */
-/*               useAnimation( */
-/*                 Animated.floatValue(0.), */
-/*                 { */
-/*                   toValue: 6.28, */
-/*                   duration: Seconds(8.), */
-/*                   delay: Seconds(1.0), */
-/*                   repeat: true, */
-/*                   easing: Animated.linear, */
-/*                 }, */
-/*               ); */
+            let (translate, _slots: React.Hooks.empty) =
+              Hooks.animation(
+                Animated.floatValue(50.),
+                {
+                  toValue: 0.,
+                  duration: Seconds(0.5),
+                  delay: Seconds(delay),
+                  repeat: false,
+                  easing: Animated.linear,
+                },
+                slots,
+              );
 
-/*             let rotationY = */
-/*               useAnimation( */
-/*                 Animated.floatValue(0.), */
-/*                 { */
-/*                   toValue: 6.28, */
-/*                   duration: Seconds(4.), */
-/*                   delay: Seconds(0.5), */
-/*                   repeat: true, */
-/*                   easing: Animated.linear, */
-/*                 }, */
-/*               ); */
+            let textHeaderStyle =
+              Style.make(
+                ~color=Colors.white,
+                ~fontFamily="Roboto-Regular.ttf",
+                ~fontSize=24,
+                ~marginHorizontal=8,
+                ~opacity,
+                ~transform=[TranslateY(translate)],
+                (),
+              );
 
-/*             <view onMouseDown onMouseUp> */
-/*               <image */
-/*                 src="outrun-logo.png" */
-/*                 style={Style.make( */
-/*                   ~width=512, */
-/*                   ~height=256, */
-/*                   ~opacity, */
-/*                   ~transform=[ */
-/*                     RotateY(Angle.from_radians(rotationY)), */
-/*                     RotateX(Angle.from_radians(rotation)), */
-/*                   ], */
-/*                   (), */
-/*                 )} */
-/*               /> */
-/*             </view>; */
-/*           }, */
-/*           ~children, */
-/*         ) */
-/*       ) */
-/* ); */
+            <Text style=textHeaderStyle text={text} />
+  });
 
-/* module AnimatedText = ( */
-/*   val component((render, ~delay, ~textContent, ~children, ()) => */
-/*         render( */
-/*           () => { */
-/*             let opacity: float = */
-/*               useAnimation( */
-/*                 Animated.floatValue(0.), */
-/*                 { */
-/*                   toValue: 1.0, */
-/*                   duration: Seconds(1.), */
-/*                   delay: Seconds(delay), */
-/*                   repeat: false, */
-/*                   easing: Animated.linear, */
-/*                 }, */
-/*               ); */
+  let createElement = (~children as _, ~text: string, ~delay: float, ()) => React.element(make(~text, ~delay, ()));
+};
 
-/*             let translate: float = */
-/*               useAnimation( */
-/*                 Animated.floatValue(50.), */
-/*                 { */
-/*                   toValue: 0., */
-/*                   duration: Seconds(0.5), */
-/*                   delay: Seconds(delay), */
-/*                   repeat: false, */
-/*                   easing: Animated.linear, */
-/*                 }, */
-/*               ); */
+module SimpleButton {
+  let component = React.component("SimpleButton");
 
-/*             let textHeaderStyle = */
-/*               Style.make( */
-/*                 ~color=Colors.white, */
-/*                 ~fontFamily="Roboto-Regular.ttf", */
-/*                 ~fontSize=24, */
-/*                 ~marginHorizontal=8, */
-/*                 ~opacity, */
-/*                 ~transform=[TranslateY(translate)], */
-/*                 (), */
-/*               ); */
+  let make = () => component((slots) => {
+            let (count, setCount, _slots: React.Hooks.empty) = React.Hooks.state(0, slots);
 
-/*             <text style=textHeaderStyle> textContent </text>; */
-/*           }, */
-/*           ~children, */
-/*         ) */
-/*       ) */
-/* ); */
+            let increment = () => setCount(count + 1);
 
-/* module SimpleButton = ( */
-/*   val component((render, ~children, ()) => */
-/*         render( */
-/*           () => { */
-/*             let (count, setCount) = useState(0); */
+            let wrapperStyle =
+              Style.make(
+                ~backgroundColor=Color.rgba(1., 1., 1., 0.1),
+                ~border=Style.Border.make(~width=2, ~color=Colors.white, ()),
+                ~margin=16,
+                (),
+              );
 
-/*             let increment = () => setCount(count + 1); */
+            let textHeaderStyle =
+              Style.make(
+                ~color=Colors.white,
+                ~fontFamily="Roboto-Regular.ttf",
+                ~fontSize=20,
+                ~margin=4,
+                (),
+              );
 
-/*             let wrapperStyle = */
-/*               Style.make( */
-/*                 ~backgroundColor=Color.rgba(1., 1., 1., 0.1), */
-/*                 ~border=Style.Border.make(~width=2, ~color=Colors.white, ()), */
-/*                 ~margin=16, */
-/*                 (), */
-/*               ); */
+            let textContent = "Click me: " ++ string_of_int(count);
+            <Clickable style=wrapperStyle onClick=increment>
+              <Text style=textHeaderStyle text={textContent} />
+            </Clickable>;
+  });
 
-/*             let textHeaderStyle = */
-/*               Style.make( */
-/*                 ~color=Colors.white, */
-/*                 ~fontFamily="Roboto-Regular.ttf", */
-/*                 ~fontSize=20, */
-/*                 ~margin=4, */
-/*                 (), */
-/*               ); */
-
-/*             let textContent = "Click me: " ++ string_of_int(count); */
-/*             <Clickable style=wrapperStyle onClick=increment> */
-/*               <text style=textHeaderStyle> textContent </text> */
-/*             </Clickable>; */
-/*           }, */
-/*           ~children, */
-/*         ) */
-/*       ) */
-/* ); */
+  let createElement = (~children as _, ()) => React.element(make());
+};
 
 let init = app => {
   let win = App.createWindow(app, "Welcome to Revery!");
 
   let render = () =>
-    /* <View */
-    /*   onMouseWheel={(evt) => print_endline ("onMouseWheel: " ++ string_of_float(evt.deltaY))} */ 
-    /*   style={Style.make( */
-    /*     ~position=LayoutTypes.Absolute, */
-    /*     ~justifyContent=LayoutTypes.JustifyCenter, */
-    /*     ~alignItems=LayoutTypes.AlignCenter, */
-    /*     ~bottom=0, */
-    /*     ~top=0, */
-    /*     ~left=0, */
-    /*     ~right=0, */
-    /*     (), */
-    /*   )}> */
-      <Logo />;
-    /* </View>; */
-    /* <View */
-    /*   onMouseWheel={(evt) => print_endline ("onMouseWheel: " ++ string_of_float(evt.deltaY))} */ 
-    /*   style={Style.make( */
-    /*     ~position=LayoutTypes.Absolute, */
-    /*     ~justifyContent=LayoutTypes.JustifyCenter, */
-    /*     ~alignItems=LayoutTypes.AlignCenter, */
-    /*     ~bottom=0, */
-    /*     ~top=0, */
-    /*     ~left=0, */
-    /*     ~right=0, */
-    /*     (), */
-    /*   )}> */
-    /*   <Logo /> */
-    /*   <View */
-    /*     ref={r => print_endline("View internal id:" ++ string_of_int(r#getInternalId()))} */
-    /*     style={Style.make(~flexDirection=Row, ~alignItems=AlignFlexEnd, ())}> */
-    /*     <AnimatedText delay=0.0 textContent="Welcome" /> */
-    /*     <AnimatedText delay=0.5 textContent="to" /> */
-    /*     <AnimatedText delay=1. textContent="Revery" /> */
-    /*   </View> */
-    /*   <SimpleButton /> */
-    /* </view>; */
+    <View
+      onMouseWheel={(evt) => print_endline ("onMouseWheel: " ++ string_of_float(evt.deltaY))} 
+      style={Style.make(
+        ~position=LayoutTypes.Absolute,
+        ~justifyContent=LayoutTypes.JustifyCenter,
+        ~alignItems=LayoutTypes.AlignCenter,
+        ~bottom=0,
+        ~top=0,
+        ~left=0,
+        ~right=0,
+        (),
+      )}>
+      <Logo />
+      <View
+        ref={r => print_endline("View internal id:" ++ string_of_int(r#getInternalId()))}
+        style={Style.make(~flexDirection=Row, ~alignItems=AlignFlexEnd, ())}>
+        <AnimatedText delay=0.0 text="Welcome" />
+        <AnimatedText delay=0.5 text="to" />
+        <AnimatedText delay=1. text="Revery" />
+      </View>
+      <SimpleButton />
+    </View>;
 
   UI.start(win, render);
 };

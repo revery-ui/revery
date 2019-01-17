@@ -20,8 +20,7 @@ module NodeEvents = NodeEvents;
 module UiEvents = UiEvents;
 
 module React  = UiReact;
-module Hooks = UiReact.Hooks;
-module Slots = UiReact.Slots;
+module Hooks = Hooks;
 
 include Primitives;
 
