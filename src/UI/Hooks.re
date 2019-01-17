@@ -4,15 +4,18 @@
 
 let animation =
     (v: Animated.animationValue, opts: Animated.animationOptions, slots) => {
-    let (_currentV, _set, slots) = UiReact.Hooks.state(v, slots);
+    let (currentV, _set, slots) = UiReact.Hooks.state(v, slots);
 
     let slots = UiReact.Hooks.effect(OnMount, () => {
-        prerr_endline ("hooked");
+        prerr_endline ("Starting animation");
         let anim = Animated.start(v, opts);
 
-        Some(() => Animated.cancel(anim));
+        Some(() => {
+            prerr_endline ("Stopping animation");
+            Animated.cancel(anim);
+        });
     }, slots);
 
   /* TODO: Replace this once 'effect' is working */
-  (opts.toValue, slots)
+  (currentV.current, slots)
 };

@@ -31,11 +31,13 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
       | None => {
           let updates = UiReact.RenderedElement.render(rootNode, component);
           UiReact.RenderedElement.executeHostViewUpdates(updates) |> ignore;
+          let updates = UiReact.RenderedElement.executePendingEffects(updates);
           updates
       } 
       | Some(v) => {
           let nextElement = UiReact.RenderedElement.flushPendingUpdates(v); 
           UiReact.RenderedElement.executeHostViewUpdates(nextElement) |> ignore;
+          let nextElement = UiReact.RenderedElement.executePendingEffects(nextElement);
           nextElement;
       }
   };
