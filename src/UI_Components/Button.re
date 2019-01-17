@@ -30,13 +30,20 @@ include (
                   ~width=300,
                   ~height=100,
                   ~disabled=false,
+                  ~tabindex=0,
+                  ~onFocus=?,
+                  ~onBlur=?,
                   ~fontFamily="Roboto-Regular.ttf",
                   (),
                 ) =>
                 render(
                   () =>
                     /* NOTE:If disabled the button should do nothing */
-                    <Clickable onClick={disabled ? noop : onClick}>
+                    <Clickable
+                      onClick={disabled ? noop : onClick}
+                      tabindex
+                      onFocus=?onFocus
+                      onBlur=?onBlur>
                       <view
                         style={containerStyle(
                           ~width,

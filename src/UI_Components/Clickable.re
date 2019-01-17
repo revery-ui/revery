@@ -13,7 +13,17 @@ let noop = () => ();
 
 /* The 'include' here makes the component available at the top level */
 include (
-          val component((render, ~style=Style.defaultStyle, ~onClick: clickFunction=noop, ~children, ()) =>
+          val component(
+                (
+                  render,
+                  ~onClick: clickFunction=noop,
+                  ~style=Style.defaultStyle,
+                  ~tabindex=0,
+                  ~onBlur=?,
+                  ~onFocus=?,
+                  ~children,
+                  (),
+                ) =>
                 render(
                   () => {
                     let (opacity, setOpacity) = useState(0.8);
@@ -36,8 +46,9 @@ include (
                       ~cursor=MouseCursors.pointer,
                       ()
                     );
-
-                    <view style=style2 onMouseDown onMouseUp> ...children </view>;
+                    <view style=style2 onMouseDown onMouseUp onBlur=?onBlur onFocus=?onFocus tabindex >
+                      ...children
+                    </view>;
                   },
                   ~children,
                 )

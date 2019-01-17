@@ -8,17 +8,18 @@ open RenderPass;
 type node = Node.node(renderPass);
 
 type primitives =
-  | View(Style.t, NodeEvents.t(node))
+  | View(Style.t, NodeEvents.t(node), option(int))
   | Text(Style.t, string, NodeEvents.t(node))
   | Image(Style.t, string, NodeEvents.t(node));
 
 let createInstance = prim => {
   let node =
     switch (prim) {
-    | View(style, events) =>
+    | View(style, events, tabindex) =>
       let view = (new ViewNode.viewNode)();
       view#setStyle(style);
       view#setEvents(events);
+      view#setTabIndex(tabindex);
       view;
     | Image(style, src, events) =>
       let img = (new ImageNode.imageNode)(src);
@@ -37,11 +38,12 @@ let createInstance = prim => {
 
 let updateInstance = (n: node, _oldPrim: primitives, newPrim: primitives) =>
   switch (newPrim) {
-  | View(style, events) =>
+  | View(style, events, tabindex) =>
     /* TODO: Is there a way to downcast properly here, from Node -> ViewNode ? */
     let vn: ViewNode.viewNode = Obj.magic(n);
     vn#setStyle(style);
     vn#setEvents(events);
+    vn#setTabIndex(tabindex);
   | Text(style, text, events) =>
     /* TODO: Is there a way to downcast properly here, from Node -> TextNode ? */
     let tn: TextNode.textNode = Obj.magic(n);
