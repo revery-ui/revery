@@ -19,7 +19,7 @@ module Mouse = Mouse;
 module NodeEvents = NodeEvents;
 module UiEvents = UiEvents;
 
-module React  = UiReact;
+module React = UiReact;
 module Hooks = Hooks;
 
 include Primitives;
@@ -37,20 +37,14 @@ let start =
   let uiDirty = ref(false);
 
   let onStale = () => {
-      uiDirty := true;
+    uiDirty := true;
   };
 
   let _ = Revery_Core.Event.subscribe(React.onStale, onStale);
 
   let rootNode = (new viewNode)();
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
-  let ui =
-    UiContainer.create(
-      window,
-      rootNode,
-      mouseCursor,
-      createOptions,
-    );
+  let ui = UiContainer.create(window, rootNode, mouseCursor, createOptions);
 
   let _ =
     Revery_Core.Event.subscribe(
