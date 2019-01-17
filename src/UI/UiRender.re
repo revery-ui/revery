@@ -27,22 +27,32 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   AnimationTicker.tick();
 
   /* Perform reconciliation */
-  let latest = switch(lastUpdate^) {
-      | None => {
+  /* TODO:
+   * - Refactor this to something like a 'Container' to better manage the state
+   * - Perf: Better logic to determine if we should just update or flush pending updates - both are not always needed.
+   */
+  let latest = switch((lastUpdate^, previousElement^)) {
+      | (None, None) => {
           let updates = UiReact.RenderedElement.render(rootNode, component);
           UiReact.RenderedElement.executeHostViewUpdates(updates) |> ignore;
           let updates = UiReact.RenderedElement.executePendingEffects(updates);
-          updates
+          Some(updates);
       } 
-      | Some(v) => {
-          let nextElement = UiReact.RenderedElement.flushPendingUpdates(v); 
+      | (Some(v), Some(previousElement)) => {
+          let nextElement = 
+          UiReact.RenderedElement.update(~previousElement, ~renderedElement=v, component)
+          |> UiReact.RenderedElement.flushPendingUpdates;
+
           UiReact.RenderedElement.executeHostViewUpdates(nextElement) |> ignore;
-          let nextElement = UiReact.RenderedElement.executePendingEffects(nextElement);
-          nextElement;
+
+          let ret = nextElement |> UiReact.RenderedElement.executePendingEffects;
+          Some(ret);
       }
+      | _ => None
   };
 
-  lastUpdate := Some(latest);
+  previousElement := Some(component);
+  lastUpdate := latest;
 
   /* Layout */
   let size = Window.getSize(window);
