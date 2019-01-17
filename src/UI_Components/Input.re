@@ -3,9 +3,35 @@ open Revery_Core;
 open Revery_Core.Window;
 
 let containerStyles =
-    (~height, ~width, ~border, ~color, ~backgroundColor, ~boxShadow, ()) =>
+    (
+      ~margin,
+      ~marginLeft,
+      ~marginRight,
+      ~marginBottom,
+      ~marginTop,
+      ~top,
+      ~right,
+      ~left,
+      ~bottom,
+      ~height,
+      ~width,
+      ~border,
+      ~color,
+      ~backgroundColor,
+      ~boxShadow,
+      (),
+    ) =>
   Style.make(
+    ~margin,
+    ~marginLeft,
+    ~marginRight,
+    ~marginBottom,
+    ~marginTop,
     ~backgroundColor,
+    ~top,
+    ~right,
+    ~left,
+    ~bottom,
     ~color,
     ~height,
     ~width,
@@ -112,16 +138,28 @@ let defaultStyles =
     (),
   );
 
-let isUndefined = (initial, default) =>
-  initial ? initial == Layout.Encoding.cssUndefined : default;
-
 include (
           val component(
                 (
                   render,
                   ~children,
                   ~window,
-                  ~styles=defaultStyles,
+                  ~margin=defaultStyles.margin,
+                  ~marginLeft=defaultStyles.marginLeft,
+                  ~marginRight=defaultStyles.marginRight,
+                  ~marginBottom=defaultStyles.marginBottom,
+                  ~marginTop=defaultStyles.marginTop,
+                  ~boxShadow=defaultStyles.boxShadow,
+                  ~height=defaultStyles.height,
+                  ~width=defaultStyles.width,
+                  ~top=defaultStyles.top,
+                  ~bottom=defaultStyles.bottom,
+                  ~right=defaultStyles.right,
+                  ~left=defaultStyles.left,
+                  ~color=defaultStyles.color,
+                  ~backgroundColor=defaultStyles.color,
+                  ~fontSize=defaultStyles.fontSize,
+                  ~border=defaultStyles.border,
                   ~value=None,
                   ~placeholder="",
                   ~onChange=noop,
@@ -145,34 +183,40 @@ include (
                     let (state, dispatch) =
                       useReducer(reducer, initialState);
 
+                    let (focused, setFocus) = useState(true);
+
                     let valueToUse =
                       isControlled ? inheritedValue : state.value;
 
-                    useEffect(() =>
-                      Event.subscribe(
-                        window.onKeyPress,
-                        event => {
-                          if (!isControlled) {
-                            dispatch(UpdateText(event.character));
-                          };
-                          onChange(
-                            ~value=addCharacter(valueToUse, event.character),
-                          );
-                        },
-                      )
-                    );
+                    if (focused) {
+                      useEffect(() =>
+                        Event.subscribe(
+                          window.onKeyPress,
+                          event => {
+                            if (!isControlled) {
+                              dispatch(UpdateText(event.character));
+                            };
+                            onChange(
+                              ~value=
+                                addCharacter(valueToUse, event.character),
+                            );
+                          },
+                        )
+                      );
+                    };
 
-                    useEffect(() =>
-                      Event.subscribe(
-                        window.onKeyDown,
-                        event => {
-                          if (!isControlled) {
-                            handleKeyDown(~dispatch, event);
-                          };
-                          onChange(~value=removeCharacter(state.value));
-                        },
-                      )
-                    );
+                    if (focused) {
+                      useEffect(() =>
+                        Event.subscribe(window.onKeyDown, event =>
+                          if (focused) {
+                            if (!isControlled) {
+                              handleKeyDown(~dispatch, event);
+                            };
+                            onChange(~value=removeCharacter(state.value));
+                          }
+                        )
+                      );
+                    };
 
                     let opacity =
                       useAnimation(
@@ -196,48 +240,53 @@ include (
                      */
                     let viewStyles =
                       containerStyles(
-                        ~height=
-                          styles.height == Layout.Encoding.cssUndefined ?
-                            defaultStyles.height : styles.height,
-                        ~width=styles.width,
-                        ~color=styles.color,
-                        ~border=styles.border,
-                        ~backgroundColor=styles.backgroundColor,
-                        ~boxShadow=styles.boxShadow,
+                        ~margin,
+                        ~marginLeft,
+                        ~marginRight,
+                        ~marginBottom,
+                        ~marginTop,
+                        ~height,
+                        ~width,
+                        ~color,
+                        ~backgroundColor,
+                        ~boxShadow,
+                        ~border,
+                        ~left,
+                        ~right,
+                        ~top,
+                        ~bottom,
                         (),
                       );
 
                     let innerTextStyles =
-                      textStyles(
-                        ~color=styles.color,
-                        ~fontSize=styles.fontSize,
-                        ~width=200,
-                        ~hasPlaceholder,
-                      );
+                      textStyles(~color, ~fontSize, ~width, ~hasPlaceholder);
 
                     let inputCursorStyles =
                       cursorStyles(
                         ~opacity,
-                        ~fontSize=styles.fontSize,
-                        ~cursorColor=styles.color,
-                        ~containerHeight=styles.height,
+                        ~fontSize,
+                        ~cursorColor=color,
+                        ~containerHeight=height,
                         ~hasPlaceholder,
                       );
 
+                    print_endline("Focus state " ++ string_of_bool(focused));
                     /*
                        component
                      */
-                    <view style=viewStyles>
-                      <text style=innerTextStyles> content </text>
-                      /*
-                         TODO:
-                         1. Passed valued does not update correctly (reconciler?)
-                         2. Show and hide cursor based on focus
-                         3. Add Focus Management
-                         4. Add Mouse events
-                       */
-                      <view style=inputCursorStyles />
-                    </view>;
+                    <Clickable onFocus={() => setFocus(!focused)}>
+                      <view style=viewStyles>
+                        <text style=innerTextStyles> content </text>
+                        /*
+                           TODO:
+                           1. Passed valued does not update correctly (reconciler?)
+                           2. Show and hide cursor based on focus
+                           3. Add Focus Management
+                           4. Add Mouse events
+                         */
+                        <view style=inputCursorStyles />
+                      </view>
+                    </Clickable>;
                   },
                   ~children,
                 )
