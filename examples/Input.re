@@ -21,6 +21,20 @@ module Example = (
   val component((render, ~window, ~children, ()) =>
         render(
           () => {
+            let custom =
+              Style.make(
+                ~backgroundColor=Colors.paleVioletRed,
+                ~color=Colors.white,
+                ~boxShadow=
+                  Style.BoxShadow.make(
+                    ~xOffset=-5.,
+                    ~yOffset=2.,
+                    ~color=Colors.black,
+                    ~blurRadius=20.,
+                    (),
+                  ),
+                (),
+              );
             let (currentValue, setValue) = useState("");
             <view style=containerStyle>
               <text
@@ -38,6 +52,7 @@ module Example = (
                 placeholder="Insert text here"
                 onChange={(~value) => setValue(value)}
               />
+              <Input styles=custom window placeholder="custom input" />
             </view>;
           },
           ~children,

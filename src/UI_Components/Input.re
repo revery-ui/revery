@@ -2,24 +2,19 @@ open Revery_UI;
 open Revery_Core;
 open Revery_Core.Window;
 
-let styles = (~height, ~width) =>
+let containerStyles =
+    (~height, ~width, ~border, ~color, ~backgroundColor, ~boxShadow, ()) =>
   Style.make(
-    ~color=Colors.transparentWhite,
+    ~backgroundColor,
+    ~color,
     ~height,
     ~width,
     ~flexDirection=LayoutTypes.Row,
     ~alignItems=LayoutTypes.AlignCenter,
     ~justifyContent=LayoutTypes.JustifyFlexStart,
     ~overflow=LayoutTypes.Hidden,
-    ~border=
-      Style.Border.make(
-        /*
-           The default border width should be 5% of the full input height
-         */
-        ~width=float_of_int(height) *. 0.05 |> int_of_float,
-        ~color=Colors.black,
-        (),
-      ),
+    ~border,
+    ~boxShadow,
     (),
   );
 
@@ -38,7 +33,7 @@ let textStyles = (~color, ~width, ~fontSize, ~hasPlaceholder) => {
 };
 
 let cursorStyles =
-    (~fontSize, ~backgroundColor, ~opacity, ~containerHeight, ~hasPlaceholder) => {
+    (~fontSize, ~cursorColor, ~opacity, ~containerHeight, ~hasPlaceholder) => {
   /*
      calculate the top padding needed to place the cursor centrally
    */
@@ -48,8 +43,8 @@ let cursorStyles =
       ~marginLeft=2,
       ~height=fontSize,
       ~width=2,
-      ~backgroundColor,
       ~opacity,
+      ~backgroundColor=cursorColor,
       ~cursor=MouseCursors.text,
     );
 
@@ -96,16 +91,37 @@ let handleKeyDown = (~dispatch, event: Events.keyEvent) =>
 
 let noop = (~value as _value) => ();
 
+let defaultBorder = height =>
+  Style.Border.make(
+    /*
+       The default border width should be 5% of the full input height
+     */
+    ~width=float_of_int(height) *. 0.05 |> int_of_float,
+    ~color=Colors.black,
+    (),
+  );
+
+let defaultStyles =
+  Style.make(
+    ~fontSize=18,
+    ~color=Colors.black,
+    ~width=200,
+    ~height=50,
+    ~border=defaultBorder(50),
+    ~backgroundColor=Colors.transparentWhite,
+    (),
+  );
+
+let isUndefined = (initial, default) =>
+  initial ? initial == Layout.Encoding.cssUndefined : default;
+
 include (
           val component(
                 (
                   render,
                   ~children,
                   ~window,
-                  ~color=Colors.black,
-                  ~fontSize=18,
-                  ~width=200,
-                  ~height=50,
+                  ~styles=defaultStyles,
                   ~value=None,
                   ~placeholder="",
                   ~onChange=noop,
@@ -175,32 +191,52 @@ include (
                     let content =
                       hasPlaceholder ? state.placeholder : valueToUse;
 
-                    <view style={styles(~height, ~width)}>
-                      <text
-                        style={textStyles(
-                          ~color,
-                          ~fontSize,
-                          ~width,
-                          ~hasPlaceholder,
-                        )}>
-                        content
-                      </text>
+                    /*
+                       computed styles
+                     */
+                    let viewStyles =
+                      containerStyles(
+                        ~height=
+                          styles.height == Layout.Encoding.cssUndefined ?
+                            defaultStyles.height : styles.height,
+                        ~width=styles.width,
+                        ~color=styles.color,
+                        ~border=styles.border,
+                        ~backgroundColor=styles.backgroundColor,
+                        ~boxShadow=styles.boxShadow,
+                        (),
+                      );
+
+                    let innerTextStyles =
+                      textStyles(
+                        ~color=styles.color,
+                        ~fontSize=styles.fontSize,
+                        ~width=200,
+                        ~hasPlaceholder,
+                      );
+
+                    let inputCursorStyles =
+                      cursorStyles(
+                        ~opacity,
+                        ~fontSize=styles.fontSize,
+                        ~cursorColor=styles.color,
+                        ~containerHeight=styles.height,
+                        ~hasPlaceholder,
+                      );
+
+                    /*
+                       component
+                     */
+                    <view style=viewStyles>
+                      <text style=innerTextStyles> content </text>
                       /*
                          TODO:
                          1. Passed valued does not update correctly (reconciler?)
                          2. Show and hide cursor based on focus
-                         3. Add Focus
+                         3. Add Focus Management
                          4. Add Mouse events
                        */
-                      <view
-                        style={cursorStyles(
-                          ~opacity,
-                          ~fontSize,
-                          ~backgroundColor=color,
-                          ~containerHeight=height,
-                          ~hasPlaceholder,
-                        )}
-                      />
+                      <view style=inputCursorStyles />
                     </view>;
                   },
                   ~children,
