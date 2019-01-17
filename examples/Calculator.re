@@ -1,7 +1,7 @@
 open Revery;
 open Revery.Core;
 open Revery.Core.Events;
-/* open Revery.Core.Window; */
+open Revery.Core.Window;
 open Revery.UI;
 open Revery.UI.Components;
 
@@ -237,16 +237,15 @@ let reducer = (action, state) =>
 module Calculator {
   let component = React.component("Calculator");
 
-  let make = (_window) => component((slots) => {
-    
-            let ({display, number, _}, dispatch, _slots: React.Hooks.empty) =
+  let make = (window) => component((slots) => {
+            let ({display, number, _}, dispatch, slots) =
               React.Hooks.reducer(
                 ~initialState={operator: `Nop, result: 0., display: "", number: ""},
                 reducer,
                 slots,
               );
 
-            let _respondToKeys = e => switch(e.key) {
+            let respondToKeys = e => switch(e.key) {
               | Key.KEY_BACKSPACE =>
                 dispatch(BackspaceKeyPressed)
 
@@ -279,10 +278,10 @@ module Calculator {
             /* TODO: Pretty sure this isn't supposed to go in the render() function.
                Seems to cause lag the more times we re-render, so I guess this is
                subscribing a ton of times and never unsubscribing. */
-            /* useEffect(() => { */
-            /*   let unsubscribe = Event.subscribe(window.onKeyDown, respondToKeys); */
-            /*   unsubscribe; */
-            /* }); */
+            let _slots: React.Hooks.empty = React.Hooks.effect(Always, () => {
+              let unsubscribe = Event.subscribe(window.onKeyDown, respondToKeys);
+              Some(unsubscribe);
+            }, slots);
 
             <Column>
               <Display display curNum=number />

@@ -27,10 +27,6 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   AnimationTicker.tick();
 
   /* Perform reconciliation */
-  /* Performance.bench("updateContainer", () => */
-  /*   UiReact.updateContainer(container, component) */
-  /* ); */
-
   let latest = switch(lastUpdate^) {
       | None => {
           let updates = UiReact.RenderedElement.render(rootNode, component);
@@ -45,7 +41,6 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   };
 
   lastUpdate := Some(latest);
-
 
   /* Layout */
   let size = Window.getSize(window);

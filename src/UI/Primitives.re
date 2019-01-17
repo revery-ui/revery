@@ -22,7 +22,6 @@ module View = {
     ) => {
        component((_: UiReact.Hooks.empty) => {
         make: () => {
-            prerr_endline("View::make");
             let events = NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ());
             let node =  (new ViewNode.viewNode)();
             node#setEvents(events);
@@ -30,7 +29,6 @@ module View = {
             node;
         },
         configureInstance: (~isFirstRender as _, node) => {
-            prerr_endline("View::configureInstance");
             let events = NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ());
             node#setEvents(events);
             node#setStyle(style);
@@ -72,7 +70,6 @@ module Text = {
 
             /* TODO: Proper way to downcast? */
             let tn: TextNode.textNode = Obj.magic(node);
-
             tn#setEvents(events);
             tn#setStyle(style);
             tn#setText(text);
@@ -102,7 +99,6 @@ module Image = {
     ) => {
        component((_: UiReact.Hooks.empty) => {
         make: () => {
-            prerr_endline ("Image::make");
             let events = NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ());
             let node =  (new ImageNode.imageNode)(src);
             node#setEvents(events);
@@ -110,7 +106,6 @@ module Image = {
             Obj.magic(node);
         },
         configureInstance: (~isFirstRender as _, node) => {
-            prerr_endline ("Image::configureInstance");
             let events = NodeEvents.make(~ref?, ~onMouseDown?, ~onMouseMove?, ~onMouseUp?, ~onMouseWheel?, ());
             node#setEvents(events);
             node#setStyle(style);
