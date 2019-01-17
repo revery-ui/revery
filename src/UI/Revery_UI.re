@@ -22,8 +22,6 @@ module UiEvents = UiEvents;
 module React = UiReact;
 module Hooks = Hooks;
 
-type component = UiReact.emptyHook;
-
 include Primitives;
 
 type renderFunction = unit => UiReact.syntheticElement;
