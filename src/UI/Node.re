@@ -17,6 +17,8 @@ class node ('a) (()) = {
   val _parent: ref(option(node('a))) = ref(None);
   val _depth: ref(int) = ref(0);
   val _internalId: int = UniqueId.getUniqueId();
+  val _tabIndex: ref(option(int)) = ref(None);
+  val _hasFocus: ref(bool) = ref(false);
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
@@ -37,6 +39,8 @@ class node ('a) (()) = {
   };
   pub getInternalId = () => _internalId;
   pub measurements = () => _layoutNode^.layout;
+  pub getTabIndex = () => _tabIndex^;
+  pub setTabIndex = index => _tabIndex := index;
   pub getDepth = () => _depth^;
   pub setStyle = style => _style := style;
   pub getStyle = () => _style^;
@@ -104,7 +108,7 @@ class node ('a) (()) = {
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
   pub getMeasureFunction = (_pixelRatio: float) => None;
-  pub handleEvent = (evt: NodeEvents.mouseEvent) => {
+  pub handleEvent = (evt: NodeEvents.event) => {
     let _ =
       switch (evt, _this#getEvents()) {
       | (MouseDown(c), {onMouseDown: Some(cb), _}) => cb(c)
@@ -115,6 +119,18 @@ class node ('a) (()) = {
       | (MouseMove(_), _)
       | (MouseUp(_), _)
       | (MouseWheel(_), _) => ()
+      | (Focus, p) =>
+        _this#focus();
+        switch (p) {
+        | {onFocus: Some(cb), _} => cb()
+        | _ => ()
+        };
+      | (Blur, p) =>
+        _this#blur();
+        switch (p) {
+        | {onBlur: Some(cb), _} => cb()
+        | _ => ()
+        };
       };
     ();
   };
@@ -155,6 +171,17 @@ class node ('a) (()) = {
       };
     | _ => ()
     };
+  };
+  pub canBeFocused = () =>
+    switch (_tabIndex^) {
+    | Some(_) => true
+    | None => false
+    };
+  pub focus = () => {
+    _hasFocus := true;
+  };
+  pub blur = () => {
+    _hasFocus := false;
   };
 };
 

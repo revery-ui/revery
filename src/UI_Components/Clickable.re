@@ -13,7 +13,7 @@ let noop = () => ();
 
 let component = React.component("Clickable");
 
-let make = (~style=Style.defaultStyle, ~onClick:clickFunction=noop, children: React.syntheticElement) => component(slots => {
+let make = (~style=Style.defaultStyle, ~onClick:clickFunction=noop, ~onBlur=?, ~onFocus=?, ~tabindex=?, children: React.syntheticElement) => component(slots => {
         let (opacity, setOpacity, _slots: React.Hooks.empty) = React.Hooks.state(0.8, slots);
 
         /* TODO:
@@ -35,7 +35,7 @@ let make = (~style=Style.defaultStyle, ~onClick:clickFunction=noop, children: Re
           ()
         );
 
-        <View style=style2 onMouseDown onMouseUp> {children} </View>;
+        <View style=style2 onMouseDown onMouseUp onBlur=?onBlur onFocus=?onFocus tabindex> {children} </View>;
 });
 
-let createElement = (~style=Style.defaultStyle, ~onClick:clickFunction=noop, ~children, ()) => React.element(make(~style, ~onClick, React.listToElement(children)));
+let createElement = (~style=Style.defaultStyle, ~onClick:clickFunction=noop, ~onBlur=?, ~onFocus=?, ~tabindex=0, ~children, ()) => React.element(make(~style, ~onClick, ~onBlur?, ~onFocus?,  ~tabindex, React.listToElement(children)));

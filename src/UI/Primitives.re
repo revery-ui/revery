@@ -17,6 +17,9 @@ module View = {
         ~onMouseMove=?,
         ~onMouseUp=?,
         ~onMouseWheel=?,
+        ~onBlur=?,
+        ~onFocus=?,
+        ~tabindex=?,
         ~ref=?,
         ~style=Style.defaultStyle,
         children,
@@ -31,11 +34,14 @@ module View = {
               ~onMouseMove?,
               ~onMouseUp?,
               ~onMouseWheel?,
+              ~onBlur?,
+              ~onFocus?,
               (),
             );
           let node = (new ViewNode.viewNode)();
           node#setEvents(events);
           node#setStyle(style);
+          node#setTabIndex(tabindex);
           node;
         },
         configureInstance: (~isFirstRender as _, node) => {
@@ -46,10 +52,13 @@ module View = {
               ~onMouseMove?,
               ~onMouseUp?,
               ~onMouseWheel?,
+              ~onBlur?,
+              ~onFocus?,
               (),
             );
           node#setEvents(events);
           node#setStyle(style);
+          node#setTabIndex(tabindex);
           node;
         },
         children,
@@ -63,8 +72,11 @@ module View = {
         ~onMouseMove=?,
         ~onMouseUp=?,
         ~onMouseWheel=?,
+       ~onBlur=?,
+       ~onFocus=?,
         ~ref=?,
         ~style=Style.defaultStyle,
+        ~tabindex=None,
         ~children,
         (),
       ) => {
@@ -74,8 +86,11 @@ module View = {
         ~onMouseMove?,
         ~onMouseUp?,
         ~onMouseWheel?,
+        ~onBlur?,
+        ~onFocus?,
         ~ref?,
         ~style,
+        ~tabindex?,
         UiReact.listToElement(children),
       ),
     );

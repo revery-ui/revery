@@ -28,13 +28,16 @@ let make = (
                   ~width=300,
                   ~height=100,
                   ~disabled=false,
+                  ~tabindex=?,
+                  ~onFocus=?,
+                  ~onBlur=?,
                   ~fontFamily="Roboto-Regular.ttf",
                   (),
                   /* children, */
     
 ) 
     => component((_slots: React.Hooks.empty) => {
-        <Clickable onClick={disabled ? noop : onClick}>
+        <Clickable onClick={disabled ? noop : onClick} onFocus=?onFocus onBlur=?onBlur tabindex=?tabindex>
           <View
             style={containerStyle(
               ~width,
@@ -55,8 +58,11 @@ let createElement = (
                   ~fontSize=40,
                   ~width=300,
                   ~height=100,
+                  ~onFocus=?,
+                  ~onBlur=?,
+                  ~tabindex=?,
                   ~disabled=false,
                   ~fontFamily="Roboto-Regular.ttf",
                   ()) => {
-                   React.element(make(~title, ~onClick, ~color, ~fontSize, ~width, ~height, ~disabled, ~fontFamily, ()));
+                   React.element(make(~title, ~onClick, ~color, ~fontSize, ~width, ~height, ~disabled, ~fontFamily, ~onFocus?, ~onBlur?, ~tabindex?, ()));
                   };
