@@ -15,12 +15,33 @@ module ViewPort = {
     | South
     | West;
 
+  let create = size => {xMin: 0, xMax: size, yMin: 0, yMax: size};
+
   let changeDirection = (viewPort, direction) =>
     switch (direction) {
     | North => {...viewPort, yMin: viewPort.yMin - 1, yMax: viewPort.yMax - 1}
     | East => {...viewPort, xMin: viewPort.xMin + 1, xMax: viewPort.xMax + 1}
     | South => {...viewPort, yMin: viewPort.yMin + 1, yMax: viewPort.yMax + 1}
     | West => {...viewPort, xMin: viewPort.xMin - 1, xMax: viewPort.xMax - 1}
+    };
+
+  let zoomOut = viewPort => {
+    xMin: viewPort.xMin - 1,
+    xMax: viewPort.xMax + 1,
+    yMin: viewPort.yMin - 1,
+    yMax: viewPort.yMax + 1,
+  };
+
+  let zoomIn = viewPort =>
+    if (viewPort.xMax > viewPort.xMin + 2) {
+      {
+        xMin: viewPort.xMin + 1,
+        xMax: viewPort.xMax - 1,
+        yMin: viewPort.yMin + 1,
+        yMax: viewPort.yMax - 1,
+      };
+    } else {
+      viewPort;
     };
 };
 
@@ -357,7 +378,8 @@ module Cell = {
     React.element(make(~cell, ~onClick, ()));
 };
 
-let viewPortRender = (viewPort:ViewPort.t, universe: Universe.t(cell), onClick) => {
+let viewPortRender =
+    (viewPort: ViewPort.t, universe: Universe.t(cell), onClick) => {
   let cell = pos =>
     switch (Universe.find_opt(pos, universe)) {
     | Some(_) => Alive
@@ -394,7 +416,11 @@ type model = {
 type action =
   | Tick
   | ToggleAlive(Position.t)
-  | MoveViewPort(ViewPort.direction);
+  | MoveViewPort(ViewPort.direction)
+  | ZoomViewPort(zoom)
+and zoom =
+  | ZoomIn
+  | ZoomOut;
 
 let reducer = (action, state) =>
   switch (action) {
@@ -415,6 +441,14 @@ let reducer = (action, state) =>
   | MoveViewPort(direction) => {
       ...state,
       viewPort: ViewPort.changeDirection(state.viewPort, direction),
+    }
+  | ZoomViewPort(zoom) => {
+      ...state,
+      viewPort:
+        switch (zoom) {
+        | ZoomIn => ViewPort.zoomIn(state.viewPort)
+        | ZoomOut => ViewPort.zoomOut(state.viewPort)
+        },
     }
   };
 
@@ -453,6 +487,14 @@ module GameOfLife = {
             contents="West"
             onClick={_ => dispatch(MoveViewPort(West))}
           />
+          <Button
+            contents="Zoom In"
+            onClick={_ => dispatch(ZoomViewPort(ZoomIn))}
+          />
+          <Button
+            contents="Zoom Out"
+            onClick={_ => dispatch(ZoomViewPort(ZoomOut))}
+          />
         </View>
       </Column>;
     });
@@ -463,7 +505,7 @@ module GameOfLife = {
 };
 
 let render = () => {
-  let viewPort = {ViewPort.xMin: 0, xMax: 20, yMin: 0, yMax: 20};
+  let viewPort = ViewPort.create(15);
   let model = {viewPort, universe: pulsar};
   <GameOfLife model />;
 };
