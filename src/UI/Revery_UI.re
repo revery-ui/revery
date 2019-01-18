@@ -28,10 +28,6 @@ type renderFunction = unit => UiReact.syntheticElement;
 
 open UiContainer;
 
-module Internal = {
-    module UiReact = UiReact;
-};
-
 let start =
     (
       ~createOptions=UiContainer.Options.default,
