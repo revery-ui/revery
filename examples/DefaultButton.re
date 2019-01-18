@@ -42,7 +42,7 @@ module DefaultButtonWithCounter = {
           <Text style=countStyle text=countStr />
         </View>
         <Button title="click me!" onClick=increment />
-        <Button disabled=true title="disabled click me!" onClick=increment />
+        <Button disabled=true title="(disabled)" onClick=increment />
       </View>;
     });
   };
