@@ -1,7 +1,6 @@
 open Revery.Core;
 open Revery.Math;
 open Revery.UI;
-open Revery.UI.Components;
 
 module Logo = {
   let component = React.component("Logo");
@@ -139,6 +138,5 @@ let render = () =>
       <AnimatedText delay=0.0 text="Welcome" />
       <AnimatedText delay=0.5 text="to" />
       <AnimatedText delay=1. text="Revery" />
-      <Slider />
     </View>
   </View>;

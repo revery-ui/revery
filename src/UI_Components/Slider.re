@@ -27,76 +27,109 @@ let make =
   component(slots => {
     let (slideRef, _setSlideRef, slots) = React.Hooks.state(None, slots);
     let (thumbRef, _setThumbRef, slots) = React.Hooks.state(None, slots);
-    let (thumbPosition, setThumbPosition, _slots: React.Hooks.empty) = React.Hooks.state(0, slots);
+    let (isActive, setActive, slots) = React.Hooks.state(false, slots);
+    let (thumbPosition, setThumbPosition, _slots: React.Hooks.empty) =
+      React.Hooks.state(0, slots);
 
     let setSlideRef = r => {
       _setSlideRef(Some(r));
     };
 
     let setThumbRef = r => {
-     _setThumbRef(Some(r));   
+      _setThumbRef(Some(r));
     };
 
-    let onMouseDown = (evt: NodeEvents.mouseButtonEventParams)  => {
-
-      switch ((slideRef, thumbRef)) {
-      | (Some(slider), Some(thumb)) => {
+    let onMouseDown = (evt: NodeEvents.mouseButtonEventParams) => {
+      switch (slideRef, thumbRef) {
+      | (Some(slider), Some(thumb)) =>
         let sliderDimensions: BoundingBox2d.t = slider#getBoundingBox();
-          let thumbDimensions: BoundingBox2d.t = thumb#getBoundingBox();
-        
-          let sliderWidth = Vec2.get_x(sliderDimensions.max) -. Vec2.get_x(sliderDimensions.min);
-          let thumbWidth = Vec2.get_x(thumbDimensions.max) -. Vec2.get_x(thumbDimensions.min);
-          let availableWidth = sliderWidth -. thumbWidth;
+        let thumbDimensions: BoundingBox2d.t = thumb#getBoundingBox();
 
-          let startPosition = Vec2.get_x(sliderDimensions.min);
-          let endPosition = startPosition +. availableWidth;
+        let sliderWidth =
+          Vec2.get_x(sliderDimensions.max)
+          -. Vec2.get_x(sliderDimensions.min);
+        let thumbWidth =
+          Vec2.get_x(thumbDimensions.max) -. Vec2.get_x(thumbDimensions.min);
+        let availableWidth = sliderWidth -. thumbWidth;
 
-          let getValue = (x) => {
-            if (x < startPosition) {
-                startPosition
-            } else if(x > endPosition) {
-                endPosition
-            } else {
-                x
-            }
+        let startPosition = Vec2.get_x(sliderDimensions.min);
+        let endPosition = startPosition +. availableWidth;
+
+        let getValue = x =>
+          if (x < startPosition) {
+            startPosition;
+          } else if (x > endPosition) {
+            endPosition;
+          } else {
+            x;
           };
 
-          let update = (mouseX) => {
-            let thumbPosition = getValue(mouseX)  -. startPosition;
+        let update = mouseX => {
+          let thumbPosition = getValue(mouseX) -. startPosition;
 
-            let normalizedValue = ((thumbPosition /. availableWidth) *. (maximumValue -. minimumValue)) +. minimumValue;
-            setThumbPosition(int_of_float(thumbPosition));
-            onValueChanged(normalizedValue);
-          };
+          let normalizedValue =
+            thumbPosition
+            /. availableWidth
+            *. (maximumValue -. minimumValue)
+            +. minimumValue;
+          setThumbPosition(int_of_float(thumbPosition));
+          onValueChanged(normalizedValue);
+        };
 
-          update(evt.mouseX);
+        update(evt.mouseX);
+        setActive(true);
 
-          Mouse.setCapture(
-            ~onMouseMove=(evt) => update(evt.mouseX),
-            ~onMouseUp=_evt => Mouse.releaseCapture(),
-            (),
-          );
-            
-          }
+        Mouse.setCapture(
+          ~onMouseMove=evt => update(evt.mouseX),
+          ~onMouseUp=
+            _evt => {
+              Mouse.releaseCapture();
+              setActive(false);
+            },
+          (),
+        );
       | _ => ()
       };
-
     };
 
-    let backgroundColor =Colors.red;
+    let backgroundColor = Colors.darkGray;
+    let thumbColor = Colors.gray;
 
-    let style = Style.make(~width=100, ~height=25, ~backgroundColor, ());
+    let opacity = isActive ? 1.0 : 0.8;
+
+    let sliderHeight = 25;
+    let trackHeight = 5;
+    let thumbHeight = sliderHeight;
+    let thumbWidth = 15;
+    let trackMargins = (sliderHeight - trackHeight) / 2;
+
+    let style = Style.make(~opacity, ~width=100, ~height=sliderHeight, ());
+
+    let trackStyle =
+      Style.make(
+        ~opacity,
+        ~width=100,
+        ~height=trackHeight,
+        ~top=trackMargins,
+        ~bottom=trackMargins,
+        ~left=0,
+        ~right=0,
+        ~position=LayoutTypes.Absolute,
+        ~backgroundColor,
+        (),
+      );
 
     <View onMouseDown style ref={r => setSlideRef(r)}>
+      <View style=trackStyle />
       <View
         ref={r => setThumbRef(r)}
         style={Style.make(
           ~position=LayoutTypes.Absolute,
-          ~height=25,
-          ~width=15,
+          ~height=thumbHeight,
+          ~width=thumbWidth,
           ~left=thumbPosition,
           ~top=0,
-          ~backgroundColor=Colors.yellow,
+          ~backgroundColor=thumbColor,
           (),
         )}
       />

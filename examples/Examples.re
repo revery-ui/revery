@@ -1,6 +1,9 @@
 open Revery;
 open Revery.Core;
 /* open Revery.Math; */
+
+module SliderExample = Slider;
+
 open Revery.UI;
 open Revery.UI.Components;
 
@@ -23,6 +26,7 @@ let state: state = {
   examples: [
     {name: "Animation", render: _w => Hello.render()},
     {name: "Button", render: _ => DefaultButton.render()},
+    {name: "Slider", render: _ => SliderExample.render()},
     {name: "Border", render: _ => Border.render()},
     {name: "Overflow", render: _w => Overflow.render()},
     {name: "Calculator", render: w => Calculator.render(w)},
@@ -51,13 +55,14 @@ module ExampleButton = {
         isActive ? selectionHighlight : Colors.transparentWhite;
 
       let opacity = 1.0;
-      let backgroundColor = isActive ? activeBackgroundColor : inactiveBackgroundColor;
+      let backgroundColor =
+        isActive ? activeBackgroundColor : inactiveBackgroundColor;
 
       let wrapperStyle =
         Style.make(
           ~opacity,
           ~borderLeft=Style.Border.make(~width=4, ~color=highlightColor, ()),
-          ~backgroundColor=backgroundColor,
+          ~backgroundColor,
           (),
         );
 

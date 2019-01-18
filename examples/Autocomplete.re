@@ -155,7 +155,7 @@ let init = app => {
       <View style={Style.make(~height=50, ())}>
         <Text style=textHeaderStyle text={state.text ++ "|"} />
       </View>
-      <View style={Style.make()}> ...items </View>
+      <View style={Style.make()> ...items </View>
     </View>;
   };
 
