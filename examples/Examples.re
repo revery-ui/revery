@@ -6,11 +6,11 @@ open Revery.UI.Components;
 
 let backgroundColor = Color.hex("#212733");
 let activeBackgroundColor = Color.hex("#2E3440");
-let selectionHighlight = Color.hex("#00ff64");
+let selectionHighlight = Color.hex("#90f7ff");
 
 type example = {
     name: string,
-    render: (Window.t) => Revery.UI.component,
+    render: (Window.t) => React.syntheticElement,
 };
 
 type state = {
@@ -37,7 +37,7 @@ let state: state = {
 
 let noop = () => ();
 
-let getRenderFunctionSelector: (state) => Window.t => Revery.UI.component = (s: state) => {
+let getRenderFunctionSelector: (state) => Window.t => React.syntheticElement = (s: state) => {
     List.filter((x) => String.equal(x.name, s.selectedExample), state.examples)
                      |> List.hd
                      |> (a) => a.render;
@@ -45,11 +45,11 @@ let getRenderFunctionSelector: (state) => Window.t => Revery.UI.component = (s: 
     /* (_w) => { <view />}; */
 }
 
-module ExampleButton = (
-  val component((render, ~isActive:bool, ~name, ~onClick, ~children, ()) =>
-        render(
-          () => {
+module ExampleButton {
 
+    let component = React.component("ExampleButton");
+
+    let make = (~isActive: bool, ~name, ~onClick, ()) => component((_slots: React.Hooks.empty) => {
             let highlightColor = isActive ? selectionHighlight : Colors.transparentWhite;
             let opacity = isActive ? 1.0 : 0.6;
 
@@ -65,20 +65,21 @@ module ExampleButton = (
               Style.make(
                 ~color=Colors.white,
                 ~fontFamily="Roboto-Regular.ttf",
-                ~fontSize=12,
+                ~fontSize=14,
                 ~margin=16,
                 (),
               );
 
-            <view style={Style.make(~opacity, ())}>
+            <View style={Style.make(~opacity, ())}>
             <Clickable style=wrapperStyle onClick>
-              <text style=textHeaderStyle> name </text>
-            </Clickable></view>;
-          },
-          ~children,
-        )
-      )
-);
+              <Text style=textHeaderStyle text={name} />
+            </Clickable>
+            </View>;
+        
+    });
+
+    let createElement = (~children as _, ~isActive, ~name, ~onClick, ()) => React.element(make(~isActive, ~name, ~onClick, ()));
+};
 
 type action =
 | SelectExample(string);
@@ -114,7 +115,7 @@ let init = app => {
     let exampleRender = getRenderFunctionSelector(s);
     let example = exampleRender(win);
 
-    <view
+    <View
       onMouseWheel={(evt) => print_endline ("onMouseWheel: " ++ string_of_float(evt.deltaY))} 
       style={Style.make(
         ~position=LayoutTypes.Absolute,
@@ -128,7 +129,7 @@ let init = app => {
         ~flexDirection=LayoutTypes.Row,
         (),
       )}>
-      <view style={Style.make(
+      <View style={Style.make(
         ~position=LayoutTypes.Absolute, 
         ~top=0,
         ~left=0,
@@ -138,8 +139,8 @@ let init = app => {
         (),
       )}>
         ...buttons
-      </view>
-      <view style={Style.make(
+      </View>
+      <View style={Style.make(
         ~position=LayoutTypes.Absolute,
         ~top=0,
         ~left=175,
@@ -149,8 +150,8 @@ let init = app => {
         (),
       )}>
         example
-      </view>
-    </view>
+      </View>
+    </View>
   };
 
   if (Environment.webGL) {
