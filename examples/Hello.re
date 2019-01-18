@@ -77,7 +77,7 @@ module AnimatedText = {
             duration: Seconds(1.),
             delay: Seconds(delay),
             repeat: false,
-            easing: Animated.linear,
+            easing: Animated.cubic,
           },
           slots,
         );
@@ -90,7 +90,7 @@ module AnimatedText = {
             duration: Seconds(0.5),
             delay: Seconds(delay),
             repeat: false,
-            easing: Animated.linear,
+            easing: Animated.cubic,
           },
           slots,
         );

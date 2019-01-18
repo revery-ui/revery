@@ -23,7 +23,7 @@ let state: state = {
     {name: "Animation", render: _w => Hello.render()},
     {name: "Overflow", render: _w => Overflow.render()},
     {name: "Calculator", render: w => Calculator.render(w)},
-    {name: "Boxshadow", render: _ => Boxshadow.render()},
+    {name: "Box Shadow", render: _ => Boxshadow.render()},
   ],
   selectedExample: "Animation",
 };

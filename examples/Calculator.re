@@ -58,7 +58,7 @@ module Button = {
           ~alignItems=LayoutTypes.AlignCenter,
           ~flexGrow=1,
           /* Min width */
-          ~width=150,
+          ~width=125,
           ~margin=10,
           (),
         );
