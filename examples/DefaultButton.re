@@ -1,4 +1,3 @@
-open Revery;
 open Revery.UI;
 open Revery.UI.Components;
 open Revery.Core;
@@ -6,7 +5,7 @@ open Revery.Core;
 module DefaultButtonWithCounter = {
   let component = React.component("DefaultButtonWithCounter");
 
-  let make = (~width, ~height, ()) => {
+  let make = () => {
     component(slots => {
       let (count, setCount, _slots: React.Hooks.empty) =
         React.Hooks.state(0, slots);
@@ -14,8 +13,6 @@ module DefaultButtonWithCounter = {
 
       let containerStyle =
         Style.make(
-          ~width,
-          ~height,
           ~justifyContent=JustifyCenter,
           ~alignItems=AlignCenter,
           (),
@@ -50,25 +47,9 @@ module DefaultButtonWithCounter = {
     });
   };
 
-  let createElement = (~width, ~height, ~children as _, ()) =>
-    React.element(make(~width, ~height, ()));
+  let createElement = (~children as _, ()) =>
+    React.element(make());
 };
 
-let init = app => {
-  let monitor = Monitor.getPrimaryMonitor() |> Monitor.getSize;
-  let width = monitor.width * 80 / 100;
-  let height = monitor.height - 100;
+let render = () => <View> <DefaultButtonWithCounter /> </View>;
 
-  let w =
-    App.createWindow(
-      app,
-      "button-example",
-      ~createOptions={...Window.defaultCreateOptions, width, height},
-    );
-
-  let render = () => <View> <DefaultButtonWithCounter width height /> </View>;
-
-  UI.start(w, render);
-};
-
-App.start(init);

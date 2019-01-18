@@ -21,8 +21,11 @@ type state = {
 let state: state = {
   examples: [
     {name: "Animation", render: _w => Hello.render()},
+    {name: "Button", render: _ => DefaultButton.render()},
+    {name: "Border", render: _ => Border.render()},
     {name: "Overflow", render: _w => Overflow.render()},
     {name: "Calculator", render: w => Calculator.render(w)},
+    {name: "Flexbox", render: _ => Flexbox.render()},
     {name: "Box Shadow", render: _ => Boxshadow.render()},
   ],
   selectedExample: "Animation",
@@ -35,7 +38,6 @@ let getRenderFunctionSelector: (state, Window.t) => React.syntheticElement =
     List.filter(x => String.equal(x.name, s.selectedExample), state.examples)
     |> List.hd
     |> (a => a.render);
-                      /* (_w) => { <view />}; */
   };
 
 module ExampleButton = {

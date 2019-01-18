@@ -1,7 +1,6 @@
 open Revery.Core;
 open Revery.Math;
 open Revery.UI;
-open Revery.UI.Components;
 
 module Logo = {
   let component = React.component("Logo");
@@ -77,7 +76,7 @@ module AnimatedText = {
             duration: Seconds(1.),
             delay: Seconds(delay),
             repeat: false,
-            easing: Animated.cubic,
+            easing: Animated.linear,
           },
           slots,
         );
@@ -90,7 +89,7 @@ module AnimatedText = {
             duration: Seconds(0.5),
             delay: Seconds(delay),
             repeat: false,
-            easing: Animated.cubic,
+            easing: Animated.linear,
           },
           slots,
         );
@@ -111,42 +110,6 @@ module AnimatedText = {
 
   let createElement = (~children as _, ~text: string, ~delay: float, ()) =>
     React.element(make(~text, ~delay, ()));
-};
-
-module SimpleButton = {
-  let component = React.component("SimpleButton");
-
-  let make = () =>
-    component(slots => {
-      let (count, setCount, _slots: React.Hooks.empty) =
-        React.Hooks.state(0, slots);
-
-      let increment = () => setCount(count + 1);
-
-      let wrapperStyle =
-        Style.make(
-          ~backgroundColor=Color.rgba(1., 1., 1., 0.1),
-          ~border=Style.Border.make(~width=2, ~color=Colors.white, ()),
-          ~margin=16,
-          (),
-        );
-
-      let textHeaderStyle =
-        Style.make(
-          ~color=Colors.white,
-          ~fontFamily="Roboto-Regular.ttf",
-          ~fontSize=20,
-          ~margin=4,
-          (),
-        );
-
-      let textContent = "Click me: " ++ string_of_int(count);
-      <Clickable style=wrapperStyle onClick=increment>
-        <Text style=textHeaderStyle text=textContent />
-      </Clickable>;
-    });
-
-  let createElement = (~children as _, ()) => React.element(make());
 };
 
 let render = () =>
@@ -176,5 +139,4 @@ let render = () =>
       <AnimatedText delay=0.5 text="to" />
       <AnimatedText delay=1. text="Revery" />
     </View>
-    <SimpleButton />
   </View>;

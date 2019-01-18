@@ -1,9 +1,5 @@
-open Revery;
 open Revery.UI;
 open Revery.Core;
-
-let init = app => {
-  let w = App.createWindow(app, "border-example");
 
   let defaultStyle =
     Style.make(
@@ -43,10 +39,5 @@ let init = app => {
   let render = () =>
     <View style=defaultStyle>
       <View style=innerStyle />
-      <Text style=textStyle text="Welcome To Revery!" />
+      <Text style=textStyle text="Inner Text" />
     </View>;
-
-  UI.start(w, render);
-};
-
-App.start(init);
