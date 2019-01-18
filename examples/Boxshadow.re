@@ -38,7 +38,7 @@ let firstShadow =
     ~width=100,
     ~height=100,
     ~boxShadow=shadowOne,
-    ~marginBottom=30,
+    ~marginVertical=30,
     (),
   );
 
@@ -49,6 +49,7 @@ let secondShadow =
     ~width=100,
     ~height=100,
     ~boxShadow=shadowTwo,
+    ~marginVertical=30,
     (),
   );
 
