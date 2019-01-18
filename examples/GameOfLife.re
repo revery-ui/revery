@@ -2,11 +2,26 @@ open Revery.Core;
 open Revery.UI;
 open Revery.UI.Components;
 
-type viewPort = {
-  xMin: int,
-  yMin: int,
-  xMax: int,
-  yMax: int,
+module ViewPort = {
+  type t = {
+    xMin: int,
+    yMin: int,
+    xMax: int,
+    yMax: int,
+  };
+  type direction =
+    | North
+    | East
+    | South
+    | West;
+
+  let changeDirection = (viewPort, direction) =>
+    switch (direction) {
+    | North => {...viewPort, yMin: viewPort.yMin - 1, yMax: viewPort.yMax - 1}
+    | East => {...viewPort, xMin: viewPort.xMin + 1, xMax: viewPort.xMax + 1}
+    | South => {...viewPort, yMin: viewPort.yMin + 1, yMax: viewPort.yMax + 1}
+    | West => {...viewPort, xMin: viewPort.xMin - 1, xMax: viewPort.xMax - 1}
+    };
 };
 
 type cell =
@@ -342,7 +357,7 @@ module Cell = {
     React.element(make(~cell, ~onClick, ()));
 };
 
-let viewPortRender = (viewPort, universe: Universe.t(cell), onClick) => {
+let viewPortRender = (viewPort:ViewPort.t, universe: Universe.t(cell), onClick) => {
   let cell = pos =>
     switch (Universe.find_opt(pos, universe)) {
     | Some(_) => Alive
@@ -362,7 +377,7 @@ let viewPortRender = (viewPort, universe: Universe.t(cell), onClick) => {
         ...{List.map(
           y =>
             <Row>
-              <Cell cell={cell((x, y))} onClick={() => onClick((x, y))} />
+              <Cell cell=cell((x, y)) onClick={() => onClick((x, y))} />
             </Row>,
           rows,
         )}
@@ -372,13 +387,14 @@ let viewPortRender = (viewPort, universe: Universe.t(cell), onClick) => {
 };
 
 type model = {
-  viewPort,
+  viewPort: ViewPort.t,
   universe: Universe.t(cell),
 };
 
 type action =
   | Tick
-  | ToggleAlive(Position.t);
+  | ToggleAlive(Position.t)
+  | MoveViewPort(ViewPort.direction);
 
 let reducer = (action, state) =>
   switch (action) {
@@ -396,6 +412,10 @@ let reducer = (action, state) =>
           state.universe,
         ),
     }
+  | MoveViewPort(direction) => {
+      ...state,
+      viewPort: ViewPort.changeDirection(state.viewPort, direction),
+    }
   };
 
 module GameOfLife = {
@@ -407,11 +427,32 @@ module GameOfLife = {
         React.Hooks.reducer(~initialState=model, reducer, slots);
       let onClick = pos => dispatch(ToggleAlive(pos));
       let controlsStyle =
-        Style.make(~backgroundColor=Colors.white, ~height=120, ());
+        Style.make(
+          ~backgroundColor=Colors.white,
+          ~height=120,
+          ~flexDirection=LayoutTypes.Row,
+          (),
+        );
       <Column>
         <Row> ...{viewPortRender(viewPort, universe, onClick)} </Row>
         <View style=controlsStyle>
           <Button contents="Tick" onClick={_ => dispatch(Tick)} />
+          <Button
+            contents="North"
+            onClick={_ => dispatch(MoveViewPort(North))}
+          />
+          <Button
+            contents="South"
+            onClick={_ => dispatch(MoveViewPort(South))}
+          />
+          <Button
+            contents="East"
+            onClick={_ => dispatch(MoveViewPort(East))}
+          />
+          <Button
+            contents="West"
+            onClick={_ => dispatch(MoveViewPort(West))}
+          />
         </View>
       </Column>;
     });
@@ -422,7 +463,7 @@ module GameOfLife = {
 };
 
 let render = () => {
-  let viewPort = {xMin: 0, xMax: 20, yMin: 0, yMax: 20};
+  let viewPort = {ViewPort.xMin: 0, xMax: 20, yMin: 0, yMax: 20};
   let model = {viewPort, universe: pulsar};
   <GameOfLife model />;
 };
