@@ -112,9 +112,7 @@ class node ('a) (()) = {
       List.filter(c => c#getInternalId() != n#getInternalId(), _children^);
     n#_setParent(None);
   };
-
   pub firstChild = () => List.hd(_children^);
-
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
   pub getMeasureFunction = (_pixelRatio: float) => None;
@@ -176,7 +174,7 @@ class node ('a) (()) = {
       let ret = (_this :> node('a));
       let maybeRef = _this#getEvents().ref;
       switch (maybeRef) {
-      | Some(ref) => ref(ret);
+      | Some(ref) => ref(ret)
       | None => ()
       };
     | _ => ()
