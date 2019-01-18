@@ -18,44 +18,13 @@ open RenderPass;
 
 let _projection = Mat4.create();
 
-let lastUpdate: ref(option(UiReact.RenderedElement.t)) = ref(None);
-let previousElement: ref(option(UiReact.syntheticElement)) = ref(None);
-
 let render = (container: UiContainer.t, component: UiReact.syntheticElement) => {
-  let {rootNode, window, options, _} = container;
+  let {rootNode, window, container, options, _} = container;
 
   AnimationTicker.tick();
 
   /* Perform reconciliation */
-  /* TODO:
-   * - Refactor this to something like a 'Container' to better manage the state
-   * - Perf: Better logic to determine if we should just update or flush pending updates - both are not always needed.
-   */
-  let latest =
-    switch (lastUpdate^, previousElement^) {
-    | (None, None) =>
-      let updates = UiReact.RenderedElement.render(rootNode, component);
-      UiReact.RenderedElement.executeHostViewUpdates(updates) |> ignore;
-      let updates = UiReact.RenderedElement.executePendingEffects(updates);
-      Some(updates);
-    | (Some(v), Some(previousElement)) =>
-      let nextElement =
-        UiReact.RenderedElement.update(
-          ~previousElement,
-          ~renderedElement=v,
-          component,
-        )
-        |> UiReact.RenderedElement.flushPendingUpdates;
-
-      UiReact.RenderedElement.executeHostViewUpdates(nextElement) |> ignore;
-
-      let ret = nextElement |> UiReact.RenderedElement.executePendingEffects;
-      Some(ret);
-    | _ => None
-    };
-
-  previousElement := Some(component);
-  lastUpdate := latest;
+  container := UiReact.Container.updateContainer(container^, component);
 
   /* Layout */
   let size = Window.getSize(window);
