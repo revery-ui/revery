@@ -106,12 +106,8 @@ let start =
   Window.setRenderCallback(
     window,
     () => {
-        print_endline ("rendering component...");
       let component = render();
-        print_endline ("rendering component... complete");
-        print_endline ("reconciling...");
       UiRender.render(ui, component);
-        print_endline ("reconciling... complete");
       uiDirty := false;
     },
   );
