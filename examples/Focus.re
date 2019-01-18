@@ -1,4 +1,3 @@
-open Revery;
 open Revery.Core;
 open Revery.UI;
 open Revery.UI.Components;
@@ -46,9 +45,6 @@ module SimpleButton = {
   let createElement = (~children as _, ()) => React.element(make());
 };
 
-let init = app => {
-  let win = App.createWindow(app, "Welcome to Revery!");
-
   let render = () =>
     <View
       style={Style.make(
@@ -63,8 +59,3 @@ let init = app => {
       )}>
       <SimpleButton />
     </View>;
-
-  UI.start(win, render);
-};
-
-App.start(init);

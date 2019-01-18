@@ -41,7 +41,10 @@ class node ('a) (()) = {
   pub measurements = () => _layoutNode^.layout;
   pub getTabIndex = () => _tabIndex^;
   pub setTabIndex = index => _tabIndex := index;
-  pub getDepth = () => _depth^;
+  pub getDepth = () => switch(_parent^) {
+  | None => 0 
+  | Some(p) => p#getDepth() + 1
+  };
   pub setStyle = style => _style := style;
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;

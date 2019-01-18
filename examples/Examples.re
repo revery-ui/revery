@@ -27,6 +27,7 @@ let state: state = {
     {name: "Calculator", render: w => Calculator.render(w)},
     {name: "Flexbox", render: _ => Flexbox.render()},
     {name: "Box Shadow", render: _ => Boxshadow.render()},
+    {name: "Focus", render: _ => Focus.render()},
   ],
   selectedExample: "Animation",
 };

@@ -6,7 +6,7 @@ let parentStyles =
     ~position=LayoutTypes.Relative,
     ~flexGrow=1,
     ~alignItems=LayoutTypes.AlignCenter,
-    ~justifyContent=LayoutTypes.JustifySpaceBetween,
+    ~justifyContent=LayoutTypes.JustifyCenter,
     ~flexDirection=LayoutTypes.Column,
     (),
   );
@@ -35,10 +35,10 @@ let firstShadow =
   Style.make(
     ~backgroundColor=Colors.blue,
     ~position=LayoutTypes.Relative,
-    ~width=500,
-    ~height=480,
+    ~width=100,
+    ~height=100,
     ~boxShadow=shadowOne,
-    ~marginTop=20,
+    ~marginBottom=30,
     (),
   );
 
@@ -46,8 +46,8 @@ let secondShadow =
   Style.make(
     ~backgroundColor=Colors.red,
     ~position=LayoutTypes.Relative,
-    ~width=500,
-    ~height=480,
+    ~width=100,
+    ~height=100,
     ~boxShadow=shadowTwo,
     (),
   );
