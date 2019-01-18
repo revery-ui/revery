@@ -188,19 +188,18 @@ let make =
       React.Hooks.effect(
         OnMount,
         () =>
-          !focused ?
-            None :
-            Some(
-              Event.subscribe(
-                window.onKeyPress,
-                event => {
-                  if (!isControlled) {
-                    dispatch(UpdateText(event.character));
-                  };
-                  onChange(~value=addCharacter(valueToUse, event.character));
-                },
-              ),
+          Some(
+            Event.subscribe(window.onKeyPress, event =>
+              if (focused) {
+                if (!isControlled) {
+                  dispatch(UpdateText(event.character));
+                };
+                print_endline("value in element: " ++ event.character);
+                print_endline("valueToUse: " ++ valueToUse);
+                onChange(~value=addCharacter(valueToUse, event.character));
+              }
             ),
+          ),
         slots,
       );
 
@@ -208,19 +207,17 @@ let make =
       React.Hooks.effect(
         OnMount,
         () =>
-          !focused ?
-            None :
-            Some(
-              Event.subscribe(
-                window.onKeyDown,
-                event => {
-                  if (!isControlled) {
+          Some(
+            Event.subscribe(window.onKeyDown, event =>
+              if (focused) {
+                if (!isControlled)
+                  {
                     handleKeyDown(~dispatch, event);
                   };
-                  onChange(~value=removeCharacter(state.value));
-                },
-              ),
+                  /* onChange(~value=removeCharacter(state.value)); */
+              }
             ),
+          ),
         slots,
       );
 
@@ -284,10 +281,8 @@ let make =
         <Text style=innerTextStyles text=content />
         /*
            TODO:
-           1. Passed valued does not update correctly (reconciler?)
-           2. Show and hide cursor based on focus
-           3. Add Focus Management
-           4. Add Mouse events
+           1. Show and hide cursor based on focus
+           2. Add Mouse events
          */
         <View style=inputCursorStyles />
       </View>
