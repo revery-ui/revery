@@ -104,6 +104,9 @@ let removeCharacter = word =>
 let addCharacter = (word, char) => word ++ char;
 
 let reducer = (action, state) =>
+  /*
+     TODO: Handle Cursor position changing via keyboard input e.g. arrow keys
+   */
   switch (action) {
   | SetFocus(isFocused) => {...state, isFocused}
   | UpdateText(t) =>
@@ -178,16 +181,22 @@ let make =
     let (state, dispatch, slots) =
       React.Hooks.reducer(~initialState, reducer, slots);
 
+    /*
+       TODO: Setting the hook to run only on mount means that the onChange
+       handler is only called with a stale version of state
+       BUT setting the value to ALWAYS causes on handler to to seize
+       control of the event listening
+     */
     let slots =
       React.Hooks.effect(
-        Always,
+        OnMount,
         () =>
           Some(
             Event.subscribe(
               window.onKeyPress,
               event => {
                 dispatch(UpdateText(event.character));
-                onChange(~value=state.value);
+                onChange(~value);
               },
             ),
           ),
@@ -196,7 +205,7 @@ let make =
 
     let slots =
       React.Hooks.effect(
-        Always,
+        OnMount,
         () =>
           Some(
             Event.subscribe(

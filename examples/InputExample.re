@@ -45,24 +45,25 @@ module Example = {
         );
 
       <View style=containerStyle>
-        <Text style=textStyles text={"First Value: " ++ first} />
-        <Text style=textStyles text={"Second Value: " ++ second} />
-        <Input
-          window
-          placeholder="Insert text here"
-          onChange={(~value) => setValue({first: value, second})}
-        />
-        <Input
-          backgroundColor=Colors.paleVioletRed
-          color=Colors.white
-          margin=20
-          boxShadow=customShadow
-          window
-          placeholder="custom input"
-          placeholderColor=Colors.plum
-          onChange={(~value) => setValue({first, second: value})}
-        />
-      </View>;
+        /* <Text style=textStyles text={"First Value: " ++ first} /> */
+        /* <Text style=textStyles text={"Second Value: " ++ second} /> */
+
+          <Input
+            window
+            placeholder="Insert text here"
+            onChange={(~value) => setValue({first: value, second})}
+          />
+          <Input
+            backgroundColor=Colors.paleVioletRed
+            color=Colors.white
+            margin=20
+            boxShadow=customShadow
+            window
+            placeholder="custom input"
+            placeholderColor=Colors.plum
+            onChange={(~value) => setValue({first, second: value})}
+          />
+        </View>;
     });
 
   let createElement = (~window, ~children as _, ()) =>
