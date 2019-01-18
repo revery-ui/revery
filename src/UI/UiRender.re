@@ -24,7 +24,7 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   AnimationTicker.tick();
 
   /* Perform reconciliation */
-  container := UiReact.Container.updateContainer(container^, component);
+  container := UiReact.Container.update(container^, component);
 
   /* Layout */
   let size = Window.getSize(window);

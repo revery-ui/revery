@@ -19,7 +19,6 @@ class node ('a) (()) = {
   val _parent: ref(option(node('a))) = ref(None);
   val _depth: ref(int) = ref(0);
   val _internalId: int = UniqueId.getUniqueId();
-  val _queuedEvents: ref(list(callback)) = ref([]);
   val _tabIndex: ref(option(int)) = ref(None);
   val _hasFocus: ref(bool) = ref(false);
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
@@ -161,16 +160,6 @@ class node ('a) (()) = {
 
     _layoutNode := node;
     node;
-  };
-  pub _flushEvents = () => {
-    let f = (c) => c();
-    List.iter(f, _queuedEvents^); 
-    _queuedEvents := [];
-
-     List.iter(c => c#_flushEvents(), _children^);
-  };
-  pub _queueEvent = (c: callback) => {
-    _queuedEvents := List.append([c], _queuedEvents^);
   };
   /* TODO: This should really be private - it should never be explicitly set */
   pub _setParent = (n: option(node('a))) => {

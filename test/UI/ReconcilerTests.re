@@ -14,11 +14,12 @@ module TestRefComponent = {
     let component = React.component("TestRefComponent");
 
     let make = (~latestRef, ()) => (component((slots) => {
-       let (refFromState, setRef, _slots: React.Hooks.empty) = useState(None); 
+       let (refFromState, setRef, _slots: React.Hooks.empty) = React.Hooks.state(None, slots); 
 
        latestRef := refFromState;
 
         let setRefInState = (r) => {
+            prerr_endline ("SET REF IN STATE");
             setRef(Some(r));
         };
 
@@ -32,8 +33,8 @@ test("Reconciler", () => {
   test("reconcile adds a child", () => {
     let rootNode = (new viewNode)();
 
-    let container = UiReact.createContainer(rootNode);
-    UiReact.updateContainer(container, <view />);
+    let container = UiReact.Container.create(rootNode);
+    UiReact.Container.update(container, <View />) |> ignore;
 
     expect(List.length(rootNode#getChildren())).toBe(1);
   });
@@ -41,7 +42,7 @@ test("Reconciler", () => {
   test("ref: returns value of node", () => {
     let rootNode = (new viewNode)();
 
-    let container = UiReact.createContainer(rootNode);
+    let container = UiReact.Container.create(rootNode);
 
     /* Use a ref to track the latest value of the `ref={..}` callback */
     let referenceNode = ref(None);
@@ -50,8 +51,7 @@ test("Reconciler", () => {
         referenceNode := Some(r);
     }
 
-    UiReact.updateContainer(container, <view ref={refCallback}/>);
-    rootNode#_flushEvents();
+    UiReact.Container.update(container, <View ref={refCallback}/>) |> ignore;
 
     /* And validate that we actually got the right one, based on the node ID! */
     switch (referenceNode^) {
@@ -66,7 +66,7 @@ test("Reconciler", () => {
   test("ref: validate ref gets passed back to component", () => {
     let rootNode = (new viewNode)();
 
-    let container = UiReact.createContainer(rootNode);
+    let container = UiReact.Container.create(rootNode);
 
     /*
      * Hold a `ref` that tracks the last refNode that comes from RENDER - 
@@ -74,19 +74,12 @@ test("Reconciler", () => {
      */
     let latestRef: ref(option(viewNode)) = ref(None);
 
-    UiReact.updateContainer(container, <TestRefComponent latestRef />);
+    /* First update - this will end up 'mounting' the node and dispatching the 'ref' callback */
+    /* However - the state won't be updated - it will just be queued up */
+    let update1 = UiReact.Container.update(container, <TestRefComponent latestRef />);
 
-    rootNode#_flushEvents();
-
-    /*
-     * After the update, we'd expect the following sequence:
-     * - ref callback is called, trigger a setState in the component
-     * - the setState triggers reconcile for that sub-tree
-     * - that sub-tree is re-rendered, with a proper ref
-     *
-     * If that sequence is correct - we should have a value for `latestRef`,
-     * because it's being set by the `render` function.
-     */
+    /* We need to update again to pick up the state update */
+    UiReact.Container.update(update1, <TestRefComponent latestRef />) |> ignore;
 
     switch (latestRef^) {
     | Some(_) => {
