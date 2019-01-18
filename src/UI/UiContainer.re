@@ -23,16 +23,16 @@ module Options = {
 
 type t = {
   rootNode: ViewNode.viewNode,
-  container: UiReact.t,
+  /* container: UiReact.t, */
   window: Window.t,
   mouseCursor: Mouse.Cursor.t,
   options: Options.t,
 };
 
-let create = (window, rootNode, container, mouseCursor, options) => {
+let create = (window, rootNode, mouseCursor, options) => {
   window,
   rootNode,
-  container,
+  /* container, */
   mouseCursor,
   options,
 };

@@ -42,6 +42,62 @@ let blinker =
     (module Position),
     [((5, 4), Alive), ((5, 5), Alive), ((5, 6), Alive)],
   );
+
+let pulsar =
+  Map.of_alist_exn(
+    (module Position),
+    [
+      ((4, 2), Alive),
+      ((5, 2), Alive),
+      ((6, 2), Alive),
+      ((10, 2), Alive),
+      ((11, 2), Alive),
+      ((12, 2), Alive),
+      ((2, 4), Alive),
+      ((7, 4), Alive),
+      ((9, 4), Alive),
+      ((14, 4), Alive),
+      ((2, 5), Alive),
+      ((7, 5), Alive),
+      ((9, 5), Alive),
+      ((14, 5), Alive),
+      ((2, 6), Alive),
+      ((7, 6), Alive),
+      ((9, 6), Alive),
+      ((14, 6), Alive),
+      ((4, 7), Alive),
+      ((5, 7), Alive),
+      ((6, 7), Alive),
+      ((10, 7), Alive),
+      ((11, 7), Alive),
+      ((12, 7), Alive),
+      ((4, 9), Alive),
+      ((5, 9), Alive),
+      ((6, 9), Alive),
+      ((10, 9), Alive),
+      ((11, 9), Alive),
+      ((12, 9), Alive),
+      ((2, 10), Alive),
+      ((7, 10), Alive),
+      ((9, 10), Alive),
+      ((14, 10), Alive),
+      ((2, 11), Alive),
+      ((7, 11), Alive),
+      ((9, 11), Alive),
+      ((14, 11), Alive),
+      ((2, 12), Alive),
+      ((7, 12), Alive),
+      ((9, 12), Alive),
+      ((14, 12), Alive),
+      ((4, 14), Alive),
+      ((5, 14), Alive),
+      ((6, 14), Alive),
+      ((10, 14), Alive),
+      ((11, 14), Alive),
+      ((12, 14), Alive),
+    ],
+  );
+
 let findCell = (universe, position) => {
   Map.find(universe, position)
   |> Option.value(~default=Dead)
@@ -163,82 +219,84 @@ let evolve = universe => {
   |> Map.of_alist_exn((module Position));
 };
 
-module Row = (
-  val component((render, ~children, ()) =>
-        render(
-          () => {
-            let style =
-              Style.make(
-                ~flexDirection=LayoutTypes.Row,
-                ~alignItems=LayoutTypes.AlignStretch,
-                ~justifyContent=LayoutTypes.JustifyCenter,
-                ~backgroundColor=Colors.darkGrey,
-                ~flexGrow=1,
-                (),
-              );
-            <view style> ...children </view>;
-          },
-          ~children,
-        )
-      )
-);
+module Row = {
+  let component = React.component("Row");
 
-module Column = (
-  val component((render, ~children, ()) =>
-        render(
-          () => {
-            let style =
-              Style.make(
-                ~flexDirection=LayoutTypes.Column,
-                ~alignItems=LayoutTypes.AlignStretch,
-                ~justifyContent=LayoutTypes.JustifyCenter,
-                ~backgroundColor=Colors.darkGrey,
-                ~flexGrow=1,
-                (),
-              );
-            <view style> ...children </view>;
-          },
-          ~children,
-        )
-      )
-);
+  let make = children =>
+    component((_slots: React.Hooks.empty) => {
+      let style =
+        Style.make(
+          ~flexDirection=LayoutTypes.Row,
+          ~alignItems=LayoutTypes.AlignStretch,
+          ~justifyContent=LayoutTypes.JustifyCenter,
+          ~backgroundColor=Colors.darkGrey,
+          ~flexGrow=1,
+          (),
+        );
+      <View style> ...children </View>;
+    });
 
-module Cell = (
-  val component((render, ~cell, ~onClick, ()) =>
-        render(() => {
-          let border = Style.Border.make(~color=Colors.gray, ~width=2, ());
-          let clickableStyle =
-            Style.make(
-              ~position=LayoutTypes.Relative,
-              ~backgroundColor=Colors.transparentWhite,
-              ~justifyContent=LayoutTypes.JustifyCenter,
-              ~alignItems=LayoutTypes.AlignStretch,
-              ~flexGrow=1,
-              ~margin=0,
-              (),
-            );
-          let baseStyle =
-            Style.make(
-              ~flexDirection=LayoutTypes.Column,
-              ~alignItems=LayoutTypes.AlignStretch,
-              ~justifyContent=LayoutTypes.JustifyCenter,
-              ~border,
-              ~flexGrow=1,
-              (),
-            );
-          let aliveStyle =
-            Style.extend(baseStyle, ~backgroundColor=Colors.red, ());
-          let deadStyle =
-            Style.extend(baseStyle, ~backgroundColor=Colors.black, ());
-          let style =
-            switch (cell) {
-            | Alive => <view style=aliveStyle />
-            | Dead => <view style=deadStyle />
-            };
-          <Clickable style=clickableStyle onClick> style </Clickable>;
-        })
-      )
-);
+  let createElement = (~children, ()) => React.element(make(children));
+};
+
+module Column = {
+  let component = React.component("Column");
+
+  let make = children =>
+    component((_slots: React.Hooks.empty) => {
+      let style =
+        Style.make(
+          ~flexDirection=LayoutTypes.Column,
+          ~alignItems=LayoutTypes.AlignStretch,
+          ~justifyContent=LayoutTypes.JustifyCenter,
+          ~backgroundColor=Colors.darkGrey,
+          ~flexGrow=1,
+          (),
+        );
+      <View style> ...children </View>;
+    });
+  let createElement = (~children, ()) => React.element(make(children));
+};
+
+module Cell = {
+  let component = React.component("Column");
+
+  let make = (~cell, ~onClick, ()) =>
+    component((_slots: React.Hooks.empty) => {
+      let border = Style.Border.make(~color=Colors.gray, ~width=2, ());
+      let clickableStyle =
+        Style.make(
+          ~position=LayoutTypes.Relative,
+          ~backgroundColor=Colors.transparentWhite,
+          ~justifyContent=LayoutTypes.JustifyCenter,
+          ~alignItems=LayoutTypes.AlignStretch,
+          ~flexGrow=1,
+          ~margin=0,
+          (),
+        );
+      let baseStyle =
+        Style.make(
+          ~flexDirection=LayoutTypes.Column,
+          ~alignItems=LayoutTypes.AlignStretch,
+          ~justifyContent=LayoutTypes.JustifyCenter,
+          ~border,
+          ~flexGrow=1,
+          (),
+        );
+      let aliveStyle =
+        Style.extend(baseStyle, ~backgroundColor=Colors.red, ());
+      let deadStyle =
+        Style.extend(baseStyle, ~backgroundColor=Colors.black, ());
+      let style =
+        switch (cell) {
+        | Alive => <View style=aliveStyle />
+        | Dead => <View style=deadStyle />
+        };
+      <Clickable style=clickableStyle onClick> style </Clickable>;
+    });
+  let createElement = (~cell, ~onClick, ~children as _, ()) =>
+    React.element(make(~cell, ~onClick, ()));
+};
 
 let viewPortRender = (viewPort, universe: universe, onClick) => {
   let cell = pos =>
@@ -271,29 +329,31 @@ let viewPortRender = (viewPort, universe: universe, onClick) => {
   );
 };
 
-let reducer = (state, action) =>
+let reducer = (action, state) =>
   switch (action) {
   | Tick => {...state, universe: evolve(state.universe)}
   };
 
-module GameOfLife = (
-  val component((render, ~model, ~children, ()) =>
-        render(
-          () => {
-            let ({universe, viewPort}, dispatch) =
-              useReducer(reducer, model);
-            let onClick = _ => dispatch(Tick);
-            <Row> ...{viewPortRender(viewPort, universe, onClick)} </Row>;
-          },
-          ~children,
-        )
-      )
-);
+module GameOfLife = {
+  let component = React.component("GameOfLife");
+
+  let make = (~model: model, ()) =>
+    component(slots => {
+      let ({universe, viewPort}, dispatch, _slots: React.Hooks.empty) =
+        React.Hooks.reducer(~initialState=model, reducer, slots);
+      let onClick = _ => dispatch(Tick);
+      <Row> ...{viewPortRender(viewPort, universe, onClick)} </Row>;
+    });
+
+  let createElement = (~model, ~children as _, ()) => {
+    React.element(make(~model, ()));
+  };
+};
 
 let init = app => {
   let window = App.createWindow(app, "Revery GameOfLife");
-  let viewPort = {xMin: 0, xMax: 10, yMin: 0, yMax: 10};
-  let model = {viewPort, universe: blinker};
+  let viewPort = {xMin: 0, xMax: 20, yMin: 0, yMax: 20};
+  let model = {viewPort, universe: pulsar};
 
   let render = () => {
     <GameOfLife model />;

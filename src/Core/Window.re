@@ -1,6 +1,5 @@
 open Reglfw;
 
-module Event = Reactify.Event;
 module Color = Color_wrapper;
 
 open Events;

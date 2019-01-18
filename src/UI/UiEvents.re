@@ -4,7 +4,7 @@ open NodeEvents;
 module BubbledEvent = {
   type bubbledEvent = {
     id: int,
-    event: mouseEvent,
+    event,
     shouldPropagate: bool,
     defaultPrevented: bool,
     stopPropagation: unit => unit,
@@ -59,6 +59,26 @@ module BubbledEvent = {
 
 let isNodeImpacted = (n, pos) => n#hitTest(pos);
 
+let rec getFirstFocusable = (node: node('a), pos) =>
+  if (!isNodeImpacted(node, pos)) {
+    None;
+  } else if (node#canBeFocused()) {
+    Some(node);
+  } else if (List.length(node#getChildren()) !== 0) {
+    checkChildren(node#getChildren(), pos);
+  } else {
+    None;
+  }
+and checkChildren = (children, pos) =>
+  switch (children) {
+  | [] => None
+  | [x, ...xs] =>
+    switch (getFirstFocusable(x, pos)) {
+    | Some(node) => Some(node)
+    | None => checkChildren(xs, pos)
+    }
+  };
+
 let getDeepestNode = (node: node('a), pos) => {
   let deepestNode = ref(None);
   let maxDepth = ref(-1);
@@ -93,7 +113,7 @@ let rec traverseHeirarchy = (node: node('a), bubbled) =>
     }
   );
 
-let bubble = (node, event: mouseEvent) => {
+let bubble = (node, event: event) => {
   /* Wrap event with preventDefault and stopPropagation */
   let evt = BubbledEvent.make(event);
   switch (evt) {

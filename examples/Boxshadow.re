@@ -73,10 +73,10 @@ let init = app => {
     );
 
   UI.start(win, () =>
-    <view style=parentStyles>
-      <view style=firstShadow />
-      <view style=secondShadow />
-    </view>
+    <View style=parentStyles>
+      <View style=firstShadow />
+      <View style=secondShadow />
+    </View>
   );
 };
 

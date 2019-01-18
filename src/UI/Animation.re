@@ -1,5 +1,3 @@
-module Event = Reactify.Event;
-
 open Revery_Core;
 open Revery_Math;
 

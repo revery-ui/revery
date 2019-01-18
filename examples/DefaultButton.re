@@ -3,11 +3,12 @@ open Revery.UI;
 open Revery.UI.Components;
 open Revery.Core;
 
-module DefaultButtonWithCounter = (
-  val component((render, ~children, ~width, ~height, ()) =>
-        render(
-          () => {
-            let (count, setCount) = useState(0);
+module DefaultButtonWithCounter {
+    let component = React.component("DefaultButtonWithCounter");
+
+    let make = (~width, ~height, ()) => {
+        component((slots) => {
+            let (count, setCount, _slots: React.Hooks.empty) = React.Hooks.state(0, slots);
             let increment = () => setCount(count + 1);
 
             let containerStyle =
@@ -38,18 +39,19 @@ module DefaultButtonWithCounter = (
               );
 
             let countStr = string_of_int(count);
-            <view style=containerStyle>
-              <view style=countContainer>
-                <text style=countStyle> countStr </text>
-              </view>
+            <View style=containerStyle>
+              <View style=countContainer>
+                <Text style=countStyle text={countStr} />
+              </View>
               <Button title="click me!" onClick=increment />
               <Button disabled=true title="click me!" onClick=increment />
-            </view>;
-          },
-          ~children,
-        )
-      )
-);
+            </View>;
+            
+        });
+    };
+
+    let createElement = (~width, ~height, ~children as _, ()) => React.element(make(~width, ~height, ()));
+}
 
 let init = app => {
   let monitor = Monitor.getPrimaryMonitor() |> Monitor.getSize;
@@ -63,7 +65,7 @@ let init = app => {
       ~createOptions={...Window.defaultCreateOptions, width, height},
     );
 
-  let render = () => <DefaultButtonWithCounter width height />;
+  let render = () => <View><DefaultButtonWithCounter width height /></View>;
 
   UI.start(w, render);
 };
