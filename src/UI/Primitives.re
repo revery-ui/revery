@@ -251,6 +251,6 @@ module Image = {
         ~src,
         UiReact.listToElement(children),
       ),
-    ),
-    ~children=[],
-  );
+    );
+  };
+};
