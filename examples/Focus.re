@@ -45,17 +45,17 @@ module SimpleButton = {
   let createElement = (~children as _, ()) => React.element(make());
 };
 
-  let render = () =>
-    <View
-      style={Style.make(
-        ~position=LayoutTypes.Absolute,
-        ~justifyContent=LayoutTypes.JustifyCenter,
-        ~alignItems=LayoutTypes.AlignCenter,
-        ~bottom=0,
-        ~top=0,
-        ~left=0,
-        ~right=0,
-        (),
-      )}>
-      <SimpleButton />
-    </View>;
+let render = () =>
+  <View
+    style={Style.make(
+      ~position=LayoutTypes.Absolute,
+      ~justifyContent=LayoutTypes.JustifyCenter,
+      ~alignItems=LayoutTypes.AlignCenter,
+      ~bottom=0,
+      ~top=0,
+      ~left=0,
+      ~right=0,
+      (),
+    )}>
+    <SimpleButton />
+  </View>;

@@ -41,10 +41,11 @@ class node ('a) (()) = {
   pub measurements = () => _layoutNode^.layout;
   pub getTabIndex = () => _tabIndex^;
   pub setTabIndex = index => _tabIndex := index;
-  pub getDepth = () => switch(_parent^) {
-  | None => 0 
-  | Some(p) => p#getDepth() + 1
-  };
+  pub getDepth = () =>
+    switch (_parent^) {
+    | None => 0
+    | Some(p) => p#getDepth() + 1
+    };
   pub setStyle = style => _style := style;
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;
@@ -105,7 +106,8 @@ class node ('a) (()) = {
     n#_setParent(Some((_this :> node('a))));
   };
   pub removeChild = (n: node('a)) => {
-    _children := List.filter(c => c#getInternalId() != n#getInternalId(), _children^);
+    _children :=
+      List.filter(c => c#getInternalId() != n#getInternalId(), _children^);
     n#_setParent(None);
   };
   pub getParent = () => _parent^;

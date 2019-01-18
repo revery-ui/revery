@@ -10,11 +10,7 @@ let animation =
       () => {
         let anim = Animated.start(v, opts);
 
-        Some(
-          () => {
-            Animated.cancel(anim);
-          },
-        );
+        Some(() => Animated.cancel(anim));
       },
       slots,
     );

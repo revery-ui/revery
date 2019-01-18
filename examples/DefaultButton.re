@@ -47,9 +47,7 @@ module DefaultButtonWithCounter = {
     });
   };
 
-  let createElement = (~children as _, ()) =>
-    React.element(make());
+  let createElement = (~children as _, ()) => React.element(make());
 };
 
 let render = () => <View> <DefaultButtonWithCounter /> </View>;
-
