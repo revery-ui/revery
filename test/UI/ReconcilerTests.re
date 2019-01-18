@@ -10,20 +10,23 @@ module UiReact = Revery_UI.Internal.UiReact;
  * with our Node tree.
  */
 
-module TestRefComponent = (val component((render, ~latestRef,  ~children, ()) => {
-    render(() => {
-       let (refFromState, setRef) = useState(None); 
+module TestRefComponent = {
+    let component = React.component("TestRefComponent");
+
+    let make = (~latestRef, ()) => (component((slots) => {
+       let (refFromState, setRef, _slots: React.Hooks.empty) = useState(None); 
 
        latestRef := refFromState;
-
 
         let setRefInState = (r) => {
             setRef(Some(r));
         };
 
-       <view ref={setRefInState} />;
-    }, ~children)
-}));
+       <View ref={setRefInState} />;
+    }));
+
+    let createElement = (~children as _, ~latestRef, ()) => React.element(make(~latestRef, ()));
+};
 
 test("Reconciler", () => {
   test("reconcile adds a child", () => {
