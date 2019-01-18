@@ -1,4 +1,3 @@
-open Revery;
 open Revery.UI;
 open Revery.Core;
 open Revery.UI.Components;
@@ -34,41 +33,32 @@ let innerBox =
     (),
   );
 
-module Sample {
-    let component = React.component("Sample");
+module Sample = {
+  let component = React.component("Sample");
 
-    let make = () => component((slots) => {
-            let (hidden, setHidden, _slots: React.Hooks.empty) = React.Hooks.state(false, slots);
+  let make = () =>
+    component(slots => {
+      let (hidden, setHidden, _slots: React.Hooks.empty) =
+        React.Hooks.state(false, slots);
 
-            let outerStyle = {
-              ...outerBox,
-              overflow: hidden ? LayoutTypes.Hidden : LayoutTypes.Visible,
-            };
+      let outerStyle = {
+        ...outerBox,
+        overflow: hidden ? LayoutTypes.Hidden : LayoutTypes.Visible,
+      };
 
-            let onClick = _ => {
-              setHidden(!hidden);
-            };
+      let onClick = _ => {
+        setHidden(!hidden);
+      };
 
-            <View style=containerStyle>
-              <View style=outerStyle> <View style=innerBox /> </View>
-              <View style={Style.make(~marginTop=80, ())}>
-                <Button
-                  fontSize=20
-                  height=45
-                  title="Toggle overflow"
-                  onClick
-                />
-              </View>
-            </View>;
+      <View style=containerStyle>
+        <View style=outerStyle> <View style=innerBox /> </View>
+        <View style={Style.make(~marginTop=80, ())}>
+          <Button fontSize=20 height=45 title="Toggle overflow" onClick />
+        </View>
+      </View>;
     });
 
-    let createElement = (~children as _, ()) => React.element(make());
-}
-
-let init = app => {
-  let win = App.createWindow(app, "Welcome to Revery!");
-
-  UI.start(win, () => <Sample />);
+  let createElement = (~children as _, ()) => React.element(make());
 };
 
-App.start(init);
+let render = () => <Sample />;

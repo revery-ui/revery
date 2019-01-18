@@ -1,130 +1,134 @@
-open Revery;
+/* open Revery; */
 open Revery.Core;
 open Revery.Core.Events;
 open Revery.Core.Window;
 open Revery.UI;
 open Revery.UI.Components;
 
-module Row {
+module Row = {
   let component = React.component("Row");
 
-  let make = (children) => component((_slots: React.Hooks.empty) => {
-            let style =
-              Style.make(
-                ~flexDirection=LayoutTypes.Row,
-                ~alignItems=LayoutTypes.AlignStretch,
-                ~justifyContent=LayoutTypes.JustifyCenter,
-                ~flexGrow=1,
-                (),
-              );
-            <View style> ...children </View>;
-  });
-
-  let createElement = (~children, ()) => React.element(make(children));
-}
-
-module Column {
-  let component = React.component("Column");
-
-  let make = (children) => component((_slots: React.Hooks.empty) => {
-            let style =
-              Style.make(
-                ~flexDirection=LayoutTypes.Column,
-                ~alignItems=LayoutTypes.AlignStretch,
-                ~justifyContent=LayoutTypes.JustifyCenter,
-                ~backgroundColor=Colors.darkGrey,
-                ~flexGrow=1,
-                (),
-              );
-            <View style> ...children </View>;
-  });
-
-  let createElement = (~children, ()) => React.element(make(children));
-}
-
-module Button {
-    let component = React.component("Button");
-
-    let make = (~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ()) => (component((_slots: React.Hooks.empty) => {
-            let clickableStyle =
-              Style.make(
-                ~position=LayoutTypes.Relative,
-                ~backgroundColor=Colors.lightGrey,
-                ~justifyContent=LayoutTypes.JustifyCenter,
-                ~alignItems=LayoutTypes.AlignCenter,
-                ~flexGrow=1,
-                /* Min width */
-                ~width=150,
-                ~margin=10,
-                (),
-              );
-            let viewStyle =
-              Style.make(
-                ~position=LayoutTypes.Relative,
-                ~justifyContent=LayoutTypes.JustifyCenter,
-                ~alignItems=LayoutTypes.AlignCenter,
-                (),
-              );
-            let textStyle =
-              Style.make(
-                ~color=Colors.black,
-                ~fontFamily,
-                ~fontSize=32,
-                (),
-              );
-
-            <Clickable style=clickableStyle onClick>
-              <View style=viewStyle>
-                <Text style=textStyle text={contents} />
-              </View>
-            </Clickable>;
-        
-    }));
-
-    let createElement = (~fontFamily="Roboto-Regular.ttf", ~contents, ~onClick, ~children as _, ()) => {
-        React.element(make(~fontFamily, ~contents, ~onClick, ()));   
-    };
-}
-
-module Display {
-    let component = React.component("Display");
-
-    let make = (~display: string, ~curNum: string, ()) => component((_slots: React.Hooks.empty) => {
-            let viewStyle =
-              Style.make(
-                ~backgroundColor=Colors.white,
-                ~height=120,
-                ~flexDirection=LayoutTypes.Column,
-                ~alignItems=LayoutTypes.AlignStretch,
-                ~justifyContent=LayoutTypes.JustifyFlexStart,
-                ~flexGrow=2,
-                (),
-              );
-            let displayStyle =
-              Style.make(
-                ~color=Colors.black,
-                ~fontFamily="Roboto-Regular.ttf",
-                ~fontSize=20,
-                ~margin=15,
-                (),
-              );
-            let numStyle =
-              Style.make(
-                ~color=Colors.black,
-                ~fontFamily="Roboto-Regular.ttf",
-                ~fontSize=32,
-                ~margin=15,
-                (),
-              );
-
-            <View style=viewStyle>
-              <Text style=displayStyle text={display} />
-              <Text style=numStyle text={curNum} />
-            </View>;
+  let make = children =>
+    component((_slots: React.Hooks.empty) => {
+      let style =
+        Style.make(
+          ~flexDirection=LayoutTypes.Row,
+          ~alignItems=LayoutTypes.AlignStretch,
+          ~justifyContent=LayoutTypes.JustifyCenter,
+          ~flexGrow=1,
+          (),
+        );
+      <View style> ...children </View>;
     });
 
-    let createElement = (~display: string, ~curNum: string, ~children as _, ()) => React.element(make(~display, ~curNum, ()));
-}
+  let createElement = (~children, ()) => React.element(make(children));
+};
+
+module Column = {
+  let component = React.component("Column");
+
+  let make = children =>
+    component((_slots: React.Hooks.empty) => {
+      let style =
+        Style.make(
+          ~flexDirection=LayoutTypes.Column,
+          ~alignItems=LayoutTypes.AlignStretch,
+          ~justifyContent=LayoutTypes.JustifyCenter,
+          ~backgroundColor=Colors.darkGrey,
+          ~flexGrow=1,
+          (),
+        );
+      <View style> ...children </View>;
+    });
+
+  let createElement = (~children, ()) => React.element(make(children));
+};
+
+module Button = {
+  let component = React.component("Button");
+
+  let make =
+      (~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ()) =>
+    component((_slots: React.Hooks.empty) => {
+      let clickableStyle =
+        Style.make(
+          ~position=LayoutTypes.Relative,
+          ~backgroundColor=Colors.lightGrey,
+          ~justifyContent=LayoutTypes.JustifyCenter,
+          ~alignItems=LayoutTypes.AlignCenter,
+          ~flexGrow=1,
+          /* Min width */
+          ~width=125,
+          ~margin=10,
+          (),
+        );
+      let viewStyle =
+        Style.make(
+          ~position=LayoutTypes.Relative,
+          ~justifyContent=LayoutTypes.JustifyCenter,
+          ~alignItems=LayoutTypes.AlignCenter,
+          (),
+        );
+      let textStyle =
+        Style.make(~color=Colors.black, ~fontFamily, ~fontSize=32, ());
+
+      <Clickable style=clickableStyle onClick>
+        <View style=viewStyle> <Text style=textStyle text=contents /> </View>
+      </Clickable>;
+    });
+
+  let createElement =
+      (
+        ~fontFamily="Roboto-Regular.ttf",
+        ~contents,
+        ~onClick,
+        ~children as _,
+        (),
+      ) => {
+    React.element(make(~fontFamily, ~contents, ~onClick, ()));
+  };
+};
+module Display = {
+  let component = React.component("Display");
+
+  let make = (~display: string, ~curNum: string, ()) =>
+    component((_slots: React.Hooks.empty) => {
+      let viewStyle =
+        Style.make(
+          ~backgroundColor=Colors.white,
+          ~height=120,
+          ~flexDirection=LayoutTypes.Column,
+          ~alignItems=LayoutTypes.AlignStretch,
+          ~justifyContent=LayoutTypes.JustifyFlexStart,
+          ~flexGrow=2,
+          (),
+        );
+      let displayStyle =
+        Style.make(
+          ~color=Colors.black,
+          ~fontFamily="Roboto-Regular.ttf",
+          ~fontSize=20,
+          ~margin=15,
+          (),
+        );
+      let numStyle =
+        Style.make(
+          ~color=Colors.black,
+          ~fontFamily="Roboto-Regular.ttf",
+          ~fontSize=32,
+          ~margin=15,
+          (),
+        );
+
+      <View style=viewStyle>
+        <Text style=displayStyle text=display />
+        <Text style=numStyle text=curNum />
+      </View>;
+    });
+
+  let createElement = (~display: string, ~curNum: string, ~children as _, ()) =>
+    React.element(make(~display, ~curNum, ()));
+};
 
 type operator = [ | `Nop | `Add | `Sub | `Mul | `Div];
 
@@ -232,162 +236,158 @@ let reducer = (action, state) =>
     {operator: `Nop, result, display, number: showFloat(result)};
   };
 
-
-
-module Calculator {
+module Calculator = {
   let component = React.component("Calculator");
 
-  let make = (window) => component((slots) => {
-            let ({display, number, _}, dispatch, slots) =
-              React.Hooks.reducer(
-                ~initialState={operator: `Nop, result: 0., display: "", number: ""},
-                reducer,
-                slots,
-              );
+  let make = window =>
+    component(slots => {
+      let ({display, number, _}, dispatch, slots) =
+        React.Hooks.reducer(
+          ~initialState={operator: `Nop, result: 0., display: "", number: ""},
+          reducer,
+          slots,
+        );
 
-            let respondToKeys = e => switch(e.key) {
-              | Key.KEY_BACKSPACE =>
-                dispatch(BackspaceKeyPressed)
+      let respondToKeys = e =>
+        switch (e.key) {
+        | Key.KEY_BACKSPACE => dispatch(BackspaceKeyPressed)
 
-              | Key.KEY_C when e.ctrlKey => dispatch(ClearKeyPressed(true))
-              | Key.KEY_C => dispatch(ClearKeyPressed(false))
+        | Key.KEY_C when e.ctrlKey => dispatch(ClearKeyPressed(true))
+        | Key.KEY_C => dispatch(ClearKeyPressed(false))
 
-              /* + key */
-              | Key.KEY_EQUAL when e.shiftKey => dispatch(OperationKeyPressed(`Add))
-              | Key.KEY_MINUS when e.ctrlKey => dispatch(PlusMinusKeyPressed)
-              | Key.KEY_MINUS => dispatch(OperationKeyPressed(`Sub))
-              /* * key */
-              | Key.KEY_8 when e.shiftKey => dispatch(OperationKeyPressed(`Mul))
-              | Key.KEY_SLASH => dispatch(OperationKeyPressed(`Div))
-              | Key.KEY_PERIOD => dispatch(DotKeyPressed)
-              | Key.KEY_EQUAL => dispatch(ResultKeyPressed)
+        /* + key */
+        | Key.KEY_EQUAL when e.shiftKey =>
+          dispatch(OperationKeyPressed(`Add))
+        | Key.KEY_MINUS when e.ctrlKey => dispatch(PlusMinusKeyPressed)
+        | Key.KEY_MINUS => dispatch(OperationKeyPressed(`Sub))
+        /* * key */
+        | Key.KEY_8 when e.shiftKey => dispatch(OperationKeyPressed(`Mul))
+        | Key.KEY_SLASH => dispatch(OperationKeyPressed(`Div))
+        | Key.KEY_PERIOD => dispatch(DotKeyPressed)
+        | Key.KEY_EQUAL => dispatch(ResultKeyPressed)
 
-              | Key.KEY_0 => dispatch(NumberKeyPressed("0"))
-              | Key.KEY_1 => dispatch(NumberKeyPressed("1"))
-              | Key.KEY_2 => dispatch(NumberKeyPressed("2"))
-              | Key.KEY_3 => dispatch(NumberKeyPressed("3"))
-              | Key.KEY_4 => dispatch(NumberKeyPressed("4"))
-              | Key.KEY_5 => dispatch(NumberKeyPressed("5"))
-              | Key.KEY_6 => dispatch(NumberKeyPressed("6"))
-              | Key.KEY_7 => dispatch(NumberKeyPressed("7"))
-              | Key.KEY_8 => dispatch(NumberKeyPressed("8"))
-              | Key.KEY_9 => dispatch(NumberKeyPressed("9"))
+        | Key.KEY_0 => dispatch(NumberKeyPressed("0"))
+        | Key.KEY_1 => dispatch(NumberKeyPressed("1"))
+        | Key.KEY_2 => dispatch(NumberKeyPressed("2"))
+        | Key.KEY_3 => dispatch(NumberKeyPressed("3"))
+        | Key.KEY_4 => dispatch(NumberKeyPressed("4"))
+        | Key.KEY_5 => dispatch(NumberKeyPressed("5"))
+        | Key.KEY_6 => dispatch(NumberKeyPressed("6"))
+        | Key.KEY_7 => dispatch(NumberKeyPressed("7"))
+        | Key.KEY_8 => dispatch(NumberKeyPressed("8"))
+        | Key.KEY_9 => dispatch(NumberKeyPressed("9"))
 
-              | _ => ()
-            };
-            /* TODO: Pretty sure this isn't supposed to go in the render() function.
-               Seems to cause lag the more times we re-render, so I guess this is
-               subscribing a ton of times and never unsubscribing. */
-            let _slots: React.Hooks.empty = React.Hooks.effect(OnMount, () => {
-              let unsubscribe = Event.subscribe(window.onKeyDown, respondToKeys);
-              Some(unsubscribe);
-            }, slots);
+        | _ => ()
+        };
+      /* TODO: Pretty sure this isn't supposed to go in the render() function.
+         Seems to cause lag the more times we re-render, so I guess this is
+         subscribing a ton of times and never unsubscribing. */
+      let _slots: React.Hooks.empty =
+        React.Hooks.effect(
+          OnMount,
+          () => {
+            let unsubscribe =
+              Event.subscribe(window.onKeyDown, respondToKeys);
+            Some(unsubscribe);
+          },
+          slots,
+        );
 
-            <Column>
-              <Display display curNum=number />
-              <Row>
-                <Button
-                  contents="AC"
-                  onClick={_ => dispatch(ClearKeyPressed(true))}
-                />
-                <Button
-                  contents="C"
-                  onClick={_ => dispatch(ClearKeyPressed(false))}
-                />
-                <Button
-                  contents="±"
-                  onClick={_ => dispatch(PlusMinusKeyPressed)}
-                />
-                /* TODO: Switch to a font with a backspace character */
-                <Button
-                  fontFamily="FontAwesome5FreeSolid.otf"
-                  contents={||}
-                  onClick={_ => dispatch(BackspaceKeyPressed)}
-                />
-              </Row>
-              <Row>
-                <Button
-                  contents="7"
-                  onClick={_ => dispatch(NumberKeyPressed("7"))}
-                />
-                <Button
-                  contents="8"
-                  onClick={_ => dispatch(NumberKeyPressed("8"))}
-                />
-                <Button
-                  contents="9"
-                  onClick={_ => dispatch(NumberKeyPressed("9"))}
-                />
-                <Button
-                  contents="÷"
-                  onClick={_ => dispatch(OperationKeyPressed(`Div))}
-                />
-              </Row>
-              <Row>
-                <Button
-                  contents="4"
-                  onClick={_ => dispatch(NumberKeyPressed("4"))}
-                />
-                <Button
-                  contents="5"
-                  onClick={_ => dispatch(NumberKeyPressed("5"))}
-                />
-                <Button
-                  contents="6"
-                  onClick={_ => dispatch(NumberKeyPressed("6"))}
-                />
-                <Button
-                  contents="×"
-                  onClick={_ => dispatch(OperationKeyPressed(`Mul))}
-                />
-              </Row>
-              <Row>
-                <Button
-                  contents="1"
-                  onClick={_ => dispatch(NumberKeyPressed("1"))}
-                />
-                <Button
-                  contents="2"
-                  onClick={_ => dispatch(NumberKeyPressed("2"))}
-                />
-                <Button
-                  contents="3"
-                  onClick={_ => dispatch(NumberKeyPressed("3"))}
-                />
-                <Button
-                  contents="-"
-                  onClick={_ => dispatch(OperationKeyPressed(`Sub))}
-                />
-              </Row>
-              <Row>
-                <Button contents="." onClick={_ => dispatch(DotKeyPressed)} />
-                <Button
-                  contents="0"
-                  onClick={_ => dispatch(NumberKeyPressed("0"))}
-                />
-                <Button
-                  contents="="
-                  onClick={_ => dispatch(ResultKeyPressed)}
-                />
-                <Button
-                  contents="+"
-                  onClick={_ => dispatch(OperationKeyPressed(`Add))}
-                />
-              </Row>
-            </Column>;
-  });
+      <Column>
+        <Display display curNum=number />
+        <Row>
+          <Button
+            contents="AC"
+            onClick={_ => dispatch(ClearKeyPressed(true))}
+          />
+          <Button
+            contents="C"
+            onClick={_ => dispatch(ClearKeyPressed(false))}
+          />
+          <Button
+            contents="±"
+            onClick={_ => dispatch(PlusMinusKeyPressed)}
+          />
+          /* TODO: Switch to a font with a backspace character */
+          <Button
+            fontFamily="FontAwesome5FreeSolid.otf"
+            contents={||}
+            onClick={_ => dispatch(BackspaceKeyPressed)}
+          />
+        </Row>
+        <Row>
+          <Button
+            contents="7"
+            onClick={_ => dispatch(NumberKeyPressed("7"))}
+          />
+          <Button
+            contents="8"
+            onClick={_ => dispatch(NumberKeyPressed("8"))}
+          />
+          <Button
+            contents="9"
+            onClick={_ => dispatch(NumberKeyPressed("9"))}
+          />
+          <Button
+            contents="÷"
+            onClick={_ => dispatch(OperationKeyPressed(`Div))}
+          />
+        </Row>
+        <Row>
+          <Button
+            contents="4"
+            onClick={_ => dispatch(NumberKeyPressed("4"))}
+          />
+          <Button
+            contents="5"
+            onClick={_ => dispatch(NumberKeyPressed("5"))}
+          />
+          <Button
+            contents="6"
+            onClick={_ => dispatch(NumberKeyPressed("6"))}
+          />
+          <Button
+            contents="×"
+            onClick={_ => dispatch(OperationKeyPressed(`Mul))}
+          />
+        </Row>
+        <Row>
+          <Button
+            contents="1"
+            onClick={_ => dispatch(NumberKeyPressed("1"))}
+          />
+          <Button
+            contents="2"
+            onClick={_ => dispatch(NumberKeyPressed("2"))}
+          />
+          <Button
+            contents="3"
+            onClick={_ => dispatch(NumberKeyPressed("3"))}
+          />
+          <Button
+            contents="-"
+            onClick={_ => dispatch(OperationKeyPressed(`Sub))}
+          />
+        </Row>
+        <Row>
+          <Button contents="." onClick={_ => dispatch(DotKeyPressed)} />
+          <Button
+            contents="0"
+            onClick={_ => dispatch(NumberKeyPressed("0"))}
+          />
+          <Button contents="=" onClick={_ => dispatch(ResultKeyPressed)} />
+          <Button
+            contents="+"
+            onClick={_ => dispatch(OperationKeyPressed(`Add))}
+          />
+        </Row>
+      </Column>;
+    });
 
-  let createElement = (~window, ~children as _, ()) => React.element(make(window));
+  let createElement = (~window, ~children as _, ()) =>
+    React.element(make(window));
 };
 
-let init = app => {
-  let window = App.createWindow(app, "Revery Calculator");
-
-  let render = () => {
-    <Calculator window />;
-  };
-
-  UI.start(window, render);
+let render = window => {
+  <Calculator window />;
 };
-
-App.start(init);

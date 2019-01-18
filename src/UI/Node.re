@@ -8,6 +8,8 @@ open Revery_Math;
 module UniqueId =
   Revery_Core.UniqueId.Make({});
 
+type callback = unit => unit;
+
 class node ('a) (()) = {
   as _this;
   val _children: ref(list(node('a))) = ref([]);
@@ -41,7 +43,11 @@ class node ('a) (()) = {
   pub measurements = () => _layoutNode^.layout;
   pub getTabIndex = () => _tabIndex^;
   pub setTabIndex = index => _tabIndex := index;
-  pub getDepth = () => _depth^;
+  pub getDepth = () =>
+    switch (_parent^) {
+    | None => 0
+    | Some(p) => p#getDepth() + 1
+    };
   pub setStyle = style => _style := style;
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;
@@ -102,9 +108,11 @@ class node ('a) (()) = {
     n#_setParent(Some((_this :> node('a))));
   };
   pub removeChild = (n: node('a)) => {
-    _children := List.filter(c => c != n, _children^);
+    _children :=
+      List.filter(c => c#getInternalId() != n#getInternalId(), _children^);
     n#_setParent(None);
   };
+  pub firstChild = () => List.hd(_children^);
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
   pub getMeasureFunction = (_pixelRatio: float) => None;

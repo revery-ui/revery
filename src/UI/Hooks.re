@@ -1,7 +1,5 @@
 /* Hooks specific to Revery */
 
-/* module React = UiReact; */
-
 let animation =
     (v: Animated.animationValue, opts: Animated.animationOptions, slots) => {
   let (currentV, _set, slots) = UiReact.Hooks.state(v, slots);
@@ -12,11 +10,7 @@ let animation =
       () => {
         let anim = Animated.start(v, opts);
 
-        Some(
-          () => {
-            Animated.cancel(anim);
-          },
-        );
+        Some(() => Animated.cancel(anim));
       },
       slots,
     );

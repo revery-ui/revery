@@ -44,11 +44,11 @@ Install the following packages with your package manager of choice:
 
 ### Running
 
-After building, you can run the 'Hello World' example via:
+After building, you can run the example app by running:
 
-- `esy x Hello`
+- `esy x Examples`
 
-Check out our [examples](https://github.com/revery-ui/revery/tree/master/examples) for more to try!
+Check out our [examples](https://github.com/revery-ui/revery/tree/master/examples) to see how they work!
 
 ### Tests
 
