@@ -36,14 +36,14 @@
     "@opam/js_of_ocaml-lwt": "*",
     "flex": "^1.2.2",
     "@opam/js_of_ocaml-compiler": "*",
-    "@brisk/core": "*"
+    "@brisk/brisk-reconciler": "*"
   },
   "resolutions": {
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
     "@esy-ocaml/reason": "facebook/reason#ab49908",
-    "@brisk/core": "link:D:/brisk/core",
+    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#f545ba0",
     "reason-gl-matrix": "github:bryphe/reason-gl-matrix#c1109d7"
   },
   "peerDependencies": {
