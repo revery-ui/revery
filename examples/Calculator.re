@@ -5,10 +5,10 @@ open Revery.Core.Window;
 open Revery.UI;
 open Revery.UI.Components;
 
-module Row = (
-  val component((render, ~children, ()) =>
-        render(
-          () => {
+module Row {
+  let component = React.component("Row");
+
+  let make = (children) => component((_slots: React.Hooks.empty) => {
             let style =
               Style.make(
                 ~flexDirection=LayoutTypes.Row,
@@ -17,17 +17,16 @@ module Row = (
                 ~flexGrow=1,
                 (),
               );
-            <view style> ...children </view>;
-          },
-          ~children,
-        )
-      )
-);
+            <View style> ...children </View>;
+  });
 
-module Column = (
-  val component((render, ~children, ()) =>
-        render(
-          () => {
+  let createElement = (~children, ()) => React.element(make(children));
+}
+
+module Column {
+  let component = React.component("Column");
+
+  let make = (children) => component((_slots: React.Hooks.empty) => {
             let style =
               Style.make(
                 ~flexDirection=LayoutTypes.Column,
@@ -37,17 +36,16 @@ module Column = (
                 ~flexGrow=1,
                 (),
               );
-            <view style> ...children </view>;
-          },
-          ~children,
-        )
-      )
-);
+            <View style> ...children </View>;
+  });
 
-module Button = (
-  val component((render, ~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ~children, ()) =>
-        render(
-          () => {
+  let createElement = (~children, ()) => React.element(make(children));
+}
+
+module Button {
+    let component = React.component("Button");
+
+    let make = (~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ()) => (component((_slots: React.Hooks.empty) => {
             let clickableStyle =
               Style.make(
                 ~position=LayoutTypes.Relative,
@@ -76,20 +74,22 @@ module Button = (
               );
 
             <Clickable style=clickableStyle onClick>
-              <view style=viewStyle>
-                <text style=textStyle> contents </text>
-              </view>
+              <View style=viewStyle>
+                <Text style=textStyle text={contents} />
+              </View>
             </Clickable>;
-          },
-          ~children,
-        )
-      )
-);
+        
+    }));
 
-module Display = (
-  val component((render, ~display: string, ~curNum: string, ~children, ()) =>
-        render(
-          () => {
+    let createElement = (~fontFamily="Roboto-Regular.ttf", ~contents, ~onClick, ~children as _, ()) => {
+        React.element(make(~fontFamily, ~contents, ~onClick, ()));   
+    };
+}
+
+module Display {
+    let component = React.component("Display");
+
+    let make = (~display: string, ~curNum: string, ()) => component((_slots: React.Hooks.empty) => {
             let viewStyle =
               Style.make(
                 ~backgroundColor=Colors.white,
@@ -117,15 +117,14 @@ module Display = (
                 (),
               );
 
-            <view style=viewStyle>
-              <text style=displayStyle> display </text>
-              <text style=numStyle> curNum </text>
-            </view>;
-          },
-          ~children,
-        )
-      )
-);
+            <View style=viewStyle>
+              <Text style=displayStyle text={display} />
+              <Text style=numStyle text={curNum} />
+            </View>;
+    });
+
+    let createElement = (~display: string, ~curNum: string, ~children as _, ()) => React.element(make(~display, ~curNum, ()));
+}
 
 type operator = [ | `Nop | `Add | `Sub | `Mul | `Div];
 
@@ -199,7 +198,7 @@ let eval = (state, newOp) => {
   (newResult, newDisplay);
 };
 
-let reducer = (state, action) =>
+let reducer = (action, state) =>
   switch (action) {
   | BackspaceKeyPressed =>
     state.number == "" ?
@@ -233,14 +232,17 @@ let reducer = (state, action) =>
     {operator: `Nop, result, display, number: showFloat(result)};
   };
 
-module Calculator = (
-  val component((render, ~window, ~children, ()) =>
-        render(
-          () => {
-            let ({display, number, _}, dispatch) =
-              useReducer(
+
+
+module Calculator {
+  let component = React.component("Calculator");
+
+  let make = (window) => component((slots) => {
+            let ({display, number, _}, dispatch, slots) =
+              React.Hooks.reducer(
+                ~initialState={operator: `Nop, result: 0., display: "", number: ""},
                 reducer,
-                {operator: `Nop, result: 0., display: "", number: ""},
+                slots,
               );
 
             let respondToKeys = e => switch(e.key) {
@@ -276,10 +278,10 @@ module Calculator = (
             /* TODO: Pretty sure this isn't supposed to go in the render() function.
                Seems to cause lag the more times we re-render, so I guess this is
                subscribing a ton of times and never unsubscribing. */
-            useEffect(() => {
+            let _slots: React.Hooks.empty = React.Hooks.effect(OnMount, () => {
               let unsubscribe = Event.subscribe(window.onKeyDown, respondToKeys);
-              unsubscribe;
-            });
+              Some(unsubscribe);
+            }, slots);
 
             <Column>
               <Display display curNum=number />
@@ -373,11 +375,10 @@ module Calculator = (
                 />
               </Row>
             </Column>;
-          },
-          ~children,
-        )
-      )
-);
+  });
+
+  let createElement = (~window, ~children as _, ()) => React.element(make(window));
+};
 
 let init = app => {
   let window = App.createWindow(app, "Revery Calculator");

@@ -68,74 +68,74 @@ let init = app => {
     );
 
   let horizontalStyles =
-    <view>
-      <text style=headerStyle> "Flex Direction Row" </text>
-      <view style={parentColumnStyle(~alignment=LayoutTypes.AlignAuto, ())}>
-        <view style=childStyles>
-          <text style=defaultTextStyles> "Default Flex" </text>
-        </view>
-      </view>
-      <view style={parentColumnStyle(~alignment=LayoutTypes.AlignCenter, ())}>
-        <view style=childStyles>
-          <text style=defaultTextStyles> "Center" </text>
-        </view>
-      </view>
-      <view
+    <View>
+      <Text style=headerStyle text="Flex Direction Row" />
+      <View style={parentColumnStyle(~alignment=LayoutTypes.AlignAuto, ())}>
+        <View style=childStyles>
+          <Text style=defaultTextStyles text="Default Flex" />
+        </View>
+      </View>
+      <View style={parentColumnStyle(~alignment=LayoutTypes.AlignCenter, ())}>
+        <View style=childStyles>
+          <Text style=defaultTextStyles text="Center" />
+        </View>
+      </View>
+      <View
         style={parentColumnStyle(~alignment=LayoutTypes.AlignFlexStart, ())}>
-        <view style=childStyles>
-          <text style=defaultTextStyles> "Flex Start" </text>
-        </view>
-      </view>
-      <view
+        <View style=childStyles>
+          <Text style=defaultTextStyles text="Flex Start" />
+        </View>
+      </View>
+      <View
         style={parentColumnStyle(~alignment=LayoutTypes.AlignFlexEnd, ())}>
-        <view style=childStyles>
-          <text style=defaultTextStyles> "Flex End" </text>
-        </view>
-      </view>
-      <view
+        <View style=childStyles>
+          <Text style=defaultTextStyles text="Flex End" />
+        </View>
+      </View>
+      <View
         style={parentColumnStyle(~alignment=LayoutTypes.AlignStretch, ())}>
-        <view style=childStyles>
-          <text style=defaultTextStyles> "Flex Stretch" </text>
-        </view>
-      </view>
-    </view>;
+        <View style=childStyles>
+          <Text style=defaultTextStyles text="Flex Stretch" />
+        </View>
+      </View>
+    </View>;
 
   let verticalStyles =
-    <view>
-      <text style=headerStyle> "Flex Direction Column" </text>
-      <view
+    <View>
+      <Text style=headerStyle text="Flex Direction Column" />
+      <View
         style={parentStyles(
           ~direction=LayoutTypes.Column,
           ~justify=LayoutTypes.JustifyFlexStart,
           (),
         )}>
-        <view style=childStyles>
-          <text style=defaultTextStyles> "Align Flex Start" </text>
-        </view>
-      </view>
-      <view
+        <View style=childStyles>
+          <Text style=defaultTextStyles text="Align Flex Start" />
+        </View>
+      </View>
+      <View
         style={parentStyles(
           ~direction=LayoutTypes.Column,
           ~justify=LayoutTypes.JustifyCenter,
           (),
         )}>
-        <view style=childStyles>
-          <text style=defaultTextStyles> "Align Flex Center" </text>
-        </view>
-      </view>
-      <view
+        <View style=childStyles>
+          <Text style=defaultTextStyles text="Align Flex Center" />
+        </View>
+      </View>
+      <View
         style={parentStyles(
           ~direction=LayoutTypes.Column,
           ~justify=LayoutTypes.JustifyFlexEnd,
           (),
         )}>
-        <view style=childStyles>
-          <text style=defaultTextStyles> "Align Flex End" </text>
-        </view>
-      </view>
-    </view>;
+        <View style=childStyles>
+          <Text style=defaultTextStyles text="Align Flex End" />
+        </View>
+      </View>
+    </View>;
 
-  let render = () => <view> horizontalStyles verticalStyles </view>;
+  let render = () => <View> horizontalStyles verticalStyles </View>;
 
   UI.start(w, render);
 };

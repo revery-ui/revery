@@ -4,17 +4,13 @@ open Revery.Math;
 open Revery.UI;
 open Revery.UI.Components;
 
-module Logo = (
-  val component((render, ~children, ()) =>
-        render(
-          () => {
-            let (opacity, setOpacity) = useState(1.0);
+module Logo {
+    let component = React.component("Logo");
 
-            let onMouseDown = _ => setOpacity(0.5);
-            let onMouseUp = _ => setOpacity(1.0);
+    let make = () => component((slots) => {
+            let (opacity, setOpacity, slots) = React.Hooks.state(1.0, slots);
 
-            let rotation =
-              useAnimation(
+            let (rotation, slots) = Hooks.animation(
                 Animated.floatValue(0.),
                 {
                   toValue: 6.28,
@@ -23,10 +19,10 @@ module Logo = (
                   repeat: true,
                   easing: Animated.linear,
                 },
+                slots
               );
 
-            let rotationY =
-              useAnimation(
+            let (rotationY, _slots: React.Hooks.empty) = Hooks.animation(
                 Animated.floatValue(0.),
                 {
                   toValue: 6.28,
@@ -35,10 +31,19 @@ module Logo = (
                   repeat: true,
                   easing: Animated.linear,
                 },
+                slots,
               );
 
-            <view onMouseDown onMouseUp>
-              <image
+            let onMouseDown = _ => {
+                setOpacity(0.5);
+            };
+
+            let onMouseUp = _ => {
+                setOpacity(1.0);
+            };
+
+            <View onMouseDown onMouseUp>
+              <Image
                 src="outrun-logo.png"
                 style={Style.make(
                   ~width=512,
@@ -51,19 +56,18 @@ module Logo = (
                   (),
                 )}
               />
-            </view>;
-          },
-          ~children,
-        )
-      )
-);
+            </View>;
+    });
 
-module AnimatedText = (
-  val component((render, ~delay, ~textContent, ~children, ()) =>
-        render(
-          () => {
-            let opacity: float =
-              useAnimation(
+    let createElement = (~children as _, ()) => React.element(make());
+};
+
+module AnimatedText {
+  let component = React.component("AnimatedText");
+
+  let make = (~text, ~delay, ()) => component((slots) => {
+            let (opacity, slots) =
+              Hooks.animation(
                 Animated.floatValue(0.),
                 {
                   toValue: 1.0,
@@ -72,10 +76,11 @@ module AnimatedText = (
                   repeat: false,
                   easing: Animated.linear,
                 },
+                slots,
               );
 
-            let translate: float =
-              useAnimation(
+            let (translate, _slots: React.Hooks.empty) =
+              Hooks.animation(
                 Animated.floatValue(50.),
                 {
                   toValue: 0.,
@@ -84,6 +89,7 @@ module AnimatedText = (
                   repeat: false,
                   easing: Animated.linear,
                 },
+                slots,
               );
 
             let textHeaderStyle =
@@ -97,18 +103,17 @@ module AnimatedText = (
                 (),
               );
 
-            <text style=textHeaderStyle> textContent </text>;
-          },
-          ~children,
-        )
-      )
-);
+            <Text style=textHeaderStyle text={text} />
+  });
 
-module SimpleButton = (
-  val component((render, ~children, ()) =>
-        render(
-          () => {
-            let (count, setCount) = useState(0);
+  let createElement = (~children as _, ~text: string, ~delay: float, ()) => React.element(make(~text, ~delay, ()));
+};
+
+module SimpleButton {
+  let component = React.component("SimpleButton");
+
+  let make = () => component((slots) => {
+            let (count, setCount, _slots: React.Hooks.empty) = React.Hooks.state(0, slots);
 
             let increment = () => setCount(count + 1);
 
@@ -131,19 +136,18 @@ module SimpleButton = (
 
             let textContent = "Click me: " ++ string_of_int(count);
             <Clickable style=wrapperStyle onClick=increment>
-              <text style=textHeaderStyle> textContent </text>
+              <Text style=textHeaderStyle text={textContent} />
             </Clickable>;
-          },
-          ~children,
-        )
-      )
-);
+  });
+
+  let createElement = (~children as _, ()) => React.element(make());
+};
 
 let init = app => {
   let win = App.createWindow(app, "Welcome to Revery!");
 
   let render = () =>
-    <view
+    <View
       onMouseWheel={(evt) => print_endline ("onMouseWheel: " ++ string_of_float(evt.deltaY))} 
       style={Style.make(
         ~position=LayoutTypes.Absolute,
@@ -156,15 +160,15 @@ let init = app => {
         (),
       )}>
       <Logo />
-      <view
+      <View
         ref={r => print_endline("View internal id:" ++ string_of_int(r#getInternalId()))}
         style={Style.make(~flexDirection=Row, ~alignItems=AlignFlexEnd, ())}>
-        <AnimatedText delay=0.0 textContent="Welcome" />
-        <AnimatedText delay=0.5 textContent="to" />
-        <AnimatedText delay=1. textContent="Revery" />
-      </view>
+        <AnimatedText delay=0.0 text="Welcome" />
+        <AnimatedText delay=0.5 text="to" />
+        <AnimatedText delay=1. text="Revery" />
+      </View>
       <SimpleButton />
-    </view>;
+    </View>;
 
   UI.start(win, render);
 };

@@ -12,7 +12,7 @@ homepage: "https://github.com/ocaml/ocaml-re"
 bug-reports: "https://github.com/ocaml/ocaml-re/issues"
 dev-repo: "git+https://github.com/ocaml/ocaml-re.git"
 build: [
-  ["jbuilder" "subst" "-p" name] {pinned}
+  ["jbuilder" "subst" "-n" name] {pinned}
   ["jbuilder" "build" "-p" name "-j" jobs]
   ["jbuilder" "runtest" "-p" name "-j" jobs] {with-test}
 ]
@@ -20,6 +20,7 @@ depends: [
   "ocaml" {>= "4.02.3"}
   "jbuilder" {build & >= "1.0+beta10"}
   "ounit" {with-test}
+  "seq"
 ]
 synopsis: "RE is a regular expression library for OCaml"
 description: """
@@ -31,6 +32,6 @@ Pure OCaml regular expressions with:
 * Compatibility layer for OCaml's built-in Str module (module Re.Str)"""
 url {
   src:
-    "https://github.com/ocaml/ocaml-re/releases/download/1.7.3/re-1.7.3.tbz"
-  checksum: "md5=d2a74ca77216861bce4449600a132de9"
+    "https://github.com/ocaml/ocaml-re/releases/download/1.8.0/re-1.8.0.tbz"
+  checksum: "md5=765f6f8d3e6ab200866e719ed7e5178d"
 }

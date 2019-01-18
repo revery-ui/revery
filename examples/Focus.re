@@ -3,12 +3,12 @@ open Revery.Core;
 open Revery.UI;
 open Revery.UI.Components;
 
-module SimpleButton = (
-  val component((render, ~children, ()) =>
-        render(
-          () => {
-            let (count, setCount) = useState(0);
-            let (focused, setFocus) = useState(false);
+module SimpleButton {
+  let component = React.component("SimpleButton");
+
+  let make = () => component((slots) => {
+            let (count, setCount, slots) = React.Hooks.state(0, slots);
+            let (focused, setFocus, _slots: React.Hooks.empty) = React.Hooks.state(false, slots);
 
             let increment = () => setCount(count + 1);
 
@@ -35,21 +35,21 @@ module SimpleButton = (
               tabindex=0
               onFocus={() => setFocus(true)}
               onBlur={() => setFocus(false)}>
-              <view style=wrapperStyle>
-                <text style=textHeaderStyle> textContent </text>
-              </view>
+              <View style=wrapperStyle>
+                <Text style=textHeaderStyle text={textContent} />
+              </View>
             </Clickable>;
-          },
-          ~children,
-        )
-      )
-);
+    
+  });
+
+  let createElement = (~children as _, ()) => React.element(make());
+};
 
 let init = app => {
   let win = App.createWindow(app, "Welcome to Revery!");
 
   let render = () =>
-    <view
+    <View
       style={Style.make(
         ~position=LayoutTypes.Absolute,
         ~justifyContent=LayoutTypes.JustifyCenter,
@@ -61,7 +61,7 @@ let init = app => {
         (),
       )}>
       <SimpleButton />
-    </view>;
+    </View>;
 
   UI.start(win, render);
 };

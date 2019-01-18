@@ -18,45 +18,62 @@ let containerStyle = (~width, ~height, ~disabled, ~color) =>
     (),
   );
 
-include (
-          val component(
-                (
-                  render,
-                  ~children,
-                  ~title,
-                  ~onClick=noop,
-                  ~color=Colors.dodgerBlue,
-                  ~fontSize=40,
-                  ~width=300,
-                  ~height=100,
-                  ~disabled=false,
-                  ~tabindex=0,
-                  ~onFocus=?,
-                  ~onBlur=?,
-                  ~fontFamily="Roboto-Regular.ttf",
-                  (),
-                ) =>
-                render(
-                  () =>
-                    /* NOTE:If disabled the button should do nothing */
-                    <Clickable
-                      onClick={disabled ? noop : onClick}
-                      tabindex
-                      onFocus=?onFocus
-                      onBlur=?onBlur>
-                      <view
-                        style={containerStyle(
-                          ~width,
-                          ~height,
-                          ~disabled,
-                          ~color,
-                        )}>
-                        <text style={textStyle(~fontSize, ~fontFamily)}>
-                          title
-                        </text>
-                      </view>
-                    </Clickable>,
-                  ~children,
-                )
-              )
-        );
+let component = React.component("Button");
+
+let make =
+    (
+      ~title,
+      ~onClick=noop,
+      ~color=Colors.dodgerBlue,
+      ~fontSize=40,
+      ~width=300,
+      ~height=100,
+      ~disabled=false,
+      ~tabindex=?,
+      ~onFocus=?,
+      ~onBlur=?,
+      ~fontFamily="Roboto-Regular.ttf",
+      (),
+    ) =>
+  /* children, */
+  component((_slots: React.Hooks.empty) =>
+    <Clickable onClick={disabled ? noop : onClick} ?onFocus ?onBlur ?tabindex>
+      <View style={containerStyle(~width, ~height, ~disabled, ~color)}>
+        <Text style={textStyle(~fontSize, ~fontFamily)} text=title />
+      </View>
+    </Clickable>
+  );
+
+let createElement =
+    (
+      ~children as _,
+      ~title,
+      ~onClick=noop,
+      ~color=Colors.dodgerBlue,
+      ~fontSize=40,
+      ~width=300,
+      ~height=100,
+      ~onFocus=?,
+      ~onBlur=?,
+      ~tabindex=?,
+      ~disabled=false,
+      ~fontFamily="Roboto-Regular.ttf",
+      (),
+    ) => {
+  React.element(
+    make(
+      ~title,
+      ~onClick,
+      ~color,
+      ~fontSize,
+      ~width,
+      ~height,
+      ~disabled,
+      ~fontFamily,
+      ~onFocus?,
+      ~onBlur?,
+      ~tabindex?,
+      (),
+    ),
+  );
+};

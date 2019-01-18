@@ -192,11 +192,10 @@ Some ideas for getting started:
 - [ocaml](https://ocaml.org) made these tools possible - thanks [Inria](https://caml.inria.fr) & [OCaml Labs](http://ocamllabs.io/)!
 - [reasonml](https://reasonml.github.io) made revery possible - thanks @jordwalke!
 - [flex](https://github.com/jordwalke/flex) by @jordwalke
-- [reason-reactify](https://github.com/bryphe/reason-reactify)
-    - [Didact's DUI React tutorial](https://engineering.hexacta.com/didact-learning-how-react-works-by-building-it-from-scratch-51007984e5c5)
-    - [ReactMini](https://github.com/reasonml/reason-react/tree/master/ReactMini)
+- [briskml](https://github.com/brismkl)
+    - [brisk-reconciler](https://github.com/briskml/brisk-reconciler) - the "native React" implementation.
 - [reason-glfw](https://github.com/bryphe/reason-glfw)
-    - [GLFW](https://www.glfw.org) -
+    - [GLFW](https://www.glfw.org)
     - [stb-image](https://github.com/nothings/stb)
 - [reason-fontkit](https://github.com/bryphe/reason-fontkit)
     - [freetype2](https://www.freetype.org)
@@ -207,7 +206,7 @@ Some ideas for getting started:
 
 `revery` was inspired by some __awesome projects:__
 - [react-native](https://facebook.github.io/react-native/)
-- [briskml](https://github.com/briskml/brisk)
-- [elm](https://elm-lang.org/)
+- [ReactMini](https://github.com/reasonml/reason-react/tree/master/ReactMini)
 - [cuite](https://github.com/let-def/cuite)
 - [wall](https://github.com/let-def/wall)
+- [elm](https://elm-lang.org/)

@@ -1,4 +1,4 @@
-module Event = Reactify.Event;
+open Revery_Core;
 
 type fontInfo = (string, int);
 type t = Hashtbl.t(fontInfo, Fontkit.fk_face);
