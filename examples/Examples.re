@@ -29,6 +29,7 @@ let state: state = {
     {name: "Flexbox", render: _ => Flexbox.render()},
     {name: "Box Shadow", render: _ => Boxshadow.render()},
     {name: "Focus", render: _ => Focus.render()},
+    {name: "Game Of Life", render: _ => Gol.render()},
   ],
   selectedExample: "Animation",
 };

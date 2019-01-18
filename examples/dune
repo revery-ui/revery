@@ -1,8 +1,8 @@
 (executables
-    (names Examples Gol)
+    (names Examples)
     (preprocess (pps lwt_ppx))
     (package Revery)
-    (public_names Examples Gol)
+    (public_names Examples)
     (js_of_ocaml)
     (libraries
         js_of_ocaml

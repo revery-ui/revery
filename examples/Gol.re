@@ -1,5 +1,4 @@
 open Core;
-open Revery;
 open Revery.Core;
 open Revery.UI;
 open Revery.UI.Components;
@@ -259,49 +258,50 @@ module Column = {
   let createElement = (~children, ()) => React.element(make(children));
 };
 
-module Button {
-    let component = React.component("Button");
+module Button = {
+  let component = React.component("Button");
 
-    let make = (~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ()) => (component((_slots: React.Hooks.empty) => {
-            let clickableStyle =
-              Style.make(
-                ~position=LayoutTypes.Relative,
-                ~backgroundColor=Colors.lightGrey,
-                ~justifyContent=LayoutTypes.JustifyCenter,
-                ~alignItems=LayoutTypes.AlignCenter,
-                ~flexGrow=1,
-                /* Min width */
-                ~width=150,
-                ~margin=10,
-                (),
-              );
-            let viewStyle =
-              Style.make(
-                ~position=LayoutTypes.Relative,
-                ~justifyContent=LayoutTypes.JustifyCenter,
-                ~alignItems=LayoutTypes.AlignCenter,
-                (),
-              );
-            let textStyle =
-              Style.make(
-                ~color=Colors.black,
-                ~fontFamily,
-                ~fontSize=32,
-                (),
-              );
+  let make =
+      (~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ()) =>
+    component((_slots: React.Hooks.empty) => {
+      let clickableStyle =
+        Style.make(
+          ~position=LayoutTypes.Relative,
+          ~backgroundColor=Colors.lightGrey,
+          ~justifyContent=LayoutTypes.JustifyCenter,
+          ~alignItems=LayoutTypes.AlignCenter,
+          ~flexGrow=1,
+          /* Min width */
+          ~width=150,
+          ~margin=10,
+          (),
+        );
+      let viewStyle =
+        Style.make(
+          ~position=LayoutTypes.Relative,
+          ~justifyContent=LayoutTypes.JustifyCenter,
+          ~alignItems=LayoutTypes.AlignCenter,
+          (),
+        );
+      let textStyle =
+        Style.make(~color=Colors.black, ~fontFamily, ~fontSize=32, ());
 
-            <Clickable style=clickableStyle onClick>
-              <View style=viewStyle>
-                <Text style=textStyle text={contents} />
-              </View>
-            </Clickable>;
-        
-    }));
+      <Clickable style=clickableStyle onClick>
+        <View style=viewStyle> <Text style=textStyle text=contents /> </View>
+      </Clickable>;
+    });
 
-    let createElement = (~fontFamily="Roboto-Regular.ttf", ~contents, ~onClick, ~children as _, ()) => {
-        React.element(make(~fontFamily, ~contents, ~onClick, ()));   
-    };
-}
+  let createElement =
+      (
+        ~fontFamily="Roboto-Regular.ttf",
+        ~contents,
+        ~onClick,
+        ~children as _,
+        (),
+      ) => {
+    React.element(make(~fontFamily, ~contents, ~onClick, ()));
+  };
+};
 
 module Cell = {
   let component = React.component("Column");
@@ -365,7 +365,7 @@ let viewPortRender = (viewPort, universe: universe, onClick) => {
             ~f=
               y =>
                 <Row>
-                  <Cell cell={cell((x, y))} onClick={() => onClick((x, y))} />
+                  <Cell cell=cell((x, y)) onClick={() => onClick((x, y))} />
                 </Row>,
             rows,
           )}
@@ -397,15 +397,14 @@ module GameOfLife = {
       let ({universe, viewPort}, dispatch, _slots: React.Hooks.empty) =
         React.Hooks.reducer(~initialState=model, reducer, slots);
       let onClick = pos => dispatch(ToggleAlive(pos));
-      let controlsStyle = Style.make(
-      	~backgroundColor=Colors.white,
-      	~height=120,
-      	()
-			);
+      let controlsStyle =
+        Style.make(~backgroundColor=Colors.white, ~height=120, ());
       <Column>
-				<Row> ...{viewPortRender(viewPort, universe, onClick)} </Row>
-				<View style=controlsStyle><Button contents="Tick" onClick={_ => dispatch(Tick)} /></View>
-			</Column>;
+        <Row> ...{viewPortRender(viewPort, universe, onClick)} </Row>
+        <View style=controlsStyle>
+          <Button contents="Tick" onClick={_ => dispatch(Tick)} />
+        </View>
+      </Column>;
     });
 
   let createElement = (~model, ~children as _, ()) => {
@@ -413,16 +412,8 @@ module GameOfLife = {
   };
 };
 
-let init = app => {
-  let window = App.createWindow(app, "Revery GameOfLife");
+let render = () => {
   let viewPort = {xMin: 0, xMax: 20, yMin: 0, yMax: 20};
   let model = {viewPort, universe: pulsar};
-
-  let render = () => {
-    <GameOfLife model />;
-  };
-
-  UI.start(window, render);
+  <GameOfLife model />;
 };
-
-App.start(init);
