@@ -9,7 +9,6 @@
         str
         Revery
         flex
-        core
             ))
 (install
     (section bin)

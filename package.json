@@ -24,7 +24,6 @@
   "dependencies": {
     "@esy-ocaml/reason": "^3.3.7",
     "@opam/color": "^0.2.0",
-    "@opam/core": "v0.11.3",
     "@opam/js_of_ocaml": "*",
     "@opam/js_of_ocaml-compiler": "*",
     "@opam/js_of_ocaml-lwt": "*",

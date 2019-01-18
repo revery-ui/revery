@@ -1,4 +1,3 @@
-open Core;
 open Revery.Core;
 open Revery.UI;
 open Revery.UI.Components;
@@ -15,102 +14,103 @@ type cell =
   | Dead;
 
 module Position = {
-  module T = {
-    type t = (int, int);
-    let compare = Tuple2.compare(~cmp1=Int.compare, ~cmp2=Int.compare);
-    let sexp_of_t = Tuple2.sexp_of_t(Int.sexp_of_t, Int.sexp_of_t);
-    let t_of_sexp = Tuple2.t_of_sexp(Int.t_of_sexp, Int.t_of_sexp);
+  type t = (int, int);
+};
+
+module Universe =
+  Map.Make({
+    type t = Position.t;
+    let compare = compare;
+  });
+
+let universeFromList = positions => {
+  List.fold_left(
+    (acc, pos) => Universe.add(pos, Alive, acc),
+    Universe.empty,
+    positions,
+  );
+};
+
+let blinker = universeFromList([(5, 4), (5, 5), (5, 6)]);
+let pulsar =
+  universeFromList([
+    (4, 2),
+    (5, 2),
+    (6, 2),
+    (10, 2),
+    (11, 2),
+    (12, 2),
+    (2, 4),
+    (7, 4),
+    (9, 4),
+    (14, 4),
+    (2, 5),
+    (7, 5),
+    (9, 5),
+    (14, 5),
+    (2, 6),
+    (7, 6),
+    (9, 6),
+    (14, 6),
+    (4, 7),
+    (5, 7),
+    (6, 7),
+    (10, 7),
+    (11, 7),
+    (12, 7),
+    (4, 9),
+    (5, 9),
+    (6, 9),
+    (10, 9),
+    (11, 9),
+    (12, 9),
+    (2, 10),
+    (7, 10),
+    (9, 10),
+    (14, 10),
+    (2, 11),
+    (7, 11),
+    (9, 11),
+    (14, 11),
+    (2, 12),
+    (7, 12),
+    (9, 12),
+    (14, 12),
+    (4, 14),
+    (5, 14),
+    (6, 14),
+    (10, 14),
+    (11, 14),
+    (12, 14),
+  ]);
+
+let withDefault = (opt, ~default) =>
+  switch (opt) {
+  | Some(x) => x
+  | None => default
   };
 
-  include T;
-  include Comparable.Make(T);
-};
-
-type universe = Map.t(Position.t, cell, Position.comparator_witness);
-
-type model = {
-  viewPort,
-  universe,
-};
-
-type action =
-  | Tick
-  | ToggleAlive(Position.t);
-
-let blinker =
-  Map.of_alist_exn(
-    (module Position),
-    [((5, 4), Alive), ((5, 5), Alive), ((5, 6), Alive)],
-  );
-
-let pulsar =
-  Map.of_alist_exn(
-    (module Position),
-    [
-      ((4, 2), Alive),
-      ((5, 2), Alive),
-      ((6, 2), Alive),
-      ((10, 2), Alive),
-      ((11, 2), Alive),
-      ((12, 2), Alive),
-      ((2, 4), Alive),
-      ((7, 4), Alive),
-      ((9, 4), Alive),
-      ((14, 4), Alive),
-      ((2, 5), Alive),
-      ((7, 5), Alive),
-      ((9, 5), Alive),
-      ((14, 5), Alive),
-      ((2, 6), Alive),
-      ((7, 6), Alive),
-      ((9, 6), Alive),
-      ((14, 6), Alive),
-      ((4, 7), Alive),
-      ((5, 7), Alive),
-      ((6, 7), Alive),
-      ((10, 7), Alive),
-      ((11, 7), Alive),
-      ((12, 7), Alive),
-      ((4, 9), Alive),
-      ((5, 9), Alive),
-      ((6, 9), Alive),
-      ((10, 9), Alive),
-      ((11, 9), Alive),
-      ((12, 9), Alive),
-      ((2, 10), Alive),
-      ((7, 10), Alive),
-      ((9, 10), Alive),
-      ((14, 10), Alive),
-      ((2, 11), Alive),
-      ((7, 11), Alive),
-      ((9, 11), Alive),
-      ((14, 11), Alive),
-      ((2, 12), Alive),
-      ((7, 12), Alive),
-      ((9, 12), Alive),
-      ((14, 12), Alive),
-      ((4, 14), Alive),
-      ((5, 14), Alive),
-      ((6, 14), Alive),
-      ((10, 14), Alive),
-      ((11, 14), Alive),
-      ((12, 14), Alive),
-    ],
-  );
-
 let findCell = (universe, position) => {
-  Map.find(universe, position)
-  |> Option.value(~default=Dead)
-  |> (cell => Tuple2.create(position, cell));
+  Universe.find_opt(position, universe)
+  |> withDefault(~default=Dead)
+  |> (cell => (position, cell));
 };
 
 let numberOfLive = neighbours =>
-  neighbours |> List.filter(~f=phys_equal(Alive)) |> List.length;
+  neighbours
+  |> List.filter(x =>
+       switch (x) {
+       | Alive => true
+       | _ => false
+       }
+     )
+  |> List.length;
 
 type lifeCycle =
   | Dies
   | Revives
   | Same;
+
 let underPopulationRule = (cell, neighbours) =>
   switch (cell) {
   | Alive =>
@@ -128,8 +128,7 @@ let livesOnRule = (cell, neighbours) =>
   | Alive =>
     let numberOfLiveNeighbours = numberOfLive(neighbours);
 
-    if (phys_equal(numberOfLiveNeighbours, 2)
-        || phys_equal(numberOfLiveNeighbours, 3)) {
+    if (numberOfLiveNeighbours == 2 || numberOfLiveNeighbours == 3) {
       Same;
     } else {
       Dies;
@@ -155,7 +154,7 @@ let reproductionRule = (cell, neighbours) =>
   | Alive => Same
 
   | Dead =>
-    if (phys_equal(numberOfLive(neighbours), 3)) {
+    if (numberOfLive(neighbours) == 3) {
       Revives;
     } else {
       Same;
@@ -170,9 +169,10 @@ let reduceLifeCycle = (cell, neighbours) => {
     reproductionRule(cell, neighbours),
   ];
 
-  let reducedLifeCycle = actions |> List.filter(~f=(!=)(Same)) |> List.hd;
+  let reducedLifeCycle =
+    actions |> List.filter((!=)(Same)) |> (l => List.nth_opt(l, 0));
 
-  Option.value(reducedLifeCycle, ~default=Same);
+  withDefault(reducedLifeCycle, ~default=Same);
 };
 
 let applyRules = (cell, neighbours) => {
@@ -197,7 +197,7 @@ let neighbourPositions = ((x, y)) => [
 let evolveCell = (universe, (position, cell)) => {
   let neighbours =
     List.map(
-      ~f=position => findCell(universe, position) |> snd,
+      position => findCell(universe, position) |> snd,
       neighbourPositions(position),
     );
   let evolvedCell = applyRules(cell, neighbours);
@@ -206,17 +206,16 @@ let evolveCell = (universe, (position, cell)) => {
 
 let evolve = universe => {
   let find_relevant_cells = position =>
-    neighbourPositions(position) |> List.map(~f=findCell(universe));
-  let compare = ((p1, _), (p2, _)) =>
-    Tuple2.compare(~cmp1=Int.compare, ~cmp2=Int.compare, p1, p2);
-  universe
-  |> Map.keys
-  |> List.map(~f=find_relevant_cells)
+    neighbourPositions(position) |> List.map(findCell(universe));
+  let keys = Universe.bindings(universe) |> List.map(fst);
+  keys
+  |> List.map(find_relevant_cells)
   |> List.concat
-  |> List.dedup_and_sort(~compare)
-  |> List.map(~f=evolveCell(universe))
-  |> List.filter(~f=x => snd(x) |> phys_equal(Alive))
-  |> Map.of_alist_exn((module Position));
+  |> List.sort_uniq(compare)
+  |> List.map(evolveCell(universe))
+  |> List.filter(x => snd(x) |> (==)(Alive))
+  |> List.map(fst)
+  |> universeFromList;
 };
 
 module Row = {
@@ -343,9 +342,9 @@ module Cell = {
     React.element(make(~cell, ~onClick, ()));
 };
 
-let viewPortRender = (viewPort, universe: universe, onClick) => {
+let viewPortRender = (viewPort, universe: Universe.t(cell), onClick) => {
   let cell = pos =>
-    switch (Map.find(universe, pos)) {
+    switch (Universe.find_opt(pos, universe)) {
     | Some(_) => Alive
     | None => Dead
     };
@@ -358,21 +357,28 @@ let viewPortRender = (viewPort, universe: universe, onClick) => {
   let cols = range(viewPort.xMin, viewPort.xMax, []);
   let rows = range(viewPort.yMin, viewPort.yMax, []);
   List.map(
-    ~f=
-      x =>
-        <Column>
-          ...{List.map(
-            ~f=
-              y =>
-                <Row>
-                  <Cell cell=cell((x, y)) onClick={() => onClick((x, y))} />
-                </Row>,
-            rows,
-          )}
-        </Column>,
+    x =>
+      <Column>
+        ...{List.map(
+          y =>
+            <Row>
+              <Cell cell=cell((x, y)) onClick={() => onClick((x, y))} />
+            </Row>,
+          rows,
+        )}
+      </Column>,
     cols,
   );
 };
+
+type model = {
+  viewPort,
+  universe: Universe.t(cell),
+};
+
+type action =
+  | Tick
+  | ToggleAlive(Position.t);
 
 let reducer = (action, state) =>
   switch (action) {
@@ -380,11 +386,14 @@ let reducer = (action, state) =>
   | ToggleAlive(position) => {
       ...state,
       universe:
-        Map.change(state.universe, position, ~f=x =>
-          switch (x) {
-          | Some(Alive) => None
-          | _ => Some(Alive)
-          }
+        Universe.update(
+          position,
+          x =>
+            switch (x) {
+            | Some(Alive) => None
+            | _ => Some(Alive)
+            },
+          state.universe,
         ),
     }
   };
