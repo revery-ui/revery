@@ -26,6 +26,7 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
 
   AnimationTicker.tick();
 
+  /* Perform reconciliation */
   /* TODO:
    * - Refactor this to something like a 'Container' to better manage the state
    * - Perf: Better logic to determine if we should just update or flush pending updates - both are not always needed.

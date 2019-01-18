@@ -85,7 +85,6 @@ module Button {
         React.element(make(~fontFamily, ~contents, ~onClick, ()));   
     };
 }
-
 module Display {
     let component = React.component("Display");
 
