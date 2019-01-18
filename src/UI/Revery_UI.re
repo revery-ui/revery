@@ -10,15 +10,6 @@ module LayoutTypes = Layout.LayoutTypes;
 module Style = Style;
 module Transform = Transform;
 
-/* Expose hooks as part of the public API */
-include Hooks;
-
-let useState = UiReact.useState;
-let useReducer = UiReact.useReducer;
-let useContext = UiReact.useContext;
-let createContext = UiReact.createContext;
-let getProvider = UiReact.getProvider;
-
 class node = class Node.node(RenderPass.t);
 class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
@@ -27,11 +18,13 @@ class imageNode = class ImageNode.imageNode;
 module Mouse = Mouse;
 module NodeEvents = NodeEvents;
 module UiEvents = UiEvents;
-let component = UiReact.component;
+
+module React = UiReact;
+module Hooks = Hooks;
 
 include Primitives;
 
-type renderFunction = unit => UiReact.emptyHook;
+type renderFunction = unit => UiReact.syntheticElement;
 
 open UiContainer;
 
@@ -47,19 +40,15 @@ let start =
     ) => {
   let uiDirty = ref(false);
 
-  let onEndReconcile = _node => uiDirty := true;
+  let onStale = () => {
+    uiDirty := true;
+  };
+
+  let _ = Revery_Core.Event.subscribe(React.onStale, onStale);
 
   let rootNode = (new viewNode)();
-  let container = UiReact.createContainer(~onEndReconcile, rootNode);
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
-  let ui =
-    UiContainer.create(
-      window,
-      rootNode,
-      container,
-      mouseCursor,
-      createOptions,
-    );
+  let ui = UiContainer.create(window, rootNode, mouseCursor, createOptions);
 
   let _ =
     Revery_Core.Event.subscribe(
@@ -111,7 +100,7 @@ let start =
     );
 
   let _ =
-    Reactify.Event.subscribe(FontCache.onFontLoaded, () =>
+    Revery_Core.Event.subscribe(FontCache.onFontLoaded, () =>
       Window.render(window)
     );
 

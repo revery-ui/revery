@@ -5,15 +5,8 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Revery_Math;
 
-module UniqueId = {
-  let current = ref(0);
-
-  let getUniqueId = () => {
-    let ret = current^;
-    current := current^ + 1;
-    ret;
-  };
-};
+module UniqueId =
+  Revery_Core.UniqueId.Make({});
 
 type callback = unit => unit;
 
@@ -27,6 +20,8 @@ class node ('a) (()) = {
   val _depth: ref(int) = ref(0);
   val _internalId: int = UniqueId.getUniqueId();
   val _queuedEvents: ref(list(callback)) = ref([]);
+  val _tabIndex: ref(option(int)) = ref(None);
+  val _hasFocus: ref(bool) = ref(false);
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
@@ -47,7 +42,13 @@ class node ('a) (()) = {
   };
   pub getInternalId = () => _internalId;
   pub measurements = () => _layoutNode^.layout;
-  pub getDepth = () => _depth^;
+  pub getTabIndex = () => _tabIndex^;
+  pub setTabIndex = index => _tabIndex := index;
+  pub getDepth = () =>
+    switch (_parent^) {
+    | None => 0
+    | Some(p) => p#getDepth() + 1
+    };
   pub setStyle = style => _style := style;
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;
@@ -108,7 +109,8 @@ class node ('a) (()) = {
     n#_setParent(Some((_this :> node('a))));
   };
   pub removeChild = (n: node('a)) => {
-    _children := List.filter(c => c != n, _children^);
+    _children :=
+      List.filter(c => c#getInternalId() != n#getInternalId(), _children^);
     n#_setParent(None);
   };
 
@@ -117,7 +119,7 @@ class node ('a) (()) = {
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
   pub getMeasureFunction = (_pixelRatio: float) => None;
-  pub handleEvent = (evt: NodeEvents.mouseEvent) => {
+  pub handleEvent = (evt: NodeEvents.event) => {
     let _ =
       switch (evt, _this#getEvents()) {
       | (MouseDown(c), {onMouseDown: Some(cb), _}) => cb(c)
@@ -128,6 +130,18 @@ class node ('a) (()) = {
       | (MouseMove(_), _)
       | (MouseUp(_), _)
       | (MouseWheel(_), _) => ()
+      | (Focus, p) =>
+        _this#focus();
+        switch (p) {
+        | {onFocus: Some(cb), _} => cb()
+        | _ => ()
+        };
+      | (Blur, p) =>
+        _this#blur();
+        switch (p) {
+        | {onBlur: Some(cb), _} => cb()
+        | _ => ()
+        };
       };
     ();
   };
@@ -173,11 +187,22 @@ class node ('a) (()) = {
       let ret = (_this :> node('a));
       let maybeRef = _this#getEvents().ref;
       switch (maybeRef) {
-      | Some(ref) => _this#_queueEvent(() => ref(ret));
+      | Some(ref) => ref(ret);
       | None => ()
       };
     | _ => ()
     };
+  };
+  pub canBeFocused = () =>
+    switch (_tabIndex^) {
+    | Some(_) => true
+    | None => false
+    };
+  pub focus = () => {
+    _hasFocus := true;
+  };
+  pub blur = () => {
+    _hasFocus := false;
   };
 };
 

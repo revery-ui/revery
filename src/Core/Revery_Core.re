@@ -11,10 +11,11 @@ module Monitor = Monitor;
 
 module Environment = Environment;
 
-module Event = Reactify.Event;
+module Event = Event;
 module Events = Events;
 
 module Performance = Performance;
+module UniqueId = UniqueId;
 
 module Memoize = {
   type t('a, 'b) = 'a => 'b;
