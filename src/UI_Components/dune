@@ -1,4 +1,4 @@
 (library
     (name Revery_UI_Components)
     (public_name Revery_UI_Components)
-    (libraries lwt lwt.unix reglfw flex fontkit reactify Revery_Core Revery_Shaders Revery_Geometry Revery_Math Revery_UI))
+    (libraries lwt lwt.unix reglfw flex fontkit Revery_Core Revery_Shaders Revery_Geometry Revery_Math Revery_UI))

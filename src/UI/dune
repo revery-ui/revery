@@ -2,4 +2,4 @@
     (name Revery_UI)
     (public_name Revery_UI)
     (preprocess (pps lwt_ppx))
-    (libraries lwt lwt.unix reglfw flex fontkit reactify Revery_Core Revery_Shaders Revery_Geometry Revery_Math))
+    (libraries brisk-reconciler lwt lwt.unix reglfw flex fontkit Revery_Core Revery_Shaders Revery_Geometry Revery_Math))

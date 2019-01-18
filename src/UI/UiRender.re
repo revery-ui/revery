@@ -18,27 +18,25 @@ open RenderPass;
 
 let _projection = Mat4.create();
 
-let render = (container: UiContainer.t, component: UiReact.component) => {
-  let {rootNode, container, window, options, _} = container;
+let render = (container: UiContainer.t, component: UiReact.syntheticElement) => {
+  let {rootNode, window, container, options, _} = container;
 
   AnimationTicker.tick();
 
   /* Perform reconciliation */
-  Performance.bench("updateContainer", () =>
-    UiReact.updateContainer(container, component)
-  );
-
-  let size = Window.getFramebufferSize(window);
-  let pixelRatio = int_of_float(Window.getDevicePixelRatio(window));
+  container := UiReact.Container.updateContainer(container^, component);
 
   /* Layout */
+  let size = Window.getSize(window);
+  let pixelRatio = Window.getDevicePixelRatio(window);
+
   switch (options.autoSize) {
   | false =>
     rootNode#setStyle(
       Style.make(
         ~position=LayoutTypes.Relative,
-        ~width=size.width / pixelRatio,
-        ~height=size.height / pixelRatio,
+        ~width=size.width,
+        ~height=size.height,
         (),
       ),
     );
@@ -51,11 +49,10 @@ let render = (container: UiContainer.t, component: UiReact.component) => {
       width: measurements.width,
       height: measurements.height,
     };
-    Window.setSize(window, size.width / pixelRatio, size.height / pixelRatio);
+    Window.setSize(window, size.width, size.height);
   };
 
   /* Render */
-
   Mat4.ortho(
     _projection,
     0.0,
@@ -70,7 +67,8 @@ let render = (container: UiContainer.t, component: UiReact.component) => {
     /* Do a first pass for all 'opaque' geometry */
     /* This helps reduce the overhead for the more expensive alpha pass, next */
 
-    let drawContext = NodeDrawContext.create(pixelRatio, 0, 1.0);
+    let drawContext =
+      NodeDrawContext.create(int_of_float(pixelRatio), 0, 1.0, size.height);
 
     let solidPass = SolidPass(_projection);
     rootNode#draw(solidPass, drawContext);

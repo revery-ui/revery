@@ -1,6 +1,6 @@
 {
   "name": "revery",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "description": "App toolkit built with Reason",
   "license": "MIT",
   "bugs": {
@@ -26,10 +26,9 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "^3.3.7",
-    "reason-glfw": "^3.2.1009",
-    "reason-fontkit": "^2.0.4",
-    "reason-gl-matrix": "^0.9.9301",
-    "reason-reactify": "^2.2.0",
+    "reason-glfw": "^3.2.1010",
+    "reason-fontkit": "^2.0.5",
+    "reason-gl-matrix": "^0.9.9302",
     "@opam/color": "^0.2.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
@@ -37,19 +36,20 @@
     "@opam/js_of_ocaml-lwt": "*",
     "flex": "^1.2.2",
     "@opam/js_of_ocaml-compiler": "*",
-    "rejest": "^1.2.0"
+    "@brisk/brisk-reconciler": "*"
   },
   "resolutions": {
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-    "@esy-ocaml/reason": "facebook/reason#ab49908"
+    "@esy-ocaml/reason": "facebook/reason#ab49908",
+    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#f545ba0"
   },
   "peerDependencies": {
-    "ocaml": "~4.6.0"
+    "ocaml": "^4.7.0"
   },
   "devDependencies": {
-    "ocaml": "~4.6.0",
+    "ocaml": "^4.7.0",
     "@opam/merlin": "*",
     "@opam/dune": "^1.5.0"
   }

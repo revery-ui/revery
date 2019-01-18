@@ -1,8 +1,8 @@
 (executables
-    (names Hello Autocomplete Flexbox Border Boxshadow DefaultButton)
+    (names Examples)
     (preprocess (pps lwt_ppx))
     (package Revery)
-    (public_names Hello Autocomplete Flexbox Border Boxshadow DefaultButton)
+    (public_names Examples)
     (js_of_ocaml)
     (libraries
         js_of_ocaml
@@ -13,4 +13,4 @@
 (install
     (section bin)
     (package Revery)
-    (files Roboto-Regular.ttf binary.dat index.html Hello.bc.js gl-matrix-min.js outrun-logo.png))
+    (files Roboto-Regular.ttf FontAwesome5FreeSolid.otf binary.dat index.html Examples.bc.js gl-matrix-min.js outrun-logo.png))

@@ -1,6 +1,5 @@
 open Reglfw;
 
-module Event = Reactify.Event;
 module Color = Color_wrapper;
 
 open Events;
@@ -29,6 +28,7 @@ type t = {
   onMouseUp: Event.t(mouseButtonEvent),
   onMouseMove: Event.t(mouseMoveEvent),
   onMouseDown: Event.t(mouseButtonEvent),
+  onMouseWheel: Event.t(mouseWheelEvent),
 };
 
 type windowCreateOptions = {
@@ -65,9 +65,13 @@ let isDirty = (w: t) =>
   };
 
 let _updateFramebuffer = (w: t) => {
-  let size = Glfw.glfwGetFramebufferSize(w.glfwWindow);
-  w.framebufferWidth = size.width;
-  w.framebufferHeight = size.height;
+  let size = Glfw.glfwGetWindowSize(w.glfwWindow);
+  w.width = size.width;
+  w.height = size.height;
+
+  let framebufferSize = Glfw.glfwGetFramebufferSize(w.glfwWindow);
+  w.framebufferWidth = framebufferSize.width;
+  w.framebufferHeight = framebufferSize.height;
 };
 
 let setSize = (w: t, width: int, height: int) =>
@@ -81,8 +85,6 @@ let setSize = (w: t, width: int, height: int) =>
       w.requestedHeight = Some(height);
     } else {
       Glfw.glfwSetWindowSize(w.glfwWindow, width, height);
-      w.width = width;
-      w.height = height;
       w.requestedWidth = None;
       w.requestedHeight = None;
       _updateFramebuffer(w);
@@ -133,6 +135,12 @@ let create = (name: string, options: windowCreateOptions) => {
 
   let fbSize = Glfw.glfwGetFramebufferSize(w);
 
+  /*
+   * The window size might not be _exactly_ what the user passed in for options.width/options.height,
+   * if the window exceeds the size of the monitor. It might be clamped in that case, so we need to double-check.
+   */
+  let size = Glfw.glfwGetWindowSize(w);
+
   let ret: t = {
     backgroundColor: options.backgroundColor,
     glfwWindow: w,
@@ -140,8 +148,8 @@ let create = (name: string, options: windowCreateOptions) => {
     render: () => (),
     shouldRender: () => false,
 
-    width: options.width,
-    height: options.height,
+    width: size.width,
+    height: size.height,
     framebufferWidth: fbSize.width,
     framebufferHeight: fbSize.height,
 
@@ -156,6 +164,7 @@ let create = (name: string, options: windowCreateOptions) => {
     onMouseMove: Event.create(),
     onMouseUp: Event.create(),
     onMouseDown: Event.create(),
+    onMouseWheel: Event.create(),
   };
 
   Glfw.glfwSetFramebufferSizeCallback(
@@ -258,6 +267,14 @@ let create = (name: string, options: windowCreateOptions) => {
     },
   );
 
+  Glfw.glfwSetScrollCallback(
+    w,
+    (_w, deltaX, deltaY) => {
+      let evt: mouseWheelEvent = {deltaX, deltaY};
+      Event.dispatch(ret.onMouseWheel, evt);
+    },
+  );
+
   Glfw.glfwSetCursorPosCallback(
     w,
     (_w, x: float, y: float) => {
@@ -295,6 +312,9 @@ let getFramebufferSize = (w: t) => {
   };
   r;
 };
+
+let maximize = (w:t) =>
+    Glfw.glfwMaximizeWindow(w.glfwWindow);
 
 let getDevicePixelRatio = (w: t) => {
   let windowSizeInScreenCoordinates = getSize(w);

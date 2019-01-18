@@ -5,15 +5,8 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Revery_Math;
 
-module UniqueId = {
-  let current = ref(0);
-
-  let getUniqueId = () => {
-    let ret = current^;
-    current := current^ + 1;
-    ret;
-  };
-};
+module UniqueId =
+  Revery_Core.UniqueId.Make({});
 
 class node ('a) (()) = {
   as _this;
@@ -24,15 +17,35 @@ class node ('a) (()) = {
   val _parent: ref(option(node('a))) = ref(None);
   val _depth: ref(int) = ref(0);
   val _internalId: int = UniqueId.getUniqueId();
+  val _tabIndex: ref(option(int)) = ref(None);
+  val _hasFocus: ref(bool) = ref(false);
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
-    let localContext =
-      NodeDrawContext.createFromParent(parentContext, style.opacity);
-    List.iter(c => c#draw(pass, localContext), _children^);
+    let worldTransform = _this#getWorldTransform();
+    let dimensions = _layoutNode^.layout;
+
+    Overflow.render(
+      worldTransform,
+      style.overflow,
+      dimensions,
+      parentContext.screenHeight,
+      float_of_int(parentContext.pixelRatio),
+      () => {
+        let localContext =
+          NodeDrawContext.createFromParent(parentContext, style.opacity);
+        List.iter(c => c#draw(pass, localContext), _children^);
+      },
+    );
   };
   pub getInternalId = () => _internalId;
   pub measurements = () => _layoutNode^.layout;
-  pub getDepth = () => _depth^;
+  pub getTabIndex = () => _tabIndex^;
+  pub setTabIndex = index => _tabIndex := index;
+  pub getDepth = () =>
+    switch (_parent^) {
+    | None => 0
+    | Some(p) => p#getDepth() + 1
+    };
   pub setStyle = style => _style := style;
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;
@@ -70,9 +83,9 @@ class node ('a) (()) = {
   };
   pub getCursorStyle = () => {
     switch (_this#getStyle().cursor, _this#getParent()) {
-      | (None, None) => Revery_Core.MouseCursors.arrow
-      | (None, Some(parent)) => parent#getCursorStyle()
-      | (Some(cursorStyle), _) => cursorStyle
+    | (None, None) => Revery_Core.MouseCursors.arrow
+    | (None, Some(parent)) => parent#getCursorStyle()
+    | (Some(cursorStyle), _) => cursorStyle
     };
   };
   pub hitTest = (p: Vec2.t) => {
@@ -93,27 +106,42 @@ class node ('a) (()) = {
     n#_setParent(Some((_this :> node('a))));
   };
   pub removeChild = (n: node('a)) => {
-    _children := List.filter(c => c != n, _children^);
+    _children :=
+      List.filter(c => c#getInternalId() != n#getInternalId(), _children^);
     n#_setParent(None);
   };
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
-  pub getMeasureFunction = (_pixelRatio: int) => None;
-  pub handleEvent = (evt: NodeEvents.mouseEvent) => {
+  pub getMeasureFunction = (_pixelRatio: float) => None;
+  pub handleEvent = (evt: NodeEvents.event) => {
     let _ =
       switch (evt, _this#getEvents()) {
       | (MouseDown(c), {onMouseDown: Some(cb), _}) => cb(c)
       | (MouseMove(c), {onMouseMove: Some(cb), _}) => cb(c)
       | (MouseUp(c), {onMouseUp: Some(cb), _}) => cb(c)
+      | (MouseWheel(c), {onMouseWheel: Some(cb), _}) => cb(c)
       | (MouseDown(_), _)
       | (MouseMove(_), _)
-      | (MouseUp(_), _) => ()
+      | (MouseUp(_), _)
+      | (MouseWheel(_), _) => ()
+      | (Focus, p) =>
+        _this#focus();
+        switch (p) {
+        | {onFocus: Some(cb), _} => cb()
+        | _ => ()
+        };
+      | (Blur, p) =>
+        _this#blur();
+        switch (p) {
+        | {onBlur: Some(cb), _} => cb()
+        | _ => ()
+        };
       };
     ();
   };
-  pub toLayoutNode = (pixelRatio: int) => {
+  pub toLayoutNode = (pixelRatio: float) => {
     let childNodes = List.map(c => c#toLayoutNode(pixelRatio), _children^);
-    let layoutStyle = Style.toLayoutNode(_style^, pixelRatio);
+    let layoutStyle = Style.toLayoutNode(_style^);
     let node =
       switch (_this#getMeasureFunction(pixelRatio)) {
       | None => Layout.createNode(Array.of_list(childNodes), layoutStyle)
@@ -148,6 +176,17 @@ class node ('a) (()) = {
       };
     | _ => ()
     };
+  };
+  pub canBeFocused = () =>
+    switch (_tabIndex^) {
+    | Some(_) => true
+    | None => false
+    };
+  pub focus = () => {
+    _hasFocus := true;
+  };
+  pub blur = () => {
+    _hasFocus := false;
   };
 };
 
