@@ -54,6 +54,8 @@ module Example = {
         />
       </View>;
     });
+  let createElement = (~window, ~children, ()) =>
+    React.createElement(make(~window, ~children, ()));
 };
 
 let init = app => {
@@ -68,7 +70,7 @@ let init = app => {
       "Input Component Example",
     );
 
-  UI.start(window, () => {});
+  UI.start(window, () => <Example window />);
 };
 
 App.start(init);
