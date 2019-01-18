@@ -6,6 +6,7 @@ open Revery.UI.Components;
 
 let backgroundColor = Color.hex("#212733");
 let activeBackgroundColor = Color.hex("#2E3440");
+let inactiveBackgroundColor = Color.hex("#272d39");
 let selectionHighlight = Color.hex("#90f7ff");
 
 type example = {
@@ -48,19 +49,22 @@ module ExampleButton = {
     component((_slots: React.Hooks.empty) => {
       let highlightColor =
         isActive ? selectionHighlight : Colors.transparentWhite;
-      let opacity = isActive ? 1.0 : 0.6;
+
+      let opacity = 1.0;
+      let backgroundColor = isActive ? activeBackgroundColor : inactiveBackgroundColor;
 
       let wrapperStyle =
         Style.make(
           ~opacity,
           ~borderLeft=Style.Border.make(~width=4, ~color=highlightColor, ()),
-          ~backgroundColor=activeBackgroundColor,
+          ~backgroundColor=backgroundColor,
           (),
         );
 
+      let textColor = isActive ? Colors.white : Colors.grey;
       let textHeaderStyle =
         Style.make(
-          ~color=Colors.white,
+          ~color=textColor,
           ~fontFamily="Roboto-Regular.ttf",
           ~fontSize=14,
           ~margin=16,
