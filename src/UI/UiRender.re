@@ -53,7 +53,6 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   };
 
   /* Render */
-
   Mat4.ortho(
     _projection,
     0.0,
