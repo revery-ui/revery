@@ -14,19 +14,13 @@ let noop = () => ();
 type valueChangedFunction = (float) => unit;
 let noopValueChanged = (_f) => ();
 
-type setStateFunction = int => unit;
+let component = React.component("Slider");
 
-let latestState: ref(setStateFunction) = ref((_) => ());
+let make = (~onValueChanged=noopValueChanged, ~minimumValue=0., ~maximumValue =1.0, ()) => component((slots) => {
+                    ignore((minimumValue, maximumValue));
 
-/* The 'include' here makes the component available at the top level */
-include (
-          val component((render, ~_style=Style.make(()), ~onValueChanged:valueChangedFunction=noopValueChanged, ~_minimumValue=0., ~_maximumValue=1., ~children, ()) =>
-                render(
-                  () => {
-                    let (ref, _setRef) = useState(None);
-                    let (curOffset, _setOffset) = useState(0);
-
-                    latestState := _setOffset;
+                    let (ref, _setRef, slots) = React.Hooks.state(None, slots);
+                    let (curOffset, _setOffset, _slots: React.Hooks.empty) = React.Hooks.state(0., slots);
 
                     let setRef = (r) => {
                         print_endline ("SETTING REF: " ++ string_of_int(r#getInternalId()));
@@ -38,7 +32,6 @@ include (
                        Mouse.setCapture(
                            ~onMouseMove=(evt) => { 
                                print_endline ("MOVING: " ++ string_of_float(evt.mouseX));
-                               (latestState^)(int_of_float(evt.mouseX)); 
 
                                switch(ref) {
                                | Some(r) => print_endline("got ref: " ++ string_of_int(r#getInternalId()));
@@ -67,11 +60,10 @@ include (
                         ()
                     );
 
-                    <view onMouseDown style ref={(r) => setRef(r)}> 
-                        <view style=Style.make(~position=LayoutTypes.Absolute, ~height=25, ~width=15, ~left=curOffset, ~top=0, ~backgroundColor=Colors.yellow, ()) />
-                    </view>;
-                  },
-                  ~children,
-                )
-              )
-        );
+                    <View onMouseDown style ref={(r) => setRef(r)}> 
+                        <View style=Style.make(~position=LayoutTypes.Absolute, ~height=25, ~width=15, ~left=int_of_float(curOffset), ~top=0, ~backgroundColor=Colors.yellow, ()) />
+                    </View>;
+    
+});
+
+let createElement = (~children as _, ~onValueChanged=noopValueChanged, ~minimumValue=0., ~maximumValue=1., ()) => React.element(make(~onValueChanged, ~minimumValue, ~maximumValue, ()));
