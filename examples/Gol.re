@@ -15,9 +15,6 @@ type cell =
   | Alive
   | Dead;
 
-type action =
-  | Tick;
-
 module Position = {
   module T = {
     type t = (int, int);
@@ -36,6 +33,10 @@ type model = {
   viewPort,
   universe,
 };
+
+type action =
+  | Tick
+  | ToggleAlive(Position.t);
 
 let blinker =
   Map.of_alist_exn(
@@ -258,6 +259,50 @@ module Column = {
   let createElement = (~children, ()) => React.element(make(children));
 };
 
+module Button {
+    let component = React.component("Button");
+
+    let make = (~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ()) => (component((_slots: React.Hooks.empty) => {
+            let clickableStyle =
+              Style.make(
+                ~position=LayoutTypes.Relative,
+                ~backgroundColor=Colors.lightGrey,
+                ~justifyContent=LayoutTypes.JustifyCenter,
+                ~alignItems=LayoutTypes.AlignCenter,
+                ~flexGrow=1,
+                /* Min width */
+                ~width=150,
+                ~margin=10,
+                (),
+              );
+            let viewStyle =
+              Style.make(
+                ~position=LayoutTypes.Relative,
+                ~justifyContent=LayoutTypes.JustifyCenter,
+                ~alignItems=LayoutTypes.AlignCenter,
+                (),
+              );
+            let textStyle =
+              Style.make(
+                ~color=Colors.black,
+                ~fontFamily,
+                ~fontSize=32,
+                (),
+              );
+
+            <Clickable style=clickableStyle onClick>
+              <View style=viewStyle>
+                <Text style=textStyle text={contents} />
+              </View>
+            </Clickable>;
+        
+    }));
+
+    let createElement = (~fontFamily="Roboto-Regular.ttf", ~contents, ~onClick, ~children as _, ()) => {
+        React.element(make(~fontFamily, ~contents, ~onClick, ()));   
+    };
+}
+
 module Cell = {
   let component = React.component("Column");
 
@@ -318,10 +363,10 @@ let viewPortRender = (viewPort, universe: universe, onClick) => {
         <Column>
           ...{List.map(
             ~f=
-              y => {
-                let foo = cell((x, y));
-                <Row> <Cell cell=foo onClick /> </Row>;
-              },
+              y =>
+                <Row>
+                  <Cell cell={cell((x, y))} onClick={() => onClick((x, y))} />
+                </Row>,
             rows,
           )}
         </Column>,
@@ -332,6 +377,16 @@ let viewPortRender = (viewPort, universe: universe, onClick) => {
 let reducer = (action, state) =>
   switch (action) {
   | Tick => {...state, universe: evolve(state.universe)}
+  | ToggleAlive(position) => {
+      ...state,
+      universe:
+        Map.change(state.universe, position, ~f=x =>
+          switch (x) {
+          | Some(Alive) => None
+          | _ => Some(Alive)
+          }
+        ),
+    }
   };
 
 module GameOfLife = {
@@ -341,8 +396,16 @@ module GameOfLife = {
     component(slots => {
       let ({universe, viewPort}, dispatch, _slots: React.Hooks.empty) =
         React.Hooks.reducer(~initialState=model, reducer, slots);
-      let onClick = _ => dispatch(Tick);
-      <Row> ...{viewPortRender(viewPort, universe, onClick)} </Row>;
+      let onClick = pos => dispatch(ToggleAlive(pos));
+      let controlsStyle = Style.make(
+      	~backgroundColor=Colors.white,
+      	~height=120,
+      	()
+			);
+      <Column>
+				<Row> ...{viewPortRender(viewPort, universe, onClick)} </Row>
+				<View style=controlsStyle><Button contents="Tick" onClick={_ => dispatch(Tick)} /></View>
+			</Column>;
     });
 
   let createElement = (~model, ~children as _, ()) => {
