@@ -362,7 +362,7 @@ let viewPortRender = (viewPort, universe: Universe.t(cell), onClick) => {
         ...{List.map(
           y =>
             <Row>
-              <Cell cell=cell((x, y)) onClick={() => onClick((x, y))} />
+              <Cell cell={cell((x, y))} onClick={() => onClick((x, y))} />
             </Row>,
           rows,
         )}
