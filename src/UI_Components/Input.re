@@ -44,10 +44,11 @@ let containerStyles =
     (),
   );
 
-let textStyles = (~color, ~width, ~fontSize, ~hasPlaceholder) => {
+let textStyles =
+    (~color, ~width, ~fontSize, ~hasPlaceholder, ~placeholderColor) => {
   let leftOffset = 6;
   Style.make(
-    ~color=hasPlaceholder ? Colors.grey : color,
+    ~color=hasPlaceholder ? placeholderColor : color,
     ~width=width - leftOffset,
     ~fontFamily="Roboto-Regular.ttf",
     ~fontSize,
@@ -87,9 +88,11 @@ let cursorStyles =
 type state = {
   value: string,
   placeholder: string,
+  isFocused: bool,
 };
 
 type action =
+  | SetFocus(bool)
   | UpdateText(string)
   | Backspace
   | ClearWord;
@@ -102,10 +105,16 @@ let addCharacter = (word, char) => word ++ char;
 
 let reducer = (action, state) =>
   switch (action) {
-  | UpdateText(t) => {...state, value: addCharacter(state.value, t)}
+  | SetFocus(isFocused) => {...state, isFocused}
+  | UpdateText(t) =>
+    state.isFocused ? {...state, value: addCharacter(state.value, t)} : state
   | Backspace =>
-    let length = String.length(state.value);
-    length > 0 ? {...state, value: removeCharacter(state.value)} : state;
+    state.isFocused ?
+      {
+        let length = String.length(state.value);
+        length > 0 ? {...state, value: removeCharacter(state.value)} : state;
+      } :
+      state
   | ClearWord => {...state, value: ""}
   };
 
@@ -160,44 +169,26 @@ let make =
       ~border,
       ~value,
       ~placeholder,
+      ~placeholderColor,
       ~onChange,
       (),
     ) =>
   component(slots => {
-    /*
-       value is specified as option as it allows a more accurate check as to
-       whether the component is controlled on uncontrolled. Using a length check
-       does not work as well as changing the size of the value can lead to incorrect
-       behaviour.
-     */
-    let (inheritedValue, isControlled) =
-      switch (value) {
-      | Some(v) => (v, true)
-      | None => ("", false)
-      };
-
-    let initialState = {value: inheritedValue, placeholder};
+    let initialState = {value, placeholder, isFocused: false};
     let (state, dispatch, slots) =
       React.Hooks.reducer(~initialState, reducer, slots);
 
-    let (focused, setFocus, slots) = React.Hooks.state(true, slots);
-
-    let valueToUse = isControlled ? inheritedValue : state.value;
-
     let slots =
       React.Hooks.effect(
-        OnMount,
+        Always,
         () =>
           Some(
-            Event.subscribe(window.onKeyPress, event =>
-              if (focused) {
-                if (!isControlled) {
-                  dispatch(UpdateText(event.character));
-                };
-                print_endline("value in element: " ++ event.character);
-                print_endline("valueToUse: " ++ valueToUse);
-                onChange(~value=addCharacter(valueToUse, event.character));
-              }
+            Event.subscribe(
+              window.onKeyPress,
+              event => {
+                dispatch(UpdateText(event.character));
+                onChange(~value=state.value);
+              },
             ),
           ),
         slots,
@@ -205,17 +196,15 @@ let make =
 
     let slots =
       React.Hooks.effect(
-        OnMount,
+        Always,
         () =>
           Some(
-            Event.subscribe(window.onKeyDown, event =>
-              if (focused) {
-                if (!isControlled)
-                  {
-                    handleKeyDown(~dispatch, event);
-                  };
-                  /* onChange(~value=removeCharacter(state.value)); */
-              }
+            Event.subscribe(
+              window.onKeyDown,
+              event => {
+                handleKeyDown(~dispatch, event);
+                onChange(~value=state.value);
+              },
             ),
           ),
         slots,
@@ -234,9 +223,9 @@ let make =
         slots,
       );
 
-    let hasPlaceholder = String.length(valueToUse) < 1;
+    let hasPlaceholder = String.length(state.value) < 1;
 
-    let content = hasPlaceholder ? state.placeholder : valueToUse;
+    let content = hasPlaceholder ? state.placeholder : state.value;
 
     /*
        computed styles
@@ -262,11 +251,17 @@ let make =
       );
 
     let innerTextStyles =
-      textStyles(~color, ~fontSize, ~width, ~hasPlaceholder);
+      textStyles(
+        ~color,
+        ~fontSize,
+        ~width,
+        ~hasPlaceholder,
+        ~placeholderColor,
+      );
 
     let inputCursorStyles =
       cursorStyles(
-        ~opacity,
+        ~opacity=state.isFocused ? opacity : 0.0,
         ~fontSize,
         ~cursorColor=color,
         ~containerHeight=height,
@@ -276,7 +271,9 @@ let make =
     /*
        component
      */
-    <Clickable onFocus={() => setFocus(!focused)}>
+    <Clickable
+      onFocus={() => dispatch(SetFocus(true))}
+      onBlur={() => dispatch(SetFocus(false))}>
       <View style=viewStyles>
         <Text style=innerTextStyles text=content />
         /*
@@ -306,10 +303,11 @@ let createElement =
       ~right=defaultStyles.right,
       ~left=defaultStyles.left,
       ~color=defaultStyles.color,
-      ~backgroundColor=defaultStyles.color,
+      ~backgroundColor=defaultStyles.backgroundColor,
+      ~placeholderColor=Colors.grey,
       ~fontSize=defaultStyles.fontSize,
       ~border=defaultStyles.border,
-      ~value=None,
+      ~value="",
       ~placeholder="",
       ~onChange=noop,
       (),
@@ -335,6 +333,7 @@ let createElement =
       ~border,
       ~value,
       ~placeholder,
+      ~placeholderColor,
       ~onChange,
       (),
     ),

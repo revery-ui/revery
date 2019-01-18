@@ -21,13 +21,20 @@ module Example = {
     first: string,
     second: string,
   };
+  let textStyles =
+    Style.make(
+      ~fontSize=30,
+      ~fontFamily="Roboto-Regular.ttf",
+      ~color=Colors.black,
+      ~marginBottom=30,
+      (),
+    );
   let component = React.component("Example");
+
   let make = window =>
     component(slots => {
       let ({first, second}, setValue, _slots: React.Hooks.empty) =
         React.Hooks.state({first: "", second: ""}, slots);
-      /* print_endline("first: " ++ first); */
-      print_endline("second: " ++ second);
       let customShadow =
         Style.BoxShadow.make(
           ~xOffset=-5.,
@@ -38,21 +45,12 @@ module Example = {
         );
 
       <View style=containerStyle>
-        <Text
-          style={Style.make(
-            ~fontSize=30,
-            ~fontFamily="Roboto-Regular.ttf",
-            ~color=Colors.black,
-            ~marginBottom=30,
-            (),
-          )}
-          text={"Current Value: " ++ first}
-        />
+        <Text style=textStyles text={"First Value: " ++ first} />
+        <Text style=textStyles text={"Second Value: " ++ second} />
         <Input
           window
           placeholder="Insert text here"
-          value={Some(first)}
-          onChange={(~value) => setValue({first: first ++ value, second})}
+          onChange={(~value) => setValue({first: value, second})}
         />
         <Input
           backgroundColor=Colors.paleVioletRed
@@ -60,9 +58,9 @@ module Example = {
           margin=20
           boxShadow=customShadow
           window
-          value={Some(second)}
           placeholder="custom input"
-          onChange={(~value) => setValue({first, second: second ++ value})}
+          placeholderColor=Colors.plum
+          onChange={(~value) => setValue({first, second: value})}
         />
       </View>;
     });

@@ -30,7 +30,7 @@ let state: state = {
     {name: "Box Shadow", render: _ => Boxshadow.render()},
     {name: "Focus", render: _ => Focus.render()},
     {name: "Stopwatch", render: _ => Stopwatch.render()},
-    {name: "Input", render: w => Input.render(w)},
+    {name: "Input", render: w => InputExample.render(w)},
   ],
   selectedExample: "Animation",
 };
