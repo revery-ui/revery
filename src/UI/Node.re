@@ -88,7 +88,7 @@ class node ('a) (()) = {
     | (Some(cursorStyle), _) => cursorStyle
     };
   };
-  pub hitTest = (p: Vec2.t) => {
+  pub getBoundingBox = () => {
     let dimensions = _layoutNode^.layout;
     let min = Vec2.create(0., 0.);
     let max =
@@ -97,8 +97,10 @@ class node ('a) (()) = {
         float_of_int(dimensions.height),
       );
     let b = BoundingBox2d.create(min, max);
-    let bbox = BoundingBox2d.transform(b, _this#getWorldTransform());
-
+    BoundingBox2d.transform(b, _this#getWorldTransform());
+  };
+  pub hitTest = (p: Vec2.t) => {
+    let bbox = _this#getBoundingBox();
     BoundingBox2d.isPointInside(bbox, p);
   };
   pub addChild = (n: node('a)) => {
