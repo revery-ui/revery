@@ -8,6 +8,8 @@ open Revery_Math;
 module UniqueId =
   Revery_Core.UniqueId.Make({});
 
+type callback = unit => unit;
+
 class node ('a) (()) = {
   as _this;
   val _children: ref(list(node('a))) = ref([]);
@@ -110,6 +112,7 @@ class node ('a) (()) = {
       List.filter(c => c#getInternalId() != n#getInternalId(), _children^);
     n#_setParent(None);
   };
+  pub firstChild = () => List.hd(_children^);
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
   pub getMeasureFunction = (_pixelRatio: float) => None;

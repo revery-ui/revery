@@ -44,7 +44,7 @@ let start =
 
   let rootNode = (new viewNode)();
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
-  let container = React.Container.createContainer(rootNode);
+  let container = React.Container.create(rootNode);
   let ui =
     UiContainer.create(
       window,

@@ -15,10 +15,9 @@ module Container = {
     state: option(state),
   };
 
-  let createContainer: UiReconciler.reveryNode => t =
-    n => {node: n, state: None};
+  let create: UiReconciler.reveryNode => t = n => {node: n, state: None};
 
-  let updateContainer: (t, React.syntheticElement) => t =
+  let update: (t, React.syntheticElement) => t =
     ({node, state}, element) => {
       let newRendered =
         switch (state) {
