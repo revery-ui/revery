@@ -1,6 +1,6 @@
 open Reglfw.Glfw;
 
-type performanceFunction = unit => unit;
+type performanceFunction('a) = unit => 'a;
 
 let nestingLevel = ref(0);
 
@@ -33,30 +33,32 @@ let getMemoryAllocations = (startCounters, endCounters) => {
   ret;
 };
 
-let bench =
-  switch (Sys.getenv_opt("REVERY_DEBUG")) {
-  | None => ((_name, f) => f())
-  | Some(_) => (
-      (name, f) => {
-        nestingLevel := nestingLevel^ + 1;
-        let startTime = glfwGetTime();
-        let startCounters = GarbageCollector.counters();
-        f();
-        let endTime = glfwGetTime();
-        let endCounters = GarbageCollector.counters();
-        let allocations = getMemoryAllocations(startCounters, endCounters);
-        print_endline(
-          String.make(nestingLevel^, '-')
-          ++ "[PERF: "
-          ++ name
-          ++ "] Time: "
-          ++ string_of_float((endTime -. startTime) *. 1000.)
-          ++ "ms"
-          ++ " Memory: "
-          ++ MemoryAllocations.show(allocations),
-        );
+let bench: (string, performanceFunction('a)) => 'a =
+  (name, f) =>
+    switch (Sys.getenv_opt("REVERY_DEBUG")) {
+    | None => f()
+    | Some(_) =>
+      nestingLevel := nestingLevel^ + 1;
+      let startTime = glfwGetTime();
+      let startCounters = GarbageCollector.counters();
+      print_endline(
+        String.make(nestingLevel^, '-') ++ "[BEGIN: " ++ name ++ "]",
+      );
+      let ret = f();
+      let endTime = glfwGetTime();
+      let endCounters = GarbageCollector.counters();
+      let allocations = getMemoryAllocations(startCounters, endCounters);
+      print_endline(
+        String.make(nestingLevel^, '-')
+        ++ "[END: "
+        ++ name
+        ++ "] Time: "
+        ++ string_of_float((endTime -. startTime) *. 1000.)
+        ++ "ms"
+        ++ " Memory: "
+        ++ MemoryAllocations.show(allocations),
+      );
 
-        nestingLevel := nestingLevel^ - 1;
-      }
-    )
-  };
+      nestingLevel := nestingLevel^ - 1;
+      ret;
+    };
