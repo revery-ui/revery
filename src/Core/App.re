@@ -70,6 +70,8 @@ let startWithState: startFunc('s, 'a) =
       needsRender: true,
     };
 
+    GarbageCollector.tune();
+
     let _ = Glfw.glfwInit();
     let _ = initFunc(appInstance);
 
@@ -84,8 +86,22 @@ let startWithState: startFunc('s, 'a) =
           List.iter(w => Window.render(w), getWindows(appInstance));
           appInstance.needsRender = false;
         });
+        /* We're taking path 2 of the garbage collector route to nirvana:
+         * https://blogs.msdn.microsoft.com/shawnhar/2007/07/02/twin-paths-to-garbage-collector-nirvana/
+         */
+        Performance.bench("gc: minor", () => GarbageCollector.minor());
       } else {
-        Environment.sleep(Milliseconds(1.));
+        /* If the app is idle, this is the perfect time to make sure
+         * we're in a clear memory state, so we're ready to go on the next
+         * tick
+         */
+        Performance.bench("gc: full", () =>
+          GarbageCollector.full()
+        );
+      };
+
+      if (Environment.isNative) {
+        Thread.yield();
       };
       List.length(getWindows(appInstance)) == 0;
     };
