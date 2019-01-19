@@ -21,7 +21,7 @@ module UniqueId = UniqueId;
  * Internally exposed modules, just for testing.
  */
 module Internal = {
-    module Tick = Tick;    
+  module Tick = Tick;
 };
 
 module Tick = Tick.Default;
