@@ -98,6 +98,9 @@ let startWithState: startFunc('s, 'a) =
         GarbageCollector.full();
       };
 
+      if (Environment.isNative) {
+          Thread.yield();
+      }
       List.length(getWindows(appInstance)) == 0;
     };
 
