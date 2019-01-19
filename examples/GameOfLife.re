@@ -409,7 +409,7 @@ let viewPortRender =
   );
 };
 
-type model = {
+type state = {
   viewPort: ViewPort.t,
   universe: Universe.t(cell),
   isRunning: bool,
@@ -441,8 +441,8 @@ let reducer = (action, state) =>
       universe:
         Universe.update(
           position,
-          x =>
-            switch (x) {
+          cell =>
+            switch (cell) {
             | Some(Alive) => None
             | _ => Some(Alive)
             },
@@ -466,17 +466,20 @@ let reducer = (action, state) =>
 module GameOfLife = {
   let component = React.component("GameOfLife");
 
-  let make = (~model: model, ()) =>
+  let make = (~state: state, ()) =>
     component(slots => {
-      let ({universe, viewPort, dispose: _, isRunning}, dispatch, slots) =
-        React.Hooks.reducer(~initialState=model, reducer, slots);
+      let (state, dispatch, slots) =
+        React.Hooks.reducer(~initialState=state, reducer, slots);
+
       let _slots: React.Hooks.empty =
         React.Hooks.effect(
           OnMount,
           () => Some(() => dispatch(StopTimer)),
           slots,
         );
-      let onClick = pos => dispatch(ToggleAlive(pos));
+
+      let toggleAlive = pos => dispatch(ToggleAlive(pos));
+
       let controlsStyle =
         Style.make(
           ~backgroundColor=Colors.white,
@@ -486,21 +489,21 @@ module GameOfLife = {
         );
 
       let startStop = () => {
-      	isRunning
-      		? dispatch(StopTimer)
-      		: {
-      			let dispose = Tick.interval(t=> dispatch(TimerTick(t)), Seconds(0.2));
-      			dispatch(StartTimer(dispose));
-					}
-			};
-			let startStopButtonText = isRunning ? "STOP": "START";
+        state.isRunning
+          ? dispatch(StopTimer)
+          : {
+            let dispose =
+              Tick.interval(t => dispatch(TimerTick(t)), Seconds(0.));
+            dispatch(StartTimer(dispose));
+          };
+      };
+
       <Column>
-        <Row> ...{viewPortRender(viewPort, universe, onClick)} </Row>
+        <Row>
+          ...{viewPortRender(state.viewPort, state.universe, toggleAlive)}
+        </Row>
         <View style=controlsStyle>
-          <Button
-            contents={startStopButtonText}
-            onClick=startStop
-          />
+          <Button contents={state.isRunning ? "Stop" : "Start"} onClick=startStop />
           <Button
             contents="North"
             onClick={_ => dispatch(MoveViewPort(North))}
@@ -529,13 +532,13 @@ module GameOfLife = {
       </Column>;
     });
 
-  let createElement = (~model, ~children as _, ()) => {
-    React.element(make(~model, ()));
+  let createElement = (~state, ~children as _, ()) => {
+    React.element(make(~state, ()));
   };
 };
 
 let render = () => {
   let viewPort = ViewPort.create(15);
-  let model = {viewPort, universe: pulsar, isRunning: false, dispose: noop};
-  <GameOfLife model />;
+  let state = {viewPort, universe: pulsar, isRunning: false, dispose: noop};
+  <GameOfLife state />;
 };
