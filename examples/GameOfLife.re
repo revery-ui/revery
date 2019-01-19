@@ -343,7 +343,6 @@ module Cell = {
 
   let make = (~cell, ~onClick, ()) =>
     component((_slots: React.Hooks.empty) => {
-      let border = Style.Border.make(~color=Colors.gray, ~width=2, ());
       let clickableStyle =
         Style.make(
           ~position=LayoutTypes.Relative,
@@ -359,7 +358,6 @@ module Cell = {
           ~flexDirection=LayoutTypes.Column,
           ~alignItems=LayoutTypes.AlignStretch,
           ~justifyContent=LayoutTypes.JustifyCenter,
-          ~border,
           ~flexGrow=1,
           (),
         );
