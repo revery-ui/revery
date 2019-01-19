@@ -1,4 +1,5 @@
 open Revery.Core;
+open Revery.Time;
 open Revery.UI;
 open Revery.UI.Components;
 
@@ -411,10 +412,15 @@ let viewPortRender =
 type model = {
   viewPort: ViewPort.t,
   universe: Universe.t(cell),
-};
+  isRunning: bool,
+  dispose,
+}
+and dispose = unit => unit;
 
 type action =
-  | Tick
+  | TimerTick(Time.t)
+  | StartTimer(dispose)
+  | StopTimer
   | ToggleAlive(Position.t)
   | MoveViewPort(ViewPort.direction)
   | ZoomViewPort(zoom)
@@ -422,9 +428,14 @@ and zoom =
   | ZoomIn
   | ZoomOut;
 
+let noop = () => ();
 let reducer = (action, state) =>
   switch (action) {
-  | Tick => {...state, universe: evolve(state.universe)}
+  | TimerTick(_t) => {...state, universe: evolve(state.universe)}
+  | StartTimer(dispose) => {...state, dispose, isRunning: true}
+  | StopTimer =>
+    state.dispose();
+    {...state, dispose: noop, isRunning: false};
   | ToggleAlive(position) => {
       ...state,
       universe:
@@ -457,8 +468,14 @@ module GameOfLife = {
 
   let make = (~model: model, ()) =>
     component(slots => {
-      let ({universe, viewPort}, dispatch, _slots: React.Hooks.empty) =
+      let ({universe, viewPort, dispose: _, isRunning}, dispatch, slots) =
         React.Hooks.reducer(~initialState=model, reducer, slots);
+      let _slots: React.Hooks.empty =
+        React.Hooks.effect(
+          OnMount,
+          () => Some(() => dispatch(StopTimer)),
+          slots,
+        );
       let onClick = pos => dispatch(ToggleAlive(pos));
       let controlsStyle =
         Style.make(
@@ -467,10 +484,23 @@ module GameOfLife = {
           ~flexDirection=LayoutTypes.Row,
           (),
         );
+
+      let startStop = () => {
+      	isRunning
+      		? dispatch(StopTimer)
+      		: {
+      			let dispose = Tick.interval(t=> dispatch(TimerTick(t)), Seconds(0.2));
+      			dispatch(StartTimer(dispose));
+					}
+			};
+			let startStopButtonText = isRunning ? "STOP": "START";
       <Column>
         <Row> ...{viewPortRender(viewPort, universe, onClick)} </Row>
         <View style=controlsStyle>
-          <Button contents="Tick" onClick={_ => dispatch(Tick)} />
+          <Button
+            contents={startStopButtonText}
+            onClick=startStop
+          />
           <Button
             contents="North"
             onClick={_ => dispatch(MoveViewPort(North))}
@@ -506,6 +536,6 @@ module GameOfLife = {
 
 let render = () => {
   let viewPort = ViewPort.create(15);
-  let model = {viewPort, universe: pulsar};
+  let model = {viewPort, universe: pulsar, isRunning: false, dispose: noop};
   <GameOfLife model />;
 };
