@@ -97,11 +97,18 @@ let reducer = (s: state, a: action) => {
 let init = app => {
   let maximized = Environment.webGL;
 
+  let size = Monitor.getPrimaryMonitor() |> Monitor.getSize;
+
   let win =
     App.createWindow(
       app,
       "Welcome to Revery!",
-      ~createOptions={...Window.defaultCreateOptions, maximized},
+      ~createOptions={
+        ...Window.defaultCreateOptions,
+        width: size.width,
+        height: size.height,
+        maximized,
+      },
     );
 
   let render = () => {
