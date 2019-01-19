@@ -75,6 +75,7 @@ let startWithState: startFunc('s, 'a) =
 
     let appLoop = (_t: float) => {
       Glfw.glfwPollEvents();
+      Tick.Default.pump();
 
       _checkAndCloseWindows(appInstance);
 

@@ -114,7 +114,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       easing: animationOptions.easing,
     };
 
-    activeAnimations := List.append(activeAnimations^, [animation]);
+    activeAnimations := List.append([animation], activeAnimations^);
     animation;
   };
 
