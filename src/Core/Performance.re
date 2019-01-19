@@ -4,28 +4,33 @@ type performanceFunction = unit => unit;
 
 let nestingLevel = ref(0);
 
-module MemoryAllocations {
-    type t = {
-        minorWords: int,
-        promotedWords: int,
-        majorWords: int,
-    };
+module MemoryAllocations = {
+  type t = {
+    minorWords: int,
+    promotedWords: int,
+    majorWords: int,
+  };
 
-    
-    let show = ({minorWords, promotedWords, majorWords}: t) => {
-        "| minor: " ++ string_of_int(minorWords) ++ " | major: " ++ string_of_int(majorWords) ++ " | promoted: " ++ string_of_int(promotedWords) ++ " |"
-    };
-}
-let getMemoryAllocations =  (startCounters, endCounters) => {
-    let (startMinor, startPromoted, startMajor) = startCounters;   
-    let (endMinor, endPromoted, endMajor) = endCounters;
+  let show = ({minorWords, promotedWords, majorWords}: t) => {
+    "| minor: "
+    ++ string_of_int(minorWords)
+    ++ " | major: "
+    ++ string_of_int(majorWords)
+    ++ " | promoted: "
+    ++ string_of_int(promotedWords)
+    ++ " |";
+  };
+};
+let getMemoryAllocations = (startCounters, endCounters) => {
+  let (startMinor, startPromoted, startMajor) = startCounters;
+  let (endMinor, endPromoted, endMajor) = endCounters;
 
-    let ret: MemoryAllocations.t = {
-        minorWords: int_of_float(endMinor -. startMinor),
-        promotedWords: int_of_float(endPromoted -. startPromoted),
-        majorWords: int_of_float(endMajor -. startMajor),
-    };
-    ret;
+  let ret: MemoryAllocations.t = {
+    minorWords: int_of_float(endMinor -. startMinor),
+    promotedWords: int_of_float(endPromoted -. startPromoted),
+    majorWords: int_of_float(endMajor -. startMajor),
+  };
+  ret;
 };
 
 let bench =
@@ -48,7 +53,7 @@ let bench =
           ++ string_of_float((endTime -. startTime) *. 1000.)
           ++ "ms"
           ++ " Memory: "
-          ++ MemoryAllocations.show(allocations)
+          ++ MemoryAllocations.show(allocations),
         );
 
         nestingLevel := nestingLevel^ - 1;
