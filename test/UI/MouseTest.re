@@ -7,6 +7,7 @@ let createNodeWithStyle = style => {
   let node = (new node)();
   node#setStyle(style);
   Layout.layout(node, 1.0);
+  node#recalculate();
   node;
 };
 
