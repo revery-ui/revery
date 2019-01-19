@@ -53,23 +53,21 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   };
 
   /* Render */
-  Performance.bench("recalculate", () => {
-    rootNode#recalculate(); 
-  });
+  Performance.bench("recalculate", () => rootNode#recalculate());
 
   Performance.bench("draw", () => {
     /* Do a first pass for all 'opaque' geometry */
     /* This helps reduce the overhead for the more expensive alpha pass, next */
 
-     Mat4.ortho(
-       _projection,
-       0.0,
-       float_of_int(size.width),
-       float_of_int(size.height),
-       0.0,
-       1000.0,
-       -1000.0,
-     );
+    Mat4.ortho(
+      _projection,
+      0.0,
+      float_of_int(size.width),
+      float_of_int(size.height),
+      0.0,
+      1000.0,
+      -1000.0,
+    );
 
     let drawContext =
       NodeDrawContext.create(int_of_float(pixelRatio), 0, 1.0, size.height);

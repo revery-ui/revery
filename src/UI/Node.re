@@ -11,17 +11,19 @@ module UniqueId =
 type callback = unit => unit;
 
 type cachedNodeState = {
-    transform: Mat4.t,
-    worldTransform: Mat4.t,   
-    bbox: BoundingBox2d.t,
-    depth: int,
+  transform: Mat4.t,
+  worldTransform: Mat4.t,
+  bbox: BoundingBox2d.t,
+  depth: int,
 };
 
 exception NoDataException(string);
-let getOrThrow: (string, option('a)) => 'a = (msg, opt) => switch(opt) {
-| Some(p) => p
-| None => raise(NoDataException(msg))
-};
+let getOrThrow: (string, option('a)) => 'a =
+  (msg, opt) =>
+    switch (opt) {
+    | Some(p) => p
+    | None => raise(NoDataException(msg))
+    };
 
 class node ('a) (()) = {
   as _this;
@@ -52,7 +54,6 @@ class node ('a) (()) = {
       },
     );
   };
-
   pub getInternalId = () => _internalId;
   pub measurements = () => _layoutNode^.layout;
   pub getTabIndex = () => _tabIndex^;
@@ -62,20 +63,20 @@ class node ('a) (()) = {
   pub setEvents = events => _events := events;
   pub getEvents = () => _events^;
   pub getWorldTransform = () => {
-      let state = _cachedNodeState^ |> getOrThrow("getWorldTransform");
-      state.worldTransform;
+    let state = _cachedNodeState^ |> getOrThrow("getWorldTransform");
+    state.worldTransform;
   };
   pub getTransform = () => {
-      let state = _cachedNodeState^ |> getOrThrow("getTransform");
-      state.transform;
+    let state = _cachedNodeState^ |> getOrThrow("getTransform");
+    state.transform;
   };
   pub getBoundingBox = () => {
-      let state = _cachedNodeState^ |> getOrThrow("getBoundingBox"); 
-      state.bbox;
+    let state = _cachedNodeState^ |> getOrThrow("getBoundingBox");
+    state.bbox;
   };
   pub getDepth = () => {
-      let state = _cachedNodeState^ |> getOrThrow("getDepth");
-      state.depth;
+    let state = _cachedNodeState^ |> getOrThrow("getDepth");
+    state.depth;
   };
   pri _recalculateTransform = () => {
     let dimensions = _layoutNode^.layout;
@@ -97,7 +98,7 @@ class node ('a) (()) = {
     Mat4.multiply(matrix, matrix, animationTransform);
     matrix;
   };
-  pri _recalculateWorldTransform = (localTransform) => {
+  pri _recalculateWorldTransform = localTransform => {
     let xform = localTransform;
     let world =
       switch (_parent^) {
@@ -108,7 +109,7 @@ class node ('a) (()) = {
     Mat4.multiply(matrix, world, xform);
     matrix;
   };
-  pri _recalculateBoundingBox = (worldTransform) => {
+  pri _recalculateBoundingBox = worldTransform => {
     let dimensions = _layoutNode^.layout;
     let min = Vec2.create(0., 0.);
     let max =
@@ -120,22 +121,18 @@ class node ('a) (()) = {
     let bbox = BoundingBox2d.transform(b, worldTransform);
     bbox;
   };
-  pri _recalculateDepth = () => switch(_parent^) {
-  | None => 0
-  | Some(p) => p#getDepth() + 1;
-  };
+  pri _recalculateDepth = () =>
+    switch (_parent^) {
+    | None => 0
+    | Some(p) => p#getDepth() + 1
+    };
   pub recalculate = () => {
-    let transform = _this#_recalculateTransform(); 
+    let transform = _this#_recalculateTransform();
     let worldTransform = _this#_recalculateWorldTransform(transform);
     let bbox = _this#_recalculateBoundingBox(worldTransform);
     let depth = _this#_recalculateDepth();
 
-    _cachedNodeState := Some({
-        transform,
-        worldTransform,
-        bbox,
-        depth,
-    });
+    _cachedNodeState := Some({transform, worldTransform, bbox, depth});
 
     List.iter(c => c#recalculate(), _children^);
   };
