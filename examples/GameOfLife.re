@@ -258,19 +258,20 @@ let evolve = universe => {
 module Row = {
   let component = React.component("Row");
 
+  let style =
+    Style.make(
+      ~flexDirection=LayoutTypes.Row,
+      ~alignItems=LayoutTypes.AlignStretch,
+      ~justifyContent=LayoutTypes.JustifyCenter,
+      ~backgroundColor=Colors.darkGrey,
+      ~flexGrow=1,
+      (),
+    );
+
   let make = children =>
-    component((_slots: React.Hooks.empty) => {
-      let style =
-        Style.make(
-          ~flexDirection=LayoutTypes.Row,
-          ~alignItems=LayoutTypes.AlignStretch,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~backgroundColor=Colors.darkGrey,
-          ~flexGrow=1,
-          (),
-        );
-      <View style> ...children </View>;
-    });
+    component((_slots: React.Hooks.empty) =>
+      <View style> ...children </View>
+    );
 
   let createElement = (~children, ()) => React.element(make(children));
 };
@@ -278,45 +279,47 @@ module Row = {
 module Column = {
   let component = React.component("Column");
 
+  let style =
+    Style.make(
+      ~flexDirection=LayoutTypes.Column,
+      ~alignItems=LayoutTypes.AlignStretch,
+      ~justifyContent=LayoutTypes.JustifyCenter,
+      ~flexGrow=1,
+      (),
+    );
+
   let make = children =>
-    component((_slots: React.Hooks.empty) => {
-      let style =
-        Style.make(
-          ~flexDirection=LayoutTypes.Column,
-          ~alignItems=LayoutTypes.AlignStretch,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~flexGrow=1,
-          (),
-        );
-      <View style> ...children </View>;
-    });
+    component((_slots: React.Hooks.empty) =>
+      <View style> ...children </View>
+    );
   let createElement = (~children, ()) => React.element(make(children));
 };
 
 module Button = {
   let component = React.component("Button");
 
+  let clickableStyle =
+    Style.make(
+      ~position=LayoutTypes.Relative,
+      ~justifyContent=LayoutTypes.JustifyCenter,
+      ~alignItems=LayoutTypes.AlignCenter,
+      ~flexGrow=1,
+      /* Min width */
+      ~width=150,
+      ~margin=10,
+      (),
+    );
+  let viewStyle =
+    Style.make(
+      ~position=LayoutTypes.Relative,
+      ~justifyContent=LayoutTypes.JustifyCenter,
+      ~alignItems=LayoutTypes.AlignCenter,
+      (),
+    );
+
   let make =
       (~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ()) =>
     component((_slots: React.Hooks.empty) => {
-      let clickableStyle =
-        Style.make(
-          ~position=LayoutTypes.Relative,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~alignItems=LayoutTypes.AlignCenter,
-          ~flexGrow=1,
-          /* Min width */
-          ~width=150,
-          ~margin=10,
-          (),
-        );
-      let viewStyle =
-        Style.make(
-          ~position=LayoutTypes.Relative,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~alignItems=LayoutTypes.AlignCenter,
-          (),
-        );
       let textStyle =
         Style.make(~color=Colors.white, ~fontFamily, ~fontSize=40, ());
 
@@ -340,30 +343,29 @@ module Button = {
 module Cell = {
   let component = React.component("Column");
 
+  let clickableStyle =
+    Style.make(
+      ~position=LayoutTypes.Relative,
+      ~backgroundColor=Colors.transparentWhite,
+      ~justifyContent=LayoutTypes.JustifyCenter,
+      ~alignItems=LayoutTypes.AlignStretch,
+      ~flexGrow=1,
+      ~margin=0,
+      (),
+    );
+  let baseStyle =
+    Style.make(
+      ~flexDirection=LayoutTypes.Column,
+      ~alignItems=LayoutTypes.AlignStretch,
+      ~justifyContent=LayoutTypes.JustifyCenter,
+      ~flexGrow=1,
+      (),
+    );
+  let aliveStyle = Style.extend(baseStyle, ~backgroundColor=Colors.red, ());
+  let deadStyle = Style.extend(baseStyle, ~backgroundColor=Colors.black, ());
+
   let make = (~cell, ~onClick, ()) =>
     component((_slots: React.Hooks.empty) => {
-      let clickableStyle =
-        Style.make(
-          ~position=LayoutTypes.Relative,
-          ~backgroundColor=Colors.transparentWhite,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~alignItems=LayoutTypes.AlignStretch,
-          ~flexGrow=1,
-          ~margin=0,
-          (),
-        );
-      let baseStyle =
-        Style.make(
-          ~flexDirection=LayoutTypes.Column,
-          ~alignItems=LayoutTypes.AlignStretch,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~flexGrow=1,
-          (),
-        );
-      let aliveStyle =
-        Style.extend(baseStyle, ~backgroundColor=Colors.red, ());
-      let deadStyle =
-        Style.extend(baseStyle, ~backgroundColor=Colors.black, ());
       let style =
         switch (cell) {
         | Alive => <View style=aliveStyle />
@@ -462,6 +464,9 @@ let reducer = (action, state) =>
 module GameOfLife = {
   let component = React.component("GameOfLife");
 
+  let controlsStyle =
+    Style.make(~height=120, ~flexDirection=LayoutTypes.Row, ());
+
   let make = (~state: state, ()) =>
     component(slots => {
       let (state, dispatch, slots) =
@@ -475,9 +480,6 @@ module GameOfLife = {
         );
 
       let toggleAlive = pos => dispatch(ToggleAlive(pos));
-
-      let controlsStyle =
-        Style.make(~height=120, ~flexDirection=LayoutTypes.Row, ());
 
       let startStop = () => {
         state.isRunning
