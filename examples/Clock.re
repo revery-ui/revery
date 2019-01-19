@@ -1,107 +1,129 @@
-open Revery;
+/* open Revery; */
+open Revery.Time;
 open Revery.Core;
+open Revery.Math;
 open Revery.UI;
+open Revery.UI.Components;
 
-let init = app => {
-  let w = App.createWindow(app, "test");
+module Clock = {
+  type dispose = unit => unit;
+  let noop = () => ();
 
-  let ui = UI.create(w);
-
-  let numberLabel = (radius, number) => {
-    let angle = float(number) *. 30.0 -. 90.0;
-    let radians = x => x *. 3.14 /. 180.0;
-    let x = int_of_float(radius *. cos(radians(angle)));
-    let y = int_of_float(radius *. sin(radians(angle)));
-    /* top = 245 b/c we have the weird invisible part of the hands & fonts draw from top down */
-    let style =
-      Style.make(
-        ~position=LayoutTypes.Absolute,
-        ~top=245 + y,
-        ~left=350 + x,
-        ~backgroundColor=Colors.white,
-        ~color=Colors.black,
-        ~fontFamily="Roboto-Regular.ttf",
-        ~fontSize=12,
-        (),
-      );
-    <text style> {string_of_int(number)} </text>;
+  type state = {
+    dispose: dispose,
+    isRunning: bool,
+    elapsedTime: Time.t,
   };
 
-  let baseStyle =
-    Style.make(
-      ~position=LayoutTypes.Absolute,
-      ~top=150,
-      ~left=350,
-      ~backgroundColor=Colors.red,
+  type action = 
+  | Start(dispose)
+  | Stop
+  | TimerTick(Time.t);
+
+  /* let reducer = (_action: action, state: state) =>  { state }; */
+
+  let reducer = (a, s) => switch(a) {
+  | Start(f) => {
+    {
+        dispose: f,
+        isRunning: true,
+        elapsedTime: Seconds(0.),
+    } 
+  }    
+  | Stop => {
+    s.dispose();
+    let ret = {
+        dispose: noop,
+        isRunning: false,
+        elapsedTime: Seconds(0.),
+    };
+    ret;
+  }
+  | TimerTick(t) => {
+    ...s,
+    elapsedTime: s.isRunning ? Time.increment(s.elapsedTime, t) : s.elapsedTime
+  }
+  };
+
+  let component = React.component("Clock");
+
+  let make = () =>
+    component(slots => {
+
+      let (state, dispatch, slots) = React.Hooks.reducer(
+          ~initialState={isRunning: false, dispose: noop, elapsedTime:Seconds(0.)},
+          reducer, 
+          slots);
+
+      let _slots: React.Hooks.empty = React.Hooks.effect(OnMount, () => {
+        Some(() => dispatch(Stop));
+      }, slots);
+
+    let clockWrapperStyle = Style.make(
+        ~margin=20,
+        ~width=150,
+        ~borderBottom=Style.Border.make(~color=Colors.gray, ~width=2, ()),
+        ()
     );
 
-  let hourHandStyle = clock =>
-    baseStyle(
-      ~width=16,
-      ~height=50,
-      ~transform=[
-        RotateZ(
-          Angle.from_degrees(float(clock.Unix.tm_hour mod 12) *. 30.0),
-        ),
-        TranslateY(0.),
-      ],
-      (),
-    );
 
-  let minuteHandStyle = clock =>
-    baseStyle(
-      ~width=8,
-      ~height=75,
-      ~transform=[
-        RotateZ(Angle.from_degrees(float(clock.Unix.tm_min) *. 6.0)),
-        TranslateY(0.),
-      ],
-      (),
-    );
+    let startStop = () => {
+        switch (state.isRunning) {
+        | true => dispatch(Stop)
+        | false => {
+            let dispose = Tick.interval((t) => dispatch(TimerTick(t)), Seconds(0.));
+            dispatch(Start(dispose));
+        };
+        }
+    };
 
-  let secondHandStyle = clock =>
-    baseStyle(
-      ~width=4,
-      ~height=100,
-      ~transform=[
-        RotateZ(Angle.from_degrees(float(clock.Unix.tm_sec) *. 6.0)),
-        TranslateY(0.),
-      ],
-      (),
-    );
-
-  Window.setShouldRenderCallback(w, () => true);
-
-  Window.setRenderCallback(
-    w,
-    () => {
-      let clock = Unix.time() |> Unix.localtime;
-
-      UI.render(
-        ui,
-        <view
-          style={Style.make(
-            ~position=LayoutTypes.Absolute,
-            ~bottom=50,
-            ~top=50,
-            ~left=50,
-            ~right=50,
-            ~backgroundColor=Colors.white,
-            (),
-          )}>
-          <image src="hour_hand.png" style={hourHandStyle(clock)} />
-          <image src="minute_hand.png" style={minuteHandStyle(clock)} />
-          <image src="second_hand.png" style={secondHandStyle(clock)} />
-          <view>
-            ...{List.map(
-              numberLabel(120.0),
-              [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-            )}
-          </view>
-        </view>,
+    let style =
+      Style.make(
+        ~color=Colors.white,
+        ~fontFamily="Roboto-Regular.ttf",
+        ~fontSize=24,
+        ~marginVertical=20,
+        ~width=200,
+        (),
       );
-    },
-  );
+
+    let buttonText = state.isRunning ? "STOP" : "START";
+
+    let marcherOpacity = state.isRunning ? 1.0 : 0.0;
+    let getMarcherPosition = (t) => (sin(Time.to_float_seconds(t) *. 2. *. pi) /. 2.) +. 0.5;
+
+    let marcherStyle = Style.make(
+        ~position=LayoutTypes.Absolute,
+        ~bottom=0,
+        ~opacity=marcherOpacity,
+        ~left=(int_of_float(getMarcherPosition(state.elapsedTime) *. 146.)),
+        ~width=4,
+        ~height=4,
+        ~backgroundColor=Color.hex("#90f7ff"),
+        (),
+    );
+
+  <View
+    style={Style.make(
+      ~position=LayoutTypes.Absolute,
+      ~justifyContent=LayoutTypes.JustifyCenter,
+      ~alignItems=LayoutTypes.AlignCenter,
+      ~bottom=0,
+      ~top=0,
+      ~left=0,
+      ~right=0,
+      (),
+    )}>
+        <View style=clockWrapperStyle>
+        <Text style text={string_of_float(state.elapsedTime |> Time.to_float_seconds)} />
+        <View style={marcherStyle} />
+        </View>
+        <Button title={buttonText} onClick=startStop />
+      </View>;
+    });
+
+  let createElement = (~children as _, ()) => React.element(make());
 };
 
-App.start(init);
+
+let render = () => <Clock />
