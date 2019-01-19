@@ -89,13 +89,17 @@ let startWithState: startFunc('s, 'a) =
         /* We're taking path 2 of the garbage collector route to nirvana:
          * https://blogs.msdn.microsoft.com/shawnhar/2007/07/02/twin-paths-to-garbage-collector-nirvana/
          */
-        GarbageCollector.minor();
+        Performance.bench("gc: minor", () => {
+          GarbageCollector.minor();
+        });
       } else {
         /* If the app is idle, this is the perfect time to make sure
          * we're in a clear memory state, so we're ready to go on the next
          * tick
          */
-        GarbageCollector.full();
+        Performance.bench("gc: full", () => {
+          GarbageCollector.full();
+        });
       };
 
       if (Environment.isNative) {
