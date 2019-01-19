@@ -144,10 +144,10 @@ class node ('a) (()) = {
     };
   };
   pub hasRendered = () => {
-      switch(_cachedNodeState^) {
-      | Some(_) => true
-      | None => false
-      } 
+    switch (_cachedNodeState^) {
+    | Some(_) => true
+    | None => false
+    };
   };
   pub hitTest = (p: Vec2.t) => {
     let bbox = _this#getBoundingBox();

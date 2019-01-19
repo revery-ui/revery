@@ -109,36 +109,34 @@ let isMouseDownEv =
 
 let dispatch =
     (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node('a)) => {
-
-  switch (node#hasRendered()) {
-  | true => {
+  node#hasRendered()
+    ? {
       let pos = getPositionFromMouseEvent(cursor, evt);
 
-  let eventToSend = internalToExternalEvent(cursor, evt);
+      let eventToSend = internalToExternalEvent(cursor, evt);
 
-  let mouseDown = isMouseDownEv(eventToSend);
-  if (mouseDown) {
-    switch (getFirstFocusable(node, pos)) {
-    | Some(node) => Focus.dispatch(node)
-    | None => Focus.loseFocus()
-    };
-  } else {
-    ();
-  };
+      let mouseDown = isMouseDownEv(eventToSend);
+      if (mouseDown) {
+        switch (getFirstFocusable(node, pos)) {
+        | Some(node) => Focus.dispatch(node)
+        | None => Focus.loseFocus()
+        };
+      } else {
+        ();
+      };
 
-  if (!handleCapture(eventToSend)) {
-    let deepestNode = getDeepestNode(node, pos);
-    switch (deepestNode^) {
-    | None => ()
-    | Some(node) =>
-      bubble(node, eventToSend);
-      let cursor = node#getCursorStyle();
-      Event.dispatch(onCursorChanged, cursor);
-    };
-  };
+      if (!handleCapture(eventToSend)) {
+        let deepestNode = getDeepestNode(node, pos);
+        switch (deepestNode^) {
+        | None => ()
+        | Some(node) =>
+          bubble(node, eventToSend);
+          let cursor = node#getCursorStyle();
+          Event.dispatch(onCursorChanged, cursor);
+        };
+      };
 
-  Cursor.set(cursor, pos);
-  }
-  | false => ();
-  };
+      Cursor.set(cursor, pos);
+    }
+    : ();
 };
