@@ -20,8 +20,6 @@ module Clock = {
     | Stop
     | TimerTick(Time.t);
 
-  /* let reducer = (_action: action, state: state) =>  { state }; */
-
   let reducer = (a, s) =>
     switch (a) {
     | Start(f) => {dispose: f, isRunning: true, elapsedTime: Seconds(0.)}
@@ -51,6 +49,10 @@ module Clock = {
           slots,
         );
 
+      /*
+       * We'll make sure to dispatch the 'Stop' action when unmounting,
+       * so we don't have a runaway timer!
+       */
       let _slots: React.Hooks.empty =
         React.Hooks.effect(
           OnMount,
@@ -70,8 +72,14 @@ module Clock = {
         state.isRunning
           ? dispatch(Stop)
           : {
+            /* 
+             * If we're not already running, we'll start a timer job
+             * and use the delta time it passes to update our reducer.
+             */
             let dispose =
               Tick.interval(t => dispatch(TimerTick(t)), Seconds(0.));
+
+            /* We'll also keep a handle on the dispose function so we can make sure its called on stop*/
             dispatch(Start(dispose));
           };
       };
