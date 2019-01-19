@@ -28,36 +28,33 @@ let containerStyles =
     ~marginBottom,
     ~marginTop,
     ~backgroundColor,
+    ~width,
     ~top,
     ~right,
     ~left,
     ~bottom,
     ~color,
     ~height,
-    ~width,
     ~flexDirection=LayoutTypes.Row,
     ~alignItems=LayoutTypes.AlignCenter,
     ~justifyContent=LayoutTypes.JustifyFlexStart,
     ~overflow=LayoutTypes.Hidden,
     ~border,
     ~boxShadow,
+    ~cursor=MouseCursors.text,
     (),
   );
 
-let textStyles =
-    (~color, ~width, ~fontSize, ~hasPlaceholder, ~placeholderColor) => {
-  let leftOffset = 6;
+let textStyles = (~color, ~fontSize, ~hasPlaceholder, ~placeholderColor) =>
   Style.make(
     ~color=hasPlaceholder ? placeholderColor : color,
-    ~width=width - leftOffset,
     ~fontFamily="Roboto-Regular.ttf",
     ~fontSize,
     ~alignItems=LayoutTypes.AlignCenter,
     ~justifyContent=LayoutTypes.JustifyFlexStart,
-    ~marginLeft=leftOffset,
+    ~marginLeft=6,
     (),
   );
-};
 
 let cursorStyles =
     (~fontSize, ~cursorColor, ~opacity, ~containerHeight, ~hasPlaceholder) => {
@@ -65,24 +62,26 @@ let cursorStyles =
      calculate the top padding needed to place the cursor centrally
    */
   let verticalAlignPos = (containerHeight - fontSize) / 2;
-  let initialStyles =
-    Style.make(
-      ~marginLeft=2,
-      ~height=fontSize,
-      ~width=2,
-      ~opacity,
-      ~backgroundColor=cursorColor,
-      ~cursor=MouseCursors.text,
-    );
-
-  hasPlaceholder ?
-    initialStyles(
-      ~position=LayoutTypes.Absolute,
-      ~top=verticalAlignPos,
-      ~left=5,
-      (),
-    ) :
-    initialStyles();
+  Style.make(
+    ~marginLeft=2,
+    ~height=fontSize,
+    ~width=2,
+    ~opacity,
+    ~backgroundColor=cursorColor,
+    (),
+  )
+  |> (
+    initial =>
+      hasPlaceholder ?
+        Style.extend(
+          initial,
+          ~position=LayoutTypes.Absolute,
+          ~top=verticalAlignPos,
+          ~left=5,
+          (),
+        ) :
+        initial
+  );
 };
 
 type state = {
@@ -106,6 +105,7 @@ let addCharacter = (word, char) => word ++ char;
 let reducer = (action, state) =>
   /*
      TODO: Handle Cursor position changing via keyboard input e.g. arrow keys
+     potentially draw the cursor Inside the text element and render the text around the cursor
    */
   switch (action) {
   | SetFocus(isFocused) => {...state, isFocused}
@@ -225,7 +225,7 @@ let make =
         {
           toValue: 1.,
           duration: Seconds(0.5),
-          delay: Seconds(0.),
+          delay: Seconds(0.5),
           repeat: true,
           easing: Animated.linear,
         },
@@ -260,13 +260,7 @@ let make =
       );
 
     let innerTextStyles =
-      textStyles(
-        ~color,
-        ~fontSize,
-        ~width,
-        ~hasPlaceholder,
-        ~placeholderColor,
-      );
+      textStyles(~color, ~fontSize, ~hasPlaceholder, ~placeholderColor);
 
     let inputCursorStyles =
       cursorStyles(
