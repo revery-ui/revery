@@ -29,6 +29,7 @@ let state: state = {
     {name: "Flexbox", render: _ => Flexbox.render()},
     {name: "Box Shadow", render: _ => Boxshadow.render()},
     {name: "Focus", render: _ => Focus.render()},
+    {name: "Stopwatch", render: _ => Stopwatch.render()},
     {name: "Game Of Life", render: _ => GameOfLife.render()},
   ],
   selectedExample: "Animation",
@@ -52,13 +53,14 @@ module ExampleButton = {
         isActive ? selectionHighlight : Colors.transparentWhite;
 
       let opacity = 1.0;
-      let backgroundColor = isActive ? activeBackgroundColor : inactiveBackgroundColor;
+      let backgroundColor =
+        isActive ? activeBackgroundColor : inactiveBackgroundColor;
 
       let wrapperStyle =
         Style.make(
           ~opacity,
           ~borderLeft=Style.Border.make(~width=4, ~color=highlightColor, ()),
-          ~backgroundColor=backgroundColor,
+          ~backgroundColor,
           (),
         );
 

@@ -22,7 +22,10 @@
     ]
   },
   "dependencies": {
-    "@esy-ocaml/reason": "^3.3.7",
+    "@esy-ocaml/reason": "3.4.0",
+    "reason-glfw": "^3.2.1010",
+    "reason-fontkit": "^2.0.5",
+    "reason-gl-matrix": "^0.9.9302",
     "@opam/color": "^0.2.0",
     "@opam/js_of_ocaml": "*",
     "@opam/js_of_ocaml-compiler": "*",
@@ -30,16 +33,12 @@
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@brisk/brisk-reconciler": "*",
-    "flex": "^1.2.2",
-    "reason-glfw": "^3.2.1010",
-    "reason-fontkit": "^2.0.5",
-    "reason-gl-matrix": "^0.9.9302"
+    "flex": "^1.2.2"
   },
   "resolutions": {
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-    "@esy-ocaml/reason": "facebook/reason#ab49908",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#f545ba0"
   },
   "peerDependencies": {
