@@ -2,11 +2,16 @@ open Reglfw;
 
 type reducer('s, 'a) = ('s, 'a) => 's;
 
+type idleState =
+| Running
+| Idle;
+
 type t('s, 'a) = {
   reducer: reducer('s, 'a),
   mutable state: 's,
   mutable windows: list(Window.t),
   mutable needsRender: bool,
+  mutable idleState: idleState,
 };
 
 /* If no state is specified, just use unit! */
@@ -68,6 +73,7 @@ let startWithState: startFunc('s, 'a) =
       state: initialState,
       windows: [],
       needsRender: true,
+      idleState: Running,
     };
 
     GarbageCollector.tune();
@@ -89,15 +95,22 @@ let startWithState: startFunc('s, 'a) =
         /* We're taking path 2 of the garbage collector route to nirvana:
          * https://blogs.msdn.microsoft.com/shawnhar/2007/07/02/twin-paths-to-garbage-collector-nirvana/
          */
+        appInstance.idleState = Running;
         Performance.bench("gc: minor", () => GarbageCollector.minor());
       } else {
-        /* If the app is idle, this is the perfect time to make sure
-         * we're in a clear memory state, so we're ready to go on the next
-         * tick
-         */
-        Performance.bench("gc: full", () =>
-          GarbageCollector.full()
-        );
+        if (appInstance.idleState == Running) {
+            /* If the we're transitioning from Running to Idle, this is the
+             * perfect time to do a full memory collection, so that
+             * we're in a clear memory state, so we're ready to go on the next
+             * tick
+             */
+            Performance.bench("gc: full", () =>
+              GarbageCollector.full()
+            );
+            appInstance.idleState = Idle;
+        } else {
+            Environment.sleep(Milliseconds(1.));
+        }
       };
 
       if (Environment.isNative) {
