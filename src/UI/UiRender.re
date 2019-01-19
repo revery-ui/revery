@@ -63,6 +63,10 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
     -1000.0,
   );
 
+  Performance.bench("recalculate", () => {
+    rootNode#recalculate(); 
+  });
+
   Performance.bench("draw", () => {
     /* Do a first pass for all 'opaque' geometry */
     /* This helps reduce the overhead for the more expensive alpha pass, next */
