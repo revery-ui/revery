@@ -143,6 +143,12 @@ class node ('a) (()) = {
     | (Some(cursorStyle), _) => cursorStyle
     };
   };
+  pub hasRendered = () => {
+      switch(_cachedNodeState^) {
+      | Some(_) => true
+      | None => false
+      } 
+  };
   pub hitTest = (p: Vec2.t) => {
     let bbox = _this#getBoundingBox();
     BoundingBox2d.isPointInside(bbox, p);

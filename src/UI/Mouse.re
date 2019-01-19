@@ -109,7 +109,10 @@ let isMouseDownEv =
 
 let dispatch =
     (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node('a)) => {
-  let pos = getPositionFromMouseEvent(cursor, evt);
+
+  switch (node#hasRendered()) {
+  | true => {
+      let pos = getPositionFromMouseEvent(cursor, evt);
 
   let eventToSend = internalToExternalEvent(cursor, evt);
 
@@ -135,4 +138,7 @@ let dispatch =
   };
 
   Cursor.set(cursor, pos);
+  }
+  | false => ();
+  };
 };
