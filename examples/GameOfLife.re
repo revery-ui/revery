@@ -285,7 +285,6 @@ module Column = {
           ~flexDirection=LayoutTypes.Column,
           ~alignItems=LayoutTypes.AlignStretch,
           ~justifyContent=LayoutTypes.JustifyCenter,
-          ~backgroundColor=Colors.darkGrey,
           ~flexGrow=1,
           (),
         );
@@ -481,12 +480,7 @@ module GameOfLife = {
       let toggleAlive = pos => dispatch(ToggleAlive(pos));
 
       let controlsStyle =
-        Style.make(
-          ~backgroundColor=Colors.white,
-          ~height=120,
-          ~flexDirection=LayoutTypes.Row,
-          (),
-        );
+        Style.make(~height=120, ~flexDirection=LayoutTypes.Row, ());
 
       let startStop = () => {
         state.isRunning
