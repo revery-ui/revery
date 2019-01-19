@@ -33,10 +33,7 @@
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@brisk/brisk-reconciler": "*",
-    "flex": "^1.2.2",
-    "reason-glfw": "^3.2.1010",
-    "reason-fontkit": "^2.0.5",
-    "reason-gl-matrix": "^0.9.9302"
+    "flex": "^1.2.2"
   },
   "resolutions": {
     "@opam/cmdliner": "1.0.2",
