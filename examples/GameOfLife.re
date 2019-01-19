@@ -302,7 +302,6 @@ module Button = {
       let clickableStyle =
         Style.make(
           ~position=LayoutTypes.Relative,
-          ~backgroundColor=Colors.lightGrey,
           ~justifyContent=LayoutTypes.JustifyCenter,
           ~alignItems=LayoutTypes.AlignCenter,
           ~flexGrow=1,
@@ -319,7 +318,7 @@ module Button = {
           (),
         );
       let textStyle =
-        Style.make(~color=Colors.black, ~fontFamily, ~fontSize=32, ());
+        Style.make(~color=Colors.white, ~fontFamily, ~fontSize=40, ());
 
       <Clickable style=clickableStyle onClick>
         <View style=viewStyle> <Text style=textStyle text=contents /> </View>
@@ -495,29 +494,39 @@ module GameOfLife = {
           ...{viewPortRender(state.viewPort, state.universe, toggleAlive)}
         </Row>
         <View style=controlsStyle>
-          <Button contents={state.isRunning ? "Stop" : "Start"} onClick=startStop />
           <Button
-            contents="North"
+            fontFamily="FontAwesome5FreeSolid.otf"
+            contents={state.isRunning ? {||} : {||}}
+            onClick=startStop
+          />
+          <Button
+            fontFamily="FontAwesome5FreeSolid.otf"
+            contents={||}
             onClick={_ => dispatch(MoveViewPort(North))}
           />
           <Button
-            contents="South"
+            fontFamily="FontAwesome5FreeSolid.otf"
+            contents={||}
             onClick={_ => dispatch(MoveViewPort(South))}
           />
           <Button
-            contents="East"
+            fontFamily="FontAwesome5FreeSolid.otf"
+            contents={||}
             onClick={_ => dispatch(MoveViewPort(East))}
           />
           <Button
-            contents="West"
+            fontFamily="FontAwesome5FreeSolid.otf"
+            contents={||}
             onClick={_ => dispatch(MoveViewPort(West))}
           />
           <Button
-            contents="Zoom In"
+            fontFamily="FontAwesome5FreeSolid.otf"
+            contents={||}
             onClick={_ => dispatch(ZoomViewPort(ZoomIn))}
           />
           <Button
-            contents="Zoom Out"
+            fontFamily="FontAwesome5FreeSolid.otf"
+            contents={||}
             onClick={_ => dispatch(ZoomViewPort(ZoomOut))}
           />
         </View>
