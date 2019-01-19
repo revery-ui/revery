@@ -288,11 +288,9 @@ let toLayoutNode = (s: t) => {
   ret;
 };
 
-/* -------------------------------------------------------------------------------*/
-/*
-   Styles: As a list of Polymorphic variants
- */
-/* -------------------------------------------------------------------------------*/
+/* -------------------------------------------------------------------------------
+        Styles: As a list of Polymorphic variants
+   -------------------------------------------------------------------------------*/
 
 type styleProps = [
   | `Position(LayoutTypes.positionType)
@@ -326,21 +324,20 @@ type styleProps = [
   | `Cursor(option(MouseCursors.t))
 ];
 
-module Height = {
-  let make = h => `Height(h);
-};
-
-module Width = {
-  let make = w => `Width(w);
-};
-
-module FontFamily = {
-  let make = ff => `FontFamily(ff);
-};
-
-let height = Height.make;
-let width = Width.make;
-let fontFamily = FontFamily.make;
+let fontFamily = f => `FontFamily(f);
+let height = h => `Height(h);
+let width = w => `Width(w);
+let position = p => `Position(p);
+let margin = m => `Margin(m);
+let marginLeft = m => `MarginLeft(m);
+let marginRight = m => `MarginRight(m);
+let marginTop = m => `MarginTop(m);
+let marginBottom = m => `MarginBottom(m);
+let border = b => `Border(b);
+let borderLeft = b => `BorderLeft(b);
+let borderRight = b => `BorderRight(b);
+let borderTop = b => `BorderTop(b);
+let borderBottom = b => `BorderBottom(b);
 
 let getflexDirection = d =>
   switch (d) {
@@ -370,11 +367,13 @@ let applyStyle = (style: t, styleRule: [> styleProps]) =>
   switch (styleRule) {
   | `FlexDirection(flexDirection) => {...style, flexDirection}
   | `Position(position) => {...style, position}
+  | `Margin(margin) => {...style, margin}
   | `MarginTop(marginTop) => {...style, marginTop}
   | `MarginBottom(marginBottom) => {...style, marginBottom}
   | `MarginRight(marginRight) => {...style, marginRight}
   | `MarginLeft(marginLeft) => {...style, marginLeft}
   | `Overflow(overflow) => {...style, overflow}
+  | `Border(border) => {...style, border}
   | `BorderBottom(borderBottom) => {...style, borderBottom}
   | `BorderTop(borderTop) => {...style, borderTop}
   | `BorderLeft(borderLeft) => {...style, borderLeft}
