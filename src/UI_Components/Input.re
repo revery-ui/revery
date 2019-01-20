@@ -279,11 +279,6 @@ let make =
       onBlur={() => dispatch(SetFocus(false))}>
       <View style=viewStyles>
         <Text style=innerTextStyles text=content />
-        /*
-           TODO:
-           1. Show and hide cursor based on focus
-           2. Add Mouse events
-         */
         <View style=inputCursorStyles />
       </View>
     </Clickable>;
