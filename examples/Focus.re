@@ -13,22 +13,6 @@ module SimpleButton = {
 
       let increment = () => setCount(count + 1);
 
-      let wrapperStyle =
-        Style.make(
-          ~backgroundColor=Color.rgba(1., 1., 1., 0.1),
-          ~border=Style.Border.make(~width=2, ~color=Colors.white, ()),
-          ~margin=16,
-          (),
-        );
-
-      let textHeaderStyle =
-        Style.make(
-          ~color=Colors.white,
-          ~fontFamily="Roboto-Regular.ttf",
-          ~fontSize=20,
-          ~margin=4,
-          (),
-        );
       let txt = focused ? "Focused" : "Unfocused";
       let textContent = txt ++ " me: " ++ string_of_int(count);
       <Clickable
@@ -36,8 +20,21 @@ module SimpleButton = {
         tabindex=0
         onFocus={() => setFocus(true)}
         onBlur={() => setFocus(false)}>
-        <View style=wrapperStyle>
-          <Text style=textHeaderStyle text=textContent />
+        <View
+          style=Style.[
+            backgroundColor(Color.rgba(1., 1., 1., 0.1)),
+            border({width: 2, color: Colors.white}),
+            margin(16),
+          ]>
+          <Text
+            style=Style.[
+              color(Colors.white),
+              fontFamily("Roboto-Regular.ttf"),
+              fontSize(20),
+              margin(4),
+            ]
+            text=textContent
+          />
         </View>
       </Clickable>;
     });
@@ -47,15 +44,14 @@ module SimpleButton = {
 
 let render = () =>
   <View
-    style={Style.make(
-      ~position=LayoutTypes.Absolute,
-      ~justifyContent=LayoutTypes.JustifyCenter,
-      ~alignItems=LayoutTypes.AlignCenter,
-      ~bottom=0,
-      ~top=0,
-      ~left=0,
-      ~right=0,
-      (),
-    )}>
+    style=Style.[
+      position(`Absolute),
+      justifyContent(`Center),
+      alignItems(`Center),
+      bottom(0),
+      top(0),
+      left(0),
+      right(0),
+    ]>
     <SimpleButton />
   </View>;
