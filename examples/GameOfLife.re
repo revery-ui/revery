@@ -46,213 +46,220 @@ module ViewPort = {
     };
 };
 
-type cell =
-  | Alive
-  | Dead;
-
 module Position = {
   type t = (int, int);
 };
 
-module Universe =
-  Map.Make({
-    type t = Position.t;
-    let compare = compare;
-  });
+type cell =
+  | Alive
+  | Dead;
 
-let universeFromList = positions => {
-  List.fold_left(
-    (acc, pos) => Universe.add(pos, Alive, acc),
-    Universe.empty,
-    positions,
-  );
+module Universe = {
+  module T =
+    Map.Make({
+      type t = Position.t;
+      let compare = compare;
+    });
+  include T;
+  let universeFromList = positions => {
+    List.fold_left(
+      (acc, pos) => T.add(pos, Alive, acc),
+      T.empty,
+      positions,
+    );
+  };
 };
 
-let blinker = universeFromList([(5, 4), (5, 5), (5, 6)]);
-let pulsar =
-  universeFromList([
-    (4, 2),
-    (5, 2),
-    (6, 2),
-    (10, 2),
-    (11, 2),
-    (12, 2),
-    (2, 4),
-    (7, 4),
-    (9, 4),
-    (14, 4),
-    (2, 5),
-    (7, 5),
-    (9, 5),
-    (14, 5),
-    (2, 6),
-    (7, 6),
-    (9, 6),
-    (14, 6),
-    (4, 7),
-    (5, 7),
-    (6, 7),
-    (10, 7),
-    (11, 7),
-    (12, 7),
-    (4, 9),
-    (5, 9),
-    (6, 9),
-    (10, 9),
-    (11, 9),
-    (12, 9),
-    (2, 10),
-    (7, 10),
-    (9, 10),
-    (14, 10),
-    (2, 11),
-    (7, 11),
-    (9, 11),
-    (14, 11),
-    (2, 12),
-    (7, 12),
-    (9, 12),
-    (14, 12),
-    (4, 14),
-    (5, 14),
-    (6, 14),
-    (10, 14),
-    (11, 14),
-    (12, 14),
-  ]);
-
-let withDefault = (opt, ~default) =>
-  switch (opt) {
-  | Some(x) => x
-  | None => default
-  };
-
-let findCell = (universe, position) => {
-  Universe.find_opt(position, universe)
-  |> withDefault(~default=Dead)
-  |> (cell => (position, cell));
+module Examples = {
+  let blinker = Universe.universeFromList([(5, 4), (5, 5), (5, 6)]);
+  let pulsar =
+    Universe.universeFromList([
+      (4, 2),
+      (5, 2),
+      (6, 2),
+      (10, 2),
+      (11, 2),
+      (12, 2),
+      (2, 4),
+      (7, 4),
+      (9, 4),
+      (14, 4),
+      (2, 5),
+      (7, 5),
+      (9, 5),
+      (14, 5),
+      (2, 6),
+      (7, 6),
+      (9, 6),
+      (14, 6),
+      (4, 7),
+      (5, 7),
+      (6, 7),
+      (10, 7),
+      (11, 7),
+      (12, 7),
+      (4, 9),
+      (5, 9),
+      (6, 9),
+      (10, 9),
+      (11, 9),
+      (12, 9),
+      (2, 10),
+      (7, 10),
+      (9, 10),
+      (14, 10),
+      (2, 11),
+      (7, 11),
+      (9, 11),
+      (14, 11),
+      (2, 12),
+      (7, 12),
+      (9, 12),
+      (14, 12),
+      (4, 14),
+      (5, 14),
+      (6, 14),
+      (10, 14),
+      (11, 14),
+      (12, 14),
+    ]);
 };
 
-let numberOfLive = neighbours =>
-  neighbours
-  |> List.filter(x =>
-       switch (x) {
-       | Alive => true
-       | _ => false
-       }
-     )
-  |> List.length;
-
-type lifeCycle =
-  | Dies
-  | Revives
-  | Same;
-
-let underPopulationRule = (cell, neighbours) =>
-  switch (cell) {
-  | Alive =>
-    if (numberOfLive(neighbours) < 2) {
-      Dies;
-    } else {
-      Same;
-    }
-
-  | Dead => Same
-  };
-
-let livesOnRule = (cell, neighbours) =>
-  switch (cell) {
-  | Alive =>
-    let numberOfLiveNeighbours = numberOfLive(neighbours);
-
-    if (numberOfLiveNeighbours == 2 || numberOfLiveNeighbours == 3) {
-      Same;
-    } else {
-      Dies;
+module GameOfLife = {
+  /* helper function for options */
+  let withDefault = (opt, ~default) =>
+    switch (opt) {
+    | Some(x) => x
+    | None => default
     };
 
-  | Dead => Same
+  let findCell = (universe, position) => {
+    Universe.find_opt(position, universe)
+    |> withDefault(~default=Dead)
+    |> (cell => (position, cell));
   };
 
-let overPopulationRule = (cell, neighbours) =>
-  switch (cell) {
-  | Alive =>
-    if (numberOfLive(neighbours) > 3) {
-      Dies;
-    } else {
-      Same;
-    }
+  let numberOfLive = neighbours =>
+    neighbours
+    |> List.filter(x =>
+         switch (x) {
+         | Alive => true
+         | _ => false
+         }
+       )
+    |> List.length;
 
-  | Dead => Same
+  type lifeCycle =
+    | Dies
+    | Revives
+    | Same;
+
+  let underPopulationRule = (cell, neighbours) =>
+    switch (cell) {
+    | Alive =>
+      if (numberOfLive(neighbours) < 2) {
+        Dies;
+      } else {
+        Same;
+      }
+
+    | Dead => Same
+    };
+
+  let livesOnRule = (cell, neighbours) =>
+    switch (cell) {
+    | Alive =>
+      let numberOfLiveNeighbours = numberOfLive(neighbours);
+
+      if (numberOfLiveNeighbours == 2 || numberOfLiveNeighbours == 3) {
+        Same;
+      } else {
+        Dies;
+      };
+
+    | Dead => Same
+    };
+
+  let overPopulationRule = (cell, neighbours) =>
+    switch (cell) {
+    | Alive =>
+      if (numberOfLive(neighbours) > 3) {
+        Dies;
+      } else {
+        Same;
+      }
+
+    | Dead => Same
+    };
+
+  let reproductionRule = (cell, neighbours) =>
+    switch (cell) {
+    | Alive => Same
+
+    | Dead =>
+      if (numberOfLive(neighbours) == 3) {
+        Revives;
+      } else {
+        Same;
+      }
+    };
+
+  let reduceLifeCycle = (cell, neighbours) => {
+    let actions = [
+      underPopulationRule(cell, neighbours),
+      livesOnRule(cell, neighbours),
+      overPopulationRule(cell, neighbours),
+      reproductionRule(cell, neighbours),
+    ];
+
+    let reducedLifeCycle =
+      actions |> List.filter((!=)(Same)) |> (l => List.nth_opt(l, 0));
+
+    withDefault(reducedLifeCycle, ~default=Same);
   };
 
-let reproductionRule = (cell, neighbours) =>
-  switch (cell) {
-  | Alive => Same
-
-  | Dead =>
-    if (numberOfLive(neighbours) == 3) {
-      Revives;
-    } else {
-      Same;
-    }
+  let applyRules = (cell, neighbours) => {
+    let action = reduceLifeCycle(cell, neighbours);
+    switch (action) {
+    | Dies => Dead
+    | Revives => Alive
+    | Same => cell
+    };
   };
 
-let reduceLifeCycle = (cell, neighbours) => {
-  let actions = [
-    underPopulationRule(cell, neighbours),
-    livesOnRule(cell, neighbours),
-    overPopulationRule(cell, neighbours),
-    reproductionRule(cell, neighbours),
+  let neighbourPositions = ((x, y)) => [
+    (x - 1, y - 1),
+    (x, y - 1),
+    (x + 1, y - 1),
+    (x - 1, y),
+    (x + 1, y),
+    (x - 1, y + 1),
+    (x, y + 1),
+    (x + 1, y + 1),
   ];
-
-  let reducedLifeCycle =
-    actions |> List.filter((!=)(Same)) |> (l => List.nth_opt(l, 0));
-
-  withDefault(reducedLifeCycle, ~default=Same);
-};
-
-let applyRules = (cell, neighbours) => {
-  let action = reduceLifeCycle(cell, neighbours);
-  switch (action) {
-  | Dies => Dead
-  | Revives => Alive
-  | Same => cell
+  let evolveCell = (universe, (position, cell)) => {
+    let neighbours =
+      List.map(
+        position => findCell(universe, position) |> snd,
+        neighbourPositions(position),
+      );
+    let evolvedCell = applyRules(cell, neighbours);
+    (position, evolvedCell);
   };
-};
 
-let neighbourPositions = ((x, y)) => [
-  (x - 1, y - 1),
-  (x, y - 1),
-  (x + 1, y - 1),
-  (x - 1, y),
-  (x + 1, y),
-  (x - 1, y + 1),
-  (x, y + 1),
-  (x + 1, y + 1),
-];
-let evolveCell = (universe, (position, cell)) => {
-  let neighbours =
-    List.map(
-      position => findCell(universe, position) |> snd,
-      neighbourPositions(position),
-    );
-  let evolvedCell = applyRules(cell, neighbours);
-  (position, evolvedCell);
-};
-
-let evolve = universe => {
-  let find_relevant_cells = position =>
-    neighbourPositions(position) |> List.map(findCell(universe));
-  let keys = Universe.bindings(universe) |> List.map(fst);
-  keys
-  |> List.map(find_relevant_cells)
-  |> List.concat
-  |> List.sort_uniq(compare)
-  |> List.map(evolveCell(universe))
-  |> List.filter(x => snd(x) |> (==)(Alive))
-  |> List.map(fst)
-  |> universeFromList;
+  let evolve = universe => {
+    let find_relevant_cells = position =>
+      neighbourPositions(position) |> List.map(findCell(universe));
+    let keys = Universe.bindings(universe) |> List.map(fst);
+    keys
+    |> List.map(find_relevant_cells)
+    |> List.concat
+    |> List.sort_uniq(compare)
+    |> List.map(evolveCell(universe))
+    |> List.filter(x => snd(x) |> (==)(Alive))
+    |> List.map(fst)
+    |> Universe.universeFromList;
+  };
 };
 
 module Row = {
@@ -293,51 +300,6 @@ module Column = {
       <View style> ...children </View>
     );
   let createElement = (~children, ()) => React.element(make(children));
-};
-
-module Button = {
-  let component = React.component("Button");
-
-  let clickableStyle =
-    Style.make(
-      ~position=LayoutTypes.Relative,
-      ~justifyContent=LayoutTypes.JustifyCenter,
-      ~alignItems=LayoutTypes.AlignCenter,
-      ~flexGrow=1,
-      /* Min width */
-      ~width=150,
-      ~margin=10,
-      (),
-    );
-  let viewStyle =
-    Style.make(
-      ~position=LayoutTypes.Relative,
-      ~justifyContent=LayoutTypes.JustifyCenter,
-      ~alignItems=LayoutTypes.AlignCenter,
-      (),
-    );
-
-  let make =
-      (~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ()) =>
-    component((_slots: React.Hooks.empty) => {
-      let textStyle =
-        Style.make(~color=Colors.white, ~fontFamily, ~fontSize=40, ());
-
-      <Clickable style=clickableStyle onClick>
-        <View style=viewStyle> <Text style=textStyle text=contents /> </View>
-      </Clickable>;
-    });
-
-  let createElement =
-      (
-        ~fontFamily="Roboto-Regular.ttf",
-        ~contents,
-        ~onClick,
-        ~children as _,
-        (),
-      ) => {
-    React.element(make(~fontFamily, ~contents, ~onClick, ()));
-  };
 };
 
 module Cell = {
@@ -429,7 +391,7 @@ and zoom =
 let noop = () => ();
 let reducer = (action, state) =>
   switch (action) {
-  | TimerTick(_t) => {...state, universe: evolve(state.universe)}
+  | TimerTick(_t) => {...state, universe: GameOfLife.evolve(state.universe)}
   | StartTimer(dispose) => {...state, dispose, isRunning: true}
   | StopTimer =>
     state.dispose();
@@ -461,8 +423,8 @@ let reducer = (action, state) =>
     }
   };
 
-module GameOfLife = {
-  let component = React.component("GameOfLife");
+module GameOfLiveComponent = {
+  let component = React.component("GameOfLiveComponent");
 
   let controlsStyle =
     Style.make(~height=120, ~flexDirection=LayoutTypes.Row, ());
@@ -498,37 +460,37 @@ module GameOfLife = {
         <View style=controlsStyle>
           <Button
             fontFamily="FontAwesome5FreeSolid.otf"
-            contents={state.isRunning ? {||} : {||}}
+            title={state.isRunning ? {||} : {||}}
             onClick=startStop
           />
           <Button
             fontFamily="FontAwesome5FreeSolid.otf"
-            contents={||}
+            title={||}
             onClick={_ => dispatch(MoveViewPort(North))}
           />
           <Button
             fontFamily="FontAwesome5FreeSolid.otf"
-            contents={||}
+            title={||}
             onClick={_ => dispatch(MoveViewPort(South))}
           />
           <Button
             fontFamily="FontAwesome5FreeSolid.otf"
-            contents={||}
+            title={||}
             onClick={_ => dispatch(MoveViewPort(East))}
           />
           <Button
             fontFamily="FontAwesome5FreeSolid.otf"
-            contents={||}
+            title={||}
             onClick={_ => dispatch(MoveViewPort(West))}
           />
           <Button
             fontFamily="FontAwesome5FreeSolid.otf"
-            contents={||}
+            title={||}
             onClick={_ => dispatch(ZoomViewPort(ZoomIn))}
           />
           <Button
             fontFamily="FontAwesome5FreeSolid.otf"
-            contents={||}
+            title={||}
             onClick={_ => dispatch(ZoomViewPort(ZoomOut))}
           />
         </View>
@@ -542,6 +504,11 @@ module GameOfLife = {
 
 let render = () => {
   let viewPort = ViewPort.create(15);
-  let state = {viewPort, universe: pulsar, isRunning: false, dispose: noop};
-  <GameOfLife state />;
+  let state = {
+    viewPort,
+    universe: Examples.pulsar,
+    isRunning: false,
+    dispose: noop,
+  };
+  <GameOfLiveComponent state />;
 };
