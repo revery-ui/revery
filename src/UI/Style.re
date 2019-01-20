@@ -423,7 +423,7 @@ let cursor = c => `Cursor(Some(c));
 
 let opacity = o => `Opacity(o);
 let transform = t => `Transform(t);
-let boxShadow = b => `BoxShadow(b);
+let boxShadow = (b: BoxShadow.properties) => `BoxShadow(b);
 let overflow = o => `Overflow(o);
 let color = o => `Color(o);
 let backgroundColor = o => `BackgroundColor(o);
