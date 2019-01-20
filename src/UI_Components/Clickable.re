@@ -18,7 +18,7 @@ let component = React.component("Clickable");
  */
 let make =
     (
-      ~style as _,
+      ~style,
       ~onClick: clickFunction=noop,
       ~onBlur=?,
       ~onFocus=?,
@@ -45,7 +45,11 @@ let make =
     /*   Style.extend(style, ~opacity=animatedOpacity, ~cursor=MouseCursors.pointer, ()); */
 
     <View
-      style=Style.[opacity(animatedOpacity), cursor(MouseCursors.pointer)]
+      style=Style.[
+        opacity(animatedOpacity),
+        cursor(MouseCursors.pointer),
+        ...style,
+      ]
       onMouseDown
       onMouseUp
       ?onBlur

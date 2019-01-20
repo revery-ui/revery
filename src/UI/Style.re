@@ -291,8 +291,20 @@ let toLayoutNode = (s: t) => {
 /* -------------------------------------------------------------------------------
         Styles: As a list of Polymorphic variants
    -------------------------------------------------------------------------------*/
+module Margin = {
+  type m2 = {
+    horizontal: int,
+    vertical: int,
+  };
+  type m4 = {
+    top: int,
+    right: int,
+    bottom: int,
+    left: int,
+  };
+};
 
-type styleProps = [
+type props = [
   | `Position(LayoutTypes.positionType)
   | `BackgroundColor(Color.t)
   | `Color(Color.t)
@@ -301,8 +313,6 @@ type styleProps = [
   | `Bottom(int)
   | `Left(int)
   | `Right(int)
-  | `FontFamily(string)
-  | `FontSize(int)
   | `MarginTop(int)
   | `MarginLeft(int)
   | `MarginRight(int)
@@ -310,6 +320,8 @@ type styleProps = [
   | `Margin(int)
   | `MarginVertical(int)
   | `MarginHorizontal(int)
+  | `Margin2(Margin.m2)
+  | `Margin4(Margin.m4)
   | `Overflow(LayoutTypes.overflow)
   | `BorderTop(Border.t)
   | `BorderLeft(Border.t)
@@ -323,6 +335,10 @@ type styleProps = [
   | `Boxshadow(BoxShadow.properties)
   | `Cursor(option(MouseCursors.t))
 ];
+
+type fontProps = [ | `FontFamily(string) | `FontSize(int)];
+type textStyleProps = [ fontProps | props];
+type viewStyleProps = [ props];
 
 let flexDirection = d => {
   let dir =
@@ -380,6 +396,10 @@ let marginTop = m => `MarginTop(m);
 let marginBottom = m => `MarginBottom(m);
 let marginVertical = m => `MarginVertical(m);
 let marginHorizontal = m => `MarginHorizontal(m);
+let margin2 = ({horizontal, vertical}: Margin.m2) =>
+  `Margin2((horizontal, vertical));
+let margin4 = ({top, right, bottom, left}: Margin.m4) =>
+  `Margin4((top, right, bottom, left));
 
 let border = (b: Border.t) =>
   Border.make(~color=b.color, ~width=b.width, ()) |> (b => `Border(b));
@@ -410,7 +430,7 @@ let overflow = o => `Overflow(o);
 let color = o => `Color(o);
 let backgroundColor = o => `BackgroundColor(o);
 
-let applyStyle = (style: t, styleRule: [> styleProps]) =>
+let applyStyle = (style: t, styleRule: [> props]) =>
   switch (styleRule) {
   | `AlignItems(alignItems) => {...style, alignItems}
   | `JustifyContent(justifyContent) => {...style, justifyContent}
@@ -422,6 +442,20 @@ let applyStyle = (style: t, styleRule: [> styleProps]) =>
   | `MarginBottom(marginBottom) => {...style, marginBottom}
   | `MarginRight(marginRight) => {...style, marginRight}
   | `MarginLeft(marginLeft) => {...style, marginLeft}
+  | `MarginVertical(marginVertical) => {...style, marginVertical}
+  | `MarginHorizontal(marginHorizontal) => {...style, marginHorizontal}
+  | `Margin2({horizontal, vertical}) => {
+      ...style,
+      marginHorizontal: horizontal,
+      marginVertical: vertical,
+    }
+  | `Margin4({top, right, bottom, left}) => {
+      ...style,
+      marginTop: top,
+      marginLeft: left,
+      marginRight: right,
+      marginBottom: bottom,
+    }
   | `Overflow(overflow) => {...style, overflow}
   | `Border(border) => {...style, border}
   | `BorderBottom(borderBottom) => {...style, borderBottom}
@@ -436,8 +470,6 @@ let applyStyle = (style: t, styleRule: [> styleProps]) =>
   | `FontFamily(fontFamily) => {...style, fontFamily}
   | `FontSize(fontSize) => {...style, fontSize}
   | `Cursor(cursor) => {...style, cursor}
-  | `MarginVertical(marginVertical) => {...style, marginVertical}
-  | `MarginHorizontal(marginHorizontal) => {...style, marginHorizontal}
   | `Color(color) => {...style, color}
   | `BackgroundColor(backgroundColor) => {...style, backgroundColor}
   | `Width(width) => {...style, width}
