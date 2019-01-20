@@ -326,11 +326,17 @@ let getDevicePixelRatio = (w: t) => {
 let takeScreenshot = (w: t, filename: string) => {
   open Glfw;
 
-  let {width, height}: Window.frameBufferSize = glfwGetFramebufferSize(w.glfwWindow);
+  let width = w.framebufferWidth;
+  let height = w.framebufferHeight;
 
   let image = Image.create(~width, ~height, ~numChannels=4, ~channelSize=1);
   let buffer = Image.getBuffer(image);
 
+  /* WebGL is weird in that we can't capture with glReadPixels during
+     a render operation. Instead, we want to wait till it's over (we
+     can force this by triggering a new render) and then taking the
+     screenshot */
+  render(w);
   glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 
   Image.save(image, filename);
