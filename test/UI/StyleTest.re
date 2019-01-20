@@ -38,20 +38,16 @@ test("Style API tests", () => {
   });
 
   test("it correctly sets a border", () => {
-    let borderStyle = Border.make(~color=black, ~width=2, ());
-    let borderLeftStyle = Border.make(~color=rebeccaPurple, ~width=2, ());
-    let borderTopStyle = Border.make(~color=red, ~width=2, ());
-    let borderRightStyle = Border.make(~color=blue, ~width=2, ());
-    let borderBottomStyle = Border.make(~color=orange, ~width=2, ());
-
     let styles =
       create(
         ~userStyles=[
-          border(borderStyle),
-          borderLeft(borderLeftStyle),
-          borderTop(borderTopStyle),
-          borderRight(borderRightStyle),
-          borderBottom(borderBottomStyle),
+          border({color: black, width: 2}),
+          borderLeft({color: rebeccaPurple, width: 2}),
+          borderTop({color: red, width: 2}),
+          borderRight({color: blue, width: 2}),
+          borderBottom({color: orange, width: 2}),
+          borderHorizontal({color: paleVioletRed, width: 12}),
+          borderVertical({color: paleTurquoise, width: 18}),
         ],
         (),
       );
@@ -60,5 +56,10 @@ test("Style API tests", () => {
     expect(styles.borderTop).toEqual({color: red, width: 2});
     expect(styles.borderRight).toEqual({color: blue, width: 2});
     expect(styles.borderLeft).toEqual({color: rebeccaPurple, width: 2});
+    expect(styles.borderHorizontal).toEqual({
+      color: paleVioletRed,
+      width: 12,
+    });
+    expect(styles.borderVertical).toEqual({color: paleTurquoise, width: 18});
   });
 });

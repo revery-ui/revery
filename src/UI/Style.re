@@ -324,22 +324,50 @@ type styleProps = [
   | `Cursor(option(MouseCursors.t))
 ];
 
+let right = f => `Right(f);
+let bottom = f => `Bottom(f);
+let left = f => `Left(f);
+let top = f => `Top(f);
+
+let fontSize = f => `FontSize(f);
 let fontFamily = f => `FontFamily(f);
+
 let height = h => `Height(h);
 let width = w => `Width(w);
+
 let position = p => `Position(p);
+
 let margin = m => `Margin(m);
 let marginLeft = m => `MarginLeft(m);
 let marginRight = m => `MarginRight(m);
 let marginTop = m => `MarginTop(m);
 let marginBottom = m => `MarginBottom(m);
-let border = b => `Border(b);
-let borderLeft = b => `BorderLeft(b);
-let borderRight = b => `BorderRight(b);
-let borderTop = b => `BorderTop(b);
-let borderBottom = b => `BorderBottom(b);
 
-let getflexDirection = d =>
+let border = (b: Border.t) =>
+  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `Border(b));
+let borderLeft = (b: Border.t) =>
+  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderLeft(b));
+let borderRight = (b: Border.t) =>
+  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderRight(b));
+let borderTop = (b: Border.t) =>
+  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderTop(b));
+let borderBottom = (b: Border.t) =>
+  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderBottom(b));
+let borderHorizontal = (b: Border.t) =>
+  Border.make(~color=b.color, ~width=b.width, ())
+  |> (b => `BorderHorizontal(b));
+let borderVertical = (b: Border.t) =>
+  Border.make(~color=b.color, ~width=b.width, ())
+  |> (b => `BorderVertical(b));
+
+let opacity = o => `Opacity(o);
+let transform = t => `Transform(t);
+let boxShadow = b => `BoxShadow(b);
+let overflow = o => `Overflow(o);
+let color = o => `Color(o);
+let backgroundColor = o => `BackgroundColor(o);
+
+let flexDirection = d =>
   switch (d) {
   | `Column => LayoutTypes.Column
   | `ColumnReverse => LayoutTypes.ColumnReverse
@@ -347,7 +375,7 @@ let getflexDirection = d =>
   | `Row => LayoutTypes.Row
   };
 
-let getAlignment = a =>
+let alignment = a =>
   switch (a) {
   | `Center => LayoutTypes.AlignCenter
   | `Stretch => LayoutTypes.AlignStretch
@@ -356,7 +384,7 @@ let getAlignment = a =>
   | `FlexEnd => LayoutTypes.AlignFlexEnd
   };
 
-let getJustification = j =>
+let justify = j =>
   switch (j) {
   | `FlexStart => LayoutTypes.JustifyFlexStart
   | `Center => LayoutTypes.JustifyCenter
