@@ -2,14 +2,13 @@ open Revery.UI;
 open Revery.Core;
 
 let parentStyles =
-  Style.make(
-    ~position=LayoutTypes.Relative,
-    ~flexGrow=1,
-    ~alignItems=LayoutTypes.AlignCenter,
-    ~justifyContent=LayoutTypes.JustifyCenter,
-    ~flexDirection=LayoutTypes.Column,
-    (),
-  );
+  Style.[
+    position(`Relative),
+    flexGrow(1),
+    alignItems(`Center),
+    justifyContent(`Center),
+    flexDirection(`Column),
+  ];
 
 let shadowOne =
   Style.BoxShadow.make(
@@ -32,30 +31,27 @@ let shadowTwo =
   );
 
 let firstShadow =
-  Style.make(
-    ~backgroundColor=Colors.blue,
-    ~position=LayoutTypes.Relative,
-    ~width=100,
-    ~height=100,
-    ~boxShadow=shadowOne,
-    ~marginVertical=30,
-    (),
-  );
+  Style.[
+    backgroundColor(Colors.blue),
+    position(`Relative),
+    width(100),
+    height(100),
+    boxShadow(shadowOne),
+    marginVertical(30),
+  ];
 
 let secondShadow =
-  Style.make(
-    ~backgroundColor=Colors.red,
-    ~position=LayoutTypes.Relative,
-    ~width=100,
-    ~height=100,
-    ~boxShadow=shadowTwo,
-    ~marginVertical=30,
-    (),
-  );
+  Style.[
+    backgroundColor(Colors.red),
+    position(`Relative),
+    width(100),
+    height(100),
+    boxShadow(shadowTwo),
+    marginVertical(30),
+  ];
 
-let render = () => {
+let render = () =>
   <View style=parentStyles>
     <View style=firstShadow />
     <View style=secondShadow />
   </View>;
-};
