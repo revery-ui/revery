@@ -184,7 +184,7 @@ let make =
     /*
        TODO: Setting the hook to run only on mount means that the onChange
        handler is only called with a stale version of state
-       BUT setting the value to ALWAYS causes on handler to to seize
+       BUT setting the value to ALWAYS causes one handler to to seize
        control of the event listening
      */
     let slots =
