@@ -324,13 +324,16 @@ type styleProps = [
   | `Cursor(option(MouseCursors.t))
 ];
 
-let flexDirection = d =>
-  switch (d) {
-  | `Column => LayoutTypes.Column
-  | `ColumnReverse => LayoutTypes.ColumnReverse
-  | `RowReverse => LayoutTypes.RowReverse
-  | `Row => LayoutTypes.Row
-  };
+let flexDirection = d => {
+  let dir =
+    switch (d) {
+    | `Column => LayoutTypes.Column
+    | `ColumnReverse => LayoutTypes.ColumnReverse
+    | `RowReverse => LayoutTypes.RowReverse
+    | `Row => LayoutTypes.Row
+    };
+  `FlexDirection(dir);
+};
 
 let alignment = a =>
   switch (a) {
@@ -347,6 +350,8 @@ let justify = j =>
   | `Center => LayoutTypes.JustifyCenter
   | `FlexEnd => LayoutTypes.JustifyFlexEnd
   };
+
+let flexGrow = g => `FlexGrow(g);
 
 let right = f => `Right(f);
 let bottom = f => `Bottom(f);
@@ -373,6 +378,8 @@ let marginLeft = m => `MarginLeft(m);
 let marginRight = m => `MarginRight(m);
 let marginTop = m => `MarginTop(m);
 let marginBottom = m => `MarginBottom(m);
+let marginVertical = m => `MarginVertical(m);
+let marginHorizontal = m => `MarginHorizontal(m);
 
 let border = (b: Border.t) =>
   Border.make(~color=b.color, ~width=b.width, ()) |> (b => `Border(b));
@@ -407,6 +414,7 @@ let applyStyle = (style: t, styleRule: [> styleProps]) =>
   switch (styleRule) {
   | `AlignItems(alignItems) => {...style, alignItems}
   | `JustifyContent(justifyContent) => {...style, justifyContent}
+  | `FlexGrow(flexGrow) => {...style, flexGrow}
   | `FlexDirection(flexDirection) => {...style, flexDirection}
   | `Position(position) => {...style, position}
   | `Margin(margin) => {...style, margin}
