@@ -324,49 +324,6 @@ type styleProps = [
   | `Cursor(option(MouseCursors.t))
 ];
 
-let right = f => `Right(f);
-let bottom = f => `Bottom(f);
-let left = f => `Left(f);
-let top = f => `Top(f);
-
-let fontSize = f => `FontSize(f);
-let fontFamily = f => `FontFamily(f);
-
-let height = h => `Height(h);
-let width = w => `Width(w);
-
-let position = p => `Position(p);
-
-let margin = m => `Margin(m);
-let marginLeft = m => `MarginLeft(m);
-let marginRight = m => `MarginRight(m);
-let marginTop = m => `MarginTop(m);
-let marginBottom = m => `MarginBottom(m);
-
-let border = (b: Border.t) =>
-  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `Border(b));
-let borderLeft = (b: Border.t) =>
-  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderLeft(b));
-let borderRight = (b: Border.t) =>
-  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderRight(b));
-let borderTop = (b: Border.t) =>
-  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderTop(b));
-let borderBottom = (b: Border.t) =>
-  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderBottom(b));
-let borderHorizontal = (b: Border.t) =>
-  Border.make(~color=b.color, ~width=b.width, ())
-  |> (b => `BorderHorizontal(b));
-let borderVertical = (b: Border.t) =>
-  Border.make(~color=b.color, ~width=b.width, ())
-  |> (b => `BorderVertical(b));
-
-let opacity = o => `Opacity(o);
-let transform = t => `Transform(t);
-let boxShadow = b => `BoxShadow(b);
-let overflow = o => `Overflow(o);
-let color = o => `Color(o);
-let backgroundColor = o => `BackgroundColor(o);
-
 let flexDirection = d =>
   switch (d) {
   | `Column => LayoutTypes.Column
@@ -391,8 +348,65 @@ let justify = j =>
   | `FlexEnd => LayoutTypes.JustifyFlexEnd
   };
 
+let right = f => `Right(f);
+let bottom = f => `Bottom(f);
+let left = f => `Left(f);
+let top = f => `Top(f);
+
+let fontSize = f => `FontSize(f);
+let fontFamily = f => `FontFamily(f);
+
+let height = h => `Height(h);
+let width = w => `Width(w);
+
+let position = p => {
+  let value =
+    switch (p) {
+    | `Absolute => LayoutTypes.Absolute
+    | `Relative => LayoutTypes.Relative
+    };
+  `Position(value);
+};
+
+let margin = m => `Margin(m);
+let marginLeft = m => `MarginLeft(m);
+let marginRight = m => `MarginRight(m);
+let marginTop = m => `MarginTop(m);
+let marginBottom = m => `MarginBottom(m);
+
+let border = (b: Border.t) =>
+  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `Border(b));
+let borderLeft = (b: Border.t) =>
+  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderLeft(b));
+let borderRight = (b: Border.t) =>
+  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderRight(b));
+let borderTop = (b: Border.t) =>
+  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderTop(b));
+let borderBottom = (b: Border.t) =>
+  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderBottom(b));
+let borderHorizontal = (b: Border.t) =>
+  Border.make(~color=b.color, ~width=b.width, ())
+  |> (b => `BorderHorizontal(b));
+let borderVertical = (b: Border.t) =>
+  Border.make(~color=b.color, ~width=b.width, ())
+  |> (b => `BorderVertical(b));
+
+let alignItems = a => `AlignItems(alignment(a));
+let justifyContent = a => `JustifyContent(justify(a));
+
+let cursor = c => `Cursor(Some(c));
+
+let opacity = o => `Opacity(o);
+let transform = t => `Transform(t);
+let boxShadow = b => `BoxShadow(b);
+let overflow = o => `Overflow(o);
+let color = o => `Color(o);
+let backgroundColor = o => `BackgroundColor(o);
+
 let applyStyle = (style: t, styleRule: [> styleProps]) =>
   switch (styleRule) {
+  | `AlignItems(alignItems) => {...style, alignItems}
+  | `JustifyContent(justifyContent) => {...style, justifyContent}
   | `FlexDirection(flexDirection) => {...style, flexDirection}
   | `Position(position) => {...style, position}
   | `Margin(margin) => {...style, margin}
@@ -412,6 +426,7 @@ let applyStyle = (style: t, styleRule: [> styleProps]) =>
   | `BoxShadow(boxShadow) => {...style, boxShadow}
   | `Transform(transform) => {...style, transform}
   | `FontFamily(fontFamily) => {...style, fontFamily}
+  | `FontSize(fontSize) => {...style, fontSize}
   | `Cursor(cursor) => {...style, cursor}
   | `MarginVertical(marginVertical) => {...style, marginVertical}
   | `MarginHorizontal(marginHorizontal) => {...style, marginHorizontal}
@@ -426,6 +441,10 @@ let applyStyle = (style: t, styleRule: [> styleProps]) =>
   | _ => style
   };
 
-let create = (~userStyles=[], ~styles=make(), ()) =>
-  List.fold_left(applyStyle, styles, userStyles);
-/* -------------------------------------------------------------------------------*/
+let create = (~style=[], ~default=make(), ()) =>
+  List.fold_left(applyStyle, default, style);
+
+/* let merge = (~source, ~target) => {*/
+/*   List.map()*/
+/* }*/
+/* /* -------------------------------------------------------------------------------*/*/

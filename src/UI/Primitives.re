@@ -21,12 +21,13 @@ module View = {
         ~onFocus=?,
         ~tabindex=?,
         ~ref=?,
-        ~style=Style.defaultStyle,
+        ~style=[],
         children,
-      ) => {
+      ) =>
     component((_: UiReact.Hooks.empty) =>
       {
         make: () => {
+          let styles = Style.create(~style, ());
           let events =
             NodeEvents.make(
               ~ref?,
@@ -40,11 +41,12 @@ module View = {
             );
           let node = (new ViewNode.viewNode)();
           node#setEvents(events);
-          node#setStyle(style);
+          node#setStyle(styles);
           node#setTabIndex(tabindex);
           node;
         },
         configureInstance: (~isFirstRender as _, node) => {
+          let styles = Style.create(~style, ());
           let events =
             NodeEvents.make(
               ~ref?,
@@ -57,14 +59,13 @@ module View = {
               (),
             );
           node#setEvents(events);
-          node#setStyle(style);
+          node#setStyle(styles);
           node#setTabIndex(tabindex);
           node;
         },
         children,
       }
     );
-  };
 
   let createElement =
       (
@@ -75,11 +76,11 @@ module View = {
         ~onBlur=?,
         ~onFocus=?,
         ~ref=?,
-        ~style=Style.defaultStyle,
+        ~style=[],
         ~tabindex=None,
         ~children,
         (),
-      ) => {
+      ) =>
     UiReact.element(
       make(
         ~onMouseDown?,
@@ -94,7 +95,6 @@ module View = {
         UiReact.listToElement(children),
       ),
     );
-  };
 };
 
 module Text = {
@@ -107,13 +107,14 @@ module Text = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
-        ~style=Style.defaultStyle,
+        ~style=[],
         ~text="",
         children,
-      ) => {
+      ) =>
     component((_: UiReact.Hooks.empty) =>
       {
         make: () => {
+          let styles = Style.create(~style, ());
           let events =
             NodeEvents.make(
               ~ref?,
@@ -125,10 +126,11 @@ module Text = {
             );
           let node = (new TextNode.textNode)(text);
           node#setEvents(events);
-          node#setStyle(style);
+          node#setStyle(styles);
           Obj.magic(node);
         },
         configureInstance: (~isFirstRender as _, node) => {
+          let styles = Style.create(~style, ());
           let events =
             NodeEvents.make(
               ~ref?,
@@ -142,14 +144,13 @@ module Text = {
           /* TODO: Proper way to downcast? */
           let tn: TextNode.textNode = Obj.magic(node);
           tn#setEvents(events);
-          tn#setStyle(style);
+          tn#setStyle(styles);
           tn#setText(text);
           node;
         },
         children,
       }
     );
-  };
 
   let createElement =
       (
@@ -158,11 +159,11 @@ module Text = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
-        ~style=Style.defaultStyle,
+        ~style=[],
         ~text="",
         ~children,
         (),
-      ) => {
+      ) =>
     UiReact.element(
       make(
         ~onMouseDown?,
@@ -175,7 +176,6 @@ module Text = {
         UiReact.listToElement(children),
       ),
     );
-  };
 };
 
 module Image = {
@@ -191,7 +191,7 @@ module Image = {
         ~style=Style.defaultStyle,
         ~src="",
         children,
-      ) => {
+      ) =>
     component((_: UiReact.Hooks.empty) =>
       {
         make: () => {
@@ -226,7 +226,6 @@ module Image = {
         children,
       }
     );
-  };
 
   let createElement =
       (
@@ -239,7 +238,7 @@ module Image = {
         ~src="",
         ~children,
         (),
-      ) => {
+      ) =>
     UiReact.element(
       make(
         ~onMouseDown?,
@@ -252,5 +251,4 @@ module Image = {
         UiReact.listToElement(children),
       ),
     );
-  };
 };

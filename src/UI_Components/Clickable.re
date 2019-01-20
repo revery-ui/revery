@@ -13,9 +13,12 @@ let noop = () => ();
 
 let component = React.component("Clickable");
 
+/*
+   FIXME: Merge the passed down styles with the default styles
+ */
 let make =
     (
-      ~style=Style.defaultStyle,
+      ~style as _,
       ~onClick: clickFunction=noop,
       ~onBlur=?,
       ~onFocus=?,
@@ -23,7 +26,7 @@ let make =
       children: React.syntheticElement,
     ) =>
   component(slots => {
-    let (opacity, setOpacity, _slots: React.Hooks.empty) =
+    let (animatedOpacity, setOpacity, _slots: React.Hooks.empty) =
       React.Hooks.state(0.8, slots);
 
     /* TODO:
@@ -38,17 +41,23 @@ let make =
       onClick();
     };
 
-    let style2 =
-      Style.extend(style, ~opacity, ~cursor=MouseCursors.pointer, ());
+    /* let style2 = */
+    /*   Style.extend(style, ~opacity=animatedOpacity, ~cursor=MouseCursors.pointer, ()); */
 
-    <View style=style2 onMouseDown onMouseUp ?onBlur ?onFocus tabindex>
+    <View
+      style=Style.[opacity(animatedOpacity), cursor(MouseCursors.pointer)]
+      onMouseDown
+      onMouseUp
+      ?onBlur
+      ?onFocus
+      tabindex>
       children
     </View>;
   });
 
 let createElement =
     (
-      ~style=Style.defaultStyle,
+      ~style=[],
       ~onClick: clickFunction=noop,
       ~onBlur=?,
       ~onFocus=?,

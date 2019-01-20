@@ -68,21 +68,20 @@ module Clock = {
           (),
         );
 
-      let startStop = () => {
-        state.isRunning
-          ? dispatch(Stop)
-          /*
-           * If we're not already running, we'll start a timer job
-           * and use the delta time it passes to update our reducer.
-           */
-          : {
+      let startStop = () =>
+        state.isRunning ?
+          dispatch(Stop) :
+          {
+            /*
+             * If we're not already running, we'll start a timer job
+             * and use the delta time it passes to update our reducer.
+             */
             let dispose =
               Tick.interval(t => dispatch(TimerTick(t)), Seconds(0.));
 
             /* We'll also keep a handle on the dispose function so we can make sure its called on stop*/
             dispatch(Start(dispose));
           };
-      };
 
       let style =
         Style.make(
@@ -113,16 +112,15 @@ module Clock = {
         );
 
       <View
-        style={Style.make(
-          ~position=LayoutTypes.Absolute,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~alignItems=LayoutTypes.AlignCenter,
-          ~bottom=0,
-          ~top=0,
-          ~left=0,
-          ~right=0,
-          (),
-        )}>
+        style=Style.[
+          position(LayoutTypes.Absolute),
+          justifyContent(`Center),
+          alignItems(`Center),
+          bottom(0),
+          top(0),
+          left(0),
+          right(0),
+        ]>
         <View style=clockWrapperStyle>
           <Text
             style
