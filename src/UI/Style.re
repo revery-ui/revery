@@ -291,17 +291,16 @@ let toLayoutNode = (s: t) => {
 /* -------------------------------------------------------------------------------
         Styles: As a list of Polymorphic variants
    -------------------------------------------------------------------------------*/
-module Margin = {
-  type m2 = {
-    horizontal: int,
-    vertical: int,
-  };
-  type m4 = {
-    top: int,
-    right: int,
-    bottom: int,
-    left: int,
-  };
+type coords = {
+  top: int,
+  right: int,
+  bottom: int,
+  left: int,
+};
+
+type xy = {
+  horizontal: int,
+  vertical: int,
 };
 
 type props = [
@@ -320,8 +319,8 @@ type props = [
   | `Margin(int)
   | `MarginVertical(int)
   | `MarginHorizontal(int)
-  | `Margin2(Margin.m2)
-  | `Margin4(Margin.m4)
+  | `Margin2(xy)
+  | `Margin4(coords)
   | `Overflow(LayoutTypes.overflow)
   | `BorderTop(Border.t)
   | `BorderLeft(Border.t)
@@ -396,10 +395,9 @@ let marginTop = m => `MarginTop(m);
 let marginBottom = m => `MarginBottom(m);
 let marginVertical = m => `MarginVertical(m);
 let marginHorizontal = m => `MarginHorizontal(m);
-let margin2 = ({horizontal, vertical}: Margin.m2) =>
-  `Margin2((horizontal, vertical));
-let margin4 = ({top, right, bottom, left}: Margin.m4) =>
-  `Margin4((top, right, bottom, left));
+let margin2 = ({horizontal, vertical}) => `Margin2({horizontal, vertical});
+let margin4 = ({top, right, bottom, left}) =>
+  `Margin4({top, right, bottom, left});
 
 let border = (b: Border.t) =>
   Border.make(~color=b.color, ~width=b.width, ()) |> (b => `Border(b));

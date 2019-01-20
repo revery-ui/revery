@@ -6,14 +6,14 @@ open Style;
 test("Style API tests", () => {
   test("that a style record is created correctly", () => {
     let styles =
-      create(~userStyles=[height(1), width(2), fontFamily("Roboto")], ());
+      create(~style=[height(1), width(2), fontFamily("Roboto")], ());
     expect(styles.height).toEqual(1);
     expect(styles.width).toEqual(2);
     expect(styles.fontFamily).toEqual("Roboto");
   });
 
   test("defaults should be correctly set", () => {
-    let styles = create(~userStyles=[height(1), width(2)], ());
+    let styles = create(~style=[height(1), width(2)], ());
     expect(styles.position).toEqual(LayoutTypes.Relative);
     expect(styles.border).toEqual(Border.make());
   });
@@ -21,7 +21,7 @@ test("Style API tests", () => {
   test("it correctly sets a margin", () => {
     let styles =
       create(
-        ~userStyles=[
+        ~style=[
           margin(1),
           marginLeft(7),
           marginTop(4),
@@ -40,7 +40,7 @@ test("Style API tests", () => {
   test("it correctly sets a border", () => {
     let styles =
       create(
-        ~userStyles=[
+        ~style=[
           border({color: black, width: 2}),
           borderLeft({color: rebeccaPurple, width: 2}),
           borderTop({color: red, width: 2}),
@@ -61,5 +61,11 @@ test("Style API tests", () => {
       width: 12,
     });
     expect(styles.borderVertical).toEqual({color: paleTurquoise, width: 18});
+  });
+
+  test("It correctly sets a margin", () => {
+    let styles = create(~style=[margin2({vertical: 2, horizontal: 4})], ());
+    expect(styles.marginVertical).toEqual(2);
+    expect(styles.marginHorizontal).toEqual(4);
   });
 });
