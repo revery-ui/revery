@@ -59,7 +59,7 @@ let createElement =
       ~disabled=false,
       ~fontFamily="Roboto-Regular.ttf",
       (),
-    ) => {
+    ) =>
   React.element(
     make(
       ~title,
@@ -76,4 +76,3 @@ let createElement =
       (),
     ),
   );
-};

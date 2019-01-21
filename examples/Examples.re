@@ -30,6 +30,7 @@ let state: state = {
     {name: "Box Shadow", render: _ => Boxshadow.render()},
     {name: "Focus", render: _ => Focus.render()},
     {name: "Stopwatch", render: _ => Stopwatch.render()},
+    {name: "Input", render: w => InputExample.render(w)},
     {name: "Game Of Life", render: _ => GameOfLife.render()},
   ],
   selectedExample: "Animation",
@@ -38,11 +39,10 @@ let state: state = {
 let noop = () => ();
 
 let getRenderFunctionSelector: (state, Window.t) => React.syntheticElement =
-  (s: state) => {
+  (s: state) =>
     List.filter(x => String.equal(x.name, s.selectedExample), state.examples)
     |> List.hd
     |> (a => a.render);
-  };
 
 module ExampleButton = {
   let component = React.component("ExampleButton");
