@@ -65,88 +65,6 @@ type t = {
   cursor: option(MouseCursors.t),
 };
 
-let extend =
-    (
-      style: t,
-      ~backgroundColor=style.backgroundColor,
-      ~color=style.color,
-      ~width=style.width,
-      ~height=style.height,
-      ~flexBasis=style.flexBasis,
-      ~flexDirection=style.flexDirection,
-      ~flexGrow=style.flexGrow,
-      ~flexShrink=style.flexShrink,
-      ~alignItems=style.alignItems,
-      ~justifyContent=style.justifyContent,
-      ~position=style.position,
-      ~top=style.top,
-      ~bottom=style.bottom,
-      ~left=style.left,
-      ~right=style.right,
-      ~fontFamily=style.fontFamily,
-      ~fontSize=style.fontSize,
-      ~marginTop=style.marginTop,
-      ~marginLeft=style.marginLeft,
-      ~marginRight=style.marginRight,
-      ~marginBottom=style.marginBottom,
-      ~margin=style.margin,
-      ~marginVertical=style.marginVertical,
-      ~marginHorizontal=style.marginHorizontal,
-      ~borderTop=style.borderTop,
-      ~borderLeft=style.borderLeft,
-      ~borderRight=style.borderRight,
-      ~borderBottom=style.borderBottom,
-      ~border=style.border,
-      ~borderHorizontal=style.borderHorizontal,
-      ~borderVertical=style.borderVertical,
-      ~transform=style.transform,
-      ~opacity=style.opacity,
-      ~overflow=style.overflow,
-      ~boxShadow=style.boxShadow,
-      ~cursor=?,
-      _unit: unit,
-    ) => {
-  let ret: t = {
-    backgroundColor,
-    color,
-    width,
-    height,
-    flexBasis,
-    flexDirection,
-    flexGrow,
-    flexShrink,
-    justifyContent,
-    alignItems,
-    position,
-    top,
-    bottom,
-    left,
-    right,
-    fontFamily,
-    fontSize,
-    transform,
-    marginTop,
-    marginLeft,
-    marginRight,
-    marginBottom,
-    margin,
-    marginVertical,
-    marginHorizontal,
-    borderTop,
-    borderLeft,
-    borderRight,
-    borderBottom,
-    border,
-    borderHorizontal,
-    borderVertical,
-    opacity,
-    overflow,
-    boxShadow,
-    cursor,
-  };
-  ret;
-};
-
 let make =
     (
       ~backgroundColor: Color.t=Colors.transparentBlack,
@@ -327,7 +245,7 @@ type props = [
 type fontProps = [ | `FontFamily(string) | `FontSize(int)];
 /*
    Text and View props take different style properties as such
-   these nodes are types to only allow styles to be specified
+   these nodes are typed to only allow styles to be specified
    which are relevant to each
  */
 type textStyleProps = [ fontProps | props];
@@ -424,7 +342,7 @@ let color = o => `Color(o);
 let backgroundColor = o => `BackgroundColor(o);
 
 /*
-   Apply style takes all style props and maps the correct style
+   Apply style takes all style props and maps each to the correct style
    and is used to build up the style record, which is eventually
    used to apply styling to elements.
  */
@@ -482,8 +400,8 @@ let create = (~style, ~default=make(), ()) =>
   List.fold_left(applyStyle, default, style);
 
 /*
-   This function merges two lists of type styleprops
-   the target values override any similar source, values
+   This function merges two lists of type styleProps
+   the target values override any similar source values
 
    TODO: is there is a faster/more performant way to do this?
  */
