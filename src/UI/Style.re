@@ -379,8 +379,8 @@ let marginTop = m => `MarginTop(m);
 let marginBottom = m => `MarginBottom(m);
 let marginVertical = m => `MarginVertical(m);
 let marginHorizontal = m => `MarginHorizontal(m);
-let margin2 = ({horizontal, vertical}) => `Margin2({horizontal, vertical});
-let margin4 = ({top, right, bottom, left}) =>
+let margin2 = (~horizontal, ~vertical) => `Margin2({horizontal, vertical});
+let margin4 = (~top, ~right, ~bottom, ~left) =>
   `Margin4({top, right, bottom, left});
 
 let border = (~color, ~width) =>
