@@ -287,15 +287,22 @@ type xy = {
   vertical: int,
 };
 
-type props = [
+type baseProps = [
+  | `FontSize(int)
+  | `FontFamily(fontFamily)
+  | `FlexGrow(int)
+  | `FlexDirection(LayoutTypes.flexDirection)
+  | `JustifyContent(LayoutTypes.justify)
+  | `AlignItems(LayoutTypes.align)
   | `Position(LayoutTypes.positionType)
   | `BackgroundColor(Color.t)
   | `Color(Color.t)
   | `Width(int)
   | `Height(int)
+  | `Top(int)
+  | `Right(int)
   | `Bottom(int)
   | `Left(int)
-  | `Right(int)
   | `MarginTop(int)
   | `MarginLeft(int)
   | `MarginRight(int)
@@ -315,13 +322,13 @@ type props = [
   | `BorderVertical(Border.t)
   | `Transform(list(Transform.t))
   | `Opacity(float)
-  | `Boxshadow(BoxShadow.properties)
+  | `BoxShadow(BoxShadow.properties)
   | `Cursor(option(MouseCursors.t))
 ];
 
 type fontProps = [ | `FontFamily(string) | `FontSize(int)];
-type textStyleProps = [ fontProps | props];
-type viewStyleProps = [ props];
+type textStyleProps = [ fontProps | baseProps];
+type viewStyleProps = [ baseProps];
 
 let flexDirection = d => {
   let dir =
@@ -410,7 +417,7 @@ let overflow = o => `Overflow(o);
 let color = o => `Color(o);
 let backgroundColor = o => `BackgroundColor(o);
 
-let applyStyle = (style: t, styleRule: [> props]) =>
+let applyStyle = (style, styleRule: baseProps) =>
   switch (styleRule) {
   | `AlignItems(alignItems) => {...style, alignItems}
   | `JustifyContent(justifyContent) => {...style, justifyContent}
@@ -458,10 +465,9 @@ let applyStyle = (style: t, styleRule: [> props]) =>
   | `Left(left) => {...style, left}
   | `Top(top) => {...style, top}
   | `Right(right) => {...style, right}
-  | _ => style
   };
 
-let create = (~style=[], ~default=make(), ()) =>
+let create = (~style, ~default=make(), ()) =>
   List.fold_left(applyStyle, default, style);
 
 /*
@@ -506,7 +512,7 @@ let merge = (~source, ~target) =>
               | (`BorderVertical(_), `BorderVertical(_)) => targetStyle
               | (`Transform(_), `Transform(_)) => targetStyle
               | (`Opacity(_), `Opacity(_)) => targetStyle
-              | (`Boxshadow(_), `Boxshadow(_)) => targetStyle
+              | (`BoxShadow(_), `BoxShadow(_)) => targetStyle
               | (newRule, _) => newRule
               }
             )
