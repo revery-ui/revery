@@ -29,7 +29,7 @@ let make =
           backgroundColor(disabled ? Colors.dimGrey : c),
           justifyContent(`Center),
           alignItems(`Center),
-          border({width: 1, color: Colors.white}),
+          border(~width=1, ~color=Colors.white),
           height(h),
           width(w),
         ]>

@@ -23,7 +23,7 @@ module SimpleButton = {
         <View
           style=Style.[
             backgroundColor(Color.rgba(1., 1., 1., 0.1)),
-            border({width: 2, color: Colors.white}),
+            border(~width=2, ~color=Colors.white),
             margin(16),
           ]>
           <Text

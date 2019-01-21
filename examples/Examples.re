@@ -62,7 +62,7 @@ module ExampleButton = {
       let wrapperStyle =
         Style.[
           opacity(buttonOpacity),
-          borderLeft({width: 4, color: highlightColor}),
+          borderLeft(~width=4, ~color=highlightColor),
           backgroundColor(bgColor),
         ];
 

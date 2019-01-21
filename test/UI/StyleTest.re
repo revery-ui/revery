@@ -37,29 +37,32 @@ test("Style API tests", () => {
     expect(styles.marginBottom).toEqual(9);
   });
 
+  test("It correctly sets a margin in the x an y axis", () => {
+    let styles = create(~style=[margin2({vertical: 2, horizontal: 4})], ());
+    expect(styles.marginVertical).toEqual(2);
+    expect(styles.marginHorizontal).toEqual(4);
+  });
+
   test("it correctly sets a border", () => {
     let styles =
       create(
         ~style=[
-          border({color: black, width: 2}),
-          borderLeft({color: rebeccaPurple, width: 2}),
-          borderTop({color: red, width: 2}),
-          borderRight({color: blue, width: 2}),
-          borderBottom({color: orange, width: 2}),
-          borderHorizontal({color: paleVioletRed, width: 12}),
-          borderVertical({color: paleTurquoise, width: 18}),
+          border(~color=black, ~width=2),
+          borderLeft(~color=rebeccaPurple, ~width=2),
+          borderTop(~color=red, ~width=2),
+          borderRight(~color=blue, ~width=2),
+          borderBottom(~color=orange, ~width=2),
+          borderHorizontal(~color=paleVioletRed, ~width=12),
+          borderVertical(~color=paleTurquoise, ~width=18),
         ],
         (),
       );
-    expect(styles.border).toEqual({color: black, width: 2});
-    expect(styles.borderBottom).toEqual({color: orange, width: 2});
-    expect(styles.borderTop).toEqual({color: red, width: 2});
-    expect(styles.borderRight).toEqual({color: blue, width: 2});
-    expect(styles.borderLeft).toEqual({color: rebeccaPurple, width: 2});
-    expect(styles.borderHorizontal).toEqual({
-      color: paleVioletRed,
-      width: 12,
-    });
+    expect(styles.border).toEqual(~color=black, ~width=2);
+    expect(styles.borderBottom).toEqual(~color=orange, ~width=2);
+    expect(styles.borderTop).toEqual(~color=red, ~width=2);
+    expect(styles.borderRight).toEqual(~color=blue, ~width=2);
+    expect(styles.borderLeft).toEqual(~color=rebeccaPurple, ~width=2);
+    expect(styles.borderHorizontal).toEqual(~color=paleVioletRed, ~width=12);
     expect(styles.borderVertical).toEqual({color: paleTurquoise, width: 18});
   });
 

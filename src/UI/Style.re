@@ -24,21 +24,6 @@ module BoxShadow = {
     spreadRadius: float,
     color: Color.t,
   };
-  let make =
-      (
-        ~xOffset=0.0,
-        ~yOffset=0.0,
-        ~blurRadius=0.0,
-        ~spreadRadius=0.0,
-        ~color=Colors.black,
-        (),
-      ) => {
-    color,
-    xOffset,
-    yOffset,
-    blurRadius,
-    spreadRadius,
-  };
 };
 
 type t = {
@@ -198,14 +183,13 @@ let make =
       ~borderVertical=Border.make(),
       ~transform=[],
       ~opacity=1.0,
-      ~boxShadow=BoxShadow.make(
-                   ~xOffset=0.0,
-                   ~yOffset=0.0,
-                   ~blurRadius=0.0,
-                   ~spreadRadius=0.0,
-                   ~color=Colors.black,
-                   (),
-                 ),
+      ~boxShadow=BoxShadow.{
+                   xOffset: 0.0,
+                   yOffset: 0.0,
+                   blurRadius: 0.0,
+                   spreadRadius: 0.0,
+                   color: Colors.black,
+                 },
       ~cursor=?,
       _unit: unit,
     ) => {
@@ -399,22 +383,20 @@ let margin2 = ({horizontal, vertical}) => `Margin2({horizontal, vertical});
 let margin4 = ({top, right, bottom, left}) =>
   `Margin4({top, right, bottom, left});
 
-let border = (b: Border.t) =>
-  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `Border(b));
-let borderLeft = (b: Border.t) =>
-  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderLeft(b));
-let borderRight = (b: Border.t) =>
-  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderRight(b));
-let borderTop = (b: Border.t) =>
-  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderTop(b));
-let borderBottom = (b: Border.t) =>
-  Border.make(~color=b.color, ~width=b.width, ()) |> (b => `BorderBottom(b));
-let borderHorizontal = (b: Border.t) =>
-  Border.make(~color=b.color, ~width=b.width, ())
-  |> (b => `BorderHorizontal(b));
-let borderVertical = (b: Border.t) =>
-  Border.make(~color=b.color, ~width=b.width, ())
-  |> (b => `BorderVertical(b));
+let border = (~color, ~width) =>
+  Border.make(~color, ~width, ()) |> (b => `Border(b));
+let borderLeft = (~color, ~width) =>
+  Border.make(~color, ~width, ()) |> (b => `BorderLeft(b));
+let borderRight = (~color, ~width) =>
+  Border.make(~color, ~width, ()) |> (b => `BorderRight(b));
+let borderTop = (~color, ~width) =>
+  Border.make(~color, ~width, ()) |> (b => `BorderTop(b));
+let borderBottom = (~color, ~width) =>
+  Border.make(~color, ~width, ()) |> (b => `BorderBottom(b));
+let borderHorizontal = (~color, ~width) =>
+  Border.make(~color, ~width, ()) |> (b => `BorderHorizontal(b));
+let borderVertical = (~color, ~width) =>
+  Border.make(~color, ~width, ()) |> (b => `BorderVertical(b));
 
 let alignItems = a => `AlignItems(alignment(a));
 let justifyContent = a => `JustifyContent(justify(a));

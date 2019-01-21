@@ -95,7 +95,7 @@ module Clock = {
           style=Style.[
             margin(20),
             width(150),
-            borderBottom({color: Colors.gray, width: 2}),
+            borderBottom(~color=Colors.gray, ~width=2),
           ]>
           <Text
             style=Style.[

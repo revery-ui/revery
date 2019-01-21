@@ -9,10 +9,10 @@ let defaultStyle =
     top(100),
     width(200),
     height(200),
-    border({width: 15, color: Colors.red}),
-    borderHorizontal({width: 8, color: Colors.blue}),
-    borderTop({width: 15, color: Colors.red}),
-    borderLeft({width: 30, color: Colors.green}),
+    border(~width=15, ~color=Colors.red),
+    borderHorizontal(~width=8, ~color=Colors.blue),
+    borderTop(~width=15, ~color=Colors.red),
+    borderLeft(~width=30, ~color=Colors.green),
   ];
 
 let innerStyle =
@@ -23,7 +23,7 @@ let innerStyle =
     top(0),
     width(30),
     height(30),
-    borderHorizontal({color: Colors.black, width: 3}),
+    borderHorizontal(~color=Colors.black, ~width=3),
   ];
 
 let textStyle =
