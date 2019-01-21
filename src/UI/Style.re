@@ -287,7 +287,7 @@ type xy = {
   vertical: int,
 };
 
-type baseProps = [
+type props = [
   | `FontSize(int)
   | `FontFamily(fontFamily)
   | `FlexGrow(int)
@@ -327,8 +327,8 @@ type baseProps = [
 ];
 
 type fontProps = [ | `FontFamily(string) | `FontSize(int)];
-type textStyleProps = [ fontProps | baseProps];
-type viewStyleProps = [ baseProps];
+type textStyleProps = [ fontProps | props];
+type viewStyleProps = [ props];
 
 let flexDirection = d => {
   let dir =
@@ -417,7 +417,7 @@ let overflow = o => `Overflow(o);
 let color = o => `Color(o);
 let backgroundColor = o => `BackgroundColor(o);
 
-let applyStyle = (style, styleRule: baseProps) =>
+let applyStyle = (style, styleRule: props) =>
   switch (styleRule) {
   | `AlignItems(alignItems) => {...style, alignItems}
   | `JustifyContent(justifyContent) => {...style, justifyContent}
