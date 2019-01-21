@@ -22,6 +22,9 @@ let make =
       ~onValueChanged=noopValueChanged,
       ~minimumValue=0.,
       ~maximumValue=1.0,
+      ~thumbLength=15,
+      ~sliderLength=100,
+      ~vertical=false,
       (),
     ) =>
   component(slots => {
@@ -46,13 +49,25 @@ let make =
         let thumbDimensions: BoundingBox2d.t = thumb#getBoundingBox();
 
         let sliderWidth =
-          Vec2.get_x(sliderDimensions.max)
-          -. Vec2.get_x(sliderDimensions.min);
+          vertical
+            ? Vec2.get_y(sliderDimensions.max)
+              -. Vec2.get_y(sliderDimensions.min)
+            : Vec2.get_x(sliderDimensions.max)
+              -. Vec2.get_x(sliderDimensions.min);
+
         let thumbWidth =
-          Vec2.get_x(thumbDimensions.max) -. Vec2.get_x(thumbDimensions.min);
+          vertical
+            ? Vec2.get_y(thumbDimensions.max)
+              -. Vec2.get_y(thumbDimensions.min)
+            : Vec2.get_x(thumbDimensions.max)
+              -. Vec2.get_x(thumbDimensions.min);
+
         let availableWidth = sliderWidth -. thumbWidth;
 
-        let startPosition = Vec2.get_x(sliderDimensions.min);
+        let startPosition =
+          vertical
+            ? Vec2.get_y(sliderDimensions.min)
+            : Vec2.get_x(sliderDimensions.min);
         let endPosition = startPosition +. availableWidth;
 
         let getValue = x =>
@@ -64,8 +79,9 @@ let make =
             x;
           };
 
-        let update = mouseX => {
-          let thumbPosition = getValue(mouseX) -. startPosition;
+        let update = (mouseX, mouseY) => {
+          let mousePosition = vertical ? mouseY : mouseX;
+          let thumbPosition = getValue(mousePosition) -. startPosition;
 
           let normalizedValue =
             thumbPosition
@@ -76,11 +92,11 @@ let make =
           onValueChanged(normalizedValue);
         };
 
-        update(evt.mouseX);
+        update(evt.mouseX, evt.mouseY);
         setActive(true);
 
         Mouse.setCapture(
-          ~onMouseMove=evt => update(evt.mouseX),
+          ~onMouseMove=evt => update(evt.mouseX, evt.mouseY),
           ~onMouseUp=
             _evt => {
               Mouse.releaseCapture();
@@ -100,20 +116,38 @@ let make =
     let sliderHeight = 25;
     let trackHeight = 5;
     let thumbHeight = sliderHeight;
-    let thumbWidth = 15;
     let trackMargins = (sliderHeight - trackHeight) / 2;
 
-    let style = Style.make(~opacity, ~width=100, ~height=sliderHeight, ~cursor=MouseCursors.pointer, ());
+    let style =
+      Style.make(
+        ~opacity,
+        ~width={
+          vertical ? sliderHeight : sliderLength;
+        },
+        ~height={
+          vertical ? sliderLength : sliderHeight;
+        },
+        ~cursor=MouseCursors.pointer,
+        (),
+      );
+
+    let thumbWidth = thumbLength;
 
     let trackStyle =
       Style.make(
         ~opacity,
-        ~width=100,
-        ~height=trackHeight,
-        ~top=trackMargins,
-        ~bottom=trackMargins,
-        ~left=0,
-        ~right=0,
+        ~top={
+          vertical ? 0 : trackMargins;
+        },
+        ~bottom={
+          vertical ? 0 : trackMargins;
+        },
+        ~left={
+          vertical ? trackMargins : 0;
+        },
+        ~right={
+          vertical ? trackMargins : 0;
+        },
         ~position=LayoutTypes.Absolute,
         ~backgroundColor,
         (),
@@ -125,10 +159,10 @@ let make =
         ref={r => setThumbRef(r)}
         style={Style.make(
           ~position=LayoutTypes.Absolute,
-          ~height=thumbHeight,
-          ~width=thumbWidth,
-          ~left=thumbPosition,
-          ~top=0,
+          ~height={vertical ? thumbWidth : thumbHeight},
+          ~width={vertical ? thumbHeight : thumbWidth},
+          ~left={vertical ? 0 : thumbPosition},
+          ~top={vertical ? thumbPosition : 0},
           ~backgroundColor=thumbColor,
           (),
         )}
@@ -142,6 +176,9 @@ let createElement =
       ~onValueChanged=noopValueChanged,
       ~minimumValue=0.,
       ~maximumValue=1.,
+      ~vertical=false,
       (),
     ) =>
-  React.element(make(~onValueChanged, ~minimumValue, ~maximumValue, ()));
+  React.element(
+    make(~vertical, ~onValueChanged, ~minimumValue, ~maximumValue, ()),
+  );
