@@ -5,6 +5,8 @@
 
 Build __native__, _high-performance_, __cross-platform__ desktop apps with [reason](https://reasonml.github.io/)!
 
+:construction: __NOTE:__ Revery is a work-in-progress and in active development! :construction:
+
 ## Building & Installing
 
 ### Install [esy](https://esy.sh/)
