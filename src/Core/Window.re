@@ -323,6 +323,20 @@ let getDevicePixelRatio = (w: t) => {
   /. float_of_int(windowSizeInScreenCoordinates.width);
 };
 
+let takeScreenshot = (w: t, filename: string) => {
+  open Glfw;
+
+  let {width, height}: Window.frameBufferSize = glfwGetFramebufferSize(w.glfwWindow);
+
+  let image = Image.create(~width, ~height, ~numChannels=4, ~channelSize=1);
+  let buffer = Image.getBuffer(image);
+
+  glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+
+  Image.save(image, filename);
+  Image.destroy(image);
+};
+
 let destroyWindow = (w: t) => Glfw.glfwDestroyWindow(w.glfwWindow);
 
 let shouldClose = (w: t) => Glfw.glfwWindowShouldClose(w.glfwWindow);

@@ -17,6 +17,8 @@ type example = {
 type state = {
   examples: list(example),
   selectedExample: string,
+  scrotCounter: int,
+  window: option(Window.t),
 };
 
 let state: state = {
@@ -33,6 +35,8 @@ let state: state = {
     {name: "Input", render: w => InputExample.render(w)},
   ],
   selectedExample: "Animation",
+  scrotCounter: 0,
+  window: None,
 };
 
 let noop = () => ();
@@ -85,13 +89,25 @@ module ExampleButton = {
 };
 
 type action =
-  | SelectExample(string);
+  | SelectExample(string)
+  | TakeScreenshot
+  | SetWindow(Window.t);
 
 let reducer = (s: state, a: action) => {
-  let SelectExample(name) = a;
-
-  let ret: state = {...s, selectedExample: name};
-  ret;
+  switch (a) {
+    | SelectExample(name) =>
+      {...s, selectedExample: name}
+    | TakeScreenshot =>
+      switch (s.window) {
+        | Some(win) =>
+          let filename = Printf.sprintf("Scrot_%d.tga", s.scrotCounter);
+          Window.takeScreenshot(win, filename);
+          {...s, scrotCounter: s.scrotCounter + 1}
+        | None => s
+      }
+    | SetWindow(window) =>
+      {...s, window: Some(window)}
+  };
 };
 
 let init = app => {
@@ -103,6 +119,7 @@ let init = app => {
       "Welcome to Revery!",
       ~createOptions={...Window.defaultCreateOptions, maximized},
     );
+  App.dispatch(app, SetWindow(win));
 
   let render = () => {
     let s = App.getState(app);
@@ -116,7 +133,14 @@ let init = app => {
       />;
     };
 
-    let buttons = List.map(renderButton, s.examples);
+    let buttons = [
+      <ExampleButton
+        isActive=true
+        name="Take screenshot"
+        onClick={_ => App.dispatch(app, TakeScreenshot)}
+      />,
+      ...List.map(renderButton, s.examples)
+    ];
 
     let exampleRender = getRenderFunctionSelector(s);
     let example = exampleRender(win);
