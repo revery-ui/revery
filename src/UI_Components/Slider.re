@@ -48,19 +48,26 @@ let make =
         let sliderDimensions: BoundingBox2d.t = slider#getBoundingBox();
         let thumbDimensions: BoundingBox2d.t = thumb#getBoundingBox();
 
-        let sliderWidth = vertical ?
-          Vec2.get_y(sliderDimensions.max)
-          -. Vec2.get_y(sliderDimensions.min) : 
-          Vec2.get_x(sliderDimensions.max)
-          -. Vec2.get_x(sliderDimensions.min);
+        let sliderWidth =
+          vertical
+            ? Vec2.get_y(sliderDimensions.max)
+              -. Vec2.get_y(sliderDimensions.min)
+            : Vec2.get_x(sliderDimensions.max)
+              -. Vec2.get_x(sliderDimensions.min);
 
-        let thumbWidth = vertical ?
-          Vec2.get_y(thumbDimensions.max) -. Vec2.get_y(thumbDimensions.min) :
-          Vec2.get_x(thumbDimensions.max) -. Vec2.get_x(thumbDimensions.min);
+        let thumbWidth =
+          vertical
+            ? Vec2.get_y(thumbDimensions.max)
+              -. Vec2.get_y(thumbDimensions.min)
+            : Vec2.get_x(thumbDimensions.max)
+              -. Vec2.get_x(thumbDimensions.min);
 
         let availableWidth = sliderWidth -. thumbWidth;
 
-        let startPosition = vertical ? Vec2.get_y(sliderDimensions.min) : Vec2.get_x(sliderDimensions.min);
+        let startPosition =
+          vertical
+            ? Vec2.get_y(sliderDimensions.min)
+            : Vec2.get_x(sliderDimensions.min);
         let endPosition = startPosition +. availableWidth;
 
         let getValue = x =>
@@ -73,7 +80,7 @@ let make =
           };
 
         let update = (mouseX, mouseY) => {
-            let mousePosition = vertical ? mouseY : mouseX;
+          let mousePosition = vertical ? mouseY : mouseX;
           let thumbPosition = getValue(mousePosition) -. startPosition;
 
           let normalizedValue =
@@ -111,19 +118,36 @@ let make =
     let thumbHeight = sliderHeight;
     let trackMargins = (sliderHeight - trackHeight) / 2;
 
-    let style = Style.make(~opacity, 
-                           ~width={vertical ? sliderHeight : sliderLength}, 
-                           ~height={vertical ? sliderLength : sliderHeight}, ~cursor=MouseCursors.pointer, ());
+    let style =
+      Style.make(
+        ~opacity,
+        ~width={
+          vertical ? sliderHeight : sliderLength;
+        },
+        ~height={
+          vertical ? sliderLength : sliderHeight;
+        },
+        ~cursor=MouseCursors.pointer,
+        (),
+      );
 
     let thumbWidth = thumbLength;
 
     let trackStyle =
       Style.make(
         ~opacity,
-        ~top={vertical ? 0 : trackMargins},
-        ~bottom={vertical ? 0 : trackMargins},
-        ~left={vertical ? trackMargins : 0},
-        ~right={vertical ? trackMargins: 0},
+        ~top={
+          vertical ? 0 : trackMargins;
+        },
+        ~bottom={
+          vertical ? 0 : trackMargins;
+        },
+        ~left={
+          vertical ? trackMargins : 0;
+        },
+        ~right={
+          vertical ? trackMargins : 0;
+        },
         ~position=LayoutTypes.Absolute,
         ~backgroundColor,
         (),
@@ -136,9 +160,9 @@ let make =
         style={Style.make(
           ~position=LayoutTypes.Absolute,
           ~height={vertical ? thumbWidth : thumbHeight},
-          ~width={ vertical ? thumbHeight: thumbWidth},
+          ~width={vertical ? thumbHeight : thumbWidth},
           ~left={vertical ? 0 : thumbPosition},
-          ~top={vertical ? thumbPosition: 0},
+          ~top={vertical ? thumbPosition : 0},
           ~backgroundColor=thumbColor,
           (),
         )}
@@ -155,4 +179,6 @@ let createElement =
       ~vertical=false,
       (),
     ) =>
-  React.element(make(~vertical, ~onValueChanged, ~minimumValue, ~maximumValue, ()));
+  React.element(
+    make(~vertical, ~onValueChanged, ~minimumValue, ~maximumValue, ()),
+  );

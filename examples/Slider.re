@@ -51,16 +51,16 @@ module AdjustableLogo = {
           (),
         );
 
-      let verticalSliderContainerStyle = 
-          Style.make(
-              ~margin=10,
-              ~borderRight=
-                Style.Border.make(~width=1, ~color=Colors.darkGray, ()),
-              ~flexDirection=LayoutTypes.Column,
-              ~justifyContent=LayoutTypes.JustifyCenter,
-              ~alignItems=LayoutTypes.AlignCenter,
-              (),
-          );
+      let verticalSliderContainerStyle =
+        Style.make(
+          ~margin=10,
+          ~borderRight=
+            Style.Border.make(~width=1, ~color=Colors.darkGray, ()),
+          ~flexDirection=LayoutTypes.Column,
+          ~justifyContent=LayoutTypes.JustifyCenter,
+          ~alignItems=LayoutTypes.AlignCenter,
+          (),
+        );
 
       let toDeg = r => 180. *. r /. pi;
 
@@ -85,23 +85,36 @@ module AdjustableLogo = {
           />
         </View>
         <View style=controlsStyle>
-            <View style=verticalSliderContainerStyle>
-                  <Text style=textStyle text="Rotation Y: " />
-                  <Slider vertical=true onValueChanged=setRotationY maximumValue=twoPi />
-                  <Text style=textStyle text={"Value: " ++ toDegString(rotationY)} />
+          <View style=verticalSliderContainerStyle>
+            <Text style=textStyle text="Rotation Y: " />
+            <Slider
+              vertical=true
+              onValueChanged=setRotationY
+              maximumValue=twoPi
+            />
+            <Text
+              style=textStyle
+              text={"Value: " ++ toDegString(rotationY)}
+            />
+          </View>
+          <View style=containerStyle>
+            <View style=sliderContainerStyle>
+              <Text style=textStyle text="Rotation X: " />
+              <Slider onValueChanged=setRotationX maximumValue=twoPi />
+              <Text
+                style=textStyle
+                text={"Value: " ++ toDegString(rotationX)}
+              />
             </View>
-            <View style=containerStyle>
-                <View style=sliderContainerStyle>
-                  <Text style=textStyle text="Rotation X: " />
-                  <Slider onValueChanged=setRotationX maximumValue=twoPi />
-                  <Text style=textStyle text={"Value: " ++ toDegString(rotationX)} />
-                </View>
-                <View style=sliderContainerStyle>
-                  <Text style=textStyle text="Rotation Z: " />
-                  <Slider onValueChanged=setRotationZ maximumValue=twoPi />
-                  <Text style=textStyle text={"Value: " ++ toDegString(rotationZ)} />
-                </View>
+            <View style=sliderContainerStyle>
+              <Text style=textStyle text="Rotation Z: " />
+              <Slider onValueChanged=setRotationZ maximumValue=twoPi />
+              <Text
+                style=textStyle
+                text={"Value: " ++ toDegString(rotationZ)}
+              />
             </View>
+          </View>
         </View>
       </View>;
     });
