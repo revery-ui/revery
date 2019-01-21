@@ -288,8 +288,6 @@ type xy = {
 };
 
 type props = [
-  | `FontSize(int)
-  | `FontFamily(fontFamily)
   | `FlexGrow(int)
   | `FlexDirection(LayoutTypes.flexDirection)
   | `JustifyContent(LayoutTypes.justify)
@@ -327,8 +325,16 @@ type props = [
 ];
 
 type fontProps = [ | `FontFamily(string) | `FontSize(int)];
+/*
+   Text and View props take different style properties as such
+   these nodes are types to only allow styles to be specified
+   which are relevant to each
+ */
 type textStyleProps = [ fontProps | props];
 type viewStyleProps = [ props];
+
+let emptyTextStyle: list(textStyleProps) = [];
+let emptyViewStyle: list(viewStyleProps) = [];
 
 let flexDirection = d => {
   let dir =
@@ -417,7 +423,12 @@ let overflow = o => `Overflow(o);
 let color = o => `Color(o);
 let backgroundColor = o => `BackgroundColor(o);
 
-let applyStyle = (style, styleRule: props) =>
+/*
+   Apply style takes all style props and maps the correct style
+   and is used to build up the style record, which is eventually
+   used to apply styling to elements.
+ */
+let applyStyle = (style, styleRule: [< props | fontProps]) =>
   switch (styleRule) {
   | `AlignItems(alignItems) => {...style, alignItems}
   | `JustifyContent(justifyContent) => {...style, justifyContent}

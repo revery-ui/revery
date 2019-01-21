@@ -21,7 +21,7 @@ module View = {
         ~onFocus=?,
         ~tabindex=?,
         ~ref=?,
-        ~style=[],
+        ~style=Style.emptyViewStyle,
         children,
       ) =>
     component((_: UiReact.Hooks.empty) =>
@@ -76,7 +76,7 @@ module View = {
         ~onBlur=?,
         ~onFocus=?,
         ~ref=?,
-        ~style=[],
+        ~style=Style.emptyViewStyle,
         ~tabindex=None,
         ~children,
         (),
@@ -98,6 +98,7 @@ module View = {
 };
 
 module Text = {
+  open Style;
   let component = UiReact.nativeComponent("Text");
 
   let make =
@@ -107,14 +108,14 @@ module Text = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
-        ~style=[],
+        ~style=emptyTextStyle,
         ~text="",
         children,
       ) =>
     component((_: UiReact.Hooks.empty) =>
       {
         make: () => {
-          let styles = Style.create(~style, ());
+          let styles = create(~style, ());
           let events =
             NodeEvents.make(
               ~ref?,
@@ -130,7 +131,7 @@ module Text = {
           Obj.magic(node);
         },
         configureInstance: (~isFirstRender as _, node) => {
-          let styles = Style.create(~style, ());
+          let styles = create(~style, ());
           let events =
             NodeEvents.make(
               ~ref?,
@@ -159,7 +160,7 @@ module Text = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
-        ~style=[],
+        ~style=emptyTextStyle,
         ~text="",
         ~children,
         (),
