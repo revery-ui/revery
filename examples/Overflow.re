@@ -18,8 +18,8 @@ let containerStyle =
 
 let outerBox =
   Style.make(
-    ~width=75,
-    ~height=75,
+    ~width=150,
+    ~height=150,
     ~overflow=LayoutTypes.Hidden,
     ~backgroundColor=Colors.red,
     (),
@@ -27,8 +27,8 @@ let outerBox =
 
 let innerBox =
   Style.make(
-    ~width=150,
-    ~height=150,
+    ~width=450,
+    ~height=450,
     ~backgroundColor=Color.rgba(0., 1.0, 0., 0.5),
     (),
   );
@@ -51,7 +51,7 @@ module Sample = {
       };
 
       <View style=containerStyle>
-        <View style=outerStyle> <View style=innerBox /> </View>
+        <ScrollView style=outerStyle> <View style=innerBox /> </ScrollView>
         <View style={Style.make(~marginTop=80, ())}>
           <Button fontSize=20 height=45 title="Toggle overflow" onClick />
         </View>
