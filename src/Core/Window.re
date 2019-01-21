@@ -1,6 +1,5 @@
 open Reglfw;
 
-module Event = Reactify.Event;
 module Color = Color_wrapper;
 
 open Events;
@@ -29,6 +28,7 @@ type t = {
   onMouseUp: Event.t(mouseButtonEvent),
   onMouseMove: Event.t(mouseMoveEvent),
   onMouseDown: Event.t(mouseButtonEvent),
+  onMouseWheel: Event.t(mouseWheelEvent),
 };
 
 type windowCreateOptions = {
@@ -130,10 +130,8 @@ let create = (name: string, options: windowCreateOptions) => {
   | _ => ()
   };
 
-  let w = Glfw.glfwCreateWindow(1, 1, name);
+  let w = Glfw.glfwCreateWindow(options.width, options.height, name);
   Glfw.glfwMakeContextCurrent(w);
-
-  Glfw.glfwSetWindowSize(w, options.width, options.height);
 
   let fbSize = Glfw.glfwGetFramebufferSize(w);
 
@@ -166,6 +164,7 @@ let create = (name: string, options: windowCreateOptions) => {
     onMouseMove: Event.create(),
     onMouseUp: Event.create(),
     onMouseDown: Event.create(),
+    onMouseWheel: Event.create(),
   };
 
   Glfw.glfwSetFramebufferSizeCallback(
@@ -268,6 +267,14 @@ let create = (name: string, options: windowCreateOptions) => {
     },
   );
 
+  Glfw.glfwSetScrollCallback(
+    w,
+    (_w, deltaX, deltaY) => {
+      let evt: mouseWheelEvent = {deltaX, deltaY};
+      Event.dispatch(ret.onMouseWheel, evt);
+    },
+  );
+
   Glfw.glfwSetCursorPosCallback(
     w,
     (_w, x: float, y: float) => {
@@ -305,6 +312,8 @@ let getFramebufferSize = (w: t) => {
   };
   r;
 };
+
+let maximize = (w: t) => Glfw.glfwMaximizeWindow(w.glfwWindow);
 
 let getDevicePixelRatio = (w: t) => {
   let windowSizeInScreenCoordinates = getSize(w);

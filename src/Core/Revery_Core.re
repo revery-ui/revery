@@ -11,10 +11,20 @@ module Monitor = Monitor;
 
 module Environment = Environment;
 
-module Event = Reactify.Event;
+module Event = Event;
 module Events = Events;
 
 module Performance = Performance;
+module UniqueId = UniqueId;
+
+/*
+ * Internally exposed modules, just for testing.
+ */
+module Internal = {
+  module Tick = Tick;
+};
+
+module Tick = Tick.Default;
 
 module Memoize = {
   type t('a, 'b) = 'a => 'b;

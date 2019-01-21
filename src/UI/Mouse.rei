@@ -19,6 +19,7 @@ let setCapture:
      ~onMouseDown:mouseButtonHandler=?,
      ~onMouseMove:mouseMoveHandler=?,
      ~onMouseUp:mouseButtonHandler=?,
+     ~onMouseWheel:mouseWheelHandler=?,
      unit
     ) => unit;
 

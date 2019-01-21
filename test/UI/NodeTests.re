@@ -31,8 +31,8 @@ test("NodeTests", () => {
     test("simple hitTest returns true case", () => {
       let node = (new node)();
       node#setStyle(Style.make(~width=400, ~height=500, ()));
-
       Layout.layout(node, 1.0);
+      node#recalculate();
 
       expect(node#hitTest(Vec2.create(200., 250.))).toBe(true);
     });
@@ -42,6 +42,7 @@ test("NodeTests", () => {
       node#setStyle(Style.make(~width=400, ~height=500, ()));
 
       Layout.layout(node, 1.0);
+      node#recalculate();
 
       expect(node#hitTest(Vec2.create(401., 250.))).toBe(false);
     });
@@ -49,8 +50,9 @@ test("NodeTests", () => {
     test("left / top are taken into account", () => {
       let node = (new node)();
       node#setStyle(Style.make(~top=5, ~left=5, ~height=2, ~width=2, ()));
-
       Layout.layout(node, 1.0);
+      node#recalculate();
+
       expect(node#hitTest(Vec2.create(1., 1.))).toBe(false);
       expect(node#hitTest(Vec2.create(6., 6.))).toBe(true);
     });
@@ -66,6 +68,8 @@ test("NodeTests", () => {
       parentNode#addChild(childNode);
 
       Layout.layout(parentNode, 1.0);
+      parentNode#recalculate();
+
       expect(childNode#hitTest(Vec2.create(0., 0.))).toBe(false);
       expect(childNode#hitTest(Vec2.create(60., 60.))).toBe(true);
     });

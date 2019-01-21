@@ -7,3 +7,5 @@
 module Clickable = Clickable;
 module Button = Button;
 module ScrollView = ScrollView;
+module Slider = Slider;
+module Input = Input;

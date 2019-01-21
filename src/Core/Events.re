@@ -18,9 +18,15 @@ type mouseMoveEvent = {
   mouseY: float,
 };
 
+type mouseWheelEvent = {
+  deltaX: float,
+  deltaY: float,
+};
+
 type mouseButtonEvent = {button: MouseButton.t};
 
 type internalMouseEvents =
   | InternalMouseDown(mouseButtonEvent)
   | InternalMouseMove(mouseMoveEvent)
-  | InternalMouseUp(mouseButtonEvent);
+  | InternalMouseUp(mouseButtonEvent)
+  | InternalMouseWheel(mouseWheelEvent);

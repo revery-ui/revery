@@ -1,4 +1,3 @@
-open Revery;
 open Revery.UI;
 open Revery.Core;
 open Revery.UI.Components;
@@ -34,52 +33,32 @@ let innerBox =
     (),
   );
 
-module Sample = (
-  val component((render, ~children, ()) =>
-        render(
-          () => {
-            let (hidden, setHidden) = useState(false);
+module Sample = {
+  let component = React.component("Sample");
 
-            let outerStyle = {
-              ...outerBox,
-              overflow: hidden ? LayoutTypes.Hidden : LayoutTypes.Visible,
-            };
+  let make = () =>
+    component(slots => {
+      let (hidden, setHidden, _slots: React.Hooks.empty) =
+        React.Hooks.state(false, slots);
 
-            let onClick = _ => {
-              setHidden(!hidden);
-            };
+      let outerStyle = {
+        ...outerBox,
+        overflow: hidden ? LayoutTypes.Hidden : LayoutTypes.Visible,
+      };
 
-            <view style=containerStyle>
-              <ScrollView scrollTop=50 style=outerStyle> 
-                            <image
-                src="outrun-logo.png"
-                style={Style.make(
-                  ~width=256,
-                  ~height=128,
-                  ~opacity=0.8,
-                  (),
-                )}
-                  />
-            </ScrollView>
-              <view style={Style.make(~marginTop=80, ())}>
-                <Button
-                  fontSize=20
-                  height=45
-                  title="Toggle overflow"
-                  onClick
-                />
-              </view>
-            </view>;
-          },
-          ~children,
-        )
-      )
-);
+      let onClick = _ => {
+        setHidden(!hidden);
+      };
 
-let init = app => {
-  let win = App.createWindow(app, "Welcome to Revery!");
+      <View style=containerStyle>
+        <View style=outerStyle> <View style=innerBox /> </View>
+        <View style={Style.make(~marginTop=80, ())}>
+          <Button fontSize=20 height=45 title="Toggle overflow" onClick />
+        </View>
+      </View>;
+    });
 
-  UI.start(win, () => <Sample />);
+  let createElement = (~children as _, ()) => React.element(make());
 };
 
-App.start(init);
+let render = () => <Sample />;

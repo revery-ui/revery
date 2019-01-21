@@ -129,18 +129,17 @@ let init = app => {
 
   /* Listen to key down events, and coerce them into actions, too */
   let _ =
-    Event.subscribe(w.onKeyDown, keyEvent
-      =>
-        if (keyEvent.key == Key.KEY_BACKSPACE) {
-          App.dispatch(app, Backspace);
-        } else if (keyEvent.key == Key.KEY_H && keyEvent.ctrlKey) {
-          App.dispatch(app, Backspace);
-        } else if (keyEvent.key == Key.KEY_ESCAPE) {
-          App.quit(0);
-        } else if (keyEvent.key == Key.KEY_W && keyEvent.ctrlKey) {
-          App.dispatch(app, ClearWord);
-        }
-      );
+    Event.subscribe(w.onKeyDown, keyEvent =>
+      if (keyEvent.key == Key.KEY_BACKSPACE) {
+        App.dispatch(app, Backspace);
+      } else if (keyEvent.key == Key.KEY_H && keyEvent.ctrlKey) {
+        App.dispatch(app, Backspace);
+      } else if (keyEvent.key == Key.KEY_ESCAPE) {
+        App.quit(0);
+      } else if (keyEvent.key == Key.KEY_W && keyEvent.ctrlKey) {
+        App.dispatch(app, ClearWord);
+      }
+    );
 
   let render = () => {
     let state = App.getState(app);
@@ -148,16 +147,16 @@ let init = app => {
     let filteredItems = filterItems(state.text, state.items);
     let items =
       List.map(
-        i => <text style=textHeaderStyle> {i.name} </text>,
+        i => <Text style=textHeaderStyle text={i.name} />,
         filteredItems,
       );
 
-    <view style={Style.make(~backgroundColor=Colors.blue, ~width, ())}>
-      <view style={Style.make(~height=50, ())}>
-        <text style=textHeaderStyle> {state.text ++ "|"} </text>
-      </view>
-      <view style={Style.make()}> ...items </view>
-    </view>;
+    <View style={Style.make(~backgroundColor=Colors.blue, ~width, ())}>
+      <View style={Style.make(~height=50, ())}>
+        <Text style=textHeaderStyle text={state.text ++ "|"} />
+      </View>
+      <View style={Style.make()}> ...items </View>
+    </View>;
   };
 
   UI.start(~createOptions={autoSize: true}, w, render);

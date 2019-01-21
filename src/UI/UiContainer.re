@@ -23,7 +23,7 @@ module Options = {
 
 type t = {
   rootNode: ViewNode.viewNode,
-  container: UiReact.t,
+  container: ref(UiReact.Container.t),
   window: Window.t,
   mouseCursor: Mouse.Cursor.t,
   options: Options.t,
@@ -32,7 +32,7 @@ type t = {
 let create = (window, rootNode, container, mouseCursor, options) => {
   window,
   rootNode,
-  container,
+  container: ref(container),
   mouseCursor,
   options,
 };
