@@ -103,7 +103,7 @@ let make =
     let thumbWidth = 15;
     let trackMargins = (sliderHeight - trackHeight) / 2;
 
-    let style = Style.make(~opacity, ~width=100, ~height=sliderHeight, ());
+    let style = Style.make(~opacity, ~width=100, ~height=sliderHeight, ~cursor=MouseCursors.pointer, ());
 
     let trackStyle =
       Style.make(
