@@ -71,11 +71,11 @@ module Clock = {
       let startStop = () => {
         state.isRunning
           ? dispatch(Stop)
+          /*
+           * If we're not already running, we'll start a timer job
+           * and use the delta time it passes to update our reducer.
+           */
           : {
-            /* 
-             * If we're not already running, we'll start a timer job
-             * and use the delta time it passes to update our reducer.
-             */
             let dispose =
               Tick.interval(t => dispatch(TimerTick(t)), Seconds(0.));
 
