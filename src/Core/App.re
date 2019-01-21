@@ -2,11 +2,16 @@ open Reglfw;
 
 type reducer('s, 'a) = ('s, 'a) => 's;
 
+type idleState =
+  | Running
+  | Idle;
+
 type t('s, 'a) = {
   reducer: reducer('s, 'a),
   mutable state: 's,
   mutable windows: list(Window.t),
   mutable needsRender: bool,
+  mutable idleState,
 };
 
 /* If no state is specified, just use unit! */
@@ -68,13 +73,17 @@ let startWithState: startFunc('s, 'a) =
       state: initialState,
       windows: [],
       needsRender: true,
+      idleState: Running,
     };
+
+    GarbageCollector.tune();
 
     let _ = Glfw.glfwInit();
     let _ = initFunc(appInstance);
 
     let appLoop = (_t: float) => {
       Glfw.glfwPollEvents();
+      Tick.Default.pump();
 
       _checkAndCloseWindows(appInstance);
 
@@ -83,8 +92,25 @@ let startWithState: startFunc('s, 'a) =
           List.iter(w => Window.render(w), getWindows(appInstance));
           appInstance.needsRender = false;
         });
+        /* We're taking path 2 of the garbage collector route to nirvana:
+         * https://blogs.msdn.microsoft.com/shawnhar/2007/07/02/twin-paths-to-garbage-collector-nirvana/
+         */
+        appInstance.idleState = Running;
+        Performance.bench("gc: minor", () => GarbageCollector.minor());
+      } else if (appInstance.idleState == Running) {
+        /* If the we're transitioning from Running to Idle, this is the
+         * perfect time to do a full memory collection, so that
+         * we're in a clear memory state, so we're ready to go on the next
+         * tick
+         */
+        Performance.bench("gc: full", () => GarbageCollector.full());
+        appInstance.idleState = Idle;
       } else {
         Environment.sleep(Milliseconds(1.));
+      };
+
+      if (Environment.isNative) {
+        Thread.yield();
       };
       List.length(getWindows(appInstance)) == 0;
     };

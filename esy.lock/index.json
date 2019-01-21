@@ -1,5 +1,5 @@
 {
-  "checksum": "184af89875e1c2796e21d3db3467b935",
+  "checksum": "8f040e5cba198f2322139190fd905023",
   "root": "revery@link:./package.json",
   "node": {
     "revery@link:./package.json": {
@@ -18,7 +18,7 @@
         "@opam/js_of_ocaml-compiler@github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce@d41d8cd9",
         "@opam/js_of_ocaml@github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce@d41d8cd9",
         "@opam/color@opam:0.2.0@8ef09171",
-        "@esy-ocaml/reason@github:facebook/reason#ab49908@d41d8cd9",
+        "@esy-ocaml/reason@3.4.0@d41d8cd9",
         "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#f545ba0@d41d8cd9"
       ],
       "devDependencies": [
@@ -45,7 +45,7 @@
         "@opam/js_of_ocaml-compiler@github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce@d41d8cd9",
         "@opam/js_of_ocaml@github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce@d41d8cd9",
         "@opam/dune@opam:1.6.3@a7d7baed", "@opam/chalk@opam:1.0@6f5da5ff",
-        "@esy-ocaml/reason@github:facebook/reason#ab49908@d41d8cd9"
+        "@esy-ocaml/reason@3.4.0@d41d8cd9"
       ],
       "devDependencies": []
     },
@@ -62,8 +62,7 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.7.1003@d41d8cd9", "@opam/re@opam:1.8.0@7baac1a7",
-        "@opam/dune@opam:1.6.3@a7d7baed",
-        "@esy-ocaml/reason@github:facebook/reason#ab49908@d41d8cd9"
+        "@opam/dune@opam:1.6.3@a7d7baed", "@esy-ocaml/reason@3.4.0@d41d8cd9"
       ],
       "devDependencies": []
     },
@@ -85,8 +84,7 @@
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
         "@opam/js_of_ocaml-compiler@github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce@d41d8cd9",
         "@opam/js_of_ocaml@github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce@d41d8cd9",
-        "@opam/dune@opam:1.6.3@a7d7baed",
-        "@esy-ocaml/reason@github:facebook/reason#ab49908@d41d8cd9"
+        "@opam/dune@opam:1.6.3@a7d7baed", "@esy-ocaml/reason@3.4.0@d41d8cd9"
       ],
       "devDependencies": []
     },
@@ -105,8 +103,7 @@
         "rejest@1.3.0@d41d8cd9", "refmterr@3.1.10@d41d8cd9",
         "ocaml@4.7.1003@d41d8cd9",
         "@opam/js_of_ocaml-compiler@github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce@d41d8cd9",
-        "@opam/dune@opam:1.6.3@a7d7baed",
-        "@esy-ocaml/reason@github:facebook/reason#ab49908@d41d8cd9"
+        "@opam/dune@opam:1.6.3@a7d7baed", "@esy-ocaml/reason@3.4.0@d41d8cd9"
       ],
       "devDependencies": []
     },
@@ -126,7 +123,7 @@
         "reason-gl-matrix@0.9.9302@d41d8cd9",
         "esy-harfbuzz@1.9.1004@d41d8cd9", "esy-freetype2@2.9.1001@d41d8cd9",
         "esy-cmake@0.3.5@d41d8cd9", "@opam/dune@opam:1.6.3@a7d7baed",
-        "@esy-ocaml/reason@github:facebook/reason#ab49908@d41d8cd9"
+        "@esy-ocaml/reason@3.4.0@d41d8cd9"
       ],
       "devDependencies": []
     },
@@ -157,7 +154,7 @@
       "overrides": [],
       "dependencies": [
         "refmterr@3.1.10@d41d8cd9", "@opam/dune@opam:1.6.3@a7d7baed",
-        "@esy-ocaml/reason@github:facebook/reason#ab49908@d41d8cd9"
+        "@esy-ocaml/reason@3.4.0@d41d8cd9"
       ],
       "devDependencies": []
     },
@@ -273,52 +270,6 @@
       "devDependencies": [
         "ocaml@4.7.1003@d41d8cd9", "@opam/easy-format@opam:1.3.1@9abfd4ed",
         "@opam/biniou@opam:1.2.0@c8516f18"
-      ]
-    },
-    "@opam/utop@opam:2.2.0@82198b0d": {
-      "id": "@opam/utop@opam:2.2.0@82198b0d",
-      "name": "@opam/utop",
-      "version": "opam:2.2.0",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/md5/c8/c8e4805883ce27a2ef27b0e4322d6f04#md5:c8e4805883ce27a2ef27b0e4322d6f04",
-          "archive:https://github.com/diml/utop/releases/download/2.2.0/utop-2.2.0.tbz#md5:c8e4805883ce27a2ef27b0e4322d6f04"
-        ],
-        "opam": {
-          "name": "utop",
-          "version": "2.2.0",
-          "path": "esy.lock/opam/utop.2.2.0"
-        }
-      },
-      "overrides": [
-        {
-          "opamoverride":
-            "esy.lock/overrides/opam__s__utop_opam__c__2.2.0_opam_override"
-        }
-      ],
-      "dependencies": [
-        "ocaml@4.7.1003@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
-        "@opam/ocamlfind@opam:1.8.0@96572762",
-        "@opam/lwt_react@opam:1.1.1@a034a5ae",
-        "@opam/lwt@opam:4.1.0@111fc2bf",
-        "@opam/lambda-term@opam:1.13@08871237",
-        "@opam/jbuilder@opam:transition@58bdfe0a",
-        "@opam/cppo@opam:1.6.5@bec3dbd9",
-        "@opam/camomile@opam:1.0.1@4a2e8bdd",
-        "@opam/base-unix@opam:base@87d0b2eb",
-        "@opam/base-threads@opam:base@36803084",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.7.1003@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
-        "@opam/ocamlfind@opam:1.8.0@96572762",
-        "@opam/lwt_react@opam:1.1.1@a034a5ae",
-        "@opam/lwt@opam:4.1.0@111fc2bf",
-        "@opam/lambda-term@opam:1.13@08871237",
-        "@opam/camomile@opam:1.0.1@4a2e8bdd",
-        "@opam/base-unix@opam:base@87d0b2eb",
-        "@opam/base-threads@opam:base@36803084"
       ]
     },
     "@opam/uchar@opam:0.0.2@c8218eea": {
@@ -1324,25 +1275,26 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "@esy-ocaml/reason@github:facebook/reason#ab49908@d41d8cd9": {
-      "id": "@esy-ocaml/reason@github:facebook/reason#ab49908@d41d8cd9",
+    "@esy-ocaml/reason@3.4.0@d41d8cd9": {
+      "id": "@esy-ocaml/reason@3.4.0@d41d8cd9",
       "name": "@esy-ocaml/reason",
-      "version": "github:facebook/reason#ab49908",
+      "version": "3.4.0",
       "source": {
         "type": "install",
-        "source": [ "github:facebook/reason#ab49908" ]
+        "source": [
+          "archive:https://registry.npmjs.org/@esy-ocaml/reason/-/reason-3.4.0.tgz#sha1:8c84c183a95d489a3e82ff0465effe4b56ff12af"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.7.1003@d41d8cd9", "@opam/utop@opam:2.2.0@82198b0d",
-        "@opam/result@opam:1.3@bee8bf2e",
+        "ocaml@4.7.1003@d41d8cd9", "@opam/result@opam:1.3@bee8bf2e",
         "@opam/ocamlfind@opam:1.8.0@96572762",
         "@opam/ocaml-migrate-parsetree@opam:1.2.0@5b3aa0d3",
         "@opam/merlin-extend@opam:0.3@e1fc0d08",
         "@opam/menhir@opam:20181113@0c8257a8",
         "@opam/dune@opam:1.6.3@a7d7baed"
       ],
-      "devDependencies": [ "ocaml@4.7.1003@d41d8cd9" ]
+      "devDependencies": []
     },
     "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#f545ba0@d41d8cd9": {
       "id":
@@ -1356,7 +1308,7 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.7.1003@d41d8cd9", "@opam/dune@opam:1.6.3@a7d7baed",
-        "@esy-ocaml/reason@github:facebook/reason#ab49908@d41d8cd9"
+        "@esy-ocaml/reason@3.4.0@d41d8cd9"
       ],
       "devDependencies": []
     }

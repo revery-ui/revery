@@ -7,6 +7,7 @@ let createNodeWithStyle = style => {
   let node = (new node)();
   node#setStyle(style);
   Layout.layout(node, 1.0);
+  node#recalculate();
   node;
 };
 
@@ -63,7 +64,9 @@ test("Mouse", () => {
 
       expect(count^).toBe(1);
     });
-    test("does trigger onBlur for node after cursor is pressed outside the node", () => {
+    test(
+      "does trigger onBlur for node after cursor is pressed outside the node",
+      () => {
       let cursor = Mouse.Cursor.make();
       Mouse.Cursor.set(cursor, Revery_Math.Vec2.create(50.0, 50.0));
 

@@ -8,6 +8,23 @@ open Revery_Math;
 module UniqueId =
   Revery_Core.UniqueId.Make({});
 
+type callback = unit => unit;
+
+type cachedNodeState = {
+  transform: Mat4.t,
+  worldTransform: Mat4.t,
+  bbox: BoundingBox2d.t,
+  depth: int,
+};
+
+exception NoDataException(string);
+let getOrThrow: (string, option('a)) => 'a =
+  (msg, opt) =>
+    switch (opt) {
+    | Some(p) => p
+    | None => raise(NoDataException(msg))
+    };
+
 class node ('a) (()) = {
   as _this;
   val _children: ref(list(node('a))) = ref([]);
@@ -15,10 +32,10 @@ class node ('a) (()) = {
   val _events: ref(NodeEvents.t(node('a))) = ref(NodeEvents.make());
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
   val _parent: ref(option(node('a))) = ref(None);
-  val _depth: ref(int) = ref(0);
   val _internalId: int = UniqueId.getUniqueId();
   val _tabIndex: ref(option(int)) = ref(None);
   val _hasFocus: ref(bool) = ref(false);
+  val _cachedNodeState: ref(option(cachedNodeState)) = ref(None);
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
@@ -41,16 +58,27 @@ class node ('a) (()) = {
   pub measurements = () => _layoutNode^.layout;
   pub getTabIndex = () => _tabIndex^;
   pub setTabIndex = index => _tabIndex := index;
-  pub getDepth = () =>
-    switch (_parent^) {
-    | None => 0
-    | Some(p) => p#getDepth() + 1
-    };
   pub setStyle = style => _style := style;
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;
   pub getEvents = () => _events^;
+  pub getWorldTransform = () => {
+    let state = _cachedNodeState^ |> getOrThrow("getWorldTransform");
+    state.worldTransform;
+  };
   pub getTransform = () => {
+    let state = _cachedNodeState^ |> getOrThrow("getTransform");
+    state.transform;
+  };
+  pub getBoundingBox = () => {
+    let state = _cachedNodeState^ |> getOrThrow("getBoundingBox");
+    state.bbox;
+  };
+  pub getDepth = () => {
+    let state = _cachedNodeState^ |> getOrThrow("getDepth");
+    state.depth;
+  };
+  pri _recalculateTransform = () => {
     let dimensions = _layoutNode^.layout;
     let matrix = Mat4.create();
     Mat4.fromTranslation(
@@ -70,8 +98,8 @@ class node ('a) (()) = {
     Mat4.multiply(matrix, matrix, animationTransform);
     matrix;
   };
-  pub getWorldTransform = () => {
-    let xform = _this#getTransform();
+  pri _recalculateWorldTransform = localTransform => {
+    let xform = localTransform;
     let world =
       switch (_parent^) {
       | None => Mat4.create()
@@ -81,14 +109,7 @@ class node ('a) (()) = {
     Mat4.multiply(matrix, world, xform);
     matrix;
   };
-  pub getCursorStyle = () => {
-    switch (_this#getStyle().cursor, _this#getParent()) {
-    | (None, None) => Revery_Core.MouseCursors.arrow
-    | (None, Some(parent)) => parent#getCursorStyle()
-    | (Some(cursorStyle), _) => cursorStyle
-    };
-  };
-  pub getBoundingBox = () => {
+  pri _recalculateBoundingBox = worldTransform => {
     let dimensions = _layoutNode^.layout;
     let min = Vec2.create(0., 0.);
     let max =
@@ -97,7 +118,36 @@ class node ('a) (()) = {
         float_of_int(dimensions.height),
       );
     let b = BoundingBox2d.create(min, max);
-    BoundingBox2d.transform(b, _this#getWorldTransform());
+    let bbox = BoundingBox2d.transform(b, worldTransform);
+    bbox;
+  };
+  pri _recalculateDepth = () =>
+    switch (_parent^) {
+    | None => 0
+    | Some(p) => p#getDepth() + 1
+    };
+  pub recalculate = () => {
+    let transform = _this#_recalculateTransform();
+    let worldTransform = _this#_recalculateWorldTransform(transform);
+    let bbox = _this#_recalculateBoundingBox(worldTransform);
+    let depth = _this#_recalculateDepth();
+
+    _cachedNodeState := Some({transform, worldTransform, bbox, depth});
+
+    List.iter(c => c#recalculate(), _children^);
+  };
+  pub getCursorStyle = () => {
+    switch (_this#getStyle().cursor, _this#getParent()) {
+    | (None, None) => Revery_Core.MouseCursors.arrow
+    | (None, Some(parent)) => parent#getCursorStyle()
+    | (Some(cursorStyle), _) => cursorStyle
+    };
+  };
+  pub hasRendered = () => {
+    switch (_cachedNodeState^) {
+    | Some(_) => true
+    | None => false
+    };
   };
   pub hitTest = (p: Vec2.t) => {
     let bbox = _this#getBoundingBox();
@@ -112,6 +162,7 @@ class node ('a) (()) = {
       List.filter(c => c#getInternalId() != n#getInternalId(), _children^);
     n#_setParent(None);
   };
+  pub firstChild = () => List.hd(_children^);
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
   pub getMeasureFunction = (_pixelRatio: float) => None;
@@ -160,11 +211,6 @@ class node ('a) (()) = {
   };
   /* TODO: This should really be private - it should never be explicitly set */
   pub _setParent = (n: option(node('a))) => {
-    /* Recalculate the depth of this node */
-    switch (n) {
-    | Some(node) => _depth := node#getDepth() + 1
-    | None => _depth := 0
-    };
     _parent := n;
 
     /* Dispatch ref event if we just got attached */
