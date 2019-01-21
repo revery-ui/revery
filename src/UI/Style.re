@@ -464,7 +464,60 @@ let applyStyle = (style: t, styleRule: [> props]) =>
 let create = (~style=[], ~default=make(), ()) =>
   List.fold_left(applyStyle, default, style);
 
-/* let merge = (~source, ~target) => {*/
-/*   List.map()*/
-/* }*/
-/* /* -------------------------------------------------------------------------------*/*/
+/*
+   This function merges two lists of type styleprops
+   the target values override any similar source, values
+
+   TODO: is there is a faster/more performant way to do this?
+ */
+let merge = (~source, ~target) =>
+  List.fold_left(
+    (merged, targetStyle) => {
+      let newStyles =
+        List.fold_left(
+          (accum, sourceStyle) =>
+            (
+              switch (targetStyle, sourceStyle) {
+              | (`Cursor(_), `Cursor(_)) => targetStyle
+              | (`Position(_), `Position(_)) => targetStyle
+              | (`BackgroundColor(_), `BackgroundColor(_)) => targetStyle
+              | (`Color(_), `Color(_)) => targetStyle
+              | (`Width(_), `Width(_)) => targetStyle
+              | (`Height(_), `Height(_)) => targetStyle
+              | (`Bottom(_), `Bottom(_)) => targetStyle
+              | (`Left(_), `Left(_)) => targetStyle
+              | (`Right(_), `Right(_)) => targetStyle
+              | (`MarginTop(_), `MarginTop(_)) => targetStyle
+              | (`MarginLeft(_), `MarginLeft(_)) => targetStyle
+              | (`MarginRight(_), `MarginRight(_)) => targetStyle
+              | (`MarginBottom(_), `MarginBottom(_)) => targetStyle
+              | (`Margin(_), `Margin(_)) => targetStyle
+              | (`MarginVertical(_), `MarginVertical(_)) => targetStyle
+              | (`MarginHorizontal(_), `MarginHorizontal(_)) => targetStyle
+              | (`Margin2(_), `Margin2(_)) => targetStyle
+              | (`Margin4(_), `Margin4(_)) => targetStyle
+              | (`Overflow(_), `Overflow(_)) => targetStyle
+              | (`BorderTop(_), `BorderTop(_)) => targetStyle
+              | (`BorderLeft(_), `BorderLeft(_)) => targetStyle
+              | (`BorderRight(_), `BorderRight(_)) => targetStyle
+              | (`BorderBottom(_), `BorderBottom(_)) => targetStyle
+              | (`Border(_), `Border(_)) => targetStyle
+              | (`BorderHorizontal(_), `BorderHorizontal(_)) => targetStyle
+              | (`BorderVertical(_), `BorderVertical(_)) => targetStyle
+              | (`Transform(_), `Transform(_)) => targetStyle
+              | (`Opacity(_), `Opacity(_)) => targetStyle
+              | (`Boxshadow(_), `Boxshadow(_)) => targetStyle
+              | (newRule, _) => newRule
+              }
+            )
+            |> (style => [style, ...accum]),
+          [],
+          source,
+        );
+      List.append(merged, newStyles);
+    },
+    source,
+    target,
+  );
+
+/* -------------------------------------------------------------------------------*/

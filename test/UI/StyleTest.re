@@ -80,6 +80,17 @@ test("Style API tests", () => {
     let found = List.find(style => style == `Margin(4), result);
     expect(found).toEqual(`Margin(4));
     expect(styles.color).toEqual(blue);
+  });
+
+  test(
+    "Should keep old styles when merging if they do not conflict with new ones",
+    () => {
+    let result =
+      merge(
+        ~source=[margin(10), color(red), backgroundColor(paleTurquoise)],
+        ~target=[margin(4), color(blue)],
+      );
+
     let found =
       List.find(style => style == `BackgroundColor(paleTurquoise), result);
     expect(found).toEqual(`BackgroundColor(paleTurquoise));

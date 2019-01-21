@@ -13,9 +13,6 @@ let noop = () => ();
 
 let component = React.component("Clickable");
 
-/*
-   FIXME: Merge the passed down styles with the default styles
- */
 let make =
     (
       ~style,
@@ -41,20 +38,15 @@ let make =
       onClick();
     };
 
-    /* let style2 = */
-    /*   Style.extend(style, ~opacity=animatedOpacity, ~cursor=MouseCursors.pointer, ()); */
+    let mergedStyles =
+      Style.(
+        merge(
+          ~source=style,
+          ~target=[opacity(animatedOpacity), cursor(MouseCursors.pointer)],
+        )
+      );
 
-    <View
-      style=Style.[
-        opacity(animatedOpacity),
-        cursor(MouseCursors.pointer),
-        ...style,
-      ]
-      onMouseDown
-      onMouseUp
-      ?onBlur
-      ?onFocus
-      tabindex>
+    <View style=mergedStyles onMouseDown onMouseUp ?onBlur ?onFocus tabindex>
       children
     </View>;
   });
