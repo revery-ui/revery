@@ -6,8 +6,5 @@
 
 module Clickable = Clickable;
 module Button = Button;
-<<<<<<< HEAD
 module Slider = Slider;
-=======
 module Input = Input;
->>>>>>> master
