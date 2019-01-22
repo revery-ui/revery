@@ -2,38 +2,6 @@ open Revery_UI;
 open Revery_Core;
 open Revery_Core.Window;
 
-let cursorStyles =
-    (
-      ~fontSize,
-      ~cursorColor,
-      ~opacity as o,
-      ~containerHeight,
-      ~hasPlaceholder,
-    ) => {
-  /*
-     calculate the top padding needed to place the cursor centrally
-   */
-  let verticalAlignPos = (containerHeight - fontSize) / 2;
-  Style.[
-    marginLeft(2),
-    height(fontSize),
-    width(2),
-    opacity(o),
-    backgroundColor(cursorColor),
-  ]
-  |> (
-    initial =>
-      hasPlaceholder ?
-        Style.[
-          position(`Absolute),
-          top(verticalAlignPos),
-          left(5),
-          ...initial,
-        ] :
-        initial
-  );
-};
-
 type state = {
   value: string,
   placeholder: string,
@@ -81,7 +49,6 @@ let noop = (~value as _value) => ();
 
 let defaultStyles =
   Style.[
-    fontSize(18),
     color(Colors.black),
     width(200),
     height(50),
@@ -150,7 +117,7 @@ let make =
         slots,
       );
 
-    let (opacity, _slots: React.Hooks.empty) =
+    let (animatedOpacity, _slots: React.Hooks.empty) =
       Hooks.animation(
         Animated.floatValue(0.),
         {
@@ -188,7 +155,7 @@ let make =
     /*
        TODO: convert this to a getter utility function
      */
-    let height =
+    let inputHeight =
       List.fold_left(
         (default, s) =>
           switch (s) {
@@ -220,13 +187,28 @@ let make =
         marginLeft(6),
       ];
 
+    /*
+       calculate the top padding needed to place the cursor centrally
+     */
+    let verticalAlignPos = (inputHeight - 20) / 2;
     let inputCursorStyles =
-      cursorStyles(
-        ~opacity=state.isFocused ? opacity : 0.0,
-        ~fontSize=20,
-        ~cursorColor,
-        ~containerHeight=height,
-        ~hasPlaceholder,
+      Style.[
+        marginLeft(2),
+        height(20),
+        width(2),
+        opacity(state.isFocused ? animatedOpacity : 0.0),
+        backgroundColor(cursorColor),
+      ]
+      |> (
+        initial =>
+          hasPlaceholder ?
+            Style.[
+              position(`Absolute),
+              top(verticalAlignPos),
+              left(5),
+              ...initial,
+            ] :
+            initial
       );
 
     /*
@@ -246,23 +228,9 @@ let createElement =
     (
       ~window,
       ~children as _,
-      ~margin=defaultStyles.margin,
-      ~marginLeft=defaultStyles.marginLeft,
-      ~marginRight=defaultStyles.marginRight,
-      ~marginBottom=defaultStyles.marginBottom,
-      ~marginTop=defaultStyles.marginTop,
-      ~boxShadow=defaultStyles.boxShadow,
-      ~height=defaultStyles.height,
-      ~width=defaultStyles.width,
-      ~top=defaultStyles.top,
-      ~bottom=defaultStyles.bottom,
-      ~right=defaultStyles.right,
-      ~left=defaultStyles.left,
-      ~color=defaultStyles.color,
-      ~backgroundColor=defaultStyles.backgroundColor,
+      ~style=defaultStyles,
       ~placeholderColor=Colors.grey,
-      ~fontSize=defaultStyles.fontSize,
-      ~border=defaultStyles.border,
+      ~cursorColor=Colors.white,
       ~value="",
       ~placeholder="",
       ~onChange=noop,
@@ -271,24 +239,10 @@ let createElement =
   React.element(
     make(
       ~window,
-      ~margin,
-      ~marginLeft,
-      ~marginRight,
-      ~marginBottom,
-      ~marginTop,
-      ~boxShadow,
-      ~height,
-      ~width,
-      ~top,
-      ~bottom,
-      ~right,
-      ~left,
-      ~color,
-      ~backgroundColor,
-      ~fontSize,
-      ~border,
       ~value,
+      ~style,
       ~placeholder,
+      ~cursorColor,
       ~placeholderColor,
       ~onChange,
       (),

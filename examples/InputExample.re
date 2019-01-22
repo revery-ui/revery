@@ -42,7 +42,6 @@ module Example = {
         />
         <Input
           window
-          boxShadow=customShadow
           placeholder="custom input"
           placeholderColor=Colors.plum
           cursorColor=Colors.white
@@ -56,6 +55,7 @@ module Example = {
               yOffset: 2.,
               color: Colors.black,
               blurRadius: 20.,
+              spreadRadius: 0.,
             }),
           ]
         />
