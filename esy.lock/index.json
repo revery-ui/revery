@@ -9,7 +9,7 @@
       "source": { "type": "link", "path": ".", "manifest": "package.json" },
       "overrides": [],
       "dependencies": [
-        "reason-glfw@3.2.1010@d41d8cd9",
+        "reason-glfw@3.2.1011@d41d8cd9",
         "reason-gl-matrix@0.9.9302@d41d8cd9",
         "reason-fontkit@2.0.5@d41d8cd9", "ocaml@4.7.1003@d41d8cd9",
         "flex@1.2.2@d41d8cd9", "@opam/lwt_ppx@opam:1.2.1@db1172a7",
@@ -66,21 +66,22 @@
       ],
       "devDependencies": []
     },
-    "reason-glfw@3.2.1010@d41d8cd9": {
-      "id": "reason-glfw@3.2.1010@d41d8cd9",
+    "reason-glfw@3.2.1011@d41d8cd9": {
+      "id": "reason-glfw@3.2.1011@d41d8cd9",
       "name": "reason-glfw",
-      "version": "3.2.1010",
+      "version": "3.2.1011",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-glfw/-/reason-glfw-3.2.1010.tgz#sha1:87656f538f3c0efc5811128e3edbd5c3f4dc9a44"
+          "archive:https://registry.npmjs.org/reason-glfw/-/reason-glfw-3.2.1011.tgz#sha1:caf283713728d653c4f8c1aab8d8591e1db159b7"
         ]
       },
       "overrides": [],
       "dependencies": [
         "refmterr@3.1.10@d41d8cd9", "reason-gl-matrix@0.9.9302@d41d8cd9",
-        "esy-glfw@3.2.1008@d41d8cd9", "esy-cmake@0.3.5@d41d8cd9",
-        "@opam/lwt_ppx@opam:1.2.1@db1172a7", "@opam/lwt@opam:4.1.0@111fc2bf",
+        "ocaml@4.7.1003@d41d8cd9", "esy-glfw@3.2.1008@d41d8cd9",
+        "esy-cmake@0.3.5@d41d8cd9", "@opam/lwt_ppx@opam:1.2.1@db1172a7",
+        "@opam/lwt@opam:4.1.0@111fc2bf",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
         "@opam/js_of_ocaml-compiler@github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce@d41d8cd9",
         "@opam/js_of_ocaml@github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce@d41d8cd9",
@@ -119,7 +120,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.1.10@d41d8cd9", "reason-glfw@3.2.1010@d41d8cd9",
+        "refmterr@3.1.10@d41d8cd9", "reason-glfw@3.2.1011@d41d8cd9",
         "reason-gl-matrix@0.9.9302@d41d8cd9",
         "esy-harfbuzz@1.9.1004@d41d8cd9", "esy-freetype2@2.9.1001@d41d8cd9",
         "esy-cmake@0.3.5@d41d8cd9", "@opam/dune@opam:1.6.3@a7d7baed",
