@@ -43,7 +43,7 @@ module Sample = {
 
       let outerStyle = {
         ...outerBox,
-        overflow: hidden ? LayoutTypes.Hidden : LayoutTypes.Visible,
+        overflow: hidden ? LayoutTypes.Visible : LayoutTypes.Scroll,
       };
 
       let onClick = _ => {
