@@ -120,7 +120,6 @@ let init = app => {
     );
 
   /* Set up render function */
-  0;
   let render = () => {
     <view
       style={Style.make(
