@@ -40,9 +40,17 @@ Install the following packages with your package manager of choice:
 * `libbz2-dev`
 * `m4`
 
+#### For `Windows` native
+
+No additional dependencies needed. 
+
+> __NOTE:__ `esy` requires building from an Administrator prompt (either `cmd.exe` or `Powershell`).
+
 #### For `Windows` Subsystem for Linux (`WSL`)
 
 - `sudo apt install libpng-dev libbz2-dev m4 xorg-dev libglu1-mesa-dev`
+
+> __NOTE:__ Hardware acceleration is not enabled by default in WSL (instead, WSL will fall-back to a _software_ renderer). This is problematic for performance - for that reason, we recommend building and running Revery natively on Windows instead of with WSL. For more info see: (https://github.com/Microsoft/WSL/issues/637 and a [potential workaround](https://superuser.com/questions/1238925/use-accelerated-graphics-on-windows-10-linux-subsystem-with-xming))
 
 ### Running
 
