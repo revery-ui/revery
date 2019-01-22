@@ -7,7 +7,7 @@ module SliderExample = Slider;
 open Revery.UI;
 open Revery.UI.Components;
 
-let backgroundColor = Color.hex("#212733");
+let bgColor = Color.hex("#212733");
 let activeBackgroundColor = Color.hex("#2E3440");
 let inactiveBackgroundColor = Color.hex("#272d39");
 let selectionHighlight = Color.hex("#90f7ff");
@@ -56,29 +56,26 @@ module ExampleButton = {
       let highlightColor =
         isActive ? selectionHighlight : Colors.transparentWhite;
 
-      let opacity = 1.0;
-      let backgroundColor =
-        isActive ? activeBackgroundColor : inactiveBackgroundColor;
+      let buttonOpacity = 1.0;
+      let bgColor = isActive ? activeBackgroundColor : inactiveBackgroundColor;
 
       let wrapperStyle =
-        Style.make(
-          ~opacity,
-          ~borderLeft=Style.Border.make(~width=4, ~color=highlightColor, ()),
-          ~backgroundColor,
-          (),
-        );
+        Style.[
+          opacity(buttonOpacity),
+          borderLeft(~width=4, ~color=highlightColor),
+          backgroundColor(bgColor),
+        ];
 
       let textColor = isActive ? Colors.white : Colors.grey;
       let textHeaderStyle =
-        Style.make(
-          ~color=textColor,
-          ~fontFamily="Roboto-Regular.ttf",
-          ~fontSize=14,
-          ~margin=16,
-          (),
-        );
+        Style.[
+          color(textColor),
+          fontFamily("Roboto-Regular.ttf"),
+          fontSize(14),
+          margin(16),
+        ];
 
-      <View style={Style.make(~opacity, ())}>
+      <View style=[Style.opacity(buttonOpacity)]>
         <Clickable style=wrapperStyle onClick>
           <Text style=textHeaderStyle text=name />
         </Clickable>
@@ -130,40 +127,37 @@ let init = app => {
       onMouseWheel={evt =>
         print_endline("onMouseWheel: " ++ string_of_float(evt.deltaY))
       }
-      style={Style.make(
-        ~position=LayoutTypes.Absolute,
-        ~justifyContent=LayoutTypes.JustifyCenter,
-        ~alignItems=LayoutTypes.AlignCenter,
-        ~backgroundColor,
-        ~bottom=0,
-        ~top=0,
-        ~left=0,
-        ~right=0,
-        ~flexDirection=LayoutTypes.Row,
-        (),
-      )}>
+      style=Style.[
+        position(`Absolute),
+        justifyContent(`Center),
+        alignItems(`Center),
+        backgroundColor(bgColor),
+        bottom(0),
+        top(0),
+        left(0),
+        right(0),
+        flexDirection(`Row),
+      ]>
       <View
-        style={Style.make(
-          ~position=LayoutTypes.Absolute,
-          ~top=0,
-          ~left=0,
-          ~width=175,
-          ~bottom=0,
-          ~backgroundColor,
-          (),
-        )}>
+        style=Style.[
+          position(`Absolute),
+          top(0),
+          left(0),
+          width(175),
+          bottom(0),
+          backgroundColor(bgColor),
+        ]>
         ...buttons
       </View>
       <View
-        style={Style.make(
-          ~position=LayoutTypes.Absolute,
-          ~top=0,
-          ~left=175,
-          ~right=0,
-          ~bottom=0,
-          ~backgroundColor=activeBackgroundColor,
-          (),
-        )}>
+        style=Style.[
+          position(`Absolute),
+          top(0),
+          left(175),
+          right(0),
+          bottom(0),
+          backgroundColor(activeBackgroundColor),
+        ]>
         example
       </View>
     </View>;
