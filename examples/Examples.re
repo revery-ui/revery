@@ -117,14 +117,14 @@ let init = app => {
       <ExampleButton
         isActive
         name={x.name}
-        onClick={(_) => {
-            /*
-             * TEMPORARY WORKAROUND: The animations don't always get stopped when switching examples,
-             * tracked by briskml/brisk-reconciler#8. We can remove this once it's fixed!
-             */
-             Animated.cancelAll();
+        onClick={_ => {
+          /*
+           * TEMPORARY WORKAROUND: The animations don't always get stopped when switching examples,
+           * tracked by briskml/brisk-reconciler#8. We can remove this once it's fixed!
+           */
+          Animated.cancelAll();
 
-            App.dispatch(app, SelectExample(x.name));
+          App.dispatch(app, SelectExample(x.name));
         }}
       />;
     };
