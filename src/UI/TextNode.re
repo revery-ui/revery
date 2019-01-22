@@ -36,7 +36,9 @@ class textNode (text: string) = {
       let font =
         FontCache.load(
           style.fontFamily,
-          int_of_float(float_of_int(style.fontSize) *. parentContext.pixelRatio +. 0.5),
+          int_of_float(
+            float_of_int(style.fontSize) *. parentContext.pixelRatio +. 0.5,
+          ),
         );
       let dimensions = _super#measurements();
       let color = Color.multiplyAlpha(opacity, style.color);
@@ -81,10 +83,7 @@ class textNode (text: string) = {
         );
 
         let scaleTransform = Mat4.create();
-        Mat4.fromScaling(
-          scaleTransform,
-          Vec3.create(width, height, 1.0),
-        );
+        Mat4.fromScaling(scaleTransform, Vec3.create(width, height, 1.0));
 
         let local = Mat4.create();
         Mat4.multiply(local, glyphTransform, scaleTransform);

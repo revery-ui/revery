@@ -10,7 +10,8 @@ type t = {
   screenHeight: int,
 };
 
-let create = (pixelRatio: float, zIndex: int, opacity: float, screenHeight: int) => {
+let create =
+    (pixelRatio: float, zIndex: int, opacity: float, screenHeight: int) => {
   let ret: t = {zIndex, opacity, pixelRatio, screenHeight};
   ret;
 };
