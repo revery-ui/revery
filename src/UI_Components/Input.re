@@ -2,85 +2,35 @@ open Revery_UI;
 open Revery_Core;
 open Revery_Core.Window;
 
-let containerStyles =
-    (
-      ~margin,
-      ~marginLeft,
-      ~marginRight,
-      ~marginBottom,
-      ~marginTop,
-      ~top,
-      ~right,
-      ~left,
-      ~bottom,
-      ~height,
-      ~width,
-      ~border,
-      ~color,
-      ~backgroundColor,
-      ~boxShadow,
-      (),
-    ) =>
-  Style.make(
-    ~margin,
-    ~marginLeft,
-    ~marginRight,
-    ~marginBottom,
-    ~marginTop,
-    ~backgroundColor,
-    ~width,
-    ~top,
-    ~right,
-    ~left,
-    ~bottom,
-    ~color,
-    ~height,
-    ~flexDirection=LayoutTypes.Row,
-    ~alignItems=LayoutTypes.AlignCenter,
-    ~justifyContent=LayoutTypes.JustifyFlexStart,
-    ~overflow=LayoutTypes.Hidden,
-    ~border,
-    ~boxShadow,
-    ~cursor=MouseCursors.text,
-    (),
-  );
-
-let textStyles = (~color, ~fontSize, ~hasPlaceholder, ~placeholderColor) =>
-  Style.make(
-    ~color=hasPlaceholder ? placeholderColor : color,
-    ~fontFamily="Roboto-Regular.ttf",
-    ~fontSize,
-    ~alignItems=LayoutTypes.AlignCenter,
-    ~justifyContent=LayoutTypes.JustifyFlexStart,
-    ~marginLeft=6,
-    (),
-  );
-
 let cursorStyles =
-    (~fontSize, ~cursorColor, ~opacity, ~containerHeight, ~hasPlaceholder) => {
+    (
+      ~fontSize,
+      ~cursorColor,
+      ~opacity as o,
+      ~containerHeight,
+      ~hasPlaceholder,
+    ) => {
   /*
      calculate the top padding needed to place the cursor centrally
    */
   let verticalAlignPos = (containerHeight - fontSize) / 2;
-  Style.make(
-    ~marginLeft=2,
-    ~height=fontSize,
-    ~width=2,
-    ~opacity,
-    ~backgroundColor=cursorColor,
-    (),
-  )
+  Style.[
+    marginLeft(2),
+    height(fontSize),
+    width(2),
+    opacity(o),
+    backgroundColor(cursorColor),
+  ]
   |> (
     initial =>
-      hasPlaceholder
-        ? Style.extend(
-            initial,
-            ~position=LayoutTypes.Absolute,
-            ~top=verticalAlignPos,
-            ~left=5,
-            (),
-          )
-        : initial
+      hasPlaceholder ?
+        Style.[
+          position(`Absolute),
+          top(verticalAlignPos),
+          left(5),
+          ...initial,
+        ] :
+        initial
   );
 };
 
@@ -112,12 +62,12 @@ let reducer = (action, state) =>
   | UpdateText(t) =>
     state.isFocused ? {...state, value: addCharacter(state.value, t)} : state
   | Backspace =>
-    state.isFocused
-      ? {
+    state.isFocused ?
+      {
         let length = String.length(state.value);
         length > 0 ? {...state, value: removeCharacter(state.value)} : state;
-      }
-      : state
+      } :
+      state
   | ClearWord => {...state, value: ""}
   };
 
@@ -129,49 +79,30 @@ let handleKeyDown = (~dispatch, event: Events.keyEvent) =>
 
 let noop = (~value as _value) => ();
 
-let defaultBorder = height =>
-  Style.Border.make(
-    /*
-       The default border width should be 5% of the full input height
-     */
-    ~width=float_of_int(height) *. 0.05 |> int_of_float,
-    ~color=Colors.black,
-    (),
-  );
-
 let defaultStyles =
-  Style.make(
-    ~fontSize=18,
-    ~color=Colors.black,
-    ~width=200,
-    ~height=50,
-    ~border=defaultBorder(50),
-    ~backgroundColor=Colors.transparentWhite,
-    (),
-  );
+  Style.[
+    fontSize(18),
+    color(Colors.black),
+    width(200),
+    height(50),
+    border(
+      /*
+         The default border width should be 5% of the full input height
+       */
+      ~width=float_of_int(50) *. 0.05 |> int_of_float,
+      ~color=Colors.black,
+    ),
+    backgroundColor(Colors.transparentWhite),
+  ];
 
 let component = React.component("Input");
 let make =
     (
       ~window,
-      ~margin,
-      ~marginLeft,
-      ~marginRight,
-      ~marginBottom,
-      ~marginTop,
-      ~boxShadow,
-      ~height,
-      ~width,
-      ~top,
-      ~bottom,
-      ~right,
-      ~left,
-      ~color,
-      ~backgroundColor,
-      ~fontSize,
-      ~border,
+      ~style,
       ~value,
       ~placeholder,
+      ~cursorColor,
       ~placeholderColor,
       ~onChange,
       (),
@@ -239,34 +170,61 @@ let make =
     /*
        computed styles
      */
+
     let viewStyles =
-      containerStyles(
-        ~margin,
-        ~marginLeft,
-        ~marginRight,
-        ~marginBottom,
-        ~marginTop,
-        ~height,
-        ~width,
-        ~color,
-        ~backgroundColor,
-        ~boxShadow,
-        ~border,
-        ~left,
-        ~right,
-        ~top,
-        ~bottom,
-        (),
+      Style.(
+        merge(
+          ~source=[
+            flexDirection(`Row),
+            alignItems(`Center),
+            justifyContent(`FlexStart),
+            overflow(LayoutTypes.Hidden),
+            cursor(MouseCursors.text),
+          ],
+          ~target=style,
+        )
+      );
+
+    /*
+       TODO: convert this to a getter utility function
+     */
+    let height =
+      List.fold_left(
+        (default, s) =>
+          switch (s) {
+          | `Height(h) => h
+          | _ => default
+          },
+        18,
+        style,
+      );
+
+    let inputColor =
+      List.fold_left(
+        (default, s) =>
+          switch (s) {
+          | `Color(c) => c
+          | _ => default
+          },
+        Colors.black,
+        style,
       );
 
     let innerTextStyles =
-      textStyles(~color, ~fontSize, ~hasPlaceholder, ~placeholderColor);
+      Style.[
+        color(hasPlaceholder ? placeholderColor : inputColor),
+        fontFamily("Roboto-Regular.ttf"),
+        fontSize(20),
+        alignItems(`Center),
+        justifyContent(`FlexStart),
+        marginLeft(6),
+      ];
 
     let inputCursorStyles =
       cursorStyles(
         ~opacity=state.isFocused ? opacity : 0.0,
-        ~fontSize,
-        ~cursorColor=color,
+        ~fontSize=20,
+        ~cursorColor,
         ~containerHeight=height,
         ~hasPlaceholder,
       );
