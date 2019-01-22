@@ -31,6 +31,7 @@ let state: state = {
     {name: "Focus", render: _ => Focus.render()},
     {name: "Stopwatch", render: _ => Stopwatch.render()},
     {name: "Input", render: w => InputExample.render(w)},
+    {name: "MultiWindow", render: _ => MultiWindow.render()},
   ],
   selectedExample: "Animation",
 };
@@ -95,6 +96,41 @@ let reducer = (s: state, a: action) => {
 };
 
 let init = app => {
+  let rec _createWindow = () => {
+    let _devWindow = App.createWindow(app, "Welcome to Revery!");
+    let _devRender = () =>
+      <View
+        style={Style.make(
+          ~position=LayoutTypes.Absolute,
+          ~justifyContent=LayoutTypes.JustifyCenter,
+          ~alignItems=LayoutTypes.AlignCenter,
+          ~backgroundColor,
+          ~bottom=0,
+          ~top=0,
+          ~left=0,
+          ~right=0,
+          ~flexDirection=LayoutTypes.Row,
+          (),
+        )}>
+        <Text
+          style={Style.make(
+            ~fontSize=50,
+            ~margin=24,
+            ~color=Colors.black,
+            ~fontFamily="Roboto-Regular.ttf",
+            (),
+          )}
+          text="Hello from DevTools!"
+        />
+        <Button title="New Window" onClick=_createWindow />
+      </View>;
+    ();
+    UI.start(_devWindow, _devRender);
+  };
+  _createWindow();
+  _createWindow();
+  _createWindow();
+
   let maximized = Environment.webGL;
 
   let win =
@@ -169,6 +205,8 @@ let init = app => {
   };
 
   UI.start(win, render);
+
+  ();
 };
 
 App.startWithState(state, reducer, init);

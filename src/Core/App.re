@@ -38,18 +38,20 @@ let dispatch = (app: t('s, 'a), action: 'a) => {
 
 let createWindow =
     (~createOptions=Window.defaultCreateOptions, app: t('s, 'a), windowName) => {
-  let w = Window.create(windowName, createOptions);
+  let context =
+    switch (app.windows) {
+    | [w] => Some(w.glfwWindow)
+    | [w, ..._] => Some(w.glfwWindow)
+    | [] => None
+    };
+  let w = Window.create(windowName, ~sharedContext=?context, createOptions);
   /* Window.render(w) */
   app.windows = [w, ...app.windows];
   w;
 };
 
 let _anyWindowsDirty = (app: t('s, 'a)) =>
-  List.fold_left(
-    (prev, w) => prev || Window.isDirty(w),
-    false,
-    getWindows(app),
-  );
+  List.exists(Window.isDirty, getWindows(app));
 
 let _checkAndCloseWindows = (app: t('s, 'a)) => {
   let currentWindows = getWindows(app);

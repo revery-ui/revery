@@ -118,7 +118,7 @@ let render = (w: t) => {
   w.isRendering = false;
 };
 
-let create = (name: string, options: windowCreateOptions) => {
+let create = (name: string, ~sharedContext=?, options: windowCreateOptions) => {
   Glfw.glfwDefaultWindowHints();
   Glfw.glfwWindowHint(GLFW_RESIZABLE, options.resizable);
   Glfw.glfwWindowHint(GLFW_VISIBLE, options.visible);
@@ -130,7 +130,13 @@ let create = (name: string, options: windowCreateOptions) => {
   | _ => ()
   };
 
-  let w = Glfw.glfwCreateWindow(options.width, options.height, name);
+  let w =
+    Glfw.glfwCreateWindow(
+      options.width,
+      options.height,
+      ~sharedContext?,
+      name,
+    );
   Glfw.glfwMakeContextCurrent(w);
 
   let fbSize = Glfw.glfwGetFramebufferSize(w);
