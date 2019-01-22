@@ -133,17 +133,37 @@ let make =
 
     let thumbWidth = thumbLength;
 
-    let trackStyle =
+    let beforeTrackStyle =
       Style.make(
         ~opacity,
         ~top={
           vertical ? 0 : trackMargins;
         },
         ~bottom={
-          vertical ? 0 : trackMargins;
+          vertical ? sliderLength - thumbPosition : trackMargins;
         },
         ~left={
           vertical ? trackMargins : 0;
+        },
+        ~right={
+          vertical ? trackMargins : sliderLength - thumbPosition;
+        },
+        ~position=LayoutTypes.Absolute,
+        ~backgroundColor=Color.hex("#90f7ff"),
+        (),
+      );
+
+    let afterTrackStyle =
+      Style.make(
+        ~opacity,
+        ~top={
+          vertical ? thumbPosition + thumbWidth : trackMargins;
+        },
+        ~bottom={
+          vertical ? 0 : trackMargins;
+        },
+        ~left={
+          vertical ? trackMargins : thumbPosition + thumbWidth;
         },
         ~right={
           vertical ? trackMargins : 0;
@@ -154,7 +174,7 @@ let make =
       );
 
     <View onMouseDown style ref={r => setSlideRef(r)}>
-      <View style=trackStyle />
+      <View style=beforeTrackStyle />
       <View
         ref={r => setThumbRef(r)}
         style={Style.make(
@@ -167,6 +187,7 @@ let make =
           (),
         )}
       />
+      <View style=afterTrackStyle />
     </View>;
   });
 
