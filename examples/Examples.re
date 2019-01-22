@@ -118,8 +118,9 @@ let init = app => {
         isActive
         name={x.name}
         onClick={(_) => {
-            /* TEMPORARY HACK: The animations don't always get stopped when switching examples,
-             * due to briskml/brisk-reconciler#8. We can remove this once it's fixed!
+            /*
+             * TEMPORARY WORKAROUND: The animations don't always get stopped when switching examples,
+             * tracked by briskml/brisk-reconciler#8. We can remove this once it's fixed!
              */
              Animated.cancelAll();
 
