@@ -52,13 +52,8 @@ module Sample = {
 
       <View style=containerStyle>
         <ScrollView style=outerStyle> 
-            <Image
-              src="outrun-logo.png"
-              style={Style.make(
-                ~width=512,
-                ~height=256,
-                (),
-              )}
+            <View
+              style={innerBox}
             />
         </ScrollView>
         <View style={Style.make(~marginTop=80, ())}>

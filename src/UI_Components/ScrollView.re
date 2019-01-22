@@ -31,6 +31,13 @@ let make =
         let maxHeight = childMeasurements.height - outerMeasurements.height;
         let maxWidth = childMeasurements.width - outerMeasurements.width;
 
+        prerr_endline ("CHILD HEIGHT: " ++ string_of_int(childMeasurements.height));
+        prerr_endline ("CHILD WIDTH: " ++ string_of_int(childMeasurements.width));
+
+        prerr_endline ("OUTER HEIGHT: " ++ string_of_int(outerMeasurements.height));
+        prerr_endline ("OUTER WIDTH: " ++ string_of_int(outerMeasurements.width));
+
+
         let verticalThumbHeight = childMeasurements.height > 0 ? (outerMeasurements.height * outerMeasurements.height) / childMeasurements.height : 1;
         let horizontalThumbHeight = childMeasurements.width > 0 ? (outerMeasurements.width * outerMeasurements.width) / childMeasurements.width : 1;
 
@@ -39,12 +46,13 @@ let make =
 
 
         prerr_endline ("MAX HEIGHT: " ++ string_of_int(maxHeight));
+        prerr_endline ("MAX WIDTH: " ++ string_of_int(maxWidth));
 
         /* let isVerticalScrollBarVisible = childDimensions.height > outerDimensions.height; */
 
         let verticalScrollBar = isVerticalScrollbarVisible ?  <Slider onValueChanged={(v) => setScrollTop(-int_of_float(v))} minimumValue={0.} maximumValue={float_of_int(maxHeight)} sliderLength={outerMeasurements.height} thumbLength={verticalThumbHeight} trackThickness=scrollBarThickness thumbThickness=scrollBarThickness vertical={true} /> : empty;
 
-        let horizontalScrollbar = isHorizontalScrollbarVisible ? <Slider onValueChanged={(v) => setScrollLeft(-int_of_float(v))} minimumValue={0.} maximumValue={float_of_int(maxWidth)} sliderLength={outerMeasurements.width} thumbLength={horizontalThumbHeight} trackThickness=scrollBarThickness thumbThickness=scrollBarThickness vertical={true} /> : empty;
+        let horizontalScrollbar = isHorizontalScrollbarVisible ? <Slider onValueChanged={(v) => setScrollLeft(-int_of_float(v))} minimumValue={0.} maximumValue={float_of_int(maxWidth)} sliderLength={outerMeasurements.width} thumbLength={horizontalThumbHeight} trackThickness=scrollBarThickness thumbThickness=scrollBarThickness /> : empty;
         
         (horizontalScrollbar, verticalScrollBar); 
     }
