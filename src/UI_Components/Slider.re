@@ -20,10 +20,12 @@ let component = React.component("Slider");
 let make =
     (
       ~onValueChanged=noopValueChanged,
-      ~minimumValue=0.,
-      ~maximumValue=1.0,
-      ~thumbLength=15,
-      ~sliderLength=100,
+      ~minimumValue,
+      ~maximumValue,
+      ~thumbLength,
+      ~sliderLength,
+      ~trackThickness,
+      ~thumbThickness,
       ~vertical=false,
       (),
     ) =>
@@ -113,9 +115,9 @@ let make =
 
     let opacity = isActive ? 1.0 : 0.8;
 
-    let sliderHeight = 25;
-    let trackHeight = 5;
-    let thumbHeight = sliderHeight;
+    let sliderHeight = max(thumbThickness, trackThickness);
+    let trackHeight = trackThickness;
+    let thumbHeight = thumbThickness;
     let trackMargins = (sliderHeight - trackHeight) / 2;
 
     let style =
@@ -177,8 +179,12 @@ let createElement =
       ~minimumValue=0.,
       ~maximumValue=1.,
       ~vertical=false,
+      ~thumbLength=15,
+      ~sliderLength=100,
+      ~thumbThickness=15,
+      ~trackThickness=5,
       (),
     ) =>
   React.element(
-    make(~vertical, ~onValueChanged, ~minimumValue, ~maximumValue, ()),
+    make(~vertical, ~onValueChanged, ~minimumValue, ~maximumValue, ~sliderLength, ~thumbLength, ~thumbThickness, ~trackThickness, ()),
   );

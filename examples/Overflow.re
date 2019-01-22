@@ -51,7 +51,16 @@ module Sample = {
       };
 
       <View style=containerStyle>
-        <ScrollView style=outerStyle> <View style=innerBox /> </ScrollView>
+        <ScrollView style=outerStyle> 
+            <Image
+              src="outrun-logo.png"
+              style={Style.make(
+                ~width=512,
+                ~height=256,
+                (),
+              )}
+            />
+        </ScrollView>
         <View style={Style.make(~marginTop=80, ())}>
           <Button fontSize=20 height=45 title="Toggle overflow" onClick />
         </View>
