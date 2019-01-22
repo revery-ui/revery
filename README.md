@@ -202,7 +202,7 @@ Some ideas for getting started:
 - [ocaml](https://ocaml.org) made these tools possible - thanks [Inria](https://caml.inria.fr) & [OCaml Labs](http://ocamllabs.io/)!
 - [reasonml](https://reasonml.github.io) made revery possible - thanks @jordwalke!
 - [flex](https://github.com/jordwalke/flex) by @jordwalke
-- [briskml](https://github.com/brismkl)
+- [briskml](https://github.com/briskml)
     - [brisk-reconciler](https://github.com/briskml/brisk-reconciler) - the "native React" implementation.
 - [reason-glfw](https://github.com/bryphe/reason-glfw)
     - [GLFW](https://www.glfw.org)
