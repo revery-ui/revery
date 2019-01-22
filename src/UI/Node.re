@@ -46,7 +46,7 @@ class node ('a) (()) = {
       style.overflow,
       dimensions,
       parentContext.screenHeight,
-      float_of_int(parentContext.pixelRatio),
+      parentContext.pixelRatio,
       () => {
         let localContext =
           NodeDrawContext.createFromParent(parentContext, style.opacity);
