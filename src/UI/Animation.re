@@ -121,6 +121,9 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   let cancel = (anim: animation) =>
     activeAnimations := List.filter(a => a.id !== anim.id, activeAnimations^);
 
+  let cancelAll = () =>
+    activeAnimations := [];
+
   let tick = (t: float) => {
     List.iter(tickAnimation(t), activeAnimations^);
 
