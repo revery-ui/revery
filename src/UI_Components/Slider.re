@@ -45,25 +45,25 @@ let make =
         let thumbDimensions: BoundingBox2d.t = thumb#getBoundingBox();
 
         let sliderWidth =
-          vertical ?
-            Vec2.get_y(sliderDimensions.max)
-            -. Vec2.get_y(sliderDimensions.min) :
-            Vec2.get_x(sliderDimensions.max)
-            -. Vec2.get_x(sliderDimensions.min);
+          vertical
+            ? Vec2.get_y(sliderDimensions.max)
+              -. Vec2.get_y(sliderDimensions.min)
+            : Vec2.get_x(sliderDimensions.max)
+              -. Vec2.get_x(sliderDimensions.min);
 
         let thumbWidth =
-          vertical ?
-            Vec2.get_y(thumbDimensions.max)
-            -. Vec2.get_y(thumbDimensions.min) :
-            Vec2.get_x(thumbDimensions.max)
-            -. Vec2.get_x(thumbDimensions.min);
+          vertical
+            ? Vec2.get_y(thumbDimensions.max)
+              -. Vec2.get_y(thumbDimensions.min)
+            : Vec2.get_x(thumbDimensions.max)
+              -. Vec2.get_x(thumbDimensions.min);
 
         let availableWidth = sliderWidth -. thumbWidth;
 
         let startPosition =
-          vertical ?
-            Vec2.get_y(sliderDimensions.min) :
-            Vec2.get_x(sliderDimensions.min);
+          vertical
+            ? Vec2.get_y(sliderDimensions.min)
+            : Vec2.get_x(sliderDimensions.min);
         let endPosition = startPosition +. availableWidth;
 
         let getValue = x =>
