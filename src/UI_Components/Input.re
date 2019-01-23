@@ -194,7 +194,7 @@ let make =
     let inputCursorStyles =
       Style.[
         marginLeft(2),
-        height(20),
+        height(inputHeight),
         width(2),
         opacity(state.isFocused ? animatedOpacity : 0.0),
         backgroundColor(cursorColor),

@@ -336,7 +336,8 @@ let cursor = c => `Cursor(Some(c));
 
 let opacity = o => `Opacity(o);
 let transform = t => `Transform(t);
-let boxShadow = (b: BoxShadow.properties) => `BoxShadow(b);
+let boxShadow = (~xOffset, ~yOffset, ~spreadRadius, ~blurRadius, ~color) =>
+  `BoxShadow(BoxShadow.{xOffset, yOffset, spreadRadius, blurRadius, color});
 let overflow = o => `Overflow(o);
 let color = o => `Color(o);
 let backgroundColor = o => `BackgroundColor(o);

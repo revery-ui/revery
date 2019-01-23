@@ -50,13 +50,13 @@ module Example = {
             backgroundColor(Colors.paleVioletRed),
             color(Colors.white),
             margin(20),
-            boxShadow({
-              xOffset: (-5.),
-              yOffset: 2.,
-              color: Colors.black,
-              blurRadius: 20.,
-              spreadRadius: 0.,
-            }),
+            boxShadow(
+              ~xOffset=-5.,
+              ~yOffset=2.,
+              ~color=Colors.black,
+              ~blurRadius=20.,
+              ~spreadRadius=0.,
+            ),
           ]
         />
       </View>;
