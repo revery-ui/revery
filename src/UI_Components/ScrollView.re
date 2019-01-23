@@ -7,7 +7,7 @@ let component = React.component("ScrollView");
 let empty = React.listToElement([]);
 
 let make =
-    (~style: Style.t, ~scrollLeft=0, ~scrollTop=0, children: React.syntheticElement) =>
+    (~style, ~scrollLeft=0, ~scrollTop=0, children: React.syntheticElement) =>
   component(slots => {
     let (actualScrollTop, setScrollTop, slots) = React.Hooks.state(scrollTop, slots);
     let (outerRef: option(Revery_UI.node), setOuterRef, slots) = React.Hooks.state(None, slots);
@@ -20,10 +20,8 @@ let make =
       TranslateY((-1.) *. float_of_int(actualScrollTop)),
     ];
 
-    let scroll = style.overflow;
-
-    let (_horizontalScrollBar, verticalScrollBar) = switch((scroll, outerRef)) {
-    | (LayoutTypes.Scroll, Some(outer)) => {
+    let (_horizontalScrollBar, verticalScrollBar) = switch(outerRef) {
+    | (Some(outer)) => {
         let inner = outer#firstChild();
         let childMeasurements = inner#measurements();
         let outerMeasurements = outer#measurements();
@@ -34,10 +32,8 @@ let make =
         let verticalThumbHeight = childMeasurements.height > 0 ? (outerMeasurements.height * outerMeasurements.height) / childMeasurements.height : 1;
         let horizontalThumbHeight = childMeasurements.width > 0 ? (outerMeasurements.width * outerMeasurements.width) / childMeasurements.width : 1;
 
-        let isVerticalScrollbarVisible = maxHeight > -scrollBarThickness;
-        let isHorizontalScrollbarVisible = maxWidth > -scrollBarThickness;
-
-        /* let isVerticalScrollBarVisible = childDimensions.height > outerDimensions.height; */
+        let isVerticalScrollbarVisible = maxHeight > 0;
+        let isHorizontalScrollbarVisible = maxWidth > 0;
 
         let verticalScrollBar = isVerticalScrollbarVisible ?  <Slider onValueChanged={(v) => setScrollTop(int_of_float(v))} minimumValue={0.} maximumValue={float_of_int(maxHeight)} sliderLength={outerMeasurements.height} thumbLength={verticalThumbHeight} trackThickness=scrollBarThickness thumbThickness=scrollBarThickness vertical={true} /> : empty;
 
@@ -54,7 +50,9 @@ let make =
     | _ => (empty, empty);
     };
 
-    let containerStyle = Style.make(~position=LayoutTypes.Relative, ());
+    let containerStyle = Style.[
+       position(`Relative), 
+    ];
 
     let outerStyle = style;
 
@@ -63,6 +61,19 @@ let make =
         setScrollTop(newScrollTop);
     };
 
+    let innerStyle = Style.[
+        transform(innerViewTransform),
+        position(`Absolute),
+    ];
+
+    let verticalScrollbarContainerStyle = Style.[
+        position(`Absolute),
+        right(0),
+        top(0),
+        bottom(0),
+        width(scrollBarThickness),
+    ];
+
     <View style={containerStyle}>
         <View 
             onMouseWheel={scroll}
@@ -70,11 +81,11 @@ let make =
                 setOuterRef(Some(r));
             }} style={outerStyle}>
           <View
-            style={Style.make(~transform=innerViewTransform, ~position=LayoutTypes.Absolute, ())}>
+            style={innerStyle}>
             children
           </View>
         </View>
-      <View style={Style.make(~position=LayoutTypes.Absolute, ~right=0, ~top=0, ~bottom=0, ~width=scrollBarThickness, ())}>
+      <View style={verticalScrollbarContainerStyle}>
       {verticalScrollBar}
        </View>
     </View>;

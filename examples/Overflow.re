@@ -16,21 +16,19 @@ let containerStyle =
   ];
 
 let outerBox =
-  Style.make(
-    ~width=150,
-    ~height=150,
-    ~overflow=LayoutTypes.Hidden,
-    ~backgroundColor=Colors.red,
-    (),
-  );
+  Style.[
+    width(512),
+    height(128),
+    overflow(LayoutTypes.Hidden),
+    backgroundColor(Colors.red),
+  ];
 
 let innerBox =
-  Style.make(
-    ~width=450,
-    ~height=450,
-    ~backgroundColor=Color.rgba(0., 1.0, 0., 0.5),
-    (),
-  );
+  Style.[
+      width(450),
+      height(450),
+      backgroundColor(Color.rgba(0., 1., 0., 0.5)),
+  ];
 
 module Sample = {
   let component = React.component("Sample");
@@ -40,23 +38,24 @@ module Sample = {
       let (hidden, setHidden, _slots: React.Hooks.empty) =
         React.Hooks.state(false, slots);
 
-      let outerStyle =
-        List.append(
-          outerBox,
-          [
-            Style.overflow(hidden ? LayoutTypes.Scroll : LayoutTypes.Visible),
-          ],
-        );
+      let buttonContainerStyle = Style.[
+        marginTop(80),
+      ];
 
       let onClick = _ => setHidden(!hidden);
 
       <View style=containerStyle>
-        <ScrollView style=outerStyle>
-            <View
-              style={innerBox}
+        <ScrollView style={outerBox}>
+            <Image
+              src="outrun-logo.png"
+              style={Style.make(
+                ~width=512,
+                ~height=256,
+                (),
+              )}
             />
         </ScrollView>
-        <View style={Style.make(~marginTop=80, ())}>
+        <View style={buttonContainerStyle}>
           <Button fontSize=20 height=45 title="Toggle overflow" onClick />
         </View>
       </View>;

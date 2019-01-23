@@ -20,21 +20,14 @@ let component = React.component("Slider");
 let make =
     (
       ~onValueChanged=noopValueChanged,
-<<<<<<< HEAD
-=======
       ~value,
->>>>>>> master
       ~minimumValue,
       ~maximumValue,
       ~thumbLength,
       ~sliderLength,
-<<<<<<< HEAD
       ~trackThickness,
       ~thumbThickness,
-      ~vertical=false,
-=======
       ~vertical,
->>>>>>> master
       (),
     ) =>
   component(slots => {
@@ -198,14 +191,8 @@ let createElement =
       ~vertical=false,
       ~thumbLength=15,
       ~sliderLength=100,
-<<<<<<< HEAD
       ~thumbThickness=15,
       ~trackThickness=5,
-      (),
-    ) =>
-  React.element(
-    make(~vertical, ~onValueChanged, ~minimumValue, ~maximumValue, ~sliderLength, ~thumbLength, ~thumbThickness, ~trackThickness, ()),
-=======
       (),
     ) =>
   React.element(
@@ -217,7 +204,8 @@ let createElement =
       ~value,
       ~thumbLength,
       ~sliderLength,
+      ~thumbThickness,
+      ~trackThickness,
       (),
     ),
->>>>>>> master
   );
