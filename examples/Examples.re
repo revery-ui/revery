@@ -146,7 +146,7 @@ let init = app => {
         right(0),
         flexDirection(`Row),
       ]>
-      <View
+      <ScrollView
         style=Style.[
           position(`Absolute),
           top(0),
@@ -155,8 +155,10 @@ let init = app => {
           bottom(0),
           backgroundColor(bgColor),
         ]>
+        <View>
         ...buttons
-      </View>
+        </View>
+      </ScrollView>
       <View
         style=Style.[
           position(`Absolute),

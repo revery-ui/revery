@@ -1,4 +1,4 @@
-/* open Revery_Core; */
+open Revery_Core;
 open Revery_UI;
 open Revery_UI.Transform;
 
@@ -50,12 +50,6 @@ let make =
     | _ => (empty, empty);
     };
 
-    let containerStyle = Style.[
-       position(`Relative), 
-    ];
-
-    let outerStyle = style;
-
     let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
         let newScrollTop = actualScrollTop - (int_of_float(wheelEvent.deltaY) * 25);
         setScrollTop(newScrollTop);
@@ -64,6 +58,10 @@ let make =
     let innerStyle = Style.[
         transform(innerViewTransform),
         position(`Absolute),
+        top(0),
+        /* TODO: This styling will need to be adjusted to handle horizontal scrolling */
+        left(0),
+        right(verticalScrollBar == empty ? 0 : scrollBarThickness),
     ];
 
     let verticalScrollbarContainerStyle = Style.[
@@ -74,20 +72,20 @@ let make =
         width(scrollBarThickness),
     ];
 
-    <View style={containerStyle}>
+    <View style={style}>
         <View 
             onMouseWheel={scroll}
             ref={(r) => {
                 setOuterRef(Some(r));
-            }} style={outerStyle}>
+            }} style={Style.[flexGrow(1), position(`Relative), backgroundColor(Colors.green)]}>
           <View
             style={innerStyle}>
             children
           </View>
+          <View style={verticalScrollbarContainerStyle}>
+          {verticalScrollBar}
+           </View>
         </View>
-      <View style={verticalScrollbarContainerStyle}>
-      {verticalScrollBar}
-       </View>
     </View>;
   });
 
