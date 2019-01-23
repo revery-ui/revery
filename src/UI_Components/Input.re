@@ -167,23 +167,33 @@ let make =
         style,
       );
 
-    let inputColor = Style.unwrapStyle(style, `Color, Colors.black);
+    let inputFontSize =
+      List.fold_left(
+        (default, s) =>
+          switch (s) {
+          | `FontSize(fs) => fs
+          | _ => default
+          },
+        20,
+        style,
+      );
 
-    /* List.fold_left( */
-    /*   (default, s) => */
-    /*     switch (s) { */
-    /*     | `Color(c) => c */
-    /*     | _ => default */
-    /*     }, */
-    /*   Colors.black, */
-    /*   style, */
-    /* ); */
+    let inputColor =
+      List.fold_left(
+        (default, s) =>
+          switch (s) {
+          | `Color(c) => c
+          | _ => default
+          },
+        Colors.black,
+        style,
+      );
 
     let innerTextStyles =
       Style.[
         color(hasPlaceholder ? placeholderColor : inputColor),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(20),
+        fontSize(inputFontSize),
         alignItems(`Center),
         justifyContent(`FlexStart),
         marginLeft(6),
