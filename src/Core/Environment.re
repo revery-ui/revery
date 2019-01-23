@@ -34,7 +34,5 @@ let getAssetPath = (p) => {
     }
     | false => p
     }
-
-    prerr_endline ("ASSET PATH: " ++ ret);
     ret;
 }

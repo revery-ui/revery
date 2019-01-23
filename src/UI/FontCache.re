@@ -15,10 +15,10 @@ let _isSome = a =>
   };
 
 let load = (fontName: string, size: int) => {
-  let execDir = Revery_Core.Environment.getExecutingDirectory();
   switch (Hashtbl.find_opt(_cache, (fontName, size))) {
   | Some(fk) => fk
   | None =>
+    let assetPath = Environment.getAssetPath(fontName);
     let fontKey = (fontName, size);
     let isLoading = _isSome(Hashtbl.find_opt(_loadingCache, fontKey));
     if (!isLoading) {
@@ -29,7 +29,7 @@ let load = (fontName: string, size: int) => {
         Event.dispatch(onFontLoaded, ());
         Lwt.return();
       };
-      let _ = Lwt.bind(Fontkit.load(execDir ++ fontName, size), success);
+      let _ = Lwt.bind(Fontkit.load(assetPath, size), success);
       ();
     };
     Fontkit.dummyFont(size);
