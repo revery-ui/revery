@@ -142,7 +142,7 @@ let make =
         left(vertical ? trackMargins : thumbPosition + thumbWidth),
         right(vertical ? trackMargins : 0),
         position(`Absolute),
-        backgroundColor(backgroundColor),
+        backgroundColor(sliderBackgroundColor),
       ];
 
     <View onMouseDown style ref={r => setSlideRef(r)}>
