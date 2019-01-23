@@ -11,13 +11,12 @@ module Row = {
   let make = children =>
     component((_slots: React.Hooks.empty) => {
       let style =
-        Style.make(
-          ~flexDirection=LayoutTypes.Row,
-          ~alignItems=LayoutTypes.AlignStretch,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~flexGrow=1,
-          (),
-        );
+        Style.[
+          flexDirection(`Row),
+          alignItems(`Stretch),
+          justifyContent(`Center),
+          flexGrow(1),
+        ];
       <View style> ...children </View>;
     });
 
@@ -30,14 +29,13 @@ module Column = {
   let make = children =>
     component((_slots: React.Hooks.empty) => {
       let style =
-        Style.make(
-          ~flexDirection=LayoutTypes.Column,
-          ~alignItems=LayoutTypes.AlignStretch,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~backgroundColor=Colors.darkGrey,
-          ~flexGrow=1,
-          (),
-        );
+        Style.[
+          flexDirection(`Column),
+          alignItems(`Stretch),
+          justifyContent(`Center),
+          backgroundColor(Colors.darkGrey),
+          flexGrow(1),
+        ];
       <View style> ...children </View>;
     });
 
@@ -48,29 +46,32 @@ module Button = {
   let component = React.component("Button");
 
   let make =
-      (~fontFamily="Roboto-Regular.ttf", ~contents: string, ~onClick, ()) =>
+      (
+        ~fontFamily as family="Roboto-Regular.ttf",
+        ~contents: string,
+        ~onClick,
+        (),
+      ) =>
     component((_slots: React.Hooks.empty) => {
       let clickableStyle =
-        Style.make(
-          ~position=LayoutTypes.Relative,
-          ~backgroundColor=Colors.lightGrey,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~alignItems=LayoutTypes.AlignCenter,
-          ~flexGrow=1,
+        Style.[
+          position(`Relative),
+          backgroundColor(Colors.lightGrey),
+          justifyContent(`Center),
+          alignItems(`Center),
+          flexGrow(1),
           /* Min width */
-          ~width=125,
-          ~margin=10,
-          (),
-        );
+          width(125),
+          margin(10),
+        ];
       let viewStyle =
-        Style.make(
-          ~position=LayoutTypes.Relative,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~alignItems=LayoutTypes.AlignCenter,
-          (),
-        );
+        Style.[
+          position(`Relative),
+          justifyContent(`Center),
+          alignItems(`Center),
+        ];
       let textStyle =
-        Style.make(~color=Colors.black, ~fontFamily, ~fontSize=32, ());
+        Style.[color(Colors.black), fontFamily(family), fontSize(32)];
 
       <Clickable style=clickableStyle onClick>
         <View style=viewStyle> <Text style=textStyle text=contents /> </View>
@@ -84,9 +85,8 @@ module Button = {
         ~onClick,
         ~children as _,
         (),
-      ) => {
+      ) =>
     React.element(make(~fontFamily, ~contents, ~onClick, ()));
-  };
 };
 module Display = {
   let component = React.component("Display");
@@ -94,31 +94,28 @@ module Display = {
   let make = (~display: string, ~curNum: string, ()) =>
     component((_slots: React.Hooks.empty) => {
       let viewStyle =
-        Style.make(
-          ~backgroundColor=Colors.white,
-          ~height=120,
-          ~flexDirection=LayoutTypes.Column,
-          ~alignItems=LayoutTypes.AlignStretch,
-          ~justifyContent=LayoutTypes.JustifyFlexStart,
-          ~flexGrow=2,
-          (),
-        );
+        Style.[
+          backgroundColor(Colors.white),
+          height(120),
+          flexDirection(`Column),
+          alignItems(`Stretch),
+          justifyContent(`FlexStart),
+          flexGrow(2),
+        ];
       let displayStyle =
-        Style.make(
-          ~color=Colors.black,
-          ~fontFamily="Roboto-Regular.ttf",
-          ~fontSize=20,
-          ~margin=15,
-          (),
-        );
+        Style.[
+          color(Colors.black),
+          fontFamily("Roboto-Regular.ttf"),
+          fontSize(20),
+          margin(15),
+        ];
       let numStyle =
-        Style.make(
-          ~color=Colors.black,
-          ~fontFamily="Roboto-Regular.ttf",
-          ~fontSize=32,
-          ~margin=15,
-          (),
-        );
+        Style.[
+          color(Colors.black),
+          fontFamily("Roboto-Regular.ttf"),
+          fontSize(32),
+          margin(15),
+        ];
 
       <View style=viewStyle>
         <Text style=displayStyle text=display />
@@ -205,19 +202,19 @@ let eval = (state, newOp) => {
 let reducer = (action, state) =>
   switch (action) {
   | BackspaceKeyPressed =>
-    state.number == ""
-      ? state
-      : {
+    state.number == "" ?
+      state :
+      {
         ...state,
         number: String.sub(state.number, 0, String.length(state.number) - 1),
       }
   | ClearKeyPressed(ac) =>
-    ac
-      ? {operator: `Nop, result: 0., display: "", number: ""}
-      : {...state, number: ""}
+    ac ?
+      {operator: `Nop, result: 0., display: "", number: ""} :
+      {...state, number: ""}
   | DotKeyPressed =>
-    String.contains(state.number, '.')
-      ? state : {...state, number: state.number ++ "."}
+    String.contains(state.number, '.') ?
+      state : {...state, number: state.number ++ "."}
   | NumberKeyPressed(n) => {...state, number: state.number ++ n}
   | OperationKeyPressed(o) =>
     let (result, display) = eval(state, o);
@@ -388,6 +385,4 @@ module Calculator = {
     React.element(make(window));
 };
 
-let render = window => {
-  <Calculator window />;
-};
+let render = window => <Calculator window />;

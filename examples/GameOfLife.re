@@ -61,13 +61,12 @@ module Universe = {
       let compare = compare;
     });
   include T;
-  let universeFromList = positions => {
+  let universeFromList = positions =>
     List.fold_left(
       (acc, pos) => T.add(pos, Alive, acc),
       T.empty,
       positions,
     );
-  };
 };
 
 module Examples = {
@@ -133,11 +132,10 @@ module GameOfLife = {
     | None => default
     };
 
-  let findCell = (universe, position) => {
+  let findCell = (universe, position) =>
     Universe.find_opt(position, universe)
     |> withDefault(~default=Dead)
     |> (cell => (position, cell));
-  };
 
   let numberOfLive = neighbours =>
     neighbours
@@ -266,14 +264,13 @@ module Row = {
   let component = React.component("Row");
 
   let style =
-    Style.make(
-      ~flexDirection=LayoutTypes.Row,
-      ~alignItems=LayoutTypes.AlignStretch,
-      ~justifyContent=LayoutTypes.JustifyCenter,
-      ~backgroundColor=Colors.darkGrey,
-      ~flexGrow=1,
-      (),
-    );
+    Style.[
+      flexDirection(`Row),
+      alignItems(`Stretch),
+      justifyContent(`Center),
+      backgroundColor(Colors.darkGrey),
+      flexGrow(1),
+    ];
 
   let make = children =>
     component((_slots: React.Hooks.empty) =>
@@ -287,13 +284,12 @@ module Column = {
   let component = React.component("Column");
 
   let style =
-    Style.make(
-      ~flexDirection=LayoutTypes.Column,
-      ~alignItems=LayoutTypes.AlignStretch,
-      ~justifyContent=LayoutTypes.JustifyCenter,
-      ~flexGrow=1,
-      (),
-    );
+    Style.[
+      flexDirection(`Column),
+      alignItems(`Stretch),
+      justifyContent(`Center),
+      flexGrow(1),
+    ];
 
   let make = children =>
     component((_slots: React.Hooks.empty) =>
@@ -306,25 +302,27 @@ module Cell = {
   let component = React.component("Column");
 
   let clickableStyle =
-    Style.make(
-      ~position=LayoutTypes.Relative,
-      ~backgroundColor=Colors.transparentWhite,
-      ~justifyContent=LayoutTypes.JustifyCenter,
-      ~alignItems=LayoutTypes.AlignStretch,
-      ~flexGrow=1,
-      ~margin=0,
-      (),
-    );
+    Style.[
+      position(`Relative),
+      backgroundColor(Colors.transparentWhite),
+      justifyContent(`Center),
+      alignItems(`Stretch),
+      flexGrow(1),
+      margin(0),
+    ];
   let baseStyle =
-    Style.make(
-      ~flexDirection=LayoutTypes.Column,
-      ~alignItems=LayoutTypes.AlignStretch,
-      ~justifyContent=LayoutTypes.JustifyCenter,
-      ~flexGrow=1,
-      (),
+    Style.[
+      flexDirection(`Column),
+      alignItems(`Stretch),
+      justifyContent(`Center),
+      flexGrow(1),
+    ];
+  let aliveStyle =
+    Style.(merge(~source=baseStyle, ~target=[backgroundColor(Colors.red)]));
+  let deadStyle =
+    Style.(
+      merge(~source=baseStyle, ~target=[backgroundColor(Colors.black)])
     );
-  let aliveStyle = Style.extend(baseStyle, ~backgroundColor=Colors.red, ());
-  let deadStyle = Style.extend(baseStyle, ~backgroundColor=Colors.black, ());
 
   let make = (~cell, ~onClick, ()) =>
     component((_slots: React.Hooks.empty) => {
@@ -426,8 +424,7 @@ let reducer = (action, state) =>
 module GameOfLiveComponent = {
   let component = React.component("GameOfLiveComponent");
 
-  let controlsStyle =
-    Style.make(~height=120, ~flexDirection=LayoutTypes.Row, ());
+  let controlsStyle = Style.[height(120), flexDirection(`Row)];
 
   let make = (~state: state, ()) =>
     component(slots => {
@@ -443,7 +440,7 @@ module GameOfLiveComponent = {
 
       let toggleAlive = pos => dispatch(ToggleAlive(pos));
 
-      let startStop = () => {
+      let startStop = () =>
         state.isRunning
           ? dispatch(StopTimer)
           : {
@@ -451,7 +448,6 @@ module GameOfLiveComponent = {
               Tick.interval(t => dispatch(TimerTick(t)), Seconds(0.));
             dispatch(StartTimer(dispose));
           };
-      };
 
       <Column>
         <Row>
@@ -497,9 +493,8 @@ module GameOfLiveComponent = {
       </Column>;
     });
 
-  let createElement = (~state, ~children as _, ()) => {
+  let createElement = (~state, ~children as _, ()) =>
     React.element(make(~state, ()));
-  };
 };
 
 let render = () => {
