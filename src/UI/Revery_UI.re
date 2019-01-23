@@ -114,7 +114,7 @@ let start =
   Window.setRenderCallback(
     window,
     () => {
-      /* 
+      /*
        * The dirty flag needs to be cleared before rendering,
        * as some events during rendering might trigger a 'dirty',
        * meaning that we'll need to re-render again next frame.

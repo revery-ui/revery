@@ -211,14 +211,14 @@ class node ('a) (()) = {
     node;
   };
   pri _queueCallback = (cb: callback) => {
-    _queuedCallbacks := List.append([cb], _queuedCallbacks^); 
+    _queuedCallbacks := List.append([cb], _queuedCallbacks^);
   };
   pub flushCallbacks = () => {
-    let f = (cb) => cb();
-    List.iter(f, _queuedCallbacks^); 
+    let f = cb => cb();
+    List.iter(f, _queuedCallbacks^);
     _queuedCallbacks := [];
 
-    let fc = (c) => c#flushCallbacks();
+    let fc = c => c#flushCallbacks();
     List.iter(fc, _children^);
   };
   /* TODO: This should really be private - it should never be explicitly set */
@@ -231,14 +231,14 @@ class node ('a) (()) = {
       let ret = (_this :> node('a));
       let maybeRef = _this#getEvents().ref;
       switch (maybeRef) {
-      | Some(ref) => 
+      | Some(ref) =>
         /*
          * Defer dispatching the `ref` until AFTER layout has occurred.
          * A common use-case for using the ref will be getting dimension
          * and layout information. This won't be available until AFTER
          * layout.
          */
-        _this#_queueCallback(() => ref(ret));
+        _this#_queueCallback(() => ref(ret))
       | None => ()
       };
     | _ => ()

@@ -202,19 +202,19 @@ let eval = (state, newOp) => {
 let reducer = (action, state) =>
   switch (action) {
   | BackspaceKeyPressed =>
-    state.number == "" ?
-      state :
-      {
+    state.number == ""
+      ? state
+      : {
         ...state,
         number: String.sub(state.number, 0, String.length(state.number) - 1),
       }
   | ClearKeyPressed(ac) =>
-    ac ?
-      {operator: `Nop, result: 0., display: "", number: ""} :
-      {...state, number: ""}
+    ac
+      ? {operator: `Nop, result: 0., display: "", number: ""}
+      : {...state, number: ""}
   | DotKeyPressed =>
-    String.contains(state.number, '.') ?
-      state : {...state, number: state.number ++ "."}
+    String.contains(state.number, '.')
+      ? state : {...state, number: state.number ++ "."}
   | NumberKeyPressed(n) => {...state, number: state.number ++ n}
   | OperationKeyPressed(o) =>
     let (result, display) = eval(state, o);
