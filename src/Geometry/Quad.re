@@ -1,6 +1,6 @@
 open Revery_Shaders.Shader;
 
-let create = (minX, minY,maxX, maxY) => {
+let create = (minX, minY, maxX, maxY) => {
   let positions = [|minX, maxY, maxX, maxY, maxX, minY, minX, minY|];
 
   let textureCoordinates = [|0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0|];
