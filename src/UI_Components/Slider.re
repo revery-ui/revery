@@ -39,8 +39,9 @@ let make =
 
     let setThumbRef = r => _setThumbRef(Some(r));
 
-    let availableWidth = switch (slideRef, thumbRef) {
-    | (Some(slider), Some(thumb)) => {
+    let availableWidth =
+      switch (slideRef, thumbRef) {
+      | (Some(slider), Some(thumb)) =>
         let sliderDimensions: BoundingBox2d.t = slider#getBoundingBox();
         let thumbDimensions: BoundingBox2d.t = thumb#getBoundingBox();
 
@@ -59,9 +60,8 @@ let make =
               -. Vec2.get_x(thumbDimensions.min);
 
         Some(sliderWidth -. thumbWidth);
-    }
-    | _ => None;
-    };
+      | _ => None
+      };
 
     let onMouseDown = (evt: NodeEvents.mouseButtonEventParams) =>
       switch (slideRef, thumbRef, availableWidth) {
@@ -121,11 +121,14 @@ let make =
     let thumbHeight = sliderHeight;
     let trackMargins = (sliderHeight - trackHeight) / 2;
 
-    let thumbPosition = switch(availableWidth) {
-    | Some(w) => int_of_float(((v -. minimumValue) /. (maximumValue -. minimumValue) *. w));
-    | None => 0;
-    };
-
+    let thumbPosition =
+      switch (availableWidth) {
+      | Some(w) =>
+        int_of_float(
+          (v -. minimumValue) /. (maximumValue -. minimumValue) *. w,
+        )
+      | None => 0
+      };
 
     let style =
       Style.[
@@ -189,5 +192,14 @@ let createElement =
       (),
     ) =>
   React.element(
-    make(~vertical, ~onValueChanged, ~minimumValue, ~maximumValue, ~value, ~thumbLength, ~sliderLength, ()),
+    make(
+      ~vertical,
+      ~onValueChanged,
+      ~minimumValue,
+      ~maximumValue,
+      ~value,
+      ~thumbLength,
+      ~sliderLength,
+      (),
+    ),
   );
