@@ -344,7 +344,7 @@ let overflow = o => `Overflow(o);
 let color = o => `Color(o);
 let backgroundColor = o => `BackgroundColor(o);
 
-let unwrapStyle = (styles, rule, default) =>
+let unwrapStyle = (styles: [> props | fontProps], rule, default) =>
   List.fold_left(
     (default, style) =>
       switch (rule, style) {
