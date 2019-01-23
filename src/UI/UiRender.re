@@ -57,6 +57,9 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   /* Render */
   Performance.bench("recalculate", () => rootNode#recalculate());
 
+  /* Flush any node callbacks */
+  Performance.bench("flush", () => rootNode#flushCallbacks());
+
   Performance.bench("draw", () => {
     /* Do a first pass for all 'opaque' geometry */
     /* This helps reduce the overhead for the more expensive alpha pass, next */
