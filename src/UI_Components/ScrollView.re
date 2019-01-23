@@ -1,4 +1,3 @@
-open Revery_Core;
 open Revery_UI;
 open Revery_UI.Transform;
 
@@ -77,7 +76,7 @@ let make =
             onMouseWheel={scroll}
             ref={(r) => {
                 setOuterRef(Some(r));
-            }} style={Style.[flexGrow(1), position(`Relative), backgroundColor(Colors.green)]}>
+            }} style={Style.[flexGrow(1), position(`Relative)]}>
           <View
             style={innerStyle}>
             children
