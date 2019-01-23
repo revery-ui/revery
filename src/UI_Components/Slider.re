@@ -45,25 +45,25 @@ let make =
         let thumbDimensions: BoundingBox2d.t = thumb#getBoundingBox();
 
         let sliderWidth =
-          vertical ?
-            Vec2.get_y(sliderDimensions.max)
-            -. Vec2.get_y(sliderDimensions.min) :
-            Vec2.get_x(sliderDimensions.max)
-            -. Vec2.get_x(sliderDimensions.min);
+          vertical
+            ? Vec2.get_y(sliderDimensions.max)
+              -. Vec2.get_y(sliderDimensions.min)
+            : Vec2.get_x(sliderDimensions.max)
+              -. Vec2.get_x(sliderDimensions.min);
 
         let thumbWidth =
-          vertical ?
-            Vec2.get_y(thumbDimensions.max)
-            -. Vec2.get_y(thumbDimensions.min) :
-            Vec2.get_x(thumbDimensions.max)
-            -. Vec2.get_x(thumbDimensions.min);
+          vertical
+            ? Vec2.get_y(thumbDimensions.max)
+              -. Vec2.get_y(thumbDimensions.min)
+            : Vec2.get_x(thumbDimensions.max)
+              -. Vec2.get_x(thumbDimensions.min);
 
         let availableWidth = sliderWidth -. thumbWidth;
 
         let startPosition =
-          vertical ?
-            Vec2.get_y(sliderDimensions.min) :
-            Vec2.get_x(sliderDimensions.min);
+          vertical
+            ? Vec2.get_y(sliderDimensions.min)
+            : Vec2.get_x(sliderDimensions.min);
         let endPosition = startPosition +. availableWidth;
 
         let getValue = x =>
@@ -123,19 +123,30 @@ let make =
 
     let thumbWidth = thumbLength;
 
-    let trackStyle =
+    let beforeTrackStyle =
       Style.[
         opacity(sliderOpacity),
         top(vertical ? 0 : trackMargins),
-        bottom(vertical ? 0 : trackMargins),
+        bottom(vertical ? sliderLength - thumbPosition : trackMargins),
         left(vertical ? trackMargins : 0),
+        right(vertical ? trackMargins : sliderLength - thumbPosition),
+        position(`Absolute),
+        backgroundColor(Color.hex("#90f7ff")),
+      ];
+
+    let afterTrackStyle =
+      Style.[
+        opacity(sliderOpacity),
+        top(vertical ? thumbPosition + thumbWidth : trackMargins),
+        bottom(vertical ? 0 : trackMargins),
+        left(vertical ? trackMargins : thumbPosition + thumbWidth),
         right(vertical ? trackMargins : 0),
         position(`Absolute),
         backgroundColor(sliderBackgroundColor),
       ];
 
     <View onMouseDown style ref={r => setSlideRef(r)}>
-      <View style=trackStyle />
+      <View style=beforeTrackStyle />
       <View
         ref={r => setThumbRef(r)}
         style=Style.[
@@ -147,6 +158,7 @@ let make =
           backgroundColor(thumbColor),
         ]
       />
+      <View style=afterTrackStyle />
     </View>;
   });
 

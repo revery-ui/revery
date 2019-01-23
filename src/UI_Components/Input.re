@@ -30,12 +30,12 @@ let reducer = (action, state) =>
   | UpdateText(t) =>
     state.isFocused ? {...state, value: addCharacter(state.value, t)} : state
   | Backspace =>
-    state.isFocused ?
-      {
+    state.isFocused
+      ? {
         let length = String.length(state.value);
         length > 0 ? {...state, value: removeCharacter(state.value)} : state;
-      } :
-      state
+      }
+      : state
   | ClearWord => {...state, value: ""}
   };
 
@@ -201,14 +201,14 @@ let make =
       ]
       |> (
         initial =>
-          hasPlaceholder ?
-            Style.[
-              position(`Absolute),
-              top(verticalAlignPos),
-              left(5),
-              ...initial,
-            ] :
-            initial
+          hasPlaceholder
+            ? Style.[
+                position(`Absolute),
+                top(verticalAlignPos),
+                left(5),
+                ...initial,
+              ]
+            : initial
       );
 
     /*
