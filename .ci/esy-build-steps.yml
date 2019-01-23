@@ -9,8 +9,12 @@ steps:
   - script: esy install
     displayName: 'esy install'
   - script: git diff --exit-code
-    displayName: 'check that `esy.lock` is up-to-date'
+    displayName: 'check that `esy.lock` is up-to-date. If this fails, commit `esy.lock` changes and re-submit PR.'
   - script: esy build
     displayName: 'esy build'
+  - script: esy format
+    displayName: esy format
+  - script: git diff --exit-code
+    displayName: 'check that formatting is correct. If this fails, run `esy format` and re-submit PR.'
   - script: esy b dune runtest
     displayName: 'esy b dune runtest'
