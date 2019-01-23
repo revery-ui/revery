@@ -27,12 +27,9 @@ let make =
         let inner = outer#firstChild();
         let childMeasurements = inner#measurements();
         let outerMeasurements = outer#measurements();
-        let firstChild = inner#firstChild();
 
         let maxHeight = childMeasurements.height - outerMeasurements.height;
         let maxWidth = childMeasurements.width - outerMeasurements.width;
-
-        let firstChild = inner#firstChild()#measurements();
 
         let verticalThumbHeight = childMeasurements.height > 0 ? (outerMeasurements.height * outerMeasurements.height) / childMeasurements.height : 1;
         let horizontalThumbHeight = childMeasurements.width > 0 ? (outerMeasurements.width * outerMeasurements.width) / childMeasurements.width : 1;
