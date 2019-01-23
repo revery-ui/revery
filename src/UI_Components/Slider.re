@@ -64,8 +64,8 @@ let make =
       };
 
     let onMouseDown = (evt: NodeEvents.mouseButtonEventParams) =>
-      switch (slideRef, thumbRef, availableWidth) {
-      | (Some(slider), _, Some(w)) =>
+      switch (slideRef, availableWidth) {
+      | (Some(slider), Some(w)) =>
         let sliderDimensions: BoundingBox2d.t = slider#getBoundingBox();
 
         let startPosition =
