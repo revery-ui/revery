@@ -8,3 +8,4 @@ module Clickable = Clickable;
 module Button = Button;
 module Slider = Slider;
 module Input = Input;
+module Checkbox = Checkbox;
