@@ -162,7 +162,9 @@ let make =
         backgroundColor(sliderBackgroundColor),
       ];
 
-    <View onMouseDown style ref={r => setSlideRef(r)}>
+    <View onMouseDown style ref={r => {
+        setSlideRef(r);
+    }}>
       <View style=beforeTrackStyle />
       <View
         ref={r => setThumbRef(r)}
