@@ -8,7 +8,8 @@
     "build": "esy b",
     "build:js": "esy b dune build examples/Bin.bc.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "esy b .ci/format.sh"
+    "format": "esy b .ci/format.sh",
+    "doc": "refmterr esy dune build @doc -p #{self.name}"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {

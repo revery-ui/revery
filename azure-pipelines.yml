@@ -22,6 +22,7 @@ jobs:
   - template: .ci/use-node.yml
   - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
+  - template: .ci/create-docs.yml
   - template: .ci/publish-build-cache.yml
 
 - job: MacOS
