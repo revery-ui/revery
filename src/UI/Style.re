@@ -344,6 +344,52 @@ let overflow = o => `Overflow(o);
 let color = o => `Color(o);
 let backgroundColor = o => `BackgroundColor(o);
 
+let unwrapStyle = (styles, rule, default) =>
+  List.fold_left(
+    (default, style) =>
+      switch (rule, style) {
+      | (`AlignItems, `AlignItems(alignItems)) => alignItems
+      | (`JustifyContent, `JustifyContent(justifyContent)) => justifyContent
+      | (`FlexGrow, `FlexGrow(flexGrow)) => flexGrow
+      | (`FlexDirection, `FlexDirection(flexDirection)) => flexDirection
+      | (`Position, `Position(position)) => position
+      | (`Margin, `Margin(margin)) => margin
+      | (`MarginTop, `MarginTop(marginTop)) => marginTop
+      | (`MarginBottom, `MarginBottom(marginBottom)) => marginBottom
+      | (`MarginRight, `MarginRight(marginRight)) => marginRight
+      | (`MarginLeft, `MarginLeft(marginLeft)) => marginLeft
+      | (`MarginVertical, `MarginVertical(marginVertical)) => marginVertical
+      | (`MarginHorizontal, `MarginHorizontal(marginHorizontal)) => marginHorizontal
+      | (`Margin4, `Margin4(m4)) => m4
+      | (`Margin2, `Margin2(m2)) => m2
+      | (`Overflow, `Overflow(overflow)) => overflow
+      | (`Border, `Border(border)) => border
+      | (`BorderBottom, `BorderBottom(borderBottom)) => borderBottom
+      | (`BorderTop, `BorderTop(borderTop)) => borderTop
+      | (`BorderLeft, `BorderLeft(borderLeft)) => borderLeft
+      | (`BorderRight, `BorderRight(borderRight)) => borderRight
+      | (`BorderVertical, `BorderVertical(borderVertical)) => borderVertical
+      | (`BorderHorizontal, `BorderHorizontal(borderHorizontal)) => borderHorizontal
+      | (`Opacity, `Opacity(opacity)) => opacity
+      | (`BoxShadow, `BoxShadow(boxShadow)) => boxShadow
+      | (`Transform, `Transform(transform)) => transform
+      | (`FontFamily, `FontFamily(fontFamily)) => fontFamily
+      | (`FontSize, `FontSize(fontSize)) => fontSize
+      | (`Cursor, `Cursor(cursor)) => cursor
+      | (`Color, `Color(color)) => color
+      | (`BackgroundColor, `BackgroundColor(backgroundColor)) => backgroundColor
+      | (`Width, `Width(width)) => width
+      | (`Height, `Height(height)) => height
+      | (`Bottom, `Bottom(bottom)) => bottom
+      | (`Left, `Left(left)) => left
+      | (`Top, `Top(top)) => top
+      | (`Right, `Right(right)) => right
+      | _ => default
+      },
+    default,
+    styles,
+  );
+
 /*
    Apply style takes all style props and maps each to the correct style
    and is used to build up the style record, which is eventually

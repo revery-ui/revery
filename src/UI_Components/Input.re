@@ -147,6 +147,7 @@ let make =
             justifyContent(`FlexStart),
             overflow(LayoutTypes.Hidden),
             cursor(MouseCursors.text),
+            ...defaultStyles,
           ],
           ~target=style,
         )
@@ -166,16 +167,17 @@ let make =
         style,
       );
 
-    let inputColor =
-      List.fold_left(
-        (default, s) =>
-          switch (s) {
-          | `Color(c) => c
-          | _ => default
-          },
-        Colors.black,
-        style,
-      );
+    let inputColor = Style.unwrapStyle(style, `Color, Colors.black);
+
+    /* List.fold_left( */
+    /*   (default, s) => */
+    /*     switch (s) { */
+    /*     | `Color(c) => c */
+    /*     | _ => default */
+    /*     }, */
+    /*   Colors.black, */
+    /*   style, */
+    /* ); */
 
     let innerTextStyles =
       Style.[
