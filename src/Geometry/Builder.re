@@ -36,10 +36,10 @@ let addVertexChannel =
   switch (builder.vertexCount^) {
   | 0 => builder.vertexCount := vertexCount
   | _ =>
-    builder.vertexCount^ == vertexCount ?
-      () :
+    builder.vertexCount^ == vertexCount
+      ? ()
       /* TODO: Raise exception */
-      print_endline("Vertex count mismatch")
+      : print_endline("Vertex count mismatch")
   };
 };
 
