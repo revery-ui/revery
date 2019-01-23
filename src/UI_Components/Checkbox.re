@@ -3,12 +3,20 @@ open Revery_Core;
 
 let component = React.component("Checkbox");
 
-let make = (~checked, ~onChange, ()) =>
+let defaultStyle =
+  Style.[
+    width(50),
+    height(50),
+    border(~width=5, ~color=Colors.dodgerBlue),
+  ];
+
+let make = (~checked, ~style, ~onChange, ()) =>
   component(slots => {
     let (isChecked, checkBox, _slots: React.Hooks.empty) =
       React.Hooks.state(checked, slots);
     let bgColor = isChecked ? Colors.dodgerBlue : Colors.transparentWhite;
     let checkedContent = isChecked ? {||} : "";
+    let stylesToUse = Style.merge(~source=defaultStyle, ~target=style);
 
     <Clickable
       onClick={() => {
@@ -16,14 +24,16 @@ let make = (~checked, ~onChange, ()) =>
         onChange(!isChecked);
       }}>
       <View
-        style=Style.[
-          width(50),
-          height(50),
-          backgroundColor(bgColor),
-          border(~width=5, ~color=Colors.dodgerBlue),
-          justifyContent(`Center),
-          alignItems(`Center),
-        ]>
+        style=Style.(
+          merge(
+            ~source=[
+              backgroundColor(bgColor),
+              justifyContent(`Center),
+              alignItems(`Center),
+            ],
+            ~target=stylesToUse,
+          )
+        )>
         <Text
           text=checkedContent
           style=Style.[
@@ -37,5 +47,6 @@ let make = (~checked, ~onChange, ()) =>
   });
 let noop = _c => ();
 
-let createElement = (~children as _, ~checked=false, ~onChange=noop, ()) =>
-  React.element(make(~checked, ~onChange, ()));
+let createElement =
+    (~children as _, ~checked=false, ~style=defaultStyle, ~onChange=noop, ()) =>
+  React.element(make(~checked, ~onChange, ~style, ()));
