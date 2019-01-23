@@ -14,16 +14,15 @@ type cache = Hashtbl.t(string, texture);
 let _cache: cache = Hashtbl.create(100);
 
 let getTexture = (imagePath: string) => {
-  /* TODO: Support url paths? */
-  let execDir = Environment.getExecutingDirectory();
-  let relativeImagePath = execDir ++ imagePath;
 
-  let cacheResult = Hashtbl.find_opt(_cache, relativeImagePath);
+  let cacheResult = Hashtbl.find_opt(_cache, imagePath);
 
   let ret =
     switch (cacheResult) {
     | Some(r) => r
     | None =>
+      /* TODO: Support url paths? */
+      let fullImagePath = Environment.getAssetPath(imagePath);
       let initialImage = Image.fromColor(255, 0, 0, 255);
 
       /* Create an initial texture container */
@@ -35,7 +34,7 @@ let getTexture = (imagePath: string) => {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexImage2D(GL_TEXTURE_2D, initialImage);
 
-      let imageLoadPromise = Image.load(relativeImagePath);
+      let imageLoadPromise = Image.load(fullImagePath);
 
       let success = img => {
         glBindTexture(GL_TEXTURE_2D, texture);
@@ -44,7 +43,7 @@ let getTexture = (imagePath: string) => {
       };
 
       let _ = Lwt.bind(imageLoadPromise, success);
-      Hashtbl.add(_cache, relativeImagePath, texture);
+      Hashtbl.add(_cache, imagePath, texture);
       texture;
     };
 
