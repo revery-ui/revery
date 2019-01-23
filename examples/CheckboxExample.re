@@ -30,7 +30,10 @@ module Check = {
             fontSize(20),
           ]
         />
-        <Checkbox style=Style.[border(~width=2, ~color=Colors.green)] />
+        <Checkbox
+          checkedColor=Colors.green
+          style=Style.[border(~width=2, ~color=Colors.green)]
+        />
       </View>;
     });
   };

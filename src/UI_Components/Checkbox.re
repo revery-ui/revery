@@ -10,13 +10,14 @@ let defaultStyle =
     border(~width=5, ~color=Colors.dodgerBlue),
   ];
 
-let make = (~checked, ~style, ~onChange, ()) =>
+let make = (~checked, ~style, ~checkedColor, ~onChange, ()) =>
   component(slots => {
     let (isChecked, checkBox, _slots: React.Hooks.empty) =
       React.Hooks.state(checked, slots);
-    let bgColor = isChecked ? Colors.dodgerBlue : Colors.transparentWhite;
-    let checkedContent = isChecked ? {||} : "";
+
     let stylesToUse = Style.merge(~source=defaultStyle, ~target=style);
+    let bgColor = isChecked ? checkedColor : Colors.transparentWhite;
+    let checkedContent = isChecked ? {||} : "";
 
     <Clickable
       onClick={() => {
@@ -48,5 +49,12 @@ let make = (~checked, ~style, ~onChange, ()) =>
 let noop = _c => ();
 
 let createElement =
-    (~children as _, ~checked=false, ~style=defaultStyle, ~onChange=noop, ()) =>
-  React.element(make(~checked, ~onChange, ~style, ()));
+    (
+      ~children as _,
+      ~checked=false,
+      ~checkedColor=Colors.dodgerBlue,
+      ~style=defaultStyle,
+      ~onChange=noop,
+      (),
+    ) =>
+  React.element(make(~checked, ~onChange, ~checkedColor, ~style, ()));
