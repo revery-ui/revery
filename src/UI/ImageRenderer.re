@@ -14,7 +14,6 @@ type cache = Hashtbl.t(string, texture);
 let _cache: cache = Hashtbl.create(100);
 
 let getTexture = (imagePath: string) => {
-
   let cacheResult = Hashtbl.find_opt(_cache, imagePath);
 
   let ret =

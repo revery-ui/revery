@@ -18,21 +18,14 @@ let getExecutingDirectory = () =>
 
 let getWorkingDirectory = () => Sys.getcwd();
 
-let getAssetPath = (p) => {
-    let ret = switch (isNative) {
-    | true => {
+let getAssetPath = p => {
+  let ret =
+    isNative
+      ? {
+        let isAbsolute = p |> Fpath.v |> Fpath.normalize |> Fpath.is_abs;
 
-        let isAbsolute = p
-            |> Fpath.v
-            |> Fpath.normalize
-            |> Fpath.is_abs;
-
-        switch(isAbsolute) {
-        | true => p
-        | false => getExecutingDirectory() ++ p
-    }
-    }
-    | false => p
-    }
-    ret;
-}
+        isAbsolute ? p : getExecutingDirectory() ++ p;
+      }
+      : p;
+  ret;
+};
