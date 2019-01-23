@@ -14,53 +14,47 @@ module AdjustableLogo = {
         React.Hooks.state(0., slots);
 
       let containerStyle =
-        Style.make(
-          ~flexGrow=1,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~alignItems=LayoutTypes.AlignCenter,
-          ~flexDirection=LayoutTypes.Column,
-          (),
-        );
+        Style.[
+          flexGrow(1),
+          justifyContent(`Center),
+          alignItems(`Center),
+          flexDirection(`Column),
+        ];
 
       let textStyle =
-        Style.make(
-          ~color=Colors.white,
-          ~width=100,
-          ~fontFamily="Roboto-Regular.ttf",
-          ~fontSize=16,
-          ~margin=14,
-          (),
-        );
+        Style.[
+          color(Colors.white),
+          width(100),
+          fontFamily("Roboto-Regular.ttf"),
+          fontSize(16),
+          margin(14),
+        ];
+
       let controlsStyle =
-        Style.make(
-          ~margin=10,
-          ~flexDirection=LayoutTypes.Row,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~alignItems=LayoutTypes.AlignCenter,
-          (),
-        );
+        Style.[
+          margin(10),
+          flexDirection(`Row),
+          justifyContent(`Center),
+          alignItems(`Center),
+        ];
 
       let sliderContainerStyle =
-        Style.make(
-          ~margin=10,
-          ~borderBottom=
-            Style.Border.make(~width=1, ~color=Colors.darkGray, ()),
-          ~flexDirection=LayoutTypes.Row,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~alignItems=LayoutTypes.AlignCenter,
-          (),
-        );
+        Style.[
+          margin(10),
+          borderBottom(~width=1, ~color=Colors.darkGray),
+          flexDirection(`Row),
+          justifyContent(`Center),
+          alignItems(`Center),
+        ];
 
       let verticalSliderContainerStyle =
-        Style.make(
-          ~margin=10,
-          ~borderRight=
-            Style.Border.make(~width=1, ~color=Colors.darkGray, ()),
-          ~flexDirection=LayoutTypes.Column,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~alignItems=LayoutTypes.AlignCenter,
-          (),
-        );
+        Style.[
+          margin(10),
+          borderRight(~width=1, ~color=Colors.darkGray),
+          flexDirection(`Column),
+          justifyContent(`Center),
+          alignItems(`Center),
+        ];
 
       let toDeg = r => 180. *. r /. pi;
 
@@ -100,7 +94,11 @@ module AdjustableLogo = {
           <View style=containerStyle>
             <View style=sliderContainerStyle>
               <Text style=textStyle text="Rotation X: " />
-              <Slider onValueChanged=setRotationX maximumValue=twoPi />
+              <Slider
+                onValueChanged=setRotationX
+                value=twoPi
+                maximumValue=twoPi
+              />
               <Text
                 style=textStyle
                 text={"Value: " ++ toDegString(rotationX)}

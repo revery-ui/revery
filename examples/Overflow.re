@@ -3,18 +3,17 @@ open Revery.Core;
 open Revery.UI.Components;
 
 let containerStyle =
-  Style.make(
-    ~position=LayoutTypes.Absolute,
-    ~top=0,
-    ~bottom=0,
-    ~left=0,
-    ~right=0,
-    ~alignItems=LayoutTypes.AlignCenter,
-    ~justifyContent=LayoutTypes.JustifyCenter,
-    ~flexDirection=LayoutTypes.Column,
-    ~backgroundColor=Colors.black,
-    (),
-  );
+  Style.[
+    position(`Absolute),
+    top(0),
+    bottom(0),
+    left(0),
+    right(0),
+    alignItems(`Center),
+    justifyContent(`Center),
+    flexDirection(`Column),
+    backgroundColor(Colors.black),
+  ];
 
 let outerBox =
   Style.make(
@@ -41,17 +40,18 @@ module Sample = {
       let (hidden, setHidden, _slots: React.Hooks.empty) =
         React.Hooks.state(false, slots);
 
-      let outerStyle = {
-        ...outerBox,
-        overflow: hidden ? LayoutTypes.Visible : LayoutTypes.Scroll,
-      };
+      let outerStyle =
+        List.append(
+          outerBox,
+          [
+            Style.overflow(hidden ? LayoutTypes.Scroll : LayoutTypes.Visible),
+          ],
+        );
 
-      let onClick = _ => {
-        setHidden(!hidden);
-      };
+      let onClick = _ => setHidden(!hidden);
 
       <View style=containerStyle>
-        <ScrollView style=outerStyle> 
+        <ScrollView style=outerStyle>
             <View
               style={innerBox}
             />

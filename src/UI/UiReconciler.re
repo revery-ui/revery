@@ -28,7 +28,9 @@ module Reconciler = {
     parent;
   };
 
-  let markAsStale = () => Event.dispatch(onStale, ());
+  let markAsStale = () => {
+    Event.dispatch(onStale, ());
+  };
 
   let beginChanges = () => ();
   let commitChanges = () => ();

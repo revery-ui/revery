@@ -1,24 +1,22 @@
 open Revery_Shaders.Shader;
 
-let minOf3(x, y, z) {
+let minOf3 = (x, y, z) =>
   if (x <= y && x <= z) {
     x;
   } else if (y <= x && y <= z) {
     y;
   } else {
     z;
-  }
-}
+  };
 
-let maxOf3(x, y, z) {
+let maxOf3 = (x, y, z) =>
   if (x >= y && x >= z) {
     x;
   } else if (y >= x && y >= z) {
     y;
   } else {
     z;
-  }
-}
+  };
 
 let create = (x1, y1, x2, y2, x3, y3) => {
   let positions = [|x1, y1, x2, y2, x3, y3|];
@@ -32,10 +30,14 @@ let create = (x1, y1, x2, y2, x3, y3) => {
 
   let largerDiff = max(maxX -. minX, maxY -. minY);
 
-  let textureCoordinates =
-    [|(x1 -. minX) /. largerDiff, (y1 -. minY) /. largerDiff,
-      (x2 -. minX) /. largerDiff, (y2 -. minY) /. largerDiff,
-      (x3 -. minX) /. largerDiff, (y2 -. minY) /. largerDiff|];
+  let textureCoordinates = [|
+    (x1 -. minX) /. largerDiff,
+    (y1 -. minY) /. largerDiff,
+    (x2 -. minX) /. largerDiff,
+    (y2 -. minY) /. largerDiff,
+    (x3 -. minX) /. largerDiff,
+    (y2 -. minY) /. largerDiff,
+  |];
 
   let indices = [|0, 1, 2|];
 

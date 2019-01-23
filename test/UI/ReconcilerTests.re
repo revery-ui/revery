@@ -52,6 +52,7 @@ test("Reconciler", () => {
     };
 
     React.Container.update(container, <View ref=refCallback />) |> ignore;
+    rootNode#flushCallbacks();
 
     /* And validate that we actually got the right one, based on the node ID! */
     switch (referenceNode^) {
@@ -77,6 +78,8 @@ test("Reconciler", () => {
     /* However - the state won't be updated - it will just be queued up */
     let update1 =
       React.Container.update(container, <TestRefComponent latestRef />);
+
+    rootNode#flushCallbacks();
 
     /* We need to update again to pick up the state update */
     React.Container.update(update1, <TestRefComponent latestRef />) |> ignore;
