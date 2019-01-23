@@ -33,6 +33,15 @@ module Check = {
         <Checkbox
           checkedColor=Colors.green
           style=Style.[border(~width=2, ~color=Colors.green)]
+          checked=true
+        />
+        <Text
+          text="Default state: Checked"
+          style=Style.[
+            marginTop(10),
+            fontFamily("Roboto-Regular.ttf"),
+            fontSize(20),
+          ]
         />
       </View>;
     });
