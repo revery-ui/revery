@@ -33,6 +33,7 @@
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@brisk/brisk-reconciler": "*",
+    "@opam/fpath": "^0.7.2",
     "flex": "^1.2.2"
   },
   "resolutions": {
