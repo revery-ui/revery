@@ -36,6 +36,7 @@ class node ('a) (()) = {
   val _tabIndex: ref(option(int)) = ref(None);
   val _hasFocus: ref(bool) = ref(false);
   val _cachedNodeState: ref(option(cachedNodeState)) = ref(None);
+  val _queuedCallbacks: ref(list(callback)) = ref([]);
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
@@ -209,6 +210,17 @@ class node ('a) (()) = {
     _layoutNode := node;
     node;
   };
+  pri _queueCallback = (cb: callback) => {
+    _queuedCallbacks := List.append([cb], _queuedCallbacks^);
+  };
+  pub flushCallbacks = () => {
+    let f = cb => cb();
+    List.iter(f, _queuedCallbacks^);
+    _queuedCallbacks := [];
+
+    let fc = c => c#flushCallbacks();
+    List.iter(fc, _children^);
+  };
   /* TODO: This should really be private - it should never be explicitly set */
   pub _setParent = (n: option(node('a))) => {
     _parent := n;
@@ -219,7 +231,14 @@ class node ('a) (()) = {
       let ret = (_this :> node('a));
       let maybeRef = _this#getEvents().ref;
       switch (maybeRef) {
-      | Some(ref) => ref(ret)
+      | Some(ref) =>
+        /*
+         * Defer dispatching the `ref` until AFTER layout has occurred.
+         * A common use-case for using the ref will be getting dimension
+         * and layout information. This won't be available until AFTER
+         * layout.
+         */
+        _this#_queueCallback(() => ref(ret))
       | None => ()
       };
     | _ => ()

@@ -94,7 +94,11 @@ module AdjustableLogo = {
           <View style=containerStyle>
             <View style=sliderContainerStyle>
               <Text style=textStyle text="Rotation X: " />
-              <Slider onValueChanged=setRotationX maximumValue=twoPi />
+              <Slider
+                onValueChanged=setRotationX
+                value=twoPi
+                maximumValue=twoPi
+              />
               <Text
                 style=textStyle
                 text={"Value: " ++ toDegString(rotationX)}

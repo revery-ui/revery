@@ -20,25 +20,26 @@ let component = React.component("Slider");
 let make =
     (
       ~onValueChanged=noopValueChanged,
-      ~minimumValue=0.,
-      ~maximumValue=1.0,
-      ~thumbLength=15,
-      ~sliderLength=100,
-      ~vertical=false,
+      ~value,
+      ~minimumValue,
+      ~maximumValue,
+      ~thumbLength,
+      ~sliderLength,
+      ~vertical,
       (),
     ) =>
   component(slots => {
     let (slideRef, _setSlideRef, slots) = React.Hooks.state(None, slots);
     let (thumbRef, _setThumbRef, slots) = React.Hooks.state(None, slots);
     let (isActive, setActive, slots) = React.Hooks.state(false, slots);
-    let (thumbPosition, setThumbPosition, _slots: React.Hooks.empty) =
-      React.Hooks.state(0, slots);
+    let (v, setV, _slots: React.Hooks.empty) =
+      React.Hooks.state(value, slots);
 
     let setSlideRef = r => _setSlideRef(Some(r));
 
     let setThumbRef = r => _setThumbRef(Some(r));
 
-    let onMouseDown = (evt: NodeEvents.mouseButtonEventParams) =>
+    let availableWidth =
       switch (slideRef, thumbRef) {
       | (Some(slider), Some(thumb)) =>
         let sliderDimensions: BoundingBox2d.t = slider#getBoundingBox();
@@ -58,13 +59,20 @@ let make =
             : Vec2.get_x(thumbDimensions.max)
               -. Vec2.get_x(thumbDimensions.min);
 
-        let availableWidth = sliderWidth -. thumbWidth;
+        Some(sliderWidth -. thumbWidth);
+      | _ => None
+      };
+
+    let onMouseDown = (evt: NodeEvents.mouseButtonEventParams) =>
+      switch (slideRef, availableWidth) {
+      | (Some(slider), Some(w)) =>
+        let sliderDimensions: BoundingBox2d.t = slider#getBoundingBox();
 
         let startPosition =
           vertical
             ? Vec2.get_y(sliderDimensions.min)
             : Vec2.get_x(sliderDimensions.min);
-        let endPosition = startPosition +. availableWidth;
+        let endPosition = startPosition +. w;
 
         let getValue = x =>
           if (x < startPosition) {
@@ -81,10 +89,10 @@ let make =
 
           let normalizedValue =
             thumbPosition
-            /. availableWidth
+            /. w
             *. (maximumValue -. minimumValue)
             +. minimumValue;
-          setThumbPosition(int_of_float(thumbPosition));
+          setV(normalizedValue);
           onValueChanged(normalizedValue);
         };
 
@@ -112,6 +120,15 @@ let make =
     let trackHeight = 5;
     let thumbHeight = sliderHeight;
     let trackMargins = (sliderHeight - trackHeight) / 2;
+
+    let thumbPosition =
+      switch (availableWidth) {
+      | Some(w) =>
+        int_of_float(
+          (v -. minimumValue) /. (maximumValue -. minimumValue) *. w,
+        )
+      | None => 0
+      };
 
     let style =
       Style.[
@@ -168,9 +185,21 @@ let createElement =
       ~onValueChanged=noopValueChanged,
       ~minimumValue=0.,
       ~maximumValue=1.,
+      ~value=0.,
       ~vertical=false,
+      ~thumbLength=15,
+      ~sliderLength=100,
       (),
     ) =>
   React.element(
-    make(~vertical, ~onValueChanged, ~minimumValue, ~maximumValue, ()),
+    make(
+      ~vertical,
+      ~onValueChanged,
+      ~minimumValue,
+      ~maximumValue,
+      ~value,
+      ~thumbLength,
+      ~sliderLength,
+      (),
+    ),
   );
