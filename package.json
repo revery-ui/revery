@@ -9,7 +9,7 @@
     "build:js": "esy b dune build examples/Bin.bc.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "esy b .ci/format.sh",
-    "doc": "refmterr esy dune build @doc -p #{self.name}"
+    "doc": "refmterr esy dune build @doc --root ."
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
@@ -49,6 +49,7 @@
   "devDependencies": {
     "ocaml": "^4.7.0",
     "@opam/merlin": "*",
-    "@opam/dune": "^1.5.0"
+    "@opam/dune": "^1.5.0",
+    "@opam/odoc": "*"
   }
 }
