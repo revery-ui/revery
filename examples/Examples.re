@@ -38,7 +38,7 @@ let state: state = {
     {name: "Radio Button", render: _ => RadioButtonExample.render()},
     {name: "Game Of Life", render: _ => GameOfLife.render()},
   ],
-  selectedExample: "Radio Button",
+  selectedExample: "Animation",
 };
 
 let noop = () => ();
