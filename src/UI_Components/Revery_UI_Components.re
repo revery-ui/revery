@@ -8,3 +8,5 @@ module Clickable = Clickable;
 module Button = Button;
 module Slider = Slider;
 module Input = Input;
+module RadioGroup = RadioGroup;
+module RadioButton = RadioGroup.RadioButton;
