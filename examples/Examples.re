@@ -26,6 +26,7 @@ let state: state = {
   examples: [
     {name: "Animation", render: _w => Hello.render()},
     {name: "Button", render: _ => DefaultButton.render()},
+    {name: "Checkbox", render: _ => CheckboxExample.render()},
     {name: "Slider", render: _ => SliderExample.render()},
     {name: "Border", render: _ => Border.render()},
     {name: "Overflow", render: _w => Overflow.render()},
