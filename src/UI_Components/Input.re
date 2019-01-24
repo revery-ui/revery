@@ -138,7 +138,7 @@ let make =
        computed styles
      */
 
-    let viewStyles =
+    let allStyles =
       Style.(
         merge(
           ~source=[
@@ -153,9 +153,8 @@ let make =
         )
       );
 
-    /*
-       TODO: convert this to a getter utility function
-     */
+    let viewStyles = Style.extractViewStyles(allStyles);
+
     let inputHeight =
       List.fold_left(
         (default, s) =>
