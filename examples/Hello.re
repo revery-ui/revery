@@ -7,7 +7,7 @@ module Logo = {
 
   let make = () =>
     component(slots => {
-      let (opacity, setOpacity, slots) = React.Hooks.state(1.0, slots);
+      let (logoOpacity, setOpacity, slots) = React.Hooks.state(1.0, slots);
 
       let (rotation, slots) =
         Hooks.animation(
@@ -42,16 +42,15 @@ module Logo = {
       <View onMouseDown onMouseUp>
         <Image
           src="outrun-logo.png"
-          style={Style.make(
-            ~width=512,
-            ~height=256,
-            ~opacity,
-            ~transform=[
-              RotateY(Angle.from_radians(rotationY)),
-              RotateX(Angle.from_radians(rotation)),
-            ],
-            (),
-          )}
+          style=Style.[
+            width(512),
+            height(256),
+            opacity(logoOpacity),
+            transform([
+              Transform.RotateY(Angle.from_radians(rotationY)),
+              Transform.RotateX(Angle.from_radians(rotation)),
+            ]),
+          ]
         />
       </View>;
     });

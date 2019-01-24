@@ -250,9 +250,11 @@ type fontProps = [ | `FontFamily(string) | `FontSize(int)];
  */
 type textStyleProps = [ fontProps | props];
 type viewStyleProps = [ props];
+type imageStyleProps = [ props];
 
 let emptyTextStyle: list(textStyleProps) = [];
 let emptyViewStyle: list(viewStyleProps) = [];
+let emptyImageStyle: list(imageStyleProps) = [];
 
 let flexDirection = d => {
   let dir =
