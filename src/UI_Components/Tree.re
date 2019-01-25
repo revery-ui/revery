@@ -9,8 +9,8 @@ let component = React.component("Tree");
 
 let defaultNodeStyles = Style.[marginVertical(5)];
 
-let createTextNode = (~nodeStyles, nodeText) => {
-  <View style=nodeStyles>
+let createTextNode = nodeText => {
+  <View style=defaultNodeStyles>
     <Text
       text=nodeText
       style=Style.[
@@ -27,32 +27,37 @@ let createTextNode = (~nodeStyles, nodeText) => {
  * @param ~renderer is a function which determines how each node is rendered
  * @param t The tree to convert to a tree of JSX elements.
  */
-let rec renderTree = (~indent=2, ~renderer, ~nodeStyles, t) => {
-  let draw = renderer(~nodeStyles);
+let rec renderTree = (~indent=2, ~nodeRenderer, ~emptyRenderer=None, t) => {
   let indentStr = String.make(indent * 2, ' ');
-  let createSubtree = renderTree(~indent=indent + 1, ~renderer, ~nodeStyles);
+  let empty =
+    switch (emptyRenderer) {
+    | Some(r) => [r(indentStr, indent)]
+    | None => []
+    };
+  let createSubtree =
+    renderTree(~indent=indent + 1, ~nodeRenderer, ~emptyRenderer);
   switch (t) {
-  | Empty => [draw(indentStr ++ "X" ++ "\n")]
+  | Empty => empty
   | Node(x, leftTree, rightTree) =>
     let lft = createSubtree(leftTree);
     let right = createSubtree(rightTree);
     let joined = List.concat([lft, right]);
-    [draw(indentStr ++ x), draw("\n"), ...joined];
+    [nodeRenderer(indentStr ++ x), nodeRenderer("\n"), ...joined];
   };
 };
 
-let make = (~tree, ~renderer, ~nodeStyles, ()) =>
+let make = (~tree, ~nodeRenderer, ~emptyRenderer) =>
   component((_slots: React.Hooks.empty) => {
-    let componentTree = renderTree(tree, ~renderer, ~nodeStyles);
-    <View style=Style.[width(500), height(500)]> ...componentTree </View>;
+    let componentTree = renderTree(tree, ~nodeRenderer, ~emptyRenderer);
+    <View> ...componentTree </View>;
   });
 
 let createElement =
     (
       ~tree,
-      ~nodeStyles=defaultNodeStyles,
-      ~renderer=createTextNode,
+      ~nodeRenderer=createTextNode,
+      ~emptyRenderer=None,
       ~children as _,
       (),
     ) =>
-  React.element(make(~tree, ~renderer, ~nodeStyles, ()));
+  React.element(make(~tree, ~nodeRenderer, ~emptyRenderer));
