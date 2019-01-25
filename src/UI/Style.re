@@ -205,7 +205,7 @@ type xy = {
   vertical: int,
 };
 
-type props = [
+type coreStyleProps = [
   | `FlexGrow(int)
   | `FlexDirection(LayoutTypes.flexDirection)
   | `JustifyContent(LayoutTypes.justify)
@@ -248,9 +248,11 @@ type fontProps = [ | `FontFamily(string) | `FontSize(int)];
    these nodes are typed to only allow styles to be specified
    which are relevant to each
  */
-type textStyleProps = [ fontProps | props];
-type viewStyleProps = [ props];
-type imageStyleProps = [ props];
+type textStyleProps = [ fontProps | coreStyleProps];
+type viewStyleProps = [ coreStyleProps];
+type imageStyleProps = [ coreStyleProps];
+
+type allProps = [ coreStyleProps | fontProps];
 
 let emptyTextStyle: list(textStyleProps) = [];
 let emptyViewStyle: list(viewStyleProps) = [];
@@ -345,11 +347,22 @@ let color = o => `Color(o);
 let backgroundColor = o => `BackgroundColor(o);
 
 /*
+   Helper function to narrow down a list of all possible style props to
+   one specific to a type of component
+ */
+let rec extractViewStyles = (styles: list(allProps)): list(viewStyleProps) =>
+  switch (styles) {
+  | [] => []
+  | [#viewStyleProps as v, ...list] => [v, ...extractViewStyles(list)]
+  | [_, ...list] => extractViewStyles(list)
+  };
+
+/*
    Apply style takes all style props and maps each to the correct style
    and is used to build up the style record, which is eventually
    used to apply styling to elements.
  */
-let applyStyle = (style, styleRule: [< props | fontProps]) =>
+let applyStyle = (style, styleRule: [< coreStyleProps | fontProps]) =>
   switch (styleRule) {
   | `AlignItems(alignItems) => {...style, alignItems}
   | `JustifyContent(justifyContent) => {...style, justifyContent}

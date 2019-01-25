@@ -138,7 +138,7 @@ let make =
        computed styles
      */
 
-    let viewStyles =
+    let allStyles =
       Style.(
         merge(
           ~source=[
@@ -147,14 +147,14 @@ let make =
             justifyContent(`FlexStart),
             overflow(LayoutTypes.Hidden),
             cursor(MouseCursors.text),
+            ...defaultStyles,
           ],
           ~target=style,
         )
       );
 
-    /*
-       TODO: convert this to a getter utility function
-     */
+    let viewStyles = Style.extractViewStyles(allStyles);
+
     let inputHeight =
       List.fold_left(
         (default, s) =>
@@ -163,6 +163,17 @@ let make =
           | _ => default
           },
         18,
+        style,
+      );
+
+    let inputFontSize =
+      List.fold_left(
+        (default, s) =>
+          switch (s) {
+          | `FontSize(fs) => fs
+          | _ => default
+          },
+        20,
         style,
       );
 
@@ -181,7 +192,7 @@ let make =
       Style.[
         color(hasPlaceholder ? placeholderColor : inputColor),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(20),
+        fontSize(inputFontSize),
         alignItems(`Center),
         justifyContent(`FlexStart),
         marginLeft(6),
