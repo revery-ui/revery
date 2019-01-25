@@ -22,13 +22,40 @@ module TreeView = {
       )
     );
 
+  type song = {
+    title: string,
+    artist: string,
+  };
+
+  let recordTree =
+    Tree.(
+      Node(
+        {title: "awesome tunes", artist: "cool dude"},
+        Node(
+          {title: "terrible song", artist: "awful person"},
+          Node(
+            {title: "jamba juice", artist: "jamba juicers"},
+            Empty,
+            Empty,
+          ),
+          Empty,
+        ),
+        Node(
+          {artist: "Michael Jackson", title: "Beat It!"},
+          Node({artist: "Janet Jackson", title: "Thriller"}, Empty, Empty),
+          Empty,
+        ),
+      )
+    );
+
   let make = (~renderer, ()) =>
     component((_slots: React.Hooks.empty) =>
       switch (renderer) {
-      | Some(fn) => <Tree tree=stringTree nodeRenderer=fn />
+      | Some(fn) => <Tree tree=recordTree nodeRenderer=fn />
       | None =>
         <Tree
           tree=stringTree
+          nodeRenderer=Tree.default
           emptyRenderer={
             Some(
               indent => {
@@ -48,15 +75,21 @@ module TreeView = {
       }
     );
 
-  let customRenderer = (~indent, node) => {
+  let customRenderer = (~indent, {artist, title}) => {
+    let textStyles =
+      Style.[
+        color(Colors.white),
+        fontFamily("Roboto-Regular.ttf"),
+        fontSize(15),
+      ];
     <View
       style=Style.[
         justifyContent(`Center),
         alignItems(`Center),
         marginLeft(indent * 30),
         backgroundColor(Colors.blue),
-        width(100),
-        height(30),
+        width(120),
+        height(60),
         marginVertical(5),
         boxShadow(
           ~xOffset=-4.,
@@ -66,14 +99,8 @@ module TreeView = {
           ~color=Color.rgba(0., 0., 0., 0.5),
         ),
       ]>
-      <Text
-        text=node
-        style=Style.[
-          color(Colors.white),
-          fontFamily("Roboto-Regular.ttf"),
-          fontSize(15),
-        ]
-      />
+      <Text text=title style=textStyles />
+      <Text text=artist style=textStyles />
     </View>;
   };
 

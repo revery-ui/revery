@@ -9,7 +9,7 @@ let component = React.component("Tree");
 
 let defaultNodeStyles = Style.[marginVertical(5)];
 
-let createTextNode = (~indent, nodeText) => {
+let default = (~indent, nodeText) => {
   let indentStr = String.make(indent * 2, ' ');
   <View style=defaultNodeStyles>
     <Text
@@ -53,12 +53,11 @@ let make = (~tree, ~nodeRenderer, ~emptyRenderer) =>
     <View> ...componentTree </View>;
   });
 
+/*
+   Cannot set a default argument for the node renderer as this will
+   narrow down the type signature of the "tree" to whaterver type the
+   default takes making it no longer generalisable
+ */
 let createElement =
-    (
-      ~tree,
-      ~nodeRenderer=createTextNode,
-      ~emptyRenderer=None,
-      ~children as _,
-      (),
-    ) =>
+    (~tree, ~nodeRenderer, ~emptyRenderer=None, ~children as _, ()) =>
   React.element(make(~tree, ~nodeRenderer, ~emptyRenderer));
