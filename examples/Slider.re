@@ -66,16 +66,15 @@ module AdjustableLogo = {
         <View>
           <Image
             src="outrun-logo.png"
-            style={Style.make(
-              ~width=512,
-              ~height=256,
-              ~transform=[
-                RotateZ(Angle.from_radians(rotationZ)),
-                RotateY(Angle.from_radians(rotationY)),
-                RotateX(Angle.from_radians(rotationX)),
-              ],
-              (),
-            )}
+            style=Style.[
+              width(512),
+              height(256),
+              transform([
+                Transform.RotateZ(Angle.from_radians(rotationZ)),
+                Transform.RotateY(Angle.from_radians(rotationY)),
+                Transform.RotateX(Angle.from_radians(rotationX)),
+              ]),
+            ]
           />
         </View>
         <View style=controlsStyle>

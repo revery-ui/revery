@@ -189,13 +189,14 @@ module Image = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
-        ~style=Style.defaultStyle,
+        ~style=Style.emptyImageStyle,
         ~src="",
         children,
       ) =>
     component((_: UiReact.Hooks.empty) =>
       {
         make: () => {
+          let styles = Style.create(~style, ());
           let events =
             NodeEvents.make(
               ~ref?,
@@ -207,10 +208,11 @@ module Image = {
             );
           let node = (new ImageNode.imageNode)(src);
           node#setEvents(events);
-          node#setStyle(style);
+          node#setStyle(styles);
           Obj.magic(node);
         },
         configureInstance: (~isFirstRender as _, node) => {
+          let styles = Style.create(~style, ());
           let events =
             NodeEvents.make(
               ~ref?,
@@ -221,7 +223,7 @@ module Image = {
               (),
             );
           node#setEvents(events);
-          node#setStyle(style);
+          node#setStyle(styles);
           node;
         },
         children,
@@ -235,7 +237,7 @@ module Image = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
-        ~style=Style.defaultStyle,
+        ~style=Style.emptyImageStyle,
         ~src="",
         ~children,
         (),
