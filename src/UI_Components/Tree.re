@@ -7,16 +7,10 @@ type tree('a) =
 
 let component = React.component("Tree");
 
-let stringTree =
-  Node(
-    "a",
-    Node("b", Empty, Empty),
-    Node("c", Node("d", Empty, Empty), Empty),
-  );
+let defaultNodeStyles = Style.[marginVertical(5)];
 
-let drawNode = nodeText => {
-  print_endline("nodeText: " ++ nodeText);
-  <View>
+let createTextNode = (~nodeStyles, nodeText) => {
+  <View style=nodeStyles>
     <Text
       text=nodeText
       style=Style.[
@@ -28,23 +22,37 @@ let drawNode = nodeText => {
   </View>;
 };
 
-let rec renderTree = (~indent=0, ~renderer=drawNode, t: tree('a)) => {
+/**
+ * @param ~indent How much to indent the current (sub)tree.
+ * @param ~renderer is a function which determines how each node is rendered
+ * @param t The tree to convert to a tree of JSX elements.
+ */
+let rec renderTree = (~indent=2, ~renderer, ~nodeStyles, t) => {
+  let draw = renderer(~nodeStyles);
   let indentStr = String.make(indent * 2, ' ');
+  let createSubtree = renderTree(~indent=indent + 1, ~renderer, ~nodeStyles);
   switch (t) {
-  | Empty => [renderer(indentStr ++ "X" ++ "\n")]
+  | Empty => [draw(indentStr ++ "X" ++ "\n")]
   | Node(x, leftTree, rightTree) =>
-    let lft = renderTree(~indent=indent + 1, ~renderer, leftTree);
-    let right = renderTree(~indent=indent + 1, ~renderer, rightTree);
+    let lft = createSubtree(leftTree);
+    let right = createSubtree(rightTree);
     let joined = List.concat([lft, right]);
-    [renderer(indentStr), renderer(x), renderer("\n"), ...joined];
+    [draw(indentStr ++ x), draw("\n"), ...joined];
   };
 };
 
-let make = (~tree, ()) =>
+let make = (~tree, ~renderer, ~nodeStyles, ()) =>
   component((_slots: React.Hooks.empty) => {
-    let componentTree = renderTree(tree);
+    let componentTree = renderTree(tree, ~renderer, ~nodeStyles);
     <View style=Style.[width(500), height(500)]> ...componentTree </View>;
   });
 
-let createElement = (~tree=stringTree, ~children as _, ()) =>
-  React.element(make(~tree, ()));
+let createElement =
+    (
+      ~tree,
+      ~nodeStyles=defaultNodeStyles,
+      ~renderer=createTextNode,
+      ~children as _,
+      (),
+    ) =>
+  React.element(make(~tree, ~renderer, ~nodeStyles, ()));

@@ -5,7 +5,25 @@ open Revery.UI.Components;
 module TreeView = {
   let component = React.component("TreeView");
 
-  let make = () => component((_slots: React.Hooks.empty) => <Tree />);
+  let stringTree =
+    Tree.(
+      Node(
+        "root",
+        Node("subfolder 1", Empty, Empty),
+        Node(
+          "home",
+          Node("downloads", Empty, Empty),
+          Node(
+            "desktop",
+            Node("subfolder 2", Empty, Empty),
+            Node("subfolder 3", Empty, Empty),
+          ),
+        ),
+      )
+    );
+
+  let make = () =>
+    component((_slots: React.Hooks.empty) => <Tree tree=stringTree />);
 
   let createElement = (~children as _, ()) => React.element(make());
 };
