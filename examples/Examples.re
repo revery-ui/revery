@@ -93,8 +93,7 @@ type action =
 
 let reducer = (s: state, a: action) => {
   switch (a) {
-    | SelectExample(name) =>
-      {...s, selectedExample: name}
+  | SelectExample(name) => {...s, selectedExample: name}
   };
 };
 

@@ -26,7 +26,7 @@ module ActionButton = {
         ];
       <Clickable style=wrapperStyle onClick>
         <Text style=textHeaderStyle text=name />
-      </Clickable>
+      </Clickable>;
     });
 
   let createElement = (~children as _, ~name, ~onClick, ()) =>
@@ -36,10 +36,11 @@ module ActionButton = {
 module CaptureArea = {
   let component = React.component("Capture Area");
 
-  let make = (w) =>
-    component((slots) => {
+  let make = w =>
+    component(slots => {
       let (count, setCount, slots) = React.Hooks.state(0, slots);
-      let (file, setFile, _slots: React.Hooks.empty) = React.Hooks.state(None, slots);
+      let (file, setFile, _slots: React.Hooks.empty) =
+        React.Hooks.state(None, slots);
 
       let capture = () => {
         let exed = Environment.getExecutingDirectory();
@@ -60,24 +61,18 @@ module CaptureArea = {
           flexDirection(`Column),
         ];
 
-      let imageStyle =
-        Style.[
-          width(400),
-          height(300),
-        ];
+      let imageStyle = Style.[width(400), height(300)];
 
       <View style=viewStyle>
         <ActionButton name="Take a screenshot!" onClick=capture />
-        (switch (file) {
-          | None => <View />
-          | Some(src) => <Image style=imageStyle src />
-        })
+        {switch (file) {
+         | None => <View />
+         | Some(src) => <Image style=imageStyle src />
+         }}
       </View>;
-
     });
 
   let createElement = (~w, ~children as _, ()) => React.element(make(w));
 };
 
-let render = (w) =>
-  <CaptureArea w />;
+let render = w => <CaptureArea w />;
