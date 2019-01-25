@@ -114,7 +114,9 @@ let render = (w: t) => {
 
   w.render();
 
-  Glfw.glfwSwapBuffers(w.glfwWindow);
+  Performance.bench("glfwSwapBuffers", () => {
+      Glfw.glfwSwapBuffers(w.glfwWindow);
+  });
   w.isRendering = false;
 };
 

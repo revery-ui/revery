@@ -6,7 +6,8 @@
   "bugs": { "url": "https://github.com/bryphe/revery/issues" },
   "scripts": {
     "build": "esy b",
-    "build:js": "esy b dune build examples/Bin.bc.js",
+    "build:js": "esy b dune build examples/Examples.bc.js",
+    "build:release": "esy b dune build --profile=release --root . -j4",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "esy b .ci/format.sh",
     "doc": "refmterr esy dune build @doc --root ."
@@ -14,6 +15,7 @@
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
     "build": [ "dune build --root . -j4" ],
+    "buildsInSource": "_build",
     "install": [
       "esy-installer Revery.install", "esy-installer Revery_Core.install",
       "esy-installer Revery_Geometry.install",
@@ -41,7 +43,8 @@
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#f545ba0"
+    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#f545ba0",
+    "reason-fontkit": "link:../reason-fontkit"
   },
   "peerDependencies": {
     "ocaml": "^4.7.0"
