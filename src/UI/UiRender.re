@@ -18,14 +18,14 @@ open RenderPass;
 
 let _projection = Mat4.create();
 
-let render = (container: UiContainer.t, component: UiReact.emptyHook) => {
-  let {rootNode, container, window, options, _} = container;
+let render = (container: UiContainer.t, component: UiReact.syntheticElement) => {
+  let {rootNode, window, container, options, _} = container;
 
   AnimationTicker.tick();
 
   /* Perform reconciliation */
-  Performance.bench("updateContainer", () =>
-    UiReact.updateContainer(container, component)
+  Performance.bench("reconcile", () =>
+    container := UiReact.Container.update(container^, component)
   );
 
   /* Layout */
@@ -55,23 +55,26 @@ let render = (container: UiContainer.t, component: UiReact.emptyHook) => {
   };
 
   /* Render */
+  Performance.bench("recalculate", () => rootNode#recalculate());
 
-  Mat4.ortho(
-    _projection,
-    0.0,
-    float_of_int(size.width),
-    float_of_int(size.height),
-    0.0,
-    1000.0,
-    -1000.0,
-  );
+  /* Flush any node callbacks */
+  Performance.bench("flush", () => rootNode#flushCallbacks());
 
   Performance.bench("draw", () => {
     /* Do a first pass for all 'opaque' geometry */
     /* This helps reduce the overhead for the more expensive alpha pass, next */
 
-    let drawContext =
-      NodeDrawContext.create(int_of_float(pixelRatio), 0, 1.0, size.height);
+    Mat4.ortho(
+      _projection,
+      0.0,
+      float_of_int(size.width),
+      float_of_int(size.height),
+      0.0,
+      1000.0,
+      -1000.0,
+    );
+
+    let drawContext = NodeDrawContext.create(pixelRatio, 0, 1.0, size.height);
 
     let solidPass = SolidPass(_projection);
     rootNode#draw(solidPass, drawContext);

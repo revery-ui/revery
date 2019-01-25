@@ -5,6 +5,8 @@
 
 Build __native__, _high-performance_, __cross-platform__ desktop apps with [reason](https://reasonml.github.io/)!
 
+:construction: __NOTE:__ Revery is a work-in-progress and in active development! :construction:
+
 ## Building & Installing
 
 ### Install [esy](https://esy.sh/)
@@ -33,13 +35,30 @@ Install the following packages with your package manager of choice:
 * `cmake`
 * `ragel`
 
+##### For `Ubuntu` you may need these additional packages
+* `libpng-dev`
+* `libbz2-dev`
+* `m4`
+
+#### For `Windows` native
+
+No additional dependencies needed. 
+
+> __NOTE:__ `esy` requires building from an Administrator prompt (either `cmd.exe` or `Powershell`).
+
+#### For `Windows` Subsystem for Linux (`WSL`)
+
+- `sudo apt install libpng-dev libbz2-dev m4 xorg-dev libglu1-mesa-dev`
+
+> __NOTE:__ Hardware acceleration is not enabled by default in WSL (instead, WSL will fall-back to a _software_ renderer). This is problematic for performance - for that reason, we recommend building and running Revery natively on Windows instead of with WSL. For more info see: (https://github.com/Microsoft/WSL/issues/637 and a [potential workaround](https://superuser.com/questions/1238925/use-accelerated-graphics-on-windows-10-linux-subsystem-with-xming))
+
 ### Running
 
-After building, you can run the 'Hello World' example via:
+After building, you can run the example app by running:
 
-- `esy x Hello`
+- `esy x Examples`
 
-Check out our [examples](https://github.com/revery-ui/revery/tree/master/examples) for more to try!
+Check out our [examples](https://github.com/revery-ui/revery/tree/master/examples) to see how they work!
 
 ### Tests
 
@@ -51,7 +70,7 @@ Tests can be run with:
 
 Today, [Electron](https://electronjs.org/) is one of the most popular tools for building desktop apps - using an HTML, JS, CSS stack. However, it has a heavy footprint in terms of both RAM and CPU - __essentially packing an entire browser into the app.__ Even with that tradeoff, it has a lot of great aspects - it's the quickest way to build a cross-platform app & it provides a great development experience - as can be testified by its usage in popular apps like VSCode, Discord, and Slack.
 
-Revery is kind of like super-fast, _native_ Electron - with a bundled React, Redux, and a fast build system - all ready to go!
+Revery is kind of like super-fast, _native_ Electron - with bundled React-like/Redux-like libraries and a fast build system - all ready to go!
 
 Revery is built with [reasonml](https://reasonml.github.io), which is a javascript-like syntax on top of [OCaml](https://ocaml.org) This means that the language is accessible to JS developers.
 
@@ -74,6 +93,10 @@ Performance should be at the forefront, and not a compromise - we need to develo
 
 We might have some dirty mutable objects for performance - but our high-level API should be purely functional. You should be able to follow the React model of modelling your UI as a _pure function_ of application state -> UI.
 
+## Screenshots
+
+![Slider components](screenshots/sliders.png)
+
 ## Quickstart
 
 Check out [revery-quick-start](https://github.com/bryphe/revery-quick-start) to get up and running with your own Revery app!
@@ -82,29 +105,54 @@ Check out [revery-quick-start](https://github.com/bryphe/revery-quick-start) to 
 
 Here's a super simple Revery app, demonstrating the basic API surface:
 
-```ocaml
-open Revery;
-open Revery.Core;
-open Revery.UI;
-
-/* The 'main' function for our app */
+```reason
+/**
+ * The 'main' function for our app.
+ */
 let init = app => {
-
   /* Create a window! */
   let win = App.createWindow(app, "test");
 
   /* Set up some styles */
-  let textHeaderStyle = Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=24, ());
+  let textHeaderStyle =
+    Style.[
+      backgroundColor(Colors.black),
+      color(Colors.white),
+      fontFamily("Roboto-Regular.ttf"),
+      fontSize(24),
+    );
 
   /* Set up render function */
   let render = () => {
-      <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=10, ~top=10, ~left=10, ~right=10, ~backgroundColor=Colors.blue, ()))>
-          <view style=(Style.make(~position=LayoutTypes.Absolute, ~bottom=0, ~width=10, ~height=10, ~backgroundColor=Colors.red, ())) />
-          <image src="logo.png" style=(Style.make(~width=128, ~height=64, ())) />
-          <text style=(textHeaderStyle)>"Hello World!"</text>
-          <view style=(Style.make(~width=25, ~height=25, ~backgroundColor=Colors.green, ())) />
-      </view>
-   };
+    <view
+      style={Style.[
+        position(`Absolute),
+        bottom(10),
+        top(10),
+        left(10),
+        right(10),
+        backgroundColor(Colors.blue),
+      ]}>
+      <view
+        style={Style.[
+          position(`Absolute),
+          bottom(0),
+          width(10),
+          height(10),
+          backgroundColor(Colors.red),
+        ]}
+      />
+      <image src="logo.png" style={Style.make(~width=128, ~height=64, ())} />
+      <text style=textHeaderStyle> "Hello World!" </text>
+      <view
+        style={Style.[
+          width(25),
+          height(25),
+          backgroundColor(Colors.green),
+        ]}
+      />
+    </view>;
+  };
 
   /* Start the UI */
   UI.start(win, render);
@@ -126,10 +174,10 @@ Some tentative work we need to do, in no particular order:
 
 - UI Infrastructure
     - [x] Styles
-    - [ ] State management / Redux-like layer
-    - [ ] Focus Management
-    - [ ] Input handling
-    - [ ] Animations
+    - [x] State management / Redux-like layer
+    - [x] Focus Management
+    - [x] Input handling
+    - [x] Animations
     - [ ] Gestures
     - [x] Transforms
     - [ ] Compositing / Container
@@ -138,16 +186,16 @@ Some tentative work we need to do, in no particular order:
     - [x] View
     - [x] Image
     - [x] Text
-    - [ ] Input
-    - [ ] Button
-    - [ ] Slider
-    - [ ] Checkbox
-    - [ ] ScrollView
+    - [x] Input
+    - [x] Button
+    - [x] Slider
+    - [x] Checkbox
+    - [x] ScrollView
 - Platform support
     - [x] Windows
     - [x] OSX
     - [x] Linux
-    - [ ] Web (JS + Wasm)
+    - [x] Web (JS + Wasm)
 - Mobile support
     - [ ] Compilation to iOS
     - [ ] Compilation to Android
@@ -161,7 +209,7 @@ Some tentative work we need to do, in no particular order:
     - [ ] MP3 file playback
 - Example apps
     - [x] [Quickstart](https://github.com/bryphe/revery-quick-start) / Hello World
-    - [ ] Calculator
+    - [x] Calculator
     - [ ] Todo List
 
 ## License
@@ -170,7 +218,7 @@ Revery is provided under the [MIT License](LICENSE).
 
 ## Contributing
 
-We'd love your help, and welcome PRs and contributions. Join  us on [Discord](https://discord.gg/UvQ2cFn)!
+We'd love your help, and welcome PRs and contributions. Join us on [Discord](https://discord.gg/UvQ2cFn)!
 
 Some ideas for getting started:
 - Help us build example apps,
@@ -183,11 +231,10 @@ Some ideas for getting started:
 - [ocaml](https://ocaml.org) made these tools possible - thanks [Inria](https://caml.inria.fr) & [OCaml Labs](http://ocamllabs.io/)!
 - [reasonml](https://reasonml.github.io) made revery possible - thanks @jordwalke!
 - [flex](https://github.com/jordwalke/flex) by @jordwalke
-- [reason-reactify](https://github.com/bryphe/reason-reactify)
-    - [Didact's DUI React tutorial](https://engineering.hexacta.com/didact-learning-how-react-works-by-building-it-from-scratch-51007984e5c5)
-    - [ReactMini](https://github.com/reasonml/reason-react/tree/master/ReactMini)
+- [briskml](https://github.com/briskml)
+    - [brisk-reconciler](https://github.com/briskml/brisk-reconciler) - the "native React" implementation.
 - [reason-glfw](https://github.com/bryphe/reason-glfw)
-    - [GLFW](https://www.glfw.org) -
+    - [GLFW](https://www.glfw.org)
     - [stb-image](https://github.com/nothings/stb)
 - [reason-fontkit](https://github.com/bryphe/reason-fontkit)
     - [freetype2](https://www.freetype.org)
@@ -198,7 +245,7 @@ Some ideas for getting started:
 
 `revery` was inspired by some __awesome projects:__
 - [react-native](https://facebook.github.io/react-native/)
-- [briskml](https://github.com/briskml/brisk)
-- [elm](https://elm-lang.org/)
+- [ReactMini](https://github.com/reasonml/reason-react/tree/master/ReactMini)
 - [cuite](https://github.com/let-def/cuite)
 - [wall](https://github.com/let-def/wall)
+- [elm](https://elm-lang.org/)

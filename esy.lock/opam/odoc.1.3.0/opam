@@ -1,0 +1,39 @@
+opam-version: "2.0"
+
+name: "odoc"
+version: "1.3.0"
+homepage: "http://github.com/ocaml-doc/odoc"
+doc: "https://ocaml-doc.github.com/odoc/"
+bug-reports: "https://github.com/ocaml-doc/odoc/issues"
+license: "ISC"
+
+authors: [
+  "Thomas Refis <trefis@janestreet.com>"
+  "David Sheets <sheets@alum.mit.edu>"
+  "Leo White <leo@lpw25.net>"
+]
+maintainer: "Anton Bachin <antonbachin@yahoo.com>"
+dev-repo: "git+http://github.com/ocaml-doc/odoc.git"
+
+depends: [
+  "astring" {build}
+  "bos" {build}
+  "dune" {build}
+  "cmdliner" {build}
+  "cppo" {build}
+  "fpath" {build}
+  "ocaml" {build & >= "4.02.0"}
+  "result" {build}
+  "tyxml" {build & >= "4.0.0"}
+]
+build: [
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+]
+
+synopsis: "OCaml documentation generator"
+
+url {
+  src: "https://github.com/ocaml/odoc/archive/1.3.0.tar.gz"
+  checksum: "md5=c734b6ffc158b9519ef2c1463f5789ba"
+}

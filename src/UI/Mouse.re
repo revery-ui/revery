@@ -54,7 +54,7 @@ let releaseCapture = () => {
   capturedEventStateInstance.onMouseWheel := None;
 };
 
-let handleCapture = (mouseEvent: mouseEvent) => {
+let handleCapture = (event: event) => {
   let ce = capturedEventStateInstance;
 
   switch (
@@ -62,7 +62,7 @@ let handleCapture = (mouseEvent: mouseEvent) => {
     ce.onMouseMove^,
     ce.onMouseUp^,
     ce.onMouseWheel^,
-    mouseEvent,
+    event,
   ) {
   | (Some(h), _, _, _, MouseDown(evt)) =>
     h(evt);
@@ -102,22 +102,41 @@ let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
 
 let onCursorChanged: Event.t(MouseCursors.t) = Event.create();
 
+let isMouseDownEv =
+  fun
+  | MouseDown(_) => true
+  | _ => false;
+
 let dispatch =
     (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node('a)) => {
-  let pos = getPositionFromMouseEvent(cursor, evt);
+  node#hasRendered()
+    ? {
+      let pos = getPositionFromMouseEvent(cursor, evt);
 
-  let eventToSend = internalToExternalEvent(cursor, evt);
+      let eventToSend = internalToExternalEvent(cursor, evt);
 
-  if (!handleCapture(eventToSend)) {
-    let deepestNode = getDeepestNode(node, pos);
-    switch (deepestNode^) {
-    | None => ()
-    | Some(node) =>
-      bubble(node, eventToSend);
-      let cursor = node#getCursorStyle();
-      Event.dispatch(onCursorChanged, cursor);
-    };
-  };
+      let mouseDown = isMouseDownEv(eventToSend);
+      if (mouseDown) {
+        switch (getFirstFocusable(node, pos)) {
+        | Some(node) => Focus.dispatch(node)
+        | None => Focus.loseFocus()
+        };
+      } else {
+        ();
+      };
 
-  Cursor.set(cursor, pos);
+      if (!handleCapture(eventToSend)) {
+        let deepestNode = getDeepestNode(node, pos);
+        switch (deepestNode^) {
+        | None => ()
+        | Some(node) =>
+          bubble(node, eventToSend);
+          let cursor = node#getCursorStyle();
+          Event.dispatch(onCursorChanged, cursor);
+        };
+      };
+
+      Cursor.set(cursor, pos);
+    }
+    : ();
 };

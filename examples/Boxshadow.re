@@ -1,83 +1,49 @@
-open Revery;
 open Revery.UI;
 open Revery.Core;
 
-let init = app => {
-  let monitor = Monitor.getPrimaryMonitor() |> Monitor.getSize;
-  let width = monitor.width * 80 / 100;
-  let centerX = monitor.width / 2 - width / 2;
-  let height = monitor.height - 100;
+let parentStyles =
+  Style.[
+    position(`Relative),
+    flexGrow(1),
+    alignItems(`Center),
+    justifyContent(`Center),
+    flexDirection(`Column),
+  ];
 
-  let win =
-    App.createWindow(
-      app,
-      "box-shadow-example",
-      ~createOptions={...Window.defaultCreateOptions, width, height},
-    );
-
-  Window.setPos(win, centerX, 0);
-
-  let parentWidth = width - 10;
-  let parentHeight = height / 2;
-
-  let parentStyles =
-    Style.make(
-      ~position=LayoutTypes.Relative,
-      ~width=parentWidth,
-      ~height=parentHeight,
-      ~alignItems=LayoutTypes.AlignCenter,
-      ~justifyContent=LayoutTypes.JustifySpaceBetween,
-      ~flexDirection=LayoutTypes.Column,
-      (),
-    );
-
-  let shadowOne =
-    Style.BoxShadow.make(
+let firstShadow =
+  Style.[
+    backgroundColor(Colors.blue),
+    position(`Relative),
+    width(100),
+    height(100),
+    boxShadow(
       ~yOffset=-10.,
-      ~xOffset=10.,
-      ~blurRadius=40.,
+      ~xOffset=0.,
+      ~blurRadius=15.,
       ~color=Colors.black,
-      ~spreadRadius=20.,
-      (),
-    );
+      ~spreadRadius=10.,
+    ),
+    marginVertical(30),
+  ];
 
-  let shadowTwo =
-    Style.BoxShadow.make(
+let secondShadow =
+  Style.[
+    backgroundColor(Colors.red),
+    position(`Relative),
+    width(100),
+    height(100),
+    boxShadow(
       ~yOffset=10.,
       ~xOffset=-30.,
-      ~blurRadius=50.,
+      ~blurRadius=20.,
       ~color=Colors.green,
       ~spreadRadius=0.,
-      (),
-    );
+    ),
+    marginVertical(30),
+  ];
 
-  let firstShadow =
-    Style.make(
-      ~backgroundColor=Colors.blue,
-      ~position=LayoutTypes.Relative,
-      ~width=500,
-      ~height=480,
-      ~boxShadow=shadowOne,
-      ~marginTop=20,
-      (),
-    );
-
-  let secondShadow =
-    Style.make(
-      ~backgroundColor=Colors.red,
-      ~position=LayoutTypes.Relative,
-      ~width=500,
-      ~height=480,
-      ~boxShadow=shadowTwo,
-      (),
-    );
-
-  UI.start(win, () =>
-    <view style=parentStyles>
-      <view style=firstShadow />
-      <view style=secondShadow />
-    </view>
-  );
-};
-
-App.start(init);
+let render = () =>
+  <View style=parentStyles>
+    <View style=firstShadow />
+    <View style=secondShadow />
+  </View>;

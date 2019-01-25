@@ -1,6 +1,5 @@
 open Reglfw;
 
-module Event = Reactify.Event;
 module Color = Color_wrapper;
 
 open Events;
@@ -313,6 +312,8 @@ let getFramebufferSize = (w: t) => {
   };
   r;
 };
+
+let maximize = (w: t) => Glfw.glfwMaximizeWindow(w.glfwWindow);
 
 let getDevicePixelRatio = (w: t) => {
   let windowSizeInScreenCoordinates = getSize(w);

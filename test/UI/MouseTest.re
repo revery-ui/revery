@@ -7,6 +7,7 @@ let createNodeWithStyle = style => {
   let node = (new node)();
   node#setStyle(style);
   Layout.layout(node, 1.0);
+  node#recalculate();
   node;
 };
 
@@ -47,6 +48,38 @@ test("Mouse", () => {
       Mouse.dispatch(cursor, InternalMouseUp({button: BUTTON_LEFT}), node);
 
       expect(count^).toBe(0);
+    });
+    test("does trigger onFocus for node", () => {
+      let cursor = Mouse.Cursor.make();
+      Mouse.Cursor.set(cursor, Revery_Math.Vec2.create(50.0, 50.0));
+
+      let count = ref(0);
+      let f = _evt => count := count^ + 1;
+      let node =
+        createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
+      node#setEvents(NodeEvents.make(~onFocus=f, ()));
+      node#setTabIndex(Some(1));
+
+      Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
+
+      expect(count^).toBe(1);
+    });
+    test(
+      "does trigger onBlur for node after cursor is pressed outside the node",
+      () => {
+      let cursor = Mouse.Cursor.make();
+      Mouse.Cursor.set(cursor, Revery_Math.Vec2.create(50.0, 50.0));
+
+      let count = ref(0);
+      let f = _evt => count := count^ + 1;
+      let node =
+        createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
+      node#setEvents(NodeEvents.make(~onBlur=f, ()));
+      node#setTabIndex(Some(1));
+      Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
+      Mouse.Cursor.set(cursor, Revery_Math.Vec2.create(200.0, 200.0));
+      Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
+      expect(count^).toBe(1);
     });
   });
 
