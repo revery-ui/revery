@@ -60,39 +60,20 @@ module Clock = {
           slots,
         );
 
-      let clockWrapperStyle =
-        Style.make(
-          ~margin=20,
-          ~width=150,
-          ~borderBottom=Style.Border.make(~color=Colors.gray, ~width=2, ()),
-          (),
-        );
-
-      let startStop = () => {
+      let startStop = () =>
         state.isRunning
           ? dispatch(Stop)
+          /*
+           * If we're not already running, we'll start a timer job
+           * and use the delta time it passes to update our reducer.
+           */
           : {
-            /* 
-             * If we're not already running, we'll start a timer job
-             * and use the delta time it passes to update our reducer.
-             */
             let dispose =
               Tick.interval(t => dispatch(TimerTick(t)), Seconds(0.));
 
             /* We'll also keep a handle on the dispose function so we can make sure its called on stop*/
             dispatch(Start(dispose));
           };
-      };
-
-      let style =
-        Style.make(
-          ~color=Colors.white,
-          ~fontFamily="Roboto-Regular.ttf",
-          ~fontSize=24,
-          ~marginVertical=20,
-          ~width=200,
-          (),
-        );
 
       let buttonText = state.isRunning ? "STOP" : "START";
 
@@ -100,35 +81,45 @@ module Clock = {
       let getMarcherPosition = t =>
         sin(Time.to_float_seconds(t) *. 2. *. pi) /. 2. +. 0.5;
 
-      let marcherStyle =
-        Style.make(
-          ~position=LayoutTypes.Absolute,
-          ~bottom=0,
-          ~opacity=marcherOpacity,
-          ~left=int_of_float(getMarcherPosition(state.elapsedTime) *. 146.),
-          ~width=4,
-          ~height=4,
-          ~backgroundColor=Color.hex("#90f7ff"),
-          (),
-        );
-
       <View
-        style={Style.make(
-          ~position=LayoutTypes.Absolute,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          ~alignItems=LayoutTypes.AlignCenter,
-          ~bottom=0,
-          ~top=0,
-          ~left=0,
-          ~right=0,
-          (),
-        )}>
-        <View style=clockWrapperStyle>
+        style=Style.[
+          position(`Absolute),
+          justifyContent(`Center),
+          alignItems(`Center),
+          bottom(0),
+          top(0),
+          left(0),
+          right(0),
+        ]>
+        <View
+          style=Style.[
+            margin(20),
+            width(150),
+            borderBottom(~color=Colors.gray, ~width=2),
+          ]>
           <Text
-            style
+            style=Style.[
+              color(Colors.white),
+              fontFamily("Roboto-Regular.ttf"),
+              fontSize(24),
+              marginVertical(20),
+              width(200),
+            ]
             text={string_of_float(state.elapsedTime |> Time.to_float_seconds)}
           />
-          <View style=marcherStyle />
+          <View
+            style=Style.[
+              position(`Absolute),
+              bottom(0),
+              opacity(marcherOpacity),
+              left(
+                int_of_float(getMarcherPosition(state.elapsedTime) *. 146.),
+              ),
+              width(4),
+              height(4),
+              backgroundColor(Color.hex("#90f7ff")),
+            ]
+          />
         </View>
         <Button title=buttonText onClick=startStop />
       </View>;

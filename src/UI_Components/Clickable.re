@@ -15,7 +15,7 @@ let component = React.component("Clickable");
 
 let make =
     (
-      ~style=Style.defaultStyle,
+      ~style,
       ~onClick: clickFunction=noop,
       ~onBlur=?,
       ~onFocus=?,
@@ -23,7 +23,7 @@ let make =
       children: React.syntheticElement,
     ) =>
   component(slots => {
-    let (opacity, setOpacity, _slots: React.Hooks.empty) =
+    let (animatedOpacity, setOpacity, _slots: React.Hooks.empty) =
       React.Hooks.state(0.8, slots);
 
     /* TODO:
@@ -38,17 +38,22 @@ let make =
       onClick();
     };
 
-    let style2 =
-      Style.extend(style, ~opacity, ~cursor=MouseCursors.pointer, ());
+    let mergedStyles =
+      Style.(
+        merge(
+          ~source=style,
+          ~target=[opacity(animatedOpacity), cursor(MouseCursors.pointer)],
+        )
+      );
 
-    <View style=style2 onMouseDown onMouseUp ?onBlur ?onFocus tabindex>
+    <View style=mergedStyles onMouseDown onMouseUp ?onBlur ?onFocus tabindex>
       children
     </View>;
   });
 
 let createElement =
     (
-      ~style=Style.defaultStyle,
+      ~style=[],
       ~onClick: clickFunction=noop,
       ~onBlur=?,
       ~onFocus=?,

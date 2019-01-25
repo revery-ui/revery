@@ -1,27 +1,26 @@
 {
   "name": "revery",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "App toolkit built with Reason",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/bryphe/revery/issues"
-  },
+  "bugs": { "url": "https://github.com/bryphe/revery/issues" },
   "scripts": {
     "build": "esy b",
     "build:js": "esy b dune build examples/Bin.bc.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "esy b .ci/format.sh",
+    "doc": "refmterr esy dune build @doc --root ."
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
-    "build": ["dune build --root . -j4"],
+    "build": [ "dune build --root . -j4" ],
     "install": [
-        "esy-installer Revery.install",
-        "esy-installer Revery_Core.install",
-        "esy-installer Revery_Geometry.install",
-        "esy-installer Revery_Math.install",
-        "esy-installer Revery_Shaders.install",
-        "esy-installer Revery_UI.install",
-        "esy-installer Revery_UI_Components.install"
+      "esy-installer Revery.install", "esy-installer Revery_Core.install",
+      "esy-installer Revery_Geometry.install",
+      "esy-installer Revery_Math.install",
+      "esy-installer Revery_Shaders.install",
+      "esy-installer Revery_UI.install",
+      "esy-installer Revery_UI_Components.install"
     ]
   },
   "dependencies": {
@@ -30,13 +29,13 @@
     "reason-fontkit": "^2.0.5",
     "reason-gl-matrix": "^0.9.9302",
     "@opam/color": "^0.2.0",
+    "@opam/js_of_ocaml": "*",
+    "@opam/js_of_ocaml-compiler": "*",
+    "@opam/js_of_ocaml-lwt": "*",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
-    "@opam/js_of_ocaml": "*",
-    "@opam/js_of_ocaml-lwt": "*",
-    "flex": "^1.2.2",
-    "@opam/js_of_ocaml-compiler": "*",
-    "@brisk/brisk-reconciler": "*"
+    "@brisk/brisk-reconciler": "*",
+    "flex": "^1.2.2"
   },
   "resolutions": {
     "@opam/cmdliner": "1.0.2",
@@ -50,6 +49,7 @@
   "devDependencies": {
     "ocaml": "^4.7.0",
     "@opam/merlin": "*",
-    "@opam/dune": "^1.5.0"
+    "@opam/dune": "^1.5.0",
+    "@opam/odoc": "*"
   }
 }

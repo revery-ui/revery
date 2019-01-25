@@ -7,7 +7,7 @@ module Logo = {
 
   let make = () =>
     component(slots => {
-      let (opacity, setOpacity, slots) = React.Hooks.state(1.0, slots);
+      let (logoOpacity, setOpacity, slots) = React.Hooks.state(1.0, slots);
 
       let (rotation, slots) =
         Hooks.animation(
@@ -35,27 +35,22 @@ module Logo = {
           slots,
         );
 
-      let onMouseDown = _ => {
-        setOpacity(0.5);
-      };
+      let onMouseDown = _ => setOpacity(0.5);
 
-      let onMouseUp = _ => {
-        setOpacity(1.0);
-      };
+      let onMouseUp = _ => setOpacity(1.0);
 
       <View onMouseDown onMouseUp>
         <Image
           src="outrun-logo.png"
-          style={Style.make(
-            ~width=512,
-            ~height=256,
-            ~opacity,
-            ~transform=[
-              RotateY(Angle.from_radians(rotationY)),
-              RotateX(Angle.from_radians(rotation)),
-            ],
-            (),
-          )}
+          style=Style.[
+            width(512),
+            height(256),
+            opacity(logoOpacity),
+            transform([
+              Transform.RotateY(Angle.from_radians(rotationY)),
+              Transform.RotateX(Angle.from_radians(rotation)),
+            ]),
+          ]
         />
       </View>;
     });
@@ -68,7 +63,7 @@ module AnimatedText = {
 
   let make = (~text, ~delay, ()) =>
     component(slots => {
-      let (opacity, slots) =
+      let (animatedOpacity, slots) =
         Hooks.animation(
           Animated.floatValue(0.),
           {
@@ -95,15 +90,14 @@ module AnimatedText = {
         );
 
       let textHeaderStyle =
-        Style.make(
-          ~color=Colors.white,
-          ~fontFamily="Roboto-Regular.ttf",
-          ~fontSize=24,
-          ~marginHorizontal=8,
-          ~opacity,
-          ~transform=[TranslateY(translate)],
-          (),
-        );
+        Style.[
+          color(Colors.white),
+          fontFamily("Roboto-Regular.ttf"),
+          fontSize(24),
+          marginHorizontal(8),
+          opacity(animatedOpacity),
+          transform([Transform.TranslateY(translate)]),
+        ];
 
       <Text style=textHeaderStyle text />;
     });
@@ -117,16 +111,15 @@ let render = () =>
     onMouseWheel={evt =>
       print_endline("onMouseWheel: " ++ string_of_float(evt.deltaY))
     }
-    style={Style.make(
-      ~position=LayoutTypes.Absolute,
-      ~justifyContent=LayoutTypes.JustifyCenter,
-      ~alignItems=LayoutTypes.AlignCenter,
-      ~bottom=0,
-      ~top=0,
-      ~left=0,
-      ~right=0,
-      (),
-    )}>
+    style=Style.[
+      position(`Absolute),
+      justifyContent(`Center),
+      alignItems(`Center),
+      bottom(0),
+      top(0),
+      left(0),
+      right(0),
+    ]>
     <Logo />
     <View
       ref={r =>
@@ -134,7 +127,7 @@ let render = () =>
           "View internal id:" ++ string_of_int(r#getInternalId()),
         )
       }
-      style={Style.make(~flexDirection=Row, ~alignItems=AlignFlexEnd, ())}>
+      style=Style.[flexDirection(`Row), alignItems(`FlexEnd)]>
       <AnimatedText delay=0.0 text="Welcome" />
       <AnimatedText delay=0.5 text="to" />
       <AnimatedText delay=1. text="Revery" />

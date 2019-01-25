@@ -5,36 +5,30 @@ open Revery.Core;
 module DefaultButtonWithCounter = {
   let component = React.component("DefaultButtonWithCounter");
 
-  let make = () => {
+  let make = () =>
     component(slots => {
       let (count, setCount, _slots: React.Hooks.empty) =
         React.Hooks.state(0, slots);
       let increment = () => setCount(count + 1);
 
       let containerStyle =
-        Style.make(
-          ~justifyContent=JustifyCenter,
-          ~alignItems=AlignCenter,
-          (),
-        );
+        Style.[justifyContent(`Center), alignItems(`Center)];
 
       let countContainer =
-        Style.make(
-          ~width=300,
-          ~height=300,
-          ~alignItems=LayoutTypes.AlignCenter,
-          ~justifyContent=LayoutTypes.JustifyCenter,
-          (),
-        );
+        Style.[
+          width(300),
+          height(300),
+          alignItems(`Center),
+          justifyContent(`Center),
+        ];
 
       let countStyle =
-        Style.make(
-          ~fontSize=50,
-          ~margin=24,
-          ~color=Colors.black,
-          ~fontFamily="Roboto-Regular.ttf",
-          (),
-        );
+        Style.[
+          fontSize(50),
+          margin(24),
+          color(Colors.black),
+          fontFamily("Roboto-Regular.ttf"),
+        ];
 
       let countStr = string_of_int(count);
       <View style=containerStyle>
@@ -45,7 +39,6 @@ module DefaultButtonWithCounter = {
         <Button disabled=true title="(disabled)" onClick=increment />
       </View>;
     });
-  };
 
   let createElement = (~children as _, ()) => React.element(make());
 };

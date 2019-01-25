@@ -13,19 +13,17 @@ module ActionButton = {
   let make = (~name, ~onClick, ()) =>
     component((_slots: React.Hooks.empty) => {
       let wrapperStyle =
-        Style.make(
-          ~backgroundColor=selectionHighlight,
-          ~border=Style.Border.make(~width=4, ~color=activeBackgroundColor, ()),
-          ()
-        );
+        Style.[
+          backgroundColor(selectionHighlight),
+          border(~width=4, ~color=activeBackgroundColor),
+        ];
       let textHeaderStyle =
-        Style.make(
-          ~color=Colors.black,
-          ~fontFamily="Roboto-Regular.ttf",
-          ~fontSize=14,
-          ~margin=16,
-          (),
-        );
+        Style.[
+          color(Colors.black),
+          fontFamily("Roboto-Regular.ttf"),
+          fontSize(14),
+          margin(16),
+        ];
       <Clickable style=wrapperStyle onClick>
         <Text style=textHeaderStyle text=name />
       </Clickable>
@@ -53,22 +51,20 @@ module CaptureArea = {
       };
 
       let viewStyle =
-        Style.make(
-          ~position=LayoutTypes.Absolute,
-          ~left=0,
-          ~right=0,
-          ~top=0,
-          ~bottom=0,
-          ~flexDirection=LayoutTypes.Column,
-          ()
-        );
+        Style.[
+          position(`Absolute),
+          left(0),
+          right(0),
+          top(0),
+          bottom(0),
+          flexDirection(`Column),
+        ];
 
       let imageStyle =
-        Style.make(
-          ~width=400,
-          ~height=300,
-          ()
-        );
+        Style.[
+          width(400),
+          height(300),
+        ];
 
       <View style=viewStyle>
         <ActionButton name="Take a screenshot!" onClick=capture />

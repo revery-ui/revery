@@ -57,6 +57,9 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   /* Render */
   Performance.bench("recalculate", () => rootNode#recalculate());
 
+  /* Flush any node callbacks */
+  Performance.bench("flush", () => rootNode#flushCallbacks());
+
   Performance.bench("draw", () => {
     /* Do a first pass for all 'opaque' geometry */
     /* This helps reduce the overhead for the more expensive alpha pass, next */
@@ -71,8 +74,7 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
       -1000.0,
     );
 
-    let drawContext =
-      NodeDrawContext.create(int_of_float(pixelRatio), 0, 1.0, size.height);
+    let drawContext = NodeDrawContext.create(pixelRatio, 0, 1.0, size.height);
 
     let solidPass = SolidPass(_projection);
     rootNode#draw(solidPass, drawContext);
