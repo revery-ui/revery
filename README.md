@@ -93,6 +93,10 @@ Performance should be at the forefront, and not a compromise - we need to develo
 
 We might have some dirty mutable objects for performance - but our high-level API should be purely functional. You should be able to follow the React model of modelling your UI as a _pure function_ of application state -> UI.
 
+## Screenshots
+
+![Slider components](screenshots/sliders.png)
+
 ## Quickstart
 
 Check out [revery-quick-start](https://github.com/bryphe/revery-quick-start) to get up and running with your own Revery app!
