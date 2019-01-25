@@ -10,6 +10,37 @@ open Revery_Core;
 open ViewNode;
 open RenderPass;
 
+let debugImageIndex = ref(0);
+
+let saveDebugImage = pixels => {
+  open Bigarray;
+  open Reglfw;
+  let width = Array2.dim2(pixels);
+  let height = Array2.dim1(pixels);
+  let debugImagePixels =
+    Array2.create(
+      int8_unsigned,
+      c_layout,
+      height,
+      width * 4 /* RGBA */
+    );
+  Array2.fill(debugImagePixels, 0);
+  for (y in 0 to height - 1) {
+    for (x in 0 to width - 1) {
+      Array2.set(debugImagePixels, y, x * 4, Array2.get(pixels, y, x));
+      Array2.set(debugImagePixels, y, x * 4 + 1, Array2.get(pixels, y, x));
+      Array2.set(debugImagePixels, y, x * 4 + 2, Array2.get(pixels, y, x));
+      Array2.set(debugImagePixels, y, x * 4 + 3, Array2.get(pixels, y, x));
+    };
+  };
+  let debugImage = Image.create(debugImagePixels);
+  Image.save(
+    debugImage,
+    "debugImage" ++ string_of_int(debugImageIndex^) ++ ".tga",
+  );
+  debugImageIndex := debugImageIndex^ + 1;
+};
+
 class textNode (text: string) = {
   as _this;
   val mutable text = text;
@@ -56,7 +87,7 @@ class textNode (text: string) = {
 
       let render = (s: Fontkit.fk_shape, x: float) => {
         let glyph = FontRenderer.getGlyph(font, s.glyphId);
-
+        saveDebugImage(glyph.bitmap);
         let {bitmap, width, height, bearingX, bearingY, advance, _} = glyph;
 
         let width = float_of_int(width) /. parentContext.pixelRatio;
@@ -123,46 +154,7 @@ class textNode (text: string) = {
         },
         shapedText,
       );
-      open Bigarray;
-      open Reglfw;
-      let debugImagePixels =
-        Array2.create(
-          int8_unsigned,
-          c_layout,
-          GlyphAtlas.textureSizeInPixels,
-          GlyphAtlas.textureSizeInPixels * 4 /* RGBA */
-        );
-      Array2.fill(debugImagePixels, 0);
-      for (y in 0 to GlyphAtlas.textureSizeInPixels - 1) {
-        for (x in 0 to GlyphAtlas.textureSizeInPixels - 1) {
-          Array2.set(
-            debugImagePixels,
-            y,
-            x * 4,
-            Array2.get(glyphAtlas.pixels, y, x),
-          );
-          Array2.set(
-            debugImagePixels,
-            y,
-            x * 4 + 1,
-            Array2.get(glyphAtlas.pixels, y, x),
-          );
-          Array2.set(
-            debugImagePixels,
-            y,
-            x * 4 + 2,
-            Array2.get(glyphAtlas.pixels, y, x),
-          );
-          Array2.set(
-            debugImagePixels,
-            y,
-            x * 4 + 3,
-            Array2.get(glyphAtlas.pixels, y, x),
-          );
-        };
-      };
-      let debugImage = Image.create(debugImagePixels);
-      Image.save(debugImage, "debugImage.tga");
+      saveDebugImage(glyphAtlas.pixels);
     | _ => ()
     };
   };
