@@ -9,10 +9,11 @@ let component = React.component("Tree");
 
 let defaultNodeStyles = Style.[marginVertical(5)];
 
-let createTextNode = nodeText => {
+let createTextNode = (~indent, nodeText) => {
+  let indentStr = String.make(indent * 2, ' ');
   <View style=defaultNodeStyles>
     <Text
-      text=nodeText
+      text={indentStr ++ nodeText}
       style=Style.[
         fontFamily("Roboto-Regular.ttf"),
         fontSize(20),
@@ -27,11 +28,11 @@ let createTextNode = nodeText => {
  * @param ~renderer is a function which determines how each node is rendered
  * @param t The tree to convert to a tree of JSX elements.
  */
-let rec renderTree = (~indent=2, ~nodeRenderer, ~emptyRenderer=None, t) => {
-  let indentStr = String.make(indent * 2, ' ');
+let rec renderTree = (~indent=0, ~nodeRenderer, ~emptyRenderer=None, t) => {
+  let drawNode = nodeRenderer(~indent);
   let empty =
     switch (emptyRenderer) {
-    | Some(r) => [r(indentStr, indent)]
+    | Some(r) => [r(indent)]
     | None => []
     };
   let createSubtree =
@@ -42,7 +43,7 @@ let rec renderTree = (~indent=2, ~nodeRenderer, ~emptyRenderer=None, t) => {
     let lft = createSubtree(leftTree);
     let right = createSubtree(rightTree);
     let joined = List.concat([lft, right]);
-    [nodeRenderer(indentStr ++ x), nodeRenderer("\n"), ...joined];
+    [drawNode(x), ...joined];
   };
 };
 

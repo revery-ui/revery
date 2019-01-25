@@ -31,29 +31,47 @@ module TreeView = {
           tree=stringTree
           emptyRenderer={
             Some(
-              (indent, _size) =>
+              indent => {
+                let indentStr = String.make(indent * 2, ' ');
                 <Text
                   style=Style.[
                     color(Colors.rebeccaPurple),
                     fontFamily("Roboto-Regular.ttf"),
                     fontSize(25),
                   ]
-                  text={indent ++ "X" ++ "\n"}
-                />,
+                  text={indentStr ++ "X" ++ "\n"}
+                />;
+              },
             )
           }
         />
       }
     );
 
-  let customRenderer = node => {
-    <View style=Style.[backgroundColor(Colors.blue)]>
+  let customRenderer = (~indent, node) => {
+    <View
+      style=Style.[
+        justifyContent(`Center),
+        alignItems(`Center),
+        marginLeft(indent * 30),
+        backgroundColor(Colors.blue),
+        width(100),
+        height(30),
+        marginVertical(5),
+        boxShadow(
+          ~xOffset=-4.,
+          ~yOffset=4.,
+          ~blurRadius=5.,
+          ~spreadRadius=2.,
+          ~color=Color.rgba(0., 0., 0., 0.5),
+        ),
+      ]>
       <Text
         text=node
         style=Style.[
-          color(Colors.red),
+          color(Colors.white),
           fontFamily("Roboto-Regular.ttf"),
-          fontSize(35),
+          fontSize(15),
         ]
       />
     </View>;
