@@ -10,22 +10,22 @@ module RadioExample = {
         React.Hooks.state("Select a button!", slots);
       <View
         style=Style.[
-                width(500),
-                height(500),
-                justifyContent(`Center),
-                alignItems(`Center),
-                backgroundColor(Color.rgba(1., 1., 1., 0.1)),
-              ]>
+          width(500),
+          height(500),
+          justifyContent(`Center),
+          alignItems(`Center),
+          backgroundColor(Color.rgba(1., 1., 1., 0.1)),
+        ]>
         <Text
           text="Radio Button"
           style=Style.[
-                  fontSize(20),
-                  fontFamily("Roboto-Regular.ttf"),
-                  marginBottom(20),
-                ]
+            fontSize(20),
+            fontFamily("Roboto-Regular.ttf"),
+            marginBottom(20),
+          ]
         />
         <RadioButtons
-          onChange=(txt => setRadioVal("Radio Button Value: " ++ txt))
+          onChange={txt => setRadioVal("Radio Button Value: " ++ txt)}
           defaultSelected=0
           buttons=[
             {text: "Button 1", value: "1"},
@@ -37,10 +37,10 @@ module RadioExample = {
         <Text
           text=radioVal
           style=Style.[
-                  fontSize(20),
-                  fontFamily("Roboto-Regular.ttf"),
-                  marginTop(20),
-                ]
+            fontSize(20),
+            fontFamily("Roboto-Regular.ttf"),
+            marginTop(20),
+          ]
         />
       </View>;
     });

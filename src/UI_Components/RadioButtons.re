@@ -29,34 +29,32 @@ let make =
     let (checkedVal, setCheckedVal, _slots: React.Hooks.empty) =
       React.Hooks.state(defaultVal, slots);
     <View style=Style.[justifyContent(`Center), alignItems(`Center)]>
-      ...(
+      ...{
            buttons
            |> List.map(button => {
                 let icon = button.value == checkedVal ? {||} : {||};
                 <Clickable
-                  onClick=(
-                    () => {
-                      setCheckedVal(button.value);
-                      onChange(button.value);
-                    }
-                  )
+                  onClick={() => {
+                    setCheckedVal(button.value);
+                    onChange(button.value);
+                  }}
                   style=Style.[
-                          justifyContent(`Center),
-                          flexDirection(`Row),
-                          alignItems(`Center),
-                          height(30),
-                        ]>
+                    justifyContent(`Center),
+                    flexDirection(`Row),
+                    alignItems(`Center),
+                    height(30),
+                  ]>
                   <Text
                     text=icon
                     style=Style.[
-                            fontSize(iconSize),
-                            fontFamily("FontAwesome5FreeSolid.otf"),
-                          ]
+                      fontSize(iconSize),
+                      fontFamily("FontAwesome5FreeSolid.otf"),
+                    ]
                   />
-                  <Text text=button.text style />
+                  <Text text={button.text} style />
                 </Clickable>;
               })
-         )
+         }
     </View>;
   });
 
