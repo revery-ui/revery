@@ -68,3 +68,6 @@ _esy/
 *.install
 
 **/.merlin
+
+#macOS
+.DS_Store
