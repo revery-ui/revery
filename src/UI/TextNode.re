@@ -14,7 +14,7 @@ let debugImageIndex = ref(0);
 
 let saveDebugImage = pixels => {
   open Bigarray;
-  open Reglfw;
+  /* open Reglfw; */
   let width = Array2.dim2(pixels);
   let height = Array2.dim1(pixels);
   let debugImagePixels =
@@ -33,11 +33,11 @@ let saveDebugImage = pixels => {
       Array2.set(debugImagePixels, y, x * 4 + 3, Array2.get(pixels, y, x));
     };
   };
-  let debugImage = Image.create(debugImagePixels);
-  Image.save(
-    debugImage,
-    "debugImage" ++ string_of_int(debugImageIndex^) ++ ".tga",
-  );
+  /* let debugImage = Image.create(debugImagePixels); */
+  /* Image.save(
+       debugImage,
+       "debugImage" ++ string_of_int(debugImageIndex^) ++ ".tga",
+     ); */
   debugImageIndex := debugImageIndex^ + 1;
 };
 
@@ -46,7 +46,7 @@ class textNode (text: string) = {
   val mutable text = text;
   val quad = Assets.quad();
   val fontShader = Assets.fontShader();
-  val glyphAtlas = GlyphAtlas.create();
+  val glyphAtlas = GlyphAtlas.getInstance();
   inherit (class viewNode)() as _super;
   pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
     /* Draw background first */
@@ -87,7 +87,7 @@ class textNode (text: string) = {
 
       let render = (s: Fontkit.fk_shape, x: float) => {
         let glyph = FontRenderer.getGlyph(font, s.glyphId);
-        saveDebugImage(glyph.bitmap);
+        /* saveDebugImage(glyph.bitmap); */
         let {bitmap, width, height, bearingX, bearingY, advance, _} = glyph;
 
         let width = float_of_int(width) /. parentContext.pixelRatio;
@@ -154,7 +154,7 @@ class textNode (text: string) = {
         },
         shapedText,
       );
-      saveDebugImage(glyphAtlas.pixels);
+    /* saveDebugImage(glyphAtlas.pixels); */
     | _ => ()
     };
   };
