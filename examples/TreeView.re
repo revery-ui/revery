@@ -108,6 +108,14 @@ module TreeView = {
     React.element(make(~renderer, ()));
 };
 
+let titleStyles =
+  Style.[
+    fontFamily("Roboto-Regular.ttf"),
+    fontSize(20),
+    color(Colors.white),
+    marginVertical(10),
+  ];
+
 let render = () =>
   <View
     style=Style.[
@@ -115,6 +123,12 @@ let render = () =>
       alignItems(`Center),
       flexDirection(`Row),
     ]>
-    <TreeView />
-    <TreeView renderer=TreeView.customRenderer />
+    <View style=Style.[marginHorizontal(10)]>
+      <Text style=titleStyles text="Show empty nodes" />
+      <TreeView />
+    </View>
+    <View style=Style.[marginHorizontal(10)]>
+      <Text style=titleStyles text="Custom renderer" />
+      <TreeView renderer=TreeView.customRenderer />
+    </View>
   </View>;
