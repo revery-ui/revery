@@ -58,9 +58,8 @@ let rec renderTree = (~indent=0, ~nodeRenderer, ~emptyRenderer, t) => {
     renderTree(~indent=indent + 1, ~nodeRenderer, ~emptyRenderer);
   switch (t) {
   | Empty => empty
-  | Node({status: Closed, data}, _, _) => [
-      drawNode({status: Closed, data}),
-    ]
+  /* If the node is closed only draw the parent do not render its children */
+  | Node({status: Closed, _} as x, _, _) => [drawNode(x)]
   | Node(x, leftTree, rightTree) =>
     let lft = createSubtree(leftTree);
     let right = createSubtree(rightTree);
