@@ -1,28 +1,42 @@
 open Revery_UI;
 open Revery_Core;
 
+type status =
+  | Open
+  | Closed;
+
+type content('a) = {
+  data: 'a,
+  status,
+};
+
 type tree('a) =
   | Empty
-  | Node('a, tree('a), tree('a));
+  | Node(content('a), tree('a), tree('a));
 
 let component = React.component("Tree");
 
 let defaultNodeStyles = Style.[flexDirection(`Row), marginVertical(5)];
 
-let default = (~indent, nodeText) => {
+let default = (~indent, {data, status}) => {
+  let isOpen =
+    switch (status) {
+    | Open => true
+    | Closed => false
+    };
   open Style;
   let textStyles = [fontSize(20), color(Colors.black)];
   let indentStr = String.make(indent * 2, ' ');
-  let arrow = true ? {||} : {||};
+  let arrow = isOpen ? {||} : {||};
   <Clickable>
     <View style=defaultNodeStyles>
       <Text
         text={indentStr ++ arrow ++ " "}
-        style=Style.[fontFamily("FontAwesome5FreeSolid.otf"), ...textStyles]
+        style=[fontFamily("FontAwesome5FreeSolid.otf"), ...textStyles]
       />
       <Text
-        text=nodeText
-        style=Style.[fontFamily("Roboto-Regular.ttf"), ...textStyles]
+        text=data
+        style=[fontFamily("Roboto-Regular.ttf"), ...textStyles]
       />
     </View>
   </Clickable>;
@@ -33,7 +47,7 @@ let default = (~indent, nodeText) => {
  * @param ~renderer is a function which determines how each node is rendered
  * @param t The tree to convert to a tree of JSX elements.
  */
-let rec renderTree = (~indent=0, ~nodeRenderer, ~emptyRenderer=None, t) => {
+let rec renderTree = (~indent=0, ~nodeRenderer, ~emptyRenderer, t) => {
   let drawNode = nodeRenderer(~indent);
   let empty =
     switch (emptyRenderer) {
@@ -44,6 +58,9 @@ let rec renderTree = (~indent=0, ~nodeRenderer, ~emptyRenderer=None, t) => {
     renderTree(~indent=indent + 1, ~nodeRenderer, ~emptyRenderer);
   switch (t) {
   | Empty => empty
+  | Node({status: Closed, data}, _, _) => [
+      drawNode({status: Closed, data}),
+    ]
   | Node(x, leftTree, rightTree) =>
     let lft = createSubtree(leftTree);
     let right = createSubtree(rightTree);

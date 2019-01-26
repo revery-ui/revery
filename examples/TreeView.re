@@ -8,15 +8,23 @@ module TreeView = {
   let stringTree =
     Tree.(
       Node(
-        "root",
-        Node("subfolder 1", Empty, Empty),
+        {data: "root", status: Open},
         Node(
-          "home",
-          Node("downloads", Empty, Empty),
+          {data: "subfolder 1", status: Open},
+          Node({data: "subdirectory 1", status: Closed}, Empty, Empty),
+          Empty,
+        ),
+        Node(
+          {data: "home", status: Open},
+          Node({status: Closed, data: "downloads"}, Empty, Empty),
           Node(
-            "desktop",
-            Node("subfolder 2", Empty, Empty),
-            Node("subfolder 3", Empty, Empty),
+            {data: "desktop", status: Closed},
+            Node(
+              {status: Closed, data: "subfolder 2"},
+              Node({status: Closed, data: "pictures"}, Empty, Empty),
+              Empty,
+            ),
+            Node({data: "subfolder 3", status: Closed}, Empty, Empty),
           ),
         ),
       )
@@ -30,19 +38,53 @@ module TreeView = {
   let recordTree =
     Tree.(
       Node(
-        {title: "awesome tunes", artist: "cool dude"},
+        {
+          status: Open,
+          data: {
+            title: "awesome tunes",
+            artist: "cool dude",
+          },
+        },
         Node(
-          {title: "terrible song", artist: "awful person"},
+          {
+            data: {
+              title: "terrible song",
+              artist: "awful person",
+            },
+            status: Open,
+          },
           Node(
-            {title: "jamba juice", artist: "jamba juicers"},
+            {
+              status: Open,
+              data: {
+                title: "jamba juice",
+                artist: "jamba juicers",
+              },
+            },
             Empty,
             Empty,
           ),
           Empty,
         ),
         Node(
-          {artist: "Michael Jackson", title: "Beat It!"},
-          Node({artist: "Janet Jackson", title: "Thriller"}, Empty, Empty),
+          {
+            status: Open,
+            data: {
+              artist: "Michael Jackson",
+              title: "Beat It!",
+            },
+          },
+          Node(
+            {
+              status: Open,
+              data: {
+                artist: "Janet Jackson",
+                title: "Thriller",
+              },
+            },
+            Empty,
+            Empty,
+          ),
           Empty,
         ),
       )
@@ -75,7 +117,9 @@ module TreeView = {
       }
     );
 
-  let customRenderer = (~indent, {artist, title}) => {
+  let customRenderer = (~indent, content) => {
+    open Tree;
+    let {data, _} = content;
     let textStyles =
       Style.[
         color(Colors.black),
@@ -99,8 +143,8 @@ module TreeView = {
           ~color=Color.rgba(0., 0., 0., 0.5),
         ),
       ]>
-      <Text text=title style=textStyles />
-      <Text text=artist style=textStyles />
+      <Text text={data.title} style=textStyles />
+      <Text text={data.artist} style=textStyles />
     </View>;
   };
 
