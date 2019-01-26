@@ -120,7 +120,7 @@ let init = app => {
       color(Colors.white),
       fontFamily("Roboto-Regular.ttf"),
       fontSize(24),
-    );
+    ];
 
   /* Set up render function */
   let render = () => {
