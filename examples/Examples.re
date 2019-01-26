@@ -1,8 +1,8 @@
 open Revery;
 open Revery.Core;
 /* open Revery.Math; */
-
-module SliderExample = Slider;
+            
+            module SliderExample = Slider;
 
 open Revery.UI;
 open Revery.UI.Components;
