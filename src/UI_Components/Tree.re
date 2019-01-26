@@ -7,20 +7,25 @@ type tree('a) =
 
 let component = React.component("Tree");
 
-let defaultNodeStyles = Style.[marginVertical(5)];
+let defaultNodeStyles = Style.[flexDirection(`Row), marginVertical(5)];
 
 let default = (~indent, nodeText) => {
+  open Style;
+  let textStyles = [fontSize(20), color(Colors.black)];
   let indentStr = String.make(indent * 2, ' ');
-  <View style=defaultNodeStyles>
-    <Text
-      text={indentStr ++ nodeText}
-      style=Style.[
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(20),
-        color(Colors.black),
-      ]
-    />
-  </View>;
+  let arrow = true ? {||} : {||};
+  <Clickable>
+    <View style=defaultNodeStyles>
+      <Text
+        text={indentStr ++ arrow ++ " "}
+        style=Style.[fontFamily("FontAwesome5FreeSolid.otf"), ...textStyles]
+      />
+      <Text
+        text=nodeText
+        style=Style.[fontFamily("Roboto-Regular.ttf"), ...textStyles]
+      />
+    </View>
+  </Clickable>;
 };
 
 /**

@@ -61,12 +61,12 @@ module TreeView = {
               indent => {
                 let indentStr = String.make(indent * 2, ' ');
                 <Text
+                  text={indentStr ++ "X" ++ "\n"}
                   style=Style.[
                     color(Colors.rebeccaPurple),
                     fontFamily("Roboto-Regular.ttf"),
                     fontSize(25),
                   ]
-                  text={indentStr ++ "X" ++ "\n"}
                 />;
               },
             )
@@ -78,7 +78,7 @@ module TreeView = {
   let customRenderer = (~indent, {artist, title}) => {
     let textStyles =
       Style.[
-        color(Colors.white),
+        color(Colors.black),
         fontFamily("Roboto-Regular.ttf"),
         fontSize(15),
       ];
@@ -87,7 +87,7 @@ module TreeView = {
         justifyContent(`Center),
         alignItems(`Center),
         marginLeft(indent * 30),
-        backgroundColor(Colors.blue),
+        backgroundColor(Colors.white),
         width(120),
         height(60),
         marginVertical(5),
