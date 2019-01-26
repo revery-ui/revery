@@ -92,7 +92,7 @@ module TreeView = {
         height(60),
         marginVertical(5),
         boxShadow(
-          ~xOffset=-4.,
+          ~xOffset=-6.,
           ~yOffset=4.,
           ~blurRadius=5.,
           ~spreadRadius=2.,
