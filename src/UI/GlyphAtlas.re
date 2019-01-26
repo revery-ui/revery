@@ -1,3 +1,4 @@
+open Revery_Core;
 open Bigarray;
 
 type t = {
@@ -7,8 +8,8 @@ type t = {
   penY: ref(int),
 };
 
-let textureSizeInPixels = 1024;
-let numChannels = 1; /* ALPHA only */
+let textureSizeInPixels = 4096;
+let numChannels = Environment.isNative ? 1 /* ALPHA */ : 4; /* RGBA */
 
 let create = () => {
   let glyphAtlas: t = {
@@ -27,6 +28,16 @@ let create = () => {
   glyphAtlas;
 };
 
+let instance: ref(option(t)) = ref(None);
+let getInstance = () => {
+  switch (instance^) {
+  | None =>
+    let glyphAtlas = create();
+    instance := Some(glyphAtlas);
+    glyphAtlas;
+  | Some(glyphAtlas) => glyphAtlas
+  };
+};
 type atlasGlyph = {
   width: int,
   height: int,
@@ -47,11 +58,12 @@ let uploadGlyphAtlas = (glyphAtlas: t) => {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  let format = Environment.isNative ? GL_ALPHA : GL_RGBA;
   glTexImage2D(
     GL_TEXTURE_2D,
     0,
-    GL_ALPHA,
-    GL_ALPHA,
+    format,
+    format,
     GL_UNSIGNED_BYTE,
     glyphAtlas.pixels,
   );
@@ -75,20 +87,10 @@ let copyGlyphTextureToAtlas =
   let y = glyphWillFitInCurrentLine ? penY^ : penY^ + height;
 
   for (rowIndex in 0 to height - 1) {
-    print_endline(
-      "blitting "
-      ++ string_of_int(width)
-      ++ " pixels in row "
-      ++ string_of_int(rowIndex)
-      ++ " into "
-      ++ string_of_int(x)
-      ++ "/"
-      ++ string_of_int(y + rowIndex),
-    );
     let sourceRow = Array2.slice_left(glyphTexture, rowIndex);
     let destinationRow = Array2.slice_left(atlasPixels, y + rowIndex);
     let destinationRowFragment =
-      Array1.sub(destinationRow, x, width * numChannels);
+      Array1.sub(destinationRow, x * numChannels, width * numChannels);
     Array1.blit(sourceRow, destinationRowFragment);
   };
 
@@ -134,7 +136,7 @@ let copyGlyphTextureToAtlas =
 };
 
 let copyGlyphToAtlas =
-  Revery_Core.Memoize.make(
+  Memoize.make(
     (
       (
         glyphAtlas: t,
