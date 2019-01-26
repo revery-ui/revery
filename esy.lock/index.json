@@ -1,5 +1,5 @@
 {
-  "checksum": "eb6ca7567a413bda44466421f9331d4b",
+  "checksum": "dd6d05b25318ecbd7d9aeab4d9908bd3",
   "root": "revery@link:./package.json",
   "node": {
     "revery@link:./package.json": {
@@ -11,7 +11,7 @@
       "dependencies": [
         "reason-glfw@3.2.1012@d41d8cd9",
         "reason-gl-matrix@0.9.9302@d41d8cd9",
-        "reason-fontkit@2.0.5@d41d8cd9", "ocaml@4.7.1003@d41d8cd9",
+        "reason-fontkit@2.0.6@d41d8cd9", "ocaml@4.7.1003@d41d8cd9",
         "flex@1.2.2@d41d8cd9", "@opam/lwt_ppx@opam:1.2.1@db1172a7",
         "@opam/lwt@opam:4.1.0@111fc2bf",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
@@ -108,21 +108,22 @@
       ],
       "devDependencies": []
     },
-    "reason-fontkit@2.0.5@d41d8cd9": {
-      "id": "reason-fontkit@2.0.5@d41d8cd9",
+    "reason-fontkit@2.0.6@d41d8cd9": {
+      "id": "reason-fontkit@2.0.6@d41d8cd9",
       "name": "reason-fontkit",
-      "version": "2.0.5",
+      "version": "2.0.6",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-2.0.5.tgz#sha1:ab6bc9796b1c4815ac8366d1037f9ca9cddafd03"
+          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-2.0.6.tgz#sha1:5897569556ea778f9cee3f402812ce1b749a993a"
         ]
       },
       "overrides": [],
       "dependencies": [
         "refmterr@3.1.10@d41d8cd9", "reason-glfw@3.2.1012@d41d8cd9",
         "reason-gl-matrix@0.9.9302@d41d8cd9",
-        "esy-harfbuzz@1.9.1004@d41d8cd9", "esy-freetype2@2.9.1001@d41d8cd9",
+        "esy-harfbuzz@github:esy-packages/esy-harfbuzz#a52f422@d41d8cd9",
+        "esy-freetype2@github:esy-packages/esy-freetype2#d9b9324@d41d8cd9",
         "esy-cmake@0.3.5@d41d8cd9", "@opam/dune@opam:1.6.3@a7d7baed",
         "@esy-ocaml/reason@3.4.0@d41d8cd9"
       ],
@@ -159,19 +160,17 @@
       ],
       "devDependencies": []
     },
-    "esy-harfbuzz@1.9.1004@d41d8cd9": {
-      "id": "esy-harfbuzz@1.9.1004@d41d8cd9",
+    "esy-harfbuzz@github:esy-packages/esy-harfbuzz#a52f422@d41d8cd9": {
+      "id": "esy-harfbuzz@github:esy-packages/esy-harfbuzz#a52f422@d41d8cd9",
       "name": "esy-harfbuzz",
-      "version": "1.9.1004",
+      "version": "github:esy-packages/esy-harfbuzz#a52f422",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/esy-harfbuzz/-/esy-harfbuzz-1.9.1004.tgz#sha1:e90b888620a0a812fb66d9f582a58771cf64a5d7"
-        ]
+        "source": [ "github:esy-packages/esy-harfbuzz#a52f422" ]
       },
       "overrides": [],
       "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
-      "devDependencies": []
+      "devDependencies": [ "esy-cmake@0.3.5@d41d8cd9" ]
     },
     "esy-glfw@3.2.1008@d41d8cd9": {
       "id": "esy-glfw@3.2.1008@d41d8cd9",
@@ -187,19 +186,18 @@
       "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
       "devDependencies": []
     },
-    "esy-freetype2@2.9.1001@d41d8cd9": {
-      "id": "esy-freetype2@2.9.1001@d41d8cd9",
+    "esy-freetype2@github:esy-packages/esy-freetype2#d9b9324@d41d8cd9": {
+      "id":
+        "esy-freetype2@github:esy-packages/esy-freetype2#d9b9324@d41d8cd9",
       "name": "esy-freetype2",
-      "version": "2.9.1001",
+      "version": "github:esy-packages/esy-freetype2#d9b9324",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/esy-freetype2/-/esy-freetype2-2.9.1001.tgz#sha1:6b22487d0fa4617822b1f02523eed64c300978c0"
-        ]
+        "source": [ "github:esy-packages/esy-freetype2#d9b9324" ]
       },
       "overrides": [],
       "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
-      "devDependencies": []
+      "devDependencies": [ "esy-cmake@0.3.5@d41d8cd9" ]
     },
     "esy-cmake@0.3.5@d41d8cd9": {
       "id": "esy-cmake@0.3.5@d41d8cd9",
