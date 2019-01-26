@@ -41,7 +41,9 @@
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#7901934"
+    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#7901934",
+    "esy-harfbuzz": "github:esy-packages/esy-harfbuzz#a52f422",
+    "esy-freetype2": "github:esy-packages/esy-freetype2#d9b9324"
   },
   "peerDependencies": {
     "ocaml": "^4.7.0"
