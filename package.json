@@ -6,7 +6,9 @@
   "bugs": { "url": "https://github.com/bryphe/revery/issues" },
   "scripts": {
     "build": "esy b",
-    "build:js": "esy b dune build examples/Bin.bc.js",
+    "build:release": "esy b dune build --profile=release --root . -j4",
+    "build:js": "esy b dune build examples/Examples.bc.js",
+    "build:js:release": "esy b dune build examples/Examples.bc.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "esy b .ci/format.sh",
     "doc": "refmterr esy dune build @doc --root ."
@@ -26,7 +28,7 @@
   "dependencies": {
     "@esy-ocaml/reason": "3.4.0",
     "reason-glfw": "^3.2.1010",
-    "reason-fontkit": "^2.0.5",
+    "reason-fontkit": "^2.0.6",
     "reason-gl-matrix": "^0.9.9302",
     "@opam/color": "^0.2.0",
     "@opam/js_of_ocaml": "*",
