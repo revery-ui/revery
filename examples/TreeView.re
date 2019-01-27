@@ -221,7 +221,11 @@ let titleStyles =
     marginVertical(10),
   ];
 
-let render = () => {
+let render = window => {
+  let dimensions = Window.getSize(window);
+  let w = dimensions.width;
+  let h = dimensions.height;
+
   let exampleContainer =
     Style.[
       flexDirection(`Column),
@@ -234,7 +238,8 @@ let render = () => {
       justifyContent(`Center),
       alignItems(`Center),
       flexDirection(`Row),
-      height(800),
+      height(h),
+      width(w),
     ]>
     <View style=exampleContainer>
       <Text style=titleStyles text="Custom Renderer" />
