@@ -225,10 +225,9 @@ let render = () => {
   let exampleContainer =
     Style.[
       flexDirection(`Column),
-      justifyContent(`FlexStart),
+      justifyContent(`Center),
       alignItems(`Center),
-      marginHorizontal(20),
-      height(800),
+      marginHorizontal(50),
     ];
   <View
     style=Style.[
