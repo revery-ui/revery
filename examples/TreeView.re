@@ -228,8 +228,9 @@ let render = window => {
 
   let exampleContainer =
     Style.[
+      height(h / 2),
       flexDirection(`Column),
-      justifyContent(`Center),
+      justifyContent(`FlexStart),
       alignItems(`Center),
       marginHorizontal(50),
     ];
