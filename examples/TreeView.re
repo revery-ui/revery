@@ -8,28 +8,55 @@ module TreeView = {
     Tree.(
       Node(
         {data: "root", id: 1, status: Open},
-        Node(
-          {data: "subfolder 1", id: 2, status: Open},
+        [
           Node(
-            {data: "subdirectory 1", id: 3, status: Closed},
-            Empty,
-            Empty,
+            {data: "subfolder 1", id: 2, status: Open},
+            [
+              Node(
+                {data: "subdirectory 1", id: 3, status: Closed},
+                [Empty, Empty],
+              ),
+            ],
           ),
-          Empty,
-        ),
-        Node(
-          {data: "home", id: 4, status: Open},
-          Node({status: Closed, id: 5, data: "downloads"}, Empty, Empty),
           Node(
-            {data: "desktop", id: 6, status: Closed},
-            Node(
-              {status: Closed, id: 7, data: "subfolder 2"},
-              Node({status: Closed, id: 8, data: "pictures"}, Empty, Empty),
-              Empty,
-            ),
-            Node({data: "subfolder 3", id: 9, status: Closed}, Empty, Empty),
+            {data: "home", id: 4, status: Open},
+            [
+              Node(
+                {status: Closed, id: 5, data: "downloads"},
+                [Empty, Empty],
+              ),
+              Node(
+                {data: "desktop", id: 6, status: Open},
+                [
+                  Node(
+                    {status: Open, id: 7, data: "subfolder 2"},
+                    [
+                      Node(
+                        {status: Open, id: 8, data: "pictures"},
+                        [
+                          Node({status: Closed, id: 12, data: "Images"}, []),
+                          Node(
+                            {status: Closed, id: 10, data: "holiday 2018"},
+                            [],
+                          ),
+                          Node(
+                            {status: Closed, id: 11, data: "Graduation 2017"},
+                            [],
+                          ),
+                        ],
+                      ),
+                      Empty,
+                    ],
+                  ),
+                  Node(
+                    {data: "subfolder 3", id: 9, status: Closed},
+                    [Empty, Empty],
+                  ),
+                ],
+              ),
+            ],
           ),
-        ),
+        ],
       )
     );
 
@@ -49,74 +76,82 @@ module TreeView = {
             level: "Kingdom",
           },
         },
-        Node(
-          {
-            id: 2,
-            data: {
-              name: "chordate",
-              level: "phylum",
-            },
-            status: Open,
-          },
+        [
           Node(
             {
-              id: 3,
-              status: Open,
+              id: 2,
               data: {
-                name: "mammal",
-                level: "class",
+                name: "chordate",
+                level: "phylum",
               },
+              status: Open,
             },
-            Node(
-              {
-                id: 4,
-                status: Open,
-                data: {
-                  name: "carnivora",
-                  level: "order",
+            [
+              Node(
+                {
+                  id: 3,
+                  status: Open,
+                  data: {
+                    name: "mammal",
+                    level: "class",
+                  },
                 },
-              },
+                [
+                  Node(
+                    {
+                      id: 4,
+                      status: Open,
+                      data: {
+                        name: "carnivora",
+                        level: "order",
+                      },
+                    },
+                    [Empty, Empty],
+                  ),
+                  Empty,
+                ],
+              ),
               Empty,
-              Empty,
-            ),
-            Empty,
+            ],
           ),
-          Empty,
-        ),
-        Node(
-          {
-            id: 5,
-            status: Open,
-            data: {
-              name: "anthropoda",
-              level: "phylum",
-            },
-          },
           Node(
             {
-              id: 6,
+              id: 5,
               status: Open,
               data: {
-                name: "insect",
-                level: "class",
+                name: "anthropoda",
+                level: "phylum",
               },
             },
-            Node(
-              {
-                id: 7,
-                status: Open,
-                data: {
-                  name: "dipthera",
-                  level: "order",
+            [
+              Node(
+                {
+                  id: 6,
+                  status: Open,
+                  data: {
+                    name: "insect",
+                    level: "class",
+                  },
                 },
-              },
+                [
+                  Node(
+                    {
+                      id: 7,
+                      status: Open,
+                      data: {
+                        name: "dipthera",
+                        level: "order",
+                      },
+                    },
+                    [Empty, Empty],
+                  ),
+                  Empty,
+                ],
+              ),
               Empty,
-              Empty,
-            ),
-            Empty,
+            ],
           ),
-          Empty,
-        ),
+        ],
       )
     );
 

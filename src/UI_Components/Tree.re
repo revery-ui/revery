@@ -13,24 +13,24 @@ type content('a) = {
 
 type tree('a) =
   | Empty
-  | Node(content('a), tree('a), tree('a));
+  | Node(content('a), list(tree('a)));
 
 let component = React.component("Tree");
 
 let defaultNodeStyles = Style.[flexDirection(`Row), marginVertical(5)];
 
-let rec findNode = (nodeID, tr) => {
-  switch (tr) {
-  | Empty => None
-  | Node({id, _} as x, _, _) when nodeID == id => Some(x)
-  | Node(_, leftTree, rightTree) =>
-    let found = findNode(nodeID, leftTree);
-    switch (found) {
-    | Some(n) => Some(n)
-    | None => findNode(nodeID, rightTree)
-    };
-  };
-};
+/* let rec findNode = (nodeID, tr) => { */
+/*   switch (tr) { */
+/*   | Empty => None */
+/*   | Node({id, _} as x, _) when nodeID == id => Some(x) */
+/*   | Node(_, leaves) => */
+/*     let found = findNode(nodeID, leaves); */
+/*     switch (found) { */
+/*     | Some(n) => Some(n) */
+/*     | None => findNode(nodeID, rightTree) */
+/*     }; */
+/*   }; */
+/* }; */
 
 let default = (~indent, {data, status, _}) => {
   let isOpen =
@@ -72,13 +72,23 @@ let rec renderTree = (~indent=0, ~nodeRenderer, ~emptyRenderer, t) => {
     renderTree(~indent=indent + 1, ~nodeRenderer, ~emptyRenderer);
   switch (t) {
   | Empty => empty
-  /* If the node is closed only draw the parent do not render its children */
-  | Node({status: Closed, _} as x, _, _) => [drawNode(x)]
-  | Node(x, leftTree, rightTree) =>
-    let lft = createSubtree(leftTree);
-    let right = createSubtree(rightTree);
-    let joined = List.concat([lft, right]);
-    [drawNode(x), ...joined];
+  /* If the node is closed OR has no children
+     only draw the parent do not render its children */
+  | Node({status: Open, _} as x, [])
+  | Node({status: Closed, _} as x, _) => [drawNode(x)]
+  | Node(current, [n, ...rest]) =>
+    let grandChildren =
+      List.fold_left(
+        (accum, i) => {
+          let subtreeNode = createSubtree(i);
+          List.concat([accum, subtreeNode]);
+        },
+        [],
+        rest,
+      );
+    let firstChild = createSubtree(n);
+    let currentGeneration = [drawNode(current), ...grandChildren];
+    List.concat([currentGeneration, firstChild]);
   };
 };
 
