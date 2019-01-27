@@ -93,17 +93,17 @@ let rec renderTree = (~indent=0, ~nodeRenderer, ~emptyRenderer, t) => {
   | Node({status: Open, _} as x, [])
   | Node({status: Closed, _} as x, _) => [drawNode(x)]
   | Node(current, [n, ...rest]) =>
-    let grandChildren =
+    let siblings =
       List.fold_left(
-        (accum, i) => {
-          let subtreeNode = createSubtree(i);
-          List.concat([accum, subtreeNode]);
+        (accum, next) => {
+          let grandChild = createSubtree(next);
+          List.concat([accum, grandChild]);
         },
         [],
         rest,
       );
     let firstChild = createSubtree(n);
-    let currentGeneration = [drawNode(current), ...grandChildren];
+    let currentGeneration = [drawNode(current), ...siblings];
     List.concat([currentGeneration, firstChild]);
   };
 };
