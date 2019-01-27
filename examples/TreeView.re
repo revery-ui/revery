@@ -4,116 +4,142 @@ open Revery.UI.Components;
 
 module TreeView = {
   let component = React.component("TreeView");
-
   let stringTree =
     Tree.(
       Node(
-        {data: "root", status: Open},
+        {data: "root", id: 1, status: Open},
         Node(
-          {data: "subfolder 1", status: Open},
-          Node({data: "subdirectory 1", status: Closed}, Empty, Empty),
+          {data: "subfolder 1", id: 2, status: Open},
+          Node(
+            {data: "subdirectory 1", id: 3, status: Closed},
+            Empty,
+            Empty,
+          ),
           Empty,
         ),
         Node(
-          {data: "home", status: Open},
-          Node({status: Closed, data: "downloads"}, Empty, Empty),
+          {data: "home", id: 4, status: Open},
+          Node({status: Closed, id: 5, data: "downloads"}, Empty, Empty),
           Node(
-            {data: "desktop", status: Closed},
+            {data: "desktop", id: 6, status: Closed},
             Node(
-              {status: Closed, data: "subfolder 2"},
-              Node({status: Closed, data: "pictures"}, Empty, Empty),
+              {status: Closed, id: 7, data: "subfolder 2"},
+              Node({status: Closed, id: 8, data: "pictures"}, Empty, Empty),
               Empty,
             ),
-            Node({data: "subfolder 3", status: Closed}, Empty, Empty),
+            Node({data: "subfolder 3", id: 9, status: Closed}, Empty, Empty),
           ),
         ),
       )
     );
 
-  type song = {
-    title: string,
-    artist: string,
+  type heirarchy = {
+    name: string,
+    level: string,
   };
 
-  let recordTree =
+  let animalKingdom =
     Tree.(
       Node(
         {
+          id: 1,
           status: Open,
           data: {
-            title: "awesome tunes",
-            artist: "cool dude",
+            name: "Animalia",
+            level: "Kingdom",
           },
         },
         Node(
           {
+            id: 2,
             data: {
-              title: "terrible song",
-              artist: "awful person",
+              name: "chordate",
+              level: "phylum",
             },
             status: Open,
           },
           Node(
             {
+              id: 3,
               status: Open,
               data: {
-                title: "jamba juice",
-                artist: "jamba juicers",
+                name: "mammal",
+                level: "class",
               },
             },
-            Empty,
+            Node(
+              {
+                id: 4,
+                status: Open,
+                data: {
+                  name: "carnivora",
+                  level: "order",
+                },
+              },
+              Empty,
+              Empty,
+            ),
             Empty,
           ),
           Empty,
         ),
         Node(
           {
+            id: 5,
             status: Open,
             data: {
-              artist: "Michael Jackson",
-              title: "Beat It!",
+              name: "anthropoda",
+              level: "phylum",
             },
           },
           Node(
             {
+              id: 6,
               status: Open,
               data: {
-                artist: "Janet Jackson",
-                title: "Thriller",
+                name: "insect",
+                level: "class",
               },
             },
-            Empty,
+            Node(
+              {
+                id: 7,
+                status: Open,
+                data: {
+                  name: "dipthera",
+                  level: "order",
+                },
+              },
+              Empty,
+              Empty,
+            ),
             Empty,
           ),
           Empty,
         ),
       )
+    );
+
+  let emptyRenderer =
+    Some(
+      indent =>
+        <Text
+          text={"There is no file present" ++ "\n"}
+          style=Style.[
+            marginLeft(indent * 20),
+            color(Colors.rebeccaPurple),
+            fontFamily("Roboto-Regular.ttf"),
+            fontSize(20),
+          ]
+        />,
     );
 
   let make = (~renderer, ()) =>
     component((_slots: React.Hooks.empty) =>
       switch (renderer) {
-      | Some(fn) => <Tree tree=recordTree nodeRenderer=fn />
+      | Some(fn) => <Tree tree=animalKingdom nodeRenderer=fn />
       | None =>
-        <Tree
-          tree=stringTree
-          nodeRenderer=Tree.default
-          emptyRenderer={
-            Some(
-              indent => {
-                let indentStr = String.make(indent * 2, ' ');
-                <Text
-                  text={indentStr ++ "X" ++ "\n"}
-                  style=Style.[
-                    color(Colors.rebeccaPurple),
-                    fontFamily("Roboto-Regular.ttf"),
-                    fontSize(25),
-                  ]
-                />;
-              },
-            )
-          }
-        />
+        <Tree tree=stringTree nodeRenderer=Tree.default emptyRenderer />
       }
     );
 
@@ -143,8 +169,8 @@ module TreeView = {
           ~color=Color.rgba(0., 0., 0., 0.5),
         ),
       ]>
-      <Text text={data.title} style=textStyles />
-      <Text text={data.artist} style=textStyles />
+      <Text text={data.name} style=textStyles />
+      <Text text={data.level} style=textStyles />
     </View>;
   };
 
@@ -160,19 +186,29 @@ let titleStyles =
     marginVertical(10),
   ];
 
-let render = () =>
+let render = () => {
+  let exampleContainer =
+    Style.[
+      flexDirection(`Column),
+      justifyContent(`FlexStart),
+      alignItems(`Center),
+      marginHorizontal(20),
+      height(800),
+    ];
   <View
     style=Style.[
       justifyContent(`Center),
       alignItems(`Center),
       flexDirection(`Row),
+      height(800),
     ]>
-    <View style=Style.[marginHorizontal(10)]>
-      <Text style=titleStyles text="Show empty nodes" />
-      <TreeView />
-    </View>
-    <View style=Style.[marginHorizontal(10)]>
-      <Text style=titleStyles text="Custom renderer" />
+    <View style=exampleContainer>
+      <Text style=titleStyles text="Custom Renderer" />
       <TreeView renderer=TreeView.customRenderer />
     </View>
+    <View style=exampleContainer>
+      <Text style=titleStyles text="Default Renderer (with emptyRenderer)" />
+      <TreeView />
+    </View>
   </View>;
+};

@@ -7,6 +7,7 @@ type status =
 
 type content('a) = {
   data: 'a,
+  id: int,
   status,
 };
 
@@ -18,7 +19,20 @@ let component = React.component("Tree");
 
 let defaultNodeStyles = Style.[flexDirection(`Row), marginVertical(5)];
 
-let default = (~indent, {data, status}) => {
+let rec findNode = (nodeID, tr) => {
+  switch (tr) {
+  | Empty => None
+  | Node({id, _} as x, _, _) when nodeID == id => Some(x)
+  | Node(_, leftTree, rightTree) =>
+    let found = findNode(nodeID, leftTree);
+    switch (found) {
+    | Some(n) => Some(n)
+    | None => findNode(nodeID, rightTree)
+    };
+  };
+};
+
+let default = (~indent, {data, status, _}) => {
   let isOpen =
     switch (status) {
     | Open => true
