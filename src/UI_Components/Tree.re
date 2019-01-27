@@ -11,6 +11,12 @@ type content('a) = {
   status,
 };
 
+/*
+   A multiway tree, each node can have a variable number of siblings
+   each of which can have a variable number of siblings etc.
+
+   more info: https://ocaml.org/learn/tutorials/99problems.html#Multiway-Trees
+ */
 type tree('a) =
   | Empty
   | Node(content('a), list(tree('a)));
@@ -19,18 +25,28 @@ let component = React.component("Tree");
 
 let defaultNodeStyles = Style.[flexDirection(`Row), marginVertical(5)];
 
-/* let rec findNode = (nodeID, tr) => { */
-/*   switch (tr) { */
-/*   | Empty => None */
-/*   | Node({id, _} as x, _) when nodeID == id => Some(x) */
-/*   | Node(_, leaves) => */
-/*     let found = findNode(nodeID, leaves); */
-/*     switch (found) { */
-/*     | Some(n) => Some(n) */
-/*     | None => findNode(nodeID, rightTree) */
-/*     }; */
-/*   }; */
-/* }; */
+let rec findNode = (nodeID, tr) => {
+  switch (tr) {
+  | Empty => None
+  | Node({id, _} as x, _) when nodeID == id => Some(x)
+  | Node(_, []) => None
+  | Node(_, [n, ...rest]) =>
+    let found = findNode(nodeID, n);
+    switch (found) {
+    | Some(n) => Some(n)
+    | None =>
+      List.fold_left(
+        (accum, item) =>
+          switch (accum) {
+          | Some(a) => Some(a)
+          | None => findNode(nodeID, item)
+          },
+        None,
+        rest,
+      )
+    };
+  };
+};
 
 let default = (~indent, {data, status, _}) => {
   let isOpen =
