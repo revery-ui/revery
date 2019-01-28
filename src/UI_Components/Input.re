@@ -188,10 +188,21 @@ let make =
         style,
       );
 
+    let inputFontFamily =
+      List.fold_left(
+        (default, s) =>
+          switch (s) {
+          | `FontFamily(f) => f
+          | _ => default
+          },
+        "Roboto-Regular.ttf",
+        style,
+      );
+
     let innerTextStyles =
       Style.[
         color(hasPlaceholder ? placeholderColor : inputColor),
-        fontFamily("Roboto-Regular.ttf"),
+        fontFamily(inputFontFamily),
         fontSize(inputFontSize),
         alignItems(`Center),
         justifyContent(`FlexStart),
