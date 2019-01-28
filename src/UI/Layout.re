@@ -3,12 +3,12 @@ open Revery_Core;
 open Flex;
 
 module Node = {
-  type context = ref(int);
+  type context = int;
   /* Ignored - only needed to create the dummy instance. */
-  let nullContext = {contents: 0};
+  let nullContext = (-1);
 };
 
-let rootContext = {contents: 0};
+let rootContext = (-1);
 
 module Encoding = FixedEncoding;
 module LayoutTestUtils = LayoutTestUtils.Create(Node, Encoding);
@@ -18,18 +18,14 @@ module LayoutSupport = Layout.LayoutSupport;
 module LayoutTypes = LayoutTypes.Create(Node, Encoding);
 
 let defaultStyle = LayoutSupport.defaultStyle;
-let createNode = (children, style) =>
-  LayoutSupport.createNode(
-    ~withChildren=children,
-    ~andStyle=style,
-    rootContext,
-  );
-let createNodeWithMeasure = (children, style, measure) =>
+let createNode = (children, style, id) =>
+  LayoutSupport.createNode(~withChildren=children, ~andStyle=style, id);
+let createNodeWithMeasure = (children, style, measure, id) =>
   LayoutSupport.createNode(
     ~withChildren=children,
     ~andStyle=style,
     ~andMeasure=measure,
-    rootContext,
+    id,
   );
 let layout = (node, pixelRatio) =>
   Performance.bench("layout", () => {

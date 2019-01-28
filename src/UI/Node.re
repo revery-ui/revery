@@ -30,7 +30,7 @@ class node ('a) (()) = {
   val _children: ref(list(node('a))) = ref([]);
   val _style: ref(Style.t) = ref(Style.defaultStyle);
   val _events: ref(NodeEvents.t(node('a))) = ref(NodeEvents.make());
-  val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
+  val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle, -1));
   val _parent: ref(option(node('a))) = ref(None);
   val _internalId: int = UniqueId.getUniqueId();
   val _tabIndex: ref(option(int)) = ref(None);
@@ -198,14 +198,23 @@ class node ('a) (()) = {
     let layoutStyle = Style.toLayoutNode(_style^);
     let node =
       switch (_this#getMeasureFunction(pixelRatio)) {
-      | None => Layout.createNode(Array.of_list(childNodes), layoutStyle)
+      | None =>
+        Layout.createNode(
+          Array.of_list(childNodes),
+          layoutStyle,
+          _this#getInternalId(),
+        )
       | Some(m) =>
         Layout.createNodeWithMeasure(
           Array.of_list(childNodes),
           layoutStyle,
           m,
+          _this#getInternalId(),
         )
       };
+
+    let id = node.context;
+    print_endline(string_of_int(id));
 
     _layoutNode := node;
     node;
