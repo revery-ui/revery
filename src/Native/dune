@@ -3,7 +3,7 @@
     (public_name Revery_Native)
     (preprocess (pps lwt_ppx))
     (library_flags (:include flags.sexp))
-    (c_names dialog_win32)
+    (c_names dialog)
     (c_flags (:include c_flags.sexp))
     (libraries reglfw))
 
