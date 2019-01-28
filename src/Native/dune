@@ -2,4 +2,12 @@
     (name Revery_Native)
     (public_name Revery_Native)
     (preprocess (pps lwt_ppx))
+    (library_flags (:include flags.sexp))
+    (c_names dialog_win32)
+    (c_flags (:include c_flags.sexp))
     (libraries reglfw))
+
+(rule
+(targets c_flags.sexp flags.sexp)
+(deps (:discover config/discover.exe))
+(action (run %{discover})))
