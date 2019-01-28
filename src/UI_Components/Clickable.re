@@ -102,7 +102,7 @@ let make =
 let createElement =
     (
       ~style=[],
-      ~onClick: clickFunction=noop,
+      ~onClick=noop,
       ~onBlur=?,
       ~onFocus=?,
       ~tabindex=0,

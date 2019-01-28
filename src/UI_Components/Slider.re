@@ -9,10 +9,6 @@ open Revery_Math;
 open Revery_Core;
 open Revery_UI;
 
-type clickFunction = unit => unit;
-let noop = () => ();
-
-type valueChangedFunction = float => unit;
 let noopValueChanged = _f => ();
 
 let component = React.component("Slider");
