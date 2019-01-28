@@ -1,0 +1,5 @@
+(library
+    (name Revery_Dune)
+    (public_name Revery_Dune)
+    (preprocess (pps lwt_ppx))
+    (libraries reglfw))
