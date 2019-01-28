@@ -1,5 +1,5 @@
 {
-  "checksum": "1d81663c61856d7ddee79cf574285e40",
+  "checksum": "c661b78bcd7c5cad47e0df079e25f169",
   "root": "revery@link:./package.json",
   "node": {
     "revery@link:./package.json": {
@@ -79,7 +79,8 @@
       "overrides": [],
       "dependencies": [
         "refmterr@3.1.10@d41d8cd9", "reason-gl-matrix@0.9.9302@d41d8cd9",
-        "ocaml@4.7.1003@d41d8cd9", "esy-glfw@3.2.1008@d41d8cd9",
+        "ocaml@4.7.1003@d41d8cd9",
+        "esy-glfw@github:esy-packages/esy-glfw#638b5d3@d41d8cd9",
         "esy-cmake@0.3.5@d41d8cd9", "@opam/lwt_ppx@opam:1.2.1@db1172a7",
         "@opam/lwt@opam:4.1.0@111fc2bf",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
@@ -173,15 +174,13 @@
       "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
       "devDependencies": []
     },
-    "esy-glfw@3.2.1008@d41d8cd9": {
-      "id": "esy-glfw@3.2.1008@d41d8cd9",
+    "esy-glfw@github:esy-packages/esy-glfw#638b5d3@d41d8cd9": {
+      "id": "esy-glfw@github:esy-packages/esy-glfw#638b5d3@d41d8cd9",
       "name": "esy-glfw",
-      "version": "3.2.1008",
+      "version": "github:esy-packages/esy-glfw#638b5d3",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/esy-glfw/-/esy-glfw-3.2.1008.tgz#sha1:0f161ccdc9fc9d1c66679739b710ca217708f4b4"
-        ]
+        "source": [ "github:esy-packages/esy-glfw#638b5d3" ]
       },
       "overrides": [],
       "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
