@@ -199,6 +199,9 @@ let make =
         style,
       );
 
+    let selected = Selector.(select(style, FontFamily, "Failed"));
+    print_endline("selected: " ++ selected);
+
     let innerTextStyles =
       Style.[
         color(hasPlaceholder ? placeholderColor : inputColor),
