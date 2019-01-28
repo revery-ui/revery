@@ -50,7 +50,7 @@ No additional dependencies needed.
 
 #### For `Windows` Subsystem for Linux (`WSL`)
 
-Follow instructions above for specific packages for the Linux distribution being used.
+Make sure to check the specific requirements for your Linux distribution, above.
 
 > __NOTE:__ Hardware acceleration is not enabled by default in WSL (instead, WSL will fall-back to a _software_ renderer). This is problematic for performance - for that reason, we recommend building and running Revery natively on Windows instead of with WSL. For more info see: (https://github.com/Microsoft/WSL/issues/637 and a [potential workaround](https://superuser.com/questions/1238925/use-accelerated-graphics-on-windows-10-linux-subsystem-with-xming))
 
