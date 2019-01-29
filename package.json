@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "3.4.0",
-    "reason-glfw": "^3.2.1010",
+    "reason-glfw": "^3.2.1013",
     "reason-fontkit": "^2.0.6",
     "reason-gl-matrix": "^0.9.9302",
     "@opam/color": "^0.2.0",
@@ -45,8 +45,7 @@
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#7901934",
-    "reason-glfw": "github:bryphe/reason-glfw#d6c5f44"
+    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#7901934"
   },
   "peerDependencies": {
     "ocaml": "^4.7.0"
