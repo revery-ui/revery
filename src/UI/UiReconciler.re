@@ -16,10 +16,12 @@ module Reconciler = {
 
   let insertNode = (~parent: node, ~child: node, ~position as _) => {
     parent#addChild(child);
+    parent#addChildLayoutNode(child);
     parent;
   };
 
   let deleteNode = (~parent: node, ~child: node) => {
+    parent#removeChildLayoutNode(child);
     parent#removeChild(child);
     parent;
   };

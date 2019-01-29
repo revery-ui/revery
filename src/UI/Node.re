@@ -17,6 +17,19 @@ type cachedNodeState = {
   depth: int,
 };
 
+class stack ('a) (init) = {
+  as _;
+  val mutable v: list('a) = init;
+  pub pop =
+    switch (v) {
+    | [hd, ...tl] =>
+      v = tl;
+      Some(hd);
+    | [] => None
+    };
+  pub push = hd => v = [hd, ...v];
+};
+
 exception NoDataException(string);
 let getOrThrow: (string, option('a)) => 'a =
   (msg, opt) =>
@@ -27,20 +40,20 @@ let getOrThrow: (string, option('a)) => 'a =
 
 class node ('a) (()) = {
   as _this;
-  val _children: ref(list(node('a))) = ref([]);
-  val _style: ref(Style.t) = ref(Style.defaultStyle);
-  val _events: ref(NodeEvents.t(node('a))) = ref(NodeEvents.make());
-  val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle, -1));
-  val _parent: ref(option(node('a))) = ref(None);
-  val _internalId: int = UniqueId.getUniqueId();
-  val _tabIndex: ref(option(int)) = ref(None);
-  val _hasFocus: ref(bool) = ref(false);
-  val _cachedNodeState: ref(option(cachedNodeState)) = ref(None);
-  val _queuedCallbacks: ref(list(callback)) = ref([]);
+  val mutable _children: list(node('a)) = [];
+  val mutable _style: Style.t = Style.defaultStyle;
+  val mutable _events: NodeEvents.t(node('a)) = NodeEvents.make();
+  val mutable _layoutNode = Layout.createNode([||], Layout.defaultStyle, -1);
+  val mutable _parent: option(node('a)) = None;
+  val mutable _internalId: int = UniqueId.getUniqueId();
+  val mutable _tabIndex: option(int) = None;
+  val mutable _hasFocus: bool = false;
+  val mutable _cachedNodeState: option(cachedNodeState) = None;
+  val mutable _queuedCallbacks: list(callback) = [];
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
-    let dimensions = _layoutNode^.layout;
+    let dimensions = _layoutNode.layout;
 
     Overflow.render(
       worldTransform,
@@ -51,36 +64,41 @@ class node ('a) (()) = {
       () => {
         let localContext =
           NodeDrawContext.createFromParent(parentContext, style.opacity);
-        List.iter(c => c#draw(pass, localContext), _children^);
+        List.iter(c => c#draw(pass, localContext), _children);
       },
     );
   };
   pub getInternalId = () => _internalId;
-  pub measurements = () => _layoutNode^.layout;
-  pub getTabIndex = () => _tabIndex^;
-  pub setTabIndex = index => _tabIndex := index;
-  pub setStyle = style => _style := style;
-  pub getStyle = () => _style^;
-  pub setEvents = events => _events := events;
-  pub getEvents = () => _events^;
+  pub getLayoutNode = () => _layoutNode;
+  pub measurements = () => _layoutNode.layout;
+  pub getTabIndex = () => _tabIndex;
+  pub setTabIndex = index => _tabIndex = index;
+  pub setStyle = style => {
+    _style = style;
+    _layoutNode.style = Style.toLayoutNode(style);
+    Layout.LayoutSupport.markDirtyInternal(_layoutNode);
+  };
+  pub getStyle = () => _style;
+  pub setEvents = events => _events = events;
+  pub getEvents = () => _events;
   pub getWorldTransform = () => {
-    let state = _cachedNodeState^ |> getOrThrow("getWorldTransform");
+    let state = _cachedNodeState |> getOrThrow("getWorldTransform");
     state.worldTransform;
   };
   pub getTransform = () => {
-    let state = _cachedNodeState^ |> getOrThrow("getTransform");
+    let state = _cachedNodeState |> getOrThrow("getTransform");
     state.transform;
   };
   pub getBoundingBox = () => {
-    let state = _cachedNodeState^ |> getOrThrow("getBoundingBox");
+    let state = _cachedNodeState |> getOrThrow("getBoundingBox");
     state.bbox;
   };
   pub getDepth = () => {
-    let state = _cachedNodeState^ |> getOrThrow("getDepth");
+    let state = _cachedNodeState |> getOrThrow("getDepth");
     state.depth;
   };
   pri _recalculateTransform = () => {
-    let dimensions = _layoutNode^.layout;
+    let dimensions = _layoutNode.layout;
     let matrix = Mat4.create();
     Mat4.fromTranslation(
       matrix,
@@ -102,7 +120,7 @@ class node ('a) (()) = {
   pri _recalculateWorldTransform = localTransform => {
     let xform = localTransform;
     let world =
-      switch (_parent^) {
+      switch (_parent) {
       | None => Mat4.create()
       | Some(p) => p#getWorldTransform()
       };
@@ -111,7 +129,7 @@ class node ('a) (()) = {
     matrix;
   };
   pri _recalculateBoundingBox = worldTransform => {
-    let dimensions = _layoutNode^.layout;
+    let dimensions = _layoutNode.layout;
     let min = Vec2.create(0., 0.);
     let max =
       Vec2.create(
@@ -123,7 +141,7 @@ class node ('a) (()) = {
     bbox;
   };
   pri _recalculateDepth = () =>
-    switch (_parent^) {
+    switch (_parent) {
     | None => 0
     | Some(p) => p#getDepth() + 1
     };
@@ -133,9 +151,9 @@ class node ('a) (()) = {
     let bbox = _this#_recalculateBoundingBox(worldTransform);
     let depth = _this#_recalculateDepth();
 
-    _cachedNodeState := Some({transform, worldTransform, bbox, depth});
+    _cachedNodeState = Some({transform, worldTransform, bbox, depth});
 
-    List.iter(c => c#recalculate(), _children^);
+    List.iter(c => c#recalculate(), _children);
   };
   pub getCursorStyle = () => {
     switch (_this#getStyle().cursor, _this#getParent()) {
@@ -145,7 +163,7 @@ class node ('a) (()) = {
     };
   };
   pub hasRendered = () => {
-    switch (_cachedNodeState^) {
+    switch (_cachedNodeState) {
     | Some(_) => true
     | None => false
     };
@@ -155,17 +173,17 @@ class node ('a) (()) = {
     BoundingBox2d.isPointInside(bbox, p);
   };
   pub addChild = (n: node('a)) => {
-    _children := List.append(_children^, [n]);
+    _children = List.append(_children, [n]);
     n#_setParent(Some((_this :> node('a))));
   };
   pub removeChild = (n: node('a)) => {
-    _children :=
-      List.filter(c => c#getInternalId() != n#getInternalId(), _children^);
+    _children =
+      List.filter(c => c#getInternalId() != n#getInternalId(), _children);
     n#_setParent(None);
   };
-  pub firstChild = () => List.hd(_children^);
-  pub getParent = () => _parent^;
-  pub getChildren = () => _children^;
+  pub firstChild = () => List.hd(_children);
+  pub getParent = () => _parent;
+  pub getChildren = () => _children;
   pub getMeasureFunction = (_pixelRatio: float) => None;
   pub handleEvent = (evt: NodeEvents.event) => {
     let _ =
@@ -193,46 +211,55 @@ class node ('a) (()) = {
       };
     ();
   };
-  pub toLayoutNode = (pixelRatio: float) => {
-    let childNodes = List.map(c => c#toLayoutNode(pixelRatio), _children^);
-    let layoutStyle = Style.toLayoutNode(_style^);
+  pub createLayoutNode = pixelRatio => {
+    let layoutStyle = Style.toLayoutNode(_style);
     let node =
       switch (_this#getMeasureFunction(pixelRatio)) {
-      | None =>
-        Layout.createNode(
-          Array.of_list(childNodes),
-          layoutStyle,
-          _this#getInternalId(),
-        )
+      | None => Layout.createNode([||], layoutStyle, _this#getInternalId())
       | Some(m) =>
         Layout.createNodeWithMeasure(
-          Array.of_list(childNodes),
+          [||],
           layoutStyle,
           m,
           _this#getInternalId(),
         )
       };
 
-    let id = node.context;
-    print_endline(string_of_int(id));
-
-    _layoutNode := node;
+    _layoutNode = node;
     node;
   };
+  pub addChildLayoutNode = (child: node('a)) => {
+    _layoutNode.children =
+      Array.append(_layoutNode.children, [|child#getLayoutNode()|]);
+    _layoutNode.childrenCount = _layoutNode.childrenCount + 1;
+    child#getLayoutNode().parent = _layoutNode;
+    Layout.LayoutSupport.markDirtyInternal(_layoutNode);
+  };
+  pub removeChildLayoutNode = (child: node('a)) => {
+    _layoutNode.childrenCount = _layoutNode.childrenCount - 1;
+    _layoutNode.children =
+      _layoutNode.children
+      |> Array.to_list
+      |> List.filter((n: Layout.LayoutTypes.node) =>
+           n.context != child#getInternalId()
+         )
+      |> Array.of_list;
+    Layout.LayoutSupport.markDirtyInternal(_layoutNode);
+  };
   pri _queueCallback = (cb: callback) => {
-    _queuedCallbacks := List.append([cb], _queuedCallbacks^);
+    _queuedCallbacks = List.append([cb], _queuedCallbacks);
   };
   pub flushCallbacks = () => {
     let f = cb => cb();
-    List.iter(f, _queuedCallbacks^);
-    _queuedCallbacks := [];
+    List.iter(f, _queuedCallbacks);
+    _queuedCallbacks = [];
 
     let fc = c => c#flushCallbacks();
-    List.iter(fc, _children^);
+    List.iter(fc, _children);
   };
   /* TODO: This should really be private - it should never be explicitly set */
   pub _setParent = (n: option(node('a))) => {
-    _parent := n;
+    _parent = n;
 
     /* Dispatch ref event if we just got attached */
     switch (n) {
@@ -254,15 +281,15 @@ class node ('a) (()) = {
     };
   };
   pub canBeFocused = () =>
-    switch (_tabIndex^) {
+    switch (_tabIndex) {
     | Some(_) => true
     | None => false
     };
   pub focus = () => {
-    _hasFocus := true;
+    _hasFocus = true;
   };
   pub blur = () => {
-    _hasFocus := false;
+    _hasFocus = false;
   };
 };
 

@@ -23,14 +23,18 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
 
   AnimationTicker.tick();
 
+  /* Layout */
+  let size = Window.getSize(window);
+  let pixelRatio = Window.getDevicePixelRatio(window);
+
+  if (rootNode#getLayoutNode().context == (-1)) {
+    rootNode#createLayoutNode(pixelRatio) |> ignore;
+  };
+
   /* Perform reconciliation */
   Performance.bench("reconcile", () =>
     container := UiReact.Container.update(container^, component)
   );
-
-  /* Layout */
-  let size = Window.getSize(window);
-  let pixelRatio = Window.getDevicePixelRatio(window);
 
   switch (options.autoSize) {
   | false =>
@@ -42,10 +46,10 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
         (),
       ),
     );
-    Layout.layout(rootNode, pixelRatio);
+    Layout.layout(rootNode);
   | true =>
     rootNode#setStyle(Style.make());
-    Layout.layout(rootNode, pixelRatio);
+    Layout.layout(rootNode);
     let measurements = rootNode#measurements();
     let size: Window.windowSize = {
       width: measurements.width,
