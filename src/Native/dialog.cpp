@@ -30,10 +30,11 @@ revery_alert(value vWindow, value vMessage) {
     void* pWin = (void *)vWindow;
 
 #ifdef WIN32
-    revery_alert_win32(pWin, szMessage); 
+    revery_alert_win32(pWin, szMessage);
 #elif __APPLE__
     revery_alert_cocoa(pWin, szMessage);
 #else
+    printf("WARNING - Not implemented: alert");
 #endif
     return Val_unit;
 }

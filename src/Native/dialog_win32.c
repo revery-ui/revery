@@ -1,3 +1,5 @@
+#ifdef WIN32
+
 #include <stdio.h>
 
 #include <Windows.h>
@@ -13,6 +15,5 @@ revery_alert_win32(void *pWin, const char *szMessage) {
             "Alert",
             MB_ICONWARNING | MB_OK
             );
-
-    printf("ALERT: %s - hwnd: %p\n", szMessage, hwnd);
 }
+#endif

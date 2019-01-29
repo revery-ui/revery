@@ -1,3 +1,4 @@
+#ifdef __APPLE__
 #include <stdio.h>
 
 #import <Cocoa/Cocoa.h>
@@ -12,7 +13,5 @@ void revery_alert_cocoa(void *pWin, const char *szMessage) {
     [alert setMessageText:@"Alert"];
     [alert setInformativeText:message];
     [alert runModal];
-
-
-    printf("ALERT: %s - hwnd: %p\n", szMessage, pCocoaWin);
 }
+#endif

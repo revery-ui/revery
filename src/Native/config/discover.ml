@@ -17,7 +17,11 @@ let get_os =
                         | "Darwin" -> Mac
                                 | "Linux" -> Linux
                                         | _ -> Unknown
-let c_flags = ["-I"; "."; "-x"; "objective-c"]
+let c_flags = match get_os with
+    | Mac -> ["-I"; "."; "-x"; "objective-c"]
+    | _ -> []
+;;
+
 let flags = []
 ;;
 Configurator.V1.Flags.write_sexp "c_flags.sexp" c_flags;
