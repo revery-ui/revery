@@ -19,7 +19,7 @@ let make =
       TranslateY((-1.) *. float_of_int(actualScrollTop)),
     ];
 
-    let (_horizontalScrollBar, verticalScrollBar) = switch(outerRef) {
+    let (_horizontalScrollBar, verticalScrollBar, scroll) = switch(outerRef) {
     | (Some(outer)) => {
         let inner = outer#firstChild();
         let childMeasurements = inner#measurements();
@@ -44,15 +44,24 @@ let make =
          * Or something we need to fix in our styling?
          */
         let _horizontalScrollbar = isHorizontalScrollbarVisible ? <Slider onValueChanged={(v) => setScrollLeft(-int_of_float(v))} minimumValue={0.} maximumValue={float_of_int(maxWidth)} sliderLength={outerMeasurements.width} thumbLength={horizontalThumbHeight} trackThickness=scrollBarThickness thumbThickness=scrollBarThickness /> : empty;
-        
-        (empty, verticalScrollBar); 
-    }
-    | _ => (empty, empty);
-    };
 
-    let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
-        let newScrollTop = actualScrollTop - (int_of_float(wheelEvent.deltaY) * 25);
-        setScrollTop(newScrollTop);
+        let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
+            let newScrollTop = actualScrollTop - (int_of_float(wheelEvent.deltaY) * 25);
+
+            let clampedScrollTop = if (newScrollTop < 0) {
+                0;
+            } else if (newScrollTop > maxHeight) {
+                maxHeight;
+            } else {
+                newScrollTop;
+            }
+
+            setScrollTop(clampedScrollTop);
+        };
+        
+        (empty, verticalScrollBar, scroll); 
+    }
+    | _ => (empty, empty, (_) => ())
     };
 
     let innerStyle = Style.[
