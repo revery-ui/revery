@@ -48,11 +48,10 @@ module Sample = {
         <ScrollView style={outerBox}>
             <Image
               src="outrun-logo.png"
-              style={Style.make(
-                ~width=512,
-                ~height=256,
-                (),
-              )}
+              style={Style.[
+                width(512),
+                height(256),
+              ]} 
             />
         </ScrollView>
         <View style={buttonContainerStyle}>

@@ -34,8 +34,17 @@ let make =
     let (slideRef, _setSlideRef, slots) = React.Hooks.state(None, slots);
     let (thumbRef, _setThumbRef, slots) = React.Hooks.state(None, slots);
     let (isActive, setActive, slots) = React.Hooks.state(false, slots);
+    let (initialValue, setInitialValue, slots) = React.Hooks.state(value, slots);
     let (v, setV, _slots: React.Hooks.empty) =
       React.Hooks.state(value, slots);
+
+    let v = if (value != initialValue) {
+        setInitialValue(value);
+        setV(value);
+        value 
+    } else {
+        v
+    }
 
     let setSlideRef = r => _setSlideRef(Some(r));
 

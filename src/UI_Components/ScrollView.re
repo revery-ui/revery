@@ -34,7 +34,8 @@ let make =
         let isVerticalScrollbarVisible = maxHeight > 0;
         let isHorizontalScrollbarVisible = maxWidth > 0;
 
-        let verticalScrollBar = isVerticalScrollbarVisible ?  <Slider onValueChanged={(v) => setScrollTop(int_of_float(v))} minimumValue={0.} maximumValue={float_of_int(maxHeight)} sliderLength={outerMeasurements.height} thumbLength={verticalThumbHeight} trackThickness=scrollBarThickness thumbThickness=scrollBarThickness vertical={true} /> : empty;
+        prerr_endline ("actualScrollTop: " ++ string_of_int(actualScrollTop));
+        let verticalScrollBar = isVerticalScrollbarVisible ?  <Slider onValueChanged={(v) => setScrollTop(int_of_float(v))} minimumValue={0.} maximumValue={float_of_int(maxHeight)} sliderLength={outerMeasurements.height} thumbLength={verticalThumbHeight} value={float_of_int(actualScrollTop)} trackThickness=scrollBarThickness thumbThickness=scrollBarThickness vertical={true} /> : empty;
 
         /* TODO:
          * Need to investigate why the child width is not being reported (expanded) correctly.
