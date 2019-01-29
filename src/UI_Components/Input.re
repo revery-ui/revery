@@ -155,8 +155,8 @@ let make =
 
     let viewStyles = Style.extractViewStyles(allStyles);
 
-    let inputHeight = Selector.select(style, Height, 18);
-    let inputFontSize = Selector.select(style, FontSize, 20);
+    let inputHeight = Selector.select(style, Height, 24);
+    let inputFontSize = Selector.select(style, FontSize, 18);
     let inputColor = Selector.select(style, Color, Colors.black);
     let inputFontFamily =
       Selector.select(style, FontFamily, "Roboto-Regular.ttf");
@@ -172,13 +172,18 @@ let make =
       ];
 
     /*
+       TODO: this logic needs the equivalent of sizing an absolutely positioned
+       element in css i.e. should work in the same way
        calculate the top padding needed to place the cursor centrally
      */
-    let verticalAlignPos = (inputHeight - 20) / 2;
+    let positionTop =
+      inputHeight > inputFontSize
+        ? (inputHeight - inputFontSize) / 2 : inputFontSize;
+
     let inputCursorStyles =
       Style.[
         marginLeft(2),
-        height(float_of_int(inputHeight) *. 0.6 |> int_of_float),
+        height(inputFontSize),
         width(2),
         opacity(state.isFocused ? animatedOpacity : 0.0),
         backgroundColor(cursorColor),
@@ -188,7 +193,7 @@ let make =
           hasPlaceholder
             ? Style.[
                 position(`Absolute),
-                top(verticalAlignPos),
+                top(positionTop),
                 left(5),
                 ...initial,
               ]
