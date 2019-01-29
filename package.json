@@ -3,7 +3,9 @@
   "version": "0.5.1",
   "description": "App toolkit built with Reason",
   "license": "MIT",
-  "bugs": { "url": "https://github.com/bryphe/revery/issues" },
+  "bugs": {
+    "url": "https://github.com/bryphe/revery/issues"
+  },
   "scripts": {
     "build": "esy b",
     "build:release": "esy b dune build --profile=release --root . -j4",
@@ -24,7 +26,8 @@
       "esy-installer Revery_Native.install",
       "esy-installer Revery_Shaders.install",
       "esy-installer Revery_UI.install",
-      "esy-installer Revery_UI_Components.install"
+      "esy-installer Revery_UI_Components.install",
+      "esy-installer Revery_Native.install"
     ]
   },
   "dependencies": {
