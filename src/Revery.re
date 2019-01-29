@@ -16,5 +16,5 @@ module Window = Core.Window;
 module Time = Core.Time;
 
 module Platform = {
-    include Platform;
-}
+  include Platform;
+};
