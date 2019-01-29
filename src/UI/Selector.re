@@ -1,4 +1,5 @@
 open Revery_Core;
+open Style;
 
 type selector('a) =
   | Color: selector(Color.t)
@@ -23,26 +24,29 @@ type selector('a) =
   | Margin: selector(int)
   | MarginVertical: selector(int)
   | MarginHorizontal: selector(int)
-  | Margin2: selector(Style.xy)
-  | Margin4: selector(Style.coords)
+  | Margin2: selector(xy)
+  | Margin4: selector(coords)
   | Overflow: selector(Layout.LayoutTypes.overflow)
-  | BorderTop: selector(Style.Border.t)
-  | BorderLeft: selector(Style.Border.t)
-  | BorderRight: selector(Style.Border.t)
-  | BorderBottom: selector(Style.Border.t)
-  | Border: selector(Style.Border.t)
-  | BorderHorizontal: selector(Style.Border.t)
-  | BorderVertical: selector(Style.Border.t)
+  | BorderTop: selector(Border.t)
+  | BorderLeft: selector(Border.t)
+  | BorderRight: selector(Border.t)
+  | BorderBottom: selector(Border.t)
+  | Border: selector(Border.t)
+  | BorderHorizontal: selector(Border.t)
+  | BorderVertical: selector(Border.t)
   | Transform: selector(list(Transform.t))
   | Opacity: selector(float)
-  | BoxShadow: selector(Style.BoxShadow.properties)
+  | BoxShadow: selector(BoxShadow.properties)
   | Cursor: selector(option(MouseCursors.t));
 
+/**
+     This function pulls out (selects) a style property based on the matching Variant that is passed in
+     it uses a GADT to correctly type return value of the function by matching the variant passed in
+   */
 let rec select:
   type selectionType.
-    (list(Style.allProps), selector(selectionType), selectionType) =>
-    selectionType =
-  (styles, selector, default) =>
+    (list(allProps), selector(selectionType), selectionType) => selectionType =
+  (styles, selector, default) => {
     switch (styles, selector) {
     | ([], _) => default
     | ([`Color(c), ...rest], Color) => select(rest, selector, c)
@@ -100,3 +104,4 @@ let rec select:
     | ([`Cursor(cur), ...rest], Cursor) => select(rest, selector, cur)
     | ([_, ...rest], _) => select(rest, selector, default)
     };
+  };

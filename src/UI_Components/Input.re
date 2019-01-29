@@ -155,54 +155,11 @@ let make =
 
     let viewStyles = Style.extractViewStyles(allStyles);
 
-    let inputHeight =
-      List.fold_left(
-        (default, s) =>
-          switch (s) {
-          | `Height(h) => h
-          | _ => default
-          },
-        18,
-        style,
-      );
-
-    let inputFontSize =
-      List.fold_left(
-        (default, s) =>
-          switch (s) {
-          | `FontSize(fs) => fs
-          | _ => default
-          },
-        20,
-        style,
-      );
-
-    let inputColor =
-      List.fold_left(
-        (default, s) =>
-          switch (s) {
-          | `Color(c) => c
-          | _ => default
-          },
-        Colors.black,
-        style,
-      );
-
+    let inputHeight = Selector.select(style, Height, 18);
+    let inputFontSize = Selector.select(style, FontSize, 20);
+    let inputColor = Selector.select(style, Color, Colors.black);
     let inputFontFamily =
-      List.fold_left(
-        (default, s) =>
-          switch (s) {
-          | `FontFamily(f) => f
-          | _ => default
-          },
-        "Roboto-Regular.ttf",
-        style,
-      );
-
-    let selected = Selector.(select(style, FontSize, 10));
-    print_endline("selected: " ++ string_of_int(selected));
-    let ff = Selector.(select(style, FontFamily, "Stuff"));
-    print_endline("font family: " ++ ff);
+      Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
     let innerTextStyles =
       Style.[
@@ -221,7 +178,7 @@ let make =
     let inputCursorStyles =
       Style.[
         marginLeft(2),
-        height(inputHeight),
+        height(float_of_int(inputHeight) *. 0.6 |> int_of_float),
         width(2),
         opacity(state.isFocused ? animatedOpacity : 0.0),
         backgroundColor(cursorColor),
@@ -257,7 +214,7 @@ let createElement =
       ~children as _,
       ~style=defaultStyles,
       ~placeholderColor=Colors.grey,
-      ~cursorColor=Colors.white,
+      ~cursorColor=Colors.black,
       ~value="",
       ~placeholder="",
       ~onChange=noop,
