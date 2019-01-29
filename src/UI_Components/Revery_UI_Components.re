@@ -9,3 +9,5 @@ module Button = Button;
 module ScrollView = ScrollView;
 module Slider = Slider;
 module Input = Input;
+module RadioButtons = RadioButtons;
+module Checkbox = Checkbox;
