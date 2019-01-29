@@ -41,7 +41,7 @@ type selector('a) =
 
 /**
      This function pulls out (selects) a style property based on the matching Variant that is passed in
-     it uses a GADT to correctly type return value of the function by matching the variant passed in
+     it uses a GADT to correctly type the return value of the function by matching the variant passed in
    */
 let rec select:
   type selectionType.
