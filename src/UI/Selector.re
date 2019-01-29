@@ -1,4 +1,3 @@
-open Style;
 open Revery_Core;
 
 type selector('a) =
@@ -24,24 +23,25 @@ type selector('a) =
   | Margin: selector(int)
   | MarginVertical: selector(int)
   | MarginHorizontal: selector(int)
-  | Margin2: selector(xy)
-  | Margin4: selector(coords)
+  | Margin2: selector(Style.xy)
+  | Margin4: selector(Style.coords)
   | Overflow: selector(Layout.LayoutTypes.overflow)
-  | BorderTop: selector(Border.t)
-  | BorderLeft: selector(Border.t)
-  | BorderRight: selector(Border.t)
-  | BorderBottom: selector(Border.t)
-  | Border: selector(Border.t)
-  | BorderHorizontal: selector(Border.t)
-  | BorderVertical: selector(Border.t)
+  | BorderTop: selector(Style.Border.t)
+  | BorderLeft: selector(Style.Border.t)
+  | BorderRight: selector(Style.Border.t)
+  | BorderBottom: selector(Style.Border.t)
+  | Border: selector(Style.Border.t)
+  | BorderHorizontal: selector(Style.Border.t)
+  | BorderVertical: selector(Style.Border.t)
   | Transform: selector(list(Transform.t))
   | Opacity: selector(float)
-  | BoxShadow: selector(BoxShadow.properties)
+  | BoxShadow: selector(Style.BoxShadow.properties)
   | Cursor: selector(option(MouseCursors.t));
 
 let rec select:
   type selectionType.
-    (list(allProps), selector(selectionType), selectionType) => selectionType =
+    (list(Style.allProps), selector(selectionType), selectionType) =>
+    selectionType =
   (styles, selector, default) =>
     switch (styles, selector) {
     | ([], _) => default

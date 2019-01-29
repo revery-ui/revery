@@ -362,7 +362,7 @@ let rec extractViewStyles = (styles: list(allProps)): list(viewStyleProps) =>
    and is used to build up the style record, which is eventually
    used to apply styling to elements.
  */
-let applyStyle = (style, styleRule: [< coreStyleProps | fontProps]) =>
+let applyStyle = (style, styleRule) =>
   switch (styleRule) {
   | `AlignItems(alignItems) => {...style, alignItems}
   | `JustifyContent(justifyContent) => {...style, justifyContent}

@@ -199,8 +199,10 @@ let make =
         style,
       );
 
-    let selected = Selector.(select(style, FontFamily, "Failed"));
-    print_endline("selected: " ++ selected);
+    let selected = Selector.(select(style, FontSize, 10));
+    print_endline("selected: " ++ string_of_int(selected));
+    let ff = Selector.(select(style, FontFamily, "Stuff"));
+    print_endline("font family: " ++ ff);
 
     let innerTextStyles =
       Style.[
