@@ -1,24 +1,11 @@
 #include <stdio.h>
 
-#include <caml/mlvalues.h>
-#include <caml/memory.h>
-#include <caml/alloc.h>
-#include <caml/callback.h>
-
 #include <Windows.h>
 #include <winuser.h>
 
-CAMLprim value
-revery_alertSupported() {
-    return Val_true;
-}
-
-CAMLprim value
-revery_alert(value vWindow, value vMessage) {
-    CAMLparam2(vWindow, vMessage);
-
-    const char *szMessage = String_val(vMessage);
-    HWND hwnd = (HWND)vWindow;
+void
+revery_alert_win32(void *pWin, const char *szMessage) {
+    HWND hwnd = (HWND)pWin;
 
     int msgboxId = MessageBox(
             hwnd,
@@ -28,5 +15,4 @@ revery_alert(value vWindow, value vMessage) {
             );
 
     printf("ALERT: %s - hwnd: %p\n", szMessage, hwnd);
-    return Val_unit;
 }
