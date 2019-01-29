@@ -25,9 +25,7 @@ type state = {
 let state: state = {
   examples: [
     {name: "Animation", render: _w => Hello.render()},
-    {name: "Button", render: _ => DefaultButton.render()},
-    {name: "Checkbox", render: _ => CheckboxExample.render()},
-    {name: "Slider", render: _ => SliderExample.render()},
+    {name: "Controls", render: _ => Controls.render()},
     {name: "Border", render: _ => Border.render()},
     {name: "Overflow", render: _w => Overflow.render()},
     {name: "Calculator", render: w => Calculator.render(w)},
@@ -35,8 +33,6 @@ let state: state = {
     {name: "Box Shadow", render: _ => Boxshadow.render()},
     {name: "Focus", render: _ => Focus.render()},
     {name: "Stopwatch", render: _ => Stopwatch.render()},
-    {name: "Input", render: w => InputExample.render(w)},
-    {name: "Radio Button", render: _ => RadioButtonExample.render()},
     {name: "Game Of Life", render: _ => GameOfLife.render()},
   ],
   selectedExample: "Animation",
