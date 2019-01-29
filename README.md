@@ -230,7 +230,7 @@ Some ideas for getting started:
 ## Special Thanks
 
 `revery` would not be possible without a bunch of cool tech:
-- [ocaml](https://ocaml.org) made these tools possible - thanks [Inria](https://caml.inria.fr) & [OCaml Labs](http://ocamllabs.io/)!
+- [ocaml](https://ocaml.org) made these tools possible - thanks [Inria](http://gallium.inria.fr/) & [OCaml Labs](http://ocamllabs.io/)!
 - [reasonml](https://reasonml.github.io) made revery possible - thanks @jordwalke!
 - [flex](https://github.com/jordwalke/flex) by @jordwalke
 - [briskml](https://github.com/briskml)
