@@ -3,9 +3,7 @@
   "version": "0.5.1",
   "description": "App toolkit built with Reason",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/bryphe/revery/issues"
-  },
+  "bugs": { "url": "https://github.com/bryphe/revery/issues" },
   "scripts": {
     "build": "esy b",
     "build:release": "esy b dune build --profile=release --root . -j4",
