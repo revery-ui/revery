@@ -35,6 +35,7 @@ let state: state = {
     {name: "Box Shadow", render: _ => Boxshadow.render()},
     {name: "Focus", render: _ => Focus.render()},
     {name: "Stopwatch", render: _ => Stopwatch.render()},
+    {name: "Native", render: w => Native.render(w)},
     {name: "Input", render: w => InputExample.render(w)},
     {name: "Radio Button", render: _ => RadioButtonExample.render()},
     {name: "Game Of Life", render: _ => GameOfLife.render()},

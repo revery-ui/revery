@@ -17,9 +17,11 @@
   "esy": {
     "build": [ "dune build --root . -j4" ],
     "install": [
-      "esy-installer Revery.install", "esy-installer Revery_Core.install",
+      "esy-installer Revery.install",
+      "esy-installer Revery_Core.install",
       "esy-installer Revery_Geometry.install",
       "esy-installer Revery_Math.install",
+      "esy-installer Revery_Native.install",
       "esy-installer Revery_Shaders.install",
       "esy-installer Revery_UI.install",
       "esy-installer Revery_UI_Components.install"
@@ -27,7 +29,7 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "3.4.0",
-    "reason-glfw": "^3.2.1010",
+    "reason-glfw": "^3.2.1013",
     "reason-fontkit": "^2.0.6",
     "reason-gl-matrix": "^0.9.9302",
     "@opam/color": "^0.2.0",
