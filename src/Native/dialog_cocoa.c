@@ -7,9 +7,10 @@ void revery_alert_cocoa(void *pWin, const char *szMessage) {
 
     NSView *view = [[NSView alloc] init];
     NSAlert *alert = [[NSAlert alloc] init];
+    NSString *message = [NSString stringWithUTF8String:szMessage];
     [alert addButtonWithTitle:@"Ok"];
     [alert setMessageText:@"Alert"];
-    [alert setInformativeText:@"Info"];
+    [alert setInformativeText:message];
     [alert runModal];
 
 
