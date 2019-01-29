@@ -9,8 +9,7 @@ type state = {
 type action =
   | SetFocus(bool)
   | UpdateText(string)
-  | Backspace
-  | ClearWord;
+  | Backspace;
 
 let removeCharacter = word =>
   String.length(word)
@@ -35,7 +34,6 @@ let reducer = (action, state) =>
         length > 0 ? {...state, value: removeCharacter(state.value)} : state;
       }
       : state
-  | ClearWord => {...state, value: ""}
   };
 
 let handleKeyDown = (~dispatch, event: Events.keyEvent) =>
