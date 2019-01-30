@@ -13,6 +13,8 @@ let containerStyle =
     justifyContent(`Center),
   ];
 
+let textStyle =
+  Style.[fontFamily("Roboto-Regular.ttf"), fontSize(20), marginBottom(20)];
 /*    TODO: Allow user style overwrite for Dropdown component
  */
 
@@ -27,9 +29,15 @@ module Example = {
   ];
 
   let make = () =>
-    component((_slots: React.Hooks.empty) =>
-      <View style=containerStyle> <Dropdown items /> </View>
-    );
+    component(slots => {
+      let (selectedItem, setSelectedItem, _slots: React.Hooks.empty) =
+        React.Hooks.state(List.nth(items, 0), slots);
+
+      <View style=containerStyle>
+        <Text style=textStyle text={"Selected Item: " ++ selectedItem.label} />
+        <Dropdown items onItemSelected={item => setSelectedItem(item)} />
+      </View>;
+    });
 
   let createElement = (~children as _, ()) => React.element(make());
 };

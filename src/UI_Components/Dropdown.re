@@ -61,8 +61,10 @@ let selectedItemStyles =
 let itemsContainerStyles =
   Style.[position(`Absolute), top(50), backgroundColor(Colors.white)];
 
+let noop = _item => ();
+
 let component = React.component("Dropdown");
-let make = (~items, ()) =>
+let make = (~items, ~onItemSelected, ()) =>
   component(slots => {
     let initialState = {items, selected: List.nth(items, 0), _open: false};
 
@@ -88,7 +90,10 @@ let make = (~items, ()) =>
                   ~width=float_of_int(50) *. 0.05 |> int_of_float,
                 ),
               ]
-              onClick={() => dispatch(SelectItem(_item))}>
+              onClick={() => {
+                dispatch(SelectItem(_item));
+                onItemSelected(_item);
+              }}>
               <Text style=textStyles text={_item.label} />
             </Clickable>,
           state.items,
@@ -117,5 +122,5 @@ let make = (~items, ()) =>
     </View>;
   });
 
-let createElement = (~items, ~children as _, ()) =>
-  React.element(make(~items, ()));
+let createElement = (~items, ~onItemSelected=noop, ~children as _, ()) =>
+  React.element(make(~items, ~onItemSelected, ()));
