@@ -26,7 +26,7 @@ let make =
       TranslateY((-1.) *. float_of_int(actualScrollTop)),
     ];
 
-    let (_horizontalScrollBar, verticalScrollBar, scroll) =
+    let (horizontalScrollBar, verticalScrollBar, scroll) =
       switch (outerRef) {
       | Some(outer) =>
         let inner = outer#firstChild();
@@ -35,6 +35,9 @@ let make =
 
         let maxHeight = childMeasurements.height - outerMeasurements.height;
         let maxWidth = childMeasurements.width - outerMeasurements.width;
+
+        prerr_endline ("Child width: " ++ string_of_int(childMeasurements.width));
+        prerr_endline ("Container width: " ++ string_of_int(outerMeasurements.width));
 
         let verticalThumbHeight =
           childMeasurements.height > 0
@@ -76,7 +79,7 @@ let make =
          * Is this a bug in flex?
          * Or something we need to fix in our styling?
          */
-        let _horizontalScrollbar =
+        let horizontalScrollbar =
           isHorizontalScrollbarVisible
             ? <Slider
                 onValueChanged={v => setScrollLeft(- int_of_float(v))}
@@ -108,7 +111,7 @@ let make =
           setScrollTop(clampedScrollTop);
         };
 
-        (empty, verticalScrollBar, scroll);
+        (horizontalScrollbar, verticalScrollBar, scroll);
       | _ => (empty, empty, (_ => ()))
       };
 
@@ -131,14 +134,24 @@ let make =
         width(scrollBarThickness),
       ];
 
+    let horizontalScrollbarContainerStyle =
+      Style.[
+        position(`Absolute),
+        right(0),
+        left(0),
+        bottom(0),
+        height(scrollBarThickness),
+      ];
+
     <View style>
       <View
         onMouseWheel=scroll
         ref={r => setOuterRef(Some(r))}
-        style=Style.[flexGrow(1), position(`Relative)]>
+        style=Style.[flexGrow(1), position(`Relative), overflow(LayoutTypes.Scroll)]>
         <View style=innerStyle> children </View>
         <View style=verticalScrollbarContainerStyle> verticalScrollBar </View>
-      </View>
+        <View style=horizontalScrollbarContainerStyle> horizontalScrollBar </View>
+       </View>
     </View>;
   });
 

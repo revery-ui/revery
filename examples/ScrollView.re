@@ -16,9 +16,8 @@ let containerStyle =
 
 let outerBox =
   Style.[
-    width(512),
+    width(128),
     height(128),
-    overflow(LayoutTypes.Hidden),
     backgroundColor(Colors.black),
   ];
 
@@ -33,7 +32,7 @@ module Sample = {
   let component = React.component("Sample");
 
   let make = () =>
-    component((_slots: React.Hooks.empty) => {
+    component((_slots: React.Hooks.empty) =>
       <View style=containerStyle>
         <ScrollView style=outerBox>
           <Image
@@ -49,8 +48,8 @@ module Sample = {
             style=Style.[width(512), height(256)]
           />
         </ScrollView>
-      </View>;
-    });
+      </View>
+    );
 
   let createElement = (~children as _, ()) => React.element(make());
 };
