@@ -33,14 +33,7 @@ module Sample = {
   let component = React.component("Sample");
 
   let make = () =>
-    component(slots => {
-      let (hidden, setHidden, _slots: React.Hooks.empty) =
-        React.Hooks.state(false, slots);
-
-      let buttonContainerStyle = Style.[marginTop(80)];
-
-      let onClick = _ => setHidden(!hidden);
-
+    component((_slots: React.Hooks.empty) => {
       <View style=containerStyle>
         <ScrollView style=outerBox>
           <Image
@@ -56,9 +49,6 @@ module Sample = {
             style=Style.[width(512), height(256)]
           />
         </ScrollView>
-        <View style=buttonContainerStyle>
-          <Button fontSize=20 height=45 title="Toggle overflow" onClick />
-        </View>
       </View>;
     });
 
