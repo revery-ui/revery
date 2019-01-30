@@ -11,8 +11,7 @@ let containerStyle =
     right(0),
     alignItems(`Center),
     justifyContent(`Center),
-    flexDirection(`Column),
-    backgroundColor(Colors.black),
+    flexDirection(`Column)
   ];
 
 let outerBox =

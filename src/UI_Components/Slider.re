@@ -25,6 +25,9 @@ let make =
       ~maximumValue,
       ~thumbLength,
       ~sliderLength,
+      ~minimumTrackColor,
+      ~maximumTrackColor,
+      ~thumbColor,
       ~trackThickness,
       ~thumbThickness,
       ~vertical,
@@ -127,8 +130,7 @@ let make =
       | _ => ()
       };
 
-    let sliderBackgroundColor = Colors.darkGray;
-    let thumbColor = Colors.gray;
+    let sliderBackgroundColor = minimumValue,
 
     let sliderOpacity = isActive ? 1.0 : 0.8;
 
@@ -164,7 +166,7 @@ let make =
         left(vertical ? trackMargins : 0),
         right(vertical ? trackMargins : sliderLength - thumbPosition),
         position(`Absolute),
-        backgroundColor(Color.hex("#90f7ff")),
+        backgroundColor(maximumTrackColor),
       ];
 
     let afterTrackStyle =
@@ -207,6 +209,9 @@ let createElement =
       ~sliderLength=100,
       ~thumbThickness=15,
       ~trackThickness=5,
+      ~maximumTrackColor=Colors.darkGray,
+      ~minimumTrackColor=Color.hex("#90f7ff"),
+      ~thumbColor=Colors.gray,
       (),
     ) =>
   React.element(
@@ -220,6 +225,9 @@ let createElement =
       ~sliderLength,
       ~thumbThickness,
       ~trackThickness,
+      ~maximumTrackColor,
+      ~minimumTrackColor,
+      ~thumbColor,
       (),
     ),
   );
