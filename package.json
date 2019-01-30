@@ -48,7 +48,7 @@
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#7901934",
     "reason-glfw": "github:bryphe/reason-glfw#4be18fb",
-    "reason-fontkit": "github:bryphe/reason-fontkit#147368b"
+    "reason-fontkit": "github:bryphe/reason-fontkit#b92e839"
   },
   "peerDependencies": {
     "ocaml": "^4.7.0"
