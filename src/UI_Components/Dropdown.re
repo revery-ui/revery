@@ -36,6 +36,7 @@ let textStyles =
 
 let selectedItemContainerStyles =
   Style.[
+    flexDirection(`Row),
     height(50),
     alignItems(`Center),
     justifyContent(`Center),
@@ -52,7 +53,7 @@ let selectedItemStyles =
       ~target=[
         color(Colors.black),
         backgroundColor(Colors.transparentWhite),
-        marginLeft(2),
+        marginHorizontal(2),
       ],
     )
   );
@@ -74,12 +75,14 @@ let make = (~items, ()) =>
           _item =>
             <Clickable
               style=Style.[
-                backgroundColor(
-                  _item == state.selected
-                    ? Color.hex("#bfc1bb") : Colors.transparentWhite,
-                ),
+                flexDirection(`Row),
                 height(50),
                 alignItems(`Center),
+                justifyContent(`Center),
+                backgroundColor(
+                  _item == state.selected
+                    ? Color.hex("#0078D7") : Colors.transparentWhite,
+                ),
                 borderBottom(
                   ~color=Colors.black,
                   ~width=float_of_int(50) *. 0.05 |> int_of_float,
@@ -98,6 +101,16 @@ let make = (~items, ()) =>
       <Clickable onClick={() => dispatch(ShowDropdown)}>
         <View style=selectedItemContainerStyles>
           <Text style=selectedItemStyles text={state.selected.label} />
+          <Text
+            style=Style.[
+              fontSize(30),
+              color(Colors.black),
+              fontFamily("FontAwesome5FreeSolid.otf"),
+              marginTop(15),
+              marginHorizontal(2),
+            ]
+            text={||}
+          />
         </View>
       </Clickable>
       <View style=itemsContainerStyles> ...items </View>
