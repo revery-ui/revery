@@ -138,7 +138,7 @@ let make =
        computed styles
      */
 
-    let viewStyles =
+    let allStyles =
       Style.(
         merge(
           ~source=[
@@ -147,54 +147,43 @@ let make =
             justifyContent(`FlexStart),
             overflow(LayoutTypes.Hidden),
             cursor(MouseCursors.text),
+            ...defaultStyles,
           ],
           ~target=style,
         )
       );
 
-    /*
-       TODO: convert this to a getter utility function
-     */
-    let inputHeight =
-      List.fold_left(
-        (default, s) =>
-          switch (s) {
-          | `Height(h) => h
-          | _ => default
-          },
-        18,
-        style,
-      );
+    let viewStyles = Style.extractViewStyles(allStyles);
 
-    let inputColor =
-      List.fold_left(
-        (default, s) =>
-          switch (s) {
-          | `Color(c) => c
-          | _ => default
-          },
-        Colors.black,
-        style,
-      );
+    let inputHeight = Selector.select(style, Height, 24);
+    let inputFontSize = Selector.select(style, FontSize, 18);
+    let inputColor = Selector.select(style, Color, Colors.black);
+    let inputFontFamily =
+      Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
     let innerTextStyles =
       Style.[
         color(hasPlaceholder ? placeholderColor : inputColor),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(20),
+        fontFamily(inputFontFamily),
+        fontSize(inputFontSize),
         alignItems(`Center),
         justifyContent(`FlexStart),
         marginLeft(6),
       ];
 
     /*
+       TODO: this logic needs the equivalent of sizing an absolutely positioned
+       element in css i.e. should work in the same way
        calculate the top padding needed to place the cursor centrally
      */
-    let verticalAlignPos = (inputHeight - 20) / 2;
+    let positionTop =
+      inputHeight > inputFontSize
+        ? (inputHeight - inputFontSize) / 2 : inputFontSize;
+
     let inputCursorStyles =
       Style.[
         marginLeft(2),
-        height(inputHeight),
+        height(inputFontSize),
         width(2),
         opacity(state.isFocused ? animatedOpacity : 0.0),
         backgroundColor(cursorColor),
@@ -204,7 +193,7 @@ let make =
           hasPlaceholder
             ? Style.[
                 position(`Absolute),
-                top(verticalAlignPos),
+                top(positionTop),
                 left(5),
                 ...initial,
               ]
@@ -230,7 +219,7 @@ let createElement =
       ~children as _,
       ~style=defaultStyles,
       ~placeholderColor=Colors.grey,
-      ~cursorColor=Colors.white,
+      ~cursorColor=Colors.black,
       ~value="",
       ~placeholder="",
       ~onChange=noop,

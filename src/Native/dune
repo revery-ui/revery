@@ -1,0 +1,15 @@
+(library
+    (name Revery_Native)
+    (public_name Revery_Native)
+    (preprocess (pps lwt_ppx))
+    (library_flags (:include flags.sexp))
+    (js_of_ocaml (javascript_files dialog.js))
+    (c_names dialog_cocoa dialog_win32)
+    (cxx_names dialog)
+    (c_flags (:include c_flags.sexp))
+    (libraries reglfw))
+
+(rule
+(targets c_flags.sexp flags.sexp)
+(deps (:discover config/discover.exe))
+(action (run %{discover})))

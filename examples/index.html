@@ -6,11 +6,17 @@
         html, body {
             margin: 0px;
             padding: 0px;
+            background-color: #212733;
         }
         </style>
     </head>
     <body>
         <script src="gl-matrix-min.js"></script>
+        <script>
+            // Compiled Examples.bc.js does a check for require,
+            // but it's not needed during runtime.
+            window.require = false;
+        </script>
         <script src="Examples.bc.js"></script>
     </body>
 </html>
