@@ -36,7 +36,7 @@ let make =
         let maxHeight = childMeasurements.height - outerMeasurements.height;
         let maxWidth = childMeasurements.width - outerMeasurements.width;
 
-        /* 
+        /*
          * TODO: #287
          * prerr_endline ("Child width: " ++ string_of_int(childMeasurements.width));
          * prerr_endline ("Container width: " ++ string_of_int(outerMeasurements.width));
@@ -151,11 +151,17 @@ let make =
       <View
         onMouseWheel=scroll
         ref={r => setOuterRef(Some(r))}
-        style=Style.[flexGrow(1), position(`Relative), overflow(LayoutTypes.Scroll)]>
+        style=Style.[
+          flexGrow(1),
+          position(`Relative),
+          overflow(LayoutTypes.Scroll),
+        ]>
         <View style=innerStyle> children </View>
         <View style=verticalScrollbarContainerStyle> verticalScrollBar </View>
-        <View style=horizontalScrollbarContainerStyle> horizontalScrollBar </View>
-       </View>
+        <View style=horizontalScrollbarContainerStyle>
+          horizontalScrollBar
+        </View>
+      </View>
     </View>;
   });
 
