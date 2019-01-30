@@ -39,6 +39,7 @@ let state: state = {
     {name: "Input", render: w => InputExample.render(w)},
     {name: "Radio Button", render: _ => RadioButtonExample.render()},
     {name: "Game Of Life", render: _ => GameOfLife.render()},
+    {name: "Tree View", render: w => TreeView.render(w)},
   ],
   selectedExample: "Animation",
 };
