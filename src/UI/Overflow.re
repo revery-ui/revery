@@ -74,13 +74,13 @@ let render =
       pixelRatio: float,
       r: renderCallback,
     ) => {
-  if (overflow == LayoutTypes.Hidden) {
+  if (overflow == LayoutTypes.Hidden || overflow == LayoutTypes.Scroll) {
     _startClipRegion(worldTransform, dimensions, screenHeight, pixelRatio);
   };
 
   r();
 
-  if (overflow == LayoutTypes.Hidden) {
+  if (overflow == LayoutTypes.Hidden || overflow == LayoutTypes.Scroll) {
     _endClipRegion();
   };
 };
