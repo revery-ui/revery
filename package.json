@@ -3,7 +3,9 @@
   "version": "0.5.1",
   "description": "App toolkit built with Reason",
   "license": "MIT",
-  "bugs": { "url": "https://github.com/bryphe/revery/issues" },
+  "bugs": {
+    "url": "https://github.com/bryphe/revery/issues"
+  },
   "scripts": {
     "build": "esy b",
     "build:release": "esy b dune build --profile=release --root . -j4",
@@ -15,7 +17,7 @@
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
-    "build": [ "dune build --root . -j4" ],
+    "build": ["refmterr dune build --root . -j4"],
     "install": [
       "esy-installer Revery.install", "esy-installer Revery_Core.install",
       "esy-installer Revery_Geometry.install",
@@ -37,7 +39,8 @@
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@brisk/brisk-reconciler": "*",
-    "flex": "^1.2.2"
+    "flex": "^1.2.2",
+    "refmterr": "*"
   },
   "resolutions": {
     "@opam/cmdliner": "1.0.2",

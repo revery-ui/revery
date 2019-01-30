@@ -3,16 +3,16 @@ open Revery.UI.Components;
 open Revery.Core;
 
 module Controls = {
-  let component = React.component("Controls");
-
   type inputFields = {
     first: string,
     second: string,
   };
 
+  let component = React.component("Controls");
   let make = window =>
     component(slots => {
       let (count, setCount, slots) = React.Hooks.state(0, slots);
+
       let ({first, second}: inputFields, setValue, _slots: React.Hooks.empty) =
         React.Hooks.state({first: "", second: ""}, slots);
 
@@ -35,14 +35,6 @@ module Controls = {
           margin(24),
           color(Colors.white),
           fontFamily("Roboto-Regular.ttf"),
-        ];
-
-      let textStyles =
-        Style.[
-          fontSize(30),
-          fontFamily("Roboto-Regular.ttf"),
-          color(Colors.black),
-          marginBottom(30),
         ];
 
       let countStr = string_of_int(count);
@@ -79,7 +71,8 @@ module Controls = {
       </View>;
     });
 
-  let createElement = (~children as _, ()) => React.element(make());
+  let createElement = (~window, ~children as _, ()) =>
+    React.element(make(window));
 };
 
-let render = () => <Controls window />;
+let render = window => <Controls window />;

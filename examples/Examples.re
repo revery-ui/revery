@@ -2,8 +2,6 @@ open Revery;
 open Revery.Core;
 /* open Revery.Math; */
 
-module SliderExample = Slider;
-
 open Revery.UI;
 open Revery.UI.Components;
 
@@ -25,7 +23,7 @@ type state = {
 let state: state = {
   examples: [
     {name: "Animation", render: _w => Hello.render()},
-    {name: "Controls", render: _ => Controls.render()},
+    {name: "Controls", render: w => Controls.render(w)},
     {name: "Border", render: _ => Border.render()},
     {name: "Overflow", render: _w => Overflow.render()},
     {name: "Calculator", render: w => Calculator.render(w)},
