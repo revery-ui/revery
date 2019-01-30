@@ -52,7 +52,6 @@ let make =
         let isVerticalScrollbarVisible = maxHeight > 0;
         let isHorizontalScrollbarVisible = maxWidth > 0;
 
-        prerr_endline("actualScrollTop: " ++ string_of_int(actualScrollTop));
         let verticalScrollBar =
           isVerticalScrollbarVisible
             ? <Slider
