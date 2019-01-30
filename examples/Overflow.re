@@ -19,7 +19,7 @@ let outerBox =
     width(512),
     height(128),
     overflow(LayoutTypes.Hidden),
-    backgroundColor(Colors.red),
+    backgroundColor(Colors.black),
   ];
 
 let innerBox =
@@ -45,6 +45,20 @@ module Sample = {
 
       <View style=containerStyle>
         <ScrollView style={outerBox}>
+            <Image
+              src="outrun-logo.png"
+              style={Style.[
+                width(512),
+                height(256),
+              ]} 
+            />
+            <Image
+              src="outrun-logo.png"
+              style={Style.[
+                width(512),
+                height(256),
+              ]} 
+            />
             <Image
               src="outrun-logo.png"
               style={Style.[

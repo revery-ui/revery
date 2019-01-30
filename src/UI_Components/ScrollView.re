@@ -1,9 +1,13 @@
+open Revery_Core;
 open Revery_UI;
 open Revery_UI.Transform;
 
 let component = React.component("ScrollView");
 
 let empty = React.listToElement([]);
+
+let scrollTrackColor = Color.rgba(0.0, 0.0, 0.0, 0.4);
+let scrollThumbColor = Color.rgba(0.5, 0.5, 0.5, 0.4);
 
 let make =
     (~style, ~scrollLeft=0, ~scrollTop=0, children: React.syntheticElement) =>
@@ -60,6 +64,9 @@ let make =
                 value={float_of_int(actualScrollTop)}
                 trackThickness=scrollBarThickness
                 thumbThickness=scrollBarThickness
+                minimumTrackColor=scrollTrackColor
+                maximumTrackColor=scrollTrackColor
+                thumbColor=scrollThumbColor
                 vertical=true
               />
             : empty;
@@ -80,6 +87,9 @@ let make =
                 thumbLength=horizontalThumbHeight
                 trackThickness=scrollBarThickness
                 thumbThickness=scrollBarThickness
+                minimumTrackColor=scrollTrackColor
+                maximumTrackColor=scrollTrackColor
+                thumbColor=scrollThumbColor
               />
             : empty;
 
