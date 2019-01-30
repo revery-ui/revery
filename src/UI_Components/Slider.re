@@ -130,7 +130,7 @@ let make =
       | _ => ()
       };
 
-    let sliderBackgroundColor = minimumValue,
+    let sliderBackgroundColor = maximumTrackColor;
 
     let sliderOpacity = isActive ? 1.0 : 0.8;
 
@@ -166,7 +166,7 @@ let make =
         left(vertical ? trackMargins : 0),
         right(vertical ? trackMargins : sliderLength - thumbPosition),
         position(`Absolute),
-        backgroundColor(maximumTrackColor),
+        backgroundColor(minimumTrackColor),
       ];
 
     let afterTrackStyle =
