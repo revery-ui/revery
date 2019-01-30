@@ -158,9 +158,7 @@ let init = app => {
           bottom(0),
           backgroundColor(bgColor),
         ]>
-        <View>
-        ...buttons
-        </View>
+        <View> ...buttons </View>
       </ScrollView>
       <View
         style=Style.[

@@ -11,7 +11,7 @@ let containerStyle =
     right(0),
     alignItems(`Center),
     justifyContent(`Center),
-    flexDirection(`Column)
+    flexDirection(`Column),
   ];
 
 let outerBox =
@@ -24,9 +24,9 @@ let outerBox =
 
 let innerBox =
   Style.[
-      width(450),
-      height(450),
-      backgroundColor(Color.rgba(0., 1., 0., 0.5)),
+    width(450),
+    height(450),
+    backgroundColor(Color.rgba(0., 1., 0., 0.5)),
   ];
 
 module Sample = {
@@ -37,37 +37,26 @@ module Sample = {
       let (hidden, setHidden, _slots: React.Hooks.empty) =
         React.Hooks.state(false, slots);
 
-      let buttonContainerStyle = Style.[
-        marginTop(80),
-      ];
+      let buttonContainerStyle = Style.[marginTop(80)];
 
       let onClick = _ => setHidden(!hidden);
 
       <View style=containerStyle>
-        <ScrollView style={outerBox}>
-            <Image
-              src="outrun-logo.png"
-              style={Style.[
-                width(512),
-                height(256),
-              ]} 
-            />
-            <Image
-              src="outrun-logo.png"
-              style={Style.[
-                width(512),
-                height(256),
-              ]} 
-            />
-            <Image
-              src="outrun-logo.png"
-              style={Style.[
-                width(512),
-                height(256),
-              ]} 
-            />
+        <ScrollView style=outerBox>
+          <Image
+            src="outrun-logo.png"
+            style=Style.[width(512), height(256)]
+          />
+          <Image
+            src="outrun-logo.png"
+            style=Style.[width(512), height(256)]
+          />
+          <Image
+            src="outrun-logo.png"
+            style=Style.[width(512), height(256)]
+          />
         </ScrollView>
-        <View style={buttonContainerStyle}>
+        <View style=buttonContainerStyle>
           <Button fontSize=20 height=45 title="Toggle overflow" onClick />
         </View>
       </View>;

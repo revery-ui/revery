@@ -193,8 +193,6 @@ class node ('a) (()) = {
       };
     ();
   };
-
-
   pub toLayoutNode = (pixelRatio: float) => {
     let childNodes = List.map(c => c#toLayoutNode(pixelRatio), _children^);
     let layoutStyle = Style.toLayoutNode(_style^);
