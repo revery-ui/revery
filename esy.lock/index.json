@@ -1,5 +1,5 @@
 {
-  "checksum": "aba4730dc9b90430568071e04356fe8c",
+  "checksum": "a01e2bffd408d27e6d1a597e0c8372c8",
   "root": "revery@link:./package.json",
   "node": {
     "revery@link:./package.json": {
@@ -11,7 +11,7 @@
       "dependencies": [
         "reason-glfw@github:bryphe/reason-glfw#4be18fb@d41d8cd9",
         "reason-gl-matrix@0.9.9302@d41d8cd9",
-        "reason-fontkit@github:bryphe/reason-fontkit#147368b@d41d8cd9",
+        "reason-fontkit@github:bryphe/reason-fontkit#b92e839@d41d8cd9",
         "ocaml@4.7.1003@d41d8cd9", "flex@1.2.2@d41d8cd9",
         "@opam/lwt_ppx@opam:1.2.1@db1172a7", "@opam/lwt@opam:4.1.0@111fc2bf",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
@@ -105,13 +105,13 @@
       ],
       "devDependencies": []
     },
-    "reason-fontkit@github:bryphe/reason-fontkit#147368b@d41d8cd9": {
-      "id": "reason-fontkit@github:bryphe/reason-fontkit#147368b@d41d8cd9",
+    "reason-fontkit@github:bryphe/reason-fontkit#b92e839@d41d8cd9": {
+      "id": "reason-fontkit@github:bryphe/reason-fontkit#b92e839@d41d8cd9",
       "name": "reason-fontkit",
-      "version": "github:bryphe/reason-fontkit#147368b",
+      "version": "github:bryphe/reason-fontkit#b92e839",
       "source": {
         "type": "install",
-        "source": [ "github:bryphe/reason-fontkit#147368b" ]
+        "source": [ "github:bryphe/reason-fontkit#b92e839" ]
       },
       "overrides": [],
       "dependencies": [
@@ -120,8 +120,7 @@
         "reason-gl-matrix@0.9.9302@d41d8cd9",
         "esy-harfbuzz-prebuilt@1.9.1003@d41d8cd9",
         "esy-freetype2-prebuilt@2.9.1005@d41d8cd9",
-        "esy-cmake@0.3.5@d41d8cd9", "@opam/dune@opam:1.6.3@a7d7baed",
-        "@esy-ocaml/reason@3.4.0@d41d8cd9"
+        "@opam/dune@opam:1.6.3@a7d7baed", "@esy-ocaml/reason@3.4.0@d41d8cd9"
       ],
       "devDependencies": []
     },
@@ -192,20 +191,6 @@
         "type": "install",
         "source": [
           "archive:https://registry.npmjs.org/esy-freetype2-prebuilt/-/esy-freetype2-prebuilt-2.9.1005.tgz#sha1:d2a41195257499617b4a0907fcdc5e5b36dfe6ae"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "esy-cmake@0.3.5@d41d8cd9": {
-      "id": "esy-cmake@0.3.5@d41d8cd9",
-      "name": "esy-cmake",
-      "version": "0.3.5",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/esy-cmake/-/esy-cmake-0.3.5.tgz#sha1:2df0bdfe9317fbcded5f463fca1f346464494c7a"
         ]
       },
       "overrides": [],
