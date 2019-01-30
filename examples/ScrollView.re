@@ -15,11 +15,7 @@ let containerStyle =
   ];
 
 let outerBox =
-  Style.[
-    width(128),
-    height(128),
-    backgroundColor(Colors.black),
-  ];
+  Style.[width(128), height(128), backgroundColor(Colors.black)];
 
 let innerBox =
   Style.[
