@@ -9,6 +9,7 @@ module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 module Style = Style;
 module Transform = Transform;
+module Selector = Selector;
 
 class node = class Node.node(RenderPass.t);
 class viewNode = class ViewNode.viewNode;

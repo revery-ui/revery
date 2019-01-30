@@ -95,4 +95,18 @@ test("Style API tests", () => {
       List.find(style => style == `BackgroundColor(paleTurquoise), result);
     expect(found).toEqual(`BackgroundColor(paleTurquoise));
   });
+
+  test("Should correctly select a style from a list of styles", () => {
+    let l = [fontFamily("Test-Font"), fontSize(20)];
+    let ff = Selector.select(l, FontFamily, "Failed");
+    let fs = Selector.select(l, FontSize, 10);
+    expect(ff).toEqual("Test-Font");
+    expect(fs).toEqual(20);
+  });
+
+  test("Should use a fallback if the correct style is not present", () => {
+    let l = [color(black), height(20)];
+    let fb = Selector.select(l, Top, 10);
+    expect(fb).toEqual(10);
+  });
 });

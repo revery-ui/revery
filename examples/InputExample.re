@@ -20,13 +20,7 @@ module Example = {
     first: string,
     second: string,
   };
-  let textStyles =
-    Style.[
-      fontSize(30),
-      fontFamily("Roboto-Regular.ttf"),
-      color(Colors.black),
-      marginBottom(30),
-    ];
+
   let component = React.component("Example");
 
   let make = window =>
