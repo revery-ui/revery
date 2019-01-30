@@ -36,8 +36,12 @@ let make =
         let maxHeight = childMeasurements.height - outerMeasurements.height;
         let maxWidth = childMeasurements.width - outerMeasurements.width;
 
-        prerr_endline ("Child width: " ++ string_of_int(childMeasurements.width));
-        prerr_endline ("Container width: " ++ string_of_int(outerMeasurements.width));
+        /* 
+         * TODO: #287
+         * prerr_endline ("Child width: " ++ string_of_int(childMeasurements.width));
+         * prerr_endline ("Container width: " ++ string_of_int(outerMeasurements.width));
+         * This can be removed once #287 is fixed
+         */
 
         let verticalThumbHeight =
           childMeasurements.height > 0
@@ -73,7 +77,7 @@ let make =
               />
             : empty;
 
-        /* TODO:
+        /* TODO: #287
          * Need to investigate why the child width is not being reported (expanded) correctly.
          * Currently, the child width is clamped to the parent.
          * Is this a bug in flex?
@@ -120,7 +124,7 @@ let make =
         transform(innerViewTransform),
         position(`Absolute),
         top(0),
-        /* TODO: This styling will need to be adjusted to handle horizontal scrolling */
+        /* TODO: #287 This styling will need to be adjusted to handle horizontal scrolling */
         left(0),
         right(verticalScrollBar == empty ? 0 : scrollBarThickness),
       ];
