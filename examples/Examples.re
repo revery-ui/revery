@@ -3,6 +3,7 @@ open Revery.Core;
 /* open Revery.Math; */
 
 module SliderExample = Slider;
+module ScrollViewExample = ScrollView;
 
 open Revery.UI;
 open Revery.UI.Components;
@@ -29,7 +30,7 @@ let state: state = {
     {name: "Checkbox", render: _ => CheckboxExample.render()},
     {name: "Slider", render: _ => SliderExample.render()},
     {name: "Border", render: _ => Border.render()},
-    {name: "ScrollView", render: _w => ScrollView.render()},
+    {name: "ScrollView", render: _w => ScrollViewExample.render()},
     {name: "Calculator", render: w => Calculator.render(w)},
     {name: "Flexbox", render: _ => Flexbox.render()},
     {name: "Box Shadow", render: _ => Boxshadow.render()},
