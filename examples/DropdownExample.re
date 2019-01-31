@@ -18,14 +18,15 @@ let textStyle =
 /*    TODO: Allow user style overwrite for Dropdown component
  */
 
-module Example = {
-  let component = React.component("Example");
+module DropdownExample = {
+  let component = React.component("DropDownExample");
 
   let items: Dropdown.items = [
     {value: "1", label: "First option"},
     {value: "2", label: "Second option"},
     {value: "3", label: "Third option"},
     {value: "4", label: "Fourth option"},
+    {value: "5", label: "A really, really, really long option"},
   ];
 
   let make = () =>
@@ -42,4 +43,4 @@ module Example = {
   let createElement = (~children as _, ()) => React.element(make());
 };
 
-let render = () => <Example />;
+let render = () => <DropdownExample />;

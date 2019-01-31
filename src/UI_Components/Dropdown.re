@@ -1,6 +1,9 @@
 open Revery_UI;
 open Revery_Core;
 
+module FontRenderer = Revery_UI__FontRenderer;
+module FontCache = Revery_UI__FontCache;
+
 type item = {
   value: string,
   label: string,
@@ -23,9 +26,6 @@ let reducer = (action, state) =>
   | ShowDropdown => {...state, _open: !state._open}
   | SelectItem(item) => {...state, selected: item, _open: false}
   };
-
-let containerStyles =
-  Style.[position(`Relative), backgroundColor(Colors.white)];
 
 let textStyles =
   Style.[
@@ -58,9 +58,6 @@ let selectedItemStyles =
     )
   );
 
-let itemsContainerStyles =
-  Style.[position(`Absolute), top(50), backgroundColor(Colors.white)];
-
 let noop = _item => ();
 
 let component = React.component("Dropdown");
@@ -70,6 +67,38 @@ let make = (~items, ~onItemSelected, ()) =>
 
     let (state, dispatch, _slots: React.Hooks.empty) =
       React.Hooks.reducer(~initialState, reducer, slots);
+
+    let longestItemText =
+      List.nth(
+        List.sort(
+          (a, b) => String.length(b.label) - String.length(a.label),
+          items,
+        ),
+        0,
+      ).
+        label;
+
+    /* let textNode = (new textNode)(longestItemText);
+       textNode#setStyle(
+         Style.make(~fontFamily="Roboto-Regular.ttf", ~fontSize=20, ()),
+
+       );  */
+    /*
+     Render text node to get measurements
+     */
+    /* Layout.layout(textNode, 1.0); */
+
+    /* let dimensions = textNode#measurements();
+       let containerWidth = dimensions.width; */
+
+    let font =
+      FontCache.load(
+        "Roboto-Regular.ttf",
+        int_of_float(float_of_int(20) *. 1.0),
+      );
+
+    let containerWidth =
+      FontRenderer.measure(font, longestItemText).width + 40;
 
     let items =
       if (state._open) {
@@ -102,7 +131,12 @@ let make = (~items, ~onItemSelected, ()) =>
         [];
       };
 
-    <View style=containerStyles>
+    <View
+      style=Style.[
+        position(`Relative),
+        backgroundColor(Colors.white),
+        width(containerWidth),
+      ]>
       <Clickable onClick={() => dispatch(ShowDropdown)}>
         <View style=selectedItemContainerStyles>
           <Text style=selectedItemStyles text={state.selected.label} />
@@ -118,7 +152,19 @@ let make = (~items, ~onItemSelected, ()) =>
           />
         </View>
       </Clickable>
-      <View style=itemsContainerStyles> ...items </View>
+      <View
+        style=Style.[
+          position(`Absolute),
+          top(50),
+          backgroundColor(Colors.white),
+          width(containerWidth),
+          borderHorizontal(
+            ~width=float_of_int(50) *. 0.05 |> int_of_float,
+            ~color=Colors.black,
+          ),
+        ]>
+        ...items
+      </View>
     </View>;
   });
 
