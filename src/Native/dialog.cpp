@@ -20,7 +20,7 @@ CAMLprim value revery_alertSupported() {
 #elif __APPLE__
   return Val_true;
 #else
-  return Val_false;
+  return Val_true;
 #endif
 }
 
