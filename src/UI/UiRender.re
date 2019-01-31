@@ -28,7 +28,7 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   let pixelRatio = Window.getDevicePixelRatio(window);
 
   if (rootNode#getLayoutNode().context == (-1)) {
-    rootNode#createLayoutNode(pixelRatio) |> ignore;
+    rootNode#createLayoutNode() |> ignore;
   };
 
   /* Perform reconciliation */

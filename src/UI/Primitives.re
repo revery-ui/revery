@@ -40,7 +40,7 @@ module View = {
               (),
             );
           let node = (new ViewNode.viewNode)();
-          node#createLayoutNode(2.0) |> ignore;
+          node#createLayoutNode() |> ignore;
           node#setEvents(events);
           node#setStyle(styles);
           node#setTabIndex(tabindex);
@@ -127,7 +127,7 @@ module Text = {
               (),
             );
           let node = (new TextNode.textNode)(text);
-          node#createLayoutNode(2.0) |> ignore;
+          node#createLayoutNode() |> ignore;
           node#setEvents(events);
           node#setStyle(styles);
           Obj.magic(node);
