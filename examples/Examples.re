@@ -40,6 +40,7 @@ let state: state = {
     {name: "Input", render: w => InputExample.render(w)},
     {name: "Radio Button", render: _ => RadioButtonExample.render()},
     {name: "Game Of Life", render: _ => GameOfLife.render()},
+    {name: "Screen Capture", render: w => ScreenCapture.render(w)},
     {name: "Tree View", render: w => TreeView.render(w)},
   ],
   selectedExample: "Animation",
@@ -95,10 +96,9 @@ type action =
   | SelectExample(string);
 
 let reducer = (s: state, a: action) => {
-  let SelectExample(name) = a;
-
-  let ret: state = {...s, selectedExample: name};
-  ret;
+  switch (a) {
+  | SelectExample(name) => {...s, selectedExample: name}
+  };
 };
 
 let init = app => {
