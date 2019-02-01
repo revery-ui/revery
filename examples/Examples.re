@@ -37,9 +37,10 @@ let state: state = {
     {name: "Stopwatch", render: _ => Stopwatch.render()},
     {name: "Input", render: w => InputExample.render(w)},
     {name: "Radio Button", render: _ => RadioButtonExample.render()},
+    {name: "Todo List", render: _ => TodoList.render()},
     {name: "Game Of Life", render: _ => GameOfLife.render()},
   ],
-  selectedExample: "Animation",
+  selectedExample: "Todo List",
 };
 
 let noop = () => ();
