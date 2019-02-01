@@ -29,7 +29,7 @@ let get_os =
     match uname () with "Darwin" -> Mac | "Linux" -> Linux | _ -> Unknown )
 
 let () =
-  C.main ~name:"linux" (fun c ->
+  C.main ~name:"discover" (fun c ->
       let conf =
         match get_os with
         | Mac -> get_mac_config ()
