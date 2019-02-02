@@ -34,7 +34,6 @@ CAMLprim value revery_alert(value vWindow, value vMessage) {
 #elif __APPLE__
   revery_alert_cocoa(pWin, szMessage);
 #else
-  /* printf("WARNING - Not implemented: alert"); */
   revery_alert_gtk(pWin, szMessage);
 #endif
   return Val_unit;
