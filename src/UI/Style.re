@@ -45,6 +45,8 @@ type t = {
   right: int,
   fontFamily,
   fontSize: int,
+  lineHeight: float,
+  textWrap: TextWrapping.wrapType,
   marginTop: int,
   marginLeft: int,
   marginRight: int,
@@ -93,6 +95,8 @@ let make =
       ~right=Encoding.cssUndefined,
       ~fontFamily="",
       ~fontSize=Encoding.cssUndefined,
+      ~lineHeight=0.,
+      ~textWrap=TextWrapping.NoWrap,
       ~marginTop=Encoding.cssUndefined,
       ~marginLeft=Encoding.cssUndefined,
       ~marginRight=Encoding.cssUndefined,
@@ -146,6 +150,8 @@ let make =
     right,
     fontFamily,
     fontSize,
+    lineHeight,
+    textWrap,
     transform,
     marginTop,
     marginLeft,
@@ -283,17 +289,22 @@ type coreStyleProps = [
   | `Cursor(option(MouseCursors.t))
 ];
 
+
+
 type fontProps = [ | `FontFamily(string) | `FontSize(int)];
+
+type textProps = [ | `LineHeight(float) | `TextWrap(TextWrapping.wrapType)]
+
 /*
    Text and View props take different style properties as such
    these nodes are typed to only allow styles to be specified
    which are relevant to each
  */
-type textStyleProps = [ fontProps | coreStyleProps];
+type textStyleProps = [ textProps | fontProps | coreStyleProps];
 type viewStyleProps = [ coreStyleProps];
 type imageStyleProps = [ coreStyleProps];
 
-type allProps = [ coreStyleProps | fontProps];
+type allProps = [ coreStyleProps | fontProps | textProps];
 
 let emptyTextStyle: list(textStyleProps) = [];
 let emptyViewStyle: list(viewStyleProps) = [];
@@ -335,6 +346,8 @@ let top = f => `Top(f);
 
 let fontSize = f => `FontSize(f);
 let fontFamily = f => `FontFamily(f);
+let lineHeight = h => `LineHeight(h);
+let textWrap = w => `TextWrap(w);
 
 let height = h => `Height(h);
 let width = w => `Width(w);
@@ -472,6 +485,8 @@ let applyStyle = (style, styleRule) =>
   | `Transform(transform) => {...style, transform}
   | `FontFamily(fontFamily) => {...style, fontFamily}
   | `FontSize(fontSize) => {...style, fontSize}
+  | `LineHeight(lineHeight) => {...style, lineHeight}
+  | `TextWrap(textWrap) => {...style, textWrap}
   | `Cursor(cursor) => {...style, cursor}
   | `Color(color) => {...style, color}
   | `BackgroundColor(backgroundColor) => {...style, backgroundColor}
