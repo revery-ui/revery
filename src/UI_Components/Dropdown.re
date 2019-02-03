@@ -34,18 +34,6 @@ let textStyles =
     color(Colors.black),
   ];
 
-let selectedItemContainerStyles =
-  Style.[
-    flexDirection(`Row),
-    height(50),
-    alignItems(`Center),
-    justifyContent(`Center),
-    border(
-      ~width=float_of_int(50) *. 0.05 |> int_of_float,
-      ~color=Colors.black,
-    ),
-  ];
-
 let selectedItemStyles =
   Style.(
     merge(
@@ -53,7 +41,7 @@ let selectedItemStyles =
       ~target=[
         color(Colors.black),
         backgroundColor(Colors.transparentWhite),
-        marginHorizontal(2),
+        marginLeft(5),
       ],
     )
   );
@@ -61,44 +49,20 @@ let selectedItemStyles =
 let noop = _item => ();
 
 let component = React.component("Dropdown");
-let make = (~items, ~onItemSelected, ()) =>
+let make =
+    (
+      ~items,
+      ~onItemSelected,
+      ~width as w=200,
+      ~height as h=50,
+      ~children as _,
+      (),
+    ) =>
   component(slots => {
     let initialState = {items, selected: List.nth(items, 0), _open: false};
 
     let (state, dispatch, _slots: React.Hooks.empty) =
       React.Hooks.reducer(~initialState, reducer, slots);
-
-    let longestItemText =
-      List.nth(
-        List.sort(
-          (a, b) => String.length(b.label) - String.length(a.label),
-          items,
-        ),
-        0,
-      ).
-        label;
-
-    /* let textNode = (new textNode)(longestItemText);
-       textNode#setStyle(
-         Style.make(~fontFamily="Roboto-Regular.ttf", ~fontSize=20, ()),
-
-       );  */
-    /*
-     Render text node to get measurements
-     */
-    /* Layout.layout(textNode, 1.0); */
-
-    /* let dimensions = textNode#measurements();
-       let containerWidth = dimensions.width; */
-
-    let font =
-      FontCache.load(
-        "Roboto-Regular.ttf",
-        int_of_float(float_of_int(20) *. 1.0),
-      );
-
-    let containerWidth =
-      FontRenderer.measure(font, longestItemText).width + 40;
 
     let items =
       if (state._open) {
@@ -107,16 +71,16 @@ let make = (~items, ~onItemSelected, ()) =>
             <Clickable
               style=Style.[
                 flexDirection(`Row),
-                height(50),
+                height(h),
                 alignItems(`Center),
-                justifyContent(`Center),
+                justifyContent(`FlexStart),
                 backgroundColor(
                   _item == state.selected
                     ? Color.hex("#0078D7") : Colors.transparentWhite,
                 ),
                 borderBottom(
                   ~color=Colors.black,
-                  ~width=float_of_int(50) *. 0.05 |> int_of_float,
+                  ~width=float_of_int(h) *. 0.05 |> int_of_float,
                 ),
               ]
               onClick={() => {
@@ -135,18 +99,35 @@ let make = (~items, ~onItemSelected, ()) =>
       style=Style.[
         position(`Relative),
         backgroundColor(Colors.white),
-        width(containerWidth),
+        width(w),
       ]>
       <Clickable onClick={() => dispatch(ShowDropdown)}>
-        <View style=selectedItemContainerStyles>
-          <Text style=selectedItemStyles text={state.selected.label} />
+        <View
+          style=Style.[
+            flexDirection(`Row),
+            height(h),
+            justifyContent(`SpaceBetween),
+            border(
+              ~width=float_of_int(h) *. 0.05 |> int_of_float,
+              ~color=Colors.black,
+            ),
+          ]>
+          <View
+            style=Style.[
+              width(float_of_int(w) *. 0.8 |> int_of_float),
+              justifyContent(`Center),
+              overflow(LayoutTypes.Hidden),
+            ]>
+            <Text style=selectedItemStyles text={state.selected.label} />
+          </View>
           <Text
             style=Style.[
               fontSize(30),
               color(Colors.black),
               fontFamily("FontAwesome5FreeSolid.otf"),
               marginTop(15),
-              marginHorizontal(2),
+              marginRight(5),
+              alignSelf(`Center),
             ]
             text={||}
           />
@@ -155,18 +136,21 @@ let make = (~items, ~onItemSelected, ()) =>
       <View
         style=Style.[
           position(`Absolute),
-          top(50),
+          top(h),
           backgroundColor(Colors.white),
-          width(containerWidth),
           borderHorizontal(
-            ~width=float_of_int(50) *. 0.05 |> int_of_float,
+            ~width=float_of_int(h) *. 0.05 |> int_of_float,
             ~color=Colors.black,
           ),
+          overflow(LayoutTypes.Hidden),
         ]>
         ...items
       </View>
     </View>;
   });
 
-let createElement = (~items, ~onItemSelected=noop, ~children as _, ()) =>
-  React.element(make(~items, ~onItemSelected, ()));
+let createElement =
+    (~items, ~onItemSelected=noop, ~width=200, ~height=50, ~children, ()) =>
+  React.element(
+    make(~items, ~onItemSelected, ~width, ~height, ~children, ()),
+  );
