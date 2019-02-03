@@ -1,7 +1,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-static void activate(GtkApplication *app, gpointer user_data) {
+static void show_dialog(GtkApplication *app, gpointer user_data) {
   GtkWidget *window;
   GtkWidget *dialog;
 
@@ -21,7 +21,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
 void revery_alert_gtk(void *pWin, const char *szMessage) {
   GtkApplication *app;
   app = gtk_application_new("org.gtk.revery", G_APPLICATION_FLAGS_NONE);
-  g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
+  g_signal_connect(app, "show_dialog", G_CALLBACK(show_dialog), NULL);
   g_application_run(G_APPLICATION(app), 0, 0);
   g_object_unref(app);
 }
