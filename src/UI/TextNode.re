@@ -54,7 +54,7 @@ class textNode (text: string) = {
         Vec3.create(0.0, float_of_int(dimensions.height), 0.0),
       );
 
-      let render = (s: Fontkit.fk_shape, x: float) => {
+      let render = (s: Fontkit.fk_shape, x: float, y: float) => {
         let glyph = FontRenderer.getGlyph(font, s.glyphId);
 
         let {width, height, bearingX, bearingY, advance, _} = glyph;
@@ -77,7 +77,7 @@ class textNode (text: string) = {
           glyphTransform,
           Vec3.create(
             x +. bearingX +. width /. 2.,
-            height *. 0.5 -. bearingY,
+            y +. height *. 0.5 -. bearingY,
             0.0,
           ),
         );
@@ -103,14 +103,22 @@ class textNode (text: string) = {
         x +. advance /. 64.0;
       };
 
-      let shapedText = FontRenderer.shape(font, text);
-      let startX = ref(0.);
-      Array.iter(
-        s => {
-          let nextPosition = render(s, startX^);
-          startX := nextPosition;
+      let startY = ref(0.);
+      let lineText = Str.split(Str.regexp("\n"), text);
+      List.iter(
+        text => {
+          let shapedText = FontRenderer.shape(font, text);
+          let startX = ref(0.);
+          Array.iter(
+            s => {
+              let nextPosition = render(s, startX^, startY^);
+              startX := nextPosition;
+            },
+            shapedText,
+          );
+          startY := startY^ +. 40.;
         },
-        shapedText,
+        lineText,
       );
     | _ => ()
     };
@@ -118,7 +126,13 @@ class textNode (text: string) = {
   pub setText = t => text = t;
   pub! getMeasureFunction = pixelRatio => {
     let measure =
-        (_mode, _width, _widthMeasureMode, _height, _heightMeasureMode) => {
+        (
+          _mode,
+          containerWidth,
+          _widthMeasureMode,
+          _containerHeight,
+          _heightMeasureMode,
+        ) => {
       /* TODO: Cache font locally in variable */
       let style = _super#getStyle();
       let font =
@@ -126,7 +140,13 @@ class textNode (text: string) = {
           style.fontFamily,
           int_of_float(float_of_int(style.fontSize) *. pixelRatio),
         );
-
+      let wrappedText =
+        TextWrap.wrap(
+          containerWidth,
+          t => FontRenderer.measure(font, t).width / int_of_float(pixelRatio),
+          text,
+        );
+      _this#setText(wrappedText);
       let d = FontRenderer.measure(font, text);
       let ret: Layout.LayoutTypes.dimensions = {
         LayoutTypes.width: int_of_float(float_of_int(d.width) /. pixelRatio),

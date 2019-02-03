@@ -128,7 +128,7 @@ let render = () =>
         )
       }
       style=Style.[flexDirection(`Row), alignItems(`FlexEnd)]>
-      <AnimatedText delay=0.0 text="Welcome" />
+      <AnimatedText delay=0.0 text="Really really really really really really really really really really Welcome" />
       <AnimatedText delay=0.5 text="to" />
       <AnimatedText delay=1. text="Revery" />
     </View>
