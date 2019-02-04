@@ -101,7 +101,7 @@ let make =
 
         let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
           let newScrollTop =
-            actualScrollTop - int_of_float(wheelEvent.deltaY) * 25;
+            actualScrollTop - int_of_float(wheelEvent.deltaY *. 25.);
 
           let clampedScrollTop =
             if (newScrollTop < 0) {
