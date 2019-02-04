@@ -6,7 +6,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
   GtkWidget *window;
   GtkWidget *dialog;
 
-  window = gtk_application_window_new(app);
+  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "revery gtk");
 
   GtkDialogFlags flags = GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT;
@@ -19,9 +19,11 @@ static void activate(GtkApplication *app, gpointer user_data) {
 }
 
 void revery_alert_gtk(void *pWin, const char *szMessage) {
-  // TODO: figure out how to convert the pointer from an X11 window handle
-  // to a GTK window, see (for inspiration):
-  // https://gist.github.com/mmozeiko/2401933b1fa89e5d5bd238b33eab0465
+  /*
+   * TODO: figure out how to convert the pointer from an X11 window handle
+   * to a GTK window, see (for inspiration):
+   * https://gist.github.com/mmozeiko/2401933b1fa89e5d5bd238b33eab0465
+   */
   GtkApplication *app;
   app = gtk_application_new("org.gtk.revery", G_APPLICATION_FLAGS_NONE);
   g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
