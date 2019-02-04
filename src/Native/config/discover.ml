@@ -8,13 +8,13 @@ let get_mac_config () =
   {cflags= ["-I"; "."; "-x"; "objective-c"]; libs= []; flags= []}
 
 let get_linux_config c =
-  let default : C.Pkg_config.package_conf = {libs= []; cflags= []} in
+  let default = {libs= []; cflags= []; flags= []} in
   match C.Pkg_config.get c with
   | None -> default
   | Some pc -> (
     match C.Pkg_config.query pc ~package:"gtk+-3.0" with
     | None -> default
-    | Some conf -> conf )
+    | Some conf -> {libs= conf.libs; cflags= conf.cflags; flags= []} )
 
 let uname () =
   let ic = Unix.open_process_in "uname" in
@@ -33,10 +33,7 @@ let () =
       let conf =
         match get_os with
         | Mac -> get_mac_config ()
-        | Linux ->
-            get_linux_config c
-            |> fun pkg_conf ->
-            {libs= pkg_conf.libs; cflags= pkg_conf.cflags; flags= []}
+        | Linux -> get_linux_config c
         | _ -> {libs= []; flags= []; cflags= []}
       in
       C.Flags.write_sexp "flags.sexp" conf.flags ;
