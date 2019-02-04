@@ -26,6 +26,15 @@ type selector('a) =
   | MarginHorizontal: selector(int)
   | Margin2: selector(xy)
   | Margin4: selector(coords)
+  | PaddingTop: selector(int)
+  | PaddingLeft: selector(int)
+  | PaddingRight: selector(int)
+  | PaddingBottom: selector(int)
+  | Padding: selector(int)
+  | PaddingVertical: selector(int)
+  | PaddingHorizontal: selector(int)
+  | Padding2: selector(xy)
+  | Padding4: selector(coords)
   | Overflow: selector(Layout.LayoutTypes.overflow)
   | BorderTop: selector(Border.t)
   | BorderLeft: selector(Border.t)
@@ -84,6 +93,20 @@ let rec select:
       select(rest, selector, mh)
     | ([`Margin2(m2), ...rest], Margin2) => select(rest, selector, m2)
     | ([`Margin4(m4), ...rest], Margin4) => select(rest, selector, m4)
+    | ([`PaddingTop(mt), ...rest], PaddingTop) => select(rest, selector, mt)
+    | ([`PaddingLeft(ml), ...rest], PaddingLeft) =>
+      select(rest, selector, ml)
+    | ([`PaddingRight(mr), ...rest], PaddingRight) =>
+      select(rest, selector, mr)
+    | ([`PaddingBottom(mb), ...rest], PaddingBottom) =>
+      select(rest, selector, mb)
+    | ([`Padding(m), ...rest], Padding) => select(rest, selector, m)
+    | ([`PaddingVertical(mv), ...rest], PaddingVertical) =>
+      select(rest, selector, mv)
+    | ([`PaddingHorizontal(mh), ...rest], PaddingHorizontal) =>
+      select(rest, selector, mh)
+    | ([`Padding2(m2), ...rest], Padding2) => select(rest, selector, m2)
+    | ([`Padding4(m4), ...rest], Padding4) => select(rest, selector, m4)
     | ([`Overflow(ovfl), ...rest], Overflow) =>
       select(rest, selector, ovfl)
     | ([`BorderTop(bt), ...rest], BorderTop) => select(rest, selector, bt)
