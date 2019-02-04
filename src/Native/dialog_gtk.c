@@ -3,16 +3,12 @@
 
 // The callback to g_signal_connect MUST be an `activate` function
 static void activate(GtkApplication *app, gpointer user_data) {
-  GtkWidget *window;
   GtkWidget *dialog;
 
-  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title(GTK_WINDOW(window), "revery gtk");
-
   GtkDialogFlags flags = GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT;
-  dialog = gtk_dialog_new_with_buttons("Revery Dialog", GTK_WINDOW(window),
-                                       flags, _("_OK"), GTK_RESPONSE_ACCEPT,
-                                       _("_Cancel"), GTK_RESPONSE_REJECT, NULL);
+  dialog = gtk_dialog_new_with_buttons("Revery Dialog", NULL, flags, _("_OK"),
+                                       GTK_RESPONSE_ACCEPT, _("_Cancel"),
+                                       GTK_RESPONSE_REJECT, NULL);
 
   gtk_dialog_run(GTK_DIALOG(dialog));
   gtk_widget_destroy(dialog);
