@@ -39,7 +39,6 @@ let make =
     let onMouseMove = (mouseX: float, mouseY: float) => {
       switch (clickableRef) {
         | Some(clickable) => {
-          /* Is it ok to run it on every event? Do we need to throttle mouse move or it's already throttled? */
           if (isMouseInsideRef(clickable, mouseX, mouseY)) {
             setOpacity(1.0)
           } else {
