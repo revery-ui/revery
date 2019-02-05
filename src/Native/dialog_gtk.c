@@ -1,4 +1,4 @@
-#include <glib/gi18n.h>
+#ifdef __linux__
 #include <gtk/gtk.h>
 
 // The callback to g_signal_connect MUST be an `activate` function
@@ -30,3 +30,4 @@ void revery_alert_gtk(void *pWin, const char *szMessage) {
   g_application_run(G_APPLICATION(app), 0, NULL);
   g_object_unref(app);
 }
+#endif
