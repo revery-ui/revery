@@ -4,12 +4,13 @@
     (preprocess (pps lwt_ppx))
     (library_flags (:include flags.sexp))
     (js_of_ocaml (javascript_files dialog.js))
-    (c_names dialog_cocoa dialog_win32)
+    (c_names dialog_cocoa dialog_win32 dialog_gtk)
     (cxx_names dialog)
     (c_flags (:include c_flags.sexp))
+    (c_library_flags (:include c_library_flags.sexp))
     (libraries reglfw))
 
 (rule
-(targets c_flags.sexp flags.sexp)
+(targets flags.sexp c_flags.sexp c_library_flags.sexp)
 (deps (:discover config/discover.exe))
 (action (run %{discover})))
