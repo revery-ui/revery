@@ -90,6 +90,7 @@ let start =
     Revery_Core.Event.subscribe(
       window.onMouseWheel,
       m => {
+        print_endline ("Revery::onMouseWheel - " ++ string_of_float(m.deltaY));
         let evt = Revery_Core.Events.InternalMouseWheel(m);
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
