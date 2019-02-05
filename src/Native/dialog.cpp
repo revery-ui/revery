@@ -19,8 +19,10 @@ CAMLprim value revery_alertSupported() {
   return Val_true;
 #elif __APPLE__
   return Val_true;
-#else
+#elif __linux__
   return Val_true;
+#else
+  return Val_false;
 #endif
 }
 
@@ -33,8 +35,10 @@ CAMLprim value revery_alert(value vWindow, value vMessage) {
   revery_alert_win32(pWin, szMessage);
 #elif __APPLE__
   revery_alert_cocoa(pWin, szMessage);
-#else
+#elif __linux__
   revery_alert_gtk(pWin, szMessage);
+#else
+  printf("WARNING - Not implemented: alert");
 #endif
   return Val_unit;
 }
