@@ -12,8 +12,8 @@ open Revery_Math;
 type clickFunction = unit => unit;
 let noop = () => ();
 
-let isMouseInsideRef = (_ref: node, mouseX: float, mouseY: float) => {
-  let clickableDimensions: BoundingBox2d.t = _ref#getBoundingBox();
+let isMouseInsideRef = (ref: node, mouseX: float, mouseY: float) => {
+  let clickableDimensions: BoundingBox2d.t = ref#getBoundingBox();
   let pointVec = Vec2.create(mouseX, mouseY);
   BoundingBox2d.isPointInside(clickableDimensions, pointVec);
 }
@@ -30,8 +30,8 @@ let make =
       children: React.syntheticElement,
     ) =>
   component(slots => {
-    let (clickableRef, _setClickableRef, slots) = React.Hooks.state(None, slots);
-    let setClickableRef = r => _setClickableRef(Some(r));
+    let (clickableRef, setClickableRefOption, slots) = React.Hooks.state(None, slots);
+    let setClickableRef = r => setClickableRefOption(Some(r));
 
     let (animatedOpacity, setOpacity, _slots: React.Hooks.empty) =
       React.Hooks.state(0.8, slots);
