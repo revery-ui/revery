@@ -2,7 +2,7 @@ open Revery.UI;
 open Revery.Core;
 open Revery.Math;
 
-module WallClock = {
+module AnalogClock = {
   module DegreeUtils = {
     type t = {
       hourDegrees: float,
@@ -41,7 +41,7 @@ module WallClock = {
     };
   };
 
-  let component = React.component("WallClock");
+  let component = React.component("AnalogClock");
 
   let make = () => {
     component(slots => {
@@ -77,29 +77,23 @@ module WallClock = {
           right(0),
         ];
 
-      let countContainer =
-        Style.[
-          width(200),
-          height(200),
-          border(~width=4, ~color=Colors.yellow),
-          position(`Relative),
-        ];
+      let clockContainer =
+        Style.[width(300), height(300), position(`Relative)];
 
-      let clockPointer = Style.[position(`Absolute)];
+      let clockPointer = Style.[position(`Absolute), left(150)];
 
       let hourStyle =
         Style.(
           merge(
             ~source=clockPointer,
             ~target=[
-              width(2),
-              height(60),
-              top(70),
-              left(100),
-              backgroundColor(Colors.red),
+              width(4),
+              height(90),
+              top(105),
+              backgroundColor(Colors.white),
               transform([
                 Transform.Rotate(Angle.from_degrees(hourDegrees)),
-                Transform.TranslateY(-50.),
+                Transform.TranslateY(-45.),
               ]),
             ],
           )
@@ -110,14 +104,13 @@ module WallClock = {
           merge(
             ~source=clockPointer,
             ~target=[
-              width(2),
-              height(100),
-              top(50),
-              left(100),
-              backgroundColor(Colors.green),
+              width(4),
+              height(120),
+              top(90),
+              backgroundColor(Colors.white),
               transform([
                 Transform.Rotate(Angle.from_degrees(minuteDegrees)),
-                Transform.TranslateY(-50.),
+                Transform.TranslateY(-60.),
               ]),
             ],
           )
@@ -129,23 +122,22 @@ module WallClock = {
             ~source=clockPointer,
             ~target=[
               width(2),
-              height(100),
-              top(50),
-              left(100),
-              backgroundColor(Colors.blue),
+              height(150),
+              top(75),
+              backgroundColor(Colors.red),
               transform([
                 Transform.Rotate(Angle.from_degrees(secondDegrees)),
-                Transform.TranslateY(-50.),
+                Transform.TranslateY(-75.),
               ]),
             ],
           )
         );
 
       <View style=containerStyle>
-        <View style=countContainer>
-          <View style=hourStyle />
-          <View style=minutesStyle />
+        <View style=clockContainer>
           <View style=secondsStyle />
+          <View style=minutesStyle />
+          <View style=hourStyle />
         </View>
       </View>;
     });
@@ -154,4 +146,4 @@ module WallClock = {
   let createElement = (~children as _, ()) => React.element(make());
 };
 
-let render = () => <WallClock />;
+let render = () => <AnalogClock />;
