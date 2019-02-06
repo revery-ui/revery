@@ -7,9 +7,16 @@
 
 open Revery_UI;
 open Revery_Core;
+open Revery_Math;
 
 type clickFunction = unit => unit;
 let noop = () => ();
+
+let isMouseInsideRef = (ref: node, mouseX: float, mouseY: float) => {
+  let clickableDimensions: BoundingBox2d.t = ref#getBoundingBox();
+  let pointVec = Vec2.create(mouseX, mouseY);
+  BoundingBox2d.isPointInside(clickableDimensions, pointVec);
+};
 
 let component = React.component("Clickable");
 
@@ -23,19 +30,46 @@ let make =
       children: React.syntheticElement,
     ) =>
   component(slots => {
+    let (clickableRef, setClickableRefOption, slots) =
+      React.Hooks.state(None, slots);
+    let setClickableRef = r => setClickableRefOption(Some(r));
+
     let (animatedOpacity, setOpacity, _slots: React.Hooks.empty) =
       React.Hooks.state(0.8, slots);
 
-    /* TODO:
-     *
-     * This logic isn't really correct,
-     * for the case where you hold down the mouse,
-     * move around (leave the item), and come back.
-     */
-    let onMouseDown = _ => setOpacity(1.0);
-    let onMouseUp = _ => {
+    let onMouseMove = (mouseX: float, mouseY: float) => {
+      switch (clickableRef) {
+      | Some(clickable) =>
+        if (isMouseInsideRef(clickable, mouseX, mouseY)) {
+          setOpacity(1.0);
+        } else {
+          setOpacity(0.8);
+        }
+      | None => ()
+      };
+    };
+
+    let onMouseUp = (mouseX: float, mouseY: float) => {
+      switch (clickableRef) {
+      | Some(clickable) =>
+        if (isMouseInsideRef(clickable, mouseX, mouseY)) {
+          onClick();
+        }
+      | None => ()
+      };
+
       setOpacity(0.8);
-      onClick();
+      Mouse.releaseCapture();
+    };
+
+    let onMouseDown = _ => {
+      Mouse.setCapture(
+        ~onMouseMove=evt => onMouseMove(evt.mouseX, evt.mouseY),
+        ~onMouseUp=evt => onMouseUp(evt.mouseX, evt.mouseY),
+        (),
+      );
+
+      setOpacity(1.0);
     };
 
     let mergedStyles =
@@ -46,7 +80,13 @@ let make =
         )
       );
 
-    <View style=mergedStyles onMouseDown onMouseUp ?onBlur ?onFocus tabindex>
+    <View
+      style=mergedStyles
+      onMouseDown
+      ?onBlur
+      ?onFocus
+      tabindex
+      ref={r => setClickableRef(r)}>
       children
     </View>;
   });
