@@ -34,8 +34,10 @@ let make =
       (),
     ) =>
   component(slots => {
-    let (slideRef, setSlideRefOption, slots) = React.Hooks.state(None, slots);
-    let (thumbRef, setThumbRefOption, slots) = React.Hooks.state(None, slots);
+    let (slideRef, setSlideRefOption, slots) =
+      React.Hooks.state(None, slots);
+    let (thumbRef, setThumbRefOption, slots) =
+      React.Hooks.state(None, slots);
     let (isActive, setActive, slots) = React.Hooks.state(false, slots);
     /* Initial value is used to detect if the 'value' parameter ever changes */
     let (initialValue, setInitialValue, slots) =
