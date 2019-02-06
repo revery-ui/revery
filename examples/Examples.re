@@ -42,6 +42,7 @@ let state: state = {
     {name: "Game Of Life", render: _ => GameOfLife.render()},
     {name: "Screen Capture", render: w => ScreenCapture.render(w)},
     {name: "Tree View", render: w => TreeView.render(w)},
+    {name: "Analog Clock", render: _w => AnalogClock.render()},
   ],
   selectedExample: "Animation",
 };
