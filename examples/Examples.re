@@ -112,6 +112,11 @@ let state: state = {
       render: _w => TextExample.render(),
       source: "TextExample.re",
     },
+    {
+      name: "Hover Example",
+      render: _ => HoverExample.render(),
+      source: "HoverExample.re",
+    },
   ],
   selectedExample: "Animation",
 };

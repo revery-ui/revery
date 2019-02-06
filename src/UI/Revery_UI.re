@@ -68,6 +68,22 @@ let start =
       },
     );
 
+  /*
+   Probably not a good idea to subscribe to onMouseMove and calling onMouseOver everytime
+   */
+  let _ =
+    Revery_Core__Event.subscribe(
+      window.onMouseOver,
+      m => {
+        let evt =
+          Revery_Core.Events.InternalMouseOver({
+            mouseX: m.mouseX,
+            mouseY: m.mouseY,
+          });
+        Mouse.dispatch(mouseCursor, evt, rootNode);
+      },
+    );
+
   let _ =
     Revery_Core.Event.subscribe(
       window.onMouseDown,

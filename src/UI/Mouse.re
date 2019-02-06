@@ -86,6 +86,7 @@ let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =
   | InternalMouseMove(e) => Vec2.create(e.mouseX, e.mouseY)
   | InternalMouseUp(_) => Cursor.toVec2(c)
   | InternalMouseWheel(_) => Cursor.toVec2(c)
+  | InternalMouseOver(_) => Cursor.toVec2(c)
   };
 
 let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
@@ -98,6 +99,7 @@ let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
     MouseMove({mouseX: evt.mouseX, mouseY: evt.mouseY})
   | InternalMouseWheel(evt) =>
     MouseWheel({deltaX: evt.deltaX, deltaY: evt.deltaY})
+  | InternalMouseOver(_) => MouseOver({mouseX: c.x^, mouseY: c.y^})
   };
 
 let onCursorChanged: Event.t(MouseCursors.t) = Event.create();
@@ -106,6 +108,20 @@ let isMouseDownEv =
   fun
   | MouseDown(_) => true
   | _ => false;
+
+let isMouseMoveEv =
+  fun
+  | MouseMove(_) => true
+  | _ => false;
+
+type handleEvent = event => unit;
+type active = {
+  handler: handleEvent,
+  id: int,
+};
+
+type mouseOverNode = ref(option(active));
+let mouseOverNode: mouseOverNode = ref(None);
 
 let dispatch =
     (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node('a)) => {
@@ -120,6 +136,52 @@ let dispatch =
         switch (getFirstFocusable(node, pos)) {
         | Some(node) => Focus.dispatch(node)
         | None => Focus.loseFocus()
+        };
+      } else {
+        ();
+      };
+
+      let mouseMove = isMouseMoveEv(eventToSend);
+      if (mouseMove) {
+        let deepestNode = getDeepestNode(node, pos);
+        switch (deepestNode^) {
+        | None =>
+          switch (mouseOverNode^) {
+          | None => ()
+          | Some({handler, _}) =>
+            handler(eventToSend); /* Send mouseLeave */
+            mouseOverNode := None;
+            print_endline("Leaving element!!!");
+          }
+        | Some(deepNode) =>
+          switch (mouseOverNode^) {
+          | None =>
+            mouseOverNode :=
+              Some({
+                handler: deepNode#handleEvent,
+                id: deepNode#getInternalId(),
+              });
+            deepNode#handleEvent(
+              MouseOver({mouseX: cursor.x^, mouseY: cursor.y^}),
+            ); /*Send mouseOver event! */
+            print_endline("First time hovering over any element!");
+          | Some({id, handler}) =>
+            if (deepNode#getInternalId() != id) {
+              handler(eventToSend); /*Send mouseLeave event! to mouseOverNode */
+              deepNode#handleEvent(
+                MouseOver({mouseX: cursor.x^, mouseY: cursor.y^}),
+              ); /*Send mouseOver event to new deepNode! */
+              mouseOverNode :=
+                Some({
+                  handler: deepNode#handleEvent,
+                  id: deepNode#getInternalId(),
+                });
+
+              print_endline("Leaving old element, and hovering over new!");
+            } else {
+              ();
+            }
+          }
         };
       } else {
         ();
