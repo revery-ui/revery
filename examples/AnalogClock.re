@@ -1,6 +1,6 @@
-open Revery.UI;
 open Revery.Core;
 open Revery.Math;
+open Revery.UI;
 
 module AnalogClock = {
   module DegreeUtils = {
@@ -68,21 +68,22 @@ module AnalogClock = {
 
       let containerStyle =
         Style.[
-          justifyContent(`Center),
           alignItems(`Center),
-          position(`Absolute),
-          top(0),
           bottom(0),
+          justifyContent(`Center),
           left(0),
+          position(`Absolute),
           right(0),
+          top(0),
         ];
 
       let clockContainer =
         Style.[
-          width(300),
-          height(300),
-          position(`Relative),
           border(~width=4, ~color=Colors.white),
+          height(300),
+          padding(15),
+          position(`Relative),
+          width(300),
         ];
 
       let clockPointer = Style.[position(`Absolute), left(150)];
@@ -92,14 +93,14 @@ module AnalogClock = {
           merge(
             ~source=clockPointer,
             ~target=[
-              width(4),
+              backgroundColor(Colors.white),
               height(90),
               top(105),
-              backgroundColor(Colors.white),
               transform([
                 Transform.Rotate(Angle.from_degrees(hourDegrees)),
                 Transform.TranslateY(-45.),
               ]),
+              width(4),
             ],
           )
         );
@@ -109,14 +110,14 @@ module AnalogClock = {
           merge(
             ~source=clockPointer,
             ~target=[
-              width(4),
+              backgroundColor(Colors.white),
               height(120),
               top(90),
-              backgroundColor(Colors.white),
               transform([
                 Transform.Rotate(Angle.from_degrees(minuteDegrees)),
                 Transform.TranslateY(-60.),
               ]),
+              width(4),
             ],
           )
         );
@@ -126,14 +127,14 @@ module AnalogClock = {
           merge(
             ~source=clockPointer,
             ~target=[
-              width(2),
+              backgroundColor(Colors.red),
               height(150),
               top(75),
-              backgroundColor(Colors.red),
               transform([
                 Transform.Rotate(Angle.from_degrees(secondDegrees)),
                 Transform.TranslateY(-75.),
               ]),
+              width(2),
             ],
           )
         );
