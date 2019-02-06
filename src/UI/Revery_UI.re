@@ -85,6 +85,19 @@ let start =
     );
 
   let _ =
+    Revery_Core__Event.subscribe(
+      window.onMouseOut,
+      m => {
+        let evt =
+          Revery_Core.Events.InternalMouseOut({
+            mouseX: m.mouseX,
+            mouseY: m.mouseY,
+          });
+        Mouse.dispatch(mouseCursor, evt, rootNode);
+      },
+    );
+
+  let _ =
     Revery_Core.Event.subscribe(
       window.onMouseDown,
       m => {

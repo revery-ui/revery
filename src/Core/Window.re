@@ -30,6 +30,7 @@ type t = {
   onMouseDown: Event.t(mouseButtonEvent),
   onMouseWheel: Event.t(mouseWheelEvent),
   onMouseOver: Event.t(mouseMoveEvent),
+  onMouseOut: Event.t(mouseMoveEvent),
 };
 
 type windowCreateOptions = {
@@ -167,6 +168,7 @@ let create = (name: string, options: windowCreateOptions) => {
     onMouseDown: Event.create(),
     onMouseWheel: Event.create(),
     onMouseOver: Event.create(),
+    onMouseOut: Event.create(),
   };
 
   Glfw.glfwSetFramebufferSizeCallback(
