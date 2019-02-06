@@ -78,7 +78,12 @@ module AnalogClock = {
         ];
 
       let clockContainer =
-        Style.[width(300), height(300), position(`Relative)];
+        Style.[
+          width(300),
+          height(300),
+          position(`Relative),
+          border(~width=4, ~color=Colors.white),
+        ];
 
       let clockPointer = Style.[position(`Absolute), left(150)];
 
