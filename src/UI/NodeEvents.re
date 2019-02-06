@@ -30,6 +30,7 @@ type event =
   | MouseMove(mouseMoveEventParams)
   | MouseUp(mouseButtonEventParams)
   | MouseWheel(mouseWheelEventParams)
+  | MouseOver(mouseMoveEventParams)
   | Blur
   | Focus;
 
@@ -45,6 +46,7 @@ type t('a) = {
   onMouseMove: option(mouseMoveHandler),
   onMouseUp: option(mouseButtonHandler),
   onMouseWheel: option(mouseWheelHandler),
+  onMouseOver: option(mouseMoveHandler),
   onFocus: option(focusHandler),
   onBlur: option(focusHandler),
 };
@@ -56,6 +58,7 @@ let make =
       ~onMouseMove=?,
       ~onMouseUp=?,
       ~onMouseWheel=?,
+      ~onMouseOver=?,
       ~onFocus=?,
       ~onBlur=?,
       _unit: unit,
@@ -66,6 +69,7 @@ let make =
     onMouseMove,
     onMouseUp,
     onMouseWheel,
+    onMouseOver,
     onFocus,
     onBlur,
   };

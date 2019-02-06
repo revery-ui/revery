@@ -43,6 +43,7 @@ let state: state = {
     {name: "Screen Capture", render: w => ScreenCapture.render(w)},
     {name: "Tree View", render: w => TreeView.render(w)},
     {name: "Analog Clock", render: _w => AnalogClock.render()},
+    {name: "Hover Example", render: _ => HoverExample.render()},
   ],
   selectedExample: "Animation",
 };

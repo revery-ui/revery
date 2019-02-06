@@ -174,9 +174,11 @@ class node ('a) (()) = {
       | (MouseMove(c), {onMouseMove: Some(cb), _}) => cb(c)
       | (MouseUp(c), {onMouseUp: Some(cb), _}) => cb(c)
       | (MouseWheel(c), {onMouseWheel: Some(cb), _}) => cb(c)
+      | (MouseOver(c), {onMouseOver: Some(cb), _}) => cb(c)
       | (MouseDown(_), _)
       | (MouseMove(_), _)
       | (MouseUp(_), _)
+      | (MouseOver(_), _)
       | (MouseWheel(_), _) => ()
       | (Focus, p) =>
         _this#focus();
