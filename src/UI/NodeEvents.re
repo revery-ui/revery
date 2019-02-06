@@ -54,9 +54,14 @@ type event =
   | MouseMove(mouseMoveEventParams)
   | MouseUp(mouseButtonEventParams)
   | MouseWheel(mouseWheelEventParams)
+<<<<<<< HEAD
   | KeyDown(keyEventParams)
   | KeyUp(keyEventParams)
   | KeyPress(keyPressEventParams)
+=======
+  | MouseOver(mouseMoveEventParams)
+  | MouseOut(mouseMoveEventParams)
+>>>>>>> Add onMouseOut event to Revery
   | Blur
   | Focus;
 
@@ -77,6 +82,7 @@ type t('a) = {
   onMouseUp: option(mouseButtonHandler),
   onMouseWheel: option(mouseWheelHandler),
   onMouseOver: option(mouseMoveHandler),
+  onMouseOut: option(mouseMoveHandler),
   onFocus: option(focusHandler),
   onBlur: option(focusHandler),
   onKeyUp: option(keyUpHandler),
@@ -93,6 +99,7 @@ let make =
       ~onMouseUp=?,
       ~onMouseWheel=?,
       ~onMouseOver=?,
+      ~onMouseOut=?,
       ~onFocus=?,
       ~onBlur=?,
       ~onKeyPress=?,
@@ -108,6 +115,7 @@ let make =
     onMouseUp,
     onMouseWheel,
     onMouseOver,
+    onMouseOut,
     onFocus,
     onBlur,
     onKeyPress,

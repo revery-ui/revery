@@ -27,6 +27,10 @@ module HoverExample = {
           setBackgroundColor(hoverBackgroundColor);
           print_endline("over element!");
         }}
+        onMouseOut={_ => {
+          setBackgroundColor(defaultBackgroundColor);
+          print_endline("left hoverExample element!");
+        }}
       />;
     });
 

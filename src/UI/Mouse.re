@@ -87,6 +87,7 @@ let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =
   | InternalMouseUp(_) => Cursor.toVec2(c)
   | InternalMouseWheel(_) => Cursor.toVec2(c)
   | InternalMouseOver(_) => Cursor.toVec2(c)
+  | InternalMouseOut(_) => Cursor.toVec2(c)
   };
 
 let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
@@ -100,6 +101,7 @@ let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
   | InternalMouseWheel(evt) =>
     MouseWheel({deltaX: evt.deltaX, deltaY: evt.deltaY})
   | InternalMouseOver(_) => MouseOver({mouseX: c.x^, mouseY: c.y^})
+  | InternalMouseOut(_) => MouseOut({mouseX: c.x^, mouseY: c.y^})
   };
 
 let onCursorChanged: Event.t(MouseCursors.t) = Event.create();
@@ -149,9 +151,8 @@ let dispatch =
           switch (mouseOverNode^) {
           | None => ()
           | Some({handler, _}) =>
-            handler(eventToSend); /* Send mouseLeave */
+            handler(MouseOut({mouseX: cursor.x^, mouseY: cursor.y^})); /* Send mouseOut */
             mouseOverNode := None;
-            print_endline("Leaving element!!!");
           }
         | Some(deepNode) =>
           switch (mouseOverNode^) {
@@ -164,10 +165,10 @@ let dispatch =
             deepNode#handleEvent(
               MouseOver({mouseX: cursor.x^, mouseY: cursor.y^}),
             ); /*Send mouseOver event! */
-            print_endline("First time hovering over any element!");
+          // print_endline("First time hovering over any element!");
           | Some({id, handler}) =>
             if (deepNode#getInternalId() != id) {
-              handler(eventToSend); /*Send mouseLeave event! to mouseOverNode */
+              handler(MouseOut({mouseX: cursor.x^, mouseY: cursor.y^})); /*Send mouseOut event! to mouseOverNode */
               deepNode#handleEvent(
                 MouseOver({mouseX: cursor.x^, mouseY: cursor.y^}),
               ); /*Send mouseOver event to new deepNode! */
@@ -176,15 +177,10 @@ let dispatch =
                   handler: deepNode#handleEvent,
                   id: deepNode#getInternalId(),
                 });
-
-              print_endline("Leaving old element, and hovering over new!");
-            } else {
-              ();
+              // print_endline("Leaving old element, and hovering over new!");
             }
           }
         };
-      } else {
-        ();
       };
 
       if (!handleCapture(eventToSend)) {
