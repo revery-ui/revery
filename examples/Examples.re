@@ -105,11 +105,22 @@ let reducer = (s: state, a: action) => {
 let init = app => {
   let maximized = Environment.webGL;
 
+  let dimensions: Monitor.size =
+    Monitor.getPrimaryMonitor() |> Monitor.getSize;
+
+  let windowWidth = dimensions.width / 2;
+  let windowHeight = dimensions.height / 2;
+
   let win =
     App.createWindow(
       app,
       "Welcome to Revery!",
-      ~createOptions={...Window.defaultCreateOptions, maximized},
+      ~createOptions={
+        ...Window.defaultCreateOptions,
+        width: windowWidth,
+        height: windowHeight,
+        maximized,
+      },
     );
 
   let render = () => {
@@ -180,6 +191,10 @@ let init = app => {
   if (Environment.webGL) {
     Window.maximize(win);
   };
+
+  let xPosition = (dimensions.width - windowWidth) / 2;
+  let yPosition = (dimensions.height - windowHeight) / 2;
+  Window.setPos(win, xPosition, yPosition);
 
   UI.start(win, render);
 };

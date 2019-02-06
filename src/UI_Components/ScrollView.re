@@ -101,7 +101,7 @@ let make =
 
         let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
           let newScrollTop =
-            actualScrollTop - int_of_float(wheelEvent.deltaY) * 25;
+            actualScrollTop - int_of_float(wheelEvent.deltaY *. 25.);
 
           let clampedScrollTop =
             if (newScrollTop < 0) {
@@ -165,8 +165,7 @@ let make =
     </View>;
   });
 
-let createElement = (~children, ~style, ~scrollLeft=0, ~scrollTop=0, ()) => {
+let createElement = (~children, ~style, ~scrollLeft=0, ~scrollTop=0, ()) =>
   React.element(
     make(~style, ~scrollLeft, ~scrollTop, React.listToElement(children)),
   );
-};
