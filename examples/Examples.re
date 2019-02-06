@@ -42,6 +42,7 @@ let state: state = {
     {name: "Game Of Life", render: _ => GameOfLife.render()},
     {name: "Screen Capture", render: w => ScreenCapture.render(w)},
     {name: "Tree View", render: w => TreeView.render(w)},
+    {name: "ToDoMVC", render: w => TodoExample.render(w)},
   ],
   selectedExample: "Animation",
 };
