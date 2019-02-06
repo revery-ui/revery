@@ -16,7 +16,7 @@ let isMouseInsideRef = (ref: node, mouseX: float, mouseY: float) => {
   let clickableDimensions: BoundingBox2d.t = ref#getBoundingBox();
   let pointVec = Vec2.create(mouseX, mouseY);
   BoundingBox2d.isPointInside(clickableDimensions, pointVec);
-}
+};
 
 let component = React.component("Clickable");
 
@@ -30,7 +30,8 @@ let make =
       children: React.syntheticElement,
     ) =>
   component(slots => {
-    let (clickableRef, setClickableRefOption, slots) = React.Hooks.state(None, slots);
+    let (clickableRef, setClickableRefOption, slots) =
+      React.Hooks.state(None, slots);
     let setClickableRef = r => setClickableRefOption(Some(r));
 
     let (animatedOpacity, setOpacity, _slots: React.Hooks.empty) =
@@ -38,38 +39,37 @@ let make =
 
     let onMouseMove = (mouseX: float, mouseY: float) => {
       switch (clickableRef) {
-        | Some(clickable) => {
-          if (isMouseInsideRef(clickable, mouseX, mouseY)) {
-            setOpacity(1.0)
-          } else {
-            setOpacity(0.8)
-          }
+      | Some(clickable) =>
+        if (isMouseInsideRef(clickable, mouseX, mouseY)) {
+          setOpacity(1.0);
+        } else {
+          setOpacity(0.8);
         }
-        | None => ()
-      }
+      | None => ()
+      };
     };
 
     let onMouseUp = (mouseX: float, mouseY: float) => {
       switch (clickableRef) {
-        | Some(clickable) => {
-          if (isMouseInsideRef(clickable, mouseX, mouseY)) {
-            onClick();
-          }
+      | Some(clickable) =>
+        if (isMouseInsideRef(clickable, mouseX, mouseY)) {
+          onClick();
         }
-        | None => ()
-      }
-      
+      | None => ()
+      };
+
       setOpacity(0.8);
       Mouse.releaseCapture();
-    }
+    };
 
     let onMouseDown = _ => {
       Mouse.setCapture(
         ~onMouseMove=evt => onMouseMove(evt.mouseX, evt.mouseY),
         ~onMouseUp=evt => onMouseUp(evt.mouseX, evt.mouseY),
-        ());
-        
-      setOpacity(1.0)
+        (),
+      );
+
+      setOpacity(1.0);
     };
 
     let mergedStyles =
@@ -80,7 +80,13 @@ let make =
         )
       );
 
-    <View style=mergedStyles onMouseDown ?onBlur ?onFocus tabindex ref={r => setClickableRef(r)}>
+    <View
+      style=mergedStyles
+      onMouseDown
+      ?onBlur
+      ?onFocus
+      tabindex
+      ref={r => setClickableRef(r)}>
       children
     </View>;
   });
