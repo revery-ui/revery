@@ -8,9 +8,28 @@
 <body style="margin: 0px;">
 
 <script>
-window.addEventListener("message", (evt) => {
-    alert("message: " + evt.data);
-}, false);
+  // Create a setter that will be overridden once an editor is available
+  window.__revery_latest_sources = "Loading...";
+  window.__revery_editor_set = (t) => window.__revery_latest_sources;
+
+  let fetchLatestSources = (sourceFile) => {
+      fetch("sources/" + sourceFile)
+          .then((response) => {
+              response.text().then((t) => {
+                  window.__revery_latest_sources = t;
+                  window.__revery_editor_set(t);
+              });
+          });
+  };
+
+  window.addEventListener("message", (evt) => {
+      let data = evt.data;
+      if (data && data.type == "example.switch") {
+          fetchLatestSources(data.payload);
+      }
+  }, false);
+
+  fetchLatestSources("Hello.re");
 </script>
 
 <div style="display: flex; flex-direction: row; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
@@ -27,23 +46,13 @@ window.addEventListener("message", (evt) => {
 
 <script>
 	var editor = monaco.editor.create(document.getElementById('code'), {
-		value: [
-			'let a = 1;',
-            'let test = (a) => 2;',
-		].join('\n'),
+		value: window.__revery_latest_sources,
 		language: 'rust',
         theme: 'vs-dark',
         readOnly: true,
 	});
 
-    fetch("sources/Hello.re")
-        .then((response) => {
-           alert("responded!"); 
-
-            response.text().then((t) => {
-                editor.setValue(t);
-            });
-        });
+  window.__revery_editor_set = (t) => editor.setValue(t);
 </script>
 
 </body>
