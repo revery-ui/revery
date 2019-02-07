@@ -25,7 +25,18 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     easing: float => float,
   };
 
-  let activeAnimations: ref(list(animation)) = ref([]);
+  type activeAnimation = {
+    animation,
+    update: option(float => unit),
+    complete: option(unit => unit),
+  };
+
+  type playback = {
+    pause: unit => unit,
+    stop: unit => unit,
+  };
+
+  let activeAnimations: ref(list(activeAnimation)) = ref([]);
 
   type animationOptions = {
     duration: Time.t,
@@ -67,28 +78,37 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     (clock -. adjustedStart) /. (endTime -. adjustedStart);
   };
 
-  let hasStarted = (clock: float, anim: animation) => {
-    let t = getLocalTime(clock, anim);
+  let hasStarted = (clock: float, {animation, _}) => {
+    let t = getLocalTime(clock, animation);
     t > 0.;
   };
 
-  let isComplete = (clock: float, anim: animation) => {
+  let isComplete = (clock: float, {animation: anim, _}) => {
     let t = getLocalTime(clock, anim);
     t > 1. && !anim.repeat;
   };
 
-  let tickAnimation = (clock: float, anim: animation) => {
+  let tickAnimation = (clock: float, {animation: anim, update, complete}) => {
     let t = anim.easing(getLocalTime(clock, anim));
 
-    /* If the anim is set to repeat and the time has expired, restart */
-    if (anim.repeat && t > 1.) {
-      /* reset */
-
-      anim.startTime = anim.startTime +. anim.delay +. anim.duration;
-      let newT = getLocalTime(clock, anim);
-      anim.value.current = interpolate(newT, anim.startValue, anim.toValue);
+    if (t > 1.) {
+      if (anim.repeat) {
+        /* If the anim is set to repeat and the time has expired, restart */
+        anim.startTime = anim.startTime +. anim.delay +. anim.duration;
+        let newT = getLocalTime(clock, anim);
+        anim.value.current = interpolate(newT, anim.startValue, anim.toValue);
+      } else {
+        switch (complete) {
+        | Some(c) => c()
+        | _ => ()
+        };
+      };
     } else {
       anim.value.current = interpolate(t, anim.startValue, anim.toValue);
+      switch (update) {
+      | Some(u) => u(anim.value.current)
+      | _ => ()
+      };
     };
   };
 
@@ -100,9 +120,9 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     List.length(anims) > 0;
   };
 
-  let start =
+  let tween =
       (animationValue: animationValue, animationOptions: animationOptions) => {
-    let animation: animation = {
+    let animation = {
       id: AnimationId.getUniqueId(),
       delay: Time.to_float_seconds(animationOptions.delay),
       duration: Time.to_float_seconds(animationOptions.duration),
@@ -113,13 +133,31 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       startValue: animationValue.current,
       easing: animationOptions.easing,
     };
-
-    activeAnimations := List.append([animation], activeAnimations^);
     animation;
+  };
+  let start = (~update=?, ~complete=?, animation) => {
+    let activeAnimation = {animation, update, complete};
+    activeAnimations := List.append([activeAnimation], activeAnimations^);
+    let removeAnimation = l =>
+      List.filter(({animation: a, _}) => a.id !== animation.id, l);
+    let playback = {
+      pause: () => {
+        activeAnimations := removeAnimation(activeAnimations^);
+      },
+      stop: () => {
+        animation.value.current = animation.startValue;
+        activeAnimations := removeAnimation(activeAnimations^);
+      },
+    };
+    playback;
   };
 
   let cancel = (anim: animation) =>
-    activeAnimations := List.filter(a => a.id !== anim.id, activeAnimations^);
+    activeAnimations :=
+      List.filter(
+        ({animation: a, _}) => a.id !== anim.id,
+        activeAnimations^,
+      );
 
   let cancelAll = () => activeAnimations := [];
 

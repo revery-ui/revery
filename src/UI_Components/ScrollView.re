@@ -9,6 +9,10 @@ let empty = React.listToElement([]);
 let scrollTrackColor = Color.rgba(0.0, 0.0, 0.0, 0.4);
 let scrollThumbColor = Color.rgba(0.5, 0.5, 0.5, 0.4);
 
+type bouncingState =
+  | Transitioning
+  | Idle;
+
 let make =
     (~style, ~scrollLeft=0, ~scrollTop=0, children: React.syntheticElement) =>
   component(slots => {
@@ -19,6 +23,7 @@ let make =
     let (actualScrollLeft, setScrollLeft, _slots: React.Hooks.empty) =
       React.Hooks.state(scrollLeft, slots);
 
+    let bouncingState = Idle;
     let scrollBarThickness = 10;
 
     let innerViewTransform = [
@@ -100,19 +105,42 @@ let make =
             : empty;
 
         let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
-          let newScrollTop =
-            actualScrollTop - int_of_float(wheelEvent.deltaY) * 25;
+          // let newScrollTop =
+          //   actualScrollTop - int_of_float(wheelEvent.deltaY) * 25;
 
-          let clampedScrollTop =
-            if (newScrollTop < 0) {
-              0;
-            } else if (newScrollTop > maxHeight) {
-              maxHeight;
-            } else {
-              newScrollTop;
+          let isAtTop = scrollTop <= 0;
+          let isAtBottom = scrollTop >= maxHeight;
+
+          switch (bouncingState) {
+          | Transitioning => ()
+          | Idle when isAtTop || isAtBottom =>
+            open Animated;
+            let animation = {
+              toValue: isAtTop ? -20. : float_of_int(maxHeight),
+              duration: Seconds(1.),
+              delay: Seconds(0.),
+              repeat: false,
+              easing: Animated.linear,
             };
+            animation
+            |> tween(floatValue(0.))
+            |> start(~update=v => setScrollTop(int_of_float(v)))
+            |> ignore;
+          | Idle =>
+            setScrollTop(
+              actualScrollTop - int_of_float(wheelEvent.deltaY) * 25,
+            )
+          };
+          // let clampedScrollTop =
+          //   if (newScrollTop < 0) {
+          //     0;
+          //   } else if (newScrollTop > maxHeight) {
+          //     maxHeight;
+          //   } else {
+          //     newScrollTop;
+          //   };
 
-          setScrollTop(clampedScrollTop);
+          // setScrollTop(clampedScrollTop);
         };
 
         (horizontalScrollbar, verticalScrollBar, scroll);
