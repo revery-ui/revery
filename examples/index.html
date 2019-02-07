@@ -17,6 +17,14 @@
             // but it's not needed during runtime.
             window.require = false;
         </script>
+        <script>
+            // If we're hosted in an iframe, we'll listen to changes and 'postMessage' them out
+            if (window.parent) {
+                window["__revery_playground_example_notify_changed"] = (s) => {
+                    window.parent.postMessage({ type: "example.switch", payload: s}, "*");
+                }
+            }
+        </script>
         <script src="Examples.bc.js"></script>
     </body>
 </html>
