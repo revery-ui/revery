@@ -82,7 +82,7 @@ let filterItems = (filterText: string, items: list(item)) => {
 };
 
 let init = app => {
-  let width = 400;
+  let appWidth = 400;
   let height = 1;
 
   let w =
@@ -93,7 +93,7 @@ let init = app => {
         ...Window.defaultCreateOptions,
         decorated: false,
         visible: false,
-        width,
+        width: appWidth,
         height,
       },
     );
@@ -104,20 +104,19 @@ let init = app => {
 
   Window.setPos(
     w,
-    (monitorSize.width - width) / 2,
+    (monitorSize.width - appWidth) / 2,
     (monitorSize.height - height) / 2,
   );
   Window.show(w);
 
   let textHeaderStyle =
-    Style.make(
-      ~backgroundColor=Colors.black,
-      ~color=Colors.white,
-      ~fontFamily="Roboto-Regular.ttf",
-      ~fontSize=24,
-      ~height=30,
-      (),
-    );
+    Style.[
+      backgroundColor(Colors.black),
+      color(Colors.white),
+      fontFamily("Roboto-Regular.ttf"),
+      fontSize(24),
+      height(30),
+    ];
 
   /* let smallerTextStyle = Style.make(~backgroundColor=Colors.black, ~color=Colors.white, ~fontFamily="Roboto-Regular.ttf", ~fontSize=12, ()); */
 
@@ -151,11 +150,11 @@ let init = app => {
         filteredItems,
       );
 
-    <View style={Style.make(~backgroundColor=Colors.blue, ~width, ())}>
-      <View style={Style.make(~height=50, ())}>
+    <View style=Style.[backgroundColor(Colors.blue), width(appWidth)]>
+      <View style=Style.[height(50)]>
         <Text style=textHeaderStyle text={state.text ++ "|"} />
       </View>
-      <View style={Style.make()}> ...items </View>
+      <View> ...items </View>
     </View>;
   };
 

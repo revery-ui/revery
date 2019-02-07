@@ -3,6 +3,7 @@ open Revery.Core;
 /* open Revery.Math; */
 
 module SliderExample = Slider;
+module ScrollViewExample = ScrollView;
 
 open Revery.UI;
 open Revery.UI.Components;
@@ -29,15 +30,19 @@ let state: state = {
     {name: "Checkbox", render: _ => CheckboxExample.render()},
     {name: "Slider", render: _ => SliderExample.render()},
     {name: "Border", render: _ => Border.render()},
-    {name: "Overflow", render: _w => Overflow.render()},
+    {name: "ScrollView", render: _w => ScrollViewExample.render()},
     {name: "Calculator", render: w => Calculator.render(w)},
     {name: "Flexbox", render: _ => Flexbox.render()},
     {name: "Box Shadow", render: _ => Boxshadow.render()},
     {name: "Focus", render: _ => Focus.render()},
     {name: "Stopwatch", render: _ => Stopwatch.render()},
+    {name: "Native", render: w => Native.render(w)},
     {name: "Input", render: w => InputExample.render(w)},
     {name: "Radio Button", render: _ => RadioButtonExample.render()},
     {name: "Game Of Life", render: _ => GameOfLife.render()},
+    {name: "Screen Capture", render: w => ScreenCapture.render(w)},
+    {name: "Tree View", render: w => TreeView.render(w)},
+    {name: "Analog Clock", render: _w => AnalogClock.render()},
   ],
   selectedExample: "Animation",
 };
@@ -92,20 +97,30 @@ type action =
   | SelectExample(string);
 
 let reducer = (s: state, a: action) => {
-  let SelectExample(name) = a;
-
-  let ret: state = {...s, selectedExample: name};
-  ret;
+  switch (a) {
+  | SelectExample(name) => {...s, selectedExample: name}
+  };
 };
 
 let init = app => {
   let maximized = Environment.webGL;
 
+  let dimensions: Monitor.size =
+    Monitor.getPrimaryMonitor() |> Monitor.getSize;
+
+  let windowWidth = dimensions.width / 2;
+  let windowHeight = dimensions.height / 2;
+
   let win =
     App.createWindow(
       app,
       "Welcome to Revery!",
-      ~createOptions={...Window.defaultCreateOptions, maximized},
+      ~createOptions={
+        ...Window.defaultCreateOptions,
+        width: windowWidth,
+        height: windowHeight,
+        maximized,
+      },
     );
 
   let render = () => {
@@ -148,7 +163,7 @@ let init = app => {
         right(0),
         flexDirection(`Row),
       ]>
-      <View
+      <ScrollView
         style=Style.[
           position(`Absolute),
           top(0),
@@ -157,8 +172,8 @@ let init = app => {
           bottom(0),
           backgroundColor(bgColor),
         ]>
-        ...buttons
-      </View>
+        <View> ...buttons </View>
+      </ScrollView>
       <View
         style=Style.[
           position(`Absolute),
@@ -176,6 +191,10 @@ let init = app => {
   if (Environment.webGL) {
     Window.maximize(win);
   };
+
+  let xPosition = (dimensions.width - windowWidth) / 2;
+  let yPosition = (dimensions.height - windowHeight) / 2;
+  Window.setPos(win, xPosition, yPosition);
 
   UI.start(win, render);
 };

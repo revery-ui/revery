@@ -36,6 +36,7 @@ type t = {
   flexBasis: int,
   flexShrink: int,
   flexDirection: LayoutTypes.flexDirection,
+  flexWrap: LayoutTypes.wrapType,
   justifyContent: LayoutTypes.justify,
   alignItems: LayoutTypes.align,
   top: int,
@@ -51,6 +52,13 @@ type t = {
   margin: int,
   marginVertical: int,
   marginHorizontal: int,
+  paddingTop: int,
+  paddingLeft: int,
+  paddingRight: int,
+  paddingBottom: int,
+  padding: int,
+  paddingVertical: int,
+  paddingHorizontal: int,
   overflow: LayoutTypes.overflow,
   borderTop: Border.t,
   borderLeft: Border.t,
@@ -75,6 +83,7 @@ let make =
       ~flexDirection=LayoutTypes.Column,
       ~flexGrow=0,
       ~flexShrink=0,
+      ~flexWrap=LayoutTypes.CssNoWrap,
       ~alignItems=LayoutTypes.AlignStretch,
       ~justifyContent=LayoutTypes.JustifyFlexStart,
       ~position=LayoutTypes.Relative,
@@ -91,6 +100,13 @@ let make =
       ~margin=Encoding.cssUndefined,
       ~marginVertical=Encoding.cssUndefined,
       ~marginHorizontal=Encoding.cssUndefined,
+      ~paddingTop=Encoding.cssUndefined,
+      ~paddingLeft=Encoding.cssUndefined,
+      ~paddingRight=Encoding.cssUndefined,
+      ~paddingBottom=Encoding.cssUndefined,
+      ~padding=Encoding.cssUndefined,
+      ~paddingHorizontal=Encoding.cssUndefined,
+      ~paddingVertical=Encoding.cssUndefined,
       ~overflow=LayoutTypes.Visible,
       ~borderTop=Border.make(),
       ~borderLeft=Border.make(),
@@ -120,6 +136,7 @@ let make =
     flexDirection,
     flexGrow,
     flexShrink,
+    flexWrap,
     justifyContent,
     alignItems,
     position,
@@ -137,6 +154,13 @@ let make =
     margin,
     marginVertical,
     marginHorizontal,
+    paddingTop,
+    paddingLeft,
+    paddingRight,
+    paddingBottom,
+    padding,
+    paddingHorizontal,
+    paddingVertical,
     overflow,
     borderTop,
     borderLeft,
@@ -166,6 +190,7 @@ let toLayoutNode = (s: t) => {
     flexDirection: s.flexDirection,
     flexGrow: s.flexGrow,
     flexShrink: s.flexShrink,
+    flexWrap: s.flexWrap,
     alignItems: s.alignItems,
     justifyContent: s.justifyContent,
     right: s.right,
@@ -178,6 +203,13 @@ let toLayoutNode = (s: t) => {
     margin: s.margin,
     marginVertical: s.marginVertical,
     marginHorizontal: s.marginHorizontal,
+    paddingTop: s.paddingTop,
+    paddingLeft: s.paddingLeft,
+    paddingRight: s.paddingRight,
+    paddingBottom: s.paddingBottom,
+    padding: s.padding,
+    paddingVertical: s.paddingVertical,
+    paddingHorizontal: s.paddingHorizontal,
     borderTop: s.borderTop.width,
     borderLeft: s.borderLeft.width,
     borderRight: s.borderRight.width,
@@ -228,6 +260,15 @@ type coreStyleProps = [
   | `MarginHorizontal(int)
   | `Margin2(xy)
   | `Margin4(coords)
+  | `PaddingTop(int)
+  | `PaddingLeft(int)
+  | `PaddingRight(int)
+  | `PaddingBottom(int)
+  | `Padding(int)
+  | `PaddingHorizontal(int)
+  | `PaddingVertical(int)
+  | `Padding2(xy)
+  | `Padding4(coords)
   | `Overflow(LayoutTypes.overflow)
   | `BorderTop(Border.t)
   | `BorderLeft(Border.t)
@@ -318,6 +359,17 @@ let margin2 = (~horizontal, ~vertical) => `Margin2({horizontal, vertical});
 let margin4 = (~top, ~right, ~bottom, ~left) =>
   `Margin4({top, right, bottom, left});
 
+let padding = m => `Padding(m);
+let paddingLeft = m => `PaddingLeft(m);
+let paddingRight = m => `PaddingRight(m);
+let paddingTop = m => `PaddingTop(m);
+let paddingBottom = m => `PaddingBottom(m);
+let paddingVertical = m => `PaddingVertical(m);
+let paddingHorizontal = m => `PaddingHorizontal(m);
+let padding2 = (~horizontal, ~vertical) => `Padding2({horizontal, vertical});
+let padding4 = (~top, ~right, ~bottom, ~left) =>
+  `Padding4({top, right, bottom, left});
+
 let border = (~color, ~width) =>
   Border.make(~color, ~width, ()) |> (b => `Border(b));
 let borderLeft = (~color, ~width) =>
@@ -362,7 +414,7 @@ let rec extractViewStyles = (styles: list(allProps)): list(viewStyleProps) =>
    and is used to build up the style record, which is eventually
    used to apply styling to elements.
  */
-let applyStyle = (style, styleRule: [< coreStyleProps | fontProps]) =>
+let applyStyle = (style, styleRule) =>
   switch (styleRule) {
   | `AlignItems(alignItems) => {...style, alignItems}
   | `JustifyContent(justifyContent) => {...style, justifyContent}
@@ -387,6 +439,25 @@ let applyStyle = (style, styleRule: [< coreStyleProps | fontProps]) =>
       marginLeft: left,
       marginRight: right,
       marginBottom: bottom,
+    }
+  | `Padding(padding) => {...style, padding}
+  | `PaddingTop(paddingTop) => {...style, paddingTop}
+  | `PaddingBottom(paddingBottom) => {...style, paddingBottom}
+  | `PaddingRight(paddingRight) => {...style, paddingRight}
+  | `PaddingLeft(paddingLeft) => {...style, paddingLeft}
+  | `PaddingVertical(paddingVertical) => {...style, paddingVertical}
+  | `PaddingHorizontal(paddingHorizontal) => {...style, paddingHorizontal}
+  | `Padding2({horizontal, vertical}) => {
+      ...style,
+      paddingHorizontal: horizontal,
+      paddingVertical: vertical,
+    }
+  | `Padding4({top, right, bottom, left}) => {
+      ...style,
+      paddingTop: top,
+      paddingLeft: left,
+      paddingRight: right,
+      paddingBottom: bottom,
     }
   | `Overflow(overflow) => {...style, overflow}
   | `Border(border) => {...style, border}
@@ -447,6 +518,15 @@ let merge = (~source, ~target) =>
               | (`MarginHorizontal(_), `MarginHorizontal(_)) => targetStyle
               | (`Margin2(_), `Margin2(_)) => targetStyle
               | (`Margin4(_), `Margin4(_)) => targetStyle
+              | (`PaddingTop(_), `PaddingTop(_)) => targetStyle
+              | (`PaddingLeft(_), `PaddingLeft(_)) => targetStyle
+              | (`PaddingRight(_), `PaddingRight(_)) => targetStyle
+              | (`PaddingBottom(_), `PaddingBottom(_)) => targetStyle
+              | (`Padding(_), `Padding(_)) => targetStyle
+              | (`PaddingVertical(_), `PaddingVertical(_)) => targetStyle
+              | (`PaddingHorizontal(_), `PaddingHorizontal(_)) => targetStyle
+              | (`Padding2(_), `Padding2(_)) => targetStyle
+              | (`Padding4(_), `Padding4(_)) => targetStyle
               | (`Overflow(_), `Overflow(_)) => targetStyle
               | (`BorderTop(_), `BorderTop(_)) => targetStyle
               | (`BorderLeft(_), `BorderLeft(_)) => targetStyle
