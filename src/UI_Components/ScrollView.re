@@ -2,16 +2,16 @@ open Revery_Core;
 open Revery_UI;
 open Revery_UI.Transform;
 
+type bouncingState =
+  | Transitioning
+  | Idle;
+
 let component = React.component("ScrollView");
 
 let empty = React.listToElement([]);
 
 let scrollTrackColor = Color.rgba(0.0, 0.0, 0.0, 0.4);
 let scrollThumbColor = Color.rgba(0.5, 0.5, 0.5, 0.4);
-
-type bouncingState =
-  | Transitioning
-  | Idle;
 
 let make =
     (~style, ~scrollLeft=0, ~scrollTop=0, children: React.syntheticElement) =>
@@ -20,10 +20,11 @@ let make =
       React.Hooks.state(scrollTop, slots);
     let (outerRef: option(Revery_UI.node), setOuterRef, slots) =
       React.Hooks.state(None, slots);
-    let (actualScrollLeft, setScrollLeft, _slots: React.Hooks.empty) =
+    let (actualScrollLeft, setScrollLeft, slots) =
       React.Hooks.state(scrollLeft, slots);
+    let (bouncingState, setBouncingState, _slots: React.Hooks.empty) =
+      React.Hooks.state(Idle, slots);
 
-    let bouncingState = Idle;
     let scrollBarThickness = 10;
 
     let innerViewTransform = [
@@ -105,32 +106,55 @@ let make =
             : empty;
 
         let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
-          // let newScrollTop =
-          //   actualScrollTop - int_of_float(wheelEvent.deltaY) * 25;
+          let newScrollTop =
+            actualScrollTop - int_of_float(wheelEvent.deltaY *. 25.);
 
-          let isAtTop = scrollTop <= 0;
-          let isAtBottom = scrollTop >= maxHeight;
+          let isAtTop = newScrollTop < 0;
+          let isAtBottom = newScrollTop > maxHeight;
+
+          print_endline(string_of_int(actualScrollTop));
+          print_endline(string_of_bool(isAtTop));
+          print_endline(string_of_bool(isAtBottom));
 
           switch (bouncingState) {
           | Transitioning => ()
           | Idle when isAtTop || isAtBottom =>
             open Animated;
-            let animation = {
-              toValue: isAtTop ? -20. : float_of_int(maxHeight),
-              duration: Seconds(1.),
+            setBouncingState(Transitioning);
+            let bounceAwayAnim = {
+              toValue: float_of_int(newScrollTop),
+              duration: Milliseconds(100.),
               delay: Seconds(0.),
               repeat: false,
-              easing: Animated.linear,
+              easing: Animated.linear // Should be 'cubic-bezier(.23,1,.32,1)'
             };
-            animation
-            |> tween(floatValue(0.))
-            |> start(~update=v => setScrollTop(int_of_float(v)))
+            let bounceBackAnim = {
+              toValue: isAtTop ? 0. : float_of_int(maxHeight),
+              duration: Milliseconds(800.),
+              delay: Seconds(0.),
+              repeat: false,
+              easing: Animated.linear // Should be 'cubic-bezier(.23,1,.32,1)'
+            };
+            tween(floatValue(float_of_int(actualScrollTop)), bounceAwayAnim)
+            |> Chain.make(
+                 tween(
+                   floatValue(float_of_int(newScrollTop)),
+                   bounceBackAnim,
+                 ),
+               )
+            |> Chain.start(
+                 ~update=v => setScrollTop(int_of_float(v)),
+                 ~complete=() => setBouncingState(Idle),
+               )
             |> ignore;
-          | Idle =>
-            setScrollTop(
-              actualScrollTop - int_of_float(wheelEvent.deltaY) * 25,
-            )
+          | Idle => setScrollTop(newScrollTop)
           };
+          let debug =
+            switch (bouncingState) {
+            | Idle => "Idle"
+            | Transitioning => "Transitioning"
+            };
+          print_endline(debug);
           // let clampedScrollTop =
           //   if (newScrollTop < 0) {
           //     0;
@@ -139,7 +163,6 @@ let make =
           //   } else {
           //     newScrollTop;
           //   };
-
           // setScrollTop(clampedScrollTop);
         };
 

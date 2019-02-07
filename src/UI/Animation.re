@@ -135,6 +135,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     };
     animation;
   };
+
   let start = (~update=?, ~complete=?, animation) => {
     let activeAnimation = {animation, update, complete};
     activeAnimations := List.append([activeAnimation], activeAnimations^);
@@ -150,6 +151,20 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       },
     };
     playback;
+  };
+
+  module Chain = {
+    type t = {
+      first: animation,
+      second: animation,
+    };
+    let make = (second, first) => {first, second};
+    let start = (~update, ~complete, {first, second}) =>
+      first
+      |> start(~update, ~complete=() =>
+           second |> start(~update, ~complete) |> ignore
+         )
+      |> ignore;
   };
 
   let cancel = (anim: animation) =>
