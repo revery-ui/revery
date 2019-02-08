@@ -85,20 +85,13 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
         newton(aX, 0);
       };
       let get = aX => {
-        print_endline("get " ++ string_of_float(aX));
         if (mX1 === mY1 && mX2 === mY2) {
-          print_endline("linear");
           aX;
         } else if (aX <= 0.) {
-          print_endline("zero");
           0.;
         } else if (aX >= 1.) {
-          print_endline("one");
           1.;
         } else {
-          print_endline(
-            "calc: " ++ string_of_float(calcBezier(getTForX(aX), mY1, mY2)),
-          );
           calcBezier(getTForX(aX), mY1, mY2);
         };
       };
