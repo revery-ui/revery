@@ -1,0 +1,60 @@
+.root {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.container {
+    position: absolute;
+    top: 3em;
+    bottom: 3em;
+    left: 0;
+    right: 0;
+}
+
+.header, .footer {
+    background-color: #0e1113;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    position: absolute;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.left {
+    flex: 0;
+    margin-left: 2em;
+}
+
+.center {
+    flex: 1;
+}
+
+.right {
+    flex: 0;
+    margin-right: 2em;
+}
+
+.header {
+    top: 0;
+    height: 3em;
+}
+
+.footer {
+    bottom: 0;
+    height: 3em;
+}
+
+
+.container {
+    display: flex;
+    flex-direction: row;
+}

@@ -4,6 +4,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
 	<link rel="stylesheet" data-name="vs/editor/editor.main" href="node_modules/monaco-editor/min/vs/editor/editor.main.css">
+	<link rel="stylesheet" href="index.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
 <body style="margin: 0px;">
 
@@ -32,12 +34,29 @@
   fetchLatestSources("Hello.re");
 </script>
 
-<div style="display: flex; flex-direction: row; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
-<div id="code" style="flex: 2;overflow: hidden;"></div>
-<div id="example" style="flex: 3; background-color: red;">
-    <iframe src="host/index.html" style="border: 0; width: 100%; height: 100%"></iframe>
+<div class="root">
+<div class="header">
+    <div class="left">
+        test
+    </div>
+    <div class="center">
+        <span>Revery Playground</span>
+    </div>
+    <div class="right">
+        test
+    </div>
+</div>
+<div class="container">
+    <div id="code" style="flex: 2;overflow: hidden;"></div>
+    <div id="example" style="flex: 3; background-color: red;">
+        <iframe src="host/index.html" style="border: 0; width: 100%; height: 100%"></iframe>
+    </div>
+</div>
+<div class="footer">
+    <div class="center">Made with :heart: by Outrun Labs and amazing collaborators.</div>
 </div>
 </div>
+
 
 <script>var require = { paths: { 'vs': 'node_modules/monaco-editor/min/vs' } };</script>
 <script src="node_modules/monaco-editor/min/vs/loader.js"></script>
