@@ -27,6 +27,15 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+    z-index: 100;
+}
+
+.header {
+    box-shadow: 0 8px 20px 0 rgba(0,0,0,.2)
+}
+
+.footer {
+    box-shadow: 0 -8px 20px 0 rgba(0,0,0,.2)
 }
 
 .left {

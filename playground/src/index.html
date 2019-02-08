@@ -76,7 +76,10 @@
         readOnly: true,
 	});
 
-  window.__revery_editor_set = (t) => editor.setValue(t);
+window.__revery_editor_set = (t) => {
+    editor.setValue(t);
+    editor.revealLine(1);
+};
 </script>
 
 </body>
