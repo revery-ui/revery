@@ -112,28 +112,25 @@ let make =
           let isAtTop = newScrollTop < 0;
           let isAtBottom = newScrollTop > maxHeight;
 
-          print_endline(string_of_int(actualScrollTop));
-          print_endline(string_of_bool(isAtTop));
-          print_endline(string_of_bool(isAtBottom));
-
           switch (bouncingState) {
           | Transitioning => ()
           | Idle when isAtTop || isAtBottom =>
             open Animated;
             setBouncingState(Transitioning);
+
             let bounceAwayAnim = {
               toValue: float_of_int(newScrollTop),
               duration: Milliseconds(100.),
               delay: Seconds(0.),
               repeat: false,
-              easing: Animated.linear // Should be 'cubic-bezier(.23,1,.32,1)'
+              easing: Animated.cubicBezier(0.23, 1., 0.32, 1.),
             };
             let bounceBackAnim = {
               toValue: isAtTop ? 0. : float_of_int(maxHeight),
               duration: Milliseconds(800.),
               delay: Seconds(0.),
               repeat: false,
-              easing: Animated.linear // Should be 'cubic-bezier(.23,1,.32,1)'
+              easing: Animated.cubicBezier(0.23, 1., 0.32, 1.),
             };
             tween(floatValue(float_of_int(actualScrollTop)), bounceAwayAnim)
             |> Chain.make(
@@ -149,21 +146,6 @@ let make =
             |> ignore;
           | Idle => setScrollTop(newScrollTop)
           };
-          let debug =
-            switch (bouncingState) {
-            | Idle => "Idle"
-            | Transitioning => "Transitioning"
-            };
-          print_endline(debug);
-          // let clampedScrollTop =
-          //   if (newScrollTop < 0) {
-          //     0;
-          //   } else if (newScrollTop > maxHeight) {
-          //     maxHeight;
-          //   } else {
-          //     newScrollTop;
-          //   };
-          // setScrollTop(clampedScrollTop);
         };
 
         (horizontalScrollbar, verticalScrollBar, scroll);
