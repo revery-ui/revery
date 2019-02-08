@@ -25,11 +25,11 @@ module HoverExample = {
           backgroundColor(currentBackgroundColor),
           border(~width=2, ~color=Colors.white),
         ]
-        onMouseOver={_ => {
+        onMouseEnter={_ => {
           setBackgroundColor(hoverBackgroundColor);
           print_endline("over element!");
         }}
-        onMouseOut={_ => {
+        onMouseLeave={_ => {
           setBackgroundColor(defaultBackgroundColor);
           print_endline("left hoverExample element!");
         }}>

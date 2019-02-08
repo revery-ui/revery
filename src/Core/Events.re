@@ -35,5 +35,5 @@ type internalMouseEvents =
   | InternalMouseMove(mouseMoveEvent)
   | InternalMouseUp(mouseButtonEvent)
   | InternalMouseWheel(mouseWheelEvent)
-  | InternalMouseOver(mouseMoveEvent)
-  | InternalMouseOut(mouseMoveEvent);
+  | InternalMouseEnter(mouseMoveEvent)
+  | InternalMouseLeave(mouseMoveEvent);
