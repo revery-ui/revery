@@ -18,8 +18,10 @@ module HoverExample = {
 
       <View
         style=Style.[
-          width(200),
-          height(200),
+          justifyContent(`Center),
+          alignItems(`Center),
+          width(500),
+          height(500),
           backgroundColor(currentBackgroundColor),
           border(~width=2, ~color=Colors.white),
         ]
@@ -30,8 +32,15 @@ module HoverExample = {
         onMouseOut={_ => {
           setBackgroundColor(defaultBackgroundColor);
           print_endline("left hoverExample element!");
-        }}
-      />;
+        }}>
+        <View
+          style=Style.[
+            width(250),
+            height(250),
+            backgroundColor(Colors.black),
+          ]
+        />
+      </View>;
     });
 
   let createElement = (~children as _, ()) => React.element(make());
