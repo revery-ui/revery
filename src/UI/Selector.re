@@ -7,6 +7,7 @@ type selector('a) =
   | FontSize: selector(int)
   | Width: selector(int)
   | FlexGrow: selector(int)
+  | FlexWrap: selector(Layout.LayoutTypes.wrapType)
   | FlexDirection: selector(Layout.LayoutTypes.flexDirection)
   | JustifyContent: selector(Layout.LayoutTypes.justify)
   | AlignItems: selector(Layout.LayoutTypes.align)
@@ -68,6 +69,10 @@ let rec select:
       select(rest, selector, grow)
     | ([`FlexDirection(direction), ...rest], FlexDirection) =>
       select(rest, selector, direction)
+
+    | ([`FlexWrap(wrap), ...rest], FlexWrap) =>
+      select(rest, selector, wrap)
+
     | ([`JustifyContent(justify), ...rest], JustifyContent) =>
       select(rest, selector, justify)
     | ([`AlignItems(align), ...rest], AlignItems) =>

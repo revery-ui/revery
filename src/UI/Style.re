@@ -250,6 +250,7 @@ type xy = {
 type coreStyleProps = [
   | `FlexGrow(int)
   | `FlexDirection(LayoutTypes.flexDirection)
+  | `FlexWrap(LayoutTypes.wrapType)
   | `JustifyContent(LayoutTypes.justify)
   | `AlignItems(LayoutTypes.align)
   | `AlignSelf(LayoutTypes.align)
@@ -322,6 +323,15 @@ let flexDirection = d => {
     | `Row => LayoutTypes.Row
     };
   `FlexDirection(dir);
+};
+
+let flexWrap = w => {
+  let wrap =
+    switch (w) {
+    | `Wrap => LayoutTypes.CssWrap
+    | `NoWrap => LayoutTypes.CssNoWrap
+    };
+  `FlexWrap(wrap);
 };
 
 let alignment = a =>
@@ -440,6 +450,7 @@ let applyStyle = (style, styleRule) =>
   | `JustifyContent(justifyContent) => {...style, justifyContent}
   | `FlexGrow(flexGrow) => {...style, flexGrow}
   | `FlexDirection(flexDirection) => {...style, flexDirection}
+  | `FlexWrap(flexWrap) => {...style, flexWrap}
   | `Position(position) => {...style, position}
   | `Margin(margin) => {...style, margin}
   | `MarginTop(marginTop) => {...style, marginTop}
