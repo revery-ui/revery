@@ -30,17 +30,48 @@
 }
 
 .left {
-    flex: 0;
+    flex-grow: 0;
+    flex-shrink: 0;
     margin-left: 2em;
 }
 
+a {
+    color: #00c8ff;
+    text-decoration: none;
+}
+
+a i {
+    opacity: 0.9;
+    color: white;
+}
+
+span {
+    opacity: 0.9;
+}
+
+a:hover {
+    font-weight: bold;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
 .center {
-    flex: 1;
+    flex-grow: 1;
+    flex-shrink: 0;
 }
 
 .right {
-    flex: 0;
+    flex-grow: 0;
+    flex-shrink: 0;
     margin-right: 2em;
+}
+
+.subtle {
+    opacity: 0.9;
+    font-size: 0.8em;
 }
 
 .header {
