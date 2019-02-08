@@ -69,14 +69,14 @@ let start =
     );
 
   /*
-   Probably not a good idea to subscribe to onMouseMove and calling onMouseOver everytime
+   Probably not a good idea to subscribe to onMouseMove and calling onMouseEnter everytime
    */
   let _ =
     Revery_Core__Event.subscribe(
-      window.onMouseOver,
+      window.onMouseEnter,
       m => {
         let evt =
-          Revery_Core.Events.InternalMouseOver({
+          Revery_Core.Events.InternalMouseEnter({
             mouseX: m.mouseX,
             mouseY: m.mouseY,
           });
@@ -86,10 +86,10 @@ let start =
 
   let _ =
     Revery_Core__Event.subscribe(
-      window.onMouseOut,
+      window.onMouseLeave,
       m => {
         let evt =
-          Revery_Core.Events.InternalMouseOut({
+          Revery_Core.Events.InternalMouseLeave({
             mouseX: m.mouseX,
             mouseY: m.mouseY,
           });

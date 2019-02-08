@@ -86,8 +86,8 @@ let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =
   | InternalMouseMove(e) => Vec2.create(e.mouseX, e.mouseY)
   | InternalMouseUp(_) => Cursor.toVec2(c)
   | InternalMouseWheel(_) => Cursor.toVec2(c)
-  | InternalMouseOver(_) => Cursor.toVec2(c)
-  | InternalMouseOut(_) => Cursor.toVec2(c)
+  | InternalMouseEnter(_) => Cursor.toVec2(c)
+  | InternalMouseLeave(_) => Cursor.toVec2(c)
   };
 
 let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
@@ -100,8 +100,8 @@ let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
     MouseMove({mouseX: evt.mouseX, mouseY: evt.mouseY})
   | InternalMouseWheel(evt) =>
     MouseWheel({deltaX: evt.deltaX, deltaY: evt.deltaY})
-  | InternalMouseOver(_) => MouseOver({mouseX: c.x^, mouseY: c.y^})
-  | InternalMouseOut(_) => MouseOut({mouseX: c.x^, mouseY: c.y^})
+  | InternalMouseEnter(_) => MouseEnter({mouseX: c.x^, mouseY: c.y^})
+  | InternalMouseLeave(_) => MouseLeave({mouseX: c.x^, mouseY: c.y^})
   };
 
 let onCursorChanged: Event.t(MouseCursors.t) = Event.create();
@@ -129,13 +129,15 @@ let rec sendMouseLeaveEvents = (listOfNodes: list(active), cursor: Cursor.t) => 
   switch (listOfNodes) {
   | [] => storedNodesUnderCursor := []
   | [{handler, _}, ...tail] =>
-    handler(MouseOut({mouseX: cursor.x^, mouseY: cursor.y^}));
+    handler(MouseLeave({mouseX: cursor.x^, mouseY: cursor.y^}));
     sendMouseLeaveEvents(tail, cursor);
   };
 };
 
-let rec sendMouseOverEvents = (deepestNode: Node.node('a), cursor: Cursor.t) => {
-  deepestNode#handleEvent(MouseOver({mouseX: cursor.x^, mouseY: cursor.y^}));
+let rec sendMouseEnterEvents = (deepestNode: Node.node('a), cursor: Cursor.t) => {
+  deepestNode#handleEvent(
+    MouseEnter({mouseX: cursor.x^, mouseY: cursor.y^}),
+  );
   let parent = deepestNode#getParent();
 
   switch (parent) {
@@ -151,46 +153,82 @@ let rec sendMouseOverEvents = (deepestNode: Node.node('a), cursor: Cursor.t) => 
         {handler: deepestNode#handleEvent, id: deepestNode#getInternalId()},
         ...storedNodesUnderCursor^,
       ];
-    sendMouseOverEvents(parent, cursor);
+    sendMouseEnterEvents(parent, cursor);
   };
-  
-  //   storedNodesUnderCursor :=
-  //   Some({
-  //     handler: deepNode#handleEvent,
-  //     id: deepNode#getInternalId(),
-  //   });
-  // deepNode#handleEvent(
-  //   MouseOver({mouseX: cursor.x^, mouseY: cursor.y^}),
-  // );
-  /*Send mouseOver event! */
-  // print_endline("First time hovering over any element!");
 };
 
-let rec handleMouseOverDiff = deepestNode => {
-  let currentlyStoredDeepestNode =
-    List.nth(
+let rec handleMouseEnterDiff = (deepestNode, _newNodes, cursor: Cursor.t) => {
+  let nodeExists =
+    List.exists(
+      node => node.id == deepestNode#getInternalId(),
       storedNodesUnderCursor^,
-      List.length(storedNodesUnderCursor^) - 1,
     );
 
-  if (deepestNode#getInternalId() == currentlyStoredDeepestNode.id) {
-    ();
-      /*
-       Save currentlyStoredNodes upntil that point
-       Send mouseout events to removed nodes
-       Send mouseover events to newly added nodes (2nd param)
-       */
+  if (nodeExists) {
+    /*
+     Save currentlyStoredNodes up until that point (So need to go through list and find turning point)
+     Send MouseLeave events to removed nodes
+     Send MouseEnter events to newly added nodes
+     */
+    let rec loopThroughStoredNodesUnderCursor = listOfNodes => {
+      switch (listOfNodes) {
+      | [] => ()
+      | [node, ...tail] =>
+        if (node.id != deepestNode#getInternalId()) {
+          node.handler(MouseLeave({mouseX: cursor.x^, mouseY: cursor.y^}));
+          loopThroughStoredNodesUnderCursor(tail);
+        } else {
+          List.iter(
+            newNode =>
+              newNode#handleEvent(
+                MouseEnter({mouseX: cursor.x^, mouseY: cursor.y^}),
+              ),
+            _newNodes,
+          );
+          storedNodesUnderCursor :=
+            List.rev([node, ...tail])
+            @ List.map(
+                newNode =>
+                  {handler: newNode#handleEvent, id: newNode#getInternalId()},
+                _newNodes,
+              );
+        }
+      };
+    };
+
+    loopThroughStoredNodesUnderCursor(List.rev(storedNodesUnderCursor^));
   } else {
     /*
        1. Get parent
-       2. If no parent, replace currently stored nodes entirely with new tree (2nd  param)
-          and send mouseout events to old stored nodes
-       3. If parent found, call function again?
+       2. If no parent, replace currently stored nodes entirely with new tree
+          and send MouseLeave events to old stored nodes
+          and send MouseEnter events to new tree
+       4. If parent found, call function again
      */
     let parent = deepestNode#getParent();
     switch (parent) {
-    | None => ()
-    | Some(parent) => handleMouseOverDiff(parent)
+    | None =>
+      List.iter(
+        ({handler, _}) =>
+          handler(MouseLeave({mouseX: cursor.x^, mouseY: cursor.y^})),
+        storedNodesUnderCursor^,
+      );
+
+      List.iter(
+        newNode =>
+          newNode#handleEvent(
+            MouseEnter({mouseX: cursor.x^, mouseY: cursor.y^}),
+          ),
+        _newNodes,
+      );
+      storedNodesUnderCursor :=
+        List.map(
+          newNode =>
+            {handler: newNode#handleEvent, id: newNode#getInternalId()},
+          _newNodes,
+        );
+    | Some(parent) =>
+      handleMouseEnterDiff(parent, [deepestNode, ..._newNodes], cursor)
     };
   };
 };
@@ -221,24 +259,9 @@ let dispatch =
 
         | Some(deepNode) =>
           switch (storedNodesUnderCursor^) {
-          | [] => sendMouseOverEvents(deepNode, cursor)
+          | [] => sendMouseEnterEvents(deepNode, cursor)
 
-          | [_, ..._xs] => handleMouseOverDiff(deepNode)
-          /*
-
-           if (deepNode#getInternalId() != id) {
-             handler(MouseOut({mouseX: cursor.x^, mouseY: cursor.y^})); /*Send mouseOut event! to mouseOverNode */
-             deepNode#handleEvent(
-               MouseOver({mouseX: cursor.x^, mouseY: cursor.y^}),
-             ); /*Send mouseOver event to new deepNode! */
-             storedNodesUnderCursor :=
-               Some({
-                 handler: deepNode#handleEvent,
-                 id: deepNode#getInternalId(),
-               });
-             // print_endline("Leaving old element, and hovering over new!");
-           }
-           */
+          | [_, ..._xs] => handleMouseEnterDiff(deepNode, [], cursor)
           }
         };
       };
