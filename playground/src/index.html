@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+	<link rel="stylesheet" data-name="vs/editor/editor.main" href="node_modules/monaco-editor/min/vs/editor/editor.main.css">
+	<link rel="stylesheet" href="index.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+</head>
+<body style="margin: 0px;">
+
+<script>
+  // Create a setter that will be overridden once an editor is available
+  window.__revery_latest_sources = "Loading...";
+  window.__revery_editor_set = (t) => window.__revery_latest_sources;
+
+  let fetchLatestSources = (sourceFile) => {
+      fetch("sources/" + sourceFile)
+          .then((response) => {
+              response.text().then((t) => {
+                  window.__revery_latest_sources = t;
+                  window.__revery_editor_set(t);
+              });
+          });
+  };
+
+  window.addEventListener("message", (evt) => {
+      let data = evt.data;
+      if (data && data.type == "example.switch") {
+          fetchLatestSources(data.payload);
+      }
+  }, false);
+
+  fetchLatestSources("Hello.re");
+</script>
+
+<div class="root">
+<div class="header">
+    <div class="left">
+        <a href="#" onclick="window.history.back()"><i class="fas fa-chevron-left"></i></a>
+    </div>
+    <div class="center">
+        <span class="title">Revery Playground</span>
+    </div>
+    <div class="right">
+        <a href="https://github.com/revery-ui/revery" onclick="window.history.back()"><i class="fab fa-github"></i></a>
+    </div>
+</div>
+<div class="container">
+    <div id="code" style="flex: 2;overflow: hidden;"></div>
+    <div id="example" style="flex: 3; background-color: red;">
+        <iframe src="host/index.html" style="border: 0; width: 100%; height: 100%"></iframe>
+    </div>
+</div>
+<div class="footer">
+    <div class="left"><span class="subtle">Revery JS + WebGL build v{#VERSION}<span></div>
+    <div class="center"><span class="subtle">Brought to you by <a href="https://www.outrunlabs.com">Outrun Labs</a> and amazing <a href="https://github.com/revery-ui/revery/graphs/contributors">collaborators.</span></a></div>
+    <div class="right"><span class="subtle"><a href="https://github.com/revery-ui/revery/commit/{#COMMIT}">{#COMMIT}</a><span></div>
+</div>
+</div>
+
+
+<script>var require = { paths: { 'vs': 'node_modules/monaco-editor/min/vs' } };</script>
+<script src="node_modules/monaco-editor/min/vs/loader.js"></script>
+<script src="node_modules/monaco-editor/min/vs/editor/editor.main.nls.js"></script>
+<script src="node_modules/monaco-editor/min/vs/editor/editor.main.js"></script>
+
+<script>
+	var editor = monaco.editor.create(document.getElementById('code'), {
+		value: window.__revery_latest_sources,
+		language: 'rust',
+        theme: 'vs-dark',
+        readOnly: true,
+	});
+
+window.__revery_editor_set = (t) => {
+    editor.setValue(t);
+    editor.revealLine(1);
+};
+</script>
+
+</body>
+</html>
