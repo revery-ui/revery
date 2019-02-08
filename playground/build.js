@@ -10,8 +10,8 @@ let playgroundSources = path.join(playgroundRoot, "src");
 let reveryRoot = path.join(playgroundRoot, "..");
 let playgroundBuild = path.join(playgroundRoot, "_build");
 
-let nodeModulesSrc = path.join(playgroundRoot, "node_modules");
-let nodeModulesDest = path.join(playgroundBuild, "node_modules");
+let nodeModulesSrc = path.join(playgroundRoot, "node_modules", "monaco-editor");
+let nodeModulesDest = path.join(playgroundBuild, "monaco-editor");
 
 let playgroundExampleSources = path.join(playgroundRoot, "_build", "sources");
 let playgroundExampleHost = path.join(playgroundRoot, "_build", "host");
