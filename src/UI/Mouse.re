@@ -122,8 +122,78 @@ type active = {
   id: int,
 };
 
-type mouseOverNode = ref(option(active));
-let mouseOverNode: mouseOverNode = ref(None);
+type mouseOverNode = ref(list(active));
+let storedNodesUnderCursor: mouseOverNode = ref([]);
+
+let rec sendMouseLeaveEvents = (listOfNodes: list(active), cursor: Cursor.t) => {
+  switch (listOfNodes) {
+  | [] => storedNodesUnderCursor := []
+  | [{handler, _}, ...tail] =>
+    handler(MouseOut({mouseX: cursor.x^, mouseY: cursor.y^}));
+    sendMouseLeaveEvents(tail, cursor);
+  };
+};
+
+let rec sendMouseOverEvents = (deepestNode: Node.node('a), cursor: Cursor.t) => {
+  deepestNode#handleEvent(MouseOver({mouseX: cursor.x^, mouseY: cursor.y^}));
+  let parent = deepestNode#getParent();
+
+  switch (parent) {
+  | None =>
+    storedNodesUnderCursor :=
+      [
+        {handler: deepestNode#handleEvent, id: deepestNode#getInternalId()},
+        ...storedNodesUnderCursor^,
+      ]
+  | Some(parent) =>
+    storedNodesUnderCursor :=
+      [
+        {handler: deepestNode#handleEvent, id: deepestNode#getInternalId()},
+        ...storedNodesUnderCursor^,
+      ];
+    sendMouseOverEvents(parent, cursor);
+  };
+  
+  //   storedNodesUnderCursor :=
+  //   Some({
+  //     handler: deepNode#handleEvent,
+  //     id: deepNode#getInternalId(),
+  //   });
+  // deepNode#handleEvent(
+  //   MouseOver({mouseX: cursor.x^, mouseY: cursor.y^}),
+  // );
+  /*Send mouseOver event! */
+  // print_endline("First time hovering over any element!");
+};
+
+let rec handleMouseOverDiff = deepestNode => {
+  let currentlyStoredDeepestNode =
+    List.nth(
+      storedNodesUnderCursor^,
+      List.length(storedNodesUnderCursor^) - 1,
+    );
+
+  if (deepestNode#getInternalId() == currentlyStoredDeepestNode.id) {
+    ();
+      /*
+       Save currentlyStoredNodes upntil that point
+       Send mouseout events to removed nodes
+       Send mouseover events to newly added nodes (2nd param)
+       */
+  } else {
+    /*
+       1. Get parent
+       2. If no parent, replace currently stored nodes entirely with new tree (2nd  param)
+          and send mouseout events to old stored nodes
+       3. If parent found, call function again?
+     */
+    let parent = deepestNode#getParent();
+    switch (parent) {
+    | None => ()
+    | Some(parent) => handleMouseOverDiff(parent)
+    };
+  };
+};
 
 let dispatch =
     (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node('a)) => {
@@ -147,38 +217,28 @@ let dispatch =
       if (mouseMove) {
         let deepestNode = getDeepestNode(node, pos);
         switch (deepestNode^) {
-        | None =>
-          switch (mouseOverNode^) {
-          | None => ()
-          | Some({handler, _}) =>
-            handler(MouseOut({mouseX: cursor.x^, mouseY: cursor.y^})); /* Send mouseOut */
-            mouseOverNode := None;
-          }
+        | None => sendMouseLeaveEvents(storedNodesUnderCursor^, cursor)
+
         | Some(deepNode) =>
-          switch (mouseOverNode^) {
-          | None =>
-            mouseOverNode :=
-              Some({
-                handler: deepNode#handleEvent,
-                id: deepNode#getInternalId(),
-              });
-            deepNode#handleEvent(
-              MouseOver({mouseX: cursor.x^, mouseY: cursor.y^}),
-            ); /*Send mouseOver event! */
-          // print_endline("First time hovering over any element!");
-          | Some({id, handler}) =>
-            if (deepNode#getInternalId() != id) {
-              handler(MouseOut({mouseX: cursor.x^, mouseY: cursor.y^})); /*Send mouseOut event! to mouseOverNode */
-              deepNode#handleEvent(
-                MouseOver({mouseX: cursor.x^, mouseY: cursor.y^}),
-              ); /*Send mouseOver event to new deepNode! */
-              mouseOverNode :=
-                Some({
-                  handler: deepNode#handleEvent,
-                  id: deepNode#getInternalId(),
-                });
-              // print_endline("Leaving old element, and hovering over new!");
-            }
+          switch (storedNodesUnderCursor^) {
+          | [] => sendMouseOverEvents(deepNode, cursor)
+
+          | [_, ..._xs] => handleMouseOverDiff(deepNode)
+          /*
+
+           if (deepNode#getInternalId() != id) {
+             handler(MouseOut({mouseX: cursor.x^, mouseY: cursor.y^})); /*Send mouseOut event! to mouseOverNode */
+             deepNode#handleEvent(
+               MouseOver({mouseX: cursor.x^, mouseY: cursor.y^}),
+             ); /*Send mouseOver event to new deepNode! */
+             storedNodesUnderCursor :=
+               Some({
+                 handler: deepNode#handleEvent,
+                 id: deepNode#getInternalId(),
+               });
+             // print_endline("Leaving old element, and hovering over new!");
+           }
+           */
           }
         };
       };
