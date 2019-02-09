@@ -103,6 +103,11 @@ let state: state = {
       render: w => TodoExample.render(w),
       source: "TodoExample.re",
     },
+    {
+      name: "Dropdown",
+      render: _ => DropdownExample.render(),
+      source: "DropdownExample.re",
+    },
   ],
   selectedExample: "Animation",
 };
