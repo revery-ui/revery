@@ -138,9 +138,7 @@ module Example = {
         );
 
       let renderTodo = task => {
-        let key1 = Key.create();
-
-        <View key=key1 style=Style.[flexDirection(`Row)]>
+        <View style=Style.[flexDirection(`Row)]>
           <Checkbox
             checked={task.isDone}
             onChange={checked => dispatch(ChangeTaskState(task.id, checked))}
