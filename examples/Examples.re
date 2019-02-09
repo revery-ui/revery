@@ -98,6 +98,11 @@ let state: state = {
       render: _w => AnalogClock.render(),
       source: "AnalogClock.re",
     },
+    {
+      name: "TodoMVC",
+      render: w => TodoExample.render(w),
+      source: "TodoExample.re",
+    },
   ],
   selectedExample: "Animation",
 };
