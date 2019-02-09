@@ -1,5 +1,8 @@
 [![Build Status](https://dev.azure.com/revery-ui/revery/_apis/build/status/revery-ui.revery?branchName=master)](https://dev.azure.com/revery-ui/revery/_build/latest?definitionId=2?branchName=master)
 [![npm version](https://badge.fury.io/js/revery.svg)](https://badge.fury.io/js/revery)
+	<a href="https://discord.gg/4pxY5Cp">
+		<img src="https://img.shields.io/discord/526111832478449695.svg" alt="Join the chat on discord!">
+	</a>
 
 # Revery
 

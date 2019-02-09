@@ -1,1 +1,1 @@
-(ignored_subdirs (node_modules _esy))
+(ignored_subdirs (node_modules _esy playground))

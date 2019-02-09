@@ -3,9 +3,9 @@
     (preprocess (pps lwt_ppx))
     (package Revery)
     (public_names Examples)
-    (js_of_ocaml)
     (libraries
         js_of_ocaml
+        ExampleStubs
         str
         Revery
         flex

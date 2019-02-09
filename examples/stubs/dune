@@ -1,0 +1,5 @@
+(library 
+  (name ExampleStubs)
+  (c_names example_stubs)
+  (js_of_ocaml (javascript_files example_stubs.js))
+)
