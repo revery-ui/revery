@@ -16,6 +16,8 @@ Build __native__, _high-performance_, __cross-platform__ desktop apps with [reas
 npm install -g esy
 ```
 
+> __NOTE:__ Revery requires `esy` at version 0.5.6+
+
 ### Building
 
 - `esy install`
