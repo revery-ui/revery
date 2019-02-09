@@ -106,10 +106,9 @@ let make =
 
     let handleKeyDown = (~dispatch, event: Events.keyEvent) =>
       switch (event.key) {
-      | Key.KEY_BACKSPACE => {
+      | Key.KEY_BACKSPACE =>
         dispatch(Backspace);
-        onChange(~value = removeCharacter(state.value))
-        }
+        onChange(~value=removeCharacter(state.value));
       | _ => ()
       };
 

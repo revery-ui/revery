@@ -8,29 +8,30 @@ type todo = {
   isDone: bool,
 };
 
-type filter =
-  | All
-  | Completed
-  | NotCompleted;
+module Filter = {
+  type t =
+    | All
+    | Completed
+    | NotCompleted;
 
-let textOfFilter = (filter: filter) => {
-  switch (filter) {
-  | All => "All"
-  | Completed => "Completed"
-  | NotCompleted => "NotCompleted"
-  };
+  let show = (v: t) =>
+    switch (v) {
+    | All => "All"
+    | Completed => "Completed"
+    | NotCompleted => "NotCompleted"
+    };
 };
 
 type state = {
   todos: list(todo),
-  filter,
+  filter: Filter.t,
   inputValue: string,
   nextId: int,
 };
 
 type action =
   | AddTodo
-  | ChangeFilter(filter)
+  | ChangeFilter(Filter.t)
   | UpdateInputTextValue(string)
   | ChangeTaskState(int, bool);
 
@@ -59,7 +60,7 @@ let reducer = (action: action, state: state) => {
 module FilterSection = {
   let component = React.component("FilterSection");
 
-  let make = (_children, currentFilier, onPickingFilter) =>
+  let make = (_children, currentFilter, onPickingFilter) =>
     component((_slots: React.Hooks.empty) =>
       <View
         style=Style.[
@@ -72,22 +73,22 @@ module FilterSection = {
           height=50
           width=150
           fontSize=15
-          title="All"
+          title={Filter.show(Filter.All)}
           color={
-            switch (currentFilier) {
-            | All => Colors.dodgerBlue
+            switch (currentFilter) {
+            | Filter.All => Colors.dodgerBlue
             | _ => Colors.lightSkyBlue
             }
           }
-          onClick={() => onPickingFilter(All)}
+          onClick={() => onPickingFilter(Filter.All)}
         />
         <Button
           height=50
           width=150
           fontSize=15
-          title="Completed"
+          title={Filter.show(Completed)}
           color={
-            switch (currentFilier) {
+            switch (currentFilter) {
             | Completed => Colors.dodgerBlue
             | _ => Colors.lightSkyBlue
             }
@@ -98,9 +99,9 @@ module FilterSection = {
           height=50
           width=150
           fontSize=15
-          title="Not Completed"
+          title={Filter.show(NotCompleted)}
           color={
-            switch (currentFilier) {
+            switch (currentFilter) {
             | NotCompleted => Colors.dodgerBlue
             | _ => Colors.lightSkyBlue
             }
@@ -110,8 +111,8 @@ module FilterSection = {
       </View>
     );
 
-  let createElement = (~children, ~currentFilier, ~onPickingFilter, ()) =>
-    React.element(make(children, currentFilier, onPickingFilter));
+  let createElement = (~children, ~currentFilter, ~onPickingFilter, ()) =>
+    React.element(make(children, currentFilter, onPickingFilter));
 };
 
 module Example = {
@@ -121,12 +122,7 @@ module Example = {
     component(slots => {
       let ({todos, inputValue, filter, _}, dispatch, slots) =
         React.Hooks.reducer(
-          ~initialState={
-            todos: [],
-            filter: All,
-            inputValue: "",
-            nextId: 0,
-          },
+          ~initialState={todos: [], filter: All, inputValue: "", nextId: 0},
           reducer,
           slots,
         );
@@ -142,7 +138,9 @@ module Example = {
         );
 
       let renderTodo = task => {
-        <View style=Style.[flexDirection(`Row)]>
+        let key1 = Key.create();
+
+        <View key=key1 style=Style.[flexDirection(`Row)]>
           <Checkbox
             checked={task.isDone}
             onChange={checked => dispatch(ChangeTaskState(task.id, checked))}
@@ -184,7 +182,7 @@ module Example = {
           backgroundColor(Colors.white),
         ]>
         <FilterSection
-          currentFilier=filter
+          currentFilter=filter
           onPickingFilter={filter => dispatch(ChangeFilter(filter))}
         />
         <View style=Style.[flexDirection(`Row)]>

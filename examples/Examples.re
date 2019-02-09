@@ -99,9 +99,9 @@ let state: state = {
       source: "AnalogClock.re",
     },
     {
-      name: "TodoMVC", 
+      name: "TodoMVC",
       render: w => TodoExample.render(w),
-      source: "TodoExample.re"
+      source: "TodoExample.re",
     },
   ],
   selectedExample: "Animation",
