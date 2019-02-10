@@ -92,7 +92,7 @@ test("Mouse", () => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseEnter({mouseX: 50., mouseY: 50.}),
+        InternalMouseMove({mouseX: 50., mouseY: 50.}),
         node,
       );
 
@@ -106,6 +106,12 @@ test("Mouse", () => {
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
       node#setEvents(NodeEvents.make(~onMouseLeave=f, ()));
+
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        node,
+      );
 
       Mouse.dispatch(
         cursor,
