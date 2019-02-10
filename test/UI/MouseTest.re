@@ -92,7 +92,7 @@ test("Mouse", () => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        InternalMouseEnter({mouseX: 50., mouseY: 50.}),
         node,
       );
 
@@ -105,21 +105,21 @@ test("Mouse", () => {
       let f = _evt => count := count^ + 1;
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
-      node#setEvents(NodeEvents.make(~onMouseLeave=f, ()));
+      node#setEvents(NodeEvents.make(~onMouseLeave=f, ~onMouseEnter=f, ()));
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        InternalMouseEnter({mouseX: 50., mouseY: 50.}),
         node,
       );
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        InternalMouseLeave({mouseX: 200., mouseY: 200.}),
         node,
       );
 
-      expect(count^).toBe(1);
+      expect(count^).toBe(2);
     });
   });
 
