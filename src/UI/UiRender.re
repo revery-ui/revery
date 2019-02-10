@@ -31,6 +31,12 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   /* Layout */
   let size = Window.getSize(window);
   let pixelRatio = Window.getDevicePixelRatio(window);
+  let scaleFactor = Monitor.getScaleFactor();
+  print_endline(
+    "Dimension =======================" ++ string_of_float(scaleFactor),
+  );
+  let _adjustedHeight = size.height / int_of_float(scaleFactor);
+  let _adjustedWidth = size.width / int_of_float(scaleFactor);
 
   switch (options.autoSize) {
   | false =>
