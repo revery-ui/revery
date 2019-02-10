@@ -27,6 +27,9 @@ let make =
       ~onBlur=?,
       ~onFocus=?,
       ~tabindex=?,
+      ~onKeyDown=?,
+      ~onKeyUp=?,
+      ~onKeyPress=?,
       children: React.syntheticElement,
     ) =>
   component(slots => {
@@ -85,6 +88,9 @@ let make =
       onMouseDown
       ?onBlur
       ?onFocus
+      ?onKeyDown
+      ?onKeyUp
+      ?onKeyPress
       tabindex
       ref={r => setClickableRef(r)}>
       children
@@ -99,6 +105,9 @@ let createElement =
       ~onFocus=?,
       ~tabindex=0,
       ~children,
+      ~onKeyDown=?,
+      ~onKeyUp=?,
+      ~onKeyPress=?,
       (),
     ) =>
   React.element(
@@ -108,6 +117,9 @@ let createElement =
       ~onBlur?,
       ~onFocus?,
       ~tabindex,
+      ~onKeyUp?,
+      ~onKeyDown?,
+      ~onKeyPress?,
       React.listToElement(children),
     ),
   );
