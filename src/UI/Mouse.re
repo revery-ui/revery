@@ -100,8 +100,10 @@ let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
     MouseMove({mouseX: evt.mouseX, mouseY: evt.mouseY})
   | InternalMouseWheel(evt) =>
     MouseWheel({deltaX: evt.deltaX, deltaY: evt.deltaY})
-  | InternalMouseEnter(_) => MouseEnter({mouseX: c.x^, mouseY: c.y^})
-  | InternalMouseLeave(_) => MouseLeave({mouseX: c.x^, mouseY: c.y^})
+  | InternalMouseEnter(evt) =>
+    MouseEnter({mouseX: evt.mouseX, mouseY: evt.mouseY})
+  | InternalMouseLeave(evt) =>
+    MouseLeave({mouseX: evt.mouseX, mouseY: evt.mouseY})
   };
 
 let onCursorChanged: Event.t(MouseCursors.t) = Event.create();
@@ -125,19 +127,24 @@ type active = {
 type mouseOverNode = ref(list(active));
 let storedNodesUnderCursor: mouseOverNode = ref([]);
 
-let rec sendMouseLeaveEvents = (listOfNodes: list(active), cursor: Cursor.t) => {
+let getMouseMoveEventParams =
+    (cursor: Cursor.t, evt: Events.internalMouseEvents) =>
+  switch (evt) {
+  | InternalMouseMove(evt) => {mouseX: evt.mouseX, mouseY: evt.mouseY}
+  | _ => {mouseX: cursor.x^, mouseY: cursor.y^}
+  };
+
+let rec sendMouseLeaveEvents = (listOfNodes: list(active), evtParams) => {
   switch (listOfNodes) {
   | [] => storedNodesUnderCursor := []
   | [{handler, _}, ...tail] =>
-    handler(MouseLeave({mouseX: cursor.x^, mouseY: cursor.y^}));
-    sendMouseLeaveEvents(tail, cursor);
+    handler(MouseLeave(evtParams));
+    sendMouseLeaveEvents(tail, evtParams);
   };
 };
 
-let rec sendMouseEnterEvents = (deepestNode: Node.node('a), cursor: Cursor.t) => {
-  deepestNode#handleEvent(
-    MouseEnter({mouseX: cursor.x^, mouseY: cursor.y^}),
-  );
+let rec sendMouseEnterEvents = (deepestNode: Node.node('a), evtParams) => {
+  deepestNode#handleEvent(MouseEnter(evtParams));
   let parent = deepestNode#getParent();
 
   switch (parent) {
@@ -153,11 +160,11 @@ let rec sendMouseEnterEvents = (deepestNode: Node.node('a), cursor: Cursor.t) =>
         {handler: deepestNode#handleEvent, id: deepestNode#getInternalId()},
         ...storedNodesUnderCursor^,
       ];
-    sendMouseEnterEvents(parent, cursor);
+    sendMouseEnterEvents(parent, evtParams);
   };
 };
 
-let rec handleMouseEnterDiff = (deepestNode, _newNodes, cursor: Cursor.t) => {
+let rec handleMouseEnterDiff = (deepestNode, newNodes, evtParams) => {
   let nodeExists =
     List.exists(
       node => node.id == deepestNode#getInternalId(),
@@ -175,22 +182,19 @@ let rec handleMouseEnterDiff = (deepestNode, _newNodes, cursor: Cursor.t) => {
       | [] => ()
       | [node, ...tail] =>
         if (node.id != deepestNode#getInternalId()) {
-          node.handler(MouseLeave({mouseX: cursor.x^, mouseY: cursor.y^}));
+          node.handler(MouseLeave(evtParams));
           loopThroughStoredNodesUnderCursor(tail);
         } else {
           List.iter(
-            newNode =>
-              newNode#handleEvent(
-                MouseEnter({mouseX: cursor.x^, mouseY: cursor.y^}),
-              ),
-            _newNodes,
+            newNode => newNode#handleEvent(MouseEnter(evtParams)),
+            newNodes,
           );
           storedNodesUnderCursor :=
             List.rev([node, ...tail])
             @ List.map(
                 newNode =>
                   {handler: newNode#handleEvent, id: newNode#getInternalId()},
-                _newNodes,
+                newNodes,
               );
         }
       };
@@ -209,26 +213,22 @@ let rec handleMouseEnterDiff = (deepestNode, _newNodes, cursor: Cursor.t) => {
     switch (parent) {
     | None =>
       List.iter(
-        ({handler, _}) =>
-          handler(MouseLeave({mouseX: cursor.x^, mouseY: cursor.y^})),
+        ({handler, _}) => handler(MouseLeave(evtParams)),
         storedNodesUnderCursor^,
       );
 
       List.iter(
-        newNode =>
-          newNode#handleEvent(
-            MouseEnter({mouseX: cursor.x^, mouseY: cursor.y^}),
-          ),
-        _newNodes,
+        newNode => newNode#handleEvent(MouseEnter(evtParams)),
+        newNodes,
       );
       storedNodesUnderCursor :=
         List.map(
           newNode =>
             {handler: newNode#handleEvent, id: newNode#getInternalId()},
-          _newNodes,
+          newNodes,
         );
     | Some(parent) =>
-      handleMouseEnterDiff(parent, [deepestNode, ..._newNodes], cursor)
+      handleMouseEnterDiff(parent, [deepestNode, ...newNodes], evtParams)
     };
   };
 };
@@ -254,14 +254,17 @@ let dispatch =
       let mouseMove = isMouseMoveEv(eventToSend);
       if (mouseMove) {
         let deepestNode = getDeepestNode(node, pos);
+        let mouseMoveEventParams = getMouseMoveEventParams(cursor, evt);
+
         switch (deepestNode^) {
-        | None => sendMouseLeaveEvents(storedNodesUnderCursor^, cursor)
+        | None =>
+          sendMouseLeaveEvents(storedNodesUnderCursor^, mouseMoveEventParams)
 
         | Some(deepNode) =>
           switch (storedNodesUnderCursor^) {
-          | [] => sendMouseEnterEvents(deepNode, cursor)
-
-          | [_, ..._xs] => handleMouseEnterDiff(deepNode, [], cursor)
+          | [] => sendMouseEnterEvents(deepNode, mouseMoveEventParams)
+          | [_, ..._xs] =>
+            handleMouseEnterDiff(deepNode, [], mouseMoveEventParams)
           }
         };
       };

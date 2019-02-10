@@ -68,9 +68,6 @@ let start =
       },
     );
 
-  /*
-   Probably not a good idea to subscribe to onMouseMove and calling onMouseEnter everytime
-   */
   let _ =
     Revery_Core__Event.subscribe(
       window.onMouseEnter,
