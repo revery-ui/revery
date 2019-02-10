@@ -81,6 +81,40 @@ test("Mouse", () => {
       Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
       expect(count^).toBe(1);
     });
+
+    test("triggers onMouseEnter event for node", () => {
+      let cursor = Mouse.Cursor.make();
+      let count = ref(0);
+      let f = _evt => count := count^ + 1;
+      let node =
+        createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
+      node#setEvents(NodeEvents.make(~onMouseEnter=f, ()));
+
+      Mouse.dispatch(
+        cursor,
+        InternalMouseEnter({mouseX: 50., mouseY: 50.}),
+        node,
+      );
+
+      expect(count^).toBe(1);
+    });
+
+    test("triggers onMouseLeave event for node", () => {
+      let cursor = Mouse.Cursor.make();
+      let count = ref(0);
+      let f = _evt => count := count^ + 1;
+      let node =
+        createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
+      node#setEvents(NodeEvents.make(~onMouseLeave=f, ()));
+
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        node,
+      );
+
+      expect(count^).toBe(1);
+    });
   });
 
   test("bubbleEvent", () => {
