@@ -231,6 +231,7 @@ let rec handleMouseEnterDiff = (deepestNode, newNodes, evtParams) => {
        2. If no parent, replace currently stored nodes entirely with new tree
           and send MouseLeave events to old stored nodes
           and send MouseEnter events to new tree
+       3. Make sure to append the final deepestNode to the list of newNodes
        4. If parent found, call function again
      */
     let parent = deepestNode#getParent();
@@ -243,13 +244,13 @@ let rec handleMouseEnterDiff = (deepestNode, newNodes, evtParams) => {
 
       List.iter(
         newNode => newNode#handleEvent(MouseEnter(evtParams)),
-        newNodes,
+        [deepestNode, ...newNodes],
       );
       storedNodesUnderCursor :=
         List.map(
           newNode =>
             {handler: newNode#handleEvent, id: newNode#getInternalId()},
-          newNodes,
+          [deepestNode, ...newNodes],
         );
     | Some(parent) =>
       handleMouseEnterDiff(parent, [deepestNode, ...newNodes], evtParams)

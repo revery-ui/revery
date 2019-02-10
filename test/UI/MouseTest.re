@@ -92,7 +92,7 @@ test("Mouse", () => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseEnter({mouseX: 50., mouseY: 50.}),
+        InternalMouseMove({mouseX: 50., mouseY: 50.}),
         node,
       );
 
@@ -105,17 +105,40 @@ test("Mouse", () => {
       let f = _evt => count := count^ + 1;
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
-      node#setEvents(NodeEvents.make(~onMouseLeave=f, ~onMouseEnter=f, ()));
+      node#setEvents(NodeEvents.make(~onMouseLeave=f, ()));
 
       Mouse.dispatch(
         cursor,
-        InternalMouseEnter({mouseX: 50., mouseY: 50.}),
+        InternalMouseMove({mouseX: 50., mouseY: 50.}),
         node,
       );
 
       Mouse.dispatch(
         cursor,
-        InternalMouseLeave({mouseX: 200., mouseY: 200.}),
+        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        node,
+      );
+
+      expect(count^).toBe(1);
+    });
+
+    test("triggers both onMouseEnter and onMouseLeave event for node", () => {
+      let cursor = Mouse.Cursor.make();
+      let count = ref(0);
+      let f = _evt => count := count^ + 1;
+      let node =
+        createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
+      node#setEvents(NodeEvents.make(~onMouseLeave=f, ~onMouseEnter=f, ()));
+
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        node,
+      );
+
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 200., mouseY: 200.}),
         node,
       );
 
