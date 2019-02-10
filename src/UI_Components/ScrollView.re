@@ -2,8 +2,11 @@ open Revery_Core;
 open Revery_UI;
 open Revery_UI.Transform;
 
+type direction =
+  | Top
+  | Bottom;
 type bouncingState =
-  | Transitioning
+  | Bouncing(direction, Animated.playback)
   | Idle;
 
 let component = React.component("ScrollView");
@@ -113,11 +116,16 @@ let make =
           let isAtBottom = newScrollTop > maxHeight;
 
           switch (bouncingState) {
-          | Transitioning => ()
+          | Bouncing(Top, playback) when wheelEvent.deltaY < 0. =>
+            playback.stop();
+            setBouncingState(Idle);
+          | Bouncing(Bottom, playback) when wheelEvent.deltaY > 0. =>
+            playback.stop();
+            setBouncingState(Idle);
+          | Bouncing(_) => ()
           | Idle when isAtTop || isAtBottom =>
             open Animated;
-            setBouncingState(Transitioning);
-
+            let direction = isAtTop ? Top : Bottom;
             let bounceAwayAnim = {
               toValue: float_of_int(newScrollTop),
               duration: Milliseconds(100.),
@@ -132,18 +140,23 @@ let make =
               repeat: false,
               easing: Animated.cubicBezier(0.23, 0., 0.32, 1.),
             };
-            tween(floatValue(float_of_int(actualScrollTop)), bounceAwayAnim)
-            |> Chain.make(
-                 tween(
-                   floatValue(float_of_int(newScrollTop)),
-                   bounceBackAnim,
-                 ),
-               )
-            |> Chain.start(
-                 ~update=v => setScrollTop(int_of_float(v)),
-                 ~complete=() => setBouncingState(Idle),
-               )
-            |> ignore;
+            let playback =
+              tween(
+                floatValue(float_of_int(actualScrollTop)),
+                bounceAwayAnim,
+              )
+              |> Chain.make
+              |> Chain.add(
+                   tween(
+                     floatValue(float_of_int(newScrollTop)),
+                     bounceBackAnim,
+                   ),
+                 )
+              |> Chain.start(
+                   ~update=v => setScrollTop(int_of_float(v)),
+                   ~complete=() => setBouncingState(Idle),
+                 );
+            setBouncingState(Bouncing(direction, playback));
           | Idle => setScrollTop(newScrollTop)
           };
         };

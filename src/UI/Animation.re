@@ -7,6 +7,12 @@ module type AnimationTicker = {
   let onTick: Event.t(Time.t);
 };
 
+let optCall = (opt, param) =>
+  switch (opt) {
+  | Some(f) => f(param)
+  | None => ()
+  };
+
 module Make = (AnimationTickerImpl: AnimationTicker) => {
   type animationValue = {mutable current: float};
 
@@ -84,7 +90,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
         };
         newton(aX, 0);
       };
-      let get = aX => {
+      let get = aX =>
         if (mX1 === mY1 && mX2 === mY2) {
           aX;
         } else if (aX <= 0.) {
@@ -94,7 +100,6 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
         } else {
           calcBezier(getTForX(aX), mY1, mY2);
         };
-      };
       get;
     };
   };
@@ -150,17 +155,11 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
         let newT = getLocalTime(clock, anim);
         anim.value.current = interpolate(newT, anim.startValue, anim.toValue);
       } else {
-        switch (complete) {
-        | Some(c) => c()
-        | _ => ()
-        };
+        optCall(complete, ());
       };
     } else {
       anim.value.current = interpolate(t, anim.startValue, anim.toValue);
-      switch (update) {
-      | Some(u) => u(anim.value.current)
-      | _ => ()
-      };
+      optCall(update, anim.value.current);
     };
   };
 
@@ -206,17 +205,39 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   };
 
   module Chain = {
-    type t = {
-      first: animation,
-      second: animation,
+    type t = {animations: list(animation)};
+    let make = animation => {animations: [animation]};
+    let add = (animation, {animations: l}) => {
+      animations: List.cons(animation, l),
     };
-    let make = (second, first) => {first, second};
-    let start = (~update, ~complete, {first, second}) =>
-      first
-      |> start(~update, ~complete=() =>
-           second |> start(~update, ~complete) |> ignore
-         )
-      |> ignore;
+    let start = (~update=?, ~complete=?, {animations: l}) => {
+      let currentPlayback = ref(None);
+      let rec runAnimation = (animations, index) => {
+        switch (animations) {
+        | [a, ...xl] =>
+          let playback =
+            a |> start(~update?, ~complete=() => runAnimation(xl, index + 1));
+          currentPlayback := Some(playback);
+        | [] => optCall(complete, ())
+        };
+      };
+      runAnimation(List.rev(l), 0);
+      let playback = {
+        pause: () => {
+          switch (currentPlayback^) {
+          | Some(p) => p.pause()
+          | None => ()
+          };
+        },
+        stop: () => {
+          switch (currentPlayback^) {
+          | Some(p) => p.stop()
+          | None => ()
+          };
+        },
+      };
+      playback;
+    };
   };
 
   let cancel = (anim: animation) =>
