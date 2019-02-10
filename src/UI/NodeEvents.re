@@ -33,12 +33,12 @@ type keyEventParams = {
   shiftKey: bool,
   superKey: bool,
   isRepeat: bool,
-}
+};
 
 type keyPressEventParams = {
   codepoint: int,
   character: string,
-}
+};
 
 type event =
   | MouseDown(mouseButtonEventParams)
@@ -97,7 +97,7 @@ let make =
     onBlur,
     onKeyPress,
     onKeyDown,
-    onKeyUp
+    onKeyUp,
   };
   ret;
 };
