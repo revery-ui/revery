@@ -30,6 +30,8 @@ type capturedEventState = {
   onMouseMove: ref(option(mouseMoveHandler)),
   onMouseUp: ref(option(mouseButtonHandler)),
   onMouseWheel: ref(option(mouseWheelHandler)),
+  onMouseEnter: ref(option(mouseMoveHandler)),
+  onMouseLeave: ref(option(mouseMoveHandler)),
 };
 
 let capturedEventStateInstance: capturedEventState = {
@@ -37,14 +39,26 @@ let capturedEventStateInstance: capturedEventState = {
   onMouseMove: ref(None),
   onMouseUp: ref(None),
   onMouseWheel: ref(None),
+  onMouseEnter: ref(None),
+  onMouseLeave: ref(None),
 };
 
 let setCapture =
-    (~onMouseDown=?, ~onMouseMove=?, ~onMouseUp=?, ~onMouseWheel=?, ()) => {
+    (
+      ~onMouseDown=?,
+      ~onMouseMove=?,
+      ~onMouseUp=?,
+      ~onMouseWheel=?,
+      ~onMouseEnter=?,
+      ~onMouseLeave=?,
+      (),
+    ) => {
   capturedEventStateInstance.onMouseDown := onMouseDown;
   capturedEventStateInstance.onMouseMove := onMouseMove;
   capturedEventStateInstance.onMouseUp := onMouseUp;
   capturedEventStateInstance.onMouseWheel := onMouseWheel;
+  capturedEventStateInstance.onMouseEnter := onMouseEnter;
+  capturedEventStateInstance.onMouseLeave := onMouseLeave;
 };
 
 let releaseCapture = () => {
@@ -52,6 +66,8 @@ let releaseCapture = () => {
   capturedEventStateInstance.onMouseMove := None;
   capturedEventStateInstance.onMouseUp := None;
   capturedEventStateInstance.onMouseWheel := None;
+  capturedEventStateInstance.onMouseEnter := None;
+  capturedEventStateInstance.onMouseLeave := None;
 };
 
 let handleCapture = (event: event) => {
@@ -62,21 +78,29 @@ let handleCapture = (event: event) => {
     ce.onMouseMove^,
     ce.onMouseUp^,
     ce.onMouseWheel^,
+    ce.onMouseEnter^,
+    ce.onMouseLeave^,
     event,
   ) {
-  | (Some(h), _, _, _, MouseDown(evt)) =>
+  | (Some(h), _, _, _, _, _, MouseDown(evt)) =>
     h(evt);
     true;
-  | (_, Some(h), _, _, MouseMove(evt)) =>
+  | (_, Some(h), _, _, _, _, MouseMove(evt)) =>
     h(evt);
     true;
-  | (_, _, Some(h), _, MouseUp(evt)) =>
+  | (_, _, Some(h), _, _, _, MouseUp(evt)) =>
     h(evt);
     true;
-  | (_, _, _, Some(h), MouseWheel(evt)) =>
+  | (_, _, _, Some(h), _, _, MouseWheel(evt)) =>
     h(evt);
     true;
-  | (_, _, _, _, _) => false
+  | (_, _, _, _, Some(h), _, MouseEnter(evt)) =>
+    h(evt);
+    true;
+  | (_, _, _, _, _, Some(h), MouseLeave(evt)) =>
+    h(evt);
+    true;
+  | (_, _, _, _, _, _, _) => false
   };
 };
 
@@ -251,25 +275,28 @@ let dispatch =
         ();
       };
 
-      let mouseMove = isMouseMoveEv(eventToSend);
-      if (mouseMove) {
-        let deepestNode = getDeepestNode(node, pos);
-        let mouseMoveEventParams = getMouseMoveEventParams(cursor, evt);
-
-        switch (deepestNode^) {
-        | None =>
-          sendMouseLeaveEvents(storedNodesUnderCursor^, mouseMoveEventParams)
-
-        | Some(deepNode) =>
-          switch (storedNodesUnderCursor^) {
-          | [] => sendMouseEnterEvents(deepNode, mouseMoveEventParams)
-          | [_, ..._xs] =>
-            handleMouseEnterDiff(deepNode, [], mouseMoveEventParams)
-          }
-        };
-      };
-
       if (!handleCapture(eventToSend)) {
+        let mouseMove = isMouseMoveEv(eventToSend);
+        if (mouseMove) {
+          let deepestNode = getDeepestNode(node, pos);
+          let mouseMoveEventParams = getMouseMoveEventParams(cursor, evt);
+
+          switch (deepestNode^) {
+          | None =>
+            sendMouseLeaveEvents(
+              storedNodesUnderCursor^,
+              mouseMoveEventParams,
+            )
+
+          | Some(deepNode) =>
+            switch (storedNodesUnderCursor^) {
+            | [] => sendMouseEnterEvents(deepNode, mouseMoveEventParams)
+            | [_, ..._xs] =>
+              handleMouseEnterDiff(deepNode, [], mouseMoveEventParams)
+            }
+          };
+        };
+
         let deepestNode = getDeepestNode(node, pos);
         switch (deepestNode^) {
         | None => ()

@@ -20,6 +20,8 @@ let setCapture:
     ~onMouseMove: mouseMoveHandler=?,
     ~onMouseUp: mouseButtonHandler=?,
     ~onMouseWheel: mouseWheelHandler=?,
+    ~onMouseEnter: mouseMoveHandler=?,
+    ~onMouseLeave: mouseMoveHandler=?,
     unit
   ) =>
   unit;
