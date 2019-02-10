@@ -1,9 +1,6 @@
 open Revery_UI;
 open Revery_Core;
 
-module FontRenderer = Revery_UI__FontRenderer;
-module FontCache = Revery_UI__FontCache;
-
 type item = {
   value: string,
   label: string,
@@ -34,18 +31,6 @@ let textStyles =
     color(Colors.black),
   ];
 
-let selectedItemStyles =
-  Style.(
-    merge(
-      ~source=textStyles,
-      ~target=[
-        color(Colors.black),
-        backgroundColor(Colors.transparentWhite),
-        marginLeft(5),
-      ],
-    )
-  );
-
 let noop = _item => ();
 
 let component = React.component("Dropdown");
@@ -65,35 +50,33 @@ let make =
       React.Hooks.reducer(~initialState, reducer, slots);
 
     let items =
-      if (state._open) {
-        List.map(
-          _item =>
-            <Clickable
-              style=Style.[
-                flexDirection(`Row),
-                height(h),
-                alignItems(`Center),
-                justifyContent(`FlexStart),
-                backgroundColor(
-                  _item == state.selected
-                    ? Color.hex("#0078D7") : Colors.transparentWhite,
-                ),
-                borderBottom(
-                  ~color=Colors.black,
-                  ~width=float_of_int(h) *. 0.05 |> int_of_float,
-                ),
-              ]
-              onClick={() => {
-                dispatch(SelectItem(_item));
-                onItemSelected(_item);
-              }}>
-              <Text style=textStyles text={_item.label} />
-            </Clickable>,
-          state.items,
-        );
-      } else {
-        [];
-      };
+      state._open
+        ? List.map(
+            _item =>
+              <Clickable
+                style=Style.[
+                  height(h),
+                  justifyContent(`Center),
+                  alignItems(`FlexStart),
+                  paddingHorizontal(5),
+                  backgroundColor(
+                    _item == state.selected
+                      ? Color.hex("#0078D7") : Colors.transparentWhite,
+                  ),
+                  borderBottom(
+                    ~color=Colors.black,
+                    ~width=float_of_int(h) *. 0.05 |> int_of_float,
+                  ),
+                ]
+                onClick={() => {
+                  dispatch(SelectItem(_item));
+                  onItemSelected(_item);
+                }}>
+                <Text style=textStyles text={_item.label} />
+              </Clickable>,
+            state.items,
+          )
+        : [];
 
     <View
       style=Style.[
@@ -107,6 +90,7 @@ let make =
             flexDirection(`Row),
             height(h),
             justifyContent(`SpaceBetween),
+            paddingHorizontal(5),
             border(
               ~width=float_of_int(h) *. 0.05 |> int_of_float,
               ~color=Colors.black,
@@ -118,15 +102,15 @@ let make =
               justifyContent(`Center),
               overflow(LayoutTypes.Hidden),
             ]>
-            <Text style=selectedItemStyles text={state.selected.label} />
+            <Text style=textStyles text={state.selected.label} />
           </View>
           <Text
             style=Style.[
               fontSize(30),
               color(Colors.black),
               fontFamily("FontAwesome5FreeSolid.otf"),
-              marginTop(15),
-              marginRight(5),
+              marginTop(17),
+              paddingRight(5),
               alignSelf(`Center),
             ]
             text={||}

@@ -1,5 +1,4 @@
 open Revery.UI;
-/* open Revery.Core; */
 open Revery.UI.Components;
 
 let containerStyle =
@@ -15,8 +14,6 @@ let containerStyle =
 
 let textStyle =
   Style.[fontFamily("Roboto-Regular.ttf"), fontSize(20), marginBottom(20)];
-/*    TODO: Allow user style overwrite for Dropdown component
- */
 
 module DropdownExample = {
   let component = React.component("DropDownExample");
