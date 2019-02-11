@@ -44,34 +44,34 @@ let _memoizedFontShape = Memoize.make(_shapeFont);
 let shape = (font, text) => _memoizedFontShape((font, text));
 
 type normalizedMetrics = {
-    height: float,   
-    ascenderSize: float,
-    descenderSize: float,
+  height: float,
+  ascenderSize: float,
+  descenderSize: float,
 };
 
-let _getNormalizedMetrics = (font) => {
-    let metrics = Fontkit.fk_get_metrics(font);
+let _getNormalizedMetrics = font => {
+  let metrics = Fontkit.fk_get_metrics(font);
 
-    let ascent = float_of_int(abs(metrics.ascent));
-    let descent = float_of_int(abs(metrics.descent));
-    let heightF = float_of_int(metrics.height);
-    let unitsPerEm = float_of_int(metrics.unitsPerEm);
-    let size = float_of_int(metrics.size);
-    
-    let height = size *. heightF /. unitsPerEm;
-    let ascenderSize = size *. ascent /. unitsPerEm;
-    let descenderSize = size *. descent /. unitsPerEm;
+  let ascent = float_of_int(abs(metrics.ascent));
+  let descent = float_of_int(abs(metrics.descent));
+  let heightF = float_of_int(metrics.height);
+  let unitsPerEm = float_of_int(metrics.unitsPerEm);
+  let size = float_of_int(metrics.size);
 
-    let ret = { height, ascenderSize, descenderSize };
-    ret;
+  let height = size *. heightF /. unitsPerEm;
+  let ascenderSize = size *. ascent /. unitsPerEm;
+  let descenderSize = size *. descent /. unitsPerEm;
+
+  let ret = {height, ascenderSize, descenderSize};
+  ret;
 };
 
 let _memoizedGetNormalizedMetrics = Memoize.make(_getNormalizedMetrics);
 
-let getNormalizedMetrics = (font) => _memoizedGetNormalizedMetrics(font);
+let getNormalizedMetrics = font => _memoizedGetNormalizedMetrics(font);
 
 let measure = (font: Fontkit.fk_face, text: string) => {
-  let { height, _ }  = getNormalizedMetrics(font);
+  let {height, _} = getNormalizedMetrics(font);
   let shapedText = shape(font, text);
   let x = ref(0);
 
