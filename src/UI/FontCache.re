@@ -24,17 +24,6 @@ let load = (fontName: string, size: int) => {
     if (!isLoading) {
       Hashtbl.add(_loadingCache, fontKey, true);
       let success = fk => {
-        let metrics = Fontkit.fk_get_metrics(fk);
-  print_endline ("-- name: " ++ fontName);
-  print_endline ("-- size: " ++ string_of_int(size));
-  print_endline ("-- lineGap: " ++ string_of_int(metrics.height));
-  print_endline ("-- ascent: " ++ string_of_int(metrics.ascent));
-  print_endline ("-- descent: " ++ string_of_int(metrics.descent));
-  print_endline ("-- underlinePosition: " ++ string_of_int(metrics.underlinePosition));
-  print_endline ("-- underlineThickness: " ++ string_of_int(metrics.underlineThickness));
-  print_endline ("-- unitsPerEm: " ++ string_of_int(metrics.unitsPerEm));
-  print_endline ("-- size: " ++ string_of_int(metrics.size));
-
         Hashtbl.remove(_loadingCache, fontKey);
         Hashtbl.add(_cache, fontKey, fk);
         Event.dispatch(onFontLoaded, ());
