@@ -1,5 +1,5 @@
 {
-  "checksum": "bb2a36f87b2d6225e8f52c031528d593",
+  "checksum": "71e5dad061ffc75de104eb007c71b9d0",
   "root": "revery@link-dev:./package.json",
   "node": {
     "revery@link-dev:./package.json": {
@@ -13,7 +13,8 @@
       },
       "overrides": [],
       "dependencies": [
-        "rebez@link-dev:../rebez", "reason-glfw@3.2.1014@d41d8cd9",
+        "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9",
+        "reason-glfw@3.2.1014@d41d8cd9",
         "reason-gl-matrix@0.9.9302@d41d8cd9",
         "reason-fontkit@2.1.0@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
         "flex@1.2.2@d41d8cd9", "@opam/lwt_ppx@opam:1.2.1@db1172a7",
@@ -70,18 +71,21 @@
       ],
       "devDependencies": []
     },
-    "rebez@link-dev:../rebez": {
-      "id": "rebez@link-dev:../rebez",
+    "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9": {
+      "id": "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9",
       "name": "rebez",
-      "version": "link-dev:../rebez",
-      "source": { "type": "link-dev", "path": "../rebez" },
+      "version": "github:jchavarri/rebez#46cbc183",
+      "source": {
+        "type": "install",
+        "source": [ "github:jchavarri/rebez#46cbc183" ]
+      },
       "overrides": [],
       "dependencies": [
         "refmterr@3.1.10@d41d8cd9", "pesy@0.4.1@d41d8cd9",
         "ocaml@4.7.1004@d41d8cd9", "@opam/dune@opam:1.6.3@a7d7baed",
         "@esy-ocaml/reason@3.4.0@d41d8cd9"
       ],
-      "devDependencies": [ "@opam/merlin@opam:3.2.2@829ee6dd" ]
+      "devDependencies": []
     },
     "reason-glfw@3.2.1014@d41d8cd9": {
       "id": "reason-glfw@3.2.1014@d41d8cd9",
