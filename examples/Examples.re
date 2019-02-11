@@ -1,7 +1,6 @@
 open Revery;
 open Revery.Core;
 /* open Revery.Math; */
-
 open ExampleStubs;
 
 module SliderExample = Slider;
@@ -97,6 +96,11 @@ let state: state = {
       name: "Analog Clock",
       render: _w => AnalogClock.render(),
       source: "AnalogClock.re",
+    },
+    {
+      name: "TodoMVC",
+      render: w => TodoExample.render(w),
+      source: "TodoExample.re",
     },
   ],
   selectedExample: "Animation",

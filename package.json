@@ -10,7 +10,8 @@
     "build:js": "esy b dune build examples/Examples.bc.js",
     "build:js:release": "esy b dune build examples/Examples.bc.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "esy b .ci/format.sh",
+    "format": "esy dune build @fmt --auto-promote",
+    "format:windows": "esy b .ci/format.sh",
     "doc": "refmterr esy dune build @doc --root ."
   },
   "homepage": "https://github.com/bryphe/revery#readme",
