@@ -34,7 +34,7 @@ let make =
       React.Hooks.state(None, slots);
     let setClickableRef = r => setClickableRefOption(Some(r));
 
-    let (animatedOpacity, setOpacity, _slots: React.Hooks.empty) =
+    let (animatedOpacity, setOpacity, slots) =
       React.Hooks.state(0.8, slots);
 
     let onMouseMove = (mouseX: float, mouseY: float) => {
@@ -80,6 +80,7 @@ let make =
         )
       );
 
+    (slots,
     <View
       style=mergedStyles
       onMouseDown
@@ -88,7 +89,7 @@ let make =
       tabindex
       ref={r => setClickableRef(r)}>
       children
-    </View>;
+    </View>);
   });
 
 let createElement =
@@ -101,7 +102,6 @@ let createElement =
       ~children,
       (),
     ) =>
-  React.element(
     make(
       ~style,
       ~onClick,
@@ -109,5 +109,4 @@ let createElement =
       ~onFocus?,
       ~tabindex,
       React.listToElement(children),
-    ),
-  );
+    );

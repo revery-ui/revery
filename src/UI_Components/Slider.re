@@ -42,7 +42,7 @@ let make =
     /* Initial value is used to detect if the 'value' parameter ever changes */
     let (initialValue, setInitialValue, slots) =
       React.Hooks.state(value, slots);
-    let (v, setV, _slots: React.Hooks.empty) =
+    let (v, setV, slots) =
       React.Hooks.state(value, slots);
 
     /*
@@ -184,6 +184,7 @@ let make =
         backgroundColor(sliderBackgroundColor),
       ];
 
+    (slots,
     <View onMouseDown style ref={r => setSlideRef(r)}>
       <View style=beforeTrackStyle />
       <View
@@ -198,7 +199,7 @@ let make =
         ]
       />
       <View style=afterTrackStyle />
-    </View>;
+    </View>);
   });
 
 let createElement =
@@ -218,7 +219,6 @@ let createElement =
       ~thumbColor=Colors.gray,
       (),
     ) =>
-  React.element(
     make(
       ~vertical,
       ~onValueChanged,
@@ -233,5 +233,4 @@ let createElement =
       ~minimumTrackColor,
       ~thumbColor,
       (),
-    ),
   );

@@ -24,7 +24,8 @@ module View = {
         ~style=Style.emptyViewStyle,
         children,
       ) =>
-    component((_: UiReact.Hooks.empty) =>
+    component((hooks) => (
+      hooks,
       {
         make: () => {
           let styles = Style.create(~style, ());
@@ -65,7 +66,7 @@ module View = {
         },
         children,
       }
-    );
+));
 
   let createElement =
       (
@@ -81,7 +82,6 @@ module View = {
         ~children,
         (),
       ) =>
-    UiReact.element(
       make(
         ~onMouseDown?,
         ~onMouseMove?,
@@ -93,8 +93,7 @@ module View = {
         ~style,
         ~tabindex?,
         UiReact.listToElement(children),
-      ),
-    );
+      );
 };
 
 module Text = {
@@ -112,7 +111,8 @@ module Text = {
         ~text="",
         children,
       ) =>
-    component((_: UiReact.Hooks.empty) =>
+    component((hooks) => (
+      hooks,
       {
         make: () => {
           let styles = create(~style, ());
@@ -150,7 +150,7 @@ module Text = {
           node;
         },
         children,
-      }
+      })
     );
 
   let createElement =
@@ -165,7 +165,6 @@ module Text = {
         ~children,
         (),
       ) =>
-    UiReact.element(
       make(
         ~onMouseDown?,
         ~onMouseMove?,
@@ -175,8 +174,7 @@ module Text = {
         ~style,
         ~text,
         UiReact.listToElement(children),
-      ),
-    );
+      )
 };
 
 module Image = {
@@ -193,7 +191,8 @@ module Image = {
         ~src="",
         children,
       ) =>
-    component((_: UiReact.Hooks.empty) =>
+    component((hooks) => (
+      hooks,
       {
         make: () => {
           let styles = Style.create(~style, ());
@@ -227,7 +226,7 @@ module Image = {
           node;
         },
         children,
-      }
+      })
     );
 
   let createElement =
@@ -242,7 +241,6 @@ module Image = {
         ~children,
         (),
       ) =>
-    UiReact.element(
       make(
         ~onMouseDown?,
         ~onMouseMove?,
@@ -252,6 +250,5 @@ module Image = {
         ~style,
         ~src,
         UiReact.listToElement(children),
-      ),
-    );
+      );
 };

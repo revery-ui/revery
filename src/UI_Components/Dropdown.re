@@ -46,7 +46,7 @@ let make =
   component(slots => {
     let initialState = {items, selected: List.nth(items, 0), _open: false};
 
-    let (state, dispatch, _slots: React.Hooks.empty) =
+    let (state, dispatch, slots) =
       React.Hooks.reducer(~initialState, reducer, slots);
 
     let items =
@@ -78,7 +78,7 @@ let make =
           )
         : [];
 
-    <View
+    (slots, <View
       style=Style.[
         position(`Relative),
         backgroundColor(Colors.white),
@@ -130,11 +130,9 @@ let make =
         ]>
         ...items
       </View>
-    </View>;
+    </View>);
   });
 
 let createElement =
     (~items, ~onItemSelected=noop, ~width=200, ~height=50, ~children, ()) =>
-  React.element(
-    make(~items, ~onItemSelected, ~width, ~height, ~children, ()),
-  );
+    make(~items, ~onItemSelected, ~width, ~height, ~children, ());

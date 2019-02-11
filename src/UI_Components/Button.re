@@ -21,8 +21,8 @@ let make =
       (),
     ) =>
   /* children, */
-  component((_slots: React.Hooks.empty) =>
-    <Clickable onClick={disabled ? noop : onClick} ?onFocus ?onBlur ?tabindex>
+  component((slots) =>
+    (slots, <Clickable onClick={disabled ? noop : onClick} ?onFocus ?onBlur ?tabindex>
       <View
         style=Style.[
           position(`Relative),
@@ -42,7 +42,7 @@ let make =
           text=title
         />
       </View>
-    </Clickable>
+    </Clickable>)
   );
 
 let createElement =
@@ -61,7 +61,6 @@ let createElement =
       ~fontFamily="Roboto-Regular.ttf",
       (),
     ) =>
-  React.element(
     make(
       ~title,
       ~onClick,
@@ -75,5 +74,4 @@ let createElement =
       ~onBlur?,
       ~tabindex?,
       (),
-    ),
   );

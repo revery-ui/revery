@@ -124,7 +124,7 @@ let make =
         slots,
       );
 
-    let (animatedOpacity, _slots: React.Hooks.empty) =
+    let (animatedOpacity, slots) =
       Hooks.animation(
         Animated.floatValue(0.),
         {
@@ -210,14 +210,14 @@ let make =
     /*
        component
      */
-    <Clickable
+    (slots, <Clickable
       onFocus={() => dispatch(SetFocus(true))}
       onBlur={() => dispatch(SetFocus(false))}>
       <View style=viewStyles>
         <Text style=innerTextStyles text=content />
         <View style=inputCursorStyles />
       </View>
-    </Clickable>;
+    </Clickable>);
   });
 
 let createElement =
@@ -232,7 +232,6 @@ let createElement =
       ~onChange=noop,
       (),
     ) =>
-  React.element(
     make(
       ~window,
       ~value,
@@ -242,5 +241,4 @@ let createElement =
       ~placeholderColor,
       ~onChange,
       (),
-    ),
   );
