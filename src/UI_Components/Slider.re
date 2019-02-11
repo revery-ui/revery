@@ -25,19 +25,42 @@ let make =
       ~maximumValue,
       ~thumbLength,
       ~sliderLength,
+      ~minimumTrackColor,
+      ~maximumTrackColor,
+      ~thumbColor,
+      ~trackThickness,
+      ~thumbThickness,
       ~vertical,
       (),
     ) =>
   component(slots => {
-    let (slideRef, _setSlideRef, slots) = React.Hooks.state(None, slots);
-    let (thumbRef, _setThumbRef, slots) = React.Hooks.state(None, slots);
+    let (slideRef, setSlideRefOption, slots) =
+      React.Hooks.state(None, slots);
+    let (thumbRef, setThumbRefOption, slots) =
+      React.Hooks.state(None, slots);
     let (isActive, setActive, slots) = React.Hooks.state(false, slots);
+    /* Initial value is used to detect if the 'value' parameter ever changes */
+    let (initialValue, setInitialValue, slots) =
+      React.Hooks.state(value, slots);
     let (v, setV, _slots: React.Hooks.empty) =
       React.Hooks.state(value, slots);
 
-    let setSlideRef = r => _setSlideRef(Some(r));
+    /*
+     * If the slider value is updated (controlled),
+     * it should override whatever previous value was set
+     */
+    let v =
+      if (value != initialValue) {
+        setInitialValue(value);
+        setV(value);
+        value;
+      } else {
+        v;
+      };
 
-    let setThumbRef = r => _setThumbRef(Some(r));
+    let setSlideRef = r => setSlideRefOption(Some(r));
+
+    let setThumbRef = r => setThumbRefOption(Some(r));
 
     let availableWidth =
       switch (slideRef, thumbRef) {
@@ -111,14 +134,13 @@ let make =
       | _ => ()
       };
 
-    let sliderBackgroundColor = Colors.darkGray;
-    let thumbColor = Colors.gray;
+    let sliderBackgroundColor = maximumTrackColor;
 
     let sliderOpacity = isActive ? 1.0 : 0.8;
 
-    let sliderHeight = 25;
-    let trackHeight = 5;
-    let thumbHeight = sliderHeight;
+    let sliderHeight = max(thumbThickness, trackThickness);
+    let trackHeight = trackThickness;
+    let thumbHeight = thumbThickness;
     let trackMargins = (sliderHeight - trackHeight) / 2;
 
     let thumbPosition =
@@ -148,7 +170,7 @@ let make =
         left(vertical ? trackMargins : 0),
         right(vertical ? trackMargins : sliderLength - thumbPosition),
         position(`Absolute),
-        backgroundColor(Color.hex("#90f7ff")),
+        backgroundColor(minimumTrackColor),
       ];
 
     let afterTrackStyle =
@@ -189,6 +211,11 @@ let createElement =
       ~vertical=false,
       ~thumbLength=15,
       ~sliderLength=100,
+      ~thumbThickness=15,
+      ~trackThickness=5,
+      ~maximumTrackColor=Colors.darkGray,
+      ~minimumTrackColor=Color.hex("#90f7ff"),
+      ~thumbColor=Colors.gray,
       (),
     ) =>
   React.element(
@@ -200,6 +227,11 @@ let createElement =
       ~value,
       ~thumbLength,
       ~sliderLength,
+      ~thumbThickness,
+      ~trackThickness,
+      ~maximumTrackColor,
+      ~minimumTrackColor,
+      ~thumbColor,
       (),
     ),
   );

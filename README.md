@@ -39,6 +39,8 @@ Install the following packages with your package manager of choice:
 * `libpng-dev`
 * `libbz2-dev`
 * `m4`
+* `xorg-dev`
+* `libglu1-mesa-dev`
 
 #### For `Windows` native
 
@@ -48,7 +50,7 @@ No additional dependencies needed.
 
 #### For `Windows` Subsystem for Linux (`WSL`)
 
-- `sudo apt install libpng-dev libbz2-dev m4 xorg-dev libglu1-mesa-dev`
+Make sure to check the specific requirements for your Linux distribution, above.
 
 > __NOTE:__ Hardware acceleration is not enabled by default in WSL (instead, WSL will fall-back to a _software_ renderer). This is problematic for performance - for that reason, we recommend building and running Revery natively on Windows instead of with WSL. For more info see: (https://github.com/Microsoft/WSL/issues/637 and a [potential workaround](https://superuser.com/questions/1238925/use-accelerated-graphics-on-windows-10-linux-subsystem-with-xming))
 
@@ -228,7 +230,7 @@ Some ideas for getting started:
 ## Special Thanks
 
 `revery` would not be possible without a bunch of cool tech:
-- [ocaml](https://ocaml.org) made these tools possible - thanks [Inria](https://caml.inria.fr) & [OCaml Labs](http://ocamllabs.io/)!
+- [ocaml](https://ocaml.org) made these tools possible - thanks [Inria](http://gallium.inria.fr/) & [OCaml Labs](http://ocamllabs.io/)!
 - [reasonml](https://reasonml.github.io) made revery possible - thanks @jordwalke!
 - [flex](https://github.com/jordwalke/flex) by @jordwalke
 - [briskml](https://github.com/briskml)

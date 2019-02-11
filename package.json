@@ -1,12 +1,14 @@
 {
   "name": "revery",
-  "version": "0.4.0",
+  "version": "0.5.1",
   "description": "App toolkit built with Reason",
   "license": "MIT",
   "bugs": { "url": "https://github.com/bryphe/revery/issues" },
   "scripts": {
     "build": "esy b",
-    "build:js": "esy b dune build examples/Bin.bc.js",
+    "build:release": "esy b dune build --profile=release --root . -j4",
+    "build:js": "esy b dune build examples/Examples.bc.js",
+    "build:js:release": "esy b dune build examples/Examples.bc.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "esy dune build @fmt --auto-promote",
     "ci:format": "esy b .ci/format.sh",
@@ -16,18 +18,21 @@
   "esy": {
     "build": [ "dune build --root . -j4" ],
     "install": [
-      "esy-installer Revery.install", "esy-installer Revery_Core.install",
+      "esy-installer Revery.install",
+      "esy-installer Revery_Core.install",
       "esy-installer Revery_Geometry.install",
       "esy-installer Revery_Math.install",
+      "esy-installer Revery_Native.install",
       "esy-installer Revery_Shaders.install",
       "esy-installer Revery_UI.install",
-      "esy-installer Revery_UI_Components.install"
+      "esy-installer Revery_UI_Components.install",
+      "esy-installer Revery_Native.install"
     ]
   },
   "dependencies": {
     "@esy-ocaml/reason": "3.4.0",
-    "reason-glfw": "^3.2.1010",
-    "reason-fontkit": "^2.0.5",
+    "reason-glfw": "^3.2.1014",
+    "reason-fontkit": "^2.0.6",
     "reason-gl-matrix": "^0.9.9302",
     "@opam/color": "^0.2.0",
     "@opam/js_of_ocaml": "*",
@@ -42,7 +47,7 @@
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#7901934"
+    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#1c102ab"
   },
   "peerDependencies": {
     "ocaml": "^4.7.0"

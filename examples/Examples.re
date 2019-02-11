@@ -1,8 +1,10 @@
 open Revery;
 open Revery.Core;
 /* open Revery.Math; */
-            
-            module SliderExample = Slider;
+open ExampleStubs;
+
+module SliderExample = Slider;
+module ScrollViewExample = ScrollView;
 
 open Revery.UI;
 open Revery.UI.Components;
@@ -15,6 +17,7 @@ let selectionHighlight = Color.hex("#90f7ff");
 type example = {
   name: string,
   render: Window.t => React.syntheticElement,
+  source: string,
 };
 
 type state = {
@@ -24,31 +27,92 @@ type state = {
 
 let state: state = {
   examples: [
-    {name: "Animation", render: _w => Hello.render()},
-    {name: "Button", render: _ => DefaultButton.render()},
-    {name: "Checkbox", render: _ => CheckboxExample.render()},
-    {name: "Slider", render: _ => SliderExample.render()},
-    {name: "Border", render: _ => Border.render()},
-    {name: "Overflow", render: _w => Overflow.render()},
-    {name: "Calculator", render: w => Calculator.render(w)},
-    {name: "Flexbox", render: _ => Flexbox.render()},
-    {name: "Box Shadow", render: _ => Boxshadow.render()},
-    {name: "Focus", render: _ => Focus.render()},
-    {name: "Stopwatch", render: _ => Stopwatch.render()},
-    {name: "Input", render: w => InputExample.render(w)},
-    {name: "Radio Button", render: _ => RadioButtonExample.render()},
-    {name: "Game Of Life", render: _ => GameOfLife.render()},
+    {name: "Animation", render: _w => Hello.render(), source: "Hello.re"},
+    {
+      name: "Button",
+      render: _ => DefaultButton.render(),
+      source: "DefaultButton.re",
+    },
+    {
+      name: "Checkbox",
+      render: _ => CheckboxExample.render(),
+      source: "CheckboxExample.re",
+    },
+    {
+      name: "Slider",
+      render: _ => SliderExample.render(),
+      source: "Slider.re",
+    },
+    {name: "Border", render: _ => Border.render(), source: "Border.re"},
+    {
+      name: "ScrollView",
+      render: _w => ScrollViewExample.render(),
+      source: "ScrollView.re",
+    },
+    {
+      name: "Calculator",
+      render: w => Calculator.render(w),
+      source: "Calculator.re",
+    },
+    {name: "Flexbox", render: _ => Flexbox.render(), source: "Flexbox.re"},
+    {
+      name: "Box Shadow",
+      render: _ => Boxshadow.render(),
+      source: "Boxshadow.re",
+    },
+    {name: "Focus", render: _ => Focus.render(), source: "Focus.re"},
+    {
+      name: "Stopwatch",
+      render: _ => Stopwatch.render(),
+      source: "Stopwatch.re",
+    },
+    {name: "Native", render: w => Native.render(w), source: "Native.re"},
+    {
+      name: "Input",
+      render: w => InputExample.render(w),
+      source: "InputExample.re",
+    },
+    {
+      name: "Radio Button",
+      render: _ => RadioButtonExample.render(),
+      source: "RadioButtonExample.re",
+    },
+    {
+      name: "Game Of Life",
+      render: _ => GameOfLife.render(),
+      source: "GameOfLife.re",
+    },
+    {
+      name: "Screen Capture",
+      render: w => ScreenCapture.render(w),
+      source: "ScreenCapture.re",
+    },
+    {
+      name: "Tree View",
+      render: w => TreeView.render(w),
+      source: "TreeView.re",
+    },
+    {
+      name: "Analog Clock",
+      render: _w => AnalogClock.render(),
+      source: "AnalogClock.re",
+    },
   ],
   selectedExample: "Animation",
+};
+
+let getExampleByName = (state: state, example: string) => {
+  List.filter(x => String.equal(x.name, example), state.examples) |> List.hd;
+};
+
+let getSourceForSample = (state: state, example: string) => {
+  getExampleByName(state, example) |> (s => s.source);
 };
 
 let noop = () => ();
 
 let getRenderFunctionSelector: (state, Window.t) => React.syntheticElement =
-  (s: state) =>
-    List.filter(x => String.equal(x.name, s.selectedExample), state.examples)
-    |> List.hd
-    |> (a => a.render);
+  (s: state) => getExampleByName(s, s.selectedExample) |> (a => a.render);
 
 module ExampleButton = {
   let component = React.component("ExampleButton");
@@ -92,20 +156,30 @@ type action =
   | SelectExample(string);
 
 let reducer = (s: state, a: action) => {
-  let SelectExample(name) = a;
-
-  let ret: state = {...s, selectedExample: name};
-  ret;
+  switch (a) {
+  | SelectExample(name) => {...s, selectedExample: name}
+  };
 };
 
 let init = app => {
   let maximized = Environment.webGL;
 
+  let dimensions: Monitor.size =
+    Monitor.getPrimaryMonitor() |> Monitor.getSize;
+
+  let windowWidth = dimensions.width / 2;
+  let windowHeight = dimensions.height / 2;
+
   let win =
     App.createWindow(
       app,
       "Welcome to Revery!",
-      ~createOptions={...Window.defaultCreateOptions, maximized},
+      ~createOptions={
+        ...Window.defaultCreateOptions,
+        width: windowWidth,
+        height: windowHeight,
+        maximized,
+      },
     );
 
   let render = () => {
@@ -123,6 +197,8 @@ let init = app => {
            */
           Animated.cancelAll();
 
+          let sourceFile = getSourceForSample(s, x.name);
+          notifyExampleSwitched(sourceFile);
           App.dispatch(app, SelectExample(x.name));
         }}
       />;
@@ -148,7 +224,7 @@ let init = app => {
         right(0),
         flexDirection(`Row),
       ]>
-      <View
+      <ScrollView
         style=Style.[
           position(`Absolute),
           top(0),
@@ -157,8 +233,8 @@ let init = app => {
           bottom(0),
           backgroundColor(bgColor),
         ]>
-        ...buttons
-      </View>
+        <View> ...buttons </View>
+      </ScrollView>
       <View
         style=Style.[
           position(`Absolute),
@@ -175,6 +251,10 @@ let init = app => {
 
   if (Environment.webGL) {
     Window.maximize(win);
+  } else {
+    let xPosition = (dimensions.width - windowWidth) / 2;
+    let yPosition = (dimensions.height - windowHeight) / 2;
+    Window.setPos(win, xPosition, yPosition);
   };
 
   UI.start(win, render);
