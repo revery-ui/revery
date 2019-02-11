@@ -1,13 +1,13 @@
 {
   "checksum": "71e5dad061ffc75de104eb007c71b9d0",
-  "root": "revery@link-dev:./package.json",
+  "root": "revery@link:./package.json",
   "node": {
-    "revery@link-dev:./package.json": {
-      "id": "revery@link-dev:./package.json",
+    "revery@link:./package.json": {
+      "id": "revery@link:./package.json",
       "name": "revery",
-      "version": "link-dev:./package.json",
+      "version": "link:./package.json",
       "source": {
-        "type": "link-dev",
+        "type": "link",
         "path": ".",
         "manifest": "package.json"
       },
