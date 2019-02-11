@@ -44,10 +44,22 @@ let _memoizedFontShape = Memoize.make(_shapeFont);
 let shape = (font, text) => _memoizedFontShape((font, text));
 
 let measure = (font: Fontkit.fk_face, text: string) => {
+  let metrics = Fontkit.fk_get_metrics(font);
   let shapedText = shape(font, text);
   let minY = ref(1000);
   let maxY = ref(-1000);
   let x = ref(0);
+
+  let newHeight = float_of_int(metrics.size) *. float_of_int(metrics.height) /. float_of_int(metrics.unitsPerEm);
+  print_endline ("-- size: " ++ string_of_int(metrics.size));
+  print_endline ("-- lineGap: " ++ string_of_int(metrics.height));
+  print_endline ("-- ascent: " ++ string_of_int(metrics.ascent));
+  print_endline ("-- descent: " ++ string_of_int(metrics.descent));
+  print_endline ("-- underlinePosition: " ++ string_of_int(metrics.underlinePosition));
+  print_endline ("-- underlineThickness: " ++ string_of_int(metrics.underlineThickness));
+  print_endline ("-- unitsPerEm: " ++ string_of_int(metrics.unitsPerEm));
+  print_endline ("-- size: " ++ string_of_int(metrics.size));
+
 
   Array.iter(
     shape => {
@@ -69,5 +81,8 @@ let measure = (font: Fontkit.fk_face, text: string) => {
     height: maxY^ - minY^,
     width: int_of_float(float_of_int(x^) /. 64.0),
   };
+
+  prerr_endline ("NEW HEIGHT: " ++ string_of_float(newHeight));
+  prerr_endline ("OLD HEIGHT: " ++ string_of_int(d.height));
   d;
 };
