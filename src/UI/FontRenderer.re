@@ -43,30 +43,48 @@ let _shapeFont = ((font, text)) => Fontkit.fk_shape(font, text);
 let _memoizedFontShape = Memoize.make(_shapeFont);
 let shape = (font, text) => _memoizedFontShape((font, text));
 
+type normalizedMetrics = {
+  height: float,
+  ascenderSize: float,
+  descenderSize: float,
+};
+
+let _getNormalizedMetrics = font => {
+  let metrics = Fontkit.fk_get_metrics(font);
+
+  let ascent = float_of_int(abs(metrics.ascent));
+  let descent = float_of_int(abs(metrics.descent));
+  let heightF = float_of_int(metrics.height);
+  let unitsPerEm = float_of_int(metrics.unitsPerEm);
+  let size = float_of_int(metrics.size);
+
+  let height = size *. heightF /. unitsPerEm;
+  let ascenderSize = size *. ascent /. unitsPerEm;
+  let descenderSize = size *. descent /. unitsPerEm;
+
+  let ret = {height, ascenderSize, descenderSize};
+  ret;
+};
+
+let _memoizedGetNormalizedMetrics = Memoize.make(_getNormalizedMetrics);
+
+let getNormalizedMetrics = font => _memoizedGetNormalizedMetrics(font);
+
 let measure = (font: Fontkit.fk_face, text: string) => {
+  let {height, _} = getNormalizedMetrics(font);
   let shapedText = shape(font, text);
-  let minY = ref(1000);
-  let maxY = ref(-1000);
   let x = ref(0);
 
   Array.iter(
     shape => {
-      let {height, bearingY, advance, _} = getGlyph(font, shape.glyphId);
-      let top = - bearingY;
-      let bottom = top + height;
-
-      if (height > 0) {
-        minY := minY^ < top ? minY^ : top;
-        maxY := maxY^ > bottom ? maxY^ : bottom;
-      };
-
+      let {advance, _} = getGlyph(font, shape.glyphId);
       x := x^ + advance;
     },
     shapedText,
   );
 
   let d: dimensions = {
-    height: maxY^ - minY^,
+    height: int_of_float(height),
     width: int_of_float(float_of_int(x^) /. 64.0),
   };
   d;

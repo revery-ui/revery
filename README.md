@@ -1,11 +1,22 @@
 [![Build Status](https://dev.azure.com/revery-ui/revery/_apis/build/status/revery-ui.revery?branchName=master)](https://dev.azure.com/revery-ui/revery/_build/latest?definitionId=2?branchName=master)
 [![npm version](https://badge.fury.io/js/revery.svg)](https://badge.fury.io/js/revery)
+	<a href="https://discord.gg/4pxY5Cp">
+		<img src="https://img.shields.io/discord/526111832478449695.svg" alt="Join the chat on discord!">
+	</a>
 
 # Revery
 
 Build __native__, _high-performance_, __cross-platform__ desktop apps with [reason](https://reasonml.github.io/)!
 
 :construction: __NOTE:__ Revery is a work-in-progress and in active development! :construction:
+
+<p align="center">
+	<a href="https://www.outrunlabs.com/revery/playground" title="Playground">
+		<img src="./screenshots/sliders.png" alt="Slider components">
+	</a>
+</p>
+
+To get a taste of Revery, check out our JavaScript + WebGL build on the [playground](https://outrunlabs.com/revery/playground). For the best experience, though, you'll want to try a native build :point_down:
 
 ## Building & Installing
 
@@ -96,10 +107,6 @@ Performance should be at the forefront, and not a compromise - we need to develo
 - __Type-safe, functional code__
 
 We might have some dirty mutable objects for performance - but our high-level API should be purely functional. You should be able to follow the React model of modelling your UI as a _pure function_ of application state -> UI.
-
-## Screenshots
-
-![Slider components](screenshots/sliders.png)
 
 ## Quickstart
 

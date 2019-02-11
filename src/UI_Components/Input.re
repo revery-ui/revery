@@ -4,7 +4,6 @@ open Revery_Core.Window;
 
 type state = {
   value: string,
-  placeholder: string,
   isFocused: bool,
 };
 
@@ -28,7 +27,8 @@ let reducer = (action, state) =>
   switch (action) {
   | SetFocus(isFocused) => {...state, isFocused}
   | UpdateText(t) =>
-    state.isFocused ? {...state, value: addCharacter(state.value, t)} : state
+    state.isFocused
+      ? {isFocused: true, value: addCharacter(state.value, t)} : state
   | Backspace =>
     state.isFocused
       ? {
@@ -67,7 +67,7 @@ let make =
     (
       ~window,
       ~style,
-      ~value,
+      ~value as valueParam,
       ~placeholder,
       ~cursorColor,
       ~placeholderColor,
@@ -75,9 +75,12 @@ let make =
       (),
     ) =>
   component(slots => {
-    let initialState = {value, placeholder, isFocused: false};
     let (state, dispatch, slots) =
-      React.Hooks.reducer(~initialState, reducer, slots);
+      React.Hooks.reducer(
+        ~initialState={value: valueParam, isFocused: false},
+        reducer,
+        slots,
+      );
 
     /*
        TODO: Setting the hook to run only on mount means that the onChange
@@ -87,31 +90,35 @@ let make =
      */
     let slots =
       React.Hooks.effect(
-        OnMount,
+        Always,
         () =>
           Some(
             Event.subscribe(
               window.onKeyPress,
               event => {
                 dispatch(UpdateText(event.character));
-                onChange(~value);
+                onChange(~value=addCharacter(state.value, event.character));
               },
             ),
           ),
         slots,
       );
 
+    let handleKeyDown = (~dispatch, event: Events.keyEvent) =>
+      switch (event.key) {
+      | Key.KEY_BACKSPACE =>
+        dispatch(Backspace);
+        onChange(~value=removeCharacter(state.value));
+      | _ => ()
+      };
+
     let slots =
       React.Hooks.effect(
-        OnMount,
+        Always,
         () =>
           Some(
-            Event.subscribe(
-              window.onKeyDown,
-              event => {
-                handleKeyDown(~dispatch, event);
-                onChange(~value=state.value);
-              },
+            Event.subscribe(window.onKeyDown, event =>
+              handleKeyDown(~dispatch, event)
             ),
           ),
         slots,
@@ -132,7 +139,7 @@ let make =
 
     let hasPlaceholder = String.length(state.value) < 1;
 
-    let content = hasPlaceholder ? state.placeholder : state.value;
+    let content = hasPlaceholder ? placeholder : state.value;
 
     /*
        computed styles

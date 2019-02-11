@@ -1,5 +1,5 @@
 {
-  "checksum": "4f6595221c0787c48c647f973cdf4274",
+  "checksum": "c71b7a95012a326d3959372c5eb960b7",
   "root": "revery@link-dev:./package.json",
   "node": {
     "revery@link-dev:./package.json": {
@@ -15,7 +15,7 @@
       "dependencies": [
         "reason-glfw@3.2.1014@d41d8cd9",
         "reason-gl-matrix@0.9.9302@d41d8cd9",
-        "reason-fontkit@2.0.6@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
+        "reason-fontkit@2.1.0@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
         "flex@1.2.2@d41d8cd9", "@opam/lwt_ppx@opam:1.2.1@db1172a7",
         "@opam/lwt@opam:4.1.0@111fc2bf",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
@@ -112,14 +112,14 @@
       ],
       "devDependencies": []
     },
-    "reason-fontkit@2.0.6@d41d8cd9": {
-      "id": "reason-fontkit@2.0.6@d41d8cd9",
+    "reason-fontkit@2.1.0@d41d8cd9": {
+      "id": "reason-fontkit@2.1.0@d41d8cd9",
       "name": "reason-fontkit",
-      "version": "2.0.6",
+      "version": "2.1.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-2.0.6.tgz#sha1:5897569556ea778f9cee3f402812ce1b749a993a"
+          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-2.1.0.tgz#sha1:a4c3f8c25f4ea5301f3125bb78b7ed40862d3008"
         ]
       },
       "overrides": [],
