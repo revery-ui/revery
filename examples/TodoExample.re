@@ -61,8 +61,8 @@ module FilterSection = {
   let component = React.component("FilterSection");
 
   let make = (_children, currentFilter, onPickingFilter) =>
-    component((_slots: React.Hooks.empty) =>
-      <View
+    component((slots) =>
+      (slots, <View
         style=Style.[
           flexDirection(`Row),
           width(500),
@@ -109,10 +109,10 @@ module FilterSection = {
           onClick={() => onPickingFilter(NotCompleted)}
         />
       </View>
-    );
+    ));
 
   let createElement = (~children, ~currentFilter, ~onPickingFilter, ()) =>
-    React.element(make(children, currentFilter, onPickingFilter));
+    make(children, currentFilter, onPickingFilter);
 };
 
 module Example = {
@@ -127,7 +127,7 @@ module Example = {
           slots,
         );
 
-      let _slots: React.Hooks.empty =
+      let slots =
         React.Hooks.effect(
           OnMount,
           () => {
@@ -167,7 +167,7 @@ module Example = {
         );
 
       let listOfTodos = List.map(renderTodo, filteredList);
-      <View
+      (slots, <View
         style=Style.[
           position(`Absolute),
           top(0),
@@ -211,11 +211,11 @@ module Example = {
           ]>
           <View> ...listOfTodos </View>
         </ScrollView>
-      </View>;
+      </View>);
     });
 
   let createElement = (~window, ~children as _, ()) =>
-    React.element(make(window));
+    make(window);
 };
 
 let render = window => <Example window />;

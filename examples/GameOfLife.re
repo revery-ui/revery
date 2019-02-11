@@ -273,11 +273,11 @@ module Row = {
     ];
 
   let make = children =>
-    component((_slots: React.Hooks.empty) =>
-      <View style> ...children </View>
+    component((slots) =>
+      (slots, <View style> ...children </View>)
     );
 
-  let createElement = (~children, ()) => React.element(make(children));
+  let createElement = (~children, ()) => make(children);
 };
 
 module Column = {
@@ -292,10 +292,10 @@ module Column = {
     ];
 
   let make = children =>
-    component((_slots: React.Hooks.empty) =>
-      <View style> ...children </View>
+    component((slots) =>
+      (slots, <View style> ...children </View>)
     );
-  let createElement = (~children, ()) => React.element(make(children));
+  let createElement = (~children, ()) => make(children);
 };
 
 module Cell = {
@@ -325,16 +325,16 @@ module Cell = {
     );
 
   let make = (~cell, ~onClick, ()) =>
-    component((_slots: React.Hooks.empty) => {
+    component((slots) => {
       let style =
         switch (cell) {
         | Alive => <View style=aliveStyle />
         | Dead => <View style=deadStyle />
         };
-      <Clickable style=clickableStyle onClick> style </Clickable>;
+      (slots, <Clickable style=clickableStyle onClick> style </Clickable>);
     });
   let createElement = (~cell, ~onClick, ~children as _, ()) =>
-    React.element(make(~cell, ~onClick, ()));
+    make(~cell, ~onClick, ());
 };
 
 let viewPortRender =
@@ -431,7 +431,7 @@ module GameOfLiveComponent = {
       let (state, dispatch, slots) =
         React.Hooks.reducer(~initialState=state, reducer, slots);
 
-      let _slots: React.Hooks.empty =
+      let slots =
         React.Hooks.effect(
           OnMount,
           () => Some(() => dispatch(StopTimer)),
@@ -449,7 +449,7 @@ module GameOfLiveComponent = {
             dispatch(StartTimer(dispose));
           };
 
-      <Column>
+      (slots, <Column>
         <Row>
           ...{viewPortRender(state.viewPort, state.universe, toggleAlive)}
         </Row>
@@ -490,11 +490,11 @@ module GameOfLiveComponent = {
             onClick={_ => dispatch(ZoomViewPort(ZoomOut))}
           />
         </View>
-      </Column>;
+      </Column>);
     });
 
   let createElement = (~state, ~children as _, ()) =>
-    React.element(make(~state, ()));
+    make(~state, ());
 };
 
 let render = () => {

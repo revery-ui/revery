@@ -25,10 +25,10 @@ module Example = {
 
   let make = window =>
     component(slots => {
-      let ({first, second}, setValue, _slots: React.Hooks.empty) =
+      let ({first, second}, setValue, slots) =
         React.Hooks.state({first: "", second: ""}, slots);
 
-      <View style=containerStyle>
+      (slots, <View style=containerStyle>
         <Input
           window
           placeholder="Insert text here"
@@ -53,11 +53,11 @@ module Example = {
             ),
           ]
         />
-      </View>;
+      </View>);
     });
 
   let createElement = (~window, ~children as _, ()) =>
-    React.element(make(window));
+    make(window);
 };
 
 let render = window => <Example window />;

@@ -43,7 +43,7 @@ module AnalogClock = {
 
   let component = React.component("AnalogClock");
 
-  let make = () => {
+  let createElement = (~children as _, ()) => 
     component(slots => {
       let (state, dispatch, slots) =
         React.Hooks.reducer(
@@ -55,7 +55,7 @@ module AnalogClock = {
       let {hourDegrees, minuteDegrees, secondDegrees}: DegreeUtils.t =
         state.currentTime |> DegreeUtils.getDegreesFromTime;
 
-      let _slots: React.Hooks.empty =
+      let slots =
         React.Hooks.effect(
           OnMount,
           () => {
@@ -139,17 +139,14 @@ module AnalogClock = {
           )
         );
 
-      <View style=containerStyle>
+      (slots, <View style=containerStyle>
         <View style=clockContainer>
           <View style=secondsStyle />
           <View style=minutesStyle />
           <View style=hourStyle />
         </View>
-      </View>;
+      </View>);
     });
-  };
-
-  let createElement = (~children as _, ()) => React.element(make());
 };
 
 let render = () => <AnalogClock />;

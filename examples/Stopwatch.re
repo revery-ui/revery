@@ -53,7 +53,7 @@ module Clock = {
        * We'll make sure to dispatch the 'Stop' action when unmounting,
        * so we don't have a runaway timer!
        */
-      let _slots: React.Hooks.empty =
+      let slots =
         React.Hooks.effect(
           OnMount,
           () => Some(() => dispatch(Stop)),
@@ -81,7 +81,7 @@ module Clock = {
       let getMarcherPosition = t =>
         sin(Time.to_float_seconds(t) *. 2. *. pi) /. 2. +. 0.5;
 
-      <View
+      (slots, <View
         style=Style.[
           position(`Absolute),
           justifyContent(`Center),
@@ -122,10 +122,10 @@ module Clock = {
           />
         </View>
         <Button title=buttonText onClick=startStop />
-      </View>;
+      </View>);
     });
 
-  let createElement = (~children as _, ()) => React.element(make());
+  let createElement = (~children as _, ()) => make();
 };
 
 let render = () => <Clock />;

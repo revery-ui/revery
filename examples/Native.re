@@ -6,7 +6,7 @@ module NativeExamples = {
   let component = React.component("DefaultButtonWithCounter");
 
   let make = (~window, ()) =>
-    component((_slots: React.Hooks.empty) => {
+    component((slots) => {
       let increment = () => {
         Dialog.alert(window, "Hello, world");
       };
@@ -22,13 +22,13 @@ module NativeExamples = {
           right(0),
         ];
 
-      <View style=containerStyle>
+      (slots, <View style=containerStyle>
         <Button title="Alert" onClick=increment />
-      </View>;
+      </View>);
     });
 
   let createElement = (~children as _, ~window, ()) =>
-    React.element(make(~window, ()));
+    make(~window, ());
 };
 
 let render = window => <NativeExamples window />;

@@ -6,9 +6,9 @@ module RadioExample = {
   let component = React.component("RadioExample");
   let make = () =>
     component(slots => {
-      let (radioVal, setRadioVal, _slots: React.Hooks.empty) =
+      let (radioVal, setRadioVal, slots) =
         React.Hooks.state("Select a button!", slots);
-      <View
+      (slots, <View
         style=Style.[
           width(500),
           height(500),
@@ -42,9 +42,9 @@ module RadioExample = {
             marginTop(20),
           ]
         />
-      </View>;
+      </View>);
     });
-  let createElement = (~children as _, ()) => React.element(make());
+  let createElement = (~children as _, ()) => make();
 };
 
 let render = () => <RadioExample />;

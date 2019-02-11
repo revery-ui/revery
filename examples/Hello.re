@@ -22,7 +22,7 @@ module Logo = {
           slots,
         );
 
-      let (rotationY, _slots: React.Hooks.empty) =
+      let (rotationY, slots) =
         Hooks.animation(
           Animated.floatValue(0.),
           {
@@ -39,7 +39,7 @@ module Logo = {
 
       let onMouseUp = _ => setOpacity(1.0);
 
-      <View onMouseDown onMouseUp>
+      (slots, <View onMouseDown onMouseUp>
         <Image
           src="outrun-logo.png"
           style=Style.[
@@ -52,10 +52,10 @@ module Logo = {
             ]),
           ]
         />
-      </View>;
+      </View>);
     });
 
-  let createElement = (~children as _, ()) => React.element(make());
+  let createElement = (~children as _, ()) => make();
 };
 
 module AnimatedText = {
@@ -76,7 +76,7 @@ module AnimatedText = {
           slots,
         );
 
-      let (translate, _slots: React.Hooks.empty) =
+      let (translate, slots) =
         Hooks.animation(
           Animated.floatValue(50.),
           {
@@ -99,11 +99,11 @@ module AnimatedText = {
           transform([Transform.TranslateY(translate)]),
         ];
 
-      <Text style=textHeaderStyle text />;
+      (slots, <Text style=textHeaderStyle text />);
     });
 
   let createElement = (~children as _, ~text: string, ~delay: float, ()) =>
-    React.element(make(~text, ~delay, ()));
+    make(~text, ~delay, ());
 };
 
 let render = () =>

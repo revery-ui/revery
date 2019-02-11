@@ -11,7 +11,7 @@ module ActionButton = {
   let component = React.component("ActionButton");
 
   let make = (~name, ~onClick, ()) =>
-    component((_slots: React.Hooks.empty) => {
+    component((slots) => {
       let wrapperStyle =
         Style.[
           backgroundColor(selectionHighlight),
@@ -24,13 +24,13 @@ module ActionButton = {
           fontSize(14),
           margin(16),
         ];
-      <Clickable style=wrapperStyle onClick>
+      (slots, <Clickable style=wrapperStyle onClick>
         <Text style=textHeaderStyle text=name />
-      </Clickable>;
+      </Clickable>);
     });
 
   let createElement = (~children as _, ~name, ~onClick, ()) =>
-    React.element(make(~name, ~onClick, ()));
+    make(~name, ~onClick, ());
 };
 
 module CaptureArea = {
@@ -39,7 +39,7 @@ module CaptureArea = {
   let make = w =>
     component(slots => {
       let (count, setCount, slots) = React.Hooks.state(0, slots);
-      let (file, setFile, _slots: React.Hooks.empty) =
+      let (file, setFile, slots) =
         React.Hooks.state(None, slots);
 
       let capture = () => {
@@ -63,16 +63,16 @@ module CaptureArea = {
 
       let imageStyle = Style.[width(400), height(300)];
 
-      <View style=viewStyle>
+      (slots, <View style=viewStyle>
         <ActionButton name="Take a screenshot!" onClick=capture />
         {switch (file) {
          | None => <View />
          | Some(src) => <Image style=imageStyle src />
          }}
-      </View>;
+      </View>);
     });
 
-  let createElement = (~w, ~children as _, ()) => React.element(make(w));
+  let createElement = (~w, ~children as _, ()) => make(w);
 };
 
 let render = w => <CaptureArea w />;

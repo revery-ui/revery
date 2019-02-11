@@ -32,7 +32,10 @@ let make =
   component(slots => {
     let (clickableRef, setClickableRefOption, slots) =
       React.Hooks.state(None, slots);
-    let setClickableRef = r => setClickableRefOption(Some(r));
+    let setClickableRef = r => {
+        print_endline ("setting ref");
+        setClickableRefOption(Some(r))
+    };
 
     let (animatedOpacity, setOpacity, slots) =
       React.Hooks.state(0.8, slots);
@@ -53,6 +56,7 @@ let make =
       switch (clickableRef) {
       | Some(clickable) =>
         if (isMouseInsideRef(clickable, mouseX, mouseY)) {
+          print_endline ("CLICKING");
           onClick();
         }
       | None => ()
@@ -63,6 +67,7 @@ let make =
     };
 
     let onMouseDown = _ => {
+        print_endline ("CLICK");
       Mouse.setCapture(
         ~onMouseMove=evt => onMouseMove(evt.mouseX, evt.mouseY),
         ~onMouseUp=evt => onMouseUp(evt.mouseX, evt.mouseY),

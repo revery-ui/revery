@@ -28,8 +28,8 @@ module Sample = {
   let component = React.component("Sample");
 
   let make = () =>
-    component((_slots: React.Hooks.empty) =>
-      <View style=containerStyle>
+    component((slots) =>
+      (slots, <View style=containerStyle>
         <ScrollView style=outerBox>
           <Image
             src="outrun-logo.png"
@@ -45,9 +45,9 @@ module Sample = {
           />
         </ScrollView>
       </View>
-    );
+    ));
 
-  let createElement = (~children as _, ()) => React.element(make());
+  let createElement = (~children as _, ()) => make();
 };
 
 let render = () => <Sample />;

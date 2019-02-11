@@ -170,13 +170,14 @@ module TreeView = {
     );
 
   let make = (~renderer, ()) =>
-    component((_slots: React.Hooks.empty) =>
-      switch (renderer) {
+    component((slots) => {
+      let c = switch (renderer) {
       | Some(fn) => <Tree tree=animalKingdom nodeRenderer=fn />
       | None =>
         <Tree tree=stringTree nodeRenderer=Tree.default emptyRenderer />
-      }
-    );
+      };
+      (slots, c)
+    });
 
   let customRenderer = (~indent, content) => {
     open Tree;
@@ -210,7 +211,7 @@ module TreeView = {
   };
 
   let createElement = (~children as _, ~renderer=?, ()) =>
-    React.element(make(~renderer, ()));
+    make(~renderer, ());
 };
 
 let titleStyles =

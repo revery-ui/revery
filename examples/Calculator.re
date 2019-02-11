@@ -8,8 +8,8 @@ open Revery.UI.Components;
 module Row = {
   let component = React.component("Row");
 
-  let make = children =>
-    component((_slots: React.Hooks.empty) => {
+  let createElement = (~children, ()) => 
+    component((slots) => {
       let style =
         Style.[
           flexDirection(`Row),
@@ -17,17 +17,16 @@ module Row = {
           justifyContent(`Center),
           flexGrow(1),
         ];
-      <View style> ...children </View>;
+      (slots, <View style> ...children </View>);
     });
 
-  let createElement = (~children, ()) => React.element(make(children));
 };
 
 module Column = {
   let component = React.component("Column");
 
-  let make = children =>
-    component((_slots: React.Hooks.empty) => {
+  let createElement = (~children, ()) => 
+    component((slots) => {
       let style =
         Style.[
           flexDirection(`Column),
@@ -36,23 +35,23 @@ module Column = {
           backgroundColor(Colors.darkGrey),
           flexGrow(1),
         ];
-      <View style> ...children </View>;
+      (slots, <View style> ...children </View>);
     });
 
-  let createElement = (~children, ()) => React.element(make(children));
 };
 
 module Button = {
   let component = React.component("Button");
 
-  let make =
+  let createElement =
       (
-        ~fontFamily as family="Roboto-Regular.ttf",
-        ~contents: string,
+        ~fontFamily as family ="Roboto-Regular.ttf",
+        ~contents,
         ~onClick,
+        ~children as _,
         (),
       ) =>
-    component((_slots: React.Hooks.empty) => {
+    component((slots) => {
       let clickableStyle =
         Style.[
           position(`Relative),
@@ -73,26 +72,16 @@ module Button = {
       let textStyle =
         Style.[color(Colors.black), fontFamily(family), fontSize(32)];
 
-      <Clickable style=clickableStyle onClick>
+      (slots, <Clickable style=clickableStyle onClick>
         <View style=viewStyle> <Text style=textStyle text=contents /> </View>
-      </Clickable>;
+      </Clickable>);
     });
-
-  let createElement =
-      (
-        ~fontFamily="Roboto-Regular.ttf",
-        ~contents,
-        ~onClick,
-        ~children as _,
-        (),
-      ) =>
-    React.element(make(~fontFamily, ~contents, ~onClick, ()));
 };
 module Display = {
   let component = React.component("Display");
 
-  let make = (~display: string, ~curNum: string, ()) =>
-    component((_slots: React.Hooks.empty) => {
+  let createElement = (~display: string, ~curNum: string, ~children as _, ()) =>
+    component((slots) => {
       let viewStyle =
         Style.[
           backgroundColor(Colors.white),
@@ -117,14 +106,11 @@ module Display = {
           margin(15),
         ];
 
-      <View style=viewStyle>
+      (slots, <View style=viewStyle>
         <Text style=displayStyle text=display />
         <Text style=numStyle text=curNum />
-      </View>;
+      </View>);
     });
-
-  let createElement = (~display: string, ~curNum: string, ~children as _, ()) =>
-    React.element(make(~display, ~curNum, ()));
 };
 
 type operator = [ | `Nop | `Add | `Sub | `Mul | `Div];
@@ -236,7 +222,7 @@ let reducer = (action, state) =>
 module Calculator = {
   let component = React.component("Calculator");
 
-  let make = window =>
+  let createElement = (~window, ~children as _, ()) =>
     component(slots => {
       let ({display, number, _}, dispatch, slots) =
         React.Hooks.reducer(
@@ -279,7 +265,7 @@ module Calculator = {
       /* TODO: Pretty sure this isn't supposed to go in the render() function.
          Seems to cause lag the more times we re-render, so I guess this is
          subscribing a ton of times and never unsubscribing. */
-      let _slots: React.Hooks.empty =
+      let slots =
         React.Hooks.effect(
           OnMount,
           () => {
@@ -290,7 +276,7 @@ module Calculator = {
           slots,
         );
 
-      <Column>
+      (slots, <Column>
         <Display display curNum=number />
         <Row>
           <Button
@@ -378,11 +364,9 @@ module Calculator = {
             onClick={_ => dispatch(OperationKeyPressed(`Add))}
           />
         </Row>
-      </Column>;
+      </Column>);
     });
 
-  let createElement = (~window, ~children as _, ()) =>
-    React.element(make(window));
 };
 
 let render = window => <Calculator window />;
