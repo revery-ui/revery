@@ -105,9 +105,9 @@ let state: state = {
     },
     {
       name: "Text",
-      render: _w => TextExample.render()},
+      render: _w => TextExample.render(),
       source: "TextExample.re",
-    }
+    },
   ],
   selectedExample: "Animation",
 };

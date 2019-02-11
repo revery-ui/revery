@@ -289,11 +289,9 @@ type coreStyleProps = [
   | `Cursor(option(MouseCursors.t))
 ];
 
-
-
 type fontProps = [ | `FontFamily(string) | `FontSize(int)];
 
-type textProps = [ | `LineHeight(float) | `TextWrap(TextWrapping.wrapType)]
+type textProps = [ | `LineHeight(float) | `TextWrap(TextWrapping.wrapType)];
 
 /*
    Text and View props take different style properties as such

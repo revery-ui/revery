@@ -2,80 +2,96 @@ type wrapType =
   | NoWrap
   | WhitespaceWrap;
 
-let splitByWhitespace = text => {
-  let (_a, _) =
-    text
-    |> Str.split(Str.regexp("[ \n\r\x0c\t]+"))
-    |> List.fold_left(
-        ((splitted, runningSumOffset), cur) => {
-          /* TODO is it? */
-          let whitespaceWidth = 1;
-          let currentRunningSumOffset =
-            runningSumOffset + String.length(cur) + whitespaceWidth;
-
-          (
-            [(cur, currentRunningSumOffset), ...splitted],
-            currentRunningSumOffset,
-          );
-        },
-        ([], 0),
-      );
-  _a;
+type folder = {
+  lines: list(string),
+  currMaxWidth: int,
+  beginIndex: int,
+  endIndex: int,
 };
 
-let wrapText = (~logging=false, ~text, ~measureWidth, ~maxWidth, ~isWrappingPoint) => {
-  let currWidth = ref(0);
-  let currOffset = ref(0);
-  let currLineOffset = ref(0);
-  let currLineNumber = ref(0);
-  let maxWidthLine = ref(0);
-  let lines: ref(list(string)) = ref([]);
-  
-  String.iteri((i, ch) => {
-    let a = isWrappingPoint(Char.escaped(ch));
-    let isEnd = i == String.length(text) - 1;
+let wrapText =
+    (~logging=false, ~text, ~measureWidth, ~maxWidth, ~isWrappingPoint) => {
+  let textLength = String.length(text);
 
-    if (logging) {
-      print_endline("TextNode:: iter:: char: " ++ Char.escaped(ch) ++ ", i: " ++ string_of_int(i));
-      print_endline("TextNode:: iter:: currOffset: " ++ string_of_int(currOffset^) ++ ", currLineOffset: " ++ string_of_int(currLineOffset^));
-    }
+  let isEnd = i => textLength == i + 1;
 
-    if (a || isEnd) {
-      let word = String.sub(text, currOffset^, i - currOffset^ + 1);
-      let dWidth = measureWidth(word);
-      
-      if (logging)
-          print_endline("TextNode:: iter:: word: " ++ word ++ ", width: " ++ string_of_int(dWidth));
+  let subAndMeasure = (beginIndex, endIndex) => {
+    let substr = String.sub(text, beginIndex, endIndex - beginIndex + 1);
+    let substrWidth = measureWidth(substr);
+    (substr, substrWidth);
+  };
 
-      if ((currWidth^ + dWidth) >= maxWidth || isEnd) {
-        let line = if (isEnd)
-          String.sub(text, currLineOffset^, String.length(text) - currLineOffset^)
-        else
-          String.sub(text, currLineOffset^, currOffset^ - currLineOffset^ - 1)
+  let foldFunc = (acc, (index, char)) =>
+    if (isEnd(index)) {
+      print_endline(
+        "is end:: beginIndex: "
+        ++ string_of_int(acc.beginIndex)
+        ++ " endIndex: "
+        ++ string_of_int(acc.endIndex),
+      );
+      let currEndIndex = index;
+      let (_substr, width) = subAndMeasure(acc.beginIndex, currEndIndex);
 
-        if (logging)
-          print_endline("TextNode:: line: " ++ line);
+      if (width >= maxWidth) {
+        print_endline("is end, width needs wrapping: ");
+        let (line, lineWidth) = subAndMeasure(acc.beginIndex, acc.endIndex);
+        let (lastLine, lastLineWidth) =
+          subAndMeasure(acc.endIndex + 2, index);
 
-        lines := [line, ...lines^];
-        currLineNumber := currLineNumber^ + 1;
-        currLineOffset := currLineOffset^ + currOffset^ - currLineOffset^ - 1;
-        currWidth := 0;
+        let currMaxWidth =
+          max(lastLineWidth, max(acc.currMaxWidth, lineWidth));
 
-        if (maxWidthLine^ < currWidth^) {
-          maxWidthLine:= currWidth^;
-          ();
-        } else {
-          ();
-        }
+        {...acc, lines: [lastLine, line, ...acc.lines], currMaxWidth};
       } else {
-        currOffset := currOffset^ + String.length(word);
-        currWidth := currWidth^ + dWidth;
-        ();
-      }
-    } else {
-      ();  
-    }
-  }, text);
+        let (line, lineWidth) = subAndMeasure(acc.beginIndex, index);
 
-  (lines^, maxWidthLine^);
-}
+        print_endline("is end, width is ok:: line: " ++ line);
+        {
+          ...acc,
+          lines: [line, ...acc.lines],
+          currMaxWidth: max(acc.currMaxWidth, lineWidth),
+        };
+      };
+    } else if (!isWrappingPoint(Char.escaped(char))) {
+      acc;
+    } else {
+      let currEndIndex = index - 1;
+      let (_substr, width) = subAndMeasure(acc.beginIndex, currEndIndex);
+
+      if (width >= maxWidth) {
+        let beginningOfCurrentWordIndex = acc.endIndex + 2;
+        let (lineWithouCurrentWord, lineWithouCurrentWordWidth) =
+          subAndMeasure(acc.beginIndex, acc.endIndex);
+
+        print_endline(
+          "wrapping point, width needs wrapping:: lineWithouCurrentWord: "
+          ++ lineWithouCurrentWord
+          ++ " beginIndex: "
+          ++ string_of_int(beginningOfCurrentWordIndex),
+        );
+        {
+          lines: [lineWithouCurrentWord, ...acc.lines],
+          currMaxWidth: max(acc.currMaxWidth, lineWithouCurrentWordWidth),
+          beginIndex: beginningOfCurrentWordIndex,
+          endIndex: index + 1,
+        };
+      } else {
+        print_endline(
+          "wrapping point, width is ok:: currEndIndex: "
+          ++ string_of_int(currEndIndex),
+        );
+        {...acc, endIndex: currEndIndex};
+      };
+    };
+
+  logging |> ignore;
+
+  let folda =
+    String.to_seqi(text)
+    |> Seq.fold_left(
+         foldFunc,
+         {lines: [], currMaxWidth: 0, beginIndex: 0, endIndex: 0},
+       );
+
+  (List.rev(folda.lines), folda.currMaxWidth);
+};

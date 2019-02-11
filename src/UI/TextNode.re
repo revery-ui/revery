@@ -34,8 +34,7 @@ class textNode (text: string) = {
 
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
-      let _lineHeight = style.lineHeight;
-      let _wrapType= style.textWrap;
+      let lineHeight = style.lineHeight;
       let font =
         FontCache.load(
           style.fontFamily,
@@ -44,9 +43,6 @@ class textNode (text: string) = {
           ),
         );
       let _dimensions = _super#measurements();
-
-      if (_super#getLogging())
-        print_endline("TextNode:: lineHeight: " ++ string_of_float(_lineHeight) ++ ", height: " ++ string_of_int(_dimensions.height))
 
       let color = Color.multiplyAlpha(opacity, style.color);
       Shaders.CompiledShader.setUniform4fv(
@@ -58,8 +54,7 @@ class textNode (text: string) = {
       let outerTransform = Mat4.create();
       Mat4.fromTranslation(
         outerTransform,
-        /*Vec3.create(0.0, _lineHeight, 0.0),*/
-        Vec3.create(0.0, float_of_int(_dimensions.height), 0.0),
+        Vec3.create(0.0, lineHeight, 0.0),
       );
 
       let render = (s: Fontkit.fk_shape, x: float, y: float) => {
@@ -108,12 +103,9 @@ class textNode (text: string) = {
 
         Geometry.draw(quad, textureShader);
 
-        /*if (x > 4. && x < 40.)
-          print_endline("renderText:: x: " ++ string_of_float(x) ++ ", advance: " ++ string_of_float(advance) ++ ", width: " ++ string_of_float(width))*/
-
         x +. advance /. 64.0;
       };
-      
+
       List.iteri(
         (lineNum, line) => {
           let shapedText = FontRenderer.shape(font, line);
@@ -121,30 +113,27 @@ class textNode (text: string) = {
 
           Array.iteri(
             (_offset, s) => {
-              let nextX = render(s, startX^, _lineHeight *. float_of_int(lineNum));
+              let nextX =
+                render(s, startX^, lineHeight *. float_of_int(lineNum));
               startX := nextX;
             },
             shapedText,
           );
         },
-        _lines^
+        _lines^,
       );
-      
+
     | _ => ()
     };
   };
   pub setText = t => text = t;
   pub! getMeasureFunction = pixelRatio => {
     let measure =
-        (_mode, _width, _widthMeasureMode, _height, _heightMeasureMode) => {
-
-      if (_super#getLogging())
-          print_endline("TextNode:: getMeasureFunction:: incoming width:" ++ string_of_int(_width));
-
+        (_mode, width, _widthMeasureMode, _height, _heightMeasureMode) => {
       /* TODO: Cache font locally in variable */
       let style = _super#getStyle();
       let textWrap = style.textWrap;
-      let _lineHeight = style.lineHeight;
+      let lineHeight = style.lineHeight;
       let font =
         FontCache.load(
           style.fontFamily,
@@ -152,36 +141,37 @@ class textNode (text: string) = {
         );
 
       switch (textWrap) {
-        | WhitespaceWrap => {
-          let (lines, maxWidthLine) = TextWrapping.wrapText(
-            ~text=text,
+      | WhitespaceWrap =>
+        let (lines, maxWidthLine) =
+          TextWrapping.wrapText(
+            ~text,
             ~measureWidth=str => FontRenderer.measure(font, str).width,
-            ~maxWidth=_width,
-            ~isWrappingPoint=str => Str.string_match(Str.regexp("[ \n\r\x0c\t]+"), str, 0),
-            ~logging=_super#getLogging()
-          )
-          
-          let ret: Layout.LayoutTypes.dimensions = {
-            width: maxWidthLine,
-            height: int_of_float(float_of_int(List.length(lines)) *. _lineHeight),
-          };
+            ~maxWidth=width,
+            ~isWrappingPoint=
+              str => Str.string_match(Str.regexp("[ \n\r\x0c\t]+"), str, 0),
+            ~logging=false,
+          );
 
-          _lines := List.rev(lines);
+        _lines := lines;
 
-          ret;
-        }
-        | NoWrap => {
-          let d = FontRenderer.measure(font, text);
-          let ret: Layout.LayoutTypes.dimensions = {
-            LayoutTypes.width: int_of_float(float_of_int(d.width) /. pixelRatio),
-            height: int_of_float(float_of_int(d.height) /. pixelRatio),
-          };
+        let dimensions: Layout.LayoutTypes.dimensions = {
+          width: maxWidthLine,
+          height:
+            int_of_float(float_of_int(List.length(lines)) *. lineHeight),
+        };
 
-          _lines := [text]
-          
-          ret;
-        }
-      }
+        dimensions;
+      | NoWrap =>
+        let d = FontRenderer.measure(font, text);
+        let dimensions: Layout.LayoutTypes.dimensions = {
+          width: int_of_float(float_of_int(d.width) /. pixelRatio),
+          height: int_of_float(float_of_int(d.height) /. pixelRatio),
+        };
+
+        _lines := [text];
+
+        dimensions;
+      };
     };
     Some(measure);
   };

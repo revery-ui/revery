@@ -17,7 +17,7 @@ module Events = Events;
 module Performance = Performance;
 module UniqueId = UniqueId;
 
-module TextWrapping = TextWrapping
+module TextWrapping = TextWrapping;
 
 /*
  * Internally exposed modules, just for testing.

@@ -14,24 +14,24 @@ module SomeText = {
       <Text
         logging=true
         style=Style.[
-              color(Colors.white),
-              fontFamily("Roboto-Regular.ttf"),
-              fontSize(20),
-              lineHeight(20.),
-              textWrap(TextWrapping.WhitespaceWrap),
-              width(200),
-              border(~color=Colors.blueViolet, ~width=5)
-            ]
+          color(Colors.white),
+          fontFamily("Roboto-Regular.ttf"),
+          fontSize(20),
+          lineHeight(20.),
+          textWrap(TextWrapping.WhitespaceWrap),
+          width(200),
+          border(~color=Colors.blueViolet, ~width=5),
+        ]
         text=textContent
       />;
-    })
-  }
+    });
+  };
 
-  let createElement = (~children as _, ()) =>
-    React.element(make());
-}
+  let createElement = (~children as _, ()) => React.element(make());
+};
 
-let render = () => <View
+let render = () =>
+  <View
     style=Style.[
       position(`Absolute),
       justifyContent(`Center),
