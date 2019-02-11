@@ -25,6 +25,26 @@ jobs:
   - template: .ci/create-docs.yml
   - template: .ci/publish-build-cache.yml
 
+- job: Hygiene
+  timeoutInMinutes: 0
+  pool:
+    vmImage: 'macOS 10.13'
+
+  variables:
+    STAGING_DIRECTORY: /Users/vsts/STAGING
+    STAGING_DIRECTORY_UNIX: /Users/vsts/STAGING
+    ESY__CACHE_INSTALL_PATH: /Users/vsts/.esy/3____________________________________________________________________/i
+    ESY__CACHE_SOURCE_TARBALL_PATH: /Users/vsts/.esy/source/i
+    # ESY__NPM_ROOT: /usr/local/lib/node_modules/esy
+
+  steps:
+  - script: brew update
+  - script: brew install libpng ragel
+  - template: .ci/use-node.yml
+  - template: .ci/restore-build-cache.yml
+  - template: .ci/esy-check-hygiene.yml
+  - template: .ci/publish-build-cache.yml
+
 - job: MacOS
   timeoutInMinutes: 0
   pool:
