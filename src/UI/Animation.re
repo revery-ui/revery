@@ -52,72 +52,10 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     easing: float => float,
   };
 
-  // From http://greweb.me/2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/
-  module Bezier = {
-    let make = (mX1, mY1, mX2, mY2) => {
-      let a = (aA1, aA2) => {
-        1.0 -. 3.0 *. aA2 +. 3.0 *. aA1;
-      };
-      let b = (aA1, aA2) => {
-        3.0 *. aA2 -. 6.0 *. aA1;
-      };
-      let c = aA1 => {
-        3.0 *. aA1;
-      };
-
-      // Returns x(t) given t, x1, and x2, or y(t) given t, y1, and y2.
-      let calcBezier = (aT, aA1, aA2) => {
-        ((a(aA1, aA2) *. aT +. b(aA1, aA2)) *. aT +. c(aA1)) *. aT;
-      };
-
-      // Returns dx/dt given t, x1, and x2, or dy/dt given t, y1, and y2.
-      let getSlope = (aT, aA1, aA2) => {
-        3.0 *. a(aA1, aA2) *. aT *. aT +. 2.0 *. b(aA1, aA2) *. aT +. c(aA1);
-      };
-
-      let getTForX = aX => {
-        // Newton raphson iteration
-        let rec newton = (guess, attempts) => {
-          let currentSlope = getSlope(guess, mX1, mX2);
-          let goodEnough = currentSlope === 0.0;
-          if (goodEnough || attempts === 4) {
-            guess;
-          } else {
-            let currentX = calcBezier(guess, mX1, mX2) -. aX;
-            let newGuess = guess -. currentX /. currentSlope;
-            newton(newGuess, attempts + 1);
-          };
-        };
-        newton(aX, 0);
-      };
-      let get = aX =>
-        if (mX1 === mY1 && mX2 === mY2) {
-          aX;
-        } else if (aX <= 0.) {
-          0.;
-        } else if (aX >= 1.) {
-          1.;
-        } else {
-          calcBezier(getTForX(aX), mY1, mY2);
-        };
-      get;
-    };
-  };
-
-  let genOneDimBezierFunc = (u1: float, u2: float) => {
-    let a = 3. *. (u1 -. u2) +. 1.;
-    let b = (-6.) *. u1 +. 3. *. u2;
-    let c = 3. *. u1;
-    let ret = (t: float) => {
-      let t2 = t ** 2.;
-      a *. t2 *. t +. b *. t2 +. c *. t;
-    };
-    ret;
-  };
   let linear = (t: float) => t;
   let quadratic = (t: float) => t *. t;
   let cubic = (t: float) => t *. t *. t;
-  let cubicBezier = Bezier.make;
+  let cubicBezier = Rebez.make;
   // From https://developer.mozilla.org/en-US/docs/Web/CSS/timing-function#Keywords_for_common_cubic-bezier_timing_functions
   let ease = cubicBezier(0.25, 0.1, 0.25, 1.0);
   let easeIn = cubicBezier(0.42, 0.0, 1.0, 1.0);
@@ -189,6 +127,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
 
   let start = (~update=?, ~complete=?, animation) => {
     let activeAnimation = {animation, update, complete};
+    animation.startTime = Time.to_float_seconds(AnimationTickerImpl.time());
     activeAnimations := List.append([activeAnimation], activeAnimations^);
     let removeAnimation = l =>
       List.filter(({animation: a, _}) => a.id !== animation.id, l);

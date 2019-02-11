@@ -131,14 +131,14 @@ let make =
               duration: Milliseconds(100.),
               delay: Seconds(0.),
               repeat: false,
-              easing: Animated.cubicBezier(0.23, 0., 0.32, 1.),
+              easing: Animated.cubicBezier(0.23, 1., 0.32, 1.),
             };
             let bounceBackAnim = {
               toValue: isAtTop ? 0. : float_of_int(maxHeight),
               duration: Milliseconds(800.),
               delay: Seconds(0.),
               repeat: false,
-              easing: Animated.cubicBezier(0.23, 0., 0.32, 1.),
+              easing: Animated.cubicBezier(0.23, 1., 0.32, 1.),
             };
             let playback =
               tween(
@@ -152,10 +152,7 @@ let make =
                      bounceBackAnim,
                    ),
                  )
-              |> Chain.start(
-                   ~update=v => setScrollTop(int_of_float(v)),
-                   ~complete=() => setBouncingState(Idle),
-                 );
+              |> Chain.start(~update=v => setScrollTop(int_of_float(v)));
             setBouncingState(Bouncing(direction, playback));
           | Idle => setScrollTop(newScrollTop)
           };

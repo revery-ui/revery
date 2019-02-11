@@ -33,6 +33,7 @@
     "reason-glfw": "^3.2.1013",
     "reason-fontkit": "^2.0.6",
     "reason-gl-matrix": "^0.9.9302",
+    "rebez": "*",
     "@opam/color": "^0.2.0",
     "@opam/js_of_ocaml": "*",
     "@opam/js_of_ocaml-compiler": "*",
@@ -43,6 +44,7 @@
     "flex": "^1.2.2"
   },
   "resolutions": {
+    "rebez": "link-dev:../rebez",
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
