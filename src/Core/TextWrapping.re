@@ -1,6 +1,7 @@
 type wrapType =
   | NoWrap
-  | WhitespaceWrap;
+  | WhitespaceWrap
+  | UserDefined((string, string => int, int) => (list(string), int));
 
 type folder = {
   lines: list(string),
@@ -9,8 +10,7 @@ type folder = {
   endIndex: int,
 };
 
-let wrapText =
-    (~logging=false, ~text, ~measureWidth, ~maxWidth, ~isWrappingPoint) => {
+let wrapText = (~logging=false, ~text, ~measureWidth, ~maxWidth, ~wrapHere) => {
   let textLength = String.length(text);
 
   let isEnd = i => textLength == i + 1;
@@ -52,7 +52,7 @@ let wrapText =
           currMaxWidth: max(acc.currMaxWidth, lineWidth),
         };
       };
-    } else if (!isWrappingPoint(Char.escaped(char))) {
+    } else if (!wrapHere(Char.escaped(char))) {
       acc;
     } else {
       let currEndIndex = index - 1;

@@ -209,7 +209,7 @@ class node ('a) (()) = {
           m,
         )
       };
-      
+
     _layoutNode := node;
     node;
   };

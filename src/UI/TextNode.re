@@ -147,7 +147,7 @@ class textNode (text: string) = {
             ~text,
             ~measureWidth=str => FontRenderer.measure(font, str).width,
             ~maxWidth=width,
-            ~isWrappingPoint=
+            ~wrapHere=
               str => Str.string_match(Str.regexp("[ \n\r\x0c\t]+"), str, 0),
             ~logging=false,
           );
@@ -169,6 +169,23 @@ class textNode (text: string) = {
         };
 
         _lines := [text];
+
+        dimensions;
+      | UserDefined(wrapFunc) =>
+        let (lines, maxWidthLine) =
+          wrapFunc(
+            text,
+            str => FontRenderer.measure(font, str).width,
+            width,
+          );
+
+        _lines := lines;
+
+        let dimensions: Layout.LayoutTypes.dimensions = {
+          width: maxWidthLine,
+          height:
+            int_of_float(float_of_int(List.length(lines)) *. lineHeight),
+        };
 
         dimensions;
       };
