@@ -25,7 +25,8 @@ jobs:
   - template: .ci/create-docs.yml
   - template: .ci/publish-build-cache.yml
 
-- job: 'Hygiene Checks'
+- job: Hygiene_Checks
+  name: 'Hygiene Checks'
   timeoutInMinutes: 0
   pool:
     vmImage: 'macOS 10.13'
