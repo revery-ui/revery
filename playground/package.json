@@ -1,0 +1,26 @@
+{
+  "name": "revery-playground",
+  "version": "1.0.0",
+  "description": "Playground for Revery examples",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node build.js",
+    "start": "http-server _build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/revery-ui/revery.git"
+  },
+  "author": "Bryan Phelps",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/revery-ui/revery/issues"
+  },
+  "homepage": "https://github.com/revery-ui/revery#readme",
+  "devDependencies": {
+    "fs-extra": "^7.0.1",
+    "http-server": "^0.11.1",
+    "monaco-editor": "^0.15.6"
+  }
+}

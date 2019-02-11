@@ -108,9 +108,6 @@ module AnimatedText = {
 
 let render = () =>
   <View
-    onMouseWheel={evt =>
-      print_endline("onMouseWheel: " ++ string_of_float(evt.deltaY))
-    }
     style=Style.[
       position(`Absolute),
       justifyContent(`Center),

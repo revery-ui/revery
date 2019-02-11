@@ -10,7 +10,8 @@
     "build:js": "esy b dune build examples/Examples.bc.js",
     "build:js:release": "esy b dune build examples/Examples.bc.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "esy b .ci/format.sh",
+    "format": "esy dune build @fmt --auto-promote",
+    "format:windows": "esy b .ci/format.sh",
     "doc": "refmterr esy dune build @doc --root ."
   },
   "homepage": "https://github.com/bryphe/revery#readme",
@@ -30,8 +31,8 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "3.4.0",
-    "reason-glfw": "^3.2.1013",
-    "reason-fontkit": "^2.0.6",
+    "reason-glfw": "^3.2.1014",
+    "reason-fontkit": "^2.1.0",
     "reason-gl-matrix": "^0.9.9302",
     "rebez": "*",
     "@opam/color": "^0.2.0",
@@ -48,7 +49,7 @@
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#7901934"
+    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#1c102ab"
   },
   "peerDependencies": {
     "ocaml": "^4.7.0"

@@ -1,5 +1,5 @@
 {
-  "checksum": "05d0232d7a47f1e4a95b57f2137d726e",
+  "checksum": "bb2a36f87b2d6225e8f52c031528d593",
   "root": "revery@link-dev:./package.json",
   "node": {
     "revery@link-dev:./package.json": {
@@ -15,7 +15,7 @@
       "dependencies": [
         "rebez@link-dev:../rebez", "reason-glfw@3.2.1014@d41d8cd9",
         "reason-gl-matrix@0.9.9302@d41d8cd9",
-        "reason-fontkit@2.0.6@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
+        "reason-fontkit@2.1.0@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
         "flex@1.2.2@d41d8cd9", "@opam/lwt_ppx@opam:1.2.1@db1172a7",
         "@opam/lwt@opam:4.1.0@111fc2bf",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
@@ -23,7 +23,7 @@
         "@opam/js_of_ocaml@github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce@d41d8cd9",
         "@opam/color@opam:0.2.0@8ef09171",
         "@esy-ocaml/reason@3.4.0@d41d8cd9",
-        "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#7901934@d41d8cd9"
+        "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#1c102ab@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.7.1004@d41d8cd9", "@opam/odoc@opam:1.3.0@a3e1a29d",
@@ -125,14 +125,14 @@
       ],
       "devDependencies": []
     },
-    "reason-fontkit@2.0.6@d41d8cd9": {
-      "id": "reason-fontkit@2.0.6@d41d8cd9",
+    "reason-fontkit@2.1.0@d41d8cd9": {
+      "id": "reason-fontkit@2.1.0@d41d8cd9",
       "name": "reason-fontkit",
-      "version": "2.0.6",
+      "version": "2.1.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-2.0.6.tgz#sha1:5897569556ea778f9cee3f402812ce1b749a993a"
+          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-2.1.0.tgz#sha1:a4c3f8c25f4ea5301f3125bb78b7ed40862d3008"
         ]
       },
       "overrides": [],
@@ -1596,14 +1596,14 @@
       ],
       "devDependencies": []
     },
-    "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#7901934@d41d8cd9": {
+    "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#1c102ab@d41d8cd9": {
       "id":
-        "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#7901934@d41d8cd9",
+        "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#1c102ab@d41d8cd9",
       "name": "@brisk/brisk-reconciler",
-      "version": "github:briskml/brisk-reconciler#7901934",
+      "version": "github:briskml/brisk-reconciler#1c102ab",
       "source": {
         "type": "install",
-        "source": [ "github:briskml/brisk-reconciler#7901934" ]
+        "source": [ "github:briskml/brisk-reconciler#1c102ab" ]
       },
       "overrides": [],
       "dependencies": [
