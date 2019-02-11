@@ -87,7 +87,6 @@ let measure = (font: Fontkit.fk_face, text: string) => {
   print_endline ("-- unitsPerEm: " ++ string_of_int(metrics.unitsPerEm));
   print_endline ("-- size: " ++ string_of_int(metrics.size));
 
-
   Array.iter(
     shape => {
       let {height, bearingY, advance, _} = getGlyph(font, shape.glyphId);
