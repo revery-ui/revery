@@ -22,14 +22,14 @@ let createElement =
       (),
     ) =>
   component(slots => {
-    let (isChecked, checkBox, _slots: React.Hooks.empty) =
+    let (isChecked, checkBox, slots) =
       React.Hooks.state(checked, slots);
 
     let stylesToUse = Style.merge(~source=defaultStyle, ~target=style);
     let bgColor = isChecked ? checkedColor : Colors.transparentWhite;
     let checkedContent = isChecked ? {||} : "";
 
-    <Clickable
+    (slots, <Clickable
       onClick={() => {
         checkBox(!isChecked);
         onChange(!isChecked);
@@ -54,5 +54,5 @@ let createElement =
           ]
         />
       </View>
-    </Clickable>;
+    </Clickable>);
   });

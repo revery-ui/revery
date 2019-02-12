@@ -26,9 +26,9 @@ let make =
     ) =>
   component(slots => {
     let defaultVal = List.nth(buttons, defaultSelected).value;
-    let (checkedVal, setCheckedVal, _slots: React.Hooks.empty) =
+    let (checkedVal, setCheckedVal, slots) =
       React.Hooks.state(defaultVal, slots);
-    <View style=Style.[justifyContent(`Center), alignItems(`Center)]>
+    (slots, <View style=Style.[justifyContent(`Center), alignItems(`Center)]>
       ...{
            buttons
            |> List.map(button => {
@@ -55,7 +55,7 @@ let make =
                 </Clickable>;
               })
          }
-    </View>;
+    </View>);
   });
 
 let createElement =

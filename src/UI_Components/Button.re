@@ -22,8 +22,8 @@ let createElement =
       (),
     ) =>
   /* children, */
-  component((_slots: React.Hooks.empty) =>
-    <Clickable onClick={disabled ? noop : onClick} ?onFocus ?onBlur ?tabindex>
+  component((slots) =>
+    (slots, <Clickable onClick={disabled ? noop : onClick} ?onFocus ?onBlur ?tabindex>
       <View
         style=Style.[
           position(`Relative),
@@ -43,5 +43,5 @@ let createElement =
           text=title
         />
       </View>
-    </Clickable>
+    </Clickable>)
   );

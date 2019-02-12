@@ -16,7 +16,7 @@ let make =
       React.Hooks.state(scrollTop, slots);
     let (outerRef: option(Revery_UI.node), setOuterRef, slots) =
       React.Hooks.state(None, slots);
-    let (actualScrollLeft, setScrollLeft, _slots: React.Hooks.empty) =
+    let (actualScrollLeft, setScrollLeft, slots) =
       React.Hooks.state(scrollLeft, slots);
 
     let scrollBarThickness = 10;
@@ -147,7 +147,7 @@ let make =
         height(scrollBarThickness),
       ];
 
-    <View style>
+    (slots, <View style>
       <View
         onMouseWheel=scroll
         ref={r => setOuterRef(Some(r))}
@@ -162,7 +162,7 @@ let make =
           horizontalScrollBar
         </View>
       </View>
-    </View>;
+    </View>);
   });
 
 let createElement = (~children, ~style, ~scrollLeft=0, ~scrollTop=0, ()) =>

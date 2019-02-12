@@ -27,8 +27,8 @@ module View = {
         ~style=Style.emptyViewStyle,
         children,
       ) =>
-    component((_: UiReact.Hooks.empty) =>
-      {
+    component((hooks) =>
+      (hooks, {
         make: () => {
           let styles = Style.create(~style, ());
           let events =
@@ -73,7 +73,7 @@ module View = {
           node;
         },
         children,
-      }
+      })
     );
 
   let createElement =
@@ -125,8 +125,8 @@ module Text = {
         ~text="",
         children,
       ) =>
-    component((_: UiReact.Hooks.empty) =>
-      {
+    component((hooks) =>
+      (hooks, {
         make: () => {
           let styles = create(~style, ());
           let events =
@@ -163,7 +163,7 @@ module Text = {
           node;
         },
         children,
-      }
+      })
     );
 
   let createElement =
@@ -204,8 +204,8 @@ module Image = {
         ~src="",
         children,
       ) =>
-    component((_: UiReact.Hooks.empty) =>
-      {
+    component((hooks) =>
+      (hooks, {
         make: () => {
           let styles = Style.create(~style, ());
           let events =
@@ -238,7 +238,7 @@ module Image = {
           node;
         },
         children,
-      }
+      })
     );
 
   let createElement =
