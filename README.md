@@ -27,6 +27,8 @@ To get a taste of Revery, check out our JavaScript + WebGL build on the [playgro
 npm install -g esy
 ```
 
+> __NOTE:__ Revery requires `esy` at version 0.5.6+
+
 ### Building
 
 - `esy install`

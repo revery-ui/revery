@@ -25,11 +25,29 @@ type mouseWheelEventParams = {
  */
 type focusEventParams = unit;
 
+type keyEventParams = {
+  key: Key.t,
+  scancode: int,
+  altKey: bool,
+  ctrlKey: bool,
+  shiftKey: bool,
+  superKey: bool,
+  isRepeat: bool,
+};
+
+type keyPressEventParams = {
+  codepoint: int,
+  character: string,
+};
+
 type event =
   | MouseDown(mouseButtonEventParams)
   | MouseMove(mouseMoveEventParams)
   | MouseUp(mouseButtonEventParams)
   | MouseWheel(mouseWheelEventParams)
+  | KeyDown(keyEventParams)
+  | KeyUp(keyEventParams)
+  | KeyPress(keyPressEventParams)
   | Blur
   | Focus;
 
@@ -38,6 +56,9 @@ type mouseButtonHandler = mouseButtonEventParams => unit;
 type mouseMoveHandler = mouseMoveEventParams => unit;
 type mouseWheelHandler = mouseWheelEventParams => unit;
 type focusHandler = focusEventParams => unit;
+type keyDownHandler = keyEventParams => unit;
+type keyUpHandler = keyEventParams => unit;
+type keyPressHandler = keyPressEventParams => unit;
 
 type t('a) = {
   ref: option(refCallback('a)),
@@ -47,6 +68,9 @@ type t('a) = {
   onMouseWheel: option(mouseWheelHandler),
   onFocus: option(focusHandler),
   onBlur: option(focusHandler),
+  onKeyUp: option(keyUpHandler),
+  onKeyDown: option(keyDownHandler),
+  onKeyPress: option(keyPressHandler),
 };
 
 let make =
@@ -58,6 +82,9 @@ let make =
       ~onMouseWheel=?,
       ~onFocus=?,
       ~onBlur=?,
+      ~onKeyPress=?,
+      ~onKeyDown=?,
+      ~onKeyUp=?,
       _unit: unit,
     ) => {
   let ret: t('a) = {
@@ -68,6 +95,9 @@ let make =
     onMouseWheel,
     onFocus,
     onBlur,
+    onKeyPress,
+    onKeyDown,
+    onKeyUp,
   };
   ret;
 };

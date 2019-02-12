@@ -12,3 +12,4 @@ module Input = Input;
 module RadioButtons = RadioButtons;
 module Checkbox = Checkbox;
 module Tree = Tree;
+module Dropdown = Dropdown;

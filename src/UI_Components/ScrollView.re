@@ -208,8 +208,5 @@ let make =
     </View>;
   });
 
-let createElement = (~children, ~style, ~scrollLeft=0, ~scrollTop=0, ()) => {
-  React.element(
-    make(~style, ~scrollLeft, ~scrollTop, React.listToElement(children)),
-  );
-};
+let createElement = (~children, ~style, ~scrollLeft=0, ~scrollTop=0, ()) =>
+  make(~style, ~scrollLeft, ~scrollTop, React.listToElement(children));

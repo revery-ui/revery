@@ -40,7 +40,6 @@ class textNode (text: string) = {
             float_of_int(style.fontSize) *. parentContext.pixelRatio +. 0.5,
           ),
         );
-      let dimensions = _super#measurements();
       let color = Color.multiplyAlpha(opacity, style.color);
       Shaders.CompiledShader.setUniform4fv(
         textureShader,
@@ -48,11 +47,14 @@ class textNode (text: string) = {
         Color.toVec4(color),
       );
 
+      let metrics = FontRenderer.getNormalizedMetrics(font);
+
+      /* Position the baseline */
+      let baseline =
+        (metrics.height -. metrics.descenderSize) /. parentContext.pixelRatio;
+
       let outerTransform = Mat4.create();
-      Mat4.fromTranslation(
-        outerTransform,
-        Vec3.create(0.0, float_of_int(dimensions.height), 0.0),
-      );
+      Mat4.fromTranslation(outerTransform, Vec3.create(0.0, baseline, 0.0));
 
       let render = (s: Fontkit.fk_shape, x: float) => {
         let glyph = FontRenderer.getGlyph(font, s.glyphId);

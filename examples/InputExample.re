@@ -23,19 +23,17 @@ module Example = {
 
   let component = React.component("Example");
 
-  let make = window =>
+  let createElement = (~children as _, ()) =>
     component(slots => {
       let ({first, second}, setValue, _slots: React.Hooks.empty) =
         React.Hooks.state({first: "", second: ""}, slots);
 
       <View style=containerStyle>
         <Input
-          window
           placeholder="Insert text here"
           onChange={(~value) => setValue({first: value, second})}
         />
         <Input
-          window
           placeholder="custom input"
           placeholderColor=Colors.plum
           cursorColor=Colors.white
@@ -55,9 +53,6 @@ module Example = {
         />
       </View>;
     });
-
-  let createElement = (~window, ~children as _, ()) =>
-    React.element(make(window));
 };
 
-let render = window => <Example window />;
+let render = () => <Example />;

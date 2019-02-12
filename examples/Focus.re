@@ -5,7 +5,7 @@ open Revery.UI.Components;
 module SimpleButton = {
   let component = React.component("SimpleButton");
 
-  let make = () =>
+  let createElement = (~children as _, ()) =>
     component(slots => {
       let (count, setCount, slots) = React.Hooks.state(0, slots);
       let (focused, setFocus, _slots: React.Hooks.empty) =
@@ -38,8 +38,6 @@ module SimpleButton = {
         </View>
       </Clickable>;
     });
-
-  let createElement = (~children as _, ()) => React.element(make());
 };
 
 let render = () =>

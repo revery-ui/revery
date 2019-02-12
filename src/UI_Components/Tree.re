@@ -108,12 +108,6 @@ let rec renderTree = (~indent=0, ~nodeRenderer, ~emptyRenderer, t) => {
   };
 };
 
-let make = (~tree, ~nodeRenderer, ~emptyRenderer) =>
-  component((_slots: React.Hooks.empty) => {
-    let componentTree = renderTree(tree, ~nodeRenderer, ~emptyRenderer);
-    <View> ...componentTree </View>;
-  });
-
 /*
    Cannot set a default argument for the node renderer as this will
    narrow down the type signature of the "tree" to whaterver type the
@@ -121,4 +115,7 @@ let make = (~tree, ~nodeRenderer, ~emptyRenderer) =>
  */
 let createElement =
     (~tree, ~nodeRenderer, ~emptyRenderer=None, ~children as _, ()) =>
-  React.element(make(~tree, ~nodeRenderer, ~emptyRenderer));
+  component((_slots: React.Hooks.empty) => {
+    let componentTree = renderTree(tree, ~nodeRenderer, ~emptyRenderer);
+    <View> ...componentTree </View>;
+  });

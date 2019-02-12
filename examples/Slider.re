@@ -6,7 +6,7 @@ open Revery.UI.Components;
 module AdjustableLogo = {
   let component = React.component("AdjustableLogo");
 
-  let make = () =>
+  let createElement = (~children as _, ()) =>
     component(slots => {
       let (rotationX, setRotationX, slots) = React.Hooks.state(0., slots);
       let (rotationY, setRotationY, slots) = React.Hooks.state(0., slots);
@@ -115,8 +115,6 @@ module AdjustableLogo = {
         </View>
       </View>;
     });
-
-  let createElement = (~children as _, ()) => React.element(make());
 };
 
 let render = () => <AdjustableLogo />;

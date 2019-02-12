@@ -46,7 +46,7 @@ let state: state = {
     {name: "Border", render: _ => Border.render(), source: "Border.re"},
     {
       name: "ScrollView",
-      render: _w => ScrollViewExample.render(),
+      render: _ => ScrollViewExample.render(),
       source: "ScrollView.re",
     },
     {
@@ -69,7 +69,7 @@ let state: state = {
     {name: "Native", render: w => Native.render(w), source: "Native.re"},
     {
       name: "Input",
-      render: w => InputExample.render(w),
+      render: _ => InputExample.render(),
       source: "InputExample.re",
     },
     {
@@ -94,13 +94,18 @@ let state: state = {
     },
     {
       name: "Analog Clock",
-      render: _w => AnalogClock.render(),
+      render: _ => AnalogClock.render(),
       source: "AnalogClock.re",
     },
     {
       name: "TodoMVC",
-      render: w => TodoExample.render(w),
+      render: _ => TodoExample.render(),
       source: "TodoExample.re",
+    },
+    {
+      name: "Dropdown",
+      render: _ => DropdownExample.render(),
+      source: "DropdownExample.re",
     },
   ],
   selectedExample: "Animation",
@@ -122,7 +127,7 @@ let getRenderFunctionSelector: (state, Window.t) => React.syntheticElement =
 module ExampleButton = {
   let component = React.component("ExampleButton");
 
-  let make = (~isActive: bool, ~name, ~onClick, ()) =>
+  let createElement = (~children as _, ~isActive, ~name, ~onClick, ()) =>
     component((_slots: React.Hooks.empty) => {
       let highlightColor =
         isActive ? selectionHighlight : Colors.transparentWhite;
@@ -152,9 +157,6 @@ module ExampleButton = {
         </Clickable>
       </View>;
     });
-
-  let createElement = (~children as _, ~isActive, ~name, ~onClick, ()) =>
-    React.element(make(~isActive, ~name, ~onClick, ()));
 };
 
 type action =

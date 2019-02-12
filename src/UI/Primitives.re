@@ -19,6 +19,9 @@ module View = {
         ~onMouseWheel=?,
         ~onBlur=?,
         ~onFocus=?,
+        ~onKeyDown=?,
+        ~onKeyUp=?,
+        ~onKeyPress=?,
         ~tabindex=?,
         ~ref=?,
         ~style=Style.emptyViewStyle,
@@ -37,6 +40,9 @@ module View = {
               ~onMouseWheel?,
               ~onBlur?,
               ~onFocus?,
+              ~onKeyDown?,
+              ~onKeyUp?,
+              ~onKeyPress?,
               (),
             );
           let node = (new ViewNode.viewNode)();
@@ -56,6 +62,9 @@ module View = {
               ~onMouseWheel?,
               ~onBlur?,
               ~onFocus?,
+              ~onKeyDown?,
+              ~onKeyUp?,
+              ~onKeyPress?,
               (),
             );
           node#setEvents(events);
@@ -79,21 +88,25 @@ module View = {
         ~style=Style.emptyViewStyle,
         ~tabindex=None,
         ~children,
+        ~onKeyDown=?,
+        ~onKeyUp=?,
+        ~onKeyPress=?,
         (),
       ) =>
-    UiReact.element(
-      make(
-        ~onMouseDown?,
-        ~onMouseMove?,
-        ~onMouseUp?,
-        ~onMouseWheel?,
-        ~onBlur?,
-        ~onFocus?,
-        ~ref?,
-        ~style,
-        ~tabindex?,
-        UiReact.listToElement(children),
-      ),
+    make(
+      ~onMouseDown?,
+      ~onMouseMove?,
+      ~onMouseUp?,
+      ~onMouseWheel?,
+      ~onBlur?,
+      ~onFocus?,
+      ~ref?,
+      ~style,
+      ~tabindex?,
+      ~onKeyDown?,
+      ~onKeyUp?,
+      ~onKeyPress?,
+      UiReact.listToElement(children),
     );
 };
 
@@ -165,17 +178,15 @@ module Text = {
         ~children,
         (),
       ) =>
-    UiReact.element(
-      make(
-        ~onMouseDown?,
-        ~onMouseMove?,
-        ~onMouseUp?,
-        ~onMouseWheel?,
-        ~ref?,
-        ~style,
-        ~text,
-        UiReact.listToElement(children),
-      ),
+    make(
+      ~onMouseDown?,
+      ~onMouseMove?,
+      ~onMouseUp?,
+      ~onMouseWheel?,
+      ~ref?,
+      ~style,
+      ~text,
+      UiReact.listToElement(children),
     );
 };
 
@@ -242,16 +253,14 @@ module Image = {
         ~children,
         (),
       ) =>
-    UiReact.element(
-      make(
-        ~onMouseDown?,
-        ~onMouseMove?,
-        ~onMouseUp?,
-        ~onMouseWheel?,
-        ~ref?,
-        ~style,
-        ~src,
-        UiReact.listToElement(children),
-      ),
+    make(
+      ~onMouseDown?,
+      ~onMouseMove?,
+      ~onMouseUp?,
+      ~onMouseWheel?,
+      ~ref?,
+      ~style,
+      ~src,
+      UiReact.listToElement(children),
     );
 };

@@ -190,6 +190,12 @@ class node ('a) (()) = {
         | {onBlur: Some(cb), _} => cb()
         | _ => ()
         };
+      | (KeyDown(e), {onKeyDown: Some(cb), _}) => cb(e)
+      | (KeyUp(e), {onKeyUp: Some(cb), _}) => cb(e)
+      | (KeyPress(e), {onKeyPress: Some(cb), _}) => cb(e)
+      | (KeyDown(_), _)
+      | (KeyUp(_), _)
+      | (KeyPress(_), _) => ()
       };
     ();
   };
