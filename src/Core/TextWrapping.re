@@ -60,18 +60,18 @@ let wrapText = (~logging=false, ~text, ~measureWidth, ~maxWidth, ~wrapHere) => {
 
       if (width >= maxWidth) {
         let beginningOfCurrentWordIndex = acc.endIndex + 2;
-        let (lineWithouCurrentWord, lineWithouCurrentWordWidth) =
+        let (lineWithoutCurrentWord, lineWithoutCurrentWordWidth) =
           subAndMeasure(acc.beginIndex, acc.endIndex);
 
         print_endline(
-          "wrapping point, width needs wrapping:: lineWithouCurrentWord: "
-          ++ lineWithouCurrentWord
+          "wrapping point, width needs wrapping:: lineWithoutCurrentWord: "
+          ++ lineWithoutCurrentWord
           ++ " beginIndex: "
           ++ string_of_int(beginningOfCurrentWordIndex),
         );
         {
-          lines: [lineWithouCurrentWord, ...acc.lines],
-          currMaxWidth: max(acc.currMaxWidth, lineWithouCurrentWordWidth),
+          lines: [lineWithoutCurrentWord, ...acc.lines],
+          currMaxWidth: max(acc.currMaxWidth, lineWithoutCurrentWordWidth),
           beginIndex: beginningOfCurrentWordIndex,
           endIndex: index + 1,
         };
