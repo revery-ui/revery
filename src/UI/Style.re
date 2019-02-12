@@ -39,6 +39,7 @@ type t = {
   flexWrap: LayoutTypes.wrapType,
   justifyContent: LayoutTypes.justify,
   alignItems: LayoutTypes.align,
+  alignSelf: LayoutTypes.align,
   top: int,
   bottom: int,
   left: int,
@@ -88,6 +89,7 @@ let make =
       ~flexWrap=LayoutTypes.CssNoWrap,
       ~alignItems=LayoutTypes.AlignStretch,
       ~justifyContent=LayoutTypes.JustifyFlexStart,
+      ~alignSelf=LayoutTypes.AlignAuto,
       ~position=LayoutTypes.Relative,
       ~top=Encoding.cssUndefined,
       ~bottom=Encoding.cssUndefined,
@@ -143,6 +145,7 @@ let make =
     flexWrap,
     justifyContent,
     alignItems,
+    alignSelf,
     position,
     top,
     bottom,
@@ -198,6 +201,7 @@ let toLayoutNode = (s: t) => {
     flexShrink: s.flexShrink,
     flexWrap: s.flexWrap,
     alignItems: s.alignItems,
+    alignSelf: s.alignSelf,
     justifyContent: s.justifyContent,
     right: s.right,
     width: s.width,
@@ -248,6 +252,7 @@ type coreStyleProps = [
   | `FlexDirection(LayoutTypes.flexDirection)
   | `JustifyContent(LayoutTypes.justify)
   | `AlignItems(LayoutTypes.align)
+  | `AlignSelf(LayoutTypes.align)
   | `Position(LayoutTypes.positionType)
   | `BackgroundColor(Color.t)
   | `Color(Color.t)
@@ -333,6 +338,8 @@ let justify = j =>
   | `FlexStart => LayoutTypes.JustifyFlexStart
   | `Center => LayoutTypes.JustifyCenter
   | `FlexEnd => LayoutTypes.JustifyFlexEnd
+  | `SpaceBetween => LayoutTypes.JustifySpaceBetween
+  | `SpaceAround => LayoutTypes.JustifySpaceAround
   };
 
 let flexGrow = g => `FlexGrow(g);
@@ -398,6 +405,7 @@ let borderVertical = (~color, ~width) =>
 
 let alignItems = a => `AlignItems(alignment(a));
 let justifyContent = a => `JustifyContent(justify(a));
+let alignSelf = a => `AlignSelf(alignment(a));
 
 let cursor = c => `Cursor(Some(c));
 
@@ -428,6 +436,7 @@ let rec extractViewStyles = (styles: list(allProps)): list(viewStyleProps) =>
 let applyStyle = (style, styleRule) =>
   switch (styleRule) {
   | `AlignItems(alignItems) => {...style, alignItems}
+  | `AlignSelf(alignSelf) => {...style, alignSelf}
   | `JustifyContent(justifyContent) => {...style, justifyContent}
   | `FlexGrow(flexGrow) => {...style, flexGrow}
   | `FlexDirection(flexDirection) => {...style, flexDirection}

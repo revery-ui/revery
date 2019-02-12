@@ -4,7 +4,8 @@ open Revery.UI.Components;
 
 module Check = {
   let component = React.component("Check");
-  let make = () => {
+
+  let createElement = (~children as _, ()) =>
     component(slots => {
       let (text, setText, _slots: React.Hooks.empty) =
         React.Hooks.state("Not Checked!", slots);
@@ -45,9 +46,6 @@ module Check = {
         />
       </View>;
     });
-  };
-
-  let createElement = (~children as _, ()) => React.element(make());
 };
 
 let render = () => {
