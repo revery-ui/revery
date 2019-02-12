@@ -10,7 +10,7 @@ let selectionHighlight = Color.hex("#90f7ff");
 module ActionButton = {
   let component = React.component("ActionButton");
 
-  let make = (~name, ~onClick, ()) =>
+  let createElement = (~children as _, ~name, ~onClick, ()) =>
     component((_slots: React.Hooks.empty) => {
       let wrapperStyle =
         Style.[
@@ -28,15 +28,12 @@ module ActionButton = {
         <Text style=textHeaderStyle text=name />
       </Clickable>;
     });
-
-  let createElement = (~children as _, ~name, ~onClick, ()) =>
-    make(~name, ~onClick, ());
 };
 
 module CaptureArea = {
   let component = React.component("Capture Area");
 
-  let make = w =>
+  let createElement = (~w, ~children as _, ()) => make(w);
     component(slots => {
       let (count, setCount, slots) = React.Hooks.state(0, slots);
       let (file, setFile, _slots: React.Hooks.empty) =
@@ -71,8 +68,6 @@ module CaptureArea = {
          }}
       </View>;
     });
-
-  let createElement = (~w, ~children as _, ()) => make(w);
 };
 
 let render = w => <CaptureArea w />;

@@ -127,7 +127,7 @@ let getRenderFunctionSelector: (state, Window.t) => React.syntheticElement =
 module ExampleButton = {
   let component = React.component("ExampleButton");
 
-  let make = (~isActive: bool, ~name, ~onClick, ()) =>
+  let createElement = (~children as _, ~isActive, ~name, ~onClick, ()) =>
     component((_slots: React.Hooks.empty) => {
       let highlightColor =
         isActive ? selectionHighlight : Colors.transparentWhite;
@@ -157,9 +157,6 @@ module ExampleButton = {
         </Clickable>
       </View>;
     });
-
-  let createElement = (~children as _, ~isActive, ~name, ~onClick, ()) =>
-    make(~isActive, ~name, ~onClick, ());
 };
 
 type action =

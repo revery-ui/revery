@@ -169,7 +169,8 @@ module TreeView = {
         />,
     );
 
-  let make = (~renderer, ()) =>
+
+  let createElement = (~children as _, ~renderer=?, ()) =>
     component((_slots: React.Hooks.empty) =>
       switch (renderer) {
       | Some(fn) => <Tree tree=animalKingdom nodeRenderer=fn />
@@ -208,9 +209,6 @@ module TreeView = {
       <Text text={data.level} style=textStyles />
     </View>;
   };
-
-  let createElement = (~children as _, ~renderer=?, ()) =>
-    make(~renderer, ());
 };
 
 let titleStyles =

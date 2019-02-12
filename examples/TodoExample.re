@@ -60,7 +60,7 @@ let reducer = (action: action, state: state) => {
 module FilterSection = {
   let component = React.component("FilterSection");
 
-  let make = (_children, currentFilter, onPickingFilter) =>
+  let createElement = (~children, ~currentFilter, ~onPickingFilter, ()) =>
     component((_slots: React.Hooks.empty) =>
       <View
         style=Style.[
@@ -110,15 +110,12 @@ module FilterSection = {
         />
       </View>
     );
-
-  let createElement = (~children, ~currentFilter, ~onPickingFilter, ()) =>
-    make(children, currentFilter, onPickingFilter);
 };
 
 module Example = {
   let component = React.component("TodoMVC");
 
-  let make = window =>
+  let createElement = (~window, ~children as _, ()) =>
     component(slots => {
       let ({todos, inputValue, filter, _}, dispatch, slots) =
         React.Hooks.reducer(
@@ -213,9 +210,6 @@ module Example = {
         </ScrollView>
       </View>;
     });
-
-  let createElement = (~window, ~children as _, ()) =>
-    make(window);
 };
 
 let render = window => <Example window />;

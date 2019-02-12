@@ -36,7 +36,7 @@ module Clock = {
 
   let component = React.component("Clock");
 
-  let make = () =>
+  let createElement = (~children as _, ()) =>
     component(slots => {
       let (state, dispatch, slots) =
         React.Hooks.reducer(
@@ -124,8 +124,6 @@ module Clock = {
         <Button title=buttonText onClick=startStop />
       </View>;
     });
-
-  let createElement = (~children as _, ()) => make();
 };
 
 let render = () => <Clock />;
