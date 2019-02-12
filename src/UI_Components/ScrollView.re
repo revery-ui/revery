@@ -15,9 +15,16 @@ let empty = React.listToElement([]);
 
 let scrollTrackColor = Color.rgba(0.0, 0.0, 0.0, 0.4);
 let scrollThumbColor = Color.rgba(0.5, 0.5, 0.5, 0.4);
+let defaultBounce = Environment.os === Mac ? true : false;
 
 let make =
-    (~style, ~scrollLeft=0, ~scrollTop=0, children: React.syntheticElement) =>
+    (
+      ~style,
+      ~scrollLeft=0,
+      ~scrollTop=0,
+      ~bounce=defaultBounce,
+      children: React.syntheticElement,
+    ) =>
   component(slots => {
     let (actualScrollTop, setScrollTop, slots) =
       React.Hooks.state(scrollTop, slots);
@@ -123,7 +130,10 @@ let make =
             playback.stop();
             setBouncingState(Idle);
           | Bouncing(_) => ()
-          | Idle when isAtTop || isAtBottom =>
+          | Idle when !bounce && (isAtTop || isAtBottom) =>
+            let clampedScrollTop = isAtTop ? 0 : maxHeight;
+            setScrollTop(clampedScrollTop);
+          | Idle when bounce && (isAtTop || isAtBottom) =>
             open Animated;
             let direction = isAtTop ? Top : Bottom;
             let bounceAwayAnim = {
@@ -208,5 +218,13 @@ let make =
     </View>;
   });
 
-let createElement = (~children, ~style, ~scrollLeft=0, ~scrollTop=0, ()) =>
-  make(~style, ~scrollLeft, ~scrollTop, React.listToElement(children));
+let createElement =
+    (
+      ~children,
+      ~style,
+      ~scrollLeft=0,
+      ~scrollTop=0,
+      ~bounce=defaultBounce,
+      (),
+    ) =>
+  make(~style, ~scrollLeft, ~scrollTop, ~bounce, React.listToElement(children));

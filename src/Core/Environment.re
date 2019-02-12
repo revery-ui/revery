@@ -17,3 +17,24 @@ let getExecutingDirectory = () =>
   isNative ? Filename.dirname(Sys.argv[0]) ++ Filename.dir_sep : "";
 
 let getWorkingDirectory = () => Sys.getcwd();
+
+type os =
+  | Windows
+  | Mac
+  | Linux
+  | Unknown;
+
+let os = {
+  let ic = Unix.open_process_in("uname");
+  let uname = input_line(ic);
+  let _ = close_in(ic);
+  switch (Sys.os_type) {
+  | "Win32" => Windows
+  | _ =>
+    switch (uname) {
+    | "Darwin" => Mac
+    | "Linux" => Linux
+    | _ => Unknown
+    }
+  };
+};
