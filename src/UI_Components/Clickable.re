@@ -110,16 +110,14 @@ let createElement =
       ~onKeyPress=?,
       (),
     ) =>
-  React.element(
-    make(
-      ~style,
-      ~onClick,
-      ~onBlur?,
-      ~onFocus?,
-      ~tabindex,
-      ~onKeyUp?,
-      ~onKeyDown?,
-      ~onKeyPress?,
-      React.listToElement(children),
-    ),
+  make(
+    ~style,
+    ~onClick,
+    ~onBlur?,
+    ~onFocus?,
+    ~onKeyDown?,
+    ~onKeyUp?,
+    ~onKeyPress?,
+    ~tabindex,
+    React.listToElement(children),
   );

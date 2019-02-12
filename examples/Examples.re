@@ -1,7 +1,6 @@
 open Revery;
 open Revery.Core;
 /* open Revery.Math; */
-
 open ExampleStubs;
 
 module SliderExample = Slider;
@@ -103,6 +102,11 @@ let state: state = {
       render: _ => TodoExample.render(),
       source: "TodoExample.re",
     },
+    {
+      name: "Dropdown",
+      render: _ => DropdownExample.render(),
+      source: "DropdownExample.re",
+    },
   ],
   selectedExample: "Animation",
 };
@@ -123,7 +127,7 @@ let getRenderFunctionSelector: (state, Window.t) => React.syntheticElement =
 module ExampleButton = {
   let component = React.component("ExampleButton");
 
-  let make = (~isActive: bool, ~name, ~onClick, ()) =>
+  let createElement = (~children as _, ~isActive, ~name, ~onClick, ()) =>
     component((_slots: React.Hooks.empty) => {
       let highlightColor =
         isActive ? selectionHighlight : Colors.transparentWhite;
@@ -153,9 +157,6 @@ module ExampleButton = {
         </Clickable>
       </View>;
     });
-
-  let createElement = (~children as _, ~isActive, ~name, ~onClick, ()) =>
-    React.element(make(~isActive, ~name, ~onClick, ()));
 };
 
 type action =

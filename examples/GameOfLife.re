@@ -272,12 +272,10 @@ module Row = {
       flexGrow(1),
     ];
 
-  let make = children =>
+  let createElement = (~children, ()) =>
     component((_slots: React.Hooks.empty) =>
       <View style> ...children </View>
     );
-
-  let createElement = (~children, ()) => React.element(make(children));
 };
 
 module Column = {
@@ -291,11 +289,10 @@ module Column = {
       flexGrow(1),
     ];
 
-  let make = children =>
+  let createElement = (~children, ()) =>
     component((_slots: React.Hooks.empty) =>
       <View style> ...children </View>
     );
-  let createElement = (~children, ()) => React.element(make(children));
 };
 
 module Cell = {
@@ -324,7 +321,7 @@ module Cell = {
       merge(~source=baseStyle, ~target=[backgroundColor(Colors.black)])
     );
 
-  let make = (~cell, ~onClick, ()) =>
+  let createElement = (~cell, ~onClick, ~children as _, ()) =>
     component((_slots: React.Hooks.empty) => {
       let style =
         switch (cell) {
@@ -333,8 +330,6 @@ module Cell = {
         };
       <Clickable style=clickableStyle onClick> style </Clickable>;
     });
-  let createElement = (~cell, ~onClick, ~children as _, ()) =>
-    React.element(make(~cell, ~onClick, ()));
 };
 
 let viewPortRender =
@@ -426,7 +421,7 @@ module GameOfLiveComponent = {
 
   let controlsStyle = Style.[height(120), flexDirection(`Row)];
 
-  let make = (~state: state, ()) =>
+  let createElement = (~state, ~children as _, ()) =>
     component(slots => {
       let (state, dispatch, slots) =
         React.Hooks.reducer(~initialState=state, reducer, slots);
@@ -492,9 +487,6 @@ module GameOfLiveComponent = {
         </View>
       </Column>;
     });
-
-  let createElement = (~state, ~children as _, ()) =>
-    React.element(make(~state, ()));
 };
 
 let render = () => {

@@ -5,8 +5,9 @@ let noop = () => ();
 
 let component = React.component("Button");
 
-let make =
+let createElement =
     (
+      ~children as _,
       ~title,
       ~onClick=noop,
       ~color as c=Colors.dodgerBlue,
@@ -43,37 +44,4 @@ let make =
         />
       </View>
     </Clickable>
-  );
-
-let createElement =
-    (
-      ~children as _,
-      ~title,
-      ~onClick=noop,
-      ~color=Colors.dodgerBlue,
-      ~fontSize=40,
-      ~width=300,
-      ~height=100,
-      ~onFocus=?,
-      ~onBlur=?,
-      ~tabindex=?,
-      ~disabled=false,
-      ~fontFamily="Roboto-Regular.ttf",
-      (),
-    ) =>
-  React.element(
-    make(
-      ~title,
-      ~onClick,
-      ~color,
-      ~fontSize,
-      ~width,
-      ~height,
-      ~disabled,
-      ~fontFamily,
-      ~onFocus?,
-      ~onBlur?,
-      ~tabindex?,
-      (),
-    ),
   );

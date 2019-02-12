@@ -23,7 +23,7 @@ module Example = {
 
   let component = React.component("Example");
 
-  let make = () =>
+  let createElement = (~children as _, ()) =>
     component(slots => {
       let ({first, second}, setValue, _slots: React.Hooks.empty) =
         React.Hooks.state({first: "", second: ""}, slots);
@@ -53,9 +53,6 @@ module Example = {
         />
       </View>;
     });
-
-  let createElement = (~children as _, ()) =>
-    React.element(make());
 };
 
 let render = () => <Example />;

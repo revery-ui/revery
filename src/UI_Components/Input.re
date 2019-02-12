@@ -200,14 +200,12 @@ let createElement =
       ~onChange=noop,
       (),
     ) =>
-  React.element(
-    make(
-      ~value,
-      ~style,
-      ~placeholder,
-      ~cursorColor,
-      ~placeholderColor,
-      ~onChange,
-      (),
-    ),
+  make(
+    ~value,
+    ~style,
+    ~placeholder,
+    ~cursorColor,
+    ~placeholderColor,
+    ~onChange,
+    (),
   );
