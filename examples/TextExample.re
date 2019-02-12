@@ -16,7 +16,7 @@ let containerStyle =
 module SampleText = {
   let component = React.component("Example");
 
-  let createElement = (~children as _, ()) => 
+  let createElement = (~children as _, ()) =>
     component((_slots: React.Hooks.empty) => {
       let textContent = "All work and no play makes Jack a dull boy";
 
@@ -29,8 +29,8 @@ module SampleText = {
             fontSize(20),
             lineHeight(1.5),
             textWrap(TextWrapping.WhitespaceWrap),
-            width(200),
-            border(~color=Colors.blueViolet, ~width=5),
+            width(150),
+            border(~color=Colors.blueViolet, ~width=1),
           ]
           text=textContent
         />

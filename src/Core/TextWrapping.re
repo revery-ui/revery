@@ -64,21 +64,37 @@ let wrapText = (~logging=false, ~text, ~measureWidth, ~maxWidth, ~wrapHere) => {
           subAndMeasure(acc.beginIndex, acc.endIndex);
 
         print_endline(
-          "wrapping point, width needs wrapping:: lineWithoutCurrentWord: "
+          "wrapping point, width needs wrapping:: lineWithoutCurrentWord: '"
           ++ lineWithoutCurrentWord
-          ++ " beginIndex: "
-          ++ string_of_int(beginningOfCurrentWordIndex),
+          ++ "' beginIndex: "
+          ++ string_of_int(acc.beginIndex)
+          ++ " endIndex: "
+          ++ string_of_int(acc.endIndex)
+          ++ " newBeginIndex: "
+          ++ string_of_int(beginningOfCurrentWordIndex)
+          ++ " char: "
+          ++ Char.escaped(char)
+          ++ " index: "
+          ++ string_of_int(index),
         );
         {
           lines: [lineWithoutCurrentWord, ...acc.lines],
           currMaxWidth: max(acc.currMaxWidth, lineWithoutCurrentWordWidth),
           beginIndex: beginningOfCurrentWordIndex,
-          endIndex: index + 1,
+          endIndex: currEndIndex,
         };
       } else {
         print_endline(
           "wrapping point, width is ok:: currEndIndex: "
-          ++ string_of_int(currEndIndex),
+          ++ string_of_int(currEndIndex)
+          ++ " beginIndex: "
+          ++ string_of_int(acc.beginIndex)
+          ++ " endIndex: "
+          ++ string_of_int(acc.endIndex)
+          ++ " char: "
+          ++ Char.escaped(char)
+          ++ " index: "
+          ++ string_of_int(index),
         );
         {...acc, endIndex: currEndIndex};
       };

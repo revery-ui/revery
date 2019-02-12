@@ -158,7 +158,9 @@ class textNode (text: string) = {
         let dimensions: Layout.LayoutTypes.dimensions = {
           width: int_of_float(float_of_int(maxWidthLine) /. pixelRatio),
           height:
-            int_of_float(float_of_int(List.length(lines)) *. lineHeightPx /. pixelRatio),
+            int_of_float(
+              float_of_int(List.length(lines)) *. lineHeightPx /. pixelRatio,
+            ),
         };
 
         dimensions;
@@ -193,9 +195,8 @@ class textNode (text: string) = {
     };
     Some(measure);
   };
-
-  pri _getLineHeightPx = (pixelRatio) => {
+  pri _getLineHeightPx = pixelRatio => {
     let style = _super#getStyle();
     style.lineHeight *. float_of_int(style.fontSize) *. pixelRatio;
-  }
+  };
 };
