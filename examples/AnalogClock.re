@@ -43,7 +43,7 @@ module AnalogClock = {
 
   let component = React.component("AnalogClock");
 
-  let createElement = (~children as _, ()) => 
+  let createElement = (~children as _, ()) =>
     component(slots => {
       let (state, dispatch, slots) =
         React.Hooks.reducer(
@@ -147,6 +147,6 @@ module AnalogClock = {
         </View>
       </View>;
     });
-  };
+};
 
 let render = () => <AnalogClock />;

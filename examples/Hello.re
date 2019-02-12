@@ -5,7 +5,7 @@ open Revery.UI;
 module Logo = {
   let component = React.component("Logo");
 
-  let createElement = (~children as _, ()) => 
+  let createElement = (~children as _, ()) =>
     component(slots => {
       let (logoOpacity, setOpacity, slots) = React.Hooks.state(1.0, slots);
 

@@ -108,7 +108,6 @@ let rec renderTree = (~indent=0, ~nodeRenderer, ~emptyRenderer, t) => {
   };
 };
 
-
 /*
    Cannot set a default argument for the node renderer as this will
    narrow down the type signature of the "tree" to whaterver type the

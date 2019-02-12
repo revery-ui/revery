@@ -68,4 +68,4 @@ let createElement =
       ~onChange=_ => (),
       (),
     ) =>
-    make(~defaultSelected, ~buttons, ~iconSize, ~style, ~onChange, ());
+  make(~defaultSelected, ~buttons, ~iconSize, ~style, ~onChange, ());

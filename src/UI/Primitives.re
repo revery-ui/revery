@@ -81,18 +81,18 @@ module View = {
         ~children,
         (),
       ) =>
-      make(
-        ~onMouseDown?,
-        ~onMouseMove?,
-        ~onMouseUp?,
-        ~onMouseWheel?,
-        ~onBlur?,
-        ~onFocus?,
-        ~ref?,
-        ~style,
-        ~tabindex?,
-        UiReact.listToElement(children),
-      );
+    make(
+      ~onMouseDown?,
+      ~onMouseMove?,
+      ~onMouseUp?,
+      ~onMouseWheel?,
+      ~onBlur?,
+      ~onFocus?,
+      ~ref?,
+      ~style,
+      ~tabindex?,
+      UiReact.listToElement(children),
+    );
 };
 
 module Text = {
@@ -163,16 +163,16 @@ module Text = {
         ~children,
         (),
       ) =>
-      make(
-        ~onMouseDown?,
-        ~onMouseMove?,
-        ~onMouseUp?,
-        ~onMouseWheel?,
-        ~ref?,
-        ~style,
-        ~text,
-        UiReact.listToElement(children),
-      );
+    make(
+      ~onMouseDown?,
+      ~onMouseMove?,
+      ~onMouseUp?,
+      ~onMouseWheel?,
+      ~ref?,
+      ~style,
+      ~text,
+      UiReact.listToElement(children),
+    );
 };
 
 module Image = {
@@ -238,14 +238,14 @@ module Image = {
         ~children,
         (),
       ) =>
-      make(
-        ~onMouseDown?,
-        ~onMouseMove?,
-        ~onMouseUp?,
-        ~onMouseWheel?,
-        ~ref?,
-        ~style,
-        ~src,
-        UiReact.listToElement(children),
-      );
+    make(
+      ~onMouseDown?,
+      ~onMouseMove?,
+      ~onMouseUp?,
+      ~onMouseWheel?,
+      ~ref?,
+      ~style,
+      ~src,
+      UiReact.listToElement(children),
+    );
 };

@@ -101,11 +101,11 @@ let createElement =
       ~children,
       (),
     ) =>
-    make(
-      ~style,
-      ~onClick,
-      ~onBlur?,
-      ~onFocus?,
-      ~tabindex,
-      React.listToElement(children),
+  make(
+    ~style,
+    ~onClick,
+    ~onBlur?,
+    ~onFocus?,
+    ~tabindex,
+    React.listToElement(children),
   );

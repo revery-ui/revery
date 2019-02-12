@@ -8,7 +8,7 @@ open Revery.UI.Components;
 module Row = {
   let component = React.component("Row");
 
-  let createElement = (~children, ()) => 
+  let createElement = (~children, ()) =>
     component((_slots: React.Hooks.empty) => {
       let style =
         Style.[
@@ -19,7 +19,6 @@ module Row = {
         ];
       <View style> ...children </View>;
     });
-
 };
 
 module Column = {
@@ -37,12 +36,10 @@ module Column = {
         ];
       <View style> ...children </View>;
     });
-
 };
 
 module Button = {
   let component = React.component("Button");
-
 
   let createElement =
       (

@@ -5,7 +5,7 @@ open Revery.UI.Components;
 module SimpleButton = {
   let component = React.component("SimpleButton");
 
-  let createElement = (~children as _, ()) => 
+  let createElement = (~children as _, ()) =>
     component(slots => {
       let (count, setCount, slots) = React.Hooks.state(0, slots);
       let (focused, setFocus, _slots: React.Hooks.empty) =

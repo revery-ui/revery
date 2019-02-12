@@ -232,13 +232,13 @@ let createElement =
       ~onChange=noop,
       (),
     ) =>
-    make(
-      ~window,
-      ~value,
-      ~style,
-      ~placeholder,
-      ~cursorColor,
-      ~placeholderColor,
-      ~onChange,
-      (),
+  make(
+    ~window,
+    ~value,
+    ~style,
+    ~placeholder,
+    ~cursorColor,
+    ~placeholderColor,
+    ~onChange,
+    (),
   );

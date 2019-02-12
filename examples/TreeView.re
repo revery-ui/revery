@@ -169,7 +169,6 @@ module TreeView = {
         />,
     );
 
-
   let createElement = (~children as _, ~renderer=?, ()) =>
     component((_slots: React.Hooks.empty) =>
       switch (renderer) {

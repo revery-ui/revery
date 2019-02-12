@@ -487,7 +487,6 @@ module GameOfLiveComponent = {
         </View>
       </Column>;
     });
-
 };
 
 let render = () => {

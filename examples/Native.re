@@ -5,7 +5,6 @@ open Revery.Platform;
 module NativeExamples = {
   let component = React.component("DefaultButtonWithCounter");
 
-
   let createElement = (~children as _, ~window, ()) =>
     component((_slots: React.Hooks.empty) => {
       let increment = () => {
