@@ -47,7 +47,6 @@ module Check = {
       </View>;
     });
   };
-};
 
 let render = () => {
   <Check />;

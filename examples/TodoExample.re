@@ -60,7 +60,7 @@ let reducer = (action: action, state: state) => {
 module FilterSection = {
   let component = React.component("FilterSection");
 
-  let createElement = (~children, ~currentFilter, ~onPickingFilter, ()) =>
+  let createElement = (~children as _, ~currentFilter, ~onPickingFilter, ()) =>
     component((_slots: React.Hooks.empty) =>
       <View
         style=Style.[

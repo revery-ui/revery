@@ -5,7 +5,7 @@ open Revery.Core;
 module DefaultButtonWithCounter = {
   let component = React.component("DefaultButtonWithCounter");
 
-  let createElement = (~children as _, ()) => make();
+  let createElement = (~children as _, ()) =>
     component(slots => {
       let (count, setCount, _slots: React.Hooks.empty) =
         React.Hooks.state(0, slots);

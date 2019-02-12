@@ -33,7 +33,7 @@ module ActionButton = {
 module CaptureArea = {
   let component = React.component("Capture Area");
 
-  let createElement = (~w, ~children as _, ()) => make(w);
+  let createElement = (~w, ~children as _, ()) =>
     component(slots => {
       let (count, setCount, slots) = React.Hooks.state(0, slots);
       let (file, setFile, _slots: React.Hooks.empty) =
