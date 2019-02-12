@@ -1,7 +1,7 @@
 /*
  * UiRender.re
  *
- * Core render logic for a UI bound toa Window
+ * Core render logic for a UI bound to a Window
  */
 
 open Reglfw.Glfw;
@@ -33,22 +33,22 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   let pixelRatio = Window.getDevicePixelRatio(window);
   let scaleFactor = Monitor.getScaleFactor();
   print_endline(
-    "Dimension =======================" ++ string_of_float(scaleFactor),
+    "Dimension =======================" ++ string_of_int(scaleFactor),
   );
-  let _adjustedHeight = size.height / int_of_float(scaleFactor);
-  let _adjustedWidth = size.width / int_of_float(scaleFactor);
+  let adjustedHeight = size.height / scaleFactor;
+  let adjustedWidth = size.width / scaleFactor;
 
   switch (options.autoSize) {
   | false =>
     rootNode#setStyle(
       Style.make(
         ~position=LayoutTypes.Relative,
-        ~width=size.width,
-        ~height=size.height,
+        ~width=adjustedWidth,
+        ~height=adjustedHeight,
         (),
       ),
     );
-    Layout.layout(rootNode, pixelRatio);
+    Layout.layout(rootNode, pixelRatio, scaleFactor);
   | true =>
     rootNode#setStyle(Style.make());
     Layout.layout(rootNode, pixelRatio);
@@ -74,8 +74,8 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
     Mat4.ortho(
       _projection,
       0.0,
-      float_of_int(size.width),
-      float_of_int(size.height),
+      float_of_int(adjustedWidth),
+      float_of_int(adjustedHeight),
       0.0,
       1000.0,
       -1000.0,

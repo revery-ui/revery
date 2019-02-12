@@ -19,8 +19,8 @@ let getScaleFactor = () => {
   let dpiH = calculateDPI(vidMode.height, physicalSize.height);
   let dpiW = calculateDPI(vidMode.width, physicalSize.width);
   let avgDPI = dpiW +. dpiH /. 2.0;
-  let scaleFactor = avgDPI /. 96.0;
-  scaleFactor >= 1.0 ? scaleFactor : 1.0;
+  let scaleFactor = int_of_float(avgDPI) / 96;
+  scaleFactor >= 1 ? scaleFactor : 1;
 };
 
 let getSize = monitor => {
