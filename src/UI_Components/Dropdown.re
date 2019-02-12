@@ -135,6 +135,4 @@ let make =
 
 let createElement =
     (~items, ~onItemSelected=noop, ~width=200, ~height=50, ~children, ()) =>
-  React.element(
-    make(~items, ~onItemSelected, ~width, ~height, ~children, ()),
-  );
+    make(~items, ~onItemSelected, ~width, ~height, ~children, ());

@@ -218,7 +218,6 @@ let createElement =
       ~thumbColor=Colors.gray,
       (),
     ) =>
-  React.element(
     make(
       ~vertical,
       ~onValueChanged,
@@ -233,5 +232,4 @@ let createElement =
       ~minimumTrackColor,
       ~thumbColor,
       (),
-    ),
-  );
+    );

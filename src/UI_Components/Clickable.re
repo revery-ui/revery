@@ -101,7 +101,6 @@ let createElement =
       ~children,
       (),
     ) =>
-  React.element(
     make(
       ~style,
       ~onClick,
@@ -109,5 +108,4 @@ let createElement =
       ~onFocus?,
       ~tabindex,
       React.listToElement(children),
-    ),
-  );
+    );

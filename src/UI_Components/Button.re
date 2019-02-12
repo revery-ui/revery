@@ -61,7 +61,6 @@ let createElement =
       ~fontFamily="Roboto-Regular.ttf",
       (),
     ) =>
-  React.element(
     make(
       ~title,
       ~onClick,
@@ -75,5 +74,4 @@ let createElement =
       ~onBlur?,
       ~tabindex?,
       (),
-    ),
   );

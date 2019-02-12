@@ -81,7 +81,6 @@ module View = {
         ~children,
         (),
       ) =>
-    UiReact.element(
       make(
         ~onMouseDown?,
         ~onMouseMove?,
@@ -93,8 +92,7 @@ module View = {
         ~style,
         ~tabindex?,
         UiReact.listToElement(children),
-      ),
-    );
+      );
 };
 
 module Text = {
@@ -165,7 +163,6 @@ module Text = {
         ~children,
         (),
       ) =>
-    UiReact.element(
       make(
         ~onMouseDown?,
         ~onMouseMove?,
@@ -175,8 +172,7 @@ module Text = {
         ~style,
         ~text,
         UiReact.listToElement(children),
-      ),
-    );
+      );
 };
 
 module Image = {
@@ -242,7 +238,6 @@ module Image = {
         ~children,
         (),
       ) =>
-    UiReact.element(
       make(
         ~onMouseDown?,
         ~onMouseMove?,
@@ -252,6 +247,5 @@ module Image = {
         ~style,
         ~src,
         UiReact.listToElement(children),
-      ),
-    );
+      );
 };

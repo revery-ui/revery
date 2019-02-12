@@ -210,7 +210,7 @@ module TreeView = {
   };
 
   let createElement = (~children as _, ~renderer=?, ()) =>
-    React.element(make(~renderer, ()));
+    make(~renderer, ());
 };
 
 let titleStyles =

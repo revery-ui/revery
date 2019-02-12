@@ -37,7 +37,7 @@ module DropdownExample = {
       </View>;
     });
 
-  let createElement = (~children as _, ()) => React.element(make());
+  let createElement = (~children as _, ()) => make();
 };
 
 let render = () => <DropdownExample />;

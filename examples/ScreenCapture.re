@@ -30,7 +30,7 @@ module ActionButton = {
     });
 
   let createElement = (~children as _, ~name, ~onClick, ()) =>
-    React.element(make(~name, ~onClick, ()));
+    make(~name, ~onClick, ());
 };
 
 module CaptureArea = {
@@ -72,7 +72,7 @@ module CaptureArea = {
       </View>;
     });
 
-  let createElement = (~w, ~children as _, ()) => React.element(make(w));
+  let createElement = (~w, ~children as _, ()) => make(w);
 };
 
 let render = w => <CaptureArea w />;

@@ -28,7 +28,7 @@ module NativeExamples = {
     });
 
   let createElement = (~children as _, ~window, ()) =>
-    React.element(make(~window, ()));
+    make(~window, ());
 };
 
 let render = window => <NativeExamples window />;

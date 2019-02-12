@@ -8,7 +8,7 @@ open Revery.UI.Components;
 module Row = {
   let component = React.component("Row");
 
-  let make = children =>
+  let createElement = (~children, ()) => 
     component((_slots: React.Hooks.empty) => {
       let style =
         Style.[
@@ -20,13 +20,12 @@ module Row = {
       <View style> ...children </View>;
     });
 
-  let createElement = (~children, ()) => React.element(make(children));
 };
 
 module Column = {
   let component = React.component("Column");
 
-  let make = children =>
+  let createElement = (~children, ()) =>
     component((_slots: React.Hooks.empty) => {
       let style =
         Style.[
@@ -39,7 +38,6 @@ module Column = {
       <View style> ...children </View>;
     });
 
-  let createElement = (~children, ()) => React.element(make(children));
 };
 
 module Button = {
@@ -86,7 +84,7 @@ module Button = {
         ~children as _,
         (),
       ) =>
-    React.element(make(~fontFamily, ~contents, ~onClick, ()));
+    make(~fontFamily, ~contents, ~onClick, ());
 };
 module Display = {
   let component = React.component("Display");
@@ -124,7 +122,7 @@ module Display = {
     });
 
   let createElement = (~display: string, ~curNum: string, ~children as _, ()) =>
-    React.element(make(~display, ~curNum, ()));
+    make(~display, ~curNum, ());
 };
 
 type operator = [ | `Nop | `Add | `Sub | `Mul | `Div];
@@ -382,7 +380,7 @@ module Calculator = {
     });
 
   let createElement = (~window, ~children as _, ()) =>
-    React.element(make(window));
+    make(window);
 };
 
 let render = window => <Calculator window />;

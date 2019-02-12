@@ -57,4 +57,4 @@ let createElement =
       ~onChange=noop,
       (),
     ) =>
-  React.element(make(~checked, ~onChange, ~checkedColor, ~style, ()));
+  make(~checked, ~onChange, ~checkedColor, ~style, ());

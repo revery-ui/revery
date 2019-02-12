@@ -55,7 +55,7 @@ module Logo = {
       </View>;
     });
 
-  let createElement = (~children as _, ()) => React.element(make());
+  let createElement = (~children as _, ()) => make();
 };
 
 module AnimatedText = {
@@ -103,7 +103,7 @@ module AnimatedText = {
     });
 
   let createElement = (~children as _, ~text: string, ~delay: float, ()) =>
-    React.element(make(~text, ~delay, ()));
+    make(~text, ~delay, ());
 };
 
 let render = () =>

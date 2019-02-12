@@ -57,7 +57,7 @@ module Example = {
     });
 
   let createElement = (~window, ~children as _, ()) =>
-    React.element(make(window));
+    make(window);
 };
 
 let render = window => <Example window />;

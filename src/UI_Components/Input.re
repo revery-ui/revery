@@ -232,7 +232,6 @@ let createElement =
       ~onChange=noop,
       (),
     ) =>
-  React.element(
     make(
       ~window,
       ~value,
@@ -242,5 +241,4 @@ let createElement =
       ~placeholderColor,
       ~onChange,
       (),
-    ),
   );

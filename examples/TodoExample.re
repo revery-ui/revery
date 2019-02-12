@@ -112,7 +112,7 @@ module FilterSection = {
     );
 
   let createElement = (~children, ~currentFilter, ~onPickingFilter, ()) =>
-    React.element(make(children, currentFilter, onPickingFilter));
+    make(children, currentFilter, onPickingFilter);
 };
 
 module Example = {
@@ -215,7 +215,7 @@ module Example = {
     });
 
   let createElement = (~window, ~children as _, ()) =>
-    React.element(make(window));
+    make(window);
 };
 
 let render = window => <Example window />;

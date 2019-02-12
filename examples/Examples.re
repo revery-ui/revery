@@ -159,7 +159,7 @@ module ExampleButton = {
     });
 
   let createElement = (~children as _, ~isActive, ~name, ~onClick, ()) =>
-    React.element(make(~isActive, ~name, ~onClick, ()));
+    make(~isActive, ~name, ~onClick, ());
 };
 
 type action =

@@ -277,7 +277,7 @@ module Row = {
       <View style> ...children </View>
     );
 
-  let createElement = (~children, ()) => React.element(make(children));
+  let createElement = (~children, ()) => make(children);
 };
 
 module Column = {
@@ -295,7 +295,7 @@ module Column = {
     component((_slots: React.Hooks.empty) =>
       <View style> ...children </View>
     );
-  let createElement = (~children, ()) => React.element(make(children));
+  let createElement = (~children, ()) => make(children);
 };
 
 module Cell = {
@@ -334,7 +334,7 @@ module Cell = {
       <Clickable style=clickableStyle onClick> style </Clickable>;
     });
   let createElement = (~cell, ~onClick, ~children as _, ()) =>
-    React.element(make(~cell, ~onClick, ()));
+    make(~cell, ~onClick, ());
 };
 
 let viewPortRender =
@@ -494,7 +494,7 @@ module GameOfLiveComponent = {
     });
 
   let createElement = (~state, ~children as _, ()) =>
-    React.element(make(~state, ()));
+    make(~state, ());
 };
 
 let render = () => {

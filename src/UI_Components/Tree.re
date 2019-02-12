@@ -121,4 +121,4 @@ let make = (~tree, ~nodeRenderer, ~emptyRenderer) =>
  */
 let createElement =
     (~tree, ~nodeRenderer, ~emptyRenderer=None, ~children as _, ()) =>
-  React.element(make(~tree, ~nodeRenderer, ~emptyRenderer));
+  make(~tree, ~nodeRenderer, ~emptyRenderer);

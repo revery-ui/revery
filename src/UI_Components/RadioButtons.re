@@ -68,6 +68,4 @@ let createElement =
       ~onChange=_ => (),
       (),
     ) =>
-  React.element(
-    make(~defaultSelected, ~buttons, ~iconSize, ~style, ~onChange, ()),
-  );
+    make(~defaultSelected, ~buttons, ~iconSize, ~style, ~onChange, ());
