@@ -64,7 +64,6 @@ let defaultStyles =
 let component = React.component("Input");
 let make =
     (
-      ~window as _window,
       ~style,
       ~value as valueParam,
       ~placeholder,
@@ -192,7 +191,6 @@ let make =
 
 let createElement =
     (
-      ~window,
       ~children as _,
       ~style=defaultStyles,
       ~placeholderColor=Colors.grey,
@@ -204,7 +202,6 @@ let createElement =
     ) =>
   React.element(
     make(
-      ~window,
       ~value,
       ~style,
       ~placeholder,

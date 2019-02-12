@@ -118,7 +118,7 @@ module FilterSection = {
 module Example = {
   let component = React.component("TodoMVC");
 
-  let make = window =>
+  let make = () =>
     component(slots => {
       let ({todos, inputValue, filter, _}, dispatch, slots) =
         React.Hooks.reducer(
@@ -186,7 +186,6 @@ module Example = {
         <View style=Style.[flexDirection(`Row)]>
           <Input
             style=Style.[width(400)]
-            window
             placeholder="Add your Todo here"
             onChange={(~value) => dispatch(UpdateInputTextValue(value))}
           />
@@ -214,8 +213,8 @@ module Example = {
       </View>;
     });
 
-  let createElement = (~window, ~children as _, ()) =>
-    React.element(make(window));
+  let createElement = (~children as _, ()) =>
+    React.element(make());
 };
 
-let render = window => <Example window />;
+let render = () => <Example />;
