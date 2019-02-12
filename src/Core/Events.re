@@ -13,6 +13,11 @@ type keyEvent = {
   isRepeat: bool,
 };
 
+type internalKeyboardEvent =
+  | InternalKeyUpEvent(keyEvent)
+  | InternalKeyDownEvent(keyEvent)
+  | InternalKeyPressEvent(keyPressEvent);
+
 type mouseMoveEvent = {
   mouseX: float,
   mouseY: float,

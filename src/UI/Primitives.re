@@ -19,6 +19,9 @@ module View = {
         ~onMouseWheel=?,
         ~onBlur=?,
         ~onFocus=?,
+        ~onKeyDown=?,
+        ~onKeyUp=?,
+        ~onKeyPress=?,
         ~tabindex=?,
         ~ref=?,
         ~style=Style.emptyViewStyle,
@@ -37,6 +40,9 @@ module View = {
               ~onMouseWheel?,
               ~onBlur?,
               ~onFocus?,
+              ~onKeyDown?,
+              ~onKeyUp?,
+              ~onKeyPress?,
               (),
             );
           let node = (new ViewNode.viewNode)();
@@ -56,6 +62,9 @@ module View = {
               ~onMouseWheel?,
               ~onBlur?,
               ~onFocus?,
+              ~onKeyDown?,
+              ~onKeyUp?,
+              ~onKeyPress?,
               (),
             );
           node#setEvents(events);
@@ -79,6 +88,9 @@ module View = {
         ~style=Style.emptyViewStyle,
         ~tabindex=None,
         ~children,
+        ~onKeyDown=?,
+        ~onKeyUp=?,
+        ~onKeyPress=?,
         (),
       ) =>
     make(
@@ -91,6 +103,9 @@ module View = {
       ~ref?,
       ~style,
       ~tabindex?,
+      ~onKeyDown?,
+      ~onKeyUp?,
+      ~onKeyPress?,
       UiReact.listToElement(children),
     );
 };
