@@ -61,8 +61,8 @@ module FilterSection = {
   let component = React.component("FilterSection");
 
   let createElement = (~children as _, ~currentFilter, ~onPickingFilter, ()) =>
-    component((_slots: React.Hooks.empty) =>
-      <View
+    component((hooks) =>
+      (hooks, <View
         style=Style.[
           flexDirection(`Row),
           width(500),
@@ -108,7 +108,7 @@ module FilterSection = {
           }
           onClick={() => onPickingFilter(NotCompleted)}
         />
-      </View>
+      </View>)
     );
 };
 
@@ -116,22 +116,22 @@ module Example = {
   let component = React.component("TodoMVC");
 
   let createElement = (~children as _, ()) =>
-    component(slots => {
-      let ({todos, inputValue, filter, _}, dispatch, slots) =
+    component(hooks => {
+      let ({todos, inputValue, filter, _}, dispatch, hooks) =
         React.Hooks.reducer(
           ~initialState={todos: [], filter: All, inputValue: "", nextId: 0},
           reducer,
-          slots,
+          hooks,
         );
 
-      let _slots: React.Hooks.empty =
+      let hooks =
         React.Hooks.effect(
           OnMount,
           () => {
             let unsubscribe = () => ();
             Some(unsubscribe);
           },
-          slots,
+          hooks,
         );
 
       let renderTodo = task => {
@@ -164,7 +164,7 @@ module Example = {
         );
 
       let listOfTodos = List.map(renderTodo, filteredList);
-      <View
+      (hooks, <View
         style=Style.[
           position(`Absolute),
           top(0),
@@ -207,7 +207,7 @@ module Example = {
           ]>
           <View> ...listOfTodos </View>
         </ScrollView>
-      </View>;
+      </View>);
     });
 };
 

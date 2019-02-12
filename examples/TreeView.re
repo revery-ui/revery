@@ -170,11 +170,11 @@ module TreeView = {
     );
 
   let createElement = (~children as _, ~renderer=?, ()) =>
-    component((_slots: React.Hooks.empty) =>
+    component((hooks) =>
       switch (renderer) {
-      | Some(fn) => <Tree tree=animalKingdom nodeRenderer=fn />
+      | Some(fn) => (hooks, <Tree tree=animalKingdom nodeRenderer=fn />)
       | None =>
-        <Tree tree=stringTree nodeRenderer=Tree.default emptyRenderer />
+        (hooks, <Tree tree=stringTree nodeRenderer=Tree.default emptyRenderer />)
       }
     );
 

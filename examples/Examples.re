@@ -128,7 +128,7 @@ module ExampleButton = {
   let component = React.component("ExampleButton");
 
   let createElement = (~children as _, ~isActive, ~name, ~onClick, ()) =>
-    component((_slots: React.Hooks.empty) => {
+    component((hooks) => {
       let highlightColor =
         isActive ? selectionHighlight : Colors.transparentWhite;
 
@@ -151,11 +151,11 @@ module ExampleButton = {
           margin(16),
         ];
 
-      <View style=[Style.opacity(buttonOpacity)]>
+      (hooks, <View style=[Style.opacity(buttonOpacity)]>
         <Clickable style=wrapperStyle onClick>
           <Text style=textHeaderStyle text=name />
         </Clickable>
-      </View>;
+      </View>);
     });
 };
 

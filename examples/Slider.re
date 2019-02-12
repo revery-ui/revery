@@ -7,11 +7,11 @@ module AdjustableLogo = {
   let component = React.component("AdjustableLogo");
 
   let createElement = (~children as _, ()) =>
-    component(slots => {
-      let (rotationX, setRotationX, slots) = React.Hooks.state(0., slots);
-      let (rotationY, setRotationY, slots) = React.Hooks.state(0., slots);
-      let (rotationZ, setRotationZ, slots) =
-        React.Hooks.state(0., slots);
+    component(hooks => {
+      let (rotationX, setRotationX, hooks) = React.Hooks.state(0., hooks);
+      let (rotationY, setRotationY, hooks) = React.Hooks.state(0., hooks);
+      let (rotationZ, setRotationZ, hooks) =
+        React.Hooks.state(0., hooks);
 
       let containerStyle =
         Style.[
@@ -62,7 +62,7 @@ module AdjustableLogo = {
 
       let twoPi = 2. *. pi;
 
-      (slots, 
+      (hooks, 
        <View style=containerStyle>
         <View>
           <Image

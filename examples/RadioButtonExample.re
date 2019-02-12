@@ -5,10 +5,10 @@ open Revery.UI.Components;
 module RadioExample = {
   let component = React.component("RadioExample");
   let make = () =>
-    component(slots => {
-      let (radioVal, setRadioVal, _slots: React.Hooks.empty) =
-        React.Hooks.state("Select a button!", slots);
-      <View
+    component(hooks => {
+      let (radioVal, setRadioVal, hooks) =
+        React.Hooks.state("Select a button!", hooks);
+      (hooks, <View
         style=Style.[
           width(500),
           height(500),
@@ -42,7 +42,7 @@ module RadioExample = {
             marginTop(20),
           ]
         />
-      </View>;
+      </View>);
     });
   let createElement = (~children as _, ()) => make();
 };

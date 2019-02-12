@@ -24,11 +24,11 @@ module Example = {
   let component = React.component("Example");
 
   let createElement = (~children as _, ()) =>
-    component(slots => {
-      let ({first, second}, setValue, _slots: React.Hooks.empty) =
-        React.Hooks.state({first: "", second: ""}, slots);
+    component(hooks => {
+      let ({first, second}, setValue, hooks) =
+        React.Hooks.state({first: "", second: ""}, hooks);
 
-      <View style=containerStyle>
+      (hooks, <View style=containerStyle>
         <Input
           placeholder="Insert text here"
           onChange={(~value) => setValue({first: value, second})}
@@ -51,7 +51,7 @@ module Example = {
             ),
           ]
         />
-      </View>;
+      </View>);
     });
 };
 

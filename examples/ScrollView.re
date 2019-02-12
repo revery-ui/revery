@@ -28,8 +28,8 @@ module Sample = {
   let component = React.component("Sample");
 
   let createElement = (~children as _, ()) =>
-    component((slots) =>
-      (slots, <View style=containerStyle>
+    component((hooks) =>
+      (hooks, <View style=containerStyle>
         <ScrollView style=outerBox>
           <Image
             src="outrun-logo.png"

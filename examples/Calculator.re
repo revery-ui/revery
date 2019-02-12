@@ -9,7 +9,7 @@ module Row = {
   let component = React.component("Row");
 
   let createElement = (~children, ()) =>
-    component((_slots: React.Hooks.empty) => {
+    component((hooks) => {
       let style =
         Style.[
           flexDirection(`Row),
@@ -17,7 +17,7 @@ module Row = {
           justifyContent(`Center),
           flexGrow(1),
         ];
-      <View style> ...children </View>;
+      (hooks, <View style> ...children </View>);
     });
 };
 
@@ -25,7 +25,7 @@ module Column = {
   let component = React.component("Column");
 
   let createElement = (~children, ()) =>
-    component((_slots: React.Hooks.empty) => {
+    component((hooks) => {
       let style =
         Style.[
           flexDirection(`Column),
@@ -34,7 +34,7 @@ module Column = {
           backgroundColor(Colors.darkGrey),
           flexGrow(1),
         ];
-      <View style> ...children </View>;
+      (hooks, <View style> ...children </View>);
     });
 };
 
@@ -49,7 +49,7 @@ module Button = {
         ~children as _,
         (),
       ) =>
-    component((_slots: React.Hooks.empty) => {
+    component((hooks) => {
       let clickableStyle =
         Style.[
           position(`Relative),
@@ -70,16 +70,16 @@ module Button = {
       let textStyle =
         Style.[color(Colors.black), fontFamily(family), fontSize(32)];
 
-      <Clickable style=clickableStyle onClick>
+      (hooks, <Clickable style=clickableStyle onClick>
         <View style=viewStyle> <Text style=textStyle text=contents /> </View>
-      </Clickable>;
+      </Clickable>);
     });
 };
 module Display = {
   let component = React.component("Display");
 
   let createElement = (~display: string, ~curNum: string, ~children as _, ()) =>
-    component((_slots: React.Hooks.empty) => {
+    component((hooks) => {
       let viewStyle =
         Style.[
           backgroundColor(Colors.white),
@@ -104,10 +104,10 @@ module Display = {
           margin(15),
         ];
 
-      <View style=viewStyle>
+      (hooks, <View style=viewStyle>
         <Text style=displayStyle text=display />
         <Text style=numStyle text=curNum />
-      </View>;
+      </View>);
     });
 };
 

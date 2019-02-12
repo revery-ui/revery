@@ -6,10 +6,10 @@ module Logo = {
   let component = React.component("Logo");
 
   let createElement = (~children as _, ()) =>
-    component(slots => {
-      let (logoOpacity, setOpacity, slots) = React.Hooks.state(1.0, slots);
+    component(hooks => {
+      let (logoOpacity, setOpacity, hooks) = React.Hooks.state(1.0, hooks);
 
-      let (rotation, slots) =
+      let (rotation, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           {
@@ -19,10 +19,10 @@ module Logo = {
             repeat: true,
             easing: Animated.linear,
           },
-          slots,
+          hooks,
         );
 
-      let (rotationY, _slots: React.Hooks.empty) =
+      let (rotationY, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           {
@@ -32,14 +32,14 @@ module Logo = {
             repeat: true,
             easing: Animated.linear,
           },
-          slots,
+          hooks,
         );
 
       let onMouseDown = _ => setOpacity(0.5);
 
       let onMouseUp = _ => setOpacity(1.0);
 
-      <View onMouseDown onMouseUp>
+      (hooks, <View onMouseDown onMouseUp>
         <Image
           src="outrun-logo.png"
           style=Style.[
@@ -52,7 +52,7 @@ module Logo = {
             ]),
           ]
         />
-      </View>;
+      </View>);
     });
 };
 
@@ -60,8 +60,8 @@ module AnimatedText = {
   let component = React.component("AnimatedText");
 
   let createElement = (~children as _, ~text: string, ~delay: float, ()) =>
-    component(slots => {
-      let (animatedOpacity, slots) =
+    component(hooks => {
+      let (animatedOpacity, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           {
@@ -71,10 +71,10 @@ module AnimatedText = {
             repeat: false,
             easing: Animated.linear,
           },
-          slots,
+          hooks,
         );
 
-      let (translate, _slots: React.Hooks.empty) =
+      let (translate, hooks) =
         Hooks.animation(
           Animated.floatValue(50.),
           {
@@ -84,7 +84,7 @@ module AnimatedText = {
             repeat: false,
             easing: Animated.linear,
           },
-          slots,
+          hooks,
         );
 
       let textHeaderStyle =
@@ -97,7 +97,7 @@ module AnimatedText = {
           transform([Transform.TranslateY(translate)]),
         ];
 
-      <Text style=textHeaderStyle text />;
+      (hooks, <Text style=textHeaderStyle text />);
     });
 };
 
