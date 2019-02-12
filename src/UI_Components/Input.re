@@ -232,15 +232,13 @@ let createElement =
       ~onChange=noop,
       (),
     ) =>
-  React.element(
-    make(
-      ~window,
-      ~value,
-      ~style,
-      ~placeholder,
-      ~cursorColor,
-      ~placeholderColor,
-      ~onChange,
-      (),
-    ),
+  make(
+    ~window,
+    ~value,
+    ~style,
+    ~placeholder,
+    ~cursorColor,
+    ~placeholderColor,
+    ~onChange,
+    (),
   );

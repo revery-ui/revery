@@ -5,7 +5,7 @@ open Revery.Platform;
 module NativeExamples = {
   let component = React.component("DefaultButtonWithCounter");
 
-  let make = (~window, ()) =>
+  let createElement = (~children as _, ~window, ()) =>
     component((_slots: React.Hooks.empty) => {
       let increment = () => {
         Dialog.alert(window, "Hello, world");
@@ -26,9 +26,6 @@ module NativeExamples = {
         <Button title="Alert" onClick=increment />
       </View>;
     });
-
-  let createElement = (~children as _, ~window, ()) =>
-    React.element(make(~window, ()));
 };
 
 let render = window => <NativeExamples window />;

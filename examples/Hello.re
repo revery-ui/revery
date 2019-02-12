@@ -5,7 +5,7 @@ open Revery.UI;
 module Logo = {
   let component = React.component("Logo");
 
-  let make = () =>
+  let createElement = (~children as _, ()) =>
     component(slots => {
       let (logoOpacity, setOpacity, slots) = React.Hooks.state(1.0, slots);
 
@@ -54,14 +54,12 @@ module Logo = {
         />
       </View>;
     });
-
-  let createElement = (~children as _, ()) => React.element(make());
 };
 
 module AnimatedText = {
   let component = React.component("AnimatedText");
 
-  let make = (~text, ~delay, ()) =>
+  let createElement = (~children as _, ~text: string, ~delay: float, ()) =>
     component(slots => {
       let (animatedOpacity, slots) =
         Hooks.animation(
@@ -101,9 +99,6 @@ module AnimatedText = {
 
       <Text style=textHeaderStyle text />;
     });
-
-  let createElement = (~children as _, ~text: string, ~delay: float, ()) =>
-    React.element(make(~text, ~delay, ()));
 };
 
 let render = () =>

@@ -26,7 +26,7 @@ module DropdownExample = {
     {value: "5", label: "A really, really, really long option"},
   ];
 
-  let make = () =>
+  let createElement = (~children as _, ()) =>
     component(slots => {
       let (selectedItem, setSelectedItem, _slots: React.Hooks.empty) =
         React.Hooks.state(List.nth(items, 0), slots);
@@ -36,8 +36,6 @@ module DropdownExample = {
         <Dropdown items onItemSelected={item => setSelectedItem(item)} />
       </View>;
     });
-
-  let createElement = (~children as _, ()) => React.element(make());
 };
 
 let render = () => <DropdownExample />;

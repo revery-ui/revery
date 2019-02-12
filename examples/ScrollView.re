@@ -27,7 +27,7 @@ let innerBox =
 module Sample = {
   let component = React.component("Sample");
 
-  let make = () =>
+  let createElement = (~children as _, ()) =>
     component((_slots: React.Hooks.empty) =>
       <View style=containerStyle>
         <ScrollView style=outerBox>
@@ -46,8 +46,6 @@ module Sample = {
         </ScrollView>
       </View>
     );
-
-  let createElement = (~children as _, ()) => React.element(make());
 };
 
 let render = () => <Sample />;
