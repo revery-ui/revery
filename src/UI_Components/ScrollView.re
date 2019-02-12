@@ -227,4 +227,10 @@ let createElement =
       ~bounce=defaultBounce,
       (),
     ) =>
-  make(~style, ~scrollLeft, ~scrollTop, ~bounce, React.listToElement(children));
+  make(
+    ~style,
+    ~scrollLeft,
+    ~scrollTop,
+    ~bounce,
+    React.listToElement(children),
+  );
