@@ -221,12 +221,12 @@ module Calculator = {
   let component = React.component("Calculator");
 
   let createElement = (~window, ~children as _, ()) =>
-    component(slots => {
-      let ({display, number, _}, dispatch, slots) =
+    component(hooks => {
+      let ({display, number, _}, dispatch, hooks) =
         React.Hooks.reducer(
           ~initialState={operator: `Nop, result: 0., display: "", number: ""},
           reducer,
-          slots,
+          hooks,
         );
 
       let respondToKeys = e =>
@@ -263,7 +263,7 @@ module Calculator = {
       /* TODO: Pretty sure this isn't supposed to go in the render() function.
          Seems to cause lag the more times we re-render, so I guess this is
          subscribing a ton of times and never unsubscribing. */
-      let _slots: React.Hooks.empty =
+      let hooks =
         React.Hooks.effect(
           OnMount,
           () => {
@@ -271,10 +271,10 @@ module Calculator = {
               Event.subscribe(window.onKeyDown, respondToKeys);
             Some(unsubscribe);
           },
-          slots,
+          hooks,
         );
 
-      <Column>
+      (hooks, <Column>
         <Display display curNum=number />
         <Row>
           <Button
@@ -362,7 +362,7 @@ module Calculator = {
             onClick={_ => dispatch(OperationKeyPressed(`Add))}
           />
         </Row>
-      </Column>;
+      </Column>);
     });
 };
 

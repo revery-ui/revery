@@ -273,8 +273,8 @@ module Row = {
     ];
 
   let createElement = (~children, ()) =>
-    component((_slots: React.Hooks.empty) =>
-      <View style> ...children </View>
+    component((hooks) =>
+      (hooks, <View style> ...children </View>)
     );
 };
 
@@ -290,8 +290,8 @@ module Column = {
     ];
 
   let createElement = (~children, ()) =>
-    component((_slots: React.Hooks.empty) =>
-      <View style> ...children </View>
+    component((hooks) =>
+      (hooks, <View style> ...children </View>)
     );
 };
 
@@ -322,13 +322,13 @@ module Cell = {
     );
 
   let createElement = (~cell, ~onClick, ~children as _, ()) =>
-    component((_slots: React.Hooks.empty) => {
+    component((hooks) => {
       let style =
         switch (cell) {
         | Alive => <View style=aliveStyle />
         | Dead => <View style=deadStyle />
         };
-      <Clickable style=clickableStyle onClick> style </Clickable>;
+      (hooks, <Clickable style=clickableStyle onClick> style </Clickable>);
     });
 };
 
@@ -422,15 +422,15 @@ module GameOfLiveComponent = {
   let controlsStyle = Style.[height(120), flexDirection(`Row)];
 
   let createElement = (~state, ~children as _, ()) =>
-    component(slots => {
-      let (state, dispatch, slots) =
-        React.Hooks.reducer(~initialState=state, reducer, slots);
+    component(hooks => {
+      let (state, dispatch, hooks) =
+        React.Hooks.reducer(~initialState=state, reducer, hooks);
 
-      let _slots: React.Hooks.empty =
+      let hooks =
         React.Hooks.effect(
           OnMount,
           () => Some(() => dispatch(StopTimer)),
-          slots,
+          hooks,
         );
 
       let toggleAlive = pos => dispatch(ToggleAlive(pos));
@@ -444,7 +444,7 @@ module GameOfLiveComponent = {
             dispatch(StartTimer(dispose));
           };
 
-      <Column>
+      (hooks, <Column>
         <Row>
           ...{viewPortRender(state.viewPort, state.universe, toggleAlive)}
         </Row>
@@ -485,7 +485,7 @@ module GameOfLiveComponent = {
             onClick={_ => dispatch(ZoomViewPort(ZoomOut))}
           />
         </View>
-      </Column>;
+      </Column>);
     });
 };
 
