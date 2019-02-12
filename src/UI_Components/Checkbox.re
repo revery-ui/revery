@@ -10,7 +10,17 @@ let defaultStyle =
     border(~width=5, ~color=Colors.dodgerBlue),
   ];
 
-let make = (~checked, ~style, ~checkedColor, ~onChange, ()) =>
+let noop = _c => ();
+
+let createElement =
+    (
+      ~children as _,
+      ~checked=false,
+      ~checkedColor=Colors.dodgerBlue,
+      ~style=defaultStyle,
+      ~onChange=noop,
+      (),
+    ) =>
   component(slots => {
     let (isChecked, checkBox, _slots: React.Hooks.empty) =
       React.Hooks.state(checked, slots);
@@ -46,15 +56,3 @@ let make = (~checked, ~style, ~checkedColor, ~onChange, ()) =>
       </View>
     </Clickable>;
   });
-let noop = _c => ();
-
-let createElement =
-    (
-      ~children as _,
-      ~checked=false,
-      ~checkedColor=Colors.dodgerBlue,
-      ~style=defaultStyle,
-      ~onChange=noop,
-      (),
-    ) =>
-  make(~checked, ~onChange, ~checkedColor, ~style, ());

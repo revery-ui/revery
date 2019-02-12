@@ -108,4 +108,4 @@ let createElement =
       ~onFocus?,
       ~tabindex,
       React.listToElement(children),
-    );
+  );

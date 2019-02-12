@@ -34,7 +34,7 @@ let textStyles =
 let noop = _item => ();
 
 let component = React.component("Dropdown");
-let make =
+let createElement =
     (
       ~items,
       ~onItemSelected,
@@ -132,7 +132,3 @@ let make =
       </View>
     </View>;
   });
-
-let createElement =
-    (~items, ~onItemSelected=noop, ~width=200, ~height=50, ~children, ()) =>
-    make(~items, ~onItemSelected, ~width, ~height, ~children, ());

@@ -17,20 +17,21 @@ let noopValueChanged = _f => ();
 
 let component = React.component("Slider");
 
-let make =
+let createElement =
     (
+      ~children as _,
       ~onValueChanged=noopValueChanged,
-      ~value,
-      ~minimumValue,
-      ~maximumValue,
-      ~thumbLength,
-      ~sliderLength,
-      ~minimumTrackColor,
-      ~maximumTrackColor,
-      ~thumbColor,
-      ~trackThickness,
-      ~thumbThickness,
-      ~vertical,
+      ~minimumValue=0.,
+      ~maximumValue=1.,
+      ~value=0.,
+      ~vertical=false,
+      ~thumbLength=15,
+      ~sliderLength=100,
+      ~thumbThickness=15,
+      ~trackThickness=5,
+      ~maximumTrackColor=Colors.darkGray,
+      ~minimumTrackColor=Color.hex("#90f7ff"),
+      ~thumbColor=Colors.gray,
       (),
     ) =>
   component(slots => {
@@ -200,36 +201,3 @@ let make =
       <View style=afterTrackStyle />
     </View>;
   });
-
-let createElement =
-    (
-      ~children as _,
-      ~onValueChanged=noopValueChanged,
-      ~minimumValue=0.,
-      ~maximumValue=1.,
-      ~value=0.,
-      ~vertical=false,
-      ~thumbLength=15,
-      ~sliderLength=100,
-      ~thumbThickness=15,
-      ~trackThickness=5,
-      ~maximumTrackColor=Colors.darkGray,
-      ~minimumTrackColor=Color.hex("#90f7ff"),
-      ~thumbColor=Colors.gray,
-      (),
-    ) =>
-    make(
-      ~vertical,
-      ~onValueChanged,
-      ~minimumValue,
-      ~maximumValue,
-      ~value,
-      ~thumbLength,
-      ~sliderLength,
-      ~thumbThickness,
-      ~trackThickness,
-      ~maximumTrackColor,
-      ~minimumTrackColor,
-      ~thumbColor,
-      (),
-    );
