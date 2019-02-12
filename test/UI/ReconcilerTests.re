@@ -10,7 +10,7 @@ open Revery_UI;
 module TestRefComponent = {
   let component = React.component("TestRefComponent");
 
-  let make = (~latestRef, ()) =>
+  let createElement = (~children as _, ~latestRef, ()) =>
     component(slots => {
       let (refFromState, setRef, _slots: React.Hooks.empty) =
         React.Hooks.state(None, slots);
@@ -24,9 +24,6 @@ module TestRefComponent = {
 
       <View ref=setRefInState />;
     });
-
-  let createElement = (~children as _, ~latestRef, ()) =>
-    React.element(make(~latestRef, ()));
 };
 
 test("Reconciler", () => {
