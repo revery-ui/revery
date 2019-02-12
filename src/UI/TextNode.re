@@ -128,7 +128,7 @@ class textNode (text: string) = {
     };
   };
   pub setText = t => text = t;
-  pub! getMeasureFunction = pixelRatio => {
+  pub! getMeasureFunction = (pixelRatio, scaleFactor) => {
     let measure =
         (_mode, width, _widthMeasureMode, _height, _heightMeasureMode) => {
       /* TODO: Cache font locally in variable */
@@ -138,7 +138,8 @@ class textNode (text: string) = {
       let font =
         FontCache.load(
           style.fontFamily,
-          int_of_float(float_of_int(style.fontSize) *. pixelRatio),
+          int_of_float(float_of_int(style.fontSize) *. pixelRatio)
+          * scaleFactor,
         );
 
       switch (textWrap) {
