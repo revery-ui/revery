@@ -39,20 +39,23 @@ module Logo = {
 
       let onMouseUp = _ => setOpacity(1.0);
 
-      (hooks, <View onMouseDown onMouseUp>
-        <Image
-          src="outrun-logo.png"
-          style=Style.[
-            width(512),
-            height(256),
-            opacity(logoOpacity),
-            transform([
-              Transform.RotateY(Angle.from_radians(rotationY)),
-              Transform.RotateX(Angle.from_radians(rotation)),
-            ]),
-          ]
-        />
-      </View>);
+      (
+        hooks,
+        <View onMouseDown onMouseUp>
+          <Image
+            src="outrun-logo.png"
+            style=Style.[
+              width(512),
+              height(256),
+              opacity(logoOpacity),
+              transform([
+                Transform.RotateY(Angle.from_radians(rotationY)),
+                Transform.RotateX(Angle.from_radians(rotation)),
+              ]),
+            ]
+          />
+        </View>,
+      );
     });
 };
 

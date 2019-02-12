@@ -28,23 +28,26 @@ module Sample = {
   let component = React.component("Sample");
 
   let createElement = (~children as _, ()) =>
-    component((hooks) =>
-      (hooks, <View style=containerStyle>
-        <ScrollView style=outerBox>
-          <Image
-            src="outrun-logo.png"
-            style=Style.[width(512), height(256)]
-          />
-          <Image
-            src="outrun-logo.png"
-            style=Style.[width(512), height(256)]
-          />
-          <Image
-            src="outrun-logo.png"
-            style=Style.[width(512), height(256)]
-          />
-        </ScrollView>
-      </View>)
+    component(hooks =>
+      (
+        hooks,
+        <View style=containerStyle>
+          <ScrollView style=outerBox>
+            <Image
+              src="outrun-logo.png"
+              style=Style.[width(512), height(256)]
+            />
+            <Image
+              src="outrun-logo.png"
+              style=Style.[width(512), height(256)]
+            />
+            <Image
+              src="outrun-logo.png"
+              style=Style.[width(512), height(256)]
+            />
+          </ScrollView>
+        </View>,
+      )
     );
 };
 

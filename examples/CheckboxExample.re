@@ -7,44 +7,46 @@ module Check = {
 
   let createElement = (~children as _, ()) =>
     component(hooks => {
-      let (text, setText, hooks) =
-        React.Hooks.state("Not Checked!", hooks);
-      (hooks, <View
-        style=Style.[
-          width(500),
-          height(500),
-          justifyContent(`Center),
-          alignItems(`Center),
-        ]>
-        <Checkbox
-          onChange={checked => {
-            let text = checked ? "Checked!" : "Not Checked!";
-            setText(text);
-          }}
-          style=Style.[marginBottom(10)]
-        />
-        <Text
-          text
+      let (text, setText, hooks) = React.Hooks.state("Not Checked!", hooks);
+      (
+        hooks,
+        <View
           style=Style.[
-            marginBottom(10),
-            fontFamily("Roboto-Regular.ttf"),
-            fontSize(20),
-          ]
-        />
-        <Checkbox
-          checkedColor=Colors.green
-          style=Style.[border(~width=2, ~color=Colors.green)]
-          checked=true
-        />
-        <Text
-          text="Default state: Checked"
-          style=Style.[
-            marginTop(10),
-            fontFamily("Roboto-Regular.ttf"),
-            fontSize(20),
-          ]
-        />
-      </View>);
+            width(500),
+            height(500),
+            justifyContent(`Center),
+            alignItems(`Center),
+          ]>
+          <Checkbox
+            onChange={checked => {
+              let text = checked ? "Checked!" : "Not Checked!";
+              setText(text);
+            }}
+            style=Style.[marginBottom(10)]
+          />
+          <Text
+            text
+            style=Style.[
+              marginBottom(10),
+              fontFamily("Roboto-Regular.ttf"),
+              fontSize(20),
+            ]
+          />
+          <Checkbox
+            checkedColor=Colors.green
+            style=Style.[border(~width=2, ~color=Colors.green)]
+            checked=true
+          />
+          <Text
+            text="Default state: Checked"
+            style=Style.[
+              marginTop(10),
+              fontFamily("Roboto-Regular.ttf"),
+              fontSize(20),
+            ]
+          />
+        </View>,
+      );
     });
 };
 

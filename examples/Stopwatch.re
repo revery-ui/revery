@@ -81,48 +81,55 @@ module Clock = {
       let getMarcherPosition = t =>
         sin(Time.to_float_seconds(t) *. 2. *. pi) /. 2. +. 0.5;
 
-      (hooks, <View
-        style=Style.[
-          position(`Absolute),
-          justifyContent(`Center),
-          alignItems(`Center),
-          bottom(0),
-          top(0),
-          left(0),
-          right(0),
-        ]>
+      (
+        hooks,
         <View
           style=Style.[
-            margin(20),
-            width(150),
-            borderBottom(~color=Colors.gray, ~width=2),
+            position(`Absolute),
+            justifyContent(`Center),
+            alignItems(`Center),
+            bottom(0),
+            top(0),
+            left(0),
+            right(0),
           ]>
-          <Text
-            style=Style.[
-              color(Colors.white),
-              fontFamily("Roboto-Regular.ttf"),
-              fontSize(24),
-              marginVertical(20),
-              width(200),
-            ]
-            text={string_of_float(state.elapsedTime |> Time.to_float_seconds)}
-          />
           <View
             style=Style.[
-              position(`Absolute),
-              bottom(0),
-              opacity(marcherOpacity),
-              left(
-                int_of_float(getMarcherPosition(state.elapsedTime) *. 146.),
-              ),
-              width(4),
-              height(4),
-              backgroundColor(Color.hex("#90f7ff")),
-            ]
-          />
-        </View>
-        <Button title=buttonText onClick=startStop />
-      </View>);
+              margin(20),
+              width(150),
+              borderBottom(~color=Colors.gray, ~width=2),
+            ]>
+            <Text
+              style=Style.[
+                color(Colors.white),
+                fontFamily("Roboto-Regular.ttf"),
+                fontSize(24),
+                marginVertical(20),
+                width(200),
+              ]
+              text={string_of_float(
+                state.elapsedTime |> Time.to_float_seconds,
+              )}
+            />
+            <View
+              style=Style.[
+                position(`Absolute),
+                bottom(0),
+                opacity(marcherOpacity),
+                left(
+                  int_of_float(
+                    getMarcherPosition(state.elapsedTime) *. 146.,
+                  ),
+                ),
+                width(4),
+                height(4),
+                backgroundColor(Color.hex("#90f7ff")),
+              ]
+            />
+          </View>
+          <Button title=buttonText onClick=startStop />
+        </View>,
+      );
     });
 };
 

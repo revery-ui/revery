@@ -174,19 +174,22 @@ let make =
     /*
        component
      */
-    (slots, <Clickable
-      onFocus={() => dispatch(SetFocus(true))}
-      onBlur={() => dispatch(SetFocus(false))}
-      onKeyDown={event => handleKeyDown(~dispatch, event)}
-      onKeyPress={event => {
-        dispatch(UpdateText(event.character));
-        onChange(~value=addCharacter(state.value, event.character));
-      }}>
-      <View style=viewStyles>
-        <Text style=innerTextStyles text=content />
-        <View style=inputCursorStyles />
-      </View>
-    </Clickable>);
+    (
+      slots,
+      <Clickable
+        onFocus={() => dispatch(SetFocus(true))}
+        onBlur={() => dispatch(SetFocus(false))}
+        onKeyDown={event => handleKeyDown(~dispatch, event)}
+        onKeyPress={event => {
+          dispatch(UpdateText(event.character));
+          onChange(~value=addCharacter(state.value, event.character));
+        }}>
+        <View style=viewStyles>
+          <Text style=innerTextStyles text=content />
+          <View style=inputCursorStyles />
+        </View>
+      </Clickable>,
+    );
   });
 
 let createElement =

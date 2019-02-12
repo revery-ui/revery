@@ -11,7 +11,7 @@ module ActionButton = {
   let component = React.component("ActionButton");
 
   let createElement = (~children as _, ~name, ~onClick, ()) =>
-    component((hooks) => {
+    component(hooks => {
       let wrapperStyle =
         Style.[
           backgroundColor(selectionHighlight),
@@ -24,9 +24,12 @@ module ActionButton = {
           fontSize(14),
           margin(16),
         ];
-      (hooks, <Clickable style=wrapperStyle onClick>
-        <Text style=textHeaderStyle text=name />
-      </Clickable>);
+      (
+        hooks,
+        <Clickable style=wrapperStyle onClick>
+          <Text style=textHeaderStyle text=name />
+        </Clickable>,
+      );
     });
 };
 
@@ -36,8 +39,7 @@ module CaptureArea = {
   let createElement = (~w, ~children as _, ()) =>
     component(hooks => {
       let (count, setCount, hooks) = React.Hooks.state(0, hooks);
-      let (file, setFile, hooks) =
-        React.Hooks.state(None, hooks);
+      let (file, setFile, hooks) = React.Hooks.state(None, hooks);
 
       let capture = () => {
         let exed = Environment.getExecutingDirectory();
@@ -60,13 +62,16 @@ module CaptureArea = {
 
       let imageStyle = Style.[width(400), height(300)];
 
-      (hooks, <View style=viewStyle>
-        <ActionButton name="Take a screenshot!" onClick=capture />
-        {switch (file) {
-         | None => <View />
-         | Some(src) => <Image style=imageStyle src />
-         }}
-      </View>);
+      (
+        hooks,
+        <View style=viewStyle>
+          <ActionButton name="Take a screenshot!" onClick=capture />
+          {switch (file) {
+           | None => <View />
+           | Some(src) => <Image style=imageStyle src />
+           }}
+        </View>,
+      );
     });
 };
 

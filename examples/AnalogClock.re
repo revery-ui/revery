@@ -139,13 +139,16 @@ module AnalogClock = {
           )
         );
 
-      (slots, <View style=containerStyle>
-        <View style=clockContainer>
-          <View style=secondsStyle />
-          <View style=minutesStyle />
-          <View style=hourStyle />
-        </View>
-      </View>);
+      (
+        slots,
+        <View style=containerStyle>
+          <View style=clockContainer>
+            <View style=secondsStyle />
+            <View style=minutesStyle />
+            <View style=hourStyle />
+          </View>
+        </View>,
+      );
     });
 };
 

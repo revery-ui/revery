@@ -28,30 +28,33 @@ module Example = {
       let ({first, second}, setValue, hooks) =
         React.Hooks.state({first: "", second: ""}, hooks);
 
-      (hooks, <View style=containerStyle>
-        <Input
-          placeholder="Insert text here"
-          onChange={(~value) => setValue({first: value, second})}
-        />
-        <Input
-          placeholder="custom input"
-          placeholderColor=Colors.plum
-          cursorColor=Colors.white
-          onChange={(~value) => setValue({first, second: value})}
-          style=Style.[
-            backgroundColor(Colors.paleVioletRed),
-            color(Colors.white),
-            margin(20),
-            boxShadow(
-              ~xOffset=-5.,
-              ~yOffset=2.,
-              ~color=Colors.black,
-              ~blurRadius=20.,
-              ~spreadRadius=0.,
-            ),
-          ]
-        />
-      </View>);
+      (
+        hooks,
+        <View style=containerStyle>
+          <Input
+            placeholder="Insert text here"
+            onChange={(~value) => setValue({first: value, second})}
+          />
+          <Input
+            placeholder="custom input"
+            placeholderColor=Colors.plum
+            cursorColor=Colors.white
+            onChange={(~value) => setValue({first, second: value})}
+            style=Style.[
+              backgroundColor(Colors.paleVioletRed),
+              color(Colors.white),
+              margin(20),
+              boxShadow(
+                ~xOffset=-5.,
+                ~yOffset=2.,
+                ~color=Colors.black,
+                ~blurRadius=20.,
+                ~spreadRadius=0.,
+              ),
+            ]
+          />
+        </View>,
+      );
     });
 };
 

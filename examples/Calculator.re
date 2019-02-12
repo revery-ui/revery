@@ -9,7 +9,7 @@ module Row = {
   let component = React.component("Row");
 
   let createElement = (~children, ()) =>
-    component((hooks) => {
+    component(hooks => {
       let style =
         Style.[
           flexDirection(`Row),
@@ -25,7 +25,7 @@ module Column = {
   let component = React.component("Column");
 
   let createElement = (~children, ()) =>
-    component((hooks) => {
+    component(hooks => {
       let style =
         Style.[
           flexDirection(`Column),
@@ -49,7 +49,7 @@ module Button = {
         ~children as _,
         (),
       ) =>
-    component((hooks) => {
+    component(hooks => {
       let clickableStyle =
         Style.[
           position(`Relative),
@@ -70,16 +70,19 @@ module Button = {
       let textStyle =
         Style.[color(Colors.black), fontFamily(family), fontSize(32)];
 
-      (hooks, <Clickable style=clickableStyle onClick>
-        <View style=viewStyle> <Text style=textStyle text=contents /> </View>
-      </Clickable>);
+      (
+        hooks,
+        <Clickable style=clickableStyle onClick>
+          <View style=viewStyle> <Text style=textStyle text=contents /> </View>
+        </Clickable>,
+      );
     });
 };
 module Display = {
   let component = React.component("Display");
 
   let createElement = (~display: string, ~curNum: string, ~children as _, ()) =>
-    component((hooks) => {
+    component(hooks => {
       let viewStyle =
         Style.[
           backgroundColor(Colors.white),
@@ -104,10 +107,13 @@ module Display = {
           margin(15),
         ];
 
-      (hooks, <View style=viewStyle>
-        <Text style=displayStyle text=display />
-        <Text style=numStyle text=curNum />
-      </View>);
+      (
+        hooks,
+        <View style=viewStyle>
+          <Text style=displayStyle text=display />
+          <Text style=numStyle text=curNum />
+        </View>,
+      );
     });
 };
 
@@ -274,95 +280,98 @@ module Calculator = {
           hooks,
         );
 
-      (hooks, <Column>
-        <Display display curNum=number />
-        <Row>
-          <Button
-            contents="AC"
-            onClick={_ => dispatch(ClearKeyPressed(true))}
-          />
-          <Button
-            contents="C"
-            onClick={_ => dispatch(ClearKeyPressed(false))}
-          />
-          <Button
-            contents="±"
-            onClick={_ => dispatch(PlusMinusKeyPressed)}
-          />
-          /* TODO: Switch to a font with a backspace character */
-          <Button
-            fontFamily="FontAwesome5FreeSolid.otf"
-            contents={||}
-            onClick={_ => dispatch(BackspaceKeyPressed)}
-          />
-        </Row>
-        <Row>
-          <Button
-            contents="7"
-            onClick={_ => dispatch(NumberKeyPressed("7"))}
-          />
-          <Button
-            contents="8"
-            onClick={_ => dispatch(NumberKeyPressed("8"))}
-          />
-          <Button
-            contents="9"
-            onClick={_ => dispatch(NumberKeyPressed("9"))}
-          />
-          <Button
-            contents="÷"
-            onClick={_ => dispatch(OperationKeyPressed(`Div))}
-          />
-        </Row>
-        <Row>
-          <Button
-            contents="4"
-            onClick={_ => dispatch(NumberKeyPressed("4"))}
-          />
-          <Button
-            contents="5"
-            onClick={_ => dispatch(NumberKeyPressed("5"))}
-          />
-          <Button
-            contents="6"
-            onClick={_ => dispatch(NumberKeyPressed("6"))}
-          />
-          <Button
-            contents="×"
-            onClick={_ => dispatch(OperationKeyPressed(`Mul))}
-          />
-        </Row>
-        <Row>
-          <Button
-            contents="1"
-            onClick={_ => dispatch(NumberKeyPressed("1"))}
-          />
-          <Button
-            contents="2"
-            onClick={_ => dispatch(NumberKeyPressed("2"))}
-          />
-          <Button
-            contents="3"
-            onClick={_ => dispatch(NumberKeyPressed("3"))}
-          />
-          <Button
-            contents="-"
-            onClick={_ => dispatch(OperationKeyPressed(`Sub))}
-          />
-        </Row>
-        <Row>
-          <Button contents="." onClick={_ => dispatch(DotKeyPressed)} />
-          <Button
-            contents="0"
-            onClick={_ => dispatch(NumberKeyPressed("0"))}
-          />
-          <Button contents="=" onClick={_ => dispatch(ResultKeyPressed)} />
-          <Button
-            contents="+"
-            onClick={_ => dispatch(OperationKeyPressed(`Add))}
-          />
-        </Row>
-      </Column>);
+      (
+        hooks,
+        <Column>
+          <Display display curNum=number />
+          <Row>
+            <Button
+              contents="AC"
+              onClick={_ => dispatch(ClearKeyPressed(true))}
+            />
+            <Button
+              contents="C"
+              onClick={_ => dispatch(ClearKeyPressed(false))}
+            />
+            <Button
+              contents="±"
+              onClick={_ => dispatch(PlusMinusKeyPressed)}
+            />
+            /* TODO: Switch to a font with a backspace character */
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              contents={||}
+              onClick={_ => dispatch(BackspaceKeyPressed)}
+            />
+          </Row>
+          <Row>
+            <Button
+              contents="7"
+              onClick={_ => dispatch(NumberKeyPressed("7"))}
+            />
+            <Button
+              contents="8"
+              onClick={_ => dispatch(NumberKeyPressed("8"))}
+            />
+            <Button
+              contents="9"
+              onClick={_ => dispatch(NumberKeyPressed("9"))}
+            />
+            <Button
+              contents="÷"
+              onClick={_ => dispatch(OperationKeyPressed(`Div))}
+            />
+          </Row>
+          <Row>
+            <Button
+              contents="4"
+              onClick={_ => dispatch(NumberKeyPressed("4"))}
+            />
+            <Button
+              contents="5"
+              onClick={_ => dispatch(NumberKeyPressed("5"))}
+            />
+            <Button
+              contents="6"
+              onClick={_ => dispatch(NumberKeyPressed("6"))}
+            />
+            <Button
+              contents="×"
+              onClick={_ => dispatch(OperationKeyPressed(`Mul))}
+            />
+          </Row>
+          <Row>
+            <Button
+              contents="1"
+              onClick={_ => dispatch(NumberKeyPressed("1"))}
+            />
+            <Button
+              contents="2"
+              onClick={_ => dispatch(NumberKeyPressed("2"))}
+            />
+            <Button
+              contents="3"
+              onClick={_ => dispatch(NumberKeyPressed("3"))}
+            />
+            <Button
+              contents="-"
+              onClick={_ => dispatch(OperationKeyPressed(`Sub))}
+            />
+          </Row>
+          <Row>
+            <Button contents="." onClick={_ => dispatch(DotKeyPressed)} />
+            <Button
+              contents="0"
+              onClick={_ => dispatch(NumberKeyPressed("0"))}
+            />
+            <Button contents="=" onClick={_ => dispatch(ResultKeyPressed)} />
+            <Button
+              contents="+"
+              onClick={_ => dispatch(OperationKeyPressed(`Add))}
+            />
+          </Row>
+        </Column>,
+      );
     });
 };
 

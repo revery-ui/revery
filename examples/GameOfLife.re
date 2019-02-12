@@ -273,9 +273,7 @@ module Row = {
     ];
 
   let createElement = (~children, ()) =>
-    component((hooks) =>
-      (hooks, <View style> ...children </View>)
-    );
+    component(hooks => (hooks, <View style> ...children </View>));
 };
 
 module Column = {
@@ -290,9 +288,7 @@ module Column = {
     ];
 
   let createElement = (~children, ()) =>
-    component((hooks) =>
-      (hooks, <View style> ...children </View>)
-    );
+    component(hooks => (hooks, <View style> ...children </View>));
 };
 
 module Cell = {
@@ -322,7 +318,7 @@ module Cell = {
     );
 
   let createElement = (~cell, ~onClick, ~children as _, ()) =>
-    component((hooks) => {
+    component(hooks => {
       let style =
         switch (cell) {
         | Alive => <View style=aliveStyle />
@@ -444,48 +440,51 @@ module GameOfLiveComponent = {
             dispatch(StartTimer(dispose));
           };
 
-      (hooks, <Column>
-        <Row>
-          ...{viewPortRender(state.viewPort, state.universe, toggleAlive)}
-        </Row>
-        <View style=controlsStyle>
-          <Button
-            fontFamily="FontAwesome5FreeSolid.otf"
-            title={state.isRunning ? {||} : {||}}
-            onClick=startStop
-          />
-          <Button
-            fontFamily="FontAwesome5FreeSolid.otf"
-            title={||}
-            onClick={_ => dispatch(MoveViewPort(North))}
-          />
-          <Button
-            fontFamily="FontAwesome5FreeSolid.otf"
-            title={||}
-            onClick={_ => dispatch(MoveViewPort(South))}
-          />
-          <Button
-            fontFamily="FontAwesome5FreeSolid.otf"
-            title={||}
-            onClick={_ => dispatch(MoveViewPort(East))}
-          />
-          <Button
-            fontFamily="FontAwesome5FreeSolid.otf"
-            title={||}
-            onClick={_ => dispatch(MoveViewPort(West))}
-          />
-          <Button
-            fontFamily="FontAwesome5FreeSolid.otf"
-            title={||}
-            onClick={_ => dispatch(ZoomViewPort(ZoomIn))}
-          />
-          <Button
-            fontFamily="FontAwesome5FreeSolid.otf"
-            title={||}
-            onClick={_ => dispatch(ZoomViewPort(ZoomOut))}
-          />
-        </View>
-      </Column>);
+      (
+        hooks,
+        <Column>
+          <Row>
+            ...{viewPortRender(state.viewPort, state.universe, toggleAlive)}
+          </Row>
+          <View style=controlsStyle>
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              title={state.isRunning ? {||} : {||}}
+              onClick=startStop
+            />
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              title={||}
+              onClick={_ => dispatch(MoveViewPort(North))}
+            />
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              title={||}
+              onClick={_ => dispatch(MoveViewPort(South))}
+            />
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              title={||}
+              onClick={_ => dispatch(MoveViewPort(East))}
+            />
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              title={||}
+              onClick={_ => dispatch(MoveViewPort(West))}
+            />
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              title={||}
+              onClick={_ => dispatch(ZoomViewPort(ZoomIn))}
+            />
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              title={||}
+              onClick={_ => dispatch(ZoomViewPort(ZoomOut))}
+            />
+          </View>
+        </Column>,
+      );
     });
 };
 

@@ -147,22 +147,27 @@ let make =
         height(scrollBarThickness),
       ];
 
-    (slots, <View style>
-      <View
-        onMouseWheel=scroll
-        ref={r => setOuterRef(Some(r))}
-        style=Style.[
-          flexGrow(1),
-          position(`Relative),
-          overflow(LayoutTypes.Scroll),
-        ]>
-        <View style=innerStyle> children </View>
-        <View style=verticalScrollbarContainerStyle> verticalScrollBar </View>
-        <View style=horizontalScrollbarContainerStyle>
-          horizontalScrollBar
+    (
+      slots,
+      <View style>
+        <View
+          onMouseWheel=scroll
+          ref={r => setOuterRef(Some(r))}
+          style=Style.[
+            flexGrow(1),
+            position(`Relative),
+            overflow(LayoutTypes.Scroll),
+          ]>
+          <View style=innerStyle> children </View>
+          <View style=verticalScrollbarContainerStyle>
+            verticalScrollBar
+          </View>
+          <View style=horizontalScrollbarContainerStyle>
+            horizontalScrollBar
+          </View>
         </View>
-      </View>
-    </View>);
+      </View>,
+    );
   });
 
 let createElement = (~children, ~style, ~scrollLeft=0, ~scrollTop=0, ()) =>

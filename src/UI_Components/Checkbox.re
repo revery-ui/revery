@@ -22,37 +22,39 @@ let createElement =
       (),
     ) =>
   component(slots => {
-    let (isChecked, checkBox, slots) =
-      React.Hooks.state(checked, slots);
+    let (isChecked, checkBox, slots) = React.Hooks.state(checked, slots);
 
     let stylesToUse = Style.merge(~source=defaultStyle, ~target=style);
     let bgColor = isChecked ? checkedColor : Colors.transparentWhite;
     let checkedContent = isChecked ? {||} : "";
 
-    (slots, <Clickable
-      onClick={() => {
-        checkBox(!isChecked);
-        onChange(!isChecked);
-      }}>
-      <View
-        style=Style.(
-          merge(
-            ~source=[
-              backgroundColor(bgColor),
-              justifyContent(`Center),
-              alignItems(`Center),
-            ],
-            ~target=stylesToUse,
-          )
-        )>
-        <Text
-          text=checkedContent
-          style=Style.[
-            color(isChecked ? Colors.white : Colors.black),
-            fontSize(30),
-            fontFamily("FontAwesome5FreeSolid.otf"),
-          ]
-        />
-      </View>
-    </Clickable>);
+    (
+      slots,
+      <Clickable
+        onClick={() => {
+          checkBox(!isChecked);
+          onChange(!isChecked);
+        }}>
+        <View
+          style=Style.(
+            merge(
+              ~source=[
+                backgroundColor(bgColor),
+                justifyContent(`Center),
+                alignItems(`Center),
+              ],
+              ~target=stylesToUse,
+            )
+          )>
+          <Text
+            text=checkedContent
+            style=Style.[
+              color(isChecked ? Colors.white : Colors.black),
+              fontSize(30),
+              fontFamily("FontAwesome5FreeSolid.otf"),
+            ]
+          />
+        </View>
+      </Clickable>,
+    );
   });

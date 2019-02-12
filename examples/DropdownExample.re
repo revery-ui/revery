@@ -31,10 +31,16 @@ module DropdownExample = {
       let (selectedItem, setSelectedItem, hooks) =
         React.Hooks.state(List.nth(items, 0), hooks);
 
-      (hooks, <View style=containerStyle>
-        <Text style=textStyle text={"Selected Item: " ++ selectedItem.label} />
-        <Dropdown items onItemSelected={item => setSelectedItem(item)} />
-      </View>);
+      (
+        hooks,
+        <View style=containerStyle>
+          <Text
+            style=textStyle
+            text={"Selected Item: " ++ selectedItem.label}
+          />
+          <Dropdown items onItemSelected={item => setSelectedItem(item)} />
+        </View>,
+      );
     });
 };
 
