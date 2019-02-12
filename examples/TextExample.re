@@ -17,7 +17,7 @@ module SomeText = {
           color(Colors.white),
           fontFamily("Roboto-Regular.ttf"),
           fontSize(20),
-          lineHeight(20.),
+          lineHeight(1.5),
           textWrap(TextWrapping.WhitespaceWrap),
           width(200),
           border(~color=Colors.blueViolet, ~width=5),

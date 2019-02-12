@@ -34,7 +34,7 @@ class textNode (text: string) = {
 
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
-      let lineHeight = style.lineHeight;
+      let lineHeightPx = _this#_getLineHeightPx(parentContext.pixelRatio);
       let font =
         FontCache.load(
           style.fontFamily,
@@ -54,7 +54,7 @@ class textNode (text: string) = {
       let outerTransform = Mat4.create();
       Mat4.fromTranslation(
         outerTransform,
-        Vec3.create(0.0, lineHeight, 0.0),
+        Vec3.create(0.0, lineHeightPx, 0.0),
       );
 
       let render = (s: Fontkit.fk_shape, x: float, y: float) => {
@@ -114,7 +114,7 @@ class textNode (text: string) = {
           Array.iteri(
             (_offset, s) => {
               let nextX =
-                render(s, startX^, lineHeight *. float_of_int(lineNum));
+                render(s, startX^, lineHeightPx *. float_of_int(lineNum));
               startX := nextX;
             },
             shapedText,
@@ -133,7 +133,7 @@ class textNode (text: string) = {
       /* TODO: Cache font locally in variable */
       let style = _super#getStyle();
       let textWrap = style.textWrap;
-      let lineHeight = style.lineHeight;
+      let lineHeightPx = _this#_getLineHeightPx(pixelRatio);
       let font =
         FontCache.load(
           style.fontFamily,
@@ -155,9 +155,9 @@ class textNode (text: string) = {
         _lines := lines;
 
         let dimensions: Layout.LayoutTypes.dimensions = {
-          width: maxWidthLine,
+          width: int_of_float(float_of_int(maxWidthLine) /. pixelRatio),
           height:
-            int_of_float(float_of_int(List.length(lines)) *. lineHeight),
+            int_of_float(float_of_int(List.length(lines)) *. lineHeightPx /. pixelRatio),
         };
 
         dimensions;
@@ -165,7 +165,7 @@ class textNode (text: string) = {
         let d = FontRenderer.measure(font, text);
         let dimensions: Layout.LayoutTypes.dimensions = {
           width: int_of_float(float_of_int(d.width) /. pixelRatio),
-          height: int_of_float(float_of_int(d.height) /. pixelRatio),
+          height: int_of_float(lineHeightPx /. pixelRatio),
         };
 
         _lines := [text];
@@ -184,7 +184,7 @@ class textNode (text: string) = {
         let dimensions: Layout.LayoutTypes.dimensions = {
           width: maxWidthLine,
           height:
-            int_of_float(float_of_int(List.length(lines)) *. lineHeight),
+            int_of_float(float_of_int(List.length(lines)) *. lineHeightPx),
         };
 
         dimensions;
@@ -192,4 +192,9 @@ class textNode (text: string) = {
     };
     Some(measure);
   };
+
+  pri _getLineHeightPx = (pixelRatio) => {
+    let style = _super#getStyle();
+    style.lineHeight *. float_of_int(style.fontSize) *. pixelRatio;
+  }
 };
