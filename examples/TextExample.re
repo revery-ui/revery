@@ -1,45 +1,41 @@
 open Revery.UI;
 open Revery.Core;
 
-module SomeText = {
+let containerStyle =
+  Style.[
+    position(`Absolute),
+    top(0),
+    bottom(0),
+    left(0),
+    right(0),
+    alignItems(`Center),
+    justifyContent(`Center),
+    flexDirection(`Column),
+  ];
+
+module SampleText = {
   let component = React.component("Example");
 
-  let make = () => {
-    component(slots => {
-      let (_focused, _setFocus, _slots: React.Hooks.empty) =
-        React.Hooks.state(false, slots);
-
+  let createElement = (~children as _, ()) => 
+    component((_slots: React.Hooks.empty) => {
       let textContent = "All work and no play makes Jack a dull boy";
 
-      <Text
-        logging=true
-        style=Style.[
-          color(Colors.white),
-          fontFamily("Roboto-Regular.ttf"),
-          fontSize(20),
-          lineHeight(1.5),
-          textWrap(TextWrapping.WhitespaceWrap),
-          width(200),
-          border(~color=Colors.blueViolet, ~width=5),
-        ]
-        text=textContent
-      />;
+      <View style=containerStyle>
+        <Text
+          logging=true
+          style=Style.[
+            color(Colors.white),
+            fontFamily("Roboto-Regular.ttf"),
+            fontSize(20),
+            lineHeight(1.5),
+            textWrap(TextWrapping.WhitespaceWrap),
+            width(200),
+            border(~color=Colors.blueViolet, ~width=5),
+          ]
+          text=textContent
+        />
+      </View>;
     });
-  };
-
-  let createElement = (~children as _, ()) => React.element(make());
 };
 
-let render = () =>
-  <View
-    style=Style.[
-      position(`Absolute),
-      justifyContent(`Center),
-      alignItems(`Center),
-      bottom(0),
-      top(0),
-      left(0),
-      right(0),
-    ]>
-    <SomeText />
-  </View>;
+let render = () => <SampleText />;
