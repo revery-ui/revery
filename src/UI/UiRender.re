@@ -51,7 +51,7 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
     Layout.layout(rootNode, pixelRatio, scaleFactor);
   | true =>
     rootNode#setStyle(Style.make());
-    Layout.layout(rootNode, pixelRatio);
+    Layout.layout(rootNode, pixelRatio, scaleFactor);
     let measurements = rootNode#measurements();
     let size: Window.windowSize = {
       width: measurements.width,
