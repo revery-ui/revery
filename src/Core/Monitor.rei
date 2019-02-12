@@ -9,4 +9,4 @@ type size = {
 
 let getSize: t => size;
 
-let getScaleFactor: unit => float;
+let getScaleFactor: unit => int;
