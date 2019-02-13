@@ -27,14 +27,20 @@ module DropdownExample = {
   ];
 
   let createElement = (~children as _, ()) =>
-    component(slots => {
-      let (selectedItem, setSelectedItem, _slots: React.Hooks.empty) =
-        React.Hooks.state(List.nth(items, 0), slots);
+    component(hooks => {
+      let (selectedItem, setSelectedItem, hooks) =
+        React.Hooks.state(List.nth(items, 0), hooks);
 
-      <View style=containerStyle>
-        <Text style=textStyle text={"Selected Item: " ++ selectedItem.label} />
-        <Dropdown items onItemSelected={item => setSelectedItem(item)} />
-      </View>;
+      (
+        hooks,
+        <View style=containerStyle>
+          <Text
+            style=textStyle
+            text={"Selected Item: " ++ selectedItem.label}
+          />
+          <Dropdown items onItemSelected={item => setSelectedItem(item)} />
+        </View>,
+      );
     });
 };
 

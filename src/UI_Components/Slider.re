@@ -43,8 +43,7 @@ let createElement =
     /* Initial value is used to detect if the 'value' parameter ever changes */
     let (initialValue, setInitialValue, slots) =
       React.Hooks.state(value, slots);
-    let (v, setV, _slots: React.Hooks.empty) =
-      React.Hooks.state(value, slots);
+    let (v, setV, slots) = React.Hooks.state(value, slots);
 
     /*
      * If the slider value is updated (controlled),
@@ -185,19 +184,22 @@ let createElement =
         backgroundColor(sliderBackgroundColor),
       ];
 
-    <View onMouseDown style ref={r => setSlideRef(r)}>
-      <View style=beforeTrackStyle />
-      <View
-        ref={r => setThumbRef(r)}
-        style=Style.[
-          position(`Absolute),
-          height(vertical ? thumbWidth : thumbHeight),
-          width(vertical ? thumbHeight : thumbWidth),
-          left(vertical ? 0 : thumbPosition),
-          top(vertical ? thumbPosition : 0),
-          backgroundColor(thumbColor),
-        ]
-      />
-      <View style=afterTrackStyle />
-    </View>;
+    (
+      slots,
+      <View onMouseDown style ref={r => setSlideRef(r)}>
+        <View style=beforeTrackStyle />
+        <View
+          ref={r => setThumbRef(r)}
+          style=Style.[
+            position(`Absolute),
+            height(vertical ? thumbWidth : thumbHeight),
+            width(vertical ? thumbHeight : thumbWidth),
+            left(vertical ? 0 : thumbPosition),
+            top(vertical ? thumbPosition : 0),
+            backgroundColor(thumbColor),
+          ]
+        />
+        <View style=afterTrackStyle />
+      </View>,
+    );
   });

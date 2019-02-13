@@ -55,7 +55,7 @@ module AnalogClock = {
       let {hourDegrees, minuteDegrees, secondDegrees}: DegreeUtils.t =
         state.currentTime |> DegreeUtils.getDegreesFromTime;
 
-      let _slots: React.Hooks.empty =
+      let slots =
         React.Hooks.effect(
           OnMount,
           () => {
@@ -139,13 +139,16 @@ module AnalogClock = {
           )
         );
 
-      <View style=containerStyle>
-        <View style=clockContainer>
-          <View style=secondsStyle />
-          <View style=minutesStyle />
-          <View style=hourStyle />
-        </View>
-      </View>;
+      (
+        slots,
+        <View style=containerStyle>
+          <View style=clockContainer>
+            <View style=secondsStyle />
+            <View style=minutesStyle />
+            <View style=hourStyle />
+          </View>
+        </View>,
+      );
     });
 };
 

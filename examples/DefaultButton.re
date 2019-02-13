@@ -6,9 +6,8 @@ module DefaultButtonWithCounter = {
   let component = React.component("DefaultButtonWithCounter");
 
   let createElement = (~children as _, ()) =>
-    component(slots => {
-      let (count, setCount, _slots: React.Hooks.empty) =
-        React.Hooks.state(0, slots);
+    component(hooks => {
+      let (count, setCount, hooks) = React.Hooks.state(0, hooks);
       let increment = () => setCount(count + 1);
 
       let containerStyle =
@@ -31,13 +30,16 @@ module DefaultButtonWithCounter = {
         ];
 
       let countStr = string_of_int(count);
-      <View style=containerStyle>
-        <View style=countContainer>
-          <Text style=countStyle text=countStr />
-        </View>
-        <Button title="click me!" onClick=increment />
-        <Button disabled=true title="(disabled)" onClick=increment />
-      </View>;
+      (
+        hooks,
+        <View style=containerStyle>
+          <View style=countContainer>
+            <Text style=countStyle text=countStr />
+          </View>
+          <Button title="click me!" onClick=increment />
+          <Button disabled=true title="(disabled)" onClick=increment />
+        </View>,
+      );
     });
 };
 

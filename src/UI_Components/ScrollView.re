@@ -32,7 +32,7 @@ let make =
       React.Hooks.state(None, slots);
     let (actualScrollLeft, setScrollLeft, slots) =
       React.Hooks.state(scrollLeft, slots);
-    let (bouncingState, setBouncingState, _slots: React.Hooks.empty) =
+    let (bouncingState, setBouncingState, slots) =
       React.Hooks.state(Idle, slots);
 
     let scrollBarThickness = 10;
@@ -200,22 +200,27 @@ let make =
         height(scrollBarThickness),
       ];
 
-    <View style>
-      <View
-        onMouseWheel=scroll
-        ref={r => setOuterRef(Some(r))}
-        style=Style.[
-          flexGrow(1),
-          position(`Relative),
-          overflow(LayoutTypes.Scroll),
-        ]>
-        <View style=innerStyle> children </View>
-        <View style=verticalScrollbarContainerStyle> verticalScrollBar </View>
-        <View style=horizontalScrollbarContainerStyle>
-          horizontalScrollBar
+    (
+      slots,
+      <View style>
+        <View
+          onMouseWheel=scroll
+          ref={r => setOuterRef(Some(r))}
+          style=Style.[
+            flexGrow(1),
+            position(`Relative),
+            overflow(LayoutTypes.Scroll),
+          ]>
+          <View style=innerStyle> children </View>
+          <View style=verticalScrollbarContainerStyle>
+            verticalScrollBar
+          </View>
+          <View style=horizontalScrollbarContainerStyle>
+            horizontalScrollBar
+          </View>
         </View>
-      </View>
-    </View>;
+      </View>,
+    );
   });
 
 let createElement =
