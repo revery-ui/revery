@@ -1,5 +1,5 @@
 {
-  "checksum": "ac008d6743a9895dff50bdc90417fc12",
+  "checksum": "059efe49cf4f9d53e2c71dfa539a48d2",
   "root": "revery@link-dev:./package.json",
   "node": {
     "revery@link-dev:./package.json": {
@@ -14,9 +14,9 @@
       "overrides": [],
       "dependencies": [
         "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9",
-        "reason-glfw@3.2.1014@d41d8cd9",
+        "reason-glfw@3.2.1015@d41d8cd9",
         "reason-gl-matrix@0.9.9302@d41d8cd9",
-        "reason-fontkit@2.1.0@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
+        "reason-fontkit@2.2.0@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
         "flex@1.2.2@d41d8cd9", "@opam/lwt_ppx@opam:1.2.1@db1172a7",
         "@opam/lwt@opam:4.1.0@111fc2bf",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
@@ -87,14 +87,14 @@
       ],
       "devDependencies": []
     },
-    "reason-glfw@3.2.1014@d41d8cd9": {
-      "id": "reason-glfw@3.2.1014@d41d8cd9",
+    "reason-glfw@3.2.1015@d41d8cd9": {
+      "id": "reason-glfw@3.2.1015@d41d8cd9",
       "name": "reason-glfw",
-      "version": "3.2.1014",
+      "version": "3.2.1015",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-glfw/-/reason-glfw-3.2.1014.tgz#sha1:1bbaeeeec3be928187bad5a50d7d676e625aec3b"
+          "archive:https://registry.npmjs.org/reason-glfw/-/reason-glfw-3.2.1015.tgz#sha1:c8589cc77f957213550e0534ed708c2514eb83b6"
         ]
       },
       "overrides": [],
@@ -129,19 +129,19 @@
       ],
       "devDependencies": []
     },
-    "reason-fontkit@2.1.0@d41d8cd9": {
-      "id": "reason-fontkit@2.1.0@d41d8cd9",
+    "reason-fontkit@2.2.0@d41d8cd9": {
+      "id": "reason-fontkit@2.2.0@d41d8cd9",
       "name": "reason-fontkit",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-2.1.0.tgz#sha1:a4c3f8c25f4ea5301f3125bb78b7ed40862d3008"
+          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-2.2.0.tgz#sha1:e9e1e3af4af85afa7379b21333538fe9f819eb4f"
         ]
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.1.10@d41d8cd9", "reason-glfw@3.2.1014@d41d8cd9",
+        "refmterr@3.1.10@d41d8cd9", "reason-glfw@3.2.1015@d41d8cd9",
         "reason-gl-matrix@0.9.9302@d41d8cd9",
         "esy-harfbuzz@1.9.1005@d41d8cd9", "esy-freetype2@2.9.1006@d41d8cd9",
         "esy-cmake@0.3.5@d41d8cd9", "@opam/dune@opam:1.7.0@81948d64",
