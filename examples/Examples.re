@@ -102,7 +102,7 @@ let state: state = {
       render: _ => TodoExample.render(),
       source: "TodoExample.re",
     },
-    { 
+    {
       name: "Dropdown",
       render: _ => DropdownExample.render(),
       source: "DropdownExample.re",
