@@ -25,12 +25,12 @@ type os =
   | Unknown;
 
 let os = {
-  let ic = Unix.open_process_in("uname");
-  let uname = input_line(ic);
-  let _ = close_in(ic);
   switch (Sys.os_type) {
   | "Win32" => Windows
   | _ =>
+    let ic = Unix.open_process_in("uname");
+    let _ = close_in(ic);
+    let uname = input_line(ic);
     switch (uname) {
     | "Darwin" => Mac
     | "Linux" => Linux
