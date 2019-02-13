@@ -29,8 +29,8 @@ let os = {
   | "Win32" => Windows
   | _ =>
     let ic = Unix.open_process_in("uname");
-    let _ = close_in(ic);
     let uname = input_line(ic);
+    let _ = close_in(ic);
     switch (uname) {
     | "Darwin" => Mac
     | "Linux" => Linux
