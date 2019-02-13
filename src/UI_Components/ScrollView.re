@@ -32,7 +32,7 @@ let make =
       React.Hooks.state(None, slots);
     let (actualScrollLeft, setScrollLeft, slots) =
       React.Hooks.state(scrollLeft, slots);
-    let (bouncingState, setBouncingState, _slots: React.Hooks.empty) =
+    let (bouncingState, setBouncingState, slots) =
       React.Hooks.state(Idle, slots);
 
     let scrollBarThickness = 10;
