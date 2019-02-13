@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "checksum": "059efe49cf4f9d53e2c71dfa539a48d2",
-=======
-  "checksum": "dc6a5c171351479b113c5a624ef75738",
->>>>>>> f8dfdae8dd1168aadebd319905b0f2937d9e17e5
+  "checksum": "a99ce8f746bf81b3b432cd8502201dd6",
   "root": "revery@link-dev:./package.json",
   "node": {
     "revery@link-dev:./package.json": {
@@ -17,10 +13,7 @@
       },
       "overrides": [],
       "dependencies": [
-<<<<<<< HEAD
         "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9",
-=======
->>>>>>> f8dfdae8dd1168aadebd319905b0f2937d9e17e5
         "reason-glfw@3.2.1015@d41d8cd9",
         "reason-gl-matrix@0.9.9302@d41d8cd9",
         "reason-fontkit@2.2.0@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
@@ -78,7 +71,6 @@
       ],
       "devDependencies": []
     },
-<<<<<<< HEAD
     "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9": {
       "id": "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9",
       "name": "rebez",
@@ -95,8 +87,6 @@
       ],
       "devDependencies": []
     },
-=======
->>>>>>> f8dfdae8dd1168aadebd319905b0f2937d9e17e5
     "reason-glfw@3.2.1015@d41d8cd9": {
       "id": "reason-glfw@3.2.1015@d41d8cd9",
       "name": "reason-glfw",
