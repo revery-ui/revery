@@ -6,37 +6,39 @@ module SimpleButton = {
   let component = React.component("SimpleButton");
 
   let createElement = (~children as _, ()) =>
-    component(slots => {
-      let (count, setCount, slots) = React.Hooks.state(0, slots);
-      let (focused, setFocus, _slots: React.Hooks.empty) =
-        React.Hooks.state(false, slots);
+    component(hooks => {
+      let (count, setCount, hooks) = React.Hooks.state(0, hooks);
+      let (focused, setFocus, hooks) = React.Hooks.state(false, hooks);
 
       let increment = () => setCount(count + 1);
 
       let txt = focused ? "Focused" : "Unfocused";
       let textContent = txt ++ " me: " ++ string_of_int(count);
-      <Clickable
-        onClick=increment
-        tabindex=0
-        onFocus={() => setFocus(true)}
-        onBlur={() => setFocus(false)}>
-        <View
-          style=Style.[
-            backgroundColor(Color.rgba(1., 1., 1., 0.1)),
-            border(~width=2, ~color=Colors.white),
-            margin(16),
-          ]>
-          <Text
+      (
+        hooks,
+        <Clickable
+          onClick=increment
+          tabindex=0
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}>
+          <View
             style=Style.[
-              color(Colors.white),
-              fontFamily("Roboto-Regular.ttf"),
-              fontSize(20),
-              margin(4),
-            ]
-            text=textContent
-          />
-        </View>
-      </Clickable>;
+              backgroundColor(Color.rgba(1., 1., 1., 0.1)),
+              border(~width=2, ~color=Colors.white),
+              margin(16),
+            ]>
+            <Text
+              style=Style.[
+                color(Colors.white),
+                fontFamily("Roboto-Regular.ttf"),
+                fontSize(20),
+                margin(4),
+              ]
+              text=textContent
+            />
+          </View>
+        </Clickable>,
+      );
     });
 };
 

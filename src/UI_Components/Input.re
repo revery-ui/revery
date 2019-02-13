@@ -1,6 +1,5 @@
 open Revery_UI;
 open Revery_Core;
-open Revery_Core.Window;
 
 type state = {
   value: string,
@@ -65,7 +64,6 @@ let defaultStyles =
 let component = React.component("Input");
 let make =
     (
-      ~window,
       ~style,
       ~value as valueParam,
       ~placeholder,
@@ -82,29 +80,7 @@ let make =
         slots,
       );
 
-    /*
-       TODO: Setting the hook to run only on mount means that the onChange
-       handler is only called with a stale version of state
-       BUT setting the value to ALWAYS causes one handler to to seize
-       control of the event listening
-     */
-    let slots =
-      React.Hooks.effect(
-        Always,
-        () =>
-          Some(
-            Event.subscribe(
-              window.onKeyPress,
-              event => {
-                dispatch(UpdateText(event.character));
-                onChange(~value=addCharacter(state.value, event.character));
-              },
-            ),
-          ),
-        slots,
-      );
-
-    let handleKeyDown = (~dispatch, event: Events.keyEvent) =>
+    let handleKeyDown = (~dispatch, event: NodeEvents.keyEventParams) =>
       switch (event.key) {
       | Key.KEY_BACKSPACE =>
         dispatch(Backspace);
@@ -112,19 +88,7 @@ let make =
       | _ => ()
       };
 
-    let slots =
-      React.Hooks.effect(
-        Always,
-        () =>
-          Some(
-            Event.subscribe(window.onKeyDown, event =>
-              handleKeyDown(~dispatch, event)
-            ),
-          ),
-        slots,
-      );
-
-    let (animatedOpacity, _slots: React.Hooks.empty) =
+    let (animatedOpacity, slots) =
       Hooks.animation(
         Animated.floatValue(0.),
         {
@@ -210,19 +174,26 @@ let make =
     /*
        component
      */
-    <Clickable
-      onFocus={() => dispatch(SetFocus(true))}
-      onBlur={() => dispatch(SetFocus(false))}>
-      <View style=viewStyles>
-        <Text style=innerTextStyles text=content />
-        <View style=inputCursorStyles />
-      </View>
-    </Clickable>;
+    (
+      slots,
+      <Clickable
+        onFocus={() => dispatch(SetFocus(true))}
+        onBlur={() => dispatch(SetFocus(false))}
+        onKeyDown={event => handleKeyDown(~dispatch, event)}
+        onKeyPress={event => {
+          dispatch(UpdateText(event.character));
+          onChange(~value=addCharacter(state.value, event.character));
+        }}>
+        <View style=viewStyles>
+          <Text style=innerTextStyles text=content />
+          <View style=inputCursorStyles />
+        </View>
+      </Clickable>,
+    );
   });
 
 let createElement =
     (
-      ~window,
       ~children as _,
       ~style=defaultStyles,
       ~placeholderColor=Colors.grey,
@@ -233,7 +204,6 @@ let createElement =
       (),
     ) =>
   make(
-    ~window,
     ~value,
     ~style,
     ~placeholder,

@@ -1,6 +1,6 @@
 {
   "name": "revery",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "App toolkit built with Reason",
   "license": "MIT",
   "bugs": { "url": "https://github.com/bryphe/revery/issues" },
@@ -31,9 +31,10 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "3.4.0",
-    "reason-glfw": "^3.2.1014",
-    "reason-fontkit": "^2.1.0",
+    "reason-glfw": "^3.2.1015",
+    "reason-fontkit": "^2.2.0",
     "reason-gl-matrix": "^0.9.9302",
+    "rebez": "*",
     "@opam/color": "^0.2.0",
     "@opam/js_of_ocaml": "*",
     "@opam/js_of_ocaml-compiler": "*",
@@ -44,10 +45,11 @@
     "flex": "^1.2.2"
   },
   "resolutions": {
+    "rebez": "github:jchavarri/rebez#46cbc183",
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#d6a8f60"
+    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#daa00be"
   },
   "peerDependencies": {
     "ocaml": "^4.7.0"

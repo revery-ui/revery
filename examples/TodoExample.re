@@ -61,77 +61,80 @@ module FilterSection = {
   let component = React.component("FilterSection");
 
   let createElement = (~children as _, ~currentFilter, ~onPickingFilter, ()) =>
-    component((_slots: React.Hooks.empty) =>
-      <View
-        style=Style.[
-          flexDirection(`Row),
-          width(500),
-          alignItems(`Center),
-          justifyContent(`Center),
-        ]>
-        <Button
-          height=50
-          width=150
-          fontSize=15
-          title={Filter.show(Filter.All)}
-          color={
-            switch (currentFilter) {
-            | Filter.All => Colors.dodgerBlue
-            | _ => Colors.lightSkyBlue
+    component(hooks =>
+      (
+        hooks,
+        <View
+          style=Style.[
+            flexDirection(`Row),
+            width(500),
+            alignItems(`Center),
+            justifyContent(`Center),
+          ]>
+          <Button
+            height=50
+            width=150
+            fontSize=15
+            title={Filter.show(Filter.All)}
+            color={
+              switch (currentFilter) {
+              | Filter.All => Colors.dodgerBlue
+              | _ => Colors.lightSkyBlue
+              }
             }
-          }
-          onClick={() => onPickingFilter(Filter.All)}
-        />
-        <Button
-          height=50
-          width=150
-          fontSize=15
-          title={Filter.show(Completed)}
-          color={
-            switch (currentFilter) {
-            | Completed => Colors.dodgerBlue
-            | _ => Colors.lightSkyBlue
+            onClick={() => onPickingFilter(Filter.All)}
+          />
+          <Button
+            height=50
+            width=150
+            fontSize=15
+            title={Filter.show(Completed)}
+            color={
+              switch (currentFilter) {
+              | Completed => Colors.dodgerBlue
+              | _ => Colors.lightSkyBlue
+              }
             }
-          }
-          onClick={() => onPickingFilter(Completed)}
-        />
-        <Button
-          height=50
-          width=150
-          fontSize=15
-          title={Filter.show(NotCompleted)}
-          color={
-            switch (currentFilter) {
-            | NotCompleted => Colors.dodgerBlue
-            | _ => Colors.lightSkyBlue
+            onClick={() => onPickingFilter(Completed)}
+          />
+          <Button
+            height=50
+            width=150
+            fontSize=15
+            title={Filter.show(NotCompleted)}
+            color={
+              switch (currentFilter) {
+              | NotCompleted => Colors.dodgerBlue
+              | _ => Colors.lightSkyBlue
+              }
             }
-          }
-          onClick={() => onPickingFilter(NotCompleted)}
-        />
-      </View>
+            onClick={() => onPickingFilter(NotCompleted)}
+          />
+        </View>,
+      )
     );
 };
 
 module Example = {
   let component = React.component("TodoMVC");
 
-  let createElement = (~window, ~children as _, ()) =>
-    component(slots => {
-      let ({todos, inputValue, filter, _}, dispatch, slots) =
+  let createElement = (~children as _, ()) =>
+    component(hooks => {
+      let ({todos, inputValue, filter, _}, dispatch, hooks) =
         React.Hooks.reducer(
           ~initialState={todos: [], filter: All, inputValue: "", nextId: 0},
           reducer,
-          slots,
+          hooks,
         );
 
-      let _slots: React.Hooks.empty =
+      let hooks =
         React.Hooks.effect(
           OnMount,
           () => {
             let unsubscribe = () => ();
             Some(unsubscribe);
           },
-          slots,
+          hooks,
         );
 
       let renderTodo = task => {
@@ -164,52 +167,54 @@ module Example = {
         );
 
       let listOfTodos = List.map(renderTodo, filteredList);
-      <View
-        style=Style.[
-          position(`Absolute),
-          top(0),
-          bottom(0),
-          left(0),
-          right(0),
-          alignItems(`Center),
-          justifyContent(`Center),
-          flexDirection(`Column),
-          backgroundColor(Colors.white),
-        ]>
-        <FilterSection
-          currentFilter=filter
-          onPickingFilter={filter => dispatch(ChangeFilter(filter))}
-        />
-        <View style=Style.[flexDirection(`Row)]>
-          <Input
-            style=Style.[width(400)]
-            window
-            placeholder="Add your Todo here"
-            onChange={(~value) => dispatch(UpdateInputTextValue(value))}
-          />
-          <Button
-            width=50
-            height=50
-            disabled={
-              switch (inputValue) {
-              | "" => true
-              | _ => false
-              }
-            }
-            title="+"
-            onClick={() => dispatch(AddTodo)}
-          />
-        </View>
-        <ScrollView
+      (
+        hooks,
+        <View
           style=Style.[
-            height(200),
-            width(450),
-            border(~width=1, ~color=Colors.black),
+            position(`Absolute),
+            top(0),
+            bottom(0),
+            left(0),
+            right(0),
+            alignItems(`Center),
+            justifyContent(`Center),
+            flexDirection(`Column),
+            backgroundColor(Colors.white),
           ]>
-          <View> ...listOfTodos </View>
-        </ScrollView>
-      </View>;
+          <FilterSection
+            currentFilter=filter
+            onPickingFilter={filter => dispatch(ChangeFilter(filter))}
+          />
+          <View style=Style.[flexDirection(`Row)]>
+            <Input
+              style=Style.[width(400)]
+              placeholder="Add your Todo here"
+              onChange={(~value) => dispatch(UpdateInputTextValue(value))}
+            />
+            <Button
+              width=50
+              height=50
+              disabled={
+                switch (inputValue) {
+                | "" => true
+                | _ => false
+                }
+              }
+              title="+"
+              onClick={() => dispatch(AddTodo)}
+            />
+          </View>
+          <ScrollView
+            style=Style.[
+              height(200),
+              width(450),
+              border(~width=1, ~color=Colors.black),
+            ]>
+            <View> ...listOfTodos </View>
+          </ScrollView>
+        </View>,
+      );
     });
 };
 
-let render = window => <Example window />;
+let render = () => <Example />;

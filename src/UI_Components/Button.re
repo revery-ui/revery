@@ -22,26 +22,30 @@ let createElement =
       (),
     ) =>
   /* children, */
-  component((_slots: React.Hooks.empty) =>
-    <Clickable onClick={disabled ? noop : onClick} ?onFocus ?onBlur ?tabindex>
-      <View
-        style=Style.[
-          position(`Relative),
-          backgroundColor(disabled ? Colors.dimGrey : c),
-          justifyContent(`Center),
-          alignItems(`Center),
-          border(~width=1, ~color=Colors.white),
-          height(h),
-          width(w),
-        ]>
-        <Text
+  component(slots =>
+    (
+      slots,
+      <Clickable
+        onClick={disabled ? noop : onClick} ?onFocus ?onBlur ?tabindex>
+        <View
           style=Style.[
-            fontSize(size),
-            fontFamily(family),
-            color(Colors.white),
-          ]
-          text=title
-        />
-      </View>
-    </Clickable>
+            position(`Relative),
+            backgroundColor(disabled ? Colors.dimGrey : c),
+            justifyContent(`Center),
+            alignItems(`Center),
+            border(~width=1, ~color=Colors.white),
+            height(h),
+            width(w),
+          ]>
+          <Text
+            style=Style.[
+              fontSize(size),
+              fontFamily(family),
+              color(Colors.white),
+            ]
+            text=title
+          />
+        </View>
+      </Clickable>,
+    )
   );

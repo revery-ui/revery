@@ -28,24 +28,40 @@ module Sample = {
   let component = React.component("Sample");
 
   let createElement = (~children as _, ()) =>
-    component((_slots: React.Hooks.empty) =>
-      <View style=containerStyle>
-        <ScrollView style=outerBox>
-          <Image
-            src="outrun-logo.png"
-            style=Style.[width(512), height(256)]
+    component(slots => {
+      let (bounce, setBounce, slots) = React.Hooks.state(true, slots);
+      (
+        slots,
+        <View style=containerStyle>
+          <Text
+            text="Bounce"
+            style=Style.[
+              marginBottom(10),
+              fontFamily("Roboto-Regular.ttf"),
+              fontSize(20),
+            ]
           />
-          <Image
-            src="outrun-logo.png"
-            style=Style.[width(512), height(256)]
+          <Checkbox
+            onChange={checked => setBounce(checked)}
+            style=Style.[marginBottom(10)]
           />
-          <Image
-            src="outrun-logo.png"
-            style=Style.[width(512), height(256)]
-          />
-        </ScrollView>
-      </View>
-    );
+          <ScrollView style=outerBox bounce>
+            <Image
+              src="outrun-logo.png"
+              style=Style.[width(512), height(256)]
+            />
+            <Image
+              src="outrun-logo.png"
+              style=Style.[width(512), height(256)]
+            />
+            <Image
+              src="outrun-logo.png"
+              style=Style.[width(512), height(256)]
+            />
+          </ScrollView>
+        </View>,
+      );
+    });
 };
 
 let render = () => <Sample />;

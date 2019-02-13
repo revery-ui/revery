@@ -27,6 +27,9 @@ let make =
       ~onBlur=?,
       ~onFocus=?,
       ~tabindex=?,
+      ~onKeyDown=?,
+      ~onKeyUp=?,
+      ~onKeyPress=?,
       children: React.syntheticElement,
     ) =>
   component(slots => {
@@ -34,8 +37,7 @@ let make =
       React.Hooks.state(None, slots);
     let setClickableRef = r => setClickableRefOption(Some(r));
 
-    let (animatedOpacity, setOpacity, _slots: React.Hooks.empty) =
-      React.Hooks.state(0.8, slots);
+    let (animatedOpacity, setOpacity, slots) = React.Hooks.state(0.8, slots);
 
     let onMouseMove = (mouseX: float, mouseY: float) => {
       switch (clickableRef) {
@@ -80,15 +82,21 @@ let make =
         )
       );
 
-    <View
-      style=mergedStyles
-      onMouseDown
-      ?onBlur
-      ?onFocus
-      tabindex
-      ref={r => setClickableRef(r)}>
-      children
-    </View>;
+    (
+      slots,
+      <View
+        style=mergedStyles
+        onMouseDown
+        ?onBlur
+        ?onFocus
+        ?onKeyDown
+        ?onKeyUp
+        ?onKeyPress
+        tabindex
+        ref={r => setClickableRef(r)}>
+        children
+      </View>,
+    );
   });
 
 let createElement =
@@ -99,6 +107,9 @@ let createElement =
       ~onFocus=?,
       ~tabindex=0,
       ~children,
+      ~onKeyDown=?,
+      ~onKeyUp=?,
+      ~onKeyPress=?,
       (),
     ) =>
   make(
@@ -106,6 +117,9 @@ let createElement =
     ~onClick,
     ~onBlur?,
     ~onFocus?,
+    ~onKeyDown?,
+    ~onKeyUp?,
+    ~onKeyPress?,
     ~tabindex,
     React.listToElement(children),
   );
