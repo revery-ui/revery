@@ -36,103 +36,104 @@ module HoverExample = {
     childFourBackground: Colors.cornflowerBlue,
   };
 
-  let make = () =>
-    component(slots => {
-      let (state, dispatch, _slots: React.Hooks.empty) =
-        React.Hooks.reducer(~initialState, reducer, slots);
+  let createElement = (~children as _, ()) =>
+    component(hooks => {
+      let (state, dispatch, hooks) =
+        React.Hooks.reducer(~initialState, reducer, hooks);
 
-      <View
-        style=Style.[
-          flexDirection(`Row),
-          justifyContent(`Center),
-          alignItems(`Center),
-          width(500),
-          height(500),
-          backgroundColor(state.parentBackground),
-        ]
-        onMouseEnter={_ => dispatch(SetParentBackground(Colors.lightGray))}
-        onMouseLeave={_ =>
-          dispatch(SetParentBackground(initialState.parentBackground))
-        }>
+      (
+        hooks,
         <View
           style=Style.[
             flexDirection(`Row),
-            flexWrap(`Wrap),
             justifyContent(`Center),
             alignItems(`Center),
-          ]>
+            width(500),
+            height(500),
+            backgroundColor(state.parentBackground),
+          ]
+          onMouseEnter={_ => dispatch(SetParentBackground(Colors.lightGray))}
+          onMouseLeave={_ =>
+            dispatch(SetParentBackground(initialState.parentBackground))
+          }>
           <View
             style=Style.[
-              width(150),
-              height(150),
-              margin(10),
-              backgroundColor(state.childOneBackground),
-            ]
-            onMouseEnter={_ =>
-              dispatch(SetChildOneBackground(Colors.aquamarine))
-            }
-            onMouseLeave={_ =>
-              dispatch(
-                SetChildOneBackground(initialState.childOneBackground),
-              )
-            }
-          />
-          <View
-            style=Style.[
-              width(150),
-              height(150),
-              margin(10),
-              backgroundColor(state.childTwoBackground),
-            ]
-            onMouseEnter={_ =>
-              dispatch(SetChildTwoBackground(Colors.forestGreen))
-            }
-            onMouseLeave={_ =>
-              dispatch(
-                SetChildTwoBackground(initialState.childTwoBackground),
-              )
-            }
-          />
-          <View
-            style=Style.[
-              width(150),
-              height(150),
-              margin(10),
-              backgroundColor(state.childThreeBackground),
-            ]
-            onMouseEnter={_ =>
-              dispatch(SetChildThreeBackground(Colors.darkSalmon))
-            }
-            onMouseLeave={_ =>
-              dispatch(
-                SetChildThreeBackground(initialState.childThreeBackground),
-              )
-            }
-          />
-          <View
-            style=Style.[
-              width(150),
-              height(150),
-              margin(10),
-              backgroundColor(state.childFourBackground),
-            ]
-            onMouseEnter={_ =>
-              dispatch(SetChildFourBackground(Colors.tomato))
-            }
-            onMouseLeave={_ =>
-              dispatch(
-                SetChildFourBackground(initialState.childFourBackground),
-              )
-            }
-          />
-        </View>
-      </View>;
+              flexDirection(`Row),
+              flexWrap(`Wrap),
+              justifyContent(`Center),
+              alignItems(`Center),
+            ]>
+            <View
+              style=Style.[
+                width(150),
+                height(150),
+                margin(10),
+                backgroundColor(state.childOneBackground),
+              ]
+              onMouseEnter={_ =>
+                dispatch(SetChildOneBackground(Colors.aquamarine))
+              }
+              onMouseLeave={_ =>
+                dispatch(
+                  SetChildOneBackground(initialState.childOneBackground),
+                )
+              }
+            />
+            <View
+              style=Style.[
+                width(150),
+                height(150),
+                margin(10),
+                backgroundColor(state.childTwoBackground),
+              ]
+              onMouseEnter={_ =>
+                dispatch(SetChildTwoBackground(Colors.forestGreen))
+              }
+              onMouseLeave={_ =>
+                dispatch(
+                  SetChildTwoBackground(initialState.childTwoBackground),
+                )
+              }
+            />
+            <View
+              style=Style.[
+                width(150),
+                height(150),
+                margin(10),
+                backgroundColor(state.childThreeBackground),
+              ]
+              onMouseEnter={_ =>
+                dispatch(SetChildThreeBackground(Colors.darkSalmon))
+              }
+              onMouseLeave={_ =>
+                dispatch(
+                  SetChildThreeBackground(initialState.childThreeBackground),
+                )
+              }
+            />
+            <View
+              style=Style.[
+                width(150),
+                height(150),
+                margin(10),
+                backgroundColor(state.childFourBackground),
+              ]
+              onMouseEnter={_ =>
+                dispatch(SetChildFourBackground(Colors.tomato))
+              }
+              onMouseLeave={_ =>
+                dispatch(
+                  SetChildFourBackground(initialState.childFourBackground),
+                )
+              }
+            />
+          </View>
+        </View>,
+      );
     });
-
-  let createElement = (~children as _, ()) => React.element(make());
 };
 
-let render = () =>
+let render = () => {
   <View
     style=Style.[
       position(`Absolute),
@@ -145,3 +146,4 @@ let render = () =>
     ]>
     <HoverExample />
   </View>;
+};
