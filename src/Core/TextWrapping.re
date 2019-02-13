@@ -3,14 +3,47 @@ type wrapType =
   | WhitespaceWrap
   | UserDefined((string, string => int, int) => (list(string), int));
 
-type folder = {
+type linesFolderAccumulator = {
   lines: list(string),
   currMaxWidth: int,
   beginIndex: int,
   endIndex: int,
 };
 
-let wrapText = (~logging=false, ~text, ~measureWidth, ~maxWidth, ~wrapHere) => {
+/* See https://www.fileformat.info/info/unicode/category/Zs/list.htm */
+let space = " ";
+let nbsp = "\xa0";
+
+/* TODO Because we're not using regex for space matching we should take all kinds of spaces into conderation
+   However, I can't make unicode escape work, it's giving me 'Warning 14: illegal backslash escape in string.' error
+   */
+
+/*
+ let oghamSpace = "\u{1680}";
+ let enQuad = "\u{2000}";
+ let emQuad = "\u{2001}";
+ let enSpace = "\u{2002}";
+ let emSpace = "\u{2003}";
+ let threePerEmSpace = "\u{2004}";
+ let fourPerEmSpace = "\u{2005}";
+ let sixPerEmSpace = "\u{2006}";
+ let figureSpace = "\u{2007}";
+ let punctuationSpace = "\u{2008}";
+ let thinSpace = "\u{2009}";
+ let hairSpace = "\u{200A}";
+ let narrowNbsp = "\u{202f}";
+ let mediumMathSpace = "\u{205f}";
+ let ideographicSpace = "\u{3000}";
+ */
+let lineBreak = "\n";
+let tab = "\t";
+let lineFeed = "\x0c";
+
+let isWhitespaceWrapPoint = str =>
+  str != nbsp
+  && (str == space || str == lineBreak || str == lineFeed || str == tab);
+
+let wrapText = (~text, ~measureWidth, ~maxWidth, ~wrapHere) => {
   let textLength = String.length(text);
 
   let isEnd = i => textLength == i + 1;
@@ -21,19 +54,12 @@ let wrapText = (~logging=false, ~text, ~measureWidth, ~maxWidth, ~wrapHere) => {
     (substr, substrWidth);
   };
 
-  let foldFunc = (acc, (index, char)) =>
+  let foldIntoLines = (acc, (index, char)) =>
     if (isEnd(index)) {
-      print_endline(
-        "is end:: beginIndex: "
-        ++ string_of_int(acc.beginIndex)
-        ++ " endIndex: "
-        ++ string_of_int(acc.endIndex),
-      );
       let currEndIndex = index;
       let (_substr, width) = subAndMeasure(acc.beginIndex, currEndIndex);
 
       if (width >= maxWidth) {
-        print_endline("is end, width needs wrapping: ");
         let (line, lineWidth) = subAndMeasure(acc.beginIndex, acc.endIndex);
         let (lastLine, lastLineWidth) =
           subAndMeasure(acc.endIndex + 2, index);
@@ -45,7 +71,6 @@ let wrapText = (~logging=false, ~text, ~measureWidth, ~maxWidth, ~wrapHere) => {
       } else {
         let (line, lineWidth) = subAndMeasure(acc.beginIndex, index);
 
-        print_endline("is end, width is ok:: line: " ++ line);
         {
           ...acc,
           lines: [line, ...acc.lines],
@@ -63,20 +88,6 @@ let wrapText = (~logging=false, ~text, ~measureWidth, ~maxWidth, ~wrapHere) => {
         let (lineWithoutCurrentWord, lineWithoutCurrentWordWidth) =
           subAndMeasure(acc.beginIndex, acc.endIndex);
 
-        print_endline(
-          "wrapping point, width needs wrapping:: lineWithoutCurrentWord: '"
-          ++ lineWithoutCurrentWord
-          ++ "' beginIndex: "
-          ++ string_of_int(acc.beginIndex)
-          ++ " endIndex: "
-          ++ string_of_int(acc.endIndex)
-          ++ " newBeginIndex: "
-          ++ string_of_int(beginningOfCurrentWordIndex)
-          ++ " char: "
-          ++ Char.escaped(char)
-          ++ " index: "
-          ++ string_of_int(index),
-        );
         {
           lines: [lineWithoutCurrentWord, ...acc.lines],
           currMaxWidth: max(acc.currMaxWidth, lineWithoutCurrentWordWidth),
@@ -84,30 +95,16 @@ let wrapText = (~logging=false, ~text, ~measureWidth, ~maxWidth, ~wrapHere) => {
           endIndex: currEndIndex,
         };
       } else {
-        print_endline(
-          "wrapping point, width is ok:: currEndIndex: "
-          ++ string_of_int(currEndIndex)
-          ++ " beginIndex: "
-          ++ string_of_int(acc.beginIndex)
-          ++ " endIndex: "
-          ++ string_of_int(acc.endIndex)
-          ++ " char: "
-          ++ Char.escaped(char)
-          ++ " index: "
-          ++ string_of_int(index),
-        );
         {...acc, endIndex: currEndIndex};
       };
     };
 
-  logging |> ignore;
-
-  let folda =
+  let linesAndMaxWidth =
     String.to_seqi(text)
     |> Seq.fold_left(
-         foldFunc,
+         foldIntoLines,
          {lines: [], currMaxWidth: 0, beginIndex: 0, endIndex: 0},
        );
 
-  (List.rev(folda.lines), folda.currMaxWidth);
+  (List.rev(linesAndMaxWidth.lines), linesAndMaxWidth.currMaxWidth);
 };

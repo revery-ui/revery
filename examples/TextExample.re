@@ -51,7 +51,6 @@ module SampleText = {
       <View style=containerStyle>
         <View style=slidersViewStyle>
           <Text
-            logging=true
             style=Style.[
               color(Colors.white),
               fontFamily("Roboto-Regular.ttf"),

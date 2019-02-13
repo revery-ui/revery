@@ -148,9 +148,7 @@ class textNode (text: string) = {
             ~text,
             ~measureWidth=str => FontRenderer.measure(font, str).width,
             ~maxWidth=width,
-            ~wrapHere=
-              str => Str.string_match(Str.regexp("[ \n\r\x0c\t]+"), str, 0),
-            ~logging=false,
+            ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
           );
 
         _lines := lines;

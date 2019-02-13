@@ -30,7 +30,6 @@ class node ('a) (()) = {
   val _children: ref(list(node('a))) = ref([]);
   val _style: ref(Style.t) = ref(Style.defaultStyle);
   val _events: ref(NodeEvents.t(node('a))) = ref(NodeEvents.make());
-  val _logging: ref(bool) = ref(false);
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
   val _parent: ref(option(node('a))) = ref(None);
   val _internalId: int = UniqueId.getUniqueId();
@@ -64,8 +63,6 @@ class node ('a) (()) = {
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;
   pub getEvents = () => _events^;
-  pub setLogging = logging => _logging := logging;
-  pub getLogging = () => _logging^;
   pub getWorldTransform = () => {
     let state = _cachedNodeState^ |> getOrThrow("getWorldTransform");
     state.worldTransform;

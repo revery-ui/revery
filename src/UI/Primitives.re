@@ -108,7 +108,6 @@ module Text = {
         ~ref=?,
         ~style=emptyTextStyle,
         ~text="",
-        ~logging=false,
         children,
       ) =>
     component((_: UiReact.Hooks.empty) =>
@@ -127,7 +126,6 @@ module Text = {
           let node = (new TextNode.textNode)(text);
           node#setEvents(events);
           node#setStyle(styles);
-          node#setLogging(logging);
           Obj.magic(node);
         },
         configureInstance: (~isFirstRender as _, node) => {
@@ -147,7 +145,6 @@ module Text = {
           tn#setEvents(events);
           tn#setStyle(styles);
           tn#setText(text);
-          tn#setLogging(logging);
           node;
         },
         children,
@@ -163,7 +160,6 @@ module Text = {
         ~ref=?,
         ~style=emptyTextStyle,
         ~text="",
-        ~logging=false,
         ~children,
         (),
       ) =>
@@ -175,7 +171,6 @@ module Text = {
       ~ref?,
       ~style,
       ~text,
-      ~logging,
       UiReact.listToElement(children),
     );
 };
