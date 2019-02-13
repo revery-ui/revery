@@ -35,6 +35,6 @@ let os = {
     | "Darwin" => Mac
     | "Linux" => Linux
     | _ => Unknown
-    }
+    };
   };
 };
