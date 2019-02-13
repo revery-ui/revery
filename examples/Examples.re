@@ -220,9 +220,7 @@ let init = app => {
     let example = exampleRender(win);
 
     <View
-      onMouseWheel={evt =>
-        print_endline("onMouseWheel: " ++ string_of_float(evt.deltaY))
-      }
+      onMouseWheel={_evt => ()}
       style=Style.[
         position(`Absolute),
         justifyContent(`Center),
