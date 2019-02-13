@@ -40,17 +40,14 @@ type keyPressEventParams = {
   character: string,
 };
 
-module DimensionsChangedEventParams {
-    type t = {
-        width: int,
-        height: int,
-    };
+module DimensionsChangedEventParams = {
+  type t = {
+    width: int,
+    height: int,
+  };
 
-    let create = (~width=0, ~height=0, ()) => {
-        width,
-        height
-    };
-}
+  let create = (~width=0, ~height=0, ()) => {width, height};
+};
 
 type event =
   | MouseDown(mouseButtonEventParams)

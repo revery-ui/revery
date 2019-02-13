@@ -37,7 +37,8 @@ class node ('a) (()) = {
   val _hasFocus: ref(bool) = ref(false);
   val _cachedNodeState: ref(option(cachedNodeState)) = ref(None);
   val _queuedCallbacks: ref(list(callback)) = ref([]);
-  val _lastDimensions: ref(NodeEvents.DimensionsChangedEventParams.t) = ref(NodeEvents.DimensionsChangedEventParams.create());
+  val _lastDimensions: ref(NodeEvents.DimensionsChangedEventParams.t) =
+    ref(NodeEvents.DimensionsChangedEventParams.create());
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
@@ -142,9 +143,13 @@ class node ('a) (()) = {
     let lastDimensions = _lastDimensions^;
     let newDimensions = _layoutNode^.layout;
 
-    if (lastDimensions.width != newDimensions.width || lastDimensions.height != newDimensions.height) {
+    if (lastDimensions.width != newDimensions.width
+        || lastDimensions.height != newDimensions.height) {
       let maybeOnDimensionsChanged = _this#getEvents().onDimensionsChanged;
-      let evt: NodeEvents.DimensionsChangedEventParams.t = {width: newDimensions.width, height: newDimensions.height};
+      let evt: NodeEvents.DimensionsChangedEventParams.t = {
+        width: newDimensions.width,
+        height: newDimensions.height,
+      };
       _lastDimensions := evt;
       switch (maybeOnDimensionsChanged) {
       | Some(cb) =>
@@ -157,7 +162,7 @@ class node ('a) (()) = {
         _this#_queueCallback(() => cb(evt))
       | None => ()
       };
-    }
+    };
   };
   pub getCursorStyle = () => {
     switch (_this#getStyle().cursor, _this#getParent()) {
