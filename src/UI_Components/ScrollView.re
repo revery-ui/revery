@@ -2,22 +2,38 @@ open Revery_Core;
 open Revery_UI;
 open Revery_UI.Transform;
 
+type direction =
+  | Top
+  | Bottom;
+type bouncingState =
+  | Bouncing(direction, Animated.playback)
+  | Idle;
+
 let component = React.component("ScrollView");
 
 let empty = React.listToElement([]);
 
 let scrollTrackColor = Color.rgba(0.0, 0.0, 0.0, 0.4);
 let scrollThumbColor = Color.rgba(0.5, 0.5, 0.5, 0.4);
+let defaultBounce = Environment.os === Mac ? true : false;
 
 let make =
-    (~style, ~scrollLeft=0, ~scrollTop=0, children: React.syntheticElement) =>
+    (
+      ~style,
+      ~scrollLeft=0,
+      ~scrollTop=0,
+      ~bounce=defaultBounce,
+      children: React.syntheticElement,
+    ) =>
   component(slots => {
     let (actualScrollTop, setScrollTop, slots) =
       React.Hooks.state(scrollTop, slots);
     let (outerRef: option(Revery_UI.node), setOuterRef, slots) =
       React.Hooks.state(None, slots);
-    let (actualScrollLeft, setScrollLeft, _slots: React.Hooks.empty) =
+    let (actualScrollLeft, setScrollLeft, slots) =
       React.Hooks.state(scrollLeft, slots);
+    let (bouncingState, setBouncingState, _slots: React.Hooks.empty) =
+      React.Hooks.state(Idle, slots);
 
     let scrollBarThickness = 10;
 
@@ -103,16 +119,53 @@ let make =
           let newScrollTop =
             actualScrollTop - int_of_float(wheelEvent.deltaY *. 25.);
 
-          let clampedScrollTop =
-            if (newScrollTop < 0) {
-              0;
-            } else if (newScrollTop > maxHeight) {
-              maxHeight;
-            } else {
-              newScrollTop;
-            };
+          let isAtTop = newScrollTop < 0;
+          let isAtBottom = newScrollTop > maxHeight;
 
-          setScrollTop(clampedScrollTop);
+          switch (bouncingState) {
+          | Bouncing(Top, playback) when wheelEvent.deltaY < 0. =>
+            playback.stop();
+            setBouncingState(Idle);
+          | Bouncing(Bottom, playback) when wheelEvent.deltaY > 0. =>
+            playback.stop();
+            setBouncingState(Idle);
+          | Bouncing(_) => ()
+          | Idle when !bounce && (isAtTop || isAtBottom) =>
+            let clampedScrollTop = isAtTop ? 0 : maxHeight;
+            setScrollTop(clampedScrollTop);
+          | Idle when bounce && (isAtTop || isAtBottom) =>
+            open Animated;
+            let direction = isAtTop ? Top : Bottom;
+            let bounceAwayAnim = {
+              toValue: float_of_int(newScrollTop),
+              duration: Milliseconds(100.),
+              delay: Seconds(0.),
+              repeat: false,
+              easing: Animated.cubicBezier(0.23, 1., 0.32, 1.),
+            };
+            let bounceBackAnim = {
+              toValue: isAtTop ? 0. : float_of_int(maxHeight),
+              duration: Milliseconds(800.),
+              delay: Seconds(0.),
+              repeat: false,
+              easing: Animated.cubicBezier(0.23, 1., 0.32, 1.),
+            };
+            let playback =
+              tween(
+                floatValue(float_of_int(actualScrollTop)),
+                bounceAwayAnim,
+              )
+              |> Chain.make
+              |> Chain.add(
+                   tween(
+                     floatValue(float_of_int(newScrollTop)),
+                     bounceBackAnim,
+                   ),
+                 )
+              |> Chain.start(~update=v => setScrollTop(int_of_float(v)));
+            setBouncingState(Bouncing(direction, playback));
+          | Idle => setScrollTop(newScrollTop)
+          };
         };
 
         (horizontalScrollbar, verticalScrollBar, scroll);
@@ -165,5 +218,19 @@ let make =
     </View>;
   });
 
-let createElement = (~children, ~style, ~scrollLeft=0, ~scrollTop=0, ()) =>
-  make(~style, ~scrollLeft, ~scrollTop, React.listToElement(children));
+let createElement =
+    (
+      ~children,
+      ~style,
+      ~scrollLeft=0,
+      ~scrollTop=0,
+      ~bounce=defaultBounce,
+      (),
+    ) =>
+  make(
+    ~style,
+    ~scrollLeft,
+    ~scrollTop,
+    ~bounce,
+    React.listToElement(children),
+  );

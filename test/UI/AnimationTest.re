@@ -34,7 +34,7 @@ test("Animation", () => {
     module Animated = Animation.Make(TestTicker);
 
     let myAnimation =
-      Animated.start(
+      Animated.tween(
         Animated.floatValue(0.),
         {
           duration: Time.Seconds(2.),
@@ -44,6 +44,7 @@ test("Animation", () => {
           easing: Animated.linear,
         },
       );
+    let _playback = Animated.start(myAnimation);
 
     TestTicker.simulateTick(Time.Seconds(1.));
     expect(myAnimation.value.current).toBe(5.);
@@ -55,7 +56,7 @@ test("Animation", () => {
     module Animated = Animation.Make(TestTicker);
 
     let myAnimation =
-      Animated.start(
+      Animated.tween(
         Animated.floatValue(0.),
         {
           duration: Time.Seconds(1.),
@@ -65,6 +66,7 @@ test("Animation", () => {
           easing: Animated.quadratic,
         },
       );
+    let _playback = Animated.start(myAnimation);
 
     TestTicker.simulateTick(Time.Seconds(0.5));
     expect(myAnimation.value.current).toBe(0.25);
@@ -76,7 +78,7 @@ test("Animation", () => {
     module Animated = Animation.Make(TestTicker);
 
     let myAnimation =
-      Animated.start(
+      Animated.tween(
         Animated.floatValue(0.),
         {
           duration: Time.Seconds(2.),
@@ -86,6 +88,7 @@ test("Animation", () => {
           easing: Animated.linear,
         },
       );
+    let _playback = Animated.start(myAnimation);
 
     TestTicker.simulateTick(Time.Seconds(3.));
     expect(myAnimation.value.current).toBe(5.);
@@ -97,7 +100,7 @@ test("Animation", () => {
     module Animated = Animation.Make(TestTicker);
 
     let myAnimation =
-      Animated.start(
+      Animated.tween(
         Animated.floatValue(0.),
         {
           duration: Time.Seconds(2.),
@@ -107,6 +110,7 @@ test("Animation", () => {
           easing: Animated.linear,
         },
       );
+    let _playback = Animated.start(myAnimation);
 
     TestTicker.simulateTick(Time.Seconds(2.));
     expect(myAnimation.value.current).toBe(5.);
@@ -117,8 +121,8 @@ test("Animation", () => {
       MakeTicker({});
     module Animated = Animation.Make(TestTicker);
 
-    let _myAnimation =
-      Animated.start(
+    let myAnimation =
+      Animated.tween(
         Animated.floatValue(0.),
         {
           duration: Time.Seconds(1.),
@@ -128,6 +132,7 @@ test("Animation", () => {
           easing: Animated.linear,
         },
       );
+    let _playback = Animated.start(myAnimation);
 
     TestTicker.simulateTick(Time.Seconds(3.));
 
@@ -141,7 +146,7 @@ test("Animation", () => {
     module Animated = Animation.Make(TestTicker);
 
     let myAnimation =
-      Animated.start(
+      Animated.tween(
         Animated.floatValue(0.),
         {
           duration: Time.Seconds(1.),
@@ -151,10 +156,88 @@ test("Animation", () => {
           easing: Animated.linear,
         },
       );
+    let {Animated.stop, _} = Animated.start(myAnimation);
 
     TestTicker.simulateTick(Time.Seconds(0.1));
 
-    Animated.cancel(myAnimation);
+    stop();
+
+    expect(Animated.anyActiveAnimations()).toBe(false);
+    expect(Animated.getAnimationCount()).toBe(0);
+  });
+
+  test("chained animations", () => {
+    module TestTicker =
+      MakeTicker({});
+    module Animated = Animation.Make(TestTicker);
+    module Chain = Animated.Chain;
+
+    let first =
+      Animated.tween(
+        Animated.floatValue(0.),
+        {
+          duration: Time.Seconds(2.),
+          delay: Time.Seconds(0.),
+          toValue: 10.,
+          repeat: false,
+          easing: Animated.linear,
+        },
+      );
+    let second =
+      Animated.tween(
+        Animated.floatValue(first.toValue),
+        {
+          duration: Time.Seconds(2.),
+          delay: Time.Seconds(0.),
+          toValue: 0.,
+          repeat: false,
+          easing: Animated.linear,
+        },
+      );
+    let _playback = Chain.make(first) |> Chain.add(second) |> Chain.start;
+
+    TestTicker.simulateTick(Time.Seconds(1.));
+    expect(first.value.current).toBe(5.);
+    // Simulate the end of the first, so the second can start
+    TestTicker.simulateTick(Time.Seconds(2.));
+    TestTicker.simulateTick(Time.Seconds(3.));
+    expect(second.value.current).toBe(5.);
+  });
+
+  test("chain animations can be cancelled", () => {
+    module TestTicker =
+      MakeTicker({});
+    module Animated = Animation.Make(TestTicker);
+    module Chain = Animated.Chain;
+
+    let first =
+      Animated.tween(
+        Animated.floatValue(0.),
+        {
+          duration: Time.Seconds(2.),
+          delay: Time.Seconds(0.),
+          toValue: 10.,
+          repeat: false,
+          easing: Animated.linear,
+        },
+      );
+    let second =
+      Animated.tween(
+        Animated.floatValue(first.toValue),
+        {
+          duration: Time.Seconds(2.),
+          delay: Time.Seconds(0.),
+          toValue: 0.,
+          repeat: false,
+          easing: Animated.linear,
+        },
+      );
+    let {Animated.stop, _} =
+      Chain.make(first) |> Chain.add(second) |> Chain.start;
+
+    TestTicker.simulateTick(Time.Seconds(0.1));
+
+    stop();
 
     expect(Animated.anyActiveAnimations()).toBe(false);
     expect(Animated.getAnimationCount()).toBe(0);
