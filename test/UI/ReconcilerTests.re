@@ -91,22 +91,43 @@ test("Reconciler", () => {
     
     let rootNode = (new viewNode)();
     let container = React.Container.create(rootNode);
-    rootNode#setStyle(Style.create(~style=Style.[width(100), height(100)], ()));
+    rootNode#setStyle(Style.create(~style=Style.[width(100), height(200)], ()));
 
     let callCount = ref(0);
     let lastWidth = ref(0);
     let lastHeight = ref(0);
 
-    let onDimensionsChanged = ({width, height}: NodeEvents.dimensionsChangedEventParams) => {
+    let onDimensionsChanged = ({width, height}: NodeEvents.DimensionsChangedEventParams.t) => {
        lastWidth := width; 
        lastHeight := height;
        callCount := callCount^ + 1;
     };
 
-    React.Container.update(container, <View onDimensionsChanged />) |> ignore;
+    let update1 = React.Container.update(container, <View onDimensionsChanged />);
+    rootNode#recalculate();
+    rootNode#flushCallbacks();
+
+    expect(callCount^).toBe(1);
+
+    /* Shouldn't dispatch if width/height hasn't change! */
+    let update2 = React.Container.update(update1, <View onDimensionsChanged />);
+    rootNode#recalculate();
+    rootNode#flushCallbacks();
+
+    expect(callCount^).toBe(1);
+
+    /* Should update if the size was somehow changed.. */
+    rootNode#setStyle(Style.create(~style=Style.[width(300), height(400)], ()));
+    React.Container.update(update2, <View onDimensionsChanged />) |> ignore;
 
     rootNode#recalculate();
     rootNode#flushCallbacks();
+
+    /* expect(callCount^).toBe(2); */
+
+    /* expect(lastWidth^).toBe(100); */
+    /* expect(lastHeight^).toBe(200); */
+    /* expect(callCount^).toBe(1); */
 
   });
 });

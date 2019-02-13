@@ -40,10 +40,17 @@ type keyPressEventParams = {
   character: string,
 };
 
-type dimensionsChangedEventParams = {
-    width: int,
-    height: int,
-};
+module DimensionsChangedEventParams {
+    type t = {
+        width: int,
+        height: int,
+    };
+
+    let create = (~width=0, ~height=0, ()) => {
+        width,
+        height
+    };
+}
 
 type event =
   | MouseDown(mouseButtonEventParams)
@@ -64,7 +71,7 @@ type focusHandler = focusEventParams => unit;
 type keyDownHandler = keyEventParams => unit;
 type keyUpHandler = keyEventParams => unit;
 type keyPressHandler = keyPressEventParams => unit;
-type dimensionsChangedHandler = dimensionsChangedEventParams => unit;
+type dimensionsChangedHandler = DimensionsChangedEventParams.t => unit;
 
 type t('a) = {
   ref: option(refCallback('a)),
