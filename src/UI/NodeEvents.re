@@ -40,6 +40,11 @@ type keyPressEventParams = {
   character: string,
 };
 
+type dimensionsChangedEventParams = {
+    width: int,
+    height: int,
+};
+
 type event =
   | MouseDown(mouseButtonEventParams)
   | MouseMove(mouseMoveEventParams)
@@ -59,6 +64,7 @@ type focusHandler = focusEventParams => unit;
 type keyDownHandler = keyEventParams => unit;
 type keyUpHandler = keyEventParams => unit;
 type keyPressHandler = keyPressEventParams => unit;
+type dimensionsChangedHandler = dimensionsChangedEventParams => unit;
 
 type t('a) = {
   ref: option(refCallback('a)),
@@ -71,6 +77,7 @@ type t('a) = {
   onKeyUp: option(keyUpHandler),
   onKeyDown: option(keyDownHandler),
   onKeyPress: option(keyPressHandler),
+  onDimensionsChanged: option(dimensionsChangedHandler),
 };
 
 let make =
@@ -85,6 +92,7 @@ let make =
       ~onKeyPress=?,
       ~onKeyDown=?,
       ~onKeyUp=?,
+      ~onDimensionsChanged=?,
       _unit: unit,
     ) => {
   let ret: t('a) = {
@@ -98,6 +106,7 @@ let make =
     onKeyPress,
     onKeyDown,
     onKeyUp,
+    onDimensionsChanged,
   };
   ret;
 };
