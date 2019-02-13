@@ -86,4 +86,27 @@ test("Reconciler", () => {
     | None => expect(0).toBe(1)
     };
   });
+
+  test("layout: onDimensionsChanged gets dispatched", () => {
+    
+    let rootNode = (new viewNode)();
+    let container = React.Container.create(rootNode);
+    rootNode#setStyle(Style.create(~style=Style.[width(100), height(100)], ()));
+
+    let callCount = ref(0);
+    let lastWidth = ref(0);
+    let lastHeight = ref(0);
+
+    let onDimensionsChanged = ({width, height}: NodeEvents.dimensionsChangedEventParams) => {
+       lastWidth := width; 
+       lastHeight := height;
+       callCount := callCount^ + 1;
+    };
+
+    React.Container.update(container, <View onDimensionsChanged />) |> ignore;
+
+    rootNode#recalculate();
+    rootNode#flushCallbacks();
+
+  });
 });
