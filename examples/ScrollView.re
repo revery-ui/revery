@@ -29,7 +29,7 @@ module Sample = {
 
   let createElement = (~children as _, ()) =>
     component(slots => {
-      let (bounce, setBounce, _slots: React.Hooks.empty) =
+      let (bounce, setBounce, slots) =
         React.Hooks.state(true, slots);
       (slots, <View style=containerStyle>
         <Text
