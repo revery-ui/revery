@@ -38,17 +38,17 @@ module SampleText = {
   let component = React.component("Example");
 
   let createElement = (~children as _, ()) =>
-    component(slots => {
-      let (fontSizeSliderVal, setFontSize, slots) =
-        React.Hooks.state(20., slots);
-      let (widthSliderVal, setWidth, _slots: React.Hooks.empty) =
-        React.Hooks.state(200., slots);
+    component(hooks => {
+      let (fontSizeSliderVal, setFontSize, hooks) =
+        React.Hooks.state(20., hooks);
+      let (widthSliderVal, setWidth, hooks) =
+        React.Hooks.state(200., hooks);
 
       let textContent = "All work and no play makes Jack a dull boy";
       let maxFontSize = 40.;
       let maxWidth = 400.;
 
-      <View style=containerStyle>
+      (hooks, <View style=containerStyle>
         <View style=slidersViewStyle>
           <Text
             style=Style.[
@@ -91,7 +91,7 @@ module SampleText = {
             }
           />
         </View>
-      </View>;
+      </View>);
     });
 };
 
