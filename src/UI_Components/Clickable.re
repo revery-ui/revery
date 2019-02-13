@@ -37,8 +37,7 @@ let make =
       React.Hooks.state(None, slots);
     let setClickableRef = r => setClickableRefOption(Some(r));
 
-    let (animatedOpacity, setOpacity, _slots: React.Hooks.empty) =
-      React.Hooks.state(0.8, slots);
+    let (animatedOpacity, setOpacity, slots) = React.Hooks.state(0.8, slots);
 
     let onMouseMove = (mouseX: float, mouseY: float) => {
       switch (clickableRef) {
@@ -83,18 +82,21 @@ let make =
         )
       );
 
-    <View
-      style=mergedStyles
-      onMouseDown
-      ?onBlur
-      ?onFocus
-      ?onKeyDown
-      ?onKeyUp
-      ?onKeyPress
-      tabindex
-      ref={r => setClickableRef(r)}>
-      children
-    </View>;
+    (
+      slots,
+      <View
+        style=mergedStyles
+        onMouseDown
+        ?onBlur
+        ?onFocus
+        ?onKeyDown
+        ?onKeyUp
+        ?onKeyPress
+        tabindex
+        ref={r => setClickableRef(r)}>
+        children
+      </View>,
+    );
   });
 
 let createElement =

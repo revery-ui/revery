@@ -115,7 +115,7 @@ let rec renderTree = (~indent=0, ~nodeRenderer, ~emptyRenderer, t) => {
  */
 let createElement =
     (~tree, ~nodeRenderer, ~emptyRenderer=None, ~children as _, ()) =>
-  component((_slots: React.Hooks.empty) => {
+  component(slots => {
     let componentTree = renderTree(tree, ~nodeRenderer, ~emptyRenderer);
-    <View> ...componentTree </View>;
+    (slots, <View> ...componentTree </View>);
   });

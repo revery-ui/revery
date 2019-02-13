@@ -28,55 +28,58 @@ module View = {
         ~style=Style.emptyViewStyle,
         children,
       ) =>
-    component((_: UiReact.Hooks.empty) =>
-      {
-        make: () => {
-          let styles = Style.create(~style, ());
-          let events =
-            NodeEvents.make(
-              ~ref?,
-              ~onMouseDown?,
-              ~onMouseMove?,
-              ~onMouseUp?,
-              ~onMouseWheel?,
-              ~onBlur?,
-              ~onFocus?,
-              ~onKeyDown?,
-              ~onKeyUp?,
-              ~onKeyPress?,
-              ~onDimensionsChanged?,
-              (),
-            );
-          let node = (new ViewNode.viewNode)();
-          node#setEvents(events);
-          node#setStyle(styles);
-          node#setTabIndex(tabindex);
-          node;
+    component(hooks =>
+      (
+        hooks,
+        {
+          make: () => {
+            let styles = Style.create(~style, ());
+            let events =
+              NodeEvents.make(
+                ~ref?,
+                ~onMouseDown?,
+                ~onMouseMove?,
+                ~onMouseUp?,
+                ~onMouseWheel?,
+                ~onBlur?,
+                ~onFocus?,
+                ~onKeyDown?,
+                ~onKeyUp?,
+                ~onKeyPress?,
+                ~onDimensionsChanged?,
+                (),
+              );
+            let node = (new ViewNode.viewNode)();
+            node#setEvents(events);
+            node#setStyle(styles);
+            node#setTabIndex(tabindex);
+            node;
+          },
+          configureInstance: (~isFirstRender as _, node) => {
+            let styles = Style.create(~style, ());
+            let events =
+              NodeEvents.make(
+                ~ref?,
+                ~onMouseDown?,
+                ~onMouseMove?,
+                ~onMouseUp?,
+                ~onMouseWheel?,
+                ~onBlur?,
+                ~onFocus?,
+                ~onKeyDown?,
+                ~onKeyUp?,
+                ~onKeyPress?,
+                ~onDimensionsChanged?,
+                (),
+              );
+            node#setEvents(events);
+            node#setStyle(styles);
+            node#setTabIndex(tabindex);
+            node;
+          },
+          children,
         },
-        configureInstance: (~isFirstRender as _, node) => {
-          let styles = Style.create(~style, ());
-          let events =
-            NodeEvents.make(
-              ~ref?,
-              ~onMouseDown?,
-              ~onMouseMove?,
-              ~onMouseUp?,
-              ~onMouseWheel?,
-              ~onBlur?,
-              ~onFocus?,
-              ~onKeyDown?,
-              ~onKeyUp?,
-              ~onKeyPress?,
-              ~onDimensionsChanged?,
-              (),
-            );
-          node#setEvents(events);
-          node#setStyle(styles);
-          node#setTabIndex(tabindex);
-          node;
-        },
-        children,
-      }
+      )
     );
 
   let createElement =
@@ -130,45 +133,48 @@ module Text = {
         ~text="",
         children,
       ) =>
-    component((_: UiReact.Hooks.empty) =>
-      {
-        make: () => {
-          let styles = create(~style, ());
-          let events =
-            NodeEvents.make(
-              ~ref?,
-              ~onMouseDown?,
-              ~onMouseMove?,
-              ~onMouseUp?,
-              ~onMouseWheel?,
-              (),
-            );
-          let node = (new TextNode.textNode)(text);
-          node#setEvents(events);
-          node#setStyle(styles);
-          Obj.magic(node);
-        },
-        configureInstance: (~isFirstRender as _, node) => {
-          let styles = create(~style, ());
-          let events =
-            NodeEvents.make(
-              ~ref?,
-              ~onMouseDown?,
-              ~onMouseMove?,
-              ~onMouseUp?,
-              ~onMouseWheel?,
-              (),
-            );
+    component(hooks =>
+      (
+        hooks,
+        {
+          make: () => {
+            let styles = create(~style, ());
+            let events =
+              NodeEvents.make(
+                ~ref?,
+                ~onMouseDown?,
+                ~onMouseMove?,
+                ~onMouseUp?,
+                ~onMouseWheel?,
+                (),
+              );
+            let node = (new TextNode.textNode)(text);
+            node#setEvents(events);
+            node#setStyle(styles);
+            Obj.magic(node);
+          },
+          configureInstance: (~isFirstRender as _, node) => {
+            let styles = create(~style, ());
+            let events =
+              NodeEvents.make(
+                ~ref?,
+                ~onMouseDown?,
+                ~onMouseMove?,
+                ~onMouseUp?,
+                ~onMouseWheel?,
+                (),
+              );
 
-          /* TODO: Proper way to downcast? */
-          let tn: TextNode.textNode = Obj.magic(node);
-          tn#setEvents(events);
-          tn#setStyle(styles);
-          tn#setText(text);
-          node;
+            /* TODO: Proper way to downcast? */
+            let tn: TextNode.textNode = Obj.magic(node);
+            tn#setEvents(events);
+            tn#setStyle(styles);
+            tn#setText(text);
+            node;
+          },
+          children,
         },
-        children,
-      }
+      )
     );
 
   let createElement =
@@ -209,41 +215,44 @@ module Image = {
         ~src="",
         children,
       ) =>
-    component((_: UiReact.Hooks.empty) =>
-      {
-        make: () => {
-          let styles = Style.create(~style, ());
-          let events =
-            NodeEvents.make(
-              ~ref?,
-              ~onMouseDown?,
-              ~onMouseMove?,
-              ~onMouseUp?,
-              ~onMouseWheel?,
-              (),
-            );
-          let node = (new ImageNode.imageNode)(src);
-          node#setEvents(events);
-          node#setStyle(styles);
-          Obj.magic(node);
+    component(hooks =>
+      (
+        hooks,
+        {
+          make: () => {
+            let styles = Style.create(~style, ());
+            let events =
+              NodeEvents.make(
+                ~ref?,
+                ~onMouseDown?,
+                ~onMouseMove?,
+                ~onMouseUp?,
+                ~onMouseWheel?,
+                (),
+              );
+            let node = (new ImageNode.imageNode)(src);
+            node#setEvents(events);
+            node#setStyle(styles);
+            Obj.magic(node);
+          },
+          configureInstance: (~isFirstRender as _, node) => {
+            let styles = Style.create(~style, ());
+            let events =
+              NodeEvents.make(
+                ~ref?,
+                ~onMouseDown?,
+                ~onMouseMove?,
+                ~onMouseUp?,
+                ~onMouseWheel?,
+                (),
+              );
+            node#setEvents(events);
+            node#setStyle(styles);
+            node;
+          },
+          children,
         },
-        configureInstance: (~isFirstRender as _, node) => {
-          let styles = Style.create(~style, ());
-          let events =
-            NodeEvents.make(
-              ~ref?,
-              ~onMouseDown?,
-              ~onMouseMove?,
-              ~onMouseUp?,
-              ~onMouseWheel?,
-              (),
-            );
-          node#setEvents(events);
-          node#setStyle(styles);
-          node;
-        },
-        children,
-      }
+      )
     );
 
   let createElement =

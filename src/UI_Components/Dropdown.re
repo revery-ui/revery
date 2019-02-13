@@ -46,7 +46,7 @@ let createElement =
   component(slots => {
     let initialState = {items, selected: List.nth(items, 0), _open: false};
 
-    let (state, dispatch, _slots: React.Hooks.empty) =
+    let (state, dispatch, slots) =
       React.Hooks.reducer(~initialState, reducer, slots);
 
     let items =
@@ -78,57 +78,60 @@ let createElement =
           )
         : [];
 
-    <View
-      style=Style.[
-        position(`Relative),
-        backgroundColor(Colors.white),
-        width(w),
-      ]>
-      <Clickable onClick={() => dispatch(ShowDropdown)}>
+    (
+      slots,
+      <View
+        style=Style.[
+          position(`Relative),
+          backgroundColor(Colors.white),
+          width(w),
+        ]>
+        <Clickable onClick={() => dispatch(ShowDropdown)}>
+          <View
+            style=Style.[
+              flexDirection(`Row),
+              height(h),
+              justifyContent(`SpaceBetween),
+              paddingHorizontal(5),
+              border(
+                ~width=float_of_int(h) *. 0.05 |> int_of_float,
+                ~color=Colors.black,
+              ),
+            ]>
+            <View
+              style=Style.[
+                width(float_of_int(w) *. 0.8 |> int_of_float),
+                justifyContent(`Center),
+                overflow(LayoutTypes.Hidden),
+              ]>
+              <Text style=textStyles text={state.selected.label} />
+            </View>
+            <Text
+              style=Style.[
+                fontSize(30),
+                color(Colors.black),
+                fontFamily("FontAwesome5FreeSolid.otf"),
+                marginTop(17),
+                paddingRight(5),
+                alignSelf(`Center),
+              ]
+              text={||}
+            />
+          </View>
+        </Clickable>
         <View
           style=Style.[
-            flexDirection(`Row),
-            height(h),
-            justifyContent(`SpaceBetween),
-            paddingHorizontal(5),
-            border(
+            position(`Absolute),
+            top(h),
+            backgroundColor(Colors.white),
+            borderHorizontal(
               ~width=float_of_int(h) *. 0.05 |> int_of_float,
               ~color=Colors.black,
             ),
+            overflow(LayoutTypes.Hidden),
           ]>
-          <View
-            style=Style.[
-              width(float_of_int(w) *. 0.8 |> int_of_float),
-              justifyContent(`Center),
-              overflow(LayoutTypes.Hidden),
-            ]>
-            <Text style=textStyles text={state.selected.label} />
-          </View>
-          <Text
-            style=Style.[
-              fontSize(30),
-              color(Colors.black),
-              fontFamily("FontAwesome5FreeSolid.otf"),
-              marginTop(17),
-              paddingRight(5),
-              alignSelf(`Center),
-            ]
-            text={||}
-          />
+          ...items
         </View>
-      </Clickable>
-      <View
-        style=Style.[
-          position(`Absolute),
-          top(h),
-          backgroundColor(Colors.white),
-          borderHorizontal(
-            ~width=float_of_int(h) *. 0.05 |> int_of_float,
-            ~color=Colors.black,
-          ),
-          overflow(LayoutTypes.Hidden),
-        ]>
-        ...items
-      </View>
-    </View>;
+      </View>,
+    );
   });

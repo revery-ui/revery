@@ -11,9 +11,8 @@ module TestRefComponent = {
   let component = React.component("TestRefComponent");
 
   let createElement = (~children as _, ~latestRef, ()) =>
-    component(slots => {
-      let (refFromState, setRef, _slots: React.Hooks.empty) =
-        React.Hooks.state(None, slots);
+    component(hooks => {
+      let (refFromState, setRef, hooks) = React.Hooks.state(None, hooks);
 
       latestRef := refFromState;
 
@@ -22,7 +21,7 @@ module TestRefComponent = {
         setRef(Some(r));
       };
 
-      <View ref=setRefInState />;
+      (hooks, <View ref=setRefInState />);
     });
 };
 
