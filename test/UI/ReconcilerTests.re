@@ -12,8 +12,7 @@ module TestRefComponent = {
 
   let createElement = (~children as _, ~latestRef, ()) =>
     component(hooks => {
-      let (refFromState, setRef, hooks) =
-        React.Hooks.state(None, hooks);
+      let (refFromState, setRef, hooks) = React.Hooks.state(None, hooks);
 
       latestRef := refFromState;
 
