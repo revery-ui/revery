@@ -22,6 +22,7 @@ module View = {
         ~onKeyDown=?,
         ~onKeyUp=?,
         ~onKeyPress=?,
+        ~onDimensionsChanged=?,
         ~tabindex=?,
         ~ref=?,
         ~style=Style.emptyViewStyle,
@@ -45,6 +46,7 @@ module View = {
                 ~onKeyDown?,
                 ~onKeyUp?,
                 ~onKeyPress?,
+                ~onDimensionsChanged?,
                 (),
               );
             let node = (new ViewNode.viewNode)();
@@ -67,6 +69,7 @@ module View = {
                 ~onKeyDown?,
                 ~onKeyUp?,
                 ~onKeyPress?,
+                ~onDimensionsChanged?,
                 (),
               );
             node#setEvents(events);
@@ -94,6 +97,7 @@ module View = {
         ~onKeyDown=?,
         ~onKeyUp=?,
         ~onKeyPress=?,
+        ~onDimensionsChanged=?,
         (),
       ) =>
     make(
@@ -109,6 +113,7 @@ module View = {
       ~onKeyDown?,
       ~onKeyUp?,
       ~onKeyPress?,
+      ~onDimensionsChanged?,
       UiReact.listToElement(children),
     );
 };
