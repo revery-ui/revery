@@ -14,6 +14,7 @@ open RenderPass;
 class textNode (text: string) = {
   as _this;
   val mutable text = text;
+  val _lines: ref(list(string)) = ref([]);
   val quad = Assets.quad();
   val textureShader = Assets.fontShader();
   inherit (class viewNode)() as _super;
@@ -33,6 +34,7 @@ class textNode (text: string) = {
 
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
+      let lineHeightPx = _this#_getLineHeightPx(parentContext.pixelRatio);
       let font =
         FontCache.load(
           style.fontFamily,
@@ -56,7 +58,7 @@ class textNode (text: string) = {
       let outerTransform = Mat4.create();
       Mat4.fromTranslation(outerTransform, Vec3.create(0.0, baseline, 0.0));
 
-      let render = (s: Fontkit.fk_shape, x: float) => {
+      let render = (s: Fontkit.fk_shape, x: float, y: float) => {
         let glyph = FontRenderer.getGlyph(font, s.glyphId);
 
         let {width, height, bearingX, bearingY, advance, _} = glyph;
@@ -79,7 +81,7 @@ class textNode (text: string) = {
           glyphTransform,
           Vec3.create(
             x +. bearingX +. width /. 2.,
-            height *. 0.5 -. bearingY,
+            y +. height *. 0.5 -. bearingY,
             0.0,
           ),
         );
@@ -105,37 +107,94 @@ class textNode (text: string) = {
         x +. advance /. 64.0;
       };
 
-      let shapedText = FontRenderer.shape(font, text);
-      let startX = ref(0.);
-      Array.iter(
-        s => {
-          let nextPosition = render(s, startX^);
-          startX := nextPosition;
+      List.iteri(
+        (lineNum, line) => {
+          let shapedText = FontRenderer.shape(font, line);
+          let startX = ref(0.);
+
+          Array.iteri(
+            (_offset, s) => {
+              let nextX =
+                render(s, startX^, lineHeightPx *. float_of_int(lineNum));
+              startX := nextX;
+            },
+            shapedText,
+          );
         },
-        shapedText,
+        _lines^,
       );
+
     | _ => ()
     };
   };
   pub setText = t => text = t;
   pub! getMeasureFunction = pixelRatio => {
     let measure =
-        (_mode, _width, _widthMeasureMode, _height, _heightMeasureMode) => {
+        (_mode, width, _widthMeasureMode, _height, _heightMeasureMode) => {
       /* TODO: Cache font locally in variable */
       let style = _super#getStyle();
+      let textWrap = style.textWrap;
+      let lineHeightPx = _this#_getLineHeightPx(pixelRatio);
       let font =
         FontCache.load(
           style.fontFamily,
           int_of_float(float_of_int(style.fontSize) *. pixelRatio),
         );
 
-      let d = FontRenderer.measure(font, text);
-      let ret: Layout.LayoutTypes.dimensions = {
-        LayoutTypes.width: int_of_float(float_of_int(d.width) /. pixelRatio),
-        height: int_of_float(float_of_int(d.height) /. pixelRatio),
+      switch (textWrap) {
+      | WhitespaceWrap =>
+        let (lines, maxWidthLine) =
+          TextWrapping.wrapText(
+            ~text,
+            ~measureWidth=str => FontRenderer.measure(font, str).width,
+            ~maxWidth=width,
+            ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
+          );
+
+        _lines := lines;
+
+        let dimensions: Layout.LayoutTypes.dimensions = {
+          width: int_of_float(float_of_int(maxWidthLine) /. pixelRatio),
+          height:
+            int_of_float(
+              float_of_int(List.length(lines)) *. lineHeightPx /. pixelRatio,
+            ),
+        };
+
+        dimensions;
+      | NoWrap =>
+        let d = FontRenderer.measure(font, text);
+        let dimensions: Layout.LayoutTypes.dimensions = {
+          width: int_of_float(float_of_int(d.width) /. pixelRatio),
+          height: int_of_float(lineHeightPx /. pixelRatio),
+        };
+
+        _lines := [text];
+
+        dimensions;
+      | UserDefined(wrapFunc) =>
+        let (lines, maxWidthLine) =
+          wrapFunc(
+            text,
+            str => FontRenderer.measure(font, str).width,
+            width,
+          );
+
+        _lines := lines;
+
+        let dimensions: Layout.LayoutTypes.dimensions = {
+          width: maxWidthLine,
+          height:
+            int_of_float(float_of_int(List.length(lines)) *. lineHeightPx),
+        };
+
+        dimensions;
       };
-      ret;
     };
     Some(measure);
+  };
+  pri _getLineHeightPx = pixelRatio => {
+    let style = _super#getStyle();
+    style.lineHeight *. float_of_int(style.fontSize) *. pixelRatio;
   };
 };

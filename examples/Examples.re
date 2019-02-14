@@ -107,6 +107,11 @@ let state: state = {
       render: _ => DropdownExample.render(),
       source: "DropdownExample.re",
     },
+    {
+      name: "Text",
+      render: _w => TextExample.render(),
+      source: "TextExample.re",
+    },
   ],
   selectedExample: "Animation",
 };
