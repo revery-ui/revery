@@ -12,3 +12,8 @@ steps:
     displayName: 'esy build'
   - script: esy b dune runtest
     displayName: 'esy b dune runtest'
+  - script: esy x Examples
+    displayName: 'esy x Examples'
+    continueOnError: true
+  - script: esy create-release
+    displayName: 'esy create-release'
