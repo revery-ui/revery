@@ -15,7 +15,45 @@ let noop = () => ();
 type valueChangedFunction = float => unit;
 let noopValueChanged = _f => ();
 
+
+type sliderSessionState = {
+    startPosition: int,
+    endPosition: int,
+    availableWidth: int
+}
+
+type state = {
+    initialValue: float,
+    value: float,
+    sliderSession: option(sliderSessionState)
+}
+
+let createInitialState: float => state = (v) => {
+   initialValue: v,
+   value: v,
+   sliderSession: None,
+};
+
+type mouseMove = {
+   mouseX: float,
+   mouseY: float,
+};
+
+type actions =
+| UpdateInitialValue(float)
+| Start
+| MouseMove(mouseMove)
+| End
+
+let reducer = (_action: actions, s: state) => s;
+
+let isActive = (v: state) => switch (v.sliderSession) {
+| Some(_) => true
+| None => false
+};
+
 let component = React.component("Slider");
+
 
 let createElement =
     (
@@ -34,16 +72,19 @@ let createElement =
       ~thumbColor=Colors.gray,
       (),
     ) =>
-  component(slots => {
-    let (slideRef, setSlideRefOption, slots) =
-      React.Hooks.state(None, slots);
-    let (thumbRef, setThumbRefOption, slots) =
-      React.Hooks.state(None, slots);
-    let (isActive, setActive, slots) = React.Hooks.state(false, slots);
+  component(hooks => {
+    let initialState = createInitialState(value);
+    let (_state, _dispatch, hooks) = React.Hooks.reducer(~initialState, reducer, hooks);
+
+    let (slideRef, setSlideRefOption, hooks) =
+      React.Hooks.state(None, hooks);
+    let (thumbRef, setThumbRefOption, hooks) =
+      React.Hooks.state(None, hooks);
+    let (isActive, setActive, hooks) = React.Hooks.state(false, hooks);
     /* Initial value is used to detect if the 'value' parameter ever changes */
-    let (initialValue, setInitialValue, slots) =
-      React.Hooks.state(value, slots);
-    let (v, setV, slots) = React.Hooks.state(value, slots);
+    let (initialValue, setInitialValue, hooks) =
+      React.Hooks.state(value, hooks);
+    let (v, setV, hooks) = React.Hooks.state(value, hooks);
 
     /*
      * If the slider value is updated (controlled),
@@ -86,18 +127,9 @@ let createElement =
       | _ => None
       };
 
-    let getValue = (x, min, max) =>
-      if (x < min) {
-        min;
-      } else if (x > max) {
-        max;
-      } else {
-        x;
-      };
-
         let sliderUpdate = (w, startPosition, endPosition, mouseX, mouseY) => {
           let mousePosition = vertical ? mouseY : mouseX;
-          let thumbPosition = getValue(mousePosition, startPosition, endPosition) -. startPosition;
+          let thumbPosition = clamp(mousePosition, startPosition, endPosition) -. startPosition;
 
           let normalizedValue =
             thumbPosition
@@ -112,6 +144,38 @@ let createElement =
             setActive(false);
         }
 
+    let hooks = React.Hooks.effect(Always, () => {
+
+        let isCaptured = isActive;
+
+        if (isCaptured) {
+          switch (slideRef, availableWidth) {
+          | (Some(slider), Some(w)) =>
+            let sliderDimensions: BoundingBox2d.t = slider#getBoundingBox();
+
+            let startPosition =
+              vertical
+                ? Vec2.get_y(sliderDimensions.min)
+                : Vec2.get_x(sliderDimensions.min);
+            let endPosition = startPosition +. w;
+
+            Mouse.setCapture(
+              ~onMouseMove=evt => sliderUpdate(w, startPosition, endPosition, evt.mouseX, evt.mouseY),
+              ~onMouseUp= _evt => sliderComplete(),
+              (),
+            );
+          | _ => ()
+          };
+        }
+
+        
+        Some(() => {
+            if (isCaptured) {
+                Mouse.releaseCapture();
+            }   
+        })
+    }, hooks);
+
     let onMouseDown = (evt: NodeEvents.mouseButtonEventParams) =>
       switch (slideRef, availableWidth) {
       | (Some(slider), Some(w)) =>
@@ -125,16 +189,6 @@ let createElement =
 
         sliderUpdate(w, startPosition, endPosition, evt.mouseX, evt.mouseY);
         setActive(true);
-
-        Mouse.setCapture(
-          ~onMouseMove=evt => sliderUpdate(w, startPosition, endPosition, evt.mouseX, evt.mouseY),
-          ~onMouseUp=
-            _evt => {
-              Mouse.releaseCapture();
-              sliderComplete();
-            },
-          (),
-        );
       | _ => ()
       };
 
@@ -189,7 +243,7 @@ let createElement =
       ];
 
     (
-      slots,
+      hooks,
       <View onMouseDown style ref={r => setSlideRef(r)}>
         <View style=beforeTrackStyle />
         <View
