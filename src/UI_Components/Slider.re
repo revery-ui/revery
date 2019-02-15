@@ -40,12 +40,17 @@ type mouseMove = {
 };
 
 type actions =
-| UpdateInitialValue(float)
+| UpdateControlledValue(float)
+| UpdateValue(float)
 | Start
 | MouseMove(mouseMove)
 | End
 
-let reducer = (_action: actions, s: state) => s;
+let reducer = (action: actions, s: state) => switch (action) {
+| UpdateControlledValue(v) => { ...s, value: v, initialValue: v }
+| UpdateValue(v) => { ...s, value: v }
+| _ => s
+};
 
 let isActive = (v: state) => switch (v.sliderSession) {
 | Some(_) => true
@@ -54,6 +59,7 @@ let isActive = (v: state) => switch (v.sliderSession) {
 
 let component = React.component("Slider");
 
+    let initialState = createInitialState(0.);
 
 let createElement =
     (
@@ -73,8 +79,7 @@ let createElement =
       (),
     ) =>
   component(hooks => {
-    let initialState = createInitialState(value);
-    let (_state, _dispatch, hooks) = React.Hooks.reducer(~initialState, reducer, hooks);
+    let (state, dispatch, hooks) = React.Hooks.reducer(~initialState, reducer, hooks);
 
     let (slideRef, setSlideRefOption, hooks) =
       React.Hooks.state(None, hooks);
@@ -82,21 +87,24 @@ let createElement =
       React.Hooks.state(None, hooks);
     let (isActive, setActive, hooks) = React.Hooks.state(false, hooks);
     /* Initial value is used to detect if the 'value' parameter ever changes */
-    let (initialValue, setInitialValue, hooks) =
-      React.Hooks.state(value, hooks);
-    let (v, setV, hooks) = React.Hooks.state(value, hooks);
+    /* let (v, setV, hooks) = React.Hooks.state(value, hooks); */
+
+    let setV = (f) => dispatch(UpdateValue(f));
+
+    print_endline ("SLIDER VALUE: " ++ string_of_float(state.value));
+    print_endline ("SLIDER INITIAL VALUE: " ++ string_of_float(state.initialValue));
 
     /*
      * If the slider value is updated (controlled),
      * it should override whatever previous value was set
      */
     let v =
-      if (value != initialValue) {
-        setInitialValue(value);
-        setV(value);
+      if (value != state.initialValue) {
+    print_endline ("UPDATING: " ++ string_of_float(value));
+        dispatch(UpdateControlledValue(value))
         value;
       } else {
-        v;
+        state.value;
       };
 
     let setSlideRef = r => setSlideRefOption(Some(r));
