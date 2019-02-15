@@ -86,6 +86,32 @@ let createElement =
       | _ => None
       };
 
+    let getValue = (x, min, max) =>
+      if (x < min) {
+        min;
+      } else if (x > max) {
+        max;
+      } else {
+        x;
+      };
+
+        let sliderUpdate = (w, startPosition, endPosition, mouseX, mouseY) => {
+          let mousePosition = vertical ? mouseY : mouseX;
+          let thumbPosition = getValue(mousePosition, startPosition, endPosition) -. startPosition;
+
+          let normalizedValue =
+            thumbPosition
+            /. w
+            *. (maximumValue -. minimumValue)
+            +. minimumValue;
+          setV(normalizedValue);
+          onValueChanged(normalizedValue);
+        };
+
+        let sliderComplete = () => {
+            setActive(false);
+        }
+
     let onMouseDown = (evt: NodeEvents.mouseButtonEventParams) =>
       switch (slideRef, availableWidth) {
       | (Some(slider), Some(w)) =>
@@ -97,37 +123,15 @@ let createElement =
             : Vec2.get_x(sliderDimensions.min);
         let endPosition = startPosition +. w;
 
-        let getValue = x =>
-          if (x < startPosition) {
-            startPosition;
-          } else if (x > endPosition) {
-            endPosition;
-          } else {
-            x;
-          };
-
-        let update = (mouseX, mouseY) => {
-          let mousePosition = vertical ? mouseY : mouseX;
-          let thumbPosition = getValue(mousePosition) -. startPosition;
-
-          let normalizedValue =
-            thumbPosition
-            /. w
-            *. (maximumValue -. minimumValue)
-            +. minimumValue;
-          setV(normalizedValue);
-          onValueChanged(normalizedValue);
-        };
-
-        update(evt.mouseX, evt.mouseY);
+        sliderUpdate(w, startPosition, endPosition, evt.mouseX, evt.mouseY);
         setActive(true);
 
         Mouse.setCapture(
-          ~onMouseMove=evt => update(evt.mouseX, evt.mouseY),
+          ~onMouseMove=evt => sliderUpdate(w, startPosition, endPosition, evt.mouseX, evt.mouseY),
           ~onMouseUp=
             _evt => {
               Mouse.releaseCapture();
-              setActive(false);
+              sliderComplete();
             },
           (),
         );
