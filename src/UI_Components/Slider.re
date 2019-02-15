@@ -15,40 +15,6 @@ let noop = () => ();
 type valueChangedFunction = float => unit;
 let noopValueChanged = _f => ();
 
-type sliderSessionState = {
-  startPosition: int,
-  endPosition: int,
-  availableWidth: int,
-};
-
-type state = {
-  initialValue: float,
-  value: float,
-  sliderSession: option(sliderSessionState),
-};
-
-let createInitialState: float => state =
-  v => {initialValue: v, value: v, sliderSession: None};
-
-type mouseMove = {
-  mouseX: float,
-  mouseY: float,
-};
-
-type actions =
-  | UpdateInitialValue(float)
-  | Start
-  | MouseMove(mouseMove)
-  | End;
-
-let reducer = (_action: actions, s: state) => s;
-
-let isActive = (v: state) =>
-  switch (v.sliderSession) {
-  | Some(_) => true
-  | None => false
-  };
-
 let component = React.component("Slider");
 
 let createElement =
@@ -69,10 +35,6 @@ let createElement =
       (),
     ) =>
   component(hooks => {
-    let initialState = createInitialState(value);
-    let (_state, _dispatch, hooks) =
-      React.Hooks.reducer(~initialState, reducer, hooks);
-
     let (slideRef, setSlideRefOption, hooks) =
       React.Hooks.state(None, hooks);
     let (thumbRef, setThumbRefOption, hooks) =
