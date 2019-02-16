@@ -12,7 +12,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "esy dune build @fmt --auto-promote",
     "format:windows": "esy b .ci/format.sh",
-    "doc": "refmterr esy dune build @doc --root ."
+    "doc": "refmterr esy dune build @doc --root .",
+    "create-release": "sh ./scripts/release.sh"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
