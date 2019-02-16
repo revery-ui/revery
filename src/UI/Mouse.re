@@ -32,6 +32,8 @@ type capturedEventState = {
   onMouseWheel: ref(option(mouseWheelHandler)),
   onMouseEnter: ref(option(mouseMoveHandler)),
   onMouseLeave: ref(option(mouseMoveHandler)),
+  onMouseOver: ref(option(mouseOverHandler)),
+  onMouseOut: ref(option(mouseMoveHandler)),
 };
 
 let capturedEventStateInstance: capturedEventState = {
@@ -41,6 +43,8 @@ let capturedEventStateInstance: capturedEventState = {
   onMouseWheel: ref(None),
   onMouseEnter: ref(None),
   onMouseLeave: ref(None),
+  onMouseOver: ref(None),
+  onMouseOut: ref(None),
 };
 
 let setCapture =
@@ -51,6 +55,8 @@ let setCapture =
       ~onMouseWheel=?,
       ~onMouseEnter=?,
       ~onMouseLeave=?,
+      ~onMouseOver=?,
+      ~onMouseOut=?,
       (),
     ) => {
   capturedEventStateInstance.onMouseDown := onMouseDown;
@@ -59,6 +65,8 @@ let setCapture =
   capturedEventStateInstance.onMouseWheel := onMouseWheel;
   capturedEventStateInstance.onMouseEnter := onMouseEnter;
   capturedEventStateInstance.onMouseLeave := onMouseLeave;
+  capturedEventStateInstance.onMouseOver := onMouseOver;
+  capturedEventStateInstance.onMouseOut := onMouseOut;
 };
 
 let releaseCapture = () => {
@@ -68,6 +76,8 @@ let releaseCapture = () => {
   capturedEventStateInstance.onMouseWheel := None;
   capturedEventStateInstance.onMouseEnter := None;
   capturedEventStateInstance.onMouseLeave := None;
+  capturedEventStateInstance.onMouseOver := None;
+  capturedEventStateInstance.onMouseOut := None;
 };
 
 let handleCapture = (event: event) => {
@@ -80,27 +90,35 @@ let handleCapture = (event: event) => {
     ce.onMouseWheel^,
     ce.onMouseEnter^,
     ce.onMouseLeave^,
+    ce.onMouseOver^,
+    ce.onMouseOut^,
     event,
   ) {
-  | (Some(h), _, _, _, _, _, MouseDown(evt)) =>
+  | (Some(h), _, _, _, _, _, _, _, MouseDown(evt)) =>
     h(evt);
     true;
-  | (_, Some(h), _, _, _, _, MouseMove(evt)) =>
+  | (_, Some(h), _, _, _, _, _, _, MouseMove(evt)) =>
     h(evt);
     true;
-  | (_, _, Some(h), _, _, _, MouseUp(evt)) =>
+  | (_, _, Some(h), _, _, _, _, _, MouseUp(evt)) =>
     h(evt);
     true;
-  | (_, _, _, Some(h), _, _, MouseWheel(evt)) =>
+  | (_, _, _, Some(h), _, _, _, _, MouseWheel(evt)) =>
     h(evt);
     true;
-  | (_, _, _, _, Some(h), _, MouseEnter(evt)) =>
+  | (_, _, _, _, Some(h), _, _, _, MouseEnter(evt)) =>
     h(evt);
     true;
-  | (_, _, _, _, _, Some(h), MouseLeave(evt)) =>
+  | (_, _, _, _, _, Some(h), _, _, MouseLeave(evt)) =>
     h(evt);
     true;
-  | (_, _, _, _, _, _, _) => false
+  | (_, _, _, _, _, _, Some(h), _, MouseOver(evt)) =>
+    h(evt);
+    true;
+  | (_, _, _, _, _, _, _, Some(h), MouseOut(evt)) =>
+    h(evt);
+    true;
+  | (_, _, _, _, _, _, _, _, _) => false
   };
 };
 
@@ -112,6 +130,8 @@ let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =
   | InternalMouseWheel(_) => Cursor.toVec2(c)
   | InternalMouseEnter(_) => Cursor.toVec2(c)
   | InternalMouseLeave(_) => Cursor.toVec2(c)
+  | InternalMouseOver(_) => Cursor.toVec2(c)
+  | InternalMouseOut(_) => Cursor.toVec2(c)
   };
 
 let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
@@ -128,6 +148,10 @@ let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
     MouseEnter({mouseX: evt.mouseX, mouseY: evt.mouseY})
   | InternalMouseLeave(evt) =>
     MouseLeave({mouseX: evt.mouseX, mouseY: evt.mouseY})
+  | InternalMouseOver(evt) =>
+    MouseOver({mouseX: evt.mouseX, mouseY: evt.mouseY})
+  | InternalMouseOut(evt) =>
+    MouseOut({mouseX: evt.mouseX, mouseY: evt.mouseY})
   };
 
 let onCursorChanged: Event.t(MouseCursors.t) = Event.create();
@@ -142,14 +166,7 @@ let isMouseMoveEv =
   | MouseMove(_) => true
   | _ => false;
 
-type handleEvent = event => unit;
-type active = {
-  handler: handleEvent,
-  id: int,
-};
-
-type mouseOverNode = ref(list(active));
-let storedNodesUnderCursor: mouseOverNode = ref([]);
+let storedNodesUnderCursor = ref([]);
 
 let getMouseMoveEventParams =
     (cursor: Cursor.t, evt: Events.internalMouseEvents) =>
@@ -158,87 +175,86 @@ let getMouseMoveEventParams =
   | _ => {mouseX: cursor.x^, mouseY: cursor.y^}
   };
 
-let rec sendMouseLeaveEvents = (listOfNodes: list(active), evtParams) => {
+let rec sendMouseLeaveEvents = (listOfNodes, evtParams) => {
   switch (listOfNodes) {
   | [] => storedNodesUnderCursor := []
-  | [{handler, _}, ...tail] =>
-    handler(MouseLeave(evtParams));
+  | [node, ...tail] =>
+    node#handleEvent(MouseLeave(evtParams));
     sendMouseLeaveEvents(tail, evtParams);
   };
 };
 
-let rec sendMouseEnterEvents = (deepestNode: Node.node('a), evtParams) => {
+let rec sendMouseEnterEvents = (deepestNode, evtParams) => {
   deepestNode#handleEvent(MouseEnter(evtParams));
+  storedNodesUnderCursor := storedNodesUnderCursor^ @ [deepestNode];
+
   let parent = deepestNode#getParent();
 
   switch (parent) {
-  | None =>
-    storedNodesUnderCursor :=
-      [
-        {handler: deepestNode#handleEvent, id: deepestNode#getInternalId()},
-        ...storedNodesUnderCursor^,
-      ]
-  | Some(parent) =>
-    storedNodesUnderCursor :=
-      [
-        {handler: deepestNode#handleEvent, id: deepestNode#getInternalId()},
-        ...storedNodesUnderCursor^,
-      ];
-    sendMouseEnterEvents(parent, evtParams);
+  | None => ()
+  | Some(parent) => sendMouseEnterEvents(parent, evtParams)
   };
 };
 
 let rec handleMouseEnterDiff = (deepestNode, newNodes, evtParams) => {
   let nodeExists =
     List.exists(
-      node => node.id == deepestNode#getInternalId(),
+      node => node#getInternalId() == deepestNode#getInternalId(),
       storedNodesUnderCursor^,
     );
 
   if (nodeExists) {
-    /*
-     Save currentlyStoredNodes up until that point (So need to go through list and find turning point)
-     Send MouseLeave events to removed nodes
-     Send MouseEnter events to newly added nodes
+    /**
+     * Save currentlyStoredNodes up until that point (So need to go through list and find point at which the new and old tree intersect)
+     * MouseEnter/MouseLeave evnets
      */
     let rec loopThroughStoredNodesUnderCursor = listOfNodes => {
       switch (listOfNodes) {
       | [] => ()
       | [node, ...tail] =>
-        if (node.id != deepestNode#getInternalId()) {
-          node.handler(MouseLeave(evtParams));
+        if (node#getInternalId() != deepestNode#getInternalId()) {
+          node#handleEvent(MouseLeave(evtParams));
           loopThroughStoredNodesUnderCursor(tail);
         } else {
           List.iter(
             newNode => newNode#handleEvent(MouseEnter(evtParams)),
             newNodes,
           );
-          storedNodesUnderCursor :=
-            List.rev([node, ...tail])
-            @ List.map(
-                newNode =>
-                  {handler: newNode#handleEvent, id: newNode#getInternalId()},
-                newNodes,
-              );
+          storedNodesUnderCursor := newNodes @ [node, ...tail];
         }
       };
     };
 
-    loopThroughStoredNodesUnderCursor(List.rev(storedNodesUnderCursor^));
+    let handleMouseOverDiff = listOfNodes => {
+      switch (newNodes) {
+      | [] =>
+        if (deepestNode#getInternalId()
+            != List.nth(listOfNodes, 0)#getInternalId()) {
+          bubble(List.nth(listOfNodes, 0), MouseOut(evtParams));
+          bubble(deepestNode, MouseOver(evtParams));
+        }
+      | [node, ..._tail] =>
+        bubble(List.nth(listOfNodes, 0), MouseOut(evtParams));
+        bubble(node, MouseOver(evtParams));
+      };
+    };
+
+    handleMouseOverDiff(storedNodesUnderCursor^);
+    loopThroughStoredNodesUnderCursor(storedNodesUnderCursor^);
   } else {
-    /*
-       1. Get parent
-       2. If no parent, replace currently stored nodes entirely with new tree
-          and send MouseLeave events to old stored nodes
-          and send MouseEnter events to new tree
-       3. Make sure to append the final deepestNode to the list of newNodes
-       4. If parent found, call function again
+    /**
+     *  1. Get parent if node is not found in currentlyStoredNodes
+     *  2. If no parent, replace currently stored nodes entirely with new tree
+     *  3. If parent found, call function again
      */
     let parent = deepestNode#getParent();
     switch (parent) {
     | None =>
+      /**
+     *  MouseEnter/Leave events
+     */
       List.iter(
-        ({handler, _}) => handler(MouseLeave(evtParams)),
+        node => node#handleEvent(MouseLeave(evtParams)),
         storedNodesUnderCursor^,
       );
 
@@ -246,20 +262,29 @@ let rec handleMouseEnterDiff = (deepestNode, newNodes, evtParams) => {
         newNode => newNode#handleEvent(MouseEnter(evtParams)),
         [deepestNode, ...newNodes],
       );
-      storedNodesUnderCursor :=
-        List.map(
-          newNode =>
-            {handler: newNode#handleEvent, id: newNode#getInternalId()},
-          [deepestNode, ...newNodes],
-        );
+
+      /**
+       * MouseOver/Out Events
+       */
+      bubble(List.nth(storedNodesUnderCursor^, 0), MouseOut(evtParams));
+      switch (newNodes) {
+      | [] => bubble(deepestNode, MouseOver(evtParams))
+      | [node, ..._tail] => bubble(node, MouseOver(evtParams))
+      };
+
+      storedNodesUnderCursor := newNodes @ [deepestNode];
     | Some(parent) =>
-      handleMouseEnterDiff(parent, [deepestNode, ...newNodes], evtParams)
+      handleMouseEnterDiff(parent, newNodes @ [deepestNode], evtParams)
     };
   };
 };
 
 let dispatch =
-    (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node('a)) => {
+    (
+      cursor: Cursor.t,
+      evt: Events.internalMouseEvents,
+      node: Node.node(RenderPass.t),
+    ) => {
   node#hasRendered()
     ? {
       let pos = getPositionFromMouseEvent(cursor, evt);
@@ -277,28 +302,46 @@ let dispatch =
       };
 
       if (!handleCapture(eventToSend)) {
+        let deepestNode = getDeepestNode(node, pos);
         let mouseMove = isMouseMoveEv(eventToSend);
         if (mouseMove) {
-          let deepestNode = getDeepestNode(node, pos);
           let mouseMoveEventParams = getMouseMoveEventParams(cursor, evt);
 
           switch (deepestNode^) {
           | None =>
+            /**
+             * if no node found, call bubbled MouseOut on deepestStoredNode if there's some stored nodes
+             * And recursively send mouseLeave events to storedNodes if they exist
+             */
+            (
+              switch (storedNodesUnderCursor^) {
+              | [] => ()
+              | [node, ..._tail] =>
+                bubble(node, MouseOut(mouseMoveEventParams))
+              }
+            );
+
             sendMouseLeaveEvents(
               storedNodesUnderCursor^,
               mouseMoveEventParams,
-            )
+            );
 
           | Some(deepNode) =>
             switch (storedNodesUnderCursor^) {
-            | [] => sendMouseEnterEvents(deepNode, mouseMoveEventParams)
+            | [] =>
+              /**
+                  * If some deepNode is found and there aer no storedNodes
+                  * Traverse the tree and call MouseEnter on each  node -  https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
+                  * And call bubbled MouseOver on deepNode
+                  */
+              sendMouseEnterEvents(deepNode, mouseMoveEventParams);
+              bubble(deepNode, MouseOver(mouseMoveEventParams));
             | [_, ..._xs] =>
               handleMouseEnterDiff(deepNode, [], mouseMoveEventParams)
             }
           };
         };
 
-        let deepestNode = getDeepestNode(node, pos);
         switch (deepestNode^) {
         | None => ()
         | Some(node) =>

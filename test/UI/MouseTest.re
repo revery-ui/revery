@@ -144,6 +144,115 @@ test("Mouse", () => {
 
       expect(count^).toBe(2);
     });
+
+    test("triggers onMouseOver event for node", () => {
+      let cursor = Mouse.Cursor.make();
+      let count = ref(0);
+      let f = _evt => count := count^ + 1;
+      let node =
+        createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
+      node#setEvents(NodeEvents.make(~onMouseOver=f, ()));
+
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        node,
+      );
+
+      expect(count^).toBe(1);
+    });
+
+    test("triggers onMouseOut event for node", () => {
+      let cursor = Mouse.Cursor.make();
+      let count = ref(0);
+      let f = _evt => count := count^ + 1;
+      let node =
+        createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
+      node#setEvents(NodeEvents.make(~onMouseOut=f, ()));
+
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        node,
+      );
+
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 150., mouseY: 150.}),
+        node,
+      );
+
+      expect(count^).toBe(1);
+    });
+    test("triggers both onMouseOver and onMouseOut event for node", () => {
+      let cursor = Mouse.Cursor.make();
+      let count = ref(0);
+      let f = _evt => count := count^ + 1;
+
+      let node =
+        createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
+      node#setEvents(NodeEvents.make(~onMouseOut=f, ~onMouseOver=f, ()));
+
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        node,
+      );
+
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        node,
+      );
+
+      expect(count^).toBe(2);
+    });
+
+    test("onMouseOver and onMouseOut should bubble", () => {
+      let cursor = Mouse.Cursor.make();
+      let count = ref(0);
+      let f = _evt => count := count^ + 1;
+
+      let parentNode =
+        createNodeWithStyle(
+          Style.make(
+            ~width=100,
+            ~height=100,
+            ~flexDirection=LayoutTypes.Row,
+            ~justifyContent=LayoutTypes.JustifyCenter,
+            ~alignItems=LayoutTypes.AlignCenter,
+            (),
+          ),
+        );
+      parentNode#setEvents(
+        NodeEvents.make(~onMouseOut=f, ~onMouseOver=f, ()),
+      );
+
+      let childNode =
+        createNodeWithStyle(Style.make(~width=50, ~height=50, ()));
+      childNode#setEvents(
+        NodeEvents.make(~onMouseOut=f, ~onMouseOver=f, ()),
+      );
+
+      parentNode#addChild(childNode);
+
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 25., mouseY: 25.}),
+        parentNode,
+      );
+
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 60., mouseY: 60.}),
+        childNode,
+      );
+
+      /**
+       * It should call mouseOver parent, mouseOut parent, mouseOver child and mouseOver parent
+       */
+      expect(count^).toBe(4);
+    });
   });
 
   test("bubbleEvent", () => {

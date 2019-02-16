@@ -203,11 +203,15 @@ class node ('a) (()) = {
       | (MouseWheel(c), {onMouseWheel: Some(cb), _}) => cb(c)
       | (MouseEnter(c), {onMouseEnter: Some(cb), _}) => cb(c)
       | (MouseLeave(c), {onMouseLeave: Some(cb), _}) => cb(c)
+      | (MouseOver(c), {onMouseOver: Some(cb), _}) => cb(c)
+      | (MouseOut(c), {onMouseOut: Some(cb), _}) => cb(c)
       | (MouseDown(_), _)
       | (MouseMove(_), _)
       | (MouseUp(_), _)
       | (MouseEnter(_), _)
       | (MouseLeave(_), _)
+      | (MouseOver(_), _)
+      | (MouseOut(_), _)
       | (MouseWheel(_), _) => ()
       | (Focus, p) =>
         _this#focus();

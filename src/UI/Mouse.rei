@@ -22,6 +22,8 @@ let setCapture:
     ~onMouseWheel: mouseWheelHandler=?,
     ~onMouseEnter: mouseMoveHandler=?,
     ~onMouseLeave: mouseMoveHandler=?,
+    ~onMouseOver: mouseMoveHandler=?,
+    ~onMouseOut: mouseMoveHandler=?,
     unit
   ) =>
   unit;
@@ -30,4 +32,5 @@ let releaseCapture: unit => unit;
 
 let onCursorChanged: Event.t(MouseCursors.t);
 
-let dispatch: (Cursor.t, Events.internalMouseEvents, Node.node('a)) => unit;
+let dispatch:
+  (Cursor.t, Events.internalMouseEvents, Node.node(RenderPass.t)) => unit;

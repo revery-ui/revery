@@ -52,22 +52,21 @@ module HoverExample = {
             height(500),
             backgroundColor(state.parentBackground),
           ]
-          onMouseEnter={_ => dispatch(SetParentBackground(Colors.lightGray))}
-          onMouseLeave={_ =>
+          onMouseOver={_ => dispatch(SetParentBackground(Colors.lightGray))}
+          onMouseOut={_ =>
             dispatch(SetParentBackground(initialState.parentBackground))
           }>
           <View
             style=Style.[
               flexDirection(`Row),
               flexWrap(`Wrap),
-              justifyContent(`Center),
+              justifyContent(`SpaceAround),
               alignItems(`Center),
             ]>
             <View
               style=Style.[
-                width(150),
-                height(150),
-                margin(10),
+                width(175),
+                height(175),
                 backgroundColor(state.childOneBackground),
               ]
               onMouseEnter={_ =>
@@ -81,15 +80,14 @@ module HoverExample = {
             />
             <View
               style=Style.[
-                width(150),
-                height(150),
-                margin(10),
+                width(175),
+                height(175),
                 backgroundColor(state.childTwoBackground),
               ]
-              onMouseEnter={_ =>
+              onMouseOver={_ =>
                 dispatch(SetChildTwoBackground(Colors.forestGreen))
               }
-              onMouseLeave={_ =>
+              onMouseOut={_ =>
                 dispatch(
                   SetChildTwoBackground(initialState.childTwoBackground),
                 )
@@ -97,15 +95,14 @@ module HoverExample = {
             />
             <View
               style=Style.[
-                width(150),
-                height(150),
-                margin(10),
+                width(175),
+                height(175),
                 backgroundColor(state.childThreeBackground),
               ]
-              onMouseEnter={_ =>
+              onMouseOver={_ =>
                 dispatch(SetChildThreeBackground(Colors.darkSalmon))
               }
-              onMouseLeave={_ =>
+              onMouseOut={_ =>
                 dispatch(
                   SetChildThreeBackground(initialState.childThreeBackground),
                 )
@@ -113,9 +110,8 @@ module HoverExample = {
             />
             <View
               style=Style.[
-                width(150),
-                height(150),
-                margin(10),
+                width(175),
+                height(175),
                 backgroundColor(state.childFourBackground),
               ]
               onMouseEnter={_ =>
