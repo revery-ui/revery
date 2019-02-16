@@ -32,9 +32,9 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   let size = Window.getSize(window);
   let pixelRatio = Window.getDevicePixelRatio(window);
   let scaleFactor = Monitor.getScaleFactor();
-  print_endline(
-    "Dimension =======================" ++ string_of_int(scaleFactor),
-  );
+  /* print_endline( */
+  /*   "Dimension =======================" ++ string_of_int(scaleFactor), */
+  /* ); */
   let adjustedHeight = size.height / scaleFactor;
   let adjustedWidth = size.width / scaleFactor;
 
@@ -81,7 +81,8 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
       -1000.0,
     );
 
-    let drawContext = NodeDrawContext.create(pixelRatio, 0, 1.0, size.height);
+    let drawContext =
+      NodeDrawContext.create(pixelRatio, 0, 1.0, size.height, scaleFactor);
 
     let solidPass = SolidPass(_projection);
     rootNode#draw(solidPass, drawContext);
