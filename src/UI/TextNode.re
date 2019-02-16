@@ -34,7 +34,7 @@ class textNode (text: string) = {
 
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
-      let lineHeightPx = _this#_getLineHeightPx(parentContext.pixelRatio);
+      let lineHeightPx = _this#_getLineHeightPx(parentContext.pixelRatio, parentContext.scaleFactor);
       let font =
         FontCache.load(
           style.fontFamily,
@@ -138,7 +138,7 @@ class textNode (text: string) = {
       /* TODO: Cache font locally in variable */
       let style = _super#getStyle();
       let textWrap = style.textWrap;
-      let lineHeightPx = _this#_getLineHeightPx(pixelRatio);
+      let lineHeightPx = _this#_getLineHeightPx(pixelRatio, scaleFactor);
       let font =
         FontCache.load(
           style.fontFamily,
@@ -162,19 +162,19 @@ class textNode (text: string) = {
         _lines := lines;
 
         let dimensions: Layout.LayoutTypes.dimensions = {
-          width: int_of_float(float_of_int(maxWidthLine) /. pixelRatio),
+          width: int_of_float(float_of_int(maxWidthLine) /. pixelRatio) / scaleFactor,
           height:
             int_of_float(
               float_of_int(List.length(lines)) *. lineHeightPx /. pixelRatio,
-            ),
+            ) / scaleFactor,
         };
 
         dimensions;
       | NoWrap =>
         let d = FontRenderer.measure(font, text);
         let dimensions: Layout.LayoutTypes.dimensions = {
-          width: int_of_float(float_of_int(d.width) /. pixelRatio),
-          height: int_of_float(lineHeightPx /. pixelRatio),
+          width: int_of_float(float_of_int(d.width) /. pixelRatio) / scaleFactor,
+          height: int_of_float(lineHeightPx /. pixelRatio) / scaleFactor,
         };
 
         _lines := [text];
@@ -201,8 +201,8 @@ class textNode (text: string) = {
     };
     Some(measure);
   };
-  pri _getLineHeightPx = pixelRatio => {
+  pri _getLineHeightPx = (pixelRatio, scaleFactor) => {
     let style = _super#getStyle();
-    style.lineHeight *. float_of_int(style.fontSize) *. pixelRatio;
+    style.lineHeight *. float_of_int(style.fontSize) *. pixelRatio *. float_of_int(scaleFactor);
   };
 };
