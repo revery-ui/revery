@@ -38,7 +38,9 @@ class textNode (text: string) = {
         FontCache.load(
           style.fontFamily,
           int_of_float(
-            float_of_int(style.fontSize) *. parentContext.pixelRatio +. 0.5,
+            float_of_int(style.fontSize * parentContext.scaleFactor)
+            *. parentContext.pixelRatio
+            +. 0.5,
           ),
         );
       let lineHeightPx =
@@ -138,8 +140,9 @@ class textNode (text: string) = {
       let font =
         FontCache.load(
           style.fontFamily,
-          int_of_float(float_of_int(style.fontSize) *. pixelRatio)
-          * scaleFactor,
+          int_of_float(
+            float_of_int(style.fontSize * scaleFactor) *. pixelRatio,
+          ),
         );
 
       let lineHeightPx = _this#_getLineHeightPx(font, pixelRatio);
