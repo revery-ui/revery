@@ -178,8 +178,9 @@ class textNode (text: string) = {
       | NoWrap =>
         let d = FontRenderer.measure(font, text);
         let dimensions: Layout.LayoutTypes.dimensions = {
-          width: int_of_float(float_of_int(d.width) /. pixelRatio),
-          height: int_of_float(lineHeightPx /. pixelRatio),
+          width:
+            int_of_float(float_of_int(d.width) /. pixelRatio) / scaleFactor,
+          height: int_of_float(lineHeightPx /. pixelRatio) / scaleFactor,
         };
 
         _lines := [text];
