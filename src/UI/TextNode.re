@@ -55,9 +55,10 @@ class textNode (text: string) = {
 
       let metrics = FontRenderer.getNormalizedMetrics(font);
 
+      let multiplier =
+        parentContext.pixelRatio *. float_of_int(parentContext.scaleFactor);
       /* Position the baseline */
-      let baseline =
-        (metrics.height -. metrics.descenderSize) /. parentContext.pixelRatio;
+      let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
 
       let outerTransform = Mat4.create();
       Mat4.fromTranslation(outerTransform, Vec3.create(0.0, baseline, 0.0));
@@ -67,11 +68,11 @@ class textNode (text: string) = {
 
         let {width, height, bearingX, bearingY, advance, _} = glyph;
 
-        let width = float_of_int(width) /. parentContext.pixelRatio;
-        let height = float_of_int(height) /. parentContext.pixelRatio;
-        let bearingX = float_of_int(bearingX) /. parentContext.pixelRatio;
-        let bearingY = float_of_int(bearingY) /. parentContext.pixelRatio;
-        let advance = float_of_int(advance) /. parentContext.pixelRatio;
+        let width = float_of_int(width) /. multiplier;
+        let height = float_of_int(height) /. multiplier;
+        let bearingX = float_of_int(bearingX) /. multiplier;
+        let bearingY = float_of_int(bearingY) /. multiplier;
+        let advance = float_of_int(advance) /. multiplier;
 
         Glfw.glPixelStorei(GL_PACK_ALIGNMENT, 1);
         Glfw.glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
