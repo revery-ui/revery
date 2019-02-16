@@ -38,8 +38,9 @@ class textNode (text: string) = {
         FontCache.load(
           style.fontFamily,
           int_of_float(
-            float_of_int(style.fontSize * parentContext.scaleFactor)
+            float_of_int(style.fontSize)
             *. parentContext.pixelRatio
+            *. float_of_int(parentContext.scaleFactor)
             +. 0.5,
           ),
         );
@@ -141,7 +142,9 @@ class textNode (text: string) = {
         FontCache.load(
           style.fontFamily,
           int_of_float(
-            float_of_int(style.fontSize * scaleFactor) *. pixelRatio,
+            float_of_int(style.fontSize)
+            *. pixelRatio
+            *. float_of_int(scaleFactor),
           ),
         );
 

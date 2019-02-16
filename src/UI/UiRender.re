@@ -32,9 +32,6 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   let size = Window.getSize(window);
   let pixelRatio = Window.getDevicePixelRatio(window);
   let scaleFactor = Monitor.getScaleFactor();
-  /* print_endline( */
-  /*   "Dimension =======================" ++ string_of_int(scaleFactor), */
-  /* ); */
   let adjustedHeight = size.height / scaleFactor;
   let adjustedWidth = size.width / scaleFactor;
 
@@ -54,8 +51,8 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
     Layout.layout(rootNode, pixelRatio, scaleFactor);
     let measurements = rootNode#measurements();
     let size: Window.windowSize = {
-      width: measurements.width,
-      height: measurements.height,
+      width: measurements.width / scaleFactor,
+      height: measurements.height / scaleFactor,
     };
     Window.setSize(window, size.width, size.height);
   };
