@@ -50,6 +50,7 @@ class node ('a) (()) = {
       dimensions,
       parentContext.screenHeight,
       parentContext.pixelRatio,
+      parentContext.scaleFactor,
       () => {
         let localContext =
           NodeDrawContext.createFromParent(parentContext, style.opacity);

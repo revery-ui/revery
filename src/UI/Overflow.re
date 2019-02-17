@@ -36,12 +36,13 @@ let _startClipRegion =
       dimensions: LayoutTypes.cssLayout,
       screenHeight: int,
       pixelRatio: float,
+      scaleFactor: int,
     ) => {
   let min = Vec2.create(0., 0.);
   let max =
     Vec2.create(
-      float_of_int(dimensions.width),
-      float_of_int(dimensions.height),
+      float_of_int(dimensions.width * scaleFactor),
+      float_of_int(dimensions.height * scaleFactor),
     );
   let b = BoundingBox2d.create(min, max);
   let bbox = BoundingBox2d.transform(b, worldTransform);
@@ -51,6 +52,10 @@ let _startClipRegion =
   let maxX = Vec2.get_x(bbox.max);
   let maxY = Vec2.get_y(bbox.max);
 
+  /**
+     TODO: Should scaleFactor be applied to the values below as well as pixelRatio
+     let multiplier = pixelRatio *. float_of_int(scaleFactor)
+   */
   let x = int_of_float(minX *. pixelRatio);
 
   let y = int_of_float(pixelRatio *. (float_of_int(screenHeight) -. maxY));
@@ -72,10 +77,11 @@ let render =
       dimensions: LayoutTypes.cssLayout,
       screenHeight: int,
       pixelRatio: float,
+      scaleFactor: int,
       r: renderCallback,
     ) => {
   if (overflow == LayoutTypes.Hidden || overflow == LayoutTypes.Scroll) {
-    _startClipRegion(worldTransform, dimensions, screenHeight, pixelRatio);
+    _startClipRegion(worldTransform, dimensions, screenHeight, pixelRatio, scaleFactor);
   };
 
   r();
