@@ -54,6 +54,9 @@ Install the following packages with your package manager of choice:
 * `m4`
 * `xorg-dev`
 * `libglu1-mesa-dev`
+* `libharfbuzz-dev`
+> __NOTE:__ `reason-fontkit` (a dependency of `revery`) requires `harfbuzz` 1.7.7+.
+
 
 #### For `Windows` native
 
