@@ -164,7 +164,7 @@ module TreeView = {
             marginLeft(indent * 20),
             color(Colors.rebeccaPurple),
             fontFamily("Roboto-Regular.ttf"),
-            fontSize(20),
+            fontSize(10),
           ]
         />,
     );
@@ -187,7 +187,7 @@ module TreeView = {
       Style.[
         color(Colors.black),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(15),
+        fontSize(10),
       ];
     <View
       style=Style.[
@@ -195,8 +195,8 @@ module TreeView = {
         alignItems(`Center),
         marginLeft(indent * 30),
         backgroundColor(Colors.white),
-        width(120),
-        height(60),
+        width(80),
+        height(40),
         marginVertical(5),
         boxShadow(
           ~xOffset=-6.,
@@ -215,31 +215,30 @@ module TreeView = {
 let titleStyles =
   Style.[
     fontFamily("Roboto-Regular.ttf"),
-    fontSize(20),
+    fontSize(15),
     color(Colors.white),
     marginVertical(10),
   ];
 
-let render = window => {
-  let dimensions = Window.getSize(window);
-  let w = dimensions.width;
-  let h = dimensions.height;
-
+let render = _w => {
   let exampleContainer =
     Style.[
-      height(h / 2),
       flexDirection(`Column),
-      justifyContent(`FlexStart),
+      justifyContent(`Center),
       alignItems(`Center),
-      marginHorizontal(50),
+      width(200),
     ];
   <View
     style=Style.[
+      paddingTop(10),
       justifyContent(`Center),
-      alignItems(`Center),
+      alignItems(`FlexStart),
       flexDirection(`Row),
-      height(h),
-      width(w),
+      position(`Absolute),
+      top(0),
+      right(0),
+      left(0),
+      bottom(0),
     ]>
     <View style=exampleContainer>
       <Text style=titleStyles text="Custom Renderer" />

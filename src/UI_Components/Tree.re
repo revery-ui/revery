@@ -25,7 +25,7 @@ let component = React.component("Tree");
 
 let defaultNodeStyles = Style.[flexDirection(`Row), marginVertical(5)];
 
-let rec findNode = (nodeID, tr) => {
+let rec findNode = (nodeID, tr) =>
   switch (tr) {
   | Empty => None
   | Node({id, _} as x, _) when nodeID == id => Some(x)
@@ -46,7 +46,6 @@ let rec findNode = (nodeID, tr) => {
       )
     };
   };
-};
 
 let default = (~indent, {data, status, _}) => {
   let isOpen =
@@ -55,7 +54,7 @@ let default = (~indent, {data, status, _}) => {
     | Closed => false
     };
   open Style;
-  let textStyles = [fontSize(20), color(Colors.black)];
+  let textStyles = [fontSize(10), color(Colors.black)];
   let indentStr = String.make(indent * 2, ' ');
   let arrow = isOpen ? {||} : {||};
   <Clickable>
