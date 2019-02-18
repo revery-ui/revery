@@ -66,9 +66,7 @@ let _startClipRegion =
   Glfw.glScissor(x, y, width, height);
 };
 
-let _endClipRegion = () => {
-  Glfw.glDisable(GL_SCISSOR_TEST);
-};
+let _endClipRegion = () => Glfw.glDisable(GL_SCISSOR_TEST);
 
 let render =
     (
@@ -81,7 +79,13 @@ let render =
       r: renderCallback,
     ) => {
   if (overflow == LayoutTypes.Hidden || overflow == LayoutTypes.Scroll) {
-    _startClipRegion(worldTransform, dimensions, screenHeight, pixelRatio, scaleFactor);
+    _startClipRegion(
+      worldTransform,
+      dimensions,
+      screenHeight,
+      pixelRatio,
+      scaleFactor,
+    );
   };
 
   r();
