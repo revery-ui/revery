@@ -195,6 +195,6 @@ class textNode (text: string) = {
   };
   pri _getLineHeightPx = pixelRatio => {
     let style = _super#getStyle();
-    style.lineHeight *. float_of_int(style.fontSize) *. pixelRatio;
+    style.lineHeight *. float_of_int(style.fontSize) /. pixelRatio;
   };
 };
