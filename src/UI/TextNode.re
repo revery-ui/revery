@@ -155,10 +155,10 @@ class textNode (text: string) = {
         _lines := lines;
 
         let dimensions: Layout.LayoutTypes.dimensions = {
-          width: int_of_float(float_of_int(maxWidthLine) /. pixelRatio),
+          width: int_of_float(float_of_int(maxWidthLine)),
           height:
             int_of_float(
-              float_of_int(List.length(lines)) *. lineHeightPx /. pixelRatio,
+              float_of_int(List.length(lines)) *. lineHeightPx,
             ),
         };
 
