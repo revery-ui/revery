@@ -34,7 +34,6 @@ class textNode (text: string) = {
 
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
-      let lineHeightPx = _this#_getLineHeightPx(parentContext.pixelRatio);
       let font =
         FontCache.load(
           style.fontFamily,
@@ -42,6 +41,7 @@ class textNode (text: string) = {
             float_of_int(style.fontSize) *. parentContext.pixelRatio +. 0.5,
           ),
         );
+      let lineHeightPx = _this#_getLineHeightPx(font, parentContext.pixelRatio);
       let color = Color.multiplyAlpha(opacity, style.color);
       Shaders.CompiledShader.setUniform4fv(
         textureShader,
@@ -134,12 +134,13 @@ class textNode (text: string) = {
       /* TODO: Cache font locally in variable */
       let style = _super#getStyle();
       let textWrap = style.textWrap;
-      let lineHeightPx = _this#_getLineHeightPx(pixelRatio);
       let font =
         FontCache.load(
           style.fontFamily,
           int_of_float(float_of_int(style.fontSize) *. pixelRatio),
         );
+
+      let lineHeightPx = _this#_getLineHeightPx(font, pixelRatio);
 
       switch (textWrap) {
       | WhitespaceWrap =>
@@ -193,8 +194,9 @@ class textNode (text: string) = {
     };
     Some(measure);
   };
-  pri _getLineHeightPx = pixelRatio => {
+  pri _getLineHeightPx = (font, pixelRatio) => {
     let style = _super#getStyle();
-    style.lineHeight *. float_of_int(style.fontSize) /. pixelRatio;
+    let metrics = FontRenderer.getNormalizedMetrics(font);
+    style.lineHeight *. metrics.height /. pixelRatio;
   };
 };
