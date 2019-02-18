@@ -41,8 +41,8 @@ let _startClipRegion =
   let min = Vec2.create(0., 0.);
   let max =
     Vec2.create(
-      float_of_int(dimensions.width * scaleFactor),
-      float_of_int(dimensions.height * scaleFactor),
+      float_of_int(dimensions.width),
+      float_of_int(dimensions.height),
     );
   let b = BoundingBox2d.create(min, max);
   let bbox = BoundingBox2d.transform(b, worldTransform);
@@ -63,7 +63,7 @@ let _startClipRegion =
   let height = int_of_float(pixelRatio *. (maxY -. minY));
 
   Glfw.glEnable(GL_SCISSOR_TEST);
-  Glfw.glScissor(x, y, width, height);
+  Glfw.glScissor(x * scaleFactor, y * scaleFactor, width * scaleFactor, height * scaleFactor);
 };
 
 let _endClipRegion = () => Glfw.glDisable(GL_SCISSOR_TEST);
