@@ -45,7 +45,11 @@ class textNode (text: string) = {
           ),
         );
       let lineHeightPx =
-        _this#_getLineHeightPx(font, parentContext.pixelRatio);
+        _this#_getLineHeightPx(
+          font,
+          parentContext.pixelRatio,
+          parentContext.scaleFactor,
+        );
       let color = Color.multiplyAlpha(opacity, style.color);
       Shaders.CompiledShader.setUniform4fv(
         textureShader,
@@ -149,7 +153,8 @@ class textNode (text: string) = {
           ),
         );
 
-      let lineHeightPx = _this#_getLineHeightPx(font, pixelRatio);
+      let lineHeightPx =
+        _this#_getLineHeightPx(font, pixelRatio, scaleFactor);
 
       switch (textWrap) {
       | WhitespaceWrap =>
@@ -160,7 +165,8 @@ class textNode (text: string) = {
               str =>
                 int_of_float(
                   float_of_int(FontRenderer.measure(font, str).width)
-                  /. pixelRatio,
+                  /. pixelRatio
+                  /. float_of_int(scaleFactor),
                 ),
             ~maxWidth=width,
             ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
@@ -207,9 +213,12 @@ class textNode (text: string) = {
     };
     Some(measure);
   };
-  pri _getLineHeightPx = (font, pixelRatio) => {
+  pri _getLineHeightPx = (font, pixelRatio, scaleFactor) => {
     let style = _super#getStyle();
     let metrics = FontRenderer.getNormalizedMetrics(font);
-    style.lineHeight *. metrics.height /. pixelRatio;
+    style.lineHeight
+    *. metrics.height
+    /. pixelRatio
+    /. float_of_int(scaleFactor);
   };
 };
