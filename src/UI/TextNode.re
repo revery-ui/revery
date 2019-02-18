@@ -146,7 +146,7 @@ class textNode (text: string) = {
         let (lines, maxWidthLine) =
           TextWrapping.wrapText(
             ~text,
-            ~measureWidth=str => FontRenderer.measure(font, str).width,
+            ~measureWidth=str => int_of_float(float_of_int(FontRenderer.measure(font, str).width) /. pixelRatio),
             ~maxWidth=width,
             ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
           );
