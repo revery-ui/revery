@@ -6,7 +6,7 @@ open UiEvents;
 let createNodeWithStyle = style => {
   let node = (new node)();
   node#setStyle(style);
-  Layout.layout(node, 1.0);
+  Layout.layout(node, 1.0, 1);
   node#recalculate();
   node;
 };
