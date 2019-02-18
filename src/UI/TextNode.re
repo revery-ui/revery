@@ -41,7 +41,8 @@ class textNode (text: string) = {
             float_of_int(style.fontSize) *. parentContext.pixelRatio +. 0.5,
           ),
         );
-      let lineHeightPx = _this#_getLineHeightPx(font, parentContext.pixelRatio);
+      let lineHeightPx =
+        _this#_getLineHeightPx(font, parentContext.pixelRatio);
       let color = Color.multiplyAlpha(opacity, style.color);
       Shaders.CompiledShader.setUniform4fv(
         textureShader,
@@ -147,7 +148,12 @@ class textNode (text: string) = {
         let (lines, maxWidthLine) =
           TextWrapping.wrapText(
             ~text,
-            ~measureWidth=str => int_of_float(float_of_int(FontRenderer.measure(font, str).width) /. pixelRatio),
+            ~measureWidth=
+              str =>
+                int_of_float(
+                  float_of_int(FontRenderer.measure(font, str).width)
+                  /. pixelRatio,
+                ),
             ~maxWidth=width,
             ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
           );
@@ -157,9 +163,7 @@ class textNode (text: string) = {
         let dimensions: Layout.LayoutTypes.dimensions = {
           width: int_of_float(float_of_int(maxWidthLine)),
           height:
-            int_of_float(
-              float_of_int(List.length(lines)) *. lineHeightPx,
-            ),
+            int_of_float(float_of_int(List.length(lines)) *. lineHeightPx),
         };
 
         dimensions;
