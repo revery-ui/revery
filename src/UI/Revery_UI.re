@@ -69,32 +69,6 @@ let start =
     );
 
   let _ =
-    Revery_Core__Event.subscribe(
-      window.onMouseEnter,
-      m => {
-        let evt =
-          Revery_Core.Events.InternalMouseEnter({
-            mouseX: m.mouseX,
-            mouseY: m.mouseY,
-          });
-        Mouse.dispatch(mouseCursor, evt, rootNode);
-      },
-    );
-
-  let _ =
-    Revery_Core__Event.subscribe(
-      window.onMouseLeave,
-      m => {
-        let evt =
-          Revery_Core.Events.InternalMouseLeave({
-            mouseX: m.mouseX,
-            mouseY: m.mouseY,
-          });
-        Mouse.dispatch(mouseCursor, evt, rootNode);
-      },
-    );
-
-  let _ =
     Revery_Core.Event.subscribe(
       window.onMouseDown,
       m => {

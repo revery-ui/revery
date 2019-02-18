@@ -196,7 +196,7 @@ let rec sendMouseEnterEvents = (deepestNode, evtParams) => {
   };
 };
 
-let rec handleMouseEnterDiff = (deepestNode, newNodes, evtParams) => {
+let rec handleMouseEnterDiff = (deepestNode, evtParams, ~newNodes=[], ()) => {
   let nodeExists =
     List.exists(
       node => node#getInternalId() == deepestNode#getInternalId(),
@@ -274,7 +274,12 @@ let rec handleMouseEnterDiff = (deepestNode, newNodes, evtParams) => {
 
       storedNodesUnderCursor := newNodes @ [deepestNode];
     | Some(parent) =>
-      handleMouseEnterDiff(parent, newNodes @ [deepestNode], evtParams)
+      handleMouseEnterDiff(
+        parent,
+        evtParams,
+        ~newNodes=newNodes @ [deepestNode],
+        (),
+      )
     };
   };
 };
@@ -336,8 +341,15 @@ let dispatch =
                   */
               sendMouseEnterEvents(deepNode, mouseMoveEventParams);
               bubble(deepNode, MouseOver(mouseMoveEventParams));
-            | [_, ..._xs] =>
-              handleMouseEnterDiff(deepNode, [], mouseMoveEventParams)
+            | [node, ..._tail] =>
+              /**
+             * Only handle diff if the deepestStoredNode !==  the deepestFoundNode
+             */
+              (
+                if (node#getInternalId() != deepNode#getInternalId()) {
+                  handleMouseEnterDiff(deepNode, mouseMoveEventParams, ());
+                }
+              )
             }
           };
         };
