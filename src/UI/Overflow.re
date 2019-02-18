@@ -52,15 +52,12 @@ let _startClipRegion =
   let maxX = Vec2.get_x(bbox.max);
   let maxY = Vec2.get_y(bbox.max);
 
-  /**
-     TODO: Should scaleFactor be applied to the values below as well as pixelRatio
-     let multiplier = pixelRatio *. float_of_int(scaleFactor)
-   */
-  let x = int_of_float(minX *. pixelRatio);
+  let multiplier = pixelRatio *. float_of_int(scaleFactor);
+  let x = int_of_float(minX *. multiplier);
 
-  let y = int_of_float(pixelRatio *. (float_of_int(screenHeight) -. maxY));
-  let width = int_of_float(pixelRatio *. (maxX -. minX));
-  let height = int_of_float(pixelRatio *. (maxY -. minY));
+  let y = int_of_float(multiplier *. (float_of_int(screenHeight) -. maxY));
+  let width = int_of_float(multiplier *. (maxX -. minX));
+  let height = int_of_float(multiplier *. (maxY -. minY));
 
   Glfw.glEnable(GL_SCISSOR_TEST);
   Glfw.glScissor(x, y, width, height);
