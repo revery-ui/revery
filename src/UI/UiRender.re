@@ -79,7 +79,7 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
     );
 
     let drawContext =
-      NodeDrawContext.create(pixelRatio, 0, 1.0, size.height, scaleFactor);
+      NodeDrawContext.create(pixelRatio, 0, 1.0, adjustedHeight, scaleFactor);
 
     let solidPass = SolidPass(_projection);
     rootNode#draw(solidPass, drawContext);
