@@ -204,7 +204,7 @@ let rec handleMouseEnterDiff = (deepestNode, evtParams, ~newNodes=[], ()) => {
     );
 
   if (nodeExists) {
-    /**
+    /*
      * Save currentlyStoredNodes up until that point (So need to go through list and find point at which the new and old tree intersect)
      * MouseEnter/MouseLeave evnets
      */
@@ -229,12 +229,12 @@ let rec handleMouseEnterDiff = (deepestNode, evtParams, ~newNodes=[], ()) => {
       switch (newNodes) {
       | [] =>
         if (deepestNode#getInternalId()
-            != List.nth(listOfNodes, 0)#getInternalId()) {
-          bubble(List.nth(listOfNodes, 0), MouseOut(evtParams));
+            != List.hd(listOfNodes)#getInternalId()) {
+          bubble(List.hd(listOfNodes), MouseOut(evtParams));
           bubble(deepestNode, MouseOver(evtParams));
         }
       | [node, ..._tail] =>
-        bubble(List.nth(listOfNodes, 0), MouseOut(evtParams));
+        bubble(List.hd(listOfNodes), MouseOut(evtParams));
         bubble(node, MouseOver(evtParams));
       };
     };
@@ -242,17 +242,17 @@ let rec handleMouseEnterDiff = (deepestNode, evtParams, ~newNodes=[], ()) => {
     handleMouseOverDiff(storedNodesUnderCursor^);
     loopThroughStoredNodesUnderCursor(storedNodesUnderCursor^);
   } else {
-    /**
-     *  1. Get parent if node is not found in currentlyStoredNodes
-     *  2. If no parent, replace currently stored nodes entirely with new tree
-     *  3. If parent found, call function again
+    /*
+     * 1. Get parent if node is not found in currentlyStoredNodes
+     * 2. If no parent, replace currently stored nodes entirely with new tree
+     * 3. If parent found, call function again
      */
     let parent = deepestNode#getParent();
     switch (parent) {
     | None =>
-      /**
-     *  MouseEnter/Leave events
-     */
+      /*
+       * MouseEnter/Leave events
+       */
       List.iter(
         node => node#handleEvent(MouseLeave(evtParams)),
         storedNodesUnderCursor^,
@@ -263,10 +263,10 @@ let rec handleMouseEnterDiff = (deepestNode, evtParams, ~newNodes=[], ()) => {
         [deepestNode, ...newNodes],
       );
 
-      /**
+      /*
        * MouseOver/Out Events
        */
-      bubble(List.nth(storedNodesUnderCursor^, 0), MouseOut(evtParams));
+      bubble(List.hd(storedNodesUnderCursor^), MouseOut(evtParams));
       switch (newNodes) {
       | [] => bubble(deepestNode, MouseOver(evtParams))
       | [node, ..._tail] => bubble(node, MouseOver(evtParams))
@@ -314,17 +314,14 @@ let dispatch =
 
           switch (deepestNode^) {
           | None =>
-            /**
+            /*
              * if no node found, call bubbled MouseOut on deepestStoredNode if there's some stored nodes
              * And recursively send mouseLeave events to storedNodes if they exist
              */
-            (
-              switch (storedNodesUnderCursor^) {
-              | [] => ()
-              | [node, ..._tail] =>
-                bubble(node, MouseOut(mouseMoveEventParams))
-              }
-            );
+            switch (storedNodesUnderCursor^) {
+            | [] => ()
+            | [node, ..._] => bubble(node, MouseOut(mouseMoveEventParams))
+            };
 
             sendMouseLeaveEvents(
               storedNodesUnderCursor^,
@@ -334,22 +331,20 @@ let dispatch =
           | Some(deepNode) =>
             switch (storedNodesUnderCursor^) {
             | [] =>
-              /**
-                  * If some deepNode is found and there aer no storedNodes
-                  * Traverse the tree and call MouseEnter on each  node -  https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
-                  * And call bubbled MouseOver on deepNode
-                  */
+              /*
+               * If some deepNode is found and there aer no storedNodes
+               * Traverse the tree and call MouseEnter on each  node -  https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
+               * And call bubbled MouseOver on deepNode
+               */
               sendMouseEnterEvents(deepNode, mouseMoveEventParams);
               bubble(deepNode, MouseOver(mouseMoveEventParams));
-            | [node, ..._tail] =>
-              /**
-             * Only handle diff if the deepestStoredNode !==  the deepestFoundNode
-             */
-              (
-                if (node#getInternalId() != deepNode#getInternalId()) {
-                  handleMouseEnterDiff(deepNode, mouseMoveEventParams, ());
-                }
-              )
+            | [node, ..._] =>
+              /*
+               * Only handle diff if the deepestStoredNode !==  the deepestFoundNode
+               */
+              if (node#getInternalId() != deepNode#getInternalId()) {
+                handleMouseEnterDiff(deepNode, mouseMoveEventParams, ());
+              }
             }
           };
         };
