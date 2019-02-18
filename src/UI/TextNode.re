@@ -34,11 +34,6 @@ class textNode (text: string) = {
 
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
-      let lineHeightPx =
-        _this#_getLineHeightPx(
-          parentContext.pixelRatio,
-          parentContext.scaleFactor,
-        );
       let font =
         FontCache.load(
           style.fontFamily,
@@ -48,6 +43,12 @@ class textNode (text: string) = {
             *. float_of_int(parentContext.scaleFactor)
             +. 0.5,
           ),
+        );
+      let lineHeightPx =
+        _this#_getLineHeightPx(
+          font,
+          parentContext.pixelRatio,
+          parentContext.scaleFactor,
         );
       let color = Color.multiplyAlpha(opacity, style.color);
       Shaders.CompiledShader.setUniform4fv(
@@ -142,7 +143,6 @@ class textNode (text: string) = {
       /* TODO: Cache font locally in variable */
       let style = _super#getStyle();
       let textWrap = style.textWrap;
-      let lineHeightPx = _this#_getLineHeightPx(pixelRatio, scaleFactor);
       let font =
         FontCache.load(
           style.fontFamily,
@@ -153,12 +153,21 @@ class textNode (text: string) = {
           ),
         );
 
+      let lineHeightPx =
+        _this#_getLineHeightPx(font, pixelRatio, scaleFactor);
+
       switch (textWrap) {
       | WhitespaceWrap =>
         let (lines, maxWidthLine) =
           TextWrapping.wrapText(
             ~text,
-            ~measureWidth=str => FontRenderer.measure(font, str).width,
+            ~measureWidth=
+              str =>
+                int_of_float(
+                  float_of_int(FontRenderer.measure(font, str).width)
+                  /. pixelRatio
+                  /. float_of_int(scaleFactor),
+                ),
             ~maxWidth=width,
             ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
           );
@@ -166,14 +175,9 @@ class textNode (text: string) = {
         _lines := lines;
 
         let dimensions: Layout.LayoutTypes.dimensions = {
-          width:
-            int_of_float(float_of_int(maxWidthLine) /. pixelRatio)
-            / scaleFactor,
+          width: int_of_float(float_of_int(maxWidthLine)),
           height:
-            int_of_float(
-              float_of_int(List.length(lines)) *. lineHeightPx /. pixelRatio,
-            )
-            / scaleFactor,
+            int_of_float(float_of_int(List.length(lines)) *. lineHeightPx),
         };
 
         dimensions;
@@ -209,11 +213,12 @@ class textNode (text: string) = {
     };
     Some(measure);
   };
-  pri _getLineHeightPx = (pixelRatio, scaleFactor) => {
+  pri _getLineHeightPx = (font, pixelRatio, scaleFactor) => {
     let style = _super#getStyle();
+    let metrics = FontRenderer.getNormalizedMetrics(font);
     style.lineHeight
-    *. float_of_int(style.fontSize)
-    *. pixelRatio
-    *. float_of_int(scaleFactor);
+    *. metrics.height
+    /. pixelRatio
+    /. float_of_int(scaleFactor);
   };
 };
