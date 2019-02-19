@@ -21,10 +21,11 @@ let getScaleFactor = () => {
   let avgDPI = (dpiW +. dpiH) /. 2.0;
   let rawScaleFactor = avgDPI /. 96.;
   /**
-     int_of_float aggressively shaves off any fractional values so we round the value first
-     e.g. int_of_float 2.93 results in 2
+     NOTE: int_of_float aggressively shaves off any fractional values
+     e.g. int_of_float 2.93 results in 2, this means the dpi we calculate
+     is rounded down
    */
-  let scaleFactor = int_of_float(floor(rawScaleFactor +. 0.5));
+  let scaleFactor = int_of_float(rawScaleFactor);
   scaleFactor >= 1 ? scaleFactor : 1;
 };
 
