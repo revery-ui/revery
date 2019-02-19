@@ -31,7 +31,6 @@ open UiContainer;
 
 let start =
     (
-      ~createOptions=UiContainer.Options.default,
       window: Window.t,
       render: renderFunction,
     ) => {
@@ -52,7 +51,6 @@ let start =
       rootNode,
       container,
       mouseCursor,
-      createOptions,
     );
 
   let scaleFactor = Revery_Core.Monitor.getScaleFactor();

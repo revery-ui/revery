@@ -158,7 +158,7 @@ let init = app => {
     </View>;
   };
 
-  UI.start(~createOptions={autoSize: true}, w, render);
+  UI.start(w, render);
 };
 
 App.startWithState(initialState, reducer, init);

@@ -19,7 +19,7 @@ open RenderPass;
 let _projection = Mat4.create();
 
 let render = (container: UiContainer.t, component: UiReact.syntheticElement) => {
-  let {rootNode, window, container, options, _} = container;
+  let {rootNode, window, container, _} = container;
 
   AnimationTicker.tick();
 
@@ -35,27 +35,15 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   let adjustedHeight = size.height / scaleFactor;
   let adjustedWidth = size.width / scaleFactor;
 
-  switch (options.autoSize) {
-  | false =>
-    rootNode#setStyle(
-      Style.make(
-        ~position=LayoutTypes.Relative,
-        ~width=adjustedWidth,
-        ~height=adjustedHeight,
-        (),
-      ),
-    );
-    Layout.layout(rootNode, pixelRatio, scaleFactor);
-  | true =>
-    rootNode#setStyle(Style.make());
-    Layout.layout(rootNode, pixelRatio, scaleFactor);
-    let measurements = rootNode#measurements();
-    let size: Window.windowSize = {
-      width: measurements.width / scaleFactor,
-      height: measurements.height / scaleFactor,
-    };
-    Window.setSize(window, size.width, size.height);
-  };
+rootNode#setStyle(
+  Style.make(
+    ~position=LayoutTypes.Relative,
+    ~width=adjustedWidth,
+    ~height=adjustedHeight,
+    (),
+  ),
+);
+Layout.layout(rootNode, pixelRatio, scaleFactor);
 
   /* Recalculate cached parameters */
   Performance.bench("recalculate", () => rootNode#recalculate());
