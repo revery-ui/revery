@@ -111,7 +111,6 @@ let createElement =
                 fontSize(30),
                 color(Colors.black),
                 fontFamily("FontAwesome5FreeSolid.otf"),
-                marginTop(17),
                 paddingRight(5),
                 alignSelf(`Center),
               ]
