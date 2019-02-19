@@ -1,0 +1,20 @@
+{
+    "source": "./package.json",
+    "override": {
+      "build": [
+        "dune build examples/Examples.bc.js"
+      ],
+      "buildsInSource": "_build",
+      "dependencies": {
+        "@opam/js_of_ocaml": "*",
+        "@opam/js_of_ocaml-compiler": "*",
+        "@opam/js_of_ocaml-lwt": "*"
+      },
+      "resolutions": {
+        "rebez": "github:jchavarri/rebez#46cbc183",
+        "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
+        "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
+        "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#daa00be"
+      }
+    }
+}
