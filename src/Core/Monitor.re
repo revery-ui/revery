@@ -18,8 +18,13 @@ let getScaleFactor = () => {
   let physicalSize = Glfw.glfwGetMonitorPhysicalSize(monitor);
   let dpiH = calculateDPI(vidMode.height, physicalSize.height);
   let dpiW = calculateDPI(vidMode.width, physicalSize.width);
-  let avgDPI = dpiW +. dpiH /. 2.0;
-  let scaleFactor = int_of_float(avgDPI) / 96;
+  let avgDPI = (dpiW +. dpiH) /. 2.0;
+  let rawScaleFactor = avgDPI /. 96.;
+  /**
+     int_of_float aggressively shaves off any fractional values so we round the value first
+     e.g. int_of_float 2.93 results in 2
+   */
+  let scaleFactor = int_of_float(floor(rawScaleFactor +. 0.5));
   scaleFactor >= 1 ? scaleFactor : 1;
 };
 
