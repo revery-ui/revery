@@ -29,11 +29,7 @@ type renderFunction = unit => UiReact.syntheticElement;
 
 open UiContainer;
 
-let start =
-    (
-      window: Window.t,
-      render: renderFunction,
-    ) => {
+let start = (window: Window.t, render: renderFunction) => {
   let uiDirty = ref(false);
 
   let onStale = () => {
@@ -45,13 +41,7 @@ let start =
   let rootNode = (new viewNode)();
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
   let container = React.Container.create(rootNode);
-  let ui =
-    UiContainer.create(
-      window,
-      rootNode,
-      container,
-      mouseCursor,
-    );
+  let ui = UiContainer.create(window, rootNode, container, mouseCursor);
 
   let scaleFactor = Revery_Core.Monitor.getScaleFactor();
 

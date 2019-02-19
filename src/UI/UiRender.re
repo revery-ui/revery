@@ -35,15 +35,15 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   let adjustedHeight = size.height / scaleFactor;
   let adjustedWidth = size.width / scaleFactor;
 
-rootNode#setStyle(
-  Style.make(
-    ~position=LayoutTypes.Relative,
-    ~width=adjustedWidth,
-    ~height=adjustedHeight,
-    (),
-  ),
-);
-Layout.layout(rootNode, pixelRatio, scaleFactor);
+  rootNode#setStyle(
+    Style.make(
+      ~position=LayoutTypes.Relative,
+      ~width=adjustedWidth,
+      ~height=adjustedHeight,
+      (),
+    ),
+  );
+  Layout.layout(rootNode, pixelRatio, scaleFactor);
 
   /* Recalculate cached parameters */
   Performance.bench("recalculate", () => rootNode#recalculate());
