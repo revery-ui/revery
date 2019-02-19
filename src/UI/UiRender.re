@@ -1,7 +1,7 @@
 /*
  * UiRender.re
  *
- * Core render logic for a UI bound toa Window
+ * Core render logic for a UI bound to a Window
  */
 
 open Reglfw.Glfw;
@@ -31,25 +31,28 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
   /* Layout */
   let size = Window.getSize(window);
   let pixelRatio = Window.getDevicePixelRatio(window);
+  let scaleFactor = Monitor.getScaleFactor();
+  let adjustedHeight = size.height / scaleFactor;
+  let adjustedWidth = size.width / scaleFactor;
 
   switch (options.autoSize) {
   | false =>
     rootNode#setStyle(
       Style.make(
         ~position=LayoutTypes.Relative,
-        ~width=size.width,
-        ~height=size.height,
+        ~width=adjustedWidth,
+        ~height=adjustedHeight,
         (),
       ),
     );
-    Layout.layout(rootNode, pixelRatio);
+    Layout.layout(rootNode, pixelRatio, scaleFactor);
   | true =>
     rootNode#setStyle(Style.make());
-    Layout.layout(rootNode, pixelRatio);
+    Layout.layout(rootNode, pixelRatio, scaleFactor);
     let measurements = rootNode#measurements();
     let size: Window.windowSize = {
-      width: measurements.width,
-      height: measurements.height,
+      width: measurements.width / scaleFactor,
+      height: measurements.height / scaleFactor,
     };
     Window.setSize(window, size.width, size.height);
   };
@@ -68,14 +71,15 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
     Mat4.ortho(
       _projection,
       0.0,
-      float_of_int(size.width),
-      float_of_int(size.height),
+      float_of_int(adjustedWidth),
+      float_of_int(adjustedHeight),
       0.0,
       1000.0,
       -1000.0,
     );
 
-    let drawContext = NodeDrawContext.create(pixelRatio, 0, 1.0, size.height);
+    let drawContext =
+      NodeDrawContext.create(pixelRatio, 0, 1.0, adjustedHeight, scaleFactor);
 
     let solidPass = SolidPass(_projection);
     rootNode#draw(solidPass, drawContext);

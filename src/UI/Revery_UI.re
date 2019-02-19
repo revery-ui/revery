@@ -55,14 +55,16 @@ let start =
       createOptions,
     );
 
+  let scaleFactor = Revery_Core.Monitor.getScaleFactor();
+
   let _ =
     Revery_Core.Event.subscribe(
       window.onMouseMove,
       m => {
         let evt =
           Revery_Core.Events.InternalMouseMove({
-            mouseX: m.mouseX,
-            mouseY: m.mouseY,
+            mouseX: m.mouseX /. float_of_int(scaleFactor),
+            mouseY: m.mouseY /. float_of_int(scaleFactor),
           });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },

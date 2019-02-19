@@ -31,9 +31,9 @@ let createNodeWithMeasure = (children, style, measure) =>
     ~andMeasure=measure,
     rootContext,
   );
-let layout = (node, pixelRatio) =>
+let layout = (node, pixelRatio, scaleFactor) =>
   Performance.bench("layout", () => {
-    let layoutNode = node#toLayoutNode(pixelRatio);
+    let layoutNode = node#toLayoutNode(pixelRatio, scaleFactor);
     Layout.layoutNode(
       layoutNode,
       Encoding.cssUndefined,

@@ -36,6 +36,7 @@ let _startClipRegion =
       dimensions: LayoutTypes.cssLayout,
       screenHeight: int,
       pixelRatio: float,
+      scaleFactor: int,
     ) => {
   let min = Vec2.create(0., 0.);
   let max =
@@ -58,12 +59,15 @@ let _startClipRegion =
   let height = int_of_float(pixelRatio *. (maxY -. minY));
 
   Glfw.glEnable(GL_SCISSOR_TEST);
-  Glfw.glScissor(x, y, width, height);
+  Glfw.glScissor(
+    x * scaleFactor,
+    y * scaleFactor,
+    width * scaleFactor,
+    height * scaleFactor,
+  );
 };
 
-let _endClipRegion = () => {
-  Glfw.glDisable(GL_SCISSOR_TEST);
-};
+let _endClipRegion = () => Glfw.glDisable(GL_SCISSOR_TEST);
 
 let render =
     (
@@ -72,10 +76,17 @@ let render =
       dimensions: LayoutTypes.cssLayout,
       screenHeight: int,
       pixelRatio: float,
+      scaleFactor: int,
       r: renderCallback,
     ) => {
   if (overflow == LayoutTypes.Hidden || overflow == LayoutTypes.Scroll) {
-    _startClipRegion(worldTransform, dimensions, screenHeight, pixelRatio);
+    _startClipRegion(
+      worldTransform,
+      dimensions,
+      screenHeight,
+      pixelRatio,
+      scaleFactor,
+    );
   };
 
   r();
