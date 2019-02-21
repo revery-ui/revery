@@ -1,5 +1,5 @@
 {
-  "checksum": "5a1060df4acff7afa98c7d494d7afb7f",
+  "checksum": "603c89403228b050eb1226e2cd3d7d95",
   "root": "revery@link-dev:./package.json",
   "node": {
     "revery@link-dev:./package.json": {
@@ -14,7 +14,7 @@
       "overrides": [],
       "dependencies": [
         "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9",
-        "reason-glfw@3.2.1017@d41d8cd9",
+        "reason-glfw@3.2.1018@d41d8cd9",
         "reason-gl-matrix@0.9.9303@d41d8cd9",
         "reason-fontkit@2.2.1@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
         "flex@1.2.2@d41d8cd9", "@opam/lwt_ppx@opam:1.2.1@db1172a7",
@@ -87,14 +87,14 @@
       ],
       "devDependencies": []
     },
-    "reason-glfw@3.2.1017@d41d8cd9": {
-      "id": "reason-glfw@3.2.1017@d41d8cd9",
+    "reason-glfw@3.2.1018@d41d8cd9": {
+      "id": "reason-glfw@3.2.1018@d41d8cd9",
       "name": "reason-glfw",
-      "version": "3.2.1017",
+      "version": "3.2.1018",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-glfw/-/reason-glfw-3.2.1017.tgz#sha1:b88358b2596e0ceb5b30ad029fb606cc2498c5d1"
+          "archive:https://registry.npmjs.org/reason-glfw/-/reason-glfw-3.2.1018.tgz#sha1:03dd15763b10c0910095a766e899f6d34c7080a7"
         ]
       },
       "overrides": [],
@@ -141,7 +141,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.1.10@d41d8cd9", "reason-glfw@3.2.1017@d41d8cd9",
+        "refmterr@3.1.10@d41d8cd9", "reason-glfw@3.2.1018@d41d8cd9",
         "reason-gl-matrix@0.9.9303@d41d8cd9",
         "esy-harfbuzz@1.9.1005@d41d8cd9", "esy-freetype2@2.9.1006@d41d8cd9",
         "esy-cmake@0.3.5@d41d8cd9", "@opam/dune@opam:1.7.1@6f40bfee",
