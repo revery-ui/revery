@@ -40,6 +40,7 @@ type windowCreateOptions = {
   height: int,
   backgroundColor: Color.t,
   vsync: bool,
+  icon: option(string)
 };
 
 let defaultCreateOptions = {
@@ -51,6 +52,7 @@ let defaultCreateOptions = {
   height: 600,
   backgroundColor: Colors.cornflowerBlue,
   vsync: true,
+  icon: None
 };
 
 let isDirty = (w: t) =>
@@ -132,6 +134,15 @@ let create = (name: string, options: windowCreateOptions) => {
 
   let w = Glfw.glfwCreateWindow(options.width, options.height, name);
   Glfw.glfwMakeContextCurrent(w);
+
+  switch (options.icon) {
+  | None => ()
+  | Some(path) => {
+      let execDir = Environment.getExecutingDirectory();
+      let relativeImagePath = execDir ++ path;
+      Glfw.glfwSetWindowIcon(w, relativeImagePath);
+    } 
+  }
 
   let fbSize = Glfw.glfwGetFramebufferSize(w);
 
