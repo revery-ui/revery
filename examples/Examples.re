@@ -199,7 +199,7 @@ let init = app => {
         width: windowWidth,
         height: windowHeight,
         maximized,
-        icon: Some("revery-icon.png")
+        icon: Some("revery-icon.png"),
       },
     );
 
