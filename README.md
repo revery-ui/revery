@@ -1,20 +1,34 @@
-[![Build Status](https://dev.azure.com/revery-ui/revery/_apis/build/status/revery-ui.revery?branchName=master)](https://dev.azure.com/revery-ui/revery/_build/latest?definitionId=2?branchName=master)
-[![npm version](https://badge.fury.io/js/revery.svg)](https://badge.fury.io/js/revery)
-	<a href="https://discord.gg/4pxY5Cp">
-		<img src="https://img.shields.io/discord/526111832478449695.svg" alt="Join the chat on discord!">
+<p align="center">
+	<a href="https://www.outrunlabs.com/revery" title="Revery">
+		<img src="./assets/logo.png" alt="Logo">
 	</a>
+</p>
 
-# Revery
+<p align="center">
+  <span>Build <b>native</b>, <i>high-performance</i>, <b>cross-platform</b> desktop tops with <a href="https://reasonml.github.io">reason!</a></span>
+</p>
 
-Build __native__, _high-performance_, __cross-platform__ desktop apps with [reason](https://reasonml.github.io/)!
+<p align="center">
+  <a href="https://dev.azure.com/revery-ui/revery/_build/latest?definitionId=2?branchName=master">
+    <img src="https://dev.azure.com/revery-ui/revery/_apis/build/status/revery-ui.revery?branchName=master" alt="Build Status"/>
+  </a>
+  <a href="https://badge.fury.io/js/revery">
+    <img src="https://badge.fury.io/js/revery.svg" alt="npm version"/>
+  </a>
+  <a href="https://discord.gg/4pxY5Cp">
+    <img src="https://img.shields.io/discord/526111832478449695.svg" alt="Join the chat on discord!"/>
+  </a>
+</p>
 
-:construction: __NOTE:__ Revery is a work-in-progress and in active development! :construction:
+---
 
 <p align="center">
 	<a href="https://www.outrunlabs.com/revery/playground" title="Playground">
-		<img src="./screenshots/sliders.png" alt="Slider components">
+		<img src="./assets/screenshot.png" alt="Slider components">
 	</a>
 </p>
+
+:construction: __NOTE:__ Revery is a work-in-progress and in active development! :construction:
 
 To get a taste of Revery, check out our JavaScript + WebGL build on the [playground](https://outrunlabs.com/revery/playground). For the best experience, though, you'll want to try a native build :point_down:
 
