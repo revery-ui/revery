@@ -4,7 +4,14 @@
 		<img src="https://img.shields.io/discord/526111832478449695.svg" alt="Join the chat on discord!">
 	</a>
 
-# Revery
+
+<p align="center">
+	<a href="https://www.outrunlabs.com/revery" title="Playground">
+		<img src="./assets/logo.png" alt="Slider components">
+	</a>
+</p>
+
+---
 
 Build __native__, _high-performance_, __cross-platform__ desktop apps with [reason](https://reasonml.github.io/)!
 
@@ -12,7 +19,7 @@ Build __native__, _high-performance_, __cross-platform__ desktop apps with [reas
 
 <p align="center">
 	<a href="https://www.outrunlabs.com/revery/playground" title="Playground">
-		<img src="./screenshots/sliders.png" alt="Slider components">
+		<img src="./assets/screenshot.png" alt="Slider components">
 	</a>
 </p>
 
