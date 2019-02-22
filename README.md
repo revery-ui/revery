@@ -9,19 +9,21 @@
 	<a href="https://www.outrunlabs.com/revery" title="Playground">
 		<img src="./assets/logo.png" alt="Slider components">
 	</a>
+
+</p>
+<p align="center">
+  <h3>Build <b>native</b>, <i>high-performance</i>, <b>cross-platform</b> desktop tops with <a href="https://reasonml.github.io">reason!</a></h3>
 </p>
 
 ---
-
-Build __native__, _high-performance_, __cross-platform__ desktop apps with [reason](https://reasonml.github.io/)!
-
-:construction: __NOTE:__ Revery is a work-in-progress and in active development! :construction:
 
 <p align="center">
 	<a href="https://www.outrunlabs.com/revery/playground" title="Playground">
 		<img src="./assets/screenshot.png" alt="Slider components">
 	</a>
 </p>
+
+:construction: __NOTE:__ Revery is a work-in-progress and in active development! :construction:
 
 To get a taste of Revery, check out our JavaScript + WebGL build on the [playground](https://outrunlabs.com/revery/playground). For the best experience, though, you'll want to try a native build :point_down:
 
