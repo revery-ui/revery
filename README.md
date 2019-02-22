@@ -1,18 +1,23 @@
-[![Build Status](https://dev.azure.com/revery-ui/revery/_apis/build/status/revery-ui.revery?branchName=master)](https://dev.azure.com/revery-ui/revery/_build/latest?definitionId=2?branchName=master)
-[![npm version](https://badge.fury.io/js/revery.svg)](https://badge.fury.io/js/revery)
-	<a href="https://discord.gg/4pxY5Cp">
-		<img src="https://img.shields.io/discord/526111832478449695.svg" alt="Join the chat on discord!">
-	</a>
-
-
 <p align="center">
-	<a href="https://www.outrunlabs.com/revery" title="Playground">
-		<img src="./assets/logo.png" alt="Slider components">
+	<a href="https://www.outrunlabs.com/revery" title="Revery">
+		<img src="./assets/logo.png" alt="Logo">
 	</a>
-
 </p>
+
 <p align="center">
-  <h3>Build <b>native</b>, <i>high-performance</i>, <b>cross-platform</b> desktop tops with <a href="https://reasonml.github.io">reason!</a></h3>
+  <span>Build <b>native</b>, <i>high-performance</i>, <b>cross-platform</b> desktop tops with <a href="https://reasonml.github.io">reason!</a></span>
+</p>
+
+<p align="center">
+  <a href="https://dev.azure.com/revery-ui/revery/_build/latest?definitionId=2?branchName=master">
+    <img src="https://dev.azure.com/revery-ui/revery/_apis/build/status/revery-ui.revery?branchName=master" alt="Build Status"/>
+  </a>
+  <a href="https://badge.fury.io/js/revery">
+    <img src="https://badge.fury.io/js/revery.svg" alt="npm version"/>
+  </a>
+  <a href="https://discord.gg/4pxY5Cp">
+    <img src="https://img.shields.io/discord/526111832478449695.svg" alt="Join the chat on discord!"/>
+  </a>
 </p>
 
 ---
