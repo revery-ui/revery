@@ -22,9 +22,13 @@ type os =
   | Windows
   | Mac
   | Linux
+  | Browser
   | Unknown;
 
 let os = {
+  switch (webGL) {
+  | true => Browser
+  | false =>
   switch (Sys.os_type) {
   | "Win32" => Windows
   | _ =>
@@ -37,4 +41,5 @@ let os = {
     | _ => Unknown
     };
   };
+};
 };
