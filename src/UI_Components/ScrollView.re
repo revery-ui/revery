@@ -161,9 +161,6 @@ let make =
               repeat: false,
               easing: Animated.cubicBezier(0.23, 1., 0.32, 1.),
             };
-            let updateValue = v => {
-              dispatch(ScrollUpdated(int_of_float(v)));
-            };
             let playback =
               tween(
                 floatValue(float_of_int(actualScrollTop)),
@@ -176,7 +173,9 @@ let make =
                      bounceBackAnim,
                    ),
                  )
-              |> Chain.start(~update=updateValue);
+              |> Chain.start(~update=v =>
+                   dispatch(ScrollUpdated(int_of_float(v)))
+                 );
             setBouncingState(Bouncing(direction, playback));
           | Idle => dispatch(ScrollUpdated(newScrollTop))
           };
