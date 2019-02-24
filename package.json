@@ -47,6 +47,7 @@
   },
   "resolutions": {
     "rebez": "github:jchavarri/rebez#46cbc183",
+    "@opam/ocamlbuild": "0.12.0",
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
