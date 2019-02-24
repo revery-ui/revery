@@ -22,19 +22,24 @@ type os =
   | Windows
   | Mac
   | Linux
+  | Browser
   | Unknown;
 
 let os = {
-  switch (Sys.os_type) {
-  | "Win32" => Windows
-  | _ =>
-    let ic = Unix.open_process_in("uname");
-    let uname = input_line(ic);
-    let _ = close_in(ic);
-    switch (uname) {
-    | "Darwin" => Mac
-    | "Linux" => Linux
-    | _ => Unknown
-    };
-  };
+  webGL
+    ? Browser
+    : (
+      switch (Sys.os_type) {
+      | "Win32" => Windows
+      | _ =>
+        let ic = Unix.open_process_in("uname");
+        let uname = input_line(ic);
+        let _ = close_in(ic);
+        switch (uname) {
+        | "Darwin" => Mac
+        | "Linux" => Linux
+        | _ => Unknown
+        };
+      }
+    );
 };
