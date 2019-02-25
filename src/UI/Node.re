@@ -236,22 +236,43 @@ class node ('a) (()) = {
     ();
   };
   pub toLayoutNode = (pixelRatio: float, scaleFactor: int) => {
-    let childNodes =
-      List.map(c => c#toLayoutNode(pixelRatio, scaleFactor), _children^);
-    let layoutStyle = Style.toLayoutNode(_style^);
-    let node =
-      switch (_this#getMeasureFunction(pixelRatio, scaleFactor)) {
-      | None => Layout.createNode(Array.of_list(childNodes), layoutStyle)
-      | Some(m) =>
-        Layout.createNodeWithMeasure(
-          Array.of_list(childNodes),
-          layoutStyle,
-          m,
-        )
-      };
 
-    _layoutNode := node;
-    node;
+    let style = _style^;
+
+    let f = (v) => switch(v) {
+    | Some(_) => true
+    | None => false
+    };
+
+    let m = (v) => switch(v) {
+    | Some(v) => v
+    | None => Layout.createNode([||], Style.toLayoutNode(style));
+    }
+
+    switch (style.layoutMode) {
+    | Style.LayoutMode.Minimal => None
+    | Style.LayoutMode.Default => {
+        let childNodes =
+          List.map(c => c#toLayoutNode(pixelRatio, scaleFactor), _children^)
+          |> List.filter(f)
+          |> List.map(m);
+          
+        let layoutStyle = Style.toLayoutNode(_style^);
+        let node =
+          switch (_this#getMeasureFunction(pixelRatio, scaleFactor)) {
+          | None => Layout.createNode(Array.of_list(childNodes), layoutStyle)
+          | Some(m) =>
+            Layout.createNodeWithMeasure(
+              Array.of_list(childNodes),
+              layoutStyle,
+              m,
+            )
+          };
+
+        _layoutNode := node;
+        Some(node);
+    };
+    };
   };
   pri _queueCallback = (cb: callback) => {
     _queuedCallbacks := List.append([cb], _queuedCallbacks^);

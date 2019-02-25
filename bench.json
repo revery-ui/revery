@@ -3,7 +3,7 @@
   "override": {
       "build": ["dune build --root . -j4"],
       "dependencies": {
-        "reperf": "^1.2.0"
+        "reperf": "*"
       },
       "install": [
           "esy-installer ReveryBench.install"
