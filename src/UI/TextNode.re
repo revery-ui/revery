@@ -15,12 +15,13 @@ class textNode (text: string) = {
   as _this;
   val mutable text = text;
   val _lines: ref(list(string)) = ref([]);
-  val quad = Assets.quad();
-  val textureShader = Assets.fontShader();
   inherit (class viewNode)() as _super;
   pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
     /* Draw background first */
     _super#draw(pass, parentContext);
+
+    let quad = Assets.quad();
+    let textureShader = Assets.fontShader();
 
     switch (pass) {
     | AlphaPass(m) =>

@@ -248,7 +248,7 @@ class node ('a) (()) = {
   };
   pub _minimalLayout =  (style: Style.t) => {
     let prev = _miniLayout^;
-    if (prev.top != style.top && prev.left != style.left && prev.width != style.width && prev.height != style.height) {
+    if (prev.top != style.top || prev.left != style.left || prev.width != style.width || prev.height != style.height) {
         _miniLayout := Dimensions.create(~top=style.top, ~left=style.left, ~width=style.width, ~height=style.height, ());
     };
     List.iter((n) => n#_minimalLayout(style), _children^);

@@ -102,7 +102,9 @@ let _resizeIfNecessary = (w: t) =>
 let render = (w: t) => {
   _resizeIfNecessary(w);
   w.isRendering = true;
-  Glfw.glfwMakeContextCurrent(w.glfwWindow);
+  Performance.bench("glfwMakeContextCurrent", () => {
+      Glfw.glfwMakeContextCurrent(w.glfwWindow);
+  });
 
   Glfw.glViewport(0, 0, w.framebufferWidth, w.framebufferHeight);
   /* glClearDepth(1.0); */
@@ -116,7 +118,9 @@ let render = (w: t) => {
 
   w.render();
 
+  Performance.bench("glfwSwapBuffers", () => {
   Glfw.glfwSwapBuffers(w.glfwWindow);
+  });
   w.isRendering = false;
 };
 
