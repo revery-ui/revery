@@ -1,7 +1,6 @@
-/* open Revery; */
-open Revery.Core;
-open Revery.Core.Events;
-open Revery.Core.Window;
+open Revery;
+open Revery.Events;
+open Revery.Window;
 open Revery.UI;
 open Revery.UI.Components;
 

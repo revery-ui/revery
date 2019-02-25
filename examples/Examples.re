@@ -1,6 +1,4 @@
 open Revery;
-open Revery.Core;
-/* open Revery.Math; */
 open ExampleStubs;
 
 module SliderExample = Slider;

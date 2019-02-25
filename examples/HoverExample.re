@@ -1,4 +1,4 @@
-open Revery.Core;
+open Revery;
 open Revery.UI;
 
 type state = {
