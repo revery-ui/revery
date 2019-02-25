@@ -17,6 +17,15 @@ let scrollTrackColor = Color.rgba(0.0, 0.0, 0.0, 0.4);
 let scrollThumbColor = Color.rgba(0.5, 0.5, 0.5, 0.4);
 let defaultBounce = Environment.os === Mac ? true : false;
 
+type action =
+  | ScrollUpdated(int);
+
+let reducer = (action, _state) => {
+  switch (action) {
+  | ScrollUpdated(v) => v
+  };
+};
+
 let make =
     (
       ~style,
@@ -26,8 +35,8 @@ let make =
       children: React.syntheticElement,
     ) =>
   component(slots => {
-    let (actualScrollTop, setScrollTop, slots) =
-      React.Hooks.state(scrollTop, slots);
+    let (actualScrollTop, dispatch, slots) =
+      React.Hooks.reducer(~initialState=scrollTop, reducer, slots);
     let (outerRef: option(Revery_UI.node), setOuterRef, slots) =
       React.Hooks.state(None, slots);
     let (actualScrollLeft, setScrollLeft, slots) =
@@ -78,7 +87,9 @@ let make =
         let verticalScrollBar =
           isVerticalScrollbarVisible
             ? <Slider
-                onValueChanged={v => setScrollTop(int_of_float(v))}
+                onValueChanged={v =>
+                  dispatch(ScrollUpdated(int_of_float(v)))
+                }
                 minimumValue=0.
                 maximumValue={float_of_int(maxHeight)}
                 sliderLength={outerMeasurements.height}
@@ -132,7 +143,7 @@ let make =
           | Bouncing(_) => ()
           | Idle when !bounce && (isAtTop || isAtBottom) =>
             let clampedScrollTop = isAtTop ? 0 : maxHeight;
-            setScrollTop(clampedScrollTop);
+            dispatch(ScrollUpdated(clampedScrollTop));
           | Idle when bounce && (isAtTop || isAtBottom) =>
             open Animated;
             let direction = isAtTop ? Top : Bottom;
@@ -162,9 +173,11 @@ let make =
                      bounceBackAnim,
                    ),
                  )
-              |> Chain.start(~update=v => setScrollTop(int_of_float(v)));
+              |> Chain.start(~update=v =>
+                   dispatch(ScrollUpdated(int_of_float(v)))
+                 );
             setBouncingState(Bouncing(direction, playback));
-          | Idle => setScrollTop(newScrollTop)
+          | Idle => dispatch(ScrollUpdated(newScrollTop))
           };
         };
 
