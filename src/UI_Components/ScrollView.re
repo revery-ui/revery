@@ -209,7 +209,7 @@ let make =
           style=Style.[
             flexGrow(1),
             position(`Relative),
-            overflow(LayoutTypes.Scroll),
+            overflow(`Scroll),
           ]>
           <View style=innerStyle> children </View>
           <View style=verticalScrollbarContainerStyle>
