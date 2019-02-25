@@ -102,7 +102,7 @@ let createElement =
               style=Style.[
                 width(float_of_int(w) *. 0.8 |> int_of_float),
                 justifyContent(`Center),
-                overflow(LayoutTypes.Hidden),
+                overflow(`Hidden),
               ]>
               <Text style=textStyles text={state.selected.label} />
             </View>
@@ -127,7 +127,7 @@ let createElement =
               ~width=float_of_int(h) *. 0.05 |> int_of_float,
               ~color=Colors.black,
             ),
-            overflow(LayoutTypes.Hidden),
+            overflow(`Hidden),
           ]>
           ...items
         </View>

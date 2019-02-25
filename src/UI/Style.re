@@ -423,7 +423,14 @@ let opacity = o => `Opacity(o);
 let transform = t => `Transform(t);
 let boxShadow = (~xOffset, ~yOffset, ~spreadRadius, ~blurRadius, ~color) =>
   `BoxShadow(BoxShadow.{xOffset, yOffset, spreadRadius, blurRadius, color});
-let overflow = o => `Overflow(o);
+
+let overflow = o =>
+  switch (o) {
+  | `Visible => `Overflow(LayoutTypes.Visible)
+  | `Hidden => `Overflow(LayoutTypes.Hidden)
+  | `Scroll => `Overflow(LayoutTypes.Scroll)
+  };
+
 let color = o => `Color(o);
 let backgroundColor = o => `BackgroundColor(o);
 
