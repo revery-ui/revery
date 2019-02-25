@@ -206,11 +206,7 @@ let make =
         <View
           onMouseWheel=scroll
           ref={r => setOuterRef(Some(r))}
-          style=Style.[
-            flexGrow(1),
-            position(`Relative),
-            overflow(`Scroll),
-          ]>
+          style=Style.[flexGrow(1), position(`Relative), overflow(`Scroll)]>
           <View style=innerStyle> children </View>
           <View style=verticalScrollbarContainerStyle>
             verticalScrollBar
