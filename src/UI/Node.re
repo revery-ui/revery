@@ -42,7 +42,7 @@ class node ('a) (()) = {
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
-    let dimensions = _layoutNode^.layout;
+    let dimensions = _this#measurements();
 
     Overflow.render(
       worldTransform,
@@ -58,8 +58,20 @@ class node ('a) (()) = {
       },
     );
   };
+  pub measurements = () => {
+      let style = _this#getStyle();
+    let ret: Dimensions.t =  switch (style.layoutMode) {
+    | Style.LayoutMode.Minimal => {
+        Dimensions.create(~left=style.left, ~top=style.top, ~width=style.width, ~height=style.height,());
+    }
+    | Style.LayoutMode.Default => {
+        let layout = _layoutNode^.layout;
+        Dimensions.create(~left=layout.left, ~top=layout.top, ~width=layout.width, ~height=layout.height, ());
+    }
+    };
+    ret;
+  };
   pub getInternalId = () => _internalId;
-  pub measurements = () => _layoutNode^.layout;
   pub getTabIndex = () => _tabIndex^;
   pub setTabIndex = index => _tabIndex := index;
   pub setStyle = style => _style := style;
@@ -83,7 +95,7 @@ class node ('a) (()) = {
     state.depth;
   };
   pri _recalculateTransform = () => {
-    let dimensions = _layoutNode^.layout;
+    let dimensions = _this#measurements();
     let matrix = Mat4.create();
     Mat4.fromTranslation(
       matrix,
@@ -114,7 +126,7 @@ class node ('a) (()) = {
     matrix;
   };
   pri _recalculateBoundingBox = worldTransform => {
-    let dimensions = _layoutNode^.layout;
+    let dimensions = _this#measurements();
     let min = Vec2.create(0., 0.);
     let max =
       Vec2.create(
@@ -142,7 +154,7 @@ class node ('a) (()) = {
 
     /* Check if dimensions are different, if so, we need to queue up a dimensions changed event */
     let lastDimensions = _lastDimensions^;
-    let newDimensions = _layoutNode^.layout;
+    let newDimensions = _this#measurements();
 
     if (lastDimensions.width != newDimensions.width
         || lastDimensions.height != newDimensions.height) {
