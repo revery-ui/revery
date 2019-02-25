@@ -1,5 +1,5 @@
+open Revery;
 open Revery.UI;
-open Revery.Core;
 
 let defaultStyle =
   Style.[

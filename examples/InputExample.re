@@ -1,5 +1,5 @@
+open Revery;
 open Revery.UI;
-open Revery.Core;
 open Revery.UI.Components;
 
 let containerStyle =

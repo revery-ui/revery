@@ -1,5 +1,4 @@
 open Revery;
-open Revery.Core;
 open Revery.UI;
 
 /* Define our app state */

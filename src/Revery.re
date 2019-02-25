@@ -17,9 +17,6 @@ module UI = {
    */
   module Components = Revery_UI_Components;
 };
-module App = Core.App;
-module Window = Core.Window;
-module Time = Core.Time;
 
 module Platform = {
   include Platform;

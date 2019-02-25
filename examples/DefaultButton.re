@@ -1,6 +1,6 @@
+open Revery;
 open Revery.UI;
 open Revery.UI.Components;
-open Revery.Core;
 
 module DefaultButtonWithCounter = {
   let component = React.component("DefaultButtonWithCounter");
