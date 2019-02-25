@@ -39,6 +39,7 @@ class node ('a) (()) = {
   val _queuedCallbacks: ref(list(callback)) = ref([]);
   val _lastDimensions: ref(NodeEvents.DimensionsChangedEventParams.t) =
     ref(NodeEvents.DimensionsChangedEventParams.create());
+  val _miniLayout: ref(Dimensions.t) = ref(Dimensions.create(~top=0, ~left=0, ~width=0, ~height=0, ()));
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
@@ -61,9 +62,7 @@ class node ('a) (()) = {
   pub measurements = () => {
       let style = _this#getStyle();
     let ret: Dimensions.t =  switch (style.layoutMode) {
-    | Style.LayoutMode.Minimal => {
-        Dimensions.create(~left=style.left, ~top=style.top, ~width=style.width, ~height=style.height,());
-    }
+    | Style.LayoutMode.Minimal => _miniLayout^;
     | Style.LayoutMode.Default => {
         let layout = _layoutNode^.layout;
         Dimensions.create(~left=layout.left, ~top=layout.top, ~width=layout.width, ~height=layout.height, ());
@@ -247,8 +246,14 @@ class node ('a) (()) = {
       };
     ();
   };
+  pub _minimalLayout =  (style: Style.t) => {
+    let prev = _miniLayout^;
+    if (prev.top != style.top && prev.left != style.left && prev.width != style.width && prev.height != style.height) {
+        _miniLayout := Dimensions.create(~top=style.top, ~left=style.left, ~width=style.width, ~height=style.height, ());
+    };
+    List.iter((n) => n#_minimalLayout(style), _children^);
+  };
   pub toLayoutNode = (pixelRatio: float, scaleFactor: int) => {
-
     let style = _style^;
 
     let f = (v) => switch(v) {
@@ -262,7 +267,10 @@ class node ('a) (()) = {
     }
 
     switch (style.layoutMode) {
-    | Style.LayoutMode.Minimal => None
+    | Style.LayoutMode.Minimal => {
+        _this#_minimalLayout(style); 
+        None;
+    }
     | Style.LayoutMode.Default => {
         let childNodes =
           List.map(c => c#toLayoutNode(pixelRatio, scaleFactor), _children^)
