@@ -1,4 +1,3 @@
-
 /*
  * Include Revery_Core in the top level 'Revery' module
  * Otherwise it's confusing when to open 'Revery' vs 'Revery.Core'
