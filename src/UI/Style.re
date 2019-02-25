@@ -26,9 +26,8 @@ module BoxShadow = {
   };
 };
 
-module LayoutMode {
-
-    /**
+module LayoutMode = {
+  /**
      * LayoutMode allows finer-grained control over how nodes are layout.
      * The default is 'Flex' which uses a yoga-like flex-box interpretation of the styles.
      * However, for performance, sometimes a more streamlined strategy is doable -
@@ -38,10 +37,10 @@ module LayoutMode {
         - transform
     * But it also incurs much reduced overhead compared to the default layout strategy.
     */
-    type t =
+  type t =
     | Default
     | Minimal;
-}
+};
 
 type t = {
   backgroundColor: Color.t,
@@ -398,11 +397,12 @@ let position = p => {
 };
 
 let layoutMode = v => {
-    let p = switch (v) {
+  let p =
+    switch (v) {
     | `Default => LayoutMode.Default
     | `Minimal => LayoutMode.Minimal
     };
-    `LayoutMode(p);
+  `LayoutMode(p);
 };
 
 let margin = m => `Margin(m);

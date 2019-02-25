@@ -126,9 +126,7 @@ let start = (window: Window.t, render: renderFunction) => {
        * meaning that we'll need to re-render again next frame.
        */
       uiDirty := false;
-      let component = Performance.bench("component render", () => {
-          render();
-      });
+      let component = Performance.bench("component render", () => render());
       UiRender.render(ui, component);
     },
   );

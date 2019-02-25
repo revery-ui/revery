@@ -36,14 +36,8 @@ let layout = (node, pixelRatio, scaleFactor) =>
     let layoutNode = node#toLayoutNode(pixelRatio, scaleFactor);
     switch (layoutNode) {
     | None => ()
-    | Some(v) => {
-        Layout.layoutNode(
-          v,
-          Encoding.cssUndefined,
-          Encoding.cssUndefined,
-          Ltr,
-        );
-        }
+    | Some(v) =>
+      Layout.layoutNode(v, Encoding.cssUndefined, Encoding.cssUndefined, Ltr)
     };
   });
 let printCssNode = root =>

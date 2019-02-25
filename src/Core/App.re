@@ -83,11 +83,11 @@ let startWithState: startFunc('s, 'a) =
 
     let appLoop = (_t: float) => {
       /* Performance.bench("glfwPollEvents", () => { */
-          Glfw.glfwPollEvents();
+      Glfw.glfwPollEvents();
       /* }); */
 
       /* Performance.bench("tick pump", () => { */
-          Tick.Default.pump();
+      Tick.Default.pump();
       /* }); */
 
       _checkAndCloseWindows(appInstance);
