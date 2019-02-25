@@ -4,11 +4,17 @@ open Revery.UI;
 open Revery.UI.Components;
 
 module ViewPort = {
+
+  type dimensions = {
+    width: int,
+    height: int,
+  };
+
   type t = {
-    xMin: int,
-    yMin: int,
-    xMax: int,
-    yMax: int,
+    posX: int,
+    posY: int,
+    dimensions: dimensions,
+    cellSize: int,
   };
   type direction =
     | North
@@ -16,33 +22,29 @@ module ViewPort = {
     | South
     | West;
 
-  let create = size => {xMin: 0, xMax: size, yMin: 0, yMax: size};
+  let create = () => {posX: 0, posY: 0, dimensions: {width: 1, height: 1}, cellSize: 16};
 
   let changeDirection = (viewPort, direction) =>
     switch (direction) {
-    | North => {...viewPort, yMin: viewPort.yMin - 1, yMax: viewPort.yMax - 1}
-    | East => {...viewPort, xMin: viewPort.xMin + 1, xMax: viewPort.xMax + 1}
-    | South => {...viewPort, yMin: viewPort.yMin + 1, yMax: viewPort.yMax + 1}
-    | West => {...viewPort, xMin: viewPort.xMin - 1, xMax: viewPort.xMax - 1}
+    | North => {...viewPort, posY: viewPort.posX - 1 }
+    | East => {...viewPort, posX: viewPort.posX + 1 }
+    | South => {...viewPort, posY: viewPort.posY - 1}
+    | West => {...viewPort, posX: viewPort.posX - 1}
     };
 
-  let zoomOut = viewPort => {
-    xMin: viewPort.xMin - 1,
-    xMax: viewPort.xMax + 1,
-    yMin: viewPort.yMin - 1,
-    yMax: viewPort.yMax + 1,
+  let setSize = (viewPort, dimensions) => {
+    ...viewPort,
+    dimensions,
   };
 
-  let zoomIn = viewPort =>
-    if (viewPort.xMax > viewPort.xMin + 2) {
-      {
-        xMin: viewPort.xMin + 1,
-        xMax: viewPort.xMax - 1,
-        yMin: viewPort.yMin + 1,
-        yMax: viewPort.yMax - 1,
-      };
-    } else {
-      viewPort;
+  let zoomOut = viewPort => {
+      ...viewPort,
+      cellSize: max(1, viewPort.cellSize / 2)
+  };
+
+  let zoomIn = viewPort => {
+      ...viewPort,
+      cellSize: viewPort.cellSize * 2,
     };
 };
 
@@ -291,9 +293,6 @@ module Column = {
     component(hooks => (hooks, <View style> ...children </View>));
 };
 
-module Cell = {
-  let component = React.component("Column");
-
   let clickableStyle =
     Style.[
       position(`Relative),
@@ -303,28 +302,32 @@ module Cell = {
       flexGrow(1),
       margin(0),
     ];
-  let baseStyle =
+  let baseStyle = (x, y, size, alive) => 
     Style.[
-      flexDirection(`Column),
-      alignItems(`Stretch),
-      justifyContent(`Center),
-      flexGrow(1),
+      position(`Absolute),
+      layoutMode(`Minimal),
+      width(size),
+      height(size),
+      left(x),
+      top(y),
+      backgroundColor(alive ? Colors.red : Colors.black),
+      /* flexDirection(`Column), */
+      /* alignItems(`Stretch), */
+      /* justifyContent(`Center), */
+      /* flexGrow(1), */
     ];
-  let aliveStyle =
-    Style.(merge(~source=baseStyle, ~target=[backgroundColor(Colors.red)]));
-  let deadStyle =
-    Style.(
-      merge(~source=baseStyle, ~target=[backgroundColor(Colors.black)])
-    );
 
-  let createElement = (~cell, ~onClick, ~children as _, ()) =>
+
+module Cell = {
+  let component = React.component("Column");
+
+  let createElement = (~x, ~y, ~size, ~cell, ~onClick as _, ~children as _, ()) =>
     component(hooks => {
-      let style =
-        switch (cell) {
-        | Alive => <View style=aliveStyle />
-        | Dead => <View style=deadStyle />
+        let cell = switch (cell) {
+        | Alive => <View style=baseStyle(x, y, size, true) />
+        | Dead => <View style=baseStyle(x, y, size, false) />
         };
-      (hooks, <Clickable style=clickableStyle onClick> style </Clickable>);
+      (hooks, cell);
     });
 };
 
@@ -335,27 +338,41 @@ let viewPortRender =
     | Some(_) => Alive
     | None => Dead
     };
-  let rec range = (min, max, result) =>
-    if (min == max) {
-      result;
-    } else {
-      range(min, max - 1, [max, ...result]);
+  /* let rec range = (min, max, result) => */
+  /*   if (min == max) { */
+  /*     result; */
+  /*   } else { */
+  /*     range(min, max - 1, [max, ...result]); */
+  /*   }; */
+  let maxY = viewPort.dimensions.width / viewPort.cellSize;
+  let maxX = viewPort.dimensions.height / viewPort.cellSize;
+
+  let x = ref(0);
+  let y = ref(0);
+
+  let cells: ref(list(React.syntheticElement)) = ref([]);
+
+  let cellSize = viewPort.cellSize;
+
+  while (x^ < maxX) {
+      y := 0;
+    while (y^ < maxY) {
+
+        let xVal = x^;
+        let yVal = y^;
+
+        let newCell = <Cell x={xVal * cellSize} y={yVal * cellSize} size={cellSize} cell=cell((xVal + viewPort.posX, yVal + viewPort.posY)) onClick=onClick((xVal, yVal)) />;
+
+        cells := [newCell, ...cells^];
+
+        incr(y);
     };
-  let cols = range(viewPort.xMin, viewPort.xMax, []);
-  let rows = range(viewPort.yMin, viewPort.yMax, []);
-  List.map(
-    x =>
-      <Column>
-        ...{List.map(
-          y =>
-            <Row>
-              <Cell cell={cell((x, y))} onClick={() => onClick((x, y))} />
-            </Row>,
-          rows,
-        )}
-      </Column>,
-    cols,
-  );
+
+    incr(x);
+  };
+
+
+  cells^
 };
 
 type state = {
@@ -372,6 +389,7 @@ type action =
   | StopTimer
   | ToggleAlive(Position.t)
   | MoveViewPort(ViewPort.direction)
+  | SetViewPortSize(ViewPort.dimensions)
   | ZoomViewPort(zoom)
 and zoom =
   | ZoomIn
@@ -402,6 +420,10 @@ let reducer = (action, state) =>
       ...state,
       viewPort: ViewPort.changeDirection(state.viewPort, direction),
     }
+  | SetViewPortSize(dimensions) => {
+    ...state,
+    viewPort: ViewPort.setSize(state.viewPort, dimensions)
+  }
   | ZoomViewPort(zoom) => {
       ...state,
       viewPort:
@@ -429,7 +451,7 @@ module GameOfLiveComponent = {
           hooks,
         );
 
-      let toggleAlive = pos => dispatch(ToggleAlive(pos));
+      let toggleAlive = (pos, ()) => dispatch(ToggleAlive(pos));
 
       let startStop = () =>
         state.isRunning
@@ -440,11 +462,19 @@ module GameOfLiveComponent = {
             dispatch(StartTimer(dispose));
           };
 
+      let onDimensionsChanged = ({width, height, _}: NodeEvents.DimensionsChangedEventParams.t ) => {
+          let action = SetViewPortSize({width, height});
+          dispatch(action);
+        print_endline ("ON DIMENSIONS CHANGED: width " ++ string_of_int(width) ++ " height: " ++ string_of_int(height));
+      };
+
       (
         hooks,
         <Column>
           <Row>
+            <View style={Style.[flexGrow(1), backgroundColor(Colors.red)]} onDimensionsChanged>
             ...{viewPortRender(state.viewPort, state.universe, toggleAlive)}
+            </View>
           </Row>
           <View style=controlsStyle>
             <Button
@@ -489,7 +519,7 @@ module GameOfLiveComponent = {
 };
 
 let render = () => {
-  let viewPort = ViewPort.create(15);
+  let viewPort = ViewPort.create();
   let state = {
     viewPort,
     universe: Examples.pulsar,
