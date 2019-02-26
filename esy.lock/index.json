@@ -1,5 +1,5 @@
 {
-  "checksum": "81f10b101bf3fd17a568d8d5bdffb865",
+  "checksum": "c592f2a834999a1d5804c96665f1004b",
   "root": "revery@link-dev:./package.json",
   "node": {
     "revery@link-dev:./package.json": {
@@ -18,8 +18,8 @@
         "reason-glfw@3.2.1019@d41d8cd9",
         "reason-gl-matrix@0.9.9303@d41d8cd9",
         "reason-fontkit@2.2.1@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
-        "flex@1.2.2@d41d8cd9", "@opam/lwt_ppx@opam:1.2.1@db1172a7",
-        "@opam/lwt@opam:4.1.0@111fc2bf",
+        "flex@1.2.2@d41d8cd9", "@reason-native/console@0.0.3@d41d8cd9",
+        "@opam/lwt_ppx@opam:1.2.1@db1172a7", "@opam/lwt@opam:4.1.0@111fc2bf",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
         "@opam/js_of_ocaml-compiler@github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce@d41d8cd9",
         "@opam/js_of_ocaml@github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce@d41d8cd9",
@@ -278,6 +278,23 @@
         "type": "install",
         "source": [
           "archive:https://registry.npmjs.org/@reason-native/pastel/-/pastel-0.1.0.tgz#sha1:2b262a654b8d807215df74768e628e9b05b3f5e3"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.7.1004@d41d8cd9", "@opam/dune@opam:1.7.2@52ecbb97",
+        "@esy-ocaml/reason@3.4.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "@reason-native/console@0.0.3@d41d8cd9": {
+      "id": "@reason-native/console@0.0.3@d41d8cd9",
+      "name": "@reason-native/console",
+      "version": "0.0.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/@reason-native/console/-/console-0.0.3.tgz#sha1:b9b6bdf800e13361cfb4daccb540316c3a11ce38"
         ]
       },
       "overrides": [],
