@@ -13,7 +13,7 @@ module View = {
 
   let make =
       (
-        ~key=?
+        ~key=?,
         ~onMouseDown=?,
         ~onMouseMove=?,
         ~onMouseUp=?,
@@ -33,7 +33,7 @@ module View = {
         ~style=Style.emptyViewStyle,
         children,
       ) =>
-    component(~key, hooks =>
+    component(~key?, hooks =>
       (
         hooks,
         {
