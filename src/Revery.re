@@ -4,6 +4,9 @@
  */
 include Revery_Core;
 
+/* Courtesy of @reason-native/console - a console-like API for native! */
+module Console = Console;
+
 module Geometry = Revery_Geometry;
 module Math = Revery_Math;
 module Shaders = Revery_Shaders;
