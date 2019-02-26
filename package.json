@@ -44,7 +44,8 @@
     "@opam/lwt_ppx": "^1.1.0",
     "@brisk/brisk-reconciler": "*",
     "flex": "^1.2.2",
-    "reperf": "^1.3.0"
+    "reperf": "^1.3.0",
+    "@reason-native/console": "^0.0.3"
   },
   "resolutions": {
     "rebez": "github:jchavarri/rebez#46cbc183",
