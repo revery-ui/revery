@@ -188,6 +188,9 @@ let init = app => {
   let windowWidth = dimensions.width / 2;
   let windowHeight = dimensions.height / 2;
 
+  Console.log("Hello from example app");
+  Console.log([1, 2, 3]);
+
   let win =
     App.createWindow(
       app,
