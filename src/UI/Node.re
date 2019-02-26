@@ -29,7 +29,8 @@ class node ('a) (()) = {
   as _this;
   val _children: ref(list(node('a))) = ref([]);
   val _style: ref(Style.t) = ref(Style.defaultStyle);
-  val _layoutStyle: ref(LayoutTypes.cssStyle) = ref(Layout.LayoutSupport.defaultStyle); 
+  val _layoutStyle: ref(LayoutTypes.cssStyle) =
+    ref(Layout.LayoutSupport.defaultStyle);
   val _events: ref(NodeEvents.t(node('a))) = ref(NodeEvents.make());
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
   val _parent: ref(option(node('a))) = ref(None);
@@ -81,12 +82,11 @@ class node ('a) (()) = {
   pub getInternalId = () => _internalId;
   pub getTabIndex = () => _tabIndex^;
   pub setTabIndex = index => _tabIndex := index;
-  pub setStyle = style => {
-      if (style != _style^) {
-          _style := style;
-          _layoutStyle := Style.toLayoutNode(style);
-      }
-  };
+  pub setStyle = style =>
+    if (style != _style^) {
+      _style := style;
+      _layoutStyle := Style.toLayoutNode(style);
+    };
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;
   pub getEvents = () => _events^;
@@ -304,7 +304,7 @@ class node ('a) (()) = {
 
       let node =
         switch (_this#getMeasureFunction(pixelRatio, scaleFactor)) {
-        | None => Layout.createNode(Array.of_list(childNodes), layoutStyle);
+        | None => Layout.createNode(Array.of_list(childNodes), layoutStyle)
         | Some(m) =>
           Layout.createNodeWithMeasure(
             Array.of_list(childNodes),
