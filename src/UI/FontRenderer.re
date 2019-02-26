@@ -20,6 +20,8 @@ let _getTexture = ((font: Fontkit.fk_face, glyphId: int)) => {
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+  let textureFormat = Environment.webGL ? GL_RGBA : GL_ALPHA;
+
   let texture = glCreateTexture();
   glBindTexture(GL_TEXTURE_2D, texture);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -29,8 +31,8 @@ let _getTexture = ((font: Fontkit.fk_face, glyphId: int)) => {
   glTexImage2D(
     GL_TEXTURE_2D,
     0,
-    GL_ALPHA,
-    GL_ALPHA,
+    textureFormat,
+    textureFormat,
     GL_UNSIGNED_BYTE,
     bitmap,
   );
