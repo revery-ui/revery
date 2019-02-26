@@ -1,0 +1,6 @@
+(executable
+    (name bench)
+    (public_name ReveryBench)
+    (libraries ReveryBench.lib)
+    (package ReveryBench)
+)

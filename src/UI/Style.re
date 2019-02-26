@@ -26,6 +26,22 @@ module BoxShadow = {
   };
 };
 
+module LayoutMode = {
+  /**
+     * LayoutMode allows finer-grained control over how nodes are layout.
+     * The default is 'Flex' which uses a yoga-like flex-box interpretation of the styles.
+     * However, for performance, sometimes a more streamlined strategy is doable -
+     * the 'Minimal' strategy only respects the following properties:
+        - width
+        - height
+        - transform
+    * But it also incurs much reduced overhead compared to the default layout strategy.
+    */
+  type t =
+    | Default
+    | Minimal;
+};
+
 type t = {
   backgroundColor: Color.t,
   color: Color.t,
@@ -47,6 +63,7 @@ type t = {
   fontFamily,
   fontSize: int,
   lineHeight: float,
+  layoutMode: LayoutMode.t,
   textWrap: TextWrapping.wrapType,
   marginTop: int,
   marginLeft: int,
@@ -97,6 +114,7 @@ let make =
       ~right=Encoding.cssUndefined,
       ~fontFamily="",
       ~fontSize=Encoding.cssUndefined,
+      ~layoutMode=LayoutMode.Default,
       ~lineHeight=1.2,
       ~textWrap=TextWrapping.WhitespaceWrap,
       ~marginTop=Encoding.cssUndefined,
@@ -153,6 +171,7 @@ let make =
     right,
     fontFamily,
     fontSize,
+    layoutMode,
     lineHeight,
     textWrap,
     transform,
@@ -263,6 +282,7 @@ type coreStyleProps = [
   | `Right(int)
   | `Bottom(int)
   | `Left(int)
+  | `LayoutMode(LayoutMode.t)
   | `MarginTop(int)
   | `MarginLeft(int)
   | `MarginRight(int)
@@ -376,6 +396,15 @@ let position = p => {
   `Position(value);
 };
 
+let layoutMode = v => {
+  let p =
+    switch (v) {
+    | `Default => LayoutMode.Default
+    | `Minimal => LayoutMode.Minimal
+    };
+  `LayoutMode(p);
+};
+
 let margin = m => `Margin(m);
 let marginLeft = m => `MarginLeft(m);
 let marginRight = m => `MarginRight(m);
@@ -458,6 +487,7 @@ let applyStyle = (style, styleRule) =>
   | `FlexGrow(flexGrow) => {...style, flexGrow}
   | `FlexDirection(flexDirection) => {...style, flexDirection}
   | `FlexWrap(flexWrap) => {...style, flexWrap}
+  | `LayoutMode(layoutMode) => {...style, layoutMode}
   | `Position(position) => {...style, position}
   | `Margin(margin) => {...style, margin}
   | `MarginTop(marginTop) => {...style, marginTop}

@@ -1,0 +1,1 @@
+ReveryBench.BenchFramework.cli();

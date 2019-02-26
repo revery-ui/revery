@@ -1,0 +1,38 @@
+opam-version: "2.0"
+name: "color"
+maintainer: "anuragsoni.13@gmail.com"
+authors: ["Anurag Soni"]
+homepage: "https://github.com/anuragsoni/color"
+dev-repo: "git+https://github.com/anuragsoni/color.git"
+bug-reports: "https://github.com/anuragsoni/color/issues"
+doc: "https://anuragsoni.github.io/color/"
+license: "MIT"
+
+build: [
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
+
+depends: [
+  "ocaml" {>= "4.05.0"}
+  "dune" {build}
+  "alcotest" {with-test}
+  "gg"
+]
+
+description: """
+Converts between different color formats
+
+Library that converts between different color formats. Right now it deals with
+HSL, HSLA, RGB and RGBA formats.
+
+The goal for this library is to provide easy handling of colors on the web, when working
+with `js_of_ocaml`.
+"""
+
+url {
+  src: "https://github.com/anuragsoni/color/releases/download/0.2.0/color-0.2.0.tbz"
+  checksum: ["md5=36a5d45385a02f96d07d40d1b0fbcf8a"]
+}
+

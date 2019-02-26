@@ -39,10 +39,12 @@ class node ('a) (()) = {
   val _queuedCallbacks: ref(list(callback)) = ref([]);
   val _lastDimensions: ref(NodeEvents.DimensionsChangedEventParams.t) =
     ref(NodeEvents.DimensionsChangedEventParams.create());
+  val _miniLayout: ref(Dimensions.t) =
+    ref(Dimensions.create(~top=0, ~left=0, ~width=0, ~height=0, ()));
   pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
-    let dimensions = _layoutNode^.layout;
+    let dimensions = _this#measurements();
 
     Overflow.render(
       worldTransform,
@@ -58,8 +60,24 @@ class node ('a) (()) = {
       },
     );
   };
+  pub measurements = () => {
+    let style = _this#getStyle();
+    let ret: Dimensions.t =
+      switch (style.layoutMode) {
+      | Style.LayoutMode.Minimal => _miniLayout^
+      | Style.LayoutMode.Default =>
+        let layout = _layoutNode^.layout;
+        Dimensions.create(
+          ~left=layout.left,
+          ~top=layout.top,
+          ~width=layout.width,
+          ~height=layout.height,
+          (),
+        );
+      };
+    ret;
+  };
   pub getInternalId = () => _internalId;
-  pub measurements = () => _layoutNode^.layout;
   pub getTabIndex = () => _tabIndex^;
   pub setTabIndex = index => _tabIndex := index;
   pub setStyle = style => _style := style;
@@ -83,7 +101,7 @@ class node ('a) (()) = {
     state.depth;
   };
   pri _recalculateTransform = () => {
-    let dimensions = _layoutNode^.layout;
+    let dimensions = _this#measurements();
     let matrix = Mat4.create();
     Mat4.fromTranslation(
       matrix,
@@ -114,7 +132,7 @@ class node ('a) (()) = {
     matrix;
   };
   pri _recalculateBoundingBox = worldTransform => {
-    let dimensions = _layoutNode^.layout;
+    let dimensions = _this#measurements();
     let min = Vec2.create(0., 0.);
     let max =
       Vec2.create(
@@ -142,7 +160,7 @@ class node ('a) (()) = {
 
     /* Check if dimensions are different, if so, we need to queue up a dimensions changed event */
     let lastDimensions = _lastDimensions^;
-    let newDimensions = _layoutNode^.layout;
+    let newDimensions = _this#measurements();
 
     if (lastDimensions.width != newDimensions.width
         || lastDimensions.height != newDimensions.height) {
@@ -235,23 +253,63 @@ class node ('a) (()) = {
       };
     ();
   };
+  pub _minimalLayout = (style: Style.t) => {
+    let prev = _miniLayout^;
+    if (prev.top != style.top
+        || prev.left != style.left
+        || prev.width != style.width
+        || prev.height != style.height) {
+      _miniLayout :=
+        Dimensions.create(
+          ~top=style.top,
+          ~left=style.left,
+          ~width=style.width,
+          ~height=style.height,
+          (),
+        );
+    };
+    List.iter(n => n#_minimalLayout(style), _children^);
+  };
   pub toLayoutNode = (pixelRatio: float, scaleFactor: int) => {
-    let childNodes =
-      List.map(c => c#toLayoutNode(pixelRatio, scaleFactor), _children^);
-    let layoutStyle = Style.toLayoutNode(_style^);
-    let node =
-      switch (_this#getMeasureFunction(pixelRatio, scaleFactor)) {
-      | None => Layout.createNode(Array.of_list(childNodes), layoutStyle)
-      | Some(m) =>
-        Layout.createNodeWithMeasure(
-          Array.of_list(childNodes),
-          layoutStyle,
-          m,
-        )
+    let style = _style^;
+
+    let f = v =>
+      switch (v) {
+      | Some(_) => true
+      | None => false
       };
 
-    _layoutNode := node;
-    node;
+    let m = v =>
+      switch (v) {
+      | Some(v) => v
+      | None => Layout.createNode([||], Style.toLayoutNode(style))
+      };
+
+    switch (style.layoutMode) {
+    | Style.LayoutMode.Minimal =>
+      _this#_minimalLayout(style);
+      None;
+    | Style.LayoutMode.Default =>
+      let childNodes =
+        List.map(c => c#toLayoutNode(pixelRatio, scaleFactor), _children^)
+        |> List.filter(f)
+        |> List.map(m);
+
+      let layoutStyle = Style.toLayoutNode(_style^);
+      let node =
+        switch (_this#getMeasureFunction(pixelRatio, scaleFactor)) {
+        | None => Layout.createNode(Array.of_list(childNodes), layoutStyle)
+        | Some(m) =>
+          Layout.createNodeWithMeasure(
+            Array.of_list(childNodes),
+            layoutStyle,
+            m,
+          )
+        };
+
+      _layoutNode := node;
+      Some(node);
+    };
   };
   pri _queueCallback = (cb: callback) => {
     _queuedCallbacks := List.append([cb], _queuedCallbacks^);

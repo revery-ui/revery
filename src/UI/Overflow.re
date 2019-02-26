@@ -33,7 +33,7 @@ type renderCallback = unit => unit;
 let _startClipRegion =
     (
       worldTransform,
-      dimensions: LayoutTypes.cssLayout,
+      dimensions: Dimensions.t,
       screenHeight: int,
       pixelRatio: float,
       scaleFactor: int,
@@ -73,7 +73,7 @@ let render =
     (
       worldTransform: Mat4.t,
       overflow: LayoutTypes.overflow,
-      dimensions: LayoutTypes.cssLayout,
+      dimensions: Dimensions.t,
       screenHeight: int,
       pixelRatio: float,
       scaleFactor: int,
