@@ -13,6 +13,7 @@ module View = {
 
   let make =
       (
+        ~key=?
         ~onMouseDown=?,
         ~onMouseMove=?,
         ~onMouseUp=?,
@@ -32,7 +33,7 @@ module View = {
         ~style=Style.emptyViewStyle,
         children,
       ) =>
-    component(hooks =>
+    component(~key, hooks =>
       (
         hooks,
         {
@@ -144,6 +145,7 @@ module Text = {
 
   let make =
       (
+        ~key=?,
         ~onMouseDown=?,
         ~onMouseMove=?,
         ~onMouseUp=?,
@@ -153,7 +155,7 @@ module Text = {
         ~text="",
         children,
       ) =>
-    component(hooks =>
+    component(~key?, hooks =>
       (
         hooks,
         {
@@ -226,6 +228,7 @@ module Image = {
 
   let make =
       (
+        ~key=?,
         ~onMouseDown=?,
         ~onMouseMove=?,
         ~onMouseUp=?,
@@ -235,7 +238,7 @@ module Image = {
         ~src="",
         children,
       ) =>
-    component(hooks =>
+    component(~key?, hooks =>
       (
         hooks,
         {
