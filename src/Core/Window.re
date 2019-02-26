@@ -343,12 +343,13 @@ let takeScreenshot = (w: t, filename: string) => {
   let width = w.framebufferWidth;
   let height = w.framebufferHeight;
 
-  let pixels = Bigarray.Array2.create(
-    Bigarray.int8_unsigned,
-    Bigarray.c_layout,
-    height,
-    width * 4,
-  );
+  let pixels =
+    Bigarray.Array2.create(
+      Bigarray.int8_unsigned,
+      Bigarray.c_layout,
+      height,
+      width * 4,
+    );
 
   /* let image = Image.create(~width, ~height, ~numChannels=4, ~channelSize=1); */
   /* let buffer = Image.getBuffer(image); */
