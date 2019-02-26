@@ -10,13 +10,13 @@ let create = (centerX, centerY, radius, startTheta, endTheta) => {
   for (i in (1) to (segments + 1)) {
     let theta = ((float_of_int(i) -. 1.0) /. float_of_int(segments)) *. totalAngle +. startTheta;
     let x = centerX +. radius *. cos(theta);
-    let y = centerY +. radius *. sin(theta);
+    let y = centerY +. -1. *. (radius *. sin(theta));
     Array.set(arcPositions, 2*(i-1), x);
     Array.set(arcPositions, 2*(i-1)+1, y);
     if (i > 1) {
       Array.set(indices, 3 * (i - 2), 0);
-      Array.set(indices, 3 * (i - 2) + 1, (i - 2));
-      Array.set(indices, 3 * (i - 2) + 2, (i - 1));
+      Array.set(indices, 3 * (i - 2) + 1, (i - 1));
+      Array.set(indices, 3 * (i - 2) + 2, i);
     };
   };
   let positions = Array.append(center, arcPositions);
