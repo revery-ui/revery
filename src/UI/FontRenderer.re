@@ -14,11 +14,13 @@ let getGlyph = (font: Fontkit.fk_face, glyphId: int) =>
 let _getTexture = ((font: Fontkit.fk_face, glyphId: int)) => {
   let glyph = getGlyph(font, glyphId);
 
-  let {image, _} = glyph;
+  let {bitmap, _} = glyph;
 
   /* - Create texture atlas */
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+  let textureFormat = Environment.webGL ? GL_RGBA : GL_ALPHA;
 
   let texture = glCreateTexture();
   glBindTexture(GL_TEXTURE_2D, texture);
@@ -26,7 +28,14 @@ let _getTexture = ((font: Fontkit.fk_face, glyphId: int)) => {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, image);
+  glTexImage2D(
+    GL_TEXTURE_2D,
+    0,
+    textureFormat,
+    textureFormat,
+    GL_UNSIGNED_BYTE,
+    bitmap,
+  );
   texture;
 };
 
