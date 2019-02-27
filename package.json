@@ -32,8 +32,8 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "3.4.0",
-    "reason-glfw": "^3.2.1019",
-    "reason-fontkit": "^2.2.1",
+    "reason-glfw": "^3.2.1020",
+    "reason-fontkit": "^2.3.1",
     "reason-gl-matrix": "^0.9.9303",
     "rebez": "*",
     "@opam/color": "^0.2.0",
@@ -49,7 +49,6 @@
   },
   "resolutions": {
     "rebez": "github:jchavarri/rebez#46cbc183",
-    "@opam/ocamlbuild": "0.12.0",
     "@opam/cmdliner": "1.0.2",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
