@@ -69,6 +69,7 @@ Install the following packages with your package manager of choice:
 * `xorg-dev`
 * `libglu1-mesa-dev`
 * `libharfbuzz-dev`
+* `libgtk-3-dev`
   
 ##### For `Fedora` you may need these additional packages
 * `libpng-devel`
@@ -79,7 +80,6 @@ Install the following packages with your package manager of choice:
 * `harfbuzz-devel`
 
 > __NOTE:__ `reason-fontkit` (a dependency of `revery`) requires `harfbuzz` 1.7.7+. This means `revery` requires Fedora 29+
-
 
 #### For `Windows` native
 
