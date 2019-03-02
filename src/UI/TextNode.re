@@ -5,9 +5,6 @@ module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
-open Fontkit;
-open Reglm;
-open Reglfw;
 open Revery_Core;
 
 open ViewNode;
@@ -21,140 +18,44 @@ class textNode (text: string) = {
     /* Draw background first */
     _super#draw(parentContext);
 
-    let pass = RenderPass.getCurrent();
+    let style = _super#getStyle();
 
-    let quad = Assets.quad();
-    let textureShader = Assets.fontShader();
+    let color = Color.multiplyAlpha(parentContext.opacity, style.color);
+    let fontFamily = style.fontFamily;
+    let fontSize = style.fontSize;
+    let lineHeight = style.lineHeight;
 
-    switch (pass) {
-    | AlphaPass(ctx) =>
-      let m = ctx.projection;
-      Shaders.CompiledShader.use(textureShader);
+    let lineHeightPx =
+      Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
 
-      Shaders.CompiledShader.setUniformMatrix4fv(
-        textureShader,
-        "uProjection",
-        m,
-      );
-
-      let style = _super#getStyle();
-      let opacity = style.opacity *. parentContext.opacity;
-      let font =
-        FontCache.load(
-          style.fontFamily,
-          int_of_float(
-            float_of_int(style.fontSize)
-            *. ctx.pixelRatio
-            *. float_of_int(ctx.scaleFactor)
-            +. 0.5,
-          ),
-        );
-      let lineHeightPx =
-        _this#_getLineHeightPx(font, ctx.pixelRatio, ctx.scaleFactor);
-      let color = Color.multiplyAlpha(opacity, style.color);
-      Shaders.CompiledShader.setUniform4fv(
-        textureShader,
-        "uColor",
-        Color.toVec4(color),
-      );
-
-      let metrics = FontRenderer.getNormalizedMetrics(font);
-
-      let multiplier = ctx.pixelRatio *. float_of_int(ctx.scaleFactor);
-      /* Position the baseline */
-      let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
-
-      let outerTransform = Mat4.create();
-      Mat4.fromTranslation(outerTransform, Vec3.create(0.0, baseline, 0.0));
-
-      let render = (s: Fontkit.fk_shape, x: float, y: float) => {
-        let glyph = FontRenderer.getGlyph(font, s.glyphId);
-
-        let {width, height, bearingX, bearingY, advance, _} = glyph;
-
-        let width = float_of_int(width) /. multiplier;
-        let height = float_of_int(height) /. multiplier;
-        let bearingX = float_of_int(bearingX) /. multiplier;
-        let bearingY = float_of_int(bearingY) /. multiplier;
-        let advance = float_of_int(advance) /. multiplier;
-
-        Glfw.glPixelStorei(GL_PACK_ALIGNMENT, 1);
-        Glfw.glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-        let texture = FontRenderer.getTexture(font, s.glyphId);
-        Glfw.glBindTexture(GL_TEXTURE_2D, texture);
-        /* TODO: Bind texture */
-
-        let glyphTransform = Mat4.create();
-        Mat4.fromTranslation(
-          glyphTransform,
-          Vec3.create(
-            x +. bearingX +. width /. 2.,
-            y +. height *. 0.5 -. bearingY,
-            0.0,
-          ),
-        );
-
-        let scaleTransform = Mat4.create();
-        Mat4.fromScaling(scaleTransform, Vec3.create(width, height, 1.0));
-
-        let local = Mat4.create();
-        Mat4.multiply(local, glyphTransform, scaleTransform);
-
-        let xform = Mat4.create();
-        Mat4.multiply(xform, outerTransform, local);
-        Mat4.multiply(xform, _this#getWorldTransform(), xform);
-
-        Shaders.CompiledShader.setUniformMatrix4fv(
-          textureShader,
-          "uWorld",
-          xform,
-        );
-
-        Geometry.draw(quad, textureShader);
-
-        x +. advance /. 64.0;
-      };
-
-      List.iteri(
-        (lineNum, line) => {
-          let shapedText = FontRenderer.shape(font, line);
-          let startX = ref(0.);
-
-          Array.iteri(
-            (_offset, s) => {
-              let nextX =
-                render(s, startX^, lineHeightPx *. float_of_int(lineNum));
-              startX := nextX;
-            },
-            shapedText,
-          );
-        },
-        _lines^,
-      );
-
-    | _ => ()
-    };
+    List.iteri(
+      (lineNum, line) =>
+        Text.drawString(
+          ~fontFamily,
+          ~fontSize,
+          ~color,
+          ~transform=_this#getWorldTransform(),
+          ~x=0.,
+          ~y=lineHeightPx *. float_of_int(lineNum),
+          line,
+        ),
+      _lines^,
+    );
   };
   pub setText = t => text = t;
-  pub! getMeasureFunction = (pixelRatio, scaleFactor) => {
+  pub! getMeasureFunction = (_pixelRatio, _scaleFactor) => {
     let measure =
         (_mode, width, _widthMeasureMode, _height, _heightMeasureMode) => {
       /* TODO: Cache font locally in variable */
       let style = _super#getStyle();
       let textWrap = style.textWrap;
-      let font =
-        FontCache.load(
-          style.fontFamily,
-          int_of_float(
-            float_of_int(style.fontSize)
-            *. pixelRatio
-            *. float_of_int(scaleFactor),
-          ),
-        );
+
+      let fontFamily = style.fontFamily;
+      let fontSize = style.fontSize;
+      let lineHeight = style.lineHeight;
 
       let lineHeightPx =
-        _this#_getLineHeightPx(font, pixelRatio, scaleFactor);
+        Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
 
       switch (textWrap) {
       | WhitespaceWrap =>
@@ -162,12 +63,7 @@ class textNode (text: string) = {
           TextWrapping.wrapText(
             ~text,
             ~measureWidth=
-              str =>
-                int_of_float(
-                  float_of_int(FontRenderer.measure(font, str).width)
-                  /. pixelRatio
-                  /. float_of_int(scaleFactor),
-                ),
+              str => Text.measure(~fontFamily, ~fontSize, str).width,
             ~maxWidth=width,
             ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
           );
@@ -182,11 +78,10 @@ class textNode (text: string) = {
 
         dimensions;
       | NoWrap =>
-        let d = FontRenderer.measure(font, text);
+        let d = Text.measure(~fontFamily, ~fontSize, text);
         let dimensions: Layout.LayoutTypes.dimensions = {
-          width:
-            int_of_float(float_of_int(d.width) /. pixelRatio) / scaleFactor,
-          height: int_of_float(lineHeightPx /. pixelRatio) / scaleFactor,
+          width: d.width,
+          height: d.height,
         };
 
         _lines := [text];
@@ -196,7 +91,7 @@ class textNode (text: string) = {
         let (lines, maxWidthLine) =
           wrapFunc(
             text,
-            str => FontRenderer.measure(font, str).width,
+            str => Text.measure(~fontFamily, ~fontSize, str).width,
             width,
           );
 
@@ -212,13 +107,5 @@ class textNode (text: string) = {
       };
     };
     Some(measure);
-  };
-  pri _getLineHeightPx = (font, pixelRatio, scaleFactor) => {
-    let style = _super#getStyle();
-    let metrics = FontRenderer.getNormalizedMetrics(font);
-    style.lineHeight
-    *. metrics.height
-    /. pixelRatio
-    /. float_of_int(scaleFactor);
   };
 };

@@ -42,6 +42,12 @@ let getCurrent = () => {
   };
 };
 
+let getContext = () =>
+  switch (getCurrent()) {
+  | SolidPass(v) => v
+  | AlphaPass(v) => v
+  };
+
 let startSolidPass =
     (~pixelRatio, ~scaleFactor, ~screenWidth, ~screenHeight, ~projection, ()) => {
   _activePass :=
