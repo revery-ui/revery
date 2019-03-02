@@ -29,11 +29,7 @@ let uniform: list(ShaderUniform.t) =
       name: "uBackgroundColor",
       usage: FragmentShader,
     },
-    {
-      dataType: ShaderDataType.Float,
-      name: "uGamma",
-      usage: FragmentShader,
-    }
+    {dataType: ShaderDataType.Float, name: "uGamma", usage: FragmentShader},
   ];
 
 let varying =
@@ -56,31 +52,30 @@ let vsShader = SolidShader.vsShader ++ "\n" ++ {|
  * This is the shader used when there is no background or a transparent background.
  * It does not properly handle gamma correction or subpixel anti-aliasing,
  * so the text render quality will be lower with this case.
- * 
+ *
  * However, it is the fastest and most convenient text rendering-strategy.
  */
-module Default {
-
-    let fsShader = {|
+module Default = {
+  let fsShader = {|
         vec4 t = texture2D(uSampler, vTexCoord);
         gl_FragColor = vec4(vColor.r, vColor.g, vColor.b, t.a * vColor.a);
     |};
 
-    let create = () => {
-      let shader =
-        Shader.create(
-          ~attributes=attribute,
-          ~uniforms=uniform,
-          ~varying,
-          ~vertexShader=vsShader,
-          ~fragmentShader=fsShader,
-        );
-      Shader.compile(shader);
-    };
+  let create = () => {
+    let shader =
+      Shader.create(
+        ~attributes=attribute,
+        ~uniforms=uniform,
+        ~varying,
+        ~vertexShader=vsShader,
+        ~fragmentShader=fsShader,
+      );
+    Shader.compile(shader);
+  };
 };
 
-module GammaCorrected {
-    let fsShader = {|
+module GammaCorrected = {
+  let fsShader = {|
         vec4 t = texture2D(uSampler, vTexCoord);
         vec4 alpha = t.a;
         vec4 fg = vColor;
@@ -100,15 +95,15 @@ module GammaCorrected {
         gl_FragColor = vec4(r, g, b, 1.0);
     |};
 
-    let create = () => {
-      let shader =
-        Shader.create(
-          ~attributes=attribute,
-          ~uniforms=uniform,
-          ~varying,
-          ~vertexShader=vsShader,
-          ~fragmentShader=fsShader,
-        );
-      Shader.compile(shader);
-    };
-}
+  let create = () => {
+    let shader =
+      Shader.create(
+        ~attributes=attribute,
+        ~uniforms=uniform,
+        ~varying,
+        ~vertexShader=vsShader,
+        ~fragmentShader=fsShader,
+      );
+    Shader.compile(shader);
+  };
+};

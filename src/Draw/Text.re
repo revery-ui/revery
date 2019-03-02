@@ -43,14 +43,14 @@ let measure = (~fontFamily, ~fontSize, text) => {
 let identityMatrix = Mat4.create();
 
 let _getShaderForDrawing = (~backgroundColor: Color.t, ()) => {
-    ignore(backgroundColor);
-    
-    if (backgroundColor.a > 0.99) {
-        Assets.fontGammaCorrectedShader();
-    } else {
-        Assets.fontDefaultShader();
-    };
-}
+  ignore(backgroundColor);
+
+  if (backgroundColor.a > 0.99) {
+    Assets.fontGammaCorrectedShader();
+  } else {
+    Assets.fontDefaultShader();
+  };
+};
 
 let drawString =
     (
@@ -88,14 +88,10 @@ let drawString =
     CompiledShader.setUniform4fv(
       textureShader,
       "uBackgroundColor",
-      Color.toVec4(backgroundColor)
+      Color.toVec4(backgroundColor),
     );
 
-    CompiledShader.setUniform1f(
-        textureShader,
-        "uGamma",
-        gamma,
-    );
+    CompiledShader.setUniform1f(textureShader, "uGamma", gamma);
 
     let metrics = FontRenderer.getNormalizedMetrics(font);
     let multiplier = ctx.pixelRatio *. float_of_int(ctx.scaleFactor);

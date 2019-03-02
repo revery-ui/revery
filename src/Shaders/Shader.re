@@ -206,8 +206,8 @@ module CompiledShader = {
     };
   };
 
-  let setUniform1f = (s: t, name: string, v: float) => 
-      _setUniformIfAvailable(s, name, u => glUniform1f(u, v));
+  let setUniform1f = (s: t, name: string, v: float) =>
+    _setUniformIfAvailable(s, name, u => glUniform1f(u, v));
 
   let setUniform2fv = (s: t, name: string, v: Vec2.t) =>
     _setUniformIfAvailable(s, name, u => glUniform2fv(u, v));

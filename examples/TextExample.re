@@ -42,8 +42,7 @@ module SampleText = {
       let (fontSizeSliderVal, setFontSize, hooks) =
         React.Hooks.state(20., hooks);
       let (widthSliderVal, setWidth, hooks) = React.Hooks.state(200., hooks);
-      let (gammaVal, setGamma, hooks) =
-        React.Hooks.state(2.2, hooks);
+      let (gammaVal, setGamma, hooks) = React.Hooks.state(2.2, hooks);
 
       let textContent = "All work and no play makes Jack a dull boy";
       let maxFontSize = 40.;
@@ -63,9 +62,9 @@ module SampleText = {
                 textWrap(TextWrapping.WhitespaceWrap),
                 width(int_of_float(widthSliderVal)),
                 border(~color=Colors.blueViolet, ~width=1),
-                backgroundColor(Colors.black)
+                backgroundColor(Colors.black),
               ]
-              gamma={gammaVal}
+              gamma=gammaVal
               text=textContent
             />
           </View>
@@ -78,10 +77,7 @@ module SampleText = {
             />
             <Text
               style=textStyle
-              text={
-                "Value: "
-                ++ (fontSizeSliderVal |> string_of_float)
-              }
+              text={"Value: " ++ (fontSizeSliderVal |> string_of_float)}
             />
           </View>
           <View style=controlsStyle>
@@ -93,13 +89,11 @@ module SampleText = {
             />
             <Text
               style=textStyle
-              text={
-                "Value: " ++ (widthSliderVal |> string_of_float)
-              }
+              text={"Value: " ++ (widthSliderVal |> string_of_float)}
             />
           </View>
           <View style=controlsStyle>
-            <Text style=textStyle text="Gamma correction:" />
+            <Text style=textStyle text="Gamma:" />
             <Slider
               onValueChanged=setGamma
               value=gammaVal
@@ -108,10 +102,7 @@ module SampleText = {
             />
             <Text
               style=textStyle
-              text={
-                "Value: "
-                ++ (gammaVal |> string_of_float)
-              }
+              text={"Value: " ++ (gammaVal |> string_of_float)}
             />
           </View>
         </View>,
