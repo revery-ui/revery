@@ -1,3 +1,5 @@
+open Revery_Draw;
+
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 module Layout = Layout;
@@ -9,22 +11,24 @@ open Reglfw;
 open Revery_Core;
 
 open ViewNode;
-open RenderPass;
 
 class textNode (text: string) = {
   as _this;
   val mutable text = text;
   val _lines: ref(list(string)) = ref([]);
   inherit (class viewNode)() as _super;
-  pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
+  pub! draw = (parentContext: NodeDrawContext.t) => {
     /* Draw background first */
-    _super#draw(pass, parentContext);
+    _super#draw(parentContext);
+
+    let pass = RenderPass.getCurrent();
 
     let quad = Assets.quad();
     let textureShader = Assets.fontShader();
 
     switch (pass) {
-    | AlphaPass(m) =>
+    | AlphaPass(ctx) =>
+      let m = ctx.projection;
       Shaders.CompiledShader.use(textureShader);
 
       Shaders.CompiledShader.setUniformMatrix4fv(
@@ -40,17 +44,13 @@ class textNode (text: string) = {
           style.fontFamily,
           int_of_float(
             float_of_int(style.fontSize)
-            *. parentContext.pixelRatio
-            *. float_of_int(parentContext.scaleFactor)
+            *. ctx.pixelRatio
+            *. float_of_int(ctx.scaleFactor)
             +. 0.5,
           ),
         );
       let lineHeightPx =
-        _this#_getLineHeightPx(
-          font,
-          parentContext.pixelRatio,
-          parentContext.scaleFactor,
-        );
+        _this#_getLineHeightPx(font, ctx.pixelRatio, ctx.scaleFactor);
       let color = Color.multiplyAlpha(opacity, style.color);
       Shaders.CompiledShader.setUniform4fv(
         textureShader,
@@ -60,8 +60,7 @@ class textNode (text: string) = {
 
       let metrics = FontRenderer.getNormalizedMetrics(font);
 
-      let multiplier =
-        parentContext.pixelRatio *. float_of_int(parentContext.scaleFactor);
+      let multiplier = ctx.pixelRatio *. float_of_int(ctx.scaleFactor);
       /* Position the baseline */
       let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
 

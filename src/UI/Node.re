@@ -2,6 +2,7 @@ module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
+module RenderPass = Revery_Draw.RenderPass;
 
 open Revery_Math;
 
@@ -25,15 +26,15 @@ let getOrThrow: (string, option('a)) => 'a =
     | None => raise(NoDataException(msg))
     };
 
-class node ('a) (()) = {
+class node (()) = {
   as _this;
-  val _children: ref(list(node('a))) = ref([]);
+  val _children: ref(list(node)) = ref([]);
   val _style: ref(Style.t) = ref(Style.defaultStyle);
   val _layoutStyle: ref(LayoutTypes.cssStyle) =
     ref(Layout.LayoutSupport.defaultStyle);
-  val _events: ref(NodeEvents.t(node('a))) = ref(NodeEvents.make());
+  val _events: ref(NodeEvents.t(node)) = ref(NodeEvents.make());
   val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
-  val _parent: ref(option(node('a))) = ref(None);
+  val _parent: ref(option(node)) = ref(None);
   val _internalId: int = UniqueId.getUniqueId();
   val _tabIndex: ref(option(int)) = ref(None);
   val _hasFocus: ref(bool) = ref(false);
@@ -43,22 +44,28 @@ class node ('a) (()) = {
     ref(NodeEvents.DimensionsChangedEventParams.create());
   val _miniLayout: ref(Dimensions.t) =
     ref(Dimensions.create(~top=0, ~left=0, ~width=0, ~height=0, ()));
-  pub draw = (pass: 'a, parentContext: NodeDrawContext.t) => {
+  pub draw = (parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
     let dimensions = _this#measurements();
+
+    let ctx =
+      switch (RenderPass.getCurrent()) {
+      | SolidPass(v) => v
+      | AlphaPass(v) => v
+      };
 
     Overflow.render(
       worldTransform,
       style.overflow,
       dimensions,
-      parentContext.screenHeight,
-      parentContext.pixelRatio,
-      parentContext.scaleFactor,
+      ctx.screenHeight,
+      ctx.pixelRatio,
+      ctx.scaleFactor,
       () => {
         let localContext =
           NodeDrawContext.createFromParent(parentContext, style.opacity);
-        List.iter(c => c#draw(pass, localContext), _children^);
+        List.iter(c => c#draw(localContext), _children^);
       },
     );
   };
@@ -206,11 +213,11 @@ class node ('a) (()) = {
     let bbox = _this#getBoundingBox();
     BoundingBox2d.isPointInside(bbox, p);
   };
-  pub addChild = (n: node('a)) => {
+  pub addChild = (n: node) => {
     _children := List.append(_children^, [n]);
-    n#_setParent(Some((_this :> node('a))));
+    n#_setParent(Some((_this :> node)));
   };
-  pub removeChild = (n: node('a)) => {
+  pub removeChild = (n: node) => {
     _children :=
       List.filter(c => c#getInternalId() != n#getInternalId(), _children^);
     n#_setParent(None);
@@ -329,13 +336,13 @@ class node ('a) (()) = {
     List.iter(fc, _children^);
   };
   /* TODO: This should really be private - it should never be explicitly set */
-  pub _setParent = (n: option(node('a))) => {
+  pub _setParent = (n: option(node)) => {
     _parent := n;
 
     /* Dispatch ref event if we just got attached */
     switch (n) {
     | Some(_) =>
-      let ret = (_this :> node('a));
+      let ret = (_this :> node);
       let maybeRef = _this#getEvents().ref;
       switch (maybeRef) {
       | Some(ref) =>
@@ -364,7 +371,7 @@ class node ('a) (()) = {
   };
 };
 
-let iter = (f, node: node('a)) => {
+let iter = (f, node: node) => {
   let rec apply = node => {
     f(node);
 

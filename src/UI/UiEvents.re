@@ -59,7 +59,7 @@ module BubbledEvent = {
 
 let isNodeImpacted = (n, pos) => n#hitTest(pos);
 
-let rec getFirstFocusable = (node: node('a), pos) =>
+let rec getFirstFocusable = (node: node, pos) =>
   if (!isNodeImpacted(node, pos)) {
     None;
   } else if (node#canBeFocused()) {
@@ -79,7 +79,7 @@ and checkChildren = (children, pos) =>
     }
   };
 
-let getDeepestNode = (node: node('a), pos) => {
+let getDeepestNode = (node: node, pos) => {
   let deepestNode = ref(None);
   let maxDepth = ref(-1);
 
@@ -97,7 +97,7 @@ let getDeepestNode = (node: node('a), pos) => {
   deepestNode;
 };
 
-let rec traverseHeirarchy = (node: node('a), bubbled) =>
+let rec traverseHeirarchy = (node: node, bubbled) =>
   BubbledEvent.(
     /*
      track if default prevent or propagation stopped per node

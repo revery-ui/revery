@@ -1,4 +1,5 @@
 open Revery_Core;
+open Revery_Draw;
 
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
@@ -7,7 +8,6 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Reglm;
 open Node;
-open RenderPass;
 open Style;
 open Style.Border;
 open Style.BoxShadow;
@@ -277,10 +277,11 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
 
 class viewNode (()) = {
   as _this;
-  inherit (class node(renderPass))() as _super;
-  pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
+  inherit (class node)() as _super;
+  pub! draw = (parentContext: NodeDrawContext.t) => {
+    let pass = RenderPass.getCurrent();
     switch (pass) {
-    | AlphaPass(m) =>
+    | AlphaPass(ctx) =>
       let solidShader = Assets.solidShader();
       let dimensions = _this#measurements();
       let width = float_of_int(dimensions.width);
@@ -290,6 +291,8 @@ class viewNode (()) = {
       let opacity = style.opacity *. parentContext.opacity;
 
       let world = _this#getWorldTransform();
+
+      let m = ctx.projection;
 
       let (minX, minY, maxX, maxY) =
         renderBorders(
@@ -337,6 +340,6 @@ class viewNode (()) = {
     | _ => ()
     };
 
-    _super#draw(pass, parentContext);
+    _super#draw(parentContext);
   };
 };

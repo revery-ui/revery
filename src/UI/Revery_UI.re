@@ -11,7 +11,7 @@ module Style = Style;
 module Transform = Transform;
 module Selector = Selector;
 
-class node = class Node.node(RenderPass.t);
+class node = class Node.node;
 class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
 class imageNode = class ImageNode.imageNode;
@@ -110,7 +110,7 @@ let start = (window: Window.t, render: renderFunction) => {
     );
 
   let _ =
-    Revery_Core.Event.subscribe(FontCache.onFontLoaded, () =>
+    Revery_Core.Event.subscribe(Revery_Draw.FontCache.onFontLoaded, () =>
       Window.render(window)
     );
 
