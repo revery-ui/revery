@@ -18,37 +18,29 @@ class textNode (text: string) = {
     /* Draw background first */
     _super#draw(parentContext);
 
-    /* let pass = RenderPass.getCurrent(); */
-
-    /* let quad = Assets.quad(); */
-    /* let textureShader = Assets.fontShader(); */
-
-
-
     let style = _super#getStyle();
 
+    let color = Color.multiplyAlpha(parentContext.opacity, style.color);
+    let fontFamily = style.fontFamily;
+    let fontSize = style.fontSize;
+    let lineHeight = style.lineHeight;
 
-      let color = Color.multiplyAlpha(parentContext.opacity, style.color);
-      let fontFamily = style.fontFamily;
-      let fontSize = style.fontSize;
-      let lineHeight = style.lineHeight;
+    let lineHeightPx =
+      Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
 
-      let lineHeightPx = Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
-
-      List.iteri(
-        (lineNum, line) => {
-          Text.drawString(
-              ~fontFamily,
-              ~fontSize,
-              ~color=color,
-              ~transform=_this#getWorldTransform(),
-              ~x=0.,
-              ~y=lineHeightPx *. float_of_int(lineNum),
-              line);
-        },
-        _lines^,
-      );
-
+    List.iteri(
+      (lineNum, line) =>
+        Text.drawString(
+          ~fontFamily,
+          ~fontSize,
+          ~color,
+          ~transform=_this#getWorldTransform(),
+          ~x=0.,
+          ~y=lineHeightPx *. float_of_int(lineNum),
+          line,
+        ),
+      _lines^,
+    );
   };
   pub setText = t => text = t;
   pub! getMeasureFunction = (_pixelRatio, _scaleFactor) => {
@@ -63,7 +55,7 @@ class textNode (text: string) = {
       let lineHeight = style.lineHeight;
 
       let lineHeightPx =
-          Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
+        Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
 
       switch (textWrap) {
       | WhitespaceWrap =>
@@ -86,10 +78,10 @@ class textNode (text: string) = {
 
         dimensions;
       | NoWrap =>
-        let d = Text.measure(~fontFamily, ~fontSize,  text);
+        let d = Text.measure(~fontFamily, ~fontSize, text);
         let dimensions: Layout.LayoutTypes.dimensions = {
           width: d.width,
-          height:  d.height,
+          height: d.height,
         };
 
         _lines := [text];
