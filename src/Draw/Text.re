@@ -51,6 +51,7 @@ let _getShaderForDrawing = (~backgroundColor: Color.t, ()) => {
 
   if (backgroundColor.a > 0.99) {
     Assets.fontSubpixelShader();
+    /* Assets.fontGammaCorrectedShader(); */
   } else {
     Assets.fontDefaultShader();
   };
