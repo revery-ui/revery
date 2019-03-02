@@ -42,12 +42,24 @@ let measure = (~fontFamily, ~fontSize, text) => {
 
 let identityMatrix = Mat4.create();
 
+let _getShaderForDrawing = (~backgroundColor: Color.t, ()) => {
+  ignore(backgroundColor);
+
+  if (backgroundColor.a > 0.99) {
+    Assets.fontGammaCorrectedShader();
+  } else {
+    Assets.fontDefaultShader();
+  };
+};
+
 let drawString =
     (
       ~fontFamily: string,
       ~fontSize: int,
       ~color: Color.t=Colors.white,
+      ~backgroundColor: Color.t=Colors.transparentBlack,
       ~transform: Mat4.t=identityMatrix,
+      ~gamma=2.2,
       ~x=0.,
       ~y=0.,
       text: string,
@@ -59,7 +71,8 @@ let drawString =
     /* let lineHeightPx = getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ()); */
     let m = ctx.projection;
     let quad = Assets.quad();
-    let textureShader = Assets.fontShader();
+    let textureShader = _getShaderForDrawing(~backgroundColor, ());
+
     CompiledShader.use(textureShader);
 
     CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", m);
@@ -71,6 +84,14 @@ let drawString =
       "uColor",
       Color.toVec4(color),
     );
+
+    CompiledShader.setUniform4fv(
+      textureShader,
+      "uBackgroundColor",
+      Color.toVec4(backgroundColor),
+    );
+
+    CompiledShader.setUniform1f(textureShader, "uGamma", gamma);
 
     let metrics = FontRenderer.getNormalizedMetrics(font);
     let multiplier = ctx.pixelRatio *. float_of_int(ctx.scaleFactor);

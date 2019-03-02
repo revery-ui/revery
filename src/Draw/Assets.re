@@ -8,7 +8,9 @@ module Memoize = Revery_Core.Memoize;
 module Geometry = Revery_Geometry;
 
 let solidShader = Lazy.make(() => SolidShader.create());
-let fontShader = Lazy.make(() => FontShader.create());
+let fontDefaultShader = Lazy.make(() => FontShader.Default.create());
+let fontGammaCorrectedShader =
+  Lazy.make(() => FontShader.GammaCorrected.create());
 let gradientShader = Lazy.make(() => GradientShader.create());
 let textureShader = Lazy.make(() => TextureShader.create());
 
