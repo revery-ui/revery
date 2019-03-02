@@ -21,12 +21,16 @@ open Fontkit;
 let _getScaledFontSize = fontSize => {
   let ctx = RenderPass.getContext();
 
-  int_of_float(
-    float_of_int(fontSize)
-    *. ctx.pixelRatio
-    *. float_of_int(ctx.scaleFactor)
-    +. 0.5,
-  );
+  ignore(ctx);
+
+  fontSize * 3;
+
+  /* int_of_float( */
+  /*   float_of_int(fontSize) */
+  /*   *. ctx.pixelRatio */
+  /*   *. float_of_int(ctx.scaleFactor) */
+  /*   +. 0.5, */
+  /* ); */
 };
 
 let getLineHeight = (~fontFamily, ~fontSize, ~lineHeight, ()) => {
@@ -46,7 +50,7 @@ let _getShaderForDrawing = (~backgroundColor: Color.t, ()) => {
   ignore(backgroundColor);
 
   if (backgroundColor.a > 0.99) {
-    Assets.fontGammaCorrectedShader();
+    Assets.fontSubpixelShader();
   } else {
     Assets.fontDefaultShader();
   };
@@ -94,7 +98,7 @@ let drawString =
     CompiledShader.setUniform1f(textureShader, "uGamma", gamma);
 
     let metrics = FontRenderer.getNormalizedMetrics(font);
-    let multiplier = ctx.pixelRatio *. float_of_int(ctx.scaleFactor);
+    let multiplier = ctx.pixelRatio *. float_of_int(ctx.scaleFactor) *. 3.;
     /* Position the baseline */
     let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
     ();
@@ -106,7 +110,9 @@ let drawString =
 
       let {width, height, bearingX, bearingY, advance, _} = glyph;
 
-      let width = float_of_int(width) /. multiplier;
+      let widthF = float_of_int(width);
+
+      let width = widthF /. multiplier;
       let height = float_of_int(height) /. multiplier;
       let bearingX = float_of_int(bearingX) /. multiplier;
       let bearingY = float_of_int(bearingY) /. multiplier;
@@ -114,6 +120,9 @@ let drawString =
 
       glPixelStorei(GL_PACK_ALIGNMENT, 1);
       glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+      let subpixelSize = 1.0 /. (widthF *. 3.0);
+      CompiledShader.setUniform1f(textureShader, "uSubpixel", subpixelSize);
 
       let texture = FontRenderer.getTexture(font, s.glyphId);
       glBindTexture(GL_TEXTURE_2D, texture);

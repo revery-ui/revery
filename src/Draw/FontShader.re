@@ -29,6 +29,11 @@ let uniform: list(ShaderUniform.t) =
       name: "uBackgroundColor",
       usage: FragmentShader,
     },
+    {
+      dataType: ShaderDataType.Float,
+      name: "uSubpixel",
+      usage: FragmentShader,
+    },
     {dataType: ShaderDataType.Float, name: "uGamma", usage: FragmentShader},
   ];
 
@@ -74,6 +79,11 @@ module Default = {
   };
 };
 
+/*
+ * GammaCorrected
+ * 
+ * This applies gamma correction for proper blending
+ */
 module GammaCorrected = {
   let fsShader = {|
         vec4 t = texture2D(uSampler, vTexCoord);
@@ -87,6 +97,46 @@ module GammaCorrected = {
         float r0 = pow(fg.r, GAMMA) * alpha + pow(bg.r, GAMMA) * (1.0 - alpha);
         float g0 = pow(fg.g, GAMMA) * alpha + pow(bg.g, GAMMA) * (1.0 - alpha);
         float b0 = pow(fg.b, GAMMA) * alpha + pow(bg.b, GAMMA) * (1.0 - alpha);
+
+        float r = pow(r0, INV_GAMMA);
+        float g = pow(g0, INV_GAMMA);
+        float b = pow(b0, INV_GAMMA);
+
+        gl_FragColor = vec4(r, g, b, 1.0);
+    |};
+
+  let create = () => {
+    let shader =
+      Shader.create(
+        ~attributes=attribute,
+        ~uniforms=uniform,
+        ~varying,
+        ~vertexShader=vsShader,
+        ~fragmentShader=fsShader,
+      );
+    Shader.compile(shader);
+  };
+};
+
+module Subpixel = {
+  let fsShader = {|
+        vec2 rPos = vec2(vTexCoord.x - uSubpixel, vTexCoord.y);
+        vec2 gPos = vTexCoord;
+        vec2 bPos = vec2(vTexCoord.x + uSubpixel, vTexCoord.y);
+
+        float rAlpha = texture2D(uSampler, rPos).a;
+        float bAlpha = texture2D(uSampler, bPos).a;
+        float gAlpha = texture2D(uSampler, gPos).a;
+
+        vec4 fg = vColor;
+        vec4 bg = uBackgroundColor;
+
+        float GAMMA = uGamma;
+        float INV_GAMMA = 1.0 / GAMMA;
+
+        float r0 = pow(fg.r, GAMMA) * rAlpha + pow(bg.r, GAMMA) * (1.0 - rAlpha);
+        float g0 = pow(fg.g, GAMMA) * gAlpha + pow(bg.g, GAMMA) * (1.0 - gAlpha);
+        float b0 = pow(fg.b, GAMMA) * bAlpha + pow(bg.b, GAMMA) * (1.0 - bAlpha);
 
         float r = pow(r0, INV_GAMMA);
         float g = pow(g0, INV_GAMMA);

@@ -11,6 +11,9 @@ let solidShader = Lazy.make(() => SolidShader.create());
 let fontDefaultShader = Lazy.make(() => FontShader.Default.create());
 let fontGammaCorrectedShader =
   Lazy.make(() => FontShader.GammaCorrected.create());
+let fontSubpixelShader =
+  Lazy.make(() => FontShader.Subpixel.create());
+
 let gradientShader = Lazy.make(() => GradientShader.create());
 let textureShader = Lazy.make(() => TextureShader.create());
 
