@@ -79,14 +79,11 @@ module Default = {
   };
 };
 
-<<<<<<< HEAD
 /*
  * GammaCorrected
  * 
  * This applies gamma correction for proper blending
  */
-=======
->>>>>>> master
 module GammaCorrected = {
   let fsShader = {|
         vec4 t = texture2D(uSampler, vTexCoord);
@@ -107,7 +104,6 @@ module GammaCorrected = {
 
         gl_FragColor = vec4(r, g, b, 1.0);
     |};
-<<<<<<< HEAD
 
   let create = () => {
     let shader =
@@ -148,8 +144,6 @@ module Subpixel = {
 
         gl_FragColor = vec4(r, g, b, 1.0);
     |};
-=======
->>>>>>> master
 
   let create = () => {
     let shader =
