@@ -59,7 +59,7 @@ let vsShader = SolidShader.vsShader ++ "\n" ++ {|
  * 
  * However, it is the fastest and most convenient text rendering-strategy.
  */
-module DefaultShader {
+module Default {
 
     let fsShader = {|
         vec4 t = texture2D(uSampler, vTexCoord);
@@ -79,7 +79,7 @@ module DefaultShader {
     };
 };
 
-module GammaCorrectedShader {
+module GammaCorrected {
     let fsShader = {|
         vec4 t = texture2D(uSampler, vTexCoord);
         vec4 alpha = t.a;
