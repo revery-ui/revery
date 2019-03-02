@@ -153,6 +153,7 @@ module Text = {
         ~ref=?,
         ~style=emptyTextStyle,
         ~text="",
+        ~gamma,
         children,
       ) =>
     component(~key?, hooks =>
@@ -192,6 +193,7 @@ module Text = {
             tn#setEvents(events);
             tn#setStyle(styles);
             tn#setText(text);
+            tn#setGamma(gamma);
             node;
           },
           children,
@@ -209,6 +211,7 @@ module Text = {
         ~style=emptyTextStyle,
         ~text="",
         ~children,
+        ~gamma=2.2,
         (),
       ) =>
     make(
@@ -219,6 +222,7 @@ module Text = {
       ~ref?,
       ~style,
       ~text,
+      ~gamma,
       UiReact.listToElement(children),
     );
 };

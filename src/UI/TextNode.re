@@ -12,6 +12,7 @@ open ViewNode;
 class textNode (text: string) = {
   as _this;
   val mutable text = text;
+  val mutable gamma = 2.2;
   val _lines: ref(list(string)) = ref([]);
   inherit (class viewNode)() as _super;
   pub! draw = (parentContext: NodeDrawContext.t) => {
@@ -33,6 +34,7 @@ class textNode (text: string) = {
         Text.drawString(
           ~fontFamily,
           ~fontSize,
+          ~gamma,
           ~color,
           ~transform=_this#getWorldTransform(),
           ~x=0.,
@@ -42,6 +44,7 @@ class textNode (text: string) = {
       _lines^,
     );
   };
+  pub setGamma = g => gamma = g;
   pub setText = t => text = t;
   pub! getMeasureFunction = (_pixelRatio, _scaleFactor) => {
     let measure =
