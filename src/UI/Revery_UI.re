@@ -111,7 +111,7 @@ let start = (window: Window.t, render: renderFunction) => {
 
   let _ =
     Revery_Core.Event.subscribe(Revery_Draw.FontCache.onFontLoaded, () =>
-      Window.render(window)
+      uiDirty := true
     );
 
   Window.setShouldRenderCallback(window, () =>
