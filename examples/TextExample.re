@@ -56,6 +56,7 @@ module SampleText = {
             <Text
               style=Style.[
                 color(Colors.white),
+                backgroundColor(Colors.black),
                 fontFamily("Roboto-Regular.ttf"),
                 fontSize(int_of_float(fontSizeSliderVal)),
                 lineHeight(1.5),

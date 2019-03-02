@@ -22,6 +22,7 @@ class textNode (text: string) = {
     let style = _super#getStyle();
 
     let color = Color.multiplyAlpha(parentContext.opacity, style.color);
+    let backgroundColor = Color.multiplyAlpha(parentContext.opacity, style.backgroundColor);
     let fontFamily = style.fontFamily;
     let fontSize = style.fontSize;
     let lineHeight = style.lineHeight;
@@ -36,6 +37,7 @@ class textNode (text: string) = {
           ~fontSize,
           ~gamma,
           ~color,
+          ~backgroundColor,
           ~transform=_this#getWorldTransform(),
           ~x=0.,
           ~y=lineHeightPx *. float_of_int(lineNum),
