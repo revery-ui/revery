@@ -32,15 +32,20 @@ let getLineHeight = (~fontFamily, ~fontSize, ~lineHeight, ()) => {
     lineHeight *. metrics.height;
 }
 
+let measure = (~fontFamily, ~fontSize, text) => {
+    let font = FontCache.load(fontFamily, fontSize);
+    FontRenderer.measure(font, text);
+};
+
 let identityMatrix = Mat4.create();
 
-let drawText = (
+let drawString = (
     ~fontFamily: string,
     ~fontSize: int,
     ~color: Color.t=Colors.white,
     ~transform: Mat4.t = identityMatrix,
-    x: float,
-    y: float,
+    ~x=0.,
+    ~y=0.,
     text: string,
     ) => {
 
