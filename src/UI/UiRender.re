@@ -63,28 +63,27 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
       -1000.0,
     );
 
-    let drawContext =
-      NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
+    let drawContext = NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
 
     RenderPass.startSolidPass(
-        ~pixelRatio,
-        ~scaleFactor,
-        ~screenHeight=adjustedHeight,
-        ~screenWidth=adjustedWidth,
-        ~projection=_projection,
-        ()
+      ~pixelRatio,
+      ~scaleFactor,
+      ~screenHeight=adjustedHeight,
+      ~screenWidth=adjustedWidth,
+      ~projection=_projection,
+      (),
     );
     rootNode#draw(drawContext);
     RenderPass.endSolidPass();
 
     /* Render all geometry that requires an alpha */
     RenderPass.startAlphaPass(
-        ~pixelRatio,
-        ~scaleFactor,
-        ~screenHeight=adjustedHeight,
-        ~screenWidth=adjustedWidth,
-        ~projection=_projection,
-        ()
+      ~pixelRatio,
+      ~scaleFactor,
+      ~screenHeight=adjustedHeight,
+      ~screenWidth=adjustedWidth,
+      ~projection=_projection,
+      (),
     );
     rootNode#draw(drawContext);
     RenderPass.endSolidPass();

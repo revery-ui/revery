@@ -285,11 +285,7 @@ let rec handleMouseEnterDiff = (deepestNode, evtParams, ~newNodes=[], ()) => {
 };
 
 let dispatch =
-    (
-      cursor: Cursor.t,
-      evt: Events.internalMouseEvents,
-      node: Node.node,
-    ) => {
+    (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node) => {
   node#hasRendered()
     ? {
       let pos = getPositionFromMouseEvent(cursor, evt);

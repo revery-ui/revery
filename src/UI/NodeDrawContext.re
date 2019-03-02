@@ -8,19 +8,11 @@ type t = {
   opacity: float,
 };
 
-let create =
-    (
-      ~zIndex: int,
-      ~opacity: float,
-      ()
-    ) => {
-  zIndex, 
-  opacity
-};
+let create = (~zIndex: int, ~opacity: float, ()) => {zIndex, opacity};
 
 let createFromParent = (parentContext: t, localOpacity: float) => {
   let zIndex = parentContext.zIndex + 1;
   let opacity = parentContext.opacity *. localOpacity;
 
-  { zIndex, opacity };
+  {zIndex, opacity};
 };

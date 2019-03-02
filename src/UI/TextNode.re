@@ -50,11 +50,7 @@ class textNode (text: string) = {
           ),
         );
       let lineHeightPx =
-        _this#_getLineHeightPx(
-          font,
-          ctx.pixelRatio,
-          ctx.scaleFactor,
-        );
+        _this#_getLineHeightPx(font, ctx.pixelRatio, ctx.scaleFactor);
       let color = Color.multiplyAlpha(opacity, style.color);
       Shaders.CompiledShader.setUniform4fv(
         textureShader,
@@ -64,8 +60,7 @@ class textNode (text: string) = {
 
       let metrics = FontRenderer.getNormalizedMetrics(font);
 
-      let multiplier =
-        ctx.pixelRatio *. float_of_int(ctx.scaleFactor);
+      let multiplier = ctx.pixelRatio *. float_of_int(ctx.scaleFactor);
       /* Position the baseline */
       let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
 

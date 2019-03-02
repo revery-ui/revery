@@ -26,7 +26,7 @@ let getOrThrow: (string, option('a)) => 'a =
     | None => raise(NoDataException(msg))
     };
 
-class node () = {
+class node (()) = {
   as _this;
   val _children: ref(list(node)) = ref([]);
   val _style: ref(Style.t) = ref(Style.defaultStyle);
@@ -49,10 +49,11 @@ class node () = {
     let worldTransform = _this#getWorldTransform();
     let dimensions = _this#measurements();
 
-    let ctx = switch(RenderPass.getCurrent()) {
-    | SolidPass(v) => v;
-    | AlphaPass(v) => v;
-    };
+    let ctx =
+      switch (RenderPass.getCurrent()) {
+      | SolidPass(v) => v
+      | AlphaPass(v) => v
+      };
 
     Overflow.render(
       worldTransform,
