@@ -5,23 +5,25 @@ module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
+module RenderPass = Revery_Draw.RenderPass;
 
 open Node;
 open ViewNode;
-open RenderPass;
 
 class imageNode (imagePath: string) = {
   as _this;
   val textureShader = Assets.textureShader();
   val texture = ImageRenderer.getTexture(imagePath);
-  inherit (class node(renderPass))() as _super;
-  pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
+  inherit (class node)() as _super;
+  pub! draw = (parentContext: NodeDrawContext.t) => {
     /* Draw background first */
-    _super#draw(pass, parentContext);
+    _super#draw(parentContext);
 
+    let pass = RenderPass.getCurrent();
     switch (pass) {
-    | AlphaPass(m) =>
+    | AlphaPass(ctx) =>
       Shaders.CompiledShader.use(textureShader);
+      let m = ctx.projection;
 
       let dimensions = _this#measurements();
       let width = float_of_int(dimensions.width);

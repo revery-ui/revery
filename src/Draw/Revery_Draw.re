@@ -1,1 +1,1 @@
-
+module RenderPass = RenderPass;

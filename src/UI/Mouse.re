@@ -288,7 +288,7 @@ let dispatch =
     (
       cursor: Cursor.t,
       evt: Events.internalMouseEvents,
-      node: Node.node(RenderPass.t),
+      node: Node.node,
     ) => {
   node#hasRendered()
     ? {

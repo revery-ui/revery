@@ -33,4 +33,4 @@ let releaseCapture: unit => unit;
 let onCursorChanged: Event.t(MouseCursors.t);
 
 let dispatch:
-  (Cursor.t, Events.internalMouseEvents, Node.node(RenderPass.t)) => unit;
+  (Cursor.t, Events.internalMouseEvents, Node.node) => unit;

@@ -18,12 +18,12 @@ let loseFocus = () =>
   | None => ()
   };
 
-let focus = (node: Node.node('a)) => {
+let focus = (node: Node.node) => {
   let _ = node#handleEvent(Focus);
   focused := Some({handler: node#handleEvent, id: node#getInternalId()});
 };
 /* TODO perform checks if a node can be focused ? */
-let dispatch = (node: Node.node('a)) =>
+let dispatch = (node: Node.node) =>
   switch (focused^) {
   | Some({id, _}) =>
     if (node#getInternalId() === id) {

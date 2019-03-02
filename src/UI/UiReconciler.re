@@ -3,10 +3,9 @@
  * This implements a reconciler for our UI primitives
  */
 
-open RenderPass;
 open Revery_Core;
 
-type reveryNode = Node.node(renderPass);
+type reveryNode = Node.node;
 
 module Reconciler = {
   type hostElement = reveryNode;

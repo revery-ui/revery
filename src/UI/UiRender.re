@@ -4,17 +4,14 @@
  * Core render logic for a UI bound to a Window
  */
 
-open Reglfw.Glfw;
-
 open Revery_Core;
+open Revery_Draw;
 open Revery_Math;
 
 open UiContainer;
 
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
-
-open RenderPass;
 
 let _projection = Mat4.create();
 
@@ -67,16 +64,29 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
     );
 
     let drawContext =
-      NodeDrawContext.create(pixelRatio, 0, 1.0, adjustedHeight, scaleFactor);
+      NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
 
-    let solidPass = SolidPass(_projection);
-    rootNode#draw(solidPass, drawContext);
+    RenderPass.startSolidPass(
+        ~pixelRatio,
+        ~scaleFactor,
+        ~screenHeight=adjustedHeight,
+        ~screenWidth=adjustedWidth,
+        ~projection=_projection,
+        ()
+    );
+    rootNode#draw(drawContext);
+    RenderPass.endSolidPass();
 
     /* Render all geometry that requires an alpha */
-    let alphaPass = AlphaPass(_projection);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    rootNode#draw(alphaPass, drawContext);
-    glDisable(GL_BLEND);
+    RenderPass.startAlphaPass(
+        ~pixelRatio,
+        ~scaleFactor,
+        ~screenHeight=adjustedHeight,
+        ~screenWidth=adjustedWidth,
+        ~projection=_projection,
+        ()
+    );
+    rootNode#draw(drawContext);
+    RenderPass.endSolidPass();
   });
 };

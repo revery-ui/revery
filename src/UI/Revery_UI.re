@@ -11,7 +11,7 @@ module Style = Style;
 module Transform = Transform;
 module Selector = Selector;
 
-class node = class Node.node(RenderPass.t);
+class node = class Node.node;
 class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
 class imageNode = class ImageNode.imageNode;
