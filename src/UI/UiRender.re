@@ -21,7 +21,6 @@ let render =
       container: UiContainer.t,
       component: UiReact.syntheticElement,
     ) => {
-  print_endline("Render: " ++ string_of_bool(forceLayout));
   let {rootNode, window, container, _} = container;
 
   AnimationTicker.tick();
