@@ -1,5 +1,5 @@
 /*
- * TextRenderer.re
+ * Text.re
  *
  * Core logic for rendering text to screen.
  */
