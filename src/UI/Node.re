@@ -251,7 +251,7 @@ class node (()) = {
   pub firstChild = () => List.hd(_children^);
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
-  pub getMeasureFunction = (_pixelRatio: float, _scaleFactor: int) => None;
+  pub getMeasureFunction = () => None;
   pub handleEvent = (evt: NodeEvents.event) => {
     let _ =
       switch (evt, _this#getEvents()) {
@@ -309,7 +309,7 @@ class node (()) = {
     };
     List.iter(n => n#_minimalLayout(style), _children^);
   };
-  pub toLayoutNode = (pixelRatio: float, scaleFactor: int) => {
+  pub toLayoutNode = (~force, ()) => {
     let style = _style^;
     let layoutStyle = _layoutStyle^;
 
@@ -325,19 +325,19 @@ class node (()) = {
       | None => Layout.createNode([||], layoutStyle)
       };
 
-    switch ((style.layoutMode, _isLayoutDirty^)) {
+    switch ((style.layoutMode, _isLayoutDirty^ || force)) {
     | (Style.LayoutMode.Minimal, _) =>
       _this#_minimalLayout(style);
       None;
     | (Style.LayoutMode.Default, false) => Some(Layout.updateCachedNode(_layoutNode^))
     | (Style.LayoutMode.Default, true) =>
       let childNodes =
-        List.map(c => c#toLayoutNode(pixelRatio, scaleFactor), _children^)
+        List.map(c => c#toLayoutNode(~force, ()), _children^)
         |> List.filter(f)
         |> List.map(m);
 
       let node =
-        switch (_this#getMeasureFunction(pixelRatio, scaleFactor)) {
+        switch (_this#getMeasureFunction()) {
         | None => Layout.createNode(Array.of_list(childNodes), layoutStyle)
         | Some(m) =>
           Layout.createNodeWithMeasure(

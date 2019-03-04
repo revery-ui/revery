@@ -54,7 +54,7 @@ class textNode (text: string) = {
           _this#markLayoutDirty();
       }
   };
-  pub! getMeasureFunction = (_pixelRatio, _scaleFactor) => {
+  pub! getMeasureFunction = () => {
     let measure =
         (_mode, width, _widthMeasureMode, _height, _heightMeasureMode) => {
       /* TODO: Cache font locally in variable */

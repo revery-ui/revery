@@ -40,7 +40,7 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
       (),
     ),
   );
-  Layout.layout(rootNode, pixelRatio, scaleFactor);
+  Layout.layout(rootNode);
 
   /* Recalculate cached parameters */
   Performance.bench("recalculate", () => rootNode#recalculate());

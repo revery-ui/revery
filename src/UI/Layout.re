@@ -46,9 +46,9 @@ let updateCachedNode = (node: LayoutTypes.node) => {
 }
 
 
-let layout = (node, pixelRatio, scaleFactor) =>
+let layout = (node) =>
   Performance.bench("layout", () => {
-    let layoutNode = node#toLayoutNode(pixelRatio, scaleFactor);
+    let layoutNode = node#toLayoutNode(~force=false, ());
     switch (layoutNode) {
     | None => ()
     | Some(v) =>
