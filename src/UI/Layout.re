@@ -31,7 +31,7 @@ let createNodeWithMeasure = (children, style, measure) =>
     ~andMeasure=measure,
     rootContext,
   );
-let layout = (~force, node) =>
+let layout = (~force=false, node) =>
   Performance.bench("layout", () => {
     let layoutNode = node#toLayoutNode(~force, ());
     switch (layoutNode) {
