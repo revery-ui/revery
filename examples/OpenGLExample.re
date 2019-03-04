@@ -30,7 +30,7 @@ module Sample = {
           <OpenGL
             style=outerBox
             render={(transform, _pctx) => {
-              Glfw.glClearColor(1.0, 0.0, 0.0, 0.0);
+              Glfw.glClearColor(1.0, 0.0, 0.0, 1.0);
 
               Revery.Draw.Text.drawString(
                 ~transform,
