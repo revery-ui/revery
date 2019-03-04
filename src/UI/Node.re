@@ -42,6 +42,7 @@ class node (()) = {
   val _queuedCallbacks: ref(list(callback)) = ref([]);
   val _lastDimensions: ref(NodeEvents.DimensionsChangedEventParams.t) =
     ref(NodeEvents.DimensionsChangedEventParams.create());
+  val _isLayoutDirty = ref(true);
   val _miniLayout: ref(Dimensions.t) =
     ref(Dimensions.create(~top=0, ~left=0, ~width=0, ~height=0, ()));
   pub draw = (parentContext: NodeDrawContext.t) => {
@@ -89,10 +90,28 @@ class node (()) = {
   pub getInternalId = () => _internalId;
   pub getTabIndex = () => _tabIndex^;
   pub setTabIndex = index => _tabIndex := index;
+  pub markLayoutDirty = () => {
+    _isLayoutDirty^
+      ? ()
+      : {
+        switch (_this#getParent()) {
+        | Some(p) => p#markLayoutDirty()
+        | None => ()
+        };
+        _isLayoutDirty := true;
+      };
+  };
   pub setStyle = style =>
     if (style != _style^) {
       _style := style;
-      _layoutStyle := Style.toLayoutNode(style);
+
+      let lastLayoutStyle = _layoutStyle^;
+      let newLayoutStyle = Style.toLayoutNode(style);
+      _layoutStyle := newLayoutStyle;
+
+      if (lastLayoutStyle != _layoutStyle^) {
+        _this#markLayoutDirty();
+      };
     };
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;
@@ -162,6 +181,7 @@ class node (()) = {
     | Some(p) => p#getDepth() + 1
     };
   pub recalculate = () => {
+    _isLayoutDirty := false;
     let transform = _this#_recalculateTransform();
     let worldTransform = _this#_recalculateWorldTransform(transform);
     let bbox = _this#_recalculateBoundingBox(worldTransform);
@@ -216,16 +236,18 @@ class node (()) = {
   pub addChild = (n: node) => {
     _children := List.append(_children^, [n]);
     n#_setParent(Some((_this :> node)));
+    _this#markLayoutDirty();
   };
   pub removeChild = (n: node) => {
     _children :=
       List.filter(c => c#getInternalId() != n#getInternalId(), _children^);
     n#_setParent(None);
+    _this#markLayoutDirty();
   };
   pub firstChild = () => List.hd(_children^);
   pub getParent = () => _parent^;
   pub getChildren = () => _children^;
-  pub getMeasureFunction = (_pixelRatio: float, _scaleFactor: int) => None;
+  pub getMeasureFunction = () => None;
   pub handleEvent = (evt: NodeEvents.event) => {
     let _ =
       switch (evt, _this#getEvents()) {
@@ -283,7 +305,7 @@ class node (()) = {
     };
     List.iter(n => n#_minimalLayout(style), _children^);
   };
-  pub toLayoutNode = (pixelRatio: float, scaleFactor: int) => {
+  pub toLayoutNode = (~force, ()) => {
     let style = _style^;
     let layoutStyle = _layoutStyle^;
 
@@ -299,18 +321,19 @@ class node (()) = {
       | None => Layout.createNode([||], layoutStyle)
       };
 
-    switch (style.layoutMode) {
-    | Style.LayoutMode.Minimal =>
+    switch (style.layoutMode, _isLayoutDirty^ || force) {
+    | (Style.LayoutMode.Minimal, _) =>
       _this#_minimalLayout(style);
       None;
-    | Style.LayoutMode.Default =>
+    | (Style.LayoutMode.Default, false) => Some(_layoutNode^)
+    | (Style.LayoutMode.Default, true) =>
       let childNodes =
-        List.map(c => c#toLayoutNode(pixelRatio, scaleFactor), _children^)
+        List.map(c => c#toLayoutNode(~force, ()), _children^)
         |> List.filter(f)
         |> List.map(m);
 
       let node =
-        switch (_this#getMeasureFunction(pixelRatio, scaleFactor)) {
+        switch (_this#getMeasureFunction()) {
         | None => Layout.createNode(Array.of_list(childNodes), layoutStyle)
         | Some(m) =>
           Layout.createNodeWithMeasure(
@@ -344,6 +367,7 @@ class node (()) = {
     | Some(_) =>
       let ret = (_this :> node);
       let maybeRef = _this#getEvents().ref;
+
       switch (maybeRef) {
       | Some(ref) =>
         /*
@@ -357,6 +381,8 @@ class node (()) = {
       };
     | _ => ()
     };
+
+    _this#markLayoutDirty();
   };
   pub canBeFocused = () =>
     switch (_tabIndex^) {

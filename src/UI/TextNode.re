@@ -48,8 +48,23 @@ class textNode (text: string) = {
     );
   };
   pub setGamma = g => gamma = g;
-  pub setText = t => text = t;
-  pub! getMeasureFunction = (_pixelRatio, _scaleFactor) => {
+  pub! setStyle = style => {
+    let lastStyle = _this#getStyle();
+    _super#setStyle(style);
+    let newStyle = _this#getStyle();
+
+    if (lastStyle.lineHeight != newStyle.lineHeight
+        || lastStyle.fontSize != newStyle.fontSize
+        || !String.equal(lastStyle.fontFamily, newStyle.fontFamily)) {
+      _this#markLayoutDirty();
+    };
+  };
+  pub setText = t =>
+    if (!String.equal(t, text)) {
+      text = t;
+      _this#markLayoutDirty();
+    };
+  pub! getMeasureFunction = () => {
     let measure =
         (_mode, width, _widthMeasureMode, _height, _heightMeasureMode) => {
       /* TODO: Cache font locally in variable */

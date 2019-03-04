@@ -108,7 +108,7 @@ test("Reconciler", () => {
     let update1 =
       React.Container.update(container, <View onDimensionsChanged style />);
 
-    Layout.layout(rootNode, 1.0, 1);
+    Layout.layout(rootNode);
     rootNode#recalculate();
     rootNode#flushCallbacks();
 
@@ -120,7 +120,7 @@ test("Reconciler", () => {
     let update2 =
       React.Container.update(update1, <View onDimensionsChanged style />);
 
-    Layout.layout(rootNode, 1.0, 1);
+    Layout.layout(rootNode);
     rootNode#recalculate();
     rootNode#flushCallbacks();
 
@@ -133,7 +133,7 @@ test("Reconciler", () => {
     React.Container.update(update2, <View onDimensionsChanged style />)
     |> ignore;
 
-    Layout.layout(rootNode, 1.0, 1);
+    Layout.layout(rootNode);
     rootNode#recalculate();
     rootNode#flushCallbacks();
 

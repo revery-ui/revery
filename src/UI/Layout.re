@@ -31,9 +31,9 @@ let createNodeWithMeasure = (children, style, measure) =>
     ~andMeasure=measure,
     rootContext,
   );
-let layout = (node, pixelRatio, scaleFactor) =>
+let layout = (~force=false, node) =>
   Performance.bench("layout", () => {
-    let layoutNode = node#toLayoutNode(pixelRatio, scaleFactor);
+    let layoutNode = node#toLayoutNode(~force, ());
     switch (layoutNode) {
     | None => ()
     | Some(v) =>

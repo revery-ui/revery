@@ -31,6 +31,7 @@ open UiContainer;
 
 let start = (window: Window.t, render: renderFunction) => {
   let uiDirty = ref(false);
+  let forceLayout = ref(false);
 
   let onStale = () => {
     uiDirty := true;
@@ -110,8 +111,12 @@ let start = (window: Window.t, render: renderFunction) => {
     );
 
   let _ =
-    Revery_Core.Event.subscribe(Revery_Draw.FontCache.onFontLoaded, () =>
-      uiDirty := true
+    Revery_Core.Event.subscribe(
+      Revery_Draw.FontCache.onFontLoaded,
+      () => {
+        uiDirty := true;
+        forceLayout := true;
+      },
     );
 
   Window.setShouldRenderCallback(window, () =>
@@ -126,8 +131,17 @@ let start = (window: Window.t, render: renderFunction) => {
        * meaning that we'll need to re-render again next frame.
        */
       uiDirty := false;
+
+      /*
+       * The forceLayout event also needs to be cleared prior to rendering,
+       * as we might get an event during rendering - like font loaded -
+       * that would be ignored if we cleared after.
+       */
+      let fl = forceLayout^;
+      forceLayout := false;
+
       let component = Performance.bench("component render", () => render());
-      UiRender.render(ui, component);
+      UiRender.render(~forceLayout=fl, ui, component);
     },
   );
 };
