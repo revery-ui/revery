@@ -387,7 +387,7 @@ module OpenGL = {
             node#setEvents(events);
             node#setStyle(styles);
             oglNode#setRender(render);
-            node
+            node;
           },
           children,
         },
@@ -437,4 +437,3 @@ module OpenGL = {
       UiReact.listToElement(children),
     );
 };
-
