@@ -115,6 +115,11 @@ let state: state = {
       render: _ => HoverExample.render(),
       source: "HoverExample.re",
     },
+    {
+      name: "OpenGL Example",
+      render: _ => OpenGLExample.render(),
+      source: "OpenGLExample.re",
+    },
   ],
   selectedExample: "Animation",
 };
