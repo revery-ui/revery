@@ -120,13 +120,22 @@ module GammaCorrected = {
 
 module Subpixel = {
   let fsShader = {|
-        vec2 rPos = vec2(vTexCoord.x - uSubpixel, vTexCoord.y);
-        vec2 gPos = vTexCoord;
-        vec2 bPos = vec2(vTexCoord.x + uSubpixel, vTexCoord.y);
+        float halfSubpixel = uSubpixel / 2;
+        vec2 k0 = vec2(vTexCoord.x + (-2 * uSubpixel), vTexCoord.y + halfSubpixel);
+        vec2 k1 = vec2(vTexCoord.x + (-1 * uSubpixel), vTexCoord.y - halfSubpixel);
+        vec2 k2 = vec2(vTexCoord.x + (0 * uSubpixel), vTexCoord.y);
+        vec2 k3 = vec2(vTexCoord.x + (1 * uSubpixel), vTexCoord.y - halfSubpixel);
+        vec2 k4 = vec2(vTexCoord.x + (2 * uSubpixel), vTexCoord.y + halfSubpixel);
 
-        float rAlpha = texture2D(uSampler, rPos).a;
-        float bAlpha = texture2D(uSampler, bPos).a;
-        float gAlpha = texture2D(uSampler, gPos).a;
+        float a0 = texture2D(uSampler, k0).a;
+        float a1 = texture2D(uSampler, k1).a;
+        float a2 = texture2D(uSampler, k2).a;
+        float a3 = texture2D(uSampler, k3).a;
+        float a4 = texture2D(uSampler, k4).a;
+
+        float rAlpha = (0.33 * a0) + (0.34 * a1) + (0.33 * a2);
+        float bAlpha = (0.33 * a1) + (0.34 * a2) + (0.33 * a3);
+        float gAlpha = (0.33 * a2) + (0.34 * a3) + (0.33 * a4);
 
         vec4 fg = vColor;
         vec4 bg = uBackgroundColor;
