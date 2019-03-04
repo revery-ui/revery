@@ -77,7 +77,7 @@ module Default = {
 module GammaCorrected = {
   let fsShader = {|
         vec4 t = texture2D(uSampler, vTexCoord);
-        vec4 alpha = t.a;
+        float alpha = t.a;
         vec4 fg = vColor;
         vec4 bg = uBackgroundColor;
 
