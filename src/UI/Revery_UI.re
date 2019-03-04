@@ -110,9 +110,10 @@ let start = (window: Window.t, render: renderFunction) => {
     );
 
   let _ =
-    Revery_Core.Event.subscribe(Revery_Draw.FontCache.onFontLoaded, () =>
+    Revery_Core.Event.subscribe(Revery_Draw.FontCache.onFontLoaded, () => {
       uiDirty := true
-    );
+      /* print_endline ("!! FONT LOADED!"); */
+    });
 
   Window.setShouldRenderCallback(window, () =>
     uiDirty^ || Animated.anyActiveAnimations()

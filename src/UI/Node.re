@@ -92,7 +92,9 @@ class node (()) = {
   pub setTabIndex = index => _tabIndex := index;
   pub markLayoutDirty = () => {
     switch (_isLayoutDirty^) {
-    | true => ();
+    | true => {
+        prerr_endline ("DIRTY: " ++ string_of_int(_this#getInternalId()));
+    }
     | false => {
         switch (_this#getParent()) {
         | Some(p) => p#markLayoutDirty();
@@ -102,11 +104,19 @@ class node (()) = {
     }
     } 
   };
-  pub setStyle = style =>
+  pub setStyle = style => {
     if (style != _style^) {
       _style := style;
-      _layoutStyle := Style.toLayoutNode(style);
-    };
+
+      let lastLayoutStyle = _layoutStyle^;
+      let newLayoutStyle= Style.toLayoutNode(style);
+      _layoutStyle := newLayoutStyle;
+
+      if (lastLayoutStyle != _layoutStyle^) {
+          _this#markLayoutDirty();
+      }
+    }
+  };
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;
   pub getEvents = () => _events^;
@@ -175,6 +185,7 @@ class node (()) = {
     | Some(p) => p#getDepth() + 1
     };
   pub recalculate = () => {
+    _isLayoutDirty := false;
     let transform = _this#_recalculateTransform();
     let worldTransform = _this#_recalculateWorldTransform(transform);
     let bbox = _this#_recalculateBoundingBox(worldTransform);
@@ -229,11 +240,13 @@ class node (()) = {
   pub addChild = (n: node) => {
     _children := List.append(_children^, [n]);
     n#_setParent(Some((_this :> node)));
+    _this#markLayoutDirty();
   };
   pub removeChild = (n: node) => {
     _children :=
       List.filter(c => c#getInternalId() != n#getInternalId(), _children^);
     n#_setParent(None);
+    _this#markLayoutDirty();
   };
   pub firstChild = () => List.hd(_children^);
   pub getParent = () => _parent^;
@@ -316,7 +329,7 @@ class node (()) = {
     | (Style.LayoutMode.Minimal, _) =>
       _this#_minimalLayout(style);
       None;
-    | (Style.LayoutMode.Default, false) => Some(_layoutNode^)
+    | (Style.LayoutMode.Default, false) => Some(Layout.updateCachedNode(_layoutNode^))
     | (Style.LayoutMode.Default, true) =>
       let childNodes =
         List.map(c => c#toLayoutNode(pixelRatio, scaleFactor), _children^)
@@ -358,6 +371,7 @@ class node (()) = {
     | Some(_) =>
       let ret = (_this :> node);
       let maybeRef = _this#getEvents().ref;
+
       switch (maybeRef) {
       | Some(ref) =>
         /*
@@ -371,6 +385,8 @@ class node (()) = {
       };
     | _ => ()
     };
+
+    _this#markLayoutDirty();
   };
   pub canBeFocused = () =>
     switch (_tabIndex^) {

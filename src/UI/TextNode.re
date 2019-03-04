@@ -48,7 +48,12 @@ class textNode (text: string) = {
     );
   };
   pub setGamma = g => gamma = g;
-  pub setText = t => text = t;
+  pub setText = t => {
+      if (!String.equal(t, text)) {
+          text = t;
+          _this#markLayoutDirty();
+      }
+  };
   pub! getMeasureFunction = (_pixelRatio, _scaleFactor) => {
     let measure =
         (_mode, width, _widthMeasureMode, _height, _heightMeasureMode) => {
@@ -62,6 +67,8 @@ class textNode (text: string) = {
 
       let lineHeightPx =
         Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
+
+      /* print_endline ("MEASURE TEXT: " ++ text ++ " line height: " ++ string_of_float(lineHeightPx)); */
 
       switch (textWrap) {
       | WhitespaceWrap =>
