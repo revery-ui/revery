@@ -42,6 +42,7 @@ class node (()) = {
   val _queuedCallbacks: ref(list(callback)) = ref([]);
   val _lastDimensions: ref(NodeEvents.DimensionsChangedEventParams.t) =
     ref(NodeEvents.DimensionsChangedEventParams.create());
+  val _isLayoutDirty = ref(true);
   val _miniLayout: ref(Dimensions.t) =
     ref(Dimensions.create(~top=0, ~left=0, ~width=0, ~height=0, ()));
   pub draw = (parentContext: NodeDrawContext.t) => {
@@ -89,6 +90,18 @@ class node (()) = {
   pub getInternalId = () => _internalId;
   pub getTabIndex = () => _tabIndex^;
   pub setTabIndex = index => _tabIndex := index;
+  pub markLayoutDirty = () => {
+    switch (_isLayoutDirty^) {
+    | true => ();
+    | false => {
+        switch (_this#getParent()) {
+        | Some(p) => p#markLayoutDirty();
+        | None => ();
+        }
+       _isLayoutDirty := true;
+    }
+    } 
+  };
   pub setStyle = style =>
     if (style != _style^) {
       _style := style;
@@ -299,11 +312,12 @@ class node (()) = {
       | None => Layout.createNode([||], layoutStyle)
       };
 
-    switch (style.layoutMode) {
-    | Style.LayoutMode.Minimal =>
+    switch ((style.layoutMode, _isLayoutDirty^)) {
+    | (Style.LayoutMode.Minimal, _) =>
       _this#_minimalLayout(style);
       None;
-    | Style.LayoutMode.Default =>
+    | (Style.LayoutMode.Default, false) => Some(_layoutNode^)
+    | (Style.LayoutMode.Default, true) =>
       let childNodes =
         List.map(c => c#toLayoutNode(pixelRatio, scaleFactor), _children^)
         |> List.filter(f)
