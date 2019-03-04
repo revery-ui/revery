@@ -15,8 +15,13 @@ module LayoutTypes = Layout.LayoutTypes;
 
 let _projection = Mat4.create();
 
-let render = (~forceLayout=false, container: UiContainer.t, component: UiReact.syntheticElement) => {
-    print_endline ("Render: " ++ string_of_bool(forceLayout));
+let render =
+    (
+      ~forceLayout=false,
+      container: UiContainer.t,
+      component: UiReact.syntheticElement,
+    ) => {
+  print_endline("Render: " ++ string_of_bool(forceLayout));
   let {rootNode, window, container, _} = container;
 
   AnimationTicker.tick();

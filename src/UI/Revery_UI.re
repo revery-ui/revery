@@ -111,10 +111,13 @@ let start = (window: Window.t, render: renderFunction) => {
     );
 
   let _ =
-    Revery_Core.Event.subscribe(Revery_Draw.FontCache.onFontLoaded, () => {
-      uiDirty := true
-      forceLayout := true;
-    });
+    Revery_Core.Event.subscribe(
+      Revery_Draw.FontCache.onFontLoaded,
+      () => {
+        uiDirty := true;
+        forceLayout := true;
+      },
+    );
 
   Window.setShouldRenderCallback(window, () =>
     uiDirty^ || Animated.anyActiveAnimations()
@@ -129,7 +132,7 @@ let start = (window: Window.t, render: renderFunction) => {
        */
       uiDirty := false;
 
-      /* 
+      /*
        * The forceLayout event also needs to be cleared prior to rendering,
        * as we might get an event during rendering - like font loaded -
        * that would be ignored if we cleared after.

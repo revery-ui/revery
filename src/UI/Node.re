@@ -91,30 +91,28 @@ class node (()) = {
   pub getTabIndex = () => _tabIndex^;
   pub setTabIndex = index => _tabIndex := index;
   pub markLayoutDirty = () => {
-    switch (_isLayoutDirty^) {
-    | true => ()
-    | false => {
+    _isLayoutDirty^
+      ? ()
+      : {
         switch (_this#getParent()) {
-        | Some(p) => p#markLayoutDirty();
-        | None => ();
-        }
-       _isLayoutDirty := true;
-    }
-    } 
+        | Some(p) => p#markLayoutDirty()
+        | None => ()
+        };
+        _isLayoutDirty := true;
+      };
   };
-  pub setStyle = style => {
+  pub setStyle = style =>
     if (style != _style^) {
       _style := style;
 
       let lastLayoutStyle = _layoutStyle^;
-      let newLayoutStyle= Style.toLayoutNode(style);
+      let newLayoutStyle = Style.toLayoutNode(style);
       _layoutStyle := newLayoutStyle;
 
       if (lastLayoutStyle != _layoutStyle^) {
-          _this#markLayoutDirty();
-      }
-    }
-  };
+        _this#markLayoutDirty();
+      };
+    };
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;
   pub getEvents = () => _events^;
@@ -323,7 +321,7 @@ class node (()) = {
       | None => Layout.createNode([||], layoutStyle)
       };
 
-    switch ((style.layoutMode, _isLayoutDirty^ || force)) {
+    switch (style.layoutMode, _isLayoutDirty^ || force) {
     | (Style.LayoutMode.Minimal, _) =>
       _this#_minimalLayout(style);
       None;
