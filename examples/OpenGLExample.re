@@ -50,7 +50,7 @@ module Sample = {
                 ~y=50.,
                 ~width=10.,
                 ~height=20.,
-                () 
+                (),
               );
             }}
           />
