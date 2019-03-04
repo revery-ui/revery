@@ -92,9 +92,7 @@ class node (()) = {
   pub setTabIndex = index => _tabIndex := index;
   pub markLayoutDirty = () => {
     switch (_isLayoutDirty^) {
-    | true => {
-        prerr_endline ("DIRTY: " ++ string_of_int(_this#getInternalId()));
-    }
+    | true => ()
     | false => {
         switch (_this#getParent()) {
         | Some(p) => p#markLayoutDirty();
@@ -329,7 +327,7 @@ class node (()) = {
     | (Style.LayoutMode.Minimal, _) =>
       _this#_minimalLayout(style);
       None;
-    | (Style.LayoutMode.Default, false) => Some(Layout.updateCachedNode(_layoutNode^))
+    | (Style.LayoutMode.Default, false) => Some(_layoutNode^)
     | (Style.LayoutMode.Default, true) =>
       let childNodes =
         List.map(c => c#toLayoutNode(~force, ()), _children^)

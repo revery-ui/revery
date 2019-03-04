@@ -68,7 +68,7 @@ class textNode (text: string) = {
       let lineHeightPx =
         Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
 
-      /* print_endline ("MEASURE TEXT: " ++ text ++ " line height: " ++ string_of_float(lineHeightPx)); */
+      print_endline ("MEASURE TEXT: " ++ text ++ " line height: " ++ string_of_float(lineHeightPx));
 
       switch (textWrap) {
       | WhitespaceWrap =>

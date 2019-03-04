@@ -31,24 +31,9 @@ let createNodeWithMeasure = (children, style, measure) =>
     ~andMeasure=measure,
     rootContext,
   );
-let updateCachedNode = (node: LayoutTypes.node) => {
-        node
-       /* ...node, */
-        /* isDirty: true, */
-        /* isDirty: true, */
-        /* selfRef: Nativeint.zero, */
-        /* hasNewLayout: true, */
-        /* isDirty: true, */
-        /* lineIndex: 0, */
-        /* layout: LayoutSupport.createLayout(), */
-        /* parent: LayoutSupport.theNullNode, */
-        /* nextChild: LayoutSupport.theNullNode, */
-}
-
-
-let layout = (node) =>
+let layout = (~force, node) =>
   Performance.bench("layout", () => {
-    let layoutNode = node#toLayoutNode(~force=false, ());
+    let layoutNode = node#toLayoutNode(~force, ());
     switch (layoutNode) {
     | None => ()
     | Some(v) =>

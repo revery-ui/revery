@@ -36,8 +36,8 @@ let rec setupNodeTree =
   n;
 };
 
-let layoutNode = (n: node) => {
-  Layout.layout(n, 1.0, 1);
+let layoutNode = (force: bool, n: node) => {
+  Layout.layout(~force, n);
 };
 
 bench(
@@ -49,10 +49,26 @@ bench(
 );
 
 bench(
+  ~name="Layout: layout single node (force re-layout)",
+  ~options,
+  ~setup=setupNode(~style=Style.make(~width=100, ~height=100, ())),
+  ~f=layoutNode(true),
+  (),
+);
+
+bench(
+  ~name="Layout: layout node tree (4 deep, 4 wide) (force re-layout))",
+  ~options,
+  ~setup=setupNodeTree(~depth=4, ~breadth=4),
+  ~f=layoutNode(true),
+  (),
+);
+
+bench(
   ~name="Layout: layout single node",
   ~options,
   ~setup=setupNode(~style=Style.make(~width=100, ~height=100, ())),
-  ~f=layoutNode,
+  ~f=layoutNode(false),
   (),
 );
 
@@ -60,11 +76,12 @@ bench(
   ~name="Layout: layout node tree (4 deep, 4 wide)",
   ~options,
   ~setup=setupNodeTree(~depth=4, ~breadth=4),
-  ~f=layoutNode,
+  ~f=layoutNode(false),
   (),
 );
+
 bench(
-  ~name="Layout: layout node tree (4 deep, 4 wide) - minimal layout",
+  ~name="Layout: layout node tree (4 deep, 4 wide) - force, minimal layout",
   ~options,
   ~setup=
     setupNodeTree(
@@ -78,6 +95,6 @@ bench(
           (),
         ),
     ),
-  ~f=layoutNode,
+  ~f=layoutNode(true),
   (),
 );

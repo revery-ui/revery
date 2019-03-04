@@ -15,7 +15,8 @@ module LayoutTypes = Layout.LayoutTypes;
 
 let _projection = Mat4.create();
 
-let render = (container: UiContainer.t, component: UiReact.syntheticElement) => {
+let render = (~forceLayout=false, container: UiContainer.t, component: UiReact.syntheticElement) => {
+    print_endline ("Render: " ++ string_of_bool(forceLayout));
   let {rootNode, window, container, _} = container;
 
   AnimationTicker.tick();
@@ -40,7 +41,7 @@ let render = (container: UiContainer.t, component: UiReact.syntheticElement) => 
       (),
     ),
   );
-  Layout.layout(rootNode);
+  Layout.layout(~force=forceLayout, rootNode);
 
   /* Recalculate cached parameters */
   Performance.bench("recalculate", () => rootNode#recalculate());
