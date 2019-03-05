@@ -27,7 +27,6 @@ let drawRect =
 
   switch (pass) {
   | AlphaPass(ctx) when color.a > 0.001 =>
-    print_endline("RENDERING QUAD");
     let world = Mat4.create();
     Mat4.fromScaling(world, Vec3.create(width, height, 1.0));
 
