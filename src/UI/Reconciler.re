@@ -16,21 +16,21 @@ type node = reveryNode;
 let onStale: Event.t(unit) = Event.create();
 
 let insertNode = (~parent: node, ~child: node, ~position as _) => {
-parent#addChild(child);
-parent;
+  parent#addChild(child);
+  parent;
 };
 
 let deleteNode = (~parent: node, ~child: node) => {
-parent#removeChild(child);
-parent;
+  parent#removeChild(child);
+  parent;
 };
 
 let moveNode = (~parent, ~child as _, ~from as _, ~to_ as _) => {
-parent;
+  parent;
 };
 
 let markAsStale = () => {
-Event.dispatch(onStale, ());
+  Event.dispatch(onStale, ());
 };
 
 let beginChanges = () => ();
