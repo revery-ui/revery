@@ -29,6 +29,7 @@ let tune = () =>
 let minor = () =>
   if (Environment.isNative) {
     let _ = Gc.major_slice(defaultSliceSize);
+    ();
   };
 
 let full = () =>
