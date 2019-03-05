@@ -6,6 +6,9 @@
  * Revery app model.
  */
 
+let minorHeapSize = 8 * 1024 * 1024;
+let defaultSliceSize = minorHeapSize / 60;
+
 let tune = () =>
   /* Gc tuning is only applicable in the native space */
   if (Environment.isNative) {
@@ -16,13 +19,12 @@ let tune = () =>
      * Some more info on why this is helpful:
      * https://md.ekstrandom.net/blog/2010/06/ocaml-memory-tuning
      */
-    let minorHeapSize = 8 * 1024 * 1024;
     Gc.set({...settings, minor_heap_size: minorHeapSize});
   };
 
 let minor = () =>
   if (Environment.isNative) {
-    Gc.minor();
+    let _ = Gc.major_slice(defaultSliceSize);
   };
 
 let full = () =>
