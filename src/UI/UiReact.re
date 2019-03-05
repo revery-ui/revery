@@ -1,7 +1,5 @@
 open Revery_Core;
 
-module Reconciler = UiReconciler.Reconciler;
-
 let onStale = Reconciler.onStale;
 
 module React = Brisk_reconciler.Make(Reconciler);
@@ -13,11 +11,11 @@ module Container = {
   };
 
   type t = {
-    node: UiReconciler.reveryNode,
+    node: Reconciler.reveryNode,
     state: option(state),
   };
 
-  let create: UiReconciler.reveryNode => t = n => {node: n, state: None};
+  let create: Reconciler.reveryNode => t = n => {node: n, state: None};
 
   let update: (t, React.syntheticElement) => t =
     ({node, state}, element) => {
