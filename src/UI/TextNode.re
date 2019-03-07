@@ -65,23 +65,42 @@ class textNode (text: string) = {
       _this#markLayoutDirty();
     };
   };
+  pub textOverflow = (parentWidth, text) => {
+    let unwrapped = TextOverflow.unwrapText(text);
+    let {fontFamily, fontSize, textOverflow, _}: Style.t = _super#getStyle();
+    let measure = str =>
+      Text.measure(~fontFamily, ~fontSize, str)
+      |> (value => FontRenderer.(value.width));
+    let width = measure(unwrapped);
+    let isOverflowing = width >= parentWidth;
+    switch (textOverflow, isOverflowing) {
+    | (Ellipsis, true) =>
+      TextOverflow.handleOverflow(~parentWidth, ~text, ~measure, ())
+    | (UserDefined(character), true) =>
+      TextOverflow.handleOverflow(
+        ~parentWidth,
+        ~text,
+        ~measure,
+        ~character,
+        (),
+      )
+    | (_, false)
+    | (Overflow, _) => text
+    };
+  };
   pub setText = t =>
     if (!String.equal(t, text)) {
       text = t;
       _isMeasured = false;
       _this#markLayoutDirty();
     };
-  pub measure = (width: int, _height: int) => {
+  pub measure = (_mode, width, _widthMeasureMode, _height, _heightMeasureMode) => {
+    _isMeasured := true;
     /* TODO: Cache font locally in variable */
-    _isMeasured = true;
-
-    let style = _super#getStyle();
-    let textWrap = style.textWrap;
-
-    let fontFamily = style.fontFamily;
-    let fontSize = style.fontSize;
-    let lineHeight = style.lineHeight;
-
+    _super#getStyle() |> _this#handleTextWrapping(width);
+  };
+  pub handleTextWrapping = (width, style) => {
+    let {textWrap, fontFamily, fontSize, lineHeight, _}: Style.t = style;
     let lineHeightPx =
       Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
 
@@ -136,15 +155,8 @@ class textNode (text: string) = {
   };
   pub! getMeasureFunction = () => {
     let measure =
-        (
-          _mode: LayoutTypes.node,
-          width: int,
-          _widthMeasureMode: LayoutTypes.measureMode,
-          height: int,
-          _heightMeasureMode: LayoutTypes.measureMode,
-        ) =>
+        (_mode, width, _widthMeasureMode, height, _heightMeasureMode) =>
       _this#measure(width, height);
-
     Some(measure);
   };
 };
