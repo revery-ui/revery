@@ -111,11 +111,20 @@ class textNode (text: string) = {
   pub measure = (_mode, width, _widthMeasureMode, _height, _heightMeasureMode) => {
     _isMeasured := true;
     /* TODO: Cache font locally in variable */
-    let style = _super#getStyle();
-    switch (style) {
-    | {textOverflow: Ellipsis | UserDefined(_), _} =>
-      _this#textOverflow(width)
-    | s => _this#handleTextWrapping(width, s)
+    /**
+         If the width value is set to cssUndefined i.e. the user did not
+         set a width then do not attempt to use textOverflow
+       */
+    {
+      let style = _super#getStyle();
+      switch (style) {
+      | {width: textWidth, _} as style
+          when textWidth == Layout.Encoding.cssUndefined =>
+        _this#handleTextWrapping(width, style)
+      | {textOverflow: Ellipsis | UserDefined(_), _} =>
+        _this#textOverflow(width)
+      | style => _this#handleTextWrapping(width, style)
+      };
     };
   };
   pub handleTextWrapping = (width, style) => {

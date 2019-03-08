@@ -44,7 +44,6 @@ let overflowStyles = (style, textFontSize, textWidth) =>
     lineHeight(1.5),
     border(~color=Colors.blueViolet, ~width=1),
     backgroundColor(Colors.black),
-    marginBottom(8),
   ];
 
 module SampleText = {
@@ -67,14 +66,14 @@ module SampleText = {
         hooks,
         <View style=containerStyle>
           <View>
-            <View style=Style.[height(40)]>
+          <View style=Style.[height(40), marginBottom(8)]>
               <Text
                 style={overflowStyles(`Ellipsis, textFontSize, textWidth)}
                 gamma=gammaVal
                 text={textContent ++ " " ++ textContent}
               />
             </View>
-            <View style=Style.[height(40)]>
+            <View style=Style.[height(40), marginBottom(8)]>
               <Text
                 style={overflowStyles(`UserDefined("£"), textFontSize, textWidth)}
                 gamma=gammaVal
