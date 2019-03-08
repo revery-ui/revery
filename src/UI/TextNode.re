@@ -69,24 +69,23 @@ class textNode (text: string) = {
     let {fontFamily, fontSize, lineHeight, textOverflow, _}: Style.t =
       _super#getStyle();
 
+    let formattedText = TextOverflow.removeLineBreaks(text);
+
     let measure = str =>
       Text.measure(~fontFamily, ~fontSize, str)
       |> (value => FontRenderer.(value.width));
-    let width = measure(text);
+
+    let width = measure(formattedText);
     let isOverflowing = width >= maxWidth;
+
+    let handleOverflow =
+      TextOverflow.handleOverflow(~maxWidth, ~text=formattedText, ~measure);
 
     let truncated =
       switch (textOverflow, isOverflowing) {
-      | (Ellipsis, true) =>
-        TextOverflow.handleOverflow(~maxWidth, ~text, ~measure, ())
-      | (UserDefined(character), true) =>
-        TextOverflow.handleOverflow(
-          ~maxWidth,
-          ~text,
-          ~measure,
-          ~character,
-          (),
-        )
+      | (Ellipsis, true) => handleOverflow()
+      | (UserDefined(character), true) => handleOverflow(~character, ())
+      | (Clip, true) => handleOverflow(~character="", ())
       | (_, false)
       | (Overflow, _) => text
       };
@@ -115,17 +114,16 @@ class textNode (text: string) = {
          If the width value is set to cssUndefined i.e. the user did not
          set a width then do not attempt to use textOverflow
        */
-    {
-      let style = _super#getStyle();
-      switch (style) {
+    (
+      switch (_super#getStyle()) {
       | {width: textWidth, _} as style
           when textWidth == Layout.Encoding.cssUndefined =>
         _this#handleTextWrapping(width, style)
       | {textOverflow: Ellipsis | UserDefined(_), _} =>
         _this#textOverflow(width)
       | style => _this#handleTextWrapping(width, style)
-      };
-    };
+      }
+    );
   };
   pub handleTextWrapping = (width, style) => {
     let {textWrap, fontFamily, fontSize, lineHeight, _}: Style.t = style;
