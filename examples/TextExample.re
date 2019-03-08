@@ -51,11 +51,29 @@ module SampleText = {
       (
         hooks,
         <View style=containerStyle>
+          <View style=Style.[height(40)]>
+            <Text
+              style=Revery_Core.(
+                Style.[
+                  color(Colors.white),
+                  fontFamily("Roboto-Regular.ttf"),
+                  fontSize(int_of_float(fontSizeSliderVal)),
+                  width(200),
+                  textOverflow(`Ellipsis),
+                  lineHeight(1.5),
+                  border(~color=Colors.blueViolet, ~width=1),
+                  backgroundColor(Colors.black),
+                  marginBottom(8),
+                ]
+              )
+              gamma=gammaVal
+              text={textContent ++ " " ++ textContent}
+            />
+          </View>
           <View style=slidersViewStyle>
             <Text
               style=Style.[
                 color(Colors.white),
-                backgroundColor(Colors.black),
                 fontFamily("Roboto-Regular.ttf"),
                 fontSize(int_of_float(fontSizeSliderVal)),
                 lineHeight(1.5),
@@ -64,7 +82,6 @@ module SampleText = {
                 border(~color=Colors.blueViolet, ~width=1),
                 backgroundColor(Colors.black),
               ]
-              gamma=gammaVal
               text=textContent
             />
           </View>

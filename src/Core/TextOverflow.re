@@ -8,18 +8,13 @@ let unwrapText = text => {
   Str.global_replace(re, "", text);
 };
 
-let rec handleOverflow = (~parentWidth, ~text, ~measure, ~character="…", ()) => {
+let rec handleOverflow = (~maxWidth, ~text, ~measure, ~character="…", ()) => {
   let clippedText =
-    String.length(text) - 1 |> Str.string_before(text) |> (++)(character);
-  let width = measure(clippedText);
+    String.length(text) - 1 |> Str.string_before(text)
 
-  width >= parentWidth ?
-    handleOverflow(
-      ~parentWidth,
-      ~text=clippedText,
-      ~measure,
-      ~character,
-      (),
-    ) :
-    clippedText;
+
+  let width = measure(clippedText ++ character);
+  width >= maxWidth && String.length(clippedText) > 1
+    ? handleOverflow(~maxWidth, ~text=clippedText, ~measure, ~character, ())
+    : clippedText ++ character;
 };

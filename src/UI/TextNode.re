@@ -65,28 +65,42 @@ class textNode (text: string) = {
       _this#markLayoutDirty();
     };
   };
-  pub textOverflow = (parentWidth, text) => {
-    let unwrapped = TextOverflow.unwrapText(text);
-    let {fontFamily, fontSize, textOverflow, _}: Style.t = _super#getStyle();
+  pub textOverflow = maxWidth => {
+    let {fontFamily, fontSize, lineHeight, textOverflow, _}: Style.t =
+      _super#getStyle();
+
     let measure = str =>
       Text.measure(~fontFamily, ~fontSize, str)
       |> (value => FontRenderer.(value.width));
-    let width = measure(unwrapped);
-    let isOverflowing = width >= parentWidth;
-    switch (textOverflow, isOverflowing) {
-    | (Ellipsis, true) =>
-      TextOverflow.handleOverflow(~parentWidth, ~text, ~measure, ())
-    | (UserDefined(character), true) =>
-      TextOverflow.handleOverflow(
-        ~parentWidth,
-        ~text,
-        ~measure,
-        ~character,
-        (),
-      )
-    | (_, false)
-    | (Overflow, _) => text
+    let width = measure(text);
+    let isOverflowing = width >= maxWidth;
+
+    let truncated =
+      switch (textOverflow, isOverflowing) {
+      | (Ellipsis, true) =>
+        TextOverflow.handleOverflow(~maxWidth, ~text, ~measure, ())
+      | (UserDefined(character), true) =>
+        TextOverflow.handleOverflow(
+          ~maxWidth,
+          ~text,
+          ~measure,
+          ~character,
+          (),
+        )
+      | (_, false)
+      | (Overflow, _) => text
+      };
+
+    _lines := [truncated];
+
+    let lineHeightPx =
+      Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
+    let dimensions: Layout.LayoutTypes.dimensions = {
+      width,
+      height: int_of_float(lineHeightPx),
     };
+
+    dimensions;
   };
   pub setText = t =>
     if (!String.equal(t, text)) {
@@ -97,7 +111,12 @@ class textNode (text: string) = {
   pub measure = (_mode, width, _widthMeasureMode, _height, _heightMeasureMode) => {
     _isMeasured := true;
     /* TODO: Cache font locally in variable */
-    _super#getStyle() |> _this#handleTextWrapping(width);
+    let style = _super#getStyle();
+    switch (style) {
+    | {textOverflow: Ellipsis | UserDefined(_), _} =>
+      _this#textOverflow(width)
+    | s => _this#handleTextWrapping(width, s)
+    };
   };
   pub handleTextWrapping = (width, style) => {
     let {textWrap, fontFamily, fontSize, lineHeight, _}: Style.t = style;
