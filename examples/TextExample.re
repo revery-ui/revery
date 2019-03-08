@@ -66,7 +66,7 @@ module SampleText = {
         hooks,
         <View style=containerStyle>
           <View>
-          <View style=Style.[height(40), marginBottom(8)]>
+            <View style=Style.[height(40), marginBottom(8)]>
               <Text
                 style={overflowStyles(`Ellipsis, textFontSize, textWidth)}
                 gamma=gammaVal
@@ -75,7 +75,11 @@ module SampleText = {
             </View>
             <View style=Style.[height(40), marginBottom(8)]>
               <Text
-                style={overflowStyles(`UserDefined("£"), textFontSize, textWidth)}
+                style={overflowStyles(
+                  `UserDefined("£"),
+                  textFontSize,
+                  textWidth,
+                )}
                 gamma=gammaVal
                 text={textContent ++ " " ++ textContent}
               />

@@ -65,7 +65,7 @@ class textNode (text: string) = {
       _this#markLayoutDirty();
     };
   };
-  pub textOverflow = maxWidth: LayoutTypes.dimensions => {
+  pub textOverflow = (maxWidth): LayoutTypes.dimensions => {
     let {fontFamily, fontSize, lineHeight, textOverflow, _}: Style.t =
       _super#getStyle();
 
