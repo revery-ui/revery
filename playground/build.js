@@ -19,32 +19,32 @@ let playgroundExampleHost = path.join(playgroundRoot, "_build", "host");
 let reveryExampleSources = path.join(reveryRoot, "examples");
 
 let getEsyPath = () => {
-  let result
-  try {
-    result = cp.execSync("where esy");
-  } catch (error) {
-    // some operating systems (unix) use `which` instead of `where`.
-    if (error.toString().indexOf('not found') != -1) {
-      result = cp.execSync("which esy");
-    } else {
-      console.error('Unable to find `esy` is it installed?');
-      throw error;
+    let result
+    try {
+        result = cp.execSync("where esy");
+    } catch (error) {
+        // some operating systems (unix) use `which` instead of `where`.
+        if (error.toString().indexOf('not found') != -1) {
+            result = cp.execSync("which esy");
+        } else {
+            console.error('Unable to find `esy` is it installed?');
+            throw error;
+        }
     }
-  }
 
-  let found = result.toString("utf8");
-  let candidates = found.trim().split(os.EOL);
-  return candidates[candidates.length - 1];
+    let found = result.toString("utf8");
+    let candidates = found.trim().split(os.EOL);
+    return candidates[candidates.length - 1];
 };
 
 let getCommit = () => {
-  let result = cp.execSync("git rev-parse --short HEAD");
-  return result.toString("utf8").trim();
+    let result = cp.execSync("git rev-parse --short HEAD");
+    return result.toString("utf8").trim();
 }
 
 let getVersion = () => {
-  let packageJson = fs.readFileSync(path.join(reveryRoot, "package.json")).toString("utf8");
-  return JSON.parse(packageJson).version;
+    let packageJson = fs.readFileSync(path.join(reveryRoot, "package.json")).toString("utf8");
+    return JSON.parse(packageJson).version;
 }
 
 let esyPath = getEsyPath();
@@ -55,12 +55,12 @@ console.log("Commit id: " + commitId);
 console.log("Version: " + version);
 
 let getBuildArtifactFolder = () => {
-  let result = cp.spawnSync(esyPath, ["bash", "-c", "echo $cur__bin"], { cwd: reveryRoot });
-  return result.stdout.toString("utf8").trim();
+    let result = cp.spawnSync(esyPath, ["bash", "-c", "echo $cur__bin"], { cwd: reveryRoot });
+    return result.stdout.toString("utf8").trim();
 };
 
 let replace = (str, val, newVal) => {
-  return str.split(val).join(newVal);
+    return str.split(val).join(newVal);
 };
 
 let artifactFolder = getBuildArtifactFolder();
