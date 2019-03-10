@@ -70,7 +70,11 @@ Install the following packages with your package manager of choice:
 * `libglu1-mesa-dev`
 * `libharfbuzz-dev`
 * `libgtk-3-dev`
-  
+
+> __NOTE:__ `reason-fontkit` (a dependency of `revery`) requires `harfbuzz` 1.7.7+. This means `revery` requires Ubuntu 18.10+ (or you can install `libharfbuzz-dev@1.8.8` by [adding 'cosmic' packages to your sources](https://makandracards.com/makandra/47558-how-to-install-packages-from-newer-ubuntu-releases), but proceed with caution since you can break other packages this way)
+
+> __NOTE:__ If `ezy build` produces an error about `libpangoft2` then try deleting the `./_esy` and `~/.esy` directories and run run `ezy install` and `esy build` again.
+
 ##### For `Fedora` you may need these additional packages
 * `libpng-devel`
 * `bzip2-devel`
