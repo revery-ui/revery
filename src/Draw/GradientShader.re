@@ -5,7 +5,6 @@
  * the gradient is used to draw a box shadow
  */
 open Revery_Shaders;
-open Revery_Shaders.Shader;
 
 let attributes: list(ShaderAttribute.t) =
   SolidShader.attribute

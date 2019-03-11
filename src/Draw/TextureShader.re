@@ -4,7 +4,6 @@
  * Simple texture shader
  */
 open Revery_Shaders;
-open Revery_Shaders.Shader;
 
 let attribute: list(ShaderAttribute.t) =
   SolidShader.attribute

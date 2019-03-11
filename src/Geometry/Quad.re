@@ -1,4 +1,4 @@
-open Revery_Shaders.Shader;
+open Revery_Shaders;
 
 let create = (minX, minY, maxX, maxY) => {
   let positions = [|minX, maxY, maxX, maxY, maxX, minY, minX, minY|];

@@ -1,5 +1,5 @@
 open Reglfw;
-open Revery_Shaders.Shader;
+open Revery_Shaders;
 
 type t = {
   vertexBuffers: ref(list(VertexBuffer.t)),

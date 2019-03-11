@@ -4,7 +4,6 @@
  * Simple shader demonstrating usage of attributes, uniforms, and varying parameters.
  */
 open Revery_Shaders;
-open Revery_Shaders.Shader;
 
 let attribute: list(ShaderAttribute.t) = [
   {dataType: ShaderDataType.Vector2, name: "aPosition", channel: Position},
