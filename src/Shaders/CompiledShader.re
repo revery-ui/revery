@@ -47,61 +47,30 @@ let getUniformLocation: (t, string) => uniformLocation =
   };
 
 /*
- * State changes in OpenGL are expensive!
- * We want to minimize those, when possible.
+ * Cache to stash global state, so we can
+ * minimize calls to OpenGL when possible
  */
 module ShaderCache {
-    let identityMatrix = Mat4.create();
-
-
-    let cache_size = 32;
-
     type t = {
        mutable program: option(Glfw.program),
-       cachedMat4: array(Mat4.t),
     };
 
     let create = () => {
         program: None,
-        cachedMat4: Array.make(cache_size, identityMatrix),
-    };
-
-    let setMat4IfNew = (cache: t, u: uniformLocation, v: Mat4.t,  f) => {
-        let uInt: int = Obj.magic(u);
-        /* print_endline ("uniform location: " ++ string_of_int(uInt)); */
-        if (uInt >= cache_size) {
-            print_endline ("Setting over cache size");
-           f(); 
-        }
-
-        let currentVal = cache.cachedMat4[uInt];
-        if (currentVal !== v) {
-            /* print_endline ("Setting cached"); */
-            cache.cachedMat4[uInt] = v;
-            f();
-        } else {
-            ();
-            /* print_endline ("not setting CACHED"); */
-        }
     };
 
     let useProgramIfNew = (cache: t, program: Glfw.program, f) => {
         switch (cache.program) {
         | None =>
-            
             cache.program = Some(program);
             f();
         | Some(v) when v !== program =>
             cache.program = Some(program);
             f();
-        | Some(_) => {
-            ();
-            /* print_endline (" NOT SWITCHING CACHED" ); */
-        }
+        | Some(_) => ();
         }
     }
-
-}
+};
 
 let _cache: ref(ShaderCache.t) = ref(ShaderCache.create());
 

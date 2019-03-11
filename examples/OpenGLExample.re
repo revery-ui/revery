@@ -32,19 +32,17 @@ module Sample = {
             render={(transform, _pctx) => {
               Glfw.glClearColor(1.0, 0.0, 0.0, 1.0);
 
-              let iterations = 50000;
-              let i = ref(0);
+              Revery.Draw.Text.drawString(
+                ~transform,
+                ~backgroundColor=Colors.red,
+                ~color=Colors.white,
+                ~fontFamily="Roboto-Regular.ttf",
+                ~fontSize=20,
+                ~x=25.,
+                ~y=25.,
+                "Hello!",
+              );
 
-              /* Revery.Draw.Text.drawString( */
-              /*   ~transform, */
-              /*   ~backgroundColor=Colors.red, */
-              /*   ~color=Colors.white, */
-              /*   ~fontFamily="Roboto-Regular.ttf", */
-              /*   ~fontSize=20, */
-              /*   ~x=25., */
-              /*   ~y=25., */
-              /*   "Hello!", */
-              /* ); */
               Revery.Draw.Shapes.drawRect(
                 ~transform,
                 ~color=Colors.green,
@@ -55,6 +53,10 @@ module Sample = {
                 (),
               );
 
+
+              /* STRESS TEST:
+              let iterations = 50000;
+              let i = ref(0);
               while (i^ < iterations) {
                 Revery.Draw.Shapes.drawRect(
                   ~transform,
@@ -67,6 +69,7 @@ module Sample = {
                 );
                 incr(i);
               };
+              */
             }}
           />
         </View>,
