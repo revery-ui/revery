@@ -5,7 +5,6 @@
  */
 
 open Reglm;
-open Reglfw.Glfw;
 
 open Revery_Core;
 open Revery_Shaders;
@@ -43,15 +42,9 @@ let drawRect =
     let shader = Assets.solidShader();
     CompiledShader.use(shader.compiledShader);
 
-    /* if (derp) { */
-    glUniformMatrix4fv(shader.uniformProjection, ctx.projection);
-    glUniformMatrix4fv(shader.uniformWorld, world);
-    glUniform4fv(shader.uniformColor, Color.toVec4(color));
-    /* } */
-    /* CompiledShader.setUniformMatrix4fv(shader, "uProjection", ctx.projection); */
-    /* CompiledShader.setUniformMatrix4fv(shader, "uWorld", world); */
-
-    /* CompiledShader.setUniform4fv(shader, "uColor", Color.toVec4(color)); */
+    CompiledShader.setUniformMatrix4fv(shader.uniformProjection, ctx.projection);
+    CompiledShader.setUniformMatrix4fv(shader.uniformWorld, world);
+    CompiledShader.setUniform4fv(shader.uniformColor, Color.toVec4(color));
 
     Geometry.draw(quad, shader.compiledShader);
   | _ => ()

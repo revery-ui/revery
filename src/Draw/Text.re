@@ -53,20 +53,20 @@ let _startShader =
   if (backgroundColor.a > 0.99) {
     let shader = Assets.fontGammaCorrectedShader();
     CompiledShader.use(shader.compiledShader);
-    glUniformMatrix4fv(shader.uniformProjection, projection);
-    glUniform4fv(shader.uniformColor, Color.toVec4(color));
-    glUniform4fv(
+CompiledShader.setUniformMatrix4fv(shader.uniformProjection, projection);
+    CompiledShader.setUniform4fv(shader.uniformColor, Color.toVec4(color));
+    CompiledShader.setUniform4fv(
       shader.uniformBackgroundColor,
       Color.toVec4(backgroundColor),
     );
-    glUniform1f(shader.uniformGamma, gamma);
+    CompiledShader.setUniform1f(shader.uniformGamma, gamma);
 
     (shader.compiledShader, shader.uniformWorld);
   } else {
     let shader = Assets.fontDefaultShader();
     CompiledShader.use(shader.compiledShader);
-    glUniformMatrix4fv(shader.uniformProjection, projection);
-    glUniform4fv(shader.uniformColor, Color.toVec4(color));
+    CompiledShader.setUniformMatrix4fv(shader.uniformProjection, projection);
+    CompiledShader.setUniform4fv(shader.uniformColor, Color.toVec4(color));
 
     (shader.compiledShader, shader.uniformWorld);
   };
@@ -141,7 +141,7 @@ let drawString =
       Mat4.multiply(xform, outerTransform, local);
       Mat4.multiply(xform, transform, xform);
 
-      glUniformMatrix4fv(uniformWorld, xform);
+      CompiledShader.setUniformMatrix4fv(uniformWorld, xform);
 
       Geometry.draw(quad, shader);
 
