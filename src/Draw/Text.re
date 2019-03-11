@@ -143,8 +143,6 @@ let drawString =
 
       glUniformMatrix4fv(uniformWorld, xform);
 
-      /* Mat4.identity(xform); */
-
       Geometry.draw(quad, shader);
 
       x +. advance /. 64.0;
