@@ -35,11 +35,11 @@ let fsShader = {|
 |};
 
 type t = {
-    compiledShader: CompiledShader.t,
-    uniformWorld: uniformLocation,
-    uniformProjection: uniformLocation,
-    uniformColor: uniformLocation,
-}
+  compiledShader: CompiledShader.t,
+  uniformWorld: uniformLocation,
+  uniformProjection: uniformLocation,
+  uniformColor: uniformLocation,
+};
 
 let create = () => {
   let shader =
@@ -51,9 +51,12 @@ let create = () => {
       ~fragmentShader=fsShader,
     );
   let compiledShader = Shader.compile(shader);
-  let uniformWorld = CompiledShader.getUniformLocation(compiledShader, "uWorld");
-  let uniformProjection = CompiledShader.getUniformLocation(compiledShader, "uProjection");
-  let uniformColor = CompiledShader.getUniformLocation(compiledShader, "uColor");
+  let uniformWorld =
+    CompiledShader.getUniformLocation(compiledShader, "uWorld");
+  let uniformProjection =
+    CompiledShader.getUniformLocation(compiledShader, "uProjection");
+  let uniformColor =
+    CompiledShader.getUniformLocation(compiledShader, "uColor");
 
-  { compiledShader, uniformWorld, uniformProjection, uniformColor }
+  {compiledShader, uniformWorld, uniformProjection, uniformColor};
 };

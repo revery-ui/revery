@@ -44,9 +44,9 @@ let drawRect =
     CompiledShader.use(shader.compiledShader);
 
     /* if (derp) { */
-        glUniformMatrix4fv(shader.uniformProjection, ctx.projection);
-        glUniformMatrix4fv(shader.uniformWorld, world);
-        glUniform4fv(shader.uniformColor, Color.toVec4(color));
+    glUniformMatrix4fv(shader.uniformProjection, ctx.projection);
+    glUniformMatrix4fv(shader.uniformWorld, world);
+    glUniform4fv(shader.uniformColor, Color.toVec4(color));
     /* } */
     /* CompiledShader.setUniformMatrix4fv(shader, "uProjection", ctx.projection); */
     /* CompiledShader.setUniformMatrix4fv(shader, "uWorld", world); */

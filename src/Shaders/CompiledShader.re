@@ -30,10 +30,10 @@ let attributeChannelToLocation = (s: t, a: VertexChannel.t) => {
 
 exception UniformNotFoundException(string);
 let _getOrThrowUniform = (name, opt) => {
-    switch (opt) {
-    | Some(v) => v
-    | None => raise(UniformNotFoundException(name));
-    }
+  switch (opt) {
+  | Some(v) => v
+  | None => raise(UniformNotFoundException(name))
+  };
 };
 
 let uniformNameToLocation = (s: t, name: string) => {
@@ -41,10 +41,10 @@ let uniformNameToLocation = (s: t, name: string) => {
   Hashtbl.find_opt(u, name);
 };
 
-let getUniformLocation: (t, string) => uniformLocation = (s, a) => {
-    uniformNameToLocation(s, a)
-    |> _getOrThrowUniform(a)
-};
+let getUniformLocation: (t, string) => uniformLocation =
+  (s, a) => {
+    uniformNameToLocation(s, a) |> _getOrThrowUniform(a);
+  };
 
 let _setUniformIfAvailable = (s, name, f) => {
   let uLoc = uniformNameToLocation(s, name);
@@ -73,6 +73,10 @@ let setUniform4fv = (s: t, name: string, v: Vec4.t) =>
 let setUniformMatrix4fv = (s: t, name: string, m: Mat4.t) =>
   _setUniformIfAvailable(s, name, u => glUniformMatrix4fv(u, m));
 
+/*
+ * State changes in OpenGL are expensive!
+ * We want to minimize those, when possible.
+ */
 let _cache: ref(option(Glfw.program)) = ref(None);
 
 let use = (s: t) => {

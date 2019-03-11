@@ -42,14 +42,29 @@ let measure = (~fontFamily, ~fontSize, text) => {
 
 let identityMatrix = Mat4.create();
 
-let _getShaderForDrawing = (~backgroundColor: Color.t, ()) => {
-  ignore(backgroundColor);
+let _startShader =
+    (~color: Color.t, ~backgroundColor: Color.t, ~projection: Mat4.t, ~gamma: float, ()) => {
 
-  if (backgroundColor.a > 0.99) {
-    Assets.fontGammaCorrectedShader();
-  } else {
-    Assets.fontDefaultShader();
-  };
+    if (backgroundColor.a > 0.99) {
+      let shader = Assets.fontGammaCorrectedShader();
+      CompiledShader.use(shader.compiledShader);
+      glUniformMatrix4fv(shader.uniformProjection, projection);
+      glUniform4fv(shader.uniformColor, Color.toVec4(color));
+      glUniform4fv(
+        shader.uniformBackgroundColor,
+        Color.toVec4(backgroundColor),
+      );
+      glUniform1f(shader.uniformGamma, gamma);
+
+      (shader.compiledShader, shader.uniformWorld)
+    } else {
+      let shader = Assets.fontDefaultShader();
+      CompiledShader.use(shader.compiledShader);
+      glUniformMatrix4fv(shader.uniformProjection, projection);
+      glUniform4fv(shader.uniformColor, Color.toVec4(color));
+
+      (shader.compiledShader, shader.uniformWorld)
+    };
 };
 
 let drawString =
@@ -68,30 +83,12 @@ let drawString =
 
   switch (pass) {
   | AlphaPass(ctx) =>
-    /* let lineHeightPx = getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ()); */
-    let m = ctx.projection;
+    let projection = ctx.projection;
     let quad = Assets.quad();
-    let textureShader = _getShaderForDrawing(~backgroundColor, ());
 
-    CompiledShader.use(textureShader);
-
-    CompiledShader.setUniformMatrix4fv(textureShader, "uProjection", m);
+    let (shader, uniformWorld) = _startShader(~color, ~backgroundColor, ~gamma, ~projection, ());
 
     let font = FontCache.load(fontFamily, _getScaledFontSize(fontSize));
-
-    CompiledShader.setUniform4fv(
-      textureShader,
-      "uColor",
-      Color.toVec4(color),
-    );
-
-    CompiledShader.setUniform4fv(
-      textureShader,
-      "uBackgroundColor",
-      Color.toVec4(backgroundColor),
-    );
-
-    CompiledShader.setUniform1f(textureShader, "uGamma", gamma);
 
     let metrics = FontRenderer.getNormalizedMetrics(font);
     let multiplier = ctx.pixelRatio *. float_of_int(ctx.scaleFactor);
@@ -139,9 +136,11 @@ let drawString =
       Mat4.multiply(xform, outerTransform, local);
       Mat4.multiply(xform, transform, xform);
 
-      CompiledShader.setUniformMatrix4fv(textureShader, "uWorld", xform);
+      glUniformMatrix4fv(uniformWorld, xform);
 
-      Geometry.draw(quad, textureShader);
+      /* Mat4.identity(xform); */
+
+      Geometry.draw(quad, shader);
 
       x +. advance /. 64.0;
     };

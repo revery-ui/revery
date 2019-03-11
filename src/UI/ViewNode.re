@@ -300,7 +300,7 @@ class viewNode (()) = {
           ~width,
           ~height,
           ~opacity,
-          ~solidShader=solidShader,
+          ~solidShader,
           ~m,
           ~world,
         );

@@ -3,6 +3,7 @@
  *
  * Simple texture shader
  */
+open Reglfw.Glfw;
 open Revery_Shaders;
 
 let attribute: list(ShaderAttribute.t) =
@@ -55,6 +56,13 @@ let vsShader = SolidShader.vsShader ++ "\n" ++ {|
  * However, it is the fastest and most convenient text rendering-strategy.
  */
 module Default = {
+    type t = {
+        compiledShader: CompiledShader.t,
+        uniformWorld: uniformLocation,
+        uniformProjection: uniformLocation,
+        uniformColor: uniformLocation,
+    };
+
   let fsShader = {|
         vec4 t = texture2D(uSampler, vTexCoord);
         gl_FragColor = vec4(vColor.r, vColor.g, vColor.b, t.a * vColor.a);
@@ -69,7 +77,12 @@ module Default = {
         ~vertexShader=vsShader,
         ~fragmentShader=fsShader,
       );
-    Shader.compile(shader);
+  let compiledShader = Shader.compile(shader);
+  let uniformWorld = CompiledShader.getUniformLocation(compiledShader, "uWorld");
+  let uniformProjection = CompiledShader.getUniformLocation(compiledShader, "uProjection");
+  let uniformColor = CompiledShader.getUniformLocation(compiledShader, "uColor");
+
+  { compiledShader, uniformWorld, uniformProjection, uniformColor }
   };
 };
 
@@ -94,6 +107,15 @@ module GammaCorrected = {
         gl_FragColor = vec4(r, g, b, 1.0);
     |};
 
+    type t = {
+        compiledShader: CompiledShader.t,
+        uniformWorld: uniformLocation,
+        uniformProjection: uniformLocation,
+        uniformColor: uniformLocation,
+        uniformBackgroundColor: uniformLocation,
+        uniformGamma: uniformLocation,
+    };
+
   let create = () => {
     let shader =
       Shader.create(
@@ -103,6 +125,13 @@ module GammaCorrected = {
         ~vertexShader=vsShader,
         ~fragmentShader=fsShader,
       );
-    Shader.compile(shader);
+  let compiledShader = Shader.compile(shader);
+  let uniformWorld = CompiledShader.getUniformLocation(compiledShader, "uWorld");
+  let uniformProjection = CompiledShader.getUniformLocation(compiledShader, "uProjection");
+  let uniformColor = CompiledShader.getUniformLocation(compiledShader, "uColor");
+  let uniformBackgroundColor = CompiledShader.getUniformLocation(compiledShader, "uBackgroundColor");
+  let uniformGamma = CompiledShader.getUniformLocation(compiledShader, "uGamma");
+
+  { compiledShader, uniformWorld, uniformProjection, uniformColor, uniformBackgroundColor, uniformGamma }
   };
 };
