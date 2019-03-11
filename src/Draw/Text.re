@@ -43,29 +43,33 @@ let measure = (~fontFamily, ~fontSize, text) => {
 let identityMatrix = Mat4.create();
 
 let _startShader =
-    (~color: Color.t, ~backgroundColor: Color.t, ~projection: Mat4.t, ~gamma: float, ()) => {
+    (
+      ~color: Color.t,
+      ~backgroundColor: Color.t,
+      ~projection: Mat4.t,
+      ~gamma: float,
+      (),
+    ) =>
+  if (backgroundColor.a > 0.99) {
+    let shader = Assets.fontGammaCorrectedShader();
+    CompiledShader.use(shader.compiledShader);
+    glUniformMatrix4fv(shader.uniformProjection, projection);
+    glUniform4fv(shader.uniformColor, Color.toVec4(color));
+    glUniform4fv(
+      shader.uniformBackgroundColor,
+      Color.toVec4(backgroundColor),
+    );
+    glUniform1f(shader.uniformGamma, gamma);
 
-    if (backgroundColor.a > 0.99) {
-      let shader = Assets.fontGammaCorrectedShader();
-      CompiledShader.use(shader.compiledShader);
-      glUniformMatrix4fv(shader.uniformProjection, projection);
-      glUniform4fv(shader.uniformColor, Color.toVec4(color));
-      glUniform4fv(
-        shader.uniformBackgroundColor,
-        Color.toVec4(backgroundColor),
-      );
-      glUniform1f(shader.uniformGamma, gamma);
+    (shader.compiledShader, shader.uniformWorld);
+  } else {
+    let shader = Assets.fontDefaultShader();
+    CompiledShader.use(shader.compiledShader);
+    glUniformMatrix4fv(shader.uniformProjection, projection);
+    glUniform4fv(shader.uniformColor, Color.toVec4(color));
 
-      (shader.compiledShader, shader.uniformWorld)
-    } else {
-      let shader = Assets.fontDefaultShader();
-      CompiledShader.use(shader.compiledShader);
-      glUniformMatrix4fv(shader.uniformProjection, projection);
-      glUniform4fv(shader.uniformColor, Color.toVec4(color));
-
-      (shader.compiledShader, shader.uniformWorld)
-    };
-};
+    (shader.compiledShader, shader.uniformWorld);
+  };
 
 let drawString =
     (
@@ -86,7 +90,8 @@ let drawString =
     let projection = ctx.projection;
     let quad = Assets.quad();
 
-    let (shader, uniformWorld) = _startShader(~color, ~backgroundColor, ~gamma, ~projection, ());
+    let (shader, uniformWorld) =
+      _startShader(~color, ~backgroundColor, ~gamma, ~projection, ());
 
     let font = FontCache.load(fontFamily, _getScaledFontSize(fontSize));
 
