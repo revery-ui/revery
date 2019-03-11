@@ -68,8 +68,8 @@ let setUniform4f =
 
 let setUniform4fv = (u: uniformLocation, v: Vec4.t) => glUniform4fv(u, v);
 
-let setUniformMatrix4fv = (s: t, name: string, m: Mat4.t) =>
-  _setUniformIfAvailable(s, name, u => glUniformMatrix4fv(u, m));
+let setUniformMatrix4fv = (u: uniformLocation, m: Mat4.t) =>
+  glUniformMatrix4fv(u, m);
 
 /*
  * State changes in OpenGL are expensive!

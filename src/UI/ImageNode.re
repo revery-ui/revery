@@ -37,13 +37,11 @@ class imageNode (imagePath: string) = {
       let world = _this#getWorldTransform();
 
       Shaders.CompiledShader.setUniformMatrix4fv(
-        textureShader.compiledShader,
-        "uWorld",
+        textureShader.uniformWorld,
         world,
       );
       Shaders.CompiledShader.setUniformMatrix4fv(
-        textureShader.compiledShader,
-        "uProjection",
+        textureShader.uniformProjection,
         m,
       );
 

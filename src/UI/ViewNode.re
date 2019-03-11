@@ -47,8 +47,8 @@ let renderBorders =
   let bbc = Color.multiplyAlpha(opacity, bottomBorderColor);
 
   Shaders.CompiledShader.use(solidShader);
-  Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uProjection", m);
-  Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uWorld", world);
+  Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformProjection, m);
+  Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformWorld,world);
 
   if (topBorderWidth != 0. && tbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
@@ -246,8 +246,7 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
   Shaders.CompiledShader.use(gradientShader.compiledShader);
 
   Shaders.CompiledShader.setUniformMatrix4fv(
-    gradientShader.compiledShader,
-    "uProjection",
+    gradientShader.uniformProjection,
     m,
   );
 
@@ -268,8 +267,7 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
   );
 
   Shaders.CompiledShader.setUniformMatrix4fv(
-    gradientShader.compiledShader,
-    "uWorld",
+    gradientShader.uniformWorld,
     shadowWorldTransform,
   );
 
@@ -314,13 +312,11 @@ class viewNode (()) = {
       if (color.a > 0.001) {
         Shaders.CompiledShader.use(solidShader);
         Shaders.CompiledShader.setUniformMatrix4fv(
-          solidShader,
-          "uProjection",
+          shader.uniformProjection,
           m,
         );
         Shaders.CompiledShader.setUniformMatrix4fv(
-          solidShader,
-          "uWorld",
+          shader.uniformWorld,
           world,
         );
 
