@@ -46,13 +46,64 @@ let getUniformLocation: (t, string) => uniformLocation =
     uniformNameToLocation(s, a) |> _getOrThrowUniform(a);
   };
 
-let _setUniformIfAvailable = (s, name, f) => {
-  let uLoc = uniformNameToLocation(s, name);
-  switch (uLoc) {
-  | Some(u) => f(u)
-  | None => ()
-  };
-};
+/*
+ * State changes in OpenGL are expensive!
+ * We want to minimize those, when possible.
+ */
+module ShaderCache {
+    let identityMatrix = Mat4.create();
+
+
+    let cache_size = 32;
+
+    type t = {
+       mutable program: option(Glfw.program),
+       cachedMat4: array(Mat4.t),
+    };
+
+    let create = () => {
+        program: None,
+        cachedMat4: Array.make(cache_size, identityMatrix),
+    };
+
+    let setMat4IfNew = (cache: t, u: uniformLocation, v: Mat4.t,  f) => {
+        let uInt: int = Obj.magic(u);
+        /* print_endline ("uniform location: " ++ string_of_int(uInt)); */
+        if (uInt >= cache_size) {
+            print_endline ("Setting over cache size");
+           f(); 
+        }
+
+        let currentVal = cache.cachedMat4[uInt];
+        if (currentVal !== v) {
+            /* print_endline ("Setting cached"); */
+            cache.cachedMat4[uInt] = v;
+            f();
+        } else {
+            ();
+            /* print_endline ("not setting CACHED"); */
+        }
+    };
+
+    let useProgramIfNew = (cache: t, program: Glfw.program, f) => {
+        switch (cache.program) {
+        | None =>
+            
+            cache.program = Some(program);
+            f();
+        | Some(v) when v !== program =>
+            cache.program = Some(program);
+            f();
+        | Some(_) => {
+            ();
+            /* print_endline (" NOT SWITCHING CACHED" ); */
+        }
+        }
+    }
+
+}
+
+let _cache: ref(ShaderCache.t) = ref(ShaderCache.create());
 
 let setUniform1f = (uniform: uniformLocation, v) => glUniform1f(uniform, v);
 
@@ -71,23 +122,7 @@ let setUniform4fv = (u: uniformLocation, v: Vec4.t) => glUniform4fv(u, v);
 let setUniformMatrix4fv = (u: uniformLocation, m: Mat4.t) =>
   glUniformMatrix4fv(u, m);
 
-/*
- * State changes in OpenGL are expensive!
- * We want to minimize those, when possible.
- */
-let _cache: ref(option(Glfw.program)) = ref(None);
-
 let use = (s: t) => {
-  let (_, _, _, p, _, _, _) = s;
-
-  switch (_cache^) {
-  | None =>
-    glUseProgram(p);
-    _cache := Some(p);
-  | Some(v) when v !== p =>
-    glUseProgram(p);
-    _cache := Some(p);
-    ();
-  | Some(_) => ()
-  };
+    let (_, _, _, p, _, _, _) = s;
+    ShaderCache.useProgramIfNew(_cache^, p, () => glUseProgram(p))
 };
