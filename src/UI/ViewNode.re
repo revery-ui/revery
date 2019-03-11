@@ -245,33 +245,31 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
 
   let gradientShader = Assets.gradientShader();
 
-  Shaders.CompiledShader.use(gradientShader);
+  Shaders.CompiledShader.use(gradientShader.compiledShader);
 
   Shaders.CompiledShader.setUniformMatrix4fv(
-    gradientShader,
+    gradientShader.compiledShader,
     "uProjection",
     m,
   );
 
-  Shaders.CompiledShader.setUniform3fv(
-    gradientShader,
-    "uShadowColor",
-    Color.toVec3(color),
-  );
+  Shaders.CompiledShader.setUniform3fv(gradientShader.uniformShadowColor, Color.toVec3(color));
 
-  Shaders.CompiledShader.setUniform2fv(
-    gradientShader,
-    "uShadowAmount",
-    Vec2.create(blurRadius /. width, blurRadius /. height),
-  );
+  /* Shaders.CompiledShader.setUniform3fv( */
+  /*   gradientShader, */
+  /*   "uShadowColor", */
+  /*   Color.toVec3(color), */
+  /* ); */
+
+  Shaders.CompiledShader.setUniform2fv(gradientShader.uniformShadowAmount, Vec2.create(blurRadius /. width, blurRadius /. height));
 
   Shaders.CompiledShader.setUniformMatrix4fv(
-    gradientShader,
+    gradientShader.compiledShader,
     "uWorld",
     shadowWorldTransform,
   );
 
-  Geometry.draw(quad, gradientShader);
+  Geometry.draw(quad, gradientShader.compiledShader);
   ();
 };
 
