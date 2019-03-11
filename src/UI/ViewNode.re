@@ -48,7 +48,7 @@ let renderBorders =
 
   Shaders.CompiledShader.use(solidShader);
   Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformProjection, m);
-  Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformWorld,world);
+  Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformWorld, world);
 
   if (topBorderWidth != 0. && tbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(

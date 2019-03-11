@@ -53,7 +53,7 @@ let _startShader =
   if (backgroundColor.a > 0.99) {
     let shader = Assets.fontGammaCorrectedShader();
     CompiledShader.use(shader.compiledShader);
-CompiledShader.setUniformMatrix4fv(shader.uniformProjection, projection);
+    CompiledShader.setUniformMatrix4fv(shader.uniformProjection, projection);
     CompiledShader.setUniform4fv(shader.uniformColor, Color.toVec4(color));
     CompiledShader.setUniform4fv(
       shader.uniformBackgroundColor,

@@ -50,26 +50,22 @@ let getUniformLocation: (t, string) => uniformLocation =
  * Cache to stash global state, so we can
  * minimize calls to OpenGL when possible
  */
-module ShaderCache {
-    type t = {
-       mutable program: option(Glfw.program),
-    };
+module ShaderCache = {
+  type t = {mutable program: option(Glfw.program)};
 
-    let create = () => {
-        program: None,
-    };
+  let create = () => {program: None};
 
-    let useProgramIfNew = (cache: t, program: Glfw.program, f) => {
-        switch (cache.program) {
-        | None =>
-            cache.program = Some(program);
-            f();
-        | Some(v) when v !== program =>
-            cache.program = Some(program);
-            f();
-        | Some(_) => ();
-        }
-    }
+  let useProgramIfNew = (cache: t, program: Glfw.program, f) => {
+    switch (cache.program) {
+    | None =>
+      cache.program = Some(program);
+      f();
+    | Some(v) when v !== program =>
+      cache.program = Some(program);
+      f();
+    | Some(_) => ()
+    };
+  };
 };
 
 let _cache: ref(ShaderCache.t) = ref(ShaderCache.create());
@@ -92,6 +88,6 @@ let setUniformMatrix4fv = (u: uniformLocation, m: Mat4.t) =>
   glUniformMatrix4fv(u, m);
 
 let use = (s: t) => {
-    let (_, _, _, p, _, _, _) = s;
-    ShaderCache.useProgramIfNew(_cache^, p, () => glUseProgram(p))
+  let (_, _, _, p, _, _, _) = s;
+  ShaderCache.useProgramIfNew(_cache^, p, () => glUseProgram(p));
 };

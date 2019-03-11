@@ -42,7 +42,10 @@ let drawRect =
     let shader = Assets.solidShader();
     CompiledShader.use(shader.compiledShader);
 
-    CompiledShader.setUniformMatrix4fv(shader.uniformProjection, ctx.projection);
+    CompiledShader.setUniformMatrix4fv(
+      shader.uniformProjection,
+      ctx.projection,
+    );
     CompiledShader.setUniformMatrix4fv(shader.uniformWorld, world);
     CompiledShader.setUniform4fv(shader.uniformColor, Color.toVec4(color));
 
