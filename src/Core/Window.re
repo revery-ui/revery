@@ -248,12 +248,9 @@ let create = (name: string, options: windowCreateOptions) => {
     },
   );
 
-  Glfw.glfwSetWindowPosCallback(
-    w,
-    (_w, _x, _y) => {
-        ret.areMetricsDirty = true;
-    }
-  )
+  Glfw.glfwSetWindowPosCallback(w, (_w, _x, _y) =>
+    ret.areMetricsDirty = true
+  );
 
   Glfw.glfwSetKeyCallback(
     w,
