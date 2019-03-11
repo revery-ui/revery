@@ -283,7 +283,6 @@ class viewNode (()) = {
     switch (pass) {
     | AlphaPass(ctx) =>
       let shader = Assets.solidShader();
-      let solidShader = shader.compiledShader;
       let dimensions = _this#measurements();
       let width = float_of_int(dimensions.width);
       let height = float_of_int(dimensions.height);
@@ -298,8 +297,6 @@ class viewNode (()) = {
       let (minX, minY, maxX, maxY) =
         renderBorders(~style, ~width, ~height, ~opacity, ~shader, ~m, ~world);
 
-      let mainQuad = Assets.quad(~minX, ~maxX, ~minY, ~maxY, ());
-
       let color = Color.multiplyAlpha(opacity, style.backgroundColor);
 
       switch (style.boxShadow) {
@@ -310,22 +307,32 @@ class viewNode (()) = {
 
       /* Only render if _not_ transparent */
       if (color.a > 0.001) {
-        Shaders.CompiledShader.use(solidShader);
-        Shaders.CompiledShader.setUniformMatrix4fv(
-          shader.uniformProjection,
-          m,
-        );
-        Shaders.CompiledShader.setUniformMatrix4fv(
-          shader.uniformWorld,
-          world,
-        );
 
-        Shaders.CompiledShader.setUniform4fv(
-          shader.uniformColor,
-          Color.toVec4(color),
-        );
+        Shapes.drawRect(~transform=world, 
+                        ~x=minX,
+                        ~y=minY,
+                        ~width=(maxX -. minX),
+                        ~height=(maxY -. minY),
+                        ~color=color,
+                        ());
+        
 
-        Geometry.draw(mainQuad, solidShader);
+/*         Shaders.CompiledShader.use(solidShader); */
+/*         Shaders.CompiledShader.setUniformMatrix4fv( */
+/*           shader.uniformProjection, */
+/*           m, */
+/*         ); */
+/*         Shaders.CompiledShader.setUniformMatrix4fv( */
+/*           shader.uniformWorld, */
+/*           world, */
+/*         ); */
+
+/*         Shaders.CompiledShader.setUniform4fv( */
+/*           shader.uniformColor, */
+/*           Color.toVec4(color), */
+/*         ); */
+
+/*         Geometry.draw(mainQuad, solidShader); */
       };
     | _ => ()
     };
