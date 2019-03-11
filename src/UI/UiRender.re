@@ -33,7 +33,7 @@ let render =
   /* Layout */
   let size = Window.getSize(window);
   let pixelRatio = Window.getDevicePixelRatio(window);
-  let scaleFactor = Monitor.getScaleFactor();
+  let scaleFactor = Window.getScaleFactor(window);
   let adjustedHeight = size.height / scaleFactor;
   let adjustedWidth = size.width / scaleFactor;
 
