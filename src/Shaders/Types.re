@@ -99,4 +99,3 @@ module ShaderVarying = {
     ++ v.name
     ++ ";";
 };
-
