@@ -12,45 +12,36 @@ type size = {
   height: int,
 };
 
-module WindowMetrics {
-    type t = {
-      /* Note we separate the _Window_ width / height
-       * and the _framebuffer_ width/height
-       * Some more info here: http://www.glfw.org/docs/latest/window_guide.html
-       */
-        size: size,
-        framebufferSize: size,
-        devicePixelRatio: float,
-        scaleFactor: int,
-    };
+module WindowMetrics = {
+  type t = {
+    /* Note we separate the _Window_ width / height
+     * and the _framebuffer_ width/height
+     * Some more info here: http://www.glfw.org/docs/latest/window_guide.html
+     */
+    size,
+    framebufferSize: size,
+    devicePixelRatio: float,
+    scaleFactor: int,
+  };
 
-    let create = (
-        ~size,
-        ~framebufferSize,
-        ~devicePixelRatio,
-        ~scaleFactor,
-        (),
-    ) => {
-        framebufferSize,
-        size,
-        devicePixelRatio,
-        scaleFactor,
-    };
-}
+  let create = (~size, ~framebufferSize, ~devicePixelRatio, ~scaleFactor, ()) => {
+    framebufferSize,
+    size,
+    devicePixelRatio,
+    scaleFactor,
+  };
+};
 
 type t = {
   mutable backgroundColor: Color.t,
   glfwWindow: Glfw.Window.t,
   mutable render: windowRenderCallback,
   mutable shouldRender: windowShouldRenderCallback,
-
   mutable metrics: WindowMetrics.t,
   mutable areMetricsDirty: bool,
-
   mutable isRendering: bool,
   mutable requestedWidth: option(int),
   mutable requestedHeight: option(int),
-
   onKeyPress: Event.t(keyPressEvent),
   onKeyDown: Event.t(keyEvent),
   onKeyUp: Event.t(keyEvent),
@@ -96,23 +87,28 @@ let isDirty = (w: t) =>
   };
 
 let _updateMetrics = (w: t) => {
-    let glfwSize = Glfw.glfwGetWindowSize(w.glfwWindow);
-    let glfwFramebufferSize = Glfw.glfwGetFramebufferSize(w.glfwWindow);
+  let glfwSize = Glfw.glfwGetWindowSize(w.glfwWindow);
+  let glfwFramebufferSize = Glfw.glfwGetFramebufferSize(w.glfwWindow);
 
-    let scaleFactor = Monitor.getScaleFactor();
+  let scaleFactor = Monitor.getScaleFactor();
 
-    let devicePixelRatio = float_of_int(glfwFramebufferSize.width) /. float_of_int(glfwSize.width);
+  let devicePixelRatio =
+    float_of_int(glfwFramebufferSize.width) /. float_of_int(glfwSize.width);
 
-    w.metrics = WindowMetrics.create(
-        ~size={width: glfwSize.width, height: glfwSize.height},
-        ~framebufferSize={width: glfwFramebufferSize.width, height: glfwFramebufferSize.height},
-        ~scaleFactor,
-        ~devicePixelRatio,
-        (),
+  w.metrics =
+    WindowMetrics.create(
+      ~size={width: glfwSize.width, height: glfwSize.height},
+      ~framebufferSize={
+        width: glfwFramebufferSize.width,
+        height: glfwFramebufferSize.height,
+      },
+      ~scaleFactor,
+      ~devicePixelRatio,
+      (),
     );
 
-    w.areMetricsDirty = false;
-}
+  w.areMetricsDirty = false;
+};
 
 let setSize = (w: t, width: int, height: int) =>
   if (width != w.metrics.size.width || height != w.metrics.size.height) {
@@ -150,7 +146,12 @@ let render = (w: t) => {
     Glfw.glfwMakeContextCurrent(w.glfwWindow)
   );
 
-  Glfw.glViewport(0, 0, w.metrics.framebufferSize.width, w.metrics.framebufferSize.height);
+  Glfw.glViewport(
+    0,
+    0,
+    w.metrics.framebufferSize.width,
+    w.metrics.framebufferSize.height,
+  );
   /* glClearDepth(1.0); */
   /* glEnable(GL_DEPTH_TEST); */
   /* glDepthFunc(GL_LEQUAL); */
@@ -199,15 +200,14 @@ let create = (name: string, options: windowCreateOptions) => {
    */
   let glfwSize = Glfw.glfwGetWindowSize(w);
 
-
-  let metrics = WindowMetrics.create(
-    ~size={width: glfwSize.width, height: glfwSize.height},
-    ~framebufferSize={width: fbSize.width, height: fbSize.height},
-    ~devicePixelRatio=96.,
-    ~scaleFactor=1,
-    (),
-  );
-
+  let metrics =
+    WindowMetrics.create(
+      ~size={width: glfwSize.width, height: glfwSize.height},
+      ~framebufferSize={width: fbSize.width, height: fbSize.height},
+      ~devicePixelRatio=96.,
+      ~scaleFactor=1,
+      (),
+    );
 
   let ret: t = {
     backgroundColor: options.backgroundColor,
@@ -324,7 +324,7 @@ let show = w => Glfw.glfwShowWindow(w.glfwWindow);
 let hide = w => Glfw.glfwHideWindow(w.glfwWindow);
 
 let getSize = (w: t) => {
-  w.metrics.size
+  w.metrics.size;
 };
 
 let getFramebufferSize = (w: t) => {
@@ -334,12 +334,12 @@ let getFramebufferSize = (w: t) => {
 let maximize = (w: t) => Glfw.glfwMaximizeWindow(w.glfwWindow);
 
 let getDevicePixelRatio = (w: t) => {
-  w.metrics.devicePixelRatio
+  w.metrics.devicePixelRatio;
 };
 
 let getScaleFactor = (w: t) => {
-    w.metrics.scaleFactor
-}
+  w.metrics.scaleFactor;
+};
 
 let takeScreenshot = (w: t, filename: string) => {
   open Glfw;
