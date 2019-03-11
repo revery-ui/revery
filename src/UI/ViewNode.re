@@ -307,32 +307,15 @@ class viewNode (()) = {
 
       /* Only render if _not_ transparent */
       if (color.a > 0.001) {
-
-        Shapes.drawRect(~transform=world, 
-                        ~x=minX,
-                        ~y=minY,
-                        ~width=(maxX -. minX),
-                        ~height=(maxY -. minY),
-                        ~color=color,
-                        ());
-        
-
-/*         Shaders.CompiledShader.use(solidShader); */
-/*         Shaders.CompiledShader.setUniformMatrix4fv( */
-/*           shader.uniformProjection, */
-/*           m, */
-/*         ); */
-/*         Shaders.CompiledShader.setUniformMatrix4fv( */
-/*           shader.uniformWorld, */
-/*           world, */
-/*         ); */
-
-/*         Shaders.CompiledShader.setUniform4fv( */
-/*           shader.uniformColor, */
-/*           Color.toVec4(color), */
-/*         ); */
-
-/*         Geometry.draw(mainQuad, solidShader); */
+        Shapes.drawRect(
+          ~transform=world,
+          ~x=minX,
+          ~y=minY,
+          ~width=maxX -. minX,
+          ~height=maxY -. minY,
+          ~color,
+          (),
+        );
       };
     | _ => ()
     };
