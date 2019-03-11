@@ -1,110 +1,14 @@
 open Reglfw;
 open Reglfw.Glfw;
-open Reglm;
 
 type vertexShaderSource = string;
 type fragmentShaderSource = string;
 
 module Environment = Revery_Core.Environment;
 
-module VertexChannel = {
-  type t =
-    | Position
-    | Normal
-    | Color
-    | TextureCoordinate
-    | Custom(string);
-};
+open Types;
 
-module ShaderPrecision = {
-  type t =
-    | Default
-    | Low
-    | Medium
-    | High;
-
-  let toString = v =>
-    switch (Environment.webGL, v) {
-    | (false, _) => ""
-    | (true, p) =>
-      switch (p) {
-      | Default => ""
-      | Low => "lowp"
-      | Medium => "mediump"
-      | High => "highp"
-      }
-    };
-};
-
-module ShaderDataType = {
-  type t =
-    | Float
-    | Vector2
-    | Vector3
-    | Vector4
-    | Mat4
-    | Sampler2D;
-
-  let toString = v =>
-    switch (v) {
-    | Float => "float"
-    | Vector2 => "vec2"
-    | Vector3 => "vec3"
-    | Vector4 => "vec4"
-    | Mat4 => "mat4"
-    | Sampler2D => "sampler2D"
-    };
-};
-
-module ShaderAttribute = {
-  type t = {
-    channel: VertexChannel.t,
-    dataType: ShaderDataType.t,
-    name: string,
-  };
-
-  let toString = a =>
-    "attribute "
-    ++ ShaderDataType.toString(a.dataType)
-    ++ " "
-    ++ a.name
-    ++ ";";
-};
-
-module ShaderUniform = {
-  type shaderUniformUsage =
-    | VertexShader
-    | FragmentShader
-    | VertexAndFragmentShader;
-
-  type t = {
-    dataType: ShaderDataType.t,
-    usage: shaderUniformUsage,
-    name: string,
-  };
-
-  let toString = u =>
-    "uniform " ++ ShaderDataType.toString(u.dataType) ++ " " ++ u.name ++ ";";
-};
-
-module ShaderVarying = {
-  type t = {
-    dataType: ShaderDataType.t,
-    precision: ShaderPrecision.t,
-    name: string,
-  };
-
-  let toString = v =>
-    "varying "
-    ++ ShaderPrecision.toString(v.precision)
-    ++ " "
-    ++ ShaderDataType.toString(v.dataType)
-    ++ " "
-    ++ v.name
-    ++ ";";
-};
-
-type uncompiledShader = (
+type t = (
   list(ShaderUniform.t),
   list(ShaderAttribute.t),
   list(ShaderVarying.t),
@@ -167,73 +71,9 @@ let create =
   (uniforms, attributes, varying, vertexShader, fragmentShader);
 };
 
-module CompiledShader = {
-  type attributeNameToLocation = Hashtbl.t(string, attribLocation);
-  type attributeChannelToLocation =
-    Hashtbl.t(VertexChannel.t, attribLocation);
-  type uniformNameToLocation = Hashtbl.t(string, uniformLocation);
-
-  type t = (
-    list(ShaderUniform.t),
-    list(ShaderAttribute.t),
-    list(ShaderVarying.t),
-    Glfw.program,
-    attributeNameToLocation,
-    attributeChannelToLocation,
-    uniformNameToLocation,
-  );
-
-  let attributeNameToLocation = (s: t, a: string) => {
-    let (_, _, _, _, dict, _, _) = s;
-    Hashtbl.find_opt(dict, a);
-  };
-
-  let attributeChannelToLocation = (s: t, a: VertexChannel.t) => {
-    let (_, _, _, _, _, dict, _) = s;
-    Hashtbl.find_opt(dict, a);
-  };
-
-  let uniformNameToLocation = (s: t, name: string) => {
-    let (_, _, _, _, _, _, u) = s;
-    Hashtbl.find_opt(u, name);
-  };
-
-  let _setUniformIfAvailable = (s, name, f) => {
-    let uLoc = uniformNameToLocation(s, name);
-    switch (uLoc) {
-    | Some(u) => f(u)
-    | None => ()
-    };
-  };
-
-  let setUniform1f = (s: t, name: string, v: float) =>
-    _setUniformIfAvailable(s, name, u => glUniform1f(u, v));
-
-  let setUniform2fv = (s: t, name: string, v: Vec2.t) =>
-    _setUniformIfAvailable(s, name, u => glUniform2fv(u, v));
-
-  let setUniform3fv = (s: t, name: string, v: Vec3.t) =>
-    _setUniformIfAvailable(s, name, u => glUniform3fv(u, v));
-
-  let setUniform4f =
-      (s: t, name: string, x: float, y: float, z: float, w: float) =>
-    _setUniformIfAvailable(s, name, u => glUniform4f(u, x, y, z, w));
-
-  let setUniform4fv = (s: t, name: string, v: Vec4.t) =>
-    _setUniformIfAvailable(s, name, u => glUniform4fv(u, v));
-
-  let setUniformMatrix4fv = (s: t, name: string, m: Mat4.t) =>
-    _setUniformIfAvailable(s, name, u => glUniformMatrix4fv(u, m));
-
-  let use = (s: t) => {
-    let (_, _, _, p, _, _, _) = s;
-    glUseProgram(p);
-  };
-};
-
 exception ShaderCompilationException(string);
 
-let compile = (shader: uncompiledShader) => {
+let compile = (shader: t) => {
   let (uniforms, attributes, varying, vs, fs) = shader;
 
   let vertexShader = glCreateShader(Glfw.GL_VERTEX_SHADER);

@@ -1,4 +1,6 @@
+include Types;
+
 module Shader = Shader;
-module CompiledShader = Shader.CompiledShader;
+module CompiledShader = CompiledShader;
 
 module BasicShader = BasicShader;

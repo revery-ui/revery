@@ -3,7 +3,7 @@
  *
  * Simple shader demonstrating usage of attributes, uniforms, and varying parameters.
  */
-open Shader;
+open Types;
 
 let attribute: list(ShaderAttribute.t) = [
   {

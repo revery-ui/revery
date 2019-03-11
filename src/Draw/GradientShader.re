@@ -4,8 +4,8 @@
  * shader used for specificying a gradient.
  * the gradient is used to draw a box shadow
  */
+open Reglfw.Glfw;
 open Revery_Shaders;
-open Revery_Shaders.Shader;
 
 let attributes: list(ShaderAttribute.t) =
   SolidShader.attribute
@@ -65,6 +65,14 @@ let fragmentShader = {|
   gl_FragColor = vec4(uShadowColor, blur);
 |};
 
+type t = {
+  compiledShader: CompiledShader.t,
+  uniformProjection: uniformLocation,
+  uniformShadowColor: uniformLocation,
+  uniformShadowAmount: uniformLocation,
+  uniformWorld: uniformLocation,
+};
+
 let create = () => {
   let shader =
     Shader.create(
@@ -74,5 +82,21 @@ let create = () => {
       ~vertexShader,
       ~fragmentShader,
     );
-  Shader.compile(shader);
+  let compiledShader = Shader.compile(shader);
+  let uniformWorld =
+    CompiledShader.getUniformLocation(compiledShader, "uWorld");
+  let uniformProjection =
+    CompiledShader.getUniformLocation(compiledShader, "uProjection");
+  let uniformShadowColor =
+    CompiledShader.getUniformLocation(compiledShader, "uShadowColor");
+  let uniformShadowAmount =
+    CompiledShader.getUniformLocation(compiledShader, "uShadowAmount");
+
+  {
+    compiledShader,
+    uniformWorld,
+    uniformProjection,
+    uniformShadowColor,
+    uniformShadowAmount,
+  };
 };

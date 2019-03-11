@@ -23,7 +23,7 @@ class imageNode (imagePath: string) = {
     let pass = RenderPass.getCurrent();
     switch (pass) {
     | AlphaPass(ctx) =>
-      Shaders.CompiledShader.use(textureShader);
+      Shaders.CompiledShader.use(textureShader.compiledShader);
       let m = ctx.projection;
 
       let dimensions = _this#measurements();
@@ -37,24 +37,21 @@ class imageNode (imagePath: string) = {
       let world = _this#getWorldTransform();
 
       Shaders.CompiledShader.setUniformMatrix4fv(
-        textureShader,
-        "uWorld",
+        textureShader.uniformWorld,
         world,
       );
       Shaders.CompiledShader.setUniformMatrix4fv(
-        textureShader,
-        "uProjection",
+        textureShader.uniformProjection,
         m,
       );
 
       Shaders.CompiledShader.setUniform4fv(
-        textureShader,
-        "uColor",
+        textureShader.uniformColor,
         Vec4.create(1.0, 1.0, 1.0, opacity),
       );
 
       glBindTexture(GL_TEXTURE_2D, texture);
-      Geometry.draw(quad, textureShader);
+      Geometry.draw(quad, textureShader.compiledShader);
     | _ => ()
     };
   };

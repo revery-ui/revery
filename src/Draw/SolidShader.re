@@ -3,8 +3,8 @@
  *
  * Simple shader demonstrating usage of attributes, uniforms, and varying parameters.
  */
+open Reglfw.Glfw;
 open Revery_Shaders;
-open Revery_Shaders.Shader;
 
 let attribute: list(ShaderAttribute.t) = [
   {dataType: ShaderDataType.Vector2, name: "aPosition", channel: Position},
@@ -34,6 +34,13 @@ let fsShader = {|
     gl_FragColor = vColor;
 |};
 
+type t = {
+  compiledShader: CompiledShader.t,
+  uniformWorld: uniformLocation,
+  uniformProjection: uniformLocation,
+  uniformColor: uniformLocation,
+};
+
 let create = () => {
   let shader =
     Shader.create(
@@ -43,5 +50,13 @@ let create = () => {
       ~vertexShader=vsShader,
       ~fragmentShader=fsShader,
     );
-  Shader.compile(shader);
+  let compiledShader = Shader.compile(shader);
+  let uniformWorld =
+    CompiledShader.getUniformLocation(compiledShader, "uWorld");
+  let uniformProjection =
+    CompiledShader.getUniformLocation(compiledShader, "uProjection");
+  let uniformColor =
+    CompiledShader.getUniformLocation(compiledShader, "uColor");
+
+  {compiledShader, uniformWorld, uniformProjection, uniformColor};
 };

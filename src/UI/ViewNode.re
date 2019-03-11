@@ -1,7 +1,7 @@
 open Revery_Core;
 open Revery_Draw;
+open Revery_Draw.SolidShader;
 
-module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
@@ -13,7 +13,7 @@ open Style.Border;
 open Style.BoxShadow;
 
 let renderBorders =
-    (~style, ~width, ~height, ~opacity, ~solidShader, ~m, ~world) => {
+    (~style, ~width, ~height, ~opacity, ~shader: SolidShader.t, ~m, ~world) => {
   let borderStyle = (side, axis, border) =>
     Layout.Encoding.(
       if (side.width !== cssUndefined) {
@@ -26,6 +26,8 @@ let renderBorders =
         (0., Colors.black);
       }
     );
+
+  let solidShader = shader.compiledShader;
 
   let (topBorderWidth, topBorderColor) =
     borderStyle(style.borderTop, style.borderVertical, style.border);
@@ -45,13 +47,12 @@ let renderBorders =
   let bbc = Color.multiplyAlpha(opacity, bottomBorderColor);
 
   Shaders.CompiledShader.use(solidShader);
-  Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uProjection", m);
-  Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uWorld", world);
+  Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformProjection, m);
+  Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformWorld, world);
 
   if (topBorderWidth != 0. && tbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
-      solidShader,
-      "uColor",
+      shader.uniformColor,
       Color.toVec4(tbc),
     );
     let topBorderQuad =
@@ -91,8 +92,7 @@ let renderBorders =
 
   if (leftBorderWidth != 0. && lbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
-      solidShader,
-      "uColor",
+      shader.uniformColor,
       Color.toVec4(lbc),
     );
     let leftBorderQuad =
@@ -132,8 +132,7 @@ let renderBorders =
 
   if (rightBorderWidth != 0. && rbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
-      solidShader,
-      "uColor",
+      shader.uniformColor,
       Color.toVec4(rbc),
     );
     let rightBorderQuad =
@@ -173,8 +172,7 @@ let renderBorders =
 
   if (bottomBorderWidth != 0. && bbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
-      solidShader,
-      "uColor",
+      shader.uniformColor,
       Color.toVec4(bbc),
     );
     let bottomBorderQuad =
@@ -245,33 +243,35 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
 
   let gradientShader = Assets.gradientShader();
 
-  Shaders.CompiledShader.use(gradientShader);
+  Shaders.CompiledShader.use(gradientShader.compiledShader);
 
   Shaders.CompiledShader.setUniformMatrix4fv(
-    gradientShader,
-    "uProjection",
+    gradientShader.uniformProjection,
     m,
   );
 
   Shaders.CompiledShader.setUniform3fv(
-    gradientShader,
-    "uShadowColor",
+    gradientShader.uniformShadowColor,
     Color.toVec3(color),
   );
 
+  /* Shaders.CompiledShader.setUniform3fv( */
+  /*   gradientShader, */
+  /*   "uShadowColor", */
+  /*   Color.toVec3(color), */
+  /* ); */
+
   Shaders.CompiledShader.setUniform2fv(
-    gradientShader,
-    "uShadowAmount",
+    gradientShader.uniformShadowAmount,
     Vec2.create(blurRadius /. width, blurRadius /. height),
   );
 
   Shaders.CompiledShader.setUniformMatrix4fv(
-    gradientShader,
-    "uWorld",
+    gradientShader.uniformWorld,
     shadowWorldTransform,
   );
 
-  Geometry.draw(quad, gradientShader);
+  Geometry.draw(quad, gradientShader.compiledShader);
   ();
 };
 
@@ -282,7 +282,8 @@ class viewNode (()) = {
     let pass = RenderPass.getCurrent();
     switch (pass) {
     | AlphaPass(ctx) =>
-      let solidShader = Assets.solidShader();
+      let shader = Assets.solidShader();
+      let solidShader = shader.compiledShader;
       let dimensions = _this#measurements();
       let width = float_of_int(dimensions.width);
       let height = float_of_int(dimensions.height);
@@ -295,15 +296,7 @@ class viewNode (()) = {
       let m = ctx.projection;
 
       let (minX, minY, maxX, maxY) =
-        renderBorders(
-          ~style,
-          ~width,
-          ~height,
-          ~opacity,
-          ~solidShader,
-          ~m,
-          ~world,
-        );
+        renderBorders(~style, ~width, ~height, ~opacity, ~shader, ~m, ~world);
 
       let mainQuad = Assets.quad(~minX, ~maxX, ~minY, ~maxY, ());
 
@@ -319,19 +312,16 @@ class viewNode (()) = {
       if (color.a > 0.001) {
         Shaders.CompiledShader.use(solidShader);
         Shaders.CompiledShader.setUniformMatrix4fv(
-          solidShader,
-          "uProjection",
+          shader.uniformProjection,
           m,
         );
         Shaders.CompiledShader.setUniformMatrix4fv(
-          solidShader,
-          "uWorld",
+          shader.uniformWorld,
           world,
         );
 
         Shaders.CompiledShader.setUniform4fv(
-          solidShader,
-          "uColor",
+          shader.uniformColor,
           Color.toVec4(color),
         );
 

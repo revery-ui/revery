@@ -53,6 +53,22 @@ module Sample = {
                 (),
               );
             }}
+            /* STRESS TEST:
+               let iterations = 50000;
+               let i = ref(0);
+               while (i^ < iterations) {
+                 Revery.Draw.Shapes.drawRect(
+                   ~transform,
+                   ~color=Colors.green,
+                   ~x=25.,
+                   ~y=50.,
+                   ~width=10.,
+                   ~height=20.,
+                   (),
+                 );
+                 incr(i);
+               };
+               */
           />
         </View>,
       )
