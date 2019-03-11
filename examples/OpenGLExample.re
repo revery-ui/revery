@@ -45,6 +45,15 @@ module Sample = {
               /*   ~y=25., */
               /*   "Hello!", */
               /* ); */
+                Revery.Draw.Shapes.drawRect(
+                  ~transform,
+                  ~color=Colors.green,
+                  ~x=25.,
+                  ~y=50.,
+                  ~width=10.,
+                  ~height=20.,
+                  (),
+                );
 
               while (i^ < iterations) {
                 Revery.Draw.Shapes.drawRect(

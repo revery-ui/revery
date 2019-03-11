@@ -282,7 +282,7 @@ class viewNode (()) = {
     let pass = RenderPass.getCurrent();
     switch (pass) {
     | AlphaPass(ctx) =>
-      let solidShader = Assets.solidShader();
+      let solidShader = Assets.solidShader().compiledShader;
       let dimensions = _this#measurements();
       let width = float_of_int(dimensions.width);
       let height = float_of_int(dimensions.height);
@@ -300,7 +300,7 @@ class viewNode (()) = {
           ~width,
           ~height,
           ~opacity,
-          ~solidShader,
+          ~solidShader=solidShader,
           ~m,
           ~world,
         );

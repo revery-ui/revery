@@ -28,9 +28,22 @@ let attributeChannelToLocation = (s: t, a: VertexChannel.t) => {
   Hashtbl.find_opt(dict, a);
 };
 
+exception UniformNotFoundException(string);
+let _getOrThrowUniform = (name, opt) => {
+    switch (opt) {
+    | Some(v) => v
+    | None => raise(UniformNotFoundException(name));
+    }
+};
+
 let uniformNameToLocation = (s: t, name: string) => {
   let (_, _, _, _, _, _, u) = s;
   Hashtbl.find_opt(u, name);
+};
+
+let getUniformLocation: (t, string) => uniformLocation = (s, a) => {
+    uniformNameToLocation(s, a)
+    |> _getOrThrowUniform(a)
 };
 
 let _setUniformIfAvailable = (s, name, f) => {
@@ -60,7 +73,19 @@ let setUniform4fv = (s: t, name: string, v: Vec4.t) =>
 let setUniformMatrix4fv = (s: t, name: string, m: Mat4.t) =>
   _setUniformIfAvailable(s, name, u => glUniformMatrix4fv(u, m));
 
+let _cache: ref(option(Glfw.program)) = ref(None);
+
 let use = (s: t) => {
   let (_, _, _, p, _, _, _) = s;
-  glUseProgram(p);
+
+  switch (_cache^) {
+  | None =>
+    glUseProgram(p);
+    _cache := Some(p);
+  | Some(v) when v !== p =>
+    glUseProgram(p);
+    _cache := Some(p);
+    ();
+  | Some(_) => ()
+  };
 };
