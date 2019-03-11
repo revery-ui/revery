@@ -236,6 +236,7 @@ let create = (name: string, options: windowCreateOptions) => {
     w,
     (_w, _width, _height) => {
       ret.areMetricsDirty = true;
+      render(ret);
     },
   );
 
@@ -243,6 +244,7 @@ let create = (name: string, options: windowCreateOptions) => {
     w,
     (_w, _width, _height) => {
       ret.areMetricsDirty = true;
+      render(ret);
     },
   );
 
