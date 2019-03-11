@@ -251,7 +251,10 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
     m,
   );
 
-  Shaders.CompiledShader.setUniform3fv(gradientShader.uniformShadowColor, Color.toVec3(color));
+  Shaders.CompiledShader.setUniform3fv(
+    gradientShader.uniformShadowColor,
+    Color.toVec3(color),
+  );
 
   /* Shaders.CompiledShader.setUniform3fv( */
   /*   gradientShader, */
@@ -259,7 +262,10 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
   /*   Color.toVec3(color), */
   /* ); */
 
-  Shaders.CompiledShader.setUniform2fv(gradientShader.uniformShadowAmount, Vec2.create(blurRadius /. width, blurRadius /. height));
+  Shaders.CompiledShader.setUniform2fv(
+    gradientShader.uniformShadowAmount,
+    Vec2.create(blurRadius /. width, blurRadius /. height),
+  );
 
   Shaders.CompiledShader.setUniformMatrix4fv(
     gradientShader.compiledShader,
@@ -279,7 +285,7 @@ class viewNode (()) = {
     switch (pass) {
     | AlphaPass(ctx) =>
       let shader = Assets.solidShader();
-    let solidShader = shader.compiledShader;
+      let solidShader = shader.compiledShader;
       let dimensions = _this#measurements();
       let width = float_of_int(dimensions.width);
       let height = float_of_int(dimensions.height);
@@ -292,15 +298,7 @@ class viewNode (()) = {
       let m = ctx.projection;
 
       let (minX, minY, maxX, maxY) =
-        renderBorders(
-          ~style,
-          ~width,
-          ~height,
-          ~opacity,
-          ~shader,
-          ~m,
-          ~world,
-        );
+        renderBorders(~style, ~width, ~height, ~opacity, ~shader, ~m, ~world);
 
       let mainQuad = Assets.quad(~minX, ~maxX, ~minY, ~maxY, ());
 

@@ -54,21 +54,19 @@ let _setUniformIfAvailable = (s, name, f) => {
   };
 };
 
-let setUniform1f = (uniform: uniformLocation, v) =>
-  glUniform1f(uniform, v);
+let setUniform1f = (uniform: uniformLocation, v) => glUniform1f(uniform, v);
 
 let setUniform2fv = (uniform: uniformLocation, v: Vec2.t) =>
-    glUniform2fv(uniform, v);
+  glUniform2fv(uniform, v);
 
 let setUniform3fv = (uniform: uniformLocation, v: Vec3.t) =>
-    glUniform3fv(uniform, v);
+  glUniform3fv(uniform, v);
 
 let setUniform4f =
     (u: uniformLocation, x: float, y: float, z: float, w: float) =>
   glUniform4f(u, x, y, z, w);
 
-let setUniform4fv = (u: uniformLocation, v: Vec4.t) =>
-  glUniform4fv(u, v);
+let setUniform4fv = (u: uniformLocation, v: Vec4.t) => glUniform4fv(u, v);
 
 let setUniformMatrix4fv = (s: t, name: string, m: Mat4.t) =>
   _setUniformIfAvailable(s, name, u => glUniformMatrix4fv(u, m));
