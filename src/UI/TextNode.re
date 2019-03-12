@@ -13,6 +13,7 @@ class textNode (text: string) = {
   as _this;
   val mutable text = text;
   val mutable gamma = 2.2;
+  val mutable _isMeasured = false;
   val _lines: ref(list(string)) = ref([]);
   inherit (class viewNode)() as _super;
   pub! draw = (parentContext: NodeDrawContext.t) => {
@@ -30,6 +31,11 @@ class textNode (text: string) = {
 
     let lineHeightPx =
       Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
+
+    /* when style.width & style.height are defined, Layout doesn't call the measure function */
+    if (!_isMeasured) {
+      _this#measure(style.width, style.height) |> ignore;
+    };
 
     List.iteri(
       (lineNum, line) =>
@@ -62,71 +68,83 @@ class textNode (text: string) = {
   pub setText = t =>
     if (!String.equal(t, text)) {
       text = t;
+      _isMeasured = false;
       _this#markLayoutDirty();
     };
+  pub measure = (width: int, _height: int) => {
+    /* TODO: Cache font locally in variable */
+    _isMeasured = true;
+
+    let style = _super#getStyle();
+    let textWrap = style.textWrap;
+
+    let fontFamily = style.fontFamily;
+    let fontSize = style.fontSize;
+    let lineHeight = style.lineHeight;
+
+    let lineHeightPx =
+      Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
+
+    switch (textWrap) {
+    | WhitespaceWrap =>
+      let (lines, maxWidthLine) =
+        TextWrapping.wrapText(
+          ~text,
+          ~measureWidth=
+            str => Text.measure(~fontFamily, ~fontSize, str).width,
+          ~maxWidth=width,
+          ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
+        );
+
+      _lines := lines;
+
+      let dimensions: Layout.LayoutTypes.dimensions = {
+        width: int_of_float(float_of_int(maxWidthLine)),
+        height:
+          int_of_float(float_of_int(List.length(lines)) *. lineHeightPx),
+      };
+
+      dimensions;
+    | NoWrap =>
+      let d = Text.measure(~fontFamily, ~fontSize, text);
+      let dimensions: Layout.LayoutTypes.dimensions = {
+        width: d.width,
+        height: d.height,
+      };
+
+      _lines := [text];
+
+      dimensions;
+    | UserDefined(wrapFunc) =>
+      let (lines, maxWidthLine) =
+        wrapFunc(
+          text,
+          str => Text.measure(~fontFamily, ~fontSize, str).width,
+          width,
+        );
+
+      _lines := lines;
+
+      let dimensions: Layout.LayoutTypes.dimensions = {
+        width: maxWidthLine,
+        height:
+          int_of_float(float_of_int(List.length(lines)) *. lineHeightPx),
+      };
+
+      dimensions;
+    };
+  };
   pub! getMeasureFunction = () => {
     let measure =
-        (_mode, width, _widthMeasureMode, _height, _heightMeasureMode) => {
-      /* TODO: Cache font locally in variable */
-      let style = _super#getStyle();
-      let textWrap = style.textWrap;
+        (
+          _mode: LayoutTypes.node,
+          width: int,
+          _widthMeasureMode: LayoutTypes.measureMode,
+          height: int,
+          _heightMeasureMode: LayoutTypes.measureMode,
+        ) =>
+      _this#measure(width, height);
 
-      let fontFamily = style.fontFamily;
-      let fontSize = style.fontSize;
-      let lineHeight = style.lineHeight;
-
-      let lineHeightPx =
-        Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
-
-      switch (textWrap) {
-      | WhitespaceWrap =>
-        let (lines, maxWidthLine) =
-          TextWrapping.wrapText(
-            ~text,
-            ~measureWidth=
-              str => Text.measure(~fontFamily, ~fontSize, str).width,
-            ~maxWidth=width,
-            ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
-          );
-
-        _lines := lines;
-
-        let dimensions: Layout.LayoutTypes.dimensions = {
-          width: int_of_float(float_of_int(maxWidthLine)),
-          height:
-            int_of_float(float_of_int(List.length(lines)) *. lineHeightPx),
-        };
-
-        dimensions;
-      | NoWrap =>
-        let d = Text.measure(~fontFamily, ~fontSize, text);
-        let dimensions: Layout.LayoutTypes.dimensions = {
-          width: d.width,
-          height: d.height,
-        };
-
-        _lines := [text];
-
-        dimensions;
-      | UserDefined(wrapFunc) =>
-        let (lines, maxWidthLine) =
-          wrapFunc(
-            text,
-            str => Text.measure(~fontFamily, ~fontSize, str).width,
-            width,
-          );
-
-        _lines := lines;
-
-        let dimensions: Layout.LayoutTypes.dimensions = {
-          width: maxWidthLine,
-          height:
-            int_of_float(float_of_int(List.length(lines)) *. lineHeightPx),
-        };
-
-        dimensions;
-      };
-    };
     Some(measure);
   };
 };
