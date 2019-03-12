@@ -29,8 +29,8 @@ test("Reconciler", () => {
   test("reconcile adds a child", () => {
     let rootNode = (new viewNode)();
 
-    let container = React.Container.create(rootNode);
-    React.Container.update(container, <View />) |> ignore;
+    let container = Container.create(rootNode);
+    Container.update(container, <View />) |> ignore;
 
     expect(List.length(rootNode#getChildren())).toBe(1);
   });
@@ -38,14 +38,14 @@ test("Reconciler", () => {
   test("ref: returns value of node", () => {
     let rootNode = (new viewNode)();
 
-    let container = React.Container.create(rootNode);
+    let container = Container.create(rootNode);
 
     /* Use a ref to track the latest value of the `ref={..}` callback */
     let referenceNode = ref(None);
 
     let refCallback = r => referenceNode := Some(r);
 
-    React.Container.update(container, <View ref=refCallback />) |> ignore;
+    Container.update(container, <View ref=refCallback />) |> ignore;
     rootNode#flushCallbacks();
 
     /* And validate that we actually got the right one, based on the node ID! */
@@ -60,7 +60,7 @@ test("Reconciler", () => {
   test("ref: validate ref gets passed back to component", () => {
     let rootNode = (new viewNode)();
 
-    let container = React.Container.create(rootNode);
+    let container = Container.create(rootNode);
 
     /*
      * Hold a `ref` that tracks the last refNode that comes from RENDER -
@@ -71,12 +71,12 @@ test("Reconciler", () => {
     /* First update - this will end up 'mounting' the node and dispatching the 'ref' callback */
     /* However - the state won't be updated - it will just be queued up */
     let update1 =
-      React.Container.update(container, <TestRefComponent latestRef />);
+      Container.update(container, <TestRefComponent latestRef />);
 
     rootNode#flushCallbacks();
 
     /* We need to update again to pick up the state update */
-    React.Container.update(update1, <TestRefComponent latestRef />) |> ignore;
+    Container.update(update1, <TestRefComponent latestRef />) |> ignore;
 
     switch (latestRef^) {
     | Some(_) => expect(1).toBe(1)
@@ -86,7 +86,7 @@ test("Reconciler", () => {
 
   test("layout: onDimensionsChanged gets dispatched", () => {
     let rootNode = (new viewNode)();
-    let container = React.Container.create(rootNode);
+    let container = Container.create(rootNode);
     rootNode#setStyle(
       Style.create(~style=Style.[width(100), height(200)], ()),
     );
@@ -106,7 +106,7 @@ test("Reconciler", () => {
     };
 
     let update1 =
-      React.Container.update(container, <View onDimensionsChanged style />);
+      Container.update(container, <View onDimensionsChanged style />);
 
     Layout.layout(rootNode);
     rootNode#recalculate();
@@ -118,7 +118,7 @@ test("Reconciler", () => {
 
     /* Shouldn't dispatch if width/height hasn't change! */
     let update2 =
-      React.Container.update(update1, <View onDimensionsChanged style />);
+      Container.update(update1, <View onDimensionsChanged style />);
 
     Layout.layout(rootNode);
     rootNode#recalculate();
