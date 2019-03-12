@@ -130,7 +130,7 @@ test("Reconciler", () => {
     rootNode#setStyle(
       Style.create(~style=Style.[width(300), height(400)], ()),
     );
-    React.Container.update(update2, <View onDimensionsChanged style />)
+    Container.update(update2, <View onDimensionsChanged style />)
     |> ignore;
 
     Layout.layout(rootNode);
