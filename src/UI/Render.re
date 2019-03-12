@@ -8,18 +8,18 @@ open Revery_Core;
 open Revery_Draw;
 open Revery_Math;
 
-open UiContainer;
-
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
 let _projection = Mat4.create();
 
+open RenderContainer;
+
 let render =
     (
       ~forceLayout=false,
-      container: UiContainer.t,
-      component: UiReact.syntheticElement,
+      container: RenderContainer.t,
+      component: React.syntheticElement,
     ) => {
   let {rootNode, window, container, _} = container;
 
@@ -27,7 +27,7 @@ let render =
 
   /* Perform reconciliation */
   Performance.bench("reconcile", () =>
-    container := UiReact.Container.update(container^, component)
+    container := Container.update(container^, component)
   );
 
   /* Layout */
