@@ -65,23 +65,63 @@ class textNode (text: string) = {
       _this#markLayoutDirty();
     };
   };
+  pub textOverflow = (maxWidth): LayoutTypes.dimensions => {
+    let {fontFamily, fontSize, lineHeight, textOverflow, _}: Style.t =
+      _super#getStyle();
+
+    let formattedText = TextOverflow.removeLineBreaks(text);
+
+    let measure = str =>
+      Text.measure(~fontFamily, ~fontSize, str)
+      |> (value => FontRenderer.(value.width));
+
+    let width = measure(formattedText);
+    let isOverflowing = width >= maxWidth;
+
+    let handleOverflow =
+      TextOverflow.handleOverflow(~maxWidth, ~text=formattedText, ~measure);
+
+    let truncated =
+      switch (textOverflow, isOverflowing) {
+      | (Ellipsis, true) => handleOverflow()
+      | (UserDefined(character), true) => handleOverflow(~character, ())
+      | (Clip, true) => handleOverflow(~character="", ())
+      | (_, false)
+      | (Overflow, _) => text
+      };
+
+    _lines := [truncated];
+
+    let lineHeightPx =
+      Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
+
+    {width, height: int_of_float(lineHeightPx)};
+  };
   pub setText = t =>
     if (!String.equal(t, text)) {
       text = t;
       _isMeasured = false;
       _this#markLayoutDirty();
     };
-  pub measure = (width: int, _height: int) => {
-    /* TODO: Cache font locally in variable */
+  pub measure = (width, _height) => {
     _isMeasured = true;
-
-    let style = _super#getStyle();
-    let textWrap = style.textWrap;
-
-    let fontFamily = style.fontFamily;
-    let fontSize = style.fontSize;
-    let lineHeight = style.lineHeight;
-
+    /**
+         If the width value is set to cssUndefined i.e. the user did not
+         set a width then do not attempt to use textOverflow
+       */
+    (
+      switch (_super#getStyle()) {
+      | {width: textWidth, _} as style
+          when textWidth == Layout.Encoding.cssUndefined =>
+        _this#handleTextWrapping(width, style)
+      | {textOverflow: Ellipsis | UserDefined(_), _} =>
+        _this#textOverflow(width)
+      | style => _this#handleTextWrapping(width, style)
+      }
+    );
+  };
+  pub handleTextWrapping = (width, style) => {
+    let {textWrap, fontFamily, fontSize, lineHeight, _}: Style.t = style;
     let lineHeightPx =
       Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
 
@@ -136,15 +176,8 @@ class textNode (text: string) = {
   };
   pub! getMeasureFunction = () => {
     let measure =
-        (
-          _mode: LayoutTypes.node,
-          width: int,
-          _widthMeasureMode: LayoutTypes.measureMode,
-          height: int,
-          _heightMeasureMode: LayoutTypes.measureMode,
-        ) =>
+        (_mode, width, _widthMeasureMode, height, _heightMeasureMode) =>
       _this#measure(width, height);
-
     Some(measure);
   };
 };

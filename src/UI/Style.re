@@ -79,6 +79,7 @@ type t = {
   padding: int,
   paddingVertical: int,
   paddingHorizontal: int,
+  textOverflow: TextOverflow.t,
   overflow: LayoutTypes.overflow,
   borderTop: Border.t,
   borderLeft: Border.t,
@@ -95,6 +96,7 @@ type t = {
 
 let make =
     (
+      ~textOverflow=TextOverflow.Overflow,
       ~backgroundColor: Color.t=Colors.transparentBlack,
       ~color: Color.t=Colors.white,
       ~width=Encoding.cssUndefined,
@@ -152,6 +154,7 @@ let make =
       _unit: unit,
     ) => {
   let ret: t = {
+    textOverflow,
     backgroundColor,
     color,
     width,
@@ -317,7 +320,11 @@ type coreStyleProps = [
 
 type fontProps = [ | `FontFamily(string) | `FontSize(int)];
 
-type textProps = [ | `LineHeight(float) | `TextWrap(TextWrapping.wrapType)];
+type textProps = [
+  | `LineHeight(float)
+  | `TextWrap(TextWrapping.wrapType)
+  | `TextOverflow(TextOverflow.t)
+];
 
 /*
    Text and View props take different style properties as such
@@ -353,6 +360,16 @@ let flexWrap = w => {
     };
   `FlexWrap(wrap);
 };
+
+let textOverflow = overflow =>
+  (
+    switch (overflow) {
+    | `Ellipsis => TextOverflow.Ellipsis
+    | `Overflow => TextOverflow.Overflow
+    | `UserDefined(v) => TextOverflow.UserDefined(v)
+    }
+  )
+  |> (s => `TextOverflow(s));
 
 let alignment = a =>
   switch (a) {
@@ -541,6 +558,7 @@ let applyStyle = (style, styleRule) =>
   | `FontFamily(fontFamily) => {...style, fontFamily}
   | `FontSize(fontSize) => {...style, fontSize}
   | `LineHeight(lineHeight) => {...style, lineHeight}
+  | `TextOverflow(textOverflow) => {...style, textOverflow}
   | `TextWrap(textWrap) => {...style, textWrap}
   | `Cursor(cursor) => {...style, cursor}
   | `Color(color) => {...style, color}

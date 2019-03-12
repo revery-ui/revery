@@ -18,6 +18,7 @@ module Performance = Performance;
 module UniqueId = UniqueId;
 
 module TextWrapping = TextWrapping;
+module TextOverflow = TextOverflow;
 
 /*
  * Internally exposed modules, just for testing.
