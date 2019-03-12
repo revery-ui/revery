@@ -70,8 +70,7 @@ test("Reconciler", () => {
 
     /* First update - this will end up 'mounting' the node and dispatching the 'ref' callback */
     /* However - the state won't be updated - it will just be queued up */
-    let update1 =
-      Container.update(container, <TestRefComponent latestRef />);
+    let update1 = Container.update(container, <TestRefComponent latestRef />);
 
     rootNode#flushCallbacks();
 
@@ -130,8 +129,7 @@ test("Reconciler", () => {
     rootNode#setStyle(
       Style.create(~style=Style.[width(300), height(400)], ()),
     );
-    Container.update(update2, <View onDimensionsChanged style />)
-    |> ignore;
+    Container.update(update2, <View onDimensionsChanged style />) |> ignore;
 
     Layout.layout(rootNode);
     rootNode#recalculate();

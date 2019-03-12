@@ -20,4 +20,3 @@ let create = (window, rootNode, container, mouseCursor) => {
   container: ref(container),
   mouseCursor,
 };
-

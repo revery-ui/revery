@@ -16,14 +16,18 @@ let _projection = Mat4.create();
 open RenderContainer;
 
 let render =
-    (~forceLayout=false, container: RenderContainer.t, component: React.syntheticElement) => {
+    (
+      ~forceLayout=false,
+      container: RenderContainer.t,
+      component: React.syntheticElement,
+    ) => {
   let {rootNode, window, container, _} = container;
 
   AnimationTicker.tick();
 
   /* Perform reconciliation */
   Performance.bench("reconcile", () =>
-    container :=Container.update(container^, component)
+    container := Container.update(container^, component)
   );
 
   /* Layout */
