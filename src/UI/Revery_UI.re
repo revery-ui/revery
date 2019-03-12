@@ -141,7 +141,7 @@ let start = (window: Window.t, render: renderFunction) => {
       forceLayout := false;
 
       let component = Performance.bench("component render", () => render());
-      UiRender.render(~forceLayout=fl, ui, component);
+      Render.render(~forceLayout=fl, ui, component);
     },
   );
 };

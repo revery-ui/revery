@@ -1,5 +1,5 @@
 /*
- * Render.re
+ * UiRender.re
  *
  * Core render logic for a UI bound to a Window
  */
