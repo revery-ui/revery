@@ -19,7 +19,7 @@ let render =
     (
       ~forceLayout=false,
       container: Ui.t,
-      component: UiReact.syntheticElement,
+      component: React.syntheticElement,
     ) => {
   let {rootNode, window, container, _} = container;
 
@@ -27,7 +27,7 @@ let render =
 
   /* Perform reconciliation */
   Performance.bench("reconcile", () =>
-    container := UiReact.Container.update(container^, component)
+    container := Container.update(container^, component)
   );
 
   /* Layout */

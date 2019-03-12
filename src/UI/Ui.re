@@ -9,7 +9,7 @@ module Window = Revery_Core.Window;
 
 type t = {
   rootNode: ViewNode.viewNode,
-  container: ref(UiReact.Container.t),
+  container: ref(Container.t),
   window: Window.t,
   mouseCursor: Mouse.Cursor.t,
 };

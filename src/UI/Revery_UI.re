@@ -20,14 +20,14 @@ module Mouse = Mouse;
 module NodeEvents = NodeEvents;
 module UiEvents = UiEvents;
 
-module React = UiReact;
+module React = React;
 module Hooks = Hooks;
 
 include Primitives;
 
 open Ui;
 
-type renderFunction = unit => UiReact.syntheticElement;
+type renderFunction = unit => React.syntheticElement;
 
 let start = (window: Window.t, render: renderFunction) => {
   let uiDirty = ref(false);
@@ -41,7 +41,7 @@ let start = (window: Window.t, render: renderFunction) => {
 
   let rootNode = (new viewNode)();
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
-  let container = React.Container.create(rootNode);
+  let container = Container.create(rootNode);
   let ui = Ui.create(window, rootNode, container, mouseCursor);
 
   let scaleFactor = Revery_Core.Monitor.getScaleFactor();

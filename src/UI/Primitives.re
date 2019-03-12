@@ -9,7 +9,7 @@
  */
 
 module View = {
-  let component = UiReact.nativeComponent("View");
+  let component = React.nativeComponent("View");
 
   let make =
       (
@@ -135,13 +135,13 @@ module View = {
       ~onKeyUp?,
       ~onKeyPress?,
       ~onDimensionsChanged?,
-      UiReact.listToElement(children),
+      React.listToElement(children),
     );
 };
 
 module Text = {
   open Style;
-  let component = UiReact.nativeComponent("Text");
+  let component = React.nativeComponent("Text");
 
   let make =
       (
@@ -223,12 +223,12 @@ module Text = {
       ~style,
       ~text,
       ~gamma,
-      UiReact.listToElement(children),
+      React.listToElement(children),
     );
 };
 
 module Image = {
-  let component = UiReact.nativeComponent("Image");
+  let component = React.nativeComponent("Image");
 
   let make =
       (
@@ -302,12 +302,12 @@ module Image = {
       ~ref?,
       ~style,
       ~src,
-      UiReact.listToElement(children),
+      React.listToElement(children),
     );
 };
 
 module OpenGL = {
-  let component = UiReact.nativeComponent("OpenGL");
+  let component = React.nativeComponent("OpenGL");
 
   let make =
       (
@@ -434,6 +434,6 @@ module OpenGL = {
       ~onKeyPress?,
       ~onDimensionsChanged?,
       ~render?,
-      UiReact.listToElement(children),
+      React.listToElement(children),
     );
 };

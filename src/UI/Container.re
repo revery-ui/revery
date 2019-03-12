@@ -1,10 +1,5 @@
 open Revery_Core;
 
-let onStale = Reconciler.onStale;
-
-module React = Brisk_reconciler.Make(Reconciler);
-
-module Container = {
   type state = {
     rendered: React.RenderedElement.t,
     previousElement: React.syntheticElement,
@@ -57,6 +52,3 @@ module Container = {
       };
       ret;
     };
-};
-
-include React;
