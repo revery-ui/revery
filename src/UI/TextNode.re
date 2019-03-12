@@ -103,9 +103,8 @@ class textNode (text: string) = {
       _isMeasured = false;
       _this#markLayoutDirty();
     };
-  pub measure = (_mode, width, _widthMeasureMode, _height, _heightMeasureMode) => {
-    _isMeasured := true;
-    /* TODO: Cache font locally in variable */
+  pub measure = (width, _height) => {
+    _isMeasured = true;
     /**
          If the width value is set to cssUndefined i.e. the user did not
          set a width then do not attempt to use textOverflow
