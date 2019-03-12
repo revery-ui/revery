@@ -16,11 +16,7 @@ let _projection = Mat4.create();
 open Ui;
 
 let render =
-    (
-      ~forceLayout=false,
-      container: Ui.t,
-      component: React.syntheticElement,
-    ) => {
+    (~forceLayout=false, container: Ui.t, component: React.syntheticElement) => {
   let {rootNode, window, container, _} = container;
 
   AnimationTicker.tick();
