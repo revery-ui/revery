@@ -8,17 +8,17 @@ open Revery_Core;
 open Revery_Draw;
 open Revery_Math;
 
-open UiContainer;
-
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
 let _projection = Mat4.create();
 
+open Ui;
+
 let render =
     (
       ~forceLayout=false,
-      container: UiContainer.t,
+      container: Ui.t,
       component: UiReact.syntheticElement,
     ) => {
   let {rootNode, window, container, _} = container;

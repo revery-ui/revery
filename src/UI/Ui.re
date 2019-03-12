@@ -1,5 +1,5 @@
 /*
- * UiContainer.re
+ * Ui.re
  *
  * State that is persisted across renderings.
  * This stores the connection between a window and its UI
