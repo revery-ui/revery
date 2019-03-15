@@ -69,7 +69,10 @@ let _startShader =
     let colorMultipliedAlpha = Color.multiplyAlpha(opacity, color);
     CompiledShader.use(shader.compiledShader);
     CompiledShader.setUniformMatrix4fv(shader.uniformProjection, projection);
-    CompiledShader.setUniform4fv(shader.uniformColor, Color.toVec4(colorMultipliedAlpha));
+    CompiledShader.setUniform4fv(
+      shader.uniformColor,
+      Color.toVec4(colorMultipliedAlpha),
+    );
 
     (shader.compiledShader, shader.uniformWorld);
   };
@@ -95,7 +98,14 @@ let drawString =
     let quad = Assets.quad();
 
     let (shader, uniformWorld) =
-      _startShader(~color, ~backgroundColor, ~opacity, ~gamma, ~projection, ());
+      _startShader(
+        ~color,
+        ~backgroundColor,
+        ~opacity,
+        ~gamma,
+        ~projection,
+        (),
+      );
 
     let font = FontCache.load(fontFamily, _getScaledFontSize(fontSize));
 

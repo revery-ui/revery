@@ -23,7 +23,7 @@ class textNode (text: string) = {
 
     let style = _super#getStyle();
 
-    let { color, backgroundColor, fontFamily, fontSize, lineHeight, _ } = style;
+    let {color, backgroundColor, fontFamily, fontSize, lineHeight, _} = style;
     let opacity = parentContext.opacity;
 
     let lineHeightPx =
