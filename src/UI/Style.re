@@ -72,6 +72,10 @@ type t = {
   margin: int,
   marginVertical: int,
   marginHorizontal: int,
+  minWidth: int,
+  maxWidth: int,
+  minHeight: int,
+  maxHeight: int,
   paddingTop: int,
   paddingLeft: int,
   paddingRight: int,
@@ -126,6 +130,10 @@ let make =
       ~margin=Encoding.cssUndefined,
       ~marginVertical=Encoding.cssUndefined,
       ~marginHorizontal=Encoding.cssUndefined,
+      ~minWidth=Encoding.cssUndefined,
+      ~maxWidth=Encoding.cssUndefined,
+      ~minHeight=Encoding.cssUndefined,
+      ~maxHeight=Encoding.cssUndefined,
       ~paddingTop=Encoding.cssUndefined,
       ~paddingLeft=Encoding.cssUndefined,
       ~paddingRight=Encoding.cssUndefined,
@@ -185,6 +193,10 @@ let make =
     margin,
     marginVertical,
     marginHorizontal,
+    minWidth,
+    maxWidth,
+    minHeight,
+    maxHeight,
     paddingTop,
     paddingLeft,
     paddingRight,
@@ -235,6 +247,10 @@ let toLayoutNode = (s: t) => {
     margin: s.margin,
     marginVertical: s.marginVertical,
     marginHorizontal: s.marginHorizontal,
+    minWidth: s.minWidth,
+    maxWidth: s.maxWidth,
+    minHeight: s.minHeight,
+    maxHeight: s.maxHeight,
     paddingTop: s.paddingTop,
     paddingLeft: s.paddingLeft,
     paddingRight: s.paddingRight,
@@ -295,6 +311,10 @@ type coreStyleProps = [
   | `MarginHorizontal(int)
   | `Margin2(xy)
   | `Margin4(coords)
+  | `MinWidth(int)
+  | `MaxWidth(int)
+  | `MinHeight(int)
+  | `MaxHeight(int)
   | `PaddingTop(int)
   | `PaddingLeft(int)
   | `PaddingRight(int)
@@ -403,6 +423,11 @@ let textWrap = w => `TextWrap(w);
 
 let height = h => `Height(h);
 let width = w => `Width(w);
+
+let minWidth = w => `MinWidth(w);
+let maxWidth = w => `MaxWidth(w);
+let minHeight = h => `MinHeight(h);
+let maxHeight = h => `MaxHeight(h);
 
 let position = p => {
   let value =
@@ -525,6 +550,10 @@ let applyStyle = (style, styleRule) =>
       marginRight: right,
       marginBottom: bottom,
     }
+  | `MinWidth(minWidth) => {...style, minWidth}
+  | `MaxWidth(maxWidth) => {...style, maxWidth}
+  | `MinHeight(minHeight) => {...style, minHeight}
+  | `MaxHeight(maxHeight) => {...style, maxHeight}
   | `Padding(padding) => {...style, padding}
   | `PaddingTop(paddingTop) => {...style, paddingTop}
   | `PaddingBottom(paddingBottom) => {...style, paddingBottom}
