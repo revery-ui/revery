@@ -7,6 +7,7 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Revery_Core;
 
+open Style;
 open ViewNode;
 
 class textNode (text: string) = {
@@ -22,12 +23,8 @@ class textNode (text: string) = {
 
     let style = _super#getStyle();
 
-    let color = Color.multiplyAlpha(parentContext.opacity, style.color);
-    let backgroundColor =
-      Color.multiplyAlpha(parentContext.opacity, style.backgroundColor);
-    let fontFamily = style.fontFamily;
-    let fontSize = style.fontSize;
-    let lineHeight = style.lineHeight;
+    let { color, backgroundColor, fontFamily, fontSize, lineHeight, _ } = style;
+    let opacity = parentContext.opacity;
 
     let lineHeightPx =
       Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
@@ -45,6 +42,7 @@ class textNode (text: string) = {
           ~gamma,
           ~color,
           ~backgroundColor,
+          ~opacity,
           ~transform=_this#getWorldTransform(),
           ~x=0.,
           ~y=lineHeightPx *. float_of_int(lineNum),
