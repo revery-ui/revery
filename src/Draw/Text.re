@@ -46,6 +46,7 @@ let _startShader =
     (
       ~color: Color.t,
       ~backgroundColor: Color.t,
+      ~opacity: float,
       ~projection: Mat4.t,
       ~gamma: float,
       (),
@@ -60,13 +61,18 @@ let _startShader =
       Color.toVec4(backgroundColor),
     );
     CompiledShader.setUniform1f(shader.uniformGamma, gamma);
+    CompiledShader.setUniform1f(shader.uniformOpacity, opacity);
 
     (shader.compiledShader, shader.uniformWorld);
   } else {
     let shader = Assets.fontDefaultShader();
+    let colorMultipliedAlpha = Color.multiplyAlpha(opacity, color);
     CompiledShader.use(shader.compiledShader);
     CompiledShader.setUniformMatrix4fv(shader.uniformProjection, projection);
-    CompiledShader.setUniform4fv(shader.uniformColor, Color.toVec4(color));
+    CompiledShader.setUniform4fv(
+      shader.uniformColor,
+      Color.toVec4(colorMultipliedAlpha),
+    );
 
     (shader.compiledShader, shader.uniformWorld);
   };
@@ -78,6 +84,7 @@ let drawString =
       ~color: Color.t=Colors.white,
       ~backgroundColor: Color.t=Colors.transparentBlack,
       ~transform: Mat4.t=identityMatrix,
+      ~opacity=1.0,
       ~gamma=2.2,
       ~x=0.,
       ~y=0.,
@@ -91,7 +98,14 @@ let drawString =
     let quad = Assets.quad();
 
     let (shader, uniformWorld) =
-      _startShader(~color, ~backgroundColor, ~gamma, ~projection, ());
+      _startShader(
+        ~color,
+        ~backgroundColor,
+        ~opacity,
+        ~gamma,
+        ~projection,
+        (),
+      );
 
     let font = FontCache.load(fontFamily, _getScaledFontSize(fontSize));
 

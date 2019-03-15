@@ -30,6 +30,7 @@ let uniform: list(ShaderUniform.t) =
       usage: FragmentShader,
     },
     {dataType: ShaderDataType.Float, name: "uGamma", usage: FragmentShader},
+    {dataType: ShaderDataType.Float, name: "uOpacity", usage: FragmentShader},
   ];
 
 let varying =
@@ -107,7 +108,7 @@ module GammaCorrected = {
         float g = pow(g0, INV_GAMMA);
         float b = pow(b0, INV_GAMMA);
 
-        gl_FragColor = vec4(r, g, b, 1.0);
+        gl_FragColor = vec4(r, g, b, uOpacity);
     |};
 
   type t = {
@@ -117,6 +118,7 @@ module GammaCorrected = {
     uniformColor: uniformLocation,
     uniformBackgroundColor: uniformLocation,
     uniformGamma: uniformLocation,
+    uniformOpacity: uniformLocation,
   };
 
   let create = () => {
@@ -140,6 +142,9 @@ module GammaCorrected = {
     let uniformGamma =
       CompiledShader.getUniformLocation(compiledShader, "uGamma");
 
+    let uniformOpacity =
+      CompiledShader.getUniformLocation(compiledShader, "uOpacity");
+
     {
       compiledShader,
       uniformWorld,
@@ -147,6 +152,7 @@ module GammaCorrected = {
       uniformColor,
       uniformBackgroundColor,
       uniformGamma,
+      uniformOpacity,
     };
   };
 };
