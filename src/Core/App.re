@@ -81,11 +81,8 @@ let startWithState: startFunc('s, 'a) =
     let _ = Glfw.glfwInit();
     let _ = initFunc(appInstance);
 
-    /* open Lwt.Infix; */
-    open Cohttp_lwt_unix;
-
     if (!Environment.webGL) {
-        Lwt_integration.startEventLoop();
+        let _ = Lwt_integration.startEventLoop();
     }
 
     let appLoop = (_t: float) => {

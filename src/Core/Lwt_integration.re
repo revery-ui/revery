@@ -21,7 +21,7 @@
 let startEventLoop = () => {
     let yielded = Lwt_sequence.create();
 
-    Tick.Default..interval(() => {
+    Tick.Default.interval((_) => {
           Performance.bench("Lwt engine pump", () => {
             Lwt.wakeup_paused(); 
             Lwt_engine.iter(false);
@@ -32,7 +32,7 @@ let startEventLoop = () => {
                 Lwt_sequence.iter_l((wakener) => Lwt.wakeup(wakener, ()), tmp);
             }
           });
-    }, Seconds(0));
-};
+    }, Seconds(0.));
+}
 
 
