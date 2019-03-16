@@ -86,27 +86,29 @@ let isDirty = (w: t) =>
     };
   };
 
-let _updateMetrics = (w: t) => {
-  let glfwSize = Glfw.glfwGetWindowSize(w.glfwWindow);
-  let glfwFramebufferSize = Glfw.glfwGetFramebufferSize(w.glfwWindow);
+let _getMetricsFromGlfwWindow = glfwWindow => {
+  let glfwSize = Glfw.glfwGetWindowSize(glfwWindow);
+  let glfwFramebufferSize = Glfw.glfwGetFramebufferSize(glfwWindow);
 
   let scaleFactor = Monitor.getScaleFactor();
 
   let devicePixelRatio =
     float_of_int(glfwFramebufferSize.width) /. float_of_int(glfwSize.width);
 
-  w.metrics =
-    WindowMetrics.create(
-      ~size={width: glfwSize.width, height: glfwSize.height},
-      ~framebufferSize={
-        width: glfwFramebufferSize.width,
-        height: glfwFramebufferSize.height,
-      },
-      ~scaleFactor,
-      ~devicePixelRatio,
-      (),
-    );
+  WindowMetrics.create(
+    ~size={width: glfwSize.width, height: glfwSize.height},
+    ~framebufferSize={
+      width: glfwFramebufferSize.width,
+      height: glfwFramebufferSize.height,
+    },
+    ~scaleFactor,
+    ~devicePixelRatio,
+    (),
+  );
+};
 
+let _updateMetrics = (w: t) => {
+  w.metrics = _getMetricsFromGlfwWindow(w.glfwWindow);
   w.areMetricsDirty = false;
 };
 
@@ -192,22 +194,7 @@ let create = (name: string, options: windowCreateOptions) => {
     Glfw.glfwSetWindowIcon(w, relativeImagePath);
   };
 
-  let fbSize = Glfw.glfwGetFramebufferSize(w);
-
-  /*
-   * The window size might not be _exactly_ what the user passed in for options.width/options.height,
-   * if the window exceeds the size of the monitor. It might be clamped in that case, so we need to double-check.
-   */
-  let glfwSize = Glfw.glfwGetWindowSize(w);
-
-  let metrics =
-    WindowMetrics.create(
-      ~size={width: glfwSize.width, height: glfwSize.height},
-      ~framebufferSize={width: fbSize.width, height: fbSize.height},
-      ~devicePixelRatio=96.,
-      ~scaleFactor=1,
-      (),
-    );
+  let metrics = _getMetricsFromGlfwWindow(w);
 
   let ret: t = {
     backgroundColor: options.backgroundColor,
@@ -217,7 +204,7 @@ let create = (name: string, options: windowCreateOptions) => {
     shouldRender: () => false,
 
     metrics,
-    areMetricsDirty: true,
+    areMetricsDirty: false,
     isRendering: false,
     requestedWidth: None,
     requestedHeight: None,
