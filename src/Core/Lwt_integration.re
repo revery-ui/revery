@@ -2,7 +2,7 @@
  * Lwt_integration.re
  *
  * Lwt engine loop integration
- * 
+ *
  * The Revery 'app-model' doesn't fit into the Lwt_main.run model of execution - which
  * blocks the main thread until the promise is complete.
  *
@@ -12,27 +12,26 @@
  * This module is responsible for facilitating that integration.
  */
 
-
 /*
  * We're using some Lwt internals, so need to disable this warning...
  */
 [@ocaml.warning "-3"];
 
 let startEventLoop = () => {
-    let yielded = Lwt_sequence.create();
+  let yielded = Lwt_sequence.create();
 
-    Tick.Default.interval((_) => {
-          Performance.bench("Lwt engine pump", () => {
-            Lwt.wakeup_paused(); 
-            Lwt_engine.iter(false);
+  Tick.Default.interval(
+    _ =>
+      Performance.bench("Lwt engine pump", () => {
+        Lwt.wakeup_paused();
+        Lwt_engine.iter(false);
 
-            if (!Lwt_sequence.is_empty(yielded)) {
-                let tmp = Lwt_sequence.create();
-                Lwt_sequence.transfer_r(yielded, tmp);
-                Lwt_sequence.iter_l((wakener) => Lwt.wakeup(wakener, ()), tmp);
-            }
-          });
-    }, Seconds(0.));
-}
-
-
+        if (!Lwt_sequence.is_empty(yielded)) {
+          let tmp = Lwt_sequence.create();
+          Lwt_sequence.transfer_r(yielded, tmp);
+          Lwt_sequence.iter_l(wakener => Lwt.wakeup(wakener, ()), tmp);
+        };
+      }),
+    Seconds(0.),
+  );
+};

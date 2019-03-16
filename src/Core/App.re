@@ -82,8 +82,9 @@ let startWithState: startFunc('s, 'a) =
     let _ = initFunc(appInstance);
 
     if (!Environment.webGL) {
-        let _ = Lwt_integration.startEventLoop();
-    }
+      let _ = Lwt_integration.startEventLoop();
+      ();
+    };
 
     let appLoop = (_t: float) => {
       Glfw.glfwPollEvents();
