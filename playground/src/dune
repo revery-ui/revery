@@ -1,0 +1,8 @@
+(executable
+  (name Playground)
+  (flags :standard -safe-string)
+  (js_of_ocaml (flags :standard --toplevel --linkall +toplevel.js +dynlink.js))
+  (preprocess (pps js_of_ocaml-ppx))
+  (libraries 
+    js_of_ocaml js_of_ocaml-compiler js_of_ocaml-toplevel compiler-libs reglfw)
+)

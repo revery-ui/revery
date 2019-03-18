@@ -1,0 +1,39 @@
+{
+  "name": "revery-playground",
+  "version": "0.13.1",
+  "description": "App toolkit built with Reason",
+  "license": "MIT",
+  "bugs": { "url": "https://github.com/bryphe/revery/issues" },
+  "scripts": {
+  },
+  "homepage": "https://github.com/bryphe/revery#readme",
+  "esy": {
+    "build": ["pwd",  "dune build --root . src/Playground.bc.js --profile=release" ]
+  },
+  "dependencies": {
+    "@esy-ocaml/reason": "3.4.0",
+    "@opam/js_of_ocaml": "*",
+    "@opam/js_of_ocaml-compiler": "*",
+    "@opam/js_of_ocaml-lwt": "*",
+    "@opam/js_of_ocaml-toplevel": "*",
+    "revery": "^0.13.0",
+    "reason-glfw": "*"
+  },
+  "resolutions": {
+    "rebez": "github:jchavarri/rebez#46cbc183",
+    "@opam/cmdliner": "1.0.2",
+    "@opam/dune": "1.7.3",
+    "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
+    "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
+    "@opam/js_of_ocaml-toplevel": "github:ocsigen/js_of_ocaml:js_of_ocaml-toplevel.opam#db257ce",
+    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#daa00be"
+  },
+  "peerDependencies": {
+    "ocaml": "^4.7.0"
+  },
+  "devDependencies": {
+    "ocaml": "^4.7.0",
+    "@opam/merlin": "*",
+    "@opam/dune": "^1.5.0"
+  }
+}
