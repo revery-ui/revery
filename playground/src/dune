@@ -1,8 +1,38 @@
 (executable
-  (name Playground)
-  (flags :standard -safe-string)
-  (js_of_ocaml (flags :standard --toplevel --linkall +toplevel.js +dynlink.js))
-  (preprocess (pps js_of_ocaml-ppx))
-  (libraries 
-    js_of_ocaml js_of_ocaml-compiler js_of_ocaml-toplevel compiler-libs)
-)
+ (name Playground)
+ (flags :standard -safe-string -rectypes)
+ (link_flags (:standard -linkall))
+ (preprocess (pps js_of_ocaml-ppx))
+ (libraries 
+  bigarray js_of_ocaml js_of_ocaml-compiler js_of_ocaml-toplevel compiler-libs reglm reglfw fontkit Revery)
+ )
+
+    (rule
+     (targets export.txt)
+     (deps Playground.bc)
+     (action (run jsoo_listunits -o %{targets} stdlib bigarray reglm reglfw fontkit Revery)))
+
+    (rule
+     (targets Playground.js)
+     (action
+      (run %{bin:js_of_ocaml}
+       --export %{dep:export.txt}
+       --toplevel
+       --pretty
+       --noruntime
+       %{lib:js_of_ocaml-compiler:runtime.js}
+       %{lib:js_of_ocaml-compiler:toplevel.js}
+       %{lib:js_of_ocaml-compiler:dynlink.js}
+       %{lib:reglm:gl-matrix_stubs.js}
+       %{dep:Playground.bc}
+       -o %{targets}
+      )))
+
+    (alias
+     (name default)
+     (deps Playground.js))
+
+(install
+    (section bin)
+    (package playground)
+    (files playground.html gl-matrix-min.js Playground.js))

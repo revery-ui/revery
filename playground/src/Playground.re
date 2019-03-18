@@ -1,3 +1,6 @@
+/* open Revery; */
+/* ignore(Revery.App.start); */
+
 open Js_of_ocaml;
 open Js_of_ocaml_toplevel;
 

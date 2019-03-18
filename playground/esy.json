@@ -9,7 +9,7 @@
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
     "buildsInSource": "_build",
-    "build": ["pwd",  "dune build src/Playground.bc.js" ]
+    "build": ["dune build -p playground -j4" ]
   },
   "dependencies": {
     "@esy-ocaml/reason": "3.4.0",
@@ -17,17 +17,18 @@
     "@opam/js_of_ocaml-compiler": "*",
     "@opam/js_of_ocaml-lwt": "*",
     "@opam/js_of_ocaml-toplevel": "*",
-    "revery": "^0.13.0",
-    "reason-glfw": "*"
+    "revery": "^0.13.0"
   },
   "resolutions": {
     "rebez": "github:jchavarri/rebez#46cbc183",
     "@opam/cmdliner": "1.0.2",
     "@opam/dune": "1.7.3",
-    "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
-    "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-    "@opam/js_of_ocaml-toplevel": "github:ocsigen/js_of_ocaml:js_of_ocaml-toplevel.opam#db257ce",
-    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#daa00be"
+    "@opam/js_of_ocaml": "link:../../js_of_ocaml/js_of_ocaml.opam",
+    "@opam/js_of_ocaml-compiler": "link:../../js_of_ocaml/js_of_ocaml-compiler.opam",
+    "@opam/js_of_ocaml-toplevel": "link:../../js_of_ocaml/js_of_ocaml-toplevel.opam",
+    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#daa00be",
+    "reason-gl-matrix": "link:../../reason-gl-matrix",
+    "revery": "link:../package.json"
   },
   "peerDependencies": {
     "ocaml": "^4.7.0"
