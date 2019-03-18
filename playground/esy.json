@@ -8,7 +8,8 @@
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
-    "build": ["pwd",  "dune build --root . src/Playground.bc.js --profile=release" ]
+    "buildsInSource": "_build",
+    "build": ["pwd",  "dune build src/Playground.bc.js" ]
   },
   "dependencies": {
     "@esy-ocaml/reason": "3.4.0",
