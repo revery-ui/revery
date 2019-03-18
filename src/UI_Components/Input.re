@@ -1,16 +1,10 @@
 open Revery_UI;
 open Revery_Core;
 
-type state = {
-  value: string,
-  isFocused: bool,
-};
+type state = {isFocused: bool};
 
 type action =
-  | SetFocus(bool)
-  | UpdateText(string)
-  | Backspace
-  | ClearWord;
+  | SetFocus(bool);
 
 let removeCharacter = word =>
   String.length(word)
@@ -18,30 +12,13 @@ let removeCharacter = word =>
 
 let addCharacter = (word, char) => word ++ char;
 
-let reducer = (action, state) =>
+let reducer = (action, _state) =>
   /*
      TODO: Handle Cursor position changing via keyboard input e.g. arrow keys
      potentially draw the cursor Inside the text element and render the text around the cursor
    */
   switch (action) {
-  | SetFocus(isFocused) => {...state, isFocused}
-  | UpdateText(t) =>
-    state.isFocused
-      ? {isFocused: true, value: addCharacter(state.value, t)} : state
-  | Backspace =>
-    state.isFocused
-      ? {
-        let length = String.length(state.value);
-        length > 0 ? {...state, value: removeCharacter(state.value)} : state;
-      }
-      : state
-  | ClearWord => {...state, value: ""}
-  };
-
-let handleKeyDown = (~dispatch, event: Events.keyEvent) =>
-  switch (event.key) {
-  | Key.KEY_BACKSPACE => dispatch(Backspace)
-  | _ => ()
+  | SetFocus(isFocused) => {isFocused: isFocused}
   };
 
 let noop = (~value as _value) => ();
@@ -65,7 +42,7 @@ let component = React.component("Input");
 let make =
     (
       ~style,
-      ~value as valueParam,
+      ~value,
       ~placeholder,
       ~cursorColor,
       ~placeholderColor,
@@ -74,17 +51,11 @@ let make =
     ) =>
   component(slots => {
     let (state, dispatch, slots) =
-      React.Hooks.reducer(
-        ~initialState={value: valueParam, isFocused: false},
-        reducer,
-        slots,
-      );
+      React.Hooks.reducer(~initialState={isFocused: false}, reducer, slots);
 
-    let handleKeyDown = (~dispatch, event: NodeEvents.keyEventParams) =>
+    let handleKeyDown = (event: NodeEvents.keyEventParams) =>
       switch (event.key) {
-      | Key.KEY_BACKSPACE =>
-        dispatch(Backspace);
-        onChange(~value=removeCharacter(state.value));
+      | Key.KEY_BACKSPACE => onChange(~value=removeCharacter(value))
       | _ => ()
       };
 
@@ -101,9 +72,9 @@ let make =
         slots,
       );
 
-    let hasPlaceholder = String.length(state.value) < 1;
+    let hasPlaceholder = String.length(value) < 1;
 
-    let content = hasPlaceholder ? placeholder : state.value;
+    let content = hasPlaceholder ? placeholder : value;
 
     /*
        computed styles
@@ -179,11 +150,10 @@ let make =
       <Clickable
         onFocus={() => dispatch(SetFocus(true))}
         onBlur={() => dispatch(SetFocus(false))}
-        onKeyDown={event => handleKeyDown(~dispatch, event)}
-        onKeyPress={event => {
-          dispatch(UpdateText(event.character));
-          onChange(~value=addCharacter(state.value, event.character));
-        }}>
+        onKeyDown={event => handleKeyDown(event)}
+        onKeyPress={event =>
+          onChange(~value=addCharacter(value, event.character))
+        }>
         <View style=viewStyles>
           <Text style=innerTextStyles text=content />
           <View style=inputCursorStyles />
