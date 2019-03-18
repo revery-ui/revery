@@ -33,10 +33,12 @@ module Example = {
         <View style=containerStyle>
           <Input
             placeholder="Insert text here"
+            value=first
             onChange={(~value) => setValue({first: value, second})}
           />
           <Input
             placeholder="custom input"
+            value=second
             placeholderColor=Colors.plum
             cursorColor=Colors.white
             onChange={(~value) => setValue({first, second: value})}

@@ -44,6 +44,7 @@ let reducer = (action: action, state: state) => {
         ...state.todos,
       ],
       nextId: state.nextId + 1,
+      inputValue: "",
     }
   | UpdateInputTextValue(text) => {...state, inputValue: text}
   | ChangeTaskState(id, isDone) =>
@@ -189,6 +190,7 @@ module Example = {
             <Input
               style=Style.[width(400)]
               placeholder="Add your Todo here"
+              value=inputValue
               onChange={(~value) => dispatch(UpdateInputTextValue(value))}
             />
             <Button
