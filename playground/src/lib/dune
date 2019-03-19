@@ -1,0 +1,4 @@
+(library
+ (name PlaygroundLib)
+ (public_name playground.lib)
+ )

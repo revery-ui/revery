@@ -109,9 +109,9 @@ let startWithState: startFunc('s, 'a) =
         Environment.sleep(Milliseconds(1.));
       };
 
-      if (Environment.isNative) {
-        Thread.yield();
-      };
+      /* if (Environment.isNative) { */
+      /*   Thread.yield(); */
+      /* }; */
       List.length(getWindows(appInstance)) == 0;
     };
 

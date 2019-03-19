@@ -14,9 +14,12 @@ let execute: Js.t(Js.js_string) => Js.t(Js.js_string) = code => {
 };
 
 
+let derp = (a) => print_endline(a);
+
 JsooTop.initialize();
 let () = Js.export_all(
   [%js {
-    val execute = execute
+    val execute = execute;
+    val derp = derp
   }]
 );
