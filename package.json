@@ -1,6 +1,6 @@
 {
   "name": "revery",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "description": "App toolkit built with Reason",
   "license": "MIT",
   "bugs": { "url": "https://github.com/bryphe/revery/issues" },
