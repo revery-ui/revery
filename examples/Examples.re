@@ -58,7 +58,7 @@ let state: state = {
       render: _ => Boxshadow.render(),
       source: "Boxshadow.re",
     },
-    {name: "Focus", render: _ => Focus.render(), source: "Focus.re"},
+    {name: "Focus", render: _ => FocusExample.render(), source: "Focus.re"},
     {
       name: "Stopwatch",
       render: _ => Stopwatch.render(),
@@ -124,13 +124,11 @@ let state: state = {
   selectedExample: "Animation",
 };
 
-let getExampleByName = (state: state, example: string) => {
+let getExampleByName = (state: state, example: string) =>
   List.filter(x => String.equal(x.name, example), state.examples) |> List.hd;
-};
 
-let getSourceForSample = (state: state, example: string) => {
+let getSourceForSample = (state: state, example: string) =>
   getExampleByName(state, example) |> (s => s.source);
-};
 
 let noop = () => ();
 
@@ -178,11 +176,10 @@ module ExampleButton = {
 type action =
   | SelectExample(string);
 
-let reducer = (s: state, a: action) => {
+let reducer = (s: state, a: action) =>
   switch (a) {
   | SelectExample(name) => {...s, selectedExample: name}
   };
-};
 
 let init = app => {
   let maximized = Environment.webGL;
@@ -217,17 +214,19 @@ let init = app => {
       <ExampleButton
         isActive
         name={x.name}
-        onClick={_ => {
-          /*
-           * TEMPORARY WORKAROUND: The animations don't always get stopped when switching examples,
-           * tracked by briskml/brisk-reconciler#8. We can remove this once it's fixed!
-           */
-          Animated.cancelAll();
+        onClick={
+          _ => {
+            /*
+             * TEMPORARY WORKAROUND: The animations don't always get stopped when switching examples,
+             * tracked by briskml/brisk-reconciler#8. We can remove this once it's fixed!
+             */
+            Animated.cancelAll();
 
-          let sourceFile = getSourceForSample(s, x.name);
-          notifyExampleSwitched(sourceFile);
-          App.dispatch(app, SelectExample(x.name));
-        }}
+            let sourceFile = getSourceForSample(s, x.name);
+            notifyExampleSwitched(sourceFile);
+            App.dispatch(app, SelectExample(x.name));
+          }
+        }
       />;
     };
 
