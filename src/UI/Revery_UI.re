@@ -23,6 +23,7 @@ module UiEvents = UiEvents;
 module Container = Container;
 module React = React;
 module Hooks = Hooks;
+module Focus = Focus;
 
 include Primitives;
 
