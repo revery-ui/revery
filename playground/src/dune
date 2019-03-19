@@ -4,7 +4,7 @@
  (link_flags (:standard -linkall))
  (preprocess (pps js_of_ocaml-ppx))
  (libraries 
-  bigarray js_of_ocaml js_of_ocaml-compiler js_of_ocaml-toplevel compiler-libs Revery_Core Revery playground.lib)
+  bigarray js_of_ocaml js_of_ocaml-compiler js_of_ocaml-toplevel compiler-libs Revery_Core Revery playground.lib reason)
  )
 
     (rule
