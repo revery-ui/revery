@@ -10,7 +10,7 @@
     (rule
      (targets export.txt)
      (deps Playground.bc)
-     (action (run jsoo_listunits -o %{targets} stdlib bigarray Revery_Core Revery playground.lib)))
+     (action (run jsoo_listunits -o %{targets} stdlib bigarray Revery_Core Revery_Draw Revery_Native Revery_UI Revery_UI_Components Revery playground.lib)))
 
     (rule
      (targets Playground.js)

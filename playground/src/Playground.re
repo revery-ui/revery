@@ -13,6 +13,18 @@ let execute: Js.t(Js.js_string) => Js.t(Js.js_string) = code => {
   Js.string(result);
 };
 
+let prefix = "module Test = { ";
+let postfix = "}; PlaygroundLib.setRenderFunction(Test.render);";
+
+let execute2: Js.t(Js.js_string) => Js.t(Js.js_string) = code => {
+  let code = prefix ++ Js.to_string(code) ++ postfix;
+  let buffer = Buffer.create(100);
+  let formatter = Format.formatter_of_buffer(buffer);
+  JsooTop.execute(true, formatter, code);
+  let result = Buffer.contents(buffer)
+  Js.string(result);
+};
+
 let reasonSyntax = () => {
   open Reason_toolchain.From_current;
   let wrap = (f, g, fmt, x) => g(fmt, f(x));
@@ -49,10 +61,12 @@ let reasonSyntax = () => {
 let _ = {
   reasonSyntax();
   JsooTop.initialize();
+  PlaygroundLib.startPlayground();
 };
 
 let () = Js.export_all(
   [%js {
     val execute = execute;
+    val execute2 = execute2;
   }]
 );
