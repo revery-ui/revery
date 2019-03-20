@@ -1,10 +1,14 @@
 open Revery_UI;
 open Revery_Core;
 
-type state = {isFocused: bool};
+type state = {
+  isFocused: bool,
+  internalValue: string,
+};
 
 type action =
-  | SetFocus(bool);
+  | SetFocus(bool)
+  | SetValue(string);
 
 let removeCharacter = word =>
   String.length(word)
@@ -12,13 +16,14 @@ let removeCharacter = word =>
 
 let addCharacter = (word, char) => word ++ char;
 
-let reducer = (action, _state) =>
+let reducer = (action, state) =>
   /*
      TODO: Handle Cursor position changing via keyboard input e.g. arrow keys
      potentially draw the cursor Inside the text element and render the text around the cursor
    */
   switch (action) {
-  | SetFocus(isFocused) => {isFocused: isFocused}
+  | SetFocus(isFocused) => {...state, isFocused}
+  | SetValue(internalValue) => {...state, internalValue}
   };
 
 let noop = (~value as _value) => ();
@@ -42,21 +47,48 @@ let component = React.component("Input");
 let make =
     (
       ~style,
-      ~value,
       ~placeholder,
       ~cursorColor,
       ~placeholderColor,
       ~onChange,
+      ~value as valueAsProp,
       (),
     ) =>
   component(slots => {
     let (state, dispatch, slots) =
-      React.Hooks.reducer(~initialState={isFocused: false}, reducer, slots);
+      React.Hooks.reducer(
+        ~initialState={isFocused: false, internalValue: ""},
+        reducer,
+        slots,
+      );
+
+    let valueToDisplay =
+      switch (valueAsProp) {
+      | Some(v) => v
+      | None => state.internalValue
+      };
 
     let handleKeyDown = (event: NodeEvents.keyEventParams) =>
       switch (event.key) {
-      | Key.KEY_BACKSPACE => onChange(~value=removeCharacter(value))
+      | Key.KEY_BACKSPACE =>
+        switch (valueAsProp) {
+        | Some(v) => onChange(~value=removeCharacter(v))
+        | None =>
+          let newValue = removeCharacter(state.internalValue);
+          dispatch(SetValue(newValue));
+          onChange(~value=newValue);
+        }
+
       | _ => ()
+      };
+
+    let handleKeyPress = (event: NodeEvents.keyPressEventParams) =>
+      switch (valueAsProp) {
+      | Some(v) => onChange(~value=addCharacter(v, event.character))
+      | None =>
+        let newValue = addCharacter(state.internalValue, event.character);
+        dispatch(SetValue(newValue));
+        onChange(~value=newValue);
       };
 
     let (animatedOpacity, slots) =
@@ -72,9 +104,9 @@ let make =
         slots,
       );
 
-    let hasPlaceholder = String.length(value) < 1;
+    let hasPlaceholder = String.length(valueToDisplay) < 1;
 
-    let content = hasPlaceholder ? placeholder : value;
+    let content = hasPlaceholder ? placeholder : valueToDisplay;
 
     /*
        computed styles
@@ -150,10 +182,8 @@ let make =
       <Clickable
         onFocus={() => dispatch(SetFocus(true))}
         onBlur={() => dispatch(SetFocus(false))}
-        onKeyDown={event => handleKeyDown(event)}
-        onKeyPress={event =>
-          onChange(~value=addCharacter(value, event.character))
-        }>
+        onKeyDown=handleKeyDown
+        onKeyPress=handleKeyPress>
         <View style=viewStyles>
           <Text style=innerTextStyles text=content />
           <View style=inputCursorStyles />
@@ -168,9 +198,9 @@ let createElement =
       ~style=defaultStyles,
       ~placeholderColor=Colors.grey,
       ~cursorColor=Colors.black,
-      ~value="",
       ~placeholder="",
       ~onChange=noop,
+      ~value=?,
       (),
     ) =>
   make(
