@@ -5,7 +5,6 @@ type state = {
   inputString: string,
   isFocused: bool,
   cursorPosition: int,
-<<<<<<< HEAD
 };
 
 type textUpdate = {
@@ -21,20 +20,18 @@ type changeEvent = {
   ctrlKey: bool,
   shiftKey: bool,
   superKey: bool,
-=======
->>>>>>> allow cursor positioning with arrow keys
+};
+
+type textUpdate = {
+  newString: string,
+  cursorPosition: int,
 };
 
 type action =
   | CursorPosition(int)
   | SetFocus(bool)
-<<<<<<< HEAD
   | UpdateText(textUpdate)
   | Backspace(textUpdate);
-=======
-  | UpdateText(string)
-  | Backspace;
->>>>>>> allow cursor positioning with arrow keys
 
 let getStringParts = (index, str) =>
   switch (index) {
@@ -76,10 +73,35 @@ let getStringParts = (index, str) =>
     (strBeginning, strEnd);
   };
 
+let getSafeStringBounds = (str, cursorPosition, change) => {
+  let nextPosition = cursorPosition + change;
+  let currentLength = String.length(str);
+  nextPosition > currentLength ?
+    currentLength : nextPosition < 0 ? 0 : nextPosition;
+};
+
+let removeCharacter = (word, cursorPosition) => {
+  let (startStr, _) = getStringParts(cursorPosition, word);
+  let length = String.length(startStr);
+  let newString =
+    length >= 0 ? Str.string_before(startStr, length - 1) : startStr;
+  {
+    newString,
+    cursorPosition: getSafeStringBounds(startStr, cursorPosition, -1),
+  };
+};
+
+let addCharacter = (word, char, index) => {
+  let (startStr, endStr) = getStringParts(index, word);
+  {
+    newString: startStr ++ char ++ endStr,
+    cursorPosition: String.length(startStr) + 1,
+  };
+};
+
 let reducer = (action, state) =>
   switch (action) {
   | SetFocus(isFocused) => {...state, isFocused}
-<<<<<<< HEAD
   | CursorPosition(pos) => {
       ...state,
       cursorPosition:
@@ -94,41 +116,6 @@ let reducer = (action, state) =>
       {...state, inputString: newString, cursorPosition} : state
   };
 
-let defaultHeight = 50;
-let defaultWidth = 200;
-let inputTextMargin = 10;
-
-=======
-  | CursorPosition(pos) =>
-    let nextPosition = state.cursorPosition + pos;
-    let currentLength = String.length(state.inputString);
-    {
-      ...state,
-      cursorPosition:
-        nextPosition > currentLength ?
-          currentLength : nextPosition < 0 ? 0 : nextPosition,
-    };
-
-  | UpdateText(t) =>
-    let newString = addCharacter(state.inputString, t);
-    state.isFocused ?
-      {
-        cursorPosition: String.length(newString),
-        isFocused: true,
-        inputString: newString,
-      } :
-      state;
-  | Backspace =>
-    state.isFocused ?
-      {
-        let length = String.length(state.inputString);
-        length > 0 ?
-          {...state, inputString: removeCharacter(state.inputString)} : state;
-      } :
-      state
-  };
-
->>>>>>> allow cursor positioning with arrow keys
 let defaultHeight = 50;
 let defaultWidth = 200;
 let inputTextMargin = 10;
