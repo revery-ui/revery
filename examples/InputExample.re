@@ -39,6 +39,7 @@ module Example = {
             placeholder="custom input"
             placeholderColor=Colors.plum
             cursorColor=Colors.white
+            autofocus=true
             onChange={(~value) => setValue({first, second: value})}
             style=Style.[
               backgroundColor(Colors.paleVioletRed),

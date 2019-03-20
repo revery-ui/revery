@@ -94,6 +94,7 @@ let component = React.component("Input");
 let make =
     (
       ~style,
+      ~autofocus,
       ~value as valueParam,
       ~placeholder,
       ~cursorColor,
@@ -213,6 +214,7 @@ let make =
       <Clickable
         onFocus={() => dispatch(SetFocus(true))}
         onBlur={() => dispatch(SetFocus(false))}
+        componentRef={r => autofocus ? Focus.focus(r) : ()}
         onKeyDown=handleKeyDown
         onKeyPress=handleKeyPress>
         <View style=viewStyles>
@@ -231,6 +233,7 @@ let createElement =
       ~style=defaultStyles,
       ~placeholderColor=Colors.grey,
       ~cursorColor=Colors.black,
+      ~autofocus=false,
       ~value="",
       ~placeholder="",
       ~onChange=(~value as _) => (),
@@ -240,6 +243,7 @@ let createElement =
     ~value,
     ~style,
     ~placeholder,
+    ~autofocus,
     ~cursorColor,
     ~placeholderColor,
     ~onChange,
