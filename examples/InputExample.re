@@ -44,6 +44,7 @@ module Example = {
               backgroundColor(Colors.paleVioletRed),
               color(Colors.white),
               margin(20),
+              height(50),
               boxShadow(
                 ~xOffset=-5.,
                 ~yOffset=2.,

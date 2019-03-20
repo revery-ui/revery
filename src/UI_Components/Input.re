@@ -26,15 +26,15 @@ let reducer = (action, state) =>
   switch (action) {
   | SetFocus(isFocused) => {...state, isFocused}
   | UpdateText(t) =>
-    state.isFocused
-      ? {isFocused: true, value: addCharacter(state.value, t)} : state
+    state.isFocused ?
+      {isFocused: true, value: addCharacter(state.value, t)} : state
   | Backspace =>
-    state.isFocused
-      ? {
+    state.isFocused ?
+      {
         let length = String.length(state.value);
         length > 0 ? {...state, value: removeCharacter(state.value)} : state;
-      }
-      : state
+      } :
+      state
   | ClearWord => {...state, value: ""}
   };
 
@@ -46,20 +46,28 @@ let handleKeyDown = (~dispatch, event: Events.keyEvent) =>
 
 let noop = (~value as _value) => ();
 
+let defaultHeight = 50;
+let defaultWidth = 200;
+
 let defaultStyles =
   Style.[
     color(Colors.black),
-    width(200),
-    height(50),
+    width(defaultWidth),
+    height(defaultHeight),
     border(
       /*
          The default border width should be 5% of the full input height
        */
-      ~width=float_of_int(50) *. 0.05 |> int_of_float,
+      ~width=float_of_int(defaultHeight) *. 0.05 |> int_of_float,
       ~color=Colors.black,
     ),
     backgroundColor(Colors.transparentWhite),
   ];
+
+let withPlaceholderStyles = (styles, hasPlaceholder, positionTop) =>
+  hasPlaceholder ?
+    Style.[position(`Absolute), top(positionTop), left(5), ...styles] :
+    styles;
 
 let component = React.component("Input");
 let make =
@@ -126,7 +134,7 @@ let make =
 
     let viewStyles = Style.extractViewStyles(allStyles);
 
-    let inputHeight = Selector.select(style, Height, 24);
+    let inputHeight = Selector.select(style, Height, defaultHeight);
     let inputFontSize = Selector.select(style, FontSize, 18);
     let inputColor = Selector.select(style, Color, Colors.black);
     let inputFontFamily =
@@ -148,42 +156,36 @@ let make =
        calculate the top padding needed to place the cursor centrally
      */
     let positionTop =
-      inputHeight > inputFontSize
-        ? (inputHeight - inputFontSize) / 2 : inputFontSize;
+      inputHeight > inputFontSize ?
+        (inputHeight - inputFontSize) / 2 : inputFontSize;
 
     let inputCursorStyles =
-      Style.[
-        marginLeft(2),
-        height(inputFontSize),
-        width(2),
-        opacity(state.isFocused ? animatedOpacity : 0.0),
-        backgroundColor(cursorColor),
-      ]
-      |> (
-        initial =>
-          hasPlaceholder
-            ? Style.[
-                position(`Absolute),
-                top(positionTop),
-                left(5),
-                ...initial,
-              ]
-            : initial
+      withPlaceholderStyles(
+        Style.[
+          marginLeft(2),
+          height(inputFontSize),
+          width(2),
+          opacity(state.isFocused ? animatedOpacity : 0.0),
+          backgroundColor(cursorColor),
+        ],
+        hasPlaceholder,
+        positionTop,
       );
-
-    /*
-       component
-     */
     (
+      /*
+         component
+       */
       slots,
       <Clickable
         onFocus={() => dispatch(SetFocus(true))}
         onBlur={() => dispatch(SetFocus(false))}
         onKeyDown={event => handleKeyDown(~dispatch, event)}
-        onKeyPress={event => {
-          dispatch(UpdateText(event.character));
-          onChange(~value=addCharacter(state.value, event.character));
-        }}>
+        onKeyPress={
+          event => {
+            dispatch(UpdateText(event.character));
+            onChange(~value=addCharacter(state.value, event.character));
+          }
+        }>
         <View style=viewStyles>
           <Text style=innerTextStyles text=content />
           <View style=inputCursorStyles />
