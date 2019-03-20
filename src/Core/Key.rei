@@ -122,3 +122,5 @@ type t =
   | KEY_MENU;
 
 let convert: Reglfw.Glfw.Key.t => t;
+let toString: t => string;
+let fromString: string => t;

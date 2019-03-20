@@ -12,6 +12,15 @@ type textUpdate = {
   cursorPosition: int,
 };
 
+type changeEvent = {
+  character: string,
+  key: Key.t,
+  altKey: bool,
+  ctrlKey: bool,
+  shiftKey: bool,
+  superKey: bool,
+};
+
 type action =
   | CursorPosition(int)
   | SetFocus(bool)
@@ -117,7 +126,17 @@ let make =
     let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
       let update = addCharacter(inputString, event.character, cursorPosition);
       dispatch(UpdateText(update));
-      onChange(~value=update.newString);
+      onChange(
+        ~value=update.newString,
+        {
+          key: Key.fromString(event.character),
+          character: event.character,
+          altKey: false,
+          ctrlKey: false,
+          shiftKey: false,
+          superKey: false,
+        },
+      );
     };
 
     let handleKeyDown = (event: NodeEvents.keyEventParams) =>
@@ -128,7 +147,17 @@ let make =
         dispatch(CursorPosition(-1));
         let update = removeCharacter(inputString, cursorPosition);
         dispatch(Backspace(update));
-        onChange(~value=update.newString);
+        onChange(
+          ~value=update.newString,
+          {
+            character: Key.toString(event.key),
+            key: event.key,
+            altKey: event.altKey,
+            ctrlKey: event.ctrlKey,
+            shiftKey: event.shiftKey,
+            superKey: event.superKey,
+          },
+        );
       | _ => ()
       };
 
@@ -236,7 +265,7 @@ let createElement =
       ~autofocus=false,
       ~value="",
       ~placeholder="",
-      ~onChange=(~value as _) => (),
+      ~onChange=(~value as _, _) => (),
       (),
     ) =>
   make(
