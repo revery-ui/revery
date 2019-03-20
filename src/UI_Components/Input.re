@@ -7,17 +7,16 @@ type state = {
   cursorPosition: int,
 };
 
+type textUpdate = {
+  newString: string,
+  cursorPosition: int,
+};
+
 type action =
   | CursorPosition(int)
   | SetFocus(bool)
-  | UpdateText(string)
-  | Backspace;
-
-let removeCharacter = word =>
-  String.length(word)
-  |> (length => length > 0 ? String.sub(word, 0, length - 1) : word);
-
-let addCharacter = (word, char) => word ++ char;
+  | UpdateText(textUpdate)
+  | Backspace(textUpdate);
 
 let getStringParts = (index, str) =>
   switch (index) {
@@ -28,6 +27,32 @@ let getStringParts = (index, str) =>
     (strBeginning, strEnd);
   };
 
+let getSafeStringBounds = (str, cursorPosition, change) => {
+  let nextPosition = cursorPosition + change;
+  let currentLength = String.length(str);
+  nextPosition > currentLength ?
+    currentLength : nextPosition < 0 ? 0 : nextPosition;
+};
+
+let removeCharacter = (word, cursorPosition) => {
+  let (startStr, _) = getStringParts(cursorPosition, word);
+  let length = String.length(startStr);
+  let newString =
+    length >= 0 ? Str.string_before(startStr, length - 1) : startStr;
+  {
+    newString,
+    cursorPosition: getSafeStringBounds(startStr, cursorPosition, -1),
+  };
+};
+
+let addCharacter = (word, char, index) => {
+  let (startStr, endStr) = getStringParts(index, word);
+  {
+    newString: startStr ++ char ++ endStr,
+    cursorPosition: String.length(startStr) + 1,
+  };
+};
+
 let reducer = (action, state) =>
   /*
      TODO: Handle Cursor position changing via keyboard input e.g. arrow keys
@@ -35,33 +60,18 @@ let reducer = (action, state) =>
    */
   switch (action) {
   | SetFocus(isFocused) => {...state, isFocused}
-  | CursorPosition(pos) =>
-    let nextPosition = state.cursorPosition + pos;
-    let currentLength = String.length(state.inputString);
-    {
+  | CursorPosition(pos) => {
       ...state,
       cursorPosition:
-        nextPosition > currentLength ?
-          currentLength : nextPosition < 0 ? 0 : nextPosition,
-    };
+        getSafeStringBounds(state.inputString, state.cursorPosition, pos),
+    }
 
-  | UpdateText(t) =>
-    let newString = addCharacter(state.inputString, t);
+  | UpdateText({newString, cursorPosition}) =>
     state.isFocused ?
-      {
-        cursorPosition: String.length(newString),
-        isFocused: true,
-        inputString: newString,
-      } :
-      state;
-  | Backspace =>
+      {cursorPosition, isFocused: true, inputString: newString} : state
+  | Backspace({newString, cursorPosition}) =>
     state.isFocused ?
-      {
-        let length = String.length(state.inputString);
-        length > 0 ?
-          {...state, inputString: removeCharacter(state.inputString)} : state;
-      } :
-      state
+      {...state, inputString: newString, cursorPosition} : state
   };
 
 let defaultHeight = 50;
@@ -113,8 +123,9 @@ let make =
       | Key.KEY_RIGHT => dispatch(CursorPosition(1))
       | Key.KEY_BACKSPACE =>
         dispatch(CursorPosition(-1));
-        dispatch(Backspace);
-        onChange(~value=removeCharacter(inputString));
+        let update = removeCharacter(inputString, cursorPosition);
+        dispatch(Backspace(update));
+        onChange(~value=update.newString);
       | _ => ()
       };
 
@@ -174,7 +185,7 @@ let make =
         ]
       />;
 
-    let makeTextComponent = content =>
+    let makeTextComponent = (content, ~isEnd) =>
       <Text
         text=content
         style=Style.[
@@ -183,15 +194,14 @@ let make =
           fontSize(inputFontSize),
           alignItems(`Center),
           justifyContent(`FlexStart),
-          marginLeft(hasPlaceholder ? 2 : inputTextMargin),
+          marginLeft(hasPlaceholder || isEnd ? 2 : inputTextMargin),
         ]
       />;
 
-    print_endline("CursorPosition ====" ++ string_of_int(cursorPosition));
     let (startStr, endStr) = getStringParts(cursorPosition, inputString);
-    let placeholderText = makeTextComponent(placeholder);
-    let startText = makeTextComponent(startStr);
-    let endText = makeTextComponent(endStr);
+    let placeholderText = makeTextComponent(placeholder, ~isEnd=false);
+    let startText = makeTextComponent(startStr, ~isEnd=false);
+    let endText = makeTextComponent(endStr, ~isEnd=true);
 
     (
       /*
@@ -204,8 +214,10 @@ let make =
         onKeyDown={event => handleKeyDown(~dispatch, event)}
         onKeyPress={
           event => {
-            dispatch(UpdateText(event.character));
-            onChange(~value=addCharacter(inputString, event.character));
+            let update =
+              addCharacter(inputString, event.character, cursorPosition);
+            dispatch(UpdateText(update));
+            onChange(~value=update.newString);
           }
         }>
         <View style=viewStyles>
