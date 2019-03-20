@@ -113,7 +113,13 @@ let make =
         slots,
       );
 
-    let handleKeyDown = (~dispatch, event: NodeEvents.keyEventParams) =>
+    let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
+      let update = addCharacter(inputString, event.character, cursorPosition);
+      dispatch(UpdateText(update));
+      onChange(~value=update.newString);
+    };
+
+    let handleKeyDown = (event: NodeEvents.keyEventParams) =>
       switch (event.key) {
       | Key.KEY_LEFT => dispatch(CursorPosition(-1))
       | Key.KEY_RIGHT => dispatch(CursorPosition(1))
@@ -207,15 +213,8 @@ let make =
       <Clickable
         onFocus={() => dispatch(SetFocus(true))}
         onBlur={() => dispatch(SetFocus(false))}
-        onKeyDown={event => handleKeyDown(~dispatch, event)}
-        onKeyPress={
-          event => {
-            let update =
-              addCharacter(inputString, event.character, cursorPosition);
-            dispatch(UpdateText(update));
-            onChange(~value=update.newString);
-          }
-        }>
+        onKeyDown=handleKeyDown
+        onKeyPress=handleKeyPress>
         <View style=viewStyles>
           ...{
                hasPlaceholder ?
