@@ -187,8 +187,8 @@ module Example = {
             <Input
               style=Style.[width(400)]
               placeholder="Add your Todo here"
-              onChange={
-                (~value, _) => dispatch(UpdateInputTextValue(value))
+              onChange={(~value, _) =>
+                dispatch(UpdateInputTextValue(value))
               }
             />
             <Button
