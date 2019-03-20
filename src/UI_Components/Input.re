@@ -81,14 +81,10 @@ let getSafeStringBounds = (str, cursorPosition, change) => {
 };
 
 let removeCharacter = (word, cursorPosition) => {
-  let (startStr, _) = getStringParts(cursorPosition, word);
-  let length = String.length(startStr);
-  let newString =
-    length >= 0 ? Str.string_before(startStr, length - 1) : startStr;
-  {
-    newString,
-    cursorPosition: getSafeStringBounds(startStr, cursorPosition, -1),
-  };
+  let (startStr, endStr) = getStringParts(cursorPosition, word);
+  let nextPosition = getSafeStringBounds(startStr, cursorPosition, -1);
+  let newString = Str.string_before(startStr, nextPosition) ++ endStr;
+  {newString, cursorPosition: nextPosition};
 };
 
 let addCharacter = (word, char, index) => {
