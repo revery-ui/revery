@@ -82,6 +82,7 @@ let inputTextMargin = 10;
 
 let defaultHeight = 50;
 let defaultWidth = 200;
+let inputTextMargin = 10;
 
 let defaultStyles =
   Style.[
@@ -97,11 +98,6 @@ let defaultStyles =
     ),
     backgroundColor(Colors.transparentWhite),
   ];
-
-let withPlaceholderStyles = (styles, hasPlaceholder, positionTop) =>
-  hasPlaceholder ?
-    Style.[position(`Absolute), top(positionTop), left(5), ...styles] :
-    styles;
 
 let component = React.component("Input");
 
