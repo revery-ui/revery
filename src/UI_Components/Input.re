@@ -214,7 +214,7 @@ let make =
       <Clickable
         onFocus={() => dispatch(SetFocus(true))}
         onBlur={() => dispatch(SetFocus(false))}
-        componentRef={r => autofocus ? Focus.focus(r) : ()}
+        componentRef={autofocus ? Focus.focus : ignore}
         onKeyDown=handleKeyDown
         onKeyPress=handleKeyPress>
         <View style=viewStyles>
