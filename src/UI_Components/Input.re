@@ -48,6 +48,7 @@ let noop = (~value as _value) => ();
 
 let defaultHeight = 50;
 let defaultWidth = 200;
+let inputTextMargin = 10;
 
 let defaultStyles =
   Style.[
@@ -64,12 +65,8 @@ let defaultStyles =
     backgroundColor(Colors.transparentWhite),
   ];
 
-let withPlaceholderStyles = (styles, hasPlaceholder, positionTop) =>
-  hasPlaceholder ?
-    Style.[position(`Absolute), top(positionTop), left(5), ...styles] :
-    styles;
-
 let component = React.component("Input");
+
 let make =
     (
       ~style,
@@ -110,7 +107,6 @@ let make =
       );
 
     let hasPlaceholder = String.length(state.value) < 1;
-
     let content = hasPlaceholder ? placeholder : state.value;
 
     /*
@@ -133,44 +129,39 @@ let make =
       );
 
     let viewStyles = Style.extractViewStyles(allStyles);
-
-    let inputHeight = Selector.select(style, Height, defaultHeight);
     let inputFontSize = Selector.select(style, FontSize, 18);
     let inputColor = Selector.select(style, Color, Colors.black);
     let inputFontFamily =
       Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
-    let innerTextStyles =
-      Style.[
-        color(hasPlaceholder ? placeholderColor : inputColor),
-        fontFamily(inputFontFamily),
-        fontSize(inputFontSize),
-        alignItems(`Center),
-        justifyContent(`FlexStart),
-        marginLeft(6),
-      ];
-
-    /*
-       TODO: this logic needs the equivalent of sizing an absolutely positioned
-       element in css i.e. should work in the same way
-       calculate the top padding needed to place the cursor centrally
+    /**
+      We place these in a list so we change the order later to
+      render the cursor before the text if placeholder is present
+      otherwise to the cursor after
      */
-    let positionTop =
-      inputHeight > inputFontSize ?
-        (inputHeight - inputFontSize) / 2 : inputFontSize;
-
-    let inputCursorStyles =
-      withPlaceholderStyles(
-        Style.[
-          marginLeft(2),
+    let inputComponents = [
+      <View
+        style=Style.[
+          marginLeft(hasPlaceholder ? inputTextMargin : 2),
           height(inputFontSize),
           width(2),
           opacity(state.isFocused ? animatedOpacity : 0.0),
           backgroundColor(cursorColor),
-        ],
-        hasPlaceholder,
-        positionTop,
-      );
+        ]
+      />,
+      <Text
+        style=Style.[
+          color(hasPlaceholder ? placeholderColor : inputColor),
+          fontFamily(inputFontFamily),
+          fontSize(inputFontSize),
+          alignItems(`Center),
+          justifyContent(`FlexStart),
+          marginLeft(hasPlaceholder ? 2 : inputTextMargin),
+        ]
+        text=content
+      />,
+    ];
+
     (
       /*
          component
@@ -179,7 +170,7 @@ let make =
       <Clickable
         onFocus={() => dispatch(SetFocus(true))}
         onBlur={() => dispatch(SetFocus(false))}
-        onKeyDown={event => handleKeyDown(~dispatch, event)}
+        onKeyDown={handleKeyDown(~dispatch)}
         onKeyPress={
           event => {
             dispatch(UpdateText(event.character));
@@ -187,8 +178,7 @@ let make =
           }
         }>
         <View style=viewStyles>
-          <Text style=innerTextStyles text=content />
-          <View style=inputCursorStyles />
+          ...{hasPlaceholder ? inputComponents : List.rev(inputComponents)}
         </View>
       </Clickable>,
     );
