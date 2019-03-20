@@ -174,7 +174,7 @@ let make =
       <View
         style=Style.[
           width(2),
-          marginLeft(hasPlaceholder ? inputTextMargin : 2),
+          marginLeft(hasPlaceholder ? inputTextMargin : 0),
           height(inputFontSize),
           opacity(isFocused ? animatedOpacity : 0.0),
           backgroundColor(cursorColor),
@@ -190,7 +190,7 @@ let make =
           fontSize(inputFontSize),
           alignItems(`Center),
           justifyContent(`FlexStart),
-          marginLeft(hasPlaceholder || isEnd ? 2 : inputTextMargin),
+          marginLeft(hasPlaceholder || isEnd ? 0 : inputTextMargin),
         ]
       />;
 
