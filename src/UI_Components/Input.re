@@ -139,17 +139,20 @@ let make =
       render the cursor before the text if placeholder is present
       otherwise to the cursor after
      */
-    let inputComponents = [
+    let cursor =
       <View
         style=Style.[
+          width(2),
           marginLeft(hasPlaceholder ? inputTextMargin : 2),
           height(inputFontSize),
-          width(2),
           opacity(state.isFocused ? animatedOpacity : 0.0),
           backgroundColor(cursorColor),
         ]
-      />,
+      />;
+
+    let inputText =
       <Text
+        text=content
         style=Style.[
           color(hasPlaceholder ? placeholderColor : inputColor),
           fontFamily(inputFontFamily),
@@ -158,9 +161,7 @@ let make =
           justifyContent(`FlexStart),
           marginLeft(hasPlaceholder ? 2 : inputTextMargin),
         ]
-        text=content
-      />,
-    ];
+      />;
 
     (
       /*
@@ -178,7 +179,7 @@ let make =
           }
         }>
         <View style=viewStyles>
-          ...{hasPlaceholder ? inputComponents : List.rev(inputComponents)}
+          ...{hasPlaceholder ? [cursor, inputText] : [inputText, cursor]}
         </View>
       </Clickable>,
     );
