@@ -5,6 +5,7 @@ type state = {
   inputString: string,
   isFocused: bool,
   cursorPosition: int,
+<<<<<<< HEAD
 };
 
 type textUpdate = {
@@ -20,13 +21,20 @@ type changeEvent = {
   ctrlKey: bool,
   shiftKey: bool,
   superKey: bool,
+=======
+>>>>>>> allow cursor positioning with arrow keys
 };
 
 type action =
   | CursorPosition(int)
   | SetFocus(bool)
+<<<<<<< HEAD
   | UpdateText(textUpdate)
   | Backspace(textUpdate);
+=======
+  | UpdateText(string)
+  | Backspace;
+>>>>>>> allow cursor positioning with arrow keys
 
 let getStringParts = (index, str) =>
   switch (index) {
@@ -59,9 +67,19 @@ let addCharacter = (word, char, index) => {
   };
 };
 
+let getStringParts = (index, str) =>
+  switch (index) {
+  | 0 => ("", str)
+  | _ =>
+    let strBeginning = Str.string_before(str, index);
+    let strEnd = Str.string_after(str, index);
+    (strBeginning, strEnd);
+  };
+
 let reducer = (action, state) =>
   switch (action) {
   | SetFocus(isFocused) => {...state, isFocused}
+<<<<<<< HEAD
   | CursorPosition(pos) => {
       ...state,
       cursorPosition:
@@ -80,6 +98,37 @@ let defaultHeight = 50;
 let defaultWidth = 200;
 let inputTextMargin = 10;
 
+=======
+  | CursorPosition(pos) =>
+    let nextPosition = state.cursorPosition + pos;
+    let currentLength = String.length(state.inputString);
+    {
+      ...state,
+      cursorPosition:
+        nextPosition > currentLength ?
+          currentLength : nextPosition < 0 ? 0 : nextPosition,
+    };
+
+  | UpdateText(t) =>
+    let newString = addCharacter(state.inputString, t);
+    state.isFocused ?
+      {
+        cursorPosition: String.length(newString),
+        isFocused: true,
+        inputString: newString,
+      } :
+      state;
+  | Backspace =>
+    state.isFocused ?
+      {
+        let length = String.length(state.inputString);
+        length > 0 ?
+          {...state, inputString: removeCharacter(state.inputString)} : state;
+      } :
+      state
+  };
+
+>>>>>>> allow cursor positioning with arrow keys
 let defaultHeight = 50;
 let defaultWidth = 200;
 let inputTextMargin = 10;
