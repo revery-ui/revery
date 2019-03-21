@@ -45,8 +45,8 @@ let getStringParts = (index, str) =>
 let getSafeStringBounds = (str, cursorPosition, change) => {
   let nextPosition = cursorPosition + change;
   let currentLength = String.length(str);
-  nextPosition > currentLength
-    ? currentLength : nextPosition < 0 ? 0 : nextPosition;
+  nextPosition > currentLength ?
+    currentLength : nextPosition < 0 ? 0 : nextPosition;
 };
 
 let removeCharacter = (word, cursorPosition) => {
@@ -105,11 +105,11 @@ let reducer = (action, state) =>
     }
 
   | UpdateText({newString, cursorPosition}) =>
-    state.isFocused
-      ? {cursorPosition, isFocused: true, inputString: newString} : state
+    state.isFocused ?
+      {cursorPosition, isFocused: true, inputString: newString} : state
   | Backspace({newString, cursorPosition}) =>
-    state.isFocused
-      ? {...state, inputString: newString, cursorPosition} : state
+    state.isFocused ?
+      {...state, inputString: newString, cursorPosition} : state
   };
 
 let defaultHeight = 50;
@@ -291,8 +291,8 @@ let make =
         onKeyPress=handleKeyPress>
         <View style=viewStyles>
           ...{
-               hasPlaceholder
-                 ? [cursor, placeholderText] : [startText, cursor, endText]
+               hasPlaceholder ?
+                 [cursor, placeholderText] : [startText, cursor, endText]
              }
         </View>
       </Clickable>,
