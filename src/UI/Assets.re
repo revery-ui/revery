@@ -11,6 +11,7 @@ let solidShader = Lazy.make(() => SolidShader.create());
 let fontShader = Lazy.make(() => FontShader.create());
 let gradientShader = Lazy.make(() => GradientShader.create());
 let textureShader = Lazy.make(() => TextureShader.create());
+let borderRadiusShader = Lazy.make(() => BorderRadiusShader.create())
 
 let _createQuad = ((minX, minY, maxX, maxY)) =>
   Geometry.Quad.create(minX, minY, maxX, maxY);
