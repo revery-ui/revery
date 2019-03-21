@@ -149,18 +149,22 @@ let make =
         dispatch(CursorPosition(1));
       | Key.KEY_BACKSPACE =>
         dispatch(CursorPosition(-1));
-        let update = removeCharacter(inputString, cursorPosition);
-        dispatch(Backspace(update));
-        onKeyDown(event);
-        onChange({
-          value: update.newString,
-          character: Key.toString(event.key),
-          key: event.key,
-          altKey: event.altKey,
-          ctrlKey: event.ctrlKey,
-          shiftKey: event.shiftKey,
-          superKey: event.superKey,
-        });
+        removeCharacter(inputString, cursorPosition)
+        |> (
+          update => {
+            dispatch(Backspace(update));
+            onKeyDown(event);
+            onChange({
+              value: update.newString,
+              character: Key.toString(event.key),
+              key: event.key,
+              altKey: event.altKey,
+              ctrlKey: event.ctrlKey,
+              shiftKey: event.shiftKey,
+              superKey: event.superKey,
+            });
+          }
+        );
       | Key.KEY_ESCAPE =>
         onKeyDown(event);
         Focus.loseFocus();
