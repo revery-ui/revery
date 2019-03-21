@@ -5,6 +5,8 @@ type state = {
   inputString: string,
   isFocused: bool,
   cursorPosition: int,
+  highlightedText: string,
+  highlightStart: option(int),
 };
 
 type textUpdate = {
@@ -30,6 +32,7 @@ type textUpdate = {
 type action =
   | CursorPosition(int)
   | SetFocus(bool)
+  | HighlightText((option(int), string))
   | UpdateText(textUpdate)
   | Backspace(textUpdate);
 
@@ -95,6 +98,39 @@ let addCharacter = (word, char, index) => {
   };
 };
 
+type direction =
+  | Forward
+  | Backward;
+
+let getHighlightedText =
+    (highlightStart, cursorPosition, inputString, ~direction) =>
+  try (
+    switch (highlightStart, direction) {
+    | (Some(start), Backward) =>
+      String.sub(inputString, cursorPosition - 1, start - cursorPosition)
+    | (Some(start), Forward) =>
+      String.sub(inputString, start - cursorPosition, cursorPosition + 1)
+    | (None, Forward) =>
+      String.sub(inputString, cursorPosition, cursorPosition + 1)
+    | (None, Backward) =>
+      String.sub(inputString, cursorPosition, cursorPosition - 1)
+    }
+  ) {
+  | Invalid_argument(s) =>
+    print_endline("Failed because " ++ s);
+    "";
+  };
+
+/**
+   We check if there is an existing start position for the highlighting
+   if there is we do not update, if there isn't then we do
+ */
+let updateHighlightStart = (prevStart: option(int), start: option(int)) =>
+  switch (prevStart) {
+  | Some(v) => Some(v)
+  | None => start
+  };
+
 let reducer = (action, state) =>
   switch (action) {
   | SetFocus(isFocused) => {...state, isFocused}
@@ -103,10 +139,16 @@ let reducer = (action, state) =>
       cursorPosition:
         getSafeStringBounds(state.inputString, state.cursorPosition, pos),
     }
-
+  | HighlightText((highlightStart, highlightedText)) => {
+      ...state,
+      highlightStart:
+        updateHighlightStart(state.highlightStart, highlightStart),
+      highlightedText,
+    }
   | UpdateText({newString, cursorPosition}) =>
     state.isFocused ?
-      {cursorPosition, isFocused: true, inputString: newString} : state
+      {...state, cursorPosition, isFocused: true, inputString: newString} :
+      state
   | Backspace({newString, cursorPosition}) =>
     state.isFocused ?
       {...state, inputString: newString, cursorPosition} : state
@@ -146,9 +188,21 @@ let make =
       (),
     ) =>
   component(slots => {
-    let ({isFocused, cursorPosition, inputString}, dispatch, slots) =
+    let (
+      {
+        highlightStart,
+        highlightedText,
+        isFocused,
+        cursorPosition,
+        inputString,
+      },
+      dispatch,
+      slots,
+    ) =
       React.Hooks.reducer(
         ~initialState={
+          highlightStart: None,
+          highlightedText: "",
           inputString: valueParam,
           cursorPosition: String.length(valueParam),
           isFocused: false,
@@ -172,14 +226,36 @@ let make =
     };
 
     let handleKeyDown = (event: NodeEvents.keyEventParams) =>
-      switch (event.key) {
-      | Key.KEY_LEFT =>
+      switch (event) {
+      | {key: Key.KEY_LEFT, shiftKey: true, _} =>
         onKeyDown(event);
         dispatch(CursorPosition(-1));
-      | Key.KEY_RIGHT =>
+        let highlighted =
+          getHighlightedText(
+            highlightStart,
+            cursorPosition,
+            inputString,
+            ~direction=Backward,
+          );
+        dispatch(HighlightText((Some(cursorPosition), highlighted)));
+      | {key: Key.KEY_RIGHT, shiftKey: true, _} =>
         onKeyDown(event);
         dispatch(CursorPosition(1));
-      | Key.KEY_BACKSPACE =>
+        let highlighted =
+          getHighlightedText(
+            highlightStart,
+            cursorPosition,
+            inputString,
+            ~direction=Forward,
+          );
+        dispatch(HighlightText((Some(cursorPosition), highlighted)));
+      | {key: Key.KEY_LEFT, _} =>
+        onKeyDown(event);
+        dispatch(CursorPosition(-1));
+      | {key: Key.KEY_RIGHT, _} =>
+        onKeyDown(event);
+        dispatch(CursorPosition(1));
+      | {key: Key.KEY_BACKSPACE, _} =>
         dispatch(CursorPosition(-1));
         removeCharacter(inputString, cursorPosition)
         |> (
@@ -197,7 +273,7 @@ let make =
             });
           }
         );
-      | Key.KEY_ESCAPE =>
+      | {key: Key.KEY_ESCAPE, _} =>
         onKeyDown(event);
         Focus.loseFocus();
 
@@ -218,6 +294,7 @@ let make =
       );
 
     let hasPlaceholder = String.length(inputString) < 1;
+    print_endline("highlightedText: " ++ highlightedText);
 
     /*
        computed styles
@@ -244,6 +321,16 @@ let make =
     let inputFontFamily =
       Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
+    let inputTextStyles = isEnd =>
+      Style.[
+        color(hasPlaceholder ? placeholderColor : inputColor),
+        fontFamily(inputFontFamily),
+        fontSize(inputFontSize),
+        alignItems(`Center),
+        justifyContent(`FlexStart),
+        marginLeft(hasPlaceholder || isEnd ? 0 : inputTextMargin),
+      ];
+
     /**
       We place these in a list so we change the order later to
       render the cursor before the text if placeholder is present
@@ -252,7 +339,7 @@ let make =
     let cursor =
       <View
         style=Style.[
-          width(2),
+          width(1),
           marginLeft(hasPlaceholder ? inputTextMargin : 0),
           height(inputFontSize),
           opacity(isFocused ? animatedOpacity : 0.0),
@@ -261,22 +348,14 @@ let make =
       />;
 
     let makeTextComponent = (content, ~isEnd) =>
-      <Text
-        text=content
-        style=Style.[
-          color(hasPlaceholder ? placeholderColor : inputColor),
-          fontFamily(inputFontFamily),
-          fontSize(inputFontSize),
-          alignItems(`Center),
-          justifyContent(`FlexStart),
-          marginLeft(hasPlaceholder || isEnd ? 0 : inputTextMargin),
-        ]
-      />;
+      <Text text=content style={inputTextStyles(isEnd)} />;
 
     let (startStr, endStr) = getStringParts(cursorPosition, inputString);
     let placeholderText = makeTextComponent(placeholder, ~isEnd=false);
     let startText = makeTextComponent(startStr, ~isEnd=false);
     let endText = makeTextComponent(endStr, ~isEnd=true);
+    print_endline("HighlightText ==============" ++ highlightedText);
+    /* let highlightedText = makeTextComponent(highlightedText, ~isEnd=false); */
 
     (
       /*
