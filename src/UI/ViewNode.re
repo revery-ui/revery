@@ -13,7 +13,7 @@ open Style.Border;
 open Style.BoxShadow;
 
 let renderBorders =
-    (~style, ~width, ~height, ~opacity, ~solidShader, ~m, ~world) => {
+    (~style, ~width, ~height, ~opacity, ~shader, ~m, ~world) => {
   let borderStyle = (side, axis, border) =>
     Layout.Encoding.(
       if (side.width !== cssUndefined) {
@@ -37,7 +37,6 @@ let renderBorders =
     borderStyle(style.borderBottom, style.borderVertical, style.border);
 
   let borderRadius = style.borderRadius;
-  let borderRadiusShader = Assets.borderRadiusShader();
       
   let resolution = Vec2.create(
     width,
@@ -53,20 +52,19 @@ let renderBorders =
   let rbc = Color.multiplyAlpha(opacity, rightBorderColor);
   let bbc = Color.multiplyAlpha(opacity, bottomBorderColor);
   
-  let mainShader = (borderRadius == 0.) ? solidShader : borderRadiusShader;
-  Shaders.CompiledShader.use(mainShader);
-  
-  Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uProjection", m);
-  Shaders.CompiledShader.setUniformMatrix4fv(solidShader, "uWorld", world);
-  Shaders.CompiledShader.setUniformMatrix4fv(borderRadiusShader, "uProjection", m);
-  Shaders.CompiledShader.setUniformMatrix4fv(borderRadiusShader, "uWorld", world);
-  Shaders.CompiledShader.setUniform2fv(borderRadiusShader, "uResolution", resolution);
-  Shaders.CompiledShader.setUniform1f(borderRadiusShader, "uBorderRadius", borderRadius);
+  Shaders.CompiledShader.use(shader);
+
+  Shaders.CompiledShader.setUniformMatrix4fv(shader, "uProjection", m);
+  Shaders.CompiledShader.setUniformMatrix4fv(shader, "uWorld", world);
+  if (borderRadius != 0.) {
+    Shaders.CompiledShader.setUniform2fv(shader, "uResolution", resolution);
+    Shaders.CompiledShader.setUniform1f(shader, "uBorderRadius", borderRadius);
+  };
 
 
   if (topBorderWidth != 0. && tbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
-      mainShader,
+      shader,
       "uColor",
       Color.toVec4(tbc),
     );
@@ -78,7 +76,7 @@ let renderBorders =
         ~maxY=topBorderWidth,
         (),
       );
-    Geometry.draw(topBorderQuad, mainShader);
+    Geometry.draw(topBorderQuad, shader);
     if (leftBorderWidth != 0.) {
       let topLeftTri =
         Assets.tri(
@@ -89,7 +87,7 @@ let renderBorders =
           0.,
           0.,
         );
-      Geometry.draw(topLeftTri, mainShader);
+      Geometry.draw(topLeftTri, shader);
     };
     if (rightBorderWidth != 0.) {
       let topRightTri =
@@ -101,13 +99,13 @@ let renderBorders =
           leftBorderWidth +. width +. rightBorderWidth,
           0.,
         );
-      Geometry.draw(topRightTri, mainShader);
+      Geometry.draw(topRightTri, shader);
     };
   };
 
   if (leftBorderWidth != 0. && lbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
-      mainShader,
+      shader,
       "uColor",
       Color.toVec4(lbc),
     );
@@ -119,7 +117,7 @@ let renderBorders =
         ~maxY=topBorderWidth +. height,
         (),
       );
-    Geometry.draw(leftBorderQuad, mainShader);
+    Geometry.draw(leftBorderQuad, shader);
     if (topBorderWidth != 0.) {
       let leftTopTri =
         Assets.tri(
@@ -130,7 +128,7 @@ let renderBorders =
           0.,
           0.,
         );
-      Geometry.draw(leftTopTri, borderRadiusShader);
+      Geometry.draw(leftTopTri, shader);
     };
     if (bottomBorderWidth != 0.) {
       let leftBottomTri =
@@ -142,13 +140,13 @@ let renderBorders =
           0.,
           topBorderWidth +. height +. bottomBorderWidth,
         );
-      Geometry.draw(leftBottomTri, mainShader);
+      Geometry.draw(leftBottomTri, shader);
     };
   };
 
   if (rightBorderWidth != 0. && rbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
-      mainShader,
+      shader,
       "uColor",
       Color.toVec4(rbc),
     );
@@ -160,7 +158,7 @@ let renderBorders =
         ~maxY=topBorderWidth +. height,
         (),
       );
-    Geometry.draw(rightBorderQuad, mainShader);
+    Geometry.draw(rightBorderQuad, shader);
     if (topBorderWidth != 0.) {
       let rightTopTri =
         Assets.tri(
@@ -171,7 +169,7 @@ let renderBorders =
           leftBorderWidth +. width +. rightBorderWidth,
           0.,
         );
-      Geometry.draw(rightTopTri, mainShader);
+      Geometry.draw(rightTopTri, shader);
     };
     if (bottomBorderWidth != 0.) {
       let rightBottomTri =
@@ -183,13 +181,13 @@ let renderBorders =
           leftBorderWidth +. width +. rightBorderWidth,
           topBorderWidth +. height +. bottomBorderWidth,
         );
-      Geometry.draw(rightBottomTri, mainShader);
+      Geometry.draw(rightBottomTri, shader);
     };
   };
 
   if (bottomBorderWidth != 0. && bbc.a > 0.001) {
     Shaders.CompiledShader.setUniform4fv(
-      mainShader,
+      shader,
       "uColor",
       Color.toVec4(bbc),
     );
@@ -201,7 +199,7 @@ let renderBorders =
         ~maxY=topBorderWidth +. height +. bottomBorderWidth,
         (),
       );
-    Geometry.draw(bottomBorderQuad, mainShader);
+    Geometry.draw(bottomBorderQuad, shader);
     if (leftBorderWidth != 0.) {
       let bottomLeftTri =
         Assets.tri(
@@ -212,7 +210,7 @@ let renderBorders =
           0.,
           topBorderWidth +. height +. bottomBorderWidth,
         );
-      Geometry.draw(bottomLeftTri, mainShader);
+      Geometry.draw(bottomLeftTri, shader);
     };
     if (rightBorderWidth != 0.) {
       let bottomRightTri =
@@ -224,7 +222,7 @@ let renderBorders =
           leftBorderWidth +. width +. rightBorderWidth,
           topBorderWidth +. height +. bottomBorderWidth,
         );
-      Geometry.draw(bottomRightTri, mainShader);
+      Geometry.draw(bottomRightTri, shader);
     };
   };
 
@@ -297,13 +295,13 @@ class viewNode (()) = {
   pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
     switch (pass) {
     | AlphaPass(m) =>
-      let solidShader = Assets.solidShader();
       let dimensions = _this#measurements();
       let width = float_of_int(dimensions.width);
       let height = float_of_int(dimensions.height);
 
       let style = _super#getStyle();
       let opacity = style.opacity *. parentContext.opacity;
+      let shader = (style.borderRadius == 0.) ? Assets.solidShader() : Assets.borderRadiusShader();
 
       let world = _this#getWorldTransform();
 
@@ -313,7 +311,7 @@ class viewNode (()) = {
           ~width,
           ~height,
           ~opacity,
-          ~solidShader,
+          ~shader,
           ~m,
           ~world,
         );
@@ -330,25 +328,25 @@ class viewNode (()) = {
 
       /* Only render if _not_ transparent */
       if (color.a > 0.001) {
-        Shaders.CompiledShader.use(solidShader);
+        Shaders.CompiledShader.use(shader);
         Shaders.CompiledShader.setUniformMatrix4fv(
-          solidShader,
+          shader,
           "uProjection",
           m,
         );
         Shaders.CompiledShader.setUniformMatrix4fv(
-          solidShader,
+          shader,
           "uWorld",
           world,
         );
 
         Shaders.CompiledShader.setUniform4fv(
-          solidShader,
+          shader,
           "uColor",
           Color.toVec4(color),
         );
 
-        Geometry.draw(mainQuad, solidShader);
+        Geometry.draw(mainQuad, shader);
       };
     | _ => ()
     };
