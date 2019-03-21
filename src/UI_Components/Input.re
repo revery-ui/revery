@@ -60,10 +60,6 @@ let addCharacter = (word, char, index) => {
 };
 
 let reducer = (action, state) =>
-  /*
-     TODO: Handle Cursor position changing via keyboard input e.g. arrow keys
-     potentially draw the cursor Inside the text element and render the text around the cursor
-   */
   switch (action) {
   | SetFocus(isFocused) => {...state, isFocused}
   | CursorPosition(pos) => {
