@@ -62,23 +62,6 @@ let make =
         slots,
       );
 
-    let slots =
-      React.Hooks.effect(
-        If(
-          (oldValueAsProps, newValueAsProp) =>
-            switch (oldValueAsProps, newValueAsProp) {
-            | (None, Some(_)) => true
-            | _ => false
-            },
-          valueAsProp,
-        ),
-        () => {
-          dispatch(SetValue(""));
-          Some(() => ());
-        },
-        slots,
-      );
-
     let valueToDisplay =
       switch (valueAsProp) {
       | Some(v) => v
