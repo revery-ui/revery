@@ -110,6 +110,7 @@ let make =
       ~cursorColor,
       ~placeholderColor,
       ~onChange,
+      ~onKeyDown,
       (),
     ) =>
   component(slots => {
@@ -140,12 +141,17 @@ let make =
 
     let handleKeyDown = (event: NodeEvents.keyEventParams) =>
       switch (event.key) {
-      | Key.KEY_LEFT => dispatch(CursorPosition(-1))
-      | Key.KEY_RIGHT => dispatch(CursorPosition(1))
+      | Key.KEY_LEFT =>
+        onKeyDown(event);
+        dispatch(CursorPosition(-1));
+      | Key.KEY_RIGHT =>
+        onKeyDown(event);
+        dispatch(CursorPosition(1));
       | Key.KEY_BACKSPACE =>
         dispatch(CursorPosition(-1));
         let update = removeCharacter(inputString, cursorPosition);
         dispatch(Backspace(update));
+        onKeyDown(event);
         onChange({
           value: update.newString,
           character: Key.toString(event.key),
@@ -155,7 +161,11 @@ let make =
           shiftKey: event.shiftKey,
           superKey: event.superKey,
         });
-      | _ => ()
+      | Key.KEY_ESCAPE =>
+        onKeyDown(event);
+        Focus.loseFocus();
+
+      | _ => onKeyDown(event)
       };
 
     let (animatedOpacity, slots) =
@@ -262,6 +272,7 @@ let createElement =
       ~autofocus=false,
       ~value="",
       ~placeholder="",
+      ~onKeyDown=_ => (),
       ~onChange=_ => (),
       (),
     ) =>
@@ -272,6 +283,7 @@ let createElement =
     ~autofocus,
     ~cursorColor,
     ~placeholderColor,
+    ~onKeyDown,
     ~onChange,
     (),
   );
