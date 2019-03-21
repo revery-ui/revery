@@ -110,10 +110,8 @@ let getHighlightedText =
       String.sub(inputString, cursorPosition - 1, start - cursorPosition)
     | (Some(start), Forward) =>
       String.sub(inputString, start - cursorPosition, cursorPosition + 1)
-    | (None, Forward) =>
-      String.sub(inputString, cursorPosition, cursorPosition + 1)
-    | (None, Backward) =>
-      String.sub(inputString, cursorPosition, cursorPosition - 1)
+    | (None, Forward) => String.sub(inputString, cursorPosition, 1)
+    | (None, Backward) => String.sub(inputString, cursorPosition - 1, 1)
     }
   ) {
   | Invalid_argument(s) =>
@@ -147,11 +145,23 @@ let reducer = (action, state) =>
     }
   | UpdateText({newString, cursorPosition}) =>
     state.isFocused ?
-      {...state, cursorPosition, isFocused: true, inputString: newString} :
+      {
+        ...state,
+        highlightStart: None,
+        cursorPosition,
+        isFocused: true,
+        inputString: newString,
+      } :
       state
   | Backspace({newString, cursorPosition}) =>
     state.isFocused ?
-      {...state, inputString: newString, cursorPosition} : state
+      {
+        ...state,
+        highlightStart: None,
+        inputString: newString,
+        cursorPosition,
+      } :
+      state
   };
 
 let defaultHeight = 50;
@@ -339,7 +349,7 @@ let make =
     let cursor =
       <View
         style=Style.[
-          width(1),
+          width(2),
           marginLeft(hasPlaceholder ? inputTextMargin : 0),
           height(inputFontSize),
           opacity(isFocused ? animatedOpacity : 0.0),
