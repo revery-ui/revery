@@ -1,17 +1,29 @@
 open Revery_UI;
 open Revery_Core;
 
+type direction =
+  | NoHighlight
+  | Forward
+  | Backward;
+
 type state = {
   inputString: string,
   isFocused: bool,
   cursorPosition: int,
   highlightedText: string,
   highlightStart: option(int),
+  highlightDirection: direction,
 };
 
 type textUpdate = {
   newString: string,
   cursorPosition: int,
+};
+
+type textHighlight = {
+  direction,
+  start: option(int),
+  text: string,
 };
 
 type changeEvent = {
@@ -32,7 +44,7 @@ type textUpdate = {
 type action =
   | CursorPosition(int)
   | SetFocus(bool)
-  | HighlightText((option(int), string))
+  | HighlightText(textHighlight)
   | UpdateText(textUpdate)
   | Backspace(textUpdate);
 
@@ -98,10 +110,6 @@ let addCharacter = (word, char, index) => {
   };
 };
 
-type direction =
-  | Forward
-  | Backward;
-
 let getHighlightedText =
     (highlightStart, cursorPosition, inputString, ~direction) =>
   try (
@@ -112,6 +120,7 @@ let getHighlightedText =
       String.sub(inputString, start - cursorPosition, cursorPosition + 1)
     | (None, Forward) => String.sub(inputString, cursorPosition, 1)
     | (None, Backward) => String.sub(inputString, cursorPosition - 1, 1)
+    | (_, NoHighlight) => ""
     }
   ) {
   | Invalid_argument(s) =>
@@ -137,16 +146,17 @@ let reducer = (action, state) =>
       cursorPosition:
         getSafeStringBounds(state.inputString, state.cursorPosition, pos),
     }
-  | HighlightText((highlightStart, highlightedText)) => {
+  | HighlightText({text, start, direction}) => {
       ...state,
-      highlightStart:
-        updateHighlightStart(state.highlightStart, highlightStart),
-      highlightedText,
+      highlightDirection: direction,
+      highlightStart: updateHighlightStart(state.highlightStart, start),
+      highlightedText: text,
     }
   | UpdateText({newString, cursorPosition}) =>
     state.isFocused ?
       {
-        ...state,
+        highlightDirection: NoHighlight,
+        highlightedText: "",
         highlightStart: None,
         cursorPosition,
         isFocused: true,
@@ -200,6 +210,7 @@ let make =
   component(slots => {
     let (
       {
+        highlightDirection,
         highlightStart,
         highlightedText,
         isFocused,
@@ -211,6 +222,7 @@ let make =
     ) =
       React.Hooks.reducer(
         ~initialState={
+          highlightDirection: NoHighlight,
           highlightStart: None,
           highlightedText: "",
           inputString: valueParam,
@@ -247,7 +259,13 @@ let make =
             inputString,
             ~direction=Backward,
           );
-        dispatch(HighlightText((Some(cursorPosition), highlighted)));
+        dispatch(
+          HighlightText({
+            start: Some(cursorPosition),
+            text: highlighted,
+            direction: Backward,
+          }),
+        );
       | {key: Key.KEY_RIGHT, shiftKey: true, _} =>
         onKeyDown(event);
         dispatch(CursorPosition(1));
@@ -258,7 +276,13 @@ let make =
             inputString,
             ~direction=Forward,
           );
-        dispatch(HighlightText((Some(cursorPosition), highlighted)));
+        dispatch(
+          HighlightText({
+            start: Some(cursorPosition),
+            text: highlighted,
+            direction: Forward,
+          }),
+        );
       | {key: Key.KEY_LEFT, _} =>
         onKeyDown(event);
         dispatch(CursorPosition(-1));
@@ -304,7 +328,6 @@ let make =
       );
 
     let hasPlaceholder = String.length(inputString) < 1;
-    print_endline("highlightedText: " ++ highlightedText);
 
     /*
        computed styles
@@ -331,14 +354,14 @@ let make =
     let inputFontFamily =
       Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
-    let inputTextStyles = isEnd =>
+    let inputTextStyles = hasMargin =>
       Style.[
         color(hasPlaceholder ? placeholderColor : inputColor),
         fontFamily(inputFontFamily),
         fontSize(inputFontSize),
         alignItems(`Center),
         justifyContent(`FlexStart),
-        marginLeft(hasPlaceholder || isEnd ? 0 : inputTextMargin),
+        marginLeft(hasPlaceholder || hasMargin ? 0 : inputTextMargin),
       ];
 
     /**
@@ -357,15 +380,37 @@ let make =
         ]
       />;
 
-    let makeTextComponent = (content, ~isEnd) =>
-      <Text text=content style={inputTextStyles(isEnd)} />;
+    let makeTextComponent = (content, ~isEnd=false, ~isSelected=false, ()) => {
+      let plainStyles = inputTextStyles(isEnd);
+      let styles =
+        isSelected ?
+          Style.[backgroundColor(Colors.grey), margin(0), ...plainStyles] :
+          plainStyles;
+      <Text text=content style=styles />;
+    };
 
     let (startStr, endStr) = getStringParts(cursorPosition, inputString);
-    let placeholderText = makeTextComponent(placeholder, ~isEnd=false);
-    let startText = makeTextComponent(startStr, ~isEnd=false);
-    let endText = makeTextComponent(endStr, ~isEnd=true);
-    print_endline("HighlightText ==============" ++ highlightedText);
-    /* let highlightedText = makeTextComponent(highlightedText, ~isEnd=false); */
+
+    let (s, e) =
+      switch (highlightStart, highlightDirection) {
+      | (None, _) => (startStr, endStr)
+      | (_, NoHighlight) => (startStr, endStr)
+      | (Some(strt), Backward) =>
+        strt
+        - String.length(inputString)
+        |> (offset => (startStr, Str.string_before(endStr, offset)))
+      | (Some(strt), Forward) => (
+          Str.string_before(startStr, strt),
+          endStr,
+        )
+      };
+
+    let placeholderText = makeTextComponent(placeholder, ());
+    let startText = makeTextComponent(s, ());
+    let endText = makeTextComponent(e, ~isEnd=true, ());
+    let highlightedText =
+      makeTextComponent(highlightedText, ~isEnd=true, ~isSelected=true, ());
+    /* print_endline("HighlightText ==============" ++ highlightedText); */
 
     (
       /*
@@ -380,8 +425,27 @@ let make =
         onKeyPress=handleKeyPress>
         <View style=viewStyles>
           ...{
-               hasPlaceholder ?
-                 [cursor, placeholderText] : [startText, cursor, endText]
+               switch (hasPlaceholder, highlightDirection) {
+               | (true, _) => [cursor, placeholderText]
+               | (false, Backward) => [
+                   startText,
+                   cursor,
+                   highlightedText,
+                   endText,
+                 ]
+               | (false, Forward) => [
+                   startText,
+                   highlightedText,
+                   cursor,
+                   endText,
+                 ]
+               | (false, NoHighlight) => [
+                   startText,
+                   highlightedText,
+                   cursor,
+                   endText,
+                 ]
+               }
              }
         </View>
       </Clickable>,
