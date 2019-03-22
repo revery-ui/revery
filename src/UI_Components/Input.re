@@ -456,7 +456,7 @@ let make =
                    cursor,
                    endText,
                  ]
-               | (false, Static) => [startText, highlighted, cursor, endText]
+               | (false, Static) => [startText, cursor, endText]
                }
              }
         </View>
