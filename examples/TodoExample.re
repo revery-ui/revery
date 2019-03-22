@@ -35,7 +35,7 @@ type action =
   | UpdateInputTextValue(string)
   | ChangeTaskState(int, bool);
 
-let reducer = (action: action, state: state) => {
+let reducer = (action: action, state: state) =>
   switch (action) {
   | AddTodo => {
       ...state,
@@ -55,7 +55,6 @@ let reducer = (action: action, state: state) => {
     {...state, todos};
   | ChangeFilter(filter) => {...state, filter}
   };
-};
 
 module FilterSection = {
   let component = React.component("FilterSection");
@@ -137,7 +136,7 @@ module Example = {
           hooks,
         );
 
-      let renderTodo = task => {
+      let renderTodo = task =>
         <View style=Style.[flexDirection(`Row)]>
           <Checkbox
             checked={task.isDone}
@@ -153,7 +152,6 @@ module Example = {
             text={task.task}
           />
         </View>;
-      };
 
       let filteredList =
         List.filter(
@@ -189,7 +187,9 @@ module Example = {
             <Input
               style=Style.[width(400)]
               placeholder="Add your Todo here"
-              onChange={(~value) => dispatch(UpdateInputTextValue(value))}
+              onChange={({value, _}) =>
+                dispatch(UpdateInputTextValue(value))
+              }
             />
             <Button
               width=50

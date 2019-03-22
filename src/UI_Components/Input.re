@@ -2,90 +2,170 @@ open Revery_UI;
 open Revery_Core;
 
 type state = {
-  value: string,
+  inputString: string,
   isFocused: bool,
+  cursorPosition: int,
+};
+
+type textUpdate = {
+  newString: string,
+  cursorPosition: int,
+};
+
+type changeEvent = {
+  value: string,
+  character: string,
+  key: Key.t,
+  altKey: bool,
+  ctrlKey: bool,
+  shiftKey: bool,
+  superKey: bool,
 };
 
 type action =
+  | CursorPosition(int)
   | SetFocus(bool)
-  | UpdateText(string)
-  | Backspace
-  | ClearWord;
+  | UpdateText(textUpdate)
+  | Backspace(textUpdate);
 
-let removeCharacter = word =>
-  String.length(word)
-  |> (length => length > 0 ? String.sub(word, 0, length - 1) : word);
+let getStringParts = (index, str) =>
+  switch (index) {
+  | 0 => ("", str)
+  | _ =>
+    let strBeginning = Str.string_before(str, index);
+    let strEnd = Str.string_after(str, index);
+    (strBeginning, strEnd);
+  };
 
-let addCharacter = (word, char) => word ++ char;
+let getSafeStringBounds = (str, cursorPosition, change) => {
+  let nextPosition = cursorPosition + change;
+  let currentLength = String.length(str);
+  nextPosition > currentLength
+    ? currentLength : nextPosition < 0 ? 0 : nextPosition;
+};
+
+let removeCharacter = (word, cursorPosition) => {
+  let (startStr, endStr) = getStringParts(cursorPosition, word);
+  let nextPosition = getSafeStringBounds(startStr, cursorPosition, -1);
+  let newString = Str.string_before(startStr, nextPosition) ++ endStr;
+  {newString, cursorPosition: nextPosition};
+};
+
+let addCharacter = (word, char, index) => {
+  let (startStr, endStr) = getStringParts(index, word);
+  {
+    newString: startStr ++ char ++ endStr,
+    cursorPosition: String.length(startStr) + 1,
+  };
+};
 
 let reducer = (action, state) =>
-  /*
-     TODO: Handle Cursor position changing via keyboard input e.g. arrow keys
-     potentially draw the cursor Inside the text element and render the text around the cursor
-   */
   switch (action) {
   | SetFocus(isFocused) => {...state, isFocused}
-  | UpdateText(t) =>
+  | CursorPosition(pos) => {
+      ...state,
+      cursorPosition:
+        getSafeStringBounds(state.inputString, state.cursorPosition, pos),
+    }
+
+  | UpdateText({newString, cursorPosition}) =>
     state.isFocused
-      ? {isFocused: true, value: addCharacter(state.value, t)} : state
-  | Backspace =>
+      ? {cursorPosition, isFocused: true, inputString: newString} : state
+  | Backspace({newString, cursorPosition}) =>
     state.isFocused
-      ? {
-        let length = String.length(state.value);
-        length > 0 ? {...state, value: removeCharacter(state.value)} : state;
-      }
-      : state
-  | ClearWord => {...state, value: ""}
+      ? {...state, inputString: newString, cursorPosition} : state
   };
 
-let handleKeyDown = (~dispatch, event: Events.keyEvent) =>
-  switch (event.key) {
-  | Key.KEY_BACKSPACE => dispatch(Backspace)
-  | _ => ()
-  };
-
-let noop = (~value as _value) => ();
+let defaultHeight = 50;
+let defaultWidth = 200;
+let inputTextMargin = 10;
 
 let defaultStyles =
   Style.[
     color(Colors.black),
-    width(200),
-    height(50),
+    width(defaultWidth),
+    height(defaultHeight),
     border(
       /*
          The default border width should be 5% of the full input height
        */
-      ~width=float_of_int(50) *. 0.05 |> int_of_float,
+      ~width=float_of_int(defaultHeight) *. 0.05 |> int_of_float,
       ~color=Colors.black,
     ),
     backgroundColor(Colors.transparentWhite),
   ];
 
 let component = React.component("Input");
+
 let make =
     (
       ~style,
+      ~autofocus,
       ~value as valueParam,
       ~placeholder,
       ~cursorColor,
       ~placeholderColor,
       ~onChange,
+      ~onKeyDown,
       (),
     ) =>
   component(slots => {
-    let (state, dispatch, slots) =
+    let ({isFocused, cursorPosition, inputString}, dispatch, slots) =
       React.Hooks.reducer(
-        ~initialState={value: valueParam, isFocused: false},
+        ~initialState={
+          inputString: valueParam,
+          cursorPosition: String.length(valueParam),
+          isFocused: false,
+        },
         reducer,
         slots,
       );
 
-    let handleKeyDown = (~dispatch, event: NodeEvents.keyEventParams) =>
+    let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
+      let update = addCharacter(inputString, event.character, cursorPosition);
+      dispatch(UpdateText(update));
+      onChange({
+        value: update.newString,
+        key: Key.fromString(event.character),
+        character: event.character,
+        altKey: false,
+        ctrlKey: false,
+        shiftKey: false,
+        superKey: false,
+      });
+    };
+
+    let handleKeyDown = (event: NodeEvents.keyEventParams) =>
       switch (event.key) {
+      | Key.KEY_LEFT =>
+        onKeyDown(event);
+        dispatch(CursorPosition(-1));
+      | Key.KEY_RIGHT =>
+        onKeyDown(event);
+        dispatch(CursorPosition(1));
       | Key.KEY_BACKSPACE =>
-        dispatch(Backspace);
-        onChange(~value=removeCharacter(state.value));
-      | _ => ()
+        dispatch(CursorPosition(-1));
+        removeCharacter(inputString, cursorPosition)
+        |> (
+          update => {
+            dispatch(Backspace(update));
+            onKeyDown(event);
+            onChange({
+              value: update.newString,
+              character: Key.toString(event.key),
+              key: event.key,
+              altKey: event.altKey,
+              ctrlKey: event.ctrlKey,
+              shiftKey: event.shiftKey,
+              superKey: event.superKey,
+            });
+          }
+        );
+      | Key.KEY_ESCAPE =>
+        onKeyDown(event);
+        Focus.loseFocus();
+
+      | _ => onKeyDown(event)
       };
 
     let (animatedOpacity, slots) =
@@ -101,9 +181,7 @@ let make =
         slots,
       );
 
-    let hasPlaceholder = String.length(state.value) < 1;
-
-    let content = hasPlaceholder ? placeholder : state.value;
+    let hasPlaceholder = String.length(inputString) < 1;
 
     /*
        computed styles
@@ -125,68 +203,61 @@ let make =
       );
 
     let viewStyles = Style.extractViewStyles(allStyles);
-
-    let inputHeight = Selector.select(style, Height, 24);
     let inputFontSize = Selector.select(style, FontSize, 18);
     let inputColor = Selector.select(style, Color, Colors.black);
     let inputFontFamily =
       Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
-    let innerTextStyles =
-      Style.[
-        color(hasPlaceholder ? placeholderColor : inputColor),
-        fontFamily(inputFontFamily),
-        fontSize(inputFontSize),
-        alignItems(`Center),
-        justifyContent(`FlexStart),
-        marginLeft(6),
-      ];
-
-    /*
-       TODO: this logic needs the equivalent of sizing an absolutely positioned
-       element in css i.e. should work in the same way
-       calculate the top padding needed to place the cursor centrally
+    /**
+      We place these in a list so we change the order later to
+      render the cursor before the text if placeholder is present
+      otherwise to the cursor after
      */
-    let positionTop =
-      inputHeight > inputFontSize
-        ? (inputHeight - inputFontSize) / 2 : inputFontSize;
+    let cursor =
+      <View
+        style=Style.[
+          width(2),
+          marginLeft(hasPlaceholder ? inputTextMargin : 0),
+          height(inputFontSize),
+          opacity(isFocused ? animatedOpacity : 0.0),
+          backgroundColor(cursorColor),
+        ]
+      />;
 
-    let inputCursorStyles =
-      Style.[
-        marginLeft(2),
-        height(inputFontSize),
-        width(2),
-        opacity(state.isFocused ? animatedOpacity : 0.0),
-        backgroundColor(cursorColor),
-      ]
-      |> (
-        initial =>
-          hasPlaceholder
-            ? Style.[
-                position(`Absolute),
-                top(positionTop),
-                left(5),
-                ...initial,
-              ]
-            : initial
-      );
+    let makeTextComponent = (content, ~isEnd) =>
+      <Text
+        text=content
+        style=Style.[
+          color(hasPlaceholder ? placeholderColor : inputColor),
+          fontFamily(inputFontFamily),
+          fontSize(inputFontSize),
+          alignItems(`Center),
+          justifyContent(`FlexStart),
+          marginLeft(hasPlaceholder || isEnd ? 0 : inputTextMargin),
+        ]
+      />;
 
-    /*
-       component
-     */
+    let (startStr, endStr) = getStringParts(cursorPosition, inputString);
+    let placeholderText = makeTextComponent(placeholder, ~isEnd=false);
+    let startText = makeTextComponent(startStr, ~isEnd=false);
+    let endText = makeTextComponent(endStr, ~isEnd=true);
+
     (
+      /*
+         component
+       */
       slots,
       <Clickable
         onFocus={() => dispatch(SetFocus(true))}
         onBlur={() => dispatch(SetFocus(false))}
-        onKeyDown={event => handleKeyDown(~dispatch, event)}
-        onKeyPress={event => {
-          dispatch(UpdateText(event.character));
-          onChange(~value=addCharacter(state.value, event.character));
-        }}>
+        componentRef={autofocus ? Focus.focus : ignore}
+        onKeyDown=handleKeyDown
+        onKeyPress=handleKeyPress>
         <View style=viewStyles>
-          <Text style=innerTextStyles text=content />
-          <View style=inputCursorStyles />
+          ...{
+               hasPlaceholder
+                 ? [cursor, placeholderText] : [startText, cursor, endText]
+             }
         </View>
       </Clickable>,
     );
@@ -198,17 +269,21 @@ let createElement =
       ~style=defaultStyles,
       ~placeholderColor=Colors.grey,
       ~cursorColor=Colors.black,
+      ~autofocus=false,
       ~value="",
       ~placeholder="",
-      ~onChange=noop,
+      ~onKeyDown=_ => (),
+      ~onChange=_ => (),
       (),
     ) =>
   make(
     ~value,
     ~style,
     ~placeholder,
+    ~autofocus,
     ~cursorColor,
     ~placeholderColor,
+    ~onKeyDown,
     ~onChange,
     (),
   );
