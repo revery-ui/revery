@@ -2,7 +2,7 @@ open Revery_UI;
 open Revery_Core;
 
 type direction =
-  | NoHighlight
+  | Static
   | Forward
   | Backward;
 
@@ -44,6 +44,7 @@ type textUpdate = {
 type action =
   | CursorPosition(int)
   | SetFocus(bool)
+  | ClearHighlight
   | HighlightText(textHighlight)
   | UpdateText(textUpdate)
   | Backspace(textUpdate);
@@ -110,17 +111,27 @@ let addCharacter = (word, char, index) => {
   };
 };
 
+/**
+   getHighlightedText
+
+   Return the section of a string which is being highlighted based on a start postion and the current posiition
+ */
 let getHighlightedText =
     (highlightStart, cursorPosition, inputString, ~direction) =>
   try (
     switch (highlightStart, direction) {
     | (Some(start), Backward) =>
-      String.sub(inputString, cursorPosition - 1, start - cursorPosition)
+      let str =
+        String.sub(inputString, cursorPosition - 1, start - cursorPosition);
+      str;
     | (Some(start), Forward) =>
       String.sub(inputString, start - cursorPosition, cursorPosition + 1)
     | (None, Forward) => String.sub(inputString, cursorPosition, 1)
-    | (None, Backward) => String.sub(inputString, cursorPosition - 1, 1)
-    | (_, NoHighlight) => ""
+    | (None, Backward) =>
+      let str = String.sub(inputString, cursorPosition - 1, 1);
+      print_endline("Backward Str === " ++ str);
+      str;
+    | (_, Static) => ""
     }
   ) {
   | Invalid_argument(s) =>
@@ -141,6 +152,12 @@ let updateHighlightStart = (prevStart: option(int), start: option(int)) =>
 let reducer = (action, state) =>
   switch (action) {
   | SetFocus(isFocused) => {...state, isFocused}
+  | ClearHighlight => {
+      ...state,
+      highlightDirection: Static,
+      highlightedText: "",
+      highlightStart: None,
+    }
   | CursorPosition(pos) => {
       ...state,
       cursorPosition:
@@ -154,14 +171,7 @@ let reducer = (action, state) =>
     }
   | UpdateText({newString, cursorPosition}) =>
     state.isFocused ?
-      {
-        highlightDirection: NoHighlight,
-        highlightedText: "",
-        highlightStart: None,
-        cursorPosition,
-        isFocused: true,
-        inputString: newString,
-      } :
+      {...state, cursorPosition, isFocused: true, inputString: newString} :
       state
   | Backspace({newString, cursorPosition}) =>
     state.isFocused ?
@@ -222,7 +232,7 @@ let make =
     ) =
       React.Hooks.reducer(
         ~initialState={
-          highlightDirection: NoHighlight,
+          highlightDirection: Static,
           highlightStart: None,
           highlightedText: "",
           inputString: valueParam,
@@ -247,47 +257,50 @@ let make =
       });
     };
 
+    let handleHighlighting = (event, direction) =>
+      (
+        switch (direction) {
+        | Forward => 1
+        | Backward => (-1)
+        | Static => 0
+        }
+      )
+      |> (
+        change => {
+          onKeyDown(event);
+          dispatch(CursorPosition(change));
+          getHighlightedText(
+            highlightStart,
+            cursorPosition,
+            inputString,
+            ~direction,
+          )
+          |> (
+            highlighted =>
+              dispatch(
+                HighlightText({
+                  start: Some(cursorPosition),
+                  text: highlighted,
+                  direction,
+                }),
+              )
+          );
+        }
+      );
+
     let handleKeyDown = (event: NodeEvents.keyEventParams) =>
       switch (event) {
       | {key: Key.KEY_LEFT, shiftKey: true, _} =>
-        onKeyDown(event);
-        dispatch(CursorPosition(-1));
-        let highlighted =
-          getHighlightedText(
-            highlightStart,
-            cursorPosition,
-            inputString,
-            ~direction=Backward,
-          );
-        dispatch(
-          HighlightText({
-            start: Some(cursorPosition),
-            text: highlighted,
-            direction: Backward,
-          }),
-        );
+        handleHighlighting(event, Backward)
       | {key: Key.KEY_RIGHT, shiftKey: true, _} =>
-        onKeyDown(event);
-        dispatch(CursorPosition(1));
-        let highlighted =
-          getHighlightedText(
-            highlightStart,
-            cursorPosition,
-            inputString,
-            ~direction=Forward,
-          );
-        dispatch(
-          HighlightText({
-            start: Some(cursorPosition),
-            text: highlighted,
-            direction: Forward,
-          }),
-        );
+        handleHighlighting(event, Forward)
       | {key: Key.KEY_LEFT, _} =>
         onKeyDown(event);
+        dispatch(ClearHighlight);
         dispatch(CursorPosition(-1));
       | {key: Key.KEY_RIGHT, _} =>
         onKeyDown(event);
+        dispatch(ClearHighlight);
         dispatch(CursorPosition(1));
       | {key: Key.KEY_BACKSPACE, _} =>
         dispatch(CursorPosition(-1));
@@ -309,6 +322,7 @@ let make =
         );
       | {key: Key.KEY_ESCAPE, _} =>
         onKeyDown(event);
+        dispatch(ClearHighlight);
         Focus.loseFocus();
 
       | _ => onKeyDown(event)
@@ -380,21 +394,15 @@ let make =
         ]
       />;
 
-    let makeTextComponent = (content, ~isEnd=false, ~isSelected=false, ()) => {
-      let plainStyles = inputTextStyles(isEnd);
-      let styles =
-        isSelected ?
-          Style.[backgroundColor(Colors.grey), margin(0), ...plainStyles] :
-          plainStyles;
-      <Text text=content style=styles />;
-    };
+    let makeTextComponent = (content, ~isEnd=false, ()) =>
+      <Text text=content style={inputTextStyles(isEnd)} />;
 
     let (startStr, endStr) = getStringParts(cursorPosition, inputString);
 
-    let (s, e) =
+    let (unselectedStart, unselectedEnd) =
       switch (highlightStart, highlightDirection) {
       | (None, _) => (startStr, endStr)
-      | (_, NoHighlight) => (startStr, endStr)
+      | (_, Static) => (startStr, endStr)
       | (Some(strt), Backward) =>
         strt
         - String.length(inputString)
@@ -406,10 +414,19 @@ let make =
       };
 
     let placeholderText = makeTextComponent(placeholder, ());
-    let startText = makeTextComponent(s, ());
-    let endText = makeTextComponent(e, ~isEnd=true, ());
-    let highlightedText =
-      makeTextComponent(highlightedText, ~isEnd=true, ~isSelected=true, ());
+    let startText = makeTextComponent(unselectedStart, ());
+    let endText = makeTextComponent(unselectedEnd, ~isEnd=true, ());
+
+    let highlighted =
+      <Text
+        text=highlightedText
+        style=Style.[
+          backgroundColor(Colors.grey),
+          margin(0),
+          ...inputTextStyles(true),
+        ]
+      />;
+
     /* print_endline("HighlightText ==============" ++ highlightedText); */
 
     (
@@ -430,21 +447,16 @@ let make =
                | (false, Backward) => [
                    startText,
                    cursor,
-                   highlightedText,
+                   highlighted,
                    endText,
                  ]
                | (false, Forward) => [
                    startText,
-                   highlightedText,
+                   highlighted,
                    cursor,
                    endText,
                  ]
-               | (false, NoHighlight) => [
-                   startText,
-                   highlightedText,
-                   cursor,
-                   endText,
-                 ]
+               | (false, Static) => [startText, highlighted, cursor, endText]
                }
              }
         </View>
