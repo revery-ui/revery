@@ -13,8 +13,8 @@ let execute: Js.t(Js.js_string) => Js.t(Js.js_string) = code => {
   Js.string(result);
 };
 
-let prefix = "module Test = { ";
-let postfix = "}; PlaygroundLib.setRenderFunction(Test.render);";
+let prefix = "module Test = {\n";
+let postfix = "\n}; PlaygroundLib.setRenderFunction(Test.render);";
 
 let execute2: Js.t(Js.js_string) => Js.t(Js.js_string) = code => {
   let code = prefix ++ Js.to_string(code) ++ postfix;

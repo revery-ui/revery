@@ -18,4 +18,13 @@
 
 </body>
 <script src="Playground.js"></script>
+    <script>
+
+        window.addEventListener("message", (msg) => {
+            if (msg.data.type === "editor.update") {
+                execute2(msg.data.payload);
+            }
+        });
+
+    </script>
 </html>

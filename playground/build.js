@@ -8,13 +8,13 @@ let path = require("path");
 let playgroundRoot = __dirname
 let playgroundSources = path.join(playgroundRoot, "src");
 let reveryRoot = path.join(playgroundRoot, "..");
-let playgroundBuild = path.join(playgroundRoot, "_build");
+let playgroundBuild = path.join(playgroundRoot, "_playground");
 
 let nodeModulesSrc = path.join(playgroundRoot, "node_modules", "monaco-editor");
 let nodeModulesDest = path.join(playgroundBuild, "monaco-editor");
 
-let playgroundExampleSources = path.join(playgroundRoot, "_build", "sources");
-let playgroundExampleHost = path.join(playgroundRoot, "_build", "host");
+let playgroundExampleSources = path.join(playgroundBuild, "sources");
+let playgroundExampleHost = path.join(playgroundBuild, "host");
 
 let reveryExampleSources = path.join(reveryRoot, "examples");
 
@@ -55,7 +55,8 @@ console.log("Commit id: " + commitId);
 console.log("Version: " + version);
 
 let getBuildArtifactFolder = () => {
-    let result = cp.spawnSync(esyPath, ["bash", "-c", "echo $cur__bin"], { cwd: reveryRoot });
+    let test = cp.spawnSync(esyPath, ["x", "echo", "get installed sources"], { cwd: playgroundRoot });
+    let result = cp.spawnSync(esyPath, ["bash", "-c", "echo $cur__bin"], { cwd: playgroundRoot });
     return result.stdout.toString("utf8").trim();
 };
 

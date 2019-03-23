@@ -52,7 +52,7 @@
 <div class="container">
     <div id="code" style="flex: 2;overflow: hidden;"></div>
     <div id="example" style="flex: 3;">
-        <iframe src="host/index.html" style="border: 0; width: 100%; height: 100%"></iframe>
+        <iframe id="example_frame" src="host/playground.html" style="border: 0; width: 100%; height: 100%"></iframe>
     </div>
 </div>
 <div class="footer">
@@ -75,6 +75,14 @@
         theme: 'vs-dark',
         readOnly: false,
 	});
+
+    let iframe = document.getElementById("example_frame");
+
+editor.onDidChangeModelContent((e) => {
+    let allLines = editor.getModel().getLinesContent().join("\n");
+    console.log(allLines);
+    iframe.contentWindow.postMessage({ type: "editor.update", payload: allLines });
+});
 
 window.__revery_editor_set = (t) => {
     editor.setValue(t);
