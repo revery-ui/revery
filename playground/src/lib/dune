@@ -1,5 +1,5 @@
 (library
  (name PlaygroundLib)
- (public_name playground_lib)
+ (public_name playground.lib)
  (libraries Revery)
  )
