@@ -56,8 +56,7 @@ console.log("Version: " + version);
 
 let getBuildArtifactFolder = () => {
     let test = cp.spawnSync(esyPath, ["x", "echo", "get installed sources"], { cwd: playgroundRoot });
-    let result = cp.spawnSync(esyPath, ["bash", "-c", "echo $cur__bin"], { cwd: playgroundRoot });
-    return result.stdout.toString("utf8").trim();
+    return path.join(playgroundRoot, "_build", "install", "default", "bin");
 };
 
 let replace = (str, val, newVal) => {

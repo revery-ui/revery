@@ -13,11 +13,10 @@ let execute: Js.t(Js.js_string) => Js.t(Js.js_string) = code => {
   Js.string(result);
 };
 
-let prefix = "module Test = {\n";
-let postfix = "\n}; PlaygroundLib.setRenderFunction(Test.render);";
+let postfix = "\nPlaygroundLib.setRenderFunction(render);";
 
 let execute2: Js.t(Js.js_string) => Js.t(Js.js_string) = code => {
-  let code = prefix ++ Js.to_string(code) ++ postfix;
+  let code = Js.to_string(code) ++ postfix;
   let buffer = Buffer.create(100);
   let formatter = Format.formatter_of_buffer(buffer);
   JsooTop.execute(true, formatter, code);
