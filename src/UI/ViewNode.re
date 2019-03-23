@@ -12,8 +12,7 @@ open Style;
 open Style.Border;
 open Style.BoxShadow;
 
-let renderBorders =
-    (~style, ~width, ~height, ~opacity, ~m, ~world) => {
+let renderBorders = (~style, ~width, ~height, ~opacity, ~m, ~world) => {
   let borderStyle = (side, axis, border) =>
     Layout.Encoding.(
       if (side.width !== cssUndefined) {
@@ -37,40 +36,56 @@ let renderBorders =
     borderStyle(style.borderBottom, style.borderVertical, style.border);
 
   let borderRadius = style.borderRadius;
-      
-  let resolution = Vec2.create(
-    width,
-    height
-  );
+
+  let resolution = Vec2.create(width, height);
 
   let width = width -. leftBorderWidth -. rightBorderWidth;
   let height = height -. topBorderWidth -. bottomBorderWidth;
-  
 
   let tbc = Color.multiplyAlpha(opacity, topBorderColor);
   let lbc = Color.multiplyAlpha(opacity, leftBorderColor);
   let rbc = Color.multiplyAlpha(opacity, rightBorderColor);
   let bbc = Color.multiplyAlpha(opacity, bottomBorderColor);
-  
 
-  let (shader, setColor) = if (borderRadius != 0.) {
-    let shader = Assets.borderRadiusShader();
-    Shaders.CompiledShader.setUniform2fv(shader.uniformResolution, resolution);
-    Shaders.CompiledShader.setUniform1f(shader.uniformBorderRadius, borderRadius);
+  let (shader, setColor) =
+    if (borderRadius != 0.) {
+      let shader = Assets.borderRadiusShader();
+      Shaders.CompiledShader.setUniform2fv(
+        shader.uniformResolution,
+        resolution,
+      );
+      Shaders.CompiledShader.setUniform1f(
+        shader.uniformBorderRadius,
+        borderRadius,
+      );
 
       Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformProjection, m);
       Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformWorld, world);
-      (shader.compiledShader, (c) => Shaders.CompiledShader.setUniform4fv(shader.uniformColor, Color.toVec4(c)));
-  } else {
-    let shader = Assets.solidShader();
-    Shaders.CompiledShader.use(shader.compiledShader);
+      (
+        shader.compiledShader,
+        c =>
+          Shaders.CompiledShader.setUniform4fv(
+            shader.uniformColor,
+            Color.toVec4(c),
+          ),
+      );
+    } else {
+      let shader = Assets.solidShader();
+      Shaders.CompiledShader.use(shader.compiledShader);
       Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformProjection, m);
       Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformWorld, world);
-      (shader.compiledShader, (c) => Shaders.CompiledShader.setUniform4fv(shader.uniformColor, Color.toVec4(c)));
-  }
+      (
+        shader.compiledShader,
+        c =>
+          Shaders.CompiledShader.setUniform4fv(
+            shader.uniformColor,
+            Color.toVec4(c),
+          ),
+      );
+    };
 
   if (topBorderWidth != 0. && tbc.a > 0.001) {
-      setColor(tbc);
+    setColor(tbc);
     let topBorderQuad =
       Assets.quad(
         ~minX=leftBorderWidth,
@@ -107,7 +122,7 @@ let renderBorders =
   };
 
   if (leftBorderWidth != 0. && lbc.a > 0.001) {
-      setColor(lbc);
+    setColor(lbc);
     let leftBorderQuad =
       Assets.quad(
         ~minX=0.,
@@ -144,7 +159,7 @@ let renderBorders =
   };
 
   if (rightBorderWidth != 0. && rbc.a > 0.001) {
-      setColor(rbc);
+    setColor(rbc);
     let rightBorderQuad =
       Assets.quad(
         ~minX=leftBorderWidth +. width,
@@ -181,7 +196,7 @@ let renderBorders =
   };
 
   if (bottomBorderWidth != 0. && bbc.a > 0.001) {
-      setColor(bbc);
+    setColor(bbc);
     let bottomBorderQuad =
       Assets.quad(
         ~minX=leftBorderWidth,
@@ -300,14 +315,7 @@ class viewNode (()) = {
 
       let m = ctx.projection;
       let (minX, minY, maxX, maxY) =
-        renderBorders(
-          ~style,
-          ~width,
-          ~height,
-          ~opacity,
-          ~m,
-          ~world,
-        );
+        renderBorders(~style, ~width, ~height, ~opacity, ~m, ~world);
 
       let color = Color.multiplyAlpha(opacity, style.backgroundColor);
 

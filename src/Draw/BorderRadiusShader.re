@@ -14,8 +14,16 @@ let uniform: list(ShaderUniform.t) = [
   {dataType: ShaderDataType.Vector4, name: "uColor", usage: VertexShader},
   {dataType: ShaderDataType.Mat4, name: "uWorld", usage: VertexShader},
   {dataType: ShaderDataType.Mat4, name: "uProjection", usage: VertexShader},
-  {dataType: ShaderDataType.Vector2, name: "uResolution", usage: FragmentShader},
-  {dataType: ShaderDataType.Float, name: "uBorderRadius", usage: FragmentShader}
+  {
+    dataType: ShaderDataType.Vector2,
+    name: "uResolution",
+    usage: FragmentShader,
+  },
+  {
+    dataType: ShaderDataType.Float,
+    name: "uBorderRadius",
+    usage: FragmentShader,
+  },
 ];
 
 let varying: list(ShaderVarying.t) = [
@@ -48,13 +56,13 @@ let fsShader = {|
 |};
 
 type t = {
-    compiledShader: CompiledShader.t,
-    uniformWorld: uniformLocation,
-    uniformProjection: uniformLocation,
-    uniformResolution: uniformLocation,
-    uniformColor: uniformLocation,
-    uniformBorderRadius: uniformLocation,
-}
+  compiledShader: CompiledShader.t,
+  uniformWorld: uniformLocation,
+  uniformProjection: uniformLocation,
+  uniformResolution: uniformLocation,
+  uniformColor: uniformLocation,
+  uniformBorderRadius: uniformLocation,
+};
 
 let create = () => {
   let shader =
@@ -70,9 +78,15 @@ let create = () => {
   {
     compiledShader,
     uniformWorld: CompiledShader.getUniformLocation(compiledShader, "uWorld"),
-    uniformProjection: CompiledShader.getUniformLocation(compiledShader, "uProjection"),
-    uniformResolution: CompiledShader.getUniformLocation(compiledShader, "uResolution"),
+    uniformProjection:
+      CompiledShader.getUniformLocation(compiledShader, "uProjection"),
+    uniformResolution:
+      CompiledShader.getUniformLocation(compiledShader, "uResolution"),
     uniformColor: CompiledShader.getUniformLocation(compiledShader, "uColor"),
-    uniformBorderRadius: CompiledShader.getUniformLocation(compiledShader, "uniformBorderRadius"),
-  }
+    uniformBorderRadius:
+      CompiledShader.getUniformLocation(
+        compiledShader,
+        "uniformBorderRadius",
+      ),
+  };
 };
