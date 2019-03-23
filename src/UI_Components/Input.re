@@ -116,7 +116,7 @@ let make =
             flexDirection(`Row),
             alignItems(`Center),
             justifyContent(`FlexStart),
-            overflow(LayoutTypes.Hidden),
+            overflow(`Hidden),
             cursor(MouseCursors.text),
             ...defaultStyles,
           ],

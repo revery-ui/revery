@@ -1,224 +1,181 @@
+open Revery_Draw;
+
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
-open Fontkit;
-open Reglm;
-open Reglfw;
 open Revery_Core;
 
+open Style;
 open ViewNode;
-open RenderPass;
 
 class textNode (text: string) = {
   as _this;
   val mutable text = text;
+  val mutable gamma = 2.2;
+  val mutable _isMeasured = false;
   val _lines: ref(list(string)) = ref([]);
-  val quad = Assets.quad();
-  val textureShader = Assets.fontShader();
   inherit (class viewNode)() as _super;
-  pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
+  pub! draw = (parentContext: NodeDrawContext.t) => {
     /* Draw background first */
-    _super#draw(pass, parentContext);
+    _super#draw(parentContext);
 
-    switch (pass) {
-    | AlphaPass(m) =>
-      Shaders.CompiledShader.use(textureShader);
-
-      Shaders.CompiledShader.setUniformMatrix4fv(
-        textureShader,
-        "uProjection",
-        m,
-      );
-
-      let style = _super#getStyle();
-      let opacity = style.opacity *. parentContext.opacity;
-      let font =
-        FontCache.load(
-          style.fontFamily,
-          int_of_float(
-            float_of_int(style.fontSize)
-            *. parentContext.pixelRatio
-            *. float_of_int(parentContext.scaleFactor)
-            +. 0.5,
-          ),
-        );
-      let lineHeightPx =
-        _this#_getLineHeightPx(
-          font,
-          parentContext.pixelRatio,
-          parentContext.scaleFactor,
-        );
-      let color = Color.multiplyAlpha(opacity, style.color);
-      Shaders.CompiledShader.setUniform4fv(
-        textureShader,
-        "uColor",
-        Color.toVec4(color),
-      );
-
-      let metrics = FontRenderer.getNormalizedMetrics(font);
-
-      let multiplier =
-        parentContext.pixelRatio *. float_of_int(parentContext.scaleFactor);
-      /* Position the baseline */
-      let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
-
-      let outerTransform = Mat4.create();
-      Mat4.fromTranslation(outerTransform, Vec3.create(0.0, baseline, 0.0));
-
-      let render = (s: Fontkit.fk_shape, x: float, y: float) => {
-        let glyph = FontRenderer.getGlyph(font, s.glyphId);
-
-        let {width, height, bearingX, bearingY, advance, _} = glyph;
-
-        let width = float_of_int(width) /. multiplier;
-        let height = float_of_int(height) /. multiplier;
-        let bearingX = float_of_int(bearingX) /. multiplier;
-        let bearingY = float_of_int(bearingY) /. multiplier;
-        let advance = float_of_int(advance) /. multiplier;
-
-        Glfw.glPixelStorei(GL_PACK_ALIGNMENT, 1);
-        Glfw.glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-        let texture = FontRenderer.getTexture(font, s.glyphId);
-        Glfw.glBindTexture(GL_TEXTURE_2D, texture);
-        /* TODO: Bind texture */
-
-        let glyphTransform = Mat4.create();
-        Mat4.fromTranslation(
-          glyphTransform,
-          Vec3.create(
-            x +. bearingX +. width /. 2.,
-            y +. height *. 0.5 -. bearingY,
-            0.0,
-          ),
-        );
-
-        let scaleTransform = Mat4.create();
-        Mat4.fromScaling(scaleTransform, Vec3.create(width, height, 1.0));
-
-        let local = Mat4.create();
-        Mat4.multiply(local, glyphTransform, scaleTransform);
-
-        let xform = Mat4.create();
-        Mat4.multiply(xform, outerTransform, local);
-        Mat4.multiply(xform, _this#getWorldTransform(), xform);
-
-        Shaders.CompiledShader.setUniformMatrix4fv(
-          textureShader,
-          "uWorld",
-          xform,
-        );
-
-        Geometry.draw(quad, textureShader);
-
-        x +. advance /. 64.0;
-      };
-
-      List.iteri(
-        (lineNum, line) => {
-          let shapedText = FontRenderer.shape(font, line);
-          let startX = ref(0.);
-
-          Array.iteri(
-            (_offset, s) => {
-              let nextX =
-                render(s, startX^, lineHeightPx *. float_of_int(lineNum));
-              startX := nextX;
-            },
-            shapedText,
-          );
-        },
-        _lines^,
-      );
-
-    | _ => ()
-    };
-  };
-  pub setText = t => text = t;
-  pub! getMeasureFunction = (pixelRatio, scaleFactor) => {
-    let measure =
-        (_mode, width, _widthMeasureMode, _height, _heightMeasureMode) => {
-      /* TODO: Cache font locally in variable */
-      let style = _super#getStyle();
-      let textWrap = style.textWrap;
-      let font =
-        FontCache.load(
-          style.fontFamily,
-          int_of_float(
-            float_of_int(style.fontSize)
-            *. pixelRatio
-            *. float_of_int(scaleFactor),
-          ),
-        );
-
-      let lineHeightPx =
-        _this#_getLineHeightPx(font, pixelRatio, scaleFactor);
-
-      switch (textWrap) {
-      | WhitespaceWrap =>
-        let (lines, maxWidthLine) =
-          TextWrapping.wrapText(
-            ~text,
-            ~measureWidth=
-              str =>
-                int_of_float(
-                  float_of_int(FontRenderer.measure(font, str).width)
-                  /. pixelRatio
-                  /. float_of_int(scaleFactor),
-                ),
-            ~maxWidth=width,
-            ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
-          );
-
-        _lines := lines;
-
-        let dimensions: Layout.LayoutTypes.dimensions = {
-          width: int_of_float(float_of_int(maxWidthLine)),
-          height:
-            int_of_float(float_of_int(List.length(lines)) *. lineHeightPx),
-        };
-
-        dimensions;
-      | NoWrap =>
-        let d = FontRenderer.measure(font, text);
-        let dimensions: Layout.LayoutTypes.dimensions = {
-          width:
-            int_of_float(float_of_int(d.width) /. pixelRatio) / scaleFactor,
-          height: int_of_float(lineHeightPx /. pixelRatio) / scaleFactor,
-        };
-
-        _lines := [text];
-
-        dimensions;
-      | UserDefined(wrapFunc) =>
-        let (lines, maxWidthLine) =
-          wrapFunc(
-            text,
-            str => FontRenderer.measure(font, str).width,
-            width,
-          );
-
-        _lines := lines;
-
-        let dimensions: Layout.LayoutTypes.dimensions = {
-          width: maxWidthLine,
-          height:
-            int_of_float(float_of_int(List.length(lines)) *. lineHeightPx),
-        };
-
-        dimensions;
-      };
-    };
-    Some(measure);
-  };
-  pri _getLineHeightPx = (font, pixelRatio, scaleFactor) => {
     let style = _super#getStyle();
-    let metrics = FontRenderer.getNormalizedMetrics(font);
-    style.lineHeight
-    *. metrics.height
-    /. pixelRatio
-    /. float_of_int(scaleFactor);
+
+    let {color, backgroundColor, fontFamily, fontSize, lineHeight, _} = style;
+    let opacity = parentContext.opacity;
+
+    let lineHeightPx =
+      Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
+
+    /* when style.width & style.height are defined, Layout doesn't call the measure function */
+    if (!_isMeasured) {
+      _this#measure(style.width, style.height) |> ignore;
+    };
+
+    List.iteri(
+      (lineNum, line) =>
+        Text.drawString(
+          ~fontFamily,
+          ~fontSize,
+          ~gamma,
+          ~color,
+          ~backgroundColor,
+          ~opacity,
+          ~transform=_this#getWorldTransform(),
+          ~x=0.,
+          ~y=lineHeightPx *. float_of_int(lineNum),
+          line,
+        ),
+      _lines^,
+    );
+  };
+  pub setGamma = g => gamma = g;
+  pub! setStyle = style => {
+    let lastStyle = _this#getStyle();
+    _super#setStyle(style);
+    let newStyle = _this#getStyle();
+
+    if (lastStyle.lineHeight != newStyle.lineHeight
+        || lastStyle.fontSize != newStyle.fontSize
+        || !String.equal(lastStyle.fontFamily, newStyle.fontFamily)) {
+      _this#markLayoutDirty();
+    };
+  };
+  pub textOverflow = (maxWidth): LayoutTypes.dimensions => {
+    let {fontFamily, fontSize, lineHeight, textOverflow, _}: Style.t =
+      _super#getStyle();
+
+    let formattedText = TextOverflow.removeLineBreaks(text);
+
+    let measure = str =>
+      Text.measure(~fontFamily, ~fontSize, str)
+      |> (value => FontRenderer.(value.width));
+
+    let width = measure(formattedText);
+    let isOverflowing = width >= maxWidth;
+
+    let handleOverflow =
+      TextOverflow.handleOverflow(~maxWidth, ~text=formattedText, ~measure);
+
+    let truncated =
+      switch (textOverflow, isOverflowing) {
+      | (Ellipsis, true) => handleOverflow()
+      | (UserDefined(character), true) => handleOverflow(~character, ())
+      | (Clip, true) => handleOverflow(~character="", ())
+      | (_, false)
+      | (Overflow, _) => text
+      };
+
+    _lines := [truncated];
+
+    let lineHeightPx =
+      Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
+
+    {width, height: int_of_float(lineHeightPx)};
+  };
+  pub setText = t =>
+    if (!String.equal(t, text)) {
+      text = t;
+      _isMeasured = false;
+      _this#markLayoutDirty();
+    };
+  pub measure = (width, _height) => {
+    _isMeasured = true;
+    /**
+         If the width value is set to cssUndefined i.e. the user did not
+         set a width then do not attempt to use textOverflow
+       */
+    (
+      switch (_super#getStyle()) {
+      | {width: textWidth, _} as style
+          when textWidth == Layout.Encoding.cssUndefined =>
+        _this#handleTextWrapping(width, style)
+      | {textOverflow: Ellipsis | UserDefined(_), _} =>
+        _this#textOverflow(width)
+      | style => _this#handleTextWrapping(width, style)
+      }
+    );
+  };
+  pub handleTextWrapping = (width, style) => {
+    let {textWrap, fontFamily, fontSize, lineHeight, _}: Style.t = style;
+    let lineHeightPx =
+      Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
+
+    switch (textWrap) {
+    | WhitespaceWrap =>
+      let (lines, maxWidthLine) =
+        TextWrapping.wrapText(
+          ~text,
+          ~measureWidth=
+            str => Text.measure(~fontFamily, ~fontSize, str).width,
+          ~maxWidth=width,
+          ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
+        );
+
+      _lines := lines;
+
+      let dimensions: Layout.LayoutTypes.dimensions = {
+        width: int_of_float(float_of_int(maxWidthLine)),
+        height:
+          int_of_float(float_of_int(List.length(lines)) *. lineHeightPx),
+      };
+
+      dimensions;
+    | NoWrap =>
+      let d = Text.measure(~fontFamily, ~fontSize, text);
+      let dimensions: Layout.LayoutTypes.dimensions = {
+        width: d.width,
+        height: d.height,
+      };
+
+      _lines := [text];
+
+      dimensions;
+    | UserDefined(wrapFunc) =>
+      let (lines, maxWidthLine) =
+        wrapFunc(
+          text,
+          str => Text.measure(~fontFamily, ~fontSize, str).width,
+          width,
+        );
+
+      _lines := lines;
+
+      let dimensions: Layout.LayoutTypes.dimensions = {
+        width: maxWidthLine,
+        height:
+          int_of_float(float_of_int(List.length(lines)) *. lineHeightPx),
+      };
+
+      dimensions;
+    };
+  };
+  pub! getMeasureFunction = () => {
+    let measure =
+        (_mode, width, _widthMeasureMode, height, _heightMeasureMode) =>
+      _this#measure(width, height);
+    Some(measure);
   };
 };

@@ -1,4 +1,4 @@
-open Revery_Shaders.Shader;
+open Revery_Shaders;
 
 
 let create = (centerX, centerY, radius, startTheta, endTheta) => {

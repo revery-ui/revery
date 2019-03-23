@@ -9,10 +9,11 @@
  */
 
 module View = {
-  let component = UiReact.nativeComponent("View");
+  let component = React.nativeComponent("View");
 
   let make =
       (
+        ~key=?,
         ~onMouseDown=?,
         ~onMouseMove=?,
         ~onMouseUp=?,
@@ -32,7 +33,7 @@ module View = {
         ~style=Style.emptyViewStyle,
         children,
       ) =>
-    component(hooks =>
+    component(~key?, hooks =>
       (
         hooks,
         {
@@ -134,16 +135,17 @@ module View = {
       ~onKeyUp?,
       ~onKeyPress?,
       ~onDimensionsChanged?,
-      UiReact.listToElement(children),
+      React.listToElement(children),
     );
 };
 
 module Text = {
   open Style;
-  let component = UiReact.nativeComponent("Text");
+  let component = React.nativeComponent("Text");
 
   let make =
       (
+        ~key=?,
         ~onMouseDown=?,
         ~onMouseMove=?,
         ~onMouseUp=?,
@@ -151,9 +153,10 @@ module Text = {
         ~ref=?,
         ~style=emptyTextStyle,
         ~text="",
+        ~gamma,
         children,
       ) =>
-    component(hooks =>
+    component(~key?, hooks =>
       (
         hooks,
         {
@@ -190,6 +193,7 @@ module Text = {
             tn#setEvents(events);
             tn#setStyle(styles);
             tn#setText(text);
+            tn#setGamma(gamma);
             node;
           },
           children,
@@ -207,6 +211,7 @@ module Text = {
         ~style=emptyTextStyle,
         ~text="",
         ~children,
+        ~gamma=2.2,
         (),
       ) =>
     make(
@@ -217,15 +222,17 @@ module Text = {
       ~ref?,
       ~style,
       ~text,
-      UiReact.listToElement(children),
+      ~gamma,
+      React.listToElement(children),
     );
 };
 
 module Image = {
-  let component = UiReact.nativeComponent("Image");
+  let component = React.nativeComponent("Image");
 
   let make =
       (
+        ~key=?,
         ~onMouseDown=?,
         ~onMouseMove=?,
         ~onMouseUp=?,
@@ -235,7 +242,7 @@ module Image = {
         ~src="",
         children,
       ) =>
-    component(hooks =>
+    component(~key?, hooks =>
       (
         hooks,
         {
@@ -295,6 +302,138 @@ module Image = {
       ~ref?,
       ~style,
       ~src,
-      UiReact.listToElement(children),
+      React.listToElement(children),
+    );
+};
+
+module OpenGL = {
+  let component = React.nativeComponent("OpenGL");
+
+  let make =
+      (
+        ~key=?,
+        ~onMouseDown=?,
+        ~onMouseMove=?,
+        ~onMouseUp=?,
+        ~onMouseWheel=?,
+        ~onMouseEnter=?,
+        ~onMouseLeave=?,
+        ~onMouseOver=?,
+        ~onMouseOut=?,
+        ~onBlur=?,
+        ~onFocus=?,
+        ~onKeyDown=?,
+        ~onKeyUp=?,
+        ~onKeyPress=?,
+        ~onDimensionsChanged=?,
+        ~ref=?,
+        ~render=?,
+        ~style=Style.emptyViewStyle,
+        children,
+      ) =>
+    component(~key?, hooks =>
+      (
+        hooks,
+        {
+          make: () => {
+            let styles = Style.create(~style, ());
+            let events =
+              NodeEvents.make(
+                ~ref?,
+                ~onMouseDown?,
+                ~onMouseMove?,
+                ~onMouseUp?,
+                ~onMouseWheel?,
+                ~onMouseEnter?,
+                ~onMouseLeave?,
+                ~onMouseOver?,
+                ~onMouseOut?,
+                ~onBlur?,
+                ~onFocus?,
+                ~onKeyDown?,
+                ~onKeyUp?,
+                ~onKeyPress?,
+                ~onDimensionsChanged?,
+                (),
+              );
+            let node = (new OpenGLNode.openGLNode)();
+            node#setEvents(events);
+            node#setStyle(styles);
+            node#setRender(render);
+            Obj.magic(node);
+          },
+          configureInstance: (~isFirstRender as _, node) => {
+            let styles = Style.create(~style, ());
+            let events =
+              NodeEvents.make(
+                ~ref?,
+                ~onMouseDown?,
+                ~onMouseMove?,
+                ~onMouseUp?,
+                ~onMouseWheel?,
+                ~onMouseEnter?,
+                ~onMouseLeave?,
+                ~onMouseOver?,
+                ~onMouseOut?,
+                ~onBlur?,
+                ~onFocus?,
+                ~onKeyDown?,
+                ~onKeyUp?,
+                ~onKeyPress?,
+                ~onDimensionsChanged?,
+                (),
+              );
+            let oglNode: OpenGLNode.openGLNode = Obj.magic(node);
+            node#setEvents(events);
+            node#setStyle(styles);
+            oglNode#setRender(render);
+            node;
+          },
+          children,
+        },
+      )
+    );
+
+  let createElement =
+      (
+        ~onMouseDown=?,
+        ~onMouseMove=?,
+        ~onMouseUp=?,
+        ~onMouseWheel=?,
+        ~onMouseEnter=?,
+        ~onMouseLeave=?,
+        ~onMouseOver=?,
+        ~onMouseOut=?,
+        ~onBlur=?,
+        ~onFocus=?,
+        ~ref=?,
+        ~style=Style.emptyViewStyle,
+        ~children,
+        ~onKeyDown=?,
+        ~onKeyUp=?,
+        ~onKeyPress=?,
+        ~onDimensionsChanged=?,
+        ~render=?,
+        (),
+      ) =>
+    make(
+      ~onMouseDown?,
+      ~onMouseMove?,
+      ~onMouseUp?,
+      ~onMouseWheel?,
+      ~onMouseEnter?,
+      ~onMouseLeave?,
+      ~onMouseOver?,
+      ~onMouseOut?,
+      ~onBlur?,
+      ~onFocus?,
+      ~ref?,
+      ~style,
+      ~onKeyDown?,
+      ~onKeyUp?,
+      ~onKeyPress?,
+      ~onDimensionsChanged?,
+      ~render?,
+      React.listToElement(children),
     );
 };

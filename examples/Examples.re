@@ -1,6 +1,4 @@
 open Revery;
-open Revery.Core;
-/* open Revery.Math; */
 open ExampleStubs;
 
 module SliderExample = Slider;
@@ -60,7 +58,7 @@ let state: state = {
       render: _ => Boxshadow.render(),
       source: "Boxshadow.re",
     },
-    {name: "Focus", render: _ => Focus.render(), source: "Focus.re"},
+    {name: "Focus", render: _ => FocusExample.render(), source: "Focus.re"},
     {
       name: "Stopwatch",
       render: _ => Stopwatch.render(),
@@ -117,17 +115,20 @@ let state: state = {
       render: _ => HoverExample.render(),
       source: "HoverExample.re",
     },
+    {
+      name: "OpenGL Example",
+      render: _ => OpenGLExample.render(),
+      source: "OpenGLExample.re",
+    },
   ],
   selectedExample: "Animation",
 };
 
-let getExampleByName = (state: state, example: string) => {
+let getExampleByName = (state: state, example: string) =>
   List.filter(x => String.equal(x.name, example), state.examples) |> List.hd;
-};
 
-let getSourceForSample = (state: state, example: string) => {
+let getSourceForSample = (state: state, example: string) =>
   getExampleByName(state, example) |> (s => s.source);
-};
 
 let noop = () => ();
 
@@ -175,11 +176,10 @@ module ExampleButton = {
 type action =
   | SelectExample(string);
 
-let reducer = (s: state, a: action) => {
+let reducer = (s: state, a: action) =>
   switch (a) {
   | SelectExample(name) => {...s, selectedExample: name}
   };
-};
 
 let init = app => {
   let maximized = Environment.webGL;
@@ -189,6 +189,9 @@ let init = app => {
 
   let windowWidth = dimensions.width / 2;
   let windowHeight = dimensions.height / 2;
+
+  Console.log("Hello from example app");
+  Console.log([1, 2, 3]);
 
   let win =
     App.createWindow(

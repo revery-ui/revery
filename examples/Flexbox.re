@@ -1,5 +1,5 @@
+open Revery;
 open Revery.UI;
-open Revery.Core;
 
 let parentWidth = 400;
 let childWidth = 300;

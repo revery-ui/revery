@@ -2,10 +2,10 @@
 open Animated;
 
 let animation = (v: animationValue, opts: animationOptions, slots) => {
-  let (currentV, _set, slots) = UiReact.Hooks.state(v, slots);
+  let (currentV, _set, slots) = React.Hooks.state(v, slots);
 
   let slots =
-    UiReact.Hooks.effect(
+    React.Hooks.effect(
       OnMount,
       () => {
         let {stop, _} = tween(v, opts) |> start;

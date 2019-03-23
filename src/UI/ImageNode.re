@@ -1,6 +1,8 @@
 open Reglm;
 open Reglfw.Glfw;
 
+open Revery_Draw;
+
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 module Layout = Layout;
@@ -8,20 +10,21 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Node;
 open ViewNode;
-open RenderPass;
 
 class imageNode (imagePath: string) = {
   as _this;
   val textureShader = Assets.textureShader();
   val texture = ImageRenderer.getTexture(imagePath);
-  inherit (class node(renderPass))() as _super;
-  pub! draw = (pass: renderPass, parentContext: NodeDrawContext.t) => {
+  inherit (class node)() as _super;
+  pub! draw = (parentContext: NodeDrawContext.t) => {
     /* Draw background first */
-    _super#draw(pass, parentContext);
+    _super#draw(parentContext);
 
+    let pass = RenderPass.getCurrent();
     switch (pass) {
-    | AlphaPass(m) =>
-      Shaders.CompiledShader.use(textureShader);
+    | AlphaPass(ctx) =>
+      Shaders.CompiledShader.use(textureShader.compiledShader);
+      let m = ctx.projection;
 
       let dimensions = _this#measurements();
       let width = float_of_int(dimensions.width);
@@ -34,24 +37,21 @@ class imageNode (imagePath: string) = {
       let world = _this#getWorldTransform();
 
       Shaders.CompiledShader.setUniformMatrix4fv(
-        textureShader,
-        "uWorld",
+        textureShader.uniformWorld,
         world,
       );
       Shaders.CompiledShader.setUniformMatrix4fv(
-        textureShader,
-        "uProjection",
+        textureShader.uniformProjection,
         m,
       );
 
       Shaders.CompiledShader.setUniform4fv(
-        textureShader,
-        "uColor",
+        textureShader.uniformColor,
         Vec4.create(1.0, 1.0, 1.0, opacity),
       );
 
       glBindTexture(GL_TEXTURE_2D, texture);
-      Geometry.draw(quad, textureShader);
+      Geometry.draw(quad, textureShader.compiledShader);
     | _ => ()
     };
   };

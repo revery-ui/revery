@@ -1,20 +1,34 @@
-[![Build Status](https://dev.azure.com/revery-ui/revery/_apis/build/status/revery-ui.revery?branchName=master)](https://dev.azure.com/revery-ui/revery/_build/latest?definitionId=2?branchName=master)
-[![npm version](https://badge.fury.io/js/revery.svg)](https://badge.fury.io/js/revery)
-	<a href="https://discord.gg/4pxY5Cp">
-		<img src="https://img.shields.io/discord/526111832478449695.svg" alt="Join the chat on discord!">
+<p align="center">
+	<a href="https://www.outrunlabs.com/revery" title="Revery">
+		<img src="./assets/logo.png" alt="Logo">
 	</a>
+</p>
 
-# Revery
+<p align="center">
+  <span>Build <b>native</b>, <i>high-performance</i>, <b>cross-platform</b> desktop tops with <a href="https://reasonml.github.io">reason!</a></span>
+</p>
 
-Build __native__, _high-performance_, __cross-platform__ desktop apps with [reason](https://reasonml.github.io/)!
+<p align="center">
+  <a href="https://dev.azure.com/revery-ui/revery/_build/latest?definitionId=2?branchName=master">
+    <img src="https://dev.azure.com/revery-ui/revery/_apis/build/status/revery-ui.revery?branchName=master" alt="Build Status"/>
+  </a>
+  <a href="https://badge.fury.io/js/revery">
+    <img src="https://badge.fury.io/js/revery.svg" alt="npm version"/>
+  </a>
+  <a href="https://discord.gg/4pxY5Cp">
+    <img src="https://img.shields.io/discord/526111832478449695.svg" alt="Join the chat on discord!"/>
+  </a>
+</p>
 
-:construction: __NOTE:__ Revery is a work-in-progress and in active development! :construction:
+---
 
 <p align="center">
 	<a href="https://www.outrunlabs.com/revery/playground" title="Playground">
-		<img src="./screenshots/sliders.png" alt="Slider components">
+		<img src="./assets/screenshot.png" alt="Slider components">
 	</a>
 </p>
+
+:construction: __NOTE:__ Revery is a work-in-progress and in active development! :construction:
 
 To get a taste of Revery, check out our JavaScript + WebGL build on the [playground](https://outrunlabs.com/revery/playground). For the best experience, though, you'll want to try a native build :point_down:
 
@@ -55,7 +69,12 @@ Install the following packages with your package manager of choice:
 * `xorg-dev`
 * `libglu1-mesa-dev`
 * `libharfbuzz-dev`
-  
+* `libgtk-3-dev`
+
+> __NOTE:__ `reason-fontkit` (a dependency of `revery`) requires `harfbuzz` 1.7.7+. This means `revery` requires Ubuntu 18.10+ (or you can install `libharfbuzz-dev@1.8.8` by [adding 'cosmic' packages to your sources](https://makandracards.com/makandra/47558-how-to-install-packages-from-newer-ubuntu-releases), but proceed with caution since you can break other packages this way)
+
+> __NOTE:__ If `esy build` produces an error about `libpangoft2` then try deleting the `./_esy` and `~/.esy` directories and run run `esy install` and `esy build` again.
+
 ##### For `Fedora` you may need these additional packages
 * `libpng-devel`
 * `bzip2-devel`
@@ -65,7 +84,6 @@ Install the following packages with your package manager of choice:
 * `harfbuzz-devel`
 
 > __NOTE:__ `reason-fontkit` (a dependency of `revery`) requires `harfbuzz` 1.7.7+. This means `revery` requires Fedora 29+
-
 
 #### For `Windows` native
 
@@ -265,6 +283,7 @@ Some ideas for getting started:
 - [reason-gl-matrix](https://github.com/bryphe/reason-gl-matrix)
     - [gl-matrix](http://glmatrix.net)
     - [glm](https://glm.g-truc.net/0.9.9/index.html)
+- [@reason-native/console](https://github.com/facebookexperimental/reason-native/tree/master/src/console)
 
 `revery` was inspired by some __awesome projects:__
 - [react-native](https://facebook.github.io/react-native/)

@@ -1,4 +1,4 @@
-open Revery_Shaders.Shader;
+open Revery_Shaders;
 
 let minOf3 = (x, y, z) =>
   min(min(x, y), z);

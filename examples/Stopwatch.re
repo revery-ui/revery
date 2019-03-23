@@ -1,6 +1,5 @@
-/* open Revery; */
+open Revery;
 open Revery.Time;
-open Revery.Core;
 open Revery.Math;
 open Revery.UI;
 open Revery.UI.Components;

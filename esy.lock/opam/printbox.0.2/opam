@@ -1,0 +1,29 @@
+opam-version: "2.0"
+synopsis:
+  "Allows to print nested boxes, lists, arrays, tables in several formats"
+maintainer: "simon.cruanes.2007@m4x.org"
+authors: ["Simon Cruanes" "Guillaume Bury"]
+tags: ["print" "box" "table" "tree"]
+homepage: "https://github.com/c-cube/printbox/"
+bug-reports: "https://github.com/c-cube/printbox/issues/"
+depends: [
+  "dune" {build}
+  "base-bytes"
+  "odoc" {with-doc}
+  "ocaml" {>= "4.03"}
+  "mdx" {with-test}
+]
+depopts: ["tyxml"]
+build: [
+  ["dune" "build" "@install" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+  ["dune" "build" "@doc" "-p" name "-j" jobs] {with-doc}
+]
+dev-repo: "git+https://github.com/c-cube/printbox.git"
+url {
+  src: "https://github.com/c-cube/printbox/archive/0.2.tar.gz"
+  checksum: [
+    "md5=d84584a8ebdf3faa7b04704f0f75813c"
+    "sha512=fa49c037c7b1aad720a9a4e74fa40838bade84572afb7bcb6dae170c2d4cbdc9c217868ee971049da18dda0308357bbbc8a934436d32f41418eceba612d56ab3"
+  ]
+}

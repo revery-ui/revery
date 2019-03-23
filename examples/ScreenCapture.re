@@ -1,6 +1,6 @@
+open Revery;
 open Revery.UI;
 open Revery.UI.Components;
-open Revery.Core;
 
 let backgroundColor = Color.hex("#212733");
 let activeBackgroundColor = Color.hex("#2E3440");

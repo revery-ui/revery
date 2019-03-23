@@ -19,9 +19,20 @@ let playgroundExampleHost = path.join(playgroundRoot, "_build", "host");
 let reveryExampleSources = path.join(reveryRoot, "examples");
 
 let getEsyPath = () => {
-    let result = cp.execSync("where esy");
-    let found = result.toString("utf8");
+    let result
+    try {
+        result = cp.execSync("where esy");
+    } catch (error) {
+        // some operating systems (unix) use `which` instead of `where`.
+        if (error.toString().indexOf('not found') != -1) {
+            result = cp.execSync("which esy");
+        } else {
+            console.error('Unable to find `esy` is it installed?');
+            throw error;
+        }
+    }
 
+    let found = result.toString("utf8");
     let candidates = found.trim().split(os.EOL);
     return candidates[candidates.length - 1];
 };
@@ -65,6 +76,8 @@ fs.copySync(reveryExampleSources, playgroundExampleSources);
 console.log("Examples copied.");
 
 console.log("Copying artifacts...");
+// Remove destination to prevent a 'Source and destination must not be the same' error when re-building
+fs.removeSync(playgroundExampleHost);
 fs.copySync(artifactFolder, playgroundExampleHost);
 console.log("Artifacts copied.");
 
@@ -72,7 +85,7 @@ console.log("Copying node_modules...");
 fs.copySync(nodeModulesSrc, nodeModulesDest);
 console.log("node_modules copied.");
 
-console.log("Replacing constaints in index.html");
+console.log("Replacing constants in index.html");
 let indexHtmlPath = path.join(playgroundBuild, "index.html");
 
 let indexHtml = fs.readFileSync(indexHtmlPath).toString("utf8");

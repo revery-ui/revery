@@ -1,6 +1,6 @@
 {
   "name": "revery",
-  "version": "0.8.0",
+  "version": "0.14.1",
   "description": "App toolkit built with Reason",
   "license": "MIT",
   "bugs": { "url": "https://github.com/bryphe/revery/issues" },
@@ -9,7 +9,7 @@
     "build:release": "esy b dune build --profile=release --root . -j4",
     "build:js": "esy b dune build examples/Examples.bc.js",
     "build:js:release": "esy b dune build examples/Examples.bc.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "esy b dune runtest",
     "format": "esy dune build @fmt --auto-promote",
     "format:windows": "esy b .ci/format.sh",
     "doc": "refmterr esy dune build @doc --root .",
@@ -23,6 +23,7 @@
       "esy-installer Revery_Core.install",
       "esy-installer Revery_Geometry.install",
       "esy-installer Revery_Math.install",
+      "esy-installer Revery_Draw.install",
       "esy-installer Revery_Native.install",
       "esy-installer Revery_Shaders.install",
       "esy-installer Revery_UI.install",
@@ -32,8 +33,8 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "3.4.0",
-    "reason-glfw": "^3.2.1018",
-    "reason-fontkit": "^2.2.1",
+    "reason-glfw": "^3.2.1023",
+    "reason-fontkit": "^2.3.2",
     "reason-gl-matrix": "^0.9.9303",
     "rebez": "*",
     "@opam/color": "^0.2.0",
@@ -43,11 +44,14 @@
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@brisk/brisk-reconciler": "*",
-    "flex": "^1.2.2"
+    "flex": "^1.2.2",
+    "reperf": "^1.4.0",
+    "@reason-native/console": "^0.0.3"
   },
   "resolutions": {
     "rebez": "github:jchavarri/rebez#46cbc183",
     "@opam/cmdliner": "1.0.2",
+    "@opam/dune": "1.7.3",
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#daa00be"

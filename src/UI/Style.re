@@ -26,6 +26,22 @@ module BoxShadow = {
   };
 };
 
+module LayoutMode = {
+  /**
+     * LayoutMode allows finer-grained control over how nodes are layout.
+     * The default is 'Flex' which uses a yoga-like flex-box interpretation of the styles.
+     * However, for performance, sometimes a more streamlined strategy is doable -
+     * the 'Minimal' strategy only respects the following properties:
+        - width
+        - height
+        - transform
+    * But it also incurs much reduced overhead compared to the default layout strategy.
+    */
+  type t =
+    | Default
+    | Minimal;
+};
+
 type t = {
   backgroundColor: Color.t,
   color: Color.t,
@@ -47,6 +63,7 @@ type t = {
   fontFamily,
   fontSize: int,
   lineHeight: float,
+  layoutMode: LayoutMode.t,
   textWrap: TextWrapping.wrapType,
   marginTop: int,
   marginLeft: int,
@@ -55,6 +72,10 @@ type t = {
   margin: int,
   marginVertical: int,
   marginHorizontal: int,
+  minWidth: int,
+  maxWidth: int,
+  minHeight: int,
+  maxHeight: int,
   paddingTop: int,
   paddingLeft: int,
   paddingRight: int,
@@ -62,6 +83,7 @@ type t = {
   padding: int,
   paddingVertical: int,
   paddingHorizontal: int,
+  textOverflow: TextOverflow.t,
   overflow: LayoutTypes.overflow,
   borderTop: Border.t,
   borderLeft: Border.t,
@@ -79,6 +101,7 @@ type t = {
 
 let make =
     (
+      ~textOverflow=TextOverflow.Overflow,
       ~backgroundColor: Color.t=Colors.transparentBlack,
       ~color: Color.t=Colors.white,
       ~width=Encoding.cssUndefined,
@@ -98,6 +121,7 @@ let make =
       ~right=Encoding.cssUndefined,
       ~fontFamily="",
       ~fontSize=Encoding.cssUndefined,
+      ~layoutMode=LayoutMode.Default,
       ~lineHeight=1.2,
       ~textWrap=TextWrapping.WhitespaceWrap,
       ~marginTop=Encoding.cssUndefined,
@@ -107,6 +131,10 @@ let make =
       ~margin=Encoding.cssUndefined,
       ~marginVertical=Encoding.cssUndefined,
       ~marginHorizontal=Encoding.cssUndefined,
+      ~minWidth=Encoding.cssUndefined,
+      ~maxWidth=Encoding.cssUndefined,
+      ~minHeight=Encoding.cssUndefined,
+      ~maxHeight=Encoding.cssUndefined,
       ~paddingTop=Encoding.cssUndefined,
       ~paddingLeft=Encoding.cssUndefined,
       ~paddingRight=Encoding.cssUndefined,
@@ -136,6 +164,7 @@ let make =
       _unit: unit,
     ) => {
   let ret: t = {
+    textOverflow,
     backgroundColor,
     color,
     width,
@@ -155,6 +184,7 @@ let make =
     right,
     fontFamily,
     fontSize,
+    layoutMode,
     lineHeight,
     textWrap,
     transform,
@@ -165,6 +195,10 @@ let make =
     margin,
     marginVertical,
     marginHorizontal,
+    minWidth,
+    maxWidth,
+    minHeight,
+    maxHeight,
     paddingTop,
     paddingLeft,
     paddingRight,
@@ -216,6 +250,10 @@ let toLayoutNode = (s: t) => {
     margin: s.margin,
     marginVertical: s.marginVertical,
     marginHorizontal: s.marginHorizontal,
+    minWidth: s.minWidth,
+    maxWidth: s.maxWidth,
+    minHeight: s.minHeight,
+    maxHeight: s.maxHeight,
     paddingTop: s.paddingTop,
     paddingLeft: s.paddingLeft,
     paddingRight: s.paddingRight,
@@ -266,6 +304,7 @@ type coreStyleProps = [
   | `Right(int)
   | `Bottom(int)
   | `Left(int)
+  | `LayoutMode(LayoutMode.t)
   | `MarginTop(int)
   | `MarginLeft(int)
   | `MarginRight(int)
@@ -275,6 +314,10 @@ type coreStyleProps = [
   | `MarginHorizontal(int)
   | `Margin2(xy)
   | `Margin4(coords)
+  | `MinWidth(int)
+  | `MaxWidth(int)
+  | `MinHeight(int)
+  | `MaxHeight(int)
   | `PaddingTop(int)
   | `PaddingLeft(int)
   | `PaddingRight(int)
@@ -301,7 +344,11 @@ type coreStyleProps = [
 
 type fontProps = [ | `FontFamily(string) | `FontSize(int)];
 
-type textProps = [ | `LineHeight(float) | `TextWrap(TextWrapping.wrapType)];
+type textProps = [
+  | `LineHeight(float)
+  | `TextWrap(TextWrapping.wrapType)
+  | `TextOverflow(TextOverflow.t)
+];
 
 /*
    Text and View props take different style properties as such
@@ -338,6 +385,16 @@ let flexWrap = w => {
   `FlexWrap(wrap);
 };
 
+let textOverflow = overflow =>
+  (
+    switch (overflow) {
+    | `Ellipsis => TextOverflow.Ellipsis
+    | `Overflow => TextOverflow.Overflow
+    | `UserDefined(v) => TextOverflow.UserDefined(v)
+    }
+  )
+  |> (s => `TextOverflow(s));
+
 let alignment = a =>
   switch (a) {
   | `Center => LayoutTypes.AlignCenter
@@ -371,6 +428,11 @@ let textWrap = w => `TextWrap(w);
 let height = h => `Height(h);
 let width = w => `Width(w);
 
+let minWidth = w => `MinWidth(w);
+let maxWidth = w => `MaxWidth(w);
+let minHeight = h => `MinHeight(h);
+let maxHeight = h => `MaxHeight(h);
+
 let position = p => {
   let value =
     switch (p) {
@@ -378,6 +440,15 @@ let position = p => {
     | `Relative => LayoutTypes.Relative
     };
   `Position(value);
+};
+
+let layoutMode = v => {
+  let p =
+    switch (v) {
+    | `Default => LayoutMode.Default
+    | `Minimal => LayoutMode.Minimal
+    };
+  `LayoutMode(p);
 };
 
 let margin = m => `Margin(m);
@@ -429,7 +500,14 @@ let opacity = o => `Opacity(o);
 let transform = t => `Transform(t);
 let boxShadow = (~xOffset, ~yOffset, ~spreadRadius, ~blurRadius, ~color) =>
   `BoxShadow(BoxShadow.{xOffset, yOffset, spreadRadius, blurRadius, color});
-let overflow = o => `Overflow(o);
+
+let overflow = o =>
+  switch (o) {
+  | `Visible => `Overflow(LayoutTypes.Visible)
+  | `Hidden => `Overflow(LayoutTypes.Hidden)
+  | `Scroll => `Overflow(LayoutTypes.Scroll)
+  };
+
 let color = o => `Color(o);
 let backgroundColor = o => `BackgroundColor(o);
 
@@ -457,6 +535,7 @@ let applyStyle = (style, styleRule) =>
   | `FlexGrow(flexGrow) => {...style, flexGrow}
   | `FlexDirection(flexDirection) => {...style, flexDirection}
   | `FlexWrap(flexWrap) => {...style, flexWrap}
+  | `LayoutMode(layoutMode) => {...style, layoutMode}
   | `Position(position) => {...style, position}
   | `Margin(margin) => {...style, margin}
   | `MarginTop(marginTop) => {...style, marginTop}
@@ -477,6 +556,10 @@ let applyStyle = (style, styleRule) =>
       marginRight: right,
       marginBottom: bottom,
     }
+  | `MinWidth(minWidth) => {...style, minWidth}
+  | `MaxWidth(maxWidth) => {...style, maxWidth}
+  | `MinHeight(minHeight) => {...style, minHeight}
+  | `MaxHeight(maxHeight) => {...style, maxHeight}
   | `Padding(padding) => {...style, padding}
   | `PaddingTop(paddingTop) => {...style, paddingTop}
   | `PaddingBottom(paddingBottom) => {...style, paddingBottom}
@@ -511,6 +594,7 @@ let applyStyle = (style, styleRule) =>
   | `FontFamily(fontFamily) => {...style, fontFamily}
   | `FontSize(fontSize) => {...style, fontSize}
   | `LineHeight(lineHeight) => {...style, lineHeight}
+  | `TextOverflow(textOverflow) => {...style, textOverflow}
   | `TextWrap(textWrap) => {...style, textWrap}
   | `Cursor(cursor) => {...style, cursor}
   | `Color(color) => {...style, color}

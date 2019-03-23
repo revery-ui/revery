@@ -6,19 +6,39 @@ open Events;
 
 type windowRenderCallback = unit => unit;
 type windowShouldRenderCallback = unit => bool;
+
+type size = {
+  width: int,
+  height: int,
+};
+
+module WindowMetrics = {
+  type t = {
+    /* Note we separate the _Window_ width / height
+     * and the _framebuffer_ width/height
+     * Some more info here: http://www.glfw.org/docs/latest/window_guide.html
+     */
+    size,
+    framebufferSize: size,
+    devicePixelRatio: float,
+    scaleFactor: int,
+  };
+
+  let create = (~size, ~framebufferSize, ~devicePixelRatio, ~scaleFactor, ()) => {
+    framebufferSize,
+    size,
+    devicePixelRatio,
+    scaleFactor,
+  };
+};
+
 type t = {
   mutable backgroundColor: Color.t,
   glfwWindow: Glfw.Window.t,
   mutable render: windowRenderCallback,
   mutable shouldRender: windowShouldRenderCallback,
-  /* Note we separate the _Window_ width / height
-   * and the _framebuffer_ width/height
-   * Some more info here: http://www.glfw.org/docs/latest/window_guide.html
-   */
-  mutable width: int,
-  mutable height: int,
-  mutable framebufferWidth: int,
-  mutable framebufferHeight: int,
+  mutable metrics: WindowMetrics.t,
+  mutable areMetricsDirty: bool,
   mutable isRendering: bool,
   mutable requestedWidth: option(int),
   mutable requestedHeight: option(int),
@@ -56,7 +76,7 @@ let defaultCreateOptions = {
 };
 
 let isDirty = (w: t) =>
-  if (w.shouldRender()) {
+  if (w.shouldRender() || w.areMetricsDirty) {
     true;
   } else {
     switch (w.requestedWidth, w.requestedHeight) {
@@ -66,18 +86,34 @@ let isDirty = (w: t) =>
     };
   };
 
-let _updateFramebuffer = (w: t) => {
-  let size = Glfw.glfwGetWindowSize(w.glfwWindow);
-  w.width = size.width;
-  w.height = size.height;
+let _getMetricsFromGlfwWindow = glfwWindow => {
+  let glfwSize = Glfw.glfwGetWindowSize(glfwWindow);
+  let glfwFramebufferSize = Glfw.glfwGetFramebufferSize(glfwWindow);
 
-  let framebufferSize = Glfw.glfwGetFramebufferSize(w.glfwWindow);
-  w.framebufferWidth = framebufferSize.width;
-  w.framebufferHeight = framebufferSize.height;
+  let scaleFactor = Monitor.getScaleFactor();
+
+  let devicePixelRatio =
+    float_of_int(glfwFramebufferSize.width) /. float_of_int(glfwSize.width);
+
+  WindowMetrics.create(
+    ~size={width: glfwSize.width, height: glfwSize.height},
+    ~framebufferSize={
+      width: glfwFramebufferSize.width,
+      height: glfwFramebufferSize.height,
+    },
+    ~scaleFactor,
+    ~devicePixelRatio,
+    (),
+  );
+};
+
+let _updateMetrics = (w: t) => {
+  w.metrics = _getMetricsFromGlfwWindow(w.glfwWindow);
+  w.areMetricsDirty = false;
 };
 
 let setSize = (w: t, width: int, height: int) =>
-  if (width != w.width || height != w.height) {
+  if (width != w.metrics.size.width || height != w.metrics.size.height) {
     /*
      *  Don't resize in the middle of a render -
      *  we'll queue up the render operation for next time.
@@ -89,7 +125,7 @@ let setSize = (w: t, width: int, height: int) =>
       Glfw.glfwSetWindowSize(w.glfwWindow, width, height);
       w.requestedWidth = None;
       w.requestedHeight = None;
-      _updateFramebuffer(w);
+      w.areMetricsDirty = true;
     };
   };
 
@@ -101,10 +137,23 @@ let _resizeIfNecessary = (w: t) =>
 
 let render = (w: t) => {
   _resizeIfNecessary(w);
-  w.isRendering = true;
-  Glfw.glfwMakeContextCurrent(w.glfwWindow);
 
-  Glfw.glViewport(0, 0, w.framebufferWidth, w.framebufferHeight);
+  if (w.areMetricsDirty) {
+    _updateMetrics(w);
+    w.areMetricsDirty = false;
+  };
+
+  w.isRendering = true;
+  Performance.bench("glfwMakeContextCurrent", () =>
+    Glfw.glfwMakeContextCurrent(w.glfwWindow)
+  );
+
+  Glfw.glViewport(
+    0,
+    0,
+    w.metrics.framebufferSize.width,
+    w.metrics.framebufferSize.height,
+  );
   /* glClearDepth(1.0); */
   /* glEnable(GL_DEPTH_TEST); */
   /* glDepthFunc(GL_LEQUAL); */
@@ -116,7 +165,9 @@ let render = (w: t) => {
 
   w.render();
 
-  Glfw.glfwSwapBuffers(w.glfwWindow);
+  Performance.bench("glfwSwapBuffers", () =>
+    Glfw.glfwSwapBuffers(w.glfwWindow)
+  );
   w.isRendering = false;
 };
 
@@ -143,13 +194,7 @@ let create = (name: string, options: windowCreateOptions) => {
     Glfw.glfwSetWindowIcon(w, relativeImagePath);
   };
 
-  let fbSize = Glfw.glfwGetFramebufferSize(w);
-
-  /*
-   * The window size might not be _exactly_ what the user passed in for options.width/options.height,
-   * if the window exceeds the size of the monitor. It might be clamped in that case, so we need to double-check.
-   */
-  let size = Glfw.glfwGetWindowSize(w);
+  let metrics = _getMetricsFromGlfwWindow(w);
 
   let ret: t = {
     backgroundColor: options.backgroundColor,
@@ -158,11 +203,8 @@ let create = (name: string, options: windowCreateOptions) => {
     render: () => (),
     shouldRender: () => false,
 
-    width: size.width,
-    height: size.height,
-    framebufferWidth: fbSize.width,
-    framebufferHeight: fbSize.height,
-
+    metrics,
+    areMetricsDirty: false,
     isRendering: false,
     requestedWidth: None,
     requestedHeight: None,
@@ -179,34 +221,22 @@ let create = (name: string, options: windowCreateOptions) => {
 
   Glfw.glfwSetFramebufferSizeCallback(
     w,
-    (_w, width, height) => {
-      ret.framebufferWidth = width;
-      ret.framebufferHeight = height;
+    (_w, _width, _height) => {
+      ret.areMetricsDirty = true;
       render(ret);
     },
   );
 
   Glfw.glfwSetWindowSizeCallback(
     w,
-    (_w, width, height) => {
-      ret.width = width;
-      ret.height = height;
+    (_w, _width, _height) => {
+      ret.areMetricsDirty = true;
       render(ret);
     },
   );
 
-  Glfw.glfwSetCharCallback(
-    w,
-    (_, codepoint) => {
-      let uchar = Uchar.of_int(codepoint);
-      let character =
-        switch (Uchar.is_char(uchar)) {
-        | true => String.make(1, Uchar.to_char(uchar))
-        | _ => ""
-        };
-      let keyPressEvent: keyPressEvent = {codepoint, character};
-      Event.dispatch(ret.onKeyPress, keyPressEvent);
-    },
+  Glfw.glfwSetWindowPosCallback(w, (_w, _x, _y) =>
+    ret.areMetricsDirty = true
   );
 
   Glfw.glfwSetKeyCallback(
@@ -241,27 +271,6 @@ let create = (name: string, options: windowCreateOptions) => {
         };
       let keyPressEvent: keyPressEvent = {codepoint, character};
       Event.dispatch(ret.onKeyPress, keyPressEvent);
-    },
-  );
-
-  Glfw.glfwSetKeyCallback(
-    w,
-    (_w, key, scancode, buttonState, m) => {
-      let evt: keyEvent = {
-        key: Key.convert(key),
-        scancode,
-        ctrlKey: Glfw.Modifier.isControlPressed(m),
-        shiftKey: Glfw.Modifier.isShiftPressed(m),
-        altKey: Glfw.Modifier.isAltPressed(m),
-        superKey: Glfw.Modifier.isSuperPressed(m),
-        isRepeat: buttonState == GLFW_REPEAT,
-      };
-
-      switch (buttonState) {
-      | GLFW_PRESS => Event.dispatch(ret.onKeyDown, evt)
-      | GLFW_REPEAT => Event.dispatch(ret.onKeyDown, evt)
-      | GLFW_RELEASE => Event.dispatch(ret.onKeyUp, evt)
-      };
     },
   );
 
@@ -305,49 +314,49 @@ let show = w => Glfw.glfwShowWindow(w.glfwWindow);
 
 let hide = w => Glfw.glfwHideWindow(w.glfwWindow);
 
-type windowSize = {
-  width: int,
-  height: int,
-};
-
 let getSize = (w: t) => {
-  let r: windowSize = {width: w.width, height: w.height};
-  r;
+  w.metrics.size;
 };
 
 let getFramebufferSize = (w: t) => {
-  let r: windowSize = {
-    width: w.framebufferWidth,
-    height: w.framebufferHeight,
-  };
-  r;
+  w.metrics.framebufferSize;
 };
 
 let maximize = (w: t) => Glfw.glfwMaximizeWindow(w.glfwWindow);
 
 let getDevicePixelRatio = (w: t) => {
-  let windowSizeInScreenCoordinates = getSize(w);
-  let windowSizeInPixels = getFramebufferSize(w);
+  w.metrics.devicePixelRatio;
+};
 
-  float_of_int(windowSizeInPixels.width)
-  /. float_of_int(windowSizeInScreenCoordinates.width);
+let getScaleFactor = (w: t) => {
+  w.metrics.scaleFactor;
 };
 
 let takeScreenshot = (w: t, filename: string) => {
   open Glfw;
 
-  let width = w.framebufferWidth;
-  let height = w.framebufferHeight;
+  let width = w.metrics.framebufferSize.width;
+  let height = w.metrics.framebufferSize.height;
 
-  let image = Image.create(~width, ~height, ~numChannels=4, ~channelSize=1);
-  let buffer = Image.getBuffer(image);
+  let pixels =
+    Bigarray.Array2.create(
+      Bigarray.int8_unsigned,
+      Bigarray.c_layout,
+      height,
+      width * 4,
+    );
+
+  /* let image = Image.create(~width, ~height, ~numChannels=4, ~channelSize=1); */
+  /* let buffer = Image.getBuffer(image); */
 
   /* WebGL is weird in that we can't capture with glReadPixels during
      a render operation. Instead, we want to wait till it's over (we
      can force this by triggering a new render) and then taking the
      screenshot */
   render(w);
-  glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+  glReadPixels(0, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+  let image = Image.create(pixels);
 
   Image.save(image, filename);
   Image.destroy(image);
