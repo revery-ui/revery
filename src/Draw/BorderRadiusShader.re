@@ -84,9 +84,6 @@ let create = () => {
       CompiledShader.getUniformLocation(compiledShader, "uResolution"),
     uniformColor: CompiledShader.getUniformLocation(compiledShader, "uColor"),
     uniformBorderRadius:
-      CompiledShader.getUniformLocation(
-        compiledShader,
-        "uBorderRadius",
-      ),
+      CompiledShader.getUniformLocation(compiledShader, "uBorderRadius"),
   };
 };
