@@ -86,7 +86,7 @@ let create = () => {
     uniformBorderRadius:
       CompiledShader.getUniformLocation(
         compiledShader,
-        "uniformBorderRadius",
+        "uBorderRadius",
       ),
   };
 };

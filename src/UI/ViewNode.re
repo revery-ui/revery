@@ -50,6 +50,7 @@ let renderBorders = (~style, ~width, ~height, ~opacity, ~m, ~world) => {
   let (shader, setColor) =
     if (borderRadius != 0.) {
       let shader = Assets.borderRadiusShader();
+      Shaders.CompiledShader.use(shader.compiledShader);
       Shaders.CompiledShader.setUniform2fv(
         shader.uniformResolution,
         resolution,
