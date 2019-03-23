@@ -13,6 +13,7 @@ let defaultStyle =
     borderHorizontal(~width=8, ~color=Colors.blue),
     borderTop(~width=15, ~color=Colors.red),
     borderLeft(~width=30, ~color=Colors.green),
+    borderRadius(16.0),
   ];
 
 let innerStyle =
