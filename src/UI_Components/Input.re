@@ -163,6 +163,115 @@ let reducer = (action, state) =>
       state
   };
 
+let handleKeyPress =
+    (
+      ~state,
+      ~dispatch,
+      ~onChange: changeEvent => unit,
+      event: NodeEvents.keyPressEventParams,
+    ) =>
+  addCharacter(state.inputString, event.character, state.cursorPosition)
+  |> (
+    update => {
+      dispatch(UpdateText(update));
+      onChange({
+        value: update.newString,
+        key: Key.fromString(event.character),
+        character: event.character,
+        altKey: false,
+        ctrlKey: false,
+        shiftKey: false,
+        superKey: false,
+      });
+    }
+  );
+
+let handleHighlighting =
+    (
+      ~onKeyDown,
+      ~dispatch,
+      ~state: state,
+      event: NodeEvents.keyEventParams,
+      direction,
+    ) =>
+  (
+    switch (direction) {
+    | Forward => 1
+    | Backward => (-1)
+    | Static => 0
+    }
+  )
+  |> (
+    change => {
+      onKeyDown(event);
+      dispatch(CursorPosition(change));
+      getHighlightedText(
+        state.highlightStart,
+        state.cursorPosition,
+        state.inputString,
+        ~direction,
+      )
+      |> (
+        highlighted =>
+          dispatch(
+            HighlightText({
+              start: Some(state.cursorPosition),
+              text: highlighted,
+              direction,
+            }),
+          )
+      );
+    }
+  );
+
+let handleKeyDown =
+    (
+      ~onKeyDown,
+      ~onChange,
+      ~dispatch,
+      ~state: state,
+      event: NodeEvents.keyEventParams,
+    ) => {
+  let highlightHandler =
+    handleHighlighting(~onKeyDown, ~dispatch, ~state, event);
+  switch (event) {
+  | {key: Key.KEY_LEFT, shiftKey: true, _} => highlightHandler(Backward)
+  | {key: Key.KEY_RIGHT, shiftKey: true, _} => highlightHandler(Forward)
+  | {key: Key.KEY_LEFT, _} =>
+    onKeyDown(event);
+    dispatch(ClearHighlight);
+    dispatch(CursorPosition(-1));
+  | {key: Key.KEY_RIGHT, _} =>
+    onKeyDown(event);
+    dispatch(ClearHighlight);
+    dispatch(CursorPosition(1));
+  | {key: Key.KEY_BACKSPACE, _} =>
+    dispatch(CursorPosition(-1));
+    removeCharacter(state.inputString, state.cursorPosition)
+    |> (
+      update => {
+        dispatch(Backspace(update));
+        onKeyDown(event);
+        onChange({
+          value: update.newString,
+          character: Key.toString(event.key),
+          key: event.key,
+          altKey: event.altKey,
+          ctrlKey: event.ctrlKey,
+          shiftKey: event.shiftKey,
+          superKey: event.superKey,
+        });
+      }
+    );
+  | {key: Key.KEY_ESCAPE, _} =>
+    onKeyDown(event);
+    dispatch(ClearHighlight);
+    Focus.loseFocus();
+
+  | _ => onKeyDown(event)
+  };
+};
+
 let defaultHeight = 50;
 let defaultWidth = 200;
 let inputTextMargin = 10;
@@ -197,18 +306,7 @@ let make =
       (),
     ) =>
   component(slots => {
-    let (
-      {
-        highlightDirection,
-        highlightStart,
-        highlightedText,
-        isFocused,
-        cursorPosition,
-        inputString,
-      },
-      dispatch,
-      slots,
-    ) =
+    let (state, dispatch, slots) =
       React.Hooks.reducer(
         ~initialState={
           highlightDirection: Static,
@@ -222,90 +320,14 @@ let make =
         slots,
       );
 
-    let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
-      let update = addCharacter(inputString, event.character, cursorPosition);
-      dispatch(UpdateText(update));
-      onChange({
-        value: update.newString,
-        key: Key.fromString(event.character),
-        character: event.character,
-        altKey: false,
-        ctrlKey: false,
-        shiftKey: false,
-        superKey: false,
-      });
-    };
-
-    let handleHighlighting = (event, direction) =>
-      (
-        switch (direction) {
-        | Forward => 1
-        | Backward => (-1)
-        | Static => 0
-        }
-      )
-      |> (
-        change => {
-          onKeyDown(event);
-          dispatch(CursorPosition(change));
-          getHighlightedText(
-            highlightStart,
-            cursorPosition,
-            inputString,
-            ~direction,
-          )
-          |> (
-            highlighted =>
-              dispatch(
-                HighlightText({
-                  start: Some(cursorPosition),
-                  text: highlighted,
-                  direction,
-                }),
-              )
-          );
-        }
-      );
-
-    let handleKeyDown = (event: NodeEvents.keyEventParams) =>
-      switch (event) {
-      | {key: Key.KEY_LEFT, shiftKey: true, _} =>
-        handleHighlighting(event, Backward)
-      | {key: Key.KEY_RIGHT, shiftKey: true, _} =>
-        handleHighlighting(event, Forward)
-      | {key: Key.KEY_LEFT, _} =>
-        onKeyDown(event);
-        dispatch(ClearHighlight);
-        dispatch(CursorPosition(-1));
-      | {key: Key.KEY_RIGHT, _} =>
-        onKeyDown(event);
-        dispatch(ClearHighlight);
-        dispatch(CursorPosition(1));
-      | {key: Key.KEY_BACKSPACE, _} =>
-        dispatch(CursorPosition(-1));
-        removeCharacter(inputString, cursorPosition)
-        |> (
-          update => {
-            dispatch(Backspace(update));
-            onKeyDown(event);
-            onChange({
-              value: update.newString,
-              character: Key.toString(event.key),
-              key: event.key,
-              altKey: event.altKey,
-              ctrlKey: event.ctrlKey,
-              shiftKey: event.shiftKey,
-              superKey: event.superKey,
-            });
-          }
-        );
-      | {key: Key.KEY_ESCAPE, _} =>
-        onKeyDown(event);
-        dispatch(ClearHighlight);
-        Focus.loseFocus();
-
-      | _ => onKeyDown(event)
-      };
+    let {
+      highlightDirection,
+      highlightStart,
+      highlightedText,
+      isFocused,
+      cursorPosition,
+      inputString,
+    } = state;
 
     let (animatedOpacity, slots) =
       Hooks.animation(
@@ -407,6 +429,9 @@ let make =
       />;
 
     /* print_endline("HighlightText ==============" ++ highlightedText); */
+    let keyDownHandler =
+      handleKeyDown(~onKeyDown, ~dispatch, ~onChange, ~state);
+    let keyPressHandler = handleKeyPress(~dispatch, ~onChange, ~state);
 
     (
       /*
@@ -417,8 +442,8 @@ let make =
         onFocus={() => dispatch(SetFocus(true))}
         onBlur={() => dispatch(SetFocus(false))}
         componentRef={autofocus ? Focus.focus : ignore}
-        onKeyDown=handleKeyDown
-        onKeyPress=handleKeyPress>
+        onKeyDown=keyDownHandler
+        onKeyPress=keyPressHandler>
         <View style=viewStyles>
           ...{
                switch (hasPlaceholder, highlightDirection) {
