@@ -110,14 +110,12 @@ let getHighlightedText =
     String.sub(inputString, cursorPos, start - cursorPos)
   | (Some(start), Some(original), Forward) =>
     print_endline("Start ---" ++ string_of_int(start));
-    print_endline("cursorPos ---" ++ string_of_int(cursorPos));
     print_endline("Original ----" ++ string_of_int(original));
+    print_endline("cursorPos ---" ++ string_of_int(cursorPos - start));
     String.sub(inputString, start, cursorPos - start);
   | (Some(start), None, Forward) => String.sub(inputString, start, 1)
-  | (None, _, Forward) => String.sub(inputString, cursorPos, 1)
-  | (None, _, Backward) =>
-    let str = String.sub(inputString, cursorPos, 1);
-    str;
+  | (None, _, Forward) => String.sub(inputString, cursorPos - 1, 1)
+  | (None, _, Backward) => String.sub(inputString, cursorPos, 1)
   | (_, _, Static) => ""
   };
 };
@@ -245,14 +243,15 @@ let handleHighlighting =
 let getUnhighlightedSegments =
     (~start, ~direction, ~startStr, ~endStr, ~input) =>
   switch (start, direction) {
-  | (None, _) => (startStr, endStr)
+  | (None, Forward)
+  | (None, Backward) => (startStr, endStr)
   | (_, Static) => (startStr, endStr)
   | (Some(strt), Backward) =>
     let offset = strt - String.length(input);
     let newEndStr = Str.string_before(endStr, offset);
     (startStr, newEndStr);
   | (Some(strt), Forward) =>
-    let newStartStr = Str.string_before(startStr, strt - 1);
+    let newStartStr = Str.string_before(startStr, strt);
     (newStartStr, endStr);
   };
 
