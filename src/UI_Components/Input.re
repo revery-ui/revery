@@ -223,7 +223,8 @@ let handleHighlighting =
       getHighlightedText(
         ~highlightStart=newStart,
         ~originalStart=state.highlightStart,
-        ~cursorPosition=state.cursorPosition + change /* use anticipated position */,
+        /* use anticipated position */
+        ~cursorPosition=state.cursorPosition + change,
         ~inputString=state.inputString,
         ~direction,
       )
@@ -240,6 +241,21 @@ let handleHighlighting =
       );
     }
   );
+
+let getUnhighlightedSegments =
+    (~highlightStart, ~highlightDirection, ~startStr, ~endStr, ~inputString) =>
+  switch (highlightStart, highlightDirection) {
+  | (None, _) => (startStr, endStr)
+  | (_, Static) => (startStr, endStr)
+  | (Some(strt), Backward) =>
+    strt
+    - String.length(inputString)
+    |> (offset => (startStr, Str.string_before(endStr, offset)))
+  | (Some(strt), Forward) => (
+      Str.string_before(startStr, strt - 1),
+      endStr,
+    )
+  };
 
 let handleKeyDown =
     (
@@ -350,11 +366,6 @@ let make =
       inputString,
     } = state;
 
-    switch (highlightStart) {
-    | Some(s) => print_endline("Highlight start -----> " ++ string_of_int(s))
-    | None => print_endline("No Start")
-    };
-
     let (animatedOpacity, slots) =
       Hooks.animation(
         Animated.floatValue(0.),
@@ -426,25 +437,18 @@ let make =
 
     let (startStr, endStr) = getStringParts(cursorPosition, inputString);
 
-    /* let (unselectedStart, unselectedEnd) = */
-    /*   switch (highlightStart, highlightDirection) { */
-    /*   | (None, _) => (startStr, endStr) */
-    /*   | (_, Static) => (startStr, endStr) */
-    /*   | (Some(strt), Backward) => */
-    /*     strt */
-    /*     - String.length(inputString) */
-    /*     |> (offset => (startStr, Str.string_before(endStr, offset))) */
-    /*   | (Some(strt), Forward) => ( */
-    /*       Str.string_before(startStr, strt - 1), */
-    /*       endStr, */
-    /*     ) */
-    /*   }; */
-    /* print_endline("unselectedStart: " ++ unselectedStart); */
-    /* print_endline("unselectedEnd: " ++ unselectedEnd); */
+    let (unselectedStart, unselectedEnd) =
+      getUnhighlightedSegments(
+        ~highlightStart,
+        ~highlightDirection,
+        ~startStr,
+        ~endStr,
+        ~inputString,
+      );
 
     let placeholderText = makeTextComponent(placeholder, ());
-    let startText = makeTextComponent(startStr, ());
-    let endText = makeTextComponent(endStr, ~isEnd=true, ());
+    let startText = makeTextComponent(unselectedStart, ());
+    let endText = makeTextComponent(unselectedEnd, ~isEnd=true, ());
 
     let highlighted =
       <Text
