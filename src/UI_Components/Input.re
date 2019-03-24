@@ -97,20 +97,28 @@ let getSafeCursorPosition = (str, cursorPosition, change) => {
    Return the section of a string which is being highlighted based on a start postion and the current posiition
  */
 let getHighlightedText =
-    (highlightStart, cursorPosition, inputString, ~direction) => {
+    (
+      ~highlightStart,
+      ~originalStart,
+      ~cursorPosition,
+      ~inputString,
+      ~direction,
+    ) => {
   let cursorPos = getSafeCursorPosition(inputString, cursorPosition, 0);
-  switch (highlightStart, direction) {
-  | (Some(start), Backward) =>
+  switch (highlightStart, originalStart, direction) {
+  | (Some(start), _, Backward) =>
     String.sub(inputString, cursorPos, start - cursorPos)
-  | (Some(start), Forward) =>
+  | (Some(start), Some(original), Forward) =>
     print_endline("Start ---" ++ string_of_int(start));
-    print_endline("Position ---" ++ string_of_int(cursorPos));
-    String.sub(inputString, start + 1, cursorPos - start);
-  | (None, Forward) => String.sub(inputString, cursorPos, 1)
-  | (None, Backward) =>
+    print_endline("cursorPos ---" ++ string_of_int(cursorPos));
+    print_endline("Original ----" ++ string_of_int(original));
+    String.sub(inputString, start, cursorPos - start);
+  | (Some(start), None, Forward) => String.sub(inputString, start, 1)
+  | (None, _, Forward) => String.sub(inputString, cursorPos, 1)
+  | (None, _, Backward) =>
     let str = String.sub(inputString, cursorPos, 1);
     str;
-  | (_, Static) => ""
+  | (_, _, Static) => ""
   };
 };
 
@@ -171,6 +179,7 @@ let handleKeyPress =
   addCharacter(state.inputString, event.character, state.cursorPosition)
   |> (
     update => {
+      dispatch(ClearHighlight);
       dispatch(UpdateText(update));
       onChange({
         value: update.newString,
@@ -212,9 +221,10 @@ let handleHighlighting =
       onKeyDown(event);
       dispatch(CursorPosition(change));
       getHighlightedText(
-        newStart,
-        state.cursorPosition + change /* use anticipated position */,
-        state.inputString,
+        ~highlightStart=newStart,
+        ~originalStart=state.highlightStart,
+        ~cursorPosition=state.cursorPosition + change /* use anticipated position */,
+        ~inputString=state.inputString,
         ~direction,
       )
       |> (
@@ -254,6 +264,10 @@ let handleKeyDown =
     dispatch(CursorPosition(1));
   | {key: Key.KEY_BACKSPACE, _} =>
     dispatch(CursorPosition(-1));
+    /**
+     TODO: Remove the highlighted section
+   */
+    dispatch(ClearHighlight);
     removeCharacter(state.inputString, state.cursorPosition)
     |> (
       update => {
