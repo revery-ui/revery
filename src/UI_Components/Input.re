@@ -84,7 +84,7 @@ let getStringParts = (index, str) =>
     (strBeginning, strEnd);
   };
 
-let getSafeStringBounds = (str, cursorPosition, change) => {
+let getSafeCursorPosition = (str, cursorPosition, change) => {
   let nextPosition = cursorPosition + change;
   let currentLength = String.length(str);
   nextPosition > currentLength ?
@@ -97,31 +97,33 @@ let getSafeStringBounds = (str, cursorPosition, change) => {
    Return the section of a string which is being highlighted based on a start postion and the current posiition
  */
 let getHighlightedText =
-    (highlightStart, cursorPosition, inputString, ~direction) =>
+    (highlightStart, cursorPosition, inputString, ~direction) => {
+  let cursorPos = getSafeCursorPosition(inputString, cursorPosition, 0);
   switch (highlightStart, direction) {
   | (Some(start), Backward) =>
-    print_endline("Start ---" ++ string_of_int(start));
-    print_endline("Position ---" ++ string_of_int(cursorPosition));
-    let str = String.sub(inputString, cursorPosition, start - cursorPosition);
-    print_endline("Backward Str ----" ++ str);
-    str;
+    String.sub(inputString, cursorPos, start - cursorPos)
   | (Some(start), Forward) =>
-    String.sub(inputString, start, cursorPosition + 1)
-  | (None, Forward) => String.sub(inputString, cursorPosition, 1)
+    print_endline("Start ---" ++ string_of_int(start));
+    print_endline("Position ---" ++ string_of_int(cursorPos));
+    String.sub(inputString, start + 1, cursorPos - start);
+  | (None, Forward) => String.sub(inputString, cursorPos, 1)
   | (None, Backward) =>
-    let str = String.sub(inputString, cursorPosition, 1);
+    let str = String.sub(inputString, cursorPos, 1);
     str;
   | (_, Static) => ""
   };
+};
 
 /**
    We check if there is an existing start position for the highlighting
-   if there is we do not update, if there isn't then we do
+   if there is we do not update, if there isn't OR the direction changed
+   then we do.
  */
-let updateHighlightStart = (prevStart: option(int), start: option(int)) =>
-  switch (prevStart) {
-  | Some(v) => Some(v)
-  | None => start
+let updateHighlightStart = (prevStart, newStartPosition, directionChanged) =>
+  switch (prevStart, directionChanged) {
+  | (Some(previous), false) => Some(previous)
+  | (Some(_), true) => newStartPosition
+  | (None, _) => newStartPosition
   };
 
 let reducer = (action, state) =>
@@ -136,12 +138,12 @@ let reducer = (action, state) =>
   | CursorPosition(pos) => {
       ...state,
       cursorPosition:
-        getSafeStringBounds(state.inputString, state.cursorPosition, pos),
+        getSafeCursorPosition(state.inputString, state.cursorPosition, pos),
     }
   | HighlightText({text, start, direction}) => {
       ...state,
       highlightDirection: direction,
-      highlightStart: updateHighlightStart(state.highlightStart, start),
+      highlightStart: start,
       highlightedText: text,
     }
   | UpdateText({newString, cursorPosition}) =>
@@ -182,6 +184,13 @@ let handleKeyPress =
     }
   );
 
+let directionToCursorPos = dir =>
+  switch (dir) {
+  | Forward => 1
+  | Backward => (-1)
+  | Static => 0
+  };
+
 let handleHighlighting =
     (
       ~onKeyDown,
@@ -190,19 +199,20 @@ let handleHighlighting =
       event: NodeEvents.keyEventParams,
       direction,
     ) =>
-  (
-    switch (direction) {
-    | Forward => 1
-    | Backward => (-1)
-    | Static => 0
-    }
-  )
+  directionToCursorPos(direction)
   |> (
     change => {
+      let newStart =
+        updateHighlightStart(
+          state.highlightStart,
+          Some(state.cursorPosition),
+          state.highlightDirection != direction,
+        );
+
       onKeyDown(event);
       dispatch(CursorPosition(change));
       getHighlightedText(
-        state.highlightStart,
+        newStart,
         state.cursorPosition + change /* use anticipated position */,
         state.inputString,
         ~direction,
@@ -212,7 +222,7 @@ let handleHighlighting =
           dispatch(
             HighlightText({
               /* start position should be the position before the change */
-              start: Some(state.cursorPosition),
+              start: newStart,
               text: highlighted,
               direction,
             }),
@@ -319,12 +329,17 @@ let make =
 
     let {
       highlightDirection,
-      highlightStart: _,
+      highlightStart,
       highlightedText,
       isFocused,
       cursorPosition,
       inputString,
     } = state;
+
+    switch (highlightStart) {
+    | Some(s) => print_endline("Highlight start -----> " ++ string_of_int(s))
+    | None => print_endline("No Start")
+    };
 
     let (animatedOpacity, slots) =
       Hooks.animation(
