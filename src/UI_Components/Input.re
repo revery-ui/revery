@@ -36,11 +36,6 @@ type changeEvent = {
   superKey: bool,
 };
 
-type textUpdate = {
-  newString: string,
-  cursorPosition: int,
-};
-
 type action =
   | CursorPosition(int)
   | SetFocus(bool)
@@ -96,21 +91,6 @@ let getSafeStringBounds = (str, cursorPosition, change) => {
     currentLength : nextPosition < 0 ? 0 : nextPosition;
 };
 
-let removeCharacter = (word, cursorPosition) => {
-  let (startStr, endStr) = getStringParts(cursorPosition, word);
-  let nextPosition = getSafeStringBounds(startStr, cursorPosition, -1);
-  let newString = Str.string_before(startStr, nextPosition) ++ endStr;
-  {newString, cursorPosition: nextPosition};
-};
-
-let addCharacter = (word, char, index) => {
-  let (startStr, endStr) = getStringParts(index, word);
-  {
-    newString: startStr ++ char ++ endStr,
-    cursorPosition: String.length(startStr) + 1,
-  };
-};
-
 /**
    getHighlightedText
 
@@ -129,7 +109,6 @@ let getHighlightedText =
     | (None, Forward) => String.sub(inputString, cursorPosition, 1)
     | (None, Backward) =>
       let str = String.sub(inputString, cursorPosition - 1, 1);
-      print_endline("Backward Str === " ++ str);
       str;
     | (_, Static) => ""
     }
