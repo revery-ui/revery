@@ -56,8 +56,8 @@ let getStringParts = (index, str) =>
 let getSafeStringBounds = (str, cursorPosition, change) => {
   let nextPosition = cursorPosition + change;
   let currentLength = String.length(str);
-  nextPosition > currentLength ?
-    currentLength : nextPosition < 0 ? 0 : nextPosition;
+  nextPosition > currentLength
+    ? currentLength : nextPosition < 0 ? 0 : nextPosition;
 };
 
 let removeCharacter = (word, cursorPosition) => {
@@ -87,8 +87,8 @@ let getStringParts = (index, str) =>
 let getSafeCursorPosition = (str, cursorPosition, change) => {
   let nextPosition = cursorPosition + change;
   let currentLength = String.length(str);
-  nextPosition > currentLength ?
-    currentLength : nextPosition < 0 ? 0 : nextPosition;
+  nextPosition > currentLength
+    ? currentLength : nextPosition < 0 ? 0 : nextPosition;
 };
 
 /**
@@ -155,18 +155,18 @@ let reducer = (action, state) =>
       highlightedText: text,
     }
   | UpdateText({newString, cursorPosition}) =>
-    state.isFocused ?
-      {...state, cursorPosition, isFocused: true, inputString: newString} :
-      state
+    state.isFocused
+      ? {...state, cursorPosition, isFocused: true, inputString: newString}
+      : state
   | Backspace({newString, cursorPosition}) =>
-    state.isFocused ?
-      {
+    state.isFocused
+      ? {
         ...state,
         highlightStart: None,
         inputString: newString,
         cursorPosition,
-      } :
-      state
+      }
+      : state
   };
 
 let handleKeyPress =
