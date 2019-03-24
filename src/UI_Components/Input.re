@@ -56,8 +56,8 @@ let getStringParts = (index, str) =>
 let getSafeStringBounds = (str, cursorPosition, change) => {
   let nextPosition = cursorPosition + change;
   let currentLength = String.length(str);
-  nextPosition > currentLength
-    ? currentLength : nextPosition < 0 ? 0 : nextPosition;
+  nextPosition > currentLength ?
+    currentLength : nextPosition < 0 ? 0 : nextPosition;
 };
 
 let removeCharacter = (word, cursorPosition) => {
@@ -87,8 +87,8 @@ let getStringParts = (index, str) =>
 let getSafeStringBounds = (str, cursorPosition, change) => {
   let nextPosition = cursorPosition + change;
   let currentLength = String.length(str);
-  nextPosition > currentLength
-    ? currentLength : nextPosition < 0 ? 0 : nextPosition;
+  nextPosition > currentLength ?
+    currentLength : nextPosition < 0 ? 0 : nextPosition;
 };
 
 /**
@@ -98,24 +98,20 @@ let getSafeStringBounds = (str, cursorPosition, change) => {
  */
 let getHighlightedText =
     (highlightStart, cursorPosition, inputString, ~direction) =>
-  try (
-    switch (highlightStart, direction) {
-    | (Some(start), Backward) =>
-      let str =
-        String.sub(inputString, cursorPosition - 1, start - cursorPosition);
-      str;
-    | (Some(start), Forward) =>
-      String.sub(inputString, start - cursorPosition, cursorPosition + 1)
-    | (None, Forward) => String.sub(inputString, cursorPosition, 1)
-    | (None, Backward) =>
-      let str = String.sub(inputString, cursorPosition - 1, 1);
-      str;
-    | (_, Static) => ""
-    }
-  ) {
-  | Invalid_argument(s) =>
-    print_endline("Failed because " ++ s);
-    "";
+  switch (highlightStart, direction) {
+  | (Some(start), Backward) =>
+    print_endline("Start ---" ++ string_of_int(start));
+    print_endline("Position ---" ++ string_of_int(cursorPosition));
+    let str = String.sub(inputString, cursorPosition, start - cursorPosition);
+    print_endline("Backward Str ----" ++ str);
+    str;
+  | (Some(start), Forward) =>
+    String.sub(inputString, start, cursorPosition + 1)
+  | (None, Forward) => String.sub(inputString, cursorPosition, 1)
+  | (None, Backward) =>
+    let str = String.sub(inputString, cursorPosition, 1);
+    str;
+  | (_, Static) => ""
   };
 
 /**
@@ -149,18 +145,18 @@ let reducer = (action, state) =>
       highlightedText: text,
     }
   | UpdateText({newString, cursorPosition}) =>
-    state.isFocused
-      ? {...state, cursorPosition, isFocused: true, inputString: newString}
-      : state
+    state.isFocused ?
+      {...state, cursorPosition, isFocused: true, inputString: newString} :
+      state
   | Backspace({newString, cursorPosition}) =>
-    state.isFocused
-      ? {
+    state.isFocused ?
+      {
         ...state,
         highlightStart: None,
         inputString: newString,
         cursorPosition,
-      }
-      : state
+      } :
+      state
   };
 
 let handleKeyPress =
@@ -207,7 +203,7 @@ let handleHighlighting =
       dispatch(CursorPosition(change));
       getHighlightedText(
         state.highlightStart,
-        state.cursorPosition,
+        state.cursorPosition + change /* use anticipated position */,
         state.inputString,
         ~direction,
       )
@@ -215,6 +211,7 @@ let handleHighlighting =
         highlighted =>
           dispatch(
             HighlightText({
+              /* start position should be the position before the change */
               start: Some(state.cursorPosition),
               text: highlighted,
               direction,
@@ -322,7 +319,7 @@ let make =
 
     let {
       highlightDirection,
-      highlightStart,
+      highlightStart: _,
       highlightedText,
       isFocused,
       cursorPosition,
@@ -400,23 +397,25 @@ let make =
 
     let (startStr, endStr) = getStringParts(cursorPosition, inputString);
 
-    let (unselectedStart, unselectedEnd) =
-      switch (highlightStart, highlightDirection) {
-      | (None, _) => (startStr, endStr)
-      | (_, Static) => (startStr, endStr)
-      | (Some(strt), Backward) =>
-        strt
-        - String.length(inputString)
-        |> (offset => (startStr, Str.string_before(endStr, offset)))
-      | (Some(strt), Forward) => (
-          Str.string_before(startStr, strt),
-          endStr,
-        )
-      };
+    /* let (unselectedStart, unselectedEnd) = */
+    /*   switch (highlightStart, highlightDirection) { */
+    /*   | (None, _) => (startStr, endStr) */
+    /*   | (_, Static) => (startStr, endStr) */
+    /*   | (Some(strt), Backward) => */
+    /*     strt */
+    /*     - String.length(inputString) */
+    /*     |> (offset => (startStr, Str.string_before(endStr, offset))) */
+    /*   | (Some(strt), Forward) => ( */
+    /*       Str.string_before(startStr, strt - 1), */
+    /*       endStr, */
+    /*     ) */
+    /*   }; */
+    /* print_endline("unselectedStart: " ++ unselectedStart); */
+    /* print_endline("unselectedEnd: " ++ unselectedEnd); */
 
     let placeholderText = makeTextComponent(placeholder, ());
-    let startText = makeTextComponent(unselectedStart, ());
-    let endText = makeTextComponent(unselectedEnd, ~isEnd=true, ());
+    let startText = makeTextComponent(startStr, ());
+    let endText = makeTextComponent(endStr, ~isEnd=true, ());
 
     let highlighted =
       <Text
@@ -428,7 +427,7 @@ let make =
         ]
       />;
 
-    /* print_endline("HighlightText ==============" ++ highlightedText); */
+    print_endline("HighlightText ==============" ++ highlightedText);
     let keyDownHandler =
       handleKeyDown(~onKeyDown, ~dispatch, ~onChange, ~state);
     let keyPressHandler = handleKeyPress(~dispatch, ~onChange, ~state);

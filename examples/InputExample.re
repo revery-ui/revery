@@ -41,7 +41,6 @@ module Example = {
             cursorColor=Colors.white
             autofocus=true
             onChange={({value, _}) => setValue({first, second: value})}
-            onKeyDown={event => Console.log(event)}
             style=Style.[
               backgroundColor(Colors.paleVioletRed),
               color(Colors.white),
