@@ -56,8 +56,8 @@ let getStringParts = (index, str) =>
 let getSafeStringBounds = (str, cursorPosition, change) => {
   let nextPosition = cursorPosition + change;
   let currentLength = String.length(str);
-  nextPosition > currentLength
-    ? currentLength : nextPosition < 0 ? 0 : nextPosition;
+  nextPosition > currentLength ?
+    currentLength : nextPosition < 0 ? 0 : nextPosition;
 };
 
 let removeCharacter = (word, cursorPosition) => {
@@ -87,8 +87,8 @@ let getStringParts = (index, str) =>
 let getSafeCursorPosition = (str, cursorPosition, change) => {
   let nextPosition = cursorPosition + change;
   let currentLength = String.length(str);
-  nextPosition > currentLength
-    ? currentLength : nextPosition < 0 ? 0 : nextPosition;
+  nextPosition > currentLength ?
+    currentLength : nextPosition < 0 ? 0 : nextPosition;
 };
 
 /**
@@ -155,18 +155,18 @@ let reducer = (action, state) =>
       highlightedText: text,
     }
   | UpdateText({newString, cursorPosition}) =>
-    state.isFocused
-      ? {...state, cursorPosition, isFocused: true, inputString: newString}
-      : state
+    state.isFocused ?
+      {...state, cursorPosition, isFocused: true, inputString: newString} :
+      state
   | Backspace({newString, cursorPosition}) =>
-    state.isFocused
-      ? {
+    state.isFocused ?
+      {
         ...state,
         highlightStart: None,
         inputString: newString,
         cursorPosition,
-      }
-      : state
+      } :
+      state
   };
 
 let handleKeyPress =
@@ -243,18 +243,17 @@ let handleHighlighting =
   );
 
 let getUnhighlightedSegments =
-    (~highlightStart, ~highlightDirection, ~startStr, ~endStr, ~inputString) =>
-  switch (highlightStart, highlightDirection) {
+    (~start, ~direction, ~startStr, ~endStr, ~input) =>
+  switch (start, direction) {
   | (None, _) => (startStr, endStr)
   | (_, Static) => (startStr, endStr)
   | (Some(strt), Backward) =>
-    strt
-    - String.length(inputString)
-    |> (offset => (startStr, Str.string_before(endStr, offset)))
-  | (Some(strt), Forward) => (
-      Str.string_before(startStr, strt - 1),
-      endStr,
-    )
+    let offset = strt - String.length(input);
+    let newEndStr = Str.string_before(endStr, offset);
+    (startStr, newEndStr);
+  | (Some(strt), Forward) =>
+    let newStartStr = Str.string_before(startStr, strt - 1);
+    (newStartStr, endStr);
   };
 
 let handleKeyDown =
@@ -439,11 +438,11 @@ let make =
 
     let (unselectedStart, unselectedEnd) =
       getUnhighlightedSegments(
-        ~highlightStart,
-        ~highlightDirection,
+        ~start=highlightStart,
+        ~direction=highlightDirection,
+        ~input=inputString,
         ~startStr,
         ~endStr,
-        ~inputString,
       );
 
     let placeholderText = makeTextComponent(placeholder, ());
@@ -453,11 +452,7 @@ let make =
     let highlighted =
       <Text
         text=highlightedText
-        style=Style.[
-          backgroundColor(Colors.grey),
-          margin(0),
-          ...inputTextStyles(true),
-        ]
+        style=Style.[backgroundColor(Colors.grey), ...inputTextStyles(true)]
       />;
 
     print_endline("HighlightText ==============" ++ highlightedText);
