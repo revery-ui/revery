@@ -52,6 +52,7 @@ let _startShader =
       (),
     ) =>
   if (backgroundColor.a > 0.99) {
+    print_endline(" - gamma shader.");
     let shader = Assets.fontGammaCorrectedShader();
     CompiledShader.use(shader.compiledShader);
     CompiledShader.setUniformMatrix4fv(shader.uniformProjection, projection);
@@ -66,6 +67,7 @@ let _startShader =
     (shader.compiledShader, shader.uniformWorld);
   } else {
     let shader = Assets.fontDefaultShader();
+    print_endline(" - default shader: " ++ string_of_float(opacity));
     let colorMultipliedAlpha = Color.multiplyAlpha(opacity, color);
     CompiledShader.use(shader.compiledShader);
     CompiledShader.setUniformMatrix4fv(shader.uniformProjection, projection);
@@ -94,6 +96,7 @@ let drawString =
 
   switch (pass) {
   | AlphaPass(ctx) =>
+    print_endline("Starting for text: " ++ text);
     let projection = ctx.projection;
     let quad = Assets.quad();
 
