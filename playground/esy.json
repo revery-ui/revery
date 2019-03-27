@@ -27,7 +27,6 @@
     "@opam/js_of_ocaml-compiler": "link:../../js_of_ocaml/js_of_ocaml-compiler.opam",
     "@opam/js_of_ocaml-toplevel": "link:../../js_of_ocaml/js_of_ocaml-toplevel.opam",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#daa00be",
-    "reason-gl-matrix": "link:../../reason-gl-matrix",
     "revery": "link:../package.json"
   },
   "peerDependencies": {
