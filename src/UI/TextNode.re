@@ -24,7 +24,7 @@ class textNode (text: string) = {
     let style = _super#getStyle();
 
     let {color, backgroundColor, fontFamily, fontSize, lineHeight, _} = style;
-    let opacity = parentContext.opacity;
+    let opacity = parentContext.opacity *. style.opacity;
 
     let lineHeightPx =
       Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
