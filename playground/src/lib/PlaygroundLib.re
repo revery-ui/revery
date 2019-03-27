@@ -6,12 +6,12 @@ let derp = () => print_endline("Hello, world!");
 let renderFunction = ref(() => <View style={Style.[backgroundColor(Colors.red), width(100), height(100)]} />);
 
 let setRenderFunction = (fn) => {
-    print_endline ("setting render function4");
-    let testVal = fn();
-    let marshalledData = Marshal.to_string(testVal, [Marshal.Closures]);
-    print_endline ("Marshalled data: " ++ marshalledData);
-    let unmarshalledData = Obj.magic(Marshal.from_string(marshalledData));
-    renderFunction := () => unmarshalledData;
+    /* print_endline ("setting render function4"); */
+    /* let testVal = fn(); */
+    /* let marshalledData = Marshal.to_string(testVal, [Marshal.Closures]); */
+    /* print_endline ("Marshalled data: " ++ marshalledData); */
+    /* let unmarshalledData = Obj.magic(Marshal.from_string(marshalledData)); */
+    renderFunction := fn;
 };
 
 let init = app => {
