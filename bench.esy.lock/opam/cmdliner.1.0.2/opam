@@ -11,7 +11,7 @@ depends: [
   "ocaml" {>= "4.01.0"}
   "ocamlfind" {build}
   "ocamlbuild" {build}
-  "topkg" {build}
+  "topkg" {>= "0.8.1" & build}
   "result"
 ]
 build: [[
