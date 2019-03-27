@@ -35,7 +35,7 @@
     "@esy-ocaml/reason": "3.4.0",
     "reason-glfw": "^3.2.1023",
     "reason-fontkit": "^2.3.2",
-    "reason-gl-matrix": "^0.9.9303",
+    "reason-gl-matrix": "^0.9.9304",
     "rebez": "*",
     "@opam/color": "^0.2.0",
     "@opam/js_of_ocaml": "*",
