@@ -77,16 +77,6 @@ let defaultStyles =
     backgroundColor(Colors.transparentWhite),
   ];
 
-let createChangeEvent = (event, value: string): changeEvent => {
-  character: Key.toString(event.key),
-  key: event.key,
-  altKey: event.altKey,
-  ctrlKey: event.ctrlKey,
-  shiftKey: event.shiftKey,
-  superKey: event.superKey,
-  value,
-};
-
 let component = React.component("Input");
 let make =
     (
