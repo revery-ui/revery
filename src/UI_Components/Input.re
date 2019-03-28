@@ -213,28 +213,16 @@ let make =
       render the cursor before the text if placeholder is present
       otherwise to the cursor after
      */
-    let cursor = {
-      let (startStr, _) = getStringParts(cursorPosition, inputString);
-      let dimension =
-        Revery_Draw.Text.measure(
-          ~fontFamily=inputFontFamily,
-          ~fontSize=inputFontSize,
-          startStr,
-        );
+    let cursor =
       <View
         style=Style.[
           width(2),
-          marginTop((defaultHeight - dimension.height) / 2),
+          marginLeft(hasPlaceholder ? inputTextMargin : 0),
           height(inputFontSize),
-          position(`Absolute),
-          marginLeft(
-            dimension.width + (hasPlaceholder ? 2 : inputTextMargin),
-          ),
           opacity(isFocused ? animatedOpacity : 0.0),
           backgroundColor(cursorColor),
         ]
       />;
-    };
 
     let makeTextComponent = (content, ~isEnd) =>
       <Text
@@ -245,12 +233,14 @@ let make =
           fontSize(inputFontSize),
           alignItems(`Center),
           justifyContent(`FlexStart),
-          marginLeft(hasPlaceholder || isEnd ? 2 : inputTextMargin),
+          marginLeft(hasPlaceholder || isEnd ? 0 : inputTextMargin),
         ]
       />;
 
+    let (startStr, endStr) = getStringParts(cursorPosition, inputString);
     let placeholderText = makeTextComponent(placeholder, ~isEnd=false);
-    let inputText = makeTextComponent(inputString, ~isEnd=false);
+    let startText = makeTextComponent(startStr, ~isEnd=false);
+    let endText = makeTextComponent(endStr, ~isEnd=true);
 
     (
       /*
@@ -266,7 +256,7 @@ let make =
         <View style=viewStyles>
           ...{
                hasPlaceholder
-                 ? [cursor, placeholderText] : [cursor, inputText]
+                 ? [cursor, placeholderText] : [startText, cursor, endText]
              }
         </View>
       </Clickable>,

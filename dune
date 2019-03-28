@@ -1,4 +1,1 @@
 (ignored_subdirs (node_modules _esy playground))
-(env
-  (dev
-    (flags (:standard -warn-error -A))))
