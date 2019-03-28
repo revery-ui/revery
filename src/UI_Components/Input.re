@@ -227,16 +227,14 @@ let make =
           marginTop((defaultHeight - dimension.height) / 2),
           height(inputFontSize),
           position(`Absolute),
-          marginLeft(
-            dimension.width + (hasPlaceholder ? 2 : inputTextMargin),
-          ),
+          marginLeft(dimension.width + inputTextMargin),
           opacity(isFocused ? animatedOpacity : 0.0),
           backgroundColor(cursorColor),
         ]
       />;
     };
 
-    let makeTextComponent = (content, ~isEnd) =>
+    let makeTextComponent = content =>
       <Text
         text=content
         style=Style.[
@@ -245,12 +243,12 @@ let make =
           fontSize(inputFontSize),
           alignItems(`Center),
           justifyContent(`FlexStart),
-          marginLeft(hasPlaceholder || isEnd ? 2 : inputTextMargin),
+          marginLeft(inputTextMargin),
         ]
       />;
 
-    let placeholderText = makeTextComponent(placeholder, ~isEnd=false);
-    let inputText = makeTextComponent(inputString, ~isEnd=false);
+    let placeholderText = makeTextComponent(placeholder);
+    let inputText = makeTextComponent(inputString);
 
     (
       /*
@@ -264,10 +262,8 @@ let make =
         onKeyDown=handleKeyDown
         onKeyPress=handleKeyPress>
         <View style=viewStyles>
-          ...{
-               hasPlaceholder
-                 ? [cursor, placeholderText] : [cursor, inputText]
-             }
+          cursor
+          {hasPlaceholder ? placeholderText : inputText}
         </View>
       </Clickable>,
     );
