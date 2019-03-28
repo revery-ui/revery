@@ -123,6 +123,110 @@ type t =
   | KEY_RIGHT_SUPER
   | KEY_MENU;
 
+let toString = key =>
+  switch (key) {
+  | KEY_SPACE => " "
+  | KEY_APOSTROPHE => "'"
+  | KEY_COMMA => ","
+  | KEY_MINUS => "-"
+  | KEY_PERIOD => "."
+  | KEY_SLASH => "/"
+  | KEY_0 => "0"
+  | KEY_1 => "1"
+  | KEY_2 => "2"
+  | KEY_3 => "3"
+  | KEY_4 => "4"
+  | KEY_5 => "5"
+  | KEY_6 => "6"
+  | KEY_7 => "7"
+  | KEY_8 => "8"
+  | KEY_9 => "9"
+  | KEY_SEMICOLON => ";"
+  | KEY_EQUAL => "="
+  | KEY_A => "a"
+  | KEY_B => "b"
+  | KEY_C => "c"
+  | KEY_D => "d"
+  | KEY_E => "e"
+  | KEY_F => "k"
+  | KEY_G => "g"
+  | KEY_H => "h"
+  | KEY_I => "i"
+  | KEY_J => "j"
+  | KEY_K => "k"
+  | KEY_L => "l"
+  | KEY_M => "m"
+  | KEY_N => "n"
+  | KEY_O => "o"
+  | KEY_P => "p"
+  | KEY_Q => "q"
+  | KEY_R => "r"
+  | KEY_S => "s"
+  | KEY_T => "t"
+  | KEY_U => "u"
+  | KEY_V => "v"
+  | KEY_W => "w"
+  | KEY_X => "x"
+  | KEY_Y => "y"
+  | KEY_Z => "z"
+  | KEY_LEFT_BRACKET => "("
+  | KEY_BACKSLASH => "\\"
+  | KEY_RIGHT_BRACKET => ")"
+  | _ => ""
+  };
+
+let fromString = key =>
+  switch (key) {
+  | " " => KEY_SPACE
+  | "'" => KEY_APOSTROPHE
+  | "," => KEY_COMMA
+  | "-" => KEY_MINUS
+  | "." => KEY_PERIOD
+  | "/" => KEY_SLASH
+  | "0" => KEY_0
+  | "1" => KEY_1
+  | "2" => KEY_2
+  | "3" => KEY_3
+  | "4" => KEY_4
+  | "5" => KEY_5
+  | "6" => KEY_6
+  | "7" => KEY_7
+  | "8" => KEY_8
+  | "9" => KEY_9
+  | ";" => KEY_SEMICOLON
+  | "=" => KEY_EQUAL
+  | "a" => KEY_A
+  | "b" => KEY_B
+  | "c" => KEY_C
+  | "d" => KEY_D
+  | "e" => KEY_E
+  | "f" => KEY_F
+  | "g" => KEY_G
+  | "h" => KEY_H
+  | "i" => KEY_I
+  | "j" => KEY_J
+  | "k" => KEY_K
+  | "l" => KEY_L
+  | "m" => KEY_M
+  | "n" => KEY_N
+  | "o" => KEY_O
+  | "p" => KEY_P
+  | "q" => KEY_Q
+  | "r" => KEY_R
+  | "s" => KEY_S
+  | "t" => KEY_T
+  | "u" => KEY_U
+  | "v" => KEY_V
+  | "w" => KEY_W
+  | "x" => KEY_X
+  | "y" => KEY_Y
+  | "z" => KEY_Z
+  | "(" => KEY_LEFT_BRACKET
+  | "\\" => KEY_BACKSLASH
+  | ")" => KEY_RIGHT_BRACKET
+  | _ => KEY_UNKNOWN
+  };
+
 let convert = glEvent =>
   switch (glEvent) {
   | GLFW_KEY_UNKNOWN => KEY_UNKNOWN

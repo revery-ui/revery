@@ -24,6 +24,7 @@ let make =
     (
       ~style,
       ~onClick: clickFunction=noop,
+      ~componentRef=?,
       ~onBlur=?,
       ~onFocus=?,
       ~tabindex=?,
@@ -35,11 +36,17 @@ let make =
   component(slots => {
     let (clickableRef, setClickableRefOption, slots) =
       React.Hooks.state(None, slots);
-    let setClickableRef = r => setClickableRefOption(Some(r));
+    let setClickableRef = r => {
+      switch (componentRef) {
+      | Some(fn) => fn(r)
+      | None => ()
+      };
+      setClickableRefOption(Some(r));
+    };
 
     let (animatedOpacity, setOpacity, slots) = React.Hooks.state(0.8, slots);
 
-    let onMouseMove = (mouseX: float, mouseY: float) => {
+    let onMouseMove = (mouseX: float, mouseY: float) =>
       switch (clickableRef) {
       | Some(clickable) =>
         if (isMouseInsideRef(clickable, mouseX, mouseY)) {
@@ -49,7 +56,6 @@ let make =
         }
       | None => ()
       };
-    };
 
     let onMouseUp = (mouseX: float, mouseY: float) => {
       switch (clickableRef) {
@@ -110,6 +116,7 @@ let createElement =
       ~onKeyDown=?,
       ~onKeyUp=?,
       ~onKeyPress=?,
+      ~componentRef=?,
       (),
     ) =>
   make(
@@ -121,5 +128,6 @@ let createElement =
     ~onKeyUp?,
     ~onKeyPress?,
     ~tabindex,
+    ~componentRef?,
     React.listToElement(children),
   );

@@ -33,19 +33,20 @@ module Example = {
         <View style=containerStyle>
           <Input
             placeholder="Insert text here"
-            value=first
-            onChange={(~value) => setValue({first: value, second})}
+            onChange={({value, _}) => setValue({first: value, second})}
           />
           <Input
             placeholder="custom input"
-            value=second
             placeholderColor=Colors.plum
             cursorColor=Colors.white
-            onChange={(~value) => setValue({first, second: value})}
+            autofocus=true
+            onChange={({value, _}) => setValue({first, second: value})}
+            onKeyDown={event => Console.log(event)}
             style=Style.[
               backgroundColor(Colors.paleVioletRed),
               color(Colors.white),
               margin(20),
+              height(50),
               boxShadow(
                 ~xOffset=-5.,
                 ~yOffset=2.,
