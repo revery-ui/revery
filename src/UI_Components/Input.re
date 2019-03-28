@@ -22,23 +22,29 @@ type action =
   | SetOffset(int)
   | SetValue(string);
 
-let removeCharacter = (word, offset) =>
-  switch (String.length(word), offset) {
-  | (0, n)
-  | (_, n) when Pervasives.abs(n) == String.length(word) => word
+let getTextBeforeCursor = (cursorOffset, text) =>
+  String.sub(text, 0, String.length(text) + cursorOffset);
+let getTextAfterCursor = (cursorOffset, text) =>
+  String.sub(
+    text,
+    String.length(text) + cursorOffset,
+    Pervasives.abs(cursorOffset),
+  );
+
+let removeCharacter = (word, offset) => {
+  let wordLength = String.length(word);
+  switch (wordLength, offset) {
+  | (0, offset)
+  | (_, offset) when Pervasives.abs(offset) == wordLength => word
   | (_, _) =>
-    String.sub(word, 0, String.length(word) + offset - 1)
-    ++ String.sub(
-         word,
-         String.length(word) + offset,
-         Pervasives.abs(offset),
-       )
+    getTextBeforeCursor(offset - 1, word) ++ getTextAfterCursor(offset, word)
   };
+};
 
 let addCharacter = (word, char, offset) =>
-  String.sub(word, 0, String.length(word) + offset)
+  getTextBeforeCursor(offset, word)
   ++ char
-  ++ String.sub(word, String.length(word) + offset, Pervasives.abs(offset));
+  ++ getTextAfterCursor(offset, word);
 
 let reducer = (action, state) =>
   /*
@@ -71,6 +77,16 @@ let defaultStyles =
     backgroundColor(Colors.transparentWhite),
   ];
 
+let createChangeEvent = (event, value: string): changeEvent => {
+  character: Key.toString(event.key),
+  key: event.key,
+  altKey: event.altKey,
+  ctrlKey: event.ctrlKey,
+  shiftKey: event.shiftKey,
+  superKey: event.superKey,
+  value,
+};
+
 let component = React.component("Input");
 let make =
     (
@@ -98,7 +114,16 @@ let make =
       | None => state.internalValue
       };
 
-    let handleKeyDown = (event: NodeEvents.keyEventParams) =>
+    let handleKeyDown = (event: NodeEvents.keyEventParams) => {
+      let createChangeEvent = value => {
+        value,
+        character: Key.toString(event.key),
+        key: event.key,
+        altKey: event.altKey,
+        ctrlKey: event.ctrlKey,
+        shiftKey: event.shiftKey,
+        superKey: event.superKey,
+      };
       switch (event.key) {
       | Key.KEY_LEFT =>
         onKeyDown(event);
@@ -116,28 +141,14 @@ let make =
       | Key.KEY_BACKSPACE =>
         switch (valueAsProp) {
         | Some(v) =>
-          onChange({
-            character: Key.toString(event.key),
-            key: event.key,
-            altKey: event.altKey,
-            ctrlKey: event.ctrlKey,
-            shiftKey: event.shiftKey,
-            superKey: event.superKey,
-            value: removeCharacter(v, state.cursorOffset),
-          })
+          onChange(
+            createChangeEvent(removeCharacter(v, state.cursorOffset)),
+          )
         | None =>
           let newValue =
             removeCharacter(state.internalValue, state.cursorOffset);
           dispatch(SetValue(newValue));
-          onChange({
-            character: Key.toString(event.key),
-            key: event.key,
-            altKey: event.altKey,
-            ctrlKey: event.ctrlKey,
-            shiftKey: event.shiftKey,
-            superKey: event.superKey,
-            value: newValue,
-          });
+          onChange(createChangeEvent(newValue));
         }
 
       | Key.KEY_ESCAPE =>
@@ -145,16 +156,17 @@ let make =
         Focus.loseFocus();
       | _ => onKeyDown(event)
       };
+    };
 
     let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
       let createChangeEvent = value => {
+        value,
         key: Key.fromString(event.character),
         character: event.character,
         altKey: false,
         ctrlKey: false,
         shiftKey: false,
         superKey: false,
-        value,
       };
       switch (valueAsProp) {
       | Some(v) =>
@@ -213,7 +225,6 @@ let make =
 
     let viewStyles = Style.extractViewStyles(allStyles);
 
-    let inputHeight = Selector.select(style, Height, 24);
     let inputFontSize = Selector.select(style, FontSize, 18);
     let inputColor = Selector.select(style, Color, Colors.black);
     let inputFontFamily =
@@ -227,36 +238,14 @@ let make =
         alignItems(`Center),
         justifyContent(`FlexStart),
       ];
-    // marginLeft(6),
-
-    /*
-       TODO: this logic needs the equivalent of sizing an absolutely positioned
-       element in css i.e. should work in the same way
-       calculate the top padding needed to place the cursor centrally
-     */
-    let positionTop =
-      inputHeight > inputFontSize
-        ? (inputHeight - inputFontSize) / 2 : inputFontSize;
 
     let inputCursorStyles =
       Style.[
-        marginLeft(hasPlaceholder ? inputTextMargin : 0),
         height(inputFontSize),
         width(2),
         opacity(state.isFocused ? animatedOpacity : 0.0),
         backgroundColor(cursorColor),
       ];
-    // |> (
-    //   initial =>
-    //     hasPlaceholder
-    //       ? Style.[
-    //           position(`Absolute),
-    //           // top(positionTop),
-    //           left(5),
-    //           ...initial,
-    //         ]
-    //       : initial
-    // );
 
     /*
        component
@@ -266,48 +255,75 @@ let make =
       <Clickable
         onFocus={() => dispatch(SetFocus(true))}
         onBlur={() => dispatch(SetFocus(false))}
-        componentRef={state.autofocus ? Focus.focus : ignore}
+        componentRef={autofocus ? Focus.focus : ignore}
         onKeyDown=handleKeyDown
         onKeyPress=handleKeyPress>
         {hasPlaceholder
            ? <View style=viewStyles>
-               <View style=inputCursorStyles />
+               <View
+                 style=Style.(
+                   merge(
+                     ~source=inputCursorStyles,
+                     ~target=Style.[marginLeft(inputTextMargin)],
+                   )
+                 )
+               />
                <Text style=innerTextStyles text=content />
              </View>
-           : (
-             switch (state.cursorOffset) {
-             | 0 =>
-               <View style=viewStyles>
-                 <Text style=innerTextStyles text=content />
-                 <View style=inputCursorStyles />
-               </View>
-             | n when Pervasives.abs(n) == String.length(content) =>
-               <View style=viewStyles>
-                 <View style=inputCursorStyles />
-                 <Text style=innerTextStyles text=content />
-               </View>
-             | offset =>
-               <View style=viewStyles>
-                 <Text
-                   style=innerTextStyles
-                   text={String.sub(
-                     content,
-                     0,
-                     String.length(content) + offset,
-                   )}
-                 />
-                 <View style=inputCursorStyles />
-                 <Text
-                   style=innerTextStyles
-                   text={String.sub(
-                     content,
-                     String.length(content) + offset,
-                     Pervasives.abs(offset),
-                   )}
-                 />
-               </View>
-             }
-           )}
+           : <View style=viewStyles>
+               ...{
+                    switch (state.cursorOffset) {
+                    | 0 => [
+                        <Text
+                          style=Style.(
+                            merge(
+                              ~source=innerTextStyles,
+                              ~target=Style.[marginLeft(inputTextMargin)],
+                            )
+                          )
+                          text=content
+                        />,
+                        <View style=inputCursorStyles />,
+                      ]
+                    | offset
+                        when Pervasives.abs(offset) == String.length(content) => [
+                        <View
+                          style=Style.(
+                            merge(
+                              ~source=inputCursorStyles,
+                              ~target=Style.[marginLeft(inputTextMargin)],
+                            )
+                          )
+                        />,
+                        <Text style=innerTextStyles text=content />,
+                      ]
+                    | offset => [
+                        <Text
+                          style=Style.(
+                            merge(
+                              ~source=innerTextStyles,
+                              ~target=Style.[marginLeft(inputTextMargin)],
+                            )
+                          )
+                          text={String.sub(
+                            content,
+                            0,
+                            String.length(content) + offset,
+                          )}
+                        />,
+                        <View style=inputCursorStyles />,
+                        <Text
+                          style=innerTextStyles
+                          text={String.sub(
+                            content,
+                            String.length(content) + offset,
+                            Pervasives.abs(offset),
+                          )}
+                        />,
+                      ]
+                    }
+                  }
+             </View>}
       </Clickable>,
     );
   });

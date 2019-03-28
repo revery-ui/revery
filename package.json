@@ -1,6 +1,6 @@
 {
   "name": "revery",
-  "version": "0.13.1",
+  "version": "0.15.2",
   "description": "App toolkit built with Reason",
   "license": "MIT",
   "bugs": { "url": "https://github.com/bryphe/revery/issues" },
@@ -34,8 +34,8 @@
   "dependencies": {
     "@esy-ocaml/reason": "3.4.0",
     "reason-glfw": "^3.2.1023",
-    "reason-fontkit": "^2.3.2",
-    "reason-gl-matrix": "^0.9.9303",
+    "reason-fontkit": "^2.4.0",
+    "reason-gl-matrix": "^0.9.9304",
     "rebez": "*",
     "@opam/color": "^0.2.0",
     "@opam/js_of_ocaml": "*",

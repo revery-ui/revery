@@ -1,22 +1,8 @@
 open Revery_Shaders;
 
-let minOf3 = (x, y, z) =>
-  if (x <= y && x <= z) {
-    x;
-  } else if (y <= x && y <= z) {
-    y;
-  } else {
-    z;
-  };
+let minOf3 = (x, y, z) => min(min(x, y), z);
 
-let maxOf3 = (x, y, z) =>
-  if (x >= y && x >= z) {
-    x;
-  } else if (y >= x && y >= z) {
-    y;
-  } else {
-    z;
-  };
+let maxOf3 = (x, y, z) => max(max(x, y), z);
 
 let create = (x1, y1, x2, y2, x3, y3) => {
   let positions = [|x1, y1, x2, y2, x3, y3|];
