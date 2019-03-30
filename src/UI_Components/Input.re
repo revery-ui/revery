@@ -4,7 +4,11 @@ open Revery_Core;
 type state = {
   inputString: string,
   isFocused: bool,
+  isTyping: bool,
+  lastKeyPress: option(Time.t),
   cursorPosition: int,
+  cursorOpacity: float,
+  nextTick: Time.t,
 };
 
 type textUpdate = {
@@ -23,10 +27,14 @@ type changeEvent = {
 };
 
 type action =
+  | CheckLastKeyPress
   | CursorPosition(int)
+  | CursorTick
   | SetFocus(bool)
+  | UpdateLastKeyPress(Time.t)
   | UpdateText(textUpdate)
-  | Backspace(textUpdate);
+  | Backspace(textUpdate)
+  | NextTick;
 
 let getStringParts = (index, str) =>
   switch (index) {
@@ -61,19 +69,50 @@ let addCharacter = (word, char, index) => {
 
 let reducer = (action, state) =>
   switch (action) {
-  | SetFocus(isFocused) => {...state, isFocused}
+  | SetFocus(isFocused) => {
+      ...state,
+      isFocused,
+      nextTick: Time.Seconds(0.0),
+    }
+  | CheckLastKeyPress => {
+      ...state,
+      isTyping:
+        switch (state.lastKeyPress) {
+        | Some(t) => t >= Time.increment(t, Time.Seconds(0.5))
+        | None => false
+        },
+    }
   | CursorPosition(pos) => {
       ...state,
       cursorPosition:
         getSafeStringBounds(state.inputString, state.cursorPosition, pos),
     }
 
+  | CursorTick => {
+      ...state,
+      cursorOpacity: state.nextTick <= Time.Seconds(0.5) ? 1.0 : 0.0,
+    }
+  | UpdateLastKeyPress(time) => {...state, lastKeyPress: Some(time)}
   | UpdateText({newString, cursorPosition}) =>
     state.isFocused
-      ? {cursorPosition, isFocused: true, inputString: newString} : state
+      ? {
+        ...state,
+        cursorPosition,
+        isFocused: true,
+        isTyping: true,
+        inputString: newString,
+      }
+      : state
   | Backspace({newString, cursorPosition}) =>
     state.isFocused
       ? {...state, inputString: newString, cursorPosition} : state
+  | NextTick => {
+      ...state,
+      nextTick:
+        state.nextTick >= Time.Seconds(1.0) || state.isTyping
+          ? Time.Seconds(0.0)
+          : Time.increment(state.nextTick, Time.Seconds(0.1)),
+    }
   };
 
 let defaultHeight = 50;
@@ -110,20 +149,57 @@ let make =
       (),
     ) =>
   component(slots => {
-    let ({isFocused, cursorPosition, inputString}, dispatch, slots) =
+    let (
+      {
+        isFocused,
+        cursorOpacity,
+        cursorPosition,
+        inputString,
+        isTyping,
+        lastKeyPress: _lastKeyPress,
+        nextTick: _nextTick,
+      },
+      dispatch,
+      slots,
+    ) =
       React.Hooks.reducer(
         ~initialState={
           inputString: valueParam,
+          cursorOpacity: 0.0,
           cursorPosition: String.length(valueParam),
           isFocused: false,
+          isTyping: false,
+          lastKeyPress: None,
+          nextTick: Time.Seconds(0.0),
         },
         reducer,
         slots,
       );
 
+    let slots =
+      React.Hooks.effect(
+        OnMount,
+        () => {
+          let clear =
+            Tick.interval(
+              _ => {
+                dispatch(NextTick);
+                dispatch(CheckLastKeyPress);
+                dispatch(CursorTick);
+              },
+              Seconds(0.1),
+            );
+          Some(clear);
+        },
+        slots,
+      );
+
     let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
       let update = addCharacter(inputString, event.character, cursorPosition);
+
+      dispatch(UpdateLastKeyPress(Time.getTime()));
       dispatch(UpdateText(update));
+
       onChange({
         value: update.newString,
         key: Key.fromString(event.character),
@@ -168,19 +244,6 @@ let make =
       | _ => onKeyDown(event)
       };
 
-    let (animatedOpacity, slots) =
-      Hooks.animation(
-        Animated.floatValue(0.),
-        {
-          toValue: 1.,
-          duration: Seconds(0.5),
-          delay: Seconds(0.5),
-          repeat: true,
-          easing: Animated.linear,
-        },
-        slots,
-      );
-
     let hasPlaceholder = String.length(inputString) < 1;
 
     /*
@@ -219,7 +282,7 @@ let make =
           width(2),
           marginLeft(hasPlaceholder ? inputTextMargin : 0),
           height(inputFontSize),
-          opacity(isFocused ? animatedOpacity : 0.0),
+          opacity(isTyping ? 1.0 : isFocused ? cursorOpacity : 0.0),
           backgroundColor(cursorColor),
         ]
       />;
