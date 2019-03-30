@@ -44,15 +44,15 @@ let startAlphaPass =
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   _activeContext :=
     Some(
-        DrawContext.create(
-          ~pixelRatio,
-          ~scaleFactor,
-          ~screenWidth,
-          ~screenHeight,
-          ~projection,
-          (),
-        ),
-      );
+      DrawContext.create(
+        ~pixelRatio,
+        ~scaleFactor,
+        ~screenWidth,
+        ~screenHeight,
+        ~projection,
+        (),
+      ),
+    );
 };
 
 let endAlphaPass = () => {

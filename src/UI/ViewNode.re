@@ -303,39 +303,39 @@ class viewNode (()) = {
   inherit (class node)() as _super;
   pub! draw = (parentContext: NodeDrawContext.t) => {
     let ctx = RenderPass.getContext();
-      let dimensions = _this#measurements();
-      let width = float_of_int(dimensions.width);
-      let height = float_of_int(dimensions.height);
+    let dimensions = _this#measurements();
+    let width = float_of_int(dimensions.width);
+    let height = float_of_int(dimensions.height);
 
-      let style = _super#getStyle();
-      let opacity = style.opacity *. parentContext.opacity;
+    let style = _super#getStyle();
+    let opacity = style.opacity *. parentContext.opacity;
 
-      let world = _this#getWorldTransform();
+    let world = _this#getWorldTransform();
 
-      let m = ctx.projection;
-      let (minX, minY, maxX, maxY) =
-        renderBorders(~style, ~width, ~height, ~opacity, ~m, ~world);
+    let m = ctx.projection;
+    let (minX, minY, maxX, maxY) =
+      renderBorders(~style, ~width, ~height, ~opacity, ~m, ~world);
 
-      let color = Color.multiplyAlpha(opacity, style.backgroundColor);
+    let color = Color.multiplyAlpha(opacity, style.backgroundColor);
 
-      switch (style.boxShadow) {
-      | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _} =>
-        ()
-      | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
-      };
+    switch (style.boxShadow) {
+    | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _} =>
+      ()
+    | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
+    };
 
-      /* Only render if _not_ transparent */
-      if (color.a > 0.001) {
-        Shapes.drawRect(
-          ~transform=world,
-          ~x=minX,
-          ~y=minY,
-          ~width=maxX -. minX,
-          ~height=maxY -. minY,
-          ~color,
-          (),
-        );
-      };
+    /* Only render if _not_ transparent */
+    if (color.a > 0.001) {
+      Shapes.drawRect(
+        ~transform=world,
+        ~x=minX,
+        ~y=minY,
+        ~width=maxX -. minX,
+        ~height=maxY -. minY,
+        ~color,
+        (),
+      );
+    };
 
     _super#draw(parentContext);
   };
