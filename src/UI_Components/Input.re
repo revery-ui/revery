@@ -86,6 +86,7 @@ let reducer = (action, state) =>
       ...state,
       cursorPosition:
         getSafeStringBounds(state.inputString, state.cursorPosition, pos),
+      nextTick: Time.Seconds(0.0),
     }
 
   | CursorTick => {
