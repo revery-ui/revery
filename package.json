@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "3.4.0",
-    "reason-glfw": "^3.2.1023",
+    "reason-glfw": "^3.2.1024",
     "reason-fontkit": "^2.4.0",
     "reason-gl-matrix": "^0.9.9304",
     "rebez": "*",
