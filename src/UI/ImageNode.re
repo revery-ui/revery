@@ -20,9 +20,7 @@ class imageNode (imagePath: string) = {
     /* Draw background first */
     _super#draw(parentContext);
 
-    let pass = RenderPass.getCurrent();
-    switch (pass) {
-    | AlphaPass(ctx) =>
+    let ctx = RenderPass.getContext();
       Shaders.CompiledShader.use(textureShader.compiledShader);
       let m = ctx.projection;
 
@@ -52,7 +50,5 @@ class imageNode (imagePath: string) = {
 
       glBindTexture(GL_TEXTURE_2D, texture);
       Geometry.draw(quad, textureShader.compiledShader);
-    | _ => ()
-    };
   };
 };

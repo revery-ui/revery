@@ -90,10 +90,8 @@ let drawString =
       ~y=0.,
       text: string,
     ) => {
-  let pass = RenderPass.getCurrent();
+  let ctx = RenderPass.getContext();
 
-  switch (pass) {
-  | AlphaPass(ctx) =>
     let projection = ctx.projection;
     let quad = Assets.quad();
 
@@ -172,6 +170,4 @@ let drawString =
       },
       shapedText,
     );
-  | _ => ()
-  };
 };

@@ -302,9 +302,7 @@ class viewNode (()) = {
   as _this;
   inherit (class node)() as _super;
   pub! draw = (parentContext: NodeDrawContext.t) => {
-    let pass = RenderPass.getCurrent();
-    switch (pass) {
-    | AlphaPass(ctx) =>
+    let ctx = RenderPass.getContext();
       let dimensions = _this#measurements();
       let width = float_of_int(dimensions.width);
       let height = float_of_int(dimensions.height);
@@ -338,8 +336,6 @@ class viewNode (()) = {
           (),
         );
       };
-    | _ => ()
-    };
 
     _super#draw(parentContext);
   };

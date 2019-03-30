@@ -27,55 +27,23 @@ module DrawContext = {
   };
 };
 
-type t =
-  | SolidPass(DrawContext.t)
-  | AlphaPass(DrawContext.t);
-
-let _activePass: ref(option(t)) = ref(None);
+let _activeContext: ref(option(DrawContext.t)) = ref(None);
 
 exception NoActiveRenderPassException;
 
-let getCurrent = () => {
-  switch (_activePass^) {
+let getContext = () => {
+  switch (_activeContext^) {
   | Some(v) => v
   | None => raise(NoActiveRenderPassException)
   };
-};
-
-let getContext = () =>
-  switch (getCurrent()) {
-  | SolidPass(v) => v
-  | AlphaPass(v) => v
-  };
-
-let startSolidPass =
-    (~pixelRatio, ~scaleFactor, ~screenWidth, ~screenHeight, ~projection, ()) => {
-  _activePass :=
-    Some(
-      SolidPass(
-        DrawContext.create(
-          ~pixelRatio,
-          ~scaleFactor,
-          ~screenWidth,
-          ~screenHeight,
-          ~projection,
-          (),
-        ),
-      ),
-    );
-};
-
-let endSolidPass = () => {
-  _activePass := None;
 };
 
 let startAlphaPass =
     (~pixelRatio, ~scaleFactor, ~screenWidth, ~screenHeight, ~projection, ()) => {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  _activePass :=
+  _activeContext :=
     Some(
-      AlphaPass(
         DrawContext.create(
           ~pixelRatio,
           ~scaleFactor,
@@ -84,11 +52,10 @@ let startAlphaPass =
           ~projection,
           (),
         ),
-      ),
-    );
+      );
 };
 
 let endAlphaPass = () => {
   glDisable(GL_BLEND);
-  _activePass := None;
+  _activeContext := None;
 };
