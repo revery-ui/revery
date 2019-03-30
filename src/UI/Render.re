@@ -70,16 +70,16 @@ let render =
 
     let drawContext = NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
 
-    RenderPass.startSolidPass(
-      ~pixelRatio,
-      ~scaleFactor,
-      ~screenHeight=adjustedHeight,
-      ~screenWidth=adjustedWidth,
-      ~projection=_projection,
-      (),
-    );
-    rootNode#draw(drawContext);
-    RenderPass.endSolidPass();
+    /* RenderPass.startSolidPass( */
+    /*   ~pixelRatio, */
+    /*   ~scaleFactor, */
+    /*   ~screenHeight=adjustedHeight, */
+    /*   ~screenWidth=adjustedWidth, */
+    /*   ~projection=_projection, */
+    /*   (), */
+    /* ); */
+    /* rootNode#draw(drawContext); */
+    /* RenderPass.endSolidPass(); */
 
     /* Render all geometry that requires an alpha */
     RenderPass.startAlphaPass(
@@ -91,6 +91,6 @@ let render =
       (),
     );
     rootNode#draw(drawContext);
-    RenderPass.endSolidPass();
+    RenderPass.endAlphaPass();
   });
 };
