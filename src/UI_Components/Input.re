@@ -227,7 +227,7 @@ let make =
           marginTop((defaultHeight - dimension.height) / 2),
           height(inputFontSize),
           position(`Absolute),
-          marginLeft(dimension.width + inputTextMargin),
+          marginLeft(dimension.width + inputTextMargin + 1),
           opacity(isFocused ? animatedOpacity : 0.0),
           backgroundColor(cursorColor),
         ]
