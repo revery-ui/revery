@@ -13,9 +13,6 @@ type cache = Hashtbl.t(string, texture);
 
 let _cache: cache = Hashtbl.create(100);
 
-let initialImage = Image.fromColor(255, 0, 0, 255);
-let initialPixels = Image.getPixels(initialImage);
-
 let getTexture = (imagePath: string) => {
   /* TODO: Support url paths? */
   let execDir = Environment.getExecutingDirectory();
@@ -34,6 +31,7 @@ let getTexture = (imagePath: string) => {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      let initialPixels = Assets.initialPixels();
       glTexImage2D(
         GL_TEXTURE_2D,
         0,

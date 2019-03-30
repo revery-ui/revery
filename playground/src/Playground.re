@@ -60,7 +60,7 @@ let reasonSyntax = () => {
 let _ = {
   reasonSyntax();
   JsooTop.initialize();
-  PlaygroundLib.startPlayground();
+  /* PlaygroundLib.startPlayground(); */
 };
 
 let () = Js.export_all(

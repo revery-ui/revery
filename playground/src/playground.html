@@ -20,11 +20,14 @@
 <script src="Playground.js"></script>
     <script>
 
+       var worker = new Worker("./worker.js");
+/*
+
         window.addEventListener("message", (msg) => {
             if (msg.data.type === "editor.update") {
                 execute2(msg.data.payload);
             }
         });
-
+*/
     </script>
 </html>

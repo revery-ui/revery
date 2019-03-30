@@ -41,4 +41,4 @@
 (install
     (section bin)
     (package playground)
-    (files playground.html gl-matrix-min.js Playground.js))
+    (files playground.html gl-matrix-min.js Playground.js worker.js))
