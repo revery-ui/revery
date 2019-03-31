@@ -339,8 +339,6 @@ class node (()) = {
           )
         };
 
-        print_endline ("Layout node info: " ++ string_of_int(layoutStyle.width) ++ string_of_int(layoutStyle.height));
-
         _layoutNode := node
             node
     };
