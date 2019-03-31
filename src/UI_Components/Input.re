@@ -4,11 +4,9 @@ open Revery_Core;
 type state = {
   inputString: string,
   isFocused: bool,
-  isTyping: bool,
   lastKeyPress: option(Time.t),
   cursorPosition: int,
-  caretOpacity: float,
-  caretTimer: Time.t,
+  cursorTimer: Time.t,
 };
 
 type textUpdate = {
@@ -27,15 +25,13 @@ type changeEvent = {
 };
 
 type action =
-  | CheckIsTyping
   | CursorPosition(int)
-  | CaretOpacity
   | SetFocus(bool)
   | UpdateLastKeyPress(Time.t)
   | UpdateText(textUpdate)
   | Backspace(textUpdate)
-  | CaretTimer
-  | ResetCaretTimer;
+  | CursorTimer
+  | ResetCursorTimer;
 
 let getStringParts = (index, str) =>
   switch (index) {
@@ -71,46 +67,28 @@ let addCharacter = (word, char, index) => {
 let reducer = (action, state) =>
   switch (action) {
   | SetFocus(isFocused) => {...state, isFocused}
-  | CheckIsTyping => {
-      ...state,
-      isTyping:
-        switch (state.lastKeyPress) {
-        | Some(t) => t >= Time.increment(t, Time.Seconds(0.5))
-        | None => false
-        },
-    }
   | CursorPosition(pos) => {
       ...state,
       cursorPosition:
         getSafeStringBounds(state.inputString, state.cursorPosition, pos),
     }
 
-  | CaretOpacity => {
-      ...state,
-      caretOpacity: state.caretTimer <= Time.Seconds(0.5) ? 1.0 : 0.0,
-    }
   | UpdateLastKeyPress(time) => {...state, lastKeyPress: Some(time)}
   | UpdateText({newString, cursorPosition}) =>
     state.isFocused
-      ? {
-        ...state,
-        cursorPosition,
-        isFocused: true,
-        isTyping: true,
-        inputString: newString,
-      }
+      ? {...state, cursorPosition, isFocused: true, inputString: newString}
       : state
   | Backspace({newString, cursorPosition}) =>
     state.isFocused
       ? {...state, inputString: newString, cursorPosition} : state
-  | CaretTimer => {
+  | CursorTimer => {
       ...state,
-      caretTimer:
-        state.caretTimer >= Time.Seconds(1.0)
+      cursorTimer:
+        state.cursorTimer >= Time.Seconds(1.0)
           ? Time.Seconds(0.0)
-          : Time.increment(state.caretTimer, Time.Seconds(0.1)),
+          : Time.increment(state.cursorTimer, Time.Seconds(0.1)),
     }
-  | ResetCaretTimer => {...state, caretTimer: Time.Seconds(0.0)}
+  | ResetCursorTimer => {...state, cursorTimer: Time.Seconds(0.0)}
   };
 
 let defaultHeight = 50;
@@ -148,27 +126,17 @@ let make =
     ) =>
   component(slots => {
     let (
-      {
-        isFocused,
-        caretOpacity,
-        cursorPosition,
-        inputString,
-        isTyping: _isTyping,
-        lastKeyPress: _lastKeyPress,
-        caretTimer: _caretTimer,
-      },
+      {isFocused, cursorPosition, cursorTimer, inputString, lastKeyPress},
       dispatch,
       slots,
     ) =
       React.Hooks.reducer(
         ~initialState={
           inputString: valueParam,
-          caretOpacity: 0.0,
           cursorPosition: String.length(valueParam),
+          cursorTimer: Time.Seconds(0.0),
           isFocused: false,
-          isTyping: false,
           lastKeyPress: None,
-          caretTimer: Time.Seconds(0.0),
         },
         reducer,
         slots,
@@ -179,14 +147,7 @@ let make =
         OnMount,
         () => {
           let clear =
-            Tick.interval(
-              _ => {
-                dispatch(CheckIsTyping);
-                dispatch(CaretTimer);
-                dispatch(CaretOpacity);
-              },
-              Seconds(0.1),
-            );
+            Tick.interval(_ => dispatch(CursorTimer), Seconds(0.1));
           Some(clear);
         },
         slots,
@@ -195,7 +156,7 @@ let make =
     let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
       let update = addCharacter(inputString, event.character, cursorPosition);
 
-      dispatch(ResetCaretTimer);
+      dispatch(ResetCursorTimer);
       dispatch(UpdateLastKeyPress(Time.getTime()));
       dispatch(UpdateText(update));
 
@@ -211,7 +172,7 @@ let make =
     };
 
     let handleKeyDown = (event: NodeEvents.keyEventParams) => {
-      dispatch(ResetCaretTimer);
+      dispatch(ResetCursorTimer);
 
       switch (event.key) {
       | Key.KEY_LEFT =>
@@ -273,18 +234,38 @@ let make =
     let inputFontFamily =
       Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
+    let cursorOpacity = {
+      let cursorToggleBreakpoint = Time.Seconds(0.5);
+
+      let isTyping =
+        lastKeyPress
+        |> (
+          fun
+          | Some(timeAgo) =>
+            timeAgo >= Time.increment(timeAgo, cursorToggleBreakpoint)
+          | None => false
+        );
+
+      (isTyping, isFocused)
+      |> (
+        fun
+        | (_, true) => cursorTimer <= cursorToggleBreakpoint ? 1.0 : 0.0
+        | (_, false) => 0.0
+      );
+    };
+
     /**
-      We place these in a list so we change the order later to
-      render the cursor before the text if placeholder is present
-      otherwise to the cursor after
-     */
+            We place these in a list so we change the order later to
+            render the cursor before the text if placeholder is present
+            otherwise to the cursor after
+           */
     let cursor =
       <View
         style=Style.[
           width(2),
           marginLeft(hasPlaceholder ? inputTextMargin : 0),
           height(inputFontSize),
-          opacity(isFocused ? caretOpacity : 0.0),
+          opacity(cursorOpacity),
           backgroundColor(cursorColor),
         ]
       />;
@@ -314,11 +295,11 @@ let make =
       slots,
       <Clickable
         onFocus={() => {
-          dispatch(ResetCaretTimer);
+          dispatch(ResetCursorTimer);
           dispatch(SetFocus(true));
         }}
         onBlur={() => {
-          dispatch(ResetCaretTimer);
+          dispatch(ResetCursorTimer);
           dispatch(SetFocus(false));
         }}
         componentRef={autofocus ? Focus.focus : ignore}
