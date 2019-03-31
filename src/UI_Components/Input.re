@@ -4,7 +4,6 @@ open Revery_Core;
 type state = {
   inputString: string,
   isFocused: bool,
-  lastKeyPress: option(Time.t),
   cursorPosition: int,
   cursorTimer: Time.t,
 };
@@ -28,7 +27,6 @@ type action =
   | CursorPosition(int)
   | CursorTimer
   | SetFocus(bool)
-  | UpdateLastKeyPress(Time.t)
   | UpdateText(textUpdate)
   | Backspace(textUpdate)
   | ResetCursorTimer;
@@ -79,7 +77,6 @@ let reducer = (action, state) =>
           ? Time.Seconds(0.0)
           : Time.increment(state.cursorTimer, Time.Seconds(0.1)),
     }
-  | UpdateLastKeyPress(time) => {...state, lastKeyPress: Some(time)}
   | UpdateText({newString, cursorPosition}) =>
     state.isFocused
       ? {...state, cursorPosition, isFocused: true, inputString: newString}
@@ -125,7 +122,7 @@ let make =
     ) =>
   component(slots => {
     let (
-      {isFocused, cursorPosition, cursorTimer, inputString, lastKeyPress},
+      {isFocused, cursorPosition, cursorTimer, inputString},
       dispatch,
       slots,
     ) =
@@ -135,7 +132,6 @@ let make =
           cursorPosition: String.length(valueParam),
           cursorTimer: Time.Seconds(0.0),
           isFocused: false,
-          lastKeyPress: None,
         },
         reducer,
         slots,
@@ -156,7 +152,6 @@ let make =
       let update = addCharacter(inputString, event.character, cursorPosition);
 
       dispatch(ResetCursorTimer);
-      dispatch(UpdateLastKeyPress(Time.getTime()));
       dispatch(UpdateText(update));
 
       onChange({
@@ -233,25 +228,13 @@ let make =
     let inputFontFamily =
       Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
-    let cursorOpacity = {
-      let cursorToggleBreakpoint = Time.Seconds(0.5);
-
-      let isTyping =
-        lastKeyPress
-        |> (
-          fun
-          | Some(timeAgo) =>
-            timeAgo >= Time.increment(timeAgo, cursorToggleBreakpoint)
-          | None => false
-        );
-
-      (isTyping, isFocused)
+    let cursorOpacity =
+      isFocused
       |> (
         fun
-        | (_, true) => cursorTimer <= cursorToggleBreakpoint ? 1.0 : 0.0
-        | (_, false) => 0.0
+        | true => cursorTimer <= Time.Seconds(0.5) ? 1.0 : 0.0
+        | false => 0.0
       );
-    };
 
     /**
       We place these in a list so we change the order later to
