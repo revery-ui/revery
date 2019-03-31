@@ -17,10 +17,15 @@
 
 
 </body>
-<script src="Playground.js"></script>
+<script src="Renderer.bc.js"></script>
     <script>
-
        var worker = new Worker("./worker.js");
+
+       worker.addEventListener("message", (msg) => {
+            console.log("GOT MESSAGE: " + JSON.stringify(msg.data)); 
+       //    updateRenderer(msg.data);
+       });
+
 /*
 
         window.addEventListener("message", (msg) => {

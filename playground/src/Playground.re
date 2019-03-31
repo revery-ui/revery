@@ -13,7 +13,7 @@ let execute: Js.t(Js.js_string) => Js.t(Js.js_string) = code => {
   Js.string(result);
 };
 
-let postfix = "\nPlaygroundLib.setRenderFunction(render);";
+let postfix = "\nPlaygroundLib.Worker.setRenderFunction(render);";
 
 let execute2: Js.t(Js.js_string) => Js.t(Js.js_string) = code => {
   let code = Js.to_string(code) ++ postfix;
@@ -63,9 +63,15 @@ let _ = {
   /* PlaygroundLib.startPlayground(); */
 };
 
+/* let startRenderer = PlaygroundLib.Renderer.start; */
+/* let updateRenderer = PlaygroundLib.Renderer.update; */
+/* let startWorker = PlaygroundLib.Worker.start; */
+
 let () = Js.export_all(
   [%js {
     val execute = execute;
     val execute2 = execute2;
+    /* val startRenderer = startRenderer; */
+    /* val updateRenderer = updateRenderer; */
   }]
 );

@@ -1,5 +1,15 @@
+
+(executable
+ (name Renderer)
+ (modules Renderer)
+ (public_name Renderer)
+ (libraries 
+  js_of_ocaml playground.lib Revery flex)
+ )
+
 (executable
  (name Playground)
+ (modules Playground reason_util)
  (flags :standard -safe-string -rectypes)
  (link_flags (:standard -linkall))
  (preprocess (pps js_of_ocaml-ppx))
@@ -41,4 +51,4 @@
 (install
     (section bin)
     (package playground)
-    (files playground.html gl-matrix-min.js Playground.js worker.js))
+    (files playground.html gl-matrix-min.js Renderer.bc.js Playground.js worker.js))
