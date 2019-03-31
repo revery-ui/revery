@@ -2,9 +2,10 @@
 (executable
  (name Renderer)
  (modules Renderer)
+ (preprocess (pps js_of_ocaml-ppx))
  (public_name Renderer)
  (libraries 
-  js_of_ocaml playground.lib Revery flex)
+  js_of_ocaml playground.lib Revery)
  )
 
 (executable

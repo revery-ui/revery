@@ -9,33 +9,28 @@ let derp = () => print_endline("Hello, world!");
 
 let renderFunction = ref(() => <View style={Style.[backgroundColor(Colors.red), width(100), height(100)]} />);
 
-let rootNode = (new viewNode)();
-
-let container = ref(Container.create(rootNode));
-
 let _pendingUpdates: ref(list(updates)) = ref([]);
 let clearUpdates = () => _pendingUpdates := [];
 let queueUpdate = (update: updates) => {
    _pendingUpdates := [update, ..._pendingUpdates^]; 
 };
 
-queueUpdate(NewNode(rootNode#getInternalId(), View));
-queueUpdate(RootNode(rootNode#getInternalId()));
-
 class proxyViewNode (()) = {
     as _this;
     inherit (class viewNode)() as super;
 
-    pub setStyle = style => {
+    pub! setStyle = style => {
       queueUpdate(SetStyle(super#getInternalId(), style));
     };
 
-    pub addChild = (child) => {
+    pub! addChild = (child) => {
+        print_endline ("WORKER: ADD CHILD");
         queueUpdate(AddChild(super#getInternalId(), child#getInternalId()));   
         super#addChild(child);
     };
 
-    pub removeChild = (child) => {
+    pub! removeChild = (child) => {
+        print_endline ("WORKER: REMOVE CHILD");
         queueUpdate(RemoveChild(super#getInternalId(), child#getInternalId()));   
         super#removeChild(child);
     };
@@ -44,6 +39,13 @@ class proxyViewNode (()) = {
         queueUpdate(NewNode(super#getInternalId(), View));
     }
 }
+
+let rootNode = (new proxyViewNode)();
+queueUpdate(RootNode(rootNode#getInternalId()));
+let container = ref(Container.create(rootNode));
+
+
+
 
 let proxyNodeFactory: nodeFactory = {
    createViewNode: () => (new proxyViewNode)(), 
@@ -61,15 +63,17 @@ let setRenderFunction = (fn) => {
 
     renderFunction := fn;
 
+    print_endline ("before render function - childCount: " ++ string_of_int(List.length(rootNode#getChildren())));
     container := Container.update(container^, fn());
     print_endline ("Set render function - childCount: " ++ string_of_int(List.length(rootNode#getChildren())));
 
     print_endline("Trying to post...");
     /* let _derp = Js.string("hi"); */
     let updatesToSend = _pendingUpdates^ |> List.rev;
+    Types.showAll(updatesToSend);
     Worker.post_message(updatesToSend);
+    print_endline("Posted!" ++ string_of_int(List.length(updatesToSend)));
     clearUpdates();
-    print_endline("Posted!");
 
     /* print_endline ("Trying to marshal..."); */
     /* let updates = Marshal.to_string(_pendingUpdates^, []); */

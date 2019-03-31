@@ -8,6 +8,18 @@
  * https://github.com/bryphe/reason-reactify
  */
 
+type nodeFactory = {
+    createViewNode: unit => ViewNode.viewNode,
+}
+
+let defaultNodeFactory: nodeFactory = {
+    createViewNode: () => (new ViewNode.viewNode)(),
+};
+
+let _nodeFactory = ref(defaultNodeFactory);
+
+let setNodeFactory = (factory) => _nodeFactory := factory;
+
 module View = {
   let component = React.nativeComponent("View");
 
@@ -58,7 +70,7 @@ module View = {
                 ~onDimensionsChanged?,
                 (),
               );
-            let node = (new ViewNode.viewNode)();
+            let node = _nodeFactory^.createViewNode();
             node#setEvents(events);
             node#setStyle(styles);
             node#setTabIndex(tabindex);

@@ -23,8 +23,10 @@
 
        worker.addEventListener("message", (msg) => {
             console.log("GOT MESSAGE: " + JSON.stringify(msg.data)); 
-       //    updateRenderer(msg.data);
+             updateRenderer(msg.data);
        });
+
+startRenderer();
 
 /*
 

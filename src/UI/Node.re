@@ -309,28 +309,24 @@ class node (()) = {
     let style = _style^;
     let layoutStyle = _layoutStyle^;
 
-    let f = v =>
-      switch (v) {
-      | Some(_) => true
-      | None => false
-      };
+    /* let f = v => */
+    /*   switch (v) { */
+    /*   | Some(_) => true */
+    /*   | None => false */
+    /*   }; */
 
-    let m = v =>
-      switch (v) {
-      | Some(v) => v
-      | None => Layout.createNode([||], layoutStyle)
-      };
+    /* let m = v => */
+    /*   switch (v) { */
+    /*   | Some(v) => v */
+    /*   | None => Layout.createNode([||], layoutStyle) */
+    /*   }; */
 
     switch (style.layoutMode, _isLayoutDirty^ || force) {
     | (Style.LayoutMode.Minimal, _) =>
-      _this#_minimalLayout(style);
-      None;
-    | (Style.LayoutMode.Default, false) => Some(_layoutNode^)
+        Layout.createNode([||], layoutStyle)
+    | (Style.LayoutMode.Default, false) => _layoutNode^
     | (Style.LayoutMode.Default, true) =>
-      let childNodes =
-        List.map(c => c#toLayoutNode(~force, ()), _children^)
-        |> List.filter(f)
-        |> List.map(m);
+      let childNodes = List.map(c => c#toLayoutNode(~force, ()), _children^)
 
       let node =
         switch (_this#getMeasureFunction()) {
@@ -343,8 +339,10 @@ class node (()) = {
           )
         };
 
-      _layoutNode := node;
-      Some(node);
+        print_endline ("Layout node info: " ++ string_of_int(layoutStyle.width) ++ string_of_int(layoutStyle.height));
+
+        _layoutNode := node
+            node
     };
   };
   pri _queueCallback = (cb: callback) => {

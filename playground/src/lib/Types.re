@@ -11,3 +11,16 @@ type updates =
 | SetStyle(int, Style.t)
 | AddChild(int, int)
 | RemoveChild(int, int);
+
+
+let show = (u: updates) => {
+switch(u) {
+| RootNode(_) => "rootnode"
+| NewNode(_) => "newnode"
+| _ => "Unknown"
+}
+};
+
+let showAll = (u: list(updates)) => {
+    List.iter((v) => print_endline("- " ++ show(v)), u);    
+};

@@ -16,6 +16,7 @@
     "@opam/js_of_ocaml": "*",
     "@opam/js_of_ocaml-compiler": "*",
     "@opam/js_of_ocaml-lwt": "*",
+    "@opam/js_of_ocaml-ppx": "*",
     "@opam/js_of_ocaml-toplevel": "*",
     "revery": "^0.13.0"
   },
@@ -24,10 +25,13 @@
     "@opam/cmdliner": "1.0.2",
     "@opam/dune": "1.7.3",
     "@opam/js_of_ocaml": "link:../../js_of_ocaml/js_of_ocaml.opam",
+    "@opam/js_of_ocaml-lwt": "link:../../js_of_ocaml/js_of_ocaml-lwt.opam",
     "@opam/js_of_ocaml-compiler": "link:../../js_of_ocaml/js_of_ocaml-compiler.opam",
+    "@opam/js_of_ocaml-ppx": "link:../../js_of_ocaml/js_of_ocaml-ppx.opam",
     "@opam/js_of_ocaml-toplevel": "link:../../js_of_ocaml/js_of_ocaml-toplevel.opam",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#daa00be",
-    "revery": "link:../package.json"
+    "revery": "link:../package.json",
+    "reason-fontkit": "link:../../reason-fontkit"
   },
   "peerDependencies": {
     "ocaml": "^4.7.0"

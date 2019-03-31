@@ -279,6 +279,7 @@ class viewNode (()) = {
   as _this;
   inherit (class node)() as _super;
   pub! draw = (parentContext: NodeDrawContext.t) => {
+      print_endline ("DRAWING NODE: " ++ string_of_int(_this#getInternalId()));
     let pass = RenderPass.getCurrent();
     switch (pass) {
     | AlphaPass(ctx) =>
@@ -305,8 +306,13 @@ class viewNode (()) = {
       | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
       };
 
+      print_endline("COlor - r: " ++ string_of_float(color.r) ++ " a: " ++ string_of_float(color.a));
+      print_endline("Measured dimensions: " ++ string_of_float(width) ++ " | " ++ string_of_float(height));
+
       /* Only render if _not_ transparent */
       if (color.a > 0.001) {
+          print_endline ("ACTUALLY drawing: " ++ string_of_float(minX) ++ "|" ++ string_of_float(minY) ++ "|" ++ string_of_float(maxX) ++ "|" ++ string_of_float(maxY));
+
         Shapes.drawRect(
           ~transform=world,
           ~x=minX,
