@@ -26,11 +26,11 @@ type changeEvent = {
 
 type action =
   | CursorPosition(int)
+  | CursorTimer
   | SetFocus(bool)
   | UpdateLastKeyPress(Time.t)
   | UpdateText(textUpdate)
   | Backspace(textUpdate)
-  | CursorTimer
   | ResetCursorTimer;
 
 let getStringParts = (index, str) =>
@@ -72,7 +72,13 @@ let reducer = (action, state) =>
       cursorPosition:
         getSafeStringBounds(state.inputString, state.cursorPosition, pos),
     }
-
+  | CursorTimer => {
+      ...state,
+      cursorTimer:
+        state.cursorTimer >= Time.Seconds(1.0)
+          ? Time.Seconds(0.0)
+          : Time.increment(state.cursorTimer, Time.Seconds(0.1)),
+    }
   | UpdateLastKeyPress(time) => {...state, lastKeyPress: Some(time)}
   | UpdateText({newString, cursorPosition}) =>
     state.isFocused
@@ -81,13 +87,6 @@ let reducer = (action, state) =>
   | Backspace({newString, cursorPosition}) =>
     state.isFocused
       ? {...state, inputString: newString, cursorPosition} : state
-  | CursorTimer => {
-      ...state,
-      cursorTimer:
-        state.cursorTimer >= Time.Seconds(1.0)
-          ? Time.Seconds(0.0)
-          : Time.increment(state.cursorTimer, Time.Seconds(0.1)),
-    }
   | ResetCursorTimer => {...state, cursorTimer: Time.Seconds(0.0)}
   };
 
@@ -255,10 +254,10 @@ let make =
     };
 
     /**
-            We place these in a list so we change the order later to
-            render the cursor before the text if placeholder is present
-            otherwise to the cursor after
-           */
+      We place these in a list so we change the order later to
+      render the cursor before the text if placeholder is present
+      otherwise to the cursor after
+     */
     let cursor =
       <View
         style=Style.[
