@@ -7,8 +7,8 @@ type state = {
   isTyping: bool,
   lastKeyPress: option(Time.t),
   cursorPosition: int,
-  cursorOpacity: float,
-  nextTick: Time.t,
+  caretOpacity: float,
+  caretTimer: Time.t,
 };
 
 type textUpdate = {
@@ -27,14 +27,15 @@ type changeEvent = {
 };
 
 type action =
-  | CheckLastKeyPress
+  | CheckIsTyping
   | CursorPosition(int)
-  | CursorTick
+  | CaretOpacity
   | SetFocus(bool)
   | UpdateLastKeyPress(Time.t)
   | UpdateText(textUpdate)
   | Backspace(textUpdate)
-  | NextTick;
+  | CaretTimer
+  | ResetCaretTimer;
 
 let getStringParts = (index, str) =>
   switch (index) {
@@ -69,12 +70,8 @@ let addCharacter = (word, char, index) => {
 
 let reducer = (action, state) =>
   switch (action) {
-  | SetFocus(isFocused) => {
-      ...state,
-      isFocused,
-      nextTick: Time.Seconds(0.0),
-    }
-  | CheckLastKeyPress => {
+  | SetFocus(isFocused) => {...state, isFocused}
+  | CheckIsTyping => {
       ...state,
       isTyping:
         switch (state.lastKeyPress) {
@@ -86,12 +83,11 @@ let reducer = (action, state) =>
       ...state,
       cursorPosition:
         getSafeStringBounds(state.inputString, state.cursorPosition, pos),
-      nextTick: Time.Seconds(0.0),
     }
 
-  | CursorTick => {
+  | CaretOpacity => {
       ...state,
-      cursorOpacity: state.nextTick <= Time.Seconds(0.5) ? 1.0 : 0.0,
+      caretOpacity: state.caretTimer <= Time.Seconds(0.5) ? 1.0 : 0.0,
     }
   | UpdateLastKeyPress(time) => {...state, lastKeyPress: Some(time)}
   | UpdateText({newString, cursorPosition}) =>
@@ -107,13 +103,14 @@ let reducer = (action, state) =>
   | Backspace({newString, cursorPosition}) =>
     state.isFocused
       ? {...state, inputString: newString, cursorPosition} : state
-  | NextTick => {
+  | CaretTimer => {
       ...state,
-      nextTick:
-        state.nextTick >= Time.Seconds(1.0) || state.isTyping
+      caretTimer:
+        state.caretTimer >= Time.Seconds(1.0)
           ? Time.Seconds(0.0)
-          : Time.increment(state.nextTick, Time.Seconds(0.1)),
+          : Time.increment(state.caretTimer, Time.Seconds(0.1)),
     }
+  | ResetCaretTimer => {...state, caretTimer: Time.Seconds(0.0)}
   };
 
 let defaultHeight = 50;
@@ -153,12 +150,12 @@ let make =
     let (
       {
         isFocused,
-        cursorOpacity,
+        caretOpacity,
         cursorPosition,
         inputString,
-        isTyping,
+        isTyping: _isTyping,
         lastKeyPress: _lastKeyPress,
-        nextTick: _nextTick,
+        caretTimer: _caretTimer,
       },
       dispatch,
       slots,
@@ -166,12 +163,12 @@ let make =
       React.Hooks.reducer(
         ~initialState={
           inputString: valueParam,
-          cursorOpacity: 0.0,
+          caretOpacity: 0.0,
           cursorPosition: String.length(valueParam),
           isFocused: false,
           isTyping: false,
           lastKeyPress: None,
-          nextTick: Time.Seconds(0.0),
+          caretTimer: Time.Seconds(0.0),
         },
         reducer,
         slots,
@@ -184,9 +181,9 @@ let make =
           let clear =
             Tick.interval(
               _ => {
-                dispatch(NextTick);
-                dispatch(CheckLastKeyPress);
-                dispatch(CursorTick);
+                dispatch(CheckIsTyping);
+                dispatch(CaretTimer);
+                dispatch(CaretOpacity);
               },
               Seconds(0.1),
             );
@@ -198,6 +195,7 @@ let make =
     let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
       let update = addCharacter(inputString, event.character, cursorPosition);
 
+      dispatch(ResetCaretTimer);
       dispatch(UpdateLastKeyPress(Time.getTime()));
       dispatch(UpdateText(update));
 
@@ -212,7 +210,9 @@ let make =
       });
     };
 
-    let handleKeyDown = (event: NodeEvents.keyEventParams) =>
+    let handleKeyDown = (event: NodeEvents.keyEventParams) => {
+      dispatch(ResetCaretTimer);
+
       switch (event.key) {
       | Key.KEY_LEFT =>
         onKeyDown(event);
@@ -244,6 +244,7 @@ let make =
 
       | _ => onKeyDown(event)
       };
+    };
 
     let hasPlaceholder = String.length(inputString) < 1;
 
@@ -283,7 +284,7 @@ let make =
           width(2),
           marginLeft(hasPlaceholder ? inputTextMargin : 0),
           height(inputFontSize),
-          opacity(isTyping ? 1.0 : isFocused ? cursorOpacity : 0.0),
+          opacity(isFocused ? caretOpacity : 0.0),
           backgroundColor(cursorColor),
         ]
       />;
@@ -312,8 +313,14 @@ let make =
        */
       slots,
       <Clickable
-        onFocus={() => dispatch(SetFocus(true))}
-        onBlur={() => dispatch(SetFocus(false))}
+        onFocus={() => {
+          dispatch(ResetCaretTimer);
+          dispatch(SetFocus(true));
+        }}
+        onBlur={() => {
+          dispatch(ResetCaretTimer);
+          dispatch(SetFocus(false));
+        }}
         componentRef={autofocus ? Focus.focus : ignore}
         onKeyDown=handleKeyDown
         onKeyPress=handleKeyPress>
