@@ -66,8 +66,21 @@ let update = (v: list(updates)) => {
 
 let start = () => {
 
-
     /* rootNode := Some((new viewNode)()); */
+     let worker = Js_of_ocaml.Worker.create("./worker.js");
+     worker##.onmessage := Js_of_ocaml.Dom_html.handler((evt) => {
+         let data = Js.Unsafe.get(evt, "data");
+         update(data);
+        Js._true
+     });
+
+    let ret = (update) => {
+
+        /* let msg = print_endline(update); */    
+
+        worker##postMessage(Protocol.ToWorker.SourceCodeUpdated(update));
+    };
+
 
     let init = app => {
 
@@ -89,8 +102,6 @@ let start = () => {
             let scaleFactor = Window.getScaleFactor(win);
             let adjustedHeight = size.height / scaleFactor;
             let adjustedWidth = size.width / scaleFactor;
-
-            print_endline ("rendering - width: " ++ string_of_int(adjustedWidth) ++ " | height: " ++ string_of_int(adjustedHeight));
 
             rootNode#setStyle(
                 Style.make(
@@ -145,13 +156,15 @@ let start = () => {
     };
 
     App.start(init);
+
+    ret;
 };
+
 
 
 let () = Js.export_all(
   [%js {
       val startRenderer = start;
-      val updateRenderer = update;
   }]
 );
 

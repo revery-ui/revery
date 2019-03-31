@@ -19,22 +19,21 @@
 </body>
 <script src="Renderer.bc.js"></script>
     <script>
-       var worker = new Worker("./worker.js");
-
+//       var worker = new Worker("./worker.js");
+/*
        worker.addEventListener("message", (msg) => {
             console.log("GOT MESSAGE: " + JSON.stringify(msg.data)); 
              updateRenderer(msg.data);
        });
+       */
 
-startRenderer();
+       let updateCode = startRenderer();
 
-/*
 
         window.addEventListener("message", (msg) => {
             if (msg.data.type === "editor.update") {
-                execute2(msg.data.payload);
+                updateCode(msg.data.payload);
             }
         });
-*/
     </script>
 </html>
