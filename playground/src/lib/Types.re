@@ -4,6 +4,7 @@ open Revery.UI;
 type nodeType =
 | View
 | Text
+| Image;
 
 
 type updates =
@@ -12,7 +13,8 @@ type updates =
 | SetStyle(int, Style.t)
 | AddChild(int, int)
 | RemoveChild(int, int)
-| SetText(int, string);
+| SetText(int, string)
+| SetImageSrc(int, string);
 
 
 let show = (u: updates) => {

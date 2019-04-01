@@ -70,7 +70,35 @@ class proxyTextNode (text) = {
         queueUpdate(NewNode(super#getInternalId(), Text));
         queueUpdate(SetText(super#getInternalId(), text));
     }
-}
+};
+
+class proxyImageNode (src) = {
+    as _this;
+    inherit (class imageNode)(src) as super;
+
+    pub! setStyle = style => {
+      queueUpdate(SetStyle(super#getInternalId(), style));
+    };
+
+    pub! addChild = (child) => {
+        print_endline ("WORKER: ADD TEXT CHILD");
+        queueUpdate(AddChild(super#getInternalId(), child#getInternalId()));   
+        super#addChild(child);
+    };
+
+    pub! removeChild = (child) => {
+        print_endline ("WORKER: REMOVE TEXT CHILD");
+        queueUpdate(RemoveChild(super#getInternalId(), child#getInternalId()));   
+        super#removeChild(child);
+    };
+
+    initializer {
+        print_endline ("IMAGE: Initial src: " ++ src);   
+        queueUpdate(NewNode(super#getInternalId(), Image));
+        queueUpdate(SetImageSrc(super#getInternalId(), src));
+    }
+};
+
 
 let rootNode = (new proxyViewNode)();
 queueUpdate(RootNode(rootNode#getInternalId()));
@@ -82,6 +110,7 @@ let container = ref(Container.create(rootNode));
 let proxyNodeFactory: nodeFactory = {
    createViewNode: () => (new proxyViewNode)(), 
    createTextNode: (text) => (new proxyTextNode)(text),
+   createImageNode: (src) => (new proxyImageNode)(src),
 };
 
 setNodeFactory(proxyNodeFactory);
