@@ -34,11 +34,12 @@ let createNodeWithMeasure = (children, style, measure) =>
 let layout = (~force=false, node) =>
   Performance.bench("layout", () => {
     let layoutNode = node#toLayoutNode(~force, ());
-    switch (layoutNode) {
-    | None => ()
-    | Some(v) =>
-      Layout.layoutNode(v, Encoding.cssUndefined, Encoding.cssUndefined, Ltr)
-    };
+    Layout.layoutNode(
+      layoutNode,
+      Encoding.cssUndefined,
+      Encoding.cssUndefined,
+      Ltr,
+    );
   });
 let printCssNode = root =>
   LayoutPrint.printCssNode((
