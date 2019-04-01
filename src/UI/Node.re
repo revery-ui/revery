@@ -50,11 +50,7 @@ class node (()) = {
     let worldTransform = _this#getWorldTransform();
     let dimensions = _this#measurements();
 
-    let ctx =
-      switch (RenderPass.getCurrent()) {
-      | SolidPass(v) => v
-      | AlphaPass(v) => v
-      };
+    let ctx = RenderPass.getContext();
 
     Overflow.render(
       worldTransform,

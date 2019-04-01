@@ -92,6 +92,7 @@ type t = {
   border: Border.t,
   borderHorizontal: Border.t,
   borderVertical: Border.t,
+  borderRadius: float,
   transform: list(Transform.t),
   opacity: float,
   boxShadow: BoxShadow.properties,
@@ -149,6 +150,7 @@ let make =
       ~border=Border.make(),
       ~borderHorizontal=Border.make(),
       ~borderVertical=Border.make(),
+      ~borderRadius=0.0,
       ~transform=[],
       ~opacity=1.0,
       ~boxShadow=BoxShadow.{
@@ -212,6 +214,7 @@ let make =
     border,
     borderHorizontal,
     borderVertical,
+    borderRadius,
     opacity,
     boxShadow,
     cursor,
@@ -332,6 +335,7 @@ type coreStyleProps = [
   | `Border(Border.t)
   | `BorderHorizontal(Border.t)
   | `BorderVertical(Border.t)
+  | `BorderRadius(float)
   | `Transform(list(Transform.t))
   | `Opacity(float)
   | `BoxShadow(BoxShadow.properties)
@@ -484,6 +488,8 @@ let borderHorizontal = (~color, ~width) =>
 let borderVertical = (~color, ~width) =>
   Border.make(~color, ~width, ()) |> (b => `BorderVertical(b));
 
+let borderRadius = r => `BorderRadius(r);
+
 let alignItems = a => `AlignItems(alignment(a));
 let justifyContent = a => `JustifyContent(justify(a));
 let alignSelf = a => `AlignSelf(alignment(a));
@@ -581,6 +587,7 @@ let applyStyle = (style, styleRule) =>
   | `BorderRight(borderRight) => {...style, borderRight}
   | `BorderVertical(borderVertical) => {...style, borderVertical}
   | `BorderHorizontal(borderHorizontal) => {...style, borderHorizontal}
+  | `BorderRadius(borderRadius) => {...style, borderRadius}
   | `Opacity(opacity) => {...style, opacity}
   | `BoxShadow(boxShadow) => {...style, boxShadow}
   | `Transform(transform) => {...style, transform}
@@ -652,6 +659,7 @@ let merge = (~source, ~target) =>
               | (`Border(_), `Border(_)) => targetStyle
               | (`BorderHorizontal(_), `BorderHorizontal(_)) => targetStyle
               | (`BorderVertical(_), `BorderVertical(_)) => targetStyle
+              | (`BorderRadius(_), `BorderRadius(_)) => targetStyle
               | (`Transform(_), `Transform(_)) => targetStyle
               | (`Opacity(_), `Opacity(_)) => targetStyle
               | (`BoxShadow(_), `BoxShadow(_)) => targetStyle
