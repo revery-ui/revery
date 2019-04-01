@@ -13,6 +13,7 @@ let rootNode: ref(option(viewNode)) = ref(None);
 
 let createNode = (nodeType) => switch(nodeType) {
 | View => (new viewNode)()
+| Text => Obj.magic((new textNode)(""));
 /* | _ => (new viewNode)() */
 };
 
@@ -55,6 +56,7 @@ let visitUpdate = u => switch(u) {
        let childNode = nodeFromId(childId);
        parentNode#removeChild(childNode);
     }
+    | SetText(id, text) => print_endline ("TODO: set text: " ++ text);
     | _ => ()
     };
 
@@ -64,21 +66,50 @@ let update = (v: list(updates)) => {
     List.iter(visitUpdate, v);
 };
 
+
 let start = () => {
 
-    /* rootNode := Some((new viewNode)()); */
-     let worker = Js_of_ocaml.Worker.create("./worker.js");
+    let isWorkerReady = ref(false);
+    let latestSourceCode: ref(option(Js.t(Js.js_string))) = ref(None);
+
+    let worker = Js_of_ocaml.Worker.create("./worker.js");
+
+    let sendLatestSource = () => {
+        switch (latestSourceCode^) {
+        | Some(v) => worker##postMessage(Protocol.ToWorker.SourceCodeUpdated(v))
+        | None => ();
+        };
+
+        latestSourceCode := None;
+    };
+
+    let handleMessage = (msg: Protocol.ToRenderer.t) => {
+       switch (msg) {
+       | Updates(updates) => update(updates)
+       | Compiling => {
+            isWorkerReady := false;
+                           print_endline("Compiling...");
+       }
+       | Ready => {
+           isWorkerReady := true; 
+                          print_endline ("Ready!");
+            sendLatestSource();
+       }
+       | _ => ();
+       } 
+    };
+
      worker##.onmessage := Js_of_ocaml.Dom_html.handler((evt) => {
          let data = Js.Unsafe.get(evt, "data");
-         update(data);
+         handleMessage(data);
         Js._true
      });
 
     let ret = (update) => {
-
-        /* let msg = print_endline(update); */    
-
-        worker##postMessage(Protocol.ToWorker.SourceCodeUpdated(update));
+        latestSourceCode := Some(update);
+        if (isWorkerReady^) {
+            sendLatestSource();   
+        }
     };
 
 

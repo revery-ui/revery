@@ -15,6 +15,8 @@ module ToWorker {
 
 module ToRenderer {
     type t =
+    | Ready
+    | Compiling
     | SourceCodeCompiled(result(unit, unit))
     | Updates(list(Types.updates))
 };

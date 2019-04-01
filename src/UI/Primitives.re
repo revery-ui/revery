@@ -10,10 +10,12 @@
 
 type nodeFactory = {
     createViewNode: unit => ViewNode.viewNode,
+    createTextNode: string => TextNode.textNode,
 }
 
 let defaultNodeFactory: nodeFactory = {
     createViewNode: () => (new ViewNode.viewNode)(),
+    createTextNode: (text) => (new TextNode.textNode)(text),
 };
 
 let _nodeFactory = ref(defaultNodeFactory);
@@ -183,7 +185,7 @@ module Text = {
                 ~onMouseWheel?,
                 (),
               );
-            let node = (new TextNode.textNode)(text);
+            let node = _nodeFactory^.createTextNode(text);
             node#setEvents(events);
             node#setStyle(styles);
             Obj.magic(node);

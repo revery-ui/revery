@@ -2,7 +2,8 @@ open Revery;
 open Revery.UI;
 
 type nodeType =
-| View;
+| View
+| Text
 
 
 type updates =
@@ -10,7 +11,8 @@ type updates =
 | NewNode(int, nodeType)
 | SetStyle(int, Style.t)
 | AddChild(int, int)
-| RemoveChild(int, int);
+| RemoveChild(int, int)
+| SetText(int, string);
 
 
 let show = (u: updates) => {
