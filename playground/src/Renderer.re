@@ -55,27 +55,22 @@ let rec buildMeasurements = (node: viewNode) => {
 let visitUpdate = u =>
   switch (u) {
   | RootNode(id) =>
-    print_endline("update: rootnode: " ++ string_of_int(id));
     let node = nodeFromId(id);
     rootNode := Obj.magic(Some(node));
     Hashtbl.add(idToNode, id, node);
     Hashtbl.add(idToWorkerId, node#getInternalId(), id);
   | NewNode(id, nodeType) =>
-    print_endline("update: newnode: " ++ string_of_int(id));
     let node = createNode(nodeType);
     Hashtbl.add(idToNode, id, node);
     Hashtbl.add(idToWorkerId, node#getInternalId(), id);
   | SetStyle(id, style) =>
-    print_endline("update: setstyle: " ++ string_of_int(id));
     let node = nodeFromId(id);
     node#setStyle(style);
   | AddChild(parentId, childId) =>
-    print_endline("update: addchild: " ++ string_of_int(parentId));
     let parentNode = nodeFromId(parentId);
     let childNode = nodeFromId(childId);
     parentNode#addChild(childNode);
   | RemoveChild(parentId, childId) =>
-    print_endline("update: removechild: " ++ string_of_int(parentId));
     let parentNode = nodeFromId(parentId);
     let childNode = nodeFromId(childId);
     parentNode#removeChild(childNode);
@@ -89,8 +84,8 @@ let visitUpdate = u =>
   };
 
 let update = (v: list(updates)) => {
-  print_endline("Got updates: ");
-  Types.showAll(v);
+  /* print_endline("Got updates: "); */
+  /* Types.showAll(v); */
   List.iter(visitUpdate, v);
 };
 
@@ -248,7 +243,6 @@ let start = () => {
             sendMeasurements();
             isLayoutDirty := false;
         }
-        rootNode#flushCallbacks();
 
         Mat4.ortho(
           _projection,
