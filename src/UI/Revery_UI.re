@@ -17,6 +17,7 @@ class textNode = class TextNode.textNode;
 class imageNode = class ImageNode.imageNode;
 module NodeDrawContext = NodeDrawContext;
 
+module Keyboard = Keyboard;
 module Mouse = Mouse;
 module NodeEvents = NodeEvents;
 module UiEvents = UiEvents;

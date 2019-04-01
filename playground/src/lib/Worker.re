@@ -131,20 +131,14 @@ let sendMessage = msg => {
   Worker.post_message(msg);
 };
 
-let setRenderFunction = fn => {
-  /* print_endline ("setting render function4"); */
-  /* let testVal = fn(); */
-  /* let marshalledData = Marshal.to_string(testVal, [Marshal.Closures]); */
-  /* print_endline ("Marshalled data: " ++ marshalledData); */
-  /* let unmarshalledData = Obj.magic(Marshal.from_string(marshalledData)); */
 
-  renderFunction := fn;
+let render = () => {
 
   print_endline(
     "before render function - childCount: "
     ++ string_of_int(List.length(rootNode#getChildren())),
   );
-  container := Container.update(container^, fn());
+  container := Container.update(container^, renderFunction^());
   print_endline(
     "Set render function - childCount: "
     ++ string_of_int(List.length(rootNode#getChildren())),
@@ -158,11 +152,32 @@ let setRenderFunction = fn => {
   /* Worker.post_message(updatesToSend); */
   print_endline("Posted!" ++ string_of_int(List.length(updatesToSend)));
   clearUpdates();
+    
+}
+
+let onStale = () => {
+    render();
 };
 
-let log = v => print_endline("[Worker] " ++ v);
+let _ = Revery_Core.Event.subscribe(React.onStale, onStale);
+let setRenderFunction = fn => {
+  /* print_endline ("setting render function4"); */
+  /* let testVal = fn(); */
+  /* let marshalledData = Marshal.to_string(testVal, [Marshal.Closures]); */
+  /* print_endline ("Marshalled data: " ++ marshalledData); */
+  /* let unmarshalledData = Obj.magic(Marshal.from_string(marshalledData)); */
+
+  renderFunction := fn;
+  render();
+};
+
+let log = v => ();
+/* let log = v => print_endline("[Worker] " ++ v); */
 
 let start = exec => {
+
+  let mouseCursor = Revery_UI.Mouse.Cursor.make();
+
   Worker.set_onmessage((updates: Protocol.ToWorker.t) => {
     log("WORKER: GOT UPDATES");
     switch (updates) {
@@ -188,8 +203,11 @@ let start = exec => {
 
       List.iter(f, v);
       rootNode#recalculate();
+      rootNode#flushCallbacks();
 
       log("measurements applied");
+    | MouseEvent(me) => Revery_UI.Mouse.dispatch(mouseCursor, me, rootNode);
+    | KeyboardEvent(ke) => Revery_UI.Keyboard.dispatch(ke);
     | _ => log("unknown update")
     };
   });

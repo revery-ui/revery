@@ -25,7 +25,7 @@ let nodeFromId = (id: int) => {
   let item = Hashtbl.find_opt(idToNode, id);
   switch (item) {
   | Some(v) => v
-  | None => failwith("Cannot find node: " ++ string_of_int(id))
+  | None => failwith("(renderer - nodeFromId) Cannot find node: " ++ string_of_int(id))
   };
 };
 
@@ -33,7 +33,7 @@ let workerIdFromId = (id: int) => {
   let workerId = Hashtbl.find_opt(idToWorkerId, id);
   switch (workerId) {
   | Some(v) => v
-  | None => failwith("Cannot find node: " ++ string_of_int(id))
+  | None => failwith("(renderer - workerIdFromId) Cannot find node: " ++ string_of_int(id))
   };
 };
 
@@ -58,6 +58,8 @@ let visitUpdate = u =>
     print_endline("update: rootnode: " ++ string_of_int(id));
     let node = nodeFromId(id);
     rootNode := Obj.magic(Some(node));
+    Hashtbl.add(idToNode, id, node);
+    Hashtbl.add(idToWorkerId, node#getInternalId(), id);
   | NewNode(id, nodeType) =>
     print_endline("update: newnode: " ++ string_of_int(id));
     let node = createNode(nodeType);
@@ -96,6 +98,8 @@ let start = () => {
   let isWorkerReady = ref(false);
   let latestSourceCode: ref(option(Js.t(Js.js_string))) = ref(None);
 
+  let isLayoutDirty = ref(false);
+
   let worker = Js_of_ocaml.Worker.create("./worker.js");
 
   let sendLatestSource = () => {
@@ -126,7 +130,10 @@ let start = () => {
 
   let handleMessage = (msg: Protocol.ToRenderer.t) => {
     switch (msg) {
-    | Updates(updates) => update(updates)
+    | Updates(updates) => {
+        isLayoutDirty := true;
+        update(updates);
+    }
     | Compiling =>
       isWorkerReady := false;
       print_endline("Compiling...");
@@ -172,6 +179,13 @@ let start = () => {
           |> sendMouseEvent;
         },
       );
+  let _ =
+    Revery_Core.Event.subscribe(
+      Revery_Draw.FontCache.onFontLoaded,
+      () => {
+        isLayoutDirty := true;
+      },
+    );
 
     let _ =
       Revery_Core.Event.subscribe(win.onMouseDown, m =>
@@ -228,9 +242,12 @@ let start = () => {
         /* let layoutNode = rootNode#toLayoutNode(~force=false, ()); */
         /* Layout.printCssNode(layoutNode); */
 
-        Layout.layout(~force=true, rootNode);
-        rootNode#recalculate();
-        sendMeasurements();
+        if (isLayoutDirty^) {
+            Layout.layout(~force=true, rootNode);
+            rootNode#recalculate();
+            sendMeasurements();
+            isLayoutDirty := false;
+        }
         rootNode#flushCallbacks();
 
         Mat4.ortho(
