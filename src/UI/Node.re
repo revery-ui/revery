@@ -304,8 +304,7 @@ class node (()) = {
     switch (_isLayoutDirty^ || force) {
     | false => _layoutNode^
     | true =>
-      let childNodes =
-        List.map(c => c#toLayoutNode(~force, ()), _children^);
+      let childNodes = List.map(c => c#toLayoutNode(~force, ()), _children^);
 
       let node =
         switch (_this#getMeasureFunction()) {
