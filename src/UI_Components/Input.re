@@ -213,18 +213,28 @@ let make =
       render the cursor before the text if placeholder is present
       otherwise to the cursor after
      */
-    let cursor =
+    let cursor = {
+      let (startStr, _) = getStringParts(cursorPosition, inputString);
+      let dimension =
+        Revery_Draw.Text.measure(
+          ~fontFamily=inputFontFamily,
+          ~fontSize=inputFontSize,
+          startStr,
+        );
       <View
         style=Style.[
           width(2),
-          marginLeft(hasPlaceholder ? inputTextMargin : 0),
+          marginTop((defaultHeight - dimension.height) / 2),
           height(inputFontSize),
+          position(`Absolute),
+          marginLeft(dimension.width + inputTextMargin + 1),
           opacity(isFocused ? animatedOpacity : 0.0),
           backgroundColor(cursorColor),
         ]
       />;
+    };
 
-    let makeTextComponent = (content, ~isEnd) =>
+    let makeTextComponent = content =>
       <Text
         text=content
         style=Style.[
@@ -233,14 +243,12 @@ let make =
           fontSize(inputFontSize),
           alignItems(`Center),
           justifyContent(`FlexStart),
-          marginLeft(hasPlaceholder || isEnd ? 0 : inputTextMargin),
+          marginLeft(inputTextMargin),
         ]
       />;
 
-    let (startStr, endStr) = getStringParts(cursorPosition, inputString);
-    let placeholderText = makeTextComponent(placeholder, ~isEnd=false);
-    let startText = makeTextComponent(startStr, ~isEnd=false);
-    let endText = makeTextComponent(endStr, ~isEnd=true);
+    let placeholderText = makeTextComponent(placeholder);
+    let inputText = makeTextComponent(inputString);
 
     (
       /*
@@ -254,10 +262,8 @@ let make =
         onKeyDown=handleKeyDown
         onKeyPress=handleKeyPress>
         <View style=viewStyles>
-          ...{
-               hasPlaceholder
-                 ? [cursor, placeholderText] : [startText, cursor, endText]
-             }
+          cursor
+          {hasPlaceholder ? placeholderText : inputText}
         </View>
       </Clickable>,
     );
