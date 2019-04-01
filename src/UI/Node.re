@@ -67,21 +67,14 @@ class node (()) = {
     );
   };
   pub measurements = () => {
-    let style = _this#getStyle();
-    let ret: Dimensions.t =
-      switch (style.layoutMode) {
-      | Style.LayoutMode.Minimal => _miniLayout^
-      | Style.LayoutMode.Default =>
-        let layout = _layoutNode^.layout;
-        Dimensions.create(
-          ~left=layout.left,
-          ~top=layout.top,
-          ~width=layout.width,
-          ~height=layout.height,
-          (),
-        );
-      };
-    ret;
+    let layout = _layoutNode^.layout;
+    Dimensions.create(
+      ~left=layout.left,
+      ~top=layout.top,
+      ~width=layout.width,
+      ~height=layout.height,
+      (),
+    );
   };
   pub getInternalId = () => _internalId;
   pub getTabIndex = () => _tabIndex^;
@@ -302,31 +295,12 @@ class node (()) = {
     List.iter(n => n#_minimalLayout(style), _children^);
   };
   pub toLayoutNode = (~force, ()) => {
-    let style = _style^;
     let layoutStyle = _layoutStyle^;
 
-    let f = v =>
-      switch (v) {
-      | Some(_) => true
-      | None => false
-      };
-
-    let m = v =>
-      switch (v) {
-      | Some(v) => v
-      | None => Layout.createNode([||], layoutStyle)
-      };
-
-    switch (style.layoutMode, _isLayoutDirty^ || force) {
-    | (Style.LayoutMode.Minimal, _) =>
-      _this#_minimalLayout(style);
-      None;
-    | (Style.LayoutMode.Default, false) => Some(_layoutNode^)
-    | (Style.LayoutMode.Default, true) =>
-      let childNodes =
-        List.map(c => c#toLayoutNode(~force, ()), _children^)
-        |> List.filter(f)
-        |> List.map(m);
+    switch (_isLayoutDirty^ || force) {
+    | false => _layoutNode^
+    | true =>
+      let childNodes = List.map(c => c#toLayoutNode(~force, ()), _children^);
 
       let node =
         switch (_this#getMeasureFunction()) {
@@ -340,7 +314,7 @@ class node (()) = {
         };
 
       _layoutNode := node;
-      Some(node);
+      node;
     };
   };
   pri _queueCallback = (cb: callback) => {
