@@ -301,25 +301,11 @@ class node (()) = {
   pub toLayoutNode = (~force, ()) => {
     let layoutStyle = _layoutStyle^;
 
-    let f = v =>
-      switch (v) {
-      | Some(_) => true
-      | None => false
-      };
-
-    let m = v =>
-      switch (v) {
-      | Some(v) => v
-      | None => Layout.createNode([||], layoutStyle)
-      };
-
     switch (_isLayoutDirty^ || force) {
-    | false => Some(_layoutNode^)
+    | false => _layoutNode^
     | true =>
       let childNodes =
-        List.map(c => c#toLayoutNode(~force, ()), _children^)
-        |> List.filter(f)
-        |> List.map(m);
+        List.map(c => c#toLayoutNode(~force, ()), _children^);
 
       let node =
         switch (_this#getMeasureFunction()) {
@@ -333,7 +319,7 @@ class node (()) = {
         };
 
       _layoutNode := node;
-      Some(node);
+      node;
     };
   };
   pri _queueCallback = (cb: callback) => {
