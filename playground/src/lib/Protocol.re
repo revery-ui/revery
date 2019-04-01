@@ -1,6 +1,6 @@
 /*
  * Protocol
- * 
+ *
  * Types for communication: worker <-> renderer
  */
 
@@ -8,15 +8,23 @@ open Js_of_ocaml;
 
 open Types;
 
-module ToWorker {
-    type t =
-    | SourceCodeUpdated(Js.t(Js.js_string));
-}
+module ToWorker = {
+  type nodeMeasurement = {
+    id: int,
+    dimensions: Revery.UI.Dimensions.t,
+  };
 
-module ToRenderer {
-    type t =
+  type t =
+    | SourceCodeUpdated(Js.t(Js.js_string))
+    | Measurements(list(nodeMeasurement))
+    | KeyboardEvent(Revery_Core.Events.internalKeyboardEvent)
+    | MouseEvent(Revery_Core.Events.internalMouseEvents);
+};
+
+module ToRenderer = {
+  type t =
     | Ready
     | Compiling
     | SourceCodeCompiled(result(unit, unit))
-    | Updates(list(Types.updates))
+    | Updates(list(Types.updates));
 };

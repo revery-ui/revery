@@ -43,8 +43,7 @@ class node (()) = {
   val _lastDimensions: ref(NodeEvents.DimensionsChangedEventParams.t) =
     ref(NodeEvents.DimensionsChangedEventParams.create());
   val _isLayoutDirty = ref(true);
-  val _miniLayout: ref(Dimensions.t) =
-    ref(Dimensions.create(~top=0, ~left=0, ~width=0, ~height=0, ()));
+  val _forcedMeasurements: ref(option(Dimensions.t)) = ref(None);
   pub draw = (parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
@@ -67,6 +66,10 @@ class node (()) = {
     );
   };
   pub measurements = () => {
+      switch (_forcedMeasurements^) {
+      | Some(v) => v
+      | None => {
+      
     let layout = _layoutNode^.layout;
     Dimensions.create(
       ~left=layout.left,
@@ -75,6 +78,11 @@ class node (()) = {
       ~height=layout.height,
       (),
     );
+      }
+      }
+  };
+  pub forceMeasurements = (dimensions: Dimensions.t) => {
+    _forcedMeasurements := Some(dimensions);  
   };
   pub getInternalId = () => _internalId;
   pub getTabIndex = () => _tabIndex^;
@@ -276,23 +284,6 @@ class node (()) = {
       | (KeyPress(_), _) => ()
       };
     ();
-  };
-  pub _minimalLayout = (style: Style.t) => {
-    let prev = _miniLayout^;
-    if (prev.top != style.top
-        || prev.left != style.left
-        || prev.width != style.width
-        || prev.height != style.height) {
-      _miniLayout :=
-        Dimensions.create(
-          ~top=style.top,
-          ~left=style.left,
-          ~width=style.width,
-          ~height=style.height,
-          (),
-        );
-    };
-    List.iter(n => n#_minimalLayout(style), _children^);
   };
   pub toLayoutNode = (~force, ()) => {
     let layoutStyle = _layoutStyle^;

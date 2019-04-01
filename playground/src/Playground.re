@@ -8,25 +8,27 @@ open Js_of_ocaml;
 
 open PlaygroundLib.Types;
 
-let execute: Js.t(Js.js_string) => Js.t(Js.js_string) = code => {
-  let code = Js.to_string(code);
-  let buffer = Buffer.create(100);
-  let formatter = Format.formatter_of_buffer(buffer);
-  JsooTop.execute(true, formatter, code);
-  let result = Buffer.contents(buffer)
-  Js.string(result);
-};
+let execute: Js.t(Js.js_string) => Js.t(Js.js_string) =
+  code => {
+    let code = Js.to_string(code);
+    let buffer = Buffer.create(100);
+    let formatter = Format.formatter_of_buffer(buffer);
+    JsooTop.execute(true, formatter, code);
+    let result = Buffer.contents(buffer);
+    Js.string(result);
+  };
 
 let postfix = "\nPlaygroundLib.Worker.setRenderFunction(render);";
 
-let execute2: Js.t(Js.js_string) => Js.t(Js.js_string) = code => {
-  let code = Js.to_string(code) ++ postfix;
-  let buffer = Buffer.create(100);
-  let formatter = Format.formatter_of_buffer(buffer);
-  JsooTop.execute(true, formatter, code);
-  let result = Buffer.contents(buffer)
-  Js.string(result);
-};
+let execute2: Js.t(Js.js_string) => Js.t(Js.js_string) =
+  code => {
+    let code = Js.to_string(code) ++ postfix;
+    let buffer = Buffer.create(100);
+    let formatter = Format.formatter_of_buffer(buffer);
+    JsooTop.execute(true, formatter, code);
+    let result = Buffer.contents(buffer);
+    Js.string(result);
+  };
 
 let reasonSyntax = () => {
   open Reason_toolchain.From_current;
@@ -61,8 +63,7 @@ let reasonSyntax = () => {
     wrap(copy_out_phrase, Reason_oprint.print_out_phrase);
 };
 
-
-let log = (v) => print_endline ("[Worker] " ++ v);
+let log = v => print_endline("[Worker] " ++ v);
 
 let _ = {
   reasonSyntax();
@@ -84,4 +85,3 @@ let _ = {
   log("Initialized");
   /* PlaygroundLib.startPlayground(); */
 };
-

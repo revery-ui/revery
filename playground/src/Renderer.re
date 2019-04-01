@@ -19,6 +19,7 @@ let createNode = (nodeType) => switch(nodeType) {
 };
 
 let idToNode: Hashtbl.t(int, node) = Hashtbl.create(100);
+let idToWorkerId: Hashtbl.t(int, int) = Hashtbl.create(100);
 
 let nodeFromId = (id: int) => {
     let item = Hashtbl.find_opt(idToNode, id);
@@ -26,6 +27,31 @@ let nodeFromId = (id: int) => {
     | Some(v) => v
     | None => failwith("Cannot find node: " ++ string_of_int(id))
     }
+};
+
+let workerIdFromId = (id: int) => {
+    let workerId = Hashtbl.find_opt(idToWorkerId, id);
+    switch (workerId) {
+    | Some(v) => v
+    | None => failwith("Cannot find node: " ++ string_of_int(id))
+    }
+}
+
+let rec buildMeasurements = (node: viewNode) => {
+
+   let nodeToMeasurement = (node: viewNode) => {
+        let ret: Protocol.ToWorker.nodeMeasurement = {
+            id: workerIdFromId(node#getInternalId()),    
+            dimensions: node#measurements(),
+        };
+        ret;
+   };
+
+   let childMeasurements = node#getChildren()
+       |> List.map(buildMeasurements)
+       |> List.flatten;
+
+    [nodeToMeasurement(node), ...childMeasurements]
 };
 
 let visitUpdate = u => switch(u) {
@@ -39,6 +65,7 @@ let visitUpdate = u => switch(u) {
         print_endline ("update: newnode: " ++string_of_int(id));
         let node = createNode(nodeType);
         Hashtbl.add(idToNode, id, node);
+        Hashtbl.add(idToWorkerId, node#getInternalId(), id);
     }
     | SetStyle(id, style) => {
         print_endline ("update: setstyle: " ++string_of_int(id));
@@ -91,6 +118,25 @@ let start = () => {
         latestSourceCode := None;
     };
 
+    let sendMeasurements = () => {
+        switch (rootNode^) {
+        | None => ();    
+        | Some(v) => { 
+            let measurements = buildMeasurements(v);
+            worker##postMessage(Protocol.ToWorker.Measurements(measurements));
+        }
+
+        };
+    }
+
+    let sendMouseEvent = (mouseEvent) => {
+       worker##postMessage(Protocol.ToWorker.MouseEvent(mouseEvent)); 
+    };
+
+    let sendKeyboardEvent = (keyboardEvent) => {
+       worker##postMessage(Protocol.ToWorker.KeyboardEvent(keyboardEvent));
+    };
+
     let handleMessage = (msg: Protocol.ToRenderer.t) => {
        switch (msg) {
        | Updates(updates) => update(updates)
@@ -130,6 +176,63 @@ let start = () => {
             });
 
 
+  let _ =
+    Revery_Core.Event.subscribe(
+      window.onMouseMove,
+      m => {
+          let scaleFactor = Window.getScaleFactor(win);
+          Revery_Core.Events.InternalMouseMove({
+            mouseX: m.mouseX /. float_of_int(scaleFactor),
+            mouseY: m.mouseY /. float_of_int(scaleFactor),
+          })
+          |> sendMouseEvent;
+      },
+    );
+
+  let _ =
+    Revery_Core.Event.subscribe(
+      window.onMouseDown,
+      m => {
+        Revery_Core.Events.InternalMouseDown({button: m.button})
+        |> sendMouseEvent;
+      },
+    );
+
+  let _ =
+    Revery_Core.Event.subscribe(window.onKeyPress, event =>
+      Revery_Core.Events.InternalKeyPressEvent(event)
+      |> sendKeyboardEvent;
+    );
+
+  let _ =
+    Revery_Core.Event.subscribe(window.onKeyDown, event =>
+      Revery_Core.Events.InternalKeyDownEvent(event)
+      |> sendKeyboardEvent;
+    );
+
+  let _ =
+    Revery_Core.Event.subscribe(window.onKeyUp, event =>
+      Revery_Core.Events.InternalKeyUpEvent(event)
+      |> sendKeyboardEvent;
+    );
+
+  let _ =
+    Revery_Core.Event.subscribe(
+      window.onMouseUp,
+      m => {
+        Revery_Core.Events.InternalMouseUp({button: m.button})
+        |> sendMouseEvent;
+      },
+    );
+
+  let _ =
+    Revery_Core.Event.subscribe(
+      window.onMouseWheel,
+      m => {
+        Revery_Core.Events.InternalMouseWheel(m)
+        |> sendMouseEvent;
+      },
+    );
         let _projection = Mat4.create();
 
         let render = () => switch(rootNode^) {
@@ -156,7 +259,9 @@ let start = () => {
 
             Layout.layout(~force=true, rootNode);
             rootNode#recalculate();
+            sendMeasurements();
             rootNode#flushCallbacks();
+
 
             Mat4.ortho(
                 _projection,
