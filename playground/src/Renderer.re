@@ -56,7 +56,10 @@ let visitUpdate = u => switch(u) {
        let childNode = nodeFromId(childId);
        parentNode#removeChild(childNode);
     }
-    | SetText(id, text) => print_endline ("TODO: set text: " ++ text);
+    | SetText(id, text) => {
+        let textNode = Obj.magic(nodeFromId(id));
+        textNode#setText(text);
+    }
     | _ => ()
     };
 

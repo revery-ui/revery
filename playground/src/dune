@@ -52,4 +52,4 @@
 (install
     (section bin)
     (package playground)
-    (files playground.html gl-matrix-min.js Renderer.bc.js Playground.js worker.js))
+    (files Roboto-Regular.ttf FontAwesome5FreeSolid.otf playground.html gl-matrix-min.js Renderer.bc.js Playground.js worker.js))
