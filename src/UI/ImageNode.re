@@ -13,12 +13,13 @@ open ViewNode;
 
 class imageNode (imagePath: string) = {
   as _this;
+  val mutable src = imagePath;
   inherit (class node)() as _super;
   pub! draw = (parentContext: NodeDrawContext.t) => {
     /* Draw background first */
     _super#draw(parentContext);
     let textureShader = Assets.textureShader();
-    let texture = ImageRenderer.getTexture(imagePath);
+    let texture = ImageRenderer.getTexture(src);
 
     let ctx = RenderPass.getContext();
     Shaders.CompiledShader.use(textureShader.compiledShader);
@@ -49,5 +50,9 @@ class imageNode (imagePath: string) = {
 
     glBindTexture(GL_TEXTURE_2D, texture);
     Geometry.draw(quad, textureShader.compiledShader);
+  };
+
+  pub setSrc = (newSrc) => {
+    src = newSrc;  
   };
 };

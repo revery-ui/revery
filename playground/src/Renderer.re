@@ -14,6 +14,7 @@ let rootNode: ref(option(viewNode)) = ref(None);
 let createNode = (nodeType) => switch(nodeType) {
 | View => (new viewNode)()
 | Text => Obj.magic((new textNode)(""));
+| Image => Obj.magic((new imageNode)(""));
 /* | _ => (new viewNode)() */
 };
 
@@ -59,6 +60,10 @@ let visitUpdate = u => switch(u) {
     | SetText(id, text) => {
         let textNode = Obj.magic(nodeFromId(id));
         textNode#setText(text);
+    }
+    | SetImageSrc(id, src) => {
+        let imageNode = Obj.magic(nodeFromId(id));
+        imageNode#setSrc(src);
     }
     | _ => ()
     };

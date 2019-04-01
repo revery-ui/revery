@@ -44,6 +44,7 @@ let getTexture = (imagePath: string) => {
       let imageLoadPromise = Image.load(relativeImagePath);
 
       let success = img => {
+          print_endline ("successfully loaded image");
         let pixels = Image.getPixels(img);
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexImage2D(
