@@ -8,307 +8,267 @@ open Js_of_ocaml;
 open PlaygroundLib;
 open PlaygroundLib.Types;
 
-
 let rootNode: ref(option(viewNode)) = ref(None);
 
-let createNode = (nodeType) => switch(nodeType) {
-| View => (new viewNode)()
-| Text => Obj.magic((new textNode)(""));
-| Image => Obj.magic((new imageNode)(""));
-/* | _ => (new viewNode)() */
-};
+let createNode = nodeType =>
+  switch (nodeType) {
+  | View => (new viewNode)()
+  | Text => Obj.magic((new textNode)(""))
+  | Image => Obj.magic((new imageNode)(""))
+  /* | _ => (new viewNode)() */
+  };
 
 let idToNode: Hashtbl.t(int, node) = Hashtbl.create(100);
 let idToWorkerId: Hashtbl.t(int, int) = Hashtbl.create(100);
 
 let nodeFromId = (id: int) => {
-    let item = Hashtbl.find_opt(idToNode, id);
-    switch (item) {
-    | Some(v) => v
-    | None => failwith("Cannot find node: " ++ string_of_int(id))
-    }
+  let item = Hashtbl.find_opt(idToNode, id);
+  switch (item) {
+  | Some(v) => v
+  | None => failwith("Cannot find node: " ++ string_of_int(id))
+  };
 };
 
 let workerIdFromId = (id: int) => {
-    let workerId = Hashtbl.find_opt(idToWorkerId, id);
-    switch (workerId) {
-    | Some(v) => v
-    | None => failwith("Cannot find node: " ++ string_of_int(id))
-    }
-}
+  let workerId = Hashtbl.find_opt(idToWorkerId, id);
+  switch (workerId) {
+  | Some(v) => v
+  | None => failwith("Cannot find node: " ++ string_of_int(id))
+  };
+};
 
 let rec buildMeasurements = (node: viewNode) => {
+  let nodeToMeasurement = (node: viewNode) => {
+    let ret: Protocol.ToWorker.nodeMeasurement = {
+      id: workerIdFromId(node#getInternalId()),
+      dimensions: node#measurements(),
+    };
+    ret;
+  };
 
-   let nodeToMeasurement = (node: viewNode) => {
-        let ret: Protocol.ToWorker.nodeMeasurement = {
-            id: workerIdFromId(node#getInternalId()),    
-            dimensions: node#measurements(),
-        };
-        ret;
-   };
+  let childMeasurements =
+    node#getChildren() |> List.map(buildMeasurements) |> List.flatten;
 
-   let childMeasurements = node#getChildren()
-       |> List.map(buildMeasurements)
-       |> List.flatten;
-
-    [nodeToMeasurement(node), ...childMeasurements]
+  [nodeToMeasurement(node), ...childMeasurements];
 };
 
-let visitUpdate = u => switch(u) {
-    | RootNode(id) => {
-        print_endline ("update: rootnode: " ++string_of_int(id));
-        let node = nodeFromId(id);
-        rootNode := Obj.magic(Some(node));
-        
-    }
-    | NewNode(id, nodeType) => {
-        print_endline ("update: newnode: " ++string_of_int(id));
-        let node = createNode(nodeType);
-        Hashtbl.add(idToNode, id, node);
-        Hashtbl.add(idToWorkerId, node#getInternalId(), id);
-    }
-    | SetStyle(id, style) => {
-        print_endline ("update: setstyle: " ++string_of_int(id));
-        let node = nodeFromId(id);
-        node#setStyle(style);
-    }
-    | AddChild(parentId, childId) => {
-        print_endline ("update: addchild: " ++string_of_int(parentId));
-       let parentNode = nodeFromId(parentId); 
-       let childNode = nodeFromId(childId);
-       parentNode#addChild(childNode);
-    }
-    | RemoveChild(parentId, childId) => {
-        print_endline ("update: removechild: " ++string_of_int(parentId));
-       let parentNode = nodeFromId(parentId); 
-       let childNode = nodeFromId(childId);
-       parentNode#removeChild(childNode);
-    }
-    | SetText(id, text) => {
-        let textNode = Obj.magic(nodeFromId(id));
-        textNode#setText(text);
-    }
-    | SetImageSrc(id, src) => {
-        let imageNode = Obj.magic(nodeFromId(id));
-        imageNode#setSrc(src);
-    }
-    | _ => ()
-    };
+let visitUpdate = u =>
+  switch (u) {
+  | RootNode(id) =>
+    print_endline("update: rootnode: " ++ string_of_int(id));
+    let node = nodeFromId(id);
+    rootNode := Obj.magic(Some(node));
+  | NewNode(id, nodeType) =>
+    print_endline("update: newnode: " ++ string_of_int(id));
+    let node = createNode(nodeType);
+    Hashtbl.add(idToNode, id, node);
+    Hashtbl.add(idToWorkerId, node#getInternalId(), id);
+  | SetStyle(id, style) =>
+    print_endline("update: setstyle: " ++ string_of_int(id));
+    let node = nodeFromId(id);
+    node#setStyle(style);
+  | AddChild(parentId, childId) =>
+    print_endline("update: addchild: " ++ string_of_int(parentId));
+    let parentNode = nodeFromId(parentId);
+    let childNode = nodeFromId(childId);
+    parentNode#addChild(childNode);
+  | RemoveChild(parentId, childId) =>
+    print_endline("update: removechild: " ++ string_of_int(parentId));
+    let parentNode = nodeFromId(parentId);
+    let childNode = nodeFromId(childId);
+    parentNode#removeChild(childNode);
+  | SetText(id, text) =>
+    let textNode = Obj.magic(nodeFromId(id));
+    textNode#setText(text);
+  | SetImageSrc(id, src) =>
+    let imageNode = Obj.magic(nodeFromId(id));
+    imageNode#setSrc(src);
+  | _ => ()
+  };
 
 let update = (v: list(updates)) => {
-    print_endline ("Got updates: ");
-    Types.showAll(v);
-    List.iter(visitUpdate, v);
+  print_endline("Got updates: ");
+  Types.showAll(v);
+  List.iter(visitUpdate, v);
 };
 
-
 let start = () => {
+  let isWorkerReady = ref(false);
+  let latestSourceCode: ref(option(Js.t(Js.js_string))) = ref(None);
 
-    let isWorkerReady = ref(false);
-    let latestSourceCode: ref(option(Js.t(Js.js_string))) = ref(None);
+  let worker = Js_of_ocaml.Worker.create("./worker.js");
 
-    let worker = Js_of_ocaml.Worker.create("./worker.js");
-
-    let sendLatestSource = () => {
-        switch (latestSourceCode^) {
-        | Some(v) => worker##postMessage(Protocol.ToWorker.SourceCodeUpdated(v))
-        | None => ();
-        };
-
-        latestSourceCode := None;
+  let sendLatestSource = () => {
+    switch (latestSourceCode^) {
+    | Some(v) => worker##postMessage(Protocol.ToWorker.SourceCodeUpdated(v))
+    | None => ()
     };
 
-    let sendMeasurements = () => {
-        switch (rootNode^) {
-        | None => ();    
-        | Some(v) => { 
-            let measurements = buildMeasurements(v);
-            worker##postMessage(Protocol.ToWorker.Measurements(measurements));
-        }
+    latestSourceCode := None;
+  };
 
-        };
-    }
-
-    let sendMouseEvent = (mouseEvent) => {
-       worker##postMessage(Protocol.ToWorker.MouseEvent(mouseEvent)); 
+  let sendMeasurements = () => {
+    switch (rootNode^) {
+    | None => ()
+    | Some(v) =>
+      let measurements = buildMeasurements(v);
+      worker##postMessage(Protocol.ToWorker.Measurements(measurements));
     };
+  };
 
-    let sendKeyboardEvent = (keyboardEvent) => {
-       worker##postMessage(Protocol.ToWorker.KeyboardEvent(keyboardEvent));
+  let sendMouseEvent = mouseEvent => {
+    worker##postMessage(Protocol.ToWorker.MouseEvent(mouseEvent));
+  };
+
+  let sendKeyboardEvent = keyboardEvent => {
+    worker##postMessage(Protocol.ToWorker.KeyboardEvent(keyboardEvent));
+  };
+
+  let handleMessage = (msg: Protocol.ToRenderer.t) => {
+    switch (msg) {
+    | Updates(updates) => update(updates)
+    | Compiling =>
+      isWorkerReady := false;
+      print_endline("Compiling...");
+    | Ready =>
+      isWorkerReady := true;
+      print_endline("Ready!");
+      sendLatestSource();
+    | _ => ()
     };
+  };
 
-    let handleMessage = (msg: Protocol.ToRenderer.t) => {
-       switch (msg) {
-       | Updates(updates) => update(updates)
-       | Compiling => {
-            isWorkerReady := false;
-                           print_endline("Compiling...");
-       }
-       | Ready => {
-           isWorkerReady := true; 
-                          print_endline ("Ready!");
-            sendLatestSource();
-       }
-       | _ => ();
-       } 
+  worker##.onmessage :=
+    Js_of_ocaml.Dom_html.handler(evt => {
+      let data = Js.Unsafe.get(evt, "data");
+      handleMessage(data);
+      Js._true;
+    });
+
+  let ret = update => {
+    latestSourceCode := Some(update);
+    if (isWorkerReady^) {
+      sendLatestSource();
     };
+  };
 
-     worker##.onmessage := Js_of_ocaml.Dom_html.handler((evt) => {
-         let data = Js.Unsafe.get(evt, "data");
-         handleMessage(data);
-        Js._true
-     });
+  let init = app => {
+    let win =
+      App.createWindow(
+        app,
+        "Welcome to Revery",
+        ~createOptions={...Window.defaultCreateOptions, maximized: true},
+      );
 
-    let ret = (update) => {
-        latestSourceCode := Some(update);
-        if (isWorkerReady^) {
-            sendLatestSource();   
-        }
-    };
-
-
-    let init = app => {
-
-        let win = 
-            App.createWindow(app, "Welcome to Revery", ~createOptions={
-                ...Window.defaultCreateOptions,
-                maximized: true,
-            });
-
-
-  let _ =
-    Revery_Core.Event.subscribe(
-      window.onMouseMove,
-      m => {
+    let _ =
+      Revery_Core.Event.subscribe(
+        win.onMouseMove,
+        m => {
           let scaleFactor = Window.getScaleFactor(win);
           Revery_Core.Events.InternalMouseMove({
             mouseX: m.mouseX /. float_of_int(scaleFactor),
             mouseY: m.mouseY /. float_of_int(scaleFactor),
           })
           |> sendMouseEvent;
-      },
-    );
+        },
+      );
 
-  let _ =
-    Revery_Core.Event.subscribe(
-      window.onMouseDown,
-      m => {
+    let _ =
+      Revery_Core.Event.subscribe(win.onMouseDown, m =>
         Revery_Core.Events.InternalMouseDown({button: m.button})
-        |> sendMouseEvent;
-      },
-    );
+        |> sendMouseEvent
+      );
 
-  let _ =
-    Revery_Core.Event.subscribe(window.onKeyPress, event =>
-      Revery_Core.Events.InternalKeyPressEvent(event)
-      |> sendKeyboardEvent;
-    );
+    let _ =
+      Revery_Core.Event.subscribe(win.onKeyPress, event =>
+        Revery_Core.Events.InternalKeyPressEvent(event) |> sendKeyboardEvent
+      );
 
-  let _ =
-    Revery_Core.Event.subscribe(window.onKeyDown, event =>
-      Revery_Core.Events.InternalKeyDownEvent(event)
-      |> sendKeyboardEvent;
-    );
+    let _ =
+      Revery_Core.Event.subscribe(win.onKeyDown, event =>
+        Revery_Core.Events.InternalKeyDownEvent(event) |> sendKeyboardEvent
+      );
 
-  let _ =
-    Revery_Core.Event.subscribe(window.onKeyUp, event =>
-      Revery_Core.Events.InternalKeyUpEvent(event)
-      |> sendKeyboardEvent;
-    );
+    let _ =
+      Revery_Core.Event.subscribe(win.onKeyUp, event =>
+        Revery_Core.Events.InternalKeyUpEvent(event) |> sendKeyboardEvent
+      );
 
-  let _ =
-    Revery_Core.Event.subscribe(
-      window.onMouseUp,
-      m => {
+    let _ =
+      Revery_Core.Event.subscribe(win.onMouseUp, m =>
         Revery_Core.Events.InternalMouseUp({button: m.button})
-        |> sendMouseEvent;
-      },
-    );
+        |> sendMouseEvent
+      );
 
-  let _ =
-    Revery_Core.Event.subscribe(
-      window.onMouseWheel,
-      m => {
-        Revery_Core.Events.InternalMouseWheel(m)
-        |> sendMouseEvent;
-      },
-    );
-        let _projection = Mat4.create();
+    let _ =
+      Revery_Core.Event.subscribe(win.onMouseWheel, m =>
+        Revery_Core.Events.InternalMouseWheel(m) |> sendMouseEvent
+      );
+    let _projection = Mat4.create();
 
-        let render = () => switch(rootNode^) {
-        | None => ()
-        | Some(rootNode) => {
+    let render = () =>
+      switch (rootNode^) {
+      | None => ()
+      | Some(rootNode) =>
+        let size = Window.getSize(win);
+        let pixelRatio = Window.getDevicePixelRatio(win);
+        let scaleFactor = Window.getScaleFactor(win);
+        let adjustedHeight = size.height / scaleFactor;
+        let adjustedWidth = size.width / scaleFactor;
 
-            let size = Window.getSize(win);
-            let pixelRatio = Window.getDevicePixelRatio(win);
-            let scaleFactor = Window.getScaleFactor(win);
-            let adjustedHeight = size.height / scaleFactor;
-            let adjustedWidth = size.width / scaleFactor;
+        rootNode#setStyle(
+          Style.make(
+            ~position=LayoutTypes.Relative,
+            ~width=adjustedWidth,
+            ~height=adjustedHeight,
+            (),
+          ),
+        );
 
-            rootNode#setStyle(
-                Style.make(
-                    ~position=LayoutTypes.Relative,
-                    ~width=adjustedWidth,
-                    ~height=adjustedHeight,
-                    (),
-                ),
-            );
+        /* let layoutNode = rootNode#toLayoutNode(~force=false, ()); */
+        /* Layout.printCssNode(layoutNode); */
 
-            /* let layoutNode = rootNode#toLayoutNode(~force=false, ()); */
-            /* Layout.printCssNode(layoutNode); */
+        Layout.layout(~force=true, rootNode);
+        rootNode#recalculate();
+        sendMeasurements();
+        rootNode#flushCallbacks();
 
-            Layout.layout(~force=true, rootNode);
-            rootNode#recalculate();
-            sendMeasurements();
-            rootNode#flushCallbacks();
+        Mat4.ortho(
+          _projection,
+          0.0,
+          float_of_int(adjustedWidth),
+          float_of_int(adjustedHeight),
+          0.0,
+          1000.0,
+          -1000.0,
+        );
 
+        let drawContext = NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
 
-            Mat4.ortho(
-                _projection,
-                0.0,
-                float_of_int(adjustedWidth),
-                float_of_int(adjustedHeight),
-                0.0,
-                1000.0,
-                -1000.0,
-            );
+        /* Render all geometry that requires an alpha */
+        RenderPass.startAlphaPass(
+          ~pixelRatio,
+          ~scaleFactor,
+          ~screenHeight=adjustedHeight,
+          ~screenWidth=adjustedWidth,
+          ~projection=_projection,
+          (),
+        );
+        rootNode#draw(drawContext);
+        RenderPass.endAlphaPass();
+      /* (renderFunction^)(); */
+      };
 
-            let drawContext = NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
+    Window.setRenderCallback(win, render);
+    Window.setShouldRenderCallback(win, () => true);
 
-            /* Render all geometry that requires an alpha */
-            RenderPass.startAlphaPass(
-                ~pixelRatio,
-                ~scaleFactor,
-                ~screenHeight=adjustedHeight,
-                ~screenWidth=adjustedWidth,
-                ~projection=_projection,
-                (),
-            );
-            rootNode#draw(drawContext);
-            RenderPass.endAlphaPass();
+    Window.maximize(win);
+    /* UI.start(win, render); */
+  };
 
-            /* (renderFunction^)(); */
-        }
-        };
+  App.start(init);
 
-        Window.setRenderCallback(win, render);
-        Window.setShouldRenderCallback(win, () => true);
-
-        Window.maximize(win);
-
-        /* UI.start(win, render); */
-    };
-
-    App.start(init);
-
-    ret;
+  ret;
 };
 
-
-
-let () = Js.export_all(
-  [%js {
-      val startRenderer = start;
-  }]
-);
-
+let () = Js.export_all([%js {val startRenderer = start}]);
