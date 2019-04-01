@@ -13,12 +13,12 @@ open ViewNode;
 
 class imageNode (imagePath: string) = {
   as _this;
-  val textureShader = Assets.textureShader();
-  val texture = ImageRenderer.getTexture(imagePath);
   inherit (class node)() as _super;
   pub! draw = (parentContext: NodeDrawContext.t) => {
     /* Draw background first */
     _super#draw(parentContext);
+    let textureShader = Assets.textureShader();
+    let texture = ImageRenderer.getTexture(imagePath);
 
     let ctx = RenderPass.getContext();
     Shaders.CompiledShader.use(textureShader.compiledShader);
