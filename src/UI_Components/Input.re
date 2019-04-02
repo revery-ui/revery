@@ -28,7 +28,6 @@ type action =
   | CursorTimer
   | SetFocus(bool)
   | UpdateText(textUpdate)
-  | Backspace(textUpdate)
   | ResetCursorTimer;
 
 let getStringParts = (index, str) =>
@@ -47,11 +46,24 @@ let getSafeStringBounds = (str, cursorPosition, change) => {
     ? currentLength : nextPosition < 0 ? 0 : nextPosition;
 };
 
-let removeCharacter = (word, cursorPosition) => {
+let removeCharacterBefore = (word, cursorPosition) => {
   let (startStr, endStr) = getStringParts(cursorPosition, word);
   let nextPosition = getSafeStringBounds(startStr, cursorPosition, -1);
   let newString = Str.string_before(startStr, nextPosition) ++ endStr;
   {newString, cursorPosition: nextPosition};
+};
+
+let removeCharacterAfter = (word, cursorPosition) => {
+  let (startStr, endStr) = getStringParts(cursorPosition, word);
+  let newString =
+    startStr
+    ++ (
+      switch (endStr) {
+      | "" => ""
+      | _ => Str.last_chars(endStr, String.length(endStr) - 1)
+      }
+    );
+  {newString, cursorPosition};
 };
 
 let addCharacter = (word, char, index) => {
@@ -81,9 +93,6 @@ let reducer = (action, state) =>
     state.isFocused
       ? {...state, cursorPosition, isFocused: true, inputString: newString}
       : state
-  | Backspace({newString, cursorPosition}) =>
-    state.isFocused
-      ? {...state, inputString: newString, cursorPosition} : state
   | ResetCursorTimer => {...state, cursorTimer: Time.Seconds(0.0)}
   };
 
@@ -175,12 +184,11 @@ let make =
       | Key.KEY_RIGHT =>
         onKeyDown(event);
         dispatch(CursorPosition(1));
-      | Key.KEY_BACKSPACE =>
-        dispatch(CursorPosition(-1));
-        removeCharacter(inputString, cursorPosition)
+      | Key.KEY_DELETE =>
+        removeCharacterAfter(inputString, cursorPosition)
         |> (
           update => {
-            dispatch(Backspace(update));
+            dispatch(UpdateText(update));
             onKeyDown(event);
             onChange({
               value: update.newString,
@@ -192,7 +200,24 @@ let make =
               superKey: event.superKey,
             });
           }
-        );
+        )
+      | Key.KEY_BACKSPACE =>
+        removeCharacterBefore(inputString, cursorPosition)
+        |> (
+          update => {
+            dispatch(UpdateText(update));
+            onKeyDown(event);
+            onChange({
+              value: update.newString,
+              character: Key.toString(event.key),
+              key: event.key,
+              altKey: event.altKey,
+              ctrlKey: event.ctrlKey,
+              shiftKey: event.shiftKey,
+              superKey: event.superKey,
+            });
+          }
+        )
       | Key.KEY_ESCAPE =>
         onKeyDown(event);
         Focus.loseFocus();
