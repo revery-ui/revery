@@ -175,6 +175,16 @@ let make =
     };
 
     let handleKeyDown = (event: NodeEvents.keyEventParams) => {
+      let createChangeEvent = inputString => {
+        value: inputString,
+        character: Key.toString(event.key),
+        key: event.key,
+        altKey: event.altKey,
+        ctrlKey: event.ctrlKey,
+        shiftKey: event.shiftKey,
+        superKey: event.superKey,
+      };
+
       dispatch(ResetCursorTimer);
 
       switch (event.key) {
@@ -190,15 +200,7 @@ let make =
           update => {
             dispatch(UpdateText(update));
             onKeyDown(event);
-            onChange({
-              value: update.newString,
-              character: Key.toString(event.key),
-              key: event.key,
-              altKey: event.altKey,
-              ctrlKey: event.ctrlKey,
-              shiftKey: event.shiftKey,
-              superKey: event.superKey,
-            });
+            onChange(createChangeEvent(update.newString));
           }
         )
       | Key.KEY_BACKSPACE =>
@@ -207,15 +209,7 @@ let make =
           update => {
             dispatch(UpdateText(update));
             onKeyDown(event);
-            onChange({
-              value: update.newString,
-              character: Key.toString(event.key),
-              key: event.key,
-              altKey: event.altKey,
-              ctrlKey: event.ctrlKey,
-              shiftKey: event.shiftKey,
-              superKey: event.superKey,
-            });
+            onChange(createChangeEvent(update.newString));
           }
         )
       | Key.KEY_ESCAPE =>
