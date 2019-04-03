@@ -2,7 +2,7 @@ module Assets = Assets;
 module RenderPass = RenderPass;
 module FontCache = FontCache;
 module FontRenderer = FontRenderer;
-module ImageRenderer = ImageRenderer;
+module Image = Image;
 module Shapes = Shapes;
 module Text = Text;
 
