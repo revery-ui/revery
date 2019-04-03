@@ -9,7 +9,7 @@ type t = {
   mutable height: int,
 };
 
-type cache = Hashtbl.t(string, texture);
+type cache = Hashtbl.t(string, t);
 
 let _cache: cache = Hashtbl.create(100);
 
@@ -45,8 +45,16 @@ let getTexture = (imagePath: string) => {
 
       let imageLoadPromise = Image.load(relativeImagePath);
 
+      let ret: t = {
+        hasLoaded: false,
+        texture,
+        width: 1,
+        height: 1,
+      };
+
       let success = img => {
         let pixels = Image.getPixels(img);
+        let {width, height, _}: Image.dimensions = Image.getDimensions(img);
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexImage2D(
           GL_TEXTURE_2D,
@@ -56,12 +64,15 @@ let getTexture = (imagePath: string) => {
           GL_UNSIGNED_BYTE,
           pixels,
         );
+
+        ret.width = width;
+        ret.height = height;
         Lwt.return();
       };
 
       let _ = Lwt.bind(imageLoadPromise, success);
-      Hashtbl.add(_cache, relativeImagePath, texture);
-      texture;
+      Hashtbl.replace(_cache, relativeImagePath, ret);
+      ret;
     };
 
   ret;

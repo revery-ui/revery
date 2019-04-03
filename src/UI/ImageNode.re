@@ -18,9 +18,11 @@ class imageNode (imagePath: string) = {
     /* Draw background first */
     _super#draw(parentContext);
     let textureShader = Assets.textureShader();
-    let texture = ImageRenderer.getTexture(imagePath);
+    let {hasLoaded, texture, _ } = ImageRenderer.getTexture(imagePath);
 
-    let ctx = RenderPass.getContext();
+    switch (hasLoaded) {
+     | false => ()
+    | true => let ctx = RenderPass.getContext();
     Shaders.CompiledShader.use(textureShader.compiledShader);
     let m = ctx.projection;
 
@@ -49,5 +51,6 @@ class imageNode (imagePath: string) = {
 
     glBindTexture(GL_TEXTURE_2D, texture);
     Geometry.draw(quad, textureShader.compiledShader);
+    };
   };
 };
