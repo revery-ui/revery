@@ -2,17 +2,19 @@ open Reglfw;
 
 type reducer('s, 'a) = ('s, 'a) => 's;
 
-type idleState =
-  | Running
-  | Idle;
+type idleFunc = unit => unit;
+let noop = () => ();
 
 type t('s, 'a) = {
   reducer: reducer('s, 'a),
   mutable state: 's,
   mutable windows: list(Window.t),
   mutable needsRender: bool,
-  mutable idleState,
+  mutable idleCount: int,
+  onIdle: idleFunc,
 };
+
+let framesToIdle = 10;
 
 /* If no state is specified, just use unit! */
 let defaultState = ();
@@ -21,8 +23,6 @@ let defaultState = ();
 let defaultReducer: reducer(unit, unit) = (_s, _a) => ();
 
 type appInitFunc('s, 'a) = t('s, 'a) => unit;
-
-type startFunc('s, 'a) = ('s, reducer('s, 'a), appInitFunc('s, 'a)) => unit;
 
 let getWindows = (app: t('s, 'a)) => app.windows;
 
@@ -62,61 +62,55 @@ let _checkAndCloseWindows = (app: t('s, 'a)) => {
   app.windows = windowsToKeep;
 };
 
-let startWithState: startFunc('s, 'a) =
-  (
-    initialState: 's,
-    reducer: reducer('s, 'a),
-    initFunc: appInitFunc('s, 'a),
-  ) => {
-    let appInstance: t('s, 'a) = {
-      reducer,
-      state: initialState,
-      windows: [],
-      needsRender: true,
-      idleState: Running,
-    };
-
-    GarbageCollector.tune();
-
-    let _ = Glfw.glfwInit();
-    let _ = initFunc(appInstance);
-
-    let appLoop = (_t: float) => {
-      Glfw.glfwPollEvents();
-      Tick.Default.pump();
-
-      _checkAndCloseWindows(appInstance);
-
-      if (appInstance.needsRender || _anyWindowsDirty(appInstance)) {
-        Performance.bench("renderWindows", () => {
-          List.iter(w => Window.render(w), getWindows(appInstance));
-          appInstance.needsRender = false;
-        });
-        /* We're taking path 2 of the garbage collector route to nirvana:
-         * https://blogs.msdn.microsoft.com/shawnhar/2007/07/02/twin-paths-to-garbage-collector-nirvana/
-         */
-        appInstance.idleState = Running;
-        Performance.bench("gc: minor", () => GarbageCollector.minor());
-      } else if (appInstance.idleState == Running) {
-        /* If the we're transitioning from Running to Idle, this is the
-         * perfect time to do a full memory collection, so that
-         * we're in a clear memory state, so we're ready to go on the next
-         * tick
-         */
-        Performance.bench("gc: full", () => GarbageCollector.full());
-        appInstance.idleState = Idle;
-      } else {
-        Environment.sleep(Milliseconds(1.));
-      };
-
-      if (Environment.isNative) {
-        Thread.yield();
-      };
-      List.length(getWindows(appInstance)) == 0;
-    };
-
-    Glfw.glfwRenderLoop(appLoop);
+let startWithState =
+    (
+      ~onIdle=noop,
+      initialState: 's,
+      reducer: reducer('s, 'a),
+      initFunc: appInitFunc('s, 'a),
+    ) => {
+  let appInstance: t('s, 'a) = {
+    reducer,
+    state: initialState,
+    windows: [],
+    needsRender: true,
+    idleCount: 0,
+    onIdle,
   };
 
-let start = (initFunc: appInitFunc(unit, unit)) =>
-  startWithState(defaultState, defaultReducer, initFunc);
+  let _ = Glfw.glfwInit();
+  let _ = initFunc(appInstance);
+
+  let appLoop = (_t: float) => {
+    Glfw.glfwPollEvents();
+    Tick.Default.pump();
+
+    _checkAndCloseWindows(appInstance);
+
+    if (appInstance.needsRender || _anyWindowsDirty(appInstance)) {
+      Performance.bench("renderWindows", () => {
+        List.iter(w => Window.render(w), getWindows(appInstance));
+        appInstance.needsRender = false;
+        appInstance.idleCount = 0;
+      });
+    } else {
+      appInstance.idleCount = appInstance.idleCount + 1;
+
+      if (appInstance.idleCount === framesToIdle) {
+        appInstance.onIdle();
+      };
+
+      Environment.sleep(Milliseconds(1.));
+    };
+
+    if (Environment.isNative) {
+      Thread.yield();
+    };
+    List.length(getWindows(appInstance)) == 0;
+  };
+
+  Glfw.glfwRenderLoop(appLoop);
+};
+
+let start = (~onIdle=noop, initFunc: appInitFunc(unit, unit)) =>
+  startWithState(~onIdle, defaultState, defaultReducer, initFunc);
