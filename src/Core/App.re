@@ -2,12 +2,16 @@ open Reglfw;
 
 type reducer('s, 'a) = ('s, 'a) => 's;
 
+type idleFunc = unit => unit;
+let noop = () => ();
+
 type t('s, 'a) = {
   reducer: reducer('s, 'a),
   mutable state: 's,
   mutable windows: list(Window.t),
   mutable needsRender: bool,
   mutable idleCount: int,
+  onIdle: idleFunc,
 };
 
 let framesToIdle = 10;
@@ -19,8 +23,6 @@ let defaultState = ();
 let defaultReducer: reducer(unit, unit) = (_s, _a) => ();
 
 type appInitFunc('s, 'a) = t('s, 'a) => unit;
-
-type startFunc('s, 'a) = ('s, reducer('s, 'a), appInitFunc('s, 'a)) => unit;
 
 let getWindows = (app: t('s, 'a)) => app.windows;
 
@@ -60,8 +62,9 @@ let _checkAndCloseWindows = (app: t('s, 'a)) => {
   app.windows = windowsToKeep;
 };
 
-let startWithState: startFunc('s, 'a) =
+let startWithState =
   (
+    ~onIdle=noop,
     initialState: 's,
     reducer: reducer('s, 'a),
     initFunc: appInitFunc('s, 'a),
@@ -72,6 +75,7 @@ let startWithState: startFunc('s, 'a) =
       windows: [],
       needsRender: true,
       idleCount: 0,
+      onIdle,
     };
 
     let _ = Glfw.glfwInit();
@@ -94,9 +98,8 @@ let startWithState: startFunc('s, 'a) =
         appInstance.idleCount = appInstance.idleCount + 1;
 
         if (appInstance.idleCount === framesToIdle) {
-            prerr_endline ("IDLE");
+            appInstance.onIdle();
         }
-
 
         Environment.sleep(Milliseconds(1.));
       };
@@ -110,5 +113,5 @@ let startWithState: startFunc('s, 'a) =
     Glfw.glfwRenderLoop(appLoop);
   };
 
-let start = (initFunc: appInitFunc(unit, unit)) =>
-  startWithState(defaultState, defaultReducer, initFunc);
+let start = (~onIdle=noop, initFunc: appInitFunc(unit, unit)) =>
+  startWithState(~onIdle, defaultState, defaultReducer, initFunc);
