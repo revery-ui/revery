@@ -63,55 +63,54 @@ let _checkAndCloseWindows = (app: t('s, 'a)) => {
 };
 
 let startWithState =
-  (
-    ~onIdle=noop,
-    initialState: 's,
-    reducer: reducer('s, 'a),
-    initFunc: appInitFunc('s, 'a),
-  ) => {
-    let appInstance: t('s, 'a) = {
-      reducer,
-      state: initialState,
-      windows: [],
-      needsRender: true,
-      idleCount: 0,
-      onIdle,
-    };
-
-    let _ = Glfw.glfwInit();
-    let _ = initFunc(appInstance);
-
-    let appLoop = (_t: float) => {
-      Glfw.glfwPollEvents();
-      Tick.Default.pump();
-
-      _checkAndCloseWindows(appInstance);
-
-      if (appInstance.needsRender || _anyWindowsDirty(appInstance)) {
-        Performance.bench("renderWindows", () => {
-          List.iter(w => Window.render(w), getWindows(appInstance));
-          appInstance.needsRender = false;
-          appInstance.idleCount = 0;
-        });
-      } else  {
-
-        appInstance.idleCount = appInstance.idleCount + 1;
-
-        if (appInstance.idleCount === framesToIdle) {
-            appInstance.onIdle();
-        }
-
-        Environment.sleep(Milliseconds(1.));
-      };
-
-      if (Environment.isNative) {
-        Thread.yield();
-      };
-      List.length(getWindows(appInstance)) == 0;
-    };
-
-    Glfw.glfwRenderLoop(appLoop);
+    (
+      ~onIdle=noop,
+      initialState: 's,
+      reducer: reducer('s, 'a),
+      initFunc: appInitFunc('s, 'a),
+    ) => {
+  let appInstance: t('s, 'a) = {
+    reducer,
+    state: initialState,
+    windows: [],
+    needsRender: true,
+    idleCount: 0,
+    onIdle,
   };
+
+  let _ = Glfw.glfwInit();
+  let _ = initFunc(appInstance);
+
+  let appLoop = (_t: float) => {
+    Glfw.glfwPollEvents();
+    Tick.Default.pump();
+
+    _checkAndCloseWindows(appInstance);
+
+    if (appInstance.needsRender || _anyWindowsDirty(appInstance)) {
+      Performance.bench("renderWindows", () => {
+        List.iter(w => Window.render(w), getWindows(appInstance));
+        appInstance.needsRender = false;
+        appInstance.idleCount = 0;
+      });
+    } else {
+      appInstance.idleCount = appInstance.idleCount + 1;
+
+      if (appInstance.idleCount === framesToIdle) {
+        appInstance.onIdle();
+      };
+
+      Environment.sleep(Milliseconds(1.));
+    };
+
+    if (Environment.isNative) {
+      Thread.yield();
+    };
+    List.length(getWindows(appInstance)) == 0;
+  };
+
+  Glfw.glfwRenderLoop(appLoop);
+};
 
 let start = (~onIdle=noop, initFunc: appInitFunc(unit, unit)) =>
   startWithState(~onIdle, defaultState, defaultReducer, initFunc);
