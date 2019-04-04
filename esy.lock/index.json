@@ -1,16 +1,12 @@
 {
-  "checksum": "af496c194d032a30efd3d34a64f0ac0d",
-  "root": "revery@link-dev:./package.json",
+  "checksum": "19b9840c553f8c6d0b9138ef0a9ed175",
+  "root": "revery@link:./package.json",
   "node": {
-    "revery@link-dev:./package.json": {
-      "id": "revery@link-dev:./package.json",
+    "revery@link:./package.json": {
+      "id": "revery@link:./package.json",
       "name": "revery",
-      "version": "link-dev:./package.json",
-      "source": {
-        "type": "link-dev",
-        "path": ".",
-        "manifest": "package.json"
-      },
+      "version": "link:./package.json",
+      "source": { "type": "link", "path": ".", "manifest": "package.json" },
       "overrides": [],
       "dependencies": [
         "reperf@1.4.0@d41d8cd9",
@@ -19,7 +15,7 @@
         "reason-gl-matrix@0.9.9304@d41d8cd9",
         "reason-fontkit@2.4.0@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
         "flex@1.2.2@d41d8cd9", "@reason-native/console@0.0.3@d41d8cd9",
-        "@opam/lwt_ppx@opam:1.2.2@946c5ba2", "@opam/lwt@opam:4.2.0@3edaca61",
+        "@opam/lwt_ppx@opam:1.2.2@946c5ba2", "@opam/lwt@opam:4.2.1@c1888ec9",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
         "@opam/js_of_ocaml-compiler@github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce@d41d8cd9",
         "@opam/js_of_ocaml@github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce@d41d8cd9",
@@ -64,7 +60,7 @@
       "overrides": [],
       "dependencies": [
         "refmterr@3.1.10@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
-        "@opam/lwt_ppx@opam:1.2.2@946c5ba2", "@opam/lwt@opam:4.2.0@3edaca61",
+        "@opam/lwt_ppx@opam:1.2.2@946c5ba2", "@opam/lwt@opam:4.2.1@c1888ec9",
         "@opam/lambda-term@opam:1.13@a3d28a27",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
         "@opam/js_of_ocaml-compiler@github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce@d41d8cd9",
@@ -122,7 +118,7 @@
         "refmterr@3.1.10@d41d8cd9", "reason-gl-matrix@0.9.9304@d41d8cd9",
         "ocaml@4.7.1004@d41d8cd9", "esy-glfw@3.2.1009@d41d8cd9",
         "esy-cmake@0.3.5@d41d8cd9", "@opam/lwt_ppx@opam:1.2.2@946c5ba2",
-        "@opam/lwt@opam:4.2.0@3edaca61",
+        "@opam/lwt@opam:4.2.1@c1888ec9",
         "@opam/js_of_ocaml-lwt@opam:3.3.0@ff746e31",
         "@opam/js_of_ocaml-compiler@github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce@d41d8cd9",
         "@opam/js_of_ocaml@github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce@d41d8cd9",
@@ -871,12 +867,12 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.7.1004@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
-        "@opam/lwt@opam:4.2.0@3edaca61", "@opam/dune@opam:1.7.3@72aad784",
+        "@opam/lwt@opam:4.2.1@c1888ec9", "@opam/dune@opam:1.7.3@72aad784",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.7.1004@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
-        "@opam/lwt@opam:4.2.0@3edaca61"
+        "@opam/lwt@opam:4.2.1@c1888ec9"
       ]
     },
     "@opam/lwt_ppx@opam:1.2.2@946c5ba2": {
@@ -900,14 +896,14 @@
         "ocaml@4.7.1004@d41d8cd9",
         "@opam/ppx_tools_versioned@opam:5.2.1@95275a75",
         "@opam/ocaml-migrate-parsetree@opam:1.2.0@23e55f71",
-        "@opam/lwt@opam:4.2.0@3edaca61", "@opam/dune@opam:1.7.3@72aad784",
+        "@opam/lwt@opam:4.2.1@c1888ec9", "@opam/dune@opam:1.7.3@72aad784",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.7.1004@d41d8cd9",
         "@opam/ppx_tools_versioned@opam:5.2.1@95275a75",
         "@opam/ocaml-migrate-parsetree@opam:1.2.0@23e55f71",
-        "@opam/lwt@opam:4.2.0@3edaca61"
+        "@opam/lwt@opam:4.2.1@c1888ec9"
       ]
     },
     "@opam/lwt_log@opam:1.1.0@72575e04": {
@@ -928,28 +924,28 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.7.1004@d41d8cd9", "@opam/lwt@opam:4.2.0@3edaca61",
+        "ocaml@4.7.1004@d41d8cd9", "@opam/lwt@opam:4.2.1@c1888ec9",
         "@opam/jbuilder@opam:transition@58bdfe0a",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.7.1004@d41d8cd9", "@opam/lwt@opam:4.2.0@3edaca61"
+        "ocaml@4.7.1004@d41d8cd9", "@opam/lwt@opam:4.2.1@c1888ec9"
       ]
     },
-    "@opam/lwt@opam:4.2.0@3edaca61": {
-      "id": "@opam/lwt@opam:4.2.0@3edaca61",
+    "@opam/lwt@opam:4.2.1@c1888ec9": {
+      "id": "@opam/lwt@opam:4.2.1@c1888ec9",
       "name": "@opam/lwt",
-      "version": "opam:4.2.0",
+      "version": "opam:4.2.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/2c/2ce7827948adc611319f9449e4519070#md5:2ce7827948adc611319f9449e4519070",
-          "archive:https://github.com/ocsigen/lwt/archive/4.2.0.tar.gz#md5:2ce7827948adc611319f9449e4519070"
+          "archive:https://opam.ocaml.org/cache/md5/9d/9d648386ca0a9978eb9487de36b781cc#md5:9d648386ca0a9978eb9487de36b781cc",
+          "archive:https://github.com/ocsigen/lwt/archive/4.2.1.tar.gz#md5:9d648386ca0a9978eb9487de36b781cc"
         ],
         "opam": {
           "name": "lwt",
-          "version": "4.2.0",
-          "path": "esy.lock/opam/lwt.4.2.0"
+          "version": "4.2.1",
+          "path": "esy.lock/opam/lwt.4.2.1"
         }
       },
       "overrides": [],
@@ -992,7 +988,7 @@
         "ocaml@4.7.1004@d41d8cd9", "@opam/zed@opam:1.6@004ea65e",
         "@opam/react@opam:1.2.1@0e11855f",
         "@opam/lwt_react@opam:1.1.2@2d73ee34",
-        "@opam/lwt_log@opam:1.1.0@72575e04", "@opam/lwt@opam:4.2.0@3edaca61",
+        "@opam/lwt_log@opam:1.1.0@72575e04", "@opam/lwt@opam:4.2.1@c1888ec9",
         "@opam/jbuilder@opam:transition@58bdfe0a",
         "@opam/camomile@opam:1.0.1@4a2e8bdd",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
@@ -1001,7 +997,7 @@
         "ocaml@4.7.1004@d41d8cd9", "@opam/zed@opam:1.6@004ea65e",
         "@opam/react@opam:1.2.1@0e11855f",
         "@opam/lwt_react@opam:1.1.2@2d73ee34",
-        "@opam/lwt_log@opam:1.1.0@72575e04", "@opam/lwt@opam:4.2.0@3edaca61",
+        "@opam/lwt_log@opam:1.1.0@72575e04", "@opam/lwt@opam:4.2.1@c1888ec9",
         "@opam/camomile@opam:1.0.1@4a2e8bdd"
       ]
     },
@@ -1055,13 +1051,13 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.7.1004@d41d8cd9", "@opam/lwt_log@opam:1.1.0@72575e04",
-        "@opam/lwt@opam:4.2.0@3edaca61",
+        "@opam/lwt@opam:4.2.1@c1888ec9",
         "@opam/js_of_ocaml-ppx@opam:3.3.0@6d90d7d2",
         "@opam/js_of_ocaml@github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce@d41d8cd9",
         "@opam/dune@opam:1.7.3@72aad784", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.7.1004@d41d8cd9", "@opam/lwt@opam:4.2.0@3edaca61",
+        "ocaml@4.7.1004@d41d8cd9", "@opam/lwt@opam:4.2.1@c1888ec9",
         "@opam/js_of_ocaml-ppx@opam:3.3.0@6d90d7d2",
         "@opam/js_of_ocaml@github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce@d41d8cd9"
       ]

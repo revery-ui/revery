@@ -18,6 +18,7 @@ module Logo = {
             delay: Seconds(1.0),
             repeat: true,
             easing: Animated.linear,
+            direction: `Normal,
           },
           hooks,
         );
@@ -31,6 +32,7 @@ module Logo = {
             delay: Seconds(0.5),
             repeat: true,
             easing: Animated.linear,
+            direction: `Normal,
           },
           hooks,
         );
@@ -73,6 +75,7 @@ module AnimatedText = {
             delay: Seconds(delay),
             repeat: false,
             easing: Animated.linear,
+            direction: `Normal,
           },
           hooks,
         );
@@ -86,6 +89,7 @@ module AnimatedText = {
             delay: Seconds(delay),
             repeat: false,
             easing: Animated.linear,
+            direction: `Normal,
           },
           hooks,
         );
