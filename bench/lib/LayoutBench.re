@@ -79,22 +79,3 @@ bench(
   ~f=layoutNode(false),
   (),
 );
-
-bench(
-  ~name="Layout: layout node tree (4 deep, 4 wide) - force, minimal layout",
-  ~options,
-  ~setup=
-    setupNodeTree(
-      ~depth=4,
-      ~breadth=4,
-      ~style=
-        Style.make(
-          ~width=400,
-          ~height=400,
-          ~layoutMode=Style.LayoutMode.Minimal,
-          (),
-        ),
-    ),
-  ~f=layoutNode(true),
-  (),
-);

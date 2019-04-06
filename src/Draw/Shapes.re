@@ -22,10 +22,9 @@ let drawRect =
       ~color: Color.t,
       (),
     ) => {
-  let pass = RenderPass.getCurrent();
+  let ctx = RenderPass.getContext();
 
-  switch (pass) {
-  | AlphaPass(ctx) when color.a > 0.001 =>
+  if (color.a > 0.001) {
     let world = Mat4.create();
     Mat4.fromScaling(world, Vec3.create(width, height, 1.0));
 
@@ -50,6 +49,5 @@ let drawRect =
     CompiledShader.setUniform4fv(shader.uniformColor, Color.toVec4(color));
 
     Geometry.draw(quad, shader.compiledShader);
-  | _ => ()
   };
 };

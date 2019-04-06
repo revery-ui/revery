@@ -16,11 +16,12 @@
  * We're using some Lwt internals, so need to disable this warning...
  */
 [@ocaml.warning "-3"];
+open Revery;
 
 let startEventLoop = () => {
   let yielded = Lwt_sequence.create();
 
-  Tick.Default.interval(
+  Tick.interval(
     _ =>
       Performance.bench("Lwt engine pump", () => {
         Lwt.wakeup_paused();

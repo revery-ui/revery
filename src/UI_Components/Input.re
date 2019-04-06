@@ -5,7 +5,13 @@ type state = {
   isFocused: bool,
   internalValue: string,
   cursorOffset: int,
+  cursorTimer: Time.t,
 };
+
+// type textUpdate = {
+//   internalValue: string,
+//   cursorOffset: int,
+// };
 
 type changeEvent = {
   value: string,
@@ -18,9 +24,11 @@ type changeEvent = {
 };
 
 type action =
-  | SetFocus(bool)
   | SetOffset(int)
-  | SetValue(string);
+  | CursorTimer
+  | SetFocus(bool)
+  | SetValue(string)
+  | ResetCursorTimer;
 
 let getTextBeforeCursor = (cursorOffset, text) =>
   String.sub(text, 0, String.length(text) + cursorOffset);
@@ -31,7 +39,7 @@ let getTextAfterCursor = (cursorOffset, text) =>
     Pervasives.abs(cursorOffset),
   );
 
-let removeCharacter = (word, offset) => {
+let removeCharacterBefore = (offset, word) => {
   let wordLength = String.length(word);
   switch (wordLength, offset) {
   | (0, offset)
@@ -40,6 +48,60 @@ let removeCharacter = (word, offset) => {
     getTextBeforeCursor(offset - 1, word) ++ getTextAfterCursor(offset, word)
   };
 };
+
+let removeCharacterAfter = (offset, word) => {
+  let wordLength = String.length(word);
+  switch (wordLength, offset) {
+  | (0, _)
+  | (_, 0) => word
+  | (_, _) =>
+    getTextBeforeCursor(offset, word) ++ getTextAfterCursor(offset + 1, word)
+  };
+};
+
+// let getStringParts = (index, str) =>
+//   switch (index) {
+//   | 0 => ("", str)
+//   | _ =>
+//     let strBeginning = Str.string_before(str, index);
+//     let strEnd = Str.string_after(str, index);
+//     (strBeginning, strEnd);
+//   };
+
+// let getSafeStringBounds = (str, cursorPosition, change) => {
+//   let nextPosition = cursorPosition + change;
+//   let currentLength = String.length(str);
+//   nextPosition > currentLength
+//     ? currentLength : nextPosition < 0 ? 0 : nextPosition;
+// };
+
+// let removeCharacterBefore = (word, cursorPosition) => {
+//   let (startStr, endStr) = getStringParts(cursorPosition, word);
+//   let nextPosition = getSafeStringBounds(startStr, cursorPosition, -1);
+//   let newString = Str.string_before(startStr, nextPosition) ++ endStr;
+//   {newString, cursorPosition: nextPosition};
+// };
+
+// let removeCharacterAfter = (word, cursorPosition) => {
+//   let (startStr, endStr) = getStringParts(cursorPosition, word);
+//   let newString =
+//     startStr
+//     ++ (
+//       switch (endStr) {
+//       | "" => ""
+//       | _ => Str.last_chars(endStr, String.length(endStr) - 1)
+//       }
+//     );
+//   {newString, cursorPosition};
+// };
+
+// let addCharacter = (word, char, index) => {
+//   let (startStr, endStr) = getStringParts(index, word);
+//   {
+//     newString: startStr ++ char ++ endStr,
+//     cursorPosition: String.length(startStr) + 1,
+//   };
+// };
 
 let addCharacter = (word, char, offset) =>
   getTextBeforeCursor(offset, word)
@@ -55,6 +117,23 @@ let reducer = (action, state) =>
   | SetFocus(isFocused) => {...state, isFocused}
   | SetOffset(cursorOffset) => {...state, cursorOffset}
   | SetValue(internalValue) => {...state, internalValue}
+  // | CursorPosition(pos) => {
+  //     ...state,
+  //     cursorPosition:
+  //       getSafeStringBounds(state.inputString, state.cursorPosition, pos),
+  //   }
+  | CursorTimer => {
+      ...state,
+      cursorTimer:
+        state.cursorTimer >= Time.Seconds(1.0)
+          ? Time.Seconds(0.0)
+          : Time.increment(state.cursorTimer, Time.Seconds(0.1)),
+    }
+  // | UpdateText({newString, cursorPosition}) =>
+  //   state.isFocused
+  //     ? {...state, cursorPosition, isFocused: true, inputString: newString}
+  //     : state
+  | ResetCursorTimer => {...state, cursorTimer: Time.Seconds(0.0)}
   };
 
 // let noop = (~value as _value) => ();
@@ -93,8 +172,24 @@ let make =
   component(slots => {
     let (state, dispatch, slots) =
       React.Hooks.reducer(
-        ~initialState={isFocused: false, internalValue: "", cursorOffset: 0},
+        ~initialState={
+          internalValue: "",
+          cursorOffset: 0,
+          cursorTimer: Time.Seconds(0.0),
+          isFocused: false,
+        },
         reducer,
+        slots,
+      );
+
+    let slots =
+      React.Hooks.effect(
+        OnMount,
+        () => {
+          let clear =
+            Tick.interval(_ => dispatch(CursorTimer), Seconds(0.1));
+          Some(clear);
+        },
         slots,
       );
 
@@ -104,9 +199,39 @@ let make =
       | None => state.internalValue
       };
 
-    let handleKeyDown = (event: NodeEvents.keyEventParams) => {
+    let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
       let createChangeEvent = value => {
         value,
+        key: Key.fromString(event.character),
+        character: event.character,
+        altKey: false,
+        ctrlKey: false,
+        shiftKey: false,
+        superKey: false,
+      };
+
+      dispatch(ResetCursorTimer);
+
+      switch (valueAsProp) {
+      | Some(v) =>
+        addCharacter(v, event.character, state.cursorOffset)
+        |> createChangeEvent
+        |> onChange
+      | None =>
+        let newValue =
+          addCharacter(
+            state.internalValue,
+            event.character,
+            state.cursorOffset,
+          );
+        dispatch(SetValue(newValue));
+        onChange(createChangeEvent(newValue));
+      };
+    };
+
+    let handleKeyDown = (event: NodeEvents.keyEventParams) => {
+      let createChangeEvent = inputString => {
+        value: inputString,
         character: Key.toString(event.key),
         key: event.key,
         altKey: event.altKey,
@@ -114,6 +239,9 @@ let make =
         shiftKey: event.shiftKey,
         superKey: event.superKey,
       };
+
+      dispatch(ResetCursorTimer);
+
       switch (event.key) {
       | Key.KEY_LEFT =>
         onKeyDown(event);
@@ -128,21 +256,31 @@ let make =
       | Key.KEY_RIGHT =>
         onKeyDown(event);
         dispatch(SetOffset(Pervasives.min(0, state.cursorOffset + 1)));
+      | Key.KEY_DELETE =>
+        switch (valueAsProp) {
+        | Some(v) =>
+          removeCharacterAfter(state.cursorOffset, v)
+          |> createChangeEvent
+          |> onChange
+        | None =>
+          let newValue =
+            removeCharacterAfter(state.cursorOffset, state.internalValue);
+          dispatch(SetValue(newValue));
+          onChange(createChangeEvent(newValue));
+        };
+        dispatch(SetOffset(Pervasives.min(0, state.cursorOffset + 1)));
       | Key.KEY_BACKSPACE =>
         switch (valueAsProp) {
         | Some(v) =>
-removeCharacter(v, state.cursorOffset)
-|> createChangeEvent
-|> onChange
-            createChangeEvent(removeCharacter(v, state.cursorOffset)),
-          )
+          removeCharacterBefore(state.cursorOffset, v)
+          |> createChangeEvent
+          |> onChange
         | None =>
           let newValue =
-            removeCharacter(state.internalValue, state.cursorOffset);
+            removeCharacterBefore(state.cursorOffset, state.internalValue);
           dispatch(SetValue(newValue));
           onChange(createChangeEvent(newValue));
         }
-
       | Key.KEY_ESCAPE =>
         onKeyDown(event);
         Focus.loseFocus();
@@ -150,51 +288,9 @@ removeCharacter(v, state.cursorOffset)
       };
     };
 
-    let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
-      let createChangeEvent = value => {
-        value,
-        key: Key.fromString(event.character),
-        character: event.character,
-        altKey: false,
-        ctrlKey: false,
-        shiftKey: false,
-        superKey: false,
-      };
-      switch (valueAsProp) {
-      | Some(v) =>
-        onChange(
-          createChangeEvent(
-            addCharacter(v, event.character, state.cursorOffset),
-          ),
-        )
-      | None =>
-        let newValue =
-          addCharacter(
-            state.internalValue,
-            event.character,
-            state.cursorOffset,
-          );
-        dispatch(SetValue(newValue));
-        onChange(createChangeEvent(newValue));
-      };
-    };
-
-    let (animatedOpacity, slots) =
-      Hooks.animation(
-        Animated.floatValue(0.),
-        {
-          toValue: 1.,
-          duration: Seconds(0.5),
-          delay: Seconds(0.5),
-          repeat: true,
-          easing: Animated.linear,
-        },
-        slots,
-      );
-
     let hasPlaceholder = String.length(valueToDisplay) < 1;
 
-    let content = hasPlaceholder ? placeholder : valueToDisplay;
+    // let content = hasPlaceholder ? placeholder : valueToDisplay;
 
     /*
        computed styles
@@ -222,22 +318,56 @@ removeCharacter(v, state.cursorOffset)
     let inputFontFamily =
       Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
-    let innerTextStyles =
-      Style.[
-        color(hasPlaceholder ? placeholderColor : inputColor),
-        fontFamily(inputFontFamily),
-        fontSize(inputFontSize),
-        alignItems(`Center),
-        justifyContent(`FlexStart),
-      ];
+    let cursorOpacity =
+      state.isFocused
+      |> (
+        fun
+        | true => state.cursorTimer <= Time.Seconds(0.5) ? 1.0 : 0.0
+        | false => 0.0
+      );
 
-    let inputCursorStyles =
-      Style.[
-        height(inputFontSize),
-        width(2),
-        opacity(state.isFocused ? animatedOpacity : 0.0),
-        backgroundColor(cursorColor),
-      ];
+    /**
+      We place these in a list so we change the order later to
+      render the cursor before the text if placeholder is present
+      otherwise to the cursor after
+     */
+    let cursor = {
+      // let (startStr, _) = getStringParts(cursorPosition, inputString);
+      let startStr = getTextBeforeCursor(state.cursorOffset, valueToDisplay);
+      let dimension =
+        Revery_Draw.Text.measure(
+          ~fontFamily=inputFontFamily,
+          ~fontSize=inputFontSize,
+          startStr,
+        );
+      <View
+        style=Style.[
+          width(2),
+          marginTop((defaultHeight - dimension.height) / 2),
+          height(inputFontSize),
+          position(`Absolute),
+          marginLeft(dimension.width + inputTextMargin + 1),
+          opacity(cursorOpacity),
+          backgroundColor(cursorColor),
+        ]
+      />;
+    };
+
+    let makeTextComponent = content =>
+      <Text
+        text=content
+        style=Style.[
+          color(hasPlaceholder ? placeholderColor : inputColor),
+          fontFamily(inputFontFamily),
+          fontSize(inputFontSize),
+          alignItems(`Center),
+          justifyContent(`FlexStart),
+          marginLeft(inputTextMargin),
+        ]
+      />;
+
+    let placeholderText = makeTextComponent(placeholder);
+    let inputText = makeTextComponent(valueToDisplay);
 
     /*
        component
@@ -245,77 +375,21 @@ removeCharacter(v, state.cursorOffset)
     (
       slots,
       <Clickable
-        onFocus={() => dispatch(SetFocus(true))}
-        onBlur={() => dispatch(SetFocus(false))}
+        onFocus={() => {
+          dispatch(ResetCursorTimer);
+          dispatch(SetFocus(true));
+        }}
+        onBlur={() => {
+          dispatch(ResetCursorTimer);
+          dispatch(SetFocus(false));
+        }}
         componentRef={autofocus ? Focus.focus : ignore}
         onKeyDown=handleKeyDown
         onKeyPress=handleKeyPress>
-        {hasPlaceholder
-           ? <View style=viewStyles>
-               <View
-                 style=Style.(
-                   merge(
-                     ~source=inputCursorStyles,
-                     ~target=Style.[marginLeft(inputTextMargin)],
-                   )
-                 )
-               />
-               <Text style=innerTextStyles text=content />
-             </View>
-           : <View style=viewStyles>
-               ...{
-                    switch (state.cursorOffset) {
-                    | 0 => [
-                        <Text
-                          style=Style.(
-                            merge(
-                              ~source=innerTextStyles,
-                              ~target=Style.[marginLeft(inputTextMargin)],
-                            )
-                          )
-                          text=content
-                        />,
-                        <View style=inputCursorStyles />,
-                      ]
-                    | offset
-                        when Pervasives.abs(offset) == String.length(content) => [
-                        <View
-                          style=Style.(
-                            merge(
-                              ~source=inputCursorStyles,
-                              ~target=Style.[marginLeft(inputTextMargin)],
-                            )
-                          )
-                        />,
-                        <Text style=innerTextStyles text=content />,
-                      ]
-                    | offset => [
-                        <Text
-                          style=Style.(
-                            merge(
-                              ~source=innerTextStyles,
-                              ~target=Style.[marginLeft(inputTextMargin)],
-                            )
-                          )
-                          text={String.sub(
-                            content,
-                            0,
-                            String.length(content) + offset,
-                          )}
-                        />,
-                        <View style=inputCursorStyles />,
-                        <Text
-                          style=innerTextStyles
-                          text={String.sub(
-                            content,
-                            String.length(content) + offset,
-                            Pervasives.abs(offset),
-                          )}
-                        />,
-                      ]
-                    }
-                  }
-             </View>}
+        <View style=viewStyles>
+          cursor
+          {hasPlaceholder ? placeholderText : inputText}
+        </View>
       </Clickable>,
     );
   });
