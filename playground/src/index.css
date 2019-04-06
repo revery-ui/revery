@@ -20,6 +20,62 @@ html, body {
     right: 0;
 }
 
+#loading-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index:1000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: opacity 0.4s ease-in-out;
+}
+
+#loading-container.loading {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#loading-container .loading-inner {
+    text-align: center;
+}
+
+#loading-container .text {
+    font-size: 1em;
+    opacity: 0;
+    color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-10);
+}
+
+#loading-container.loading .text {
+    transition: all 0.25s ease-in-out 0.25s;
+    transform: translateY(0);
+    opacity: 1;
+}
+
+@keyframes loading-rotation {
+    from {transform: rotateY(0deg);}
+    to {transform: rotateY(-360deg);}
+}
+
+#loading-container img {
+    transition: opacity 0.25s ease-in-out 0.25s;
+    opacity: 0;
+    width: 48px;
+    animation-name: loading-rotation;
+    animation-timing-function: ease-in-out;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+
+#loading-container.loading img {
+    opacity: 1;
+}
+
 .header, .footer {
     background-color: #0e1113;
     color: white;

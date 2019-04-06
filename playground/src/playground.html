@@ -5,14 +5,23 @@
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link href="index.css" rel="stylesheet">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <script src="gl-matrix-min.js"></script>
+
 </head>
 <body style="margin: 0px;">
 
 
 <div class="root">
+</div>
+
+<div id="loading-container">
+    <div class="loading-inner">
+        <img src="revery-logo-only.png" />
+        <p class="text">Compiling...</p>
+    </div>
 </div>
 
 
@@ -27,7 +36,16 @@
        });
        */
 
-       let updateCode = startRenderer();
+    let onCompiling = () => {
+       var element = document.getElementById("loading-container");
+        element.classList.add("loading");
+    };
+
+    let onRender = () => {
+       document.getElementById("loading-container").classList.remove("loading");
+    };
+
+       let updateCode = startRenderer(onCompiling, onRender);
 
 
         window.addEventListener("message", (msg) => {

@@ -89,7 +89,7 @@ let update = (v: list(updates)) => {
   List.iter(visitUpdate, v);
 };
 
-let start = () => {
+let start = (onCompiling, onReady) => {
   let isWorkerReady = ref(false);
   let latestSourceCode: ref(option(Js.t(Js.js_string))) = ref(None);
 
@@ -132,9 +132,11 @@ let start = () => {
     | Compiling =>
       isWorkerReady := false;
       print_endline("Compiling...");
+      onCompiling();
     | Ready =>
       isWorkerReady := true;
       print_endline("Ready!");
+      onReady();
       sendLatestSource();
     | _ => ()
     };
