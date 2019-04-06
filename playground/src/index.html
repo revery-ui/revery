@@ -33,12 +33,28 @@
 <div class="header">
     <div class="left">
         <a href="#" onclick="window.history.back()"><i class="fas fa-chevron-left"></i></a>
+        <div>
+            <select id="example-picker">
+                <!-- <option value="AnalogClock.re">AnalogClock</option> -->
+                <!-- <option value="Border.re">Border</option> -->
+                <option value="Boxshadow.re">Boxshadow</option>
+                <option value="CheckboxExample.re">Checkbox</option>
+                <!-- <option value="Hello.re">Hello</option> -->
+                <option value="HoverExample.re" selected>Hover</option>
+                <!-- <option value="InputExample.re">Input</option> -->
+                <!-- <option value="Calculator.re">Calculator</option> -->
+                <option value="Flexbox.re">Flexbox</option>
+                <!-- <option value="Stopwatch.re">Stopwatch</option> -->
+                <!-- <option value="TextExample.re">TextExample</option> -->
+            </select>
+        </div>
     </div>
     <div class="center">
         <a href="https://www.outrunlabs.com/revery" alt="Revery"><img src="./dark-logo-transparent.png" title="Revery Logo" style="width: 96px;" /></a>
     </div>
     <div class="right">
         <a href="https://github.com/revery-ui/revery" onclick="window.history.back()"><i class="fab fa-github"></i></a>
+        <a href="https://twitter.com/reveryui" onclick="window.history.back()"><i class="fab fa-twitter"></i></a>
     </div>
 </div>
 <div class="container">
@@ -67,6 +83,11 @@
         theme: 'vs-dark',
         readOnly: false,
 	});
+
+document.getElementById("example-picker").addEventListener("change", (v) => {
+    <!-- alert( document.getElementById("example-picker").value); -->
+    fetchLatestSources(document.getElementById("example-picker").value);
+});
 
     let iframe = document.getElementById("example_frame");
 
@@ -173,7 +194,7 @@ editor.onDidChangeModelContent((e) => {
       }
   }, false);
 
-  fetchLatestSources("BoxShadow.re");
+  fetchLatestSources("HoverExample.re");
 
 window.__revery_editor_set = (t) => {
     editor.setValue(t);
