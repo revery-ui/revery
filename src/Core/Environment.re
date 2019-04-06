@@ -13,6 +13,8 @@ let sleep = (t: Time.t) =>
     Unix.sleepf(Time.to_float_seconds(t));
   };
 
+external yield: unit => unit = "caml_thread_yield";
+
 let getExecutingDirectory = () =>
   isNative ? Filename.dirname(Sys.argv[0]) ++ Filename.dir_sep : "";
 
