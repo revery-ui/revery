@@ -176,41 +176,21 @@ module ExampleButton = {
 type action =
   | SelectExample(string);
 
-let reducer = (s: state, a: action) =>
-  switch (a) {
-  | SelectExample(name) => {...s, selectedExample: name}
+let reducer = (action: action, state: state) =>
+  switch (action) {
+  | SelectExample(name) => {...state, selectedExample: name}
   };
 
-let init = app => {
-  let maximized = Environment.webGL;
+module ExampleHost = {
+  let component = React.component("ExampleHost");
 
-  let dimensions: Monitor.size =
-    Monitor.getPrimaryMonitor() |> Monitor.getSize;
+  let createElement = (~children as _, ~win, ()) =>
+    component(hooks => {
 
-  let windowWidth = dimensions.width / 2;
-  let windowHeight = dimensions.height / 2;
-
-  Console.log("Hello from example app");
-  Console.log([1, 2, 3]);
-
-  let win =
-    App.createWindow(
-      app,
-      "Welcome to Revery!",
-      ~createOptions={
-        ...Window.defaultCreateOptions,
-        width: windowWidth,
-        height: windowHeight,
-        maximized,
-        icon: Some("revery-icon.png"),
-      },
-    );
-
-  let render = () => {
-    let s = App.getState(app);
+      let (state, dispatch, hooks) = React.Hooks.reducer(~initialState=state, reducer, hooks);
 
     let renderButton = (x: example) => {
-      let isActive = String.equal(x.name, s.selectedExample);
+      let isActive = String.equal(x.name, state.selectedExample);
       <ExampleButton
         isActive
         name={x.name}
@@ -221,18 +201,19 @@ let init = app => {
            */
           Animated.cancelAll();
 
-          let sourceFile = getSourceForSample(s, x.name);
+          let sourceFile = getSourceForSample(state, x.name);
           notifyExampleSwitched(sourceFile);
-          App.dispatch(app, SelectExample(x.name));
+          dispatch(SelectExample(x.name));
         }}
       />;
     };
 
-    let buttons = List.map(renderButton, s.examples);
+    let buttons = List.map(renderButton, state.examples);
 
-    let exampleRender = getRenderFunctionSelector(s);
+    let exampleRender = getRenderFunctionSelector(state);
     let example = exampleRender(win);
 
+    (hooks, 
     <View
       onMouseWheel={_evt => ()}
       style=Style.[
@@ -268,8 +249,37 @@ let init = app => {
         ]>
         example
       </View>
-    </View>;
-  };
+    </View>);
+
+    });
+};
+
+let init = app => {
+  let maximized = Environment.webGL;
+
+  let dimensions: Monitor.size =
+    Monitor.getPrimaryMonitor() |> Monitor.getSize;
+
+  let windowWidth = dimensions.width / 2;
+  let windowHeight = dimensions.height / 2;
+
+  Console.log("Hello from example app");
+  Console.log([1, 2, 3]);
+
+  let win =
+    App.createWindow(
+      app,
+      "Welcome to Revery!",
+      ~createOptions={
+        ...Window.defaultCreateOptions,
+        width: windowWidth,
+        height: windowHeight,
+        maximized,
+        icon: Some("revery-icon.png"),
+      },
+    );
+
+  let render = () => <ExampleHost win />;
 
   if (Environment.webGL) {
     Window.maximize(win);
@@ -283,4 +293,4 @@ let init = app => {
 };
 
 let onIdle = () => print_endline("Example: idle callback triggered");
-App.startWithState(~onIdle, state, reducer, init);
+App.start(~onIdle, init);
