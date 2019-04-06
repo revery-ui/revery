@@ -89,7 +89,7 @@ let update = (v: list(updates)) => {
   List.iter(visitUpdate, v);
 };
 
-let start = (onCompiling, onReady) => {
+let start = (onCompiling, onReady, onOutput) => {
   let isWorkerReady = ref(false);
   let latestSourceCode: ref(option(Js.t(Js.js_string))) = ref(None);
 
@@ -129,6 +129,8 @@ let start = (onCompiling, onReady) => {
         isLayoutDirty := true;
         update(updates);
     }
+    | Output(v) => 
+        let _ = Js.Unsafe.fun_call(onOutput, [|Obj.magic(v)|]);
     | Compiling =>
       isWorkerReady := false;
       print_endline("Compiling...");

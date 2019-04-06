@@ -170,10 +170,10 @@ let start = exec => {
   Worker.set_onmessage((updates: Protocol.ToWorker.t) => {
     switch (updates) {
     | SourceCodeUpdated(v) =>
-      log("got source code update");
-
+      log("got source code update");      
       sendMessage(Protocol.ToRenderer.Compiling);
-      let _ = exec(v);
+      let output = Obj.magic(exec(v));
+      sendMessage(Protocol.ToRenderer.Output(output));
       sendMessage(Protocol.ToRenderer.Ready);
     | Measurements(v) =>
       log("applying measurements");

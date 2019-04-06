@@ -45,7 +45,16 @@
        document.getElementById("loading-container").classList.remove("loading");
     };
 
-       let updateCode = startRenderer(onCompiling, onRender);
+    let onOutput = (e) => {
+        if (e.stderr) {
+            window.parent.postMessage({
+                type: "compile.errors", 
+                errors: e.stderr,
+            });
+        }
+    };
+
+       let updateCode = startRenderer(onCompiling, onRender, onOutput);
 
 
         window.addEventListener("message", (msg) => {

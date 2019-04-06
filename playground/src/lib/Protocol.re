@@ -25,6 +25,7 @@ module ToRenderer = {
   type t =
     | Ready
     | Compiling
+    | Output(Js.t(Js.Unsafe.any))
     | SourceCodeCompiled(result(unit, unit))
     | Updates(list(Types.updates));
 };
