@@ -42,6 +42,14 @@ html, body {
 
 #loading-container .loading-inner {
     text-align: center;
+    padding: 2em;
+    width: 100%;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#loading-container.loading .loading-inner {
+    opacity: 1;
 }
 
 #error-container {
