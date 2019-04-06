@@ -132,12 +132,14 @@ let start = (onCompiling, onReady) => {
     | Compiling =>
       isWorkerReady := false;
       print_endline("Compiling...");
-      onCompiling();
+      let _ = Js.Unsafe.fun_call(onCompiling, [||]);
     | Ready =>
       isWorkerReady := true;
       print_endline("Ready!");
-      onReady();
+      let _ = Js.Unsafe.fun_call(onReady, [||]);
+      print_endline("Ready called!");
       sendLatestSource();
+      print_endline("Send latest source called!");
     | _ => ()
     };
   };
@@ -145,7 +147,9 @@ let start = (onCompiling, onReady) => {
   worker##.onmessage :=
     Js_of_ocaml.Dom_html.handler(evt => {
       let data = Js.Unsafe.get(evt, "data");
+      print_endline ("Before handle message...");
       handleMessage(data);
+      print_endline ("After handle message...");
       Js._true;
     });
 

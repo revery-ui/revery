@@ -33,7 +33,7 @@ html, body {
     justify-content: center;
     align-items: center;
 
-    transition: opacity 0.4s ease-in-out;
+    transition: opacity 0.5s ease-in-out 0.25s;
 }
 
 #loading-container.loading {
@@ -52,7 +52,7 @@ html, body {
 }
 
 #loading-container.loading .text {
-    transition: all 0.25s ease-in-out 0.25s;
+    transition: all 0.25s ease-in-out 0.5s;
     transform: translateY(0);
     opacity: 1;
 }
@@ -63,7 +63,7 @@ html, body {
 }
 
 #loading-container img {
-    transition: opacity 0.25s ease-in-out 0.25s;
+    transition: opacity 0.25s ease-in-out;
     opacity: 0;
     width: 48px;
     animation-name: loading-rotation;
