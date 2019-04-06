@@ -126,6 +126,7 @@ function debounce(func, wait, immediate) {
 };
 
 let debouncedUpdate = debounce(() => {
+    console.log("[index] Sending code update");
 let allLines = editor.getModel().getLinesContent().join("\n");
 iframe.contentWindow.postMessage({ type: "editor.update", payload: allLines });
 }, 250, false);

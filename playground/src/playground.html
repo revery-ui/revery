@@ -50,6 +50,7 @@
 
         window.addEventListener("message", (msg) => {
             if (msg.data.type === "editor.update") {
+                console.log("Got code update!");
                 updateCode(msg.data.payload);
             }
         });
