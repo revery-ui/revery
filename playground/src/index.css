@@ -44,6 +44,33 @@ html, body {
     text-align: center;
 }
 
+#error-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index:999;
+    background-color: red;
+    color: white;
+    opacity: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: opacity 0.5s ease-in-out 0.25s;
+}
+
+#error-container.errors {
+    opacity: 0.9;
+}
+
+#error-text {
+    font-weight: bold;
+}
+
 #loading-container .text {
     font-size: 1em;
     opacity: 0;

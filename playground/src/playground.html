@@ -24,6 +24,10 @@
     </div>
 </div>
 
+<div id="error-container">
+    <div id="error-text" />
+</div>
+
 
 </body>
 <script src="Renderer.bc.js"></script>
@@ -36,6 +40,11 @@
        });
        */
 
+    let clearErrors = () => {
+        let errorContainer = document.getElementById("error-container");
+        errorContainer.classList.remove("errors");
+    };
+
     let onCompiling = () => {
        var element = document.getElementById("loading-container");
         element.classList.add("loading");
@@ -46,11 +55,29 @@
     };
 
     let onOutput = (e) => {
-        if (e.stderr) {
-            window.parent.postMessage({
-                type: "compile.errors", 
-                errors: e.stderr,
-            });
+        let errorContainer = document.getElementById("error-container");
+           if (e.stderr && e.stderr.length > 1) {
+
+            let errorText = document.getElementById("error-text");
+            errorContainer.classList.add("errors");
+
+            let errors = e.stderr.split("\n").map((s) => s.trim());
+            errorText.innerHTML = "";
+
+               let elements = errors.map((errorText) => {
+                   let elem = document.createElement("p");
+                   elem.textContent = errorText;
+                   return elem;
+               });
+
+               elements.forEach((elem) => errorText.appendChild(elem));
+
+            //window.parent.postMessage({
+            //    type: "compile.errors", 
+            //    errors: e.stderr,
+            //});
+        } else {
+            clearErrors();
         }
     };
 

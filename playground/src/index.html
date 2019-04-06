@@ -38,7 +38,7 @@
                 <!-- <option value="AnalogClock.re">AnalogClock</option> -->
                 <!-- <option value="Border.re">Border</option> -->
                 <option value="Boxshadow.re">Boxshadow</option>
-                <option value="CheckboxExample.re">Checkbox</option>
+                <!-- <option value="CheckboxExample.re">Checkbox</option> -->
                 <!-- <option value="Hello.re">Hello</option> -->
                 <option value="HoverExample.re" selected>Hover</option>
                 <!-- <option value="InputExample.re">Input</option> -->
@@ -149,39 +149,42 @@ function debounce(func, wait, immediate) {
         debouncedUpdate();
     });
 
-  let infoFromError = (s) => {
-    let items = s.split(',');
-    let lineNumber = items[1];
-    let characters = items[2];
 
-    let lineSpace = lineNumber.lastIndexOf(' ');
-    let startLineNumber = parseInt(lineNumber.substring(lineSpace, lineNumber.length));
-    let endLineNumber = startLineNumber;
+// TODO: Fix this up
+//  let infoFromError = (s) => {
+//    let items = s.split(',');
+//    let lineNumber = items[1];
+//    let characters = items[2];
+//
+//    let lineSpace = lineNumber.lastIndexOf(' ');
+//    let startLineNumber = parseInt(lineNumber.substring(lineSpace, lineNumber.length));
+//    let endLineNumber = startLineNumber;
+//
+//    let characterSpace = characters.lastIndexOf(' ');
+//    let characterHyphen = characters.lastIndexOf('-');
+//    let characterColon = characters.lastIndexOf(':')
+//
+//    let startColumn = parseInt(characters.substring(characterSpace, characterHyphen));
+//    let endColumn = parseInt(characters.substring(characterHyphen + 1, characterColon));
+//      return { startLineNumber, startColumn, endLineNumber, endColumn };
+//  };
 
-    let characterSpace = characters.lastIndexOf(' ');
-    let characterHyphen = characters.lastIndexOf('-');
-    let characterColon = characters.lastIndexOf(':')
-
-    let startColumn = parseInt(characters.substring(characterSpace, characterHyphen));
-    let endColumn = parseInt(characters.substring(characterHyphen + 1, characterColon));
-      return { startLineNumber, startColumn, endLineNumber, endColumn };
-  };
 
   let setErrors = (errors) => {
-    errors = errors.split("\n");
-      let markers = [];
-    for(let i = 0; i  < errors.length - 1; i += 2) {
-        let location = errors[i]; 
-        let message = errors[i + 1];
-
-        let info = infoFromError(location);
-
-        markers.push({
-           ...info,
-           message
-        })
-    };
-
+//    errors = errors.split("\n");
+//      let markers = [];
+//    for(let i = 0; i  < errors.length - 1; i += 2) {
+//        let location = errors[i]; 
+//        let message = errors[i + 1];
+//
+//        let info = infoFromError(location);
+//
+//        markers.push({
+//           ...info,
+//           message
+//        })
+//    };
+//
      monaco.editor.setModelMarkers(editor.getModel(), "revery", markers);
   };
 
@@ -189,9 +192,6 @@ function debounce(func, wait, immediate) {
       let data = evt.data;
       if (data && data.type == "example.switch") {
           fetchLatestSources(data.payload);
-      } else if (data && data.type == "compile.errors") {
-          /* TODO: Parse errors and show in editor */
-          setErrors(data.errors);
       }
   }, false);
 
