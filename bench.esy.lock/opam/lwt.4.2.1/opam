@@ -21,7 +21,7 @@ dev-repo: "git+https://github.com/ocsigen/lwt.git"
 depends: [
   "cppo" {build & >= "1.1.0"}
   "dune" {build}
-  "mmap"
+  "mmap"  # mmap is needed as long as Lwt supports OCaml < 4.06.0.
   "ocaml" {>= "4.02.0"}
   "result" # result is needed as long as Lwt supports OCaml 4.02.
   "seq" # seq is needed as long as Lwt supports OCaml < 4.07.0.
@@ -53,6 +53,6 @@ a single thread by default. This reduces the need for locks or other
 synchronization primitives. Code can be run in parallel on an opt-in basis."
 
 url {
-  src: "https://github.com/ocsigen/lwt/archive/4.2.0.tar.gz"
-  checksum: "md5=2ce7827948adc611319f9449e4519070"
+  src: "https://github.com/ocsigen/lwt/archive/4.2.1.tar.gz"
+  checksum: "md5=9d648386ca0a9978eb9487de36b781cc"
 }
