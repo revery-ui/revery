@@ -72,9 +72,8 @@ let start = (~onIdle=noop, initFunc: appInitFunc('s, 'a)) => {
       Environment.sleep(Milliseconds(1.));
     };
 
-    if (Environment.isNative) {
-      Thread.yield();
-    };
+    Environment.yield();
+
     List.length(getWindows(appInstance)) == 0;
   };
 

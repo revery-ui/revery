@@ -4,6 +4,9 @@ function caml_thread_create() { }
 // Provides: caml_thread_initialize
 function caml_thread_initialize() { }
 
+// Provides: caml_thread_yield
+function caml_thread_yield() { }
+
 // Provides: caml_mutex_new
 function caml_mutex_new() { }
 
