@@ -282,4 +282,5 @@ let init = app => {
   UI.start(win, render);
 };
 
-App.startWithState(state, reducer, init);
+let onIdle = () => print_endline("Example: idle callback triggered");
+App.startWithState(~onIdle, state, reducer, init);

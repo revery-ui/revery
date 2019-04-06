@@ -90,88 +90,77 @@ let drawString =
       ~y=0.,
       text: string,
     ) => {
-  let pass = RenderPass.getCurrent();
+  let ctx = RenderPass.getContext();
 
-  switch (pass) {
-  | AlphaPass(ctx) =>
-    let projection = ctx.projection;
-    let quad = Assets.quad();
+  let projection = ctx.projection;
+  let quad = Assets.quad();
 
-    let (shader, uniformWorld) =
-      _startShader(
-        ~color,
-        ~backgroundColor,
-        ~opacity,
-        ~gamma,
-        ~projection,
-        (),
-      );
+  let (shader, uniformWorld) =
+    _startShader(~color, ~backgroundColor, ~opacity, ~gamma, ~projection, ());
 
-    let font = FontCache.load(fontFamily, _getScaledFontSize(fontSize));
+  let font = FontCache.load(fontFamily, _getScaledFontSize(fontSize));
 
-    let metrics = FontRenderer.getNormalizedMetrics(font);
-    let multiplier = ctx.pixelRatio *. float_of_int(ctx.scaleFactor);
-    /* Position the baseline */
-    let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
-    ();
+  let metrics = FontRenderer.getNormalizedMetrics(font);
+  let multiplier = ctx.pixelRatio *. float_of_int(ctx.scaleFactor);
+  /* Position the baseline */
+  let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
+  ();
 
-    let outerTransform = Mat4.create();
-    Mat4.fromTranslation(outerTransform, Vec3.create(0.0, baseline, 0.0));
-    let render = (s: Fontkit.fk_shape, x: float, y: float) => {
-      let glyph = FontRenderer.getGlyph(font, s.glyphId);
+  let outerTransform = Mat4.create();
+  Mat4.fromTranslation(outerTransform, Vec3.create(0.0, baseline, 0.0));
+  let render = (s: Fontkit.fk_shape, x: float, y: float) => {
+    let glyph = FontRenderer.getGlyph(font, s.glyphId);
 
-      let {width, height, bearingX, bearingY, advance, _} = glyph;
+    let {width, height, bearingX, bearingY, advance, _} = glyph;
 
-      let width = float_of_int(width) /. multiplier;
-      let height = float_of_int(height) /. multiplier;
-      let bearingX = float_of_int(bearingX) /. multiplier;
-      let bearingY = float_of_int(bearingY) /. multiplier;
-      let advance = float_of_int(advance) /. multiplier;
+    let width = float_of_int(width) /. multiplier;
+    let height = float_of_int(height) /. multiplier;
+    let bearingX = float_of_int(bearingX) /. multiplier;
+    let bearingY = float_of_int(bearingY) /. multiplier;
+    let advance = float_of_int(advance) /. multiplier;
 
-      glPixelStorei(GL_PACK_ALIGNMENT, 1);
-      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-      let texture = FontRenderer.getTexture(font, s.glyphId);
-      glBindTexture(GL_TEXTURE_2D, texture);
-      /* TODO: Bind texture */
+    let texture = FontRenderer.getTexture(font, s.glyphId);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    /* TODO: Bind texture */
 
-      let glyphTransform = Mat4.create();
-      Mat4.fromTranslation(
-        glyphTransform,
-        Vec3.create(
-          x +. bearingX +. width /. 2.,
-          y +. height *. 0.5 -. bearingY,
-          0.0,
-        ),
-      );
-
-      let scaleTransform = Mat4.create();
-      Mat4.fromScaling(scaleTransform, Vec3.create(width, height, 1.0));
-
-      let local = Mat4.create();
-      Mat4.multiply(local, glyphTransform, scaleTransform);
-
-      let xform = Mat4.create();
-      Mat4.multiply(xform, outerTransform, local);
-      Mat4.multiply(xform, transform, xform);
-
-      CompiledShader.setUniformMatrix4fv(uniformWorld, xform);
-
-      Geometry.draw(quad, shader);
-
-      x +. advance /. 64.0;
-    };
-
-    let shapedText = FontRenderer.shape(font, text);
-    let startX = ref(x);
-
-    Array.iter(
-      s => {
-        let nextX = render(s, startX^, y);
-        startX := nextX;
-      },
-      shapedText,
+    let glyphTransform = Mat4.create();
+    Mat4.fromTranslation(
+      glyphTransform,
+      Vec3.create(
+        x +. bearingX +. width /. 2.,
+        y +. height *. 0.5 -. bearingY,
+        0.0,
+      ),
     );
-  | _ => ()
+
+    let scaleTransform = Mat4.create();
+    Mat4.fromScaling(scaleTransform, Vec3.create(width, height, 1.0));
+
+    let local = Mat4.create();
+    Mat4.multiply(local, glyphTransform, scaleTransform);
+
+    let xform = Mat4.create();
+    Mat4.multiply(xform, outerTransform, local);
+    Mat4.multiply(xform, transform, xform);
+
+    CompiledShader.setUniformMatrix4fv(uniformWorld, xform);
+
+    Geometry.draw(quad, shader);
+
+    x +. advance /. 64.0;
   };
+
+  let shapedText = FontRenderer.shape(font, text);
+  let startX = ref(x);
+
+  Array.iter(
+    s => {
+      let nextX = render(s, startX^, y);
+      startX := nextX;
+    },
+    shapedText,
+  );
 };
