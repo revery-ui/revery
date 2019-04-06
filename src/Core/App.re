@@ -45,16 +45,8 @@ let _checkAndCloseWindows = (app: t('s, 'a)) => {
   app.windows = windowsToKeep;
 };
 
-let start =
-    (
-      ~onIdle=noop,
-      initFunc: appInitFunc('s, 'a),
-    ) => {
-  let appInstance: t('s, 'a) = {
-    windows: [],
-    idleCount: 0,
-    onIdle,
-  };
+let start = (~onIdle=noop, initFunc: appInitFunc('s, 'a)) => {
+  let appInstance: t('s, 'a) = {windows: [], idleCount: 0, onIdle};
 
   let _ = Glfw.glfwInit();
   let _ = initFunc(appInstance);

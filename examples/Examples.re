@@ -186,71 +186,72 @@ module ExampleHost = {
 
   let createElement = (~children as _, ~win, ()) =>
     component(hooks => {
+      let (state, dispatch, hooks) =
+        React.Hooks.reducer(~initialState=state, reducer, hooks);
 
-      let (state, dispatch, hooks) = React.Hooks.reducer(~initialState=state, reducer, hooks);
+      let renderButton = (x: example) => {
+        let isActive = String.equal(x.name, state.selectedExample);
+        <ExampleButton
+          isActive
+          name={x.name}
+          onClick={_ => {
+            /*
+             * TEMPORARY WORKAROUND: The animations don't always get stopped when switching examples,
+             * tracked by briskml/brisk-reconciler#8. We can remove this once it's fixed!
+             */
+            Animated.cancelAll();
 
-    let renderButton = (x: example) => {
-      let isActive = String.equal(x.name, state.selectedExample);
-      <ExampleButton
-        isActive
-        name={x.name}
-        onClick={_ => {
-          /*
-           * TEMPORARY WORKAROUND: The animations don't always get stopped when switching examples,
-           * tracked by briskml/brisk-reconciler#8. We can remove this once it's fixed!
-           */
-          Animated.cancelAll();
+            let sourceFile = getSourceForSample(state, x.name);
+            notifyExampleSwitched(sourceFile);
+            dispatch(SelectExample(x.name));
+          }}
+        />;
+      };
 
-          let sourceFile = getSourceForSample(state, x.name);
-          notifyExampleSwitched(sourceFile);
-          dispatch(SelectExample(x.name));
-        }}
-      />;
-    };
+      let buttons = List.map(renderButton, state.examples);
 
-    let buttons = List.map(renderButton, state.examples);
+      let exampleRender = getRenderFunctionSelector(state);
+      let example = exampleRender(win);
 
-    let exampleRender = getRenderFunctionSelector(state);
-    let example = exampleRender(win);
-
-    (hooks, 
-    <View
-      onMouseWheel={_evt => ()}
-      style=Style.[
-        position(`Absolute),
-        justifyContent(`Center),
-        alignItems(`Center),
-        backgroundColor(bgColor),
-        bottom(0),
-        top(0),
-        left(0),
-        right(0),
-        flexDirection(`Row),
-      ]>
-      <ScrollView
-        style=Style.[
-          position(`Absolute),
-          top(0),
-          left(0),
-          width(175),
-          bottom(0),
-          backgroundColor(bgColor),
-        ]>
-        <View> ...buttons </View>
-      </ScrollView>
-      <View
-        style=Style.[
-          position(`Absolute),
-          top(0),
-          left(175),
-          right(0),
-          bottom(0),
-          backgroundColor(activeBackgroundColor),
-        ]>
-        example
-      </View>
-    </View>);
-
+      (
+        hooks,
+        <View
+          onMouseWheel={_evt => ()}
+          style=Style.[
+            position(`Absolute),
+            justifyContent(`Center),
+            alignItems(`Center),
+            backgroundColor(bgColor),
+            bottom(0),
+            top(0),
+            left(0),
+            right(0),
+            flexDirection(`Row),
+          ]>
+          <ScrollView
+            style=Style.[
+              position(`Absolute),
+              top(0),
+              left(0),
+              width(175),
+              bottom(0),
+              backgroundColor(bgColor),
+            ]>
+            <View> ...buttons </View>
+          </ScrollView>
+          <View
+            style=Style.[
+              position(`Absolute),
+              top(0),
+              left(175),
+              right(0),
+              bottom(0),
+              backgroundColor(activeBackgroundColor),
+            ]>
+            example
+          </View>
+        </View>,
+      );
     });
 };
 
