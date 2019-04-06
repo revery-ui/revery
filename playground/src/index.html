@@ -53,8 +53,9 @@
         <a href="https://www.outrunlabs.com/revery" alt="Revery"><img src="./dark-logo-transparent.png" title="Revery Logo" style="width: 96px;" /></a>
     </div>
     <div class="right">
-        <a href="https://github.com/revery-ui/revery" onclick="window.history.back()"><i class="fab fa-github"></i></a>
-        <a href="https://twitter.com/reveryui" onclick="window.history.back()"><i class="fab fa-twitter"></i></a>
+        <a href="https://github.com/revery-ui/revery"><i class="fab fa-github"></i></a>
+        <a href="https://twitter.com/reveryui"><i class="fab fa-twitter"></i></a>
+        <a href="https://discord.gg/NENVeaC"><i class="fab fa-discord"></i></a>
     </div>
 </div>
 <div class="container">
@@ -138,15 +139,15 @@ function debounce(func, wait, immediate) {
   };
 };
 
-let debouncedUpdate = debounce(() => {
-    console.log("[index] Sending code update");
-let allLines = editor.getModel().getLinesContent().join("\n");
-iframe.contentWindow.postMessage({ type: "editor.update", payload: allLines });
-}, 250, false);
+    let debouncedUpdate = debounce(() => {
+        console.log("[index] Sending code update");
+    let allLines = editor.getModel().getLinesContent().join("\n");
+    iframe.contentWindow.postMessage({ type: "editor.update", payload: allLines });
+    }, 250, false);
 
-editor.onDidChangeModelContent((e) => {
-    debouncedUpdate();
-});
+    editor.onDidChangeModelContent((e) => {
+        debouncedUpdate();
+    });
 
   let infoFromError = (s) => {
     let items = s.split(',');

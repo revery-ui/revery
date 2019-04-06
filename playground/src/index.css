@@ -110,6 +110,14 @@ html, body {
     flex-grow: 0;
     flex-shrink: 0;
     margin-left: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left #example-picker {
+    margin-left: 1em;
+    margin-right: 1em;
 }
 
 a {
@@ -144,6 +152,10 @@ a:hover {
     flex-grow: 0;
     flex-shrink: 0;
     margin-right: 2em;
+}
+
+.right .fab {
+    padding: 0.5em;
 }
 
 .subtle {
