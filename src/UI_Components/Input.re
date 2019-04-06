@@ -131,7 +131,9 @@ let make =
       | Key.KEY_BACKSPACE =>
         switch (valueAsProp) {
         | Some(v) =>
-          onChange(
+removeCharacter(v, state.cursorOffset)
+|> createChangeEvent
+|> onChange
             createChangeEvent(removeCharacter(v, state.cursorOffset)),
           )
         | None =>
