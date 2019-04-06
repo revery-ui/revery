@@ -51,8 +51,7 @@ class imageNode (imagePath: string) = {
     glBindTexture(GL_TEXTURE_2D, texture);
     Geometry.draw(quad, textureShader.compiledShader);
   };
-
-  pub setSrc = (newSrc) => {
-    src = newSrc;  
+  pub setSrc = newSrc => {
+    src = newSrc;
   };
 };

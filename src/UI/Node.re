@@ -66,23 +66,21 @@ class node (()) = {
     );
   };
   pub measurements = () => {
-      switch (_forcedMeasurements^) {
-      | Some(v) => v
-      | None => {
-      
-    let layout = _layoutNode^.layout;
-    Dimensions.create(
-      ~left=layout.left,
-      ~top=layout.top,
-      ~width=layout.width,
-      ~height=layout.height,
-      (),
-    );
-      }
-      }
+    switch (_forcedMeasurements^) {
+    | Some(v) => v
+    | None =>
+      let layout = _layoutNode^.layout;
+      Dimensions.create(
+        ~left=layout.left,
+        ~top=layout.top,
+        ~width=layout.width,
+        ~height=layout.height,
+        (),
+      );
+    };
   };
   pub forceMeasurements = (dimensions: Dimensions.t) => {
-    _forcedMeasurements := Some(dimensions);  
+    _forcedMeasurements := Some(dimensions);
   };
   pub getInternalId = () => _internalId;
   pub getTabIndex = () => _tabIndex^;

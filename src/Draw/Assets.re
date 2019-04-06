@@ -20,10 +20,11 @@ let _createQuad = ((minX, minY, maxX, maxY)) =>
 let _memoizedCreateQuad = Memoize.make(_createQuad);
 
 open Reglfw;
-let initialPixels = Lazy.make(() => {
+let initialPixels =
+  Lazy.make(() => {
     let initialImage = Image.fromColor(255, 0, 0, 255);
     Image.getPixels(initialImage);
-})
+  });
 
 let quad =
     (

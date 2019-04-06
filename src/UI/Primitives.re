@@ -9,20 +9,20 @@
  */
 
 type nodeFactory = {
-    createViewNode: unit => ViewNode.viewNode,
-    createTextNode: string => TextNode.textNode,
-    createImageNode: string => ImageNode.imageNode,
-}
+  createViewNode: unit => ViewNode.viewNode,
+  createTextNode: string => TextNode.textNode,
+  createImageNode: string => ImageNode.imageNode,
+};
 
 let defaultNodeFactory: nodeFactory = {
-    createViewNode: () => (new ViewNode.viewNode)(),
-    createTextNode: (text) => (new TextNode.textNode)(text),
-    createImageNode: (text) => (new ImageNode.imageNode)(text),
+  createViewNode: () => (new ViewNode.viewNode)(),
+  createTextNode: text => (new TextNode.textNode)(text),
+  createImageNode: text => (new ImageNode.imageNode)(text),
 };
 
 let _nodeFactory = ref(defaultNodeFactory);
 
-let setNodeFactory = (factory) => _nodeFactory := factory;
+let setNodeFactory = factory => _nodeFactory := factory;
 
 module View = {
   let component = React.nativeComponent("View");
