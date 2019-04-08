@@ -20,11 +20,17 @@ let getTexture = (imagePath: string) => {
 
   let cacheResult = Hashtbl.find_opt(_cache, relativeImagePath);
 
+  print_endline ("IMAGE: Loading from path: " ++ imagePath);
+
   let ret =
     switch (cacheResult) {
-    | Some(r) => r
+    | Some(r) => {
+          print_endline ("IMAGE: Got cached image: " ++ imagePath);
+        r
+    }
     | None =>
       /* Create an initial texture container */
+          print_endline ("IMAGE: Loading: " ++ imagePath);
       let texture = glCreateTexture();
       glBindTexture(GL_TEXTURE_2D, texture);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
