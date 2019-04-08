@@ -21,15 +21,16 @@ let drawImage =
       ~height: float,
       ~opacity=1.0,
       ~tint=Colors.white,
+      ~resizeMode=ImageResizeMode.Stretch,
       (),
     ) => {
+  let textureShader = Assets.textureShader();
+  let imgInfo: ImageRenderer.t = ImageRenderer.getTexture(imagePath);
 
-    let textureShader = Assets.textureShader();
-    let imgInfo: ImageRenderer.t = ImageRenderer.getTexture(imagePath);
-
-    switch (imgInfo.hasLoaded) {
-     | false => ()
-    | true => let ctx = RenderPass.getContext();
+  switch (imgInfo.hasLoaded) {
+  | false => ()
+  | true =>
+    let ctx = RenderPass.getContext();
     CompiledShader.use(textureShader.compiledShader);
     let m = ctx.projection;
 
@@ -37,14 +38,8 @@ let drawImage =
 
     let world = transform;
 
-    CompiledShader.setUniformMatrix4fv(
-      textureShader.uniformWorld,
-      world,
-    );
-    CompiledShader.setUniformMatrix4fv(
-      textureShader.uniformProjection,
-      m,
-    );
+    CompiledShader.setUniformMatrix4fv(textureShader.uniformWorld, world);
+    CompiledShader.setUniformMatrix4fv(textureShader.uniformProjection, m);
 
     CompiledShader.setUniform4fv(
       textureShader.uniformColor,
@@ -53,5 +48,5 @@ let drawImage =
 
     glBindTexture(GL_TEXTURE_2D, imgInfo.texture);
     Geometry.draw(quad, textureShader.compiledShader);
-    };
+  };
 };

@@ -227,6 +227,12 @@ module Text = {
     );
 };
 
+module ImageResizeMode = {
+  type t =
+    | Stretch
+    | Repeat;
+};
+
 module Image = {
   let component = React.nativeComponent("Image");
 
@@ -238,6 +244,7 @@ module Image = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
+        ~resizeMode,
         ~style=Style.emptyImageStyle,
         ~src="",
         children,
@@ -260,6 +267,7 @@ module Image = {
             let node = (new ImageNode.imageNode)(src);
             node#setEvents(events);
             node#setStyle(styles);
+            node#setResizeMode(resizeMode);
             Obj.magic(node);
           },
           configureInstance: (~isFirstRender as _, node) => {
@@ -273,6 +281,7 @@ module Image = {
                 ~onMouseWheel?,
                 (),
               );
+            node#setResizeMode(resizeMode);
             node#setEvents(events);
             node#setStyle(styles);
             node;
@@ -289,6 +298,7 @@ module Image = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
+        ~resizeMode=Draw.ImageResizeMode.Stretch,
         ~style=Style.emptyImageStyle,
         ~src="",
         ~children,
@@ -300,6 +310,7 @@ module Image = {
       ~onMouseUp?,
       ~onMouseWheel?,
       ~ref?,
+      ~resizeMode?,
       ~style,
       ~src,
       React.listToElement(children),
