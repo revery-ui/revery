@@ -46,11 +46,6 @@ let drawImage =
 
     glBindTexture(GL_TEXTURE_2D, imgInfo.texture);
 
-    /*
-       TODO: 
-       Implement this via geometry batching rather than additional draw calls
-    */
-
     switch (resizeMode) {
     | Stretch => 
         let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
@@ -65,6 +60,10 @@ let drawImage =
 
         let localTransform = Mat4.create();
 
+        /*
+           TODO: 
+           Implement this via geometry batching rather than additional draw calls
+        */
         while (y^ < yDiv) {
             while (x^ < xDiv) {
 
