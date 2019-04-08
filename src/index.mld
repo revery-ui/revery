@@ -2,6 +2,15 @@
 
 Framework for fast, native, cross-platform GUI applications.
 
+{%html:
+<nav class="toc">
+%}
+{ol
+  {li {{:#quick-start} Quick Start}}
+}
+{%html:
+</nav>
+%}
 
 {2 Modules}
 
