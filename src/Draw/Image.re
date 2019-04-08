@@ -34,8 +34,6 @@ let drawImage =
     CompiledShader.use(textureShader.compiledShader);
     let m = ctx.projection;
 
-    let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
-
     let world = transform;
 
     CompiledShader.setUniformMatrix4fv(textureShader.uniformWorld, world);
@@ -47,6 +45,20 @@ let drawImage =
     );
 
     glBindTexture(GL_TEXTURE_2D, imgInfo.texture);
-    Geometry.draw(quad, textureShader.compiledShader);
+
+    /*
+       TODO: 
+       Implement this via geometry batching rather than additional draw calls
+    */
+
+    switch (resizeMode) {
+    | Stretch => 
+        let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
+        Geometry.draw(quad, textureShader.compiledShader);
+    | Repeat =>
+        let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=float_of_int(imgInfo.width), ~maxY=float_of_int(imgInfo.height), ());
+        Geometry.draw(quad, textureShader.compiledShader);
+
+    }
   };
 };

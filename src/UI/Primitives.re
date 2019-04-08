@@ -227,12 +227,6 @@ module Text = {
     );
 };
 
-module ImageResizeMode = {
-  type t =
-    | Stretch
-    | Repeat;
-};
-
 module Image = {
   let component = React.nativeComponent("Image");
 
@@ -244,7 +238,7 @@ module Image = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
-        ~resizeMode,
+        ~resizeMode=Revery_Draw.ImageResizeMode.Stretch,
         ~style=Style.emptyImageStyle,
         ~src="",
         children,
@@ -281,7 +275,8 @@ module Image = {
                 ~onMouseWheel?,
                 (),
               );
-            node#setResizeMode(resizeMode);
+            let imgNode: ImageNode.imageNode = Obj.magic(node);
+            imgNode#setResizeMode(resizeMode);
             node#setEvents(events);
             node#setStyle(styles);
             node;
@@ -298,7 +293,7 @@ module Image = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
-        ~resizeMode=Draw.ImageResizeMode.Stretch,
+        ~resizeMode=?,
         ~style=Style.emptyImageStyle,
         ~src="",
         ~children,
