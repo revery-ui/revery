@@ -51,7 +51,6 @@ let drawImage =
         let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
         Geometry.draw(quad, textureShader.compiledShader);
     | Repeat =>
-
         let x = ref (0);
         let y = ref (0);
 
