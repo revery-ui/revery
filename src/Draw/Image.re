@@ -47,42 +47,50 @@ let drawImage =
     glBindTexture(GL_TEXTURE_2D, imgInfo.texture);
 
     switch (resizeMode) {
-    | Stretch => 
-        let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
-        Geometry.draw(quad, textureShader.compiledShader);
+    | Stretch =>
+      let quad =
+        Assets.quad(~minX=0., ~minY=0., ~maxX=width, ~maxY=height, ());
+      Geometry.draw(quad, textureShader.compiledShader);
     | Repeat =>
-        let x = ref (0);
-        let y = ref (0);
+      let x = ref(0);
+      let y = ref(0);
 
-        let xDiv = int_of_float(ceil(width /. float_of_int(imgInfo.width)));
-        let yDiv = int_of_float(ceil(height /. float_of_int(imgInfo.height)));
+      let xDiv = int_of_float(ceil(width /. float_of_int(imgInfo.width)));
+      let yDiv = int_of_float(ceil(height /. float_of_int(imgInfo.height)));
 
-        let localTransform = Mat4.create();
+      let localTransform = Mat4.create();
 
-        /*
-           TODO: 
-           Implement this via geometry batching rather than additional draw calls
-        */
-        while (y^ < yDiv) {
-            while (x^ < xDiv) {
+      /*
+          TODO:
+          Implement this via geometry batching rather than additional draw calls
+       */
+      while (y^ < yDiv) {
+        while (x^ < xDiv) {
+          let xPos = float_of_int(x^ * imgInfo.width);
+          let yPos = float_of_int(y^ * imgInfo.height);
+          let v = Vec3.create(xPos, yPos, 0.);
 
+          Mat4.fromTranslation(localTransform, v);
+          Mat4.multiply(localTransform, world, localTransform);
+          CompiledShader.setUniformMatrix4fv(
+            textureShader.uniformWorld,
+            localTransform,
+          );
 
-                let xPos = float_of_int(x^ * imgInfo.width);
-                let yPos = float_of_int(y^ * imgInfo.height);
-                let v = Vec3.create(xPos, yPos, 0.);
+          let quad =
+            Assets.quad(
+              ~minX=0.,
+              ~minY=0.,
+              ~maxX=float_of_int(imgInfo.width),
+              ~maxY=float_of_int(imgInfo.height),
+              (),
+            );
+          Geometry.draw(quad, textureShader.compiledShader);
 
-                Mat4.fromTranslation(localTransform, v);
-                Mat4.multiply(localTransform, world, localTransform);
-                CompiledShader.setUniformMatrix4fv(textureShader.uniformWorld, localTransform);
-                
-                    let quad = Assets.quad(~minX=0., ~minY=0., ~maxX=float_of_int(imgInfo.width), ~maxY=float_of_int(imgInfo.height), ());
-                    Geometry.draw(quad, textureShader.compiledShader);
-
-                incr(x);
-            }
-            incr(y)
-        }
-
-    }
+          incr(x);
+        };
+        incr(y);
+      };
+    };
   };
 };

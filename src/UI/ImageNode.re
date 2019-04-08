@@ -29,8 +29,7 @@ class imageNode (imagePath: string) = {
       (),
     );
   };
-
   pub setResizeMode = (mode: ImageResizeMode.t) => {
-    _resizeMode := mode; 
+    _resizeMode := mode;
   };
 };
