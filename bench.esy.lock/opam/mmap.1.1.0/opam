@@ -1,6 +1,6 @@
 opam-version: "2.0"
 maintainer: "jeremie@dimino.org"
-authors: ["Jérémie Dimino <jeremie@dimino.org>"]
+authors: ["Jérémie Dimino <jeremie@dimino.org>" "Anton Bachin" ]
 homepage: "https://github.com/mirage/mmap"
 bug-reports: "https://github.com/mirage/mmap/issues"
 doc: "https://mirage.github.io/mmap/"
@@ -19,6 +19,6 @@ This project provides a Mmap.map_file functions for mapping files in memory.
 """
 url {
   src:
-    "https://github.com/mirage/mmap/releases/download/v1.0.2/mmap-v1.0.2.tbz"
-  checksum: "md5=7880d4d74b37664f9bb0906ae1cadf6b"
+    "https://github.com/mirage/mmap/releases/download/v1.1.0/mmap-v1.1.0.tbz"
+  checksum: "md5=8c5d5fbc537296dc525867535fb878ba"
 }

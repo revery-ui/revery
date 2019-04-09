@@ -47,12 +47,12 @@ let vsShader = {|
 |};
 
 let fsShader = {|
-  float halfRes = 0.5 * uResolution.xy;
+  vec2 halfRes = 0.5 * uResolution.xy;
   float box = length(max(abs(vPosition - halfRes) - halfRes + uBorderRadius, 0.0)) - uBorderRadius;
   float delta = fwidth(box);
   float alpha = smoothstep(0.45-delta, 0.45, box);
 
-  gl_FragColor = vec4(vColor.xyz, 1 - alpha);
+  gl_FragColor = vec4(vColor.xyz, 1.0 - alpha);
 |};
 
 type t = {
