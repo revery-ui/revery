@@ -29,7 +29,6 @@ type changeEvent = {
 
 type action =
   | CursorPosition(cursorUpdate)
-  | SetCursorPosition(int)
   | CursorTimer
   | SetFocus(bool)
   | UpdateText(textUpdate)
@@ -88,7 +87,6 @@ let addCharacter = (word, char, index) => {
 let reducer = (action, state) =>
   switch (action) {
   | SetFocus(isFocused) => {...state, isFocused}
-  | SetCursorPosition(cursorPosition) => {...state, cursorPosition}
   | CursorPosition({inputString, change}) => {
       ...state,
       cursorPosition:
@@ -178,65 +176,41 @@ let make =
 
     let slots =
       React.Hooks.effect(
-        If((a, b) => a != b, (valueToDisplay, inputValueRef)),
-        /* If((!=), valueToDisplay), */
+        If((!=), valueToDisplay),
         () => {
           let oldValueLength = String.length(inputValueRef);
           let newValueLength = String.length(valueToDisplay);
           switch (Pervasives.abs(oldValueLength - newValueLength)) {
           | lengthDiff when lengthDiff != 1 =>
             // Set cursor at the end
-            dispatch(SetCursorPosition(String.length(valueToDisplay)))
-          /* dispatch(
-               CursorPosition({
-                 inputString: valueToDisplay,
-                 change: String.length(valueToDisplay) - state.cursorPosition,
-               }),
-             ) */
+            dispatch(
+              CursorPosition({
+                inputString: valueToDisplay,
+                change: String.length(valueToDisplay) - state.cursorPosition,
+              }),
+            )
           | _ =>
             let (oldStart, _oldEnd) =
               getStringParts(state.cursorPosition, inputValueRef);
             let (newStart, _newEnd) =
               getStringParts(state.cursorPosition, valueToDisplay);
 
-            /* switch (oldStart, newStart) {
-               | (oldStart, newStart)
-                   when oldStart == newStart && newValueLength > oldValueLength =>
-                 // One character was added
-                 dispatch(
-                   CursorPosition({inputString: valueToDisplay, change: 1}),
-                 )
-               | (oldStart, newStart) when oldStart != newStart =>
-                 // One character was removed from the left side of the cursor (Backspace)
-                 dispatch(
-                   CursorPosition({inputString: valueToDisplay, change: (-1)}),
-                 )
-               | _ => ()
-               }; */
-
             if (oldStart == newStart) {
               if (newValueLength > oldValueLength)
                 {
                   // One character was added
                   dispatch(
-                    SetCursorPosition(state.cursorPosition + 1),
-                    /* dispatch(
-                         CursorPosition({inputString: valueToDisplay, change: 1}),
-                       ); */
+                    CursorPosition({inputString: valueToDisplay, change: 1}),
                   );
                 };
                 // One characted was removed from the right side of the cursor (Delete key)
             } else {
               // One character was removed from the left side of the cursor (Backspace)
               dispatch(
-                SetCursorPosition(state.cursorPosition - 1),
-                /* dispatch(
-                     CursorPosition({inputString: valueToDisplay, change: (-1)}),
-                   ); */
+                CursorPosition({inputString: valueToDisplay, change: (-1)}),
               );
             };
           };
-          print_endline(string_of_int(state.cursorPosition));
           setInputValueRef(valueToDisplay);
           None;
         },
@@ -310,7 +284,6 @@ let make =
         )
 
       | Key.KEY_BACKSPACE =>
-        // We should manage both cases
         removeCharacterBefore(valueToDisplay, state.cursorPosition)
         |> (
           update => {
@@ -365,11 +338,6 @@ let make =
         | false => 0.0
       );
 
-    /**
-      We place these in a list so we change the order later to
-      render the cursor before the text if placeholder is present
-      otherwise to the cursor after
-     */
     let cursor = {
       let (startStr, _) =
         getStringParts(state.cursorPosition, valueToDisplay);
