@@ -29,8 +29,8 @@ type changeEvent = {
 
 type action =
   | CursorPosition(cursorUpdate)
-  | CursorTimer
   | SetCursorPosition(int)
+  | CursorTimer
   | SetFocus(bool)
   | UpdateText(textUpdate)
   | ResetCursorTimer;
@@ -101,10 +101,9 @@ let reducer = (action, state) =>
           ? Time.Seconds(0.0)
           : Time.increment(state.cursorTimer, Time.Seconds(0.1)),
     }
-  | UpdateText({newString, cursorPosition}) =>
+  | UpdateText({newString, _}) =>
     state.isFocused
-      ? {...state, cursorPosition, isFocused: true, internalValue: newString}
-      : state
+      ? {...state, isFocused: true, internalValue: newString} : state
   | ResetCursorTimer => {...state, cursorTimer: Time.Seconds(0.0)}
   };
 
@@ -174,20 +173,75 @@ let make =
         slots,
       );
 
-    // let slots =
-    //   React.Hooks.effect(
-    //     If((!=), valueAsProp),
-    //     () => {
-    //       if (valueToDisplay != state.internalValue) {
-    //         print_endline("render");
-    //         print_endline(state.internalValue);
-    //         print_endline(valueToDisplay);
-    //         dispatch(SetCursorPosition(0))
-    //       };
-    //       None;
-    //     },
-    //     slots,
-    //   );
+    let (inputValueRef, setInputValueRef, slots) =
+      React.Hooks.ref(valueToDisplay, slots);
+
+    let slots =
+      React.Hooks.effect(
+        If((a, b) => a != b, (valueToDisplay, inputValueRef)),
+        /* If((!=), valueToDisplay), */
+        () => {
+          let oldValueLength = String.length(inputValueRef);
+          let newValueLength = String.length(valueToDisplay);
+          switch (Pervasives.abs(oldValueLength - newValueLength)) {
+          | lengthDiff when lengthDiff != 1 =>
+            // Set cursor at the end
+            dispatch(SetCursorPosition(String.length(valueToDisplay)))
+          /* dispatch(
+               CursorPosition({
+                 inputString: valueToDisplay,
+                 change: String.length(valueToDisplay) - state.cursorPosition,
+               }),
+             ) */
+          | _ =>
+            let (oldStart, _oldEnd) =
+              getStringParts(state.cursorPosition, inputValueRef);
+            let (newStart, _newEnd) =
+              getStringParts(state.cursorPosition, valueToDisplay);
+
+            /* switch (oldStart, newStart) {
+               | (oldStart, newStart)
+                   when oldStart == newStart && newValueLength > oldValueLength =>
+                 // One character was added
+                 dispatch(
+                   CursorPosition({inputString: valueToDisplay, change: 1}),
+                 )
+               | (oldStart, newStart) when oldStart != newStart =>
+                 // One character was removed from the left side of the cursor (Backspace)
+                 dispatch(
+                   CursorPosition({inputString: valueToDisplay, change: (-1)}),
+                 )
+               | _ => ()
+               }; */
+
+            if (oldStart == newStart) {
+              if (newValueLength > oldValueLength)
+                {
+                  // One character was added
+                  dispatch(
+                    SetCursorPosition(state.cursorPosition + 1),
+                    /* dispatch(
+                         CursorPosition({inputString: valueToDisplay, change: 1}),
+                       ); */
+                  );
+                };
+                // One characted was removed from the right side of the cursor (Delete key)
+            } else {
+              // One character was removed from the left side of the cursor (Backspace)
+              dispatch(
+                SetCursorPosition(state.cursorPosition - 1),
+                /* dispatch(
+                     CursorPosition({inputString: valueToDisplay, change: (-1)}),
+                   ); */
+              );
+            };
+          };
+          print_endline(string_of_int(state.cursorPosition));
+          setInputValueRef(valueToDisplay);
+          None;
+        },
+        slots,
+      );
 
     let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
       let createChangeEvent = value => {
@@ -207,8 +261,6 @@ let make =
         let {newString, _} =
           addCharacter(v, event.character, state.cursorPosition);
         onChange(createChangeEvent(newString));
-        // dispatch(UpdateText({newString, cursorPosition}));
-      dispatch(CursorPosition({inputString: newString, change: 1}));
       | None =>
         let {newString, cursorPosition} =
           addCharacter(
@@ -248,7 +300,10 @@ let make =
         removeCharacterAfter(valueToDisplay, state.cursorPosition)
         |> (
           update => {
-            dispatch(UpdateText(update));
+            switch (valueAsProp) {
+            | Some(_) => ()
+            | None => dispatch(UpdateText(update))
+            };
             onKeyDown(event);
             onChange(createChangeEvent(update.newString));
           }
@@ -259,7 +314,10 @@ let make =
         removeCharacterBefore(valueToDisplay, state.cursorPosition)
         |> (
           update => {
-            dispatch(UpdateText(update));
+            switch (valueAsProp) {
+            | Some(_) => ()
+            | None => dispatch(UpdateText(update))
+            };
             onKeyDown(event);
             onChange(createChangeEvent(update.newString));
           }
