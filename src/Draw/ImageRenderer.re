@@ -1,6 +1,7 @@
-open Reglfw;
 open Reglfw.Glfw;
 open Revery_Core;
+
+module Image = Reglfw.Image;
 
 type t = {
   mutable hasLoaded: bool,
@@ -9,21 +10,21 @@ type t = {
   mutable height: int,
 };
 
-type cache = Hashtbl.t(string, texture);
+type cache = Hashtbl.t(string, t);
 
 let _cache: cache = Hashtbl.create(100);
 
 let initialImage = Image.fromColor(255, 0, 0, 255);
 let initialPixels = Image.getPixels(initialImage);
 
-let getTexture = (imagePath: string) => {
-  /* TODO: Support url paths? */
-  let execDir = Environment.getExecutingDirectory();
-  let relativeImagePath = execDir ++ imagePath;
+let getTexture: string => t =
+  (imagePath: string) => {
+    /* TODO: Support url paths? */
+    let execDir = Environment.getExecutingDirectory();
+    let relativeImagePath = execDir ++ imagePath;
 
-  let cacheResult = Hashtbl.find_opt(_cache, relativeImagePath);
+    let cacheResult = Hashtbl.find_opt(_cache, relativeImagePath);
 
-  let ret =
     switch (cacheResult) {
     | Some(r) => r
     | None =>
@@ -45,8 +46,11 @@ let getTexture = (imagePath: string) => {
 
       let imageLoadPromise = Image.load(relativeImagePath);
 
+      let ret: t = {hasLoaded: false, texture, width: 1, height: 1};
+
       let success = img => {
         let pixels = Image.getPixels(img);
+        let {width, height, _}: Image.dimensions = Image.getDimensions(img);
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexImage2D(
           GL_TEXTURE_2D,
@@ -56,13 +60,14 @@ let getTexture = (imagePath: string) => {
           GL_UNSIGNED_BYTE,
           pixels,
         );
+        ret.hasLoaded = true;
+        ret.width = width;
+        ret.height = height;
         Lwt.return();
       };
 
       let _ = Lwt.bind(imageLoadPromise, success);
-      Hashtbl.add(_cache, relativeImagePath, texture);
-      texture;
+      Hashtbl.replace(_cache, relativeImagePath, ret);
+      ret;
     };
-
-  ret;
-};
+  };
