@@ -6,11 +6,18 @@ Framework for fast, native, cross-platform GUI applications.
 <nav class="toc">
 %}
 {ul
-  {li {b Getting Started}}
+  {li {b Get Started}}
   {li
     {ul
-        {li Part 1}
-        {li Part 2}
+        {li Build & Install}
+    }
+  }
+  {li Resources
+    {ul
+        {li FAQ}
+        {li Technical Overview}
+        {li Samples}
+        {li Tutorials}
     }
   }
   {li API}
