@@ -12,10 +12,11 @@ type idleFunc = unit => unit;
 let getWindows: t => list(Window.t);
 
 /** [quit a] causes the App to quit with exit code [c] */
-let quit: (int) => unit;
+let quit: int => unit;
 
 /** [createWindow ~createOptions, app, name] creates a new window */
-let createWindow: (~createOptions:Window.windowCreateOptions=?,  t, string) => Window.t;
+let createWindow:
+  (~createOptions: Window.windowCreateOptions=?, t, string) => Window.t;
 
 /** [start] is the entry point for a Revery application. This initiates
   the Revery application lifecycle, and an app instance ([t]) is passed
@@ -26,4 +27,4 @@ let createWindow: (~createOptions:Window.windowCreateOptions=?,  t, string) => W
   this is a good time to garbage collect). This will be called
   when multiple frames have passed without requiring a render.
 */
-let start: (~onIdle:idleFunc=?, initFunc) => unit;
+let start: (~onIdle: idleFunc=?, initFunc) => unit;
