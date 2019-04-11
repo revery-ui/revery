@@ -1,11 +1,9 @@
 open Reglfw;
 
-type reducer('s, 'a) = ('s, 'a) => 's;
-
 type idleFunc = unit => unit;
 let noop = () => ();
 
-type t('s, 'a) = {
+type t = {
   mutable windows: list(Window.t),
   mutable idleCount: int,
   onIdle: idleFunc,
@@ -13,28 +11,28 @@ type t('s, 'a) = {
 
 let framesToIdle = 10;
 
-type appInitFunc('s, 'a) = t('s, 'a) => unit;
+type appInitFunc = t => unit;
 
-let getWindows = (app: t('s, 'a)) => app.windows;
+let getWindows = (app: t) => app.windows;
 
 let quit = (code: int) => exit(code);
 
 let createWindow =
-    (~createOptions=Window.defaultCreateOptions, app: t('s, 'a), windowName) => {
+    (~createOptions=Window.defaultCreateOptions, app: t, windowName) => {
   let w = Window.create(windowName, createOptions);
   /* Window.render(w) */
   app.windows = [w, ...app.windows];
   w;
 };
 
-let _anyWindowsDirty = (app: t('s, 'a)) =>
+let _anyWindowsDirty = (app: t) =>
   List.fold_left(
     (prev, w) => prev || Window.isDirty(w),
     false,
     getWindows(app),
   );
 
-let _checkAndCloseWindows = (app: t('s, 'a)) => {
+let _checkAndCloseWindows = (app: t) => {
   let currentWindows = getWindows(app);
   let windowsToClose =
     List.filter(w => Window.shouldClose(w), currentWindows);
@@ -45,8 +43,8 @@ let _checkAndCloseWindows = (app: t('s, 'a)) => {
   app.windows = windowsToKeep;
 };
 
-let start = (~onIdle=noop, initFunc: appInitFunc('s, 'a)) => {
-  let appInstance: t('s, 'a) = {windows: [], idleCount: 0, onIdle};
+let start = (~onIdle=noop, initFunc: appInitFunc) => {
+  let appInstance: t = {windows: [], idleCount: 0, onIdle};
 
   let _ = Glfw.glfwInit();
   let _ = initFunc(appInstance);
