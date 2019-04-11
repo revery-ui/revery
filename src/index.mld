@@ -5,8 +5,22 @@ Framework for fast, native, cross-platform GUI applications.
 {%html:
 <nav class="toc">
 %}
-{ol
-  {li {{:#quick-start} Quick Start}}
+{ul
+  {li {b Getting Started}}
+  {li
+    {ul
+        {li Part 1}
+        {li Part 2}
+    }
+  }
+  {li API}
+  {li
+    {ul
+        {li Revery}
+        {li Revery.UI}
+        {li Revery.UI.Components}
+    }
+  }
 }
 {%html:
 </nav>
