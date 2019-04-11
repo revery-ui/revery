@@ -1,12 +1,16 @@
 {
-  "checksum": "19b9840c553f8c6d0b9138ef0a9ed175",
-  "root": "revery@link:./package.json",
+  "checksum": "95684439452d4263a90a9bb3b4ec638a",
+  "root": "revery@link-dev:./package.json",
   "node": {
-    "revery@link:./package.json": {
-      "id": "revery@link:./package.json",
+    "revery@link-dev:./package.json": {
+      "id": "revery@link-dev:./package.json",
       "name": "revery",
-      "version": "link:./package.json",
-      "source": { "type": "link", "path": ".", "manifest": "package.json" },
+      "version": "link-dev:./package.json",
+      "source": {
+        "type": "link-dev",
+        "path": ".",
+        "manifest": "package.json"
+      },
       "overrides": [],
       "dependencies": [
         "reperf@1.4.0@d41d8cd9",
