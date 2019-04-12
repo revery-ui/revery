@@ -153,6 +153,7 @@ let make =
               delay: Seconds(0.),
               repeat: false,
               easing: Animated.cubicBezier(0.23, 1., 0.32, 1.),
+              direction: `Normal,
             };
             let bounceBackAnim = {
               toValue: isAtTop ? 0. : float_of_int(maxHeight),
@@ -160,6 +161,7 @@ let make =
               delay: Seconds(0.),
               repeat: false,
               easing: Animated.cubicBezier(0.23, 1., 0.32, 1.),
+              direction: `Normal,
             };
             let playback =
               tween(
