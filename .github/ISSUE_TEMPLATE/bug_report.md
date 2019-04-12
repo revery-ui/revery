@@ -9,6 +9,9 @@ about: Create a report to help us improve
 
 - Operating System:
 - Revery Version:
+- OCaml version:
+- Packages Manager: Npm, Esy, Opam
+- Native or Bytecode build:
 
 <!-- 
     Please try to narrow down the code to a minimal repro.
@@ -17,5 +20,7 @@ about: Create a report to help us improve
 -->
 
 - Minimal Repro:
+
+- which event trigger this bug:
 
 - Additional Information:
