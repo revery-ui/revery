@@ -1,51 +1,63 @@
 open Revery_Core;
 
-module StringHash = Hashtbl.Make({
+module StringHash =
+  Hashtbl.Make({
     type t = string;
     let equal = String.equal;
     let hash = String.length;
-});
+  });
 
-module InternalCache {
+module InternalCache = {
+  type t('a) = StringHash.t(Hashtbl.t(int, 'a));
 
-    type t('a) = StringHash.t(Hashtbl.t(int, 'a));
-
-    let create: unit => t('a) = () => {
-        StringHash.create(10);
-    }
-
-    let _getOrCreateSizeDict = (v: t('a), fontName) => {
-        switch (StringHash.find_opt(v, fontName)) {
-        | Some(x) => x
-        | None => 
-        print_endline ("NAME MISS: " ++ fontName ++ " | hash: " ++ string_of_int(Hashtbl.hash(fontName)));
-            let result = Hashtbl.create(10);
-           StringHash.add(v, fontName, result); 
-           result
-        };
+  let create: unit => t('a) =
+    () => {
+      StringHash.create(10);
     };
 
-    let find_opt = (v: t('a), fontName, size) => {
-        let sizeDictionary = _getOrCreateSizeDict(v, fontName);
-        switch(Hashtbl.find_opt(sizeDictionary, size)) {
-        | Some(v) => 
-            Some(v);
-        | None => 
-            print_endline ("find_opt - miss: " ++ fontName ++ " | " ++ string_of_int(size) ++ " | hash: " ++ string_of_int(Hashtbl.hash(size)));
-            None;
-        }
+  let _getOrCreateSizeDict = (v: t('a), fontName) => {
+    switch (StringHash.find_opt(v, fontName)) {
+    | Some(x) => x
+    | None =>
+      print_endline(
+        "NAME MISS: "
+        ++ fontName
+        ++ " | hash: "
+        ++ string_of_int(Hashtbl.hash(fontName)),
+      );
+      let result = Hashtbl.create(10);
+      StringHash.add(v, fontName, result);
+      result;
     };
+  };
 
-    let add = (v:t('a), fontName, size, b) => {
-       let sizeDictionary = _getOrCreateSizeDict(v, fontName); 
-       Hashtbl.add(sizeDictionary, size, b);
+  let find_opt = (v: t('a), fontName, size) => {
+    let sizeDictionary = _getOrCreateSizeDict(v, fontName);
+    switch (Hashtbl.find_opt(sizeDictionary, size)) {
+    | Some(v) => Some(v)
+    | None =>
+      print_endline(
+        "find_opt - miss: "
+        ++ fontName
+        ++ " | "
+        ++ string_of_int(size)
+        ++ " | hash: "
+        ++ string_of_int(Hashtbl.hash(size)),
+      );
+      None;
     };
+  };
 
-    let remove = (v:t('a), fontName, size) => {
-       let sizeDictionary = _getOrCreateSizeDict(v, fontName); 
-       Hashtbl.remove(sizeDictionary, size);
-    };
-}
+  let add = (v: t('a), fontName, size, b) => {
+    let sizeDictionary = _getOrCreateSizeDict(v, fontName);
+    Hashtbl.add(sizeDictionary, size, b);
+  };
+
+  let remove = (v: t('a), fontName, size) => {
+    let sizeDictionary = _getOrCreateSizeDict(v, fontName);
+    Hashtbl.remove(sizeDictionary, size);
+  };
+};
 
 type fontInfo = (string, int);
 /* type t = Hashtbl.t(fontInfo, Fontkit.fk_face); */
@@ -66,8 +78,9 @@ let load = (fontName: string, size: int) => {
   switch (InternalCache.find_opt(_cache, fontName, size)) {
   | Some(fk) => fk
   | None =>
-    print_endline ("FontCache: cache miss - " ++ fontName);
-    let isLoading = _isSome(InternalCache.find_opt(_loadingCache, fontName, size));
+    print_endline("FontCache: cache miss - " ++ fontName);
+    let isLoading =
+      _isSome(InternalCache.find_opt(_loadingCache, fontName, size));
     if (!isLoading) {
       InternalCache.add(_loadingCache, fontName, size, true);
       let success = fk => {
