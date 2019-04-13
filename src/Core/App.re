@@ -9,6 +9,7 @@ type t('s, 'a) = {
   mutable windows: list(Window.t),
   mutable idleCount: int,
   onIdle: idleFunc,
+  isFirstRender: ref(bool),
 };
 
 let framesToIdle = 10;
@@ -46,7 +47,7 @@ let _checkAndCloseWindows = (app: t('s, 'a)) => {
 };
 
 let start = (~onIdle=noop, initFunc: appInitFunc('s, 'a)) => {
-  let appInstance: t('s, 'a) = {windows: [], idleCount: 0, onIdle};
+  let appInstance: t('s, 'a) = {windows: [], idleCount: 0, onIdle, isFirstRender: ref(true)};
 
   let _ = Glfw.glfwInit();
   let _ = initFunc(appInstance);
@@ -57,10 +58,11 @@ let start = (~onIdle=noop, initFunc: appInitFunc('s, 'a)) => {
 
     _checkAndCloseWindows(appInstance);
 
-    if (_anyWindowsDirty(appInstance)) {
+    if (appInstance.isFirstRender^ || _anyWindowsDirty(appInstance)) {
       Performance.bench("renderWindows", () => {
         List.iter(w => Window.render(w), getWindows(appInstance));
         appInstance.idleCount = 0;
+        appInstance.isFirstRender := false;
       });
     } else {
       appInstance.idleCount = appInstance.idleCount + 1;
