@@ -14,11 +14,12 @@ build: [
 
 depends: [
   "ocaml" {>= "4.02"}
+  "re" {>= "1.5.0"}
+  ("ocaml" {>= "4.07"} | "re" {>= "1.8.0"})
   "dune" {build}
   "alcotest" {with-test}
   "seq"
   "uutf" {>= "1.0.0"}
-  "re" {>= "1.5.0"}
 ]
 
 synopsis:"TyXML is a library for building correct HTML and SVG documents"

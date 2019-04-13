@@ -61,13 +61,17 @@ let wrapText = (~text, ~measureWidth, ~maxWidth, ~wrapHere) => {
 
       if (width >= maxWidth) {
         let (line, lineWidth) = subAndMeasure(acc.beginIndex, acc.endIndex);
-        let (lastLine, lastLineWidth) =
-          subAndMeasure(acc.endIndex + 2, index);
+        if (acc.endIndex + 2 > index) {
+          {...acc, lines: [line, ...acc.lines], currMaxWidth: lineWidth};
+        } else {
+          let (lastLine, lastLineWidth) =
+            subAndMeasure(acc.endIndex + 2, index);
 
-        let currMaxWidth =
-          max(lastLineWidth, max(acc.currMaxWidth, lineWidth));
+          let currMaxWidth =
+            max(lastLineWidth, max(acc.currMaxWidth, lineWidth));
 
-        {...acc, lines: [lastLine, line, ...acc.lines], currMaxWidth};
+          {...acc, lines: [lastLine, line, ...acc.lines], currMaxWidth};
+        };
       } else {
         let (line, lineWidth) = subAndMeasure(acc.beginIndex, index);
 
