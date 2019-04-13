@@ -13,6 +13,13 @@ let optCall = (opt, param) =>
   | None => ()
   };
 
+type animationDirection = [
+  | `Normal
+  | `Reverse
+  | `Alternate
+  | `AlternateReverse
+];
+
 module Make = (AnimationTickerImpl: AnimationTicker) => {
   type animationValue = {mutable current: float};
 
@@ -29,6 +36,8 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     value: animationValue,
     repeat: bool,
     easing: float => float,
+    direction: animationDirection,
+    mutable isReverse: bool,
   };
 
   type activeAnimation = {
@@ -50,6 +59,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     toValue: float,
     repeat: bool,
     easing: float => float,
+    direction: animationDirection,
   };
 
   let linear = (t: float) => t;
@@ -85,18 +95,26 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
 
   let tickAnimation = (clock: float, {animation: anim, update, complete}) => {
     let t = anim.easing(getLocalTime(clock, anim));
+    let (startValue, toValue) =
+      anim.isReverse
+        ? (anim.toValue, anim.startValue) : (anim.startValue, anim.toValue);
 
     if (t >= 1.) {
       if (anim.repeat) {
+        if (anim.direction == `Alternate || anim.direction == `AlternateReverse) {
+          anim.isReverse = !anim.isReverse;
+        };
+
         /* If the anim is set to repeat and the time has expired, restart */
         anim.startTime = anim.startTime +. anim.delay +. anim.duration;
+
         let newT = getLocalTime(clock, anim);
-        anim.value.current = interpolate(newT, anim.startValue, anim.toValue);
+        anim.value.current = interpolate(newT, startValue, toValue);
       } else {
         optCall(complete, ());
       };
     } else {
-      anim.value.current = interpolate(t, anim.startValue, anim.toValue);
+      anim.value.current = interpolate(t, startValue, toValue);
       optCall(update, anim.value.current);
     };
   };
@@ -121,13 +139,19 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       startTime: Time.to_float_seconds(AnimationTickerImpl.time()),
       startValue: animationValue.current,
       easing: animationOptions.easing,
+      direction: animationOptions.direction,
+      isReverse: false,
     };
     animation;
   };
 
   let start = (~update=?, ~complete=?, animation) => {
     let activeAnimation = {animation, update, complete};
+    let isReverseStartValue =
+      animation.direction == `Reverse
+      || animation.direction == `AlternateReverse;
     animation.startTime = Time.to_float_seconds(AnimationTickerImpl.time());
+    animation.isReverse = isReverseStartValue;
     activeAnimations := List.append([activeAnimation], activeAnimations^);
     let removeAnimation = l =>
       List.filter(({animation: a, _}) => a.id !== animation.id, l);
@@ -137,6 +161,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       },
       stop: () => {
         animation.value.current = animation.startValue;
+        animation.isReverse = isReverseStartValue;
         activeAnimations := removeAnimation(activeAnimations^);
       },
     };

@@ -42,6 +42,7 @@ test("Animation", () => {
           toValue: 10.,
           repeat: false,
           easing: Animated.linear,
+          direction: `Normal,
         },
       );
     let _playback = Animated.start(myAnimation);
@@ -64,6 +65,7 @@ test("Animation", () => {
           toValue: 1.,
           repeat: false,
           easing: Animated.quadratic,
+          direction: `Normal,
         },
       );
     let _playback = Animated.start(myAnimation);
@@ -86,6 +88,7 @@ test("Animation", () => {
           toValue: 10.,
           repeat: true,
           easing: Animated.linear,
+          direction: `Normal,
         },
       );
     let _playback = Animated.start(myAnimation);
@@ -108,6 +111,7 @@ test("Animation", () => {
           toValue: 10.,
           repeat: false,
           easing: Animated.linear,
+          direction: `Normal,
         },
       );
     let _playback = Animated.start(myAnimation);
@@ -130,6 +134,7 @@ test("Animation", () => {
           toValue: 10.,
           repeat: false,
           easing: Animated.linear,
+          direction: `Normal,
         },
       );
     let _playback = Animated.start(myAnimation);
@@ -154,6 +159,7 @@ test("Animation", () => {
           toValue: 10.,
           repeat: false,
           easing: Animated.linear,
+          direction: `Normal,
         },
       );
     let {Animated.stop, _} = Animated.start(myAnimation);
@@ -181,6 +187,7 @@ test("Animation", () => {
           toValue: 10.,
           repeat: false,
           easing: Animated.linear,
+          direction: `Normal,
         },
       );
     let second =
@@ -192,6 +199,7 @@ test("Animation", () => {
           toValue: 0.,
           repeat: false,
           easing: Animated.linear,
+          direction: `Normal,
         },
       );
     let _playback = Chain.make(first) |> Chain.add(second) |> Chain.start;
@@ -219,6 +227,7 @@ test("Animation", () => {
           toValue: 10.,
           repeat: false,
           easing: Animated.linear,
+          direction: `Normal,
         },
       );
     let second =
@@ -230,6 +239,7 @@ test("Animation", () => {
           toValue: 0.,
           repeat: false,
           easing: Animated.linear,
+          direction: `Normal,
         },
       );
     let {Animated.stop, _} =
@@ -241,5 +251,69 @@ test("Animation", () => {
 
     expect(Animated.anyActiveAnimations()).toBe(false);
     expect(Animated.getAnimationCount()).toBe(0);
+  });
+
+  let directionTest = (description, direction, before, after) => {
+    test(
+      description,
+      () => {
+        module TestTicker =
+          MakeTicker({});
+        module Animated = Animation.Make(TestTicker);
+
+        let myAnimation =
+          Animated.tween(
+            Animated.floatValue(0.),
+            {
+              duration: Time.Seconds(0.5),
+              delay: Time.Seconds(0.),
+              toValue: 10.,
+              repeat: true,
+              easing: Animated.linear,
+              direction,
+            },
+          );
+        let _playback = Animated.start(myAnimation);
+
+        expect(myAnimation.isReverse).toBe(before);
+        TestTicker.simulateTick(Time.Seconds(1.));
+        expect(myAnimation.isReverse).toBe(after);
+      },
+    );
+  };
+
+  directionTest("animation that does not alternate", `Normal, false, false);
+  directionTest("animation that is in reverse", `Reverse, true, true);
+  directionTest("animation that alternates", `Alternate, false, true);
+  directionTest(
+    "animation that alternates in reverse",
+    `AlternateReverse,
+    true,
+    false,
+  );
+
+  test("animation resets when stopped", () => {
+    module TestTicker =
+      MakeTicker({});
+    module Animated = Animation.Make(TestTicker);
+
+    let myAnimation =
+      Animated.tween(
+        Animated.floatValue(0.),
+        {
+          duration: Time.Seconds(0.5),
+          delay: Time.Seconds(0.),
+          toValue: 10.,
+          repeat: true,
+          easing: Animated.linear,
+          direction: `Alternate,
+        },
+      );
+    let _playback = Animated.start(myAnimation);
+    TestTicker.simulateTick(Time.Seconds(1.));
+    _playback.stop();
+
+    expect(myAnimation.value.current).toBe(0.);
+    expect(myAnimation.isReverse).toBe(false);
   });
 });

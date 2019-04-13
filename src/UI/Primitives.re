@@ -254,6 +254,7 @@ module Image = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
+        ~resizeMode=Revery_Draw.ImageResizeMode.Stretch,
         ~style=Style.emptyImageStyle,
         ~src="",
         children,
@@ -276,6 +277,7 @@ module Image = {
             let node = _nodeFactory^.createImageNode(src);
             node#setEvents(events);
             node#setStyle(styles);
+            node#setResizeMode(resizeMode);
             Obj.magic(node);
           },
           configureInstance: (~isFirstRender as _, node) => {
@@ -289,6 +291,8 @@ module Image = {
                 ~onMouseWheel?,
                 (),
               );
+            let imgNode: ImageNode.imageNode = Obj.magic(node);
+            imgNode#setResizeMode(resizeMode);
             node#setEvents(events);
             node#setStyle(styles);
             node;
@@ -305,6 +309,7 @@ module Image = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
+        ~resizeMode=?,
         ~style=Style.emptyImageStyle,
         ~src="",
         ~children,
@@ -316,6 +321,7 @@ module Image = {
       ~onMouseUp?,
       ~onMouseWheel?,
       ~ref?,
+      ~resizeMode?,
       ~style,
       ~src,
       React.listToElement(children),
