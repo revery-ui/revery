@@ -10,8 +10,13 @@ type t = {
   mutable height: int,
 };
 
-type cache = Hashtbl.t(string, t);
+let initialPixels =
+  Lazy.make(() => {
+    let initialImage = Image.fromColor(255, 0, 0, 255);
+    Image.getPixels(initialImage);
+  });
 
+type cache = Hashtbl.t(string, t);
 let _cache: cache = Hashtbl.create(100);
 
 let getTexture = (imagePath: string) => {
@@ -31,7 +36,7 @@ let getTexture = (imagePath: string) => {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      let initialPixels = Assets.initialPixels();
+      let initialPixels = initialPixels();
       glTexImage2D(
         GL_TEXTURE_2D,
         0,
