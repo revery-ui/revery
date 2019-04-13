@@ -25,7 +25,6 @@ let getTexture = (imagePath: string) => {
     | Some(r) =>  r
     | None =>
       /* Create an initial texture container */
-          print_endline ("IMAGE: Loading: " ++ imagePath);
       let texture = glCreateTexture();
       glBindTexture(GL_TEXTURE_2D, texture);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
