@@ -1,6 +1,4 @@
 open Revery;
-open Revery.Events;
-open Revery.Window;
 open Revery.UI;
 open Revery.UI.Components;
 
@@ -225,57 +223,12 @@ let reducer = (action, state) =>
 module Calculator = {
   let component = React.component("Calculator");
 
-  let createElement = (~window, ~children as _, ()) =>
+  let createElement = (~children as _, ()) =>
     component(hooks => {
       let ({display, number, _}, dispatch, hooks) =
         React.Hooks.reducer(
           ~initialState={operator: `Nop, result: 0., display: "", number: ""},
           reducer,
-          hooks,
-        );
-
-      let respondToKeys = e =>
-        switch (e.key) {
-        | Key.KEY_BACKSPACE => dispatch(BackspaceKeyPressed)
-
-        | Key.KEY_C when e.ctrlKey => dispatch(ClearKeyPressed(true))
-        | Key.KEY_C => dispatch(ClearKeyPressed(false))
-
-        /* + key */
-        | Key.KEY_EQUAL when e.shiftKey =>
-          dispatch(OperationKeyPressed(`Add))
-        | Key.KEY_MINUS when e.ctrlKey => dispatch(PlusMinusKeyPressed)
-        | Key.KEY_MINUS => dispatch(OperationKeyPressed(`Sub))
-        /* * key */
-        | Key.KEY_8 when e.shiftKey => dispatch(OperationKeyPressed(`Mul))
-        | Key.KEY_SLASH => dispatch(OperationKeyPressed(`Div))
-        | Key.KEY_PERIOD => dispatch(DotKeyPressed)
-        | Key.KEY_EQUAL => dispatch(ResultKeyPressed)
-
-        | Key.KEY_0 => dispatch(NumberKeyPressed("0"))
-        | Key.KEY_1 => dispatch(NumberKeyPressed("1"))
-        | Key.KEY_2 => dispatch(NumberKeyPressed("2"))
-        | Key.KEY_3 => dispatch(NumberKeyPressed("3"))
-        | Key.KEY_4 => dispatch(NumberKeyPressed("4"))
-        | Key.KEY_5 => dispatch(NumberKeyPressed("5"))
-        | Key.KEY_6 => dispatch(NumberKeyPressed("6"))
-        | Key.KEY_7 => dispatch(NumberKeyPressed("7"))
-        | Key.KEY_8 => dispatch(NumberKeyPressed("8"))
-        | Key.KEY_9 => dispatch(NumberKeyPressed("9"))
-
-        | _ => ()
-        };
-      /* TODO: Pretty sure this isn't supposed to go in the render() function.
-         Seems to cause lag the more times we re-render, so I guess this is
-         subscribing a ton of times and never unsubscribing. */
-      let hooks =
-        React.Hooks.effect(
-          OnMount,
-          () => {
-            let unsubscribe =
-              Event.subscribe(window.onKeyDown, respondToKeys);
-            Some(unsubscribe);
-          },
           hooks,
         );
 
@@ -374,4 +327,4 @@ module Calculator = {
     });
 };
 
-let render = window => <Calculator window />;
+let render = _ => <Calculator />;

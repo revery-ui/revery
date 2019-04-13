@@ -119,7 +119,6 @@ let render = () =>
       left(0),
       right(0),
     ]>
-    <Logo />
     <View
       ref={r =>
         print_endline(
@@ -131,4 +130,5 @@ let render = () =>
       <AnimatedText delay=0.5 text="to" />
       <AnimatedText delay=1. text="Revery" />
     </View>
+    <Logo />
   </View>;

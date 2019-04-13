@@ -19,12 +19,6 @@ module InternalCache = {
     switch (StringHash.find_opt(v, fontName)) {
     | Some(x) => x
     | None =>
-      print_endline(
-        "NAME MISS: "
-        ++ fontName
-        ++ " | hash: "
-        ++ string_of_int(Hashtbl.hash(fontName)),
-      );
       let result = Hashtbl.create(10);
       StringHash.add(v, fontName, result);
       result;
@@ -36,14 +30,6 @@ module InternalCache = {
     switch (Hashtbl.find_opt(sizeDictionary, size)) {
     | Some(v) => Some(v)
     | None =>
-      print_endline(
-        "find_opt - miss: "
-        ++ fontName
-        ++ " | "
-        ++ string_of_int(size)
-        ++ " | hash: "
-        ++ string_of_int(Hashtbl.hash(size)),
-      );
       None;
     };
   };
@@ -60,7 +46,6 @@ module InternalCache = {
 };
 
 type fontInfo = (string, int);
-/* type t = Hashtbl.t(fontInfo, Fontkit.fk_face); */
 
 type fontLoaded = Event.t(unit);
 let onFontLoaded: fontLoaded = Event.create();
