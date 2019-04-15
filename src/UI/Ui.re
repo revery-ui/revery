@@ -5,6 +5,8 @@
  * This stores the connection between a window and its UI
  */
 
+open Revery_Core;
+
 module Window = Revery_Core.Window;
 
 open RenderContainer;
@@ -14,7 +16,7 @@ type renderFunction = React.syntheticElement => unit;
 let start = (window: Window.t, element: React.syntheticElement) => {
   let uiDirty = ref(false);
   let forceLayout = ref(false);
-  let latestElement = ref(element);
+  let latestElement = ref(() => element);
 
   let onStale = () => {
     uiDirty := true;
@@ -103,7 +105,6 @@ let start = (window: Window.t, element: React.syntheticElement) => {
     );
 
   Window.setShouldRenderCallback(window, () => {
-      print_endline ("any active animations? " ++ string_of_bool(Animated.anyActiveAnimations()));
     uiDirty^ || Animated.anyActiveAnimations()
     });
   Window.setRenderCallback(
@@ -124,12 +125,20 @@ let start = (window: Window.t, element: React.syntheticElement) => {
       let fl = forceLayout^;
       forceLayout := false;
 
-      Render.render(~forceLayout=fl, ui, latestElement^);
+      /*
+       * TODO:
+       *
+       * Once https://github.com/briskml/brisk-reconciler/issues/26 is fixed,
+       * we should be able to avoid this function call and just use the latest
+       * element directly (along with a fix to the Animations)
+       */
+      let component = Performance.bench("component render", () =>(latestElement^)());
+      Render.render(~forceLayout=fl, ui, component);
     },
   );
 
   let render = (element: React.syntheticElement) => {
-    latestElement := element;
+    latestElement := () => element;
     uiDirty := true;
   };
 

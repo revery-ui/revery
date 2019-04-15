@@ -25,8 +25,6 @@ let render =
 
   AnimationTicker.tick();
 
-  print_endline ("DRAWING");
-
   /* Perform reconciliation */
   Performance.bench("reconcile", () =>
     container := Container.update(container^, component)
