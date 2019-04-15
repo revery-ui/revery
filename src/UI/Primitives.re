@@ -8,22 +8,6 @@
  * https://github.com/bryphe/reason-reactify
  */
 
-type nodeFactory = {
-  createViewNode: unit => ViewNode.viewNode,
-  createTextNode: string => TextNode.textNode,
-  createImageNode: string => ImageNode.imageNode,
-};
-
-let defaultNodeFactory: nodeFactory = {
-  createViewNode: () => (new ViewNode.viewNode)(),
-  createTextNode: text => (new TextNode.textNode)(text),
-  createImageNode: text => (new ImageNode.imageNode)(text),
-};
-
-let _nodeFactory = ref(defaultNodeFactory);
-
-let setNodeFactory = factory => _nodeFactory := factory;
-
 module View = {
   let component = React.nativeComponent("View");
 
@@ -74,7 +58,7 @@ module View = {
                 ~onDimensionsChanged?,
                 (),
               );
-            let node = _nodeFactory^.createViewNode();
+            let node = PrimitiveNodeFactory.get().createViewNode();
             node#setEvents(events);
             node#setStyle(styles);
             node#setTabIndex(tabindex);
@@ -187,7 +171,7 @@ module Text = {
                 ~onMouseWheel?,
                 (),
               );
-            let node = _nodeFactory^.createTextNode(text);
+            let node = PrimitiveNodeFactory.get().createTextNode(text);
             node#setEvents(events);
             node#setStyle(styles);
             Obj.magic(node);
@@ -274,7 +258,7 @@ module Image = {
                 ~onMouseWheel?,
                 (),
               );
-            let node = _nodeFactory^.createImageNode(src);
+            let node = PrimitiveNodeFactory.get().createImageNode(src);
             node#setEvents(events);
             node#setStyle(styles);
             node#setResizeMode(resizeMode);

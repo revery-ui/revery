@@ -31,4 +31,8 @@ module Dimensions = Dimensions;
 
 include Primitives;
 
+module Internal = {
+  module PrimitiveNodeFactory = PrimitiveNodeFactory;
+};
+
 let start = Ui.start;
