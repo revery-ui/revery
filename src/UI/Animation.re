@@ -53,9 +53,12 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
 
   let activeAnimations: ref(list(activeAnimation)) = ref([]);
 
-  let isActive = (animation) => {
-      List.length(List.filter((a) => a.animation.id == animation.id, activeAnimations^)) > 0;
-  }
+  let isActive = animation => {
+    List.length(
+      List.filter(a => a.animation.id == animation.id, activeAnimations^),
+    )
+    > 0;
+  };
 
   type animationOptions = {
     duration: Time.t,

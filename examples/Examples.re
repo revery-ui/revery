@@ -289,6 +289,7 @@ let init = app => {
   };
 
   let _ = UI.start(win, <ExampleHost win />);
+  ();
 };
 
 let onIdle = () => print_endline("Example: idle callback triggered");
