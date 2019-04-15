@@ -20,32 +20,26 @@ Framework for fast, native, cross-platform GUI applications.
         {li Tutorials}
     }
   }
-  {li API}
+  {li {{:../index.html} API}}
   {li
     {ul
-        {li Revery
+        {li {{:../Revery/Revery/index.html} Revery}
             {ul 
                 {li {{:../Revery_Core/Revery_Core/App/index.html} App}}
                 {li Environment}
                 {li Event}
-                {li Window}
                 {li Time}
                 {li Tick}
+                {li {{:../Revery_Core/Revery_Core/Window/index.html} Window}}
             }
         }
-        {li Revery.UI
+        {li {{:../Revery_UI/Revery_UI/index.html} Revery.UI}
             {ul 
-                {li Border}
-                {li Boxshadow}
                 {li Hooks}
                 {li React}
-                {li Event}
-                {li Window}
-                {li Time}
-                {li Tick}
             }
         }
-        {li Revery.UI.Components
+        {li {{:../Revery_UI_Components/Revery_UI_Components/index.html} Revery.UI.Components}
             {ul 
                 {li Button}
                 {li Checkbox}

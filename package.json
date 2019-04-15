@@ -62,7 +62,6 @@
   "devDependencies": {
     "ocaml": "^4.7.0",
     "@opam/merlin": "*",
-    "@opam/dune": "^1.5.0",
-    "@opam/odoc": "*"
+    "@opam/dune": "^1.5.0"
   }
 }
