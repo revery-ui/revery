@@ -51,30 +51,6 @@ type t = {
   onMouseWheel: Event.t(mouseWheelEvent),
 };
 
-type windowCreateOptions = {
-  resizable: bool,
-  visible: bool,
-  maximized: bool,
-  decorated: bool,
-  width: int,
-  height: int,
-  backgroundColor: Color.t,
-  vsync: bool,
-  icon: option(string),
-};
-
-let defaultCreateOptions = {
-  resizable: true,
-  visible: true,
-  maximized: false,
-  decorated: true,
-  width: 800,
-  height: 600,
-  backgroundColor: Colors.cornflowerBlue,
-  vsync: true,
-  icon: None,
-};
-
 let isDirty = (w: t) =>
   if (w.shouldRender() || w.areMetricsDirty) {
     true;
@@ -171,7 +147,7 @@ let render = (w: t) => {
   w.isRendering = false;
 };
 
-let create = (name: string, options: windowCreateOptions) => {
+let create = (name: string, options: WindowCreateOptions.t) => {
   Glfw.glfwDefaultWindowHints();
   Glfw.glfwWindowHint(GLFW_RESIZABLE, options.resizable);
   Glfw.glfwWindowHint(GLFW_VISIBLE, options.visible);

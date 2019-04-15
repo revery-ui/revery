@@ -21,7 +21,7 @@ let getWindows = (app: t('s, 'a)) => app.windows;
 let quit = (code: int) => exit(code);
 
 let createWindow =
-    (~createOptions=Window.defaultCreateOptions, app: t('s, 'a), windowName) => {
+    (~createOptions=WindowCreateOptions.default, app: t('s, 'a), windowName) => {
   let w = Window.create(windowName, createOptions);
   /* Window.render(w) */
   app.windows = [w, ...app.windows];
