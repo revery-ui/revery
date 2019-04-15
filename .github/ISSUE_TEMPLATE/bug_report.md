@@ -26,3 +26,7 @@ about: Create a report to help us improve
 - Expected Result:
 
 - Additional Information:
+
+- Search terms used:
+
+<!-- Please include the search terms you used when searching the issue tracker. This will make it easier for others to find! -->
