@@ -9,13 +9,12 @@ open Revery_Core;
 
 module Window = Revery_Core.Window;
 
-type renderFunction = unit => React.syntheticElement;
-
 open RenderContainer;
 
-let start = (window: Window.t, render: renderFunction) => {
+let start = (window: Window.t, element: React.syntheticElement) => {
   let uiDirty = ref(false);
   let forceLayout = ref(false);
+  let latestElement = ref(element);
 
   let onStale = () => {
     uiDirty := true;
@@ -124,8 +123,14 @@ let start = (window: Window.t, render: renderFunction) => {
       let fl = forceLayout^;
       forceLayout := false;
 
-      let component = Performance.bench("component render", () => render());
-      Render.render(~forceLayout=fl, ui, component);
+      Render.render(~forceLayout=fl, ui, latestElement^);
     },
   );
+
+  let render = (element: React.syntheticElement) => {
+    latestElement := element;
+    uiDirty := true;
+  };
+
+  render;
 };
