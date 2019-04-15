@@ -18,5 +18,4 @@ type renderFunction = React.syntheticElement => unit;
   [update(<Button />);]
 */
 
-let start: (Window.t, React.syntheticElement) => renderFunction
-
+let start: (Window.t, React.syntheticElement) => renderFunction;
