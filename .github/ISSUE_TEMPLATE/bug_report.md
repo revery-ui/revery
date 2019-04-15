@@ -10,8 +10,7 @@ about: Create a report to help us improve
 - Operating System:
 - Revery Version:
 - OCaml version:
-- Packages Manager: Npm, Esy, Opam
-- Native or Bytecode build:
+- Native, Bytecode, or JS build:
 
 <!-- 
     Please try to narrow down the code to a minimal repro.
@@ -19,8 +18,11 @@ about: Create a report to help us improve
     a  link to the github repo, if available, will help!
 -->
 
-- Minimal Repro:
+- Link to github repo:
 
-- which event trigger this bug:
+- Steps to reproduce:
+
+- Actual Result:
+- Expected Result:
 
 - Additional Information:
