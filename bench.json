@@ -1,5 +1,8 @@
 {
   "source": "./package.json",
+  "scripts": {
+      "run": "esy '@bench' x ReveryBench"
+  },
   "override": {
       "build": ["dune build --root . -j4"],
       "install": [
