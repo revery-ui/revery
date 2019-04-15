@@ -10,6 +10,8 @@ type t = {
   onIdle: idleFunc,
 };
 
+type initFunc = t => unit;
+
 let framesToIdle = 10;
 
 type appInitFunc = t => unit;

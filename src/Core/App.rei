@@ -16,7 +16,7 @@ let quit: int => unit;
 
 /** [createWindow ~createOptions, app, name] creates a new window */
 let createWindow:
-  (~createOptions: Window.windowCreateOptions=?, t, string) => Window.t;
+  (~createOptions: WindowCreateOptions.t=?, t, string) => Window.t;
 
 /** [start] is the entry point for a Revery application. This initiates
   the Revery application lifecycle, and an app instance ([t]) is passed
