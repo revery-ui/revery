@@ -269,13 +269,14 @@ let init = app => {
 
   let win =
     App.createWindow(
-      ~createOptions=WindowCreateOptions.create(
-        ~width=windowWidth,
-        ~height=windowHeight,
-        ~maximized,
-        ~icon=Some("revery-icon.png"),
-        (),
-      ),
+      ~createOptions=
+        WindowCreateOptions.create(
+          ~width=windowWidth,
+          ~height=windowHeight,
+          ~maximized,
+          ~icon=Some("revery-icon.png"),
+          (),
+        ),
       app,
       "Welcome to Revery!",
     );
