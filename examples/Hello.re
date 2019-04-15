@@ -66,6 +66,7 @@ module AnimatedText = {
 
   let createElement = (~children as _, ~text: string, ~delay: float, ()) =>
     component(hooks => {
+        print_endline ("rendering text");
       let (animatedOpacity, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
