@@ -12,7 +12,6 @@
     "test": "esy b dune runtest",
     "format": "esy dune build @fmt --auto-promote",
     "format:windows": "esy b .ci/format.sh",
-    "doc": "esy dune build @doc --root .",
     "create-release": "sh ./scripts/release.sh"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
