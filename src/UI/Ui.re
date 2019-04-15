@@ -5,11 +5,11 @@
  * This stores the connection between a window and its UI
  */
 
-open Revery_Core;
-
 module Window = Revery_Core.Window;
 
 open RenderContainer;
+
+type renderFunction = React.syntheticElement => unit;
 
 let start = (window: Window.t, element: React.syntheticElement) => {
   let uiDirty = ref(false);
