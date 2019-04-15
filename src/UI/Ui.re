@@ -102,9 +102,10 @@ let start = (window: Window.t, element: React.syntheticElement) => {
       },
     );
 
-  Window.setShouldRenderCallback(window, () =>
+  Window.setShouldRenderCallback(window, () => {
+      print_endline ("any active animations? " ++ string_of_bool(Animated.anyActiveAnimations()));
     uiDirty^ || Animated.anyActiveAnimations()
-  );
+    });
   Window.setRenderCallback(
     window,
     () => {

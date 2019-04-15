@@ -280,8 +280,6 @@ let init = app => {
       },
     );
 
-  let render = () => <ExampleHost win />;
-
   if (Environment.webGL) {
     Window.maximize(win);
   } else {
