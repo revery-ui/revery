@@ -222,7 +222,6 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
 
   let tick = (t: float) => {
     List.iter(tickAnimation(t), activeAnimations^);
-
     activeAnimations :=
       List.filter(a => !isComplete(t, a), activeAnimations^);
   };
