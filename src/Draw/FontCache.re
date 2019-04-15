@@ -29,8 +29,7 @@ module InternalCache = {
     let sizeDictionary = _getOrCreateSizeDict(v, fontName);
     switch (Hashtbl.find_opt(sizeDictionary, size)) {
     | Some(v) => Some(v)
-    | None =>
-      None;
+    | None => None
     };
   };
 

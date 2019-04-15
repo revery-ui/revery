@@ -10,15 +10,18 @@ type focused = ref(option(active));
 let focused = ref(None);
 
 /* Should happen when user clicks anywhere where no focusable node exists */
-let loseFocus = () =>
+let loseFocus = () => {
+  print_endline("lose focus");
   switch (focused^) {
   | Some({handler, _}) =>
     let _ = handler(Blur);
     focused := None;
   | None => ()
   };
+};
 
 let focus = (node: Node.node) => {
+  print_endline("focus");
   let _ = node#handleEvent(Focus);
   focused := Some({handler: node#handleEvent, id: node#getInternalId()});
 };

@@ -31,7 +31,12 @@ module Column = {
           backgroundColor(Colors.darkGrey),
           flexGrow(1),
         ];
-      (hooks, <View style> ...children </View>);
+      (
+        hooks,
+        <View style onKeyPress={_ => print_endline("KEY PRESS")}>
+          ...children
+        </View>,
+      );
     });
 };
 
@@ -220,6 +225,70 @@ let reducer = (action, state) =>
     {operator: `Nop, result, display, number: showFloat(result)};
   };
 
+module KeyboardInput = {
+  type state = {
+    ref: option(node),
+    hasFocus: bool,
+  };
+
+  type action =
+    | Focused(bool)
+    | SetRef(node);
+
+  let reducer = (action, state) =>
+    switch (action) {
+    | Focused(v) => {...state, hasFocus: v}
+    | SetRef(v) => {...state, ref: Some(v)}
+    };
+  let component = React.component("KeyboardInput");
+
+  let createElement = (~children as _, ~dispatch as dispatchEvent, ()) =>
+    component(hooks => {
+      let (v, _dispatch, hooks) =
+        React.Hooks.reducer(
+          ~initialState={ref: None, hasFocus: false},
+          reducer,
+          hooks,
+        );
+
+      ignore(dispatchEvent);
+
+      let hooks =
+        React.Hooks.effect(
+          Always,
+          () => {
+            if (!v.hasFocus) {
+              switch (v.ref) {
+              | Some(v) => Focus.focus(v)
+              | None => ()
+              };
+            };
+            None;
+          },
+          hooks,
+        );
+
+      let onBlur = () => {
+        _dispatch(Focused(false));
+      };
+
+      let onFocus = () => {
+        _dispatch(Focused(true));
+      };
+
+      (
+        hooks,
+        <View
+          ref={r => _dispatch(SetRef(r))}
+          onBlur
+          onFocus
+          style=Style.[position(`Absolute), width(1), height(1)]
+          onKeyDown={_ => print_endline("ON KEY DOWN")}
+        />,
+      );
+    });
+};
+
 module Calculator = {
   let component = React.component("Calculator");
 
@@ -235,6 +304,7 @@ module Calculator = {
       (
         hooks,
         <Column>
+          <KeyboardInput dispatch />
           <Display display curNum=number />
           <Row>
             <Button
