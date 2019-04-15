@@ -62,7 +62,6 @@ let load = (fontName: string, size: int) => {
   switch (InternalCache.find_opt(_cache, fontName, size)) {
   | Some(fk) => fk
   | None =>
-    print_endline("FontCache: cache miss - " ++ fontName);
     let isLoading =
       _isSome(InternalCache.find_opt(_loadingCache, fontName, size));
     if (!isLoading) {

@@ -11,7 +11,6 @@ let focused = ref(None);
 
 /* Should happen when user clicks anywhere where no focusable node exists */
 let loseFocus = () => {
-  print_endline("lose focus");
   switch (focused^) {
   | Some({handler, _}) =>
     let _ = handler(Blur);
@@ -21,7 +20,6 @@ let loseFocus = () => {
 };
 
 let focus = (node: Node.node) => {
-  print_endline("focus");
   let _ = node#handleEvent(Focus);
   focused := Some({handler: node#handleEvent, id: node#getInternalId()});
 };
