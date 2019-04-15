@@ -281,8 +281,6 @@ let init = app => {
       "Welcome to Revery!",
     );
 
-  let render = () => <ExampleHost win />;
-
   if (Environment.webGL) {
     Window.maximize(win);
   } else {
@@ -291,7 +289,8 @@ let init = app => {
     Window.setPos(win, xPosition, yPosition);
   };
 
-  UI.start(win, render);
+  let _ = UI.start(win, <ExampleHost win />);
+  ();
 };
 
 let onIdle = () => print_endline("Example: idle callback triggered");
