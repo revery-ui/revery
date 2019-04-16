@@ -1,0 +1,27 @@
+opam-version: "2.0"
+maintainer:   "dev@ocsigen.org"
+authors:      "Ocsigen team"
+bug-reports:  "https://github.com/ocsigen/js_of_ocaml/issues"
+homepage:     "http://ocsigen.org/js_of_ocaml"
+dev-repo:     "git+https://github.com/ocsigen/js_of_ocaml.git"
+
+name: "js_of_ocaml-ppx"
+
+build: [["dune" "build" "-p" name "-j" jobs]]
+
+depends: [
+  "ocaml" {>= "4.02.0"}
+  "dune" {build & >= "1.2"}
+  "ocaml-migrate-parsetree"
+  "ppx_tools_versioned"
+  "js_of_ocaml" {>= "3.0"}
+]
+conflicts: [
+  "ppx_tools_versioned"     {<="5.0beta0"}
+]
+
+synopsis: "Compiler from OCaml bytecode to Javascript"
+url {
+  src: "https://github.com/ocsigen/js_of_ocaml/archive/3.3.0.tar.gz"
+  checksum: "md5=438051f64e307edbda42f250a3d9cef1"
+}
