@@ -13,11 +13,12 @@
     "format": "esy dune build @fmt --auto-promote",
     "format:windows": "esy b .ci/format.sh",
     "doc": "refmterr esy dune build @doc --root .",
-    "create-release": "sh ./scripts/release.sh"
+    "create-release": "sh ./scripts/release.sh",
+    "run": "esy x Examples"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
-    "build": [ "dune build --root . -j4" ],
+    "build": [ "dune build -p Revery -j4" ],
     "install": [
       "esy-installer Revery.install"
     ]
