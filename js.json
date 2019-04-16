@@ -1,0 +1,26 @@
+{
+  "source": "./package.json",
+  "scripts": {
+      "run": "esy '@js' x bash -c 'http-server #{self.bin}'"
+  },
+  "override": {
+      "build": ["dune build --root . -j4"],
+      "install": [
+          "esy-installer Revery.install",
+          "esy-installer ReveryExampleJs.install"
+      ],
+      "dependencies": {
+        "@opam/js_of_ocaml": "*",
+        "@opam/js_of_ocaml-compiler": "*",
+        "@opam/js_of_ocaml-lwt": "*",
+        "http-server": "*"
+      },
+      "resolutions": {
+        "rebez": "github:jchavarri/rebez#46cbc183",
+        "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
+        "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
+        "@opam/js_of_ocaml-lwt": "github:ocsigen/js_of_ocaml:js_of_ocaml-lwt.opam#db257ce",
+        "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#daa00be"
+      }
+  }
+}

@@ -12,22 +12,14 @@
     "test": "esy b dune runtest",
     "format": "esy dune build @fmt --auto-promote",
     "format:windows": "esy b .ci/format.sh",
-    "create-release": "sh ./scripts/release.sh"
+    "create-release": "sh ./scripts/release.sh",
+    "run": "esy x Examples"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
-    "build": [ "dune build --root . -j4" ],
+    "build": [ "dune build -p Revery -j4" ],
     "install": [
-      "esy-installer Revery.install",
-      "esy-installer Revery_Core.install",
-      "esy-installer Revery_Geometry.install",
-      "esy-installer Revery_Math.install",
-      "esy-installer Revery_Draw.install",
-      "esy-installer Revery_Native.install",
-      "esy-installer Revery_Shaders.install",
-      "esy-installer Revery_UI.install",
-      "esy-installer Revery_UI_Components.install",
-      "esy-installer Revery_Native.install"
+      "esy-installer Revery.install"
     ]
   },
   "dependencies": {
