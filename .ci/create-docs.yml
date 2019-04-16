@@ -1,11 +1,15 @@
 # These steps are only run on Linux
 
 steps:
-  - script: "esy doc"
+  - script: "esy '@doc' install"
+    displayName: "Install doc dependency"
+    condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
+
+  - script: "esy '@doc' build"
     displayName: "Build docs"
     condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
-  - script: echo '##vso[task.setvariable variable=docsPath]'$(esy echo '#{self.target_dir}/default/_doc/_html')
+  - script: echo '##vso[task.setvariable variable=docsPath]'$(esy '@doc' echo '#{self.target_dir}/default/_doc/_html')
     displayName: "Save docsPath in variable"
     condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
