@@ -12,7 +12,6 @@
     "test": "esy b dune runtest",
     "format": "esy dune build @fmt --auto-promote",
     "format:windows": "esy b .ci/format.sh",
-    "doc": "refmterr esy dune build @doc --root .",
     "create-release": "sh ./scripts/release.sh"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
@@ -62,7 +61,6 @@
   "devDependencies": {
     "ocaml": "^4.7.0",
     "@opam/merlin": "*",
-    "@opam/dune": "^1.5.0",
-    "@opam/odoc": "*"
+    "@opam/dune": "^1.5.0"
   }
 }

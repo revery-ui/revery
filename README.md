@@ -111,6 +111,20 @@ Tests can be run with:
 
 - `esy b dune runtest`
 
+### Benchmarks
+
+Benchmarks can be built & run with:
+
+- `esy '@bench' run`
+
+### Documentation
+
+Documentation can be built & run with:
+
+- `esy '@doc' run`
+
+> NOTE: This will start an http-server at localhost; open a URL at the specified address to the view latest docs.
+
 ## Motivation
 
 Today, [Electron](https://electronjs.org/) is one of the most popular tools for building desktop apps - using an HTML, JS, CSS stack. However, it has a heavy footprint in terms of both RAM and CPU - __essentially packing an entire browser into the app.__ Even with that tradeoff, it has a lot of great aspects - it's the quickest way to build a cross-platform app & it provides a great development experience - as can be testified by its usage in popular apps like VSCode, Discord, and Slack.
