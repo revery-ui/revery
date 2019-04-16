@@ -1,6 +1,4 @@
 open Revery;
-open Revery.Events;
-open Revery.Window;
 open Revery.UI;
 open Revery.UI.Components;
 
@@ -33,7 +31,12 @@ module Column = {
           backgroundColor(Colors.darkGrey),
           flexGrow(1),
         ];
-      (hooks, <View style> ...children </View>);
+      (
+        hooks,
+        <View style onKeyPress={_ => print_endline("KEY PRESS")}>
+          ...children
+        </View>,
+      );
     });
 };
 
@@ -222,10 +225,103 @@ let reducer = (action, state) =>
     {operator: `Nop, result, display, number: showFloat(result)};
   };
 
+module KeyboardInput = {
+  type state = {
+    ref: option(node),
+    hasFocus: bool,
+  };
+
+  type action =
+    | Focused(bool)
+    | SetRef(node);
+
+  let reducer = (action, state) =>
+    switch (action) {
+    | Focused(v) => {...state, hasFocus: v}
+    | SetRef(v) => {...state, ref: Some(v)}
+    };
+  let component = React.component("KeyboardInput");
+
+  let createElement = (~children as _, ~dispatch as parentDispatch, ()) =>
+    component(hooks => {
+      let (v, dispatch, hooks) =
+        React.Hooks.reducer(
+          ~initialState={ref: None, hasFocus: false},
+          reducer,
+          hooks,
+        );
+
+      let hooks =
+        React.Hooks.effect(
+          Always,
+          () => {
+            if (!v.hasFocus) {
+              switch (v.ref) {
+              | Some(v) => Focus.focus(v)
+              | None => ()
+              };
+            };
+            None;
+          },
+          hooks,
+        );
+
+      let onBlur = () => {
+        dispatch(Focused(false));
+      };
+
+      let onFocus = () => {
+        dispatch(Focused(true));
+      };
+      let respondToKeys = (e: NodeEvents.keyEventParams) =>
+        switch (e.key) {
+        | Key.KEY_BACKSPACE => parentDispatch(BackspaceKeyPressed)
+
+        | Key.KEY_C when e.ctrlKey => parentDispatch(ClearKeyPressed(true))
+        | Key.KEY_C => parentDispatch(ClearKeyPressed(false))
+
+        /* + key */
+        | Key.KEY_EQUAL when e.shiftKey =>
+          parentDispatch(OperationKeyPressed(`Add))
+        | Key.KEY_MINUS when e.ctrlKey => parentDispatch(PlusMinusKeyPressed)
+        | Key.KEY_MINUS => parentDispatch(OperationKeyPressed(`Sub))
+        /* * key */
+        | Key.KEY_8 when e.shiftKey =>
+          parentDispatch(OperationKeyPressed(`Mul))
+        | Key.KEY_SLASH => parentDispatch(OperationKeyPressed(`Div))
+        | Key.KEY_PERIOD => parentDispatch(DotKeyPressed)
+        | Key.KEY_EQUAL => parentDispatch(ResultKeyPressed)
+
+        | Key.KEY_0 => parentDispatch(NumberKeyPressed("0"))
+        | Key.KEY_1 => parentDispatch(NumberKeyPressed("1"))
+        | Key.KEY_2 => parentDispatch(NumberKeyPressed("2"))
+        | Key.KEY_3 => parentDispatch(NumberKeyPressed("3"))
+        | Key.KEY_4 => parentDispatch(NumberKeyPressed("4"))
+        | Key.KEY_5 => parentDispatch(NumberKeyPressed("5"))
+        | Key.KEY_6 => parentDispatch(NumberKeyPressed("6"))
+        | Key.KEY_7 => parentDispatch(NumberKeyPressed("7"))
+        | Key.KEY_8 => parentDispatch(NumberKeyPressed("8"))
+        | Key.KEY_9 => parentDispatch(NumberKeyPressed("9"))
+
+        | _ => ()
+        };
+      (
+        hooks,
+        <View
+          ref={r => dispatch(SetRef(r))}
+          onBlur
+          onFocus
+          style=Style.[position(`Absolute), width(1), height(1)]
+          onKeyDown=respondToKeys
+        />,
+      );
+    });
+};
+
 module Calculator = {
   let component = React.component("Calculator");
 
-  let createElement = (~window, ~children as _, ()) =>
+  let createElement = (~children as _, ()) =>
     component(hooks => {
       let ({display, number, _}, dispatch, hooks) =
         React.Hooks.reducer(
@@ -234,54 +330,10 @@ module Calculator = {
           hooks,
         );
 
-      let respondToKeys = e =>
-        switch (e.key) {
-        | Key.KEY_BACKSPACE => dispatch(BackspaceKeyPressed)
-
-        | Key.KEY_C when e.ctrlKey => dispatch(ClearKeyPressed(true))
-        | Key.KEY_C => dispatch(ClearKeyPressed(false))
-
-        /* + key */
-        | Key.KEY_EQUAL when e.shiftKey =>
-          dispatch(OperationKeyPressed(`Add))
-        | Key.KEY_MINUS when e.ctrlKey => dispatch(PlusMinusKeyPressed)
-        | Key.KEY_MINUS => dispatch(OperationKeyPressed(`Sub))
-        /* * key */
-        | Key.KEY_8 when e.shiftKey => dispatch(OperationKeyPressed(`Mul))
-        | Key.KEY_SLASH => dispatch(OperationKeyPressed(`Div))
-        | Key.KEY_PERIOD => dispatch(DotKeyPressed)
-        | Key.KEY_EQUAL => dispatch(ResultKeyPressed)
-
-        | Key.KEY_0 => dispatch(NumberKeyPressed("0"))
-        | Key.KEY_1 => dispatch(NumberKeyPressed("1"))
-        | Key.KEY_2 => dispatch(NumberKeyPressed("2"))
-        | Key.KEY_3 => dispatch(NumberKeyPressed("3"))
-        | Key.KEY_4 => dispatch(NumberKeyPressed("4"))
-        | Key.KEY_5 => dispatch(NumberKeyPressed("5"))
-        | Key.KEY_6 => dispatch(NumberKeyPressed("6"))
-        | Key.KEY_7 => dispatch(NumberKeyPressed("7"))
-        | Key.KEY_8 => dispatch(NumberKeyPressed("8"))
-        | Key.KEY_9 => dispatch(NumberKeyPressed("9"))
-
-        | _ => ()
-        };
-      /* TODO: Pretty sure this isn't supposed to go in the render() function.
-         Seems to cause lag the more times we re-render, so I guess this is
-         subscribing a ton of times and never unsubscribing. */
-      let hooks =
-        React.Hooks.effect(
-          OnMount,
-          () => {
-            let unsubscribe =
-              Event.subscribe(window.onKeyDown, respondToKeys);
-            Some(unsubscribe);
-          },
-          hooks,
-        );
-
       (
         hooks,
         <Column>
+          <KeyboardInput dispatch />
           <Display display curNum=number />
           <Row>
             <Button
@@ -374,4 +426,4 @@ module Calculator = {
     });
 };
 
-let render = window => <Calculator window />;
+let render = _ => <Calculator />;
