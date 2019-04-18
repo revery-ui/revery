@@ -39,6 +39,31 @@ let _getTexture = ((font: Fontkit.fk_face, glyphId: int)) => {
   texture;
 };
 
+let filterGlyphClusters = shapedText => {
+  let lastCluster = ref(-1);
+  let increasing = ref(true);
+  Array.to_list(shapedText)
+  |> List.filter(s
+       // When the cluster values stop increasing monotonically, we have reached
+       // the end of what we want to render.
+       =>
+         if (! increasing^ || lastCluster^ > s.cluster) {
+           increasing := false;
+           false;
+         } else if
+           // When multiple characters are part of the same cluster, they have the
+           // same cluster value. We only render the first appearance of a cluster
+           // value, which will be the whole glyph.
+           (lastCluster^ != s.cluster) {
+           lastCluster := s.cluster;
+           true;
+         } else {
+           false;
+         }
+       )
+  |> Array.of_list;
+};
+
 let _memoizedGetTexture = Memoize.make(_getTexture);
 let getTexture = (font: Fontkit.fk_face, glyphId: int) =>
   _memoizedGetTexture((font, glyphId));
@@ -48,7 +73,8 @@ type dimensions = {
   height: int,
 };
 
-let _shapeFont = ((font, text)) => Fontkit.fk_shape(font, text);
+let _shapeFont = ((font, text)) =>
+  filterGlyphClusters(Fontkit.fk_shape(font, text));
 let _memoizedFontShape = Memoize.make(_shapeFont);
 let shape = (font, text) => _memoizedFontShape((font, text));
 
