@@ -150,12 +150,12 @@ let drawString =
 
     Geometry.draw(quad, shader);
 
-    x +. advance /. 64.0;
+    // This is wrong, see #457, but good enough for now.
+    ceil(x +. advance /. 64.0);
   };
 
   let shapedText = FontRenderer.shape(font, text);
   let startX = ref(x);
-  let lastCluster = ref(-1);
 
   Array.iter(
     s => {
