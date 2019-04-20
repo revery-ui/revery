@@ -10,6 +10,13 @@ function revery_create_menu() {
     return;
 }
 
+// Provides: revery_add_string_item_menu
+function revery_add_string_item_menu(vMenu, pMessage) {
+    // no-op
+    window.console.error("WARNING - Not implemented: revery_add_string_item_menu_js");
+    return;
+}
+
 // Provides: revery_assign_menu
 function revery_assign_menu(vWindow, vMenu) {
     // no-op

@@ -1,6 +1,7 @@
 #ifdef WIN32
 
 #include <stdio.h>
+#include <stdbool.h>
 
 #include <Windows.h>
 #include <winuser.h>
@@ -27,11 +28,22 @@ struct s_menu
 
 #define Menu_val(v) (*((struct s_menu *)Data_custom_val(v)))
 
+static int g_unique_identifier = 0;
+
 value revery_create_menu_win32(void)
 {
     value ret = alloc_custom(&menu_ops, sizeof(struct s_menu), 0, 1);
 
     Menu_val(ret).menu_handle = CreateMenu();
+
+    return ret;
+}
+
+value revery_add_string_item_menu_win32(value vMenu, const char * pMessage)
+{
+    bool ret = AppendMenu(Menu_val(vMenu).menu_handle, MF_STRING, g_unique_identifier, pMessage);
+
+    g_unique_identifier++;
 
     return ret;
 }
