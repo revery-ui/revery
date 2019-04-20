@@ -12,6 +12,7 @@ let assoc_callback = ref([]: list(unit => unit));
 /* TODO: make it private */
 
 let dispatch = i => {
+  let () = Printf.printf("we will dispatch: %d", i);
   let l = assoc_callback^;
   let rec loop = i =>
     fun
