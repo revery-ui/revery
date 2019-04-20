@@ -6,6 +6,8 @@
 #include <Windows.h>
 #include <winuser.h>
 
+#include <caml/alloc.h>
+#include <caml/callback.h>
 #include <caml/custom.h>
 
 /* Encapsulation of opaque menu handles (of type s_menu)
