@@ -38,6 +38,17 @@ value revery_create_menu_win32(void)
 
 value revery_assign_menu_win32(void * pWindow, value vMenu)
 {
+/*
+** TODO: apply this remarks
+** Remarks:
+**
+** The window is redrawn to reflect the menu change.
+** A menu can be assigned to any window that is not a child window.
+**
+** The SetMenu function replaces the previous menu, if any,
+** but it does not destroy it. An application should call the DestroyMenu
+** function to accomplish this task.
+*/
     return SetMenu(pWindow, Menu_val(vMenu).menu_handle);
 }
 #endif

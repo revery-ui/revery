@@ -34,6 +34,7 @@ CAMLprim value revery_create_menu()
 
 #ifdef WIN32
     ret = revery_create_menu_win32();
+    printf("We have created menu (%p)\n", ret);
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_create_menu_cocoa");
 #elif __linux__
@@ -57,6 +58,7 @@ CAMLprim value revery_assign_menu(value vWindow, value vMenu)
 
 #ifdef WIN32
     ret = revery_assign_menu_win32(pWin, vMenu);
+    printf("We have assign menu (%p) to window (%p): %s\n", vMenu, pWin, ret ? "true" : "false");
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_assign_menu_cocoa");
 #elif __linux__
@@ -65,6 +67,6 @@ CAMLprim value revery_assign_menu(value vWindow, value vMenu)
     printf("WARNING - Not implemented: revery_assign_menu_menu");
 #endif
 
-    CAMLreturn(ret);
+    CAMLreturn(Bool_val(ret));
 }
 }
