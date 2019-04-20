@@ -22,14 +22,17 @@ let dispatch = i => {
   loop(i, l);
 };
 
-let register_callback = e => assoc_callback := List.append(assoc_callback^, [e]);
+let register_callback = cb => assoc_callback := List.append(assoc_callback^, [cb]);
 /* TODO: make it private */
 
 let () = Callback.register("menu_dispatch", dispatch);
 
 let add_item_menu = w =>
   fun
-  | `String(s) => add_string_item_menu(w, s);
+  | `String(s, f) => {
+      register_callback(f);
+      add_string_item_menu(w, s);
+  };
 
 [@noalloc] external assign_menu_nat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
 

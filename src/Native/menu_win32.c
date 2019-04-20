@@ -47,6 +47,9 @@ value revery_add_string_item_menu_win32(value vMenu, const char * pMessage)
 
     g_unique_identifier++;
 
+    caml_callback(*caml_named_value("menu_dispatch"), Val_int(0));
+/* TODO: add hooks */
+
     return ret;
 }
 
