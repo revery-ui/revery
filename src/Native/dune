@@ -6,7 +6,8 @@
     (js_of_ocaml (javascript_files
         dialog.js
         menu.js))
-    (c_names dialog_cocoa dialog_win32 dialog_gtk)
+    (c_names dialog_cocoa dialog_win32 dialog_gtk
+            menu_win32)
     (cxx_names dialog menu)
     (c_flags (:include c_flags.sexp))
     (c_library_flags (:include c_library_flags.sexp))
