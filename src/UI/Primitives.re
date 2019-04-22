@@ -207,22 +207,18 @@ module Text = {
                 ~onMouseLeave?,
                 ~onMouseOver=
                   e => {
-                    onMouseOver
-                    |> (
-                      fun
-                      | Some(userFn) => userFn(e)
-                      | None => ()
-                    );
+                    switch (onMouseOver) {
+                    | Some(userFn) => userFn(e)
+                    | None => ()
+                    };
                     setState(`Hover);
                   },
                 ~onMouseOut=
                   e => {
-                    onMouseOut
-                    |> (
-                      fun
-                      | Some(userFn) => userFn(e)
-                      | None => ()
-                    );
+                    switch (onMouseOver) {
+                    | Some(userFn) => userFn(e)
+                    | None => ()
+                    };
                     setState(`Idle);
                   },
                 (),
