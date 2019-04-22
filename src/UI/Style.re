@@ -85,18 +85,58 @@ type t = {
 
 let make =
     (
-      ~alignItems=LayoutTypes.AlignStretch,
-      ~alignSelf=LayoutTypes.AlignAuto,
+      ~textOverflow=TextOverflow.Overflow,
       ~backgroundColor: Color.t=Colors.transparentBlack,
-      ~border=Border.make(),
-      ~borderBottom=Border.make(),
-      ~borderHorizontal=Border.make(),
-      ~borderLeft=Border.make(),
-      ~borderRadius=0.0,
-      ~borderRight=Border.make(),
-      ~borderTop=Border.make(),
-      ~borderVertical=Border.make(),
+      ~color: Color.t=Colors.white,
+      ~width=Encoding.cssUndefined,
+      ~height=Encoding.cssUndefined,
+      ~hover=None,
+      ~flexBasis=Encoding.cssUndefined,
+      ~flexDirection=LayoutTypes.Column,
+      ~flexGrow=0,
+      ~flexShrink=0,
+      ~flexWrap=LayoutTypes.CssNoWrap,
+      ~alignItems=LayoutTypes.AlignStretch,
+      ~justifyContent=LayoutTypes.JustifyFlexStart,
+      ~alignSelf=LayoutTypes.AlignAuto,
+      ~position=LayoutTypes.Relative,
+      ~top=Encoding.cssUndefined,
       ~bottom=Encoding.cssUndefined,
+      ~left=Encoding.cssUndefined,
+      ~right=Encoding.cssUndefined,
+      ~fontFamily="",
+      ~fontSize=Encoding.cssUndefined,
+      ~lineHeight=1.2,
+      ~textWrap=TextWrapping.WhitespaceWrap,
+      ~marginTop=Encoding.cssUndefined,
+      ~marginLeft=Encoding.cssUndefined,
+      ~marginRight=Encoding.cssUndefined,
+      ~marginBottom=Encoding.cssUndefined,
+      ~margin=Encoding.cssUndefined,
+      ~marginVertical=Encoding.cssUndefined,
+      ~marginHorizontal=Encoding.cssUndefined,
+      ~minWidth=Encoding.cssUndefined,
+      ~maxWidth=Encoding.cssUndefined,
+      ~minHeight=Encoding.cssUndefined,
+      ~maxHeight=Encoding.cssUndefined,
+      ~paddingTop=Encoding.cssUndefined,
+      ~paddingLeft=Encoding.cssUndefined,
+      ~paddingRight=Encoding.cssUndefined,
+      ~paddingBottom=Encoding.cssUndefined,
+      ~padding=Encoding.cssUndefined,
+      ~paddingHorizontal=Encoding.cssUndefined,
+      ~paddingVertical=Encoding.cssUndefined,
+      ~overflow=LayoutTypes.Visible,
+      ~borderTop=Border.make(),
+      ~borderLeft=Border.make(),
+      ~borderRight=Border.make(),
+      ~borderBottom=Border.make(),
+      ~border=Border.make(),
+      ~borderHorizontal=Border.make(),
+      ~borderVertical=Border.make(),
+      ~borderRadius=0.0,
+      ~transform=[],
+      ~opacity=1.0,
       ~boxShadow=BoxShadow.{
                    xOffset: 0.0,
                    yOffset: 0.0,
@@ -104,104 +144,64 @@ let make =
                    spreadRadius: 0.0,
                    color: Colors.black,
                  },
-      ~color: Color.t=Colors.white,
       ~cursor=?,
-      ~flexBasis=Encoding.cssUndefined,
-      ~flexDirection=LayoutTypes.Column,
-      ~flexGrow=0,
-      ~flexShrink=0,
-      ~flexWrap=LayoutTypes.CssNoWrap,
-      ~fontFamily="",
-      ~fontSize=Encoding.cssUndefined,
-      ~height=Encoding.cssUndefined,
-      ~hover=None,
-      ~justifyContent=LayoutTypes.JustifyFlexStart,
-      ~left=Encoding.cssUndefined,
-      ~lineHeight=1.2,
-      ~margin=Encoding.cssUndefined,
-      ~marginBottom=Encoding.cssUndefined,
-      ~marginHorizontal=Encoding.cssUndefined,
-      ~marginLeft=Encoding.cssUndefined,
-      ~marginRight=Encoding.cssUndefined,
-      ~marginTop=Encoding.cssUndefined,
-      ~marginVertical=Encoding.cssUndefined,
-      ~maxHeight=Encoding.cssUndefined,
-      ~maxWidth=Encoding.cssUndefined,
-      ~minHeight=Encoding.cssUndefined,
-      ~minWidth=Encoding.cssUndefined,
-      ~opacity=1.0,
-      ~overflow=LayoutTypes.Visible,
-      ~padding=Encoding.cssUndefined,
-      ~paddingBottom=Encoding.cssUndefined,
-      ~paddingHorizontal=Encoding.cssUndefined,
-      ~paddingLeft=Encoding.cssUndefined,
-      ~paddingRight=Encoding.cssUndefined,
-      ~paddingTop=Encoding.cssUndefined,
-      ~paddingVertical=Encoding.cssUndefined,
-      ~position=LayoutTypes.Relative,
-      ~right=Encoding.cssUndefined,
-      ~textOverflow=TextOverflow.Overflow,
-      ~textWrap=TextWrapping.WhitespaceWrap,
-      ~top=Encoding.cssUndefined,
-      ~transform=[],
-      ~width=Encoding.cssUndefined,
       _unit: unit,
     ) => {
   let ret: t = {
-    alignItems,
-    alignSelf,
+    textOverflow,
     backgroundColor,
-    border,
-    borderBottom,
-    borderHorizontal,
-    borderLeft,
-    borderRadius,
-    borderRight,
-    borderTop,
-    borderVertical,
-    bottom,
-    boxShadow,
     color,
-    cursor,
+    width,
+    height,
+    hover,
     flexBasis,
     flexDirection,
     flexGrow,
     flexShrink,
     flexWrap,
+    justifyContent,
+    alignItems,
+    alignSelf,
+    position,
+    top,
+    bottom,
+    left,
+    right,
     fontFamily,
     fontSize,
-    height,
-    hover,
-    justifyContent,
-    left,
     lineHeight,
-    margin,
-    marginBottom,
-    marginHorizontal,
+    textWrap,
+    transform,
+    marginTop,
     marginLeft,
     marginRight,
-    marginTop,
+    marginBottom,
+    margin,
     marginVertical,
-    maxHeight,
+    marginHorizontal,
+    minWidth,
     maxWidth,
     minHeight,
-    minWidth,
-    opacity,
-    overflow,
-    padding,
-    paddingBottom,
-    paddingHorizontal,
+    maxHeight,
+    paddingTop,
     paddingLeft,
     paddingRight,
-    paddingTop,
+    paddingBottom,
+    padding,
+    paddingHorizontal,
     paddingVertical,
-    position,
-    right,
-    textOverflow,
-    textWrap,
-    top,
-    transform,
-    width,
+    overflow,
+    borderTop,
+    borderLeft,
+    borderRight,
+    borderBottom,
+    border,
+    borderHorizontal,
+    borderVertical,
+    borderRadius,
+    opacity,
+    boxShadow,
+    cursor,
   };
 
   ret;
@@ -212,47 +212,47 @@ let defaultStyle = make();
 let toLayoutNode = (s: t) => {
   let ret: LayoutTypes.cssStyle = {
     ...LayoutSupport.defaultStyle,
-    alignItems: s.alignItems,
-    alignSelf: s.alignSelf,
-    border: s.border.width,
-    borderBottom: s.borderBottom.width,
-    borderHorizontal: s.borderHorizontal.width,
-    borderLeft: s.borderLeft.width,
-    borderRight: s.borderRight.width,
-    borderTop: s.borderTop.width,
-    borderVertical: s.borderVertical.width,
+    positionType: s.position,
+    top: s.top,
+    left: s.left,
     bottom: s.bottom,
     flexBasis: s.flexBasis,
     flexDirection: s.flexDirection,
     flexGrow: s.flexGrow,
     flexShrink: s.flexShrink,
     flexWrap: s.flexWrap,
-    height: s.height,
+    alignItems: s.alignItems,
+    alignSelf: s.alignSelf,
     justifyContent: s.justifyContent,
-    left: s.left,
-    margin: s.margin,
-    marginBottom: s.marginBottom,
-    marginHorizontal: s.marginHorizontal,
+    right: s.right,
+    width: s.width,
+    height: s.height,
+    marginTop: s.marginTop,
     marginLeft: s.marginLeft,
     marginRight: s.marginRight,
-    marginTop: s.marginTop,
+    marginBottom: s.marginBottom,
+    margin: s.margin,
     marginVertical: s.marginVertical,
-    maxHeight: s.maxHeight,
+    marginHorizontal: s.marginHorizontal,
+    minWidth: s.minWidth,
     maxWidth: s.maxWidth,
     minHeight: s.minHeight,
-    minWidth: s.minWidth,
-    overflow: s.overflow,
-    padding: s.padding,
-    paddingBottom: s.paddingBottom,
-    paddingHorizontal: s.paddingHorizontal,
+    maxHeight: s.maxHeight,
+    paddingTop: s.paddingTop,
     paddingLeft: s.paddingLeft,
     paddingRight: s.paddingRight,
-    paddingTop: s.paddingTop,
+    paddingBottom: s.paddingBottom,
+    padding: s.padding,
     paddingVertical: s.paddingVertical,
-    positionType: s.position,
-    right: s.right,
-    top: s.top,
-    width: s.width,
+    paddingHorizontal: s.paddingHorizontal,
+    borderTop: s.borderTop.width,
+    borderLeft: s.borderLeft.width,
+    borderRight: s.borderRight.width,
+    borderBottom: s.borderBottom.width,
+    border: s.border.width,
+    borderHorizontal: s.borderHorizontal.width,
+    borderVertical: s.borderVertical.width,
+    overflow: s.overflow,
   };
   ret;
 };
@@ -273,64 +273,64 @@ type xy = {
 };
 
 type coreStyleProps = [
+  | `FlexGrow(int)
+  | `FlexDirection(LayoutTypes.flexDirection)
+  | `FlexWrap(LayoutTypes.wrapType)
+  | `JustifyContent(LayoutTypes.justify)
   | `AlignItems(LayoutTypes.align)
   | `AlignSelf(LayoutTypes.align)
+  | `Position(LayoutTypes.positionType)
   | `BackgroundColor(Color.t)
-  | `Border(Border.t)
-  | `BorderBottom(Border.t)
-  | `BorderHorizontal(Border.t)
-  | `BorderLeft(Border.t)
-  | `BorderRadius(float)
-  | `BorderRight(Border.t)
-  | `BorderTop(Border.t)
-  | `BorderVertical(Border.t)
-  | `Bottom(int)
-  | `BoxShadow(BoxShadow.properties)
   | `Color(Color.t)
-  | `Cursor(option(MouseCursors.t))
-  | `FlexDirection(LayoutTypes.flexDirection)
-  | `FlexGrow(int)
-  | `FlexWrap(LayoutTypes.wrapType)
+  | `Width(int)
   | `Height(int)
-  | `JustifyContent(LayoutTypes.justify)
+  | `Top(int)
+  | `Right(int)
+  | `Bottom(int)
   | `Left(int)
-  | `Margin(int)
-  | `Margin2(xy)
-  | `Margin4(coords)
-  | `MarginBottom(int)
-  | `MarginHorizontal(int)
+  | `MarginTop(int)
   | `MarginLeft(int)
   | `MarginRight(int)
-  | `MarginTop(int)
+  | `MarginBottom(int)
+  | `Margin(int)
   | `MarginVertical(int)
-  | `MaxHeight(int)
+  | `MarginHorizontal(int)
+  | `Margin2(xy)
+  | `Margin4(coords)
+  | `MinWidth(int)
   | `MaxWidth(int)
   | `MinHeight(int)
-  | `MinWidth(int)
-  | `Opacity(float)
-  | `Overflow(LayoutTypes.overflow)
-  | `Padding(int)
-  | `Padding2(xy)
-  | `Padding4(coords)
-  | `PaddingBottom(int)
-  | `PaddingHorizontal(int)
+  | `MaxHeight(int)
+  | `PaddingTop(int)
   | `PaddingLeft(int)
   | `PaddingRight(int)
-  | `PaddingTop(int)
+  | `PaddingBottom(int)
+  | `Padding(int)
+  | `PaddingHorizontal(int)
   | `PaddingVertical(int)
-  | `Position(LayoutTypes.positionType)
-  | `Right(int)
-  | `Top(int)
+  | `Padding2(xy)
+  | `Padding4(coords)
+  | `Overflow(LayoutTypes.overflow)
+  | `BorderTop(Border.t)
+  | `BorderLeft(Border.t)
+  | `BorderRight(Border.t)
+  | `BorderBottom(Border.t)
+  | `Border(Border.t)
+  | `BorderHorizontal(Border.t)
+  | `BorderVertical(Border.t)
+  | `BorderRadius(float)
   | `Transform(list(Transform.t))
-  | `Width(int)
+  | `Opacity(float)
+  | `BoxShadow(BoxShadow.properties)
+  | `Cursor(option(MouseCursors.t))
 ];
 
 type fontProps = [ | `FontFamily(string) | `FontSize(int)];
 
 type textProps = [
   | `LineHeight(float)
-  | `TextOverflow(TextOverflow.t)
   | `TextWrap(TextWrapping.wrapType)
+  | `TextOverflow(TextOverflow.t)
 ];
 
 type pseudoProps('t) = [ | `Hover('t)];
@@ -361,8 +361,8 @@ let flexDirection = d => {
     switch (d) {
     | `Column => LayoutTypes.Column
     | `ColumnReverse => LayoutTypes.ColumnReverse
-    | `Row => LayoutTypes.Row
     | `RowReverse => LayoutTypes.RowReverse
+    | `Row => LayoutTypes.Row
     };
   `FlexDirection(dir);
 };
@@ -388,20 +388,20 @@ let textOverflow = overflow =>
 
 let alignment = a =>
   switch (a) {
-  | `Auto => LayoutTypes.AlignAuto
   | `Center => LayoutTypes.AlignCenter
-  | `FlexEnd => LayoutTypes.AlignFlexEnd
-  | `FlexStart => LayoutTypes.AlignFlexStart
   | `Stretch => LayoutTypes.AlignStretch
+  | `Auto => LayoutTypes.AlignAuto
+  | `FlexStart => LayoutTypes.AlignFlexStart
+  | `FlexEnd => LayoutTypes.AlignFlexEnd
   };
 
 let justify = j =>
   switch (j) {
+  | `FlexStart => LayoutTypes.JustifyFlexStart
   | `Center => LayoutTypes.JustifyCenter
   | `FlexEnd => LayoutTypes.JustifyFlexEnd
-  | `FlexStart => LayoutTypes.JustifyFlexStart
-  | `SpaceAround => LayoutTypes.JustifySpaceAround
   | `SpaceBetween => LayoutTypes.JustifySpaceBetween
+  | `SpaceAround => LayoutTypes.JustifySpaceAround
   };
 
 let flexGrow = g => `FlexGrow(g);
@@ -536,18 +536,18 @@ let rec applyStyle = (style, styleRule) =>
   switch (styleRule) {
   | `AlignItems(alignItems) => {...style, alignItems}
   | `AlignSelf(alignSelf) => {...style, alignSelf}
-  | `FlexDirection(flexDirection) => {...style, flexDirection}
-  | `FlexGrow(flexGrow) => {...style, flexGrow}
-  | `FlexWrap(flexWrap) => {...style, flexWrap}
   | `JustifyContent(justifyContent) => {...style, justifyContent}
-  | `Margin(margin) => {...style, margin}
-  | `MarginBottom(marginBottom) => {...style, marginBottom}
-  | `MarginHorizontal(marginHorizontal) => {...style, marginHorizontal}
-  | `MarginLeft(marginLeft) => {...style, marginLeft}
-  | `MarginRight(marginRight) => {...style, marginRight}
-  | `MarginTop(marginTop) => {...style, marginTop}
-  | `MarginVertical(marginVertical) => {...style, marginVertical}
+  | `FlexGrow(flexGrow) => {...style, flexGrow}
+  | `FlexDirection(flexDirection) => {...style, flexDirection}
+  | `FlexWrap(flexWrap) => {...style, flexWrap}
   | `Position(position) => {...style, position}
+  | `Margin(margin) => {...style, margin}
+  | `MarginTop(marginTop) => {...style, marginTop}
+  | `MarginBottom(marginBottom) => {...style, marginBottom}
+  | `MarginRight(marginRight) => {...style, marginRight}
+  | `MarginLeft(marginLeft) => {...style, marginLeft}
+  | `MarginVertical(marginVertical) => {...style, marginVertical}
+  | `MarginHorizontal(marginHorizontal) => {...style, marginHorizontal}
   | `Margin2({horizontal, vertical}) => {
       ...style,
       marginHorizontal: horizontal,
@@ -560,17 +560,17 @@ let rec applyStyle = (style, styleRule) =>
       marginRight: right,
       marginBottom: bottom,
     }
-  | `MaxHeight(maxHeight) => {...style, maxHeight}
+  | `MinWidth(minWidth) => {...style, minWidth}
   | `MaxWidth(maxWidth) => {...style, maxWidth}
   | `MinHeight(minHeight) => {...style, minHeight}
-  | `MinWidth(minWidth) => {...style, minWidth}
+  | `MaxHeight(maxHeight) => {...style, maxHeight}
   | `Padding(padding) => {...style, padding}
-  | `PaddingBottom(paddingBottom) => {...style, paddingBottom}
-  | `PaddingHorizontal(paddingHorizontal) => {...style, paddingHorizontal}
-  | `PaddingLeft(paddingLeft) => {...style, paddingLeft}
-  | `PaddingRight(paddingRight) => {...style, paddingRight}
   | `PaddingTop(paddingTop) => {...style, paddingTop}
+  | `PaddingBottom(paddingBottom) => {...style, paddingBottom}
+  | `PaddingRight(paddingRight) => {...style, paddingRight}
+  | `PaddingLeft(paddingLeft) => {...style, paddingLeft}
   | `PaddingVertical(paddingVertical) => {...style, paddingVertical}
+  | `PaddingHorizontal(paddingHorizontal) => {...style, paddingHorizontal}
   | `Padding2({horizontal, vertical}) => {
       ...style,
       paddingHorizontal: horizontal,
@@ -583,36 +583,36 @@ let rec applyStyle = (style, styleRule) =>
       paddingRight: right,
       paddingBottom: bottom,
     }
-  | `BackgroundColor(backgroundColor) => {...style, backgroundColor}
+  | `Overflow(overflow) => {...style, overflow}
   | `Border(border) => {...style, border}
   | `BorderBottom(borderBottom) => {...style, borderBottom}
-  | `BorderHorizontal(borderHorizontal) => {...style, borderHorizontal}
-  | `BorderLeft(borderLeft) => {...style, borderLeft}
-  | `BorderRadius(borderRadius) => {...style, borderRadius}
-  | `BorderRight(borderRight) => {...style, borderRight}
   | `BorderTop(borderTop) => {...style, borderTop}
+  | `BorderLeft(borderLeft) => {...style, borderLeft}
+  | `BorderRight(borderRight) => {...style, borderRight}
   | `BorderVertical(borderVertical) => {...style, borderVertical}
-  | `Bottom(bottom) => {...style, bottom}
+  | `BorderHorizontal(borderHorizontal) => {...style, borderHorizontal}
+  | `BorderRadius(borderRadius) => {...style, borderRadius}
+  | `Opacity(opacity) => {...style, opacity}
   | `BoxShadow(boxShadow) => {...style, boxShadow}
-  | `Color(color) => {...style, color}
-  | `Cursor(cursor) => {...style, cursor}
+  | `Transform(transform) => {...style, transform}
   | `FontFamily(fontFamily) => {...style, fontFamily}
   | `FontSize(fontSize) => {...style, fontSize}
+  | `LineHeight(lineHeight) => {...style, lineHeight}
+  | `TextOverflow(textOverflow) => {...style, textOverflow}
+  | `TextWrap(textWrap) => {...style, textWrap}
+  | `Cursor(cursor) => {...style, cursor}
+  | `Color(color) => {...style, color}
+  | `BackgroundColor(backgroundColor) => {...style, backgroundColor}
+  | `Width(width) => {...style, width}
   | `Height(height) => {...style, height}
   | `Hover(hoverStyles) => {
       ...style,
       hover: Some(List.fold_left(applyStyle, defaultStyle, hoverStyles)),
     }
+  | `Bottom(bottom) => {...style, bottom}
   | `Left(left) => {...style, left}
-  | `LineHeight(lineHeight) => {...style, lineHeight}
-  | `Opacity(opacity) => {...style, opacity}
-  | `Overflow(overflow) => {...style, overflow}
-  | `Right(right) => {...style, right}
-  | `TextOverflow(textOverflow) => {...style, textOverflow}
-  | `TextWrap(textWrap) => {...style, textWrap}
   | `Top(top) => {...style, top}
-  | `Transform(transform) => {...style, transform}
-  | `Width(width) => {...style, width}
+  | `Right(right) => {...style, right}
   };
 
 let create = (~style, ~default=make(), ()) => {
