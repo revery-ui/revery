@@ -1,0 +1,72 @@
+{1 Revery}
+
+Framework for fast, native, cross-platform GUI applications.
+
+{%html:
+<nav class="toc">
+%}
+{ul
+  {li {b Get Started}}
+  {li
+    {ul
+        {li Build & Install}
+    }
+  }
+  {li Resources
+    {ul
+        {li FAQ}
+        {li Technical Overview}
+        {li Samples}
+        {li Tutorials}
+    }
+  }
+  {li {{:../index.html} API}}
+  {li
+    {ul
+        {li {{:../Revery/Revery/index.html} Revery}
+            {ul 
+                {li {{:../Revery_Core/Revery_Core/App/index.html} App}}
+                {li Environment}
+                {li Event}
+                {li Time}
+                {li Tick}
+                {li {{:../Revery_Core/Revery_Core/Window/index.html} Window}}
+            }
+        }
+        {li {{:../Revery_UI/Revery_UI/index.html} Revery.UI}
+            {ul 
+                {li Hooks}
+                {li React}
+            }
+        }
+        {li {{:../Revery_UI_Components/Revery_UI_Components/index.html} Revery.UI.Components}
+            {ul 
+                {li Button}
+                {li Checkbox}
+                {li Clickable}
+                {li Dropdown}
+                {li Input}
+                {li RadioButtons}
+                {li ScrollView}
+                {li Slider}
+                {li TreeView}
+            }
+        }
+    }
+  }
+}
+{%html:
+</nav>
+%}
+
+{2 Modules}
+
+{!modules: Revery_Core Revery_UI Revery_UI_Components}
+
+{2:overview Overview}
+
+Revery is a framework for building cross-platform GUI applications. Revery provides a React-like functional model for UI, as well as scaffolding for managing the application lifecycle.
+
+{2:quickstart Quickstart}
+
+The easiest way to get started is with revery-quick-start.

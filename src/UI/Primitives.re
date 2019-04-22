@@ -58,7 +58,7 @@ module View = {
                 ~onDimensionsChanged?,
                 (),
               );
-            let node = (new ViewNode.viewNode)();
+            let node = PrimitiveNodeFactory.get().createViewNode();
             node#setEvents(events);
             node#setStyle(styles);
             node#setTabIndex(tabindex);
@@ -190,7 +190,7 @@ module Text = {
                 ~onMouseOut?,
                 (),
               );
-            let node = (new TextNode.textNode)(text);
+            let node = PrimitiveNodeFactory.get().createTextNode(text);
             node#setEvents(events);
             node#setStyle(styles);
             Obj.magic(node);
@@ -292,6 +292,7 @@ module Image = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
+        ~resizeMode=Revery_Draw.ImageResizeMode.Stretch,
         ~style=Style.emptyImageStyle,
         ~src="",
         children,
@@ -311,9 +312,10 @@ module Image = {
                 ~onMouseWheel?,
                 (),
               );
-            let node = (new ImageNode.imageNode)(src);
+            let node = PrimitiveNodeFactory.get().createImageNode(src);
             node#setEvents(events);
             node#setStyle(styles);
+            node#setResizeMode(resizeMode);
             Obj.magic(node);
           },
           configureInstance: (~isFirstRender as _, node) => {
@@ -327,6 +329,8 @@ module Image = {
                 ~onMouseWheel?,
                 (),
               );
+            let imgNode: ImageNode.imageNode = Obj.magic(node);
+            imgNode#setResizeMode(resizeMode);
             node#setEvents(events);
             node#setStyle(styles);
             node;
@@ -343,6 +347,7 @@ module Image = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
+        ~resizeMode=?,
         ~style=Style.emptyImageStyle,
         ~src="",
         ~children,
@@ -354,6 +359,7 @@ module Image = {
       ~onMouseUp?,
       ~onMouseWheel?,
       ~ref?,
+      ~resizeMode?,
       ~style,
       ~src,
       React.listToElement(children),

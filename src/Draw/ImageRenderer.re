@@ -1,6 +1,7 @@
-open Reglfw;
 open Reglfw.Glfw;
 open Revery_Core;
+
+module Image = Reglfw.Image;
 
 type t = {
   mutable hasLoaded: bool,
@@ -9,12 +10,14 @@ type t = {
   mutable height: int,
 };
 
-type cache = Hashtbl.t(string, texture);
+let initialPixels =
+  Lazy.make(() => {
+    let initialImage = Image.fromColor(255, 0, 0, 255);
+    Image.getPixels(initialImage);
+  });
 
+type cache = Hashtbl.t(string, t);
 let _cache: cache = Hashtbl.create(100);
-
-let initialImage = Image.fromColor(255, 0, 0, 255);
-let initialPixels = Image.getPixels(initialImage);
 
 let getTexture = (imagePath: string) => {
   /* TODO: Support url paths? */
@@ -23,46 +26,50 @@ let getTexture = (imagePath: string) => {
 
   let cacheResult = Hashtbl.find_opt(_cache, relativeImagePath);
 
-  let ret =
-    switch (cacheResult) {
-    | Some(r) => r
-    | None =>
-      /* Create an initial texture container */
-      let texture = glCreateTexture();
+  switch (cacheResult) {
+  | Some(r) => r
+  | None =>
+    /* Create an initial texture container */
+    let texture = glCreateTexture();
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    let initialPixels = initialPixels();
+    glTexImage2D(
+      GL_TEXTURE_2D,
+      0,
+      GL_RGBA,
+      GL_RGBA,
+      GL_UNSIGNED_BYTE,
+      initialPixels,
+    );
+
+    let imageLoadPromise = Image.load(relativeImagePath);
+
+    let ret: t = {hasLoaded: false, texture, width: 1, height: 1};
+
+    let success = img => {
+      let pixels = Image.getPixels(img);
+      let {width, height, _}: Image.dimensions = Image.getDimensions(img);
       glBindTexture(GL_TEXTURE_2D, texture);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexImage2D(
         GL_TEXTURE_2D,
         0,
         GL_RGBA,
         GL_RGBA,
         GL_UNSIGNED_BYTE,
-        initialPixels,
+        pixels,
       );
-
-      let imageLoadPromise = Image.load(relativeImagePath);
-
-      let success = img => {
-        let pixels = Image.getPixels(img);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(
-          GL_TEXTURE_2D,
-          0,
-          GL_RGBA,
-          GL_RGBA,
-          GL_UNSIGNED_BYTE,
-          pixels,
-        );
-        Lwt.return();
-      };
-
-      let _ = Lwt.bind(imageLoadPromise, success);
-      Hashtbl.add(_cache, relativeImagePath, texture);
-      texture;
+      ret.hasLoaded = true;
+      ret.width = width;
+      ret.height = height;
+      Lwt.return();
     };
 
-  ret;
+    let _ = Lwt.bind(imageLoadPromise, success);
+    Hashtbl.replace(_cache, relativeImagePath, ret);
+    ret;
+  };
 };

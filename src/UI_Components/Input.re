@@ -2,8 +2,8 @@ open Revery_UI;
 open Revery_Core;
 
 type state = {
-  inputString: string,
   isFocused: bool,
+  internalValue: string,
   cursorPosition: int,
   cursorTimer: Time.t,
 };
@@ -13,6 +13,10 @@ type textUpdate = {
   cursorPosition: int,
 };
 
+type cursorUpdate = {
+  inputString: string,
+  change: int,
+};
 type changeEvent = {
   value: string,
   character: string,
@@ -24,20 +28,27 @@ type changeEvent = {
 };
 
 type action =
-  | CursorPosition(int)
+  | CursorPosition(cursorUpdate)
   | CursorTimer
   | SetFocus(bool)
   | UpdateText(textUpdate)
   | ResetCursorTimer;
 
-let getStringParts = (index, str) =>
+let getStringParts = (index, str) => {
   switch (index) {
   | 0 => ("", str)
   | _ =>
-    let strBeginning = Str.string_before(str, index);
-    let strEnd = Str.string_after(str, index);
+    let strBeginning =
+      try (Str.string_before(str, index)) {
+      | _ => str
+      };
+    let strEnd =
+      try (Str.string_after(str, index)) {
+      | _ => ""
+      };
     (strBeginning, strEnd);
   };
+};
 
 let getSafeStringBounds = (str, cursorPosition, change) => {
   let nextPosition = cursorPosition + change;
@@ -73,14 +84,13 @@ let addCharacter = (word, char, index) => {
     cursorPosition: String.length(startStr) + 1,
   };
 };
-
 let reducer = (action, state) =>
   switch (action) {
   | SetFocus(isFocused) => {...state, isFocused}
-  | CursorPosition(pos) => {
+  | CursorPosition({inputString, change}) => {
       ...state,
       cursorPosition:
-        getSafeStringBounds(state.inputString, state.cursorPosition, pos),
+        getSafeStringBounds(inputString, state.cursorPosition, change),
     }
   | CursorTimer => {
       ...state,
@@ -89,10 +99,9 @@ let reducer = (action, state) =>
           ? Time.Seconds(0.0)
           : Time.increment(state.cursorTimer, Time.Seconds(0.1)),
     }
-  | UpdateText({newString, cursorPosition}) =>
+  | UpdateText({newString, _}) =>
     state.isFocused
-      ? {...state, cursorPosition, isFocused: true, inputString: newString}
-      : state
+      ? {...state, isFocused: true, internalValue: newString} : state
   | ResetCursorTimer => {...state, cursorTimer: Time.Seconds(0.0)}
   };
 
@@ -116,35 +125,40 @@ let defaultStyles =
   ];
 
 let component = React.component("Input");
-
 let make =
     (
       ~style,
       ~autofocus,
-      ~value as valueParam,
       ~placeholder,
       ~cursorColor,
       ~placeholderColor,
       ~onChange,
       ~onKeyDown,
+      ~value as valueAsProp,
       (),
     ) =>
   component(slots => {
-    let (
-      {isFocused, cursorPosition, cursorTimer, inputString},
-      dispatch,
-      slots,
-    ) =
+    let (state, dispatch, slots) =
       React.Hooks.reducer(
         ~initialState={
-          inputString: valueParam,
-          cursorPosition: String.length(valueParam),
+          internalValue: "",
+          cursorPosition:
+            switch (valueAsProp) {
+            | Some(v) => String.length(v)
+            | None => 0
+            },
           cursorTimer: Time.Seconds(0.0),
           isFocused: false,
         },
         reducer,
         slots,
       );
+
+    let valueToDisplay =
+      switch (valueAsProp) {
+      | Some(v) => v
+      | None => state.internalValue
+      };
 
     let slots =
       React.Hooks.effect(
@@ -157,21 +171,80 @@ let make =
         slots,
       );
 
+    let (inputValueRef, setInputValueRef, slots) =
+      React.Hooks.ref(valueToDisplay, slots);
+
+    let slots =
+      React.Hooks.effect(
+        If((!=), valueToDisplay),
+        () => {
+          let oldValueLength = String.length(inputValueRef);
+          let newValueLength = String.length(valueToDisplay);
+          switch (Pervasives.abs(oldValueLength - newValueLength)) {
+          | lengthDiff when lengthDiff != 1 =>
+            // Set cursor at the end
+            dispatch(
+              CursorPosition({
+                inputString: valueToDisplay,
+                change: String.length(valueToDisplay) - state.cursorPosition,
+              }),
+            )
+          | _ =>
+            let (oldStart, _oldEnd) =
+              getStringParts(state.cursorPosition, inputValueRef);
+            let (newStart, _newEnd) =
+              getStringParts(state.cursorPosition, valueToDisplay);
+
+            if (oldStart == newStart) {
+              if (newValueLength > oldValueLength)
+                {
+                  // One character was added
+                  dispatch(
+                    CursorPosition({inputString: valueToDisplay, change: 1}),
+                  );
+                };
+                // One characted was removed from the right side of the cursor (Delete key)
+            } else {
+              // One character was removed from the left side of the cursor (Backspace)
+              dispatch(
+                CursorPosition({inputString: valueToDisplay, change: (-1)}),
+              );
+            };
+          };
+          setInputValueRef(valueToDisplay);
+          None;
+        },
+        slots,
+      );
+
     let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
-      let update = addCharacter(inputString, event.character, cursorPosition);
-
-      dispatch(ResetCursorTimer);
-      dispatch(UpdateText(update));
-
-      onChange({
-        value: update.newString,
+      let createChangeEvent = value => {
+        value,
         key: Key.fromString(event.character),
         character: event.character,
         altKey: false,
         ctrlKey: false,
         shiftKey: false,
         superKey: false,
-      });
+      };
+
+      dispatch(ResetCursorTimer);
+
+      switch (valueAsProp) {
+      | Some(v) =>
+        let {newString, _} =
+          addCharacter(v, event.character, state.cursorPosition);
+        onChange(createChangeEvent(newString));
+      | None =>
+        let {newString, cursorPosition} =
+          addCharacter(
+            state.internalValue,
+            event.character,
+            state.cursorPosition,
+          );
+        dispatch(UpdateText({newString, cursorPosition}));
+        onChange(createChangeEvent(newString));
+      };
     };
 
     let handleKeyDown = (event: NodeEvents.keyEventParams) => {
@@ -190,24 +263,34 @@ let make =
       switch (event.key) {
       | Key.KEY_LEFT =>
         onKeyDown(event);
-        dispatch(CursorPosition(-1));
+        dispatch(
+          CursorPosition({inputString: valueToDisplay, change: (-1)}),
+        );
       | Key.KEY_RIGHT =>
         onKeyDown(event);
-        dispatch(CursorPosition(1));
+        dispatch(CursorPosition({inputString: valueToDisplay, change: 1}));
       | Key.KEY_DELETE =>
-        removeCharacterAfter(inputString, cursorPosition)
+        // We should manage both cases
+        removeCharacterAfter(valueToDisplay, state.cursorPosition)
         |> (
           update => {
-            dispatch(UpdateText(update));
+            switch (valueAsProp) {
+            | Some(_) => ()
+            | None => dispatch(UpdateText(update))
+            };
             onKeyDown(event);
             onChange(createChangeEvent(update.newString));
           }
         )
+
       | Key.KEY_BACKSPACE =>
-        removeCharacterBefore(inputString, cursorPosition)
+        removeCharacterBefore(valueToDisplay, state.cursorPosition)
         |> (
           update => {
-            dispatch(UpdateText(update));
+            switch (valueAsProp) {
+            | Some(_) => ()
+            | None => dispatch(UpdateText(update))
+            };
             onKeyDown(event);
             onChange(createChangeEvent(update.newString));
           }
@@ -215,12 +298,11 @@ let make =
       | Key.KEY_ESCAPE =>
         onKeyDown(event);
         Focus.loseFocus();
-
       | _ => onKeyDown(event)
       };
     };
 
-    let hasPlaceholder = String.length(inputString) < 1;
+    let hasPlaceholder = String.length(valueToDisplay) < 1;
 
     /*
        computed styles
@@ -242,26 +324,23 @@ let make =
       );
 
     let viewStyles = Style.extractViewStyles(allStyles);
+
     let inputFontSize = Selector.select(style, FontSize, 18);
     let inputColor = Selector.select(style, Color, Colors.black);
     let inputFontFamily =
       Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
     let cursorOpacity =
-      isFocused
+      state.isFocused
       |> (
         fun
-        | true => cursorTimer <= Time.Seconds(0.5) ? 1.0 : 0.0
+        | true => state.cursorTimer <= Time.Seconds(0.5) ? 1.0 : 0.0
         | false => 0.0
       );
 
-    /**
-      We place these in a list so we change the order later to
-      render the cursor before the text if placeholder is present
-      otherwise to the cursor after
-     */
     let cursor = {
-      let (startStr, _) = getStringParts(cursorPosition, inputString);
+      let (startStr, _) =
+        getStringParts(state.cursorPosition, valueToDisplay);
       let dimension =
         Revery_Draw.Text.measure(
           ~fontFamily=inputFontFamily,
@@ -295,12 +374,12 @@ let make =
       />;
 
     let placeholderText = makeTextComponent(placeholder);
-    let inputText = makeTextComponent(inputString);
+    let inputText = makeTextComponent(valueToDisplay);
 
+    /*
+       component
+     */
     (
-      /*
-         component
-       */
       slots,
       <Clickable
         onFocus={() => {
@@ -329,10 +408,10 @@ let createElement =
       ~placeholderColor=Colors.grey,
       ~cursorColor=Colors.black,
       ~autofocus=false,
-      ~value="",
       ~placeholder="",
       ~onKeyDown=_ => (),
       ~onChange=_ => (),
+      ~value=?,
       (),
     ) =>
   make(

@@ -269,18 +269,17 @@ let init = app => {
 
   let win =
     App.createWindow(
+      ~createOptions=
+        WindowCreateOptions.create(
+          ~width=windowWidth,
+          ~height=windowHeight,
+          ~maximized,
+          ~icon=Some("revery-icon.png"),
+          (),
+        ),
       app,
       "Welcome to Revery!",
-      ~createOptions={
-        ...Window.defaultCreateOptions,
-        width: windowWidth,
-        height: windowHeight,
-        maximized,
-        icon: Some("revery-icon.png"),
-      },
     );
-
-  let render = () => <ExampleHost win />;
 
   if (Environment.webGL) {
     Window.maximize(win);
@@ -290,7 +289,8 @@ let init = app => {
     Window.setPos(win, xPosition, yPosition);
   };
 
-  UI.start(win, render);
+  let _ = UI.start(win, <ExampleHost win />);
+  ();
 };
 
 let onIdle = () => print_endline("Example: idle callback triggered");

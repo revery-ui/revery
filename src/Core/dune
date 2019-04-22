@@ -1,6 +1,6 @@
 (library
     (name Revery_Core)
-    (public_name Revery_Core)
+    (public_name Revery.Core)
     (js_of_ocaml (javascript_files file.js))
     (cxx_names file)
-    (libraries console.lib str color lwt lwt.unix reglfw flex fontkit))
+    (libraries console.lib str color lwt reglfw flex fontkit))
