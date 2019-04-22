@@ -141,7 +141,18 @@ module View = {
 
 module Text = {
   open Style;
+
   let component = React.nativeComponent("Text");
+
+  let state = ref(`Idle);
+
+  let setState = a =>
+    switch (a) {
+    | `Hover => state := `Hover
+    | `Idle => state := `Idle
+    };
+
+  let getState = () => state^;
 
   let make =
       (
@@ -150,12 +161,16 @@ module Text = {
         ~onMouseMove=?,
         ~onMouseUp=?,
         ~onMouseWheel=?,
+        ~onMouseEnter=?,
+        ~onMouseLeave=?,
+        ~onMouseOver=?,
+        ~onMouseOut=?,
         ~ref=?,
         ~style=emptyTextStyle,
         ~text="",
         ~gamma,
         children,
-      ) =>
+      ) => {
     component(~key?, hooks =>
       (
         hooks,
@@ -169,6 +184,10 @@ module Text = {
                 ~onMouseMove?,
                 ~onMouseUp?,
                 ~onMouseWheel?,
+                ~onMouseEnter?,
+                ~onMouseLeave?,
+                ~onMouseOver?,
+                ~onMouseOut?,
                 (),
               );
             let node = (new TextNode.textNode)(text);
@@ -177,7 +196,6 @@ module Text = {
             Obj.magic(node);
           },
           configureInstance: (~isFirstRender as _, node) => {
-            let styles = create(~style, ());
             let events =
               NodeEvents.make(
                 ~ref?,
@@ -185,8 +203,35 @@ module Text = {
                 ~onMouseMove?,
                 ~onMouseUp?,
                 ~onMouseWheel?,
+                ~onMouseEnter?,
+                ~onMouseLeave?,
+                ~onMouseOver=
+                  e => {
+                    onMouseOver
+                    |> (
+                      fun
+                      | Some(userFn) => userFn(e)
+                      | None => ()
+                    );
+                    setState(`Hover);
+                  },
+                ~onMouseOut=
+                  e => {
+                    onMouseOut
+                    |> (
+                      fun
+                      | Some(userFn) => userFn(e)
+                      | None => ()
+                    );
+                    setState(`Idle);
+                  },
                 (),
               );
+
+            let target =
+              extractPseudoStyles(~styles=style, ~pseudoState=getState());
+
+            let styles = create(~style=merge(~source=style, ~target), ());
 
             /* TODO: Proper way to downcast? */
             let tn: TextNode.textNode = Obj.magic(node);
@@ -200,6 +245,7 @@ module Text = {
         },
       )
     );
+  };
 
   let createElement =
       (
@@ -207,6 +253,10 @@ module Text = {
         ~onMouseMove=?,
         ~onMouseUp=?,
         ~onMouseWheel=?,
+        ~onMouseEnter=?,
+        ~onMouseLeave=?,
+        ~onMouseOver=?,
+        ~onMouseOut=?,
         ~ref=?,
         ~style=emptyTextStyle,
         ~text="",
@@ -219,6 +269,10 @@ module Text = {
       ~onMouseMove?,
       ~onMouseUp?,
       ~onMouseWheel?,
+      ~onMouseEnter?,
+      ~onMouseLeave?,
+      ~onMouseOver?,
+      ~onMouseOut?,
       ~ref?,
       ~style,
       ~text,

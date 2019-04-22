@@ -95,6 +95,7 @@ module AnimatedText = {
           color(Colors.white),
           fontFamily("Roboto-Regular.ttf"),
           fontSize(24),
+          hover([color(Colors.red), fontSize(32)]),
           marginHorizontal(8),
           opacity(animatedOpacity),
           transform([Transform.TranslateY(translate)]),
