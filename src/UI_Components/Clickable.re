@@ -57,25 +57,30 @@ let make =
       | None => ()
       };
 
-    let onMouseUp = (mouseX: float, mouseY: float) => {
-      switch (clickableRef) {
-      | Some(clickable) =>
-        if (isMouseInsideRef(clickable, mouseX, mouseY)) {
+    let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
+      switch (mouseEvt.button, clickableRef) {
+      | (MouseButton.BUTTON_LEFT, Some(clickable)) =>
+        if (isMouseInsideRef(clickable, mouseEvt.mouseX, mouseEvt.mouseY)) {
           onClick();
         }
-      | None => ()
+      | (_, _) => ()
       };
 
       setOpacity(0.8);
       Mouse.releaseCapture();
     };
 
-    let onMouseDown = _ => {
-      Mouse.setCapture(
-        ~onMouseMove=evt => onMouseMove(evt.mouseX, evt.mouseY),
-        ~onMouseUp=evt => onMouseUp(evt.mouseX, evt.mouseY),
-        (),
-      );
+    let onMouseDown = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
+      switch (mouseEvt.button) {
+      | MouseButton.BUTTON_LEFT => {
+            Mouse.setCapture(
+              ~onMouseMove=evt => onMouseMove(evt.mouseX, evt.mouseY),
+              ~onMouseUp=evt => onMouseUp(evt),
+              (),
+            );
+          }
+      | _ => ()
+      };
 
       setOpacity(1.0);
     };
