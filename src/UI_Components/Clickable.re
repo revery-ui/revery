@@ -78,6 +78,11 @@ let make =
       };
 
       setOpacity(0.8);
+      
+      /* TODO Releasing capture in here means 
+      if multiple buttons are pressed simutaneously
+      there would a race condition
+      Not sure we need fix it though */
       Mouse.releaseCapture();
     };
 
