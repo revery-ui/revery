@@ -10,7 +10,9 @@ open Revery_Core;
 open Revery_Math;
 
 type clickFunction = unit => unit;
+type clickFunctionWithEvt = NodeEvents.mouseButtonEventParams => unit;
 let noop = () => ();
+let noopEvt = evt => ();
 
 let isMouseInsideRef = (ref: node, mouseX: float, mouseY: float) => {
   let clickableDimensions: BoundingBox2d.t = ref#getBoundingBox();
@@ -24,6 +26,8 @@ let make =
     (
       ~style,
       ~onClick: clickFunction=noop,
+      ~onRightClick: clickFunction=noop,
+      ~onAnyClick: clickFunctionWithEvt=noopEvt,
       ~componentRef=?,
       ~onBlur=?,
       ~onFocus=?,
@@ -36,6 +40,7 @@ let make =
   component(slots => {
     let (clickableRef, setClickableRefOption, slots) =
       React.Hooks.state(None, slots);
+
     let setClickableRef = r => {
       switch (componentRef) {
       | Some(fn) => fn(r)
@@ -58,12 +63,18 @@ let make =
       };
 
     let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
-      switch (mouseEvt.button, clickableRef) {
-      | (MouseButton.BUTTON_LEFT, Some(clickable)) =>
+      switch (clickableRef) {
+      | Some(clickable) =>
         if (isMouseInsideRef(clickable, mouseEvt.mouseX, mouseEvt.mouseY)) {
-          onClick();
+          switch (mouseEvt.button) {
+          | MouseButton.BUTTON_LEFT => onClick()
+          | MouseButton.BUTTON_RIGHT => onRightClick()
+          | _ => ()
+          };
+
+          onAnyClick(mouseEvt);
         }
-      | (_, _) => ()
+      | _ => ()
       };
 
       setOpacity(0.8);
@@ -77,11 +88,10 @@ let make =
           ~onMouseMove=evt => onMouseMove(evt.mouseX, evt.mouseY),
           ~onMouseUp=evt => onMouseUp(evt),
           (),
-        )
-      | _ => ()
+        );
+        setOpacity(1.0);
+      | _ => Mouse.setCapture(~onMouseUp=evt => onMouseUp(evt), ())
       };
-
-      setOpacity(1.0);
     };
 
     let mergedStyles =
