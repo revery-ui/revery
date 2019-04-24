@@ -72,13 +72,12 @@ let make =
 
     let onMouseDown = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
       switch (mouseEvt.button) {
-      | MouseButton.BUTTON_LEFT => {
-            Mouse.setCapture(
-              ~onMouseMove=evt => onMouseMove(evt.mouseX, evt.mouseY),
-              ~onMouseUp=evt => onMouseUp(evt),
-              (),
-            );
-          }
+      | MouseButton.BUTTON_LEFT =>
+        Mouse.setCapture(
+          ~onMouseMove=evt => onMouseMove(evt.mouseX, evt.mouseY),
+          ~onMouseUp=evt => onMouseUp(evt),
+          (),
+        )
       | _ => ()
       };
 
