@@ -12,7 +12,7 @@ open Revery_Math;
 type clickFunction = unit => unit;
 type clickFunctionWithEvt = NodeEvents.mouseButtonEventParams => unit;
 let noop = () => ();
-let noopEvt = evt => ();
+let noopEvt = _evt => ();
 
 let isMouseInsideRef = (ref: node, mouseX: float, mouseY: float) => {
   let clickableDimensions: BoundingBox2d.t = ref#getBoundingBox();
