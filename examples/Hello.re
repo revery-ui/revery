@@ -134,4 +134,3 @@ let render = () =>
     </View>
     <Logo />
   </View>;
-  
