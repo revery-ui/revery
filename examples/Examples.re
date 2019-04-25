@@ -279,9 +279,9 @@ let init = app => {
         icon: Some("revery-icon.png"),
       },
     );
-  let handle = Revery_Native.Menu.create_menu();
-  let _ = Revery_Native.Menu.add_item_menu(handle, `String("Info", () => print_endline("Did you need some infos ?")));
-  let _ = Revery_Native.Menu.(assign_menu(win.glfwWindow, handle));
+  let handle = Revery_Native.Menu.createMenu();
+  let _ = Revery_Native.Menu.addItemMenu(handle, `String("Info", () => print_endline("Did you need some infos ?")));
+  let _ = Revery_Native.Menu.(assignMenu(win.glfwWindow, handle));
 
   let render = () => <ExampleHost win />;
 

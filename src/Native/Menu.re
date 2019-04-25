@@ -4,16 +4,16 @@ open Reglfw.Glfw;
 
 type menu;
 
-external create_menu: unit => menu = "revery_create_menu";
+external createMenu: unit => menu = "revery_create_menu";
 
-[@noalloc] external add_string_item_menu: (menu, string) => bool = "revery_add_string_item_menu"
+[@noalloc] external addStringItemMenu: (menu, string) => bool = "revery_add_string_item_menu"
 
-let assoc_callback = ref([]: list(unit => unit));
+let assocCallback = ref([]: list(unit => unit));
 /* TODO: make it private */
 
 let dispatch = i => {
   let () = Printf.printf("we will dispatch: %d", i);
-  let l = assoc_callback^;
+  let l = assocCallback^;
   let rec loop = i =>
     fun
     | [] => () /* nothing to call */
@@ -23,19 +23,19 @@ let dispatch = i => {
   loop(i, l);
 };
 
-let register_callback = cb => assoc_callback := List.append(assoc_callback^, [cb]);
+let registerCallback = cb => assocCallback := List.append(assocCallback^, [cb]);
 /* TODO: make it private */
 
 let () = Callback.register("menu_dispatch", dispatch);
 
-let add_item_menu = w =>
+let addItemMenu = w =>
   fun
   | `String(s, f) => {
-      register_callback(f);
-      add_string_item_menu(w, s);
+      registerCallback(f);
+      addStringItemMenu(w, s);
   };
 
-[@noalloc] external assign_menu_nat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
+[@noalloc] external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
 
-[@noalloc] let assign_menu = (w, menu) =>
-  assign_menu_nat(glfwGetNativeWindow(w), menu);
+[@noalloc] let assignMenu = (w, menu) =>
+  assignMenuNat(glfwGetNativeWindow(w), menu);
