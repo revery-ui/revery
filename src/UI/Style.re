@@ -27,6 +27,7 @@ module BoxShadow = {
 };
 
 type t = {
+  active: option(t),
   backgroundColor: Color.t,
   color: Color.t,
   width: int,
@@ -85,6 +86,7 @@ type t = {
 
 let make =
     (
+      ~active=None,
       ~textOverflow=TextOverflow.Overflow,
       ~backgroundColor: Color.t=Colors.transparentBlack,
       ~color: Color.t=Colors.white,
@@ -148,6 +150,7 @@ let make =
       _unit: unit,
     ) => {
   let ret: t = {
+    active,
     textOverflow,
     backgroundColor,
     color,
@@ -333,7 +336,7 @@ type textProps = [
   | `TextOverflow(TextOverflow.t)
 ];
 
-type pseudoProps('t) = [ | `Hover('t)];
+type pseudoProps('t) = [ | `Hover('t) | `Active('t)];
 
 /*
    Text and View props take different style properties as such
@@ -494,6 +497,7 @@ let color = o => `Color(o);
 let backgroundColor = o => `BackgroundColor(o);
 
 let hover = h => `Hover(h);
+let active = a => `Active(a);
 
 /*
    Helper function to narrow down a list of all possible style props to
@@ -524,6 +528,22 @@ let extractPseudoStyles = (~styles, ~pseudoState) =>
     ) {
     | Not_found => []
     }
+  | `Active =>
+    try (
+      styles
+      |> List.find(
+           fun
+           | `Active(_) => true
+           | _ => false,
+         )
+      |> (
+        fun
+        | `Active(a) => a
+        | _ => []
+      )
+    ) {
+    | Not_found => []
+    }
   | `Idle => []
   };
 
@@ -534,6 +554,8 @@ let extractPseudoStyles = (~styles, ~pseudoState) =>
  */
 let rec applyStyle = (style, styleRule) =>
   switch (styleRule) {
+  | `Active(_activeStyles) => style
+
   | `AlignItems(alignItems) => {...style, alignItems}
   | `AlignSelf(alignSelf) => {...style, alignSelf}
   | `JustifyContent(justifyContent) => {...style, justifyContent}
@@ -605,10 +627,7 @@ let rec applyStyle = (style, styleRule) =>
   | `BackgroundColor(backgroundColor) => {...style, backgroundColor}
   | `Width(width) => {...style, width}
   | `Height(height) => {...style, height}
-  | `Hover(hoverStyles) => {
-      ...style,
-      hover: Some(List.fold_left(applyStyle, defaultStyle, hoverStyles)),
-    }
+  | `Hover(_hoverStyles) => style
   | `Bottom(bottom) => {...style, bottom}
   | `Left(left) => {...style, left}
   | `Top(top) => {...style, top}
@@ -684,3 +703,4 @@ let merge = (~source, ~target) =>
     source,
     target,
   );
+  

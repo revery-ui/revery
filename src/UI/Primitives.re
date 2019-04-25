@@ -142,17 +142,9 @@ module View = {
 module Text = {
   open Style;
 
+  type state = [ | `Active | `Hover | `Idle];
+
   let component = React.nativeComponent("Text");
-
-  let state = ref(`Idle);
-
-  let setState = a =>
-    switch (a) {
-    | `Hover => state := `Hover
-    | `Idle => state := `Idle
-    };
-
-  let getState = () => state^;
 
   let make =
       (
@@ -171,75 +163,97 @@ module Text = {
         ~gamma,
         children,
       ) => {
-    component(~key?, hooks =>
-      (
-        hooks,
-        {
-          make: () => {
-            let styles = create(~style, ());
-            let events =
-              NodeEvents.make(
-                ~ref?,
-                ~onMouseDown?,
-                ~onMouseMove?,
-                ~onMouseUp?,
-                ~onMouseWheel?,
-                ~onMouseEnter?,
-                ~onMouseLeave?,
-                ~onMouseOver?,
-                ~onMouseOut?,
-                (),
-              );
-            let node = PrimitiveNodeFactory.get().createTextNode(text);
-            node#setEvents(events);
-            node#setStyle(styles);
-            Obj.magic(node);
+    component(
+      ~key?,
+      hooks => {
+        let (state, setState, hooks) = React.Hooks.state(`Idle, hooks);
+        (
+          hooks,
+          {
+            make: () => {
+              let styles = create(~style, ());
+              let events =
+                NodeEvents.make(
+                  ~ref?,
+                  ~onMouseDown?,
+                  ~onMouseMove?,
+                  ~onMouseUp?,
+                  ~onMouseWheel?,
+                  ~onMouseEnter?,
+                  ~onMouseLeave?,
+                  ~onMouseOver?,
+                  ~onMouseOut?,
+                  (),
+                );
+              let node = PrimitiveNodeFactory.get().createTextNode(text);
+              node#setEvents(events);
+              node#setStyle(styles);
+              Obj.magic(node);
+            },
+            configureInstance: (~isFirstRender as _, node) => {
+              let events =
+                NodeEvents.make(
+                  ~ref?,
+                  ~onMouseDown=
+                    e => {
+                      switch (onMouseDown) {
+                      | Some(userFn) => userFn(e)
+                      | None => ()
+                      };
+                      setState(`Active);
+                    },
+                  ~onMouseMove?,
+                  ~onMouseUp=
+                    e => {
+                      switch (onMouseUp) {
+                      | Some(userFn) => userFn(e)
+                      | None => ()
+                      };
+                      /*
+                         We can't set this to `Idle here
+                         since we're still on the element
+                       */
+                      setState(`Hover);
+                    },
+                  ~onMouseWheel?,
+                  ~onMouseEnter?,
+                  ~onMouseLeave?,
+                  ~onMouseOver=
+                    e => {
+                      switch (onMouseOver) {
+                      | Some(userFn) => userFn(e)
+                      | None => ()
+                      };
+                      setState(`Hover);
+                    },
+                  ~onMouseOut=
+                    e => {
+                      switch (onMouseOver) {
+                      | Some(userFn) => userFn(e)
+                      | None => ()
+                      };
+                      setState(`Idle);
+                    },
+                  (),
+                );
+
+              let target =
+                extractPseudoStyles(~styles=style, ~pseudoState=state);
+
+              let styles = create(~style=merge(~source=style, ~target), ());
+
+              /* TODO: Proper way to downcast? */
+              let tn: TextNode.textNode = Obj.magic(node);
+              tn#setEvents(events);
+              tn#setStyle(styles);
+              tn#setText(text);
+              tn#setGamma(gamma);
+              node;
+            },
+            children,
           },
-          configureInstance: (~isFirstRender as _, node) => {
-            let events =
-              NodeEvents.make(
-                ~ref?,
-                ~onMouseDown?,
-                ~onMouseMove?,
-                ~onMouseUp?,
-                ~onMouseWheel?,
-                ~onMouseEnter?,
-                ~onMouseLeave?,
-                ~onMouseOver=
-                  e => {
-                    switch (onMouseOver) {
-                    | Some(userFn) => userFn(e)
-                    | None => ()
-                    };
-                    setState(`Hover);
-                  },
-                ~onMouseOut=
-                  e => {
-                    switch (onMouseOver) {
-                    | Some(userFn) => userFn(e)
-                    | None => ()
-                    };
-                    setState(`Idle);
-                  },
-                (),
-              );
-
-            let target =
-              extractPseudoStyles(~styles=style, ~pseudoState=getState());
-
-            let styles = create(~style=merge(~source=style, ~target), ());
-
-            /* TODO: Proper way to downcast? */
-            let tn: TextNode.textNode = Obj.magic(node);
-            tn#setEvents(events);
-            tn#setStyle(styles);
-            tn#setText(text);
-            tn#setGamma(gamma);
-            node;
-          },
-          children,
-        },
-      )
+        );
+      },
     );
   };
 
