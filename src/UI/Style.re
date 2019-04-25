@@ -552,7 +552,7 @@ let extractPseudoStyles = (~styles, ~pseudoState) =>
    and is used to build up the style record, which is eventually
    used to apply styling to elements.
  */
-let rec applyStyle = (style, styleRule) =>
+let applyStyle = (style, styleRule) =>
   switch (styleRule) {
   | `Active(_activeStyles) => style
 
