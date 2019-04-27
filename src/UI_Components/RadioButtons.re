@@ -1,9 +1,9 @@
 open Revery_UI;
 open Revery_Core;
 
-type button = {
+type button('a) = {
   text: string,
-  value: string,
+  value: 'a,
 };
 let defaultStyle =
   Style.[
@@ -14,17 +14,18 @@ let defaultStyle =
     fontFamily("Roboto-Regular.ttf"),
   ];
 
-let component = React.component("RadioButtons");
+//let component = React.component("RadioButtons");
+// same thing as DropDown
 let make =
     (
       ~defaultSelected,
-      ~buttons: list(button),
+      ~buttons: list(button('a)),
       ~iconSize,
       ~style,
       ~onChange,
       _children,
     ) =>
-  component(slots => {
+  React.component("RadioButtons")(slots => {
     let defaultVal = List.nth(buttons, defaultSelected).value;
     let (checkedVal, setCheckedVal, slots) =
       React.Hooks.state(defaultVal, slots);
