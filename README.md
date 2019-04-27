@@ -99,11 +99,22 @@ Make sure to check the specific requirements for your Linux distribution, above.
 
 ### Running
 
+#### Native Build
+
 After building, you can run the example app by running:
 
 - `esy x Examples`
 
 Check out our [examples](https://github.com/revery-ui/revery/tree/master/examples) to see how they work!
+
+#### JavaScript Build
+
+You can also build the example app for JavaScript by running:
+
+- `esy '@js' install`
+- `esy '@js' run`
+
+And navigating your browser to the locally hosted URL.
 
 ### Tests
 
