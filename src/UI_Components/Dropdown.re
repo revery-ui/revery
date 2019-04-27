@@ -1,22 +1,22 @@
 open Revery_UI;
 open Revery_Core;
 
-type item = {
-  value: string,
+type item('a) = {
+  value: 'a,
   label: string,
 };
 
-type items = list(item);
+type items('a) = list(item('a));
 
-type state = {
-  items,
-  selected: item,
+type state('a) = {
+  items : items('a),
+  selected: item('a),
   _open: bool,
 };
 
-type action =
+type action('a) =
   | ShowDropdown
-  | SelectItem(item);
+  | SelectItem(item('a));
 
 let reducer = (action, state) =>
   switch (action) {
@@ -33,7 +33,23 @@ let textStyles =
 
 let noop = _item => ();
 
-let component = React.component("Dropdown");
+//let component = React.component("Dropdown");
+/*
+File "src/UI_Components/Dropdown.re", line 36, characters 4-13:
+Error: The type of this expression,
+       ?key:Revery_UI.React.Key.t ->
+       (('_weak1 state Revery_UI.React.Hooks.Reducer.t -> unit, unit,
+         '_weak1 state Revery_UI.React.Hooks.Reducer.t -> unit,
+         '_weak1 state Revery_UI.React.Hooks.Reducer.t -> unit)
+        Brisk_reconciler__.Hooks.t ->
+        (unit, unit, '_weak1 state Revery_UI.React.Hooks.Reducer.t -> unit,
+         unit)
+        Brisk_reconciler__.Hooks.t * Revery_UI.React.syntheticElement) ->
+       Revery_UI.React.syntheticElement,
+       contains type variables that cannot be generalized
+TODO: modify Brisk ? to allow polymorphic state
+MAYBE use +'a somewhere in Brisk
+*/
 let createElement =
     (
       ~items,
@@ -43,7 +59,7 @@ let createElement =
       ~children as _,
       (),
     ) =>
-  component(slots => {
+  React.component("Dropdown")(slots => {
     let initialState = {items, selected: List.nth(items, 0), _open: false};
 
     let (state, dispatch, slots) =
