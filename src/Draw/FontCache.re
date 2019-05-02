@@ -1,13 +1,56 @@
 open Revery_Core;
 
+module StringHash =
+  Hashtbl.Make({
+    type t = string;
+    let equal = String.equal;
+    let hash = String.length;
+  });
+
+module InternalCache = {
+  type t('a) = StringHash.t(Hashtbl.t(int, 'a));
+
+  let create: unit => t('a) =
+    () => {
+      StringHash.create(10);
+    };
+
+  let _getOrCreateSizeDict = (v: t('a), fontName) => {
+    switch (StringHash.find_opt(v, fontName)) {
+    | Some(x) => x
+    | None =>
+      let result = Hashtbl.create(10);
+      StringHash.add(v, fontName, result);
+      result;
+    };
+  };
+
+  let find_opt = (v: t('a), fontName, size) => {
+    let sizeDictionary = _getOrCreateSizeDict(v, fontName);
+    switch (Hashtbl.find_opt(sizeDictionary, size)) {
+    | Some(v) => Some(v)
+    | None => None
+    };
+  };
+
+  let add = (v: t('a), fontName, size, b) => {
+    let sizeDictionary = _getOrCreateSizeDict(v, fontName);
+    Hashtbl.add(sizeDictionary, size, b);
+  };
+
+  let remove = (v: t('a), fontName, size) => {
+    let sizeDictionary = _getOrCreateSizeDict(v, fontName);
+    Hashtbl.remove(sizeDictionary, size);
+  };
+};
+
 type fontInfo = (string, int);
-type t = Hashtbl.t(fontInfo, Fontkit.fk_face);
 
 type fontLoaded = Event.t(unit);
 let onFontLoaded: fontLoaded = Event.create();
 
-let _cache: t = Hashtbl.create(100);
-let _loadingCache = Hashtbl.create(10);
+let _cache: InternalCache.t(Fontkit.fk_face) = InternalCache.create();
+let _loadingCache: InternalCache.t(bool) = InternalCache.create();
 let _isSome = a =>
   switch (a) {
   | Some(_) => true
@@ -16,16 +59,16 @@ let _isSome = a =>
 
 let load = (fontName: string, size: int) => {
   let execDir = Revery_Core.Environment.getExecutingDirectory();
-  switch (Hashtbl.find_opt(_cache, (fontName, size))) {
+  switch (InternalCache.find_opt(_cache, fontName, size)) {
   | Some(fk) => fk
   | None =>
-    let fontKey = (fontName, size);
-    let isLoading = _isSome(Hashtbl.find_opt(_loadingCache, fontKey));
+    let isLoading =
+      _isSome(InternalCache.find_opt(_loadingCache, fontName, size));
     if (!isLoading) {
-      Hashtbl.add(_loadingCache, fontKey, true);
+      InternalCache.add(_loadingCache, fontName, size, true);
       let success = fk => {
-        Hashtbl.remove(_loadingCache, fontKey);
-        Hashtbl.add(_cache, fontKey, fk);
+        InternalCache.remove(_loadingCache, fontName, size);
+        InternalCache.add(_cache, fontName, size, fk);
         Event.dispatch(onFontLoaded, ());
         Lwt.return();
       };

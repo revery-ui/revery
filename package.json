@@ -1,6 +1,6 @@
 {
   "name": "revery",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "App toolkit built with Reason",
   "license": "MIT",
   "bugs": { "url": "https://github.com/bryphe/revery/issues" },
@@ -12,23 +12,14 @@
     "test": "esy b dune runtest",
     "format": "esy dune build @fmt --auto-promote",
     "format:windows": "esy b .ci/format.sh",
-    "doc": "refmterr esy dune build @doc --root .",
-    "create-release": "sh ./scripts/release.sh"
+    "create-release": "sh ./scripts/release.sh",
+    "run": "esy x Examples"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
-    "build": [ "dune build --root . -j4" ],
+    "build": [ "dune build -p Revery -j4" ],
     "install": [
-      "esy-installer Revery.install",
-      "esy-installer Revery_Core.install",
-      "esy-installer Revery_Geometry.install",
-      "esy-installer Revery_Math.install",
-      "esy-installer Revery_Draw.install",
-      "esy-installer Revery_Native.install",
-      "esy-installer Revery_Shaders.install",
-      "esy-installer Revery_UI.install",
-      "esy-installer Revery_UI_Components.install",
-      "esy-installer Revery_Native.install"
+      "esy-installer Revery.install"
     ]
   },
   "dependencies": {
@@ -62,7 +53,6 @@
   "devDependencies": {
     "ocaml": "^4.7.0",
     "@opam/merlin": "*",
-    "@opam/dune": "^1.5.0",
-    "@opam/odoc": "*"
+    "@opam/dune": "^1.5.0"
   }
 }

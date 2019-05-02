@@ -269,22 +269,21 @@ let init = app => {
 
   let win =
     App.createWindow(
+      ~createOptions=
+        WindowCreateOptions.create(
+          ~width=windowWidth,
+          ~height=windowHeight,
+          ~maximized,
+          ~icon=Some("revery-icon.png"),
+          (),
+        ),
       app,
       "Welcome to Revery!",
-      ~createOptions={
-        ...Window.defaultCreateOptions,
-        width: windowWidth,
-        height: windowHeight,
-        maximized,
-        icon: Some("revery-icon.png"),
-      },
     );
   let handle = Revery_Native.Menu.createMenu();
   let _ = Revery_Native.Menu.addItemMenu(handle, `String("Info1", () => print_endline("Did you need some infos ?")));
   let _ = Revery_Native.Menu.addItemMenu(handle, `String("Info2", () => print_endline("Did you need some infos ?")));
   let _ = Revery_Native.Menu.(assignMenu(win.glfwWindow, handle));
-
-  let render = () => <ExampleHost win />;
 
   if (Environment.webGL) {
     Window.maximize(win);
@@ -294,7 +293,8 @@ let init = app => {
     Window.setPos(win, xPosition, yPosition);
   };
 
-  UI.start(win, render);
+  let _ = UI.start(win, <ExampleHost win />);
+  ();
 };
 
 let onIdle = () => print_endline("Example: idle callback triggered");

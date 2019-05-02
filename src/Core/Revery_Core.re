@@ -20,6 +20,8 @@ module UniqueId = UniqueId;
 module TextWrapping = TextWrapping;
 module TextOverflow = TextOverflow;
 
+module WindowCreateOptions = WindowCreateOptions;
+
 /*
  * Internally exposed modules, just for testing.
  */

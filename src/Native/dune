@@ -1,6 +1,6 @@
 (library
     (name Revery_Native)
-    (public_name Revery_Native)
+    (public_name Revery.Native)
     (preprocess (pps lwt_ppx))
     (library_flags (:include flags.sexp))
     (js_of_ocaml (javascript_files

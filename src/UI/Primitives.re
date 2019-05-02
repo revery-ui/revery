@@ -58,7 +58,7 @@ module View = {
                 ~onDimensionsChanged?,
                 (),
               );
-            let node = (new ViewNode.viewNode)();
+            let node = PrimitiveNodeFactory.get().createViewNode();
             node#setEvents(events);
             node#setStyle(styles);
             node#setTabIndex(tabindex);
@@ -171,7 +171,7 @@ module Text = {
                 ~onMouseWheel?,
                 (),
               );
-            let node = (new TextNode.textNode)(text);
+            let node = PrimitiveNodeFactory.get().createTextNode(text);
             node#setEvents(events);
             node#setStyle(styles);
             Obj.magic(node);
@@ -258,7 +258,7 @@ module Image = {
                 ~onMouseWheel?,
                 (),
               );
-            let node = (new ImageNode.imageNode)(src);
+            let node = PrimitiveNodeFactory.get().createImageNode(src);
             node#setEvents(events);
             node#setStyle(styles);
             node#setResizeMode(resizeMode);

@@ -2,3 +2,7 @@
     (name Revery)
     (public_name Revery)
     (libraries console.lib lwt lwt.unix reglfw Revery_Core Revery_Draw Revery_Math Revery_Shaders Revery_Geometry Revery_UI Revery_UI_Components Revery_Native))
+
+(documentation
+   (package Revery)
+   (mld_files index))
