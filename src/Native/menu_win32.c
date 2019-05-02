@@ -48,7 +48,6 @@ LRESULT CALLBACK WndProc(int msg, WPARAM wParam, LPARAM lParam)
             /* First time around, look up by name */
             if (g_menu_dispatch == NULL)
                 g_menu_dispatch = caml_named_value("menu_dispatch");
-            printf("menu_dispatch: %p, nth: %d\n", g_menu_dispatch, LOWORD(m.wParam));
             caml_callback(*g_menu_dispatch, Val_int(LOWORD(m.wParam)));
         }
     }
@@ -65,13 +64,24 @@ value revery_create_menu_win32(void)
     return ret;
 }
 
+void release_hook(void)
+{
+/*
+** we are registered only if we add a hook
+*/
+    UnhookWindowsHookEx(g_hook_handle);
+}
+
 value revery_add_string_item_menu_win32(value vMenu, const char * pMessage)
 {
     bool ret = AppendMenu(Menu_val(vMenu).menu_handle, MF_STRING, g_unique_identifier, pMessage);
 
     g_unique_identifier++;
     if (!g_hook_handle)
+    {
         g_hook_handle = SetWindowsHookExW(WH_GETMESSAGE, WndProc, (HINSTANCE)NULL, GetCurrentThreadId());
+        atexit(release_hook);
+    }
 
     return ret;
 }
