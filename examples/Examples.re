@@ -280,7 +280,8 @@ let init = app => {
       },
     );
   let handle = Revery_Native.Menu.createMenu();
-  let _ = Revery_Native.Menu.addItemMenu(handle, `String("Info", () => print_endline("Did you need some infos ?")));
+  let _ = Revery_Native.Menu.addItemMenu(handle, `String("Info1", () => print_endline("Did you need some infos ?")));
+  let _ = Revery_Native.Menu.addItemMenu(handle, `String("Info2", () => print_endline("Did you need some infos ?")));
   let _ = Revery_Native.Menu.(assignMenu(win.glfwWindow, handle));
 
   let render = () => <ExampleHost win />;
