@@ -76,7 +76,9 @@ Revery is provided under the [MIT License](LICENSE).
 We'd love your help, and welcome PRs and contributions.
 
 Some ideas for getting started:
+- [Build and run](https://github.com/revery-ui/revery/wiki/Building-&-Installing) Revery
 - View our [Roadmap](https://github.com/revery-ui/revery/wiki/Roadmap)
+- Help us improve our documentation
 - Help us build example apps
 - Help us [fix bugs](https://github.com/revery-ui/revery/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22+label%3A%22bug%22) and [build features](https://github.com/revery-ui/revery/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22++-label%3Abug)
 - Help us [log bugs and open issues](https://github.com/bryphe/revery/issues/new)
