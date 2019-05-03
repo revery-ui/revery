@@ -17,6 +17,7 @@ type t = {
   backgroundColor: Color.t,
   vsync: bool,
   icon: option(string),
+  menu: option(Revery_Native.Menu.menu),
 };
 
 let create =
@@ -30,6 +31,7 @@ let create =
       ~backgroundColor=Colors.cornflowerBlue,
       ~vsync=true,
       ~icon=None,
+      ~menu=None,
       (),
     ) => {
   resizable,
@@ -41,6 +43,7 @@ let create =
   backgroundColor,
   vsync,
   icon,
+  menu,
 };
 
 let default = create();

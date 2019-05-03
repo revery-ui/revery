@@ -267,6 +267,12 @@ let init = app => {
   Console.log("Hello from example app");
   Console.log([1, 2, 3]);
 
+
+  let menu =
+    <Revery_Native.Menu>
+      <Revery_Native.StringItem label="About" callback=(() => print_endline("Revery is a cross-platform framework written in ReasonML")) />
+      <Revery_Native.StringItem label="Info JSX" callback=(() => print_endline("Did you need some infos ?")) />
+    </Revery_Native.Menu>;
   let win =
     App.createWindow(
       ~createOptions=
@@ -275,17 +281,12 @@ let init = app => {
           ~height=windowHeight,
           ~maximized,
           ~icon=Some("revery-icon.png"),
+          ~menu=Some(menu),
           (),
         ),
       app,
       "Welcome to Revery!",
     );
-  let handle =
-  <Revery_Native.Menu>
-    <Revery_Native.StringItem label="About" callback=(() => print_endline("Revery is a cross-platform framework written in ReasonML")) />
-    <Revery_Native.StringItem label="Info JSX" callback=(() => print_endline("Did you need some infos ?")) />
-  </Revery_Native.Menu>;
-  let _ = Revery_Native.Menu.(assignMenu(win.glfwWindow, handle));
 
   if (Environment.webGL) {
     Window.maximize(win);
