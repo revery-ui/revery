@@ -1,37 +1,26 @@
 /* Hooks specific to Revery */
+open Revery_Core;
 open Animated;
 
+let reducer = (_a, s) => s + 1;
+
 let animation = (v: animationValue, opts: animationOptions, slots) => {
-  let (playing, setPlaying, slots) = React.Hooks.ref(true, slots);
-  let (currentV, _set, slots) = React.Hooks.state(v, slots);
-  let (frame, pump, slots) = React.Hooks.state(0, slots);
+  let (currentV, _, slots) = React.Hooks.ref(v, slots);
+  let (_, dispatch, slots) =
+    React.Hooks.reducer(~initialState=0, reducer, slots);
 
   let slots =
     React.Hooks.effect(
       OnMount,
       () => {
-        let complete = () => setPlaying(false);
-
+        let complete = Tick.interval(_t => dispatch(), Seconds(0.));
         let {stop, _} = tween(v, opts) |> start(~complete);
-
-        Some(() => stop());
-      },
-      slots,
-    );
-
-  let slots =
-    React.Hooks.effect(
-      Always,
-      () => {
-        /*
-           If the animation is active, force a state change
-           so that the component gets re-rendered
-         */
-        if (playing) {
-          pump(frame + 1);
-        };
-
-        None;
+        Some(
+          () => {
+            stop();
+            complete();
+          },
+        );
       },
       slots,
     );
