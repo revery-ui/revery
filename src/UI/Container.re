@@ -22,27 +22,17 @@ let update: (t, React.syntheticElement) => t =
         updates |> React.RenderedElement.executePendingEffects;
       | Some(s) =>
         let nextElement =
-          Performance.bench("RenderedElement.update", () =>
             React.RenderedElement.update(
               ~previousElement=s.previousElement,
               ~renderedElement=s.rendered,
               element,
             )
-          );
         let nextElement =
-          Performance.bench("RenderedElement.flushPendingUpdates", () =>
             React.RenderedElement.flushPendingUpdates(nextElement)
-          );
 
-        Performance.bench("RenderedElement.executeHostViewEffects", () =>
           React.RenderedElement.executeHostViewUpdates(nextElement) |> ignore
-        );
 
-        let ret =
-          Performance.bench("RenderedElement.executePendingEffects", () =>
             React.RenderedElement.executePendingEffects(nextElement)
-          );
-        ret;
       };
 
     let ret: t = {
