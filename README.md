@@ -102,7 +102,7 @@ Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com
 
 <p align="left">
   <a href="https://v2.onivim.io/">
-    <img src="https://reasonml.github.io/img/logos/onivim2.png" alt="Onivim 2" style="width: 64px;"/>
+    <img src="./assets/onivim-logo.png" alt="Onivim 2" style="width: 64px;"/>
   </a>
 </p>
 
