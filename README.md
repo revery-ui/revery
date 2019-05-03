@@ -97,6 +97,14 @@ Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com
 
 <a href="https://opencollective.com/revery#backers" target="_blank"><img src="https://opencollective.com/revery/backers.svg?width=890"></a>
 
+## Built with Revery
+
+<p align="left">
+  <a href="https://v2.onivim.io/">
+    <img src="./assets/onivim-logo.png" alt="Onivim 2" />
+  </a>
+</p>
+
 
 ## Special Thanks
 
