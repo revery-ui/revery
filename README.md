@@ -18,6 +18,9 @@
   <a href="https://discord.gg/4pxY5Cp">
     <img src="https://img.shields.io/discord/526111832478449695.svg" alt="Join the chat on discord!"/>
   </a>
+  <a href="#backers">
+    <img src="https://opencollective.com/revery/backers/badge.svg" alt="Backers"/>
+  </a>
 </p>
 
 ---
@@ -284,12 +287,27 @@ Revery is provided under the [MIT License](LICENSE).
 
 ## Contributing
 
-We'd love your help, and welcome PRs and contributions. Join us on [Discord](https://discord.gg/UvQ2cFn)!
+We'd love your help, and welcome PRs and contributions.
 
 Some ideas for getting started:
-- Help us build example apps,
-- Help us implement missing features,
-- Help us [log bugs and open issues](https://github.com/bryphe/revery/issues/new).
+- Help us build example apps
+- Help us [fix bugs](https://github.com/revery-ui/revery/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22+label%3A%22bug%22) and [build features](https://github.com/revery-ui/revery/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22++-label%3Abug)
+- Help us [log bugs and open issues](https://github.com/bryphe/revery/issues/new)
+- Support the project on [OpenCollective](https://opencollective.com/revery)
+- Follow us on [Twitter](https://twitter.com/reveryui) or chat with us on [Discord](https://discord.gg/UvQ2cFn)!
+
+## Contributors
+
+Thanks to everyone who has contributed to Revery!
+
+<a href="https://github.com/revery-ui/revery/graphs/contributors"><img src="https://opencollective.com/revery/contributors.svg?width=890&button=false" /></a>
+
+## Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/revery#backer)]
+
+<a href="https://opencollective.com/revery#backers" target="_blank"><img src="https://opencollective.com/revery/backers.svg?width=890"></a>
+
 
 ## Special Thanks
 
