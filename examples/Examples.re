@@ -280,11 +280,11 @@ let init = app => {
       app,
       "Welcome to Revery!",
     );
-  let handle = <Revery_Native.Menu />;
-  let _ = Revery_Native.Menu.addItemMenu(handle, <Revery_Native.StringItem callback=(() => print_endline("Did you need some infos ?")) label="Info JSX" />);
-  let _ = Revery_Native.Menu.addItemMenu(handle, `String("Info1", () => print_endline("Did you need some infos ?")));
-  let _ = Revery_Native.Menu.addItemMenu(handle, `String("Info1", () => print_endline("Did you need some infos ?")));
-  let _ = Revery_Native.Menu.addItemMenu(handle, `String("Info2", () => print_endline("Did you need some infos ?")));
+  let handle =
+  <Revery_Native.Menu>
+    <Revery_Native.StringItem label="About" callback=(() => print_endline("Revery is a cross-platform framework written in ReasonML")) />
+    <Revery_Native.StringItem label="Info JSX" callback=(() => print_endline("Did you need some infos ?")) />
+  </Revery_Native.Menu>;
   let _ = Revery_Native.Menu.(assignMenu(win.glfwWindow, handle));
 
   if (Environment.webGL) {

@@ -41,4 +41,8 @@ module StringItem = {
     , ~label as s, ~callback as f, ()) => `String(s, f);
 }
 
-let createElement = (~children as _, ()) => createMenu ();
+let createElement = (~children, ()) => {
+  let handle = createMenu();
+  let _ = List.map(e => addItemMenu(handle, e), children);/* ASK: what should we do on error */
+  handle
+};
