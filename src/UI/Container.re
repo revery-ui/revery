@@ -22,17 +22,17 @@ let update: (t, React.syntheticElement) => t =
         updates |> React.RenderedElement.executePendingEffects;
       | Some(s) =>
         let nextElement =
-            React.RenderedElement.update(
-              ~previousElement=s.previousElement,
-              ~renderedElement=s.rendered,
-              element,
-            )
+          React.RenderedElement.update(
+            ~previousElement=s.previousElement,
+            ~renderedElement=s.rendered,
+            element,
+          );
         let nextElement =
-            React.RenderedElement.flushPendingUpdates(nextElement)
+          React.RenderedElement.flushPendingUpdates(nextElement);
 
-          React.RenderedElement.executeHostViewUpdates(nextElement) |> ignore
+        React.RenderedElement.executeHostViewUpdates(nextElement) |> ignore;
 
-            React.RenderedElement.executePendingEffects(nextElement)
+        React.RenderedElement.executePendingEffects(nextElement);
       };
 
     let ret: t = {
