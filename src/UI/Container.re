@@ -1,5 +1,3 @@
-open Revery_Core;
-
 type state = {
   rendered: React.RenderedElement.t,
   previousElement: React.syntheticElement,
