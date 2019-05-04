@@ -76,10 +76,6 @@ value revery_create_menu_win32(void)
     value ret = alloc_custom(&menu_ops, sizeof(struct s_menu), 0, 1);
 
     Menu_val(ret).menu_handle = CreateMenu();
-#if 0
-    if (g_menu_list == NULL)
-        g_menu_list = caml_named_value("menu_list");
-#endif
 
     return ret;
 }
@@ -120,5 +116,25 @@ value revery_assign_menu_win32(void * pWindow, value vMenu)
 ** function to accomplish this task.
 */
     return SetMenu(pWindow, Menu_val(vMenu).menu_handle);
+}
+
+value revery_get_application_menu_win32(void * pWindow, value list)
+{
+  CAMLparam1(list);
+  CAMLlocal1(ret);
+
+#if 0
+  while (Is_block(list))
+  {
+    printf("the variable list is a block: %p, contain: %p\n", Field(list, 0), NULL /*Menu_val(Field(list, 0)).menu_handle*/);
+    list = Field(list, 0);
+  }
+  ret = GetMenu(pWindow);
+#endif
+/*
+** this function try to iterate over menu to find the right one object
+*/
+
+  CAMLreturn(ret);
 }
 #endif

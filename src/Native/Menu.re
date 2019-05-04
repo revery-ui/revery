@@ -22,7 +22,6 @@ let registerCallback = cb => assocCallback := List.append(assocCallback^, [cb]);
 /* TODO: make it private */
 
 let () = Callback.register("menu_dispatch", menuDispatch);
-/*let () = Callback.register("menu_list", menuList);*/
 
 let addItemMenu = w =>
   fun
@@ -49,3 +48,7 @@ let createElement = (~children, ()) => {
   let () = menuList := [handle, ...menuList^];
   handle
 };
+
+external getApplicationMenuNat: (NativeWindow.t, list(menu)) => menu = "revery_get_application_menu"
+
+let getApplicationMenu = w => getApplicationMenuNat(glfwGetNativeWindow(w), menuList^);

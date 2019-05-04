@@ -64,7 +64,7 @@ CAMLprim value revery_add_string_item_menu(value vMenu, value vMessage)
     #elif __linux__
     printf("WARNING - Not implemented: revery_add_string_item_menu_gtk");
     #else
-    printf("WARNING - Not implemented: revery_add_string_item_menu_menu");
+    printf("WARNING - Not implemented: revery_add_string_item_menu");
     #endif
 
     CAMLreturn(Bool_val(ret));
@@ -88,9 +88,29 @@ CAMLprim value revery_assign_menu(value vWindow, value vMenu)
 #elif __linux__
     printf("WARNING - Not implemented: revery_assign_menu_gtk");
 #else
-    printf("WARNING - Not implemented: revery_assign_menu_menu");
+    printf("WARNING - Not implemented: revery_assign_menu");
 #endif
 
     CAMLreturn(Bool_val(ret));
+}
+
+CAMLprim value revery_get_application_menu(value vWindow, value vList)
+{
+    CAMLparam2(vWindow, vList);
+    void *pWin = (void *)vWindow;
+    value ret;
+
+#ifdef WIN32
+    ret = revery_get_application_menu_win32(pWin, vList);
+    printf("We get the application menu (%p)\n", ret);
+#elif __APPLE__
+    printf("WARNING - Not implemented: revery_get_application_menu_cocoa");
+#elif __linux__
+    printf("WARNING - Not implemented: revery_get_application_menu_gtk");
+#else
+    printf("WARNING - Not implemented: revery_get_application_menu");
+#endif
+
+    CAMLreturn(ret);
 }
 }
