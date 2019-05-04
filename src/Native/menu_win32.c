@@ -9,19 +9,11 @@
 #include <caml/alloc.h>
 #include <caml/callback.h>
 #include <caml/custom.h>
+#include <caml/memory.h>
 
-/* Encapsulation of opaque menu handles (of type s_menu)
-   as OCaml custom blocks. */
-
-static struct custom_operations menu_ops = {
-    "com.outrunlabs.www.revery.menu",
-    custom_finalize_default,
-    custom_compare_default,
-    custom_hash_default,
-    custom_serialize_default,
-    custom_deserialize_default,
-    custom_compare_ext_default
-};
+/*
+** Define custom operations here
+*/
 
 struct s_menu
 {
@@ -30,8 +22,32 @@ struct s_menu
 
 #define Menu_val(v) (*((struct s_menu *)Data_custom_val(v)))
 
+CAMLprim int menu_compare(value v1, value v2)
+{
+  return Val_int(Menu_val(v1).menu_handle - Menu_val(v2).menu_handle);
+}
+
+/*
+** Encapsulation of opaque menu handles (of type s_menu)
+** as OCaml custom blocks.
+*/
+
+static struct custom_operations menu_ops = {
+    "com.outrunlabs.www.revery.menu",
+    custom_finalize_default,
+    menu_compare,
+    custom_hash_default,
+/*
+** ASK: is it useful to define custom_hash_default
+*/
+    custom_serialize_default,
+    custom_deserialize_default,
+    custom_compare_ext_default
+};
+
 static int g_unique_identifier = 0;
 static value * g_menu_dispatch = NULL;
+static value * g_menu_list = NULL;
 static void * g_hook_handle = NULL;
 
 LRESULT CALLBACK WndProc(int msg, WPARAM wParam, LPARAM lParam)
@@ -60,6 +76,10 @@ value revery_create_menu_win32(void)
     value ret = alloc_custom(&menu_ops, sizeof(struct s_menu), 0, 1);
 
     Menu_val(ret).menu_handle = CreateMenu();
+#if 0
+    if (g_menu_list == NULL)
+        g_menu_list = caml_named_value("menu_list");
+#endif
 
     return ret;
 }

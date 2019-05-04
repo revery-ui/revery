@@ -11,16 +11,18 @@ external addStringItemMenu: (menu, string) => bool = "revery_add_string_item_men
 let assocCallback = ref([]: list(unit => unit));
 /* TODO: make it private */
 
-let menuDispatch = (i) => {
+let menuList = ref([]: list(menu));
+
+let menuDispatch = i => {
   Printf.printf("we will dispatch: %d\n", i);
   List.nth(assocCallback^, i)();
-  Printf.printf("List.length(assocCallback^): %d\n", List.length(assocCallback^));
 }
 
 let registerCallback = cb => assocCallback := List.append(assocCallback^, [cb]);
 /* TODO: make it private */
 
 let () = Callback.register("menu_dispatch", menuDispatch);
+/*let () = Callback.register("menu_list", menuList);*/
 
 let addItemMenu = w =>
   fun
@@ -44,5 +46,6 @@ module StringItem = {
 let createElement = (~children, ()) => {
   let handle = createMenu();
   let _ = List.map(e => addItemMenu(handle, e), children);/* ASK: what should we do on error */
+  let () = menuList := [handle, ...menuList^];
   handle
 };
