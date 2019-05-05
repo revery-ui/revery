@@ -31,10 +31,32 @@ module Example = {
       (
         hooks,
         <View style=containerStyle>
-          <Input
-            placeholder="Insert text here"
-            onChange={({value, _}) => setValue({first: value, second})}
-          />
+          <View
+            style=Style.[
+              flexDirection(`Row),
+              alignItems(`Center),
+              justifyContent(`Center),
+            ]>
+            <Input
+              placeholder="Insert text here"
+              onChange={({value, _}) => setValue({first: value, second})}
+              value=first
+            />
+            <Button
+              height=50
+              width=100
+              fontSize=15
+              title="Reset"
+              onClick={() => setValue({first: "", second})}
+            />
+            <Button
+              height=50
+              width=100
+              fontSize=15
+              title="Set value"
+              onClick={() => setValue({first: "New value", second})}
+            />
+          </View>
           <Input
             placeholder="custom input"
             placeholderColor=Colors.plum

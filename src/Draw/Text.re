@@ -155,12 +155,18 @@ let drawString =
 
   let shapedText = FontRenderer.shape(font, text);
   let startX = ref(x);
+  let lastCluster = ref(-1);
 
   Array.iter(
-    s => {
-      let nextX = render(s, startX^, y);
-      startX := nextX;
-    },
+    s =>
+      // When multiple characters are part of the same cluster, they have the
+      // same cluster value. We only render the first appearance of a cluster
+      // value, which will be the whole glyph.
+      if (lastCluster^ != s.cluster || Environment.webGL) {
+        let nextX = render(s, startX^, y);
+        lastCluster := s.cluster;
+        startX := nextX;
+      },
     shapedText,
   );
 };

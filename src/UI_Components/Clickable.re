@@ -10,7 +10,9 @@ open Revery_Core;
 open Revery_Math;
 
 type clickFunction = unit => unit;
+type clickFunctionWithEvt = NodeEvents.mouseButtonEventParams => unit;
 let noop = () => ();
+let noopEvt = _evt => ();
 
 let isMouseInsideRef = (ref: node, mouseX: float, mouseY: float) => {
   let clickableDimensions: BoundingBox2d.t = ref#getBoundingBox();
@@ -24,6 +26,8 @@ let make =
     (
       ~style,
       ~onClick: clickFunction=noop,
+      ~onRightClick: clickFunction=noop,
+      ~onAnyClick: clickFunctionWithEvt=noopEvt,
       ~componentRef=?,
       ~onBlur=?,
       ~onFocus=?,
@@ -36,6 +40,7 @@ let make =
   component(slots => {
     let (clickableRef, setClickableRefOption, slots) =
       React.Hooks.state(None, slots);
+
     let setClickableRef = r => {
       switch (componentRef) {
       | Some(fn) => fn(r)
@@ -57,27 +62,41 @@ let make =
       | None => ()
       };
 
-    let onMouseUp = (mouseX: float, mouseY: float) => {
+    let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
       switch (clickableRef) {
       | Some(clickable) =>
-        if (isMouseInsideRef(clickable, mouseX, mouseY)) {
-          onClick();
+        if (isMouseInsideRef(clickable, mouseEvt.mouseX, mouseEvt.mouseY)) {
+          switch (mouseEvt.button) {
+          | MouseButton.BUTTON_LEFT => onClick()
+          | MouseButton.BUTTON_RIGHT => onRightClick()
+          | _ => ()
+          };
+
+          onAnyClick(mouseEvt);
         }
-      | None => ()
+      | _ => ()
       };
 
       setOpacity(0.8);
+
+      /* TODO Releasing capture in here means
+         if multiple buttons are pressed simutaneously
+         there would a race condition
+         Not sure we need fix it though */
       Mouse.releaseCapture();
     };
 
-    let onMouseDown = _ => {
-      Mouse.setCapture(
-        ~onMouseMove=evt => onMouseMove(evt.mouseX, evt.mouseY),
-        ~onMouseUp=evt => onMouseUp(evt.mouseX, evt.mouseY),
-        (),
-      );
-
-      setOpacity(1.0);
+    let onMouseDown = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
+      switch (mouseEvt.button) {
+      | MouseButton.BUTTON_LEFT =>
+        Mouse.setCapture(
+          ~onMouseMove=evt => onMouseMove(evt.mouseX, evt.mouseY),
+          ~onMouseUp=evt => onMouseUp(evt),
+          (),
+        );
+        setOpacity(1.0);
+      | _ => Mouse.setCapture(~onMouseUp=evt => onMouseUp(evt), ())
+      };
     };
 
     let mergedStyles =
