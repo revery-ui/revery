@@ -14,9 +14,9 @@ module Check = {
 
   let createElement = (~children as _, ()) =>
     component(hooks => {
-      let initialCheckboxValues = {first: false, second: true};
+      let initialCheckboxState = {first: false, second: true};
       let ({first, second}, setCheckboxState, hooks) =
-        React.Hooks.state(initialCheckboxValues, hooks);
+        React.Hooks.state(initialCheckboxState, hooks);
 
       (
         hooks,
@@ -49,7 +49,7 @@ module Check = {
           <Text
             text={
               "Default state: "
-              ++ getCheckboxText(initialCheckboxValues.second)
+              ++ getCheckboxText(initialCheckboxState.second)
             }
             style=Style.[
               marginTop(10),
