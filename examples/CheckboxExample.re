@@ -8,7 +8,7 @@ module Check = {
     second: bool,
   };
 
-  let getCheckboxText = checked => checked ?  "Checked!" : "Not Checked!"; 
+  let getCheckboxText = checked => checked ? "Checked!" : "Not Checked!";
 
   let component = React.component("Check");
 
@@ -47,7 +47,10 @@ module Check = {
             checked=second
           />
           <Text
-            text={"Default state: " ++ getCheckboxText(initialCheckboxValues.second)}
+            text={
+              "Default state: "
+              ++ getCheckboxText(initialCheckboxValues.second)
+            }
             style=Style.[
               marginTop(10),
               fontFamily("Roboto-Regular.ttf"),
