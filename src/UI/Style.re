@@ -510,42 +510,31 @@ let rec extractViewStyles = (styles: list(allProps)): list(viewStyleProps) =>
   | [_, ...list] => extractViewStyles(list)
   };
 
-let extractPseudoStyles = (~styles, ~pseudoState) =>
+/*
+ Pseudo styles helper functions
+ */
+let hasPseudoStyle = (compare, ~styles) =>
+  styles |> List.map(compare) |> List.flatten;
+
+let extractPseudoStyles = (~styles, ~pseudoState) => {
+  let hasPseudo = hasPseudoStyle(~styles);
+
   switch (pseudoState) {
   | `Hover =>
-    try (
-      styles
-      |> List.find(
-           fun
-           | `Hover(_) => true
-           | _ => false,
-         )
-      |> (
-        fun
-        | `Hover(h) => h
-        | _ => []
-      )
-    ) {
-    | Not_found => []
-    }
+    hasPseudo(
+      fun
+      | `Hover(h) => h
+      | _ => [],
+    )
   | `Active =>
-    try (
-      styles
-      |> List.find(
-           fun
-           | `Active(_) => true
-           | _ => false,
-         )
-      |> (
-        fun
-        | `Active(a) => a
-        | _ => []
-      )
-    ) {
-    | Not_found => []
-    }
+    hasPseudo(
+      fun
+      | `Active(a) => a
+      | _ => [],
+    )
   | `Idle => []
   };
+};
 
 /*
    Apply style takes all style props and maps each to the correct style
@@ -555,7 +544,6 @@ let extractPseudoStyles = (~styles, ~pseudoState) =>
 let applyStyle = (style, styleRule) =>
   switch (styleRule) {
   | `Active(_activeStyles) => style
-
   | `AlignItems(alignItems) => {...style, alignItems}
   | `AlignSelf(alignSelf) => {...style, alignSelf}
   | `JustifyContent(justifyContent) => {...style, justifyContent}
