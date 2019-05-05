@@ -42,7 +42,8 @@ module Sample = {
             ]
           />
           <Checkbox
-            onChange={checked => setBounce(checked)}
+            onChange={() => setBounce(!bounce)}
+            checked={bounce}
             style=Style.[marginBottom(10)]
           />
           <ScrollView style=outerBox bounce>
