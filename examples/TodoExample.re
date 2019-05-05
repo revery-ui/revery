@@ -39,10 +39,11 @@ let reducer = (action: action, state: state) =>
   switch (action) {
   | AddTodo => {
       ...state,
-      todos: [
-        {id: state.nextId, task: state.inputValue, isDone: false},
-        ...state.todos,
-      ],
+      todos:
+        List.append(
+          state.todos,
+          [{id: state.nextId, task: state.inputValue, isDone: false}],
+        ),
       inputValue: "",
       nextId: state.nextId + 1,
     }
