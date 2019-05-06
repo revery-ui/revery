@@ -20,7 +20,7 @@ let insertNode = (~parent: node, ~child: node, ~position as _) => {
   parent;
 };
 
-let deleteNode = (~parent: node, ~child: node) => {
+let deleteNode = (~parent: node, ~child: node, ~position as _) => {
   parent#removeChild(child);
   parent;
 };
