@@ -79,10 +79,10 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   let easeOut = cubicBezier(0.0, 0.0, 0.58, 1.0);
   let easeInOut = cubicBezier(0.42, 0.0, 0.58, 1.0);
 
-  let floatValue = (v: float) => {
-    let ret = {current: v};
-    ret;
-  };
+  let floatValue: float => animationValue =
+    (v: float) => {
+      {current: v};
+    };
 
   let getLocalTime = (clock: float, anim: animation) => {
     let adjustedStart = anim.startTime +. anim.delay;
