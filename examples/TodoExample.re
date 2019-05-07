@@ -143,7 +143,6 @@ module Example = {
           <Checkbox
             checked={task.isDone}
             onChange={() => dispatch(ToggleTaskState(task.id))}
-            // onChange={checked => dispatch(ChangeTaskState(task.id, checked))}
           />
           <Text
             style=Style.[
