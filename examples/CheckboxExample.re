@@ -3,11 +3,21 @@ open Revery.UI;
 open Revery.UI.Components;
 
 module Check = {
+  type checkboxState = {
+    first: bool,
+    second: bool,
+  };
+
+  let getCheckboxText = checked => checked ? "Checked!" : "Not Checked!";
+
   let component = React.component("Check");
 
   let createElement = (~children as _, ()) =>
     component(hooks => {
-      let (text, setText, hooks) = React.Hooks.state("Not Checked!", hooks);
+      let initialCheckboxState = {first: false, second: true};
+      let ({first, second}, setCheckboxState, hooks) =
+        React.Hooks.state(initialCheckboxState, hooks);
+
       (
         hooks,
         <View
@@ -18,14 +28,12 @@ module Check = {
             alignItems(`Center),
           ]>
           <Checkbox
-            onChange={checked => {
-              let text = checked ? "Checked!" : "Not Checked!";
-              setText(text);
-            }}
+            checked=first
+            onChange={() => setCheckboxState({first: !first, second})}
             style=Style.[marginBottom(10)]
           />
           <Text
-            text
+            text={getCheckboxText(first)}
             style=Style.[
               marginBottom(10),
               fontFamily("Roboto-Regular.ttf"),
@@ -34,11 +42,15 @@ module Check = {
           />
           <Checkbox
             checkedColor=Colors.green
+            onChange={() => setCheckboxState({second: !second, first})}
             style=Style.[border(~width=2, ~color=Colors.green)]
-            checked=true
+            checked=second
           />
           <Text
-            text="Default state: Checked"
+            text={
+              "Default state: "
+              ++ getCheckboxText(initialCheckboxState.second)
+            }
             style=Style.[
               marginTop(10),
               fontFamily("Roboto-Regular.ttf"),
