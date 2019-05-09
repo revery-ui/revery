@@ -279,6 +279,7 @@ module Image = {
                 (),
               );
             let node = PrimitiveNodeFactory.get().createImageNode(src);
+            node#setOpacity(opacity);
             node#setEvents(events);
             node#setStyle(styles);
             node#setResizeMode(resizeMode);
@@ -298,6 +299,7 @@ module Image = {
               );
             let imgNode: ImageNode.imageNode = Obj.magic(node);
             imgNode#setResizeMode(resizeMode);
+            imgNode#setOpacity(opacity);
             node#setEvents(events);
             node#setStyle(styles);
             node;
