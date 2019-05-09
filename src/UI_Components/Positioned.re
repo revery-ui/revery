@@ -2,8 +2,6 @@ open Revery_UI;
 
 let component = React.component("Positioned");
 
-let style = Style.[position(`Relative)];
-
 let createElement = (~top=?, ~left=?, ~right=?, ~bottom=?, ~children, ()) =>
   component(hooks => {
     let style =
@@ -16,7 +14,7 @@ let createElement = (~top=?, ~left=?, ~right=?, ~bottom=?, ~children, ()) =>
         Style.[position(`Absolute), bottom(b), right(r)]
       | (_, Some(l), _, Some(b)) =>
         Style.[position(`Absolute), bottom(b), left(l)]
-      | _ => Style.[]
+      | _ => []
       };
 
     (hooks, <View style> ...children </View>);
