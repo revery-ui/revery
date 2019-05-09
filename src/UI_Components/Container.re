@@ -1,5 +1,4 @@
 open Revery_UI;
-open Revery_Core;
 
 let component = React.component("Container");
 
