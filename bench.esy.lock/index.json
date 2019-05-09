@@ -1,5 +1,5 @@
 {
-  "checksum": "49353798b768beabc2c5851b0bf26b15",
+  "checksum": "cc718115f38a45a3c086e8b995febda0",
   "root": "revery@link-dev:./package.json",
   "node": {
     "revery@link-dev:./package.json": {
@@ -25,7 +25,7 @@
         "@opam/js_of_ocaml@github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce@d41d8cd9",
         "@opam/color@opam:0.2.0@8ef09171",
         "@esy-ocaml/reason@3.4.0@d41d8cd9",
-        "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#223b879@d41d8cd9"
+        "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#dd933fc@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.7.1004@d41d8cd9", "@opam/merlin@opam:3.2.2@829ee6dd",
@@ -1432,14 +1432,14 @@
       ],
       "devDependencies": []
     },
-    "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#223b879@d41d8cd9": {
+    "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#dd933fc@d41d8cd9": {
       "id":
-        "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#223b879@d41d8cd9",
+        "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#dd933fc@d41d8cd9",
       "name": "@brisk/brisk-reconciler",
-      "version": "github:briskml/brisk-reconciler#223b879",
+      "version": "github:briskml/brisk-reconciler#dd933fc",
       "source": {
         "type": "install",
-        "source": [ "github:briskml/brisk-reconciler#223b879" ]
+        "source": [ "github:briskml/brisk-reconciler#dd933fc" ]
       },
       "overrides": [],
       "dependencies": [
