@@ -7,10 +7,12 @@ module LayoutTypes = Layout.LayoutTypes;
 
 open Node;
 
-let uiToDrawResizeMode: ImageResizeMode.t => Revery_Draw.ImageResizeMode.t = (rm) => switch (rm) {
-| Stretch => Revery_Draw.ImageResizeMode.Stretch
-| Repeat => Revery_Draw.ImageResizeMode.Repeat
-};
+let uiToDrawResizeMode: ImageResizeMode.t => Revery_Draw.ImageResizeMode.t =
+  rm =>
+    switch (rm) {
+    | Stretch => Revery_Draw.ImageResizeMode.Stretch
+    | Repeat => Revery_Draw.ImageResizeMode.Repeat
+    };
 
 class imageNode (imagePath: string) = {
   as _this;
@@ -35,7 +37,7 @@ class imageNode (imagePath: string) = {
       (),
     );
   };
-  pub setOpacity = (f) => _opacity := f;
+  pub setOpacity = f => _opacity := f;
   pub setResizeMode = (mode: ImageResizeMode.t) => {
     _resizeMode := mode;
   };
