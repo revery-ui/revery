@@ -5,7 +5,10 @@
  */
 
 module Clickable = Clickable;
+module Container = Container;
+module Stack = Stack;
 module Button = Button;
+module Positioned = Positioned;
 module ScrollView = ScrollView;
 module Slider = Slider;
 module Input = Input;
