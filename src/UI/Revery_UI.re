@@ -6,6 +6,7 @@ module Performance = Revery_Core.Performance;
 module Animated = Animated;
 module Animation = Animation;
 module AnimationTicker = AnimationTicker;
+module ImageResizeMode = ImageResizeMode;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 module Style = Style;

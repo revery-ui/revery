@@ -230,6 +230,22 @@ module Text = {
 module Image = {
   let component = React.nativeComponent("Image");
 
+  let getStyles: (option(int), option(int), Style.t) => Style.t =
+    (w, h, style) => {
+      let style =
+        switch (w) {
+        | Some(v) => {...style, width: v}
+        | None => style
+        };
+
+      let style =
+        switch (h) {
+        | Some(v) => {...style, height: v}
+        | None => style
+        };
+      style;
+    };
+
   let make =
       (
         ~key=?,
@@ -238,9 +254,12 @@ module Image = {
         ~onMouseUp=?,
         ~onMouseWheel=?,
         ~ref=?,
-        ~resizeMode=Revery_Draw.ImageResizeMode.Stretch,
-        ~style=Style.emptyImageStyle,
+        ~resizeMode=ImageResizeMode.Stretch,
+        ~opacity=1.0,
+        ~width=?,
+        ~height=?,
         ~src="",
+        ~style,
         children,
       ) =>
     component(~key?, hooks =>
@@ -248,7 +267,8 @@ module Image = {
         hooks,
         {
           make: () => {
-            let styles = Style.create(~style, ());
+            let styles =
+              Style.create(~style, ()) |> getStyles(width, height);
             let events =
               NodeEvents.make(
                 ~ref?,
@@ -259,13 +279,15 @@ module Image = {
                 (),
               );
             let node = PrimitiveNodeFactory.get().createImageNode(src);
+            node#setOpacity(opacity);
             node#setEvents(events);
             node#setStyle(styles);
             node#setResizeMode(resizeMode);
             Obj.magic(node);
           },
           configureInstance: (~isFirstRender as _, node) => {
-            let styles = Style.create(~style, ());
+            let styles =
+              Style.create(~style, ()) |> getStyles(width, height);
             let events =
               NodeEvents.make(
                 ~ref?,
@@ -277,6 +299,7 @@ module Image = {
               );
             let imgNode: ImageNode.imageNode = Obj.magic(node);
             imgNode#setResizeMode(resizeMode);
+            imgNode#setOpacity(opacity);
             node#setEvents(events);
             node#setStyle(styles);
             node;
@@ -296,6 +319,8 @@ module Image = {
         ~resizeMode=?,
         ~style=Style.emptyImageStyle,
         ~src="",
+        ~width=?,
+        ~height=?,
         ~children,
         (),
       ) =>
@@ -308,6 +333,8 @@ module Image = {
       ~resizeMode?,
       ~style,
       ~src,
+      ~width?,
+      ~height?,
       React.listToElement(children),
     );
 };
