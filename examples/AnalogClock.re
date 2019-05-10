@@ -96,10 +96,6 @@ module AnalogClock = {
               backgroundColor(Colors.white),
               height(90),
               top(105),
-              transform([
-                Transform.Rotate(Angle.from_degrees(hourDegrees)),
-                Transform.TranslateY(-45.),
-              ]),
               width(4),
             ],
           )
@@ -113,10 +109,6 @@ module AnalogClock = {
               backgroundColor(Colors.white),
               height(120),
               top(90),
-              transform([
-                Transform.Rotate(Angle.from_degrees(minuteDegrees)),
-                Transform.TranslateY(-60.),
-              ]),
               width(4),
             ],
           )
@@ -130,10 +122,6 @@ module AnalogClock = {
               backgroundColor(Colors.red),
               height(150),
               top(75),
-              transform([
-                Transform.Rotate(Angle.from_degrees(secondDegrees)),
-                Transform.TranslateY(-75.),
-              ]),
               width(2),
             ],
           )
@@ -143,9 +131,21 @@ module AnalogClock = {
         slots,
         <View style=containerStyle>
           <View style=clockContainer>
-            <View style=secondsStyle />
-            <View style=minutesStyle />
-            <View style=hourStyle />
+				<Transform.TranslateY value={75.}>
+			<Transform.Rotate value=Angle.from_degrees(secondDegrees)>
+					<View style=secondsStyle />
+			</Transform.Rotate>
+				</Transform.TranslateY>
+				<Transform.TranslateY value={60.}>
+			<Transform.Rotate value=Angle.from_degrees(minuteDegrees)>
+					<View style=minutesStyle />
+			</Transform.Rotate>
+				</Transform.TranslateY>
+				<Transform.TranslateY value={45.}>
+			<Transform.Rotate value=Angle.from_degrees(hourDegrees)>
+													<View style=hourStyle />
+			</Transform.Rotate>
+				</Transform.TranslateY>
           </View>
         </View>,
       );

@@ -11,6 +11,7 @@ module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 module Style = Style;
 module Selector = Selector;
+module TransformStyle = TransformStyle;
 
 class node = class Node.node;
 class viewNode = class ViewNode.viewNode;

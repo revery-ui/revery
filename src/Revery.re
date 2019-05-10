@@ -19,6 +19,7 @@ module UI = {
    * Revery.UI.Components
    */
   module Components = Revery_UI_Components;
+  module Transform = Components.Transform;
 };
 
 module Platform = {

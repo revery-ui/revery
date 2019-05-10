@@ -1,6 +1,5 @@
 open Revery_Core;
 open Revery_UI;
-open Revery_UI.Transform;
 
 type direction =
   | Top
