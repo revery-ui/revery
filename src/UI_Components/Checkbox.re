@@ -1,5 +1,6 @@
 open Revery_UI;
 open Revery_Core;
+open Revery_UI_Primitives;
 
 let component = React.component("Checkbox");
 

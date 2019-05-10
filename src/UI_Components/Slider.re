@@ -8,6 +8,7 @@
 open Revery_Math;
 open Revery_Core;
 open Revery_UI;
+open Revery_UI_Primitives;
 
 type clickFunction = unit => unit;
 let noop = () => ();

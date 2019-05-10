@@ -1,3 +1,4 @@
+		open Revery_UI;
   let component = React.nativeComponent("View");
 
   let make =

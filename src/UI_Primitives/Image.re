@@ -1,3 +1,4 @@
+		open Revery_UI;
   let component = React.nativeComponent("Image");
 
   let getStyles: (option(int), option(int), Style.t) => Style.t =
@@ -67,7 +68,7 @@
                 ~onMouseWheel?,
                 (),
               );
-            let imgNode: ImageNode.imageNode = Obj.magic(node);
+            let imgNode: imageNode = Obj.magic(node);
             imgNode#setResizeMode(resizeMode);
             imgNode#setOpacity(opacity);
             node#setEvents(events);

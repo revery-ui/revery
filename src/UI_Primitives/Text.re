@@ -1,3 +1,4 @@
+  open Revery_UI;
   open Style;
   let component = React.nativeComponent("Text");
 
@@ -47,7 +48,7 @@
               );
 
             /* TODO: Proper way to downcast? */
-            let tn: TextNode.textNode = Obj.magic(node);
+            let tn: textNode = Obj.magic(node);
             tn#setEvents(events);
             tn#setStyle(styles);
             tn#setText(text);

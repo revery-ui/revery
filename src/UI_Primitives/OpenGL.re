@@ -1,3 +1,5 @@
+open Revery_UI;
+
   let component = React.nativeComponent("OpenGL");
 
   let make =
@@ -47,7 +49,7 @@
                 ~onDimensionsChanged?,
                 (),
               );
-            let node = (new OpenGLNode.openGLNode)();
+            let node = (new openGLNode)();
             node#setEvents(events);
             node#setStyle(styles);
             node#setRender(render);
@@ -74,7 +76,7 @@
                 ~onDimensionsChanged?,
                 (),
               );
-            let oglNode: OpenGLNode.openGLNode = Obj.magic(node);
+            let oglNode: openGLNode = Obj.magic(node);
             node#setEvents(events);
             node#setStyle(styles);
             oglNode#setRender(render);
