@@ -56,6 +56,25 @@ module Make = (ClockImpl: Clock) => {
     _activeTickers := List.append([tf], _activeTickers^);
     _clear(id);
   };
+
+  let timeout = (f, waitTime: Time.t) => {
+    let id = TickId.getUniqueId();
+
+    let f = _ => {
+      f();
+      _clear(id, ());
+    };
+
+    let tf: tickFunction = {
+      id,
+      lastExecutionTime: ClockImpl.time(),
+      frequency: waitTime,
+      f,
+    };
+
+    _activeTickers := List.append([tf], _activeTickers^);
+    _clear(id);
+  };
 };
 
 module Default = Make(DefaultClock);
