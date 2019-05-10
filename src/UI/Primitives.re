@@ -300,6 +300,7 @@ module Image = {
             let imgNode: ImageNode.imageNode = Obj.magic(node);
             imgNode#setResizeMode(resizeMode);
             imgNode#setOpacity(opacity);
+            imgNode#setSrc(src);
             node#setEvents(events);
             node#setStyle(styles);
             node;
