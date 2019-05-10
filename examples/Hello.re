@@ -44,20 +44,16 @@ module Logo = {
       (
         hooks,
         <View onMouseDown onMouseUp>
-		  <Revery_UI_Components.Transform.Rotate value=Radians(rotationY)>
-          <Image
-            src="outrun-logo.png"
-            style=Style.[
-              width(512),
-              height(256),
-              opacity(logoOpacity),
+          <Revery_UI_Components.Transform.Rotate value={Radians(rotationY)}>
+            <Image
+              src="outrun-logo.png"
+              style=Style.[width(512), height(256), opacity(logoOpacity)]
               /*transform([
-                Transform.RotateY(Angle.from_radians(rotationY)),
-                Transform.RotateX(Angle.from_radians(rotation)),
-              ]),*/
-            ]
-          />
-										</Revery_UI_Components.Transform.Rotate>
+                  Transform.RotateY(Angle.from_radians(rotationY)),
+                  Transform.RotateX(Angle.from_radians(rotation)),
+                ]),*/
+            />
+          </Revery_UI_Components.Transform.Rotate>
         </View>,
       );
     });
@@ -105,7 +101,12 @@ module AnimatedText = {
           opacity(animatedOpacity),
         ];
 
-      (hooks, <Transform.TranslateY value=translate><Text style=textHeaderStyle text /></Transform.TranslateY>);
+      (
+        hooks,
+        <Transform.TranslateY value=translate>
+          <Text style=textHeaderStyle text />
+        </Transform.TranslateY>,
+      );
     });
 };
 

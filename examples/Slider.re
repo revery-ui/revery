@@ -65,19 +65,16 @@ module AdjustableLogo = {
         hooks,
         <View style=containerStyle>
           <View>
-					<Transform.RotateZ value=Angle.from_radians(rotationZ)>
-					<Transform.RotateY value=Angle.from_radians(rotationY)>
-					<Transform.RotateX value=Angle.from_radians(rotationX)>
-            <Image
-              src="outrun-logo.png"
-              style=Style.[
-                width(512),
-                height(256),
-              ]
-            />
-					</Transform.RotateX>
-					</Transform.RotateY>
-					</Transform.RotateZ>
+            <Transform.RotateZ value={Angle.from_radians(rotationZ)}>
+              <Transform.RotateY value={Angle.from_radians(rotationY)}>
+                <Transform.RotateX value={Angle.from_radians(rotationX)}>
+                  <Image
+                    src="outrun-logo.png"
+                    style=Style.[width(512), height(256)]
+                  />
+                </Transform.RotateX>
+              </Transform.RotateY>
+            </Transform.RotateZ>
           </View>
           <View style=controlsStyle>
             <View style=verticalSliderContainerStyle>

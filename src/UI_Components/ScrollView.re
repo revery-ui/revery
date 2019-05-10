@@ -45,8 +45,8 @@ let make =
 
     let scrollBarThickness = 10;
 
-	let translateX = (-1.) *. float_of_int(actualScrollLeft);
-	let translateY = (-1.) *. float_of_int(actualScrollTop);
+    let translateX = (-1.) *. float_of_int(actualScrollLeft);
+    let translateY = (-1.) *. float_of_int(actualScrollTop);
 
     let (horizontalScrollBar, verticalScrollBar, scroll) =
       switch (outerRef) {
@@ -218,13 +218,13 @@ let make =
           onMouseWheel=scroll
           ref={r => setOuterRef(Some(r))}
           style=Style.[flexGrow(1), position(`Relative), overflow(`Scroll)]>
-          <View style=innerStyle> 
-			<Transform.TranslateX value=translateX>
-				<Transform.TranslateY value=translateY>
-					children 
-				</Transform.TranslateY>
-			</Transform.TranslateX>
-		  </View>
+          <View style=innerStyle>
+            <Transform.TranslateX value=translateX>
+              <Transform.TranslateY value=translateY>
+                children
+              </Transform.TranslateY>
+            </Transform.TranslateX>
+          </View>
           <View style=verticalScrollbarContainerStyle>
             verticalScrollBar
           </View>

@@ -131,21 +131,21 @@ module AnalogClock = {
         slots,
         <View style=containerStyle>
           <View style=clockContainer>
-				<Transform.TranslateY value={75.}>
-			<Transform.Rotate value=Angle.from_degrees(secondDegrees)>
-					<View style=secondsStyle />
-			</Transform.Rotate>
-				</Transform.TranslateY>
-				<Transform.TranslateY value={60.}>
-			<Transform.Rotate value=Angle.from_degrees(minuteDegrees)>
-					<View style=minutesStyle />
-			</Transform.Rotate>
-				</Transform.TranslateY>
-				<Transform.TranslateY value={45.}>
-			<Transform.Rotate value=Angle.from_degrees(hourDegrees)>
-													<View style=hourStyle />
-			</Transform.Rotate>
-				</Transform.TranslateY>
+            <Transform.TranslateY value=75.>
+              <Transform.Rotate value={Angle.from_degrees(secondDegrees)}>
+                <View style=secondsStyle />
+              </Transform.Rotate>
+            </Transform.TranslateY>
+            <Transform.TranslateY value=60.>
+              <Transform.Rotate value={Angle.from_degrees(minuteDegrees)}>
+                <View style=minutesStyle />
+              </Transform.Rotate>
+            </Transform.TranslateY>
+            <Transform.TranslateY value=45.>
+              <Transform.Rotate value={Angle.from_degrees(hourDegrees)}>
+                <View style=hourStyle />
+              </Transform.Rotate>
+            </Transform.TranslateY>
           </View>
         </View>,
       );
