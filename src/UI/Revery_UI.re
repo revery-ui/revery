@@ -1,7 +1,5 @@
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
-module Window = Revery_Core.Window;
-module Performance = Revery_Core.Performance;
 
 module Animated = Animated;
 module Animation = Animation;
@@ -29,11 +27,5 @@ module React = React;
 module Hooks = Hooks;
 module Focus = Focus;
 module Dimensions = Dimensions;
-
-include Primitives;
-
-module Internal = {
-  module PrimitiveNodeFactory = PrimitiveNodeFactory;
-};
 
 let start = Ui.start;
