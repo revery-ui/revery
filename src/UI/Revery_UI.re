@@ -1,7 +1,5 @@
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
-module Window = Revery_Core.Window;
-module Performance = Revery_Core.Performance;
 
 module Animated = Animated;
 module Animation = Animation;
@@ -17,6 +15,7 @@ class node = class Node.node;
 class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
 class imageNode = class ImageNode.imageNode;
+class openGLNode = class OpenGLNode.openGLNode;
 module NodeDrawContext = NodeDrawContext;
 
 module Keyboard = Keyboard;
@@ -29,11 +28,5 @@ module React = React;
 module Hooks = Hooks;
 module Focus = Focus;
 module Dimensions = Dimensions;
-
-include Primitives;
-
-module Internal = {
-  module PrimitiveNodeFactory = PrimitiveNodeFactory;
-};
 
 let start = Ui.start;

@@ -1,6 +1,7 @@
 open Rejest;
 
 open Revery_UI;
+open Revery_UI_Primitives;
 
 /*
  * This module tests the integration of the Brisk reconciler - `React` -

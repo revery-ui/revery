@@ -1,0 +1,4 @@
+(library
+    (name Revery_UI_Primitives)
+    (public_name Revery.UI_Primitives)
+    (libraries lwt lwt.unix reglfw flex fontkit Revery_Core Revery_Shaders Revery_Geometry Revery_Math Revery_UI))

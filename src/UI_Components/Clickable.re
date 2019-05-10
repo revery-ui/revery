@@ -8,6 +8,7 @@
 open Revery_UI;
 open Revery_Core;
 open Revery_Math;
+open Revery_UI_Primitives;
 
 type clickFunction = unit => unit;
 type clickFunctionWithEvt = NodeEvents.mouseButtonEventParams => unit;
