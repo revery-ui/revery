@@ -8,10 +8,10 @@ type t;
 type initFunc = t => unit;
 type idleFunc = unit => unit;
 
-/** [getWindows app] returns the list of all open [Window.t] instances */
+/** [getWindows(app)] returns the list of all open [Window.t] instances */
 let getWindows: t => list(Window.t);
 
-/** [quit a] causes the App to quit with exit code [c] */
+/** [quit(c)] causes the App to quit with exit code [c] */
 let quit: int => unit;
 
 /** [createWindow ~createOptions, app, name] creates a new window */

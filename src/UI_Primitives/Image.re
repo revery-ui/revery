@@ -69,6 +69,7 @@ let make =
           let imgNode: imageNode = Obj.magic(node);
           imgNode#setResizeMode(resizeMode);
           imgNode#setOpacity(opacity);
+          imgNode#setSrc(src);
           node#setEvents(events);
           node#setStyle(styles);
           node;
