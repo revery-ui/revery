@@ -139,7 +139,7 @@ class node (()) = {
       ),
     );
     let animationTransform =
-      Transform.toMat4(
+      TransformStyle.toMat4(
         float_of_int(dimensions.width) /. 2.,
         float_of_int(dimensions.height) /. 2.,
         _this#getStyle().transform,

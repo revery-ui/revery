@@ -76,7 +76,7 @@ type t = {
   borderHorizontal: Border.t,
   borderVertical: Border.t,
   borderRadius: float,
-  transform: list(Transform.t),
+  transform: list(TransformStyle.t),
   opacity: float,
   boxShadow: BoxShadow.properties,
   cursor: option(MouseCursors.t),
@@ -316,7 +316,7 @@ type coreStyleProps = [
   | `BorderHorizontal(Border.t)
   | `BorderVertical(Border.t)
   | `BorderRadius(float)
-  | `Transform(list(Transform.t))
+  | `Transform(list(TransformStyle.t))
   | `Opacity(float)
   | `BoxShadow(BoxShadow.properties)
   | `Cursor(option(MouseCursors.t))

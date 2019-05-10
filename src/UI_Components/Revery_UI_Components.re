@@ -14,5 +14,6 @@ module Slider = Slider;
 module Input = Input;
 module RadioButtons = RadioButtons;
 module Checkbox = Checkbox;
+module Transform = Transform;
 module Tree = Tree;
 module Dropdown = Dropdown;

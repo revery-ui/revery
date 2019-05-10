@@ -44,7 +44,7 @@ type selector('a) =
   | Border: selector(Border.t)
   | BorderHorizontal: selector(Border.t)
   | BorderVertical: selector(Border.t)
-  | Transform: selector(list(Transform.t))
+  | Transform: selector(list(TransformStyle.t))
   | Opacity: selector(float)
   | BoxShadow: selector(BoxShadow.properties)
   | Cursor: selector(option(MouseCursors.t));

@@ -46,10 +46,8 @@ let make =
 
     let scrollBarThickness = 10;
 
-    let innerViewTransform = [
-      TranslateX((-1.) *. float_of_int(actualScrollLeft)),
-      TranslateY((-1.) *. float_of_int(actualScrollTop)),
-    ];
+	let translateX = (-1.) *. float_of_int(actualScrollLeft);
+	let translateY = (-1.) *. float_of_int(actualScrollTop);
 
     let (horizontalScrollBar, verticalScrollBar, scroll) =
       switch (outerRef) {
@@ -189,7 +187,6 @@ let make =
 
     let innerStyle =
       Style.[
-        transform(innerViewTransform),
         position(`Absolute),
         top(0),
         /* TODO: #287 This styling will need to be adjusted to handle horizontal scrolling */
@@ -222,7 +219,13 @@ let make =
           onMouseWheel=scroll
           ref={r => setOuterRef(Some(r))}
           style=Style.[flexGrow(1), position(`Relative), overflow(`Scroll)]>
-          <View style=innerStyle> children </View>
+          <View style=innerStyle> 
+			<Transform.TranslateX value=translateX>
+				<Transform.TranslateY value=translateY>
+					children 
+				</Transform.TranslateY>
+			</Transform.TranslateX>
+		  </View>
           <View style=verticalScrollbarContainerStyle>
             verticalScrollBar
           </View>
