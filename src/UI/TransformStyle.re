@@ -21,6 +21,9 @@ let _rotateWithOrigin = (x: float, y: float, angle, axis, m: Mat4.t) => {
   let postTranslate = Mat4.create();
   let rotation = Mat4.create();
 
+	prerr_endline ("X: " ++ string_of_float(x));
+	prerr_endline ("Y: " ++ string_of_float(y));
+
   Mat4.fromTranslation(
     preTranslate,
     Vec3.create((-1.) *. x, (-1.) *. y, 0.),

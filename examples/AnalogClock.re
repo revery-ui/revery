@@ -81,21 +81,20 @@ module AnalogClock = {
         Style.[
           border(~width=4, ~color=Colors.white),
           height(300),
-          padding(15),
           position(`Relative),
           width(300),
         ];
 
-      let clockPointer = Style.[position(`Absolute), left(150)];
+      let clockPointer = Style.[];
 
       let hourStyle =
         Style.(
           merge(
             ~source=clockPointer,
             ~target=[
+		      position(`Absolute),
               backgroundColor(Colors.white),
               height(90),
-              top(105),
               width(4),
             ],
           )
@@ -106,46 +105,30 @@ module AnalogClock = {
           merge(
             ~source=clockPointer,
             ~target=[
+		      position(`Absolute),
               backgroundColor(Colors.white),
               height(120),
-              top(90),
               width(4),
             ],
           )
         );
 
       let secondsStyle =
-        Style.(
-          merge(
-            ~source=clockPointer,
-            ~target=[
+        Style.[
               backgroundColor(Colors.red),
               height(150),
-              top(75),
-              width(2),
-            ],
-          )
-        );
+              width(150),
+            ];
 
       (
         slots,
         <View style=containerStyle>
           <View style=clockContainer>
-            <Transform.TranslateY value=75.>
-              <Transform.Rotate value={Angle.from_degrees(secondDegrees)}>
+              <Transform.Rotate value={Angle.from_degrees(secondDegrees *. 2.)}>
                 <View style=secondsStyle />
               </Transform.Rotate>
-            </Transform.TranslateY>
-            <Transform.TranslateY value=60.>
-              <Transform.Rotate value={Angle.from_degrees(minuteDegrees)}>
                 <View style=minutesStyle />
-              </Transform.Rotate>
-            </Transform.TranslateY>
-            <Transform.TranslateY value=45.>
-              <Transform.Rotate value={Angle.from_degrees(hourDegrees)}>
                 <View style=hourStyle />
-              </Transform.Rotate>
-            </Transform.TranslateY>
           </View>
         </View>,
       );

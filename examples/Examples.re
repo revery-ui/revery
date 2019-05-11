@@ -121,7 +121,7 @@ let state: state = {
       source: "OpenGLExample.re",
     },
   ],
-  selectedExample: "Animation",
+  selectedExample: "Analog Clock",
 };
 
 let getExampleByName = (state: state, example: string) =>
