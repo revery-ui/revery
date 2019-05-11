@@ -36,8 +36,11 @@ module Make = (ClockImpl: Clock) => {
         tf;
       };
     };
+	print_endline ("Ticker count: " ++ string_of_int(List.length(_activeTickers^)));
     _activeTickers := List.map(f, _activeTickers^);
   };
+
+  let clearAll = () => _activeTickers := [];
 
   let _clear = (id: int, ()) => {
     _activeTickers := List.filter(v => v.id !== id, _activeTickers^);

@@ -224,6 +224,8 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     List.iter(tickAnimation(t), activeAnimations^);
     activeAnimations :=
       List.filter(a => !isComplete(t, a), activeAnimations^);
+
+    print_endline ("Animation count: " ++ string_of_int(List.length(activeAnimations^)));
   };
 
   Event.subscribe(AnimationTickerImpl.onTick, t =>
