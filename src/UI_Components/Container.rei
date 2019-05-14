@@ -13,7 +13,7 @@ Usage:
 let createElement:
   (
     ~children: list(React.syntheticElement),
-    ~color: Revery_Core.Color.t=?,
+    ~color: Color.t=?,
     ~width: int,
     ~height: int,
     unit
