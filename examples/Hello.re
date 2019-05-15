@@ -45,7 +45,7 @@ let logo = {
         <View onMouseDown onMouseUp>
           <Image
             src="outrun-logo.png"
-			opacity=logoOpacity
+            opacity=logoOpacity
             style=Style.[
               width(512),
               height(256),
