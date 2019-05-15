@@ -2,10 +2,10 @@ open Revery;
 open Revery.Math;
 open Revery.UI;
 
-module Logo = {
-  let component = React.component("Logo");
+let logo = {
+  let component = React.component("logo");
 
-  let createElement = (~children as _, ()) =>
+  (~children as _: list(React.syntheticElement), ()) =>
     component(hooks => {
       let (logoOpacity, setOpacity, hooks) = Hooks.state(1.0, hooks);
 
@@ -61,10 +61,10 @@ module Logo = {
     });
 };
 
-module AnimatedText = {
+let animatedText = {
   let component = React.component("AnimatedText");
 
-  let createElement = (~children as _, ~text: string, ~delay: float, ()) =>
+  (~children as _: list(React.syntheticElement), ~text: string, ~delay: float, ()) =>
     component(hooks => {
       let (animatedOpacity, hooks) =
         Hooks.animation(
@@ -126,9 +126,9 @@ let render = () =>
         )
       }
       style=Style.[flexDirection(`Row), alignItems(`FlexEnd)]>
-      <AnimatedText delay=0.0 text="Welcome" />
-      <AnimatedText delay=0.5 text="to" />
-      <AnimatedText delay=1. text="Revery" />
+      <animatedText delay=0.0 text="Welcome" />
+      <animatedText delay=0.5 text="to" />
+      <animatedText delay=1. text="Revery" />
     </View>
-    <Logo />
+    <logo />
   </View>;
