@@ -33,7 +33,7 @@ module Column = {
         ];
       (
         hooks,
-        <View style onKeyPress={_ => print_endline("KEY PRESS")}>
+        <View style>
           ...children
         </View>,
       );

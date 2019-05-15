@@ -1,6 +1,7 @@
 open Revery;
 open Revery.Math;
 open Revery.UI;
+open Revery.UI.Components;
 
 let logo = {
   let component = React.component("logo");
@@ -109,26 +110,11 @@ let animatedText = {
 };
 
 let render = () =>
-  <View
-    style=Style.[
-      position(`Absolute),
-      justifyContent(`Center),
-      alignItems(`Center),
-      bottom(0),
-      top(0),
-      left(0),
-      right(0),
-    ]>
-    <View
-      ref={r =>
-        print_endline(
-          "View internal id:" ++ string_of_int(r#getInternalId()),
-        )
-      }
-      style=Style.[flexDirection(`Row), alignItems(`FlexEnd)]>
+  <Center>
+    <Row>
       <animatedText delay=0.0 text="Welcome" />
       <animatedText delay=0.5 text="to" />
       <animatedText delay=1. text="Revery" />
-    </View>
+    </Row>
     <logo />
-  </View>;
+  </Center>;
