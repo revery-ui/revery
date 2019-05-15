@@ -420,10 +420,10 @@ module GameOfLiveComponent = {
   let createElement = (~state, ~children as _, ()) =>
     component(hooks => {
       let (state, dispatch, hooks) =
-        React.Hooks.reducer(~initialState=state, reducer, hooks);
+        Hooks.reducer(~initialState=state, reducer, hooks);
 
       let hooks =
-        React.Hooks.effect(
+        Hooks.effect(
           OnMount,
           () => Some(() => dispatch(StopTimer)),
           hooks,

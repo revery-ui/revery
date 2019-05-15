@@ -26,7 +26,7 @@ module Example = {
   let createElement = (~children as _, ()) =>
     component(hooks => {
       let ({first, second}, setValue, hooks) =
-        React.Hooks.state({first: "", second: ""}, hooks);
+        Hooks.state({first: "", second: ""}, hooks);
 
       (
         hooks,

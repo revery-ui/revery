@@ -39,7 +39,7 @@ module HoverExample = {
   let createElement = (~children as _, ()) =>
     component(hooks => {
       let (state, dispatch, hooks) =
-        React.Hooks.reducer(~initialState, reducer, hooks);
+        Hooks.reducer(~initialState, reducer, hooks);
 
       (
         hooks,

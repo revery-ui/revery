@@ -187,7 +187,7 @@ module ExampleHost = {
   let createElement = (~children as _, ~win, ()) =>
     component(hooks => {
       let (state, dispatch, hooks) =
-        React.Hooks.reducer(~initialState=state, reducer, hooks);
+        Hooks.reducer(~initialState=state, reducer, hooks);
 
       let renderButton = (x: example) => {
         let isActive = String.equal(x.name, state.selectedExample);

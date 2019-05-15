@@ -122,14 +122,14 @@ module Example = {
   let createElement = (~children as _, ()) =>
     component(hooks => {
       let ({todos, inputValue, filter, _}, dispatch, hooks) =
-        React.Hooks.reducer(
+        Hooks.reducer(
           ~initialState={todos: [], filter: All, inputValue: "", nextId: 0},
           reducer,
           hooks,
         );
 
       let hooks =
-        React.Hooks.effect(
+        Hooks.effect(
           OnMount,
           () => {
             let unsubscribe = () => ();

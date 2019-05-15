@@ -1,16 +1,17 @@
 open Revery;
-open Revery.Math;
-open Revery.UI;
-open Revery.UI.Components;
+open Revery_Math;
+open Revery_UI;
+open Revery_UI_Components;
+open Revery_UI_Hooks;
 
 module AdjustableLogo = {
   let component = React.component("AdjustableLogo");
 
   let createElement = (~children as _, ()) =>
     component(hooks => {
-      let (rotationX, setRotationX, hooks) = React.Hooks.state(0., hooks);
-      let (rotationY, setRotationY, hooks) = React.Hooks.state(0., hooks);
-      let (rotationZ, setRotationZ, hooks) = React.Hooks.state(0., hooks);
+      let (rotationX, setRotationX, hooks) = Hooks.state(0., hooks);
+      let (rotationY, setRotationY, hooks) = Hooks.state(0., hooks);
+      let (rotationZ, setRotationZ, hooks) = Hooks.state(0., hooks);
 
       let containerStyle =
         Style.[

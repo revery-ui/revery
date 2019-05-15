@@ -2,6 +2,7 @@ open Revery_Core;
 open Revery_UI;
 open Revery_UI.Transform;
 open Revery_UI_Primitives;
+open Revery_UI_Hooks;
 
 type direction =
   | Top
@@ -37,13 +38,13 @@ let make =
     ) =>
   component(slots => {
     let (actualScrollTop, dispatch, slots) =
-      React.Hooks.reducer(~initialState=scrollTop, reducer, slots);
+      Hooks.reducer(~initialState=scrollTop, reducer, slots);
     let (outerRef: option(Revery_UI.node), setOuterRef, slots) =
-      React.Hooks.state(None, slots);
+      Hooks.state(None, slots);
     let (actualScrollLeft, setScrollLeft, slots) =
-      React.Hooks.state(scrollLeft, slots);
+      Hooks.state(scrollLeft, slots);
     let (bouncingState, setBouncingState, slots) =
-      React.Hooks.state(Idle, slots);
+      Hooks.state(Idle, slots);
 
     let scrollBarThickness = 10;
 
