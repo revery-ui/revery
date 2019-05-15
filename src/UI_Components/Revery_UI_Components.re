@@ -4,15 +4,19 @@
  * Top-level API exposed for Revery.UI.Components
  */
 
-module Clickable = Clickable;
-module Container = Container;
-module Stack = Stack;
 module Button = Button;
+module Center = Center;
+module Checkbox = Checkbox;
+module Clickable = Clickable;
+module Column = Column;
+module Container = Container;
+module Dropdown = Dropdown;
+module ExpandContainer = ExpandContainer;
+module Input = Input;
 module Positioned = Positioned;
+module Row = Row;
 module ScrollView = ScrollView;
 module Slider = Slider;
-module Input = Input;
+module Stack = Stack;
 module RadioButtons = RadioButtons;
-module Checkbox = Checkbox;
 module Tree = Tree;
-module Dropdown = Dropdown;

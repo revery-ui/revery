@@ -35,7 +35,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     toValue: float,
     value: animationValue,
     repeat: bool,
-    easing: float => float,
+    easing: Easing.t,
     direction: animationDirection,
     mutable isReverse: bool,
   };
@@ -69,20 +69,28 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     direction: animationDirection,
   };
 
-  let linear = (t: float) => t;
-  let quadratic = (t: float) => t *. t;
-  let cubic = (t: float) => t *. t *. t;
-  let cubicBezier = Rebez.make;
-  // From https://developer.mozilla.org/en-US/docs/Web/CSS/timing-function#Keywords_for_common_cubic-bezier_timing_functions
-  let ease = cubicBezier(0.25, 0.1, 0.25, 1.0);
-  let easeIn = cubicBezier(0.42, 0.0, 1.0, 1.0);
-  let easeOut = cubicBezier(0.0, 0.0, 0.58, 1.0);
-  let easeInOut = cubicBezier(0.42, 0.0, 0.58, 1.0);
-
   let floatValue: float => animationValue =
     (v: float) => {
       {current: v};
     };
+
+  let options =
+      (
+        ~duration=Time.Seconds(1.0),
+        ~delay=Time.Seconds(0.0),
+        ~repeat=false,
+        ~easing=Easing.linear,
+        ~direction=`Normal,
+        ~toValue: float,
+        (),
+      ) => {
+    duration,
+    delay,
+    toValue,
+    repeat,
+    easing,
+    direction,
+  };
 
   let getLocalTime = (clock: float, anim: animation) => {
     let adjustedStart = anim.startTime +. anim.delay;
