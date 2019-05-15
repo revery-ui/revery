@@ -1,1 +1,0 @@
-val effect : 'a Revery_UI.React.Hooks.Effect.condition -> Revery_UI.React.Hooks.Effect.handler -> ('a Revery_UI.React.Hooks.Effect.t -> 'b, unit, 'c, 'a Revery_UI.React.Hooks.Effect.t -> 'd) Revery_UI.React.Hooks.t -> ('b, unit, 'c, 'd) Revery_UI.React.Hooks.t

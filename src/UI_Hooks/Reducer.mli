@@ -1,1 +1,0 @@
-val reducer : initialState:'a -> ('b -> 'a -> 'a) -> ('a Revery_UI.React.Hooks.Reducer.t -> 'c, unit, 'd, 'a Revery_UI.React.Hooks.Reducer.t -> 'e) Revery_UI.React.Hooks.t -> 'a * ('b -> unit) * ('c, unit, 'd, 'e) Revery_UI.React.Hooks.t
