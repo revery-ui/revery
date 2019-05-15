@@ -13,28 +13,26 @@ let logo = {
       let (rotation, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
-          {
-            toValue: 6.28,
-            duration: Seconds(8.),
-            delay: Seconds(1.0),
-            repeat: true,
-            easing: Animated.linear,
-            direction: `Normal,
-          },
+          Animated.options(
+            ~toValue=6.28,
+            ~duration=Seconds(8.),
+            ~delay=Seconds(1.0),
+            ~repeat=true,
+            (),
+          ),
           hooks,
         );
 
       let (rotationY, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
-          {
-            toValue: 6.28,
-            duration: Seconds(4.),
-            delay: Seconds(0.5),
-            repeat: true,
-            easing: Animated.linear,
-            direction: `Normal,
-          },
+          Animated.options(
+            ~toValue=6.28,
+            ~duration=Seconds(4.),
+            ~delay=Seconds(0.5),
+            ~repeat=true,
+            (),
+          ),
           hooks,
         );
 
@@ -47,10 +45,10 @@ let logo = {
         <View onMouseDown onMouseUp>
           <Image
             src="outrun-logo.png"
+			opacity=logoOpacity
             style=Style.[
               width(512),
               height(256),
-              opacity(logoOpacity),
               transform([
                 Transform.RotateY(Angle.from_radians(rotationY)),
                 Transform.RotateX(Angle.from_radians(rotation)),
@@ -75,28 +73,24 @@ let animatedText = {
       let (animatedOpacity, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
-          {
-            toValue: 1.0,
-            duration: Seconds(1.),
-            delay: Seconds(delay),
-            repeat: false,
-            easing: Animated.linear,
-            direction: `Normal,
-          },
+          Animated.options(
+            ~toValue=1.0,
+            ~duration=Seconds(1.),
+            ~delay=Seconds(delay),
+            (),
+          ),
           hooks,
         );
 
       let (translate, hooks) =
         Hooks.animation(
           Animated.floatValue(50.),
-          {
-            toValue: 0.,
-            duration: Seconds(0.5),
-            delay: Seconds(delay),
-            repeat: false,
-            easing: Animated.linear,
-            direction: `Normal,
-          },
+          Animated.options(
+            ~toValue=1.0,
+            ~duration=Seconds(0.5),
+            ~delay=Seconds(delay),
+            (),
+          ),
           hooks,
         );
 

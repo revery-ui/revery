@@ -154,7 +154,7 @@ let make =
               duration: Milliseconds(100.),
               delay: Seconds(0.),
               repeat: false,
-              easing: Animated.cubicBezier(0.23, 1., 0.32, 1.),
+              easing: Easing.cubicBezier(0.23, 1., 0.32, 1.),
               direction: `Normal,
             };
             let bounceBackAnim = {
@@ -162,7 +162,7 @@ let make =
               duration: Milliseconds(800.),
               delay: Seconds(0.),
               repeat: false,
-              easing: Animated.cubicBezier(0.23, 1., 0.32, 1.),
+              easing: Easing.cubicBezier(0.23, 1., 0.32, 1.),
               direction: `Normal,
             };
             let playback =

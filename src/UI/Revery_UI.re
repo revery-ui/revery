@@ -4,6 +4,8 @@ module Geometry = Revery_Geometry;
 module Animated = Animated;
 module Animation = Animation;
 module AnimationTicker = AnimationTicker;
+module Easing = Easing;
+
 module ImageResizeMode = ImageResizeMode;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
