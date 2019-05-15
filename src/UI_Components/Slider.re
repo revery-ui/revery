@@ -9,7 +9,8 @@ open Revery_Math;
 open Revery_Core;
 open Revery_UI;
 open Revery_UI_Primitives;
-open Revery_UI_Hooks;
+
+module Hooks = Revery_UI_Hooks;
 
 type clickFunction = unit => unit;
 let noop = () => ();

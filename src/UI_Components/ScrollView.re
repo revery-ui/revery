@@ -2,7 +2,8 @@ open Revery_Core;
 open Revery_UI;
 open Revery_UI.Transform;
 open Revery_UI_Primitives;
-open Revery_UI_Hooks;
+
+module Hooks = Revery_UI_Hooks;
 
 type direction =
   | Top

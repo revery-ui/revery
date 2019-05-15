@@ -1,8 +1,7 @@
 open Revery;
-open Revery_Math;
-open Revery_UI;
-open Revery_UI_Components;
-open Revery_UI_Hooks;
+open Revery.Math;
+open Revery.UI;
+open Revery.UI.Components;
 
 module AdjustableLogo = {
   let component = React.component("AdjustableLogo");

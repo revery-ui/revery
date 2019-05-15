@@ -1,8 +1,6 @@
 open Revery;
-open Revery_UI;
-open Revery_UI_Components;
-open Revery_UI_Hooks;
-open Revery_UI_Primitives;
+open Revery.UI;
+open Revery.UI.Components;
 
 let containerStyle =
   Style.[
