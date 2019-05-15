@@ -423,11 +423,7 @@ module GameOfLiveComponent = {
         Hooks.reducer(~initialState=state, reducer, hooks);
 
       let hooks =
-        Hooks.effect(
-          OnMount,
-          () => Some(() => dispatch(StopTimer)),
-          hooks,
-        );
+        Hooks.effect(OnMount, () => Some(() => dispatch(StopTimer)), hooks);
 
       let toggleAlive = pos => dispatch(ToggleAlive(pos));
 

@@ -53,11 +53,7 @@ module Clock = {
        * so we don't have a runaway timer!
        */
       let hooks =
-        Hooks.effect(
-          OnMount,
-          () => Some(() => dispatch(Stop)),
-          hooks,
-        );
+        Hooks.effect(OnMount, () => Some(() => dispatch(Stop)), hooks);
 
       let startStop = () =>
         state.isRunning

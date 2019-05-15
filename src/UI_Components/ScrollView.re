@@ -44,8 +44,7 @@ let make =
       Hooks.state(None, slots);
     let (actualScrollLeft, setScrollLeft, slots) =
       Hooks.state(scrollLeft, slots);
-    let (bouncingState, setBouncingState, slots) =
-      Hooks.state(Idle, slots);
+    let (bouncingState, setBouncingState, slots) = Hooks.state(Idle, slots);
 
     let scrollBarThickness = 10;
 

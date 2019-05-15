@@ -38,14 +38,11 @@ let createElement =
       (),
     ) =>
   component(hooks => {
-    let (slideRef, setSlideRefOption, hooks) =
-      Hooks.state(None, hooks);
-    let (thumbRef, setThumbRefOption, hooks) =
-      Hooks.state(None, hooks);
+    let (slideRef, setSlideRefOption, hooks) = Hooks.state(None, hooks);
+    let (thumbRef, setThumbRefOption, hooks) = Hooks.state(None, hooks);
     let (isActive, setActive, hooks) = Hooks.state(false, hooks);
     /* Initial value is used to detect if the 'value' parameter ever changes */
-    let (initialValue, setInitialValue, hooks) =
-      Hooks.state(value, hooks);
+    let (initialValue, setInitialValue, hooks) = Hooks.state(value, hooks);
     let (v, setV, hooks) = Hooks.state(value, hooks);
 
     /*
