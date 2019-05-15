@@ -8,9 +8,9 @@ module AdjustableLogo = {
 
   let createElement = (~children as _, ()) =>
     component(hooks => {
-      let (rotationX, setRotationX, hooks) = React.Hooks.state(0., hooks);
-      let (rotationY, setRotationY, hooks) = React.Hooks.state(0., hooks);
-      let (rotationZ, setRotationZ, hooks) = React.Hooks.state(0., hooks);
+      let (rotationX, setRotationX, hooks) = Hooks.state(0., hooks);
+      let (rotationY, setRotationY, hooks) = Hooks.state(0., hooks);
+      let (rotationZ, setRotationZ, hooks) = Hooks.state(0., hooks);
 
       let containerStyle =
         Style.[

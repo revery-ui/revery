@@ -51,10 +51,9 @@ module SampleText = {
 
   let createElement = (~children as _, ()) =>
     component(hooks => {
-      let (fontSizeSliderVal, setFontSize, hooks) =
-        React.Hooks.state(20., hooks);
-      let (widthSliderVal, setWidth, hooks) = React.Hooks.state(200., hooks);
-      let (gammaVal, setGamma, hooks) = React.Hooks.state(2.2, hooks);
+      let (fontSizeSliderVal, setFontSize, hooks) = Hooks.state(20., hooks);
+      let (widthSliderVal, setWidth, hooks) = Hooks.state(200., hooks);
+      let (gammaVal, setGamma, hooks) = Hooks.state(2.2, hooks);
 
       let textContent = "All work and no play makes Jack a dull boy";
       let maxFontSize = 40.;

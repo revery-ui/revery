@@ -1,6 +1,6 @@
 /* Hooks specific to Revery */
 open Revery_Core;
-open Animated;
+open Revery_UI.Animated;
 
 let reducer = (_a, s) => s + 1;
 
@@ -16,16 +16,12 @@ let animationLoop = (dispatch, v, opts, ()) => {
 };
 
 let animation = (v: animationValue, opts: animationOptions, slots) => {
-  let (currentV, _, slots) = React.Hooks.ref(v, slots);
+  let (currentV, _, slots) = Ref.ref(v, slots);
   let (_, dispatch, slots) =
-    React.Hooks.reducer(~initialState=0, reducer, slots);
+    Reducer.reducer(~initialState=0, reducer, slots);
 
   let slots =
-    React.Hooks.effect(
-      OnMount,
-      animationLoop(dispatch, currentV, opts),
-      slots,
-    );
+    Effect.effect(OnMount, animationLoop(dispatch, currentV, opts), slots);
 
   (currentV.current, slots);
 };

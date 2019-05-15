@@ -46,7 +46,7 @@ module AnalogClock = {
   let createElement = (~children as _, ()) =>
     component(slots => {
       let (state, dispatch, slots) =
-        React.Hooks.reducer(
+        Hooks.reducer(
           ~initialState={currentTime: Unix.time() |> Unix.localtime},
           reducer,
           slots,
@@ -56,7 +56,7 @@ module AnalogClock = {
         state.currentTime |> DegreeUtils.getDegreesFromTime;
 
       let slots =
-        React.Hooks.effect(
+        Hooks.effect(
           OnMount,
           () => {
             let clear =

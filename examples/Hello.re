@@ -7,7 +7,7 @@ module Logo = {
 
   let createElement = (~children as _, ()) =>
     component(hooks => {
-      let (logoOpacity, setOpacity, hooks) = React.Hooks.state(1.0, hooks);
+      let (logoOpacity, setOpacity, hooks) = Hooks.state(1.0, hooks);
 
       let (rotation, hooks) =
         Hooks.animation(

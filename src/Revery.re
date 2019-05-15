@@ -20,6 +20,7 @@ module UI = {
    * Revery.UI.Components
    */
   module Components = Revery_UI_Components;
+  module Hooks = Revery_UI_Hooks;
 };
 
 module Platform = {

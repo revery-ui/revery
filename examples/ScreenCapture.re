@@ -38,8 +38,8 @@ module CaptureArea = {
 
   let createElement = (~w, ~children as _, ()) =>
     component(hooks => {
-      let (count, setCount, hooks) = React.Hooks.state(0, hooks);
-      let (file, setFile, hooks) = React.Hooks.state(None, hooks);
+      let (count, setCount, hooks) = Hooks.state(0, hooks);
+      let (file, setFile, hooks) = Hooks.state(None, hooks);
 
       let capture = () => {
         let exed = Environment.getExecutingDirectory();

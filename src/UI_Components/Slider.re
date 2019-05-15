@@ -10,6 +10,8 @@ open Revery_Core;
 open Revery_UI;
 open Revery_UI_Primitives;
 
+module Hooks = Revery_UI_Hooks;
+
 type clickFunction = unit => unit;
 let noop = () => ();
 
@@ -36,15 +38,12 @@ let createElement =
       (),
     ) =>
   component(hooks => {
-    let (slideRef, setSlideRefOption, hooks) =
-      React.Hooks.state(None, hooks);
-    let (thumbRef, setThumbRefOption, hooks) =
-      React.Hooks.state(None, hooks);
-    let (isActive, setActive, hooks) = React.Hooks.state(false, hooks);
+    let (slideRef, setSlideRefOption, hooks) = Hooks.state(None, hooks);
+    let (thumbRef, setThumbRefOption, hooks) = Hooks.state(None, hooks);
+    let (isActive, setActive, hooks) = Hooks.state(false, hooks);
     /* Initial value is used to detect if the 'value' parameter ever changes */
-    let (initialValue, setInitialValue, hooks) =
-      React.Hooks.state(value, hooks);
-    let (v, setV, hooks) = React.Hooks.state(value, hooks);
+    let (initialValue, setInitialValue, hooks) = Hooks.state(value, hooks);
+    let (v, setV, hooks) = Hooks.state(value, hooks);
 
     /*
      * If the slider value is updated (controlled),
@@ -103,7 +102,7 @@ let createElement =
     };
 
     let hooks =
-      React.Hooks.effect(
+      Hooks.effect(
         Always,
         () => {
           let isCaptured = isActive;

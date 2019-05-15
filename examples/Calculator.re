@@ -245,14 +245,14 @@ module KeyboardInput = {
   let createElement = (~children as _, ~dispatch as parentDispatch, ()) =>
     component(hooks => {
       let (v, dispatch, hooks) =
-        React.Hooks.reducer(
+        Hooks.reducer(
           ~initialState={ref: None, hasFocus: false},
           reducer,
           hooks,
         );
 
       let hooks =
-        React.Hooks.effect(
+        Hooks.effect(
           Always,
           () => {
             if (!v.hasFocus) {
@@ -324,7 +324,7 @@ module Calculator = {
   let createElement = (~children as _, ()) =>
     component(hooks => {
       let ({display, number, _}, dispatch, hooks) =
-        React.Hooks.reducer(
+        Hooks.reducer(
           ~initialState={operator: `Nop, result: 0., display: "", number: ""},
           reducer,
           hooks,
