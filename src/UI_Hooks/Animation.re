@@ -21,11 +21,7 @@ let animation = (v: animationValue, opts: animationOptions, slots) => {
     Reducer.reducer(~initialState=0, reducer, slots);
 
   let slots =
-    Effect.effect(
-      OnMount,
-      animationLoop(dispatch, currentV, opts),
-      slots,
-    );
+    Effect.effect(OnMount, animationLoop(dispatch, currentV, opts), slots);
 
   (currentV.current, slots);
 };
