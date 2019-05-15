@@ -4,7 +4,7 @@
 
 {1 Revery}
 
-Framework for fast, native, cross-platform GUI applications.
+Framework for fast, native code, cross-platform GUI applications.
 
 {%html:
 <nav class="toc">
@@ -16,6 +16,12 @@ Framework for fast, native, cross-platform GUI applications.
                 {li {{:#Overview} Overview}}
                 {li {{:#Quickstart} Quickstart}}
                 {li {{:#ComponentModel} Component Model}}
+                {li
+                    {ul
+                        {li {{:#BasicComponentModel} Basic Components}}
+                        {li {{:#HooksComponent} Components with Hooks}}
+                    }
+                }
             }
     }
   {li API}
@@ -26,6 +32,8 @@ Framework for fast, native, cross-platform GUI applications.
                 {li {{:../Revery/Revery_Core/Environment/index.html} Environment}}
                 {li {{:../Revery/Revery_Core/Key/index.html} Key}}
                 {li {{:../Revery/Revery_Core/Monitor/index.html} Monitor}}
+                {li {{:../Revery/Revery_Core/MouseButton/index.html} MouseButton}}
+                {li {{:../Revery/Revery_Core/MouseCursors/index.html} MouseCursors}}
                 {li {{:../Revery/Revery_Core/Tick/index.html} Tick}}
                 {li {{:../Revery/Revery_Core/Time/index.html} Time}}
                 {li {{:../Revery/Revery_Core/Window/index.html} Window}}
@@ -36,6 +44,7 @@ Framework for fast, native, cross-platform GUI applications.
   {li
     {ul
                 {li {{:../Revery/Revery_UI_Components/Button/index.html} Button}}
+                {li {{:../Revery/Revery_UI_Components/Checkbox/index.html} Checkbox}}
                 {li {{:../Revery/Revery_UI_Components/Clickable/index.html} Clickable}}
                 {li {{:../Revery/Revery_UI_Components/Container/index.html} Container}}
                 {li {{:../Revery/Revery_UI_Components/Dropdown/index.html} Dropdown}}
@@ -71,9 +80,9 @@ Framework for fast, native, cross-platform GUI applications.
 
 {2:overview Overview}
 
-Revery is a framework for building cross-platform GUI applications. Revery provides a React-like functional model for UI, as well as scaffolding for managing the application lifecycle.
+Revery is a framework for building cross-platform GUI applications. Revery provides a React-like, functional approach for modeling UI, as well as scaffolding for managing the application lifecycle.
 
-Revery started as part of {{:https://v2.onivim.io} Onivim 2}, but was factored out into a general toolkit for {{:https://reasonml.github.io} ReasonML} user interfaces.
+Revery started as the foundation of {{:https://v2.onivim.io} Onivim 2}, but was factored out into a general toolkit for {{:https://reasonml.github.io} ReasonML} user interfaces.
 
 {2:quickstart Quickstart}
 
@@ -96,4 +105,50 @@ There are two ways to get started:
 
 {2:ComponentModel Component Model}
 
-TODO
+{3:BasicFunctionalComponent Basic Components}
+
+The basic component building block is simply a {b pure function}, that returns an {e element}.
+
+Example:
+
+{[
+    let squareBox = (~children as _, ()) => <Container width=10 height=10 color=Colors.red />;
+]}
+
+Properties can be specified as {b named arguments}.
+
+Example:
+
+{[
+    let wideBox = (~children as _, ~width: int, ()) => <Container width height=10 color=Colors.red />;
+]}
+
+Note that the [~children as _] is used to ignore the [children] argument when it is not used (otherwise, there will be a compiler warning.)
+
+You may instead decide you wish to render the children, for example:
+
+{[
+    let boxWithChildren = (~children, ()) => <Container width=10 height=10 color=Colors.red>children</Container>;
+]}
+
+{3:HooksComponent Components with Hooks}
+
+For components that manage state, or have side effects, you'll want to encapsulate those using {b hooks}!
+
+A component that uses hooks must create a handle via [React.component], for example:
+
+{[
+    let componentWithHooks = {
+        let component = React.component("componentWithHooks");
+        (~children, ()) => component(hooks => {
+           let (state, setState, hooks) = Hooks.state(0, hooks);
+
+           (hooks, <Button text=string_of_int(state) onClick={(_) => setState(state + 1)}/>)
+        });
+    };
+]}
+
+Hooks components still return a function with named arguments representing the properties, but there is a nested call to [component(hooks => ...] - a hooks component is a {i function that takes a hooks object}, and then {i returns a tuple of [(hooks, element)]}.
+
+In effect, Revery components should always be pure functions - given a set of props, and a hooks, the output should always be the same.
+
