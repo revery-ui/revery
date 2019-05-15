@@ -41,7 +41,7 @@ test("Animation", () => {
           delay: Time.Seconds(0.),
           toValue: 10.,
           repeat: false,
-          easing: Animated.linear,
+          easing: Easing.linear,
           direction: `Normal,
         },
       );
@@ -64,7 +64,7 @@ test("Animation", () => {
           delay: Time.Seconds(0.),
           toValue: 1.,
           repeat: false,
-          easing: Animated.quadratic,
+          easing: Easing.quadratic,
           direction: `Normal,
         },
       );
@@ -87,7 +87,7 @@ test("Animation", () => {
           delay: Time.Seconds(0.),
           toValue: 10.,
           repeat: true,
-          easing: Animated.linear,
+          easing: Easing.linear,
           direction: `Normal,
         },
       );
@@ -110,7 +110,7 @@ test("Animation", () => {
           delay: Time.Seconds(1.),
           toValue: 10.,
           repeat: false,
-          easing: Animated.linear,
+          easing: Easing.linear,
           direction: `Normal,
         },
       );
@@ -133,7 +133,7 @@ test("Animation", () => {
           delay: Time.Seconds(0.),
           toValue: 10.,
           repeat: false,
-          easing: Animated.linear,
+          easing: Easing.linear,
           direction: `Normal,
         },
       );
@@ -158,7 +158,7 @@ test("Animation", () => {
           delay: Time.Seconds(0.),
           toValue: 10.,
           repeat: false,
-          easing: Animated.linear,
+          easing: Easing.linear,
           direction: `Normal,
         },
       );
@@ -186,7 +186,7 @@ test("Animation", () => {
           delay: Time.Seconds(0.),
           toValue: 10.,
           repeat: false,
-          easing: Animated.linear,
+          easing: Easing.linear,
           direction: `Normal,
         },
       );
@@ -198,7 +198,7 @@ test("Animation", () => {
           delay: Time.Seconds(0.),
           toValue: 0.,
           repeat: false,
-          easing: Animated.linear,
+          easing: Easing.linear,
           direction: `Normal,
         },
       );
@@ -226,7 +226,7 @@ test("Animation", () => {
           delay: Time.Seconds(0.),
           toValue: 10.,
           repeat: false,
-          easing: Animated.linear,
+          easing: Easing.linear,
           direction: `Normal,
         },
       );
@@ -238,7 +238,7 @@ test("Animation", () => {
           delay: Time.Seconds(0.),
           toValue: 0.,
           repeat: false,
-          easing: Animated.linear,
+          easing: Easing.linear,
           direction: `Normal,
         },
       );
@@ -269,7 +269,7 @@ test("Animation", () => {
               delay: Time.Seconds(0.),
               toValue: 10.,
               repeat: true,
-              easing: Animated.linear,
+              easing: Easing.linear,
               direction,
             },
           );
@@ -305,7 +305,7 @@ test("Animation", () => {
           delay: Time.Seconds(0.),
           toValue: 10.,
           repeat: true,
-          easing: Animated.linear,
+          easing: Easing.linear,
           direction: `Alternate,
         },
       );
