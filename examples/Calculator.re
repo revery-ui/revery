@@ -31,12 +31,7 @@ module Column = {
           backgroundColor(Colors.darkGrey),
           flexGrow(1),
         ];
-      (
-        hooks,
-        <View style>
-          ...children
-        </View>,
-      );
+      (hooks, <View style> ...children </View>);
     });
 };
 

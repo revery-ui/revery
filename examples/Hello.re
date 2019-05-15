@@ -65,7 +65,12 @@ let logo = {
 let animatedText = {
   let component = React.component("AnimatedText");
 
-  (~children as _: list(React.syntheticElement), ~text: string, ~delay: float, ()) =>
+  (
+    ~children as _: list(React.syntheticElement),
+    ~text: string,
+    ~delay: float,
+    (),
+  ) =>
     component(hooks => {
       let (animatedOpacity, hooks) =
         Hooks.animation(
