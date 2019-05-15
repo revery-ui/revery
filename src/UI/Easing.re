@@ -1,6 +1,3 @@
-open Revery_Core;
-open Revery_Math;
-
 type t = float => float;
 
 let linear = (t: float) => t;
