@@ -12,11 +12,11 @@ let noop: tickFunction = (_) => ();
 let component = React.component("Container");
 
 let createElement =
-    (~children, ~onTick=noop, ~tickRate, ()) =>
+    (~children, ~onTick=noop, ~tickRate=Time.Seconds(1.), ()) =>
   component(hooks => {
 
 	let hooks = Hooks.effect(OnMount, (t) => {
-		let dispose = Tick.interval(onTick, tickRate);
+		let dispose = Revery_Core.Tick.interval(onTick, tickRate);
 
 		Some(dispose);
 	}, hooks);

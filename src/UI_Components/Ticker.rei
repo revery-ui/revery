@@ -6,14 +6,14 @@ type tickFunction = Time.t => unit;
 /**
 {2 Description:}
 
-The [Tick] component is a helper that calls a specific function periodically as a side-effect.
+The [Ticker] component is a helper that calls a specific function periodically as a side-effect.
 
 {2 Usage:}
 
 {[
 let tick tick = (t) => print_endline("Time: " ++ string_of_float(Time.toSeconds(t)));
 
-<Tick onTick=tick tickRate=Seconds(1.0) />
+<Ticker onTick=tick tickRate=Seconds(1.0) />
 ]}
 
 @param [onTick] Callback function, called for each tick.
@@ -22,8 +22,8 @@ let tick tick = (t) => print_endline("Time: " ++ string_of_float(Time.toSeconds(
 let createElement:
   (
     ~children: list(React.syntheticElement),
-    ~onTick: tickFunction,
-    ~tickRate: Time.t,
+    ~onTick: tickFunction=?,
+    ~tickRate: Time.t=?,
     unit
   ) =>
   React.syntheticElement;
