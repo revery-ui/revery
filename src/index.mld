@@ -58,6 +58,13 @@ Framework for fast, native, cross-platform GUI applications.
                 {li {{:../Revery/Revery_UI/Hooks/index.html} state}}
     }
   }
+  {li Math}
+  {li
+    {ul
+                {li {{:../Revery/Revery_Math/BoundingBox2d/index.html} BoundingBox2d}}
+                {li {{:../Revery/Revery_Math/Rectangle/index.html} Rectangle}}
+    }
+  }
   {li Platform}
   {li
     {ul
