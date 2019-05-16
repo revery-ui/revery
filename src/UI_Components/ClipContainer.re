@@ -8,7 +8,8 @@ let createElement =
     (~children, ~color=Colors.transparentWhite, ~width as w, ~height as h, ()) =>
   component(hooks => {
     let c = color;
-    let style = Style.[width(w), height(h), overflow(`Hidden), backgroundColor(c)];
+    let style =
+      Style.[width(w), height(h), overflow(`Hidden), backgroundColor(c)];
 
     (hooks, <View style> ...children </View>);
   });
