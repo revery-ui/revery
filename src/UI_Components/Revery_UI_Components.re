@@ -19,4 +19,5 @@ module ScrollView = ScrollView;
 module Slider = Slider;
 module Stack = Stack;
 module RadioButtons = RadioButtons;
+module Tick = Tick;
 module Tree = Tree;
