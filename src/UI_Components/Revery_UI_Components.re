@@ -8,6 +8,7 @@ module Button = Button;
 module Center = Center;
 module Checkbox = Checkbox;
 module Clickable = Clickable;
+module ClipContainer = ClipContainer;
 module Column = Column;
 module Container = Container;
 module Dropdown = Dropdown;
