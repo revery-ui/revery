@@ -1,6 +1,5 @@
 open Revery_UI;
 open Revery_Core;
-open Revery_Math;
 open Revery_UI_Primitives;
 
 module Hooks = Revery_UI_Hooks;
@@ -15,7 +14,7 @@ let createElement = (~children, ~onTick=noop, ~tickRate=Time.Seconds(1.), ()) =>
     let hooks =
       Hooks.effect(
         OnMount,
-        t => {
+        () => {
           let dispose = Revery_Core.Tick.interval(onTick, tickRate);
 
           Some(dispose);
