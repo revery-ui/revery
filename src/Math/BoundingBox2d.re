@@ -17,7 +17,6 @@ let isPointInside = (bbox: t, p: Vec2.t) =>
   && Vec2.get_y(p) <= Vec2.get_y(bbox.max);
 
 let intersects = (b0: t, b1: t) => {
-
   let box0_minX = Vec2.get_x(b0.min);
   let box0_minY = Vec2.get_y(b0.min);
 
@@ -30,14 +29,15 @@ let intersects = (b0: t, b1: t) => {
   let box1_maxX = Vec2.get_x(b1.max);
   let box1_maxY = Vec2.get_y(b1.max);
 
-    /* 
-		From stackoverflow: https://stackoverflow.com/questions/306316/determine-if-two-rectangles-overlap-each-other
-	*/
-  let noOverlap = box0_minX > box1_maxX
-				  || box1_minX > box0_maxX
-				  || box0_minY > box1_maxY
-				  || box1_minY > box0_maxY;
-  !noOverlap
+  /*
+   	From stackoverflow: https://stackoverflow.com/questions/306316/determine-if-two-rectangles-overlap-each-other
+   */
+  let noOverlap =
+    box0_minX > box1_maxX
+    || box1_minX > box0_maxX
+    || box0_minY > box1_maxY
+    || box1_minY > box0_maxY;
+  !noOverlap;
 };
 
 let _getMin = (fn, v1: Vec3.t, v2: Vec3.t, v3: Vec3.t, v4: Vec3.t) => {
