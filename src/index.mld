@@ -46,6 +46,7 @@ Framework for fast, native, cross-platform GUI applications.
                 {li {{:../Revery/Revery_UI_Components/ScrollView/index.html} ScrollView}}
                 {li {{:../Revery/Revery_UI_Components/Slider/index.html} Slider}}
                 {li {{:../Revery/Revery_UI_Components/Stack/index.html} Stack}}
+                {li {{:../Revery/Revery_UI_Components/Ticker/index.html} Tickre}}
                 {li {{:../Revery/Revery_UI_Components/Tree/index.html} Tree}}
             }
     }
