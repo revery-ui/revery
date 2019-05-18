@@ -1,12 +1,9 @@
+open Revery_UI.React.Hooks;
+
 let reducer:
   (
     ~initialState: 'a,
     ('b, 'a) => 'a,
-    Revery_UI.React.Hooks.t(
-      Revery_UI.React.Hooks.Reducer.t('a) => 'c,
-      unit,
-      'd,
-      Revery_UI.React.Hooks.Reducer.t('a) => 'e,
-    )
+    t(Reducer.t('a) => 'c, unit, 'd, Reducer.t('a) => 'e)
   ) =>
-  ('a, 'b => unit, Revery_UI.React.Hooks.t('c, unit, 'd, 'e));
+  ('a, 'b => unit, t('c, unit, 'd, 'e));

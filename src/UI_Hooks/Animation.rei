@@ -1,22 +1,17 @@
+open Revery_UI.Animated;
+open Revery_UI.React.Hooks;
+
 let animation:
   (
-    Revery_UI.Animated.animationValue,
-    Revery_UI.Animated.animationOptions,
-    Revery_UI.React.Hooks.t(
-      (
-        Revery_UI.React.Hooks.Ref.t(Revery_UI.Animated.animationValue),
-        Revery_UI.React.Hooks.Reducer.t(int),
-        Revery_UI.React.Hooks.Effect.t(Revery_UI.React.Hooks.Effect.onMount)
-      ) =>
+    animationValue,
+    animationOptions,
+    t(
+      (Ref.t(animationValue), Reducer.t(int), Effect.t(Effect.onMount)) =>
       'a,
       unit,
       'b,
-      (
-        Revery_UI.React.Hooks.Ref.t(Revery_UI.Animated.animationValue),
-        Revery_UI.React.Hooks.Reducer.t(int),
-        Revery_UI.React.Hooks.Effect.t(Revery_UI.React.Hooks.Effect.onMount)
-      ) =>
+      (Ref.t(animationValue), Reducer.t(int), Effect.t(Effect.onMount)) =>
       'c,
     )
   ) =>
-  (float, Revery_UI.React.Hooks.t('a, unit, 'b, 'c));
+  (float, t('a, unit, 'b, 'c));
