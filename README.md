@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <span>Build <b>native</b>, <i>high-performance</i>, <b>cross-platform</b> desktop tops with <a href="https://reasonml.github.io">reason!</a></span>
+  <span>Build <b>native</b>, <i>high-performance</i>, <b>cross-platform</b> desktop apps with <a href="https://reasonml.github.io">reason!</a></span>
 </p>
 
 <p align="center">
