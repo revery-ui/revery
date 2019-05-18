@@ -16,7 +16,7 @@ module Check = {
     component(hooks => {
       let initialCheckboxState = {first: false, second: true};
       let ({first, second}, setCheckboxState, hooks) =
-        React.Hooks.state(initialCheckboxState, hooks);
+        Hooks.state(initialCheckboxState, hooks);
 
       (
         hooks,

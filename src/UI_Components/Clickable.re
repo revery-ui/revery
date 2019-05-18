@@ -10,6 +10,8 @@ open Revery_Core;
 open Revery_Math;
 open Revery_UI_Primitives;
 
+module Hooks = Revery_UI_Hooks;
+
 type clickFunction = unit => unit;
 type clickFunctionWithEvt = NodeEvents.mouseButtonEventParams => unit;
 let noop = () => ();
@@ -40,7 +42,7 @@ let make =
     ) =>
   component(slots => {
     let (clickableRef, setClickableRefOption, slots) =
-      React.Hooks.state(None, slots);
+      Hooks.state(None, slots);
 
     let setClickableRef = r => {
       switch (componentRef) {
@@ -50,7 +52,7 @@ let make =
       setClickableRefOption(Some(r));
     };
 
-    let (animatedOpacity, setOpacity, slots) = React.Hooks.state(0.8, slots);
+    let (animatedOpacity, setOpacity, slots) = Hooks.state(0.8, slots);
 
     let onMouseMove = (mouseX: float, mouseY: float) =>
       switch (clickableRef) {

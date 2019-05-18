@@ -29,7 +29,7 @@ module DropdownExample = {
   let createElement = (~children as _, ()) =>
     component(hooks => {
       let (selectedItem, setSelectedItem, hooks) =
-        React.Hooks.state(List.nth(items, 0), hooks);
+        Hooks.state(List.nth(items, 0), hooks);
 
       (
         hooks,

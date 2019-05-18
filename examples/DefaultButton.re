@@ -7,7 +7,7 @@ module DefaultButtonWithCounter = {
 
   let createElement = (~children as _, ()) =>
     component(hooks => {
-      let (count, setCount, hooks) = React.Hooks.state(0, hooks);
+      let (count, setCount, hooks) = Hooks.state(0, hooks);
       let increment = () => setCount(count + 1);
 
       let containerStyle =

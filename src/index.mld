@@ -46,6 +46,7 @@ Framework for fast, native code, cross-platform GUI applications.
                 {li {{:../Revery/Revery_UI_Components/Button/index.html} Button}}
                 {li {{:../Revery/Revery_UI_Components/Checkbox/index.html} Checkbox}}
                 {li {{:../Revery/Revery_UI_Components/Clickable/index.html} Clickable}}
+                {li {{:../Revery/Revery_UI_Components/ClipContainer/index.html} ClipContainer}}
                 {li {{:../Revery/Revery_UI_Components/Container/index.html} Container}}
                 {li {{:../Revery/Revery_UI_Components/Dropdown/index.html} Dropdown}}
                 {li {{:../Revery/Revery_UI_Components/Input/index.html} Input}}
@@ -54,6 +55,7 @@ Framework for fast, native code, cross-platform GUI applications.
                 {li {{:../Revery/Revery_UI_Components/ScrollView/index.html} ScrollView}}
                 {li {{:../Revery/Revery_UI_Components/Slider/index.html} Slider}}
                 {li {{:../Revery/Revery_UI_Components/Stack/index.html} Stack}}
+                {li {{:../Revery/Revery_UI_Components/Ticker/index.html} Tickre}}
                 {li {{:../Revery/Revery_UI_Components/Tree/index.html} Tree}}
             }
     }
@@ -65,6 +67,13 @@ Framework for fast, native code, cross-platform GUI applications.
                 {li {{:../Revery/Revery_UI/Hooks/index.html} reducer}}
                 {li {{:../Revery/Revery_UI/Hooks/index.html} ref}}
                 {li {{:../Revery/Revery_UI/Hooks/index.html} state}}
+    }
+  }
+  {li Math}
+  {li
+    {ul
+                {li {{:../Revery/Revery_Math/BoundingBox2d/index.html} BoundingBox2d}}
+                {li {{:../Revery/Revery_Math/Rectangle/index.html} Rectangle}}
     }
   }
   {li Platform}
