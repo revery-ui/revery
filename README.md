@@ -89,9 +89,7 @@ Revery is provided under the [MIT License](LICENSE).
 
 ## Contributors
 
-Thanks to everyone who has contributed to Revery!
-
-<a href="https://github.com/revery-ui/revery/graphs/contributors"><img src="https://opencollective.com/revery/contributors.svg?width=890&button=false" /></a>
+Thanks to everyone who has [contributed](https://github.com/revery-ui/revery/graphs/contributors) to Revery!
 
 ## Backers
 
