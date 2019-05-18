@@ -63,13 +63,11 @@ Performance should be at the forefront, and not a compromise - we need to develo
 
 We might have some dirty mutable objects for performance - but our high-level API should be purely functional. You should be able to follow the React model of modelling your UI as a _pure function_ of application state -> UI.
 
-## Quickstart
+## Getting Started
 
-Check out [revery-quick-start](https://github.com/revery-ui/revery-quick-start) to get up and running with your own Revery app!
-
-## License
-
-Revery is provided under the [MIT License](LICENSE).
+- Check out [revery-quick-start](https://github.com/revery-ui/revery-quick-start) to get up and running with your own Revery app!
+- Try out our [interactive playground](https://www.outrunlabs.com/revery/playground/)
+- Read through our [docs](
 
 ## Contributing
 
@@ -78,12 +76,16 @@ We'd love your help, and welcome PRs and contributions.
 Some ideas for getting started:
 - [Build and run](https://github.com/revery-ui/revery/wiki/Building-&-Installing) Revery
 - View our [Roadmap](https://github.com/revery-ui/revery/wiki/Roadmap)
-- Help us improve our documentation
-- Help us build example apps
+- Help us improve our [documentation](https://github.com/revery-ui/revery/blob/master/src/index.mld)
+- Help us build [examples](https://github.com/revery-ui/revery/tree/master/examples)
 - Help us [fix bugs](https://github.com/revery-ui/revery/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22+label%3A%22bug%22) and [build features](https://github.com/revery-ui/revery/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22++-label%3Abug)
 - Help us [log bugs and open issues](https://github.com/bryphe/revery/issues/new)
 - Support the project on [OpenCollective](https://opencollective.com/revery)
 - Follow us on [Twitter](https://twitter.com/reveryui) or chat with us on [Discord](https://discord.gg/UvQ2cFn)!
+
+## License
+
+Revery is provided under the [MIT License](LICENSE).
 
 ## Contributors
 
