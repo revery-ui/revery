@@ -67,7 +67,7 @@ We might have some dirty mutable objects for performance - but our high-level AP
 
 - Check out [revery-quick-start](https://github.com/revery-ui/revery-quick-start) to get up and running with your own Revery app!
 - Try out our [interactive playground](https://www.outrunlabs.com/revery/playground/)
-- Read through our [docs](
+- Read through our [docs](https://www.outrunlabs.com/revery/api/revery/)
 
 ## Contributing
 
