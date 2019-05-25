@@ -351,9 +351,17 @@ type textStyleProps = [
   | pseudoProps(list(textStyleProps))
 ];
 type viewStyleProps = [ coreStyleProps];
-type imageStyleProps = [ coreStyleProps];
+type imageStyleProps = [
+  coreStyleProps
+  | pseudoProps(list(imageStyleProps))
+];
 
-type allProps = [ coreStyleProps | fontProps | textProps];
+type allProps = [
+  coreStyleProps
+  | fontProps
+  | textProps
+  | pseudoProps(list(allProps))
+];
 
 let emptyTextStyle: list(textStyleProps) = [];
 let emptyViewStyle: list(viewStyleProps) = [];

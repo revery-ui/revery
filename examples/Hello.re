@@ -7,8 +7,6 @@ module Logo = {
 
   let createElement = (~children as _, ()) =>
     component(hooks => {
-      let (logoOpacity, setOpacity, hooks) = React.Hooks.state(1.0, hooks);
-
       let (rotation, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
@@ -37,19 +35,16 @@ module Logo = {
           hooks,
         );
 
-      let onMouseDown = _ => setOpacity(0.5);
-
-      let onMouseUp = _ => setOpacity(1.0);
-
       (
         hooks,
-        <View onMouseDown onMouseUp>
+        <View>
           <Image
             src="outrun-logo.png"
             style=Style.[
               width(512),
               height(256),
-              opacity(logoOpacity),
+              opacity(1.0),
+              active([opacity(0.5)]),
               transform([
                 Transform.RotateY(Angle.from_radians(rotationY)),
                 Transform.RotateX(Angle.from_radians(rotation)),

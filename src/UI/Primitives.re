@@ -292,6 +292,10 @@ module Text = {
 };
 
 module Image = {
+  open Style;
+
+  type state = [ | `Active | `Hover | `Idle];
+
   let component = React.nativeComponent("Image");
 
   let make =
@@ -301,53 +305,107 @@ module Image = {
         ~onMouseMove=?,
         ~onMouseUp=?,
         ~onMouseWheel=?,
+        ~onMouseEnter=?,
+        ~onMouseLeave=?,
+        ~onMouseOver=?,
+        ~onMouseOut=?,
         ~ref=?,
         ~resizeMode=Revery_Draw.ImageResizeMode.Stretch,
         ~style=Style.emptyImageStyle,
         ~src="",
         children,
       ) =>
-    component(~key?, hooks =>
-      (
-        hooks,
-        {
-          make: () => {
-            let styles = Style.create(~style, ());
-            let events =
-              NodeEvents.make(
-                ~ref?,
-                ~onMouseDown?,
-                ~onMouseMove?,
-                ~onMouseUp?,
-                ~onMouseWheel?,
-                (),
-              );
-            let node = PrimitiveNodeFactory.get().createImageNode(src);
-            node#setEvents(events);
-            node#setStyle(styles);
-            node#setResizeMode(resizeMode);
-            Obj.magic(node);
+    component(
+      ~key?,
+      hooks => {
+        let (state, setState, hooks) = React.Hooks.state(`Idle, hooks);
+        (
+          hooks,
+          {
+            make: () => {
+              let styles = Style.create(~style, ());
+              let events =
+                NodeEvents.make(
+                  ~ref?,
+                  ~onMouseDown?,
+                  ~onMouseMove?,
+                  ~onMouseUp?,
+                  ~onMouseWheel?,
+                  ~onMouseEnter?,
+                  ~onMouseLeave?,
+                  ~onMouseOver?,
+                  ~onMouseOut?,
+                  (),
+                );
+              let node = PrimitiveNodeFactory.get().createImageNode(src);
+              node#setEvents(events);
+              node#setStyle(styles);
+              node#setResizeMode(resizeMode);
+              Obj.magic(node);
+            },
+            configureInstance: (~isFirstRender as _, node) => {
+              let styles = Style.create(~style, ());
+              let events =
+                NodeEvents.make(
+                  ~ref?,
+                  ~onMouseDown=
+                    e => {
+                      switch (onMouseDown) {
+                      | Some(userFn) => userFn(e)
+                      | None => ()
+                      };
+                      setState(`Active);
+                    },
+                  ~onMouseMove?,
+                  ~onMouseUp=
+                    e => {
+                      switch (onMouseUp) {
+                      | Some(userFn) => userFn(e)
+                      | None => ()
+                      };
+                      /*
+                         We can't set this to `Idle here
+                         since we're still on the element
+                       */
+                      setState(`Hover);
+                    },
+                  ~onMouseWheel?,
+                  ~onMouseEnter?,
+                  ~onMouseLeave?,
+                  ~onMouseOver=
+                    e => {
+                      switch (onMouseOver) {
+                      | Some(userFn) => userFn(e)
+                      | None => ()
+                      };
+                      setState(`Hover);
+                    },
+                  ~onMouseOut=
+                    e => {
+                      switch (onMouseOver) {
+                      | Some(userFn) => userFn(e)
+                      | None => ()
+                      };
+                      setState(`Idle);
+                    },
+                  (),
+                );
+
+              let target =
+                extractPseudoStyles(~styles=style, ~pseudoState=state);
+
+              let styles = create(~style=merge(~source=style, ~target), ());
+
+              let imgNode: ImageNode.imageNode = Obj.magic(node);
+              imgNode#setResizeMode(resizeMode);
+              node#setEvents(events);
+              node#setStyle(styles);
+              node;
+            },
+            children,
           },
-          configureInstance: (~isFirstRender as _, node) => {
-            let styles = Style.create(~style, ());
-            let events =
-              NodeEvents.make(
-                ~ref?,
-                ~onMouseDown?,
-                ~onMouseMove?,
-                ~onMouseUp?,
-                ~onMouseWheel?,
-                (),
-              );
-            let imgNode: ImageNode.imageNode = Obj.magic(node);
-            imgNode#setResizeMode(resizeMode);
-            node#setEvents(events);
-            node#setStyle(styles);
-            node;
-          },
-          children,
-        },
-      )
+        );
+      },
     );
 
   let createElement =
