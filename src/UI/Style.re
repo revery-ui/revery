@@ -350,7 +350,7 @@ type textStyleProps = [
   | coreStyleProps
   | pseudoProps(list(textStyleProps))
 ];
-type viewStyleProps = [ coreStyleProps];
+type viewStyleProps = [ coreStyleProps | pseudoProps(list(viewStyleProps))];
 type imageStyleProps = [
   coreStyleProps
   | pseudoProps(list(imageStyleProps))
@@ -551,7 +551,6 @@ let extractPseudoStyles = (~styles, ~pseudoState) => {
  */
 let applyStyle = (style, styleRule) =>
   switch (styleRule) {
-  | `Active(_activeStyles) => style
   | `AlignItems(alignItems) => {...style, alignItems}
   | `AlignSelf(alignSelf) => {...style, alignSelf}
   | `JustifyContent(justifyContent) => {...style, justifyContent}
@@ -623,11 +622,11 @@ let applyStyle = (style, styleRule) =>
   | `BackgroundColor(backgroundColor) => {...style, backgroundColor}
   | `Width(width) => {...style, width}
   | `Height(height) => {...style, height}
-  | `Hover(_hoverStyles) => style
   | `Bottom(bottom) => {...style, bottom}
   | `Left(left) => {...style, left}
   | `Top(top) => {...style, top}
   | `Right(right) => {...style, right}
+  | #pseudoProps => style
   };
 
 let create = (~style, ~default=make(), ()) => {

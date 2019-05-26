@@ -9,6 +9,8 @@
  */
 
 module View = {
+  type state = [ | `Active | `Hover | `Idle];
+
   let component = React.nativeComponent("View");
 
   let make =
@@ -33,66 +35,105 @@ module View = {
         ~style=Style.emptyViewStyle,
         children,
       ) =>
-    component(~key?, hooks =>
-      (
-        hooks,
-        {
-          make: () => {
-            let styles = Style.create(~style, ());
-            let events =
-              NodeEvents.make(
-                ~ref?,
-                ~onMouseDown?,
-                ~onMouseMove?,
-                ~onMouseUp?,
-                ~onMouseWheel?,
-                ~onMouseEnter?,
-                ~onMouseLeave?,
-                ~onMouseOver?,
-                ~onMouseOut?,
-                ~onBlur?,
-                ~onFocus?,
-                ~onKeyDown?,
-                ~onKeyUp?,
-                ~onKeyPress?,
-                ~onDimensionsChanged?,
-                (),
-              );
-            let node = PrimitiveNodeFactory.get().createViewNode();
-            node#setEvents(events);
-            node#setStyle(styles);
-            node#setTabIndex(tabindex);
-            node;
+    component(
+      ~key?,
+      hooks => {
+        let (state, setState, hooks) = React.Hooks.state(`Idle, hooks);
+        (
+          hooks,
+          {
+            make: () => {
+              let styles = Style.create(~style, ());
+              let events =
+                NodeEvents.make(
+                  ~ref?,
+                  ~onMouseDown?,
+                  ~onMouseMove?,
+                  ~onMouseUp?,
+                  ~onMouseWheel?,
+                  ~onMouseEnter?,
+                  ~onMouseLeave?,
+                  ~onMouseOver?,
+                  ~onMouseOut?,
+                  ~onBlur?,
+                  ~onFocus?,
+                  ~onKeyDown?,
+                  ~onKeyUp?,
+                  ~onKeyPress?,
+                  ~onDimensionsChanged?,
+                  (),
+                );
+              let node = PrimitiveNodeFactory.get().createViewNode();
+              node#setEvents(events);
+              node#setStyle(styles);
+              node#setTabIndex(tabindex);
+              node;
+            },
+            configureInstance: (~isFirstRender as _, node) => {
+              let styles = Style.create(~style, ());
+              let events =
+                NodeEvents.make(
+                  ~ref?,
+                  ~onMouseDown=
+                    e => {
+                      switch (onMouseDown) {
+                      | Some(userFn) => userFn(e)
+                      | None => ()
+                      };
+                      setState(`Active);
+                    },
+                  ~onMouseMove?,
+                  ~onMouseUp=
+                    e => {
+                      switch (onMouseUp) {
+                      | Some(userFn) => userFn(e)
+                      | None => ()
+                      };
+                      /*
+                         We can't set this to `Idle here
+                         since we're still on the element
+                       */
+                      setState(`Hover);
+                    },
+                  ~onMouseWheel?,
+                  ~onMouseEnter?,
+                  ~onMouseLeave?,
+                  ~onMouseOver=
+                    e => {
+                      switch (onMouseOver) {
+                      | Some(userFn) => userFn(e)
+                      | None => ()
+                      };
+                      setState(`Hover);
+                    },
+                  ~onMouseOut=
+                    e => {
+                      switch (onMouseOver) {
+                      | Some(userFn) => userFn(e)
+                      | None => ()
+                      };
+                      setState(`Idle);
+                    },
+                  (),
+                );
+
+              let target =
+                Style.(
+                  extractPseudoStyles(~styles=style, ~pseudoState=state)
+                );
+
+              let styles =
+                Style.(create(~style=merge(~source=style, ~target), ()));
+
+              node#setEvents(events);
+              node#setStyle(styles);
+              node#setTabIndex(tabindex);
+              node;
+            },
+            children,
           },
-          configureInstance: (~isFirstRender as _, node) => {
-            let styles = Style.create(~style, ());
-            let events =
-              NodeEvents.make(
-                ~ref?,
-                ~onMouseDown?,
-                ~onMouseMove?,
-                ~onMouseUp?,
-                ~onMouseWheel?,
-                ~onMouseEnter?,
-                ~onMouseLeave?,
-                ~onMouseOver?,
-                ~onMouseOut?,
-                ~onBlur?,
-                ~onFocus?,
-                ~onKeyDown?,
-                ~onKeyUp?,
-                ~onKeyPress?,
-                ~onDimensionsChanged?,
-                (),
-              );
-            node#setEvents(events);
-            node#setStyle(styles);
-            node#setTabIndex(tabindex);
-            node;
-          },
-          children,
-        },
-      )
+        );
+      },
     );
 
   let createElement =
