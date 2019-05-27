@@ -49,6 +49,10 @@ let createElement = (~children, ()) => {
   handle
 };
 
+/*
+** per windows ?
+*/
+
 external getApplicationMenuNat: (NativeWindow.t, list(menu)) => menu = "revery_get_application_menu"
 
 let getApplicationMenu = w => getApplicationMenuNat(glfwGetNativeWindow(w), menuList^);
