@@ -13,6 +13,7 @@ module Column = Column;
 module Container = Container;
 module Dropdown = Dropdown;
 module ExpandContainer = ExpandContainer;
+module KeyboardInput = KeyboardInput;
 module Input = Input;
 module Positioned = Positioned;
 module Row = Row;
