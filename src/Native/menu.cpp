@@ -46,18 +46,19 @@ CAMLprim value revery_create_menu()
     CAMLreturn(ret);
 }
 
-CAMLprim value revery_add_string_item_menu(value vMenu, value vMessage)
+CAMLprim value revery_add_string_item_menu(value vMenu, value vUid, value vMessage)
 {
-    CAMLparam2(vMenu, vMessage);
+    CAMLparam3(vMenu, vUid, vMessage);
     const char * pMessage = String_val(vMessage);
     /*
     ** void *pMenu = (void *)vMenu;
     ** it is a custom type
     */
+    int uid = Int_val(vUid);
     value ret;
 
     #ifdef WIN32
-    ret = revery_add_string_item_menu_win32(vMenu, pMessage);
+    ret = revery_add_string_item_menu_win32(vMenu, uid, pMessage);
     printf("We have add string (%s) to menu (%p): %s\n", pMessage, vMenu, ret ? "true" : "false");
     #elif __APPLE__
     printf("WARNING - Not implemented: revery_add_string_item_menu_cocoa");

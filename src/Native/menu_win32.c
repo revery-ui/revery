@@ -45,7 +45,6 @@ static struct custom_operations menu_ops = {
     custom_compare_ext_default
 };
 
-static int g_unique_identifier = 0;
 static value * g_menu_dispatch = NULL;
 static value * g_menu_list = NULL;
 static void * g_hook_handle = NULL;
@@ -88,11 +87,10 @@ void release_hook(void)
     UnhookWindowsHookEx(g_hook_handle);
 }
 
-value revery_add_string_item_menu_win32(value vMenu, const char * pMessage)
+value revery_add_string_item_menu_win32(value vMenu, int uid, const char * pMessage)
 {
-    bool ret = AppendMenu(Menu_val(vMenu).menu_handle, MF_STRING, g_unique_identifier, pMessage);
+    bool ret = AppendMenu(Menu_val(vMenu).menu_handle, MF_STRING, uid, pMessage);
 
-    g_unique_identifier++;
     if (!g_hook_handle)
     {
         g_hook_handle = SetWindowsHookExW(WH_GETMESSAGE, WndProc, (HINSTANCE)NULL, GetCurrentThreadId());

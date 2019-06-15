@@ -1,12 +1,22 @@
 open Reglfw.Glfw;
 
+module UIDGenerator = {
+  let v = ref(0);
+
+  let gen() = {
+    let ret = v^;
+    let () = incr(v);
+    ret;
+  };
+};
+
 [@noalloc] external menuSupported: unit => bool = "revery_menuSupported";
 
 type menu;
 
 external createMenu: unit => menu = "revery_create_menu";
 
-external addStringItemMenu: (menu, string) => bool = "revery_add_string_item_menu"
+external addStringItemMenu: (menu, int, string) => bool = "revery_add_string_item_menu"
 
 let assocCallback = ref([]: list(unit => unit));
 /* TODO: make it private */
@@ -27,7 +37,7 @@ let addItemMenu = w =>
   fun
   | `String(s, f) => {
       registerCallback(f);
-      addStringItemMenu(w, s);
+      addStringItemMenu(w, UIDGenerator.gen(), s);
   };
 
 external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
