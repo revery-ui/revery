@@ -34,6 +34,7 @@ type action =
   | CursorPosition(cursorUpdate)
   | CursorTimer
   | SetFocus(bool)
+  | InsertText(string)
   | UpdateText(textUpdate)
   | ResetCursorTimer;
 
@@ -102,6 +103,14 @@ let reducer = (action, state) =>
           ? Time.Seconds(0.0)
           : Time.increment(state.cursorTimer, Time.Seconds(0.1)),
     }
+   | InsertText(t) =>  {
+       print_endline ("INSERTING : " ++ t);
+   { ...state,
+        internalValue: state.internalValue ++ t,
+        cursorPosition: state.cursorPosition + String.length(t),
+        cursorTimer: Time.Seconds(0.0),
+   }
+   }
   | UpdateText({newString, _}) =>
     state.isFocused
       ? {...state, isFocused: true, internalValue: newString} : state
@@ -157,6 +166,8 @@ let make =
         slots,
       );
 
+    print_endline("re-rendering - new value: " ++ state.internalValue);
+
     let valueToDisplay =
       switch (valueAsProp) {
       | Some(v) => v
@@ -179,75 +190,71 @@ let make =
 
     let slots =
       Hooks.effect(
-        If((!=), valueToDisplay),
+        If((!=), state.internalValue),
         () => {
-          let oldValueLength = String.length(inputValueRef);
-          let newValueLength = String.length(valueToDisplay);
-          switch (Pervasives.abs(oldValueLength - newValueLength)) {
-          | lengthDiff when lengthDiff != 1 =>
-            // Set cursor at the end
-            dispatch(
-              CursorPosition({
-                inputString: valueToDisplay,
-                change: String.length(valueToDisplay) - state.cursorPosition,
-              }),
-            )
-          | _ =>
-            let (oldStart, _oldEnd) =
-              getStringParts(state.cursorPosition, inputValueRef);
-            let (newStart, _newEnd) =
-              getStringParts(state.cursorPosition, valueToDisplay);
-
-            if (oldStart == newStart) {
-              if (newValueLength > oldValueLength)
-                {
-                  // One character was added
-                  dispatch(
-                    CursorPosition({inputString: valueToDisplay, change: 1}),
-                  );
-                };
-                // One characted was removed from the right side of the cursor (Delete key)
-            } else {
-              // One character was removed from the left side of the cursor (Backspace)
-              dispatch(
-                CursorPosition({inputString: valueToDisplay, change: (-1)}),
-              );
-            };
+          let createChangeEvent = value => {
+            value,
+            key: Key.fromString(""),
+            character: "",
+            altKey: false,
+            ctrlKey: false,
+            shiftKey: false,
+            superKey: false,
           };
-          setInputValueRef(valueToDisplay);
+        onChange(createChangeEvent(state.internalValue));
           None;
         },
         slots,
       );
+    /* let slots = */
+    /*   Hooks.effect( */
+    /*     If((!=), valueToDisplay), */
+    /*     () => { */
+    /*       let oldValueLength = String.length(inputValueRef); */
+    /*       let newValueLength = String.length(valueToDisplay); */
+    /*       switch (Pervasives.abs(oldValueLength - newValueLength)) { */
+    /*       | lengthDiff when lengthDiff != 1 => */
+    /*         // Set cursor at the end */
+    /*         dispatch( */
+    /*           CursorPosition({ */
+    /*             inputString: valueToDisplay, */
+    /*             change: String.length(valueToDisplay) - state.cursorPosition, */
+    /*           }), */
+    /*         ) */
+    /*       | _ => */
+    /*         let (oldStart, _oldEnd) = */
+    /*           getStringParts(state.cursorPosition, inputValueRef); */
+    /*         let (newStart, _newEnd) = */
+    /*           getStringParts(state.cursorPosition, valueToDisplay); */
+
+    /*         if (oldStart == newStart) { */
+    /*           if (newValueLength > oldValueLength) */
+    /*             { */
+    /*               // One character was added */
+    /*               dispatch( */
+    /*                 CursorPosition({inputString: valueToDisplay, change: 1}), */
+    /*               ); */
+    /*             }; */
+    /*             // One characted was removed from the right side of the cursor (Delete key) */
+    /*         } else { */
+    /*           // One character was removed from the left side of the cursor (Backspace) */
+    /*           dispatch( */
+    /*             CursorPosition({inputString: valueToDisplay, change: (-1)}), */
+    /*           ); */
+    /*         }; */
+    /*       }; */
+    /*       setInputValueRef(valueToDisplay); */
+    /*       None; */
+    /*     }, */
+    /*     slots, */
+    /*   ); */
 
     let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
-      let createChangeEvent = value => {
-        value,
-        key: Key.fromString(event.character),
-        character: event.character,
-        altKey: false,
-        ctrlKey: false,
-        shiftKey: false,
-        superKey: false,
-      };
 
-      dispatch(ResetCursorTimer);
+      dispatch(InsertText(event.character));
 
-      switch (valueAsProp) {
-      | Some(v) =>
-        let {newString, _} =
-          addCharacter(v, event.character, state.cursorPosition);
-        onChange(createChangeEvent(newString));
-      | None =>
-        let {newString, cursorPosition} =
-          addCharacter(
-            state.internalValue,
-            event.character,
-            state.cursorPosition,
-          );
-        dispatch(UpdateText({newString, cursorPosition}));
-        onChange(createChangeEvent(newString));
-      };
+      /* TODO: Port this over ? */
+       /* onChange(createChangeEvent(newString)); */
     };
 
     let handleKeyDown = (event: NodeEvents.keyEventParams) => {
