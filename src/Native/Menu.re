@@ -28,6 +28,8 @@ external createSubMenu: unit => subMenu = "revery_create_sub_menu";
 
 external addStringItemMenu: (menu, int, string) => bool = "revery_add_string_item_menu";
 
+external addStringItemSubMenu: (subMenu, int, string) => bool = "revery_add_string_item_sub_menu";
+
 external addSubMenu: (menu, subMenu, string) => bool = "revery_add_sub_menu";
 
 let assocCallback = ref([]: list(unit => unit));
@@ -55,6 +57,13 @@ let addItemMenu = w =>
       addSubMenu(w, h, s);
   };
 
+let addItemSubMenu = w =>
+  fun
+  | `String(s, f) => {
+      registerCallback(f);
+      addStringItemSubMenu(w, UIDGenerator.gen(), s);
+  };
+
 external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
 
 let assignMenu = (w, {menu, _}) =>
@@ -70,6 +79,7 @@ module String = {
 module SubMenu = {
   let createElement = (~label as s, ~children, ()) => {
     let handle = createSubMenu();
+    let _ = List.map(e => addItemSubMenu(handle, e), children);/* ASK: what should we do on error */
     `SubMenu(s, handle);
   };
 }

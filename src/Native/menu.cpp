@@ -90,6 +90,34 @@ CAMLprim value revery_add_string_item_menu(value vMenu, value vUid, value vMessa
     CAMLreturn(Bool_val(ret));
 }
 
+CAMLprim value revery_add_string_item_sub_menu(value vMenu, value vUid, value vMessage)
+{
+    CAMLparam3(vMenu, vUid, vMessage);
+    const char * pMessage = String_val(vMessage);
+    /*
+    ** void *pMenu = (void *)vMenu;
+    ** it is a custom type
+    */
+    int uid = Int_val(vUid);
+    value ret;
+
+#ifdef WIN32
+    /*
+    ** Same on windows
+    */
+    ret = revery_add_string_item_menu_win32(vMenu, uid, pMessage);
+    printf("We have add string (%s) to submenu (%p): %s\n", pMessage, vMenu, ret ? "true" : "false");
+#elif __APPLE__
+    printf("WARNING - Not implemented: revery_add_string_item_sub_menu_cocoa");
+#elif __linux__
+    printf("WARNING - Not implemented: revery_add_string_item_sub_menu_gtk");
+#else
+    printf("WARNING - Not implemented: revery_add_string_item_sub_menu");
+#endif
+
+    CAMLreturn(Bool_val(ret));
+}
+
 CAMLprim value revery_add_sub_menu(value vMenu, value vSub, value vMessage)
 {
     CAMLparam3(vMenu, vSub, vMessage);

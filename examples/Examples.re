@@ -272,6 +272,7 @@ let init = app => {
     <Revery_Native.Menu>
       <Revery_Native.String label="About" callback=(() => print_endline("Revery is a cross-platform framework written in ReasonML")) />
       <Revery_Native.SubMenu label="SubMenu1">
+        <Revery_Native.String label="test." callback=(() => print_endline("test. is a private joke of Et7f3.")) />
       </Revery_Native.SubMenu>
       <Revery_Native.String label="Info JSX" callback=(() => print_endline("Did you need some infos ?")) />
     </Revery_Native.Menu>;
