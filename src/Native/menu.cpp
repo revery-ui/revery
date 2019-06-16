@@ -57,16 +57,16 @@ CAMLprim value revery_add_string_item_menu(value vMenu, value vUid, value vMessa
     int uid = Int_val(vUid);
     value ret;
 
-    #ifdef WIN32
+#ifdef WIN32
     ret = revery_add_string_item_menu_win32(vMenu, uid, pMessage);
     printf("We have add string (%s) to menu (%p): %s\n", pMessage, vMenu, ret ? "true" : "false");
-    #elif __APPLE__
+#elif __APPLE__
     printf("WARNING - Not implemented: revery_add_string_item_menu_cocoa");
-    #elif __linux__
+#elif __linux__
     printf("WARNING - Not implemented: revery_add_string_item_menu_gtk");
-    #else
+#else
     printf("WARNING - Not implemented: revery_add_string_item_menu");
-    #endif
+#endif
 
     CAMLreturn(Bool_val(ret));
 }

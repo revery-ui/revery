@@ -22,7 +22,7 @@ type menuInfo =
 
 external createMenu: unit => menu = "revery_create_menu";
 
-external addStringItemMenu: (menu, int, string) => bool = "revery_add_string_item_menu"
+external addStringItemMenu: (menu, int, string) => bool = "revery_add_string_item_menu";
 
 let assocCallback = ref([]: list(unit => unit));
 /* TODO: make it private */
