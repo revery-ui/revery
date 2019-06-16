@@ -17,7 +17,7 @@ type t = {
   backgroundColor: Color.t,
   vsync: bool,
   icon: option(string),
-  menu: option(Revery_Native.Menu.menu),
+  menu: option(Revery_Native.Menu.menuInfo),
 };
 
 let create =

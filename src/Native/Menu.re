@@ -14,6 +14,12 @@ module UIDGenerator = {
 
 type menu;
 
+type menuInfo =
+  {
+    menu,
+    children: list(menuInfo),
+  };
+
 external createMenu: unit => menu = "revery_create_menu";
 
 external addStringItemMenu: (menu, int, string) => bool = "revery_add_string_item_menu"
@@ -42,7 +48,7 @@ let addItemMenu = w =>
 
 external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
 
-let assignMenu = (w, menu) =>
+let assignMenu = (w, {menu, _}) =>
   assignMenuNat(glfwGetNativeWindow(w), menu);
 
 module StringItem = {
@@ -56,7 +62,10 @@ let createElement = (~children, ()) => {
   let handle = createMenu();
   let _ = List.map(e => addItemMenu(handle, e), children);/* ASK: what should we do on error */
   let () = menuList := [handle, ...menuList^];
-  handle
+  {
+    menu: handle,
+    children: [], // empty at the moment
+  };
 };
 
 /*
