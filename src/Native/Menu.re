@@ -34,6 +34,8 @@ external addSeparatorSubMenu: subMenu => bool = "revery_add_separator_sub_menu";
 
 external addSubMenu: (menu, subMenu, string) => bool = "revery_add_sub_menu";
 
+external addSubMenuSubMenu: (subMenu, subMenu, string) => bool = "revery_add_sub_menu_sub_menu";
+
 let assocCallback = ref([]: list(unit => unit));
 /* TODO: make it private */
 
@@ -66,6 +68,7 @@ let addItemSubMenu = w =>
       addStringItemSubMenu(w, UIDGenerator.gen(), s);
   }
   | `Separator => addSeparatorSubMenu(w)
+  | `SubMenu(s, h) => addSubMenuSubMenu(w, h, s)
   ;
 
 external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";

@@ -165,6 +165,33 @@ CAMLprim value revery_add_sub_menu(value vMenu, value vSub, value vMessage)
     CAMLreturn(Bool_val(ret));
 }
 
+CAMLprim value revery_add_sub_menu_sub_menu(value vMenu, value vSub, value vMessage)
+{
+    CAMLparam3(vMenu, vSub, vMessage);
+    const char * pMessage = String_val(vMessage);
+    /*
+    ** void *pMenu = (void *)vMenu;
+    ** it is a custom type
+    */
+    value ret;
+
+#ifdef WIN32
+    /*
+    ** Same on windows
+    */
+    ret = revery_add_sub_menu_win32(vMenu, vSub, pMessage);
+    printf("We have add submenu (%s) to submenu (%p): %s\n", pMessage, vMenu, ret ? "true" : "false");
+#elif __APPLE__
+    printf("WARNING - Not implemented: revery_add_sub_menu_sub_menu_cocoa");
+#elif __linux__
+    printf("WARNING - Not implemented: revery_add_sub_menu_sub_menu_gtk");
+#else
+    printf("WARNING - Not implemented: revery_add_sub_menu_sub_menu");
+#endif
+
+    CAMLreturn(Bool_val(ret));
+}
+
 CAMLprim value revery_assign_menu(value vWindow, value vMenu)
 {
     CAMLparam2(vWindow, vMenu);

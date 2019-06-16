@@ -274,6 +274,10 @@ let init = app => {
       <SubMenu label="SubMenu1">
         <String label="test." callback=(() => print_endline("test. is a private joke of Et7f3.")) />
         <Separator />
+        <SubMenu label="SubSubMenu0">
+          <String label="Label1" callback=(() => print_endline("Label1")) />
+          <String label="Label2" callback=(() => print_endline("Label2")) />
+        </SubMenu>
         <String label="Label0" callback=(() => print_endline("Label0")) />
       </SubMenu>
       <String label="Info JSX" callback=(() => print_endline("Did you need some infos ?")) />
