@@ -270,8 +270,8 @@ let init = app => {
 
   let menu =
     <Revery_Native.Menu>
-      <Revery_Native.StringItem label="About" callback=(() => print_endline("Revery is a cross-platform framework written in ReasonML")) />
-      <Revery_Native.StringItem label="Info JSX" callback=(() => print_endline("Did you need some infos ?")) />
+      <Revery_Native.String label="About" callback=(() => print_endline("Revery is a cross-platform framework written in ReasonML")) />
+      <Revery_Native.String label="Info JSX" callback=(() => print_endline("Did you need some infos ?")) />
     </Revery_Native.Menu>;
   let win =
     App.createWindow(

@@ -51,7 +51,7 @@ external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
 let assignMenu = (w, {menu, _}) =>
   assignMenuNat(glfwGetNativeWindow(w), menu);
 
-module StringItem = {
+module String = {
   let createElement = (
     /* TODO will contain sub-menu*/
     ~children as _
