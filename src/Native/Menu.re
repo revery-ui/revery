@@ -12,13 +12,24 @@ module UIDGenerator = {
 
 [@noalloc] external menuSupported: unit => bool = "revery_menuSupported";
 
+type subMenu;
 type menu;
 
-type subMenu;
+type subMenuItem =
+  | SubMenuLabel(string, int)
+  | Separator
+  | NestedSubMenu(subMenuInfo)
+and subMenuInfo = {
+  subMenu,
+  children: list(subMenuItem),
+};
 
-type menuInfo = {
+type menuItem =
+  | Label(string, int)
+  | SubMenu(subMenuInfo)
+and menuInfo = {
   menu,
-  children: list(menuInfo),
+  children: list(menuItem),
 };
 
 external createMenu: unit => menu = "revery_create_menu";

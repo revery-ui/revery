@@ -86,7 +86,7 @@ value revery_create_sub_menu_win32(void)
     */
     value ret = alloc_custom(&menu_ops, sizeof(struct s_menu), 0, 1);
 
-    Menu_val(ret).menu_handle = CreateMenu();
+    Menu_val(ret).menu_handle = CreatePopupMenu();
 
     return ret;
 }
