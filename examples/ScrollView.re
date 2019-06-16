@@ -29,7 +29,7 @@ module Sample = {
 
   let createElement = (~children as _, ()) =>
     component(slots => {
-      let (bounce, setBounce, slots) = React.Hooks.state(true, slots);
+      let (bounce, setBounce, slots) = Hooks.state(true, slots);
       (
         slots,
         <View style=containerStyle>
@@ -42,7 +42,8 @@ module Sample = {
             ]
           />
           <Checkbox
-            onChange={checked => setBounce(checked)}
+            onChange={() => setBounce(!bounce)}
+            checked=bounce
             style=Style.[marginBottom(10)]
           />
           <ScrollView style=outerBox bounce>

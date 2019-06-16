@@ -1,5 +1,8 @@
 open Revery_UI;
 open Revery_Core;
+open Revery_UI_Primitives;
+
+module Hooks = Revery_UI_Hooks;
 
 type state = {
   isFocused: bool,
@@ -139,7 +142,7 @@ let make =
     ) =>
   component(slots => {
     let (state, dispatch, slots) =
-      React.Hooks.reducer(
+      Hooks.reducer(
         ~initialState={
           internalValue: "",
           cursorPosition:
@@ -161,7 +164,7 @@ let make =
       };
 
     let slots =
-      React.Hooks.effect(
+      Hooks.effect(
         OnMount,
         () => {
           let clear =
@@ -172,10 +175,10 @@ let make =
       );
 
     let (inputValueRef, setInputValueRef, slots) =
-      React.Hooks.ref(valueToDisplay, slots);
+      Hooks.ref(valueToDisplay, slots);
 
     let slots =
-      React.Hooks.effect(
+      Hooks.effect(
         If((!=), valueToDisplay),
         () => {
           let oldValueLength = String.length(inputValueRef);

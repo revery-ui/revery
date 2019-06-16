@@ -33,24 +33,25 @@ type action =
   | AddTodo
   | ChangeFilter(Filter.t)
   | UpdateInputTextValue(string)
-  | ChangeTaskState(int, bool);
+  | ToggleTaskState(int);
 
 let reducer = (action: action, state: state) =>
   switch (action) {
   | AddTodo => {
       ...state,
-      todos: [
-        {id: state.nextId, task: state.inputValue, isDone: false},
-        ...state.todos,
-      ],
+      todos:
+        List.append(
+          state.todos,
+          [{id: state.nextId, task: state.inputValue, isDone: false}],
+        ),
       inputValue: "",
       nextId: state.nextId + 1,
     }
   | UpdateInputTextValue(text) => {...state, inputValue: text}
-  | ChangeTaskState(id, isDone) =>
+  | ToggleTaskState(id) =>
     let todos =
       List.map(
-        item => item.id == id ? {...item, isDone} : item,
+        item => item.id == id ? {...item, isDone: !item.isDone} : item,
         state.todos,
       );
     {...state, todos};
@@ -121,14 +122,14 @@ module Example = {
   let createElement = (~children as _, ()) =>
     component(hooks => {
       let ({todos, inputValue, filter, _}, dispatch, hooks) =
-        React.Hooks.reducer(
+        Hooks.reducer(
           ~initialState={todos: [], filter: All, inputValue: "", nextId: 0},
           reducer,
           hooks,
         );
 
       let hooks =
-        React.Hooks.effect(
+        Hooks.effect(
           OnMount,
           () => {
             let unsubscribe = () => ();
@@ -141,7 +142,7 @@ module Example = {
         <View style=Style.[flexDirection(`Row)]>
           <Checkbox
             checked={task.isDone}
-            onChange={checked => dispatch(ChangeTaskState(task.id, checked))}
+            onChange={() => dispatch(ToggleTaskState(task.id))}
           />
           <Text
             style=Style.[

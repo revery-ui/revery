@@ -38,7 +38,7 @@ module Clock = {
   let createElement = (~children as _, ()) =>
     component(hooks => {
       let (state, dispatch, hooks) =
-        React.Hooks.reducer(
+        Hooks.reducer(
           ~initialState={
             isRunning: false,
             dispose: noop,
@@ -53,11 +53,7 @@ module Clock = {
        * so we don't have a runaway timer!
        */
       let hooks =
-        React.Hooks.effect(
-          OnMount,
-          () => Some(() => dispatch(Stop)),
-          hooks,
-        );
+        Hooks.effect(OnMount, () => Some(() => dispatch(Stop)), hooks);
 
       let startStop = () =>
         state.isRunning

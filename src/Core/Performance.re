@@ -33,11 +33,17 @@ let getMemoryAllocations = (startCounters, endCounters) => {
   ret;
 };
 
+let isBenchmarking =
+  switch (Sys.getenv_opt("REVERY_DEBUG")) {
+  | Some(_) => true
+  | None => false
+  };
+
 let bench: (string, performanceFunction('a)) => 'a =
   (name, f) =>
-    switch (Sys.getenv_opt("REVERY_DEBUG")) {
-    | None => f()
-    | Some(_) =>
+    switch (isBenchmarking) {
+    | false => f()
+    | true =>
       nestingLevel := nestingLevel^ + 1;
       let startTime = glfwGetTime();
       let startCounters = GarbageCollector.counters();

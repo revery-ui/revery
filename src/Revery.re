@@ -13,12 +13,14 @@ module Math = Revery_Math;
 module Shaders = Revery_Shaders;
 module UI = {
   include Revery_UI;
+  include Revery_UI_Primitives;
 
   /*
    * Include Components such that consumers access it via:
    * Revery.UI.Components
    */
   module Components = Revery_UI_Components;
+  module Hooks = Revery_UI_Hooks;
 };
 
 module Platform = {

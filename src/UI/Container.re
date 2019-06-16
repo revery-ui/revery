@@ -1,5 +1,3 @@
-open Revery_Core;
-
 type state = {
   rendered: React.RenderedElement.t,
   previousElement: React.syntheticElement,
@@ -22,27 +20,17 @@ let update: (t, React.syntheticElement) => t =
         updates |> React.RenderedElement.executePendingEffects;
       | Some(s) =>
         let nextElement =
-          Performance.bench("RenderedElement.update", () =>
-            React.RenderedElement.update(
-              ~previousElement=s.previousElement,
-              ~renderedElement=s.rendered,
-              element,
-            )
+          React.RenderedElement.update(
+            ~previousElement=s.previousElement,
+            ~renderedElement=s.rendered,
+            element,
           );
         let nextElement =
-          Performance.bench("RenderedElement.flushPendingUpdates", () =>
-            React.RenderedElement.flushPendingUpdates(nextElement)
-          );
+          React.RenderedElement.flushPendingUpdates(nextElement);
 
-        Performance.bench("RenderedElement.executeHostViewEffects", () =>
-          React.RenderedElement.executeHostViewUpdates(nextElement) |> ignore
-        );
+        React.RenderedElement.executeHostViewUpdates(nextElement) |> ignore;
 
-        let ret =
-          Performance.bench("RenderedElement.executePendingEffects", () =>
-            React.RenderedElement.executePendingEffects(nextElement)
-          );
-        ret;
+        React.RenderedElement.executePendingEffects(nextElement);
       };
 
     let ret: t = {

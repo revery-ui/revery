@@ -7,8 +7,8 @@ module SimpleButton = {
 
   let createElement = (~children as _, ()) =>
     component(hooks => {
-      let (count, setCount, hooks) = React.Hooks.state(0, hooks);
-      let (focused, setFocus, hooks) = React.Hooks.state(false, hooks);
+      let (count, setCount, hooks) = Hooks.state(0, hooks);
+      let (focused, setFocus, hooks) = Hooks.state(false, hooks);
 
       let increment = () => setCount(count + 1);
 

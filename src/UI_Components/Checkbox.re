@@ -1,5 +1,6 @@
 open Revery_UI;
 open Revery_Core;
+open Revery_UI_Primitives;
 
 let component = React.component("Checkbox");
 
@@ -22,19 +23,13 @@ let createElement =
       (),
     ) =>
   component(slots => {
-    let (isChecked, checkBox, slots) = React.Hooks.state(checked, slots);
-
     let stylesToUse = Style.merge(~source=defaultStyle, ~target=style);
-    let bgColor = isChecked ? checkedColor : Colors.transparentWhite;
-    let checkedContent = isChecked ? {||} : "";
+    let bgColor = checked ? checkedColor : Colors.transparentWhite;
+    let checkedContent = checked ? {||} : "";
 
     (
       slots,
-      <Clickable
-        onClick={() => {
-          checkBox(!isChecked);
-          onChange(!isChecked);
-        }}>
+      <Clickable onClick=onChange>
         <View
           style=Style.(
             merge(
@@ -49,7 +44,7 @@ let createElement =
           <Text
             text=checkedContent
             style=Style.[
-              color(isChecked ? Colors.white : Colors.black),
+              color(checked ? Colors.white : Colors.black),
               fontSize(30),
               fontFamily("FontAwesome5FreeSolid.otf"),
             ]

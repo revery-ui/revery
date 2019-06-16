@@ -1,5 +1,8 @@
 open Revery_UI;
 open Revery_Core;
+open Revery_UI_Primitives;
+
+module Hooks = Revery_UI_Hooks;
 
 type item = {
   value: string,
@@ -47,7 +50,7 @@ let createElement =
     let initialState = {items, selected: List.nth(items, 0), _open: false};
 
     let (state, dispatch, slots) =
-      React.Hooks.reducer(~initialState, reducer, slots);
+      Hooks.reducer(~initialState, reducer, slots);
 
     let items =
       state._open

@@ -7,7 +7,7 @@ module RadioExample = {
   let make = () =>
     component(hooks => {
       let (radioVal, setRadioVal, hooks) =
-        React.Hooks.state("Select a button!", hooks);
+        Hooks.state("Select a button!", hooks);
       (
         hooks,
         <View

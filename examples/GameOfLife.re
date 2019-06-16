@@ -420,14 +420,10 @@ module GameOfLiveComponent = {
   let createElement = (~state, ~children as _, ()) =>
     component(hooks => {
       let (state, dispatch, hooks) =
-        React.Hooks.reducer(~initialState=state, reducer, hooks);
+        Hooks.reducer(~initialState=state, reducer, hooks);
 
       let hooks =
-        React.Hooks.effect(
-          OnMount,
-          () => Some(() => dispatch(StopTimer)),
-          hooks,
-        );
+        Hooks.effect(OnMount, () => Some(() => dispatch(StopTimer)), hooks);
 
       let toggleAlive = pos => dispatch(ToggleAlive(pos));
 
