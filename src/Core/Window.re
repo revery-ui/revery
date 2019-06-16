@@ -160,10 +160,11 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   };
 
   let w = Glfw.glfwCreateWindow(options.width, options.height, name);
-  let _ = switch (options.menu) {
-  | None => true /* it haven't failed */
-  | Some(menu) => Revery_Native.Menu.(assignMenu(w, menu));/* ASK: what should we do on error */
-  };
+  let _ =
+    switch (options.menu) {
+    | None => true /* it haven't failed */
+    | Some(menu) => Revery_Native.Menu.(assignMenu(w, menu)) /* ASK: what should we do on error */
+    };
   Glfw.glfwMakeContextCurrent(w);
 
   switch (options.icon) {

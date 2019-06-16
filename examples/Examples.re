@@ -267,21 +267,37 @@ let init = app => {
   Console.log("Hello from example app");
   Console.log([1, 2, 3]);
 
-
   let menu =
-    Revery_Native.(<Menu>
-      <String label="About" callback=(() => print_endline("Revery is a cross-platform framework written in ReasonML")) />
-      <SubMenu label="SubMenu1">
-        <String label="test." callback=(() => print_endline("test. is a private joke of Et7f3.")) />
-        <Separator />
-        <SubMenu label="SubSubMenu0">
-          <String label="Label1" callback=(() => print_endline("Label1")) />
-          <String label="Label2" callback=(() => print_endline("Label2")) />
+    Revery_Native.(
+      <Menu>
+        <String
+          label="About"
+          callback={() =>
+            print_endline(
+              "Revery is a cross-platform framework written in ReasonML",
+            )
+          }
+        />
+        <SubMenu label="SubMenu1">
+          <String
+            label="test."
+            callback={() =>
+              print_endline("test. is a private joke of Et7f3.")
+            }
+          />
+          <Separator />
+          <SubMenu label="SubSubMenu0">
+            <String label="Label1" callback={() => print_endline("Label1")} />
+            <String label="Label2" callback={() => print_endline("Label2")} />
+          </SubMenu>
+          <String label="Label0" callback={() => print_endline("Label0")} />
         </SubMenu>
-        <String label="Label0" callback=(() => print_endline("Label0")) />
-      </SubMenu>
-      <String label="Info JSX" callback=(() => print_endline("Did you need some infos ?")) />
-    </Menu>);
+        <String
+          label="Info JSX"
+          callback={() => print_endline("Did you need some infos ?")}
+        />
+      </Menu>
+    );
   let win =
     App.createWindow(
       ~createOptions=
@@ -296,7 +312,7 @@ let init = app => {
       app,
       "Welcome to Revery!",
     );
-  let _ = Revery_Native.Menu.getApplicationMenu (win.glfwWindow);
+  let _ = Revery_Native.Menu.getApplicationMenu(win.glfwWindow);
 
   if (Environment.webGL) {
     Window.maximize(win);
