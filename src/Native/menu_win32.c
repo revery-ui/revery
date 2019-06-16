@@ -79,6 +79,18 @@ value revery_create_menu_win32(void)
     return ret;
 }
 
+value revery_create_sub_menu_win32(void)
+{
+    /*
+      TODO: Make another structure when we will need to free ressource
+    */
+    value ret = alloc_custom(&menu_ops, sizeof(struct s_menu), 0, 1);
+
+    Menu_val(ret).menu_handle = CreateMenu();
+
+    return ret;
+}
+
 void release_hook(void)
 {
 /*
@@ -96,6 +108,14 @@ value revery_add_string_item_menu_win32(value vMenu, int uid, const char * pMess
         g_hook_handle = SetWindowsHookExW(WH_GETMESSAGE, WndProc, (HINSTANCE)NULL, GetCurrentThreadId());
         atexit(release_hook);
     }
+
+    return ret;
+}
+
+
+value revery_add_sub_menu_win32(value vMenu, value vSub, const char * pMessage)
+{
+    bool ret = AppendMenu(Menu_val(vMenu).menu_handle, MF_POPUP, (UINT_PTR)Menu_val(vSub).menu_handle, pMessage);
 
     return ret;
 }

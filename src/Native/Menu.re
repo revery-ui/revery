@@ -14,6 +14,8 @@ module UIDGenerator = {
 
 type menu;
 
+type subMenu;
+
 type menuInfo =
   {
     menu,
@@ -22,7 +24,11 @@ type menuInfo =
 
 external createMenu: unit => menu = "revery_create_menu";
 
+external createSubMenu: unit => subMenu = "revery_create_sub_menu";
+
 external addStringItemMenu: (menu, int, string) => bool = "revery_add_string_item_menu";
+
+external addSubMenu: (menu, subMenu, string) => bool = "revery_add_sub_menu";
 
 let assocCallback = ref([]: list(unit => unit));
 /* TODO: make it private */
@@ -44,6 +50,9 @@ let addItemMenu = w =>
   | `String(s, f) => {
       registerCallback(f);
       addStringItemMenu(w, UIDGenerator.gen(), s);
+  }
+  | `SubMenu(s, h) => {
+      addSubMenu(w, h, s);
   };
 
 external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
@@ -56,6 +65,13 @@ module String = {
     /* TODO will contain sub-menu*/
     ~children as _
     , ~label as s, ~callback as f, ()) => `String(s, f);
+}
+
+module SubMenu = {
+  let createElement = (~label as s, ~children, ()) => {
+    let handle = createSubMenu();
+    `SubMenu(s, handle);
+  };
 }
 
 let createElement = (~children, ()) => {
