@@ -30,6 +30,8 @@ external addStringItemMenu: (menu, int, string) => bool = "revery_add_string_ite
 
 external addStringItemSubMenu: (subMenu, int, string) => bool = "revery_add_string_item_sub_menu";
 
+external addSeparatorSubMenu: subMenu => bool = "revery_add_separator_sub_menu";
+
 external addSubMenu: (menu, subMenu, string) => bool = "revery_add_sub_menu";
 
 let assocCallback = ref([]: list(unit => unit));
@@ -62,7 +64,9 @@ let addItemSubMenu = w =>
   | `String(s, f) => {
       registerCallback(f);
       addStringItemSubMenu(w, UIDGenerator.gen(), s);
-  };
+  }
+  | `Separator => addSeparatorSubMenu(w)
+  ;
 
 external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
 
@@ -74,6 +78,13 @@ module String = {
     /* TODO will contain sub-menu*/
     ~children as _
     , ~label as s, ~callback as f, ()) => `String(s, f);
+}
+
+module Separator = {
+let createElement = (
+  /* TODO will be empty */
+  /* TODO for toplevel menu*/
+  ~children as _, ()) => `Separator;
 }
 
 module SubMenu = {

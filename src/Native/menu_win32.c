@@ -112,6 +112,12 @@ value revery_add_string_item_menu_win32(value vMenu, int uid, const char * pMess
     return ret;
 }
 
+value revery_add_separator_sub_menu_win32(value vMenu, int uid, const char * pMessage)
+{
+    bool ret = AppendMenu(Menu_val(vMenu).menu_handle, MF_SEPARATOR, 0, NULL);
+
+    return ret;
+}
 
 value revery_add_sub_menu_win32(value vMenu, value vSub, const char * pMessage)
 {
