@@ -21,6 +21,7 @@ type subMenuItem =
   | NestedSubMenu(subMenuInfo)
 and subMenuInfo = {
   subMenu,
+  label: string,
   children: list(subMenuItem),
 };
 
@@ -68,19 +69,27 @@ let () = Callback.register("menu_dispatch", menuDispatch);
 
 let addItemMenu = w =>
   fun
-  | `String(s, f) => {
+  | `String(label, f) => {
       registerCallback(f);
-      addStringItemMenu(w, UIDGenerator.gen(), s);
+      let id = UIDGenerator.gen();
+      let _ = addStringItemMenu(w, id, label); /* ASK: what should we do on error */
+      Label(label, id);
     }
-  | `SubMenu(s, h) => {
-      addSubMenu(w, h, s);
+  | `SubMenu(label, subMenu) => {
+      let _ = addSubMenu(w, subMenu, label); /* ASK: what should we do on error */
+      SubMenu({
+        subMenu,
+        label,
+        children: [] // empty at the moment
+      });
     };
 
 let addItemSubMenu = w =>
   fun
   | `String(s, f) => {
       registerCallback(f);
-      addStringItemSubMenu(w, UIDGenerator.gen(), s);
+      let id = UIDGenerator.gen();
+      addStringItemSubMenu(w, id, s);
     }
   | `Separator => addSeparatorSubMenu(w)
   | `SubMenu(s, h) => addSubMenuSubMenu(w, h, s);
@@ -107,19 +116,16 @@ module Separator = {
 module SubMenu = {
   let createElement = (~label as s, ~children, ()) => {
     let handle = createSubMenu();
-    let _ = List.map(e => addItemSubMenu(handle, e), children); /* ASK: what should we do on error */
+    let _ = List.map(e => addItemSubMenu(handle, e), children);
     `SubMenu((s, handle));
   };
 };
 
 let createElement = (~children, ()) => {
-  let handle = createMenu();
-  let _ = List.map(e => addItemMenu(handle, e), children); /* ASK: what should we do on error */
-  let () = menuList := [handle, ...menuList^];
-  {
-    menu: handle,
-    children: [] // empty at the moment
-  };
+  let menu = createMenu();
+  let children = List.map(e => addItemMenu(menu, e), children);
+  let () = menuList := [menu, ...menuList^];
+  {menu, children};
 };
 
 /*
