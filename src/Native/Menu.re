@@ -131,6 +131,12 @@ let createElement = (~children, ()) => {
   {menu, children};
 };
 
+let getMenuItemById = (menu, n) =>
+  try (Some(List.nth(menu.children, n))) {
+  | Invalid_argument(_)
+  | Failure(_) => None
+  };
+
 /*
  ** per windows ?
  */
