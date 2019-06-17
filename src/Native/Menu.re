@@ -75,24 +75,27 @@ let addItemMenu = w =>
       let _ = addStringItemMenu(w, id, label); /* ASK: what should we do on error */
       Label(label, id);
     }
-  | `SubMenu(label, subMenu) => {
+  | `SubMenu(label, subMenu, children) => {
       let _ = addSubMenu(w, subMenu, label); /* ASK: what should we do on error */
-      SubMenu({
-        subMenu,
-        label,
-        children: [] // empty at the moment
-      });
+      SubMenu({subMenu, label, children});
     };
 
 let addItemSubMenu = w =>
   fun
-  | `String(s, f) => {
+  | `String(label, f) => {
       registerCallback(f);
       let id = UIDGenerator.gen();
-      addStringItemSubMenu(w, id, s);
+      let _ = addStringItemSubMenu(w, id, label); /* ASK: what should we do on error */
+      SubMenuLabel(label, id);
     }
-  | `Separator => addSeparatorSubMenu(w)
-  | `SubMenu(s, h) => addSubMenuSubMenu(w, h, s);
+  | `Separator => {
+      let _ = addSeparatorSubMenu(w); /* ASK: what should we do on error */
+      Separator;
+    }
+  | `SubMenu(label, subMenu, children) => {
+      let _ = addSubMenuSubMenu(w, subMenu, label); /* ASK: what should we do on error */
+      NestedSubMenu({subMenu, label, children});
+    };
 
 external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
 
@@ -116,8 +119,8 @@ module Separator = {
 module SubMenu = {
   let createElement = (~label as s, ~children, ()) => {
     let handle = createSubMenu();
-    let _ = List.map(e => addItemSubMenu(handle, e), children);
-    `SubMenu((s, handle));
+    let children = List.map(e => addItemSubMenu(handle, e), children);
+    `SubMenu((s, handle, children)); // we use polymorphic variant to enforce construction constraint
   };
 };
 
