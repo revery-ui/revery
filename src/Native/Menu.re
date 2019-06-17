@@ -33,6 +33,8 @@ and menuInfo = {
   children: list(menuItem),
 };
 
+let applicationMenu = ref(None);
+
 external createMenu: unit => menu = "revery_create_menu";
 
 external createSubMenu: unit => subMenu = "revery_create_sub_menu";
@@ -99,8 +101,15 @@ let addItemSubMenu = w =>
 
 external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
 
-let assignMenu = (w, {menu, _}) =>
-  assignMenuNat(glfwGetNativeWindow(w), menu);
+// it is setApplicationMenu
+let assignMenu = (w, {menu, _}) => {
+  let success = assignMenuNat(glfwGetNativeWindow(w), menu);
+  if (success) {
+    // we have managed to change our target
+    applicationMenu := Some(menu);
+  }; /* ASK: what should we do on error */
+  success;
+};
 
 module String = {
   let createElement =
@@ -138,11 +147,14 @@ let getMenuItemById = (menu, n) =>
   };
 
 /*
- ** per windows ?
- */
+ /*
+  ** per windows ?
+  */
 
-external getApplicationMenuNat: (NativeWindow.t, list(menu)) => menu =
-  "revery_get_application_menu";
+ external getApplicationMenuNat: (NativeWindow.t, list(menu)) => menu =
+   "revery_get_application_menu";
 
-let getApplicationMenu = w =>
-  getApplicationMenuNat(glfwGetNativeWindow(w), menuList^);
+ let getApplicationMenu = w =>
+   getApplicationMenuNat(glfwGetNativeWindow(w), menuList^);*/
+
+let getApplicationMenu = () => applicationMenu^;
