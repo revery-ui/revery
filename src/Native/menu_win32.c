@@ -161,6 +161,34 @@ value revery_assign_menu_win32(void * pWindow, value vMenu)
     return SetMenu(pWindow, Menu_val(vMenu).menu_handle);
 }
 
+value revery_popup_sub_menu_win32(void * pWindow, value vMenu, int x, int y)
+{
+    CAMLparam1(vMenu);
+    WINDOWINFO wndi = {sizeof(WINDOWINFO)};
+
+/*SystemParametersInfo(SPI_SETMENUANIMATION, 0, (PVOID)true, 0);*/
+
+    if (GetWindowInfo(pWindow, &wndi))
+    {
+        /*
+        ** We have managed to access window position
+        */
+        x += wndi.rcClient.left;
+        y += wndi.rcClient.top;
+    }
+
+    int ret = TrackPopupMenu(Menu_val(vMenu).menu_handle,
+        TPM_LEFTALIGN | TPM_TOPALIGN | TPM_NONOTIFY | TPM_RETURNCMD
+      | TPM_LEFTBUTTON/* | TPM_HORPOSANIMATION | TPM_VERPOSANIMATION*/,
+      x, y, 0 /* reserved */, pWindow, NULL /* ignored */
+    );
+
+    if (ret)
+        PostMessage(pWindow, WM_POPUP, ret, 0);
+
+    CAMLreturn(ret == 0);
+}
+
 value revery_get_application_menu_win32(void * pWindow, value list)
 {
   CAMLparam1(list);

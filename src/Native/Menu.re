@@ -136,6 +136,14 @@ let addItemPopupMenu = w =>
 
 external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
 
+external popupMenuNat: (NativeWindow.t, popupMenu, int, int) => bool =
+  "revery_popup_sub_menu";
+
+let popupMenu = (w, {popupMenu, _}, x, y) => {
+  let success = popupMenuNat(glfwGetNativeWindow(w), popupMenu, x, y);
+  success;
+};
+
 // it is setApplicationMenu
 let assignMenu = (w, {menu, _}) => {
   let success = assignMenuNat(glfwGetNativeWindow(w), menu);

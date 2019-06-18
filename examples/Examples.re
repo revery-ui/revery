@@ -217,6 +217,31 @@ module ExampleHost = {
         hooks,
         <View
           onMouseWheel={_evt => ()}
+          onMouseUp={({mouseX, mouseY, button}) =>
+            if (button == Revery_Core.MouseButton.BUTTON_RIGHT) {
+              let cancelled =
+                Revery_Native.(
+                  Menu.popupMenu(
+                    win.glfwWindow,
+                    <PopupMenu>
+                      <String label="Hey" callback={() => ()} />
+                      <Separator />
+                      <String label="I am" callback={() => ()} />
+                      <Separator />
+                      <Separator />
+                      <SubMenu label="a">
+                        <String label="popup menu" callback={() => ()} />
+                      </SubMenu>
+                    </PopupMenu>,
+                    int_of_float(mouseX),
+                    int_of_float(mouseY),
+                  )
+                );
+              if (cancelled) {
+                print_endline("Popup is cancelled");
+              };
+            }
+          }
           style=Style.[
             position(`Absolute),
             justifyContent(`Center),

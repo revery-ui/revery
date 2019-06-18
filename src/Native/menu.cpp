@@ -319,6 +319,34 @@ CAMLprim value revery_assign_menu(value vWindow, value vMenu)
     CAMLreturn(Bool_val(ret));
 }
 
+CAMLprim value revery_popup_sub_menu(value vWindow, value vMenu, value vX, value vY)
+{
+    CAMLparam4(vWindow, vMenu, vX, vY);
+    void *pWin = (void *)vWindow;
+    /*
+    ** void *pMenu = (void *)vMenu;
+    ** it is a custom type
+    */
+    int x = Int_val(vX), y = Int_val(vY);
+    value ret;
+
+#ifdef WIN32
+    ret = revery_popup_sub_menu_win32(pWin, vMenu, x, y);
+    printf("We have display popupmenu (%p): %s\n", vMenu, ret ? "true" : "false");
+#elif __APPLE__
+    printf("WARNING - Not implemented: revery_popup_sub_menu_cocoa");
+#elif __linux__
+    printf("WARNING - Not implemented: revery_popup_sub_menu_gtk");
+#else
+    printf("WARNING - Not implemented: revery_popup_sub_menu");
+#endif
+
+/*
+** this value is meaningless on Windows :shrug:
+*/
+    CAMLreturn(Bool_val(ret));
+}
+
 CAMLprim value revery_get_application_menu(value vWindow, value vList)
 {
     CAMLparam2(vWindow, vList);

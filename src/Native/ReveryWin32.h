@@ -6,5 +6,6 @@ extern "C" {
     value revery_add_separator_sub_menu_win32(value vMenu);
     value revery_add_sub_menu_win32(value vMenu, value vSub, const char * pMessage);
     value revery_assign_menu_win32(void * pWindow, value vMenu);
+    value revery_popup_sub_menu_win32(void * pWindow, value vMenu, int x, int y);
     value revery_get_application_menu_win32(void * pWindow, value list);
 }
