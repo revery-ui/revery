@@ -13,6 +13,7 @@ module UIDGenerator = {
 [@noalloc] external menuSupported: unit => bool = "revery_menuSupported";
 
 type subMenu;
+type popupMenu;
 type menu;
 
 type subMenuItem =
@@ -22,6 +23,11 @@ type subMenuItem =
 and subMenuInfo = {
   subMenu,
   label: string,
+  children: list(subMenuItem),
+};
+
+type popupMenuInfo = {
+  popupMenu,
   children: list(subMenuItem),
 };
 
@@ -39,19 +45,30 @@ external createMenu: unit => menu = "revery_create_menu";
 
 external createSubMenu: unit => subMenu = "revery_create_sub_menu";
 
+external createPopupMenu: unit => popupMenu = "revery_create_popup_menu"; // should be the same on all OS
+
 external addStringItemMenu: (menu, int, string) => bool =
   "revery_add_string_item_menu";
 
 external addStringItemSubMenu: (subMenu, int, string) => bool =
   "revery_add_string_item_sub_menu";
 
+external addStringItemPopupMenu: (popupMenu, int, string) => bool =
+  "revery_add_string_item_popup_menu"; // should be the same on all OS
+
 external addSeparatorSubMenu: subMenu => bool =
   "revery_add_separator_sub_menu";
+
+external addSeparatorPopupMenu: popupMenu => bool =
+  "revery_add_separator_popup_menu"; // should be the same on all OS
 
 external addSubMenu: (menu, subMenu, string) => bool = "revery_add_sub_menu";
 
 external addSubMenuSubMenu: (subMenu, subMenu, string) => bool =
   "revery_add_sub_menu_sub_menu";
+
+external addSubMenuPopupMenu: (popupMenu, subMenu, string) => bool =
+  "revery_add_sub_menu_popup_menu"; // should be the same on all OS
 
 let assocCallback = ref([]: list(unit => unit));
 /* TODO: make it private */
@@ -100,6 +117,23 @@ let addItemSubMenu = w =>
       NestedSubMenu({subMenu, label, children});
     };
 
+let addItemPopupMenu = w =>
+  fun
+  | `String(label, f) => {
+      registerCallback(f);
+      let id = UIDGenerator.gen();
+      let _ = addStringItemPopupMenu(w, id, label); /* ASK: what should we do on error */
+      SubMenuLabel(label, id);
+    }
+  | `Separator => {
+      let _ = addSeparatorPopupMenu(w); /* ASK: what should we do on error */
+      Separator;
+    }
+  | `SubMenu(label, subMenu, children) => {
+      let _ = addSubMenuPopupMenu(w, subMenu, label); /* ASK: what should we do on error */
+      NestedSubMenu({subMenu, label, children});
+    };
+
 external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
 
 // it is setApplicationMenu
@@ -131,6 +165,14 @@ module SubMenu = {
     let handle = createSubMenu();
     let children = List.map(e => addItemSubMenu(handle, e), children);
     `SubMenu((s, handle, children)); // we use polymorphic variant to enforce construction constraint
+  };
+};
+
+module PopupMenu = {
+  let createElement = (~children, ()) => {
+    let popupMenu = createPopupMenu();
+    let children = List.map(e => addItemPopupMenu(popupMenu, e), children);
+    {popupMenu, children};
   };
 };
 
