@@ -61,6 +61,7 @@ static void * g_hook_handle = NULL;
 
 LRESULT CALLBACK WndProc(int msg, WPARAM wParam, LPARAM lParam)
 {
+    CAMLparam0();
     MSG m;
 
     if (msg == HC_ACTION && wParam == PM_REMOVE)
@@ -86,7 +87,7 @@ LRESULT CALLBACK WndProc(int msg, WPARAM wParam, LPARAM lParam)
         }
     }
 
-    return CallNextHookEx((void *) NULL, msg, wParam, lParam);
+    CAMLreturnT(LRESULT, CallNextHookEx((void *) NULL, msg, wParam, lParam));
 }
 
 value revery_create_menu_win32(void)
