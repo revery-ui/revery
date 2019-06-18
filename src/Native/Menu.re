@@ -72,6 +72,7 @@ external addSubMenuPopupMenu: (popupMenu, subMenu, string) => bool =
 
 let assocCallback = ref([]: list(unit => unit));
 /* TODO: make it private */
+/* TODO: use HashTbl to save memory and don't store all callback when not needed */
 
 let menuList = ref([]: list(menu));
 
@@ -139,8 +140,12 @@ external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
 external popupMenuNat: (NativeWindow.t, popupMenu, int, int) => bool =
   "revery_popup_sub_menu";
 
-let popupMenu = (w, {popupMenu, _}, x, y) => {
+let popupMenu = (~callback=None, w, {popupMenu, _}, x, y) => {
   let success = popupMenuNat(glfwGetNativeWindow(w), popupMenu, x, y);
+  switch (callback) {
+  | None => ()
+  | Some(callback) => callback(success) // we haven't more useful information
+  };
   success;
 };
 
