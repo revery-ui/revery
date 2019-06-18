@@ -68,6 +68,7 @@ let registerCallback = cb =>
 /* TODO: make it private */
 
 let () = Callback.register("menu_dispatch", menuDispatch);
+let () = Callback.register("popup_dispatch", menuDispatch); // draft to implement popup
 
 let addItemMenu = w =>
   fun

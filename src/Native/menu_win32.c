@@ -11,6 +11,15 @@
 #include <caml/custom.h>
 #include <caml/memory.h>
 
+#define WM_POPUP WM_USER + 14
+/*
+** We need to have a unique number to avoid clash with other message
+** of GLFW for instance.
+**
+** So I have pick the line number as random one.
+** TODO: check that this number isn't used in our dependencies
+*/
+
 /*
 ** Define custom operations here
 */
@@ -46,6 +55,7 @@ static struct custom_operations menu_ops = {
 };
 
 static value * g_menu_dispatch = NULL;
+static value * g_popup_dispatch = NULL;
 static value * g_menu_list = NULL;
 static void * g_hook_handle = NULL;
 
@@ -64,6 +74,15 @@ LRESULT CALLBACK WndProc(int msg, WPARAM wParam, LPARAM lParam)
             if (g_menu_dispatch == NULL)
                 g_menu_dispatch = caml_named_value("menu_dispatch");
             caml_callback(*g_menu_dispatch, Val_int(LOWORD(m.wParam)));
+        }
+        else if (m.message == WM_POPUP)
+        {
+            printf("%d is clicked\n", LOWORD(m.wParam));
+
+            /* First time around, look up by name */
+            if (g_popup_dispatch == NULL)
+                g_popup_dispatch = caml_named_value("popup_dispatch");
+            caml_callback(*g_popup_dispatch, Val_int(LOWORD(m.wParam)));
         }
     }
 
