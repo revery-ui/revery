@@ -21,6 +21,8 @@ type example = {
 type state = {
   examples: list(example),
   selectedExample: string,
+  lastExample: option(string),
+  newExample: option(string),
 };
 
 let state: state = {
@@ -122,6 +124,8 @@ let state: state = {
     },
   ],
   selectedExample: "Animation",
+  lastExample: None,
+  newExample: None,
 };
 
 let getExampleByName = (state: state, example: string) =>
@@ -174,11 +178,23 @@ module ExampleButton = {
 };
 
 type action =
-  | SelectExample(string);
+  | SelectExample(string)
+  | LastExample(string);
 
 let reducer = (action: action, state: state) =>
   switch (action) {
-  | SelectExample(name) => {...state, selectedExample: name}
+  | SelectExample(name) => {
+      ...state,
+      selectedExample: name,
+      lastExample: Some(state.selectedExample),
+      newExample: None,
+    }
+  | LastExample(name) => {
+      ...state,
+      selectedExample: name,
+      lastExample: None,
+      newExample: Some(state.selectedExample),
+    }
   };
 
 module ExampleHost = {
@@ -219,20 +235,64 @@ module ExampleHost = {
           onMouseWheel={_evt => ()}
           onMouseUp={({mouseX, mouseY, button}) =>
             if (button == Revery_Core.MouseButton.BUTTON_RIGHT) {
+              let uselessMenu =
+                Revery_Native.[
+                  <String label="Hey" callback={() => ()} />,
+                  <Separator />,
+                  <String label="I am" callback={() => ()} />,
+                  <Separator />,
+                  <Separator />,
+                  <SubMenu label="a">
+                    <String label="popup menu" callback={() => ()} />
+                  </SubMenu>,
+                ];
+              let uselessMenu =
+                switch (state.lastExample) {
+                | Some(name) => [
+                    <Revery_Native.String
+                      label="<- Back"
+                      callback={() => {
+                        /*
+                         * TEMPORARY WORKAROUND: The animations don't always get stopped when switching examples,
+                         * tracked by briskml/brisk-reconciler#8. We can remove this once it's fixed!
+                         */
+                        Animated.cancelAll();
+
+                        let sourceFile = getSourceForSample(state, name);
+                        notifyExampleSwitched(sourceFile);
+                        dispatch(LastExample(name));
+                      }}
+                    />,
+                    ...uselessMenu,
+                  ]
+                | None => uselessMenu
+                };
+              let uselessMenu =
+                switch (state.newExample) {
+                | Some(name) => [
+                    <Revery_Native.String
+                      label="Foward ->"
+                      callback={() => {
+                        /*
+                         * TEMPORARY WORKAROUND: The animations don't always get stopped when switching examples,
+                         * tracked by briskml/brisk-reconciler#8. We can remove this once it's fixed!
+                         */
+                        Animated.cancelAll();
+
+                        let sourceFile = getSourceForSample(state, name);
+                        notifyExampleSwitched(sourceFile);
+                        dispatch(SelectExample(name));
+                      }}
+                    />,
+                    ...uselessMenu,
+                  ]
+                | None => uselessMenu
+                };
               let cancelled =
                 Revery_Native.(
                   Menu.popupMenu(
                     win.glfwWindow,
-                    <PopupMenu>
-                      <String label="Hey" callback={() => ()} />
-                      <Separator />
-                      <String label="I am" callback={() => ()} />
-                      <Separator />
-                      <Separator />
-                      <SubMenu label="a">
-                        <String label="popup menu" callback={() => ()} />
-                      </SubMenu>
-                    </PopupMenu>,
+                    <PopupMenu> ...uselessMenu </PopupMenu>,
                     int_of_float(mouseX),
                     int_of_float(mouseY),
                   )
