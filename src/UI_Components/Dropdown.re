@@ -33,23 +33,8 @@ let textStyles =
 
 let noop = _item => ();
 
-//let component = React.component("Dropdown");
-/*
-File "src/UI_Components/Dropdown.re", line 36, characters 4-13:
-Error: The type of this expression,
-       ?key:Revery_UI.React.Key.t ->
-       (('_weak1 state Revery_UI.React.Hooks.Reducer.t -> unit, unit,
-         '_weak1 state Revery_UI.React.Hooks.Reducer.t -> unit,
-         '_weak1 state Revery_UI.React.Hooks.Reducer.t -> unit)
-        Brisk_reconciler__.Hooks.t ->
-        (unit, unit, '_weak1 state Revery_UI.React.Hooks.Reducer.t -> unit,
-         unit)
-        Brisk_reconciler__.Hooks.t * Revery_UI.React.syntheticElement) ->
-       Revery_UI.React.syntheticElement,
-       contains type variables that cannot be generalized
-TODO: modify Brisk ? to allow polymorphic state
-MAYBE use +'a somewhere in Brisk
-*/
+let component(a) = React.component("Dropdown", a);
+
 let createElement =
     (
       ~items,
@@ -59,7 +44,7 @@ let createElement =
       ~children as _,
       (),
     ) =>
-  React.component("Dropdown")(slots => {
+  component(slots => {
     let initialState = {items, selected: List.nth(items, 0), _open: false};
 
     let (state, dispatch, slots) =

@@ -14,8 +14,8 @@ let defaultStyle =
     fontFamily("Roboto-Regular.ttf"),
   ];
 
-//let component = React.component("RadioButtons");
-// same thing as DropDown
+let component(a) = React.component("RadioButtons", a);
+
 let make =
     (
       ~defaultSelected,
@@ -25,7 +25,7 @@ let make =
       ~onChange,
       _children,
     ) =>
-  React.component("RadioButtons")(slots => {
+  component(slots => {
     let defaultVal = List.nth(buttons, defaultSelected).value;
     let (checkedVal, setCheckedVal, slots) =
       React.Hooks.state(defaultVal, slots);
