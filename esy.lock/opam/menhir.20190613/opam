@@ -13,9 +13,6 @@ build: [
 install: [
   [make "-f" "Makefile" "install" "PREFIX=%{prefix}%" "docdir=%{doc}%/menhir" "libdir=%{lib}%/menhir" "mandir=%{man}%/man1"]
 ]
-remove: [
-  [make "-f" "Makefile" "uninstall" "PREFIX=%{prefix}%" "docdir=%{doc}%/menhir" "libdir=%{lib}%/menhir" "mandir=%{man}%/man1"]
-]
 depends: [
   "ocaml" {>= "4.02"}
   "ocamlfind" {build}
@@ -24,9 +21,9 @@ depends: [
 synopsis: "An LR(1) parser generator"
 url {
   src:
-    "https://gitlab.inria.fr/fpottier/menhir/repository/20181113/archive.tar.gz"
+    "https://gitlab.inria.fr/fpottier/menhir/repository/20190613/archive.tar.gz"
   checksum: [
-    "md5=69ce441a06ea131cd43e7b44c4303f3c"
-    "sha512=4ddefcd71d305bfb933a4056da57e36c13c99ec6dfcc4695814798fbbd78b4d65828381ebcb0e58c4c0394105ac763af3d475474e05e408f7080315bc3cf6176"
+    "md5=23c380e23903e1974c923f3a6ff25ad4"
+    "sha512=0a929803068771bcc785abd94d37966fdb84f515f7f82393e685d44cc6e18144f62f2e00e0a7bf9b69f87c2c4bb9e33435878322d26b8fc37f7756fd84bc6f46"
   ]
 }
