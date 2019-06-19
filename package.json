@@ -45,7 +45,7 @@
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#dd933fc",
-    "pesy": "0.4.2"
+    "pesy": "0.4.1"
   },
   "peerDependencies": {
     "ocaml": ">=4.6.0 <4.8.0"

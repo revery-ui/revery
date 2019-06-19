@@ -1,5 +1,5 @@
 {
-  "checksum": "6b2975514ef73b048f442b63b0034879",
+  "checksum": "e73221ce578e87f03951adf6837def11",
   "root": "revery@link-dev:./package.json",
   "node": {
     "revery@link-dev:./package.json": {
@@ -17,8 +17,8 @@
         "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9",
         "reason-glfw@3.2.1024@d41d8cd9",
         "reason-gl-matrix@0.9.9304@d41d8cd9",
-        "reason-fontkit@2.4.1@d41d8cd9", "flex@1.2.2@d41d8cd9",
-        "@reason-native/console@0.0.3@d41d8cd9",
+        "reason-fontkit@2.4.1@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
+        "flex@1.2.2@d41d8cd9", "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/lwt_ppx@opam:1.2.2@946c5ba2", "@opam/lwt@opam:4.2.1@c1888ec9",
         "@opam/js_of_ocaml-lwt@opam:3.4.0@8207cd9d",
         "@opam/js_of_ocaml-compiler@github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce@d41d8cd9",
@@ -101,7 +101,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.1.10@d41d8cd9", "pesy@0.4.2@d41d8cd9",
+        "refmterr@3.1.10@d41d8cd9", "pesy@0.4.1@d41d8cd9",
         "ocaml@4.7.1004@d41d8cd9", "@opam/dune@opam:1.7.3@72aad784",
         "@esy-ocaml/reason@3.4.0@d41d8cd9"
       ],
@@ -169,14 +169,14 @@
       ],
       "devDependencies": []
     },
-    "pesy@0.4.2@d41d8cd9": {
-      "id": "pesy@0.4.2@d41d8cd9",
+    "pesy@0.4.1@d41d8cd9": {
+      "id": "pesy@0.4.1@d41d8cd9",
       "name": "pesy",
-      "version": "0.4.2",
+      "version": "0.4.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/pesy/-/pesy-0.4.2.tgz#sha1:ba28bee662f274fa5755f76f43ccb8d46a51d02e"
+          "archive:https://registry.npmjs.org/pesy/-/pesy-0.4.1.tgz#sha1:37b3faccb3ecdb37f4bf3d95d04ffbd2633247af"
         ]
       },
       "overrides": [],
