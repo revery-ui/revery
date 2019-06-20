@@ -1,5 +1,5 @@
 {
-  "checksum": "1c55b65329e1c05c29c8c5da718e6418",
+  "checksum": "947d8208fcb1ad57f8ff1340d212ccc4",
   "root": "revery@link-dev:./package.json",
   "node": {
     "wordwrap@0.0.3@d41d8cd9": {
@@ -158,7 +158,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.1.10@d41d8cd9", "pesy@0.4.2@d41d8cd9",
+        "refmterr@3.1.10@d41d8cd9", "pesy@0.4.1@d41d8cd9",
         "ocaml@4.7.1004@d41d8cd9", "@opam/dune@opam:1.7.3@72aad784",
         "@esy-ocaml/reason@3.4.0@d41d8cd9"
       ],
@@ -257,14 +257,14 @@
       ],
       "devDependencies": []
     },
-    "pesy@0.4.2@d41d8cd9": {
-      "id": "pesy@0.4.2@d41d8cd9",
+    "pesy@0.4.1@d41d8cd9": {
+      "id": "pesy@0.4.1@d41d8cd9",
       "name": "pesy",
-      "version": "0.4.2",
+      "version": "0.4.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/pesy/-/pesy-0.4.2.tgz#sha1:ba28bee662f274fa5755f76f43ccb8d46a51d02e"
+          "archive:https://registry.npmjs.org/pesy/-/pesy-0.4.1.tgz#sha1:37b3faccb3ecdb37f4bf3d95d04ffbd2633247af"
         ]
       },
       "overrides": [],
