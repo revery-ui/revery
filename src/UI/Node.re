@@ -185,8 +185,8 @@ class node (()) = {
       );
     let b = BoundingBox2d.create(min, max);
     let bbox = BoundingBox2d.transform(b, worldTransform);
-    switch(_this#getParent()){
-    | Some(p) => BoundingBox2d.intersect(bbox, p#getBoundingBoxClipped());
+    switch (_this#getParent()) {
+    | Some(p) => BoundingBox2d.intersect(bbox, p#getBoundingBoxClipped())
     | None => bbox
     };
   };
@@ -203,7 +203,8 @@ class node (()) = {
     let bboxClipped = _this#_recalculateBoundingBoxClipped(worldTransform);
     let depth = _this#_recalculateDepth();
 
-    _cachedNodeState := Some({transform, worldTransform, bbox, bboxClipped, depth});
+    _cachedNodeState :=
+      Some({transform, worldTransform, bbox, bboxClipped, depth});
 
     List.iter(c => c#recalculate(), _children^);
 
