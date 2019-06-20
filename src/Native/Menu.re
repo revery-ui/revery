@@ -23,12 +23,12 @@ type subMenuItem =
 and subMenuInfo = {
   subMenu,
   label: string,
-  children: list(subMenuItem),
+  children: ref(list(subMenuItem)),
 };
 
 type popupMenuInfo = {
   popupMenu,
-  children: list(subMenuItem),
+  children: ref(list(subMenuItem)),
 };
 
 type menuItem =
@@ -36,7 +36,7 @@ type menuItem =
   | SubMenu(subMenuInfo)
 and menuInfo = {
   menu,
-  children: list(menuItem),
+  children: ref(list(menuItem)),
 };
 
 let applicationMenu = ref(None);
@@ -177,7 +177,7 @@ module SubMenu = {
   let createElement = (~label as s, ~children, ()) => {
     let handle = createSubMenu();
     let children = List.map(e => addItemSubMenu(handle, e), children);
-    `SubMenu((s, handle, children)); // we use polymorphic variant to enforce construction constraint
+    `SubMenu((s, handle, ref(children))); // we use polymorphic variant to enforce construction constraint
   };
 };
 
@@ -185,7 +185,7 @@ module PopupMenu = {
   let createElement = (~children, ()) => {
     let popupMenu = createPopupMenu();
     let children = List.map(e => addItemPopupMenu(popupMenu, e), children);
-    {popupMenu, children};
+    {popupMenu, children: ref(children)};
   };
 };
 
@@ -193,11 +193,11 @@ let createElement = (~children, ()) => {
   let menu = createMenu();
   let children = List.map(e => addItemMenu(menu, e), children);
   let () = menuList := [menu, ...menuList^];
-  {menu, children};
+  {menu, children: ref(children)};
 };
 
 let getMenuItemById = (menu, n) =>
-  try (Some(List.nth(menu.children, n))) {
+  try (Some(List.nth(menu.children^, n))) {
   | Invalid_argument(_)
   | Failure(_) => None
   };
