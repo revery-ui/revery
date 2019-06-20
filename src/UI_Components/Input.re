@@ -34,8 +34,10 @@ type action =
   | CursorPosition(cursorUpdate)
   | CursorTimer
   | SetFocus(bool)
+  | Delete
+  | Backspace
   | InsertText(string)
-  | UpdateText(textUpdate)
+  | UpdateText(string)
   | ResetCursorTimer;
 
 let getStringParts = (index, str) => {
@@ -111,9 +113,11 @@ let reducer = (action, state) =>
         cursorTimer: Time.Seconds(0.0),
    }
    }
-  | UpdateText({newString, _}) =>
+  | Backspace => state
+  | Delete => state
+  | UpdateText(v) =>
     state.isFocused
-      ? {...state, isFocused: true, internalValue: newString} : state
+      ? {...state, isFocused: true, internalValue: v, cursorPosition: String.length(v)} : state
   | ResetCursorTimer => {...state, cursorTimer: Time.Seconds(0.0)}
   };
 
@@ -166,46 +170,90 @@ let make =
         slots,
       );
 
-    print_endline("re-rendering - new value: " ++ state.internalValue);
-
     let valueToDisplay =
       switch (valueAsProp) {
       | Some(v) => v
       | None => state.internalValue
       };
+    print_endline("re-rendering - new value: " ++ state.internalValue ++ " valueToDisplay: " ++ valueToDisplay);
 
-    let slots =
-      Hooks.effect(
-        OnMount,
-        () => {
-          let clear =
-            Tick.interval(_ => dispatch(CursorTimer), Seconds(0.1));
-          Some(clear);
-        },
-        slots,
-      );
+
+    /* let slots = */
+    /*   Hooks.effect( */
+    /*     OnMount, */
+    /*     () => { */
+    /*       let clear = */
+    /*         Tick.interval(_ => dispatch(CursorTimer), Seconds(0.1)); */
+    /*       Some(clear); */
+    /*     }, */
+    /*     slots, */
+    /*   ); */
+
+    let (lastChangeRef, setLastChangeRef, slots) =
+        Hooks.ref(state.internalValue, slots);
 
     let (inputValueRef, setInputValueRef, slots) =
-      Hooks.ref(valueToDisplay, slots);
+      Hooks.ref(valueAsProp, slots);
 
-    let slots =
-      Hooks.effect(
-        If((!=), state.internalValue),
+
+
+    let slots = Hooks.effect(
+        Always,
         () => {
-          let createChangeEvent = value => {
-            value,
-            key: Key.fromString(""),
-            character: "",
-            altKey: false,
-            ctrlKey: false,
-            shiftKey: false,
-            superKey: false,
-          };
-        onChange(createChangeEvent(state.internalValue));
-          None;
+            let didPropChange = switch((inputValueRef, valueAsProp)) {
+            | (Some(oldVal), Some(newVal)) => {
+                    setInputValueRef(Some(newVal));
+                print_endline ("Comparing oldval: |" ++ oldVal ++ "| to newVal: |" ++ newVal ++ "|");
+                !String.equal(oldVal, newVal)
+            }
+            | _ => false
+            };
+          /* let createChangeEvent = value => { */
+          /*   value, */
+          /*   key: Key.fromString(""), */
+          /*   character: "", */
+          /*   altKey: false, */
+          /*   ctrlKey: false, */
+          /*   shiftKey: false, */
+          /*   superKey: false, */
+          /* }; */
+
+            if (didPropChange) {
+                print_endline ("Prop changed!");
+                switch (valueAsProp) {
+                | None => ()
+                | Some(v) => 
+                    print_endline ("Updating value: " ++ v);
+                    dispatch(UpdateText(v));
+                }
+            } else if (!String.equal(lastChangeRef, state.internalValue)) {
+                print_endline ("Internal state changed!");
+                /* onChange(createChangeEvent(state.internalValue)); */
+                setLastChangeRef(state.internalValue);
+            };
+None;
         },
-        slots,
-      );
+        slots
+    );
+
+    /* let slots = */
+    /*   Hooks.effect( */
+    /*     If((!=), state.internalValue), */
+    /*     () => { */
+    /*       let createChangeEvent = value => { */
+    /*         value, */
+    /*         key: Key.fromString(""), */
+    /*         character: "", */
+    /*         altKey: false, */
+    /*         ctrlKey: false, */
+    /*         shiftKey: false, */
+    /*         superKey: false, */
+    /*       }; */
+    /*     onChange(createChangeEvent(state.internalValue)); */
+    /*       None; */
+    /*     }, */
+    /*     slots, */
+    /*   ); */
     /* let slots = */
     /*   Hooks.effect( */
     /*     If((!=), valueToDisplay), */
@@ -280,31 +328,11 @@ let make =
         onKeyDown(event);
         dispatch(CursorPosition({inputString: valueToDisplay, change: 1}));
       | Key.KEY_DELETE =>
-        // We should manage both cases
-        removeCharacterAfter(valueToDisplay, state.cursorPosition)
-        |> (
-          update => {
-            switch (valueAsProp) {
-            | Some(_) => ()
-            | None => dispatch(UpdateText(update))
-            };
-            onKeyDown(event);
-            onChange(createChangeEvent(update.newString));
-          }
-        )
-
+        onKeyDown(event);
+        dispatch(Delete);
       | Key.KEY_BACKSPACE =>
-        removeCharacterBefore(valueToDisplay, state.cursorPosition)
-        |> (
-          update => {
-            switch (valueAsProp) {
-            | Some(_) => ()
-            | None => dispatch(UpdateText(update))
-            };
-            onKeyDown(event);
-            onChange(createChangeEvent(update.newString));
-          }
-        )
+        onKeyDown(event);
+        dispatch(Backspace);
       | Key.KEY_ESCAPE =>
         onKeyDown(event);
         Focus.loseFocus();
