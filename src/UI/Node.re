@@ -15,6 +15,7 @@ type cachedNodeState = {
   transform: Mat4.t,
   worldTransform: Mat4.t,
   bbox: BoundingBox2d.t,
+  bboxClipped: BoundingBox2d.t,
   depth: int,
 };
 
@@ -123,6 +124,10 @@ class node (()) = {
     let state = _cachedNodeState^ |> getOrThrow("getBoundingBox");
     state.bbox;
   };
+  pub getBoundingBoxClipped = () => {
+    let state = _cachedNodeState^ |> getOrThrow("getBoundingBoxClipped");
+    state.bboxClipped;
+  };
   pub getDepth = () => {
     let state = _cachedNodeState^ |> getOrThrow("getDepth");
     state.depth;
@@ -170,6 +175,21 @@ class node (()) = {
     let bbox = BoundingBox2d.transform(b, worldTransform);
     bbox;
   };
+  pri _recalculateBoundingBoxClipped = worldTransform => {
+    let dimensions = _this#measurements();
+    let min = Vec2.create(0., 0.);
+    let max =
+      Vec2.create(
+        float_of_int(dimensions.width),
+        float_of_int(dimensions.height),
+      );
+    let b = BoundingBox2d.create(min, max);
+    let bbox = BoundingBox2d.transform(b, worldTransform);
+    switch(_this#getParent()){
+    | Some(p) => BoundingBox2d.intersect(bbox, p#getBoundingBoxClipped());
+    | None => bbox
+    };
+  };
   pri _recalculateDepth = () =>
     switch (_parent^) {
     | None => 0
@@ -180,9 +200,10 @@ class node (()) = {
     let transform = _this#_recalculateTransform();
     let worldTransform = _this#_recalculateWorldTransform(transform);
     let bbox = _this#_recalculateBoundingBox(worldTransform);
+    let bboxClipped = _this#_recalculateBoundingBoxClipped(worldTransform);
     let depth = _this#_recalculateDepth();
 
-    _cachedNodeState := Some({transform, worldTransform, bbox, depth});
+    _cachedNodeState := Some({transform, worldTransform, bbox, bboxClipped, depth});
 
     List.iter(c => c#recalculate(), _children^);
 
@@ -225,8 +246,8 @@ class node (()) = {
     };
   };
   pub hitTest = (p: Vec2.t) => {
-    let bbox = _this#getBoundingBox();
-    BoundingBox2d.isPointInside(bbox, p);
+    let bboxClipped = _this#getBoundingBoxClipped();
+    BoundingBox2d.isPointInside(bboxClipped, p);
   };
   pub addChild = (n: node) => {
     _children := List.append(_children^, [n]);
