@@ -152,14 +152,22 @@ external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
 external popupMenuNat: (NativeWindow.t, popupMenu, int, int) => bool =
   "revery_popup_sub_menu";
 
-let popupMenu = (~callback=None, w, {popupMenu, _} as info, x, y) => {
-  let success = popupMenuNat(glfwGetNativeWindow(w), popupMenu, x, y);
-  applicationPopup := Some(info);
-  switch (callback) {
-  | None => ()
-  | Some(callback) => callback(success) // we haven't more useful information
+let popupMenu = w => {
+  let {mouseX, mouseY} = glfwGetCursorPos(w);
+  (
+    ~x=int_of_float(mouseX),
+    ~y=int_of_float(mouseY),
+    ~callback=None,
+    {popupMenu, _} as info,
+  ) => {
+    let success = popupMenuNat(glfwGetNativeWindow(w), popupMenu, x, y);
+    applicationPopup := Some(info);
+    switch (callback) {
+    | None => ()
+    | Some(callback) => callback(success) // we haven't more useful information
+    };
+    success;
   };
-  success;
 };
 
 // it is setApplicationMenu

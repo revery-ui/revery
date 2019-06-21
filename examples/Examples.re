@@ -293,8 +293,6 @@ module ExampleHost = {
                   Menu.popupMenu(
                     win.glfwWindow,
                     <PopupMenu> ...uselessMenu </PopupMenu>,
-                    int_of_float(mouseX),
-                    int_of_float(mouseY),
                   )
                 );
               if (cancelled) {
