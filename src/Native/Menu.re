@@ -29,6 +29,7 @@ and subMenuInfo = {
 type popupMenuInfo = {
   popupMenu,
   children: ref(list(subMenuItem)),
+  callback: Hashtbl.t(int, unit => unit),
 };
 
 type menuItem =
@@ -37,9 +38,11 @@ type menuItem =
 and menuInfo = {
   menu,
   children: ref(list(menuItem)),
+  callback: Hashtbl.t(int, unit => unit),
 };
 
 let applicationMenu = ref(None);
+let applicationPopup: ref(option(popupMenuInfo)) = ref(None);
 
 external createMenu: unit => menu = "revery_create_menu";
 
@@ -70,42 +73,51 @@ external addSubMenuSubMenu: (subMenu, subMenu, string) => bool =
 external addSubMenuPopupMenu: (popupMenu, subMenu, string) => bool =
   "revery_add_sub_menu_popup_menu"; // should be the same on all OS
 
-let assocCallback = ref([]: list(unit => unit));
-/* TODO: make it private */
-/* TODO: use HashTbl to save memory and don't store all callback when not needed */
-
 let menuList = ref([]: list(menu));
 
 let menuDispatch = i => {
   Printf.printf("we will dispatch: %d\n", i);
-  List.nth(assocCallback^, i, ());
+  switch (applicationMenu^) {
+  | Some(menu) => Hashtbl.find(menu.callback, i, ())
+  | None =>
+    prerr_endline(
+      "The menu disapear. Please give a repro to revery's authors",
+    )
+  };
 };
 
-let registerCallback = cb =>
-  assocCallback := List.append(assocCallback^, [cb]);
-/* TODO: make it private */
+let popupDispatch = i => {
+  Printf.printf("we will dispatch: %d\n", i);
+  switch (applicationPopup^) {
+  | Some(popup) => Hashtbl.find(popup.callback, i, ())
+  | None =>
+    prerr_endline(
+      "The popup disapear. Please give a repro to revery's authors",
+    )
+  };
+};
 
 let () = Callback.register("menu_dispatch", menuDispatch);
-let () = Callback.register("popup_dispatch", menuDispatch); // draft to implement popup
+let () = Callback.register("popup_dispatch", popupDispatch); // draft to implement popup
 
-let addItemMenu = w =>
+let addItemMenu = (w, h) =>
   fun
   | `String(label, f) => {
-      registerCallback(f);
       let id = UIDGenerator.gen();
+      Hashtbl.add(h, id, f);
       let _ = addStringItemMenu(w, id, label); /* ASK: what should we do on error */
       Label(label, id);
     }
   | `SubMenu(label, subMenu, children) => {
       let _ = addSubMenu(w, subMenu, label); /* ASK: what should we do on error */
-      SubMenu({subMenu, label, children});
+      SubMenu({subMenu, label, children: children(h)});
     };
 
-let addItemSubMenu = w =>
+let addItemSubMenu = (w, h) =>
   fun
   | `String(label, f) => {
-      registerCallback(f);
       let id = UIDGenerator.gen();
+      Hashtbl.add(h, id, f);
       let _ = addStringItemSubMenu(w, id, label); /* ASK: what should we do on error */
       SubMenuLabel(label, id);
     }
@@ -115,14 +127,14 @@ let addItemSubMenu = w =>
     }
   | `SubMenu(label, subMenu, children) => {
       let _ = addSubMenuSubMenu(w, subMenu, label); /* ASK: what should we do on error */
-      NestedSubMenu({subMenu, label, children});
+      NestedSubMenu({subMenu, label, children: children(h)});
     };
 
-let addItemPopupMenu = w =>
+let addItemPopupMenu = (w, h) =>
   fun
   | `String(label, f) => {
-      registerCallback(f);
       let id = UIDGenerator.gen();
+      Hashtbl.add(h, id, f);
       let _ = addStringItemPopupMenu(w, id, label); /* ASK: what should we do on error */
       SubMenuLabel(label, id);
     }
@@ -132,7 +144,7 @@ let addItemPopupMenu = w =>
     }
   | `SubMenu(label, subMenu, children) => {
       let _ = addSubMenuPopupMenu(w, subMenu, label); /* ASK: what should we do on error */
-      NestedSubMenu({subMenu, label, children});
+      NestedSubMenu({subMenu, label, children: children(h)});
     };
 
 external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
@@ -140,8 +152,9 @@ external assignMenuNat: (NativeWindow.t, menu) => bool = "revery_assign_menu";
 external popupMenuNat: (NativeWindow.t, popupMenu, int, int) => bool =
   "revery_popup_sub_menu";
 
-let popupMenu = (~callback=None, w, {popupMenu, _}, x, y) => {
+let popupMenu = (~callback=None, w, {popupMenu, _} as info, x, y) => {
   let success = popupMenuNat(glfwGetNativeWindow(w), popupMenu, x, y);
+  applicationPopup := Some(info);
   switch (callback) {
   | None => ()
   | Some(callback) => callback(success) // we haven't more useful information
@@ -150,11 +163,11 @@ let popupMenu = (~callback=None, w, {popupMenu, _}, x, y) => {
 };
 
 // it is setApplicationMenu
-let assignMenu = (w, {menu, _}) => {
+let assignMenu = (w, {menu, _} as info) => {
   let success = assignMenuNat(glfwGetNativeWindow(w), menu);
   if (success) {
     // we have managed to change our target
-    applicationMenu := Some(menu);
+    applicationMenu := Some(info);
   }; /* ASK: what should we do on error */
   success;
 };
@@ -176,24 +189,28 @@ module Separator = {
 module SubMenu = {
   let createElement = (~label as s, ~children, ()) => {
     let handle = createSubMenu();
-    let children = List.map(e => addItemSubMenu(handle, e), children);
-    `SubMenu((s, handle, ref(children))); // we use polymorphic variant to enforce construction constraint
+    let children = callback =>
+      ref(List.map(e => addItemSubMenu(handle, callback, e), children));
+    `SubMenu((s, handle, children)); // we use polymorphic variant to enforce construction constraint
   };
 };
 
 module PopupMenu = {
   let createElement = (~children, ()) => {
     let popupMenu = createPopupMenu();
-    let children = List.map(e => addItemPopupMenu(popupMenu, e), children);
-    {popupMenu, children: ref(children)};
+    let callback = Hashtbl.create(20);
+    let children =
+      List.map(e => addItemPopupMenu(popupMenu, callback, e), children);
+    {popupMenu, children: ref(children), callback};
   };
 };
 
 let createElement = (~children, ()) => {
   let menu = createMenu();
-  let children = List.map(e => addItemMenu(menu, e), children);
+  let callback = Hashtbl.create(20);
+  let children = List.map(e => addItemMenu(menu, callback, e), children);
   let () = menuList := [menu, ...menuList^];
-  {menu, children: ref(children)};
+  {menu, children: ref(children), callback};
 };
 
 let getMenuItemById = (menu, n) =>
