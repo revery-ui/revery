@@ -29,31 +29,82 @@ test("BoundingBox2d", () => {
   });
 
   test("intersection", () => {
-    let bbox1 =
-      BoundingBox2d.create(Vec2.create(5., 5.), Vec2.create(10., 10.));
-    let bbox2 =
-      BoundingBox2d.create(Vec2.create(0., 0.), Vec2.create(4., 4.));
+    test("intersects", () => {
+      let bbox1 =
+        BoundingBox2d.create(Vec2.create(5., 5.), Vec2.create(10., 10.));
+      let bbox2 =
+        BoundingBox2d.create(Vec2.create(0., 0.), Vec2.create(4., 4.));
 
-    expect(BoundingBox2d.intersects(bbox1, bbox2)).toBe(false);
+      expect(BoundingBox2d.intersects(bbox1, bbox2)).toBe(false);
 
-    let leftIntersect =
-      BoundingBox2d.create(Vec2.create(4., 4.), Vec2.create(6., 6.));
+      let leftIntersect =
+        BoundingBox2d.create(Vec2.create(4., 4.), Vec2.create(6., 6.));
 
-    expect(BoundingBox2d.intersects(bbox1, leftIntersect)).toBe(true);
+      expect(BoundingBox2d.intersects(bbox1, leftIntersect)).toBe(true);
 
-    let topIntersect =
-      BoundingBox2d.create(Vec2.create(6., 4.), Vec2.create(8., 6.));
+      let topIntersect =
+        BoundingBox2d.create(Vec2.create(6., 4.), Vec2.create(8., 6.));
 
-    expect(BoundingBox2d.intersects(bbox1, topIntersect)).toBe(true);
+      expect(BoundingBox2d.intersects(bbox1, topIntersect)).toBe(true);
 
-    let rightIntersect =
-      BoundingBox2d.create(Vec2.create(7., 6.), Vec2.create(11., 8.));
+      let rightIntersect =
+        BoundingBox2d.create(Vec2.create(7., 6.), Vec2.create(11., 8.));
 
-    expect(BoundingBox2d.intersects(bbox1, rightIntersect)).toBe(true);
+      expect(BoundingBox2d.intersects(bbox1, rightIntersect)).toBe(true);
 
-    let bottomIntersect =
-      BoundingBox2d.create(Vec2.create(6., 9.), Vec2.create(7., 11.));
-    expect(BoundingBox2d.intersects(bbox1, bottomIntersect)).toBe(true);
+      let bottomIntersect =
+        BoundingBox2d.create(Vec2.create(6., 9.), Vec2.create(7., 11.));
+      expect(BoundingBox2d.intersects(bbox1, bottomIntersect)).toBe(true);
+    });
+    test("intersect", () => {
+      let areBboxEqual = (b1, b2) => {
+        BoundingBox2d.(
+          Vec2.get_x(b1.min) == Vec2.get_x(b2.min)
+          && Vec2.get_y(b1.min) == Vec2.get_y(b2.min)
+          && Vec2.get_x(b1.max) == Vec2.get_x(b2.max)
+          && Vec2.get_y(b1.max) == Vec2.get_y(b2.max)
+        );
+      };
+      let bbox =
+        BoundingBox2d.create(Vec2.create(1., 1.), Vec2.create(5., 10.));
+
+      let bbox2 =
+        BoundingBox2d.create(Vec2.create(2., 2.), Vec2.create(7., 8.));
+      let intersectBbox =
+        BoundingBox2d.create(Vec2.create(2., 2.), Vec2.create(5., 8.));
+
+      expect(
+        areBboxEqual(BoundingBox2d.intersect(bbox, bbox2), intersectBbox),
+      ).
+        toBe(
+        true,
+      );
+
+      let insideBbox =
+        BoundingBox2d.create(Vec2.create(3., 4.), Vec2.create(4., 7.));
+
+      expect(
+        areBboxEqual(BoundingBox2d.intersect(bbox, insideBbox), insideBbox),
+      ).
+        toBe(
+        true,
+      );
+
+      let outsideBbox =
+        BoundingBox2d.create(Vec2.create(6., 11.), Vec2.create(7., 12.));
+      let intersectOutsideBbox =
+        BoundingBox2d.create(Vec2.create(0., 0.), Vec2.create(0., 0.));
+
+      expect(
+        areBboxEqual(
+          BoundingBox2d.intersect(bbox, outsideBbox),
+          intersectOutsideBbox,
+        ),
+      ).
+        toBe(
+        true,
+      );
+    });
   });
 
   test("transform", () => {
