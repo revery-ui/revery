@@ -174,10 +174,18 @@ let popupMenu = w => {
 
 // it is setApplicationMenu
 let assignMenu = (w, {menu, _} as info) => {
-  let success = assignMenuNat(glfwGetNativeWindow(w), menu);
+  let w = glfwGetNativeWindow(w);
+  let success = assignMenuNat(w, menu);
   if (success) {
     // we have managed to change our target
+    // so we cancel the link
+    switch (applicationMenu^) {
+    | Some(menu) => menu.wnd = None
+    | None => ()
+    };
     applicationMenu := Some(info);
+    //we define the new link
+    info.wnd = Some(w);
   }; /* ASK: what should we do on error */
   success;
 };
