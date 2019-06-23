@@ -23,13 +23,14 @@ type subMenuItem =
 and subMenuInfo = {
   subMenu,
   label: string,
-  children: ref(list(subMenuItem)),
+  mutable children: list(subMenuItem),
 };
 
 type popupMenuInfo = {
   popupMenu,
-  children: ref(list(subMenuItem)),
+  mutable children: list(subMenuItem),
   callback: Hashtbl.t(int, unit => unit),
+  mutable wnd: option(NativeWindow.t),
 };
 
 type menuItem =
@@ -37,8 +38,9 @@ type menuItem =
   | SubMenu(subMenuInfo)
 and menuInfo = {
   menu,
-  children: ref(list(menuItem)),
+  mutable children: list(menuItem),
   callback: Hashtbl.t(int, unit => unit),
+  mutable wnd: option(NativeWindow.t),
 };
 
 let applicationMenu = ref(None);
@@ -198,7 +200,7 @@ module SubMenu = {
   let createElement = (~label as s, ~children, ()) => {
     let handle = createSubMenu();
     let children = callback =>
-      ref(List.map(e => addItemSubMenu(handle, callback, e), children));
+      List.map(e => addItemSubMenu(handle, callback, e), children);
     `SubMenu((s, handle, children)); // we use polymorphic variant to enforce construction constraint
   };
 };
@@ -209,7 +211,7 @@ module PopupMenu = {
     let callback = Hashtbl.create(20);
     let children =
       List.map(e => addItemPopupMenu(popupMenu, callback, e), children);
-    {popupMenu, children: ref(children), callback};
+    {popupMenu, children, callback, wnd: None};
   };
 };
 
@@ -218,11 +220,11 @@ let createElement = (~children, ()) => {
   let callback = Hashtbl.create(20);
   let children = List.map(e => addItemMenu(menu, callback, e), children);
   let () = menuList := [menu, ...menuList^];
-  {menu, children: ref(children), callback};
+  {menu, children, callback, wnd: None};
 };
 
 let getMenuItemById = (menu, n) =>
-  try (Some(List.nth(menu.children^, n))) {
+  try (Some(List.nth(menu.children, n))) {
   | Invalid_argument(_)
   | Failure(_) => None
   };
