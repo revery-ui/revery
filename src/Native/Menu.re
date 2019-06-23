@@ -249,3 +249,12 @@ let getMenuItemById = (menu, n) =>
    getApplicationMenuNat(glfwGetNativeWindow(w), menuList^);*/
 
 let getApplicationMenu = () => applicationMenu^;
+external redrawMenu: NativeWindow.t => bool = "revery_refresh_menu_bar";
+
+let redraw =
+  fun
+  | {wnd: Some(wnd), _} => {
+      let _ = redrawMenu(wnd); /* ASK: what should we do on error */
+      ();
+    }
+  | {wnd: None, _} => ();

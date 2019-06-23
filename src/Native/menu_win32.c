@@ -209,4 +209,10 @@ value revery_get_application_menu_win32(void * pWindow, value list)
 
   CAMLreturn(ret);
 }
+
+value revery_refresh_menu_bar_win32(void * pWindow)
+{
+  CAMLparam0();
+  CAMLreturn(DrawMenuBar(pWindow) != 0);
+}
 #endif

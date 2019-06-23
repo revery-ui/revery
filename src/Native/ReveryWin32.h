@@ -8,4 +8,5 @@ extern "C" {
     value revery_assign_menu_win32(void * pWindow, value vMenu);
     value revery_popup_sub_menu_win32(void * pWindow, value vMenu, int x, int y);
     value revery_get_application_menu_win32(void * pWindow, value list);
+    value revery_refresh_menu_bar_win32(void * pWindow);
 }

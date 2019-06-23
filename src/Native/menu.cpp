@@ -366,4 +366,25 @@ CAMLprim value revery_get_application_menu(value vWindow, value vList)
 
     CAMLreturn(ret);
 }
+
+CAMLprim value revery_refresh_menu_bar(value vWindow)
+{
+    CAMLparam1(vWindow);
+    void *pWin = (void *)vWindow;
+    value ret = Val_true; //all is ok
+
+#ifdef WIN32
+    ret = Bool_val(revery_refresh_menu_bar_win32(pWin));
+#elif __APPLE__
+    // I think it is window specific
+    //printf("WARNING - Not implemented: revery_refresh_menu_bar_cocoa");
+#elif __linux__
+    // I think it is window specific
+    //printf("WARNING - Not implemented: revery_refresh_menu_bar_gtk");
+#else
+    printf("WARNING - Not implemented: revery_refresh_menu_bar");
+#endif
+
+    CAMLreturn(ret);
+}
 }
