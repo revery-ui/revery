@@ -233,7 +233,7 @@ module ExampleHost = {
         hooks,
         <View
           onMouseWheel={_evt => ()}
-          onMouseUp={({mouseX, mouseY, button}) =>
+          onMouseUp={({mouseX: _, mouseY: _, button}) =>
             if (button == Revery_Core.MouseButton.BUTTON_RIGHT) {
               let uselessMenu =
                 Revery_Native.[
