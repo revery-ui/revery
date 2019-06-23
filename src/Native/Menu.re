@@ -249,6 +249,11 @@ let getMenuItemById = (menu, n) =>
    getApplicationMenuNat(glfwGetNativeWindow(w), menuList^);*/
 
 let getApplicationMenu = () => applicationMenu^;
+
+/*
+ ** UPDATE THE MENU
+ */
+
 external redrawMenu: NativeWindow.t => bool = "revery_refresh_menu_bar";
 
 let redraw =
@@ -258,3 +263,10 @@ let redraw =
       ();
     }
   | {wnd: None, _} => ();
+
+let appendMenus = ({menu, callback, _} as m, items) => {
+  m.children =
+    m.children @ List.map(item => addItemMenu(menu, callback, item), items);
+  redraw(m);
+  m;
+};

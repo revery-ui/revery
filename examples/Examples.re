@@ -122,6 +122,11 @@ let state: state = {
       render: _ => OpenGLExample.render(),
       source: "OpenGLExample.re",
     },
+    {
+      name: "Toplevel menu (Windows only)",
+      render: _ => ToplevelMenu.render(),
+      source: "ToplevelMenu.re",
+    },
   ],
   selectedExample: "Animation",
   lastExample: None,
