@@ -1,7 +1,7 @@
 open Reglfw.Glfw;
 
 module UIDGenerator = {
-  let v = ref(0);
+  let v = ref(1);
 
   let gen = () => {
     let ret = v^;
