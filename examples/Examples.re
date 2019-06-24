@@ -400,7 +400,6 @@ let init = app => {
       app,
       "Welcome to Revery!",
     );
-  let _ = Revery_Native.Menu.getApplicationMenu();
 
   if (Environment.webGL) {
     Window.maximize(win);

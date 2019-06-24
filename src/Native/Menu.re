@@ -112,7 +112,7 @@ let popupDispatch = i => {
 };
 
 let () = Callback.register("menu_dispatch", menuDispatch);
-let () = Callback.register("popup_dispatch", popupDispatch); // draft to implement popup
+let () = Callback.register("popup_dispatch", popupDispatch);
 
 let addItemMenu = (w, h) =>
   fun
@@ -287,3 +287,6 @@ let appendMenus = ({menu, callback, _} as m, items) => {
   redraw(m);
   m;
 };
+
+/* TODO insert, remove */
+/* TODO same for subMenu and popupMenu */
