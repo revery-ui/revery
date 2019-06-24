@@ -79,7 +79,6 @@ external addSubMenuPopupMenu: (popupMenu, subMenu, string) => bool =
 let menuList = ref([]: list(menu));
 
 let menuDispatch = i => {
-  Printf.printf("we will dispatch: %d\n", i);
   switch (applicationMenu^) {
   | Some(menu) => Hashtbl.find(menu.callback, i, ())
   | None =>
@@ -90,7 +89,6 @@ let menuDispatch = i => {
 };
 
 let popupDispatch = i => {
-  Printf.printf("we will dispatch: %d\n", i);
   switch (applicationPopup^) {
   | Some(popup) => Hashtbl.find(popup.callback, i, ())
   | None =>

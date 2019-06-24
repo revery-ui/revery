@@ -34,7 +34,6 @@ CAMLprim value revery_create_menu()
 
 #ifdef WIN32
     ret = revery_create_menu_win32();
-    printf("We have created menu (%p)\n", ret);
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_create_menu_cocoa");
 #elif __linux__
@@ -53,7 +52,6 @@ CAMLprim value revery_create_sub_menu()
 
 #ifdef WIN32
     ret = revery_create_sub_menu_win32();
-    printf("We have created submenu (%p)\n", ret);
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_create_sub_menu_cocoa");
 #elif __linux__
@@ -75,7 +73,6 @@ CAMLprim value revery_create_popup_menu()
     ** Same on Windows
     */
     ret = revery_create_sub_menu_win32();
-    printf("We have created popupmenu (%p)\n", ret);
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_create_popup_menu_cocoa");
 #elif __linux__
@@ -100,7 +97,6 @@ CAMLprim value revery_add_string_item_menu(value vMenu, value vUid, value vMessa
 
 #ifdef WIN32
     ret = revery_add_string_item_menu_win32(vMenu, uid, pMessage);
-    printf("We have add string (%s) to menu (%p): %s\n", pMessage, vMenu, ret ? "true" : "false");
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_add_string_item_menu_cocoa");
 #elif __linux__
@@ -128,7 +124,6 @@ CAMLprim value revery_add_string_item_sub_menu(value vMenu, value vUid, value vM
     ** Same on windows
     */
     ret = revery_add_string_item_menu_win32(vMenu, uid, pMessage);
-    printf("We have add string (%s) to submenu (%p): %s\n", pMessage, vMenu, ret ? "true" : "false");
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_add_string_item_sub_menu_cocoa");
 #elif __linux__
@@ -156,7 +151,6 @@ CAMLprim value revery_add_string_item_popup_menu(value vMenu, value vUid, value 
     ** Same on windows
     */
     ret = revery_add_string_item_menu_win32(vMenu, uid, pMessage);
-    printf("We have add string (%s) to popupmenu (%p): %s\n", pMessage, vMenu, ret ? "true" : "false");
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_add_string_item_popup_menu_cocoa");
 #elif __linux__
@@ -179,7 +173,6 @@ CAMLprim value revery_add_separator_sub_menu(value vMenu)
 
 #ifdef WIN32
     ret = revery_add_separator_sub_menu_win32(vMenu);
-    printf("We have add separator to submenu (%p): %s\n", vMenu, ret ? "true" : "false");
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_add_separator_sub_menu_cocoa");
 #elif __linux__
@@ -205,7 +198,6 @@ CAMLprim value revery_add_separator_popup_menu(value vMenu)
     ** Same on Windows
     */
     ret = revery_add_separator_sub_menu_win32(vMenu);
-    printf("We have add separator to popupmenu (%p): %s\n", vMenu, ret ? "true" : "false");
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_add_separator_popup_menu_cocoa");
 #elif __linux__
@@ -229,7 +221,6 @@ CAMLprim value revery_add_sub_menu(value vMenu, value vSub, value vMessage)
 
 #ifdef WIN32
     ret = revery_add_sub_menu_win32(vMenu, vSub, pMessage);
-    printf("We have add submenu (%s) to menu (%p): %s\n", pMessage, vMenu, ret ? "true" : "false");
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_add_sub_menu_cocoa");
 #elif __linux__
@@ -256,7 +247,6 @@ CAMLprim value revery_add_sub_menu_sub_menu(value vMenu, value vSub, value vMess
     ** Same on windows
     */
     ret = revery_add_sub_menu_win32(vMenu, vSub, pMessage);
-    printf("We have add submenu (%s) to submenu (%p): %s\n", pMessage, vMenu, ret ? "true" : "false");
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_add_sub_menu_sub_menu_cocoa");
 #elif __linux__
@@ -283,7 +273,6 @@ CAMLprim value revery_add_sub_menu_popup_menu(value vMenu, value vSub, value vMe
     ** Same on windows
     */
     ret = revery_add_sub_menu_win32(vMenu, vSub, pMessage);
-    printf("We have add submenu (%s) to popupmenu (%p): %s\n", pMessage, vMenu, ret ? "true" : "false");
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_add_sub_menu_popup_menu_cocoa");
 #elif __linux__
@@ -307,7 +296,6 @@ CAMLprim value revery_assign_menu(value vWindow, value vMenu)
 
 #ifdef WIN32
     ret = revery_assign_menu_win32(pWin, vMenu);
-    printf("We have assign menu (%p) to window (%p): %s\n", vMenu, pWin, ret ? "true" : "false");
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_assign_menu_cocoa");
 #elif __linux__
@@ -332,7 +320,6 @@ CAMLprim value revery_popup_sub_menu(value vWindow, value vMenu, value vX, value
 
 #ifdef WIN32
     ret = revery_popup_sub_menu_win32(pWin, vMenu, x, y);
-    printf("We have display popupmenu (%p): %s\n", vMenu, ret ? "true" : "false");
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_popup_sub_menu_cocoa");
 #elif __linux__
@@ -355,7 +342,6 @@ CAMLprim value revery_get_application_menu(value vWindow, value vList)
 
 #ifdef WIN32
     ret = revery_get_application_menu_win32(pWin, vList);
-    printf("We get the application menu (%p)\n", ret);
 #elif __APPLE__
     printf("WARNING - Not implemented: revery_get_application_menu_cocoa");
 #elif __linux__

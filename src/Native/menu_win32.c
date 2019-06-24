@@ -69,8 +69,6 @@ LRESULT CALLBACK WndProc(int msg, WPARAM wParam, LPARAM lParam)
         m = *(MSG *)lParam;
         if (m.message == WM_COMMAND)
         {
-            printf("%d is clicked\n", LOWORD(m.wParam));
-
             /* First time around, look up by name */
             if (g_menu_dispatch == NULL)
                 g_menu_dispatch = caml_named_value("menu_dispatch");
@@ -78,8 +76,6 @@ LRESULT CALLBACK WndProc(int msg, WPARAM wParam, LPARAM lParam)
         }
         else if (m.message == WM_POPUP)
         {
-            printf("%d is clicked\n", LOWORD(m.wParam));
-
             /* First time around, look up by name */
             if (g_popup_dispatch == NULL)
                 g_popup_dispatch = caml_named_value("popup_dispatch");
