@@ -15,6 +15,7 @@ module UIDGenerator = {
 type subMenu;
 type popupMenu;
 type menu;
+type noChildren; // fake type to disallow to add children
 
 type subMenuItem =
   | SubMenuLabel(string, int)
