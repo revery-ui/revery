@@ -41,9 +41,16 @@ and menuInfo = {
   menu,
   mutable children: list(menuItem),
   callback: Hashtbl.t(int, unit => unit),
+// when we have multiple windows:
+// we should transform this in list because a menu could be in many windows
+// adapt the function below for instanceasigneMenu
   mutable wnd: option(NativeWindow.t),
 };
 
+
+// when we have multiple windows:
+// we should transform this in list
+// we should rename applicationMenus or store it in the window record
 let applicationMenu = ref(None);
 let applicationPopup: ref(option(popupMenuInfo)) = ref(None);
 
@@ -76,9 +83,15 @@ external addSubMenuSubMenu: (subMenu, subMenu, string) => bool =
 external addSubMenuPopupMenu: (popupMenu, subMenu, string) => bool =
   "revery_add_sub_menu_popup_menu"; // should be the same on all OS
 
+
+// when we have multiple windows:
+// we should keep track of menu and free them whenever we don't need them: maybe finalize of Gc module
+
 let menuList = ref([]: list(menu));
 
 let menuDispatch = i => {
+// when we have multiple windows:
+// we should iterate over list to find the right Hashtbl
   switch (applicationMenu^) {
   | Some(menu) => Hashtbl.find(menu.callback, i, ())
   | None =>
@@ -226,6 +239,8 @@ let createElement = (~children, ()) => {
   let menu = createMenu();
   let callback = Hashtbl.create(20);
   let children = List.map(e => addItemMenu(menu, callback, e), children);
+// when we have multiple windows:
+// we should keep track of menu and free them whenever we don't need them
   let () = menuList := [menu, ...menuList^];
   {menu, children, callback, wnd: None};
 };
@@ -235,6 +250,7 @@ let getMenuItemById = (menu, n) =>
   | Invalid_argument(_)
   | Failure(_) => None
   };
+/* TODO same for subMenu and popupMenu */
 
 /*
  /*
@@ -255,6 +271,8 @@ let getApplicationMenu = () => applicationMenu^;
 
 external redrawMenu: NativeWindow.t => bool = "revery_refresh_menu_bar";
 
+// when we have multiple windows:
+// we should all the window
 let redraw =
   fun
   | {wnd: Some(wnd), _} => {
