@@ -24,6 +24,13 @@ function revery_create_popup_menu() {
     return;
 }
 
+// Provides: revery_add_string_item_menu
+function revery_add_string_item_menu(vMenu, vUid, pMessage) {
+    // no-op
+    window.console.error("WARNING - Not implemented: revery_add_string_item_menu_js");
+    return false;
+}
+
 // Provides: revery_add_string_item_sub_menu
 function revery_add_string_item_sub_menu(vMenu, vUid, pMessage) {
     // no-op
