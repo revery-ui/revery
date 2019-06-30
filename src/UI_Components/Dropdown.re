@@ -9,7 +9,7 @@ type item('a) = {
 type items('a) = list(item('a));
 
 type state('a) = {
-  items : items('a),
+  items: items('a),
   selected: item('a),
   _open: bool,
 };
@@ -33,7 +33,7 @@ let textStyles =
 
 let noop = _item => ();
 
-let component(a) = React.component("Dropdown", a);
+let component = a => React.component("Dropdown", a);
 
 let createElement =
     (

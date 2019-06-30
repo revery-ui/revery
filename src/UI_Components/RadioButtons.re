@@ -14,7 +14,7 @@ let defaultStyle =
     fontFamily("Roboto-Regular.ttf"),
   ];
 
-let component(a) = React.component("RadioButtons", a);
+let component = a => React.component("RadioButtons", a);
 
 let make =
     (
