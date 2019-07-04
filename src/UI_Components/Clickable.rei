@@ -21,6 +21,8 @@ let createElement:
   (
     ~style: list(Revery_UI.Style.viewStyleProps)=?,
     ~onClick: clickFunction=?,
+    ~onRightClick: clickFunction=?,
+    ~onAnyClick: clickFunctionWithEvt=?,
     ~onBlur: Revery_UI.NodeEvents.focusHandler=?,
     ~onFocus: Revery_UI.NodeEvents.focusHandler=?,
     ~tabindex: int=?,

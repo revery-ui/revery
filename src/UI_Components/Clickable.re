@@ -131,6 +131,8 @@ let createElement =
     (
       ~style=[],
       ~onClick: clickFunction=noop,
+      ~onRightClick: clickFunction=noop,
+      ~onAnyClick: clickFunctionWithEvt=noopEvt,
       ~onBlur=?,
       ~onFocus=?,
       ~tabindex=0,
@@ -144,6 +146,8 @@ let createElement =
   make(
     ~style,
     ~onClick,
+    ~onRightClick,
+    ~onAnyClick,
     ~onBlur?,
     ~onFocus?,
     ~onKeyDown?,
