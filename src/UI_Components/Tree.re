@@ -100,7 +100,7 @@ let rec renderTree = (~indent=0, ~nodeRenderer, ~emptyRenderer, t) => {
           List.concat([accum, grandChild]);
         },
         [],
-        v,
+        siblings,
       );
     [drawNode(current), ...renderedSiblings];
   };
