@@ -18,7 +18,7 @@ let noop = () => ();
 let noopEvt = _evt => ();
 
 let isMouseInsideRef = (ref: node, mouseX: float, mouseY: float) => {
-  let clickableDimensions: BoundingBox2d.t = ref#getBoundingBox();
+  let clickableDimensions: BoundingBox2d.t = ref#getBoundingBoxClipped();
   let pointVec = Vec2.create(mouseX, mouseY);
   BoundingBox2d.isPointInside(clickableDimensions, pointVec);
 };
