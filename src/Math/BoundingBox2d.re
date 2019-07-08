@@ -40,6 +40,34 @@ let intersects = (b0: t, b1: t) => {
   !noOverlap;
 };
 
+let intersect = (b0: t, b1: t) =>
+  if (intersects(b0, b1)) {
+    let box0_minX = Vec2.get_x(b0.min);
+    let box1_minX = Vec2.get_x(b1.min);
+    let minX = max(box0_minX, box1_minX);
+    let box0_minY = Vec2.get_y(b0.min);
+    let box1_minY = Vec2.get_y(b1.min);
+    let minY = max(box0_minY, box1_minY);
+
+    let box0_maxX = Vec2.get_x(b0.max);
+    let box1_maxX = Vec2.get_x(b1.max);
+    let maxX = min(box0_maxX, box1_maxX);
+
+    let box0_maxY = Vec2.get_y(b0.max);
+    let box1_maxY = Vec2.get_y(b1.max);
+    let maxY = min(box0_maxY, box1_maxY);
+
+    let min = Vec2.create(minX, minY);
+    let max = Vec2.create(maxX, maxY);
+
+    create(min, max);
+  } else {
+    let min = Vec2.create(0., 0.);
+    let max = Vec2.create(0., 0.);
+
+    create(min, max);
+  };
+
 let _getMin = (fn, v1: Vec3.t, v2: Vec3.t, v3: Vec3.t, v4: Vec3.t) => {
   let x1 = fn(v1);
   let x2 = fn(v2);
