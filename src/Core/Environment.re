@@ -19,19 +19,13 @@ let getExecutingDirectory = () =>
   if (!isNative) {
     "";
   } else {
-    let dir =
-      switch (Filename.dirname(Sys.argv[0])) {
-      /* In some cases, like launching an OSX app from a .App folder,
-       * we'll get a '.' as the Sys.argv[0] value. In that case - we'll
-       * fallback to checking Sys.executable_name. */
-      | "." =>
-        /* We want the parent directory of the Sys.executable_name */
-        switch (String.rindex_opt(Sys.executable_name, '.')) {
-        | Some(v) => String.sub(Sys.executable_name, 0, v)
+        let dir = 
+        switch ((String.rindex_opt(Sys.executable_name, '/'), String.rindex_opt(Sys.executable_name, '\\')) {
+        | (Some(v1), Some(v2)) => String.sub(Sys.executable_name, 0, max(v1, v2))
+        | (None, Some(v)) => String.sub(Sys.executable_name, 0, v);
+        | (Some(v), None) => String.sub(Sys.executable_name, 0, v)
         | None => Sys.executable_name
         }
-      | v => v
-      };
 
     /* Check if there is a trailing slash. If not, we need to add one. */
 
