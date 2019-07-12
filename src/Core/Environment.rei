@@ -19,7 +19,15 @@ let sleep: Time.t => unit;
 
 let yield: unit => unit;
 
+/**
+[@deprecated]
+*/
 let getExecutingDirectory: unit => string;
+
+/**
+[executingDirectory] gets the directory where the running executable lives.
+*/
+let executingDirectory: string;
 
 let getWorkingDirectory: unit => string;
 
