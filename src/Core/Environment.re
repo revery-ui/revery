@@ -20,11 +20,11 @@ let getExecutingDirectory = () =>
     "";
   } else {
         let dir = 
-        switch ((String.rindex_opt(Sys.executable_name, '/'), String.rindex_opt(Sys.executable_name, '\\')) {
+        switch ((String.rindex_opt(Sys.executable_name, '/'), String.rindex_opt(Sys.executable_name, '\\'))) {
         | (Some(v1), Some(v2)) => String.sub(Sys.executable_name, 0, max(v1, v2))
         | (None, Some(v)) => String.sub(Sys.executable_name, 0, v);
-        | (Some(v), None) => String.sub(Sys.executable_name, 0, v)
-        | None => Sys.executable_name
+        | (Some(v), None) => String.sub(Sys.executable_name, 0, v);
+        | _ => Sys.executable_name
         }
 
     /* Check if there is a trailing slash. If not, we need to add one. */
