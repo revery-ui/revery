@@ -10,9 +10,14 @@ let validateColor = (actual: Color.t, expected: Color.t) => {
 };
 
 test("Environment", () =>
-  test("executingDirectory", () => {
-    test("validate we can load a file adjacent to the executable", () => {
-      expect(Sys.file_exists(Environment.executingDirectory ++ "test-asset.txt")).toEqual(true);
-    });
-  })
+  test("executingDirectory", () =>
+    test("validate we can load a file adjacent to the executable", () =>
+      expect(
+        Sys.file_exists(Environment.executingDirectory ++ "test-asset.txt"),
+      ).
+        toEqual(
+        true,
+      )
+    )
+  )
 );
