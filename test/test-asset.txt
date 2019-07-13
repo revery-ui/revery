@@ -1,7 +1,5 @@
 (executable
     (name TestRunner)
-    (public_name ReveryTestRunner)
-    (package ReveryTest)
     (libraries
         rejest
         Revery_Core_Test
@@ -9,7 +7,6 @@
         Revery_UI_Test
             ))
 
-(install
-    (section bin)
-    (package ReveryTest)
-    (files test-asset.txt))
+(alias
+    (name runtest)
+    (action (run ./TestRunner.exe)))
