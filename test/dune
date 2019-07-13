@@ -8,8 +8,3 @@
         Revery_Math_Test
         Revery_UI_Test
             ))
-
-(install
-    (section bin)
-    (package ReveryTest)
-    (files test-asset.txt))

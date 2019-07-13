@@ -1,7 +1,7 @@
 {
   "source": "./package.json",
   "scripts": {
-      "run": "esy '@test' x ReveryTestRunner.exe"
+      "run": "esy '@test' x ReveryTestRunner"
   },
   "override": {
       "build": ["dune build --root . -j4"],
