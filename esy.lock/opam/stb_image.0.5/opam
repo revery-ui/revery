@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Frederic Bour <frederic.bour@lakaban.net>"
+authors: "Frederic Bour <frederic.bour@lakaban.net>"
+homepage: "https://github.com/let-def/stb_image"
+bug-reports: "https://github.com/let-def/stb_image"
+license: "CC0"
+dev-repo: "git+https://github.com/let-def/stb_image.git"
+build: [
+  [make]
+]
+install: [make "install"]
+depends: [
+  "ocaml" {!= "4.01.0"}
+  "ocamlfind" {build}
+  "result"
+]
+synopsis: "OCaml bindings to stb_image, a public domain image loader"
+description: """
+Stb_image is an OCaml binding to stb_image from Sean Barrett, [Nothings](http://nothings.org/):
+
+  stb_image.h: public domain C image loading library
+
+The OCaml binding is released under CC-0 license.  It has no dependency beside working OCaml and C compilers (stb_image is self-contained)."""
+url {
+  src: "https://github.com/let-def/stb_image/archive/v0.5.tar.gz"
+  checksum: [
+    "md5=b4382fe112cadd240972f07547138a2d"
+    "sha512=4d051e0c33d95527c01eab33d6fe07dce4c5f2d7f7e0b136fbfac1a8c092a645efc1d867fbd34403dd1c4797b73647caebf07ecb95f94d317dc8a15e23ddddb5"
+  ]
+}

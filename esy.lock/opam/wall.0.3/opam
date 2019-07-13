@@ -1,0 +1,32 @@
+opam-version: "2.0"
+synopsis: "Realtime Vector Graphics with OpenGL"
+description:
+  "Lightweight, fast and declarative vector graphics rasterization using OpenGL."
+maintainer: "Frédéric Bour <frederic.bour@lakaban.net>"
+authors: "Frédéric Bour <frederic.bour@lakaban.net>"
+license: "BSD3"
+homepage: "https://github.com/let-def/wall"
+bug-reports: "https://github.com/let-def/wall"
+patches: ["fix-ocaml-beta.patch"]
+depends: [
+  "ocaml"
+  "jbuilder" {build}
+  "gg"
+  "result"
+  "stb_image"
+  "grenier"
+  "stb_truetype" {>= "0.5"}
+  "conf-gles2"
+]
+build: [
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+]
+dev-repo: "git+https://github.com/let-def/wall.git"
+url {
+  src: "https://github.com/let-def/wall/archive/v0.3.tar.gz"
+  checksum: [
+    "md5=3cd4387ee6c67ad8194a8fb29dc3b63b"
+    "sha512=0ebc0d7d9d8830bd14463cb6bf7e50c08100b6cc7dd1b295687da7182c5b1c406a502a5f419149e37b1ebc1674fe1c986683579368e971cc8905096ddaeda1d8"
+  ]
+}

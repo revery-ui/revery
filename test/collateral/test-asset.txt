@@ -1,10 +1,12 @@
 (executable
     (name TestRunner)
-    (public_name ReveryTestRunner)
-    (package ReveryTest)
     (libraries
         rejest
         Revery_Core_Test
         Revery_Math_Test
         Revery_UI_Test
             ))
+
+(alias
+    (name runtest)
+    (action (run ./TestRunner.exe)))

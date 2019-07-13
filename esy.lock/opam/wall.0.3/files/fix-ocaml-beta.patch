@@ -1,0 +1,15 @@
+diff --git a/lib/dune b/lib/dune
+index 27194ae..06db428 100644
+--- a/lib/dune
++++ b/lib/dune
+@@ -11,8 +11,8 @@ let at_least_4_03 =
+     | Some j -> String.sub s i (j - i) :: split s (j + 1)
+     | None -> [String.sub s i (String.length s - i)]
+   in
+-  let v = List.map int_of_string (split version 0) in
+-  v >= [4; 3]
++  let v = split version 0 in
++  v >= ["4"; "3"]
+ 
+ let () = 
+   Jbuild_plugin.V1.send @@

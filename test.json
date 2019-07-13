@@ -1,0 +1,13 @@
+{
+  "source": "./package.json",
+  "scripts": {
+      "run": "esy '@test' x ReveryTestRunner"
+  },
+  "override": {
+      "build": ["dune build --root . -j4"],
+      "install": [
+          "esy-installer Revery.install",
+          "esy-installer ReveryTest.install"
+      ]
+  }
+}
