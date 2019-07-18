@@ -11,6 +11,8 @@ let create = (~x: float, ~y: float, ~width: float, ~height: float, ()) => {
   BoundingBox2d.create(min, max);
 };
 
+let ofBoundingBox = v => v;
+
 let intersects = BoundingBox2d.intersects;
 
 let getX = (v: BoundingBox2d.t) => Vec2.get_x(v.min);
