@@ -169,9 +169,9 @@ let toString = key =>
   | KEY_X => "x"
   | KEY_Y => "y"
   | KEY_Z => "z"
-  | KEY_LEFT_BRACKET => "("
+  | KEY_LEFT_BRACKET => "["
   | KEY_BACKSLASH => "\\"
-  | KEY_RIGHT_BRACKET => ")"
+  | KEY_RIGHT_BRACKET => "]"
   | _ => ""
   };
 
@@ -221,9 +221,9 @@ let fromString = key =>
   | "x" => KEY_X
   | "y" => KEY_Y
   | "z" => KEY_Z
-  | "(" => KEY_LEFT_BRACKET
+  | "[" => KEY_LEFT_BRACKET
   | "\\" => KEY_BACKSLASH
-  | ")" => KEY_RIGHT_BRACKET
+  | "]" => KEY_RIGHT_BRACKET
   | _ => KEY_UNKNOWN
   };
 
