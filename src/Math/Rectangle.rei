@@ -2,7 +2,7 @@ type t;
 
 let create: (~x: float, ~y: float, ~width: float, ~height: float, unit) => t;
 
-let ofBoundingBox: (BoundingBox2d.t) => t;
+let ofBoundingBox: BoundingBox2d.t => t;
 
 let intersects: (t, t) => bool;
 
