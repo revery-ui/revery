@@ -30,7 +30,11 @@ let createWindow =
 
 let _anyWindowsDirty = (app: t) =>
   List.fold_left(
-    (prev, w) => prev || Window.isDirty(w),
+    (prev, w) => { 
+        let dirty = Window.isDirty(w);
+        //print_endline ("dirty: " ++ string_of_bool(dirty));
+        prev || dirty;
+    },
     false,
     getWindows(app),
   );
@@ -58,25 +62,30 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
   let _ = initFunc(appInstance);
 
   let appLoop = (_t: float) => {
-    Glfw.glfwPollEvents();
+
+    if (appInstance.idleCount >= framesToIdle) {
+      Glfw.glfwWaitEvents();
+    } else {
+      Glfw.glfwPollEvents();
+    }
     Tick.Default.pump();
 
     _checkAndCloseWindows(appInstance);
 
     if (appInstance.isFirstRender || _anyWindowsDirty(appInstance)) {
+      //print_endline ("NO IDLE render");
       Performance.bench("renderWindows", () => {
         List.iter(w => Window.render(w), getWindows(appInstance));
         appInstance.idleCount = 0;
         appInstance.isFirstRender = false;
       });
     } else {
+      //print_endline ("IDLE render");
       appInstance.idleCount = appInstance.idleCount + 1;
 
       if (appInstance.idleCount === framesToIdle) {
         appInstance.onIdle();
       };
-
-      Environment.sleep(Milliseconds(1.));
     };
 
     Environment.yield();
