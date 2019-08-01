@@ -14,6 +14,15 @@ let getWindows: t => list(Window.t);
 /** [quit(c)] causes the App to quit with exit code [c] */
 let quit: int => unit;
 
+type delegatedFunc = unit => unit;
+
+/** [runOnMainThread(f)] schedules the function [f] to run during the next 
+    render frame on the main thread.
+
+    If the main thread is idle, this will force the main thread to render
+*/
+let runOnMainThread = delegatedFunc => unit;
+
 /** [createWindow ~createOptions, app, name] creates a new window */
 let createWindow:
   (~createOptions: WindowCreateOptions.t=?, t, string) => Window.t;
