@@ -21,7 +21,7 @@ type delegatedFunc = unit => unit;
 
     If the main thread is idle, this will force the main thread to render
 */
-let runOnMainThread = delegatedFunc => unit;
+let runOnMainThread: delegatedFunc => unit;
 
 /** [createWindow ~createOptions, app, name] creates a new window */
 let createWindow:
