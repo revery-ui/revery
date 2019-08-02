@@ -28,7 +28,7 @@ let _mainThreadPendingFunctions: ref(list(delegatedFunc)) = ref([]);
 let _anyPendingWork: ref(bool) = ref(false);
 let runOnMainThread = (f) => {
   Mutex.lock(_mainThreadMutex);
-  _mainThreadPendingFunctions := [f, ..._mainThreadPendingFuncitons^];
+  _mainThreadPendingFunctions := [f, ..._mainThreadPendingFunctions^];
   _anyPendingWork := true;
   Mutex.unlock(_mainThreadMutex);
 };
@@ -98,7 +98,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
 
     if (appInstance.isFirstRender 
         || _anyWindowsDirty(appInstance) 
-        || _anyPendingWork()) {
+        || _anyPendingMainThreadJobs()) {
       Performance.bench("_doPendingMainThreadJobs", () => {
         _doPendingMainThreadJobs();
       });
