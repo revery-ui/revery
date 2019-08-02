@@ -16,7 +16,7 @@ let quit: int => unit;
 
 type delegatedFunc = unit => unit;
 
-/** [runOnMainThread(f)] schedules the function [f] to run during the next 
+/** [runOnMainThread(f)] schedules the function [f] to run during the next
     render frame on the main thread.
 
     If the main thread is idle, this will force the main thread to render

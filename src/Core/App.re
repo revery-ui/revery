@@ -21,12 +21,11 @@ let getWindows = (app: t) => app.windows;
 
 let quit = (code: int) => exit(code);
 
-
 let _mainThreadMutex = Mutex.create();
 /* A list of pending functions the main thread will need to run */
 let _mainThreadPendingFunctions: ref(list(delegatedFunc)) = ref([]);
 let _anyPendingWork: ref(bool) = ref(false);
-let runOnMainThread = (f) => {
+let runOnMainThread = f => {
   Mutex.lock(_mainThreadMutex);
   _mainThreadPendingFunctions := [f, ..._mainThreadPendingFunctions^];
   _anyPendingWork := true;
@@ -41,16 +40,14 @@ let _anyPendingMainThreadJobs = () => {
 let _doPendingMainThreadJobs = () => {
   let jobs = {
     Mutex.lock(_mainThreadMutex);
-    let ret = _mainThreadPendingFunctions^; 
+    let ret = _mainThreadPendingFunctions^;
     _anyPendingWork := false;
     _mainThreadPendingFunctions := [];
     Mutex.unlock(_mainThreadMutex);
     ret;
   };
-  
-  jobs
-  |> List.rev
-  |> List.iter(f => f());
+
+  jobs |> List.rev |> List.iter(f => f());
 };
 
 let createWindow =
@@ -96,16 +93,16 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
 
     _checkAndCloseWindows(appInstance);
 
-    if (appInstance.isFirstRender 
-        || _anyWindowsDirty(appInstance) 
+    if (appInstance.isFirstRender
+        || _anyWindowsDirty(appInstance)
         || _anyPendingMainThreadJobs()) {
-      Performance.bench("_doPendingMainThreadJobs", () => {
-        _doPendingMainThreadJobs();
-      });
-      Performance.bench("renderWindows", () => {
-        List.iter(w => Window.render(w), getWindows(appInstance));
-      });
-      
+      Performance.bench("_doPendingMainThreadJobs", () =>
+        _doPendingMainThreadJobs()
+      );
+      Performance.bench("renderWindows", () =>
+        List.iter(w => Window.render(w), getWindows(appInstance))
+      );
+
       appInstance.idleCount = 0;
       appInstance.isFirstRender = false;
     } else {
