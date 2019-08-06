@@ -17,6 +17,7 @@ class node = class Node.node;
 class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
 class imageNode = class ImageNode.imageNode;
+class mountUnmountNode = class MountUnmountNode.mountUnmountNode;
 class openGLNode = class OpenGLNode.openGLNode;
 module NodeDrawContext = NodeDrawContext;
 
