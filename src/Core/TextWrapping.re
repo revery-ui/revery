@@ -10,13 +10,13 @@ type linesFolderAccumulator = {
   endIndex: int,
 };
 
-/* See https://www.fileformat.info/info/unicode/category/Zs/list.htm */
+// See https://www.fileformat.info/info/unicode/category/Zs/list.htm
+
 let space = " ";
 let nbsp = "\xa0";
 
 /* TODO Because we're not using regex for space matching we should take all kinds of spaces into conderation
-   However, I can't make unicode escape work, it's giving me 'Warning 14: illegal backslash escape in string.' error
-   */
+   However, I can't make unicode escape work, it's giving me 'Warning 14: illegal backslash escape in string.' error */
 
 /*
  let oghamSpace = "\u{1680}";
@@ -59,10 +59,11 @@ let wrapText = (~text, ~measureWidth, ~maxWidth, ~wrapHere) => {
       let currEndIndex = index;
       let (_substr, width) = subAndMeasure(acc.beginIndex, currEndIndex);
 
-      if (width >= maxWidth) {
+      let incrementedEndIndex = acc.endIndex + 2;
+      if (width >= maxWidth && incrementedEndIndex <= String.length(text)) {
         let (line, lineWidth) = subAndMeasure(acc.beginIndex, acc.endIndex);
         let (lastLine, lastLineWidth) =
-          subAndMeasure(acc.endIndex + 2, index);
+          subAndMeasure(incrementedEndIndex, index);
 
         let currMaxWidth =
           max(lastLineWidth, max(acc.currMaxWidth, lineWidth));
