@@ -148,7 +148,7 @@ let toString = key =>
   | KEY_C => "c"
   | KEY_D => "d"
   | KEY_E => "e"
-  | KEY_F => "k"
+  | KEY_F => "f"
   | KEY_G => "g"
   | KEY_H => "h"
   | KEY_I => "i"
