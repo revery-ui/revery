@@ -16,7 +16,7 @@ build: [
 ]
 depends: [
   "ocaml" {>= "4.02.0"}
-  "dune" {build & >= "1.0"}
+  "dune" {>= "1.0"}
   "ocaml-migrate-parsetree" {>= "1.0.10"}
 ]
 synopsis: "A variant of ppx_tools based on ocaml-migrate-parsetree"

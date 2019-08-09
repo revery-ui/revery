@@ -16,7 +16,7 @@ depends: [
   "ocaml" {>= "4.02"}
   "re" {>= "1.5.0"}
   ("ocaml" {>= "4.07"} | "re" {>= "1.8.0"})
-  "dune" {build}
+  "dune"
   "alcotest" {with-test}
   "seq"
   "uutf" {>= "1.0.0"}

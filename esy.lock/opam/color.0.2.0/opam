@@ -16,7 +16,7 @@ build: [
 
 depends: [
   "ocaml" {>= "4.05.0"}
-  "dune" {build}
+  "dune"
   "alcotest" {with-test}
   "gg"
 ]
