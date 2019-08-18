@@ -80,21 +80,25 @@ and checkChildren = (children, pos) =>
   };
 
 let getTopMostNode = (node: node, pos) => {
-  let deepestNode = ref(None);
-  let maxDepth = ref(-1);
+  let rec f = (node: node) => {
+    if(!isNodeImpacted(node, pos)) {
+      None
+    } else {
+      let revChildren = List.rev(node#getChildren());
+      switch (revChildren) {
+      | [] => Some(node)
+      | children => List.fold_left((prev, curr) => {
+          switch (prev) {
+          | Some(v) => Some(v)
+          | None => f(curr);
+          }
+        }, None, children);
+    };
+  };
+  };
 
-  Node.iter(
-    currentNode => {
-      let nodeIsImpacted = isNodeImpacted(currentNode, pos);
-      let hasLargerDepth = currentNode#getDepth() >= maxDepth^;
-      if (nodeIsImpacted && hasLargerDepth) {
-        maxDepth := currentNode#getDepth();
-        deepestNode := Some(currentNode);
-      };
-    },
-    node,
-  );
-  deepestNode;
+  let ret: option(node) = f(node);
+  ret;
 };
 
 let rec traverseHeirarchy = (node: node, bubbled) =>

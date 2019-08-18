@@ -309,7 +309,7 @@ let dispatch =
         if (mouseMove) {
           let mouseMoveEventParams = getMouseMoveEventParams(cursor, evt);
 
-          switch (deepestNode^) {
+          switch (deepestNode) {
           | None =>
             /*
              * if no node found, call bubbled MouseOut on deepestStoredNode if there's some stored nodes
@@ -346,7 +346,7 @@ let dispatch =
           };
         };
 
-        switch (deepestNode^) {
+        switch (deepestNode) {
         | None => ()
         | Some(node) =>
           let bbox = node#getBoundingBox();
