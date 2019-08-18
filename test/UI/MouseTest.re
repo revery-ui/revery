@@ -12,74 +12,75 @@ let createNodeWithStyle = style => {
 };
 
 test("Mouse", () => {
-  test("layers", () =>
+  test("layers", ()
     // Regression test for: https://github.com/onivim/oni2/issues/665
-    test("event is dispatched to topmost node", () => {
-      /* We'll create a few nodes:
-           - Root
-             - Node 1
-               - Node 2
-             - Node 3
+    =>
+      test("event is dispatched to topmost node", () => {
+        /* We'll create a few nodes:
+             - Root
+               - Node 1
+                 - Node 2
+               - Node 3
 
-           All these nodes are absolutely positioned, so Node 4 would be rendered on top.
-           However, a bug in the old logic would prefer Node 3 (the deepest node) over
-           Node 4 (the topmost node).
-         */
+             All these nodes are absolutely positioned, so Node 4 would be rendered on top.
+             However, a bug in the old logic would prefer Node 3 (the deepest node) over
+             Node 4 (the topmost node).
+           */
 
-      let createChildNode = () => {
-        let _node = (new node)();
-        _node#setStyle(
-          Style.make(
-            ~position=Absolute,
-            ~top=0,
-            ~left=0,
-            ~width=100,
-            ~height=100,
-            (),
-          ),
+        let createChildNode = () => {
+          let _node = (new node)();
+          _node#setStyle(
+            Style.make(
+              ~position=Absolute,
+              ~top=0,
+              ~left=0,
+              ~width=100,
+              ~height=100,
+              (),
+            ),
+          );
+          _node;
+        };
+
+        let rootNode = (new node)();
+        rootNode#setStyle(Style.make(~width=100, ~height=100, ()));
+
+        let node1 = createChildNode();
+        let node2 = createChildNode();
+        let node3 = createChildNode();
+
+        node1#addChild(node2);
+        rootNode#addChild(node1);
+        rootNode#addChild(node3);
+
+        Layout.layout(rootNode);
+        rootNode#recalculate();
+
+        let child2HitCount = ref(0);
+        let child3HitCount = ref(0);
+
+        let child2MouseDown = _evt => incr(child2HitCount);
+        let child3MouseDown = _evt => incr(child3HitCount);
+
+        node2#setEvents(NodeEvents.make(~onMouseDown=child2MouseDown, ()));
+        node3#setEvents(NodeEvents.make(~onMouseDown=child3MouseDown, ()));
+
+        let cursor = Mouse.Cursor.make();
+        Mouse.dispatch(
+          cursor,
+          InternalMouseMove({mouseX: 50., mouseY: 50.}),
+          rootNode,
         );
-        _node;
-      };
+        Mouse.dispatch(
+          cursor,
+          InternalMouseDown({button: BUTTON_LEFT}),
+          rootNode,
+        );
 
-      let rootNode = (new node)();
-      rootNode#setStyle(Style.make(~width=100, ~height=100, ()));
-
-      let node1 = createChildNode();
-      let node2 = createChildNode();
-      let node3 = createChildNode();
-
-      node1#addChild(node2);
-      rootNode#addChild(node1);
-      rootNode#addChild(node3);
-
-      Layout.layout(rootNode);
-      rootNode#recalculate();
-
-      let child2HitCount = ref(0);
-      let child3HitCount = ref(0);
-
-      let child2MouseDown = _evt => incr(child2HitCount);
-      let child3MouseDown = _evt => incr(child3HitCount);
-
-      node2#setEvents(NodeEvents.make(~onMouseDown=child2MouseDown, ()));
-      node3#setEvents(NodeEvents.make(~onMouseDown=child3MouseDown, ()));
-
-      let cursor = Mouse.Cursor.make();
-      Mouse.dispatch(
-        cursor,
-        InternalMouseMove({mouseX: 50., mouseY: 50.}),
-        rootNode,
-      );
-      Mouse.dispatch(
-        cursor,
-        InternalMouseDown({button: BUTTON_LEFT}),
-        rootNode,
-      );
-
-      expect(child2HitCount^).toBe(0);
-      expect(child3HitCount^).toBe(1);
-    })
-  );
+        expect(child2HitCount^).toBe(0);
+        expect(child3HitCount^).toBe(1);
+      })
+    );
   test("dispatch", () => {
     test("triggers onMouseDown event for node", () => {
       let cursor = Mouse.Cursor.make();
