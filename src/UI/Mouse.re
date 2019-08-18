@@ -1,5 +1,6 @@
 /* Mouse Input */
 open Revery_Core;
+open Revery_Draw;
 open Revery_Math;
 
 open UiEvents;
@@ -303,7 +304,7 @@ let dispatch =
       };
 
       if (!handleCapture(eventToSend)) {
-        let deepestNode = getDeepestNode(node, pos);
+        let deepestNode = getTopMostNode(node, pos);
         let mouseMove = isMouseMoveEv(eventToSend);
         if (mouseMove) {
           let mouseMoveEventParams = getMouseMoveEventParams(cursor, evt);
@@ -348,6 +349,8 @@ let dispatch =
         switch (deepestNode^) {
         | None => ()
         | Some(node) =>
+          let bbox = node#getBoundingBox();
+          DebugDraw.setActive(bbox);
           bubble(node, eventToSend);
           let cursor = node#getCursorStyle();
           Event.dispatch(onCursorChanged, cursor);

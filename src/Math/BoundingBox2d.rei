@@ -5,6 +5,8 @@ type t = {
   max: Vec2.t,
 };
 
+let getBounds: t => (float, float, float, float);
+
 let create: (Vec2.t, Vec2.t) => t;
 
 let intersects: (t, t) => bool;

@@ -79,7 +79,7 @@ and checkChildren = (children, pos) =>
     }
   };
 
-let getDeepestNode = (node: node, pos) => {
+let getTopMostNode = (node: node, pos) => {
   let deepestNode = ref(None);
   let maxDepth = ref(-1);
 

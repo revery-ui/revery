@@ -10,6 +10,14 @@ type t = {
 
 let create = (min: Vec2.t, max: Vec2.t) => {min, max};
 
+let getBounds = (v: t) => {
+  let x0 = Vec2.get_x(v.min);
+  let y0 = Vec2.get_y(v.min);
+  let x1 = Vec2.get_x(v.max);
+  let y1 = Vec2.get_y(v.max);
+  (x0, y0, x1, y1);
+};
+
 let isPointInside = (bbox: t, p: Vec2.t) =>
   Vec2.get_x(p) >= Vec2.get_x(bbox.min)
   && Vec2.get_x(p) <= Vec2.get_x(bbox.max)
