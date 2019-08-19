@@ -5,7 +5,8 @@
  */
 
 module PrimitiveNodeFactory = PrimitiveNodeFactory;
-module IgnorePointerEvent = IgnorePointerEvent;
+module AllowPointer = AllowPointer;
+module IgnorePointer = IgnorePointer;
 module Image = Image;
 module OpenGL = OpenGL;
 module Text = Text;

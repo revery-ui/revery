@@ -1,8 +1,8 @@
 open Revery_UI;
-let component = React.nativeComponent("IgnorePointer");
+let component = React.nativeComponent("AllowPointer");
 
 let ignorePointerStyle = Style.make(
-  ~pointerEvents=Style.PointerEvents.Ignore,
+  ~pointerEvents=Style.PointerEvents.Allow,
   (),
 );
   
