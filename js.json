@@ -13,7 +13,8 @@
         "@opam/js_of_ocaml": "*",
         "@opam/js_of_ocaml-compiler": "*",
         "@opam/js_of_ocaml-lwt": "*",
-        "http-server": "*"
+        "http-server": "*",
+        "@opam/merlin-extend": "0.4"
       },
       "resolutions": {
         "rebez": "github:jchavarri/rebez#46cbc183",

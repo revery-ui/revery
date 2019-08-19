@@ -13,7 +13,7 @@ depends: [
   "ocaml" {>= "4.02.3"}
   "result"
   "camomile" {>= "1.0.0" & < "2.0~"}
-  "dune" {build}
+  "dune"
   "ppx_expect" {with-test & < "v0.13"}
 ]
 
