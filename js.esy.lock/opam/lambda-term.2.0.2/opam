@@ -6,7 +6,6 @@ bug-reports: "https://github.com/ocaml-community/lambda-term/issues"
 dev-repo: "git://github.com/ocaml-community/lambda-term.git"
 license: "BSD3"
 build: [
-  ["dune" "subst"] {pinned}
   ["dune" "build" "-p" name "-j" jobs]
   ["dune" "runtest" "-p" name "-j" jobs] {with-test}
 ]
@@ -15,8 +14,8 @@ depends: [
   "lwt"   {>= "4.0.0"}
   "lwt_log"
   "react"
-  "zed"   {>= "2.0" & < "3.0"}
-  "camomile" {>= "0.8.6"}
+  "zed"   {>= "2.0.3" & < "3.0"}
+  "camomile" {>= "1.0.1"}
   "lwt_react"
   "dune" {>= "1.0.0"}
 ]
@@ -30,7 +29,6 @@ for example, ncurses, by providing a native OCaml interface instead of bindings
 to a C library. Lambda-term integrates with zed to provide text edition
 facilities in console applications."""
 url {
-  src:
-    "https://github.com/ocaml-community/lambda-term/releases/download/2.0.1/lambda-term-2.0.1.tbz"
-  checksum: "md5=4b4b8480fe1280e1ed2a34ed93d16675"
+  src: "https://github.com/ocaml-community/lambda-term/releases/download/2.0.2/lambda-term-2.0.2.tbz"
+  checksum: "md5=4602aa4355705909e406513322b4b27e"
 }

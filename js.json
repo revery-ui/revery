@@ -13,7 +13,8 @@
         "@opam/js_of_ocaml": "*",
         "@opam/js_of_ocaml-compiler": "*",
         "@opam/js_of_ocaml-lwt": "*",
-        "http-server": "*"
+        "http-server": "*",
+        "@opam/merlin-extend": "0.4"
       },
       "resolutions": {
         "rebez": "github:jchavarri/rebez#46cbc183",
@@ -21,8 +22,7 @@
         "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
         "@opam/js_of_ocaml-lwt": "github:ocsigen/js_of_ocaml:js_of_ocaml-lwt.opam#db257ce",
         "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#3d1ea3a",
-        "pesy": "0.4.1",
-        "@opam/merlin-extend": "0.4"
+        "pesy": "0.4.1"
       }
   }
 }

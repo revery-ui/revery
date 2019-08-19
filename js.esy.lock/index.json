@@ -1,5 +1,5 @@
 {
-  "checksum": "144d67b6c4a0c8001efe3839f7edcc2f",
+  "checksum": "696bbc6a92bb008c3214c784be56245f",
   "root": "revery@link-dev:./package.json",
   "node": {
     "wordwrap@0.0.3@d41d8cd9": {
@@ -62,6 +62,7 @@
         "reason-fontkit@2.5.0@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
         "http-server@0.11.1@d41d8cd9", "flex@1.2.2@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
+        "@opam/merlin-extend@opam:0.4@64c45329",
         "@opam/lwt_ppx@opam:1.2.2@ee59a0be", "@opam/lwt@opam:4.2.1@08ba7e51",
         "@opam/js_of_ocaml-lwt@github:ocsigen/js_of_ocaml:js_of_ocaml-lwt.opam#db257ce@d41d8cd9",
         "@opam/js_of_ocaml-compiler@github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce@d41d8cd9",
@@ -122,7 +123,7 @@
       "dependencies": [
         "refmterr@3.2.2@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
         "@opam/lwt_ppx@opam:1.2.2@ee59a0be", "@opam/lwt@opam:4.2.1@08ba7e51",
-        "@opam/lambda-term@opam:2.0.1@6ce56e6e",
+        "@opam/lambda-term@opam:2.0.2@ecff8c4f",
         "@opam/js_of_ocaml-lwt@github:ocsigen/js_of_ocaml:js_of_ocaml-lwt.opam#db257ce@d41d8cd9",
         "@opam/js_of_ocaml-compiler@github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce@d41d8cd9",
         "@opam/js_of_ocaml@github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce@d41d8cd9",
@@ -243,14 +244,14 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "portfinder@1.0.21@d41d8cd9": {
-      "id": "portfinder@1.0.21@d41d8cd9",
+    "portfinder@1.0.23@d41d8cd9": {
+      "id": "portfinder@1.0.23@d41d8cd9",
       "name": "portfinder",
-      "version": "1.0.21",
+      "version": "1.0.23",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/portfinder/-/portfinder-1.0.21.tgz#sha1:60e1397b95ac170749db70034ece306b9a27e324"
+          "archive:https://registry.npmjs.org/portfinder/-/portfinder-1.0.23.tgz#sha1:894db4bcc5daf02b6614517ce89cd21a38226b82"
         ]
       },
       "overrides": [],
@@ -428,7 +429,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "union@0.4.6@d41d8cd9", "portfinder@1.0.21@d41d8cd9",
+        "union@0.4.6@d41d8cd9", "portfinder@1.0.23@d41d8cd9",
         "optimist@0.6.1@d41d8cd9", "opener@1.4.3@d41d8cd9",
         "http-proxy@1.17.0@d41d8cd9", "ecstatic@3.3.2@d41d8cd9",
         "corser@2.0.1@d41d8cd9", "colors@1.0.3@d41d8cd9"
@@ -688,20 +689,20 @@
       ],
       "devDependencies": []
     },
-    "@opam/zed@opam:2.0.2@42c1a642": {
-      "id": "@opam/zed@opam:2.0.2@42c1a642",
+    "@opam/zed@opam:2.0.3@7016ad7c": {
+      "id": "@opam/zed@opam:2.0.3@7016ad7c",
       "name": "@opam/zed",
-      "version": "opam:2.0.2",
+      "version": "opam:2.0.3",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/5c/5c0cb1ee87147514adfd23966d58440e#md5:5c0cb1ee87147514adfd23966d58440e",
-          "archive:https://github.com/ocaml-community/zed/releases/download/2.0.2/zed-2.0.2.tbz#md5:5c0cb1ee87147514adfd23966d58440e"
+          "archive:https://opam.ocaml.org/cache/md5/87/878123c9114bf3c0bd18a19fb1af73cd#md5:878123c9114bf3c0bd18a19fb1af73cd",
+          "archive:https://github.com/ocaml-community/zed/releases/download/2.0.3/zed-2.0.3.tbz#md5:878123c9114bf3c0bd18a19fb1af73cd"
         ],
         "opam": {
           "name": "zed",
-          "version": "2.0.2",
-          "path": "js.esy.lock/opam/zed.2.0.2"
+          "version": "2.0.3",
+          "path": "js.esy.lock/opam/zed.2.0.3"
         }
       },
       "overrides": [],
@@ -1082,20 +1083,20 @@
         "ocaml@4.7.1004@d41d8cd9", "@opam/dune@opam:1.7.3@e23fe0a7"
       ]
     },
-    "@opam/merlin-extend@opam:0.5@a5dd7d4b": {
-      "id": "@opam/merlin-extend@opam:0.5@a5dd7d4b",
+    "@opam/merlin-extend@opam:0.4@64c45329": {
+      "id": "@opam/merlin-extend@opam:0.4@64c45329",
       "name": "@opam/merlin-extend",
-      "version": "opam:0.5",
+      "version": "opam:0.4",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/ca/ca3a38c360c7d4827eb4789abf7a6aa4b6e3b4e3c3ef69a5be64dce4601ec227#sha256:ca3a38c360c7d4827eb4789abf7a6aa4b6e3b4e3c3ef69a5be64dce4601ec227",
-          "archive:https://github.com/let-def/merlin-extend/releases/download/v0.5/merlin-extend-v0.5.tbz#sha256:ca3a38c360c7d4827eb4789abf7a6aa4b6e3b4e3c3ef69a5be64dce4601ec227"
+          "archive:https://opam.ocaml.org/cache/md5/06/0663a58f2c45fad71615fbf0f6dd2e51#md5:0663a58f2c45fad71615fbf0f6dd2e51",
+          "archive:https://github.com/let-def/merlin-extend/archive/v0.4.tar.gz#md5:0663a58f2c45fad71615fbf0f6dd2e51"
         ],
         "opam": {
           "name": "merlin-extend",
-          "version": "0.5",
-          "path": "js.esy.lock/opam/merlin-extend.0.5"
+          "version": "0.4",
+          "path": "js.esy.lock/opam/merlin-extend.0.4"
         }
       },
       "overrides": [],
@@ -1273,25 +1274,25 @@
         "@opam/dune@opam:1.7.3@e23fe0a7"
       ]
     },
-    "@opam/lambda-term@opam:2.0.1@6ce56e6e": {
-      "id": "@opam/lambda-term@opam:2.0.1@6ce56e6e",
+    "@opam/lambda-term@opam:2.0.2@ecff8c4f": {
+      "id": "@opam/lambda-term@opam:2.0.2@ecff8c4f",
       "name": "@opam/lambda-term",
-      "version": "opam:2.0.1",
+      "version": "opam:2.0.2",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/4b/4b4b8480fe1280e1ed2a34ed93d16675#md5:4b4b8480fe1280e1ed2a34ed93d16675",
-          "archive:https://github.com/ocaml-community/lambda-term/releases/download/2.0.1/lambda-term-2.0.1.tbz#md5:4b4b8480fe1280e1ed2a34ed93d16675"
+          "archive:https://opam.ocaml.org/cache/md5/46/4602aa4355705909e406513322b4b27e#md5:4602aa4355705909e406513322b4b27e",
+          "archive:https://github.com/ocaml-community/lambda-term/releases/download/2.0.2/lambda-term-2.0.2.tbz#md5:4602aa4355705909e406513322b4b27e"
         ],
         "opam": {
           "name": "lambda-term",
-          "version": "2.0.1",
-          "path": "js.esy.lock/opam/lambda-term.2.0.1"
+          "version": "2.0.2",
+          "path": "js.esy.lock/opam/lambda-term.2.0.2"
         }
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.7.1004@d41d8cd9", "@opam/zed@opam:2.0.2@42c1a642",
+        "ocaml@4.7.1004@d41d8cd9", "@opam/zed@opam:2.0.3@7016ad7c",
         "@opam/react@opam:1.2.1@0e11855f",
         "@opam/lwt_react@opam:1.1.2@fb068e52",
         "@opam/lwt_log@opam:1.1.1@91643f38", "@opam/lwt@opam:4.2.1@08ba7e51",
@@ -1300,7 +1301,7 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.7.1004@d41d8cd9", "@opam/zed@opam:2.0.2@42c1a642",
+        "ocaml@4.7.1004@d41d8cd9", "@opam/zed@opam:2.0.3@7016ad7c",
         "@opam/react@opam:1.2.1@0e11855f",
         "@opam/lwt_react@opam:1.1.2@fb068e52",
         "@opam/lwt_log@opam:1.1.1@91643f38", "@opam/lwt@opam:4.2.1@08ba7e51",
@@ -1921,7 +1922,7 @@
         "ocaml@4.7.1004@d41d8cd9", "@opam/result@opam:1.4@6fb665c3",
         "@opam/ocamlfind@opam:1.8.1@c65fe06a",
         "@opam/ocaml-migrate-parsetree@opam:1.3.1@73570fbd",
-        "@opam/merlin-extend@opam:0.5@a5dd7d4b",
+        "@opam/merlin-extend@opam:0.4@64c45329",
         "@opam/menhir@opam:20190626@bbeb8953",
         "@opam/dune@opam:1.7.3@e23fe0a7"
       ],
