@@ -57,6 +57,7 @@ module Example = {
               onClick={() => setValue({first: "New value", second})}
             />
           </View>
+          <Padding padding=20>
           <BoxShadow
             boxShadow={Style.BoxShadow.make(
               ~xOffset=-5.,
@@ -76,11 +77,11 @@ module Example = {
               style=Style.[
                 backgroundColor(Colors.paleVioletRed),
                 color(Colors.white),
-                margin(20),
                 height(50),
               ]
             />
           </BoxShadow>
+          </Padding>
         </View>,
       );
     });
