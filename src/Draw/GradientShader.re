@@ -62,7 +62,7 @@ let fragmentShader = {|
   float verticalBlur = min(topEdgeAmount, bottomEdgeAmount);
 
   float blur = horizontalBlur * verticalBlur;
-  gl_FragColor = vec4(uShadowColor, blur);
+  gl_FragColor = vec4(uShadowColor.rgb, blur);
 |};
 
 type t = {
