@@ -12,149 +12,178 @@ let createNodeWithStyle = style => {
 };
 
 test("Mouse", () => {
-  test("pointer events", ()
-    => {
-      test("ignore allows pointer events to pass through", () => {
-        /* We'll create a few nodes:
-             - Root
-               - Node 1
-                 - Node 2
-               - Node 3
-                - Node 4
+  test("pointer events", () => {
+    test("ignore allows pointer events to pass through", () => {
+      /* We'll create a few nodes:
+           - Root
+             - Node 1
+               - Node 2
+             - Node 3
+              - Node 4
 
-              Node 3 will be set to ignore pointer events, but Node 4
-              will be set to accept pointer events, so the event
-              should make it to node 4.
-           */
+            Node 3 will be set to ignore pointer events, but Node 4
+            will be set to accept pointer events, so the event
+            should make it to node 4.
+         */
 
-        let createChildNode = () => {
-          let _node = (new node)();
-          _node#setStyle(
-            Style.make(
-              ~position=Absolute,
-              ~top=0,
-              ~left=0,
-              ~width=100,
-              ~height=100,
-              (),
-            ),
-          );
-          _node;
-        };
-
-        let rootNode = (new node)();
-        rootNode#setStyle(Style.make(~width=100, ~height=100, ()));
-
-        let node1 = createChildNode();
-        let node2 = createChildNode();
-        let node3 = createChildNode();
-        let node4 = createChildNode();
-
-        node3#setStyle(Style.make(~position=Absolute, ~top=0, ~left=0, ~width=100, ~height=100, ~pointerEvents=Style.PointerEvents.Ignore, ()));
-        node4#setStyle(Style.make(~position=Absolute, ~top=0, ~left=0, ~width=100, ~height=100, ~pointerEvents=Style.PointerEvents.Allow, ()));
-
-        node1#addChild(node2);
-        node3#addChild(node4);
-        rootNode#addChild(node1);
-        rootNode#addChild(node3);
-
-        Layout.layout(rootNode);
-        rootNode#recalculate();
-
-        let child2HitCount = ref(0);
-        let child4HitCount = ref(0);
-
-        let child2MouseDown = _evt => incr(child2HitCount);
-        let child4MouseDown = _evt => incr(child4HitCount);
-
-        node2#setEvents(NodeEvents.make(~onMouseDown=child2MouseDown, ()));
-        node4#setEvents(NodeEvents.make(~onMouseDown=child4MouseDown, ()));
-
-        let cursor = Mouse.Cursor.make();
-        Mouse.dispatch(
-          cursor,
-          InternalMouseMove({mouseX: 50., mouseY: 50.}),
-          rootNode,
+      let createChildNode = () => {
+        let _node = (new node)();
+        _node#setStyle(
+          Style.make(
+            ~position=Absolute,
+            ~top=0,
+            ~left=0,
+            ~width=100,
+            ~height=100,
+            (),
+          ),
         );
-        Mouse.dispatch(
-          cursor,
-          InternalMouseDown({button: BUTTON_LEFT}),
-          rootNode,
-        );
+        _node;
+      };
 
-        expect(child2HitCount^).toBe(0);
-        expect(child4HitCount^).toBe(1);
-      });
-      
-      test("ignore allows pointer events to pass through", () => {
-        /* We'll create a few nodes:
-             - Root
-               - Node 1
-                 - Node 2
-               - Node 3
-                - Node 4
+      let rootNode = (new node)();
+      rootNode#setStyle(Style.make(~width=100, ~height=100, ()));
 
-              Node 3 will be set to ignore pointer events, so the event
-              shouldn't make it to node 4
-           */
+      let node1 = createChildNode();
+      let node2 = createChildNode();
+      let node3 = createChildNode();
+      let node4 = createChildNode();
 
-        let createChildNode = () => {
-          let _node = (new node)();
-          _node#setStyle(
-            Style.make(
-              ~position=Absolute,
-              ~top=0,
-              ~left=0,
-              ~width=100,
-              ~height=100,
-              (),
-            ),
-          );
-          _node;
-        };
+      node3#setStyle(
+        Style.make(
+          ~position=Absolute,
+          ~top=0,
+          ~left=0,
+          ~width=100,
+          ~height=100,
+          ~pointerEvents=Style.PointerEvents.Ignore,
+          (),
+        ),
+      );
+      node4#setStyle(
+        Style.make(
+          ~position=Absolute,
+          ~top=0,
+          ~left=0,
+          ~width=100,
+          ~height=100,
+          ~pointerEvents=Style.PointerEvents.Allow,
+          (),
+        ),
+      );
 
-        let rootNode = (new node)();
-        rootNode#setStyle(Style.make(~width=100, ~height=100, ()));
+      node1#addChild(node2);
+      node3#addChild(node4);
+      rootNode#addChild(node1);
+      rootNode#addChild(node3);
 
-        let node1 = createChildNode();
-        let node2 = createChildNode();
-        let node3 = createChildNode();
-        let node4 = createChildNode();
+      Layout.layout(rootNode);
+      rootNode#recalculate();
 
-        node3#setStyle(Style.make(~position=Absolute, ~top=0, ~left=0, ~width=100, ~height=100, ~pointerEvents=Style.PointerEvents.Ignore, ()));
+      let child2HitCount = ref(0);
+      let child4HitCount = ref(0);
 
-        node1#addChild(node2);
-        node3#addChild(node4);
-        rootNode#addChild(node1);
-        rootNode#addChild(node3);
+      let child2MouseDown = _evt => incr(child2HitCount);
+      let child4MouseDown = _evt => incr(child4HitCount);
 
-        Layout.layout(rootNode);
-        rootNode#recalculate();
+      node2#setEvents(NodeEvents.make(~onMouseDown=child2MouseDown, ()));
+      node4#setEvents(NodeEvents.make(~onMouseDown=child4MouseDown, ()));
 
-        let child2HitCount = ref(0);
-        let child4HitCount = ref(0);
+      let cursor = Mouse.Cursor.make();
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        rootNode,
+      );
+      Mouse.dispatch(
+        cursor,
+        InternalMouseDown({button: BUTTON_LEFT}),
+        rootNode,
+      );
 
-        let child2MouseDown = _evt => incr(child2HitCount);
-        let child4MouseDown = _evt => incr(child4HitCount);
-
-        node2#setEvents(NodeEvents.make(~onMouseDown=child2MouseDown, ()));
-        node4#setEvents(NodeEvents.make(~onMouseDown=child4MouseDown, ()));
-
-        let cursor = Mouse.Cursor.make();
-        Mouse.dispatch(
-          cursor,
-          InternalMouseMove({mouseX: 50., mouseY: 50.}),
-          rootNode,
-        );
-        Mouse.dispatch(
-          cursor,
-          InternalMouseDown({button: BUTTON_LEFT}),
-          rootNode,
-        );
-        expect(child2HitCount^).toBe(1);
-        expect(child4HitCount^).toBe(0);
-      })
+      expect(child2HitCount^).toBe(0);
+      expect(child4HitCount^).toBe(1);
     });
+
+    test("ignore allows pointer events to pass through", () => {
+      /* We'll create a few nodes:
+           - Root
+             - Node 1
+               - Node 2
+             - Node 3
+              - Node 4
+
+            Node 3 will be set to ignore pointer events, so the event
+            shouldn't make it to node 4
+         */
+
+      let createChildNode = () => {
+        let _node = (new node)();
+        _node#setStyle(
+          Style.make(
+            ~position=Absolute,
+            ~top=0,
+            ~left=0,
+            ~width=100,
+            ~height=100,
+            (),
+          ),
+        );
+        _node;
+      };
+
+      let rootNode = (new node)();
+      rootNode#setStyle(Style.make(~width=100, ~height=100, ()));
+
+      let node1 = createChildNode();
+      let node2 = createChildNode();
+      let node3 = createChildNode();
+      let node4 = createChildNode();
+
+      node3#setStyle(
+        Style.make(
+          ~position=Absolute,
+          ~top=0,
+          ~left=0,
+          ~width=100,
+          ~height=100,
+          ~pointerEvents=Style.PointerEvents.Ignore,
+          (),
+        ),
+      );
+
+      node1#addChild(node2);
+      node3#addChild(node4);
+      rootNode#addChild(node1);
+      rootNode#addChild(node3);
+
+      Layout.layout(rootNode);
+      rootNode#recalculate();
+
+      let child2HitCount = ref(0);
+      let child4HitCount = ref(0);
+
+      let child2MouseDown = _evt => incr(child2HitCount);
+      let child4MouseDown = _evt => incr(child4HitCount);
+
+      node2#setEvents(NodeEvents.make(~onMouseDown=child2MouseDown, ()));
+      node4#setEvents(NodeEvents.make(~onMouseDown=child4MouseDown, ()));
+
+      let cursor = Mouse.Cursor.make();
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        rootNode,
+      );
+      Mouse.dispatch(
+        cursor,
+        InternalMouseDown({button: BUTTON_LEFT}),
+        rootNode,
+      );
+      expect(child2HitCount^).toBe(1);
+      expect(child4HitCount^).toBe(0);
+    });
+  });
   test("layers", ()
     // Regression test for: https://github.com/onivim/oni2/issues/665
     =>

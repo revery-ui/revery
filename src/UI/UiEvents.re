@@ -79,50 +79,50 @@ and checkChildren = (children, pos) =>
     }
   };
 
-
-type pointerEventMode = 
-| Default
-| Ignore;
+type pointerEventMode =
+  | Default
+  | Ignore;
 
 let getTopMostNode = (node: node, pos) => {
   open Style;
-  
+
   let rec f = (node: node, pointerEventMode) => {
     let style = node#getStyle();
 
     if (!isNodeImpacted(node, pos)) {
       None;
     } else {
-
-      let mode = switch (style.pointerEvents) {
-      | PointerEvents.Allow => Default
-      | PointerEvents.Ignore => Ignore
-      | PointerEvents.Default => pointerEventMode
-      };
+      let mode =
+        switch (style.pointerEvents) {
+        | PointerEvents.Allow => Default
+        | PointerEvents.Ignore => Ignore
+        | PointerEvents.Default => pointerEventMode
+        };
 
       let ignored = mode == Ignore;
 
       let revChildren = node#getRevChildren();
-      let ret = switch (revChildren) {
-      | [] => ignored ? None : Some(node)
-      | children =>
-        List.fold_left(
-          (prev, curr) =>
-            switch (prev) {
-            | Some(v) => Some(v)
-            | None => f(curr, mode)
-            },
-          None,
-          children,
-        )
-      };
-      
-      switch(ret) {
+      let ret =
+        switch (revChildren) {
+        | [] => ignored ? None : Some(node)
+        | children =>
+          List.fold_left(
+            (prev, curr) =>
+              switch (prev) {
+              | Some(v) => Some(v)
+              | None => f(curr, mode)
+              },
+            None,
+            children,
+          )
+        };
+
+      switch (ret) {
       | None => ignored ? None : Some(node)
       | Some(v) => Some(v)
-      }
+      };
     };
-   };
+  };
 
   let ret: option(node) = f(node, Default);
   ret;

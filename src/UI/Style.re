@@ -26,12 +26,12 @@ module BoxShadow = {
   };
 };
 
-module PointerEvents {
-  type t = 
-  | Default
-  | Allow
-  | Ignore;
-}
+module PointerEvents = {
+  type t =
+    | Default
+    | Allow
+    | Ignore;
+};
 
 type t = {
   backgroundColor: Color.t,
@@ -330,6 +330,7 @@ type coreStyleProps = [
   | `Opacity(float)
   | `BoxShadow(BoxShadow.properties)
   | `Cursor(option(MouseCursors.t))
+  | `PointerEvents(PointerEvents.t)
 ];
 
 type fontProps = [ | `FontFamily(string) | `FontSize(int)];
@@ -373,6 +374,15 @@ let flexWrap = w => {
     | `NoWrap => LayoutTypes.CssNoWrap
     };
   `FlexWrap(wrap);
+};
+
+let pointerEvents = v => {
+  let pe =
+    switch (v) {
+    | `Allow => PointerEvents.Allow
+    | `Ignore => PointerEvents.Ignore
+    };
+  `PointerEvents(pe);
 };
 
 let textOverflow = overflow =>
@@ -585,6 +595,7 @@ let applyStyle = (style, styleRule) =>
   | `Left(left) => {...style, left}
   | `Top(top) => {...style, top}
   | `Right(right) => {...style, right}
+  | `PointerEvents(pointerEvents) => {...style, pointerEvents}
   };
 
 let create = (~style, ~default=make(), ()) =>
@@ -643,6 +654,7 @@ let merge = (~source, ~target) =>
               | (`Transform(_), `Transform(_)) => targetStyle
               | (`Opacity(_), `Opacity(_)) => targetStyle
               | (`BoxShadow(_), `BoxShadow(_)) => targetStyle
+              | (`PointerEvents(_), `PointerEvents(_)) => targetStyle
               | (newRule, _) => newRule
               }
             )

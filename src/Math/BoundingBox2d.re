@@ -21,7 +21,14 @@ let getBounds = (v: t) => {
 let show = (v: t) => {
   let (x0, y0, x1, y1) = getBounds(v);
 
-  "x0: " ++ string_of_float(x0) ++ " y0: " ++ string_of_float(y0) ++ " x1: " ++ string_of_float(x1) ++ " y1: " ++ string_of_float(y1);
+  "x0: "
+  ++ string_of_float(x0)
+  ++ " y0: "
+  ++ string_of_float(y0)
+  ++ " x1: "
+  ++ string_of_float(x1)
+  ++ " y1: "
+  ++ string_of_float(y1);
 };
 
 let isPointInside = (bbox: t, p: Vec2.t) =>

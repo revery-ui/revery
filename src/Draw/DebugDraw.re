@@ -21,7 +21,7 @@ let setActive = (bbox: BoundingBox2d.t) => {
   _activeRect := Some(v);
 };
 
-let draw = () => {
+let draw = () =>
   if (_isEnabled^) {
     switch (_activeRect^) {
     | None => ()
@@ -40,5 +40,4 @@ let draw = () => {
         (),
       );
     };
-  }
-};
+  };

@@ -11,7 +11,6 @@ module UniqueId =
 
 type callback = unit => unit;
 
-
 exception NoDataException(string);
 let getOrThrow: (string, option('a)) => 'a =
   (msg, opt) =>
@@ -29,7 +28,6 @@ type cachedNodeState = {
 };
 class node (()) = {
   as _this;
-  
   /* We use revChildren for appending, as appending to the _head_ of a list
    * is much cheaper than appending to the _tail_ of a list.
    * However, we often want the child in the 'correct' order - so we'll track
@@ -40,7 +38,6 @@ class node (()) = {
   val _revChildren: ref(list(node)) = ref([]);
   val _childrenInvalid: ref(bool) = ref(false);
   val _children: ref(list(node)) = ref([]);
-  
   val _style: ref(Style.t) = ref(Style.defaultStyle);
   val _layoutStyle: ref(LayoutTypes.cssStyle) =
     ref(Layout.LayoutSupport.defaultStyle);
@@ -124,15 +121,14 @@ class node (()) = {
   pub setEvents = events => _events := events;
   pub getEvents = () => _events^;
   pub getRevChildren = () => _revChildren^;
-  pub getChildren = () => { 
-      if (_childrenInvalid^) {
-        _childrenInvalid := false;
-        _children := List.rev(_revChildren^);
-        _children^;
-      } else {
+  pub getChildren = () =>
+    if (_childrenInvalid^) {
+      _childrenInvalid := false;
+      _children := List.rev(_revChildren^);
       _children^;
-    }
-  };
+    } else {
+      _children^;
+    };
   pub getWorldTransform = () => {
     let state = _cachedNodeState^ |> getOrThrow("getWorldTransform");
     state.worldTransform;
@@ -227,7 +223,7 @@ class node (()) = {
     _children := List.rev(_revChildren^);
 
     _cachedNodeState :=
-      Some({transform, worldTransform, bbox, bboxClipped, depth });
+      Some({transform, worldTransform, bbox, bboxClipped, depth});
 
     List.iter(c => c#recalculate(), _children^);
 
@@ -335,7 +331,8 @@ class node (()) = {
     switch (_isLayoutDirty^ || force) {
     | false => _layoutNode^
     | true =>
-      let childNodes = List.map(c => c#toLayoutNode(~force, ()), _this#getChildren());
+      let childNodes =
+        List.map(c => c#toLayoutNode(~force, ()), _this#getChildren());
 
       let node =
         switch (_this#getMeasureFunction()) {
@@ -361,7 +358,7 @@ class node (()) = {
     _queuedCallbacks := [];
 
     let fc = c => c#flushCallbacks();
-    List.iter(fc, _this#getChildren())
+    List.iter(fc, _this#getChildren());
   };
   /* TODO: This should really be private - it should never be explicitly set */
   pub _setParent = (n: option(node)) => {
