@@ -1,8 +1,6 @@
 open Revery_UI;
 let component = React.nativeComponent("Padding");
 
-open Style;
-
 let make = (~key=?, ~padding, children) =>
   component(~key?, hooks =>
     (
