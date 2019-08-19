@@ -26,6 +26,14 @@ module BoxShadow = {
   };
 };
 
+module PointerEvents {
+  type t = {
+  | Default
+  | Allowed
+  | Ignore
+  };
+}
+
 type t = {
   backgroundColor: Color.t,
   color: Color.t,
@@ -47,6 +55,7 @@ type t = {
   fontFamily,
   fontSize: int,
   lineHeight: float,
+  pointerEvents: PointerEvents.t,
   textWrap: TextWrapping.wrapType,
   marginTop: int,
   marginLeft: int,
