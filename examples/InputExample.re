@@ -57,28 +57,29 @@ module Example = {
               onClick={() => setValue({first: "New value", second})}
             />
           </View>
-          <BoxShadow boxShadow=Style.BoxShadow.make(
-                ~xOffset=-5.,
-                ~yOffset=2.,
-                ~color=Colors.black,
-                ~blurRadius=20.,
-                ~spreadRadius=0.,
-                (),
-          )>
-          <Input
-            placeholder="custom input"
-            placeholderColor=Colors.plum
-            cursorColor=Colors.white
-            autofocus=true
-            onChange={({value, _}) => setValue({first, second: value})}
-            onKeyDown={event => Console.log(event)}
-            style=Style.[
-              backgroundColor(Colors.paleVioletRed),
-              color(Colors.white),
-              margin(20),
-              height(50),
-            ]
-          />
+          <BoxShadow
+            boxShadow={Style.BoxShadow.make(
+              ~xOffset=-5.,
+              ~yOffset=2.,
+              ~color=Colors.black,
+              ~blurRadius=20.,
+              ~spreadRadius=0.,
+              (),
+            )}>
+            <Input
+              placeholder="custom input"
+              placeholderColor=Colors.plum
+              cursorColor=Colors.white
+              autofocus=true
+              onChange={({value, _}) => setValue({first, second: value})}
+              onKeyDown={event => Console.log(event)}
+              style=Style.[
+                backgroundColor(Colors.paleVioletRed),
+                color(Colors.white),
+                margin(20),
+                height(50),
+              ]
+            />
           </BoxShadow>
         </View>,
       );

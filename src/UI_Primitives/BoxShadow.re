@@ -3,12 +3,7 @@ let component = React.nativeComponent("BoxShadow");
 
 open Style;
 
-let make =
-    (
-      ~key=?,
-      ~boxShadow,
-      children,
-    ) =>
+let make = (~key=?, ~boxShadow, children) =>
   component(~key?, hooks =>
     (
       hooks,
@@ -29,13 +24,5 @@ let make =
     )
   );
 
-let createElement =
-    (
-      ~boxShadow=BoxShadow.make(),
-      ~children,
-      (),
-    ) =>
-  make(
-    ~boxShadow,
-    React.listToElement(children),
-  );
+let createElement = (~boxShadow=BoxShadow.make(), ~children, ()) =>
+  make(~boxShadow, React.listToElement(children));

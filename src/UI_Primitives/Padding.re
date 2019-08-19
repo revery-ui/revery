@@ -3,12 +3,7 @@ let component = React.nativeComponent("Padding");
 
 open Style;
 
-let make =
-    (
-      ~key=?,
-      ~padding,
-      children,
-    ) =>
+let make = (~key=?, ~padding, children) =>
   component(~key?, hooks =>
     (
       hooks,
@@ -29,13 +24,5 @@ let make =
     )
   );
 
-let createElement =
-    (
-      ~padding,
-      ~children,
-      (),
-    ) =>
-  make(
-    ~padding,
-    React.listToElement(children),
-  );
+let createElement = (~padding, ~children, ()) =>
+  make(~padding, React.listToElement(children));

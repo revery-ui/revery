@@ -26,23 +26,25 @@ let secondBoxStyle =
     height(100),
   ];
 
-let firstShadow = Style.BoxShadow.make(
-      ~yOffset=-10.,
-      ~xOffset=0.,
-      ~blurRadius=15.,
-      ~color=Colors.black,
-      ~spreadRadius=10.,
-      (),
-    );
+let firstShadow =
+  Style.BoxShadow.make(
+    ~yOffset=-10.,
+    ~xOffset=0.,
+    ~blurRadius=15.,
+    ~color=Colors.black,
+    ~spreadRadius=10.,
+    (),
+  );
 
-let secondShadow = Style.BoxShadow.make(
-      ~yOffset=10.,
-      ~xOffset=-30.,
-      ~blurRadius=20.,
-      ~color=Colors.green,
-      ~spreadRadius=0.,
-      ()
-);
+let secondShadow =
+  Style.BoxShadow.make(
+    ~yOffset=10.,
+    ~xOffset=-30.,
+    ~blurRadius=20.,
+    ~color=Colors.green,
+    ~spreadRadius=0.,
+    (),
+  );
 
 let render = () =>
   <View style=parentStyles>

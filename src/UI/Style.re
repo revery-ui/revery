@@ -27,24 +27,29 @@ module BoxShadow = {
 
   type t = properties;
 
-  let make = (
-    ~xOffset=-5.,
-    ~yOffset=-5.,
-    ~blurRadius=20.,
-    ~spreadRadius=00.,
-    ~color=Color.rgba(0., 0., 0., 1.0),
-    ()) => {
+  let make =
+      (
+        ~xOffset=(-5.),
+        ~yOffset=(-5.),
+        ~blurRadius=20.,
+        ~spreadRadius=00.,
+        ~color=Color.rgba(0., 0., 0., 1.0),
+        (),
+      ) => {
     xOffset,
     yOffset,
     blurRadius,
     spreadRadius,
     color,
   };
-  
-  let default: t = {
-    xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: Colors.black,
-  };
 
+  let default: t = {
+    xOffset: 0.,
+    yOffset: 0.,
+    blurRadius: 0.,
+    spreadRadius: 0.,
+    color: Colors.black,
+  };
 };
 
 type t = {

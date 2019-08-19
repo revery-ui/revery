@@ -190,18 +190,18 @@ module TreeView = {
         fontSize(10),
       ];
     <Padding padding=5>
-    <View
-      style=Style.[
-        justifyContent(`Center),
-        alignItems(`Center),
-        marginLeft(indent * 30),
-        backgroundColor(Colors.white),
-        width(80),
-        height(40)
-      ]>
+      <View
+        style=Style.[
+          justifyContent(`Center),
+          alignItems(`Center),
+          marginLeft(indent * 30),
+          backgroundColor(Colors.white),
+          width(80),
+          height(40),
+        ]>
         <Text text={data.name} style=textStyles />
         <Text text={data.level} style=textStyles />
-    </View>
+      </View>
     </Padding>;
   };
 };
