@@ -189,6 +189,7 @@ module TreeView = {
         fontFamily("Roboto-Regular.ttf"),
         fontSize(10),
       ];
+    <Padding padding=5>
     <View
       style=Style.[
         justifyContent(`Center),
@@ -196,19 +197,12 @@ module TreeView = {
         marginLeft(indent * 30),
         backgroundColor(Colors.white),
         width(80),
-        height(40),
-        marginVertical(5),
-        boxShadow(
-          ~xOffset=-6.,
-          ~yOffset=4.,
-          ~blurRadius=5.,
-          ~spreadRadius=2.,
-          ~color=Color.rgba(0., 0., 0., 0.5),
-        ),
+        height(40)
       ]>
-      <Text text={data.name} style=textStyles />
-      <Text text={data.level} style=textStyles />
-    </View>;
+        <Text text={data.name} style=textStyles />
+        <Text text={data.level} style=textStyles />
+    </View>
+    </Padding>;
   };
 };
 

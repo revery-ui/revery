@@ -40,10 +40,16 @@ module BoxShadow = {
     spreadRadius,
     color,
   };
+  
+  let default: t = {
+    xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: Colors.black,
+  };
+
 };
 
 type t = {
   backgroundColor: Color.t,
+  boxShadow: BoxShadow.t,
   color: Color.t,
   width: int,
   height: int,
@@ -94,7 +100,6 @@ type t = {
   borderRadius: float,
   transform: list(Transform.t),
   opacity: float,
-  boxShadow: BoxShadow.properties,
   cursor: option(MouseCursors.t),
 };
 
@@ -102,6 +107,7 @@ let make =
     (
       ~textOverflow=TextOverflow.Overflow,
       ~backgroundColor: Color.t=Colors.transparentBlack,
+      ~boxShadow=BoxShadow.default,
       ~color: Color.t=Colors.white,
       ~width=Encoding.cssUndefined,
       ~height=Encoding.cssUndefined,
@@ -151,19 +157,13 @@ let make =
       ~borderRadius=0.0,
       ~transform=[],
       ~opacity=1.0,
-      ~boxShadow=BoxShadow.{
-                   xOffset: 0.0,
-                   yOffset: 0.0,
-                   blurRadius: 0.0,
-                   spreadRadius: 0.0,
-                   color: Colors.black,
-                 },
       ~cursor=?,
       _unit: unit,
     ) => {
   let ret: t = {
     textOverflow,
     backgroundColor,
+    boxShadow,
     color,
     width,
     height,
@@ -213,7 +213,6 @@ let make =
     borderVertical,
     borderRadius,
     opacity,
-    boxShadow,
     cursor,
   };
 
@@ -334,7 +333,6 @@ type coreStyleProps = [
   | `BorderRadius(float)
   | `Transform(list(Transform.t))
   | `Opacity(float)
-  | `BoxShadow(BoxShadow.properties)
   | `Cursor(option(MouseCursors.t))
 ];
 
@@ -485,8 +483,6 @@ let cursor = c => `Cursor(Some(c));
 
 let opacity = o => `Opacity(o);
 let transform = t => `Transform(t);
-let boxShadow = (~xOffset, ~yOffset, ~spreadRadius, ~blurRadius, ~color) =>
-  `BoxShadow(BoxShadow.{xOffset, yOffset, spreadRadius, blurRadius, color});
 
 let overflow = o =>
   switch (o) {
@@ -575,7 +571,6 @@ let applyStyle = (style, styleRule) =>
   | `BorderHorizontal(borderHorizontal) => {...style, borderHorizontal}
   | `BorderRadius(borderRadius) => {...style, borderRadius}
   | `Opacity(opacity) => {...style, opacity}
-  | `BoxShadow(boxShadow) => {...style, boxShadow}
   | `Transform(transform) => {...style, transform}
   | `FontFamily(fontFamily) => {...style, fontFamily}
   | `FontSize(fontSize) => {...style, fontSize}
@@ -648,7 +643,6 @@ let merge = (~source, ~target) =>
               | (`BorderRadius(_), `BorderRadius(_)) => targetStyle
               | (`Transform(_), `Transform(_)) => targetStyle
               | (`Opacity(_), `Opacity(_)) => targetStyle
-              | (`BoxShadow(_), `BoxShadow(_)) => targetStyle
               | (newRule, _) => newRule
               }
             )
