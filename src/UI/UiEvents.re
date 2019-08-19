@@ -84,8 +84,8 @@ let getTopMostNode = (node: node, pos) => {
     if (!isNodeImpacted(node, pos)) {
       None;
     } else {
-      let revChildren = List.rev(node#getChildren());
-      switch (revChildren) {
+      let revChildren = node#getRevChildren();
+      let ret = switch (revChildren) {
       | [] => Some(node)
       | children =>
         List.fold_left(
@@ -98,6 +98,11 @@ let getTopMostNode = (node: node, pos) => {
           children,
         )
       };
+
+      switch(ret) {
+      | None => Some(node)
+      | Some(v) => Some(v)
+      }
     };
 
   let ret: option(node) = f(node);

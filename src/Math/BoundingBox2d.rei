@@ -16,3 +16,5 @@ let intersect: (t, t) => t;
 let isPointInside: (t, Vec2.t) => bool;
 
 let transform: (t, Mat4.t) => t;
+
+let show: t => string;
