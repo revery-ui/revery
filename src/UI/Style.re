@@ -27,11 +27,10 @@ module BoxShadow = {
 };
 
 module PointerEvents {
-  type t = {
+  type t = 
   | Default
   | Allowed
-  | Ignore
-  };
+  | Ignore;
 }
 
 type t = {
@@ -144,6 +143,7 @@ let make =
       ~borderRadius=0.0,
       ~transform=[],
       ~opacity=1.0,
+      ~pointerEvents: PointerEvents.Default,
       ~boxShadow=BoxShadow.{
                    xOffset: 0.0,
                    yOffset: 0.0,
