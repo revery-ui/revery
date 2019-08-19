@@ -7,7 +7,7 @@ tags: ["print" "box" "table" "tree"]
 homepage: "https://github.com/c-cube/printbox/"
 bug-reports: "https://github.com/c-cube/printbox/issues/"
 depends: [
-  "dune" {build}
+  "dune"
   "base-bytes"
   "odoc" {with-doc}
   "ocaml" {>= "4.03"}
