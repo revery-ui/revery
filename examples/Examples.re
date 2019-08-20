@@ -164,9 +164,9 @@ module ExampleButton = {
       (
         hooks,
         <Opacity opacity=buttonOpacity>
-            <Clickable style=wrapperStyle onClick>
-              <Text style=textHeaderStyle text=name />
-            </Clickable>
+          <Clickable style=wrapperStyle onClick>
+            <Text style=textHeaderStyle text=name />
+          </Clickable>
         </Opacity>,
       );
     });

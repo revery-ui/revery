@@ -104,7 +104,12 @@ let animatedText = {
           transform([Transform.TranslateY(translate)]),
         ];
 
-      (hooks, <Opacity opacity=animatedOpacity><Text style=textHeaderStyle text /></Opacity>);
+      (
+        hooks,
+        <Opacity opacity=animatedOpacity>
+          <Text style=textHeaderStyle text />
+        </Opacity>,
+      );
     });
 };
 

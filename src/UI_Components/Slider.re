@@ -226,6 +226,6 @@ let createElement =
           />
           <View style=afterTrackStyle />
         </View>
-      </Opacity>
+      </Opacity>,
     );
   });

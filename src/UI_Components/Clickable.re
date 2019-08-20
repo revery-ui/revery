@@ -77,18 +77,12 @@ let make =
     let onMouseDown = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
       switch (mouseEvt.button) {
       | MouseButton.BUTTON_LEFT =>
-        Mouse.setCapture(
-          ~onMouseUp=evt => onMouseUp(evt),
-          (),
-        );
+        Mouse.setCapture(~onMouseUp=evt => onMouseUp(evt), ())
       | _ => Mouse.setCapture(~onMouseUp=evt => onMouseUp(evt), ())
       };
     };
 
-    let style = Style.[
-      cursor(MouseCursors.pointer),
-      ...style
-    ];
+    let style = Style.[cursor(MouseCursors.pointer), ...style];
 
     (
       slots,
