@@ -181,7 +181,6 @@ let createElement =
 
     let style =
       Style.[
-        //opacity(sliderOpacity),
         width(vertical ? sliderHeight : sliderLength),
         height(vertical ? sliderLength : sliderHeight),
         cursor(MouseCursors.pointer),
@@ -191,7 +190,6 @@ let createElement =
 
     let beforeTrackStyle =
       Style.[
-        //opacity(sliderOpacity),
         top(vertical ? 0 : trackMargins),
         bottom(vertical ? sliderLength - thumbPosition : trackMargins),
         left(vertical ? trackMargins : 0),
@@ -202,7 +200,6 @@ let createElement =
 
     let afterTrackStyle =
       Style.[
-        //opacity(sliderOpacity),
         top(vertical ? thumbPosition + thumbWidth : trackMargins),
         bottom(vertical ? 0 : trackMargins),
         left(vertical ? trackMargins : thumbPosition + thumbWidth),
