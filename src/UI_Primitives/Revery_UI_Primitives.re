@@ -10,6 +10,7 @@ module AllowPointer = AllowPointer;
 module IgnorePointer = IgnorePointer;
 module Image = Image;
 module OpenGL = OpenGL;
+module Opacity = Opacity;
 module Padding = Padding;
 module Text = Text;
 module View = View;

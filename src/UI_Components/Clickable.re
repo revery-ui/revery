@@ -52,19 +52,6 @@ let make =
       setClickableRefOption(Some(r));
     };
 
-    let (animatedOpacity, setOpacity, slots) = Hooks.state(0.8, slots);
-
-    let onMouseMove = (mouseX: float, mouseY: float) =>
-      switch (clickableRef) {
-      | Some(clickable) =>
-        if (isMouseInsideRef(clickable, mouseX, mouseY)) {
-          setOpacity(1.0);
-        } else {
-          setOpacity(0.8);
-        }
-      | None => ()
-      };
-
     let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
       switch (clickableRef) {
       | Some(clickable) =>
@@ -80,8 +67,6 @@ let make =
       | _ => ()
       };
 
-      setOpacity(0.8);
-
       /* TODO Releasing capture in here means
          if multiple buttons are pressed simutaneously
          there would a race condition
@@ -92,28 +77,17 @@ let make =
     let onMouseDown = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
       switch (mouseEvt.button) {
       | MouseButton.BUTTON_LEFT =>
-        Mouse.setCapture(
-          ~onMouseMove=evt => onMouseMove(evt.mouseX, evt.mouseY),
-          ~onMouseUp=evt => onMouseUp(evt),
-          (),
-        );
-        setOpacity(1.0);
+        Mouse.setCapture(~onMouseUp=evt => onMouseUp(evt), ())
       | _ => Mouse.setCapture(~onMouseUp=evt => onMouseUp(evt), ())
       };
     };
 
-    let mergedStyles =
-      Style.(
-        merge(
-          ~source=style,
-          ~target=[opacity(animatedOpacity), cursor(MouseCursors.pointer)],
-        )
-      );
+    let style = Style.[cursor(MouseCursors.pointer), ...style];
 
     (
       slots,
       <View
-        style=mergedStyles
+        style
         onMouseDown
         ?onBlur
         ?onFocus

@@ -1,3 +1,4 @@
+module ContainerComponent = Container;
 open Revery_UI;
 open Revery_Core;
 open Revery_UI_Primitives;
@@ -352,15 +353,14 @@ let make =
         );
       <View
         style=Style.[
-          width(2),
-          marginTop((defaultHeight - dimension.height) / 2),
-          height(inputFontSize),
           position(`Absolute),
           marginLeft(dimension.width + inputTextMargin + 1),
-          opacity(cursorOpacity),
-          backgroundColor(cursorColor),
-        ]
-      />;
+          marginTop((defaultHeight - dimension.height) / 2),
+        ]>
+        <Opacity opacity=cursorOpacity>
+          <ContainerComponent width=2 height=inputFontSize color=cursorColor />
+        </Opacity>
+      </View>;
     };
 
     let makeTextComponent = content =>
