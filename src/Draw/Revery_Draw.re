@@ -1,4 +1,5 @@
 module Assets = Assets;
+module DebugDraw = DebugDraw;
 module RenderPass = RenderPass;
 module FontCache = FontCache;
 module FontRenderer = FontRenderer;

@@ -1,12 +1,14 @@
 open Revery_UI;
 
 type nodeFactory = {
+  createNode: unit => node,
   createViewNode: unit => viewNode,
   createTextNode: string => textNode,
   createImageNode: string => imageNode,
 };
 
 let defaultNodeFactory: nodeFactory = {
+  createNode: () => (new node)(),
   createViewNode: () => (new viewNode)(),
   createTextNode: text => (new textNode)(text),
   createImageNode: text => (new imageNode)(text),

@@ -11,14 +11,6 @@ module UniqueId =
 
 type callback = unit => unit;
 
-type cachedNodeState = {
-  transform: Mat4.t,
-  worldTransform: Mat4.t,
-  bbox: BoundingBox2d.t,
-  bboxClipped: BoundingBox2d.t,
-  depth: int,
-};
-
 exception NoDataException(string);
 let getOrThrow: (string, option('a)) => 'a =
   (msg, opt) =>
@@ -27,8 +19,24 @@ let getOrThrow: (string, option('a)) => 'a =
     | None => raise(NoDataException(msg))
     };
 
+type cachedNodeState = {
+  transform: Mat4.t,
+  worldTransform: Mat4.t,
+  bbox: BoundingBox2d.t,
+  bboxClipped: BoundingBox2d.t,
+  depth: int,
+};
 class node (()) = {
   as _this;
+  /* We use revChildren for appending, as appending to the _head_ of a list
+   * is much cheaper than appending to the _tail_ of a list.
+   * However, we often want the child in the 'correct' order - so we'll track
+   * when we've made changes to `_revChildren`, and update `_children` on request
+   * if `_revChildren` is dirty. `_childrenInvalid` tracks if `_children` needs
+   * to be updated.
+   */
+  val _revChildren: ref(list(node)) = ref([]);
+  val _childrenInvalid: ref(bool) = ref(false);
   val _children: ref(list(node)) = ref([]);
   val _style: ref(Style.t) = ref(Style.defaultStyle);
   val _layoutStyle: ref(LayoutTypes.cssStyle) =
@@ -62,7 +70,7 @@ class node (()) = {
       () => {
         let localContext =
           NodeDrawContext.createFromParent(parentContext, style.opacity);
-        List.iter(c => c#draw(localContext), _children^);
+        List.iter(c => c#draw(localContext), _this#getChildren());
       },
     );
   };
@@ -112,6 +120,15 @@ class node (()) = {
   pub getStyle = () => _style^;
   pub setEvents = events => _events := events;
   pub getEvents = () => _events^;
+  pub getRevChildren = () => _revChildren^;
+  pub getChildren = () =>
+    if (_childrenInvalid^) {
+      _childrenInvalid := false;
+      _children := List.rev(_revChildren^);
+      _children^;
+    } else {
+      _children^;
+    };
   pub getWorldTransform = () => {
     let state = _cachedNodeState^ |> getOrThrow("getWorldTransform");
     state.worldTransform;
@@ -203,6 +220,8 @@ class node (()) = {
     let bboxClipped = _this#_recalculateBoundingBoxClipped(worldTransform);
     let depth = _this#_recalculateDepth();
 
+    _children := List.rev(_revChildren^);
+
     _cachedNodeState :=
       Some({transform, worldTransform, bbox, bboxClipped, depth});
 
@@ -251,19 +270,20 @@ class node (()) = {
     BoundingBox2d.isPointInside(bboxClipped, p);
   };
   pub addChild = (n: node) => {
-    _children := List.append(_children^, [n]);
+    _revChildren := [n, ..._revChildren^];
+    _childrenInvalid := true;
     n#_setParent(Some((_this :> node)));
     _this#markLayoutDirty();
   };
   pub removeChild = (n: node) => {
-    _children :=
-      List.filter(c => c#getInternalId() != n#getInternalId(), _children^);
+    _revChildren :=
+      List.filter(c => c#getInternalId() != n#getInternalId(), _revChildren^);
+    _childrenInvalid := true;
     n#_setParent(None);
     _this#markLayoutDirty();
   };
-  pub firstChild = () => List.hd(_children^);
+  pub firstChild = () => List.hd(_this#getChildren());
   pub getParent = () => _parent^;
-  pub getChildren = () => _children^;
   pub getMeasureFunction = () => None;
   pub handleEvent = (evt: NodeEvents.event) => {
     let _ =
@@ -311,7 +331,8 @@ class node (()) = {
     switch (_isLayoutDirty^ || force) {
     | false => _layoutNode^
     | true =>
-      let childNodes = List.map(c => c#toLayoutNode(~force, ()), _children^);
+      let childNodes =
+        List.map(c => c#toLayoutNode(~force, ()), _this#getChildren());
 
       let node =
         switch (_this#getMeasureFunction()) {
@@ -337,7 +358,7 @@ class node (()) = {
     _queuedCallbacks := [];
 
     let fc = c => c#flushCallbacks();
-    List.iter(fc, _children^);
+    List.iter(fc, _this#getChildren());
   };
   /* TODO: This should really be private - it should never be explicitly set */
   pub _setParent = (n: option(node)) => {

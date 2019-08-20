@@ -6,6 +6,8 @@
 
 module BoxShadow = BoxShadow;
 module PrimitiveNodeFactory = PrimitiveNodeFactory;
+module AllowPointer = AllowPointer;
+module IgnorePointer = IgnorePointer;
 module Image = Image;
 module OpenGL = OpenGL;
 module Padding = Padding;

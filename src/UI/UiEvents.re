@@ -79,22 +79,53 @@ and checkChildren = (children, pos) =>
     }
   };
 
-let getDeepestNode = (node: node, pos) => {
-  let deepestNode = ref(None);
-  let maxDepth = ref(-1);
+type pointerEventMode =
+  | Default
+  | Ignore;
 
-  Node.iter(
-    currentNode => {
-      let nodeIsImpacted = isNodeImpacted(currentNode, pos);
-      let hasLargerDepth = currentNode#getDepth() >= maxDepth^;
-      if (nodeIsImpacted && hasLargerDepth) {
-        maxDepth := currentNode#getDepth();
-        deepestNode := Some(currentNode);
+let getTopMostNode = (node: node, pos) => {
+  open Style;
+
+  let rec f = (node: node, pointerEventMode) => {
+    let style = node#getStyle();
+
+    if (!isNodeImpacted(node, pos)) {
+      None;
+    } else {
+      let mode =
+        switch (style.pointerEvents) {
+        | PointerEvents.Allow => Default
+        | PointerEvents.Ignore => Ignore
+        | PointerEvents.Default => pointerEventMode
+        };
+
+      let ignored = mode == Ignore;
+
+      let revChildren = node#getRevChildren();
+      let ret =
+        switch (revChildren) {
+        | [] => ignored ? None : Some(node)
+        | children =>
+          List.fold_left(
+            (prev, curr) =>
+              switch (prev) {
+              | Some(v) => Some(v)
+              | None => f(curr, mode)
+              },
+            None,
+            children,
+          )
+        };
+
+      switch (ret) {
+      | None => ignored ? None : Some(node)
+      | Some(v) => Some(v)
       };
-    },
-    node,
-  );
-  deepestNode;
+    };
+  };
+
+  let ret: option(node) = f(node, Default);
+  ret;
 };
 
 let rec traverseHeirarchy = (node: node, bubbled) =>

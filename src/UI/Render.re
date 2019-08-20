@@ -79,6 +79,7 @@ let render =
       (),
     );
     rootNode#draw(drawContext);
+    DebugDraw.draw();
     RenderPass.endAlphaPass();
   });
 };
