@@ -4,22 +4,22 @@ open Revery_UI_Primitives;
 
 module Hooks = Revery_UI_Hooks;
 
-type item = {
-  value: string,
+type item('a) = {
+  value: 'a,
   label: string,
 };
 
-type items = list(item);
+type items('a) = list(item('a));
 
-type state = {
-  items,
-  selected: item,
+type state('a) = {
+  items: items('a),
+  selected: item('a),
   _open: bool,
 };
 
-type action =
+type action('a) =
   | ShowDropdown
-  | SelectItem(item);
+  | SelectItem(item('a));
 
 let reducer = (action, state) =>
   switch (action) {
@@ -36,7 +36,8 @@ let textStyles =
 
 let noop = _item => ();
 
-let component = React.component("Dropdown");
+let component = a => React.component("Dropdown", a);
+
 let createElement =
     (
       ~items,

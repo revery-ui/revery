@@ -2,9 +2,9 @@ open Revery_UI;
 open Revery_Core;
 open Revery_UI_Primitives;
 
-type button = {
+type button('a) = {
   text: string,
-  value: string,
+  value: 'a,
 };
 let defaultStyle =
   Style.[
@@ -15,11 +15,12 @@ let defaultStyle =
     fontFamily("Roboto-Regular.ttf"),
   ];
 
-let component = React.component("RadioButtons");
+let component = a => React.component("RadioButtons", a);
+
 let make =
     (
       ~defaultSelected,
-      ~buttons: list(button),
+      ~buttons: list(button('a)),
       ~iconSize,
       ~style,
       ~onChange,

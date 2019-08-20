@@ -18,12 +18,12 @@ let textStyle =
 module DropdownExample = {
   let component = React.component("DropDownExample");
 
-  let items: Dropdown.items = [
-    {value: "1", label: "First option"},
-    {value: "2", label: "Second option"},
-    {value: "3", label: "Third option"},
-    {value: "4", label: "Fourth option"},
-    {value: "5", label: "A really, really, really long option"},
+  let items: Dropdown.items(int) = [
+    {value: 1, label: "First option"},
+    {value: 2, label: "Second option"},
+    {value: 3, label: "Third option"},
+    {value: 4, label: "Fourth option"},
+    {value: 5, label: "A really, really, really long option"},
   ];
 
   let createElement = (~children as _, ()) =>
