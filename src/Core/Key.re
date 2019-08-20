@@ -126,6 +126,7 @@ type t =
 let toString = key =>
   switch (key) {
   | KEY_SPACE => " "
+  | KEY_TAB => "\t"
   | KEY_APOSTROPHE => "'"
   | KEY_COMMA => ","
   | KEY_MINUS => "-"
