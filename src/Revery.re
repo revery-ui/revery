@@ -9,6 +9,7 @@ module Console = Console;
 
 module Draw = Revery_Draw;
 module Geometry = Revery_Geometry;
+module Lwt = Revery_Lwt;
 module Math = Revery_Math;
 module Shaders = Revery_Shaders;
 module UI = {
