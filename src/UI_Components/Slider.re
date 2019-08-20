@@ -181,7 +181,7 @@ let createElement =
 
     let style =
       Style.[
-        opacity(sliderOpacity),
+        //opacity(sliderOpacity),
         width(vertical ? sliderHeight : sliderLength),
         height(vertical ? sliderLength : sliderHeight),
         cursor(MouseCursors.pointer),
@@ -191,7 +191,7 @@ let createElement =
 
     let beforeTrackStyle =
       Style.[
-        opacity(sliderOpacity),
+        //opacity(sliderOpacity),
         top(vertical ? 0 : trackMargins),
         bottom(vertical ? sliderLength - thumbPosition : trackMargins),
         left(vertical ? trackMargins : 0),
@@ -202,7 +202,7 @@ let createElement =
 
     let afterTrackStyle =
       Style.[
-        opacity(sliderOpacity),
+        //opacity(sliderOpacity),
         top(vertical ? thumbPosition + thumbWidth : trackMargins),
         bottom(vertical ? 0 : trackMargins),
         left(vertical ? trackMargins : thumbPosition + thumbWidth),
@@ -213,20 +213,22 @@ let createElement =
 
     (
       hooks,
-      <View onMouseDown style ref={r => setSlideRef(r)}>
-        <View style=beforeTrackStyle />
-        <View
-          ref={r => setThumbRef(r)}
-          style=Style.[
-            position(`Absolute),
-            height(vertical ? thumbWidth : thumbHeight),
-            width(vertical ? thumbHeight : thumbWidth),
-            left(vertical ? 0 : thumbPosition),
-            top(vertical ? thumbPosition : 0),
-            backgroundColor(thumbColor),
-          ]
-        />
-        <View style=afterTrackStyle />
-      </View>,
+      <Opacity opacity=sliderOpacity>
+        <View onMouseDown style ref={r => setSlideRef(r)}>
+          <View style=beforeTrackStyle />
+          <View
+            ref={r => setThumbRef(r)}
+            style=Style.[
+              position(`Absolute),
+              height(vertical ? thumbWidth : thumbHeight),
+              width(vertical ? thumbHeight : thumbWidth),
+              left(vertical ? 0 : thumbPosition),
+              top(vertical ? thumbPosition : 0),
+              backgroundColor(thumbColor),
+            ]
+          />
+          <View style=afterTrackStyle />
+        </View>
+      </Opacity>
     );
   });

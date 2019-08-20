@@ -148,7 +148,6 @@ module ExampleButton = {
 
       let wrapperStyle =
         Style.[
-          opacity(buttonOpacity),
           borderLeft(~width=4, ~color=highlightColor),
           backgroundColor(bgColor),
         ];
@@ -164,11 +163,11 @@ module ExampleButton = {
 
       (
         hooks,
-        <View style=[Style.opacity(buttonOpacity)]>
-          <Clickable style=wrapperStyle onClick>
-            <Text style=textHeaderStyle text=name />
-          </Clickable>
-        </View>,
+        <Opacity opacity=buttonOpacity>
+            <Clickable style=wrapperStyle onClick>
+              <Text style=textHeaderStyle text=name />
+            </Clickable>
+        </Opacity>,
       );
     });
 };

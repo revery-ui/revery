@@ -350,17 +350,21 @@ let make =
           ~fontSize=inputFontSize,
           startStr,
         );
+      <View style=Style.[
+          position(`Absolute),
+          marginLeft(dimension.width + inputTextMargin + 1),
+          marginTop((defaultHeight - dimension.height) / 2),
+      ]>
+      <Opacity opacity=cursorOpacity>
       <View
         style=Style.[
           width(2),
-          marginTop((defaultHeight - dimension.height) / 2),
           height(inputFontSize),
-          position(`Absolute),
-          marginLeft(dimension.width + inputTextMargin + 1),
-          opacity(cursorOpacity),
           backgroundColor(cursorColor),
         ]
-      />;
+      />
+      </Opacity>
+      </View>
     };
 
     let makeTextComponent = content =>

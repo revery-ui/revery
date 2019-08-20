@@ -43,18 +43,19 @@ let logo = {
       (
         hooks,
         <View onMouseDown onMouseUp>
-          <Image
-            src="outrun-logo.png"
-            opacity=logoOpacity
-            style=Style.[
-              width(512),
-              height(256),
-              transform([
-                Transform.RotateY(Angle.from_radians(rotationY)),
-                Transform.RotateX(Angle.from_radians(rotation)),
-              ]),
-            ]
-          />
+          <Opacity opacity=logoOpacity>
+            <Image
+              src="outrun-logo.png"
+              style=Style.[
+                width(512),
+                height(256),
+                transform([
+                  Transform.RotateY(Angle.from_radians(rotationY)),
+                  Transform.RotateX(Angle.from_radians(rotation)),
+                ]),
+              ]
+            />
+          </Opacity>
         </View>,
       );
     });
@@ -100,11 +101,10 @@ let animatedText = {
           fontFamily("Roboto-Regular.ttf"),
           fontSize(24),
           marginHorizontal(8),
-          opacity(animatedOpacity),
           transform([Transform.TranslateY(translate)]),
         ];
 
-      (hooks, <Text style=textHeaderStyle text />);
+      (hooks, <Opacity opacity=animatedOpacity><Text style=textHeaderStyle text /></Opacity>);
     });
 };
 

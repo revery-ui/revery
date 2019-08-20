@@ -347,7 +347,6 @@ type coreStyleProps = [
   | `BorderVertical(Border.t)
   | `BorderRadius(float)
   | `Transform(list(Transform.t))
-  | `Opacity(float)
   | `Cursor(option(MouseCursors.t))
   | `PointerEvents(PointerEvents.t)
 ];
@@ -506,7 +505,6 @@ let alignSelf = a => `AlignSelf(alignment(a));
 
 let cursor = c => `Cursor(Some(c));
 
-let opacity = o => `Opacity(o);
 let transform = t => `Transform(t);
 
 let overflow = o =>
@@ -595,7 +593,6 @@ let applyStyle = (style, styleRule) =>
   | `BorderVertical(borderVertical) => {...style, borderVertical}
   | `BorderHorizontal(borderHorizontal) => {...style, borderHorizontal}
   | `BorderRadius(borderRadius) => {...style, borderRadius}
-  | `Opacity(opacity) => {...style, opacity}
   | `Transform(transform) => {...style, transform}
   | `FontFamily(fontFamily) => {...style, fontFamily}
   | `FontSize(fontSize) => {...style, fontSize}
@@ -668,7 +665,6 @@ let merge = (~source, ~target) =>
               | (`BorderVertical(_), `BorderVertical(_)) => targetStyle
               | (`BorderRadius(_), `BorderRadius(_)) => targetStyle
               | (`Transform(_), `Transform(_)) => targetStyle
-              | (`Opacity(_), `Opacity(_)) => targetStyle
               | (`PointerEvents(_), `PointerEvents(_)) => targetStyle
               | (newRule, _) => newRule
               }

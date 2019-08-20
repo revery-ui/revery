@@ -106,11 +106,11 @@ module Clock = {
                 state.elapsedTime |> Time.to_float_seconds,
               )}
             />
+            <Opacity opacity=marcherOpacity>
             <View
               style=Style.[
                 position(`Absolute),
                 bottom(0),
-                opacity(marcherOpacity),
                 left(
                   int_of_float(
                     getMarcherPosition(state.elapsedTime) *. 146.,
@@ -121,6 +121,7 @@ module Clock = {
                 backgroundColor(Color.hex("#90f7ff")),
               ]
             />
+            </Opacity>
           </View>
           <Button title=buttonText onClick=startStop />
         </View>,
