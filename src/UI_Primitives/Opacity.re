@@ -1,8 +1,6 @@
 open Revery_UI;
 let component = React.nativeComponent("Opacity");
 
-open Style;
-
 let make = (~key=?, ~opacity, children) =>
   component(~key?, hooks =>
     (
