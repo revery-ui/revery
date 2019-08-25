@@ -2,6 +2,7 @@ open Reglfw;
 
 type delegatedFunc = unit => unit;
 type idleFunc = unit => unit;
+type canIdleFunc = unit => bool;
 let noop = () => ();
 
 type t = {
@@ -9,6 +10,7 @@ type t = {
   mutable idleCount: int,
   mutable isFirstRender: bool,
   onIdle: idleFunc,
+  canIdle: ref(canIdleFunc),
 };
 
 type initFunc = t => unit;
@@ -20,6 +22,8 @@ type appInitFunc = t => unit;
 let getWindows = (app: t) => app.windows;
 
 let quit = (code: int) => exit(code);
+
+let isIdle = (app: t) => app.idleCount >= framesToIdle;
 
 let _mainThreadMutex = Mutex.create();
 /* A list of pending functions the main thread will need to run */
@@ -34,6 +38,10 @@ let runOnMainThread = f => {
 
 let _anyPendingMainThreadJobs = () => {
   _anyPendingWork^;
+};
+
+let setCanIdle = (f: canIdleFunc, app: t) => {
+  app.canIdle := f;
 };
 
 /* Execute any pending main thread jobs */
@@ -82,6 +90,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     idleCount: 0,
     isFirstRender: true,
     onIdle,
+    canIdle: ref(() => true),
   };
 
   let _ = Glfw.glfwInit();
@@ -95,7 +104,8 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
 
     if (appInstance.isFirstRender
         || _anyWindowsDirty(appInstance)
-        || _anyPendingMainThreadJobs()) {
+        || _anyPendingMainThreadJobs()
+        || !(appInstance.canIdle^())) {
       Performance.bench("_doPendingMainThreadJobs", () =>
         _doPendingMainThreadJobs()
       );
