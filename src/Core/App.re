@@ -105,7 +105,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     if (appInstance.isFirstRender
         || _anyWindowsDirty(appInstance)
         || _anyPendingMainThreadJobs()
-        || !(appInstance.canIdle^())) {
+        || !appInstance.canIdle^()) {
       Performance.bench("_doPendingMainThreadJobs", () =>
         _doPendingMainThreadJobs()
       );
