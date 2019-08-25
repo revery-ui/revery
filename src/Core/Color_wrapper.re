@@ -32,8 +32,8 @@ let equals = (a: t, b: t) => {
   Float.equal(a.r, b.r)
   && Float.equal(a.g, b.g)
   && Float.equal(a.b, b.b)
-  && Float.equal(a.a, b.a)
+  && Float.equal(a.a, b.a);
 };
 
-
-let show = (color: t) => Color.to_hexstring(Color.of_rgba'(color.r, color.g, color.b, color.a));
+let show = (color: t) =>
+  Color.to_hexstring(Color.of_rgba'(color.r, color.g, color.b, color.a));
