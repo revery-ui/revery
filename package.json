@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "3.4.0",
-    "reason-glfw": "^3.2.1028",
+    "reason-glfw": "^3.2.1029",
     "reason-fontkit": "^2.5.0",
     "reason-gl-matrix": "^0.9.9305",
     "rebez": "*",
