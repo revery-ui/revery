@@ -30,13 +30,15 @@ let make =
     let defaultVal = List.nth(buttons, defaultSelected).value;
     let (checkedVal, setCheckedVal, slots) =
       React.Hooks.state(defaultVal, slots);
+
+    let icon = v => v == checkedVal ? {||} : {||};
+
     (
       slots,
       <View style=Style.[justifyContent(`Center), alignItems(`Center)]>
         ...{
              buttons
-             |> List.map(button => {
-                  let icon = button.value == checkedVal ? {||} : {||};
+             |> List.map(button =>
                   <Clickable
                     onClick={() => {
                       setCheckedVal(button.value);
@@ -49,15 +51,15 @@ let make =
                       height(30),
                     ]>
                     <Text
-                      text=icon
+                      text={icon(button.value)}
                       style=Style.[
                         fontSize(iconSize),
                         fontFamily("FontAwesome5FreeSolid.otf"),
                       ]
                     />
                     <Text text={button.text} style />
-                  </Clickable>;
-                })
+                  </Clickable>
+                )
            }
       </View>,
     );
