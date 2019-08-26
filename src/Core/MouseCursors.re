@@ -7,14 +7,13 @@ open Reglfw.Glfw;
    leak. */
 type t = [ | `Arrow | `Text | `Pointer | `Crosshair | `HResize | `VResize];
 
-let arrow_lazy = lazy (glfwCreateStandardCursor(GLFW_ARROW_CURSOR));
-let text_lazy = lazy (glfwCreateStandardCursor(GLFW_IBEAM_CURSOR));
-let pointer_lazy = lazy (glfwCreateStandardCursor(GLFW_HAND_CURSOR));
-let crosshair_lazy = lazy (glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR));
+let arrow_lazy = lazy(glfwCreateStandardCursor(GLFW_ARROW_CURSOR));
+let text_lazy = lazy(glfwCreateStandardCursor(GLFW_IBEAM_CURSOR));
+let pointer_lazy = lazy(glfwCreateStandardCursor(GLFW_HAND_CURSOR));
+let crosshair_lazy = lazy(glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR));
 let horizontalResize_lazy =
-  lazy (glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR));
-let verticalResize_lazy =
-  lazy (glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR));
+  lazy(glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR));
+let verticalResize_lazy = lazy(glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR));
 
 let toGlfwCursor = cursorType => {
   (
