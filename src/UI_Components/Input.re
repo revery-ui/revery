@@ -43,11 +43,11 @@ let getStringParts = (index, str) => {
   | 0 => ("", str)
   | _ =>
     let strBeginning =
-      try (Str.string_before(str, index)) {
+      try(Str.string_before(str, index)) {
       | _ => str
       };
     let strEnd =
-      try (Str.string_after(str, index)) {
+      try(Str.string_after(str, index)) {
       | _ => ""
       };
     (strBeginning, strEnd);

@@ -35,7 +35,7 @@ let make =
       <View style=Style.[justifyContent(`Center), alignItems(`Center)]>
         ...{
              buttons
-             |> List.map(button => {
+             |> List.map(button =>
                   let icon = button.value == checkedVal ? {||} : {||};
                   <Clickable
                     onClick={() => {
@@ -57,7 +57,7 @@ let make =
                     />
                     <Text text={button.text} style />
                   </Clickable>;
-                })
+                )
            }
       </View>,
     );
