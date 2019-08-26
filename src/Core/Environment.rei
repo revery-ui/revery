@@ -31,6 +31,12 @@ let executingDirectory: string;
 
 let getWorkingDirectory: unit => string;
 
+/**
+[getAssetPath] resolves a path to an absolute path. If the path is not already
+absolute, it is assumed to be relative to the current binary.
+*/
+let getAssetPath: string => string;
+
 type os =
   | Windows
   | Mac
