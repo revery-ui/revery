@@ -21,15 +21,14 @@ let _cache: cache = Hashtbl.create(100);
 
 let getTexture = (imagePath: string) => {
   /* TODO: Support url paths? */
-  let execDir = Environment.getExecutingDirectory();
-  let relativeImagePath = execDir ++ imagePath;
-
-  let cacheResult = Hashtbl.find_opt(_cache, relativeImagePath);
+  let cacheResult = Hashtbl.find_opt(_cache, imagePath);
 
   switch (cacheResult) {
   | Some(r) => r
   | None =>
     /* Create an initial texture container */
+    let fullImagePath = Environment.getAssetPath(imagePath);
+
     let texture = glCreateTexture();
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -46,7 +45,7 @@ let getTexture = (imagePath: string) => {
       initialPixels,
     );
 
-    let imageLoadPromise = Image.load(relativeImagePath);
+    let imageLoadPromise = Image.load(fullImagePath);
 
     let ret: t = {hasLoaded: false, texture, width: 1, height: 1};
 
@@ -69,7 +68,7 @@ let getTexture = (imagePath: string) => {
     };
 
     let _ = Lwt.bind(imageLoadPromise, success);
-    Hashtbl.replace(_cache, relativeImagePath, ret);
+    Hashtbl.replace(_cache, imagePath, ret);
     ret;
   };
 };

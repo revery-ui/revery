@@ -81,4 +81,10 @@ let getExecutingDirectory = () =>
 
 let executingDirectory = getExecutingDirectory();
 
+let getAssetPath = (p) => {
+  isNative ? {
+    Rench.Path.isAbsolute(p) ? p : executingDirectory ++ p
+  } : p;
+};
+
 let getWorkingDirectory = () => Sys.getcwd();

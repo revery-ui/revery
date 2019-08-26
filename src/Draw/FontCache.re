@@ -58,7 +58,7 @@ let _isSome = a =>
   };
 
 let load = (fontName: string, size: int) => {
-  let execDir = Revery_Core.Environment.getExecutingDirectory();
+  let assetPath = Environment.getAssetPath(fontName);
   switch (InternalCache.find_opt(_cache, fontName, size)) {
   | Some(fk) => fk
   | None =>
@@ -72,7 +72,7 @@ let load = (fontName: string, size: int) => {
         Event.dispatch(onFontLoaded, ());
         Lwt.return();
       };
-      let _ = Lwt.bind(Fontkit.load(execDir ++ fontName, size), success);
+      let _ = Lwt.bind(Fontkit.load(assetPath, size), success);
       ();
     };
     Fontkit.dummyFont(size);
