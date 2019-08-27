@@ -1,1 +1,1 @@
-(data_only_dirs node_modules _esy playground)
+(dirs src test examples bench)
