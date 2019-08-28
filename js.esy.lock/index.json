@@ -1,5 +1,5 @@
 {
-  "checksum": "5c33a9261d7fa6ae9c0c38f46034d830",
+  "checksum": "513cabf20b3e715bb8d0cbcebbf79b60",
   "root": "revery@link-dev:./package.json",
   "node": {
     "wordwrap@0.0.3@d41d8cd9": {
@@ -59,7 +59,8 @@
         "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9",
         "reason-glfw@3.2.1029@d41d8cd9",
         "reason-gl-matrix@0.9.9305@d41d8cd9",
-        "reason-fontkit@2.6.0@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
+        "reason-fontkit@2.6.0@d41d8cd9",
+        "reason-font-manager@2.0.0@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
         "http-server@0.11.1@d41d8cd9", "flex@1.2.2@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/merlin-extend@opam:0.4@64c45329",
@@ -248,6 +249,26 @@
         "reason-gl-matrix@0.9.9305@d41d8cd9",
         "esy-harfbuzz@1.9.1005@d41d8cd9", "esy-freetype2@2.9.1006@d41d8cd9",
         "esy-cmake@0.3.5@d41d8cd9", "@opam/dune@opam:1.11.3@9894df55",
+        "@esy-ocaml/reason@3.5.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "reason-font-manager@2.0.0@d41d8cd9": {
+      "id": "reason-font-manager@2.0.0@d41d8cd9",
+      "name": "reason-font-manager",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/reason-font-manager/-/reason-font-manager-2.0.0.tgz#sha1:eb59d070fa1f3e5f75864cd1f68ac832e4b4557a"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "refmterr@3.2.2@d41d8cd9", "ocaml@4.7.1004@d41d8cd9",
+        "@reason-native/rely@3.1.0@d41d8cd9",
+        "@reason-native/pastel@0.1.0@d41d8cd9",
+        "@reason-native/console@0.0.3@d41d8cd9",
         "@esy-ocaml/reason@3.5.0@d41d8cd9"
       ],
       "devDependencies": []
@@ -470,7 +491,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "requires-port@1.0.0@d41d8cd9", "follow-redirects@1.7.0@d41d8cd9",
+        "requires-port@1.0.0@d41d8cd9", "follow-redirects@1.8.1@d41d8cd9",
         "eventemitter3@3.1.2@d41d8cd9"
       ],
       "devDependencies": []
@@ -489,14 +510,14 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "follow-redirects@1.7.0@d41d8cd9": {
-      "id": "follow-redirects@1.7.0@d41d8cd9",
+    "follow-redirects@1.8.1@d41d8cd9": {
+      "id": "follow-redirects@1.8.1@d41d8cd9",
       "name": "follow-redirects",
-      "version": "1.7.0",
+      "version": "1.8.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.7.0.tgz#sha1:489ebc198dc0e7f64167bd23b03c4c19b5784c76"
+          "archive:https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.8.1.tgz#sha1:24804f9eaab67160b0e840c085885d606371a35b"
         ]
       },
       "overrides": [],
