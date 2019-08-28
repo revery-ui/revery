@@ -38,7 +38,8 @@
     "flex": "^1.2.2",
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
-    "rench": "^1.9.0"
+    "rench": "^1.9.0",
+    "reason-font-manager": "*",
   },
   "resolutions": {
     "rebez": "github:jchavarri/rebez#46cbc183",
@@ -46,7 +47,8 @@
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#dd933fc",
-    "pesy": "0.4.1"
+    "pesy": "0.4.1",
+    "reason-font-manager": "link:../reason-font-manager"
   },
   "peerDependencies": {
     "ocaml": ">=4.6.0"
