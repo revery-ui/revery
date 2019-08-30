@@ -22,10 +22,7 @@ let _getScaledFontSize = fontSize => {
   let ctx = RenderPass.getContext();
 
   int_of_float(
-    float_of_int(fontSize)
-    *. ctx.pixelRatio
-    *. ctx.scaleFactor
-    +. 0.5,
+    float_of_int(fontSize) *. ctx.pixelRatio *. ctx.scaleFactor +. 0.5,
   );
 };
 

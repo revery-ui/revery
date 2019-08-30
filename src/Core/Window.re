@@ -89,7 +89,7 @@ let _updateMetrics = (w: t) => {
   let previousZoom = w.metrics.zoom;
   w.metrics = {
     ..._getMetricsFromGlfwWindow(w.glfwWindow),
-    zoom: previousZoom
+    zoom: previousZoom,
   };
   w.areMetricsDirty = false;
 };
@@ -112,11 +112,8 @@ let setSize = (w: t, width: int, height: int) =>
   };
 
 let setZoom = (w: t, zoom: float) => {
-    w.metrics = {
-      ...w.metrics,
-      zoom: max(zoom, 0.1),
-    };
-    w.areMetricsDirty = true;
+  w.metrics = {...w.metrics, zoom: max(zoom, 0.1)};
+  w.areMetricsDirty = true;
 };
 
 let _resizeIfNecessary = (w: t) =>

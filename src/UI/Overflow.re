@@ -54,17 +54,15 @@ let _startClipRegion =
 
   let x = int_of_float(minX *. pixelRatio *. scaleFactor);
 
-  let y = int_of_float(scaleFactor *. pixelRatio *. (float_of_int(screenHeight) -. maxY));
+  let y =
+    int_of_float(
+      scaleFactor *. pixelRatio *. (float_of_int(screenHeight) -. maxY),
+    );
   let width = int_of_float(scaleFactor *. pixelRatio *. (maxX -. minX));
   let height = int_of_float(scaleFactor *. pixelRatio *. (maxY -. minY));
 
   Glfw.glEnable(GL_SCISSOR_TEST);
-  Glfw.glScissor(
-    x,
-    y,
-    width,
-    height,
-  );
+  Glfw.glScissor(x, y, width, height);
 };
 
 let _endClipRegion = () => Glfw.glDisable(GL_SCISSOR_TEST);
