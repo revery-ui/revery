@@ -22,10 +22,7 @@ let _getScaledFontSize = fontSize => {
   let ctx = RenderPass.getContext();
 
   int_of_float(
-    float_of_int(fontSize)
-    *. ctx.pixelRatio
-    *. float_of_int(ctx.scaleFactor)
-    +. 0.5,
+    float_of_int(fontSize) *. ctx.pixelRatio *. ctx.scaleFactor +. 0.5,
   );
 };
 
@@ -101,7 +98,7 @@ let drawString =
   let font = FontCache.load(fontFamily, _getScaledFontSize(fontSize));
 
   let metrics = FontRenderer.getNormalizedMetrics(font);
-  let multiplier = ctx.pixelRatio *. float_of_int(ctx.scaleFactor);
+  let multiplier = ctx.pixelRatio *. ctx.scaleFactor;
   /* Position the baseline */
   let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
   ();

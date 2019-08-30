@@ -34,8 +34,10 @@ let render =
   let size = Window.getSize(window);
   let pixelRatio = Window.getDevicePixelRatio(window);
   let scaleFactor = Window.getScaleFactor(window);
-  let adjustedHeight = size.height / scaleFactor;
-  let adjustedWidth = size.width / scaleFactor;
+  print_endline("Scalefactor: " ++ string_of_float(scaleFactor));
+  let adjustedHeight =
+    float_of_int(size.height) /. scaleFactor |> int_of_float;
+  let adjustedWidth = float_of_int(size.width) /. scaleFactor |> int_of_float;
 
   rootNode#setStyle(
     Style.make(
