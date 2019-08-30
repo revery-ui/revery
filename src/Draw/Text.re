@@ -20,27 +20,28 @@ open Fontkit;
  */
 let _getScaledFontSize2 = (~scaleFactor, ~pixelRatio, fontSize) => {
   int_of_float(
-    float_of_int(fontSize)
-    *. pixelRatio
-    *. float_of_int(scaleFactor)
-    +. 0.5,
+    float_of_int(fontSize) *. pixelRatio *. float_of_int(scaleFactor) +. 0.5,
   );
 };
 
 let _getScaledFontSize = fontSize => {
   let ctx = RenderPass.getContext();
-  _getScaledFontSize2(~scaleFactor=ctx.scaleFactor, ~pixelRatio=ctx.pixelRatio, fontSize);
+  _getScaledFontSize2(
+    ~scaleFactor=ctx.scaleFactor,
+    ~pixelRatio=ctx.pixelRatio,
+    fontSize,
+  );
 };
 
 let _getScaledFontSizeFromWindow = (window: option(Window.t), fontSize) => {
-
-  let (scaleFactor, pixelRatio) = switch(window) {
-  | None => (1, 1.0)
-  | Some(v) =>
-    let sf = Window.getScaleFactor(v);
-    let pr = Window.getDevicePixelRatio(v);
-    (sf, pr);
-  }
+  let (scaleFactor, pixelRatio) =
+    switch (window) {
+    | None => (1, 1.0)
+    | Some(v) =>
+      let sf = Window.getScaleFactor(v);
+      let pr = Window.getDevicePixelRatio(v);
+      (sf, pr);
+    };
 
   _getScaledFontSize2(~scaleFactor, ~pixelRatio, fontSize);
 };

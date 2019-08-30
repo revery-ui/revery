@@ -126,7 +126,7 @@ let start = (window: Window.t, element: React.syntheticElement) => {
        */
       let fl = forceLayout^;
       forceLayout := false;
-      
+
       _activeWindow := Some(window);
       Render.render(~forceLayout=fl, ui, latestElement^);
     },
