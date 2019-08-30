@@ -19,3 +19,5 @@ type renderFunction = React.syntheticElement => unit;
 */
 
 let start: (Window.t, React.syntheticElement) => renderFunction;
+
+let getActiveWindow: unit => option(Window.t);

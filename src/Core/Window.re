@@ -86,7 +86,11 @@ let _getMetricsFromGlfwWindow = glfwWindow => {
 };
 
 let _updateMetrics = (w: t) => {
-  w.metrics = _getMetricsFromGlfwWindow(w.glfwWindow);
+  let previousZoom = w.metrics.zoom;
+  w.metrics = {
+    ..._getMetricsFromGlfwWindow(w.glfwWindow),
+    zoom: previousZoom
+  };
   w.areMetricsDirty = false;
 };
 

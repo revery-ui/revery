@@ -31,3 +31,4 @@ module Focus = Focus;
 module Dimensions = Dimensions;
 
 let start = Ui.start;
+let getActiveWindow = Ui.getActiveWindow;

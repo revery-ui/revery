@@ -9,7 +9,11 @@ module Window = Revery_Core.Window;
 
 open RenderContainer;
 
+let _activeWindow: ref(option(Window.t)) = ref(None);
+
 type renderFunction = React.syntheticElement => unit;
+
+let getActiveWindow = () => _activeWindow^;
 
 let start = (window: Window.t, element: React.syntheticElement) => {
   let uiDirty = ref(false);
@@ -27,16 +31,15 @@ let start = (window: Window.t, element: React.syntheticElement) => {
   let container = Container.create(rootNode);
   let ui = RenderContainer.create(window, rootNode, container, mouseCursor);
 
-  let scaleFactor = Revery_Core.Monitor.getScaleFactor();
-
   let _ =
     Revery_Core.Event.subscribe(
       window.onMouseMove,
       m => {
+        let scaleFactor = Revery_Core.Window.getScaleFactor(window);
         let evt =
           Revery_Core.Events.InternalMouseMove({
-            mouseX: m.mouseX /. float_of_int(scaleFactor),
-            mouseY: m.mouseY /. float_of_int(scaleFactor),
+            mouseX: m.mouseX /. scaleFactor,
+            mouseY: m.mouseY /. scaleFactor,
           });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
@@ -123,6 +126,7 @@ let start = (window: Window.t, element: React.syntheticElement) => {
       let fl = forceLayout^;
       forceLayout := false;
 
+      _activeWindow := Some(window);
       Render.render(~forceLayout=fl, ui, latestElement^);
     },
   );
