@@ -11,6 +11,10 @@ open RenderContainer;
 
 type renderFunction = React.syntheticElement => unit;
 
+let _activeWindow = ref(None);
+
+let getActiveWindow = () => _activeWindow^;
+
 let start = (window: Window.t, element: React.syntheticElement) => {
   let uiDirty = ref(false);
   let forceLayout = ref(false);
@@ -27,7 +31,7 @@ let start = (window: Window.t, element: React.syntheticElement) => {
   let container = Container.create(rootNode);
   let ui = RenderContainer.create(window, rootNode, container, mouseCursor);
 
-  let scaleFactor = Revery_Core.Monitor.getScaleFactor();
+  let scaleFactor = Revery_Core.Window.getScaleFactor(window);
 
   let _ =
     Revery_Core.Event.subscribe(
@@ -122,7 +126,8 @@ let start = (window: Window.t, element: React.syntheticElement) => {
        */
       let fl = forceLayout^;
       forceLayout := false;
-
+      
+      _activeWindow := Some(window);
       Render.render(~forceLayout=fl, ui, latestElement^);
     },
   );

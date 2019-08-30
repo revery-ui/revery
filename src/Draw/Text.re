@@ -18,25 +18,43 @@ open Fontkit;
  * with the requested fontSize. For example, in a high DPI that has a 3x pixel
  * ratio, we want to render a 3x size bitmap.
  */
-let _getScaledFontSize = fontSize => {
-  let ctx = RenderPass.getContext();
-
+let _getScaledFontSize2 = (~scaleFactor, ~pixelRatio, fontSize) => {
   int_of_float(
     float_of_int(fontSize)
-    *. ctx.pixelRatio
-    *. float_of_int(ctx.scaleFactor)
+    *. pixelRatio
+    *. float_of_int(scaleFactor)
     +. 0.5,
   );
 };
 
-let getLineHeight = (~fontFamily, ~fontSize, ~lineHeight, ()) => {
-  let font = FontCache.load(fontFamily, fontSize);
+let _getScaledFontSize = fontSize => {
+  let ctx = RenderPass.getContext();
+  _getScaledFontSize2(~scaleFactor=ctx.scaleFactor, ~pixelRatio=ctx.pixelRatio, fontSize);
+};
+
+let _getScaledFontSizeFromWindow = (window: option(Window.t), fontSize) => {
+
+  let (scaleFactor, pixelRatio) = switch(window) {
+  | None => (1, 1.0)
+  | Some(v) =>
+    let sf = Window.getScaleFactor(v);
+    let pr = Window.getDevicePixelRatio(v);
+    (sf, pr);
+  }
+
+  _getScaledFontSize2(~scaleFactor, ~pixelRatio, fontSize);
+};
+
+let getLineHeight = (~window=None, ~fontFamily, ~fontSize, ~lineHeight, ()) => {
+  let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
+  let font = FontCache.load(fontFamily, scaledFontSize);
   let metrics = FontRenderer.getNormalizedMetrics(font);
   lineHeight *. metrics.height;
 };
 
-let measure = (~fontFamily, ~fontSize, text) => {
-  let font = FontCache.load(fontFamily, fontSize);
+let measure = (~window=None, ~fontFamily, ~fontSize, text) => {
+  let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
+  let font = FontCache.load(fontFamily, scaledFontSize);
   FontRenderer.measure(font, text);
 };
 

@@ -2,6 +2,8 @@ open Revery_Core;
 
 type renderFunction = React.syntheticElement => unit;
 
+let getActiveWindow: unit => option(Window.t);
+
 /**
   [start] is the entry point for creating a UI driven by the
   brisk-reconciler React infrastructure.
