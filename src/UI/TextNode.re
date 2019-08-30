@@ -21,15 +21,13 @@ class textNode (text: string) = {
     /* Draw background first */
     _super#draw(parentContext);
 
-    let window = Ui.getActiveWindow();
-
     let style = _super#getStyle();
 
     let {color, backgroundColor, fontFamily, fontSize, lineHeight, _} = style;
     let opacity = parentContext.opacity *. style.opacity;
 
     let lineHeightPx =
-      Text.getLineHeight(~window, ~fontFamily, ~fontSize, ~lineHeight, ());
+      Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
 
     /* when style.width & style.height are defined, Layout doesn't call the measure function */
     if (!_isMeasured) {
@@ -69,12 +67,10 @@ class textNode (text: string) = {
     let {fontFamily, fontSize, lineHeight, textOverflow, _}: Style.t =
       _super#getStyle();
 
-    let window = Ui.getActiveWindow();
-
     let formattedText = TextOverflow.removeLineBreaks(text);
 
     let measure = str =>
-      Text.measure(~window, ~fontFamily, ~fontSize, str)
+      Text.measure(~fontFamily, ~fontSize, str)
       |> (value => FontRenderer.(value.width));
 
     let width = measure(formattedText);
@@ -95,7 +91,7 @@ class textNode (text: string) = {
     _lines := [truncated];
 
     let lineHeightPx =
-      Text.getLineHeight(~window, ~fontFamily, ~fontSize, ~lineHeight, ());
+      Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
 
     {width, height: int_of_float(lineHeightPx)};
   };
@@ -123,10 +119,9 @@ class textNode (text: string) = {
     );
   };
   pub handleTextWrapping = (width, style) => {
-    let window = Ui.getActiveWindow();
     let {textWrap, fontFamily, fontSize, lineHeight, _}: Style.t = style;
     let lineHeightPx =
-      Text.getLineHeight(~window, ~fontFamily, ~fontSize, ~lineHeight, ());
+      Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
 
     switch (textWrap) {
     | WhitespaceWrap =>
@@ -134,7 +129,7 @@ class textNode (text: string) = {
         TextWrapping.wrapText(
           ~text,
           ~measureWidth=
-            str => Text.measure(~window, ~fontFamily, ~fontSize, str).width,
+            str => Text.measure(~fontFamily, ~fontSize, str).width,
           ~maxWidth=width,
           ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
         );
@@ -149,7 +144,7 @@ class textNode (text: string) = {
 
       dimensions;
     | NoWrap =>
-      let d = Text.measure(~window, ~fontFamily, ~fontSize, text);
+      let d = Text.measure(~fontFamily, ~fontSize, text);
       let dimensions: Layout.LayoutTypes.dimensions = {
         width: d.width,
         height: d.height,
@@ -162,7 +157,7 @@ class textNode (text: string) = {
       let (lines, maxWidthLine) =
         wrapFunc(
           text,
-          str => Text.measure(~window, ~fontFamily, ~fontSize, str).width,
+          str => Text.measure(~fontFamily, ~fontSize, str).width,
           width,
         );
 
