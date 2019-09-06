@@ -58,7 +58,7 @@ let _doPendingMainThreadJobs = () => {
   jobs |> List.rev |> List.iter(f => f());
 };
 
-let flushPendingcallbacks = _doPendingMainThreadJobs();
+let flushPendingCallbacks = () => _doPendingMainThreadJobs();
 
 let createWindow =
     (~createOptions=WindowCreateOptions.default, app: t, windowName) => {
