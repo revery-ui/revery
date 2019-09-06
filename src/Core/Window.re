@@ -21,7 +21,8 @@ module WindowMetrics = {
     size,
     framebufferSize: size,
     devicePixelRatio: float,
-    scaleFactor: int,
+    scaleFactor: float,
+    zoom: float,
   };
 
   let create = (~size, ~framebufferSize, ~devicePixelRatio, ~scaleFactor, ()) => {
@@ -29,6 +30,7 @@ module WindowMetrics = {
     size,
     devicePixelRatio,
     scaleFactor,
+    zoom: 1.0,
   };
 };
 
@@ -66,7 +68,7 @@ let _getMetricsFromGlfwWindow = glfwWindow => {
   let glfwSize = Glfw.glfwGetWindowSize(glfwWindow);
   let glfwFramebufferSize = Glfw.glfwGetFramebufferSize(glfwWindow);
 
-  let scaleFactor = Monitor.getScaleFactor();
+  let scaleFactor = float_of_int(Monitor.getScaleFactor());
 
   let devicePixelRatio =
     float_of_int(glfwFramebufferSize.width) /. float_of_int(glfwSize.width);
@@ -84,7 +86,11 @@ let _getMetricsFromGlfwWindow = glfwWindow => {
 };
 
 let _updateMetrics = (w: t) => {
-  w.metrics = _getMetricsFromGlfwWindow(w.glfwWindow);
+  let previousZoom = w.metrics.zoom;
+  w.metrics = {
+    ..._getMetricsFromGlfwWindow(w.glfwWindow),
+    zoom: previousZoom,
+  };
   w.areMetricsDirty = false;
 };
 
@@ -104,6 +110,11 @@ let setSize = (w: t, width: int, height: int) =>
       w.areMetricsDirty = true;
     };
   };
+
+let setZoom = (w: t, zoom: float) => {
+  w.metrics = {...w.metrics, zoom: max(zoom, 0.1)};
+  w.areMetricsDirty = true;
+};
 
 let _resizeIfNecessary = (w: t) =>
   switch (w.requestedWidth, w.requestedHeight) {
@@ -305,7 +316,11 @@ let getDevicePixelRatio = (w: t) => {
 };
 
 let getScaleFactor = (w: t) => {
-  w.metrics.scaleFactor;
+  w.metrics.scaleFactor *. w.metrics.zoom;
+};
+
+let getZoom = (w: t) => {
+  w.metrics.zoom;
 };
 
 let takeScreenshot = (w: t, filename: string) => {

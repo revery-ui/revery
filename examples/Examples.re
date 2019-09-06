@@ -121,6 +121,11 @@ let state: state = {
       render: _ => OpenGLExample.render(),
       source: "OpenGLExample.re",
     },
+    {
+      name: "Zoom Example",
+      render: _ => ZoomExample.render(),
+      source: "ZoomExample.re",
+    },
   ],
   selectedExample: "Animation",
 };
