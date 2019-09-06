@@ -19,6 +19,6 @@ module Dialog = {
         window |> (w => w.glfwWindow |> Glfw.glfwGetNativeWindow);
       Native.Dialog.alert(nativeWindow, message);
     } else {
-      /* TODO */
+      {/* TODO */};
     };
 };
