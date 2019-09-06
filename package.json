@@ -38,7 +38,8 @@
     "flex": "^1.2.2",
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
-    "rench": "^1.9.0"
+    "rench": "^1.9.0",
+    "reason-font-manager": "^2.0.0"
   },
   "resolutions": {
     "rebez": "github:jchavarri/rebez#46cbc183",
