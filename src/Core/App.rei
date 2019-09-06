@@ -23,9 +23,20 @@ type delegatedFunc = unit => unit;
 /** [runOnMainThread(f)] schedules the function [f] to run during the next
     render frame on the main thread.
 
-    If the main thread is idle, this will force the main thread to render
+    If the application is idle, this will cause it to become active, and trigger a re-render.
 */
 let runOnMainThread: delegatedFunc => unit;
+
+/** [flushPendingCallbacks(f)] will explicitly run all the callbacks
+    queued up via [runOnMainThread].
+
+    In general, this should not need to be called by user code,
+    as it happens as part of the application lifecycle.
+
+    However, it may be necessary to call this for tests that queue
+    up callbacks via [runOnMainThread].
+*/
+let flushPendingCallbacks: unit => unit;
 
 /** [setCanIdle(f, app)] registers a callback [f]. Each frame, [f] will be called
  to check if the application can idle. If [f()] returns [false], the app will not
