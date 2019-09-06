@@ -20,9 +20,5 @@ module Dialog = {
       Native.Dialog.alert(nativeWindow, message);
     } else {
       /* TODO */
-      /* Fallback when not supported on a platform */
-      prerr_endline(
-        "WARNING: alert not supported on this platform",
-      );
     };
 };
