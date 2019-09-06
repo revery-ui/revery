@@ -57,7 +57,7 @@ module FontComponent = {
   let createElement = (~children as _, ()) =>
     component(hooks => {
       let (state, dispatch, hooks) =
-        Hooks.reducer(initialState, reducer, hooks);
+        Hooks.reducer(~initialState, reducer, hooks);
 
       let fontExample =
         switch (state.resolvedFont) {
