@@ -19,10 +19,7 @@ module Dialog = {
         window |> (w => w.glfwWindow |> Glfw.glfwGetNativeWindow);
       Native.Dialog.alert(nativeWindow, message);
     } else {
-      /* TODO */
-      /* Fallback when not supported on a platform */
-      prerr_endline(
-        "WARNING: alert not supported on this platform",
-      );
+      ();
+        /* TODO */
     };
 };
