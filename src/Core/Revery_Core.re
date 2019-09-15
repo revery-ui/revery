@@ -14,6 +14,8 @@ module Environment = Environment;
 module Event = Event;
 module Events = Events;
 
+module Log = Log;
+
 module Performance = Performance;
 module UniqueId = UniqueId;
 
