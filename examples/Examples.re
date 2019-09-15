@@ -261,6 +261,8 @@ module ExampleHost = {
 };
 
 let init = app => {
+  let _ = Log.listen((_, msg) => print_endline(msg));
+
   let maximized = Environment.webGL;
 
   let dimensions: Monitor.size =

@@ -32,6 +32,15 @@ module WindowMetrics = {
     scaleFactor,
     zoom: 1.0,
   };
+
+  let show = (v: t) => {
+    " DevicePixelRatio: "
+    ++ string_of_float(v.devicePixelRatio)
+    ++ " ScaleFactor: "
+    ++ string_of_float(v.scaleFactor)
+    ++ " Zoom: "
+    ++ string_of_float(v.zoom);
+  };
 };
 
 type t = {
@@ -159,29 +168,43 @@ let render = (w: t) => {
 };
 
 let create = (name: string, options: WindowCreateOptions.t) => {
+  let log = Log.info("Window::create");
+
+  log("Creating window hints...");
   Glfw.glfwDefaultWindowHints();
   Glfw.glfwWindowHint(GLFW_RESIZABLE, options.resizable);
   Glfw.glfwWindowHint(GLFW_VISIBLE, options.visible);
   Glfw.glfwWindowHint(GLFW_MAXIMIZED, options.maximized);
   Glfw.glfwWindowHint(GLFW_DECORATED, options.decorated);
+  log("Window hints created successfully.");
 
+  log("Using vsync: " ++ string_of_bool(options.vsync));
   switch (options.vsync) {
   | false => Glfw.glfwSwapInterval(0)
   | _ => ()
   };
 
+  log("Creating window " ++ name);
   let w = Glfw.glfwCreateWindow(options.width, options.height, name);
+  log("Setting window context");
   Glfw.glfwMakeContextCurrent(w);
 
   switch (options.icon) {
-  | None => ()
+  | None =>
+    log("No icon to load.");
+    ();
   | Some(path) =>
     let execDir = Environment.getExecutingDirectory();
     let relativeImagePath = execDir ++ path;
+
+    log("Loading icon from: " ++ relativeImagePath);
     Glfw.glfwSetWindowIcon(w, relativeImagePath);
+    log("Icon loaded successfully.");
   };
 
+  log("Getting window metrics");
   let metrics = _getMetricsFromGlfwWindow(w);
+  log("Metrics: " ++ WindowMetrics.show(metrics));
 
   let ret: t = {
     backgroundColor: options.backgroundColor,
