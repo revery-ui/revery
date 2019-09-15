@@ -34,10 +34,13 @@ module WindowMetrics = {
   };
 
   let show = (v: t) => {
-    " DevicePixelRatio: " ++ string_of_float(v.devicePixelRatio)
-    ++ " ScaleFactor: " ++ string_of_float(v.scaleFactor)
-    ++ " Zoom: " ++ string_of_float(v.zoom)
-   };
+    " DevicePixelRatio: "
+    ++ string_of_float(v.devicePixelRatio)
+    ++ " ScaleFactor: "
+    ++ string_of_float(v.scaleFactor)
+    ++ " Zoom: "
+    ++ string_of_float(v.zoom);
+  };
 };
 
 type t = {
@@ -165,16 +168,15 @@ let render = (w: t) => {
 };
 
 let create = (name: string, options: WindowCreateOptions.t) => {
-
   let log = Log.info("Window::create");
 
-  log("Creating window hints...")
+  log("Creating window hints...");
   Glfw.glfwDefaultWindowHints();
   Glfw.glfwWindowHint(GLFW_RESIZABLE, options.resizable);
   Glfw.glfwWindowHint(GLFW_VISIBLE, options.visible);
   Glfw.glfwWindowHint(GLFW_MAXIMIZED, options.maximized);
   Glfw.glfwWindowHint(GLFW_DECORATED, options.decorated);
-  log("Window hints created successfully.")
+  log("Window hints created successfully.");
 
   log("Using vsync: " ++ string_of_bool(options.vsync));
   switch (options.vsync) {
@@ -188,13 +190,13 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   Glfw.glfwMakeContextCurrent(w);
 
   switch (options.icon) {
-  | None => 
+  | None =>
     log("No icon to load.");
-    ()
+    ();
   | Some(path) =>
     let execDir = Environment.getExecutingDirectory();
     let relativeImagePath = execDir ++ path;
-    
+
     log("Loading icon from: " ++ relativeImagePath);
     Glfw.glfwSetWindowIcon(w, relativeImagePath);
     log("Icon loaded successfully.");
