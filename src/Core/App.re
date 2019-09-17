@@ -1,4 +1,4 @@
-open Reglfw;
+open Sdl2;
 
 type delegatedFunc = unit => unit;
 type idleFunc = unit => unit;
@@ -95,11 +95,11 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     canIdle: ref(() => true),
   };
 
-  let _ = Glfw.glfwInit();
+  let _ = Sdl2.init();
   let _ = initFunc(appInstance);
 
   let appLoop = (_t: float) => {
-    Glfw.glfwPollEvents();
+    let _ = SDL2.pollEvent();
     Tick.Default.pump();
 
     _checkAndCloseWindows(appInstance);
@@ -132,5 +132,9 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     List.length(getWindows(appInstance)) == 0;
   };
 
-  Glfw.glfwRenderLoop(appLoop);
+  while (true) {
+    appLoop(0.);
+  }
+
+//  Glfw.glfwRenderLoop(appLoop);
 };

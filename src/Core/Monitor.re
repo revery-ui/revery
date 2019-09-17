@@ -1,19 +1,19 @@
 open Reglfw;
 
-type t = Glfw.Monitor.t;
+type t = unit;
 
 type size = {
   width: int,
   height: int,
 };
 
-let getPrimaryMonitor = () => Glfw.glfwGetPrimaryMonitor();
+let getPrimaryMonitor = () => ();
 
 let calculateDPI = (modeDimension, physicalDimension) =>
   float_of_int(modeDimension) /. (float_of_int(physicalDimension) /. 25.4);
 
 let getScaleFactor = () => {
-  let monitor = Glfw.glfwGetPrimaryMonitor();
+  /*let monitor = Glfw.glfwGetPrimaryMonitor();
   let vidMode = Glfw.glfwGetVideoMode(monitor);
   let physicalSize = Glfw.glfwGetMonitorPhysicalSize(monitor);
   let dpiH = calculateDPI(vidMode.height, physicalSize.height);
@@ -26,11 +26,13 @@ let getScaleFactor = () => {
      is rounded down
    */
   let scaleFactor = int_of_float(rawScaleFactor);
-  scaleFactor >= 1 ? scaleFactor : 1;
+  scaleFactor >= 1 ? scaleFactor : 1;*/
+  1.0
 };
 
 let getSize = monitor => {
-  let monitorSize = Glfw.glfwGetVideoMode(monitor);
+  /*let monitorSize = Glfw.glfwGetVideoMode(monitor);
   let ret: size = {width: monitorSize.width, height: monitorSize.height};
-  ret;
+  ret;*/
+  { width: 0, height: 0};
 };

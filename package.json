@@ -24,7 +24,6 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "^3.4.0",
-    "reason-glfw": "^3.2.1029",
     "reason-fontkit": "^2.6.0",
     "reason-gl-matrix": "^0.9.9305",
     "rebez": "*",
@@ -39,7 +38,8 @@
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
     "rench": "^1.9.0",
-    "reason-font-manager": "^2.0.0"
+    "reason-font-manager": "^2.0.0",
+    "reason-sdl2": "*"
   },
   "resolutions": {
     "rebez": "github:jchavarri/rebez#46cbc183",
@@ -47,7 +47,9 @@
     "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#dd933fc",
-    "pesy": "0.4.1"
+    "pesy": "0.4.1",
+    "reason-sdl2": "link:../reason-sdl2",
+    "reason-fontkit": "link:../reason-fontkit"
   },
   "peerDependencies": {
     "ocaml": ">=4.6.0"
