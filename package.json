@@ -49,11 +49,8 @@
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#dd933fc",
     "pesy": "0.4.1"
   },
-  "peerDependencies": {
-    "ocaml": ">=4.6.0"
-  },
   "devDependencies": {
-    "ocaml": ">=4.6.0 <4.8.0",
+    "ocaml": ">=4.6.0",
     "@opam/merlin": "*",
     "@opam/dune": "^1.7.3"
   }
