@@ -184,7 +184,7 @@ let make =
         () => {
           let oldValueLength = String.length(inputValueRef);
           let newValueLength = String.length(valueToDisplay);
-          switch (Pervasives.abs(oldValueLength - newValueLength)) {
+          switch (abs(oldValueLength - newValueLength)) {
           | lengthDiff when lengthDiff != 1 =>
             // Set cursor at the end
             dispatch(
