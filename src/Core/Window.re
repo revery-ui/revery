@@ -45,7 +45,7 @@ module WindowMetrics = {
 
 type t = {
   mutable backgroundColor: Color.t,
-  glfwWindow: Sdl2.Window.t,
+  sdlWindow: Sdl2.Window.t,
   mutable render: windowRenderCallback,
   mutable shouldRender: windowShouldRenderCallback,
   mutable metrics: WindowMetrics.t,
@@ -73,9 +73,9 @@ let isDirty = (w: t) =>
     };
   };
 
-let _getMetricsFromGlfwWindow = glfwWindow => {
-  let glfwSize = Window.getSize(glfwWindow);
-  let glfwFramebufferSize = Gl.getDrawableSize(glfwWindow);
+let _getMetricsFromGlfwWindow = sdlWindow => {
+  let glfwSize = Window.getSize(sdlWindow);
+  let glfwFramebufferSize = Gl.getDrawableSize(sdlWindow);
 
   let scaleFactor = float_of_int(Monitor.getScaleFactor());
 
@@ -97,7 +97,7 @@ let _getMetricsFromGlfwWindow = glfwWindow => {
 let _updateMetrics = (w: t) => {
   let previousZoom = w.metrics.zoom;
   w.metrics = {
-    ..._getMetricsFromGlfwWindow(w.glfwWindow),
+    ..._getMetricsFromGlfwWindow(w.sdlWindow),
     zoom: previousZoom,
   };
   w.areMetricsDirty = false;
@@ -114,7 +114,7 @@ let setSize = (w: t, width: int, height: int) =>
       w.requestedHeight = Some(height);
     } else {
       // TODO
-      //Glfw.glfwSetWindowSize(w.glfwWindow, width, height);
+      //Glfw.glfwSetWindowSize(w.sdlWindow, width, height);
       w.requestedWidth = None;
       w.requestedHeight = None;
       w.areMetricsDirty = true;
@@ -144,7 +144,7 @@ let render = (w: t) => {
   w.isRendering = true;
 /*  Performance.bench("glfwMakeContextCurrent", () =>
     ()
-    //Gl.setup(w.glfwWindow)
+    //Gl.setup(w.sdlWindow)
   );*/
 
   Gl.glViewport(
@@ -167,7 +167,7 @@ let render = (w: t) => {
   w.render();
 
   Performance.bench("glfwSwapBuffers", () =>
-    Gl.swapWindow(w.glfwWindow)
+    Gl.swapWindow(w.sdlWindow)
   );
   w.isRendering = false;
 };
@@ -177,10 +177,10 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   log("Creating window hints...");
   /*Glfw.glfwDefaultWindowHints();
-  Glfw.glfwWindowHint(GLFW_RESIZABLE, options.resizable);
-  Glfw.glfwWindowHint(GLFW_VISIBLE, options.visible);
-  Glfw.glfwWindowHint(GLFW_MAXIMIZED, options.maximized);
-  Glfw.glfwWindowHint(GLFW_DECORATED, options.decorated);*/
+  Glfw.sdlWindowHint(GLFW_RESIZABLE, options.resizable);
+  Glfw.sdlWindowHint(GLFW_VISIBLE, options.visible);
+  Glfw.sdlWindowHint(GLFW_MAXIMIZED, options.maximized);
+  Glfw.sdlWindowHint(GLFW_DECORATED, options.decorated);*/
   log("Window hints created successfully.");
 
   log("Using vsync: " ++ string_of_bool(options.vsync));
@@ -231,7 +231,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   let ret: t = {
     backgroundColor: options.backgroundColor,
-    glfwWindow: w,
+    sdlWindow: w,
 
     render: () => (),
     shouldRender: () => false,
@@ -341,17 +341,17 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
 
 let setPos = (w: t, x: int, y: int) => {
-  //Glfw.glfwSetWindowPos(w.glfwWindow, x, y);
+  //Glfw.glfwSetWindowPos(w.sdlWindow, x, y);
   ();
   };
 
 let show = w => { 
-  // Glfw.glfwShowWindow(w.glfwWindow);
+  // Glfw.glfwShowWindow(w.sdlWindow);
   ();
 };
 
 let hide = w => {
-  // Glfw.glfwHideWindow(w.glfwWindow);
+  // Glfw.glfwHideWindow(w.sdlWindow);
   ();
 };
 
@@ -364,7 +364,7 @@ let getFramebufferSize = (w: t) => {
 };
 
 let maximize = (w: t) => {
-  //Glfw.glfwMaximizeWindow(w.glfwWindow);
+  //Glfw.glfwMaximizeWindow(w.sdlWindow);
   ();
 }
 
@@ -411,12 +411,12 @@ let takeScreenshot = (w: t, filename: string) => {
 };
 
 let destroyWindow = (w: t) =>{
-  //Glfw.glfwDestroyWindow(w.glfwWindow);
+  //Glfw.glfwDestroyWindow(w.sdlWindow);
   ();
 };
 
 let shouldClose = (w: t) => {
-  //Glfw.glfwWindowShouldClose(w.glfwWindow);
+  //Glfw.sdlWindowShouldClose(w.sdlWindow);
   false;
 };
 
