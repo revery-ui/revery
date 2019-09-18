@@ -31,7 +31,7 @@ let start = (window: Window.t, element: React.syntheticElement) => {
   let container = Container.create(rootNode);
   let ui = RenderContainer.create(window, rootNode, container, mouseCursor);
 
-  let _ =
+  /*let _ =
     Revery_Core.Event.subscribe(
       window.onMouseMove,
       m => {
@@ -103,7 +103,7 @@ let start = (window: Window.t, element: React.syntheticElement) => {
         uiDirty := true;
         forceLayout := true;
       },
-    );
+    );*/
 
   Window.setShouldRenderCallback(window, () =>
     uiDirty^ || Animated.anyActiveAnimations()

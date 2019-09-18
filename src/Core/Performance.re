@@ -1,5 +1,3 @@
-open Reglfw.Glfw;
-
 type performanceFunction('a) = unit => 'a;
 
 let nestingLevel = ref(0);
@@ -45,13 +43,13 @@ let bench: (string, performanceFunction('a)) => 'a =
     | false => f()
     | true =>
       nestingLevel := nestingLevel^ + 1;
-      let startTime = glfwGetTime();
+      let startTime = Unix.gettimeofday();
       let startCounters = GarbageCollector.counters();
       print_endline(
         String.make(nestingLevel^, '-') ++ "[BEGIN: " ++ name ++ "]",
       );
       let ret = f();
-      let endTime = glfwGetTime();
+      let endTime = Unix.gettimeofday();
       let endCounters = GarbageCollector.counters();
       let allocations = getMemoryAllocations(startCounters, endCounters);
       print_endline(

@@ -1,4 +1,4 @@
-open Reglfw;
+//open Reglfw;
 
 type t = unit;
 
@@ -27,7 +27,7 @@ let getScaleFactor = () => {
    */
   let scaleFactor = int_of_float(rawScaleFactor);
   scaleFactor >= 1 ? scaleFactor : 1;*/
-  1.0
+  1
 };
 
 let getSize = monitor => {

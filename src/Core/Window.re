@@ -1,4 +1,4 @@
-open Reglfw;
+open Sdl2;
 
 module Color = Color_wrapper;
 
@@ -45,7 +45,7 @@ module WindowMetrics = {
 
 type t = {
   mutable backgroundColor: Color.t,
-  glfwWindow: Glfw.Window.t,
+  glfwWindow: Sdl2.Window.t,
   mutable render: windowRenderCallback,
   mutable shouldRender: windowShouldRenderCallback,
   mutable metrics: WindowMetrics.t,
@@ -53,13 +53,13 @@ type t = {
   mutable isRendering: bool,
   mutable requestedWidth: option(int),
   mutable requestedHeight: option(int),
-  onKeyPress: Event.t(keyPressEvent),
+  /*onKeyPress: Event.t(keyPressEvent),
   onKeyDown: Event.t(keyEvent),
   onKeyUp: Event.t(keyEvent),
   onMouseUp: Event.t(mouseButtonEvent),
   onMouseMove: Event.t(mouseMoveEvent),
   onMouseDown: Event.t(mouseButtonEvent),
-  onMouseWheel: Event.t(mouseWheelEvent),
+  onMouseWheel: Event.t(mouseWheelEvent),*/
 };
 
 let isDirty = (w: t) =>
@@ -74,8 +74,8 @@ let isDirty = (w: t) =>
   };
 
 let _getMetricsFromGlfwWindow = glfwWindow => {
-  let glfwSize = Glfw.glfwGetWindowSize(glfwWindow);
-  let glfwFramebufferSize = Glfw.glfwGetFramebufferSize(glfwWindow);
+  let glfwSize = Window.getSize(glfwWindow);
+  let glfwFramebufferSize = Gl.getDrawableSize(glfwWindow);
 
   let scaleFactor = float_of_int(Monitor.getScaleFactor());
 
@@ -113,7 +113,8 @@ let setSize = (w: t, width: int, height: int) =>
       w.requestedWidth = Some(width);
       w.requestedHeight = Some(height);
     } else {
-      Glfw.glfwSetWindowSize(w.glfwWindow, width, height);
+      // TODO
+      //Glfw.glfwSetWindowSize(w.glfwWindow, width, height);
       w.requestedWidth = None;
       w.requestedHeight = None;
       w.areMetricsDirty = true;
@@ -141,10 +142,10 @@ let render = (w: t) => {
 
   w.isRendering = true;
   Performance.bench("glfwMakeContextCurrent", () =>
-    Glfw.glfwMakeContextCurrent(w.glfwWindow)
+    Gl.setup(w.glfwWindow)
   );
 
-  Glfw.glViewport(
+  Gl.glViewport(
     0,
     0,
     w.metrics.framebufferSize.width,
@@ -154,15 +155,15 @@ let render = (w: t) => {
   /* glEnable(GL_DEPTH_TEST); */
   /* glDepthFunc(GL_LEQUAL); */
 
-  Glfw.glDisable(GL_DEPTH_TEST);
+  Gl.glDisable(GL_DEPTH_TEST);
 
   let color = w.backgroundColor;
-  Glfw.glClearColor(color.r, color.g, color.b, color.a);
+  Gl.glClearColor(color.r, color.g, color.b, color.a);
 
   w.render();
 
   Performance.bench("glfwSwapBuffers", () =>
-    Glfw.glfwSwapBuffers(w.glfwWindow)
+    Gl.swapWindow(w.glfwWindow)
   );
   w.isRendering = false;
 };
@@ -171,23 +172,24 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   let log = Log.info("Window::create");
 
   log("Creating window hints...");
-  Glfw.glfwDefaultWindowHints();
+  /*Glfw.glfwDefaultWindowHints();
   Glfw.glfwWindowHint(GLFW_RESIZABLE, options.resizable);
   Glfw.glfwWindowHint(GLFW_VISIBLE, options.visible);
   Glfw.glfwWindowHint(GLFW_MAXIMIZED, options.maximized);
-  Glfw.glfwWindowHint(GLFW_DECORATED, options.decorated);
+  Glfw.glfwWindowHint(GLFW_DECORATED, options.decorated);*/
   log("Window hints created successfully.");
 
   log("Using vsync: " ++ string_of_bool(options.vsync));
   switch (options.vsync) {
-  | false => Glfw.glfwSwapInterval(0)
+  //| false => Glfw.glfwSwapInterval(0)
   | _ => ()
   };
 
   log("Creating window " ++ name);
-  let w = Glfw.glfwCreateWindow(options.width, options.height, name);
+  //let w = Glfw.glfwCreateWindow(options.width, options.height, name);
+  let w = Sdl2.Window.create();
   log("Setting window context");
-  Glfw.glfwMakeContextCurrent(w);
+  Sdl2.Gl.setup(w);
 
   switch (options.icon) {
   | None =>
@@ -198,7 +200,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     let relativeImagePath = execDir ++ path;
 
     log("Loading icon from: " ++ relativeImagePath);
-    Glfw.glfwSetWindowIcon(w, relativeImagePath);
+    //Glfw.glfwSetWindowIcon(w, relativeImagePath);
     log("Icon loaded successfully.");
   };
 
@@ -219,17 +221,17 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     requestedWidth: None,
     requestedHeight: None,
 
-    onKeyPress: Event.create(),
+    /*onKeyPress: Event.create(),
     onKeyDown: Event.create(),
     onKeyUp: Event.create(),
 
     onMouseMove: Event.create(),
     onMouseUp: Event.create(),
     onMouseDown: Event.create(),
-    onMouseWheel: Event.create(),
+    onMouseWheel: Event.create(),*/
   };
 
-  Glfw.glfwSetFramebufferSizeCallback(
+  /*Glfw.glfwSetFramebufferSizeCallback(
     w,
     (_w, _width, _height) => {
       ret.areMetricsDirty = true;
@@ -311,18 +313,26 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
       Event.dispatch(ret.onMouseMove, evt);
     },
-  );
+  );*/
   ret;
 };
 
 let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
 
-let setPos = (w: t, x: int, y: int) =>
-  Glfw.glfwSetWindowPos(w.glfwWindow, x, y);
+let setPos = (w: t, x: int, y: int) => {
+  //Glfw.glfwSetWindowPos(w.glfwWindow, x, y);
+  ();
+  };
 
-let show = w => Glfw.glfwShowWindow(w.glfwWindow);
+let show = w => { 
+  // Glfw.glfwShowWindow(w.glfwWindow);
+  ();
+};
 
-let hide = w => Glfw.glfwHideWindow(w.glfwWindow);
+let hide = w => {
+  // Glfw.glfwHideWindow(w.glfwWindow);
+  ();
+};
 
 let getSize = (w: t) => {
   w.metrics.size;
@@ -332,7 +342,10 @@ let getFramebufferSize = (w: t) => {
   w.metrics.framebufferSize;
 };
 
-let maximize = (w: t) => Glfw.glfwMaximizeWindow(w.glfwWindow);
+let maximize = (w: t) => {
+  //Glfw.glfwMaximizeWindow(w.glfwWindow);
+  ();
+}
 
 let getDevicePixelRatio = (w: t) => {
   w.metrics.devicePixelRatio;
@@ -347,7 +360,7 @@ let getZoom = (w: t) => {
 };
 
 let takeScreenshot = (w: t, filename: string) => {
-  open Glfw;
+  //open Glfw;
 
   let width = w.metrics.framebufferSize.width;
   let height = w.metrics.framebufferSize.height;
@@ -368,17 +381,23 @@ let takeScreenshot = (w: t, filename: string) => {
      can force this by triggering a new render) and then taking the
      screenshot */
   render(w);
-  glReadPixels(0, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+  Gl.glReadPixels(0, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
-  let image = Image.create(pixels);
+  /*let image = Image.create(pixels);
 
   Image.save(image, filename);
-  Image.destroy(image);
+  Image.destroy(image);*/
 };
 
-let destroyWindow = (w: t) => Glfw.glfwDestroyWindow(w.glfwWindow);
+let destroyWindow = (w: t) =>{
+  //Glfw.glfwDestroyWindow(w.glfwWindow);
+  ();
+};
 
-let shouldClose = (w: t) => Glfw.glfwWindowShouldClose(w.glfwWindow);
+let shouldClose = (w: t) => {
+  //Glfw.glfwWindowShouldClose(w.glfwWindow);
+  false;
+};
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) =>
   w.render = callback;

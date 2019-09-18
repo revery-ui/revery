@@ -1,4 +1,4 @@
-open Reglfw.Glfw;
+//open Reglfw.Glfw;
 
 /* This module must use lazy values for the cursors, because GLFW will return
    [GLFW_NOT_INITIALIZED] (which renders as an arrow) if this gets called before
@@ -7,6 +7,7 @@ open Reglfw.Glfw;
    leak. */
 type t = [ | `Arrow | `Text | `Pointer | `Crosshair | `HResize | `VResize];
 
+/*
 let arrow_lazy = lazy(glfwCreateStandardCursor(GLFW_ARROW_CURSOR));
 let text_lazy = lazy(glfwCreateStandardCursor(GLFW_IBEAM_CURSOR));
 let pointer_lazy = lazy(glfwCreateStandardCursor(GLFW_HAND_CURSOR));
@@ -14,6 +15,17 @@ let crosshair_lazy = lazy(glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR));
 let horizontalResize_lazy =
   lazy(glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR));
 let verticalResize_lazy = lazy(glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR));
+*/
+
+
+let arrow_lazy = lazy(());
+let text_lazy = lazy(());
+let pointer_lazy = lazy(());
+let crosshair_lazy = lazy(());
+let horizontalResize_lazy =
+  lazy(());
+let verticalResize_lazy = lazy(());
+
 
 let toGlfwCursor = cursorType => {
   (

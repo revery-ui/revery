@@ -1,5 +1,5 @@
 open Reglm;
-open Reglfw.Glfw;
+open Sdl2.Gl;
 
 module DrawContext = {
   type t = {

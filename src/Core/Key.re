@@ -1,4 +1,4 @@
-open Reglfw.Glfw.Key;
+open Sdl2;
 
 type t =
   | KEY_UNKNOWN
@@ -229,7 +229,8 @@ let fromString = key =>
   };
 
 let convert = glEvent =>
-  switch (glEvent) {
+  KEY_UNKNOWN
+  /*switch (glEvent) {
   | GLFW_KEY_UNKNOWN => KEY_UNKNOWN
   | GLFW_KEY_SPACE => KEY_SPACE
   | GLFW_KEY_APOSTROPHE => KEY_APOSTROPHE
@@ -351,4 +352,4 @@ let convert = glEvent =>
   | GLFW_KEY_RIGHT_ALT => KEY_RIGHT_ALT
   | GLFW_KEY_RIGHT_SUPER => KEY_RIGHT_SUPER
   | GLFW_KEY_MENU => KEY_MENU
-  };
+  };*/

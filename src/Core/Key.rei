@@ -121,6 +121,6 @@ type t =
   | KEY_RIGHT_SUPER
   | KEY_MENU;
 
-let convert: Reglfw.Glfw.Key.t => t;
+let convert: Sdl2.Key.t => t;
 let toString: t => string;
 let fromString: string => t;

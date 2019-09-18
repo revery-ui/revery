@@ -4,7 +4,7 @@
  * Core logic for rendering text to screen.
  */
 
-open Reglfw.Glfw;
+open Sdl2.Gl;
 
 open Revery_Core;
 module Geometry = Revery_Geometry;

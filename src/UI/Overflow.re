@@ -5,7 +5,7 @@
  *
  */
 
-open Reglfw;
+open Sdl2.Gl;
 
 open Revery_Math;
 
@@ -61,11 +61,11 @@ let _startClipRegion =
   let width = int_of_float(scaleFactor *. pixelRatio *. (maxX -. minX));
   let height = int_of_float(scaleFactor *. pixelRatio *. (maxY -. minY));
 
-  Glfw.glEnable(GL_SCISSOR_TEST);
-  Glfw.glScissor(x, y, width, height);
+  glEnable(GL_SCISSOR_TEST);
+  glScissor(x, y, width, height);
 };
 
-let _endClipRegion = () => Glfw.glDisable(GL_SCISSOR_TEST);
+let _endClipRegion = () => glDisable(GL_SCISSOR_TEST);
 
 let render =
     (

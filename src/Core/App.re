@@ -1,5 +1,3 @@
-open Sdl2;
-
 type delegatedFunc = unit => unit;
 type idleFunc = unit => unit;
 type canIdleFunc = unit => bool;
@@ -99,7 +97,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
   let _ = initFunc(appInstance);
 
   let appLoop = (_t: float) => {
-    let _ = SDL2.pollEvent();
+    let _ = Sdl2.Event.poll();
     Tick.Default.pump();
 
     _checkAndCloseWindows(appInstance);

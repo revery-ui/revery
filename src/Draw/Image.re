@@ -5,7 +5,7 @@
  */
 
 open Reglm;
-open Reglfw.Glfw;
+open Sdl2.Gl;
 
 open Revery_Core;
 open Revery_Shaders;
