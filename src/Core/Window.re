@@ -133,7 +133,6 @@ let _resizeIfNecessary = (w: t) =>
   };
 
 let render = (w: t) => {
-  prerr_endline ("RENDERING");
   Log.info("Window::render");
   _resizeIfNecessary(w);
 
@@ -155,7 +154,7 @@ let render = (w: t) => {
     w.metrics.framebufferSize.height,
   );
 
-  prerr_endline("Framebuffer width: " ++ string_of_int(w.metrics.framebufferSize.width) ++ " | " ++ string_of_int(w.metrics.framebufferSize.height));
+  //prerr_endline("Framebuffer width: " ++ string_of_int(w.metrics.framebufferSize.width) ++ " | " ++ string_of_int(w.metrics.framebufferSize.height));
    /*Gl.glClearDepth(1.0);
    Gl.glEnable(GL_DEPTH_TEST);
    Gl.glDepthFunc(GL_LEQUAL);*/
@@ -163,7 +162,7 @@ let render = (w: t) => {
   Gl.glDisable(GL_DEPTH_TEST);
 
   let color = w.backgroundColor;
-  Gl.glClearColor(sin(Unix.gettimeofday()), color.g, color.b, color.a);
+  Gl.glClearColor(color.r, color.g, color.b, color.a);
 
   w.render();
 
@@ -190,9 +189,19 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   | _ => ()
   };
 
-  log("Creating window " ++ name);
+  let width = switch(options.width) {
+  | 0 => 800
+  | v => v
+  };
+
+  let height = switch(options.height) {
+  | 0 => 600
+  | v => v
+  }
+
+  log("Creating window " ++ name ++ " width: " ++ string_of_int(width) ++ " height: " ++ string_of_int(height));
   //let w = Glfw.glfwCreateWindow(options.width, options.height, name);
-  let w = Sdl2.Window.create();
+  let w = Sdl2.Window.create(width, height, name);
   log("Setting window context");
   Sdl2.Gl.setup(w);
 
@@ -205,8 +214,15 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     let relativeImagePath = execDir ++ path;
 
     log("Loading icon from: " ++ relativeImagePath);
+    switch (Sdl2.Surface.createFromImagePath(relativeImagePath)) {
+    | Ok(v) => 
+      log("Icon loaded successfully.");
+      Sdl2.Window.setIcon(w, v);
+      log("Icon set successfully.");
+    | Error(msg) => log("Error loading icon: " ++ msg);
+    };
+
     //Glfw.glfwSetWindowIcon(w, relativeImagePath);
-    log("Icon loaded successfully.");
   };
 
   log("Getting window metrics");
@@ -388,10 +404,10 @@ let takeScreenshot = (w: t, filename: string) => {
   render(w);
   Gl.glReadPixels(0, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
-  /*let image = Image.create(pixels);
+  let image = Image.create(pixels);
 
   Image.save(image, filename);
-  Image.destroy(image);*/
+  Image.destroy(image);
 };
 
 let destroyWindow = (w: t) =>{

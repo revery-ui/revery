@@ -99,8 +99,8 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
   let appLoop = (_t: float) => {
     let evt = Sdl2.Event.poll();
     switch(evt) {
-    | None => prerr_endline ("No event");
-    | Some(v) => prerr_endline ("EVENT: " ++ Sdl2.Event.show(v));
+    | None => ();// prerr_endline ("No event");
+    | Some(v) => (); //prerr_endline ("EVENT: " ++ Sdl2.Event.show(v));
       switch (v) {
       | Sdl2.Event.Quit => exit(0);
       | _ => ();
