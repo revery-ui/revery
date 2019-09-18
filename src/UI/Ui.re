@@ -16,8 +16,8 @@ type renderFunction = React.syntheticElement => unit;
 let getActiveWindow = () => _activeWindow^;
 
 let start = (window: Window.t, element: React.syntheticElement) => {
-  let uiDirty = ref(false);
-  let forceLayout = ref(false);
+  let uiDirty = ref(true);
+  let forceLayout = ref(true);
   let latestElement = ref(element);
 
   let onStale = () => {
@@ -127,6 +127,7 @@ let start = (window: Window.t, element: React.syntheticElement) => {
       forceLayout := false;
 
       _activeWindow := Some(window);
+      prerr_endline ("UI: Render.render");
       Render.render(~forceLayout=fl, ui, latestElement^);
     },
   );

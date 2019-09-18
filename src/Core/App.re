@@ -97,7 +97,15 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
   let _ = initFunc(appInstance);
 
   let appLoop = (_t: float) => {
-    let _ = Sdl2.Event.poll();
+    let evt = Sdl2.Event.poll();
+    switch(evt) {
+    | None => prerr_endline ("No event");
+    | Some(v) => prerr_endline ("EVENT: " ++ Sdl2.Event.show(v));
+      switch (v) {
+      | Sdl2.Event.Quit => exit(0);
+      | _ => ();
+      }
+    };
     Tick.Default.pump();
 
     _checkAndCloseWindows(appInstance);
@@ -109,9 +117,9 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       Performance.bench("_doPendingMainThreadJobs", () =>
         _doPendingMainThreadJobs()
       );
-      Performance.bench("renderWindows", () =>
+      Performance.bench("renderWindows", () => {
         List.iter(w => Window.render(w), getWindows(appInstance))
-      );
+      });
 
       appInstance.idleCount = 0;
       appInstance.isFirstRender = false;
@@ -131,7 +139,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
   };
 
   while (true) {
-    appLoop(0.);
+    let _ = appLoop(0.);
   }
 
 //  Glfw.glfwRenderLoop(appLoop);

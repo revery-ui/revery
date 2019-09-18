@@ -133,6 +133,8 @@ let _resizeIfNecessary = (w: t) =>
   };
 
 let render = (w: t) => {
+  prerr_endline ("RENDERING");
+  Log.info("Window::render");
   _resizeIfNecessary(w);
 
   if (w.areMetricsDirty) {
@@ -141,9 +143,10 @@ let render = (w: t) => {
   };
 
   w.isRendering = true;
-  Performance.bench("glfwMakeContextCurrent", () =>
-    Gl.setup(w.glfwWindow)
-  );
+/*  Performance.bench("glfwMakeContextCurrent", () =>
+    ()
+    //Gl.setup(w.glfwWindow)
+  );*/
 
   Gl.glViewport(
     0,
@@ -151,14 +154,16 @@ let render = (w: t) => {
     w.metrics.framebufferSize.width,
     w.metrics.framebufferSize.height,
   );
-  /* glClearDepth(1.0); */
-  /* glEnable(GL_DEPTH_TEST); */
-  /* glDepthFunc(GL_LEQUAL); */
+
+  prerr_endline("Framebuffer width: " ++ string_of_int(w.metrics.framebufferSize.width) ++ " | " ++ string_of_int(w.metrics.framebufferSize.height));
+   /*Gl.glClearDepth(1.0);
+   Gl.glEnable(GL_DEPTH_TEST);
+   Gl.glDepthFunc(GL_LEQUAL);*/
 
   Gl.glDisable(GL_DEPTH_TEST);
 
   let color = w.backgroundColor;
-  Gl.glClearColor(color.r, color.g, color.b, color.a);
+  Gl.glClearColor(sin(Unix.gettimeofday()), color.g, color.b, color.a);
 
   w.render();
 
