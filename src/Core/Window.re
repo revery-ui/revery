@@ -1,5 +1,3 @@
-open Sdl2;
-
 module Color = Color_wrapper;
 
 open Events;
@@ -46,6 +44,7 @@ module WindowMetrics = {
 type t = {
   mutable backgroundColor: Color.t,
   sdlWindow: Sdl2.Window.t,
+  uniqueId: int,
   mutable render: windowRenderCallback,
   mutable shouldRender: windowShouldRenderCallback,
   mutable metrics: WindowMetrics.t,
@@ -55,12 +54,15 @@ type t = {
   mutable requestedHeight: option(int),
   /*onKeyPress: Event.t(keyPressEvent),
   onKeyDown: Event.t(keyEvent),
-  onKeyUp: Event.t(keyEvent),
-  onMouseUp: Event.t(mouseButtonEvent),
+  onKeyUp: Event.t(keyEvent), 
+  onMouseUp: Event.t(mouseButtonEvent),*/
   onMouseMove: Event.t(mouseMoveEvent),
+  /*
   onMouseDown: Event.t(mouseButtonEvent),
   onMouseWheel: Event.t(mouseWheelEvent),*/
 };
+
+let getUniqueId = (w: t) => w.uniqueId;
 
 let isDirty = (w: t) =>
   if (w.shouldRender() || w.areMetricsDirty) {
@@ -74,8 +76,8 @@ let isDirty = (w: t) =>
   };
 
 let _getMetricsFromGlfwWindow = sdlWindow => {
-  let glfwSize = Window.getSize(sdlWindow);
-  let glfwFramebufferSize = Gl.getDrawableSize(sdlWindow);
+  let glfwSize = Sdl2.Window.getSize(sdlWindow);
+  let glfwFramebufferSize = Sdl2.Gl.getDrawableSize(sdlWindow);
 
   let scaleFactor = float_of_int(Monitor.getScaleFactor());
 
@@ -147,7 +149,7 @@ let render = (w: t) => {
     //Gl.setup(w.sdlWindow)
   );*/
 
-  Gl.glViewport(
+  Sdl2.Gl.glViewport(
     0,
     0,
     w.metrics.framebufferSize.width,
@@ -159,15 +161,15 @@ let render = (w: t) => {
    Gl.glEnable(GL_DEPTH_TEST);
    Gl.glDepthFunc(GL_LEQUAL);*/
 
-  Gl.glDisable(GL_DEPTH_TEST);
+  Sdl2.Gl.glDisable(GL_DEPTH_TEST);
 
   let color = w.backgroundColor;
-  Gl.glClearColor(color.r, color.g, color.b, color.a);
+  Sdl2.Gl.glClearColor(color.r, color.g, color.b, color.a);
 
   w.render();
 
   Performance.bench("glfwSwapBuffers", () =>
-    Gl.swapWindow(w.sdlWindow)
+    Sdl2.Gl.swapWindow(w.sdlWindow)
   );
   w.isRendering = false;
 };
@@ -202,6 +204,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   log("Creating window " ++ name ++ " width: " ++ string_of_int(width) ++ " height: " ++ string_of_int(height));
   //let w = Glfw.glfwCreateWindow(options.width, options.height, name);
   let w = Sdl2.Window.create(width, height, name);
+  let uniqueId = Sdl2.Window.getId(w);
+  log("Window created - id: " ++ string_of_int(uniqueId));
   log("Setting window context");
   Sdl2.Gl.setup(w);
 
@@ -232,6 +236,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   let ret: t = {
     backgroundColor: options.backgroundColor,
     sdlWindow: w,
+    uniqueId,
 
     render: () => (),
     shouldRender: () => false,
@@ -241,12 +246,12 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     isRendering: false,
     requestedWidth: None,
     requestedHeight: None,
+    onMouseMove: Event.create(),
 
     /*onKeyPress: Event.create(),
     onKeyDown: Event.create(),
     onKeyUp: Event.create(),
 
-    onMouseMove: Event.create(),
     onMouseUp: Event.create(),
     onMouseDown: Event.create(),
     onMouseWheel: Event.create(),*/
@@ -381,7 +386,7 @@ let getZoom = (w: t) => {
 };
 
 let takeScreenshot = (w: t, filename: string) => {
-  //open Glfw;
+  open Sdl2;
 
   let width = w.metrics.framebufferSize.width;
   let height = w.metrics.framebufferSize.height;

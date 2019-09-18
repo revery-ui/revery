@@ -19,6 +19,11 @@ type appInitFunc = t => unit;
 
 let getWindows = (app: t) => app.windows;
 
+let getWindowById = (app: t, id: int) =>
+ app.windows
+|> List.filter((w) => Window.getUniqueId(w) == id)
+|> List.hd;
+
 let quit = (code: int) => exit(code);
 
 let isIdle = (app: t) => app.idleCount >= framesToIdle;
@@ -100,8 +105,12 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     let evt = Sdl2.Event.poll();
     switch(evt) {
     | None => ();// prerr_endline ("No event");
-    | Some(v) => (); //prerr_endline ("EVENT: " ++ Sdl2.Event.show(v));
+    | Some(v) =>  prerr_endline ("EVENT: " ++ Sdl2.Event.show(v));
       switch (v) {
+      | Sdl2.Event.MouseMotion({windowID, x, y}) =>
+        let window = getWindowById(appInstance, windowID);
+        let mouseEvent: Events.mouseMoveEvent = { mouseX: float_of_int(x), mouseY: float_of_int(y) };
+        Event.dispatch(window.onMouseMove, mouseEvent);
       | Sdl2.Event.Quit => exit(0);
       | _ => ();
       }
