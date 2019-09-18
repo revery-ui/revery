@@ -86,16 +86,17 @@ let start = (window: Window.t, element: React.syntheticElement) => {
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
-
+*/
   let _ =
     Revery_Core.Event.subscribe(
       Mouse.onCursorChanged,
       cursor => {
-        let glfwCursor = Revery_Core.MouseCursors.toGlfwCursor(cursor);
-        Reglfw.Glfw.glfwSetCursor(window.glfwWindow, glfwCursor);
+        prerr_endline ("CURSOR CHANGED: " ++ Revery_Core.MouseCursors.show(cursor));
+        /*let glfwCursor = Revery_Core.MouseCursors.toGlfwCursor(cursor);
+        Reglfw.Glfw.glfwSetCursor(window.glfwWindow, glfwCursor);*/
       },
     );
-*/
+
   let _ =
     Revery_Core.Event.subscribe(
       Revery_Draw.FontCache.onFontLoaded,

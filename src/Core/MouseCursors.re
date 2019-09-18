@@ -47,3 +47,12 @@ let pointer = `Pointer;
 let crosshair = `Crosshair;
 let horizontalResize = `HResize;
 let verticalResize = `VResize;
+
+let show = (v: t) => switch (v) {
+| `Arrow => "arrow"
+| `Text => "text"
+| `Pointer => "pointer"
+| `Crosshair => "crosshair"
+| `HResize => "hresize"
+| `VResize => "vresize"
+};
