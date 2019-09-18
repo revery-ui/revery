@@ -44,6 +44,15 @@ let start = (window: Window.t, element: React.syntheticElement) => {
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
+  
+  let _ =
+    Revery_Core.Event.subscribe(
+      window.onMouseWheel,
+      m => {
+        let evt = Revery_Core.Events.InternalMouseWheel(m);
+        Mouse.dispatch(mouseCursor, evt, rootNode);
+      },
+    );
 /*
   let _ =
     Revery_Core.Event.subscribe(
@@ -78,22 +87,12 @@ let start = (window: Window.t, element: React.syntheticElement) => {
       },
     );
 
-  let _ =
-    Revery_Core.Event.subscribe(
-      window.onMouseWheel,
-      m => {
-        let evt = Revery_Core.Events.InternalMouseWheel(m);
-        Mouse.dispatch(mouseCursor, evt, rootNode);
-      },
-    );
 */
   let _ =
     Revery_Core.Event.subscribe(
       Mouse.onCursorChanged,
       cursor => {
-        prerr_endline ("CURSOR CHANGED: " ++ Revery_Core.MouseCursors.show(cursor));
-        /*let glfwCursor = Revery_Core.MouseCursors.toGlfwCursor(cursor);
-        Reglfw.Glfw.glfwSetCursor(window.glfwWindow, glfwCursor);*/
+        Revery_Core.MouseCursors.setCursor(cursor);
       },
     );
 

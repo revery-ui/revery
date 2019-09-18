@@ -107,6 +107,10 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     | None => ();// prerr_endline ("No event");
     | Some(v) =>  prerr_endline ("EVENT: " ++ Sdl2.Event.show(v));
       switch (v) {
+      | Sdl2.Event.MouseWheel({windowID, deltaX, deltaY, _}) =>
+        let window = getWindowById(appInstance, windowID);
+        let wheelEvent: Events.mouseWheelEvent = { deltaX: float_of_int(deltaX), deltaY: float_of_int(deltaY) };
+        Event.dispatch(window.onMouseWheel, wheelEvent);
       | Sdl2.Event.MouseMotion({windowID, x, y}) =>
         let window = getWindowById(appInstance, windowID);
         let mouseEvent: Events.mouseMoveEvent = { mouseX: float_of_int(x), mouseY: float_of_int(y) };

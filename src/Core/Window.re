@@ -57,9 +57,10 @@ type t = {
   onKeyUp: Event.t(keyEvent), 
   onMouseUp: Event.t(mouseButtonEvent),*/
   onMouseMove: Event.t(mouseMoveEvent),
+  onMouseWheel: Event.t(mouseWheelEvent),
   /*
   onMouseDown: Event.t(mouseButtonEvent),
-  onMouseWheel: Event.t(mouseWheelEvent),*/
+  */
 };
 
 let getUniqueId = (w: t) => w.uniqueId;
@@ -247,6 +248,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     requestedWidth: None,
     requestedHeight: None,
     onMouseMove: Event.create(),
+    onMouseWheel: Event.create(),
 
     /*onKeyPress: Event.create(),
     onKeyDown: Event.create(),
@@ -254,7 +256,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     onMouseUp: Event.create(),
     onMouseDown: Event.create(),
-    onMouseWheel: Event.create(),*/
+  */
   };
 
   /*Glfw.glfwSetFramebufferSizeCallback(

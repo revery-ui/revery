@@ -1,6 +1,6 @@
 type t;
 
-let toGlfwCursor: t => unit;
+let setCursor: t => unit;
 
 let arrow: t;
 let text: t;
