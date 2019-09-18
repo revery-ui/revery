@@ -207,8 +207,10 @@ module ExampleHost = {
             Animated.cancelAll();
 
             let sourceFile = getSourceForSample(state, x.name);
+            prerr_endline ("SOURCE FILE: " ++ sourceFile);
             notifyExampleSwitched(sourceFile);
             dispatch(SelectExample(x.name));
+            ();
           }}
         />;
       };

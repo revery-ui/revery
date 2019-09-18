@@ -57,11 +57,10 @@ let make =
       | Some(clickable) =>
         if (isMouseInsideRef(clickable, mouseEvt.mouseX, mouseEvt.mouseY)) {
           switch (mouseEvt.button) {
-          | MouseButton.BUTTON_LEFT => onClick()
-          | MouseButton.BUTTON_RIGHT => onRightClick()
+          | MouseButton.BUTTON_LEFT => onClick();
+          | MouseButton.BUTTON_RIGHT => (); //onRightClick()
           | _ => ()
           };
-
           onAnyClick(mouseEvt);
         }
       | _ => ()
@@ -72,6 +71,7 @@ let make =
          there would a race condition
          Not sure we need fix it though */
       Mouse.releaseCapture();
+      ();
     };
 
     let onMouseDown = (mouseEvt: NodeEvents.mouseButtonEventParams) => {

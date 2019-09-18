@@ -111,14 +111,31 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
         let window = getWindowById(appInstance, windowID);
         let wheelEvent: Events.mouseWheelEvent = { deltaX: float_of_int(deltaX), deltaY: float_of_int(deltaY) };
         Event.dispatch(window.onMouseWheel, wheelEvent);
+        prerr_endline ("mousedown - after dispatch");
       | Sdl2.Event.MouseMotion({windowID, x, y}) =>
         let window = getWindowById(appInstance, windowID);
         let mouseEvent: Events.mouseMoveEvent = { mouseX: float_of_int(x), mouseY: float_of_int(y) };
         Event.dispatch(window.onMouseMove, mouseEvent);
+        let mouseButtonEvent: Events.mouseButtonEvent = { button: MouseButton.BUTTON_LEFT };
+      | Sdl2.Event.MouseButtonUp({windowID, _}) =>
+        let window = getWindowById(appInstance, windowID);
+        let mouseButtonEvent: Events.mouseButtonEvent = { button: MouseButton.BUTTON_LEFT };
+        prerr_endline ("mouseup - before dispatch");
+        Event.dispatch(window.onMouseUp, mouseButtonEvent);        
+        prerr_endline ("mouseup - after dispatch");
+      | Sdl2.Event.MouseButtonDown({windowID, _}) =>
+        let window = getWindowById(appInstance, windowID);
+        let mouseButtonEvent: Events.mouseButtonEvent = { button: MouseButton.BUTTON_LEFT };
+        prerr_endline ("mousedown - before dispatch");
+        Event.dispatch(window.onMouseDown, mouseButtonEvent);        
+        prerr_endline ("mousedown - after dispatch");
       | Sdl2.Event.Quit => exit(0);
       | _ => ();
       }
     };
+    prerr_endline ("BEFORE GC");
+    Gc.full_major();
+    prerr_endline ("AFTER GC");
     Tick.Default.pump();
 
     _checkAndCloseWindows(appInstance);
@@ -133,6 +150,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       Performance.bench("renderWindows", () => {
         List.iter(w => Window.render(w), getWindows(appInstance))
       });
+      prerr_endline ("after render windows?");
 
       appInstance.idleCount = 0;
       appInstance.isFirstRender = false;

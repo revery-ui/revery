@@ -54,13 +54,11 @@ type t = {
   mutable requestedHeight: option(int),
   /*onKeyPress: Event.t(keyPressEvent),
   onKeyDown: Event.t(keyEvent),
-  onKeyUp: Event.t(keyEvent), 
-  onMouseUp: Event.t(mouseButtonEvent),*/
+  onKeyUp: Event.t(keyEvent), */
+  onMouseUp: Event.t(mouseButtonEvent),
   onMouseMove: Event.t(mouseMoveEvent),
   onMouseWheel: Event.t(mouseWheelEvent),
-  /*
   onMouseDown: Event.t(mouseButtonEvent),
-  */
 };
 
 let getUniqueId = (w: t) => w.uniqueId;
@@ -249,13 +247,13 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     requestedHeight: None,
     onMouseMove: Event.create(),
     onMouseWheel: Event.create(),
+    onMouseUp: Event.create(),
+    onMouseDown: Event.create(),
 
     /*onKeyPress: Event.create(),
     onKeyDown: Event.create(),
     onKeyUp: Event.create(),
 
-    onMouseUp: Event.create(),
-    onMouseDown: Event.create(),
   */
   };
 
