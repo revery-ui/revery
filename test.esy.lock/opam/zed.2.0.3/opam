@@ -4,7 +4,7 @@ authors: ["Jérémie Dimino"]
 homepage: "https://github.com/ocaml-community/zed"
 bug-reports: "https://github.com/ocaml-community/zed/issues"
 dev-repo: "git://github.com/ocaml-community/zed.git"
-license: "BSD3"
+license: "BSD-3-Clause"
 depends: [
   "ocaml" {>= "4.02.3"}
   "dune" {>= "1.1.0"}
