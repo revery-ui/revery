@@ -1,5 +1,6 @@
 opam-version: "2.0"
 
+version: "1.4.2"
 homepage: "http://github.com/ocaml/odoc"
 doc: "https://github.com/ocaml/odoc#readme"
 bug-reports: "https://github.com/ocaml/odoc/issues"
@@ -39,6 +40,6 @@ build: [
 ]
 
 url {
-  src: "https://github.com/ocaml/odoc/archive/1.4.1.tar.gz"
-  checksum: "md5=b27f9de7993d7bb87cbcc3586b19360c"
+  src: "https://github.com/ocaml/odoc/archive/1.4.2.tar.gz"
+  checksum: "md5=d75ce63539040cd199d22203d46fc5f3"
 }

@@ -577,7 +577,7 @@ test("Mouse", () => {
         Style.make(~width=100, ~cursor=Cursors.text, ~height=100, ()),
       );
 
-    let _ = Revery_Core.Event.subscribe(Mouse.onCursorChanged, f);
+    let _ignore = Revery_Core.Event.subscribe(Mouse.onCursorChanged, f);
 
     Mouse.dispatch(
       Mouse.Cursor.make(),
