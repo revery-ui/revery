@@ -39,8 +39,8 @@ let render =
   let adjustedWidth = float_of_int(size.width) /. scaleFactor |> int_of_float;
 
   /*prerr_endline ("RENDER - window size: " ++ string_of_int(size.width) ++ " | " ++ string_of_int(size.height));
-  prerr_endline ("RENDER - scale factor: " ++ string_of_float(scaleFactor));
-  prerr_endline ("RENDER - dpi: " ++ string_of_float(pixelRatio));*/
+    prerr_endline ("RENDER - scale factor: " ++ string_of_float(scaleFactor));
+    prerr_endline ("RENDER - dpi: " ++ string_of_float(pixelRatio));*/
 
   rootNode#setStyle(
     Style.make(

@@ -25,7 +25,6 @@ type changeEvent = {
   value: string,
   character: string,
   keycode: Key.Keycode.t,
-
   altKey: bool,
   ctrlKey: bool,
   shiftKey: bool,
@@ -243,11 +242,7 @@ let make =
         onChange(createChangeEvent(newString));
       | None =>
         let {newString, cursorPosition} =
-          addCharacter(
-            state.internalValue,
-            character,
-            state.cursorPosition,
-          );
+          addCharacter(state.internalValue, character, state.cursorPosition);
         dispatch(UpdateText({newString, cursorPosition}));
         onChange(createChangeEvent(newString));
       };
@@ -260,61 +255,58 @@ let make =
         character,
         keycode: event.keycode,
         /*
-        altKey: event.altKey,
-        ctrlKey: event.ctrlKey,
-        shiftKey: event.shiftKey,
-        superKey: event.superKey,
-        */
+         altKey: event.altKey,
+         ctrlKey: event.ctrlKey,
+         shiftKey: event.shiftKey,
+         superKey: event.superKey,
+         */
         altKey: false,
         ctrlKey: false,
         shiftKey: false,
-        superKey: false
+        superKey: false,
       };
 
       dispatch(ResetCursorTimer);
-
-    /*  switch (event.keycode) {
-      | Key.Keycode.backspace =>
-        onKeyDown(event);
-        dispatch(
-          CursorPosition({inputString: valueToDisplay, change: (-1)}),
-        );
-      | _ => ();
-      };*/
-      
-
+      /*  switch (event.keycode) {
+          | Key.Keycode.backspace =>
+            onKeyDown(event);
+            dispatch(
+              CursorPosition({inputString: valueToDisplay, change: (-1)}),
+            );
+          | _ => ();
+          };*/
       /*| Key.Keycode.right =>
-        onKeyDown(event);
-        dispatch(CursorPosition({inputString: valueToDisplay, change: 1}));
-      | Key.Keycode.delete =>
-        // We should manage both cases
-        removeCharacterAfter(valueToDisplay, state.cursorPosition)
-        |> (
-          update => {
-            switch (valueAsProp) {
-            | Some(_) => ()
-            | None => dispatch(UpdateText(update))
-            };
-            onKeyDown(event);
-            onChange(createChangeEvent(update.newString));
-          }
-        )
+          onKeyDown(event);
+          dispatch(CursorPosition({inputString: valueToDisplay, change: 1}));
+        | Key.Keycode.delete =>
+          // We should manage both cases
+          removeCharacterAfter(valueToDisplay, state.cursorPosition)
+          |> (
+            update => {
+              switch (valueAsProp) {
+              | Some(_) => ()
+              | None => dispatch(UpdateText(update))
+              };
+              onKeyDown(event);
+              onChange(createChangeEvent(update.newString));
+            }
+          )
 
-      | Key.Keycode.backspace =>
-        removeCharacterBefore(valueToDisplay, state.cursorPosition)
-        |> (
-          update => {
-            switch (valueAsProp) {
-            | Some(_) => ()
-            | None => dispatch(UpdateText(update))
-            };
-            onKeyDown(event);
-            onChange(createChangeEvent(update.newString));
-          }
-        )
-      | Key.Keycode.escape =>
-        onKeyDown(event);
-        Focus.loseFocus();*/
+        | Key.Keycode.backspace =>
+          removeCharacterBefore(valueToDisplay, state.cursorPosition)
+          |> (
+            update => {
+              switch (valueAsProp) {
+              | Some(_) => ()
+              | None => dispatch(UpdateText(update))
+              };
+              onKeyDown(event);
+              onChange(createChangeEvent(update.newString));
+            }
+          )
+        | Key.Keycode.escape =>
+          onKeyDown(event);
+          Focus.loseFocus();*/
       //| _ => onKeyDown(event)
       //};
     };
@@ -407,8 +399,7 @@ let make =
           dispatch(SetFocus(false));
         }}
         componentRef={autofocus ? Focus.focus : ignore}
-        onKeyDown=handleKeyDown
-        >
+        onKeyDown=handleKeyDown>
         <View style=viewStyles>
           cursor
           {hasPlaceholder ? placeholderText : inputText}

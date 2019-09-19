@@ -15,10 +15,10 @@ module Native = Revery_Native;
 module Dialog = {
   let alert = (window: Window.t, message: string) =>
     if (Native.Dialog.alertSupported()) {
-      /*let nativeWindow =
-        window |> (w => w.glfwWindow |> Glfw.glfwGetNativeWindow);
-      Native.Dialog.alert(nativeWindow, message);*/
-    ();
+      ();
+        /*let nativeWindow =
+            window |> (w => w.glfwWindow |> Glfw.glfwGetNativeWindow);
+          Native.Dialog.alert(nativeWindow, message);*/
     } else {
       ();
         /* TODO */

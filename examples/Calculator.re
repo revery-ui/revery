@@ -268,38 +268,41 @@ module KeyboardInput = {
       let onFocus = () => {
         dispatch(Focused(true));
       };
-      let respondToKeys = (e: NodeEvents.keyEventParams) =>
-        switch (e.keycode) {
-        | Key.Keycode.backspace=> parentDispatch(BackspaceKeyPressed)
+      let respondToKeys = (e: NodeEvents.keyEventParams) => {
+        Key.Keycode.(
+          switch (e.keycode) {
+          | backspace => parentDispatch(BackspaceKeyPressed)
+          /*
+                   | Key.Keycode.c when e.ctrlKey => parentDispatch(ClearKeyPressed(true))
+                   | Key.Keycode.c => parentDispatch(ClearKeyPressed(false))
 
-        | Key.Keycode.c when e.ctrlKey => parentDispatch(ClearKeyPressed(true))
-        | Key.Keycode.c => parentDispatch(ClearKeyPressed(false))
+                   /* + key */
+                   | Key.Keycode.equals when e.shiftKey =>
+                     parentDispatch(OperationKeyPressed(`Add))
+                   | Key.Keycode.minus when e.ctrlKey => parentDispatch(PlusMinusKeyPressed)
+                   | Key.Keycode.minus => parentDispatch(OperationKeyPressed(`Sub))
+                   /* * key */
+                   | Key.Keycode.digit8 when e.shiftKey =>
+                     parentDispatch(OperationKeyPressed(`Mul))
+                   | Key.Keycode.slash => parentDispatch(OperationKeyPressed(`Div))
+                   | Key.Keycode.period => parentDispatch(DotKeyPressed)
+                   | Key.Keycode.equal => parentDispatch(ResultKeyPressed)
 
-        /* + key */
-        | Key.Keycode.equal when e.shiftKey =>
-          parentDispatch(OperationKeyPressed(`Add))
-        | Key.Keycode.minus when e.ctrlKey => parentDispatch(PlusMinusKeyPressed)
-        | Key.Keycode.minus => parentDispatch(OperationKeyPressed(`Sub))
-        /* * key */
-        | Key.Keycode.digit8 when e.shiftKey =>
-          parentDispatch(OperationKeyPressed(`Mul))
-        | Key.Keycode.slash => parentDispatch(OperationKeyPressed(`Div))
-        | Key.Keycode.period => parentDispatch(DotKeyPressed)
-        | Key.Keycode.equal => parentDispatch(ResultKeyPressed)
-
-        | Key.Keycode.digit0 => parentDispatch(NumberKeyPressed("0"))
-        | Key.Keycode.digit1 => parentDispatch(NumberKeyPressed("1"))
-        | Key.Keycode.digit2 => parentDispatch(NumberKeyPressed("2"))
-        | Key.Keycode.digit3 => parentDispatch(NumberKeyPressed("3"))
-        | Key.Keycode.digit4 => parentDispatch(NumberKeyPressed("4"))
-        | Key.Keycode.digit5 => parentDispatch(NumberKeyPressed("5"))
-        | Key.Keycode.digit6 => parentDispatch(NumberKeyPressed("6"))
-        | Key.Keycode.digit7 => parentDispatch(NumberKeyPressed("7"))
-        | Key.Keycode.digit8 => parentDispatch(NumberKeyPressed("8"))
-        | Key.Keycode.digit9 => parentDispatch(NumberKeyPressed("9"))
-
-        | _ => ()
-        };
+                   | Key.Keycode.digit0 => parentDispatch(NumberKeyPressed("0"))
+                   | Key.Keycode.digit1 => parentDispatch(NumberKeyPressed("1"))
+                   | Key.Keycode.digit2 => parentDispatch(NumberKeyPressed("2"))
+                   | Key.Keycode.digit3 => parentDispatch(NumberKeyPressed("3"))
+                   | Key.Keycode.digit4 => parentDispatch(NumberKeyPressed("4"))
+                   | Key.Keycode.digit5 => parentDispatch(NumberKeyPressed("5"))
+                   | Key.Keycode.digit6 => parentDispatch(NumberKeyPressed("6"))
+                   | Key.Keycode.digit7 => parentDispatch(NumberKeyPressed("7"))
+                   | Key.Keycode.digit8 => parentDispatch(NumberKeyPressed("8"))
+                   | Key.Keycode.digit9 => parentDispatch(NumberKeyPressed("9"))
+           */
+          | _ => ()
+          }
+        );
+      };
       (
         hooks,
         <View

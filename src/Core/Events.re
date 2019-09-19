@@ -5,8 +5,8 @@ type keyPressEvent = {
 
 type internalKeyboardEvent =
   | InternalKeyUpEvent(Key.KeyEvent.t)
-  | InternalKeyDownEvent(Key.KeyEvent.t)
-  //| InternalKeyPressEvent(keyPressEvent);
+  | InternalKeyDownEvent(Key.KeyEvent.t);
+//| InternalKeyPressEvent(keyPressEvent);
 
 type mouseMoveEvent = {
   mouseX: float,

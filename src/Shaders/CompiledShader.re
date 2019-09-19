@@ -5,7 +5,8 @@ open Reglm;
 open Types;
 
 type attributeNameToLocation = Hashtbl.t(string, Gl.attribLocation);
-type attributeChannelToLocation = Hashtbl.t(VertexChannel.t, Gl.attribLocation);
+type attributeChannelToLocation =
+  Hashtbl.t(VertexChannel.t, Gl.attribLocation);
 type uniformNameToLocation = Hashtbl.t(string, Gl.uniformLocation);
 
 type t = (

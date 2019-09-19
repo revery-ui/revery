@@ -9,8 +9,7 @@ type t = {
   channel: VertexChannel.t,
 };
 
-let create =
-    (glType: Gl.glType, elementCount: int, channel: VertexChannel.t) => {
+let create = (glType: Gl.glType, elementCount: int, channel: VertexChannel.t) => {
   let buffer = Gl.glCreateBuffer();
 
   let result: t = {buffer, glType, elementCount, channel};

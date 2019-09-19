@@ -9,19 +9,11 @@ let dispatch = (event: Revery_Core.Events.internalKeyboardEvent) => {
     switch (event) {
     | InternalKeyUpEvent(e) =>
       handler(
-        KeyUp({
-          keycode: e.keycode,
-          scancode: e.scancode,
-          repeat: e.repeat,
-        }),
+        KeyUp({keycode: e.keycode, scancode: e.scancode, repeat: e.repeat}),
       )
     | InternalKeyDownEvent(e) =>
       handler(
-        KeyDown({
-          keycode: e.keycode,
-          scancode: e.scancode,
-          repeat: e.repeat,
-        }),
+        KeyDown({keycode: e.keycode, scancode: e.scancode, repeat: e.repeat}),
       )
     }
   };

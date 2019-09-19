@@ -7,13 +7,11 @@ open Sdl2;
    leak. */
 type t = [ | `Arrow | `Text | `Pointer | `Crosshair | `HResize | `VResize];
 
-
 let arrow_lazy = lazy(Cursor.createSystem(Cursor.Arrow));
 let text_lazy = lazy(Cursor.createSystem(Cursor.IBeam));
 let pointer_lazy = lazy(Cursor.createSystem(Cursor.Hand));
 let crosshair_lazy = lazy(Cursor.createSystem(Cursor.Crosshair));
-let horizontalResize_lazy =
-  lazy(Cursor.createSystem(Cursor.SizeWE));
+let horizontalResize_lazy = lazy(Cursor.createSystem(Cursor.SizeWE));
 let verticalResize_lazy = lazy(Cursor.createSystem(Cursor.SizeNS));
 
 let _toSdlCursor = cursorType => {
@@ -30,9 +28,8 @@ let _toSdlCursor = cursorType => {
   |> Lazy.force;
 };
 
-let setCursor = (v) => {
-  _toSdlCursor(v)
-  |> Cursor.setCursor;
+let setCursor = v => {
+  _toSdlCursor(v) |> Cursor.setCursor;
 };
 
 let arrow = `Arrow;
@@ -42,11 +39,12 @@ let crosshair = `Crosshair;
 let horizontalResize = `HResize;
 let verticalResize = `VResize;
 
-let show = (v: t) => switch (v) {
-| `Arrow => "arrow"
-| `Text => "text"
-| `Pointer => "pointer"
-| `Crosshair => "crosshair"
-| `HResize => "hresize"
-| `VResize => "vresize"
-};
+let show = (v: t) =>
+  switch (v) {
+  | `Arrow => "arrow"
+  | `Text => "text"
+  | `Pointer => "pointer"
+  | `Crosshair => "crosshair"
+  | `HResize => "hresize"
+  | `VResize => "vresize"
+  };

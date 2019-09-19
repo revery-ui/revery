@@ -1,12 +1,11 @@
-module Scancode {
+module Scancode: {
   type t = int;
 
   let getName: t => string;
   let show: t => string;
-}
+};
 
-
-module Keycode {
+module Keycode: {
   type t = int;
 
   let getName: t => string;
@@ -18,10 +17,10 @@ module Keycode {
   let backspace: int;
 };
 
-module KeyEvent {
-    type t = {
-        keycode: Keycode.t,
-        scancode: Scancode.t,
-        repeat: bool,
-    };
+module KeyEvent: {
+  type t = {
+    keycode: Keycode.t,
+    scancode: Scancode.t,
+    repeat: bool,
+  };
 };

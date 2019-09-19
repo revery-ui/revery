@@ -44,7 +44,7 @@ let start = (window: Window.t, element: React.syntheticElement) => {
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
-  
+
   let _ =
     Revery_Core.Event.subscribe(
       window.onMouseWheel,
@@ -62,22 +62,22 @@ let start = (window: Window.t, element: React.syntheticElement) => {
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
-/*
-  let _ =
-    Revery_Core.Event.subscribe(window.onKeyPress, event =>
-      Keyboard.dispatch(Revery_Core.Events.InternalKeyPressEvent(event))
-    );
+  /*
+     let _ =
+       Revery_Core.Event.subscribe(window.onKeyPress, event =>
+         Keyboard.dispatch(Revery_Core.Events.InternalKeyPressEvent(event))
+       );
 
-  let _ =
-    Revery_Core.Event.subscribe(window.onKeyDown, event =>
-      Keyboard.dispatch(Revery_Core.Events.InternalKeyDownEvent(event))
-    );
+     let _ =
+       Revery_Core.Event.subscribe(window.onKeyDown, event =>
+         Keyboard.dispatch(Revery_Core.Events.InternalKeyDownEvent(event))
+       );
 
-  let _ =
-    Revery_Core.Event.subscribe(window.onKeyUp, event =>
-      Keyboard.dispatch(Revery_Core.Events.InternalKeyUpEvent(event))
-    );
-*/
+     let _ =
+       Revery_Core.Event.subscribe(window.onKeyUp, event =>
+         Keyboard.dispatch(Revery_Core.Events.InternalKeyUpEvent(event))
+       );
+   */
   let _ =
     Revery_Core.Event.subscribe(
       window.onMouseUp,
@@ -88,12 +88,9 @@ let start = (window: Window.t, element: React.syntheticElement) => {
     );
 
   let _ =
-    Revery_Core.Event.subscribe(
-      Mouse.onCursorChanged,
-      cursor => {
-        Revery_Core.MouseCursors.setCursor(cursor);
-      },
-    );
+    Revery_Core.Event.subscribe(Mouse.onCursorChanged, cursor => {
+      Revery_Core.MouseCursors.setCursor(cursor)
+    });
 
   let _ =
     Revery_Core.Event.subscribe(

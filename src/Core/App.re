@@ -20,9 +20,7 @@ type appInitFunc = t => unit;
 let getWindows = (app: t) => app.windows;
 
 let getWindowById = (app: t, id: int) =>
- app.windows
-|> List.filter((w) => Window.getUniqueId(w) == id)
-|> List.hd;
+  app.windows |> List.filter(w => Window.getUniqueId(w) == id) |> List.hd;
 
 let quit = (code: int) => exit(code);
 
@@ -103,39 +101,53 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
 
   let appLoop = (_t: float) => {
     let evt = Sdl2.Event.poll();
-    switch(evt) {
-    | None => ();// prerr_endline ("No event");
-    | Some(v) =>  prerr_endline ("EVENT: " ++ Sdl2.Event.show(v));
+    switch (evt) {
+    | None => () // prerr_endline ("No event");
+    | Some(v) =>
+      prerr_endline("EVENT: " ++ Sdl2.Event.show(v));
       switch (v) {
       | Sdl2.Event.MouseWheel({windowID, deltaX, deltaY, _}) =>
         let window = getWindowById(appInstance, windowID);
-        let wheelEvent: Events.mouseWheelEvent = { deltaX: float_of_int(deltaX), deltaY: float_of_int(deltaY) };
+        let wheelEvent: Events.mouseWheelEvent = {
+          deltaX: float_of_int(deltaX),
+          deltaY: float_of_int(deltaY),
+        };
         Event.dispatch(window.onMouseWheel, wheelEvent);
-        prerr_endline ("mousedown - after dispatch");
+        prerr_endline("mousedown - after dispatch");
       | Sdl2.Event.MouseMotion({windowID, x, y}) =>
         let window = getWindowById(appInstance, windowID);
-        let mouseEvent: Events.mouseMoveEvent = { mouseX: float_of_int(x), mouseY: float_of_int(y) };
+        let mouseEvent: Events.mouseMoveEvent = {
+          mouseX: float_of_int(x),
+          mouseY: float_of_int(y),
+        };
         Event.dispatch(window.onMouseMove, mouseEvent);
-        let mouseButtonEvent: Events.mouseButtonEvent = { button: MouseButton.BUTTON_LEFT };
+        let mouseButtonEvent: Events.mouseButtonEvent = {
+          button: MouseButton.BUTTON_LEFT,
+        };
+        ();
       | Sdl2.Event.MouseButtonUp({windowID, _}) =>
         let window = getWindowById(appInstance, windowID);
-        let mouseButtonEvent: Events.mouseButtonEvent = { button: MouseButton.BUTTON_LEFT };
-        prerr_endline ("mouseup - before dispatch");
-        Event.dispatch(window.onMouseUp, mouseButtonEvent);        
-        prerr_endline ("mouseup - after dispatch");
+        let mouseButtonEvent: Events.mouseButtonEvent = {
+          button: MouseButton.BUTTON_LEFT,
+        };
+        prerr_endline("mouseup - before dispatch");
+        Event.dispatch(window.onMouseUp, mouseButtonEvent);
+        prerr_endline("mouseup - after dispatch");
       | Sdl2.Event.MouseButtonDown({windowID, _}) =>
         let window = getWindowById(appInstance, windowID);
-        let mouseButtonEvent: Events.mouseButtonEvent = { button: MouseButton.BUTTON_LEFT };
-        prerr_endline ("mousedown - before dispatch");
-        Event.dispatch(window.onMouseDown, mouseButtonEvent);        
-        prerr_endline ("mousedown - after dispatch");
-      | Sdl2.Event.Quit => exit(0);
-      | _ => ();
-      }
+        let mouseButtonEvent: Events.mouseButtonEvent = {
+          button: MouseButton.BUTTON_LEFT,
+        };
+        prerr_endline("mousedown - before dispatch");
+        Event.dispatch(window.onMouseDown, mouseButtonEvent);
+        prerr_endline("mousedown - after dispatch");
+      | Sdl2.Event.Quit => exit(0)
+      | _ => ()
+      };
     };
-    prerr_endline ("BEFORE GC");
+    prerr_endline("BEFORE GC");
     Gc.full_major();
-    prerr_endline ("AFTER GC");
+    prerr_endline("AFTER GC");
     Tick.Default.pump();
 
     _checkAndCloseWindows(appInstance);
@@ -150,7 +162,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       Performance.bench("renderWindows", () => {
         List.iter(w => Window.render(w), getWindows(appInstance))
       });
-      prerr_endline ("after render windows?");
+      prerr_endline("after render windows?");
 
       appInstance.idleCount = 0;
       appInstance.isFirstRender = false;
@@ -171,7 +183,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
 
   while (true) {
     let _ = appLoop(0.);
-  }
-
-//  Glfw.glfwRenderLoop(appLoop);
+    ();
+  };
+  //  Glfw.glfwRenderLoop(appLoop);
 };

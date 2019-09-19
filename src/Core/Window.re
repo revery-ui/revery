@@ -53,8 +53,8 @@ type t = {
   mutable requestedWidth: option(int),
   mutable requestedHeight: option(int),
   /*onKeyPress: Event.t(keyPressEvent),
-  onKeyDown: Event.t(keyEvent),
-  onKeyUp: Event.t(keyEvent), */
+    onKeyDown: Event.t(keyEvent),
+    onKeyUp: Event.t(keyEvent), */
   onMouseUp: Event.t(mouseButtonEvent),
   onMouseMove: Event.t(mouseMoveEvent),
   onMouseWheel: Event.t(mouseWheelEvent),
@@ -143,10 +143,10 @@ let render = (w: t) => {
   };
 
   w.isRendering = true;
-/*  Performance.bench("glfwMakeContextCurrent", () =>
-    ()
-    //Gl.setup(w.sdlWindow)
-  );*/
+  /*  Performance.bench("glfwMakeContextCurrent", () =>
+        ()
+        //Gl.setup(w.sdlWindow)
+      );*/
 
   Sdl2.Gl.glViewport(
     0,
@@ -156,9 +156,9 @@ let render = (w: t) => {
   );
 
   //prerr_endline("Framebuffer width: " ++ string_of_int(w.metrics.framebufferSize.width) ++ " | " ++ string_of_int(w.metrics.framebufferSize.height));
-   /*Gl.glClearDepth(1.0);
-   Gl.glEnable(GL_DEPTH_TEST);
-   Gl.glDepthFunc(GL_LEQUAL);*/
+  /*Gl.glClearDepth(1.0);
+    Gl.glEnable(GL_DEPTH_TEST);
+    Gl.glDepthFunc(GL_LEQUAL);*/
 
   Sdl2.Gl.glDisable(GL_DEPTH_TEST);
 
@@ -167,9 +167,7 @@ let render = (w: t) => {
 
   w.render();
 
-  Performance.bench("glfwSwapBuffers", () =>
-    Sdl2.Gl.swapWindow(w.sdlWindow)
-  );
+  Performance.bench("glfwSwapBuffers", () => Sdl2.Gl.swapWindow(w.sdlWindow));
   w.isRendering = false;
 };
 
@@ -178,10 +176,10 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   log("Creating window hints...");
   /*Glfw.glfwDefaultWindowHints();
-  Glfw.sdlWindowHint(GLFW_RESIZABLE, options.resizable);
-  Glfw.sdlWindowHint(GLFW_VISIBLE, options.visible);
-  Glfw.sdlWindowHint(GLFW_MAXIMIZED, options.maximized);
-  Glfw.sdlWindowHint(GLFW_DECORATED, options.decorated);*/
+    Glfw.sdlWindowHint(GLFW_RESIZABLE, options.resizable);
+    Glfw.sdlWindowHint(GLFW_VISIBLE, options.visible);
+    Glfw.sdlWindowHint(GLFW_MAXIMIZED, options.maximized);
+    Glfw.sdlWindowHint(GLFW_DECORATED, options.decorated);*/
   log("Window hints created successfully.");
 
   log("Using vsync: " ++ string_of_bool(options.vsync));
@@ -190,21 +188,30 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   | _ => ()
   };
 
-  let width = switch(options.width) {
-  | 0 => 800
-  | v => v
-  };
+  let width =
+    switch (options.width) {
+    | 0 => 800
+    | v => v
+    };
 
-  let height = switch(options.height) {
-  | 0 => 600
-  | v => v
-  }
+  let height =
+    switch (options.height) {
+    | 0 => 600
+    | v => v
+    };
 
-  log("Creating window " ++ name ++ " width: " ++ string_of_int(width) ++ " height: " ++ string_of_int(height));
+  log(
+    "Creating window "
+    ++ name
+    ++ " width: "
+    ++ string_of_int(width)
+    ++ " height: "
+    ++ string_of_int(height),
+  );
   let w = Sdl2.Window.create(width, height, name);
   let uniqueId = Sdl2.Window.getId(w);
   log("Window created - id: " ++ string_of_int(uniqueId));
-  
+
   log("Setting window context");
   Sdl2.Gl.setup(w);
   log("Gl setup");
@@ -219,11 +226,11 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     log("Loading icon from: " ++ relativeImagePath);
     switch (Sdl2.Surface.createFromImagePath(relativeImagePath)) {
-    | Ok(v) => 
+    | Ok(v) =>
       log("Icon loaded successfully.");
       Sdl2.Window.setIcon(w, v);
       log("Icon set successfully.");
-    | Error(msg) => log("Error loading icon: " ++ msg);
+    | Error(msg) => log("Error loading icon: " ++ msg)
     };
   };
 
@@ -248,70 +255,69 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onMouseWheel: Event.create(),
     onMouseUp: Event.create(),
     onMouseDown: Event.create(),
-
     /*onKeyPress: Event.create(),
-    onKeyDown: Event.create(),
-    onKeyUp: Event.create(),
+        onKeyDown: Event.create(),
+        onKeyUp: Event.create(),
 
-  */
+      */
   };
 
   /*Glfw.glfwSetFramebufferSizeCallback(
-    w,
-    (_w, _width, _height) => {
-      ret.areMetricsDirty = true;
-      render(ret);
-    },
-  );
+      w,
+      (_w, _width, _height) => {
+        ret.areMetricsDirty = true;
+        render(ret);
+      },
+    );
 
-  Glfw.glfwSetWindowSizeCallback(
-    w,
-    (_w, _width, _height) => {
-      ret.areMetricsDirty = true;
-      render(ret);
-    },
-  );
+    Glfw.glfwSetWindowSizeCallback(
+      w,
+      (_w, _width, _height) => {
+        ret.areMetricsDirty = true;
+        render(ret);
+      },
+    );
 
-  Glfw.glfwSetWindowPosCallback(w, (_w, _x, _y) =>
-    ret.areMetricsDirty = true
-  );
+    Glfw.glfwSetWindowPosCallback(w, (_w, _x, _y) =>
+      ret.areMetricsDirty = true
+    );
 
-  Glfw.glfwSetKeyCallback(
-    w,
-    (_w, key, scancode, buttonState, m) => {
-      let evt: keyEvent = {
-        key: Key.convert(key),
-        scancode,
-        ctrlKey: Glfw.Modifier.isControlPressed(m),
-        shiftKey: Glfw.Modifier.isShiftPressed(m),
-        altKey: Glfw.Modifier.isAltPressed(m),
-        superKey: Glfw.Modifier.isSuperPressed(m),
-        isRepeat: buttonState == GLFW_REPEAT,
-      };
-
-      switch (buttonState) {
-      | GLFW_PRESS => Event.dispatch(ret.onKeyDown, evt)
-      | GLFW_REPEAT => Event.dispatch(ret.onKeyDown, evt)
-      | GLFW_RELEASE => Event.dispatch(ret.onKeyUp, evt)
-      };
-    },
-  );
-
-  Glfw.glfwSetCharCallback(
-    w,
-    (_, codepoint) => {
-      let uchar = Uchar.of_int(codepoint);
-      let character =
-        switch (Uchar.is_char(uchar)) {
-        | true => String.make(1, Uchar.to_char(uchar))
-        | _ => ""
+    Glfw.glfwSetKeyCallback(
+      w,
+      (_w, key, scancode, buttonState, m) => {
+        let evt: keyEvent = {
+          key: Key.convert(key),
+          scancode,
+          ctrlKey: Glfw.Modifier.isControlPressed(m),
+          shiftKey: Glfw.Modifier.isShiftPressed(m),
+          altKey: Glfw.Modifier.isAltPressed(m),
+          superKey: Glfw.Modifier.isSuperPressed(m),
+          isRepeat: buttonState == GLFW_REPEAT,
         };
-      let keyPressEvent: keyPressEvent = {codepoint, character};
-      Event.dispatch(ret.onKeyPress, keyPressEvent);
-    },
-  );
-  */
-  
+
+        switch (buttonState) {
+        | GLFW_PRESS => Event.dispatch(ret.onKeyDown, evt)
+        | GLFW_REPEAT => Event.dispatch(ret.onKeyDown, evt)
+        | GLFW_RELEASE => Event.dispatch(ret.onKeyUp, evt)
+        };
+      },
+    );
+
+    Glfw.glfwSetCharCallback(
+      w,
+      (_, codepoint) => {
+        let uchar = Uchar.of_int(codepoint);
+        let character =
+          switch (Uchar.is_char(uchar)) {
+          | true => String.make(1, Uchar.to_char(uchar))
+          | _ => ""
+          };
+        let keyPressEvent: keyPressEvent = {codepoint, character};
+        Event.dispatch(ret.onKeyPress, keyPressEvent);
+      },
+    );
+    */
+
   ret;
 };
 
@@ -319,9 +325,9 @@ let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
 
 let setPosition = (w: t, x: int, y: int) => {
   //Sdl2.Window.setPosition(w.sdlWindow, x, y);
-  };
+};
 
-let show = w => { 
+let show = w => {
   //Sdl2.Window.show(w.sdlWindow);
 };
 
@@ -339,7 +345,7 @@ let getFramebufferSize = (w: t) => {
 
 let maximize = (w: t) => {
   //Sdl2.Window.maximize(w.sdlWindow);
-}
+};
 
 let getDevicePixelRatio = (w: t) => {
   w.metrics.devicePixelRatio;
@@ -383,14 +389,14 @@ let takeScreenshot = (w: t, filename: string) => {
   Image.destroy(image);
 };
 
-let destroyWindow = (w: t) =>{
-  //Glfw.glfwDestroyWindow(w.sdlWindow);
+let destroyWindow = (w: t) => {
   ();
+    //Glfw.glfwDestroyWindow(w.sdlWindow);
 };
 
 let shouldClose = (w: t) => {
-  //Glfw.sdlWindowShouldClose(w.sdlWindow);
   false;
+       //Glfw.sdlWindowShouldClose(w.sdlWindow);
 };
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) =>
