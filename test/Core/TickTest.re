@@ -19,7 +19,8 @@ test("Ticker", () => {
   test("calls after tick time", () => {
     let callCount = ref(0);
 
-    let _ignore = Tick.interval(_ => callCount := callCount^ + 1, Seconds(1.));
+    let _ignore =
+      Tick.interval(_ => callCount := callCount^ + 1, Seconds(1.));
 
     TestTicker.incrementTime(Seconds(1.01));
 
