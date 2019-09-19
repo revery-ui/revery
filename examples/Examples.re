@@ -295,7 +295,7 @@ let init = app => {
   } else {
     let xPosition = (dimensions.width - windowWidth) / 2;
     let yPosition = (dimensions.height - windowHeight) / 2;
-    Window.setPos(win, xPosition, yPosition);
+    Window.setPosition(win, xPosition, yPosition);
   };
 
   let _ = UI.start(win, <ExampleHost win />);

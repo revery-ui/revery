@@ -201,12 +201,13 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   }
 
   log("Creating window " ++ name ++ " width: " ++ string_of_int(width) ++ " height: " ++ string_of_int(height));
-  //let w = Glfw.glfwCreateWindow(options.width, options.height, name);
   let w = Sdl2.Window.create(width, height, name);
   let uniqueId = Sdl2.Window.getId(w);
   log("Window created - id: " ++ string_of_int(uniqueId));
+  
   log("Setting window context");
   Sdl2.Gl.setup(w);
+  log("Gl setup");
 
   switch (options.icon) {
   | None =>
@@ -224,8 +225,6 @@ let create = (name: string, options: WindowCreateOptions.t) => {
       log("Icon set successfully.");
     | Error(msg) => log("Error loading icon: " ++ msg);
     };
-
-    //Glfw.glfwSetWindowIcon(w, relativeImagePath);
   };
 
   log("Getting window metrics");
@@ -311,53 +310,23 @@ let create = (name: string, options: WindowCreateOptions.t) => {
       Event.dispatch(ret.onKeyPress, keyPressEvent);
     },
   );
-
-  Glfw.glfwSetMouseButtonCallback(
-    w,
-    (_w, mouseButton, buttonState, _modifier) => {
-      let evt: mouseButtonEvent = {button: MouseButton.convert(mouseButton)};
-      switch (buttonState) {
-      | GLFW_PRESS => Event.dispatch(ret.onMouseDown, evt)
-      | GLFW_REPEAT => Event.dispatch(ret.onMouseDown, evt)
-      | GLFW_RELEASE => Event.dispatch(ret.onMouseUp, evt)
-      };
-    },
-  );
-
-  Glfw.glfwSetScrollCallback(
-    w,
-    (_w, deltaX, deltaY) => {
-      let evt: mouseWheelEvent = {deltaX, deltaY};
-      Event.dispatch(ret.onMouseWheel, evt);
-    },
-  );
-
-  Glfw.glfwSetCursorPosCallback(
-    w,
-    (_w, x: float, y: float) => {
-      let evt: mouseMoveEvent = {mouseX: x, mouseY: y};
-
-      Event.dispatch(ret.onMouseMove, evt);
-    },
-  );*/
+  */
+  
   ret;
 };
 
 let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
 
-let setPos = (w: t, x: int, y: int) => {
-  //Glfw.glfwSetWindowPos(w.sdlWindow, x, y);
-  ();
+let setPosition = (w: t, x: int, y: int) => {
+  Sdl2.Window.setPosition(w.sdlWindow, x, y);
   };
 
 let show = w => { 
-  // Glfw.glfwShowWindow(w.sdlWindow);
-  ();
+  Sdl2.Window.show(w.sdlWindow);
 };
 
 let hide = w => {
-  // Glfw.glfwHideWindow(w.sdlWindow);
-  ();
+  Sdl2.Window.hide(w.sdlWindow);
 };
 
 let getSize = (w: t) => {
@@ -369,8 +338,7 @@ let getFramebufferSize = (w: t) => {
 };
 
 let maximize = (w: t) => {
-  //Glfw.glfwMaximizeWindow(w.sdlWindow);
-  ();
+  Sdl2.Window.maximize(w.sdlWindow);
 }
 
 let getDevicePixelRatio = (w: t) => {
