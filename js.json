@@ -18,6 +18,7 @@
       },
       "resolutions": {
         "rebez": "github:jchavarri/rebez#46cbc183",
+        "rench": "github:revery-ui/rench#4554280",
         "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#3d1ea3a",
         "pesy": "0.4.1"
       }
