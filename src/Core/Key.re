@@ -8,11 +8,9 @@ module Scancode {
 };
 
 module Keycode {
-    type t = Sdl2.Keycode.t;
-    let getName = Sdl2.Keycode.getName;
+    include Sdl2.Keycode;
+    
     let show = getName;
-    let ofScancode = Sdl2.Keycode.ofScancode;
-    let toScancode = Sdl2.Keycode.toScancode;
 };
 
 module KeyEvent {

@@ -269,34 +269,34 @@ module KeyboardInput = {
         dispatch(Focused(true));
       };
       let respondToKeys = (e: NodeEvents.keyEventParams) =>
-        switch (e.key) {
-        | Key.KEY_BACKSPACE => parentDispatch(BackspaceKeyPressed)
+        switch (e.keycode) {
+        | Key.Keycode.backspace=> parentDispatch(BackspaceKeyPressed)
 
-        | Key.KEY_C when e.ctrlKey => parentDispatch(ClearKeyPressed(true))
-        | Key.KEY_C => parentDispatch(ClearKeyPressed(false))
+        | Key.Keycode.c when e.ctrlKey => parentDispatch(ClearKeyPressed(true))
+        | Key.Keycode.c => parentDispatch(ClearKeyPressed(false))
 
         /* + key */
-        | Key.KEY_EQUAL when e.shiftKey =>
+        | Key.Keycode.equal when e.shiftKey =>
           parentDispatch(OperationKeyPressed(`Add))
-        | Key.KEY_MINUS when e.ctrlKey => parentDispatch(PlusMinusKeyPressed)
-        | Key.KEY_MINUS => parentDispatch(OperationKeyPressed(`Sub))
+        | Key.Keycode.minus when e.ctrlKey => parentDispatch(PlusMinusKeyPressed)
+        | Key.Keycode.minus => parentDispatch(OperationKeyPressed(`Sub))
         /* * key */
-        | Key.KEY_8 when e.shiftKey =>
+        | Key.Keycode.digit8 when e.shiftKey =>
           parentDispatch(OperationKeyPressed(`Mul))
-        | Key.KEY_SLASH => parentDispatch(OperationKeyPressed(`Div))
-        | Key.KEY_PERIOD => parentDispatch(DotKeyPressed)
-        | Key.KEY_EQUAL => parentDispatch(ResultKeyPressed)
+        | Key.Keycode.slash => parentDispatch(OperationKeyPressed(`Div))
+        | Key.Keycode.period => parentDispatch(DotKeyPressed)
+        | Key.Keycode.equal => parentDispatch(ResultKeyPressed)
 
-        | Key.KEY_0 => parentDispatch(NumberKeyPressed("0"))
-        | Key.KEY_1 => parentDispatch(NumberKeyPressed("1"))
-        | Key.KEY_2 => parentDispatch(NumberKeyPressed("2"))
-        | Key.KEY_3 => parentDispatch(NumberKeyPressed("3"))
-        | Key.KEY_4 => parentDispatch(NumberKeyPressed("4"))
-        | Key.KEY_5 => parentDispatch(NumberKeyPressed("5"))
-        | Key.KEY_6 => parentDispatch(NumberKeyPressed("6"))
-        | Key.KEY_7 => parentDispatch(NumberKeyPressed("7"))
-        | Key.KEY_8 => parentDispatch(NumberKeyPressed("8"))
-        | Key.KEY_9 => parentDispatch(NumberKeyPressed("9"))
+        | Key.Keycode.digit0 => parentDispatch(NumberKeyPressed("0"))
+        | Key.Keycode.digit1 => parentDispatch(NumberKeyPressed("1"))
+        | Key.Keycode.digit2 => parentDispatch(NumberKeyPressed("2"))
+        | Key.Keycode.digit3 => parentDispatch(NumberKeyPressed("3"))
+        | Key.Keycode.digit4 => parentDispatch(NumberKeyPressed("4"))
+        | Key.Keycode.digit5 => parentDispatch(NumberKeyPressed("5"))
+        | Key.Keycode.digit6 => parentDispatch(NumberKeyPressed("6"))
+        | Key.Keycode.digit7 => parentDispatch(NumberKeyPressed("7"))
+        | Key.Keycode.digit8 => parentDispatch(NumberKeyPressed("8"))
+        | Key.Keycode.digit9 => parentDispatch(NumberKeyPressed("9"))
 
         | _ => ()
         };

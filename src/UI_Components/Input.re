@@ -222,11 +222,12 @@ let make =
         slots,
       );
 
-    /*let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
+    let handleKeyPress = (event: NodeEvents.keyEventParams) => {
+      let character = Key.Keycode.getName(event.keycode);
       let createChangeEvent = value => {
         value,
-        key: Key.fromString(event.character),
-        character: event.character,
+        keycode: event.keycode,
+        character,
         altKey: false,
         ctrlKey: false,
         shiftKey: false,
@@ -238,24 +239,25 @@ let make =
       switch (valueAsProp) {
       | Some(v) =>
         let {newString, _} =
-          addCharacter(v, event.character, state.cursorPosition);
+          addCharacter(v, character, state.cursorPosition);
         onChange(createChangeEvent(newString));
       | None =>
         let {newString, cursorPosition} =
           addCharacter(
             state.internalValue,
-            event.character,
+            character,
             state.cursorPosition,
           );
         dispatch(UpdateText({newString, cursorPosition}));
         onChange(createChangeEvent(newString));
       };
-    };*/
+    };
 
     let handleKeyDown = (event: NodeEvents.keyEventParams) => {
+      let character = Key.Keycode.getName(event.keycode);
       let createChangeEvent = inputString => {
         value: inputString,
-        character: Key.Keycode.getName(event.keycode),
+        character,
         keycode: event.keycode,
         /*
         altKey: event.altKey,
@@ -271,16 +273,20 @@ let make =
 
       dispatch(ResetCursorTimer);
 
-      switch (event.key) {
-      | Key.KEY_LEFT =>
+    /*  switch (event.keycode) {
+      | Key.Keycode.backspace =>
         onKeyDown(event);
         dispatch(
           CursorPosition({inputString: valueToDisplay, change: (-1)}),
         );
-      | Key.KEY_RIGHT =>
+      | _ => ();
+      };*/
+      
+
+      /*| Key.Keycode.right =>
         onKeyDown(event);
         dispatch(CursorPosition({inputString: valueToDisplay, change: 1}));
-      | Key.KEY_DELETE =>
+      | Key.Keycode.delete =>
         // We should manage both cases
         removeCharacterAfter(valueToDisplay, state.cursorPosition)
         |> (
@@ -294,7 +300,7 @@ let make =
           }
         )
 
-      | Key.KEY_BACKSPACE =>
+      | Key.Keycode.backspace =>
         removeCharacterBefore(valueToDisplay, state.cursorPosition)
         |> (
           update => {
@@ -306,11 +312,11 @@ let make =
             onChange(createChangeEvent(update.newString));
           }
         )
-      | Key.KEY_ESCAPE =>
+      | Key.Keycode.escape =>
         onKeyDown(event);
-        Focus.loseFocus();
-      | _ => onKeyDown(event)
-      };
+        Focus.loseFocus();*/
+      //| _ => onKeyDown(event)
+      //};
     };
 
     let hasPlaceholder = String.length(valueToDisplay) < 1;
