@@ -16,7 +16,6 @@ let make =
       ~onFocus=?,
       ~onKeyDown=?,
       ~onKeyUp=?,
-      ~onKeyPress=?,
       ~onDimensionsChanged=?,
       ~tabindex=?,
       ~ref=?,
@@ -44,7 +43,6 @@ let make =
               ~onFocus?,
               ~onKeyDown?,
               ~onKeyUp?,
-              ~onKeyPress?,
               ~onDimensionsChanged?,
               (),
             );
@@ -71,7 +69,6 @@ let make =
               ~onFocus?,
               ~onKeyDown?,
               ~onKeyUp?,
-              ~onKeyPress?,
               ~onDimensionsChanged?,
               (),
             );
@@ -103,7 +100,6 @@ let createElement =
       ~children,
       ~onKeyDown=?,
       ~onKeyUp=?,
-      ~onKeyPress=?,
       ~onDimensionsChanged=?,
       (),
     ) =>
@@ -123,7 +119,6 @@ let createElement =
     ~tabindex?,
     ~onKeyDown?,
     ~onKeyUp?,
-    ~onKeyPress?,
     ~onDimensionsChanged?,
     React.listToElement(children),
   );

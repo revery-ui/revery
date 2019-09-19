@@ -24,7 +24,8 @@ type cursorUpdate = {
 type changeEvent = {
   value: string,
   character: string,
-  key: Key.t,
+  keycode: Key.Keycode.t,
+
   altKey: bool,
   ctrlKey: bool,
   shiftKey: bool,
@@ -221,7 +222,7 @@ let make =
         slots,
       );
 
-    let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
+    /*let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
       let createChangeEvent = value => {
         value,
         key: Key.fromString(event.character),
@@ -249,17 +250,23 @@ let make =
         dispatch(UpdateText({newString, cursorPosition}));
         onChange(createChangeEvent(newString));
       };
-    };
+    };*/
 
     let handleKeyDown = (event: NodeEvents.keyEventParams) => {
       let createChangeEvent = inputString => {
         value: inputString,
-        character: Key.toString(event.key),
-        key: event.key,
+        character: Key.Keycode.getName(event.keycode),
+        keycode: event.keycode,
+        /*
         altKey: event.altKey,
         ctrlKey: event.ctrlKey,
         shiftKey: event.shiftKey,
         superKey: event.superKey,
+        */
+        altKey: false,
+        ctrlKey: false,
+        shiftKey: false,
+        superKey: false
       };
 
       dispatch(ResetCursorTimer);
@@ -395,7 +402,7 @@ let make =
         }}
         componentRef={autofocus ? Focus.focus : ignore}
         onKeyDown=handleKeyDown
-        onKeyPress=handleKeyPress>
+        >
         <View style=viewStyles>
           cursor
           {hasPlaceholder ? placeholderText : inputText}

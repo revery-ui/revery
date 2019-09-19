@@ -10,29 +10,19 @@ let dispatch = (event: Revery_Core.Events.internalKeyboardEvent) => {
     | InternalKeyUpEvent(e) =>
       handler(
         KeyUp({
-          key: e.key,
+          keycode: e.keycode,
           scancode: e.scancode,
-          altKey: e.altKey,
-          ctrlKey: e.ctrlKey,
-          shiftKey: e.shiftKey,
-          superKey: e.superKey,
-          isRepeat: e.isRepeat,
+          repeat: e.repeat,
         }),
       )
     | InternalKeyDownEvent(e) =>
       handler(
         KeyDown({
-          key: e.key,
+          keycode: e.keycode,
           scancode: e.scancode,
-          altKey: e.altKey,
-          ctrlKey: e.ctrlKey,
-          shiftKey: e.shiftKey,
-          superKey: e.superKey,
-          isRepeat: e.isRepeat,
+          repeat: e.repeat,
         }),
       )
-    | InternalKeyPressEvent(e) =>
-      handler(KeyPress({codepoint: e.codepoint, character: e.character}))
     }
   };
 };

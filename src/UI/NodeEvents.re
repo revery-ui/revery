@@ -26,18 +26,9 @@ type mouseWheelEventParams = {
 type focusEventParams = unit;
 
 type keyEventParams = {
-  key: Key.t,
-  scancode: int,
-  altKey: bool,
-  ctrlKey: bool,
-  shiftKey: bool,
-  superKey: bool,
-  isRepeat: bool,
-};
-
-type keyPressEventParams = {
-  codepoint: int,
-  character: string,
+  keycode: Key.Keycode.t,
+  scancode: Key.Scancode.t,
+  repeat: bool,
 };
 
 module DimensionsChangedEventParams = {
@@ -56,7 +47,7 @@ type event =
   | MouseWheel(mouseWheelEventParams)
   | KeyDown(keyEventParams)
   | KeyUp(keyEventParams)
-  | KeyPress(keyPressEventParams)
+  //| KeyPress(keyPressEventParams)
   | MouseEnter(mouseMoveEventParams)
   | MouseLeave(mouseMoveEventParams)
   | MouseOver(mouseMoveEventParams)
@@ -73,7 +64,7 @@ type mouseWheelHandler = mouseWheelEventParams => unit;
 type focusHandler = focusEventParams => unit;
 type keyDownHandler = keyEventParams => unit;
 type keyUpHandler = keyEventParams => unit;
-type keyPressHandler = keyPressEventParams => unit;
+//type keyPressHandler = keyPressEventParams => unit;
 type dimensionsChangedHandler = DimensionsChangedEventParams.t => unit;
 
 type t('a) = {
@@ -90,7 +81,7 @@ type t('a) = {
   onBlur: option(focusHandler),
   onKeyUp: option(keyUpHandler),
   onKeyDown: option(keyDownHandler),
-  onKeyPress: option(keyPressHandler),
+  //onKeyPress: option(keyPressHandler),
   onDimensionsChanged: option(dimensionsChangedHandler),
 };
 
@@ -107,7 +98,7 @@ let make =
       ~onMouseOut=?,
       ~onFocus=?,
       ~onBlur=?,
-      ~onKeyPress=?,
+      //~onKeyPress=?,
       ~onKeyDown=?,
       ~onKeyUp=?,
       ~onDimensionsChanged=?,
@@ -125,7 +116,7 @@ let make =
     onMouseOut,
     onFocus,
     onBlur,
-    onKeyPress,
+    //onKeyPress,
     onKeyDown,
     onKeyUp,
     onDimensionsChanged,

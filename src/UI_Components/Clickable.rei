@@ -29,7 +29,6 @@ let createElement:
     ~children: list(Revery_UI.React.syntheticElement),
     ~onKeyDown: Revery_UI.NodeEvents.keyDownHandler=?,
     ~onKeyUp: Revery_UI.NodeEvents.keyUpHandler=?,
-    ~onKeyPress: Revery_UI.NodeEvents.keyPressHandler=?,
     ~componentRef: Revery_UI.node => unit=?,
     unit
   ) =>
