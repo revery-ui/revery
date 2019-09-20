@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "^3.4.0",
-    "reason-fontkit": "^2.6.0",
+    "reason-fontkit": "^2.7.0",
     "reason-gl-matrix": "^0.9.9305",
     "rebez": "*",
     "@opam/color": "^0.2.0",
@@ -48,8 +48,9 @@
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#dd933fc",
     "pesy": "0.4.1",
-    "reason-fontkit": "link:../reason-fontkit",
-    "reason-sdl2": "link:../reason-sdl2"
+    "reason-sdl2": "link:../reason-sdl2",
+    "esy-sdl2": "link:../esy-sdl2",
+    "@esy-ocaml/reason": "github:facebook/reason#474900e"
   },
   "peerDependencies": {
     "ocaml": ">=4.6.0"
