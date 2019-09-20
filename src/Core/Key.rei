@@ -14,7 +14,36 @@ module Keycode: {
   let show: t => string;
   let toScancode: t => Scancode.t;
 
+  // Incrementally add these as needed from:
+  // https://wiki.libsdl.org/SDLKeycodeLookup
+  let unknown: int;
   let backspace: int;
+
+  let escape: int;
+
+  let minus: int;
+  let period: int;
+  let slash: int;
+
+  let equals: int;
+
+  let digit0: int;
+  let digit1: int;
+  let digit2: int;
+  let digit3: int;
+  let digit4: int;
+  let digit5: int;
+  let digit6: int;
+  let digit7: int;
+  let digit8: int;
+  let digit9: int;
+
+  let c: int;
+
+  let delete: int;
+
+  let right: int;
+  let left: int;
 };
 
 module Keymod: {
