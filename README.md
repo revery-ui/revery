@@ -87,6 +87,8 @@ Some ideas for getting started:
 
 Revery is provided under the [MIT License](LICENSE).
 
+Revery bundles several dependencies under their own license terms - please refer to [ThirdPartyLicenses.txt](./ThirdPartyLicenses.txt).
+
 ## Contributors
 
 Thanks to everyone who has [contributed](https://github.com/revery-ui/revery/graphs/contributors) to Revery!
