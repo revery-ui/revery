@@ -52,9 +52,8 @@ type t = {
   mutable isRendering: bool,
   mutable requestedWidth: option(int),
   mutable requestedHeight: option(int),
-  /*onKeyPress: Event.t(keyPressEvent),
-    onKeyDown: Event.t(keyEvent),
-    onKeyUp: Event.t(keyEvent), */
+  onKeyDown: Event.t(Key.KeyEvent.t),
+  onKeyUp: Event.t(Key.KeyEvent.t),
   onMouseUp: Event.t(mouseButtonEvent),
   onMouseMove: Event.t(mouseMoveEvent),
   onMouseWheel: Event.t(mouseWheelEvent),
@@ -255,11 +254,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onMouseWheel: Event.create(),
     onMouseUp: Event.create(),
     onMouseDown: Event.create(),
-    /*onKeyPress: Event.create(),
-        onKeyDown: Event.create(),
-        onKeyUp: Event.create(),
-
-      */
+    onKeyDown: Event.create(),
+    onKeyUp: Event.create(),
   };
 
   /*Glfw.glfwSetFramebufferSizeCallback(

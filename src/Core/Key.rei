@@ -47,7 +47,7 @@ module Keycode: {
 };
 
 module Keymod: {
-  type t;
+  type t = int;
 
   let isLeftShiftDown: t => bool;
   let isRightShiftDown: t => bool;

@@ -62,11 +62,11 @@ let start = (window: Window.t, element: React.syntheticElement) => {
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
-  /*
-     let _ =
+  
+ /*    let _ =
        Revery_Core.Event.subscribe(window.onKeyPress, event =>
          Keyboard.dispatch(Revery_Core.Events.InternalKeyPressEvent(event))
-       );
+       );*/
 
      let _ =
        Revery_Core.Event.subscribe(window.onKeyDown, event =>
@@ -77,7 +77,7 @@ let start = (window: Window.t, element: React.syntheticElement) => {
        Revery_Core.Event.subscribe(window.onKeyUp, event =>
          Keyboard.dispatch(Revery_Core.Events.InternalKeyUpEvent(event))
        );
-   */
+
   let _ =
     Revery_Core.Event.subscribe(
       window.onMouseUp,

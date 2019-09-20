@@ -141,8 +141,24 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
         prerr_endline("mousedown - before dispatch");
         Event.dispatch(window.onMouseDown, mouseButtonEvent);
         prerr_endline("mousedown - after dispatch");
-      | Sdl2.Event.KeyDown(_) => prerr_endline("keydown")
-      | Sdl2.Event.KeyUp(_) => prerr_endline("keydown")
+      | Sdl2.Event.KeyDown({ windowID, keycode, keymod, scancode, repeat }) => 
+        let window = getWindowById(appInstance, windowID);
+        let keyEvent: Key.KeyEvent.t = {
+          keycode,
+          scancode,
+          keymod,
+          repeat,
+        };
+        Event.dispatch(window.onKeyDown, keyEvent);
+      | Sdl2.Event.KeyUp({ windowID, keycode, keymod, scancode, repeat }) => 
+        let window = getWindowById(appInstance, windowID);
+        let keyEvent: Key.KeyEvent.t = {
+          keycode,
+          scancode,
+          keymod,
+          repeat,
+        };
+        Event.dispatch(window.onKeyUp, keyEvent);
       | Sdl2.Event.Quit => exit(0)
       | _ => ()
       };
