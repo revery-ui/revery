@@ -237,6 +237,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   let metrics = _getMetricsFromGlfwWindow(w);
   log("Metrics: " ++ WindowMetrics.show(metrics));
 
+  Sdl2.TextInput.setInputRect(50, 100, 200, 25);
+  Sdl2.TextInput.start();
   let ret: t = {
     backgroundColor: options.backgroundColor,
     sdlWindow: w,

@@ -163,6 +163,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       | _ => ()
       };
     };
+
     Gc.full_major();
     Tick.Default.pump();
 
