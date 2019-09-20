@@ -25,7 +25,7 @@
   "dependencies": {
     "@esy-ocaml/reason": "^3.4.0",
     "reason-glfw": "^3.2.1029",
-    "reason-fontkit": "^2.6.0",
+    "reason-fontkit": "^2.7.0",
     "reason-gl-matrix": "^0.9.9305",
     "rebez": "*",
     "@opam/color": "^0.2.0",
