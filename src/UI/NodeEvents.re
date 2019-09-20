@@ -28,7 +28,11 @@ type focusEventParams = unit;
 type keyEventParams = {
   keycode: Key.Keycode.t,
   scancode: Key.Scancode.t,
+  keymod: Key.Keymod.t,
   repeat: bool,
+  ctrlKey: bool,
+  altKey: bool,
+  shiftKey: bool,
 };
 
 module DimensionsChangedEventParams = {

@@ -13,10 +13,15 @@ module Keycode = {
   let show = getName;
 };
 
+module Keymod = {
+  include Sdl2.Keymod;
+};
+
 module KeyEvent = {
   type t = {
     keycode: Keycode.t,
     scancode: Scancode.t,
+    keymod: Keymod.t,
     repeat: bool,
   };
 };
