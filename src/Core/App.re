@@ -141,13 +141,13 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
         prerr_endline("mousedown - before dispatch");
         Event.dispatch(window.onMouseDown, mouseButtonEvent);
         prerr_endline("mousedown - after dispatch");
+      | Sdl2.Event.KeyDown(_) => prerr_endline("keydown")
+      | Sdl2.Event.KeyUp(_) => prerr_endline("keydown")
       | Sdl2.Event.Quit => exit(0)
       | _ => ()
       };
     };
-    prerr_endline("BEFORE GC");
     Gc.full_major();
-    prerr_endline("AFTER GC");
     Tick.Default.pump();
 
     _checkAndCloseWindows(appInstance);
@@ -162,7 +162,6 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       Performance.bench("renderWindows", () => {
         List.iter(w => Window.render(w), getWindows(appInstance))
       });
-      prerr_endline("after render windows?");
 
       appInstance.idleCount = 0;
       appInstance.isFirstRender = false;

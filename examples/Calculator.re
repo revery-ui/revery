@@ -271,32 +271,35 @@ module KeyboardInput = {
       let respondToKeys = (e: NodeEvents.keyEventParams) => {
         Key.Keycode.(
           switch (e.keycode) {
-          | backspace => parentDispatch(BackspaceKeyPressed)
-          | c when e.ctrlKey => parentDispatch(ClearKeyPressed(true))
-          | c => parentDispatch(ClearKeyPressed(false))
+          | v when v == backspace => parentDispatch(BackspaceKeyPressed)
+          | v when v == c && e.ctrlKey =>
+            parentDispatch(ClearKeyPressed(true))
+          | v when v == c => parentDispatch(ClearKeyPressed(false))
 
           /* + key */
-          | equals when e.shiftKey =>
+          | v when v == Key.Keycode.equals && e.shiftKey =>
             parentDispatch(OperationKeyPressed(`Add))
-          | minus when e.ctrlKey => parentDispatch(PlusMinusKeyPressed)
-          | minus => parentDispatch(OperationKeyPressed(`Sub))
+          | v when v == Key.Keycode.equals && e.ctrlKey =>
+            parentDispatch(PlusMinusKeyPressed)
+          | v when v == Key.Keycode.minus =>
+            parentDispatch(OperationKeyPressed(`Sub))
           /* * key */
-          | digit8 when e.shiftKey =>
+          | v when v == digit8 && e.shiftKey =>
             parentDispatch(OperationKeyPressed(`Mul))
-          | slash => parentDispatch(OperationKeyPressed(`Div))
-          | period => parentDispatch(DotKeyPressed)
-          | equal => parentDispatch(ResultKeyPressed)
+          | v when v == slash => parentDispatch(OperationKeyPressed(`Div))
+          | v when v == period => parentDispatch(DotKeyPressed)
+          | v when v == equals => parentDispatch(ResultKeyPressed)
 
-          | digit0 => parentDispatch(NumberKeyPressed("0"))
-          | digit1 => parentDispatch(NumberKeyPressed("1"))
-          | digit2 => parentDispatch(NumberKeyPressed("2"))
-          | digit3 => parentDispatch(NumberKeyPressed("3"))
-          | digit4 => parentDispatch(NumberKeyPressed("4"))
-          | digit5 => parentDispatch(NumberKeyPressed("5"))
-          | digit6 => parentDispatch(NumberKeyPressed("6"))
-          | digit7 => parentDispatch(NumberKeyPressed("7"))
-          | digit8 => parentDispatch(NumberKeyPressed("8"))
-          | digit9 => parentDispatch(NumberKeyPressed("9"))
+          | v when v == digit0 => parentDispatch(NumberKeyPressed("0"))
+          | v when v == digit1 => parentDispatch(NumberKeyPressed("1"))
+          | v when v == digit2 => parentDispatch(NumberKeyPressed("2"))
+          | v when v == digit3 => parentDispatch(NumberKeyPressed("3"))
+          | v when v == digit4 => parentDispatch(NumberKeyPressed("4"))
+          | v when v == digit5 => parentDispatch(NumberKeyPressed("5"))
+          | v when v == digit6 => parentDispatch(NumberKeyPressed("6"))
+          | v when v == digit7 => parentDispatch(NumberKeyPressed("7"))
+          | v when v == digit8 => parentDispatch(NumberKeyPressed("8"))
+          | v when v == digit9 => parentDispatch(NumberKeyPressed("9"))
 
           | _ => ()
           }
