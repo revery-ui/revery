@@ -32,7 +32,7 @@ module Keymod: {
 
   let isLeftAltDown: t => bool;
   let isRightAltDown: t => bool;
-  
+
   let isAltDown: t => bool;
 
   let isLeftGuiDown: t => bool;
