@@ -17,6 +17,8 @@ let make =
       ~onKeyDown=?,
       ~onKeyUp=?,
       ~onDimensionsChanged=?,
+      ~onTextInput=?,
+      ~onTextEdit=?,
       ~tabindex=?,
       ~ref=?,
       ~style=Style.emptyViewStyle,
@@ -43,6 +45,8 @@ let make =
               ~onFocus?,
               ~onKeyDown?,
               ~onKeyUp?,
+              ~onTextEdit?,
+              ~onTextInput?,
               ~onDimensionsChanged?,
               (),
             );
@@ -69,6 +73,8 @@ let make =
               ~onFocus?,
               ~onKeyDown?,
               ~onKeyUp?,
+              ~onTextEdit?,
+              ~onTextInput?,
               ~onDimensionsChanged?,
               (),
             );
@@ -100,6 +106,8 @@ let createElement =
       ~children,
       ~onKeyDown=?,
       ~onKeyUp=?,
+      ~onTextInput=?,
+      ~onTextEdit=?,
       ~onDimensionsChanged=?,
       (),
     ) =>
@@ -119,6 +127,8 @@ let createElement =
     ~tabindex?,
     ~onKeyDown?,
     ~onKeyUp?,
+    ~onTextInput?,
+    ~onTextEdit?,
     ~onDimensionsChanged?,
     React.listToElement(children),
   );

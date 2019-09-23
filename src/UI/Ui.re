@@ -78,6 +78,17 @@ let start = (window: Window.t, element: React.syntheticElement) => {
          Keyboard.dispatch(Revery_Core.Events.InternalKeyUpEvent(event))
        );
 
+     let _ =
+       Revery_Core.Event.subscribe(window.onTextInputCommit, event =>
+         Keyboard.dispatch(Revery_Core.Events.InternalTextInputEvent(event))
+       );
+     
+     let _ =
+       Revery_Core.Event.subscribe(window.onCompositionEdit, event =>
+         Keyboard.dispatch(Revery_Core.Events.InternalTextEditEvent(event))
+       );
+        
+
   let _ =
     Revery_Core.Event.subscribe(
       window.onMouseUp,

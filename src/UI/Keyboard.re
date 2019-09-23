@@ -8,6 +8,10 @@ let dispatch = (event: Revery_Core.Events.internalKeyboardEvent) => {
   | None => ()
   | Some({handler, _}) =>
     switch (event) {
+    | InternalTextEditEvent({text, start, length}) =>
+      handler(TextEdit({text, start, length}));
+    | InternalTextInputEvent(e) =>
+      handler(TextInput({text: e.text}));
     | InternalKeyUpEvent(e) =>
       handler(
         KeyUp({

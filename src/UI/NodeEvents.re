@@ -20,6 +20,16 @@ type mouseWheelEventParams = {
   deltaY: float,
 };
 
+type textInputEventParams = {
+  text: string,
+};
+
+type textEditEventParams = {
+  text: string,
+  start: int,
+  length: int,
+};
+
 /*
   Might be useful to extend in the future
  */
@@ -51,6 +61,8 @@ type event =
   | MouseWheel(mouseWheelEventParams)
   | KeyDown(keyEventParams)
   | KeyUp(keyEventParams)
+  | TextInput(textInputEventParams)
+  | TextEdit(textEditEventParams)
   //| KeyPress(keyPressEventParams)
   | MouseEnter(mouseMoveEventParams)
   | MouseLeave(mouseMoveEventParams)
@@ -68,7 +80,8 @@ type mouseWheelHandler = mouseWheelEventParams => unit;
 type focusHandler = focusEventParams => unit;
 type keyDownHandler = keyEventParams => unit;
 type keyUpHandler = keyEventParams => unit;
-//type keyPressHandler = keyPressEventParams => unit;
+type textInputHandler = textInputEventParams => unit;
+type textEditHandler = textEditEventParams => unit;
 type dimensionsChangedHandler = DimensionsChangedEventParams.t => unit;
 
 type t('a) = {
@@ -85,7 +98,8 @@ type t('a) = {
   onBlur: option(focusHandler),
   onKeyUp: option(keyUpHandler),
   onKeyDown: option(keyDownHandler),
-  //onKeyPress: option(keyPressHandler),
+  onTextInput: option(textInputHandler),
+  onTextEdit: option(textEditHandler),
   onDimensionsChanged: option(dimensionsChangedHandler),
 };
 
@@ -103,6 +117,8 @@ let make =
       ~onFocus=?,
       ~onBlur=?,
       //~onKeyPress=?,
+      ~onTextEdit=?,
+      ~onTextInput=?,
       ~onKeyDown=?,
       ~onKeyUp=?,
       ~onDimensionsChanged=?,
@@ -120,7 +136,8 @@ let make =
     onMouseOut,
     onFocus,
     onBlur,
-    //onKeyPress,
+    onTextEdit,
+    onTextInput,
     onKeyDown,
     onKeyUp,
     onDimensionsChanged,

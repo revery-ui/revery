@@ -3,11 +3,6 @@ type keyPressEvent = {
   character: string,
 };
 
-type internalKeyboardEvent =
-  | InternalKeyUpEvent(Key.KeyEvent.t)
-  | InternalKeyDownEvent(Key.KeyEvent.t);
-//| InternalKeyPressEvent(keyPressEvent);
-
 type textInputEvent = {
   text: string,
 };
@@ -17,6 +12,12 @@ type textEditEvent = {
   start: int,
   length: int,
 };
+
+type internalKeyboardEvent =
+  | InternalKeyUpEvent(Key.KeyEvent.t)
+  | InternalKeyDownEvent(Key.KeyEvent.t)
+  | InternalTextEditEvent(textEditEvent)
+  | InternalTextInputEvent(textInputEvent);
 
 type mouseMoveEvent = {
   mouseX: float,

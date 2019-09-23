@@ -99,12 +99,11 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
   let _ = Sdl2.init();
   let _ = initFunc(appInstance);
 
-  let appLoop = (_t: float) => {
+  let appLoop = () => {
     let evt = Sdl2.Event.poll();
     switch (evt) {
     | None => () // prerr_endline ("No event");
     | Some(v) =>
-      prerr_endline("EVENT: " ++ Sdl2.Event.show(v));
       let handleEvent = (windowID) => {
         let window = getWindowById(appInstance, windowID);
         Window._handleEvent(v, window);
@@ -116,16 +115,16 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       | Sdl2.Event.MouseWheel({windowID, _}) => handleEvent(windowID);
       | Sdl2.Event.KeyDown({windowID, _}) => handleEvent(windowID);
       | Sdl2.Event.KeyUp({windowID, _}) => handleEvent(windowID);
+      | Sdl2.Event.TextInput({windowID, _}) => handleEvent(windowID);
+      | Sdl2.Event.TextEditing({windowID, _}) => handleEvent(windowID);
       | Sdl2.Event.WindowResized({windowID, _}) => handleEvent(windowID);
       | Sdl2.Event.WindowSizeChanged({windowID, _}) => handleEvent(windowID);
       | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID);
       | Sdl2.Event.Quit => exit(0)
-      
       | _ => ()
       };
     };
 
-    Gc.full_major();
     Tick.Default.pump();
 
     _checkAndCloseWindows(appInstance);
@@ -158,9 +157,5 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     List.length(getWindows(appInstance)) == 0;
   };
 
-  while (true) {
-    let _ = appLoop(0.);
-    ();
-  };
-  //  Glfw.glfwRenderLoop(appLoop);
+  Sdl2.renderLoop(appLoop);
 };

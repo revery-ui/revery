@@ -224,6 +224,8 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
           repeat,
         };
         Event.dispatch(v.onKeyUp, keyEvent);
+      | Sdl2.Event.TextInput(ti) =>
+        Event.dispatch(v.onTextInputCommit, {text: ti.text});
       | Sdl2.Event.WindowResized(_) => {
         v.areMetricsDirty = true;
         
@@ -305,9 +307,6 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   log("Getting window metrics");
   let metrics = _getMetricsFromGlfwWindow(w);
   log("Metrics: " ++ WindowMetrics.show(metrics));
-
-  Sdl2.TextInput.setInputRect(50, 100, 200, 25);
-  Sdl2.TextInput.start();
   let ret: t = {
     backgroundColor: options.backgroundColor,
     sdlWindow: w,

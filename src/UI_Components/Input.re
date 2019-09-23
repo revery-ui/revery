@@ -221,12 +221,12 @@ let make =
         slots,
       );
 
-    let handleKeyPress = (event: NodeEvents.keyEventParams) => {
-      let character = Key.Keycode.getName(event.keycode);
+    let handleTextInput = (event: NodeEvents.textInputEventParams) => {
+      prerr_endline ("HANDLE TEXT INPUT");
       let createChangeEvent = value => {
         value,
-        keycode: event.keycode,
-        character,
+        keycode: 0,
+        character: event.text,
         altKey: false,
         ctrlKey: false,
         shiftKey: false,
@@ -238,11 +238,11 @@ let make =
       switch (valueAsProp) {
       | Some(v) =>
         let {newString, _} =
-          addCharacter(v, character, state.cursorPosition);
+          addCharacter(v, event.text, state.cursorPosition);
         onChange(createChangeEvent(newString));
       | None =>
         let {newString, cursorPosition} =
-          addCharacter(state.internalValue, character, state.cursorPosition);
+          addCharacter(state.internalValue, event.text, state.cursorPosition);
         dispatch(UpdateText({newString, cursorPosition}));
         onChange(createChangeEvent(newString));
       };
@@ -254,31 +254,23 @@ let make =
         value: inputString,
         character,
         keycode: event.keycode,
-        /*
-         altKey: event.altKey,
-         ctrlKey: event.ctrlKey,
-         shiftKey: event.shiftKey,
-         superKey: event.superKey,
-         */
-        altKey: false,
-        ctrlKey: false,
-        shiftKey: false,
-        superKey: false,
+        altKey: Key.Keymod.isAltDown(event.keymod),
+        ctrlKey: Key.Keymod.isControlDown(event.keymod),
+        shiftKey: Key.Keymod.isShiftDown(event.keymod),
+        superKey: Key.Keymod.isGuiDown(event.keymod),
       };
 
       dispatch(ResetCursorTimer);
-      /*  switch (event.keycode) {
-          | Key.Keycode.backspace =>
+      switch (event.keycode) {
+          | v when Key.Keycode.left == v =>
             onKeyDown(event);
             dispatch(
               CursorPosition({inputString: valueToDisplay, change: (-1)}),
             );
-          | _ => ();
-          };*/
-      /*| Key.Keycode.right =>
+      | v when Key.Keycode.right == v=>
           onKeyDown(event);
           dispatch(CursorPosition({inputString: valueToDisplay, change: 1}));
-        | Key.Keycode.delete =>
+        | v when Key.Keycode.delete == v=>
           // We should manage both cases
           removeCharacterAfter(valueToDisplay, state.cursorPosition)
           |> (
@@ -292,7 +284,7 @@ let make =
             }
           )
 
-        | Key.Keycode.backspace =>
+        | v when Key.Keycode.backspace  == v=>
           removeCharacterBefore(valueToDisplay, state.cursorPosition)
           |> (
             update => {
@@ -304,11 +296,11 @@ let make =
               onChange(createChangeEvent(update.newString));
             }
           )
-        | Key.Keycode.escape =>
+        | v when Key.Keycode.escape  == v=>
           onKeyDown(event);
-          Focus.loseFocus();*/
-      //| _ => onKeyDown(event)
-      //};
+          Focus.loseFocus();
+        | _ => onKeyDown(event)
+      };
     };
 
     let hasPlaceholder = String.length(valueToDisplay) < 1;
@@ -391,15 +383,19 @@ let make =
       slots,
       <Clickable
         onFocus={() => {
+        prerr_endline ("onFocus");
           dispatch(ResetCursorTimer);
           dispatch(SetFocus(true));
+          Sdl2.TextInput.start();
         }}
         onBlur={() => {
           dispatch(ResetCursorTimer);
           dispatch(SetFocus(false));
+          Sdl2.TextInput.stop();
         }}
         componentRef={autofocus ? Focus.focus : ignore}
-        onKeyDown=handleKeyDown>
+        onKeyDown=handleKeyDown
+        onTextInput=handleTextInput>
         <View style=viewStyles>
           cursor
           {hasPlaceholder ? placeholderText : inputText}
