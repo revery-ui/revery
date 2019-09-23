@@ -105,61 +105,22 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     | None => () // prerr_endline ("No event");
     | Some(v) =>
       prerr_endline("EVENT: " ++ Sdl2.Event.show(v));
+      let handleEvent = (windowID) => {
+        let window = getWindowById(appInstance, windowID);
+        Window._handleEvent(v, window);
+      };
       switch (v) {
-      | Sdl2.Event.MouseWheel({windowID, deltaX, deltaY, _}) =>
-        let window = getWindowById(appInstance, windowID);
-        let wheelEvent: Events.mouseWheelEvent = {
-          deltaX: float_of_int(deltaX),
-          deltaY: float_of_int(deltaY),
-        };
-        Event.dispatch(window.onMouseWheel, wheelEvent);
-        prerr_endline("mousedown - after dispatch");
-      | Sdl2.Event.MouseMotion({windowID, x, y}) =>
-        let window = getWindowById(appInstance, windowID);
-        let mouseEvent: Events.mouseMoveEvent = {
-          mouseX: float_of_int(x),
-          mouseY: float_of_int(y),
-        };
-        Event.dispatch(window.onMouseMove, mouseEvent);
-        let mouseButtonEvent: Events.mouseButtonEvent = {
-          button: MouseButton.BUTTON_LEFT,
-        };
-        ();
-      | Sdl2.Event.MouseButtonUp({windowID, _}) =>
-        let window = getWindowById(appInstance, windowID);
-        let mouseButtonEvent: Events.mouseButtonEvent = {
-          button: MouseButton.BUTTON_LEFT,
-        };
-        prerr_endline("mouseup - before dispatch");
-        Event.dispatch(window.onMouseUp, mouseButtonEvent);
-        prerr_endline("mouseup - after dispatch");
-      | Sdl2.Event.MouseButtonDown({windowID, _}) =>
-        let window = getWindowById(appInstance, windowID);
-        let mouseButtonEvent: Events.mouseButtonEvent = {
-          button: MouseButton.BUTTON_LEFT,
-        };
-        prerr_endline("mousedown - before dispatch");
-        Event.dispatch(window.onMouseDown, mouseButtonEvent);
-        prerr_endline("mousedown - after dispatch");
-      | Sdl2.Event.KeyDown({ windowID, keycode, keymod, scancode, repeat }) => 
-        let window = getWindowById(appInstance, windowID);
-        let keyEvent: Key.KeyEvent.t = {
-          keycode,
-          scancode,
-          keymod,
-          repeat,
-        };
-        Event.dispatch(window.onKeyDown, keyEvent);
-      | Sdl2.Event.KeyUp({ windowID, keycode, keymod, scancode, repeat }) => 
-        let window = getWindowById(appInstance, windowID);
-        let keyEvent: Key.KeyEvent.t = {
-          keycode,
-          scancode,
-          keymod,
-          repeat,
-        };
-        Event.dispatch(window.onKeyUp, keyEvent);
+      | Sdl2.Event.MouseButtonUp({windowID, _}) => handleEvent(windowID);
+      | Sdl2.Event.MouseButtonDown({windowID, _}) => handleEvent(windowID);
+      | Sdl2.Event.MouseMotion({windowID, _ }) => handleEvent(windowID);
+      | Sdl2.Event.MouseWheel({windowID, _}) => handleEvent(windowID);
+      | Sdl2.Event.KeyDown({windowID, _}) => handleEvent(windowID);
+      | Sdl2.Event.KeyUp({windowID, _}) => handleEvent(windowID);
+      | Sdl2.Event.WindowResized({windowID, _}) => handleEvent(windowID);
+      | Sdl2.Event.WindowSizeChanged({windowID, _}) => handleEvent(windowID);
+      | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID);
       | Sdl2.Event.Quit => exit(0)
+      
       | _ => ()
       };
     };

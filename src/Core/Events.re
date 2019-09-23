@@ -8,6 +8,16 @@ type internalKeyboardEvent =
   | InternalKeyDownEvent(Key.KeyEvent.t);
 //| InternalKeyPressEvent(keyPressEvent);
 
+type textInputEvent = {
+  text: string,
+};
+
+type textEditEvent = {
+  text: string,
+  start: int,
+  length: int,
+};
+
 type mouseMoveEvent = {
   mouseX: float,
   mouseY: float,

@@ -52,12 +52,26 @@ type t = {
   mutable isRendering: bool,
   mutable requestedWidth: option(int),
   mutable requestedHeight: option(int),
+
+  // True if we are in text-input mode
+  mutable isEditingText: bool,
+  
+  // True if composition (IME) is active
+  mutable isComposingText: bool,
+  
   onKeyDown: Event.t(Key.KeyEvent.t),
   onKeyUp: Event.t(Key.KeyEvent.t),
   onMouseUp: Event.t(mouseButtonEvent),
   onMouseMove: Event.t(mouseMoveEvent),
   onMouseWheel: Event.t(mouseWheelEvent),
   onMouseDown: Event.t(mouseButtonEvent),
+
+  onTextInputStart: Event.t(unit),
+  onCompositionStart: Event.t(unit),
+  onCompositionEdit: Event.t(textEditEvent),
+  onCompositionEnd: Event.t(unit),
+  onTextInputCommit: Event.t(textInputEvent),
+  onTextInputEnd: Event.t(unit),
 };
 
 let getUniqueId = (w: t) => w.uniqueId;
@@ -170,6 +184,61 @@ let render = (w: t) => {
   w.isRendering = false;
 };
 
+let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
+  switch (sdlEvent) {
+      | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
+        let wheelEvent: Events.mouseWheelEvent = {
+          deltaX: float_of_int(deltaX),
+          deltaY: float_of_int(deltaY),
+        };
+        Event.dispatch(v.onMouseWheel, wheelEvent);
+      | Sdl2.Event.MouseMotion({x, y, _}) =>
+        let mouseEvent: Events.mouseMoveEvent = {
+          mouseX: float_of_int(x),
+          mouseY: float_of_int(y),
+        };
+        Event.dispatch(v.onMouseMove, mouseEvent);
+      | Sdl2.Event.MouseButtonUp(_) =>
+        let mouseButtonEvent: Events.mouseButtonEvent = {
+          button: MouseButton.BUTTON_LEFT,
+        };
+        Event.dispatch(v.onMouseUp, mouseButtonEvent);
+      | Sdl2.Event.MouseButtonDown(_) =>
+        let mouseButtonEvent: Events.mouseButtonEvent = {
+          button: MouseButton.BUTTON_LEFT,
+        };
+        Event.dispatch(v.onMouseDown, mouseButtonEvent);
+      | Sdl2.Event.KeyDown({ keycode, keymod, scancode, repeat, _ }) => 
+        let keyEvent: Key.KeyEvent.t = {
+          keycode,
+          scancode,
+          keymod,
+          repeat,
+        };
+        Event.dispatch(v.onKeyDown, keyEvent);
+      | Sdl2.Event.KeyUp({ keycode, keymod, scancode, repeat,_ }) => 
+        let keyEvent: Key.KeyEvent.t = {
+          keycode,
+          scancode,
+          keymod,
+          repeat,
+        };
+        Event.dispatch(v.onKeyUp, keyEvent);
+      | Sdl2.Event.WindowResized(_) => {
+        v.areMetricsDirty = true;
+        
+      }
+      | Sdl2.Event.WindowSizeChanged(_) => {
+        v.areMetricsDirty = true;
+      }
+      | Sdl2.Event.WindowMoved(_) => {
+        v.areMetricsDirty = true;
+      }
+      | Sdl2.Event.Quit => ();
+      | _ => ();
+  };
+};
+
 let create = (name: string, options: WindowCreateOptions.t) => {
   let log = Log.info("Window::create");
 
@@ -252,12 +321,24 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     isRendering: false,
     requestedWidth: None,
     requestedHeight: None,
+
+    isEditingText: false,
+    isComposingText: false,
+    
     onMouseMove: Event.create(),
     onMouseWheel: Event.create(),
     onMouseUp: Event.create(),
     onMouseDown: Event.create(),
+    
     onKeyDown: Event.create(),
     onKeyUp: Event.create(),
+
+    onTextInputStart: Event.create(),
+    onCompositionStart: Event.create(),
+    onCompositionEdit: Event.create(),
+    onCompositionEnd: Event.create(),
+    onTextInputCommit: Event.create(),
+    onTextInputEnd: Event.create(),
   };
 
   /*Glfw.glfwSetFramebufferSizeCallback(
