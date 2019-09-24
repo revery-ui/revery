@@ -165,6 +165,7 @@ let _updateMetrics = (w: t) => {
     zoom: previousZoom,
   };
   w.areMetricsDirty = false;
+  log("_updateMetrics - new metrics: " ++ WindowMetrics.show(w.metrics));
 };
 
 let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
