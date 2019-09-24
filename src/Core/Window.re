@@ -9,6 +9,8 @@ type size = {
   width: int,
   height: int,
 };
+  
+let log = Log.info("Window");
 
 module WindowMetrics = {
   type t = {
@@ -37,7 +39,9 @@ module WindowMetrics = {
     ++ " ScaleFactor: "
     ++ string_of_float(v.scaleFactor)
     ++ " Zoom: "
-    ++ string_of_float(v.zoom);
+    ++ string_of_float(v.zoom)
+    ++ " Raw width: " ++ string_of_int(v.size.width)
+    ++ " Raw height: " ++ string_of_int(v.size.height);
   };
 };
 
@@ -58,6 +62,10 @@ type t = {
   
   // True if composition (IME) is active
   mutable isComposingText: bool,
+
+  // If a scale factor is forced (ie, by a CLI argument),
+  // keep track of it here
+  mutable forceScaleFactor: option(float),
   
   onKeyDown: Event.t(Key.KeyEvent.t),
   onKeyUp: Event.t(Key.KeyEvent.t),
@@ -87,17 +95,59 @@ let isDirty = (w: t) =>
     };
   };
 
-let _getMetricsFromGlfwWindow = sdlWindow => {
+let _getScaleFactor = (~forceScaleFactor = None, sdlWindow)=> {
+  switch (forceScaleFactor) {
+  // If a scale factor is forced... prefer that!
+  | Some(v) => v
+  // Otherwise, the way we figure out the scale factor depends on the platform
+  | None => switch (Environment.os) {
+    // Mac is easy... there isn't any scaling factor.  The window is automatically
+    // proportioned for us. The scaling is handled by the ratio of size / framebufferSize.
+    | Mac => 1.0
+    // On Windows, we need to try a Win32 API to get the scale factor
+    | Windows => 
+      let scale = Sdl2.Window.getWin32ScaleFactor(sdlWindow)
+      log("_getScaleFactor - from getWin32ScaleFactor: " ++ string_of_float(scale));
+      scale;
+      
+    // On Linux, there's a few other things to try:
+    // - First, we'll look for a [GDK_SCALE] environment variable, and prefer that.
+    // - Otherwise, we'll try and infer it from the DPI.
+    | Linux =>
+        switch (Rench.Environment.getEnvironmentVariable("GDK_SCALE")) {
+        | Some(v) =>
+          // TODO
+          log("_getScaleFactor - Linux - got GDK_SCALE variable: " ++ v);
+          1.0;
+        | None => 
+          let display = Sdl2.Window.getDisplay(sdlWindow);
+          let dpi = Sdl2.Display.getDPI(display);
+          let avgDpi = (dpi.hdpi +. dpi.vdpi +. dpi.ddpi) /. 3.0;
+          let scaleFactor = min(1.0, floor((avgDpi /. 96.0)));
+          log("_getScaleFactor - Linux - inferring from DPI: " ++ string_of_float(scaleFactor));
+          scaleFactor
+        }
+    | _ => 1.0
+    }
+  }
+  
+};
+
+let _getMetricsFromGlfwWindow = (~forceScaleFactor=None, sdlWindow) => {
   let glfwSize = Sdl2.Window.getSize(sdlWindow);
   let glfwFramebufferSize = Sdl2.Gl.getDrawableSize(sdlWindow);
 
-  let scaleFactor = float_of_int(Monitor.getScaleFactor());
+  let scaleFactor = _getScaleFactor(~forceScaleFactor, sdlWindow);
 
   let devicePixelRatio =
     float_of_int(glfwFramebufferSize.width) /. float_of_int(glfwSize.width);
 
+  // We keep track of the RAW / unscaled sizes internally
+  let width = glfwSize.width;
+  let height = glfwSize.height;
+
   WindowMetrics.create(
-    ~size={width: glfwSize.width, height: glfwSize.height},
+    ~size={width, height},
     ~framebufferSize={
       width: glfwFramebufferSize.width,
       height: glfwFramebufferSize.height,
@@ -111,29 +161,43 @@ let _getMetricsFromGlfwWindow = sdlWindow => {
 let _updateMetrics = (w: t) => {
   let previousZoom = w.metrics.zoom;
   w.metrics = {
-    ..._getMetricsFromGlfwWindow(w.sdlWindow),
+    ..._getMetricsFromGlfwWindow(~forceScaleFactor=w.forceScaleFactor, w.sdlWindow),
     zoom: previousZoom,
   };
   w.areMetricsDirty = false;
 };
 
-let setSize = (w: t, width: int, height: int) =>
-  if (width != w.metrics.size.width || height != w.metrics.size.height) {
+let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
+
+  log("setSize - dimensions adjusted after scaling: " ++ string_of_int(adjWidth) ++ " x " ++ string_of_int(adjHeight));
+
+  if (adjWidth != win.metrics.size.width || adjHeight != win.metrics.size.height) {
     /*
      *  Don't resize in the middle of a render -
      *  we'll queue up the render operation for next time.
      */
-    if (w.isRendering) {
-      w.requestedWidth = Some(width);
-      w.requestedHeight = Some(height);
+    if (win.isRendering) {
+      log("setSize - queuing for next render");
+      win.requestedWidth = Some(adjWidth);
+      win.requestedHeight = Some(adjHeight);
     } else {
-      // TODO
-      //Glfw.glfwSetWindowSize(w.sdlWindow, width, height);
-      w.requestedWidth = None;
-      w.requestedHeight = None;
-      w.areMetricsDirty = true;
+      log("setSize - calling Sdl2.Window.setSize");
+      Sdl2.Window.setSize(win.sdlWindow, adjWidth, adjHeight);
+      win.requestedWidth = None;
+      win.requestedHeight = None;
+      win.areMetricsDirty = true;
     };
   };
+};
+
+let setScaledSize = (win: t, width: int, height: int) => {
+  // On platforms that return a non-unit scale factor (Windows and Linux),
+  // we also have to scale the window size by the scale factor
+  let adjWidth = int_of_float((float_of_int(width) *. win.metrics.scaleFactor));
+  let adjHeight = int_of_float((float_of_int(height) *. win.metrics.scaleFactor));
+
+  setRawSize(win, adjWidth, adjHeight);
+};
 
 let setZoom = (w: t, zoom: float) => {
   w.metrics = {...w.metrics, zoom: max(zoom, 0.1)};
@@ -142,7 +206,7 @@ let setZoom = (w: t, zoom: float) => {
 
 let _resizeIfNecessary = (w: t) =>
   switch (w.requestedWidth, w.requestedHeight) {
-  | (Some(width), Some(height)) => setSize(w, width, height)
+  | (Some(width), Some(height)) => setRawSize(w, width, height)
   | _ => ()
   };
 
@@ -241,7 +305,6 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
 };
 
 let create = (name: string, options: WindowCreateOptions.t) => {
-  let log = Log.info("Window::create");
 
   log("Creating window hints...");
   /*Glfw.glfwDefaultWindowHints();
@@ -278,6 +341,11 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     ++ string_of_int(height),
   );
   let w = Sdl2.Window.create(width, height, name);
+
+  // We need to let Windows know that we are DPI-aware and that we are going to
+  // properly handle scaling. This is a no-op on other platforms.
+  Sdl2.Window.setWin32ProcessDPIAware(w);
+
   let uniqueId = Sdl2.Window.getId(w);
   log("Window created - id: " ++ string_of_int(uniqueId));
 
@@ -322,6 +390,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     isEditingText: false,
     isComposingText: false,
+
+    forceScaleFactor: None,
     
     onMouseMove: Event.create(),
     onMouseWheel: Event.create(),
@@ -338,62 +408,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onTextInputCommit: Event.create(),
     onTextInputEnd: Event.create(),
   };
-
-  /*Glfw.glfwSetFramebufferSizeCallback(
-      w,
-      (_w, _width, _height) => {
-        ret.areMetricsDirty = true;
-        render(ret);
-      },
-    );
-
-    Glfw.glfwSetWindowSizeCallback(
-      w,
-      (_w, _width, _height) => {
-        ret.areMetricsDirty = true;
-        render(ret);
-      },
-    );
-
-    Glfw.glfwSetWindowPosCallback(w, (_w, _x, _y) =>
-      ret.areMetricsDirty = true
-    );
-
-    Glfw.glfwSetKeyCallback(
-      w,
-      (_w, key, scancode, buttonState, m) => {
-        let evt: keyEvent = {
-          key: Key.convert(key),
-          scancode,
-          ctrlKey: Glfw.Modifier.isControlPressed(m),
-          shiftKey: Glfw.Modifier.isShiftPressed(m),
-          altKey: Glfw.Modifier.isAltPressed(m),
-          superKey: Glfw.Modifier.isSuperPressed(m),
-          isRepeat: buttonState == GLFW_REPEAT,
-        };
-
-        switch (buttonState) {
-        | GLFW_PRESS => Event.dispatch(ret.onKeyDown, evt)
-        | GLFW_REPEAT => Event.dispatch(ret.onKeyDown, evt)
-        | GLFW_RELEASE => Event.dispatch(ret.onKeyUp, evt)
-        };
-      },
-    );
-
-    Glfw.glfwSetCharCallback(
-      w,
-      (_, codepoint) => {
-        let uchar = Uchar.of_int(codepoint);
-        let character =
-          switch (Uchar.is_char(uchar)) {
-          | true => String.make(1, Uchar.to_char(uchar))
-          | _ => ""
-          };
-        let keyPressEvent: keyPressEvent = {codepoint, character};
-        Event.dispatch(ret.onKeyPress, keyPressEvent);
-      },
-    );
-    */
+  setScaledSize(ret, width, height);
+  Sdl2.Window.center(w);
 
   ret;
 };
@@ -416,8 +432,23 @@ let hide = w => {
   Sdl2.Window.hide(w.sdlWindow);
 };
 
-let getSize = (w: t) => {
-  w.metrics.size;
+let getRawSize = (w: t) => {
+  let width = w.metrics.size.width;
+  let height = w.metrics.size.height;
+
+  let ret: size = {
+    width,
+    height
+  };
+  ret;
+};
+
+let getScaledSize = (w: t) => {
+  let rawSize = getRawSize(w);
+  {
+    width: int_of_float(float_of_int(w.metrics.size.width) /. w.metrics.scaleFactor),
+    height: int_of_float(float_of_int(w.metrics.size.height) /. w.metrics.scaleFactor),
+  }
 };
 
 let getFramebufferSize = (w: t) => {
@@ -432,7 +463,7 @@ let getDevicePixelRatio = (w: t) => {
   w.metrics.devicePixelRatio;
 };
 
-let getScaleFactor = (w: t) => {
+let getScaleAndZoom = (w: t) => {
   w.metrics.scaleFactor *. w.metrics.zoom;
 };
 
