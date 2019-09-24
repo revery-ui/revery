@@ -268,7 +268,7 @@ let init = app => {
   let maximized = Environment.webGL;
 
   let windowWidth = 800;
-  let windowHeight = 600;
+  let windowHeight = 480;
 
   Console.log("Hello from example app");
   Console.log([1, 2, 3]);

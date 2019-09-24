@@ -332,7 +332,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   let height =
     switch (options.height) {
-    | 0 => 600
+    | 0 => 480
     | v => v
     };
 
