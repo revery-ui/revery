@@ -118,12 +118,15 @@ let _getScaleFactor = (~forceScaleFactor = None, sdlWindow)=> {
         | Some(v) =>
           // TODO
           log("_getScaleFactor - Linux - got GDK_SCALE variable: " ++ v);
-          1.0;
+          switch (Float.of_string_opt(v)) {
+          | Some(v) => v
+          | None => 1.0;
+          }
         | None => 
           let display = Sdl2.Window.getDisplay(sdlWindow);
           let dpi = Sdl2.Display.getDPI(display);
           let avgDpi = (dpi.hdpi +. dpi.vdpi +. dpi.ddpi) /. 3.0;
-          let scaleFactor = min(1.0, floor((avgDpi /. 96.0)));
+          let scaleFactor = max(1.0, floor((avgDpi /. 96.0)));
           log("_getScaleFactor - Linux - inferring from DPI: " ++ string_of_float(scaleFactor));
           scaleFactor
         }
