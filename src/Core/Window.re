@@ -169,7 +169,7 @@ let _updateMetrics = (w: t) => {
 
 let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
 
-  log("seRawtSize - dimensions adjusted after scaling: " ++ string_of_int(adjWidth) ++ " x " ++ string_of_int(adjHeight));
+  log("setRawSize - dimensions adjusted after scaling: " ++ string_of_int(adjWidth) ++ " x " ++ string_of_int(adjHeight));
 
   if (adjWidth != win.metrics.size.width || adjHeight != win.metrics.size.height) {
     /*
@@ -186,6 +186,8 @@ let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
       win.requestedWidth = None;
       win.requestedHeight = None;
       win.areMetricsDirty = true;
+      let size = Sdl2.Window.getSize(win.sdlWindow);
+      log("setRawSize: SDL size reported after resize: " ++ string_of_int(size.width) ++ "x" ++ string_of_int(size.height));
     };
   };
 };
@@ -420,6 +422,7 @@ let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
 
 let setPosition = (w: t, x: int, y: int) => {
   Sdl2.Window.setPosition(w.sdlWindow, x, y);
+  w.areMetricsDirty = true; 
 };
 
 let center = (w: t) => {
