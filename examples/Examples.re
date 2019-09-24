@@ -267,11 +267,8 @@ let init = app => {
 
   let maximized = Environment.webGL;
 
-  let dimensions: Monitor.size =
-    Monitor.getPrimaryMonitor() |> Monitor.getSize;
-
-  let windowWidth = dimensions.width / 2;
-  let windowHeight = dimensions.height / 2;
+  let windowWidth = 800;
+  let windowHeight = 600;
 
   Console.log("Hello from example app");
   Console.log([1, 2, 3]);
@@ -292,10 +289,10 @@ let init = app => {
 
   if (Environment.webGL) {
     Window.maximize(win);
+    ();
   } else {
-    let xPosition = (dimensions.width - windowWidth) / 2;
-    let yPosition = (dimensions.height - windowHeight) / 2;
-    Window.setPosition(win, xPosition, yPosition);
+    Window.center(win);
+    ();
   };
 
   let _ = UI.start(win, <ExampleHost win />);

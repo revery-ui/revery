@@ -401,15 +401,19 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
 
 let setPosition = (w: t, x: int, y: int) => {
-  //Sdl2.Window.setPosition(w.sdlWindow, x, y);
+  Sdl2.Window.setPosition(w.sdlWindow, x, y);
+};
+
+let center = (w: t) => {
+  Sdl2.Window.center(w.sdlWindow);
 };
 
 let show = w => {
-  //Sdl2.Window.show(w.sdlWindow);
+  Sdl2.Window.show(w.sdlWindow);
 };
 
 let hide = w => {
-  //Sdl2.Window.hide(w.sdlWindow);
+  Sdl2.Window.hide(w.sdlWindow);
 };
 
 let getSize = (w: t) => {
@@ -421,7 +425,7 @@ let getFramebufferSize = (w: t) => {
 };
 
 let maximize = (w: t) => {
-  //Sdl2.Window.maximize(w.sdlWindow);
+  Sdl2.Window.maximize(w.sdlWindow);
 };
 
 let getDevicePixelRatio = (w: t) => {
@@ -468,12 +472,10 @@ let takeScreenshot = (w: t, filename: string) => {
 
 let destroyWindow = (w: t) => {
   ();
-    //Glfw.glfwDestroyWindow(w.sdlWindow);
 };
 
 let shouldClose = (w: t) => {
-  false;
-       //Glfw.sdlWindowShouldClose(w.sdlWindow);
+  true;
 };
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) =>

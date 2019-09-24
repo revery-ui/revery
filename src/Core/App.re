@@ -4,6 +4,7 @@ type canIdleFunc = unit => bool;
 let noop = () => ();
 
 let logError = Log.error("App");
+let logInfo = Log.info("App");
 
 type t = {
   mutable idleCount: int,
@@ -25,6 +26,16 @@ let getWindows = (app: t) => {
 
 let getWindowById = (app: t, id: int) => {
   Hashtbl.find_opt(app.windows, id);
+};
+
+let _tryToClose = (app: t, window: Window.t) => {
+  if (Window.shouldClose(window)) {
+    logInfo("_tryToClose: Window shouldClose is true - closing window: " ++ string_of_int(window.uniqueId));
+    Window.destroyWindow(window);
+    Hashtbl.remove(app.windows, window.uniqueId);
+  } else {
+    logInfo("_tryToClose: Window shouldClose is false " ++ string_of_int(window.uniqueId));
+  }
 };
 
 let quit = (code: int) => exit(code);
@@ -102,7 +113,8 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
         let window = getWindowById(appInstance, windowID);
         switch (window) {
         | Some(win) => Window._handleEvent(v, win);
-        | None => logError("Unable to find window with ID: " ++ string_of_int(windowID));
+        | None => 
+          logError("Unable to find window with ID: " ++ string_of_int(windowID) ++ " - event: " ++ Sdl2.Event.show(v));
         }
       };
       switch (v) {
@@ -117,7 +129,18 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       | Sdl2.Event.WindowResized({windowID, _}) => handleEvent(windowID);
       | Sdl2.Event.WindowSizeChanged({windowID, _}) => handleEvent(windowID);
       | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID);
-      | Sdl2.Event.Quit => exit(0)
+      | Sdl2.Event.WindowClosed({windowID, _}) => 
+        logInfo("Got window closed event: " ++ string_of_int(windowID));
+        handleEvent(windowID);
+        switch (getWindowById(appInstance, windowID)) {
+        | None => ()
+        | Some(win) => _tryToClose(appInstance, win)
+        }
+      | Sdl2.Event.Quit => 
+        if (Hashtbl.length(appInstance.windows) == 0) {
+          logInfo("Quitting");
+          exit(0)
+        }
       | _ => ()
       };
     };
@@ -149,7 +172,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
 
     Environment.yield();
 
-    List.length(getWindows(appInstance)) == 0;
+    false;
   };
 
   Sdl2.renderLoop(appLoop);
