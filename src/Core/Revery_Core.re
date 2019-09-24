@@ -7,7 +7,6 @@ module MouseCursors = MouseCursors;
 module Window = Window;
 module App = App;
 module Time = Time;
-module Monitor = Monitor;
 
 module Environment = Environment;
 
