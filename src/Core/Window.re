@@ -169,7 +169,7 @@ let _updateMetrics = (w: t) => {
 
 let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
 
-  log("setSize - dimensions adjusted after scaling: " ++ string_of_int(adjWidth) ++ " x " ++ string_of_int(adjHeight));
+  log("seRawtSize - dimensions adjusted after scaling: " ++ string_of_int(adjWidth) ++ " x " ++ string_of_int(adjHeight));
 
   if (adjWidth != win.metrics.size.width || adjHeight != win.metrics.size.height) {
     /*
@@ -177,11 +177,11 @@ let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
      *  we'll queue up the render operation for next time.
      */
     if (win.isRendering) {
-      log("setSize - queuing for next render");
+      log("setRawSize - queuing for next render");
       win.requestedWidth = Some(adjWidth);
       win.requestedHeight = Some(adjHeight);
     } else {
-      log("setSize - calling Sdl2.Window.setSize");
+      log("setRawSize - calling Sdl2.Window.setSize");
       Sdl2.Window.setSize(win.sdlWindow, adjWidth, adjHeight);
       win.requestedWidth = None;
       win.requestedHeight = None;
@@ -191,6 +191,7 @@ let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
 };
 
 let setScaledSize = (win: t, width: int, height: int) => {
+  log("setScaledSize - calling with: " ++ string_of_int(width) ++ "x" ++ string_of_int(height));
   // On platforms that return a non-unit scale factor (Windows and Linux),
   // we also have to scale the window size by the scale factor
   let adjWidth = int_of_float((float_of_int(width) *. win.metrics.scaleFactor));
@@ -410,6 +411,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   };
   setScaledSize(ret, width, height);
   Sdl2.Window.center(w);
+  _updateMetrics(ret);
 
   ret;
 };
@@ -446,8 +448,8 @@ let getRawSize = (w: t) => {
 let getScaledSize = (w: t) => {
   let rawSize = getRawSize(w);
   {
-    width: int_of_float(float_of_int(w.metrics.size.width) /. w.metrics.scaleFactor),
-    height: int_of_float(float_of_int(w.metrics.size.height) /. w.metrics.scaleFactor),
+    width: int_of_float(float_of_int(rawSize.width) /. w.metrics.scaleFactor),
+    height: int_of_float(float_of_int(rawSize.height) /. w.metrics.scaleFactor),
   }
 };
 
