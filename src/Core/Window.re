@@ -34,14 +34,14 @@ module WindowMetrics = {
   };
 
   let show = (v: t) => {
-    " DevicePixelRatio: "
-    ++ string_of_float(v.devicePixelRatio)
-    ++ " ScaleFactor: "
-    ++ string_of_float(v.scaleFactor)
-    ++ " Zoom: "
-    ++ string_of_float(v.zoom)
-    ++ " Raw width: " ++ string_of_int(v.size.width)
-    ++ " Raw height: " ++ string_of_int(v.size.height);
+    Printf.sprintf("DevicePixelRatio: %f ScaleFactor: %f Zoom: %f Raw Dimensions: %dx%dpx Framebuffer: %dx%dpx",
+    v.devicePixelRatio,
+    v.scaleFactor,
+    v.zoom,
+    v.size.width,
+    v.size.height,
+    v.framebufferSize.width,
+    v.framebufferSize.height);
   };
 };
 
