@@ -168,7 +168,6 @@ let render = (w: t) => {
     w.metrics.framebufferSize.height,
   );
 
-  //prerr_endline("Framebuffer width: " ++ string_of_int(w.metrics.framebufferSize.width) ++ " | " ++ string_of_int(w.metrics.framebufferSize.height));
   /*Gl.glClearDepth(1.0);
     Gl.glEnable(GL_DEPTH_TEST);
     Gl.glDepthFunc(GL_LEQUAL);*/
@@ -180,7 +179,7 @@ let render = (w: t) => {
 
   w.render();
 
-  Performance.bench("glfwSwapBuffers", () => Sdl2.Gl.swapWindow(w.sdlWindow));
+  Performance.bench("swapWindow", () => Sdl2.Gl.swapWindow(w.sdlWindow));
   w.isRendering = false;
 };
 

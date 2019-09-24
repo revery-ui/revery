@@ -3,10 +3,12 @@ type idleFunc = unit => unit;
 type canIdleFunc = unit => bool;
 let noop = () => ();
 
+let logError = Log.error("App");
+
 type t = {
-  mutable windows: list(Window.t),
   mutable idleCount: int,
   mutable isFirstRender: bool,
+  windows: Hashtbl.t(int, Window.t),
   onIdle: idleFunc,
   canIdle: ref(canIdleFunc),
 };
@@ -17,10 +19,13 @@ let framesToIdle = 10;
 
 type appInitFunc = t => unit;
 
-let getWindows = (app: t) => app.windows;
+let getWindows = (app: t) => {
+  Hashtbl.to_seq_values(app.windows) |> List.of_seq;
+};
 
-let getWindowById = (app: t, id: int) =>
-  app.windows |> List.filter(w => Window.getUniqueId(w) == id) |> List.hd;
+let getWindowById = (app: t, id: int) => {
+  Hashtbl.find_opt(app.windows, id);
+};
 
 let quit = (code: int) => exit(code);
 
@@ -65,7 +70,7 @@ let createWindow =
     (~createOptions=WindowCreateOptions.default, app: t, windowName) => {
   let w = Window.create(windowName, createOptions);
   /* Window.render(w) */
-  app.windows = [w, ...app.windows];
+  Hashtbl.add(app.windows, w.uniqueId, w);
   w;
 };
 
@@ -76,20 +81,9 @@ let _anyWindowsDirty = (app: t) =>
     getWindows(app),
   );
 
-let _checkAndCloseWindows = (app: t) => {
-  let currentWindows = getWindows(app);
-  let windowsToClose =
-    List.filter(w => Window.shouldClose(w), currentWindows);
-  let windowsToKeep =
-    List.filter(w => !Window.shouldClose(w), currentWindows);
-
-  List.iter(w => Window.destroyWindow(w), windowsToClose);
-  app.windows = windowsToKeep;
-};
-
 let start = (~onIdle=noop, initFunc: appInitFunc) => {
   let appInstance: t = {
-    windows: [],
+    windows: Hashtbl.create(1),
     idleCount: 0,
     isFirstRender: true,
     onIdle,
@@ -106,7 +100,10 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     | Some(v) =>
       let handleEvent = (windowID) => {
         let window = getWindowById(appInstance, windowID);
-        Window._handleEvent(v, window);
+        switch (window) {
+        | Some(win) => Window._handleEvent(v, win);
+        | None => logError("Unable to find window with ID: " ++ string_of_int(windowID));
+        }
       };
       switch (v) {
       | Sdl2.Event.MouseButtonUp({windowID, _}) => handleEvent(windowID);
@@ -126,8 +123,6 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     };
 
     Tick.Default.pump();
-
-    _checkAndCloseWindows(appInstance);
 
     if (appInstance.isFirstRender
         || _anyWindowsDirty(appInstance)
