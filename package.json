@@ -39,7 +39,7 @@
     "@reason-native/console": "^0.0.3",
     "rench": "^1.9.0",
     "reason-font-manager": "^2.0.0",
-    "reason-sdl2": "*"
+    "reason-sdl2": "^2.0.10001"
   },
   "resolutions": {
     "rebez": "github:jchavarri/rebez#46cbc183",
@@ -48,8 +48,6 @@
     "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#dd933fc",
     "pesy": "0.4.1",
-    "reason-sdl2": "link:../reason-sdl2",
-    "esy-sdl2": "link:../esy-sdl2",
     "@esy-ocaml/reason": "github:facebook/reason#474900e"
   },
   "peerDependencies": {
