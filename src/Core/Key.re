@@ -1,5 +1,3 @@
-open Sdl2;
-
 module Scancode = {
   type t = Sdl2.Scancode.t;
 

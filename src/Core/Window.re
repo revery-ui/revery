@@ -218,7 +218,7 @@ let _resizeIfNecessary = (w: t) =>
   };
 
 let render = (w: t) => {
-  Log.info("Window::render");
+  log("Window::render");
   _resizeIfNecessary(w);
 
   if (w.areMetricsDirty) {
@@ -357,7 +357,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   log("Window created - id: " ++ string_of_int(uniqueId));
 
   log("Setting window context");
-  Sdl2.Gl.setup(w);
+  let _ = Sdl2.Gl.setup(w);
   log("Gl setup");
 
   switch (options.icon) {
@@ -510,11 +510,11 @@ let takeScreenshot = (w: t, filename: string) => {
   Image.destroy(image);
 };
 
-let destroyWindow = (w: t) => {
+let destroyWindow = (_w: t) => {
   ();
 };
 
-let shouldClose = (w: t) => {
+let shouldClose = (_w: t) => {
   true;
 };
 

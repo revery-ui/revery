@@ -222,7 +222,6 @@ let make =
       );
 
     let handleTextInput = (event: NodeEvents.textInputEventParams) => {
-      prerr_endline ("HANDLE TEXT INPUT");
       let createChangeEvent = value => {
         value,
         keycode: 0,
@@ -383,7 +382,6 @@ let make =
       slots,
       <Clickable
         onFocus={() => {
-        prerr_endline ("onFocus");
           dispatch(ResetCursorTimer);
           dispatch(SetFocus(true));
           Sdl2.TextInput.start();
