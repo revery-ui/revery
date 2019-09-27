@@ -242,7 +242,6 @@ let _resizeIfNecessary = (w: t) =>
   };
 
 let render = (w: t) => {
-  log("Window::render");
   _resizeIfNecessary(w);
 
   if (w.areMetricsDirty) {
