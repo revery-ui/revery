@@ -21,9 +21,9 @@ depends: [
 synopsis: "An LR(1) parser generator"
 url {
   src:
-    "https://gitlab.inria.fr/fpottier/menhir/repository/20190626/archive.tar.gz"
+    "https://gitlab.inria.fr/fpottier/menhir/repository/20190924/archive.tar.gz"
   checksum: [
-    "md5=783961f8d124449a1a335cc8e50f013f"
-    "sha512=bacc5161682130d894a6476fb79363aa73e5582543265a0c23c9a1f9d974007c04853dc8f6faa2b8bd2e82b2323b8604dcc4cb74308af667698079b394dfd492"
+    "md5=677f1997fb73177d5a00fa1b8d61c3ef"
+    "sha512=ea8a9a6d773529cf6ac05e4c6c4532770fbb8e574c9b646efcefe90d9f24544741e3e8cfd94c8afea0447e34059a8c79c2829b46764ce3a3d6dcb3e7f75980fc"
   ]
 }

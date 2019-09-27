@@ -2,7 +2,7 @@ opam-version: "2.0"
 
 synopsis: "Promises and event-driven I/O"
 
-version: "4.3.0"
+version: "4.3.1"
 license: "MIT"
 homepage: "https://github.com/ocsigen/lwt"
 doc: "https://ocsigen.org/lwt/manual/"
@@ -60,6 +60,6 @@ a single thread by default. This reduces the need for locks or other
 synchronization primitives. Code can be run in parallel on an opt-in basis."
 
 url {
-  src: "https://github.com/ocsigen/lwt/archive/4.3.0.tar.gz"
-  checksum: "md5=1a72b5ae4245707c12656632a25fc18c"
+  src: "https://github.com/ocsigen/lwt/archive/4.3.1.tar.gz"
+  checksum: "md5=926936860087c5819d6ca04241bc894a"
 }
