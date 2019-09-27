@@ -56,8 +56,6 @@ type t = {
   mutable isRendering: bool,
   mutable requestedWidth: option(int),
   mutable requestedHeight: option(int),
-  // True if we are in text-input mode
-  mutable isEditingText: bool,
   // True if composition (IME) is active
   mutable isComposingText: bool,
   // If a scale factor is forced (ie, by a CLI argument),
@@ -69,12 +67,10 @@ type t = {
   onMouseMove: Event.t(mouseMoveEvent),
   onMouseWheel: Event.t(mouseWheelEvent),
   onMouseDown: Event.t(mouseButtonEvent),
-  onTextInputStart: Event.t(unit),
   onCompositionStart: Event.t(unit),
   onCompositionEdit: Event.t(textEditEvent),
   onCompositionEnd: Event.t(unit),
   onTextInputCommit: Event.t(textInputEvent),
-  onTextInputEnd: Event.t(unit),
 };
 
 let getUniqueId = (w: t) => w.uniqueId;
@@ -305,7 +301,19 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.KeyUp({keycode, keymod, scancode, repeat, _}) =>
     let keyEvent: Key.KeyEvent.t = {keycode, scancode, keymod, repeat};
     Event.dispatch(v.onKeyUp, keyEvent);
+  | Sdl2.Event.TextEditing(te) =>
+    if (!v.isComposingText) {
+      Event.dispatch(v.onCompositionStart, ()); 
+      v.isComposingText = true;
+    }
+
+    Event.dispatch(v.onCompositionEdit, { text: te.text, start: te.start, length: te.length });
   | Sdl2.Event.TextInput(ti) =>
+    if (v.isComposingText) {
+      Event.dispatch(v.onCompositionEnd, ());
+      v.isComposingText = false;
+    }
+
     Event.dispatch(v.onTextInputCommit, {text: ti.text})
   | Sdl2.Event.WindowResized(_) => v.areMetricsDirty = true
   | Sdl2.Event.WindowSizeChanged(_) => v.areMetricsDirty = true
@@ -313,6 +321,10 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.Quit => ()
   | _ => ()
   };
+};
+
+let forceScaleFactor = (scaleFactor: float, w: t) => {
+  w.forceScaleFactor = Some(scaleFactor);
 };
 
 let create = (name: string, options: WindowCreateOptions.t) => {
@@ -393,7 +405,6 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     requestedWidth: None,
     requestedHeight: None,
 
-    isEditingText: false,
     isComposingText: false,
 
     forceScaleFactor: None,
@@ -406,12 +417,10 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onKeyDown: Event.create(),
     onKeyUp: Event.create(),
 
-    onTextInputStart: Event.create(),
     onCompositionStart: Event.create(),
     onCompositionEdit: Event.create(),
     onCompositionEnd: Event.create(),
     onTextInputCommit: Event.create(),
-    onTextInputEnd: Event.create(),
   };
   setScaledSize(ret, width, height);
   Sdl2.Window.center(w);
