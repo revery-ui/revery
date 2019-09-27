@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-module Color = Color_wrapper;
-=======
-open Reglfw;
->>>>>>> master
-
 open Events;
 
 type windowRenderCallback = unit => unit;
