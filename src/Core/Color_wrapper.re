@@ -22,10 +22,9 @@ let singleHex = Str.regexp("#\\([a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]\\)\\([a-f|A-F|0
 // #FFFFFF
 // #FFFFFF0
 // #FFFFFF00
-//let singleHex = Str.regexp("#\([a-f|A-F|0-9]\)\([a-f|A-F|0-9]\)\([a-f|A-F|0-9]\)\([a-f|A-F|0-9]\)\([a-f|A-F|0-9]\){0, 2}");
+let doubleHex = Str.regexp("#\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]?[a-f|A-F|0-9]?\\)");
 
 exception ColorHexParseException(string);
-
 
 let parseColor = (c) => {
   let len = String.length(c);
@@ -40,17 +39,20 @@ let parseColor = (c) => {
   | _ => None
   };
 
-  let derp = switch (result) {
+  switch (result) {
   | None => raise(ColorHexParseException("Unable to parse color component: " ++ c));
   | Some(v) => float_of_int(v) /. 255.;
   }
-
-  prerr_endline ("GOT VAL: |" ++ c ++ "| - returning: " ++ string_of_float(derp));
-  derp;
 };
 
 let hex = str => {
-  if (Str.string_match(singleHex, str, 0)) {
+  if(Str.string_match(doubleHex, str, 0)) {
+    let r = Str.matched_group(1, str) |> parseColor;
+    let g = Str.matched_group(2, str) |> parseColor;
+    let b = Str.matched_group(3, str) |> parseColor;
+    let a = Str.matched_group(4, str) |> parseColor;
+    rgba(r, g, b, a)
+  } else if (Str.string_match(singleHex, str, 0)) {
     let r = Str.matched_group(1, str) |> parseColor;
     let g = Str.matched_group(2, str) |> parseColor;
     let b = Str.matched_group(3, str) |> parseColor;

@@ -24,6 +24,16 @@ test("Color", () =>
       validateColor(color4, Color.rgb(0., 0., 1.));
       validateColor(color5, Color.rgb(1., 1., 1.));
     });
+    
+    test("16-bit RGB w/ alpha", () => {
+      let color1 = Color.hex("#0000");
+      let color2 = Color.hex("#000F");
+      let color3 = Color.hex("#000FF");
+
+      validateColor(color1, Color.rgba(0., 0., 0., 0.));
+      validateColor(color2, Color.rgba(0., 0., 0., 1.));
+      validateColor(color3, Color.rgba(0., 0., 0., 1.0));
+    });
     test("256-bit RGB cases", () => {
       let color1 = Color.hex("#000000");
       let color2 = Color.hex("#FF0000");
@@ -36,6 +46,17 @@ test("Color", () =>
       validateColor(color3, Color.rgb(0., 1., 0.));
       validateColor(color4, Color.rgb(0., 0., 1.));
       validateColor(color5, Color.rgb(1., 1., 1.));
+    });
+    test("256-bit RGB cases w/ alpha", () => {
+      let color1 = Color.hex("#000000F");
+      let color2 = Color.hex("#FF0000FF");
+      let color3 = Color.hex("#0000000");
+      let color4 = Color.hex("#FF000000");
+
+      validateColor(color1, Color.rgba(0., 0., 0., 1.0));
+      validateColor(color2, Color.rgba(1., 0., 0., 1.0));
+      validateColor(color3, Color.rgba(0., 0., 0., 0.));
+      validateColor(color4, Color.rgba(1., 0., 0., 0.0));
     });
   })
 );
