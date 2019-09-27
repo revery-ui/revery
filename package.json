@@ -28,7 +28,6 @@
     "reason-fontkit": "^2.7.0",
     "reason-gl-matrix": "^0.9.9305",
     "rebez": "*",
-    "@opam/color": "^0.2.0",
     "@opam/js_of_ocaml": "^3.4.0",
     "@opam/js_of_ocaml-compiler": "^3.4.0",
     "@opam/js_of_ocaml-lwt": "^3.4.0",

@@ -1,5 +1,5 @@
 {
-  "checksum": "f80ad5b305f75fde61c3a7ef6ed8bdac",
+  "checksum": "cd61ad8b4587ad84151aa838e4442a00",
   "root": "revery@link-dev:./package.json",
   "node": {
     "revery@link-dev:./package.json": {
@@ -16,7 +16,7 @@
         "reperf@1.4.0@d41d8cd9",
         "rench@github:revery-ui/rench#4554280@d41d8cd9",
         "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9",
-        "reason-sdl2@github:revery-ui/reason-sdl2#bcc49dc@d41d8cd9",
+        "reason-sdl2@2.10.2001@d41d8cd9",
         "reason-gl-matrix@0.9.9305@d41d8cd9",
         "reason-fontkit@2.7.0@d41d8cd9",
         "reason-font-manager@2.0.0@d41d8cd9", "flex@1.2.2@d41d8cd9",
@@ -25,7 +25,6 @@
         "@opam/js_of_ocaml-lwt@opam:3.4.0@ce99e929",
         "@opam/js_of_ocaml-compiler@opam:3.4.0@d2f7c406",
         "@opam/js_of_ocaml@opam:3.4.0@d8a98a2c",
-        "@opam/color@opam:0.2.0@5fc6f315",
         "@esy-ocaml/reason@3.5.0@d41d8cd9",
         "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#dd933fc@d41d8cd9"
       ],
@@ -134,13 +133,15 @@
       ],
       "devDependencies": []
     },
-    "reason-sdl2@github:revery-ui/reason-sdl2#bcc49dc@d41d8cd9": {
-      "id": "reason-sdl2@github:revery-ui/reason-sdl2#bcc49dc@d41d8cd9",
+    "reason-sdl2@2.10.2001@d41d8cd9": {
+      "id": "reason-sdl2@2.10.2001@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "github:revery-ui/reason-sdl2#bcc49dc",
+      "version": "2.10.2001",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-sdl2#bcc49dc" ]
+        "source": [
+          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.2001.tgz#sha1:d05dd30d1654eb3460d1cacb5a9bafc5205fbf30"
+        ]
       },
       "overrides": [],
       "dependencies": [
@@ -1307,34 +1308,6 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.3@9894df55"
       ]
     },
-    "@opam/gg@opam:0.9.3@063e5657": {
-      "id": "@opam/gg@opam:0.9.3@063e5657",
-      "name": "@opam/gg",
-      "version": "opam:0.9.3",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/md5/18/1801fc7b6af16c597ef0bfaacc12cd5b#md5:1801fc7b6af16c597ef0bfaacc12cd5b",
-          "archive:http://erratique.ch/software/gg/releases/gg-0.9.3.tbz#md5:1801fc7b6af16c597ef0bfaacc12cd5b"
-        ],
-        "opam": {
-          "name": "gg",
-          "version": "0.9.3",
-          "path": "test.esy.lock/opam/gg.0.9.3"
-        }
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
-        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
-        "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
-        "@opam/base-bigarray@opam:base@b03491b0",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/base-bigarray@opam:base@b03491b0"
-      ]
-    },
     "@opam/fpath@opam:0.7.2@45477b93": {
       "id": "@opam/fpath@opam:0.7.2@45477b93",
       "name": "@opam/fpath",
@@ -1484,32 +1457,6 @@
       "overrides": [],
       "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
       "devDependencies": []
-    },
-    "@opam/color@opam:0.2.0@5fc6f315": {
-      "id": "@opam/color@opam:0.2.0@5fc6f315",
-      "name": "@opam/color",
-      "version": "opam:0.2.0",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/md5/36/36a5d45385a02f96d07d40d1b0fbcf8a#md5:36a5d45385a02f96d07d40d1b0fbcf8a",
-          "archive:https://github.com/anuragsoni/color/releases/download/0.2.0/color-0.2.0.tbz#md5:36a5d45385a02f96d07d40d1b0fbcf8a"
-        ],
-        "opam": {
-          "name": "color",
-          "version": "0.2.0",
-          "path": "test.esy.lock/opam/color.0.2.0"
-        }
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/gg@opam:0.9.3@063e5657",
-        "@opam/dune@opam:1.11.3@9894df55", "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/gg@opam:0.9.3@063e5657",
-        "@opam/dune@opam:1.11.3@9894df55"
-      ]
     },
     "@opam/cmdliner@opam:1.0.2@8ab0598a": {
       "id": "@opam/cmdliner@opam:1.0.2@8ab0598a",
@@ -1699,23 +1646,6 @@
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9"
       ]
-    },
-    "@opam/base-bigarray@opam:base@b03491b0": {
-      "id": "@opam/base-bigarray@opam:base@b03491b0",
-      "name": "@opam/base-bigarray",
-      "version": "opam:base",
-      "source": {
-        "type": "install",
-        "source": [ "no-source:" ],
-        "opam": {
-          "name": "base-bigarray",
-          "version": "base",
-          "path": "test.esy.lock/opam/base-bigarray.base"
-        }
-      },
-      "overrides": [],
-      "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
-      "devDependencies": []
     },
     "@opam/atdgen-runtime@opam:2.0.0@8a75c3bb": {
       "id": "@opam/atdgen-runtime@opam:2.0.0@8a75c3bb",

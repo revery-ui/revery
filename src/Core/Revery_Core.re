@@ -1,4 +1,4 @@
-module Color = Color_wrapper;
+module Color = Color;
 module Colors = Colors;
 module Key = Key;
 module MouseButton = MouseButton;
