@@ -107,60 +107,73 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
   };
 
   let _ = Sdl2.init();
-  let _ = initFunc(appInstance);
+  let _dispose = initFunc(appInstance);
+
+  let _flushEvents = ()  => {
+    let processingEvents = ref(true);
+
+    while (processingEvents^) {
+      let evt = Sdl2.Event.poll();
+      switch (evt) {
+      | None => processingEvents := false;
+      | Some(v) =>
+        let handleEvent = windowID => {
+          let window = getWindowById(appInstance, windowID);
+          switch (window) {
+          | Some(win) => Window._handleEvent(v, win)
+          | None =>
+            logError(
+              "Unable to find window with ID: "
+              ++ string_of_int(windowID)
+              ++ " - event: "
+              ++ Sdl2.Event.show(v),
+            )
+          };
+        };
+        switch (v) {
+        | Sdl2.Event.MouseButtonUp({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.MouseButtonDown({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.MouseMotion({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.MouseWheel({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.KeyDown({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.KeyUp({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.TextInput({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.TextEditing({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.WindowResized({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.WindowSizeChanged({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.WindowClosed({windowID, _}) =>
+          logInfo("Got window closed event: " ++ string_of_int(windowID));
+          handleEvent(windowID);
+          switch (getWindowById(appInstance, windowID)) {
+          | None => ()
+          | Some(win) => _tryToClose(appInstance, win)
+          };
+        | Sdl2.Event.Quit =>
+          if (Hashtbl.length(appInstance.windows) == 0) {
+            logInfo("Quitting");
+            exit(0);
+          }
+        | _ => ()
+        };
+      };
+  };
+  };
 
   let appLoop = () => {
-    let evt = Sdl2.Event.poll();
-    switch (evt) {
-    | None => () // prerr_endline ("No event");
-    | Some(v) =>
-      let handleEvent = windowID => {
-        let window = getWindowById(appInstance, windowID);
-        switch (window) {
-        | Some(win) => Window._handleEvent(v, win)
-        | None =>
-          logError(
-            "Unable to find window with ID: "
-            ++ string_of_int(windowID)
-            ++ " - event: "
-            ++ Sdl2.Event.show(v),
-          )
-        };
-      };
-      switch (v) {
-      | Sdl2.Event.MouseButtonUp({windowID, _}) => handleEvent(windowID)
-      | Sdl2.Event.MouseButtonDown({windowID, _}) => handleEvent(windowID)
-      | Sdl2.Event.MouseMotion({windowID, _}) => handleEvent(windowID)
-      | Sdl2.Event.MouseWheel({windowID, _}) => handleEvent(windowID)
-      | Sdl2.Event.KeyDown({windowID, _}) => handleEvent(windowID)
-      | Sdl2.Event.KeyUp({windowID, _}) => handleEvent(windowID)
-      | Sdl2.Event.TextInput({windowID, _}) => handleEvent(windowID)
-      | Sdl2.Event.TextEditing({windowID, _}) => handleEvent(windowID)
-      | Sdl2.Event.WindowResized({windowID, _}) => handleEvent(windowID)
-      | Sdl2.Event.WindowSizeChanged({windowID, _}) => handleEvent(windowID)
-      | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID)
-      | Sdl2.Event.WindowClosed({windowID, _}) =>
-        logInfo("Got window closed event: " ++ string_of_int(windowID));
-        handleEvent(windowID);
-        switch (getWindowById(appInstance, windowID)) {
-        | None => ()
-        | Some(win) => _tryToClose(appInstance, win)
-        };
-      | Sdl2.Event.Quit =>
-        if (Hashtbl.length(appInstance.windows) == 0) {
-          logInfo("Quitting");
-          exit(0);
-        }
-      | _ => ()
-      };
-    };
-
+    _flushEvents();
+    
     Tick.Default.pump();
 
     if (appInstance.isFirstRender
         || _anyWindowsDirty(appInstance)
         || _anyPendingMainThreadJobs()
         || !appInstance.canIdle^()) {
+      
+      if (appInstance.idleCount > 0) {
+        logInfo("Upshifting into active state."); 
+      }
+
       Performance.bench("_doPendingMainThreadJobs", () =>
         _doPendingMainThreadJobs()
       );
@@ -174,6 +187,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       appInstance.idleCount = appInstance.idleCount + 1;
 
       if (appInstance.idleCount === framesToIdle) {
+        logInfo("Downshifting into idle state..."); 
         appInstance.onIdle();
       };
 
