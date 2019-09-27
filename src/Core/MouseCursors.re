@@ -29,7 +29,7 @@ let _toSdlCursor = cursorType => {
 };
 
 let setCursor = v => {
-  _toSdlCursor(v) |> Cursor.setCursor;
+  _toSdlCursor(v) |> Cursor.set;
 };
 
 let arrow = `Arrow;
