@@ -20,9 +20,7 @@ type mouseWheelEventParams = {
   deltaY: float,
 };
 
-type textInputEventParams = {
-  text: string,
-};
+type textInputEventParams = {text: string};
 
 type textEditEventParams = {
   text: string,

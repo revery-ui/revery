@@ -21,7 +21,6 @@ let loseFocus = () => {
     focused := None;
   | None => ()
   };
-
   // If there is an active window, with text input active, turn off text input
 };
 
@@ -42,4 +41,4 @@ let dispatch = (node: Node.node) =>
       focus(node);
     }
   | None => focus(node)
-};
+  };

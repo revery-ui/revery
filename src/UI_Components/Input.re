@@ -261,44 +261,44 @@ let make =
 
       dispatch(ResetCursorTimer);
       switch (event.keycode) {
-          | v when Key.Keycode.left == v =>
+      | v when Key.Keycode.left == v =>
+        onKeyDown(event);
+        dispatch(
+          CursorPosition({inputString: valueToDisplay, change: (-1)}),
+        );
+      | v when Key.Keycode.right == v =>
+        onKeyDown(event);
+        dispatch(CursorPosition({inputString: valueToDisplay, change: 1}));
+      | v when Key.Keycode.delete == v =>
+        // We should manage both cases
+        removeCharacterAfter(valueToDisplay, state.cursorPosition)
+        |> (
+          update => {
+            switch (valueAsProp) {
+            | Some(_) => ()
+            | None => dispatch(UpdateText(update))
+            };
             onKeyDown(event);
-            dispatch(
-              CursorPosition({inputString: valueToDisplay, change: (-1)}),
-            );
-      | v when Key.Keycode.right == v=>
-          onKeyDown(event);
-          dispatch(CursorPosition({inputString: valueToDisplay, change: 1}));
-        | v when Key.Keycode.delete == v=>
-          // We should manage both cases
-          removeCharacterAfter(valueToDisplay, state.cursorPosition)
-          |> (
-            update => {
-              switch (valueAsProp) {
-              | Some(_) => ()
-              | None => dispatch(UpdateText(update))
-              };
-              onKeyDown(event);
-              onChange(createChangeEvent(update.newString));
-            }
-          )
+            onChange(createChangeEvent(update.newString));
+          }
+        )
 
-        | v when Key.Keycode.backspace  == v=>
-          removeCharacterBefore(valueToDisplay, state.cursorPosition)
-          |> (
-            update => {
-              switch (valueAsProp) {
-              | Some(_) => ()
-              | None => dispatch(UpdateText(update))
-              };
-              onKeyDown(event);
-              onChange(createChangeEvent(update.newString));
-            }
-          )
-        | v when Key.Keycode.escape  == v=>
-          onKeyDown(event);
-          Focus.loseFocus();
-        | _ => onKeyDown(event)
+      | v when Key.Keycode.backspace == v =>
+        removeCharacterBefore(valueToDisplay, state.cursorPosition)
+        |> (
+          update => {
+            switch (valueAsProp) {
+            | Some(_) => ()
+            | None => dispatch(UpdateText(update))
+            };
+            onKeyDown(event);
+            onChange(createChangeEvent(update.newString));
+          }
+        )
+      | v when Key.Keycode.escape == v =>
+        onKeyDown(event);
+        Focus.loseFocus();
+      | _ => onKeyDown(event)
       };
     };
 

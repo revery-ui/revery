@@ -28,15 +28,20 @@ let getWindowById = (app: t, id: int) => {
   Hashtbl.find_opt(app.windows, id);
 };
 
-let _tryToClose = (app: t, window: Window.t) => {
+let _tryToClose = (app: t, window: Window.t) =>
   if (Window.shouldClose(window)) {
-    logInfo("_tryToClose: Window shouldClose is true - closing window: " ++ string_of_int(window.uniqueId));
+    logInfo(
+      "_tryToClose: Window shouldClose is true - closing window: "
+      ++ string_of_int(window.uniqueId),
+    );
     Window.destroyWindow(window);
     Hashtbl.remove(app.windows, window.uniqueId);
   } else {
-    logInfo("_tryToClose: Window shouldClose is false " ++ string_of_int(window.uniqueId));
-  }
-};
+    logInfo(
+      "_tryToClose: Window shouldClose is false "
+      ++ string_of_int(window.uniqueId),
+    );
+  };
 
 let quit = (code: int) => exit(code);
 
@@ -109,37 +114,42 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     switch (evt) {
     | None => () // prerr_endline ("No event");
     | Some(v) =>
-      let handleEvent = (windowID) => {
+      let handleEvent = windowID => {
         let window = getWindowById(appInstance, windowID);
         switch (window) {
-        | Some(win) => Window._handleEvent(v, win);
-        | None => 
-          logError("Unable to find window with ID: " ++ string_of_int(windowID) ++ " - event: " ++ Sdl2.Event.show(v));
-        }
+        | Some(win) => Window._handleEvent(v, win)
+        | None =>
+          logError(
+            "Unable to find window with ID: "
+            ++ string_of_int(windowID)
+            ++ " - event: "
+            ++ Sdl2.Event.show(v),
+          )
+        };
       };
       switch (v) {
-      | Sdl2.Event.MouseButtonUp({windowID, _}) => handleEvent(windowID);
-      | Sdl2.Event.MouseButtonDown({windowID, _}) => handleEvent(windowID);
-      | Sdl2.Event.MouseMotion({windowID, _ }) => handleEvent(windowID);
-      | Sdl2.Event.MouseWheel({windowID, _}) => handleEvent(windowID);
-      | Sdl2.Event.KeyDown({windowID, _}) => handleEvent(windowID);
-      | Sdl2.Event.KeyUp({windowID, _}) => handleEvent(windowID);
-      | Sdl2.Event.TextInput({windowID, _}) => handleEvent(windowID);
-      | Sdl2.Event.TextEditing({windowID, _}) => handleEvent(windowID);
-      | Sdl2.Event.WindowResized({windowID, _}) => handleEvent(windowID);
-      | Sdl2.Event.WindowSizeChanged({windowID, _}) => handleEvent(windowID);
-      | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID);
-      | Sdl2.Event.WindowClosed({windowID, _}) => 
+      | Sdl2.Event.MouseButtonUp({windowID, _}) => handleEvent(windowID)
+      | Sdl2.Event.MouseButtonDown({windowID, _}) => handleEvent(windowID)
+      | Sdl2.Event.MouseMotion({windowID, _}) => handleEvent(windowID)
+      | Sdl2.Event.MouseWheel({windowID, _}) => handleEvent(windowID)
+      | Sdl2.Event.KeyDown({windowID, _}) => handleEvent(windowID)
+      | Sdl2.Event.KeyUp({windowID, _}) => handleEvent(windowID)
+      | Sdl2.Event.TextInput({windowID, _}) => handleEvent(windowID)
+      | Sdl2.Event.TextEditing({windowID, _}) => handleEvent(windowID)
+      | Sdl2.Event.WindowResized({windowID, _}) => handleEvent(windowID)
+      | Sdl2.Event.WindowSizeChanged({windowID, _}) => handleEvent(windowID)
+      | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID)
+      | Sdl2.Event.WindowClosed({windowID, _}) =>
         logInfo("Got window closed event: " ++ string_of_int(windowID));
         handleEvent(windowID);
         switch (getWindowById(appInstance, windowID)) {
         | None => ()
         | Some(win) => _tryToClose(appInstance, win)
-        }
-      | Sdl2.Event.Quit => 
+        };
+      | Sdl2.Event.Quit =>
         if (Hashtbl.length(appInstance.windows) == 0) {
           logInfo("Quitting");
-          exit(0)
+          exit(0);
         }
       | _ => ()
       };

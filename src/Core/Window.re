@@ -9,7 +9,7 @@ type size = {
   width: int,
   height: int,
 };
-  
+
 let log = Log.info("Window");
 
 module WindowMetrics = {
@@ -34,14 +34,16 @@ module WindowMetrics = {
   };
 
   let show = (v: t) => {
-    Printf.sprintf("DevicePixelRatio: %f ScaleFactor: %f Zoom: %f Raw Dimensions: %dx%dpx Framebuffer: %dx%dpx",
-    v.devicePixelRatio,
-    v.scaleFactor,
-    v.zoom,
-    v.size.width,
-    v.size.height,
-    v.framebufferSize.width,
-    v.framebufferSize.height);
+    Printf.sprintf(
+      "DevicePixelRatio: %f ScaleFactor: %f Zoom: %f Raw Dimensions: %dx%dpx Framebuffer: %dx%dpx",
+      v.devicePixelRatio,
+      v.scaleFactor,
+      v.zoom,
+      v.size.width,
+      v.size.height,
+      v.framebufferSize.width,
+      v.framebufferSize.height,
+    );
   };
 };
 
@@ -56,24 +58,19 @@ type t = {
   mutable isRendering: bool,
   mutable requestedWidth: option(int),
   mutable requestedHeight: option(int),
-
   // True if we are in text-input mode
   mutable isEditingText: bool,
-  
   // True if composition (IME) is active
   mutable isComposingText: bool,
-
   // If a scale factor is forced (ie, by a CLI argument),
   // keep track of it here
   mutable forceScaleFactor: option(float),
-  
   onKeyDown: Event.t(Key.KeyEvent.t),
   onKeyUp: Event.t(Key.KeyEvent.t),
   onMouseUp: Event.t(mouseButtonEvent),
   onMouseMove: Event.t(mouseMoveEvent),
   onMouseWheel: Event.t(mouseWheelEvent),
   onMouseDown: Event.t(mouseButtonEvent),
-
   onTextInputStart: Event.t(unit),
   onCompositionStart: Event.t(unit),
   onCompositionEdit: Event.t(textEditEvent),
@@ -95,45 +92,51 @@ let isDirty = (w: t) =>
     };
   };
 
-let _getScaleFactor = (~forceScaleFactor = None, sdlWindow)=> {
+let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
   switch (forceScaleFactor) {
   // If a scale factor is forced... prefer that!
   | Some(v) => v
   // Otherwise, the way we figure out the scale factor depends on the platform
-  | None => switch (Environment.os) {
+  | None =>
+    switch (Environment.os) {
     // Mac is easy... there isn't any scaling factor.  The window is automatically
     // proportioned for us. The scaling is handled by the ratio of size / framebufferSize.
     | Mac => 1.0
     // On Windows, we need to try a Win32 API to get the scale factor
-    | Windows => 
-      let scale = Sdl2.Window.getWin32ScaleFactor(sdlWindow)
-      log("_getScaleFactor - from getWin32ScaleFactor: " ++ string_of_float(scale));
+    | Windows =>
+      let scale = Sdl2.Window.getWin32ScaleFactor(sdlWindow);
+      log(
+        "_getScaleFactor - from getWin32ScaleFactor: "
+        ++ string_of_float(scale),
+      );
       scale;
-      
+
     // On Linux, there's a few other things to try:
     // - First, we'll look for a [GDK_SCALE] environment variable, and prefer that.
     // - Otherwise, we'll try and infer it from the DPI.
     | Linux =>
-        switch (Rench.Environment.getEnvironmentVariable("GDK_SCALE")) {
-        | Some(v) =>
-          // TODO
-          log("_getScaleFactor - Linux - got GDK_SCALE variable: " ++ v);
-          switch (Float.of_string_opt(v)) {
-          | Some(v) => v
-          | None => 1.0;
-          }
-        | None => 
-          let display = Sdl2.Window.getDisplay(sdlWindow);
-          let dpi = Sdl2.Display.getDPI(display);
-          let avgDpi = (dpi.hdpi +. dpi.vdpi +. dpi.ddpi) /. 3.0;
-          let scaleFactor = max(1.0, floor((avgDpi /. 96.0)));
-          log("_getScaleFactor - Linux - inferring from DPI: " ++ string_of_float(scaleFactor));
-          scaleFactor
-        }
+      switch (Rench.Environment.getEnvironmentVariable("GDK_SCALE")) {
+      | Some(v) =>
+        // TODO
+        log("_getScaleFactor - Linux - got GDK_SCALE variable: " ++ v);
+        switch (Float.of_string_opt(v)) {
+        | Some(v) => v
+        | None => 1.0
+        };
+      | None =>
+        let display = Sdl2.Window.getDisplay(sdlWindow);
+        let dpi = Sdl2.Display.getDPI(display);
+        let avgDpi = (dpi.hdpi +. dpi.vdpi +. dpi.ddpi) /. 3.0;
+        let scaleFactor = max(1.0, floor(avgDpi /. 96.0));
+        log(
+          "_getScaleFactor - Linux - inferring from DPI: "
+          ++ string_of_float(scaleFactor),
+        );
+        scaleFactor;
+      }
     | _ => 1.0
     }
-  }
-  
+  };
 };
 
 let _getMetricsFromGlfwWindow = (~forceScaleFactor=None, sdlWindow) => {
@@ -164,7 +167,11 @@ let _getMetricsFromGlfwWindow = (~forceScaleFactor=None, sdlWindow) => {
 let _updateMetrics = (w: t) => {
   let previousZoom = w.metrics.zoom;
   w.metrics = {
-    ..._getMetricsFromGlfwWindow(~forceScaleFactor=w.forceScaleFactor, w.sdlWindow),
+    ...
+      _getMetricsFromGlfwWindow(
+        ~forceScaleFactor=w.forceScaleFactor,
+        w.sdlWindow,
+      ),
     zoom: previousZoom,
   };
   w.areMetricsDirty = false;
@@ -172,10 +179,15 @@ let _updateMetrics = (w: t) => {
 };
 
 let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
+  log(
+    "setRawSize - dimensions adjusted after scaling: "
+    ++ string_of_int(adjWidth)
+    ++ " x "
+    ++ string_of_int(adjHeight),
+  );
 
-  log("setRawSize - dimensions adjusted after scaling: " ++ string_of_int(adjWidth) ++ " x " ++ string_of_int(adjHeight));
-
-  if (adjWidth != win.metrics.size.width || adjHeight != win.metrics.size.height) {
+  if (adjWidth != win.metrics.size.width
+      || adjHeight != win.metrics.size.height) {
     /*
      *  Don't resize in the middle of a render -
      *  we'll queue up the render operation for next time.
@@ -191,17 +203,29 @@ let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
       win.requestedHeight = None;
       win.areMetricsDirty = true;
       let size = Sdl2.Window.getSize(win.sdlWindow);
-      log("setRawSize: SDL size reported after resize: " ++ string_of_int(size.width) ++ "x" ++ string_of_int(size.height));
+      log(
+        "setRawSize: SDL size reported after resize: "
+        ++ string_of_int(size.width)
+        ++ "x"
+        ++ string_of_int(size.height),
+      );
     };
   };
 };
 
 let setScaledSize = (win: t, width: int, height: int) => {
-  log("setScaledSize - calling with: " ++ string_of_int(width) ++ "x" ++ string_of_int(height));
+  log(
+    "setScaledSize - calling with: "
+    ++ string_of_int(width)
+    ++ "x"
+    ++ string_of_int(height),
+  );
   // On platforms that return a non-unit scale factor (Windows and Linux),
   // we also have to scale the window size by the scale factor
-  let adjWidth = int_of_float((float_of_int(width) *. win.metrics.scaleFactor));
-  let adjHeight = int_of_float((float_of_int(height) *. win.metrics.scaleFactor));
+  let adjWidth =
+    int_of_float(float_of_int(width) *. win.metrics.scaleFactor);
+  let adjHeight =
+    int_of_float(float_of_int(height) *. win.metrics.scaleFactor);
 
   setRawSize(win, adjWidth, adjHeight);
 };
@@ -256,63 +280,45 @@ let render = (w: t) => {
 
 let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   switch (sdlEvent) {
-      | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
-        let wheelEvent: Events.mouseWheelEvent = {
-          deltaX: float_of_int(deltaX),
-          deltaY: float_of_int(deltaY),
-        };
-        Event.dispatch(v.onMouseWheel, wheelEvent);
-      | Sdl2.Event.MouseMotion({x, y, _}) =>
-        let mouseEvent: Events.mouseMoveEvent = {
-          mouseX: float_of_int(x),
-          mouseY: float_of_int(y),
-        };
-        Event.dispatch(v.onMouseMove, mouseEvent);
-      | Sdl2.Event.MouseButtonUp(_) =>
-        let mouseButtonEvent: Events.mouseButtonEvent = {
-          button: MouseButton.BUTTON_LEFT,
-        };
-        Event.dispatch(v.onMouseUp, mouseButtonEvent);
-      | Sdl2.Event.MouseButtonDown(_) =>
-        let mouseButtonEvent: Events.mouseButtonEvent = {
-          button: MouseButton.BUTTON_LEFT,
-        };
-        Event.dispatch(v.onMouseDown, mouseButtonEvent);
-      | Sdl2.Event.KeyDown({ keycode, keymod, scancode, repeat, _ }) => 
-        let keyEvent: Key.KeyEvent.t = {
-          keycode,
-          scancode,
-          keymod,
-          repeat,
-        };
-        Event.dispatch(v.onKeyDown, keyEvent);
-      | Sdl2.Event.KeyUp({ keycode, keymod, scancode, repeat,_ }) => 
-        let keyEvent: Key.KeyEvent.t = {
-          keycode,
-          scancode,
-          keymod,
-          repeat,
-        };
-        Event.dispatch(v.onKeyUp, keyEvent);
-      | Sdl2.Event.TextInput(ti) =>
-        Event.dispatch(v.onTextInputCommit, {text: ti.text});
-      | Sdl2.Event.WindowResized(_) => {
-        v.areMetricsDirty = true;
-        
-      }
-      | Sdl2.Event.WindowSizeChanged(_) => {
-        v.areMetricsDirty = true;
-      }
-      | Sdl2.Event.WindowMoved(_) => {
-        v.areMetricsDirty = true;
-      }
-      | Sdl2.Event.Quit => ();
-      | _ => ();
+  | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
+    let wheelEvent: Events.mouseWheelEvent = {
+      deltaX: float_of_int(deltaX),
+      deltaY: float_of_int(deltaY),
+    };
+    Event.dispatch(v.onMouseWheel, wheelEvent);
+  | Sdl2.Event.MouseMotion({x, y, _}) =>
+    let mouseEvent: Events.mouseMoveEvent = {
+      mouseX: float_of_int(x),
+      mouseY: float_of_int(y),
+    };
+    Event.dispatch(v.onMouseMove, mouseEvent);
+  | Sdl2.Event.MouseButtonUp(_) =>
+    let mouseButtonEvent: Events.mouseButtonEvent = {
+      button: MouseButton.BUTTON_LEFT,
+    };
+    Event.dispatch(v.onMouseUp, mouseButtonEvent);
+  | Sdl2.Event.MouseButtonDown(_) =>
+    let mouseButtonEvent: Events.mouseButtonEvent = {
+      button: MouseButton.BUTTON_LEFT,
+    };
+    Event.dispatch(v.onMouseDown, mouseButtonEvent);
+  | Sdl2.Event.KeyDown({keycode, keymod, scancode, repeat, _}) =>
+    let keyEvent: Key.KeyEvent.t = {keycode, scancode, keymod, repeat};
+    Event.dispatch(v.onKeyDown, keyEvent);
+  | Sdl2.Event.KeyUp({keycode, keymod, scancode, repeat, _}) =>
+    let keyEvent: Key.KeyEvent.t = {keycode, scancode, keymod, repeat};
+    Event.dispatch(v.onKeyUp, keyEvent);
+  | Sdl2.Event.TextInput(ti) =>
+    Event.dispatch(v.onTextInputCommit, {text: ti.text})
+  | Sdl2.Event.WindowResized(_) => v.areMetricsDirty = true
+  | Sdl2.Event.WindowSizeChanged(_) => v.areMetricsDirty = true
+  | Sdl2.Event.WindowMoved(_) => v.areMetricsDirty = true
+  | Sdl2.Event.Quit => ()
+  | _ => ()
   };
 };
 
 let create = (name: string, options: WindowCreateOptions.t) => {
-
   log("Creating window hints...");
   /*Glfw.glfwDefaultWindowHints();
     Glfw.sdlWindowHint(GLFW_RESIZABLE, options.resizable);
@@ -399,12 +405,12 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     isComposingText: false,
 
     forceScaleFactor: None,
-    
+
     onMouseMove: Event.create(),
     onMouseWheel: Event.create(),
     onMouseUp: Event.create(),
     onMouseDown: Event.create(),
-    
+
     onKeyDown: Event.create(),
     onKeyUp: Event.create(),
 
@@ -426,7 +432,7 @@ let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
 
 let setPosition = (w: t, x: int, y: int) => {
   Sdl2.Window.setPosition(w.sdlWindow, x, y);
-  w.areMetricsDirty = true; 
+  w.areMetricsDirty = true;
 };
 
 let center = (w: t) => {
@@ -445,10 +451,7 @@ let getRawSize = (w: t) => {
   let width = w.metrics.size.width;
   let height = w.metrics.size.height;
 
-  let ret: size = {
-    width,
-    height
-  };
+  let ret: size = {width, height};
   ret;
 };
 
@@ -456,8 +459,9 @@ let getScaledSize = (w: t) => {
   let rawSize = getRawSize(w);
   {
     width: int_of_float(float_of_int(rawSize.width) /. w.metrics.scaleFactor),
-    height: int_of_float(float_of_int(rawSize.height) /. w.metrics.scaleFactor),
-  }
+    height:
+      int_of_float(float_of_int(rawSize.height) /. w.metrics.scaleFactor),
+  };
 };
 
 let getFramebufferSize = (w: t) => {

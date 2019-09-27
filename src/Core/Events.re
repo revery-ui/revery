@@ -3,9 +3,7 @@ type keyPressEvent = {
   character: string,
 };
 
-type textInputEvent = {
-  text: string,
-};
+type textInputEvent = {text: string};
 
 type textEditEvent = {
   text: string,

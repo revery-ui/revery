@@ -48,7 +48,7 @@ let start = (window: Window.t, element: React.syntheticElement) => {
             mouseY: m.mouseY /. scaleFactor,
           });
         Mouse.dispatch(mouseCursor, evt, rootNode);
-      }
+      },
     );
 
   let _ignore =
@@ -68,27 +68,26 @@ let start = (window: Window.t, element: React.syntheticElement) => {
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
-  
-     let _ignore =
-       Revery_Core.Event.subscribe(window.onKeyDown, event =>
-         Keyboard.dispatch(Revery_Core.Events.InternalKeyDownEvent(event))
-       );
 
-     let _ignore =
-       Revery_Core.Event.subscribe(window.onKeyUp, event =>
-         Keyboard.dispatch(Revery_Core.Events.InternalKeyUpEvent(event))
-       );
+  let _ignore =
+    Revery_Core.Event.subscribe(window.onKeyDown, event =>
+      Keyboard.dispatch(Revery_Core.Events.InternalKeyDownEvent(event))
+    );
 
-     let _ignore =
-       Revery_Core.Event.subscribe(window.onTextInputCommit, event =>
-         Keyboard.dispatch(Revery_Core.Events.InternalTextInputEvent(event))
-       );
-     
-     let _ignore =
-       Revery_Core.Event.subscribe(window.onCompositionEdit, event =>
-         Keyboard.dispatch(Revery_Core.Events.InternalTextEditEvent(event))
-       );
-        
+  let _ignore =
+    Revery_Core.Event.subscribe(window.onKeyUp, event =>
+      Keyboard.dispatch(Revery_Core.Events.InternalKeyUpEvent(event))
+    );
+
+  let _ignore =
+    Revery_Core.Event.subscribe(window.onTextInputCommit, event =>
+      Keyboard.dispatch(Revery_Core.Events.InternalTextInputEvent(event))
+    );
+
+  let _ignore =
+    Revery_Core.Event.subscribe(window.onCompositionEdit, event =>
+      Keyboard.dispatch(Revery_Core.Events.InternalTextEditEvent(event))
+    );
 
   let _ignore =
     Revery_Core.Event.subscribe(

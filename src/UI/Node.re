@@ -320,10 +320,10 @@ class node (()) = {
       | (KeyUp(e), {onKeyUp: Some(cb), _}) => cb(e)
       | (TextInput(e), {onTextInput: Some(cb), _}) => cb(e)
       | (TextEdit(e), {onTextEdit: Some(cb), _}) => cb(e)
-      | (TextInput(_), _) 
-      | (TextEdit(_), _) 
+      | (TextInput(_), _)
+      | (TextEdit(_), _)
       | (KeyDown(_), _)
-      | (KeyUp(_), _) => ();
+      | (KeyUp(_), _) => ()
       };
     ();
   };
