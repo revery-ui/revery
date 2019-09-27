@@ -10,6 +10,12 @@ function caml_thread_yield() { }
 // Provides: caml_mutex_new
 function caml_mutex_new() { }
 
+// Provides: caml_mutex_lock
+function caml_mutex_lock() { }
+
+// Provides: caml_mutex_unlock
+function caml_mutex_unlock() { }
+
 // Provides: lwt_unix_iov_max
 function lwt_unix_iov_max() { }
 

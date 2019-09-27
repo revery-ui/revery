@@ -5,6 +5,12 @@
  * This stores the connection between a window and its UI
  */
 
+/*
+ * TODO:
+ * We have ignored the callback to clean the subscription.
+ * We should call them if we want to have multiple windows support.
+ */
+
 module Window = Revery_Core.Window;
 
 open RenderContainer;
@@ -24,14 +30,14 @@ let start = (window: Window.t, element: React.syntheticElement) => {
     uiDirty := true;
   };
 
-  let _ = Revery_Core.Event.subscribe(React.onStale, onStale);
+  let _ignore = Revery_Core.Event.subscribe(React.onStale, onStale);
 
   let rootNode = (new ViewNode.viewNode)();
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
   let container = Container.create(rootNode);
   let ui = RenderContainer.create(window, rootNode, container, mouseCursor);
 
-  let _ =
+  let _ignore =
     Revery_Core.Event.subscribe(
       window.onMouseMove,
       m => {
@@ -42,10 +48,10 @@ let start = (window: Window.t, element: React.syntheticElement) => {
             mouseY: m.mouseY /. scaleFactor,
           });
         Mouse.dispatch(mouseCursor, evt, rootNode);
-      },
+      }
     );
 
-  let _ =
+  let _ignore =
     Revery_Core.Event.subscribe(
       window.onMouseWheel,
       m => {
@@ -54,7 +60,7 @@ let start = (window: Window.t, element: React.syntheticElement) => {
       },
     );
 
-  let _ =
+  let _ignore =
     Revery_Core.Event.subscribe(
       window.onMouseDown,
       m => {
@@ -63,33 +69,28 @@ let start = (window: Window.t, element: React.syntheticElement) => {
       },
     );
   
- /*    let _ =
-       Revery_Core.Event.subscribe(window.onKeyPress, event =>
-         Keyboard.dispatch(Revery_Core.Events.InternalKeyPressEvent(event))
-       );*/
-
-     let _ =
+     let _ignore =
        Revery_Core.Event.subscribe(window.onKeyDown, event =>
          Keyboard.dispatch(Revery_Core.Events.InternalKeyDownEvent(event))
        );
 
-     let _ =
+     let _ignore =
        Revery_Core.Event.subscribe(window.onKeyUp, event =>
          Keyboard.dispatch(Revery_Core.Events.InternalKeyUpEvent(event))
        );
 
-     let _ =
+     let _ignore =
        Revery_Core.Event.subscribe(window.onTextInputCommit, event =>
          Keyboard.dispatch(Revery_Core.Events.InternalTextInputEvent(event))
        );
      
-     let _ =
+     let _ignore =
        Revery_Core.Event.subscribe(window.onCompositionEdit, event =>
          Keyboard.dispatch(Revery_Core.Events.InternalTextEditEvent(event))
        );
         
 
-  let _ =
+  let _ignore =
     Revery_Core.Event.subscribe(
       window.onMouseUp,
       m => {
@@ -98,12 +99,12 @@ let start = (window: Window.t, element: React.syntheticElement) => {
       },
     );
 
-  let _ =
+  let _ignore =
     Revery_Core.Event.subscribe(Mouse.onCursorChanged, cursor => {
       Revery_Core.MouseCursors.setCursor(cursor)
     });
 
-  let _ =
+  let _ignore =
     Revery_Core.Event.subscribe(
       Revery_Draw.FontCache.onFontLoaded,
       () => {

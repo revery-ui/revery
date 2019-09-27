@@ -263,7 +263,7 @@ module ExampleHost = {
 };
 
 let init = app => {
-  let _ = Log.listen((_, msg) => print_endline(msg));
+  let _ignore = Log.listen((_, msg) => print_endline(msg));
 
   let maximized = Environment.webGL;
 
@@ -295,7 +295,7 @@ let init = app => {
     ();
   };
 
-  let _ = UI.start(win, <ExampleHost win />);
+  let _ignore = UI.start(win, <ExampleHost win />);
   ();
 };
 

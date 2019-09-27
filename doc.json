@@ -9,6 +9,9 @@
       "dependencies": {
 	  "@opam/odoc": "*",
 	  "http-server": "*"
-	}
+	},
+	  "devDependencies": {
+	    "ocaml": ">=4.6.0 <4.9.0"
+	  }
   }
 }
