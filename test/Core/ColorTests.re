@@ -24,7 +24,7 @@ test("Color", () =>
       validateColor(color4, Color.rgb(0., 0., 1.));
       validateColor(color5, Color.rgb(1., 1., 1.));
     });
-    
+
     test("16-bit RGB w/ alpha", () => {
       let color1 = Color.hex("#0000");
       let color2 = Color.hex("#000F");
