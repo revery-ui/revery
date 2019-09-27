@@ -1,5 +1,5 @@
 {
-  "checksum": "97979e103e6def8393fcc30844eb8ed5",
+  "checksum": "d79e1bdc27b3c150d8757cc0c7ad6d11",
   "root": "revery@link-dev:./package.json",
   "node": {
     "wordwrap@0.0.3@d41d8cd9": {
@@ -68,7 +68,6 @@
         "@opam/js_of_ocaml-lwt@opam:3.4.0@ce99e929",
         "@opam/js_of_ocaml-compiler@opam:3.4.0@d2f7c406",
         "@opam/js_of_ocaml@opam:3.4.0@d8a98a2c",
-        "@opam/color@opam:0.2.0@5fc6f315",
         "@esy-ocaml/reason@3.5.0@d41d8cd9",
         "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#3d1ea3a@d41d8cd9"
       ],
@@ -1688,34 +1687,6 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.3@9894df55"
       ]
     },
-    "@opam/gg@opam:0.9.3@063e5657": {
-      "id": "@opam/gg@opam:0.9.3@063e5657",
-      "name": "@opam/gg",
-      "version": "opam:0.9.3",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/md5/18/1801fc7b6af16c597ef0bfaacc12cd5b#md5:1801fc7b6af16c597ef0bfaacc12cd5b",
-          "archive:http://erratique.ch/software/gg/releases/gg-0.9.3.tbz#md5:1801fc7b6af16c597ef0bfaacc12cd5b"
-        ],
-        "opam": {
-          "name": "gg",
-          "version": "0.9.3",
-          "path": "js.esy.lock/opam/gg.0.9.3"
-        }
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
-        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
-        "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
-        "@opam/base-bigarray@opam:base@b03491b0",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/base-bigarray@opam:base@b03491b0"
-      ]
-    },
     "@opam/fpath@opam:0.7.2@45477b93": {
       "id": "@opam/fpath@opam:0.7.2@45477b93",
       "name": "@opam/fpath",
@@ -1865,32 +1836,6 @@
       "overrides": [],
       "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
       "devDependencies": []
-    },
-    "@opam/color@opam:0.2.0@5fc6f315": {
-      "id": "@opam/color@opam:0.2.0@5fc6f315",
-      "name": "@opam/color",
-      "version": "opam:0.2.0",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/md5/36/36a5d45385a02f96d07d40d1b0fbcf8a#md5:36a5d45385a02f96d07d40d1b0fbcf8a",
-          "archive:https://github.com/anuragsoni/color/releases/download/0.2.0/color-0.2.0.tbz#md5:36a5d45385a02f96d07d40d1b0fbcf8a"
-        ],
-        "opam": {
-          "name": "color",
-          "version": "0.2.0",
-          "path": "js.esy.lock/opam/color.0.2.0"
-        }
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/gg@opam:0.9.3@063e5657",
-        "@opam/dune@opam:1.11.3@9894df55", "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/gg@opam:0.9.3@063e5657",
-        "@opam/dune@opam:1.11.3@9894df55"
-      ]
     },
     "@opam/cmdliner@opam:1.0.4@93208aac": {
       "id": "@opam/cmdliner@opam:1.0.4@93208aac",
@@ -2074,23 +2019,6 @@
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9"
       ]
-    },
-    "@opam/base-bigarray@opam:base@b03491b0": {
-      "id": "@opam/base-bigarray@opam:base@b03491b0",
-      "name": "@opam/base-bigarray",
-      "version": "opam:base",
-      "source": {
-        "type": "install",
-        "source": [ "no-source:" ],
-        "opam": {
-          "name": "base-bigarray",
-          "version": "base",
-          "path": "js.esy.lock/opam/base-bigarray.base"
-        }
-      },
-      "overrides": [],
-      "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
-      "devDependencies": []
     },
     "@opam/atdgen-runtime@opam:2.0.0@8a75c3bb": {
       "id": "@opam/atdgen-runtime@opam:2.0.0@8a75c3bb",

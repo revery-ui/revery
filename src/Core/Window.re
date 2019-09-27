@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 module Color = Color_wrapper;
+=======
+open Reglfw;
+>>>>>>> master
 
 open Events;
 
