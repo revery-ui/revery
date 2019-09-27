@@ -14,7 +14,7 @@ let createElement:
     ~children: 'a,
     ~title: string,
     ~onClick: unit => unit=?,
-    ~color: Color.Rgba'.t=?,
+    ~color: Revery_Core.Color.t=?,
     ~fontSize: int=?,
     ~width: int=?,
     ~height: int=?,

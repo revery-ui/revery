@@ -1,5 +1,3 @@
-module Color = Color_wrapper;
-
 /** [t] is the type representing creation options for a window */
 type t = {
   resizable: bool,
