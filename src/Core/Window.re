@@ -318,19 +318,15 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
 };
 
 let create = (name: string, options: WindowCreateOptions.t) => {
-  log("Creating window hints...");
-  /*Glfw.glfwDefaultWindowHints();
-    Glfw.sdlWindowHint(GLFW_RESIZABLE, options.resizable);
-    Glfw.sdlWindowHint(GLFW_VISIBLE, options.visible);
-    Glfw.sdlWindowHint(GLFW_MAXIMIZED, options.maximized);
-    Glfw.sdlWindowHint(GLFW_DECORATED, options.decorated);*/
-  log("Window hints created successfully.");
+  log("Starting window creation...");
 
   log("Using vsync: " ++ string_of_bool(options.vsync));
-  switch (options.vsync) {
-  //| false => Glfw.glfwSwapInterval(0)
-  | _ => ()
-  };
+  
+  // TODO: Upgrade SDL2
+  // switch (options.vsync) {
+  //| false => Sdl2.Gl.setSwapInterval(0)
+  //| true => Sdl2.Gl.setSwapInterval(1);
+  //};
 
   let width =
     switch (options.width) {
@@ -422,6 +418,23 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   };
   setScaledSize(ret, width, height);
   Sdl2.Window.center(w);
+
+  if (options.maximized) {
+    Sdl2.Window.maximize(w);
+  }
+
+  if (!options.decorated) {
+    Sdl2.Window.setBordered(w, false);
+  }
+
+  if (!options.resizable) {
+    Sdl2.Window.setResizable(w, false);
+  }
+
+  if (options.visible) {
+    Sdl2.Window.show(w);
+  }
+
   _updateMetrics(ret);
 
   ret;
