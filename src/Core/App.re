@@ -109,13 +109,13 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
   let _ = Sdl2.init();
   let _dispose = initFunc(appInstance);
 
-  let _flushEvents = ()  => {
+  let _flushEvents = () => {
     let processingEvents = ref(true);
 
     while (processingEvents^) {
       let evt = Sdl2.Event.poll();
       switch (evt) {
-      | None => processingEvents := false;
+      | None => processingEvents := false
       | Some(v) =>
         let handleEvent = windowID => {
           let window = getWindowById(appInstance, windowID);
@@ -140,7 +140,8 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
         | Sdl2.Event.TextInput({windowID, _}) => handleEvent(windowID)
         | Sdl2.Event.TextEditing({windowID, _}) => handleEvent(windowID)
         | Sdl2.Event.WindowResized({windowID, _}) => handleEvent(windowID)
-        | Sdl2.Event.WindowSizeChanged({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.WindowSizeChanged({windowID, _}) =>
+          handleEvent(windowID)
         | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID)
         | Sdl2.Event.WindowClosed({windowID, _}) =>
           logInfo("Got window closed event: " ++ string_of_int(windowID));
@@ -157,22 +158,21 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
         | _ => ()
         };
       };
-  };
+    };
   };
 
   let appLoop = () => {
     _flushEvents();
-    
+
     Tick.Default.pump();
 
     if (appInstance.isFirstRender
         || _anyWindowsDirty(appInstance)
         || _anyPendingMainThreadJobs()
         || !appInstance.canIdle^()) {
-      
       if (appInstance.idleCount > 0) {
-        logInfo("Upshifting into active state."); 
-      }
+        logInfo("Upshifting into active state.");
+      };
 
       Performance.bench("_doPendingMainThreadJobs", () =>
         _doPendingMainThreadJobs()
@@ -187,7 +187,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       appInstance.idleCount = appInstance.idleCount + 1;
 
       if (appInstance.idleCount === framesToIdle) {
-        logInfo("Downshifting into idle state..."); 
+        logInfo("Downshifting into idle state...");
         appInstance.onIdle();
       };
 

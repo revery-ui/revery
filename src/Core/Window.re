@@ -303,18 +303,21 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
     Event.dispatch(v.onKeyUp, keyEvent);
   | Sdl2.Event.TextEditing(te) =>
     if (!v.isComposingText) {
-      Event.dispatch(v.onCompositionStart, ()); 
+      Event.dispatch(v.onCompositionStart, ());
       v.isComposingText = true;
-    }
+    };
 
-    Event.dispatch(v.onCompositionEdit, { text: te.text, start: te.start, length: te.length });
+    Event.dispatch(
+      v.onCompositionEdit,
+      {text: te.text, start: te.start, length: te.length},
+    );
   | Sdl2.Event.TextInput(ti) =>
     if (v.isComposingText) {
       Event.dispatch(v.onCompositionEnd, ());
       v.isComposingText = false;
-    }
+    };
 
-    Event.dispatch(v.onTextInputCommit, {text: ti.text})
+    Event.dispatch(v.onTextInputCommit, {text: ti.text});
   | Sdl2.Event.WindowResized(_) => v.areMetricsDirty = true
   | Sdl2.Event.WindowSizeChanged(_) => v.areMetricsDirty = true
   | Sdl2.Event.WindowMoved(_) => v.areMetricsDirty = true
@@ -331,10 +334,10 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   log("Starting window creation...");
 
   log("Using vsync: " ++ string_of_bool(options.vsync));
-   
-   switch (options.vsync) {
+
+  switch (options.vsync) {
   | false => Sdl2.Gl.setSwapInterval(0)
-  | true => Sdl2.Gl.setSwapInterval(1);
+  | true => Sdl2.Gl.setSwapInterval(1)
   };
 
   let width =
@@ -427,19 +430,19 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   if (options.maximized) {
     Sdl2.Window.maximize(w);
-  }
+  };
 
   if (!options.decorated) {
     Sdl2.Window.setBordered(w, false);
-  }
+  };
 
   if (!options.resizable) {
     Sdl2.Window.setResizable(w, false);
-  }
+  };
 
   if (options.visible) {
     Sdl2.Window.show(w);
-  }
+  };
 
   _updateMetrics(ret);
 
