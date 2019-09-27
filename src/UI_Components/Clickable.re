@@ -59,7 +59,7 @@ let make =
         if (isMouseInsideRef(clickable, mouseEvt.mouseX, mouseEvt.mouseY)) {
           switch (mouseEvt.button) {
           | MouseButton.BUTTON_LEFT => onClick()
-          | MouseButton.BUTTON_RIGHT => () //onRightClick()
+          | MouseButton.BUTTON_RIGHT => onRightClick();
           | _ => ()
           };
           onAnyClick(mouseEvt);

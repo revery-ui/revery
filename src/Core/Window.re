@@ -321,12 +321,11 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   log("Starting window creation...");
 
   log("Using vsync: " ++ string_of_bool(options.vsync));
-  
-  // TODO: Upgrade SDL2
-  // switch (options.vsync) {
-  //| false => Sdl2.Gl.setSwapInterval(0)
-  //| true => Sdl2.Gl.setSwapInterval(1);
-  //};
+   
+   switch (options.vsync) {
+  | false => Sdl2.Gl.setSwapInterval(0)
+  | true => Sdl2.Gl.setSwapInterval(1);
+  };
 
   let width =
     switch (options.width) {
