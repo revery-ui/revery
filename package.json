@@ -48,7 +48,7 @@
     "rench": "github:revery-ui/rench#4554280",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#dd933fc",
     "pesy": "0.4.1",
-    "reason-sdl2": "github:revery-ui/reason-sdl2#bcc49dc"
+    "reason-sdl2": "link:../reason-sdl2"
   },
   "devDependencies": {
     "ocaml": ">=4.6.0 <4.9.0",
