@@ -1,7 +1,5 @@
 open Reglfw;
 
-module Color = Color_wrapper;
-
 open Events;
 
 type windowRenderCallback = unit => unit;
