@@ -461,9 +461,14 @@ let isTextInputActive = (_w: t) => {
   Sdl2.TextInput.isActive();
 };
 
-let setInputRect = (_w: t,  x, y, width, height) => {
+let setInputRect = (_w: t, x, y, width, height) => {
   // TODO: Do we need to apply scale factor here?
-  Sdl2.TextInput.setInputRect(x, y, width, height);
+  Sdl2.TextInput.setInputRect(
+    x,
+    y,
+    width,
+    height,
+  );
 };
 
 let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
