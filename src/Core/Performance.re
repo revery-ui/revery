@@ -47,9 +47,7 @@ let bench: (string, performanceFunction('a)) => 'a =
       nestingLevel := nestingLevel^ + 1;
       let startTime = glfwGetTime();
       let startCounters = GarbageCollector.counters();
-      Log.perf(
-        String.make(nestingLevel^, '-') ++ "[BEGIN: " ++ name ++ "]",
-      );
+      Log.perf(String.make(nestingLevel^, '-') ++ "[BEGIN: " ++ name ++ "]");
       let ret = f();
       let endTime = glfwGetTime();
       let endCounters = GarbageCollector.counters();

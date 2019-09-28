@@ -2,7 +2,6 @@ type severity =
   | Info
   | Performance;
 
-
 type logFunc = (severity, string) => unit;
 
 let _logEvent = Event.create();
@@ -15,6 +14,6 @@ let info = (category, str) => {
   Event.dispatch(_logEvent, (Info, category ++ ": " ++ str));
 };
 
-let perf = (str) => {
+let perf = str => {
   Event.dispatch(_logEvent, (Performance, str));
 };
