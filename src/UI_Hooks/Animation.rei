@@ -6,8 +6,7 @@ let animation:
     animationValue,
     animationOptions,
     t(
-      (ref(animationValue), Reducer.t(int), Effect.t(Effect.onMount)) =>
-      'a,
+      (ref(animationValue), Reducer.t(int), Effect.t(Effect.onMount)) => 'a,
       'b,
     )
   ) =>
