@@ -24,7 +24,6 @@ jobs:
   - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
   - template: .ci/esy-bench.yml
-  - template: .ci/publish-release.yml
   - template: .ci/create-docs.yml
   - template: .ci/publish-build-cache.yml
 
@@ -68,7 +67,6 @@ jobs:
   - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
   - template: .ci/esy-bench.yml
-  - template: .ci/publish-release.yml
   - template: .ci/publish-build-cache.yml
 
 - job: Windows
@@ -88,5 +86,4 @@ jobs:
   - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
   - template: .ci/esy-bench.yml
-  - template: .ci/publish-release.yml
   - template: .ci/publish-build-cache.yml

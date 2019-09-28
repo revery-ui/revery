@@ -21,5 +21,3 @@ steps:
     displayName: 'js: esy install'
   - script: esy @js build
     displayName: 'js: esy build'
-  - script: esy create-release
-    displayName: 'esy create-release'
