@@ -34,7 +34,7 @@ let getMemoryAllocations = (startCounters, endCounters) => {
 };
 
 let isBenchmarking =
-  switch (Sys.getenv_opt("REVERY_DEBUG")) {
+  switch (Sys.getenv_opt("REVERY_PERF")) {
   | Some(_) => true
   | None => false
   };
@@ -47,14 +47,12 @@ let bench: (string, performanceFunction('a)) => 'a =
       nestingLevel := nestingLevel^ + 1;
       let startTime = glfwGetTime();
       let startCounters = GarbageCollector.counters();
-      print_endline(
-        String.make(nestingLevel^, '-') ++ "[BEGIN: " ++ name ++ "]",
-      );
+      Log.perf(String.make(nestingLevel^, '-') ++ "[BEGIN: " ++ name ++ "]");
       let ret = f();
       let endTime = glfwGetTime();
       let endCounters = GarbageCollector.counters();
       let allocations = getMemoryAllocations(startCounters, endCounters);
-      print_endline(
+      Log.perf(
         String.make(nestingLevel^, '-')
         ++ "[END: "
         ++ name
