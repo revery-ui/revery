@@ -4,6 +4,6 @@ let reducer:
   (
     ~initialState: 'a,
     ('b, 'a) => 'a,
-    t(Reducer.t('a) => 'c, unit, 'd, Reducer.t('a) => 'e)
+    t(Reducer.t('a) => 'c, 'd)
   ) =>
-  ('a, 'b => unit, t('c, unit, 'd, 'e));
+  ('a, 'b => unit, t('c, 'd));

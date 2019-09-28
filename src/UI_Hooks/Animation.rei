@@ -6,12 +6,9 @@ let animation:
     animationValue,
     animationOptions,
     t(
-      (Ref.t(animationValue), Reducer.t(int), Effect.t(Effect.onMount)) =>
+      (ref(animationValue), Reducer.t(int), Effect.t(Effect.onMount)) =>
       'a,
-      unit,
       'b,
-      (Ref.t(animationValue), Reducer.t(int), Effect.t(Effect.onMount)) =>
-      'c,
     )
   ) =>
-  (float, t('a, unit, 'b, 'c));
+  (float, t('a, 'b));

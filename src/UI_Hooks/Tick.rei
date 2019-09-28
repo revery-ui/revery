@@ -8,9 +8,7 @@ let tick:
     Time.t => unit,
     t(
       Effect.t(Effect.onMount) => 'b,
-      unit,
       'c,
-      Effect.t(Effect.onMount) => 'd,
     )
   ) =>
-  t('b, unit, 'c, 'd);
+  t('b, 'c);

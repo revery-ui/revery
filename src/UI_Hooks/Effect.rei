@@ -4,6 +4,6 @@ let effect:
   (
     Effect.condition('a),
     Effect.handler,
-    t(Effect.t('a) => 'b, unit, 'c, Effect.t('a) => 'd)
+    t(Effect.t('a) => 'b, 'c)
   ) =>
-  t('b, unit, 'c, 'd);
+  t('b, 'c);
