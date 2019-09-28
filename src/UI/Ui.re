@@ -15,6 +15,8 @@ module Window = Revery_Core.Window;
 
 open RenderContainer;
 
+let logError = Revery_Core.Log.error("UI");
+
 let _activeWindow: ref(option(Window.t)) = ref(None);
 
 type renderFunction = React.syntheticElement => unit;
@@ -118,13 +120,14 @@ let start = (window: Window.t, element: React.syntheticElement) => {
 
   let surfaceRef = ref(None);
   let _ensureSurface = (width, height) => {
+    open Skia;
     switch (surfaceRef^) {
-    | Some(v) => v
+    | Some(v) => Some(v)
     | None =>
         let context = Skia.Gr.Context.makeGl(None);
         switch (context) {
         | None => 
-            Log.error("Unable to create skia context")
+            logError("Unable to create skia context")
             None
         | Some(glContext) => 
             let framebufferInfo = Gr.Gl.FramebufferInfo.make(Unsigned.UInt.of_int(0), Unsigned.UInt.of_int(0x8058));
@@ -132,11 +135,11 @@ let start = (window: Window.t, element: React.syntheticElement) => {
             let surfaceProps = SurfaceProps.make(Unsigned.UInt32.of_int(0), RgbH);
             switch(Surface.makeFromBackendRenderTarget(glContext, backendRenderTarget, BottomLeft, Rgba8888, None, Some(surfaceProps))) {
             | None => 
-              Log.error("Unable to create skia surface");
+              logError("Unable to create skia surface");
               None;
-            | Some(_) as v=> 
-              surfaceRef := v
-              v
+            | Some(v) as newSurf => 
+              surfaceRef := newSurf
+              newSurf
             }
         }
     }
@@ -163,13 +166,15 @@ let start = (window: Window.t, element: React.syntheticElement) => {
       forceLayout := false;
 
       _activeWindow := Some(window);
-      Render.render(~forceLayout=fl, ui, latestElement^);
+      //Render.render(~forceLayout=fl, ui, latestElement^);
 
-      let surface = switch(surfaceRef^) {
-      | None => Log.error("no surface");
+      
+      switch(_ensureSurface(640, 480)) {
+      | None => (); /*logError("no surface");*/
       | Some(surface) => {
+          open Skia;
 
-        let canvas = Surface.getCanvas(surface);
+          let canvas = Surface.getCanvas(surface);
           let fill = Paint.make();
           Paint.setColor(fill, Color.makeArgb(0xFF, 0x00, 0x00, 0x00));
           Canvas.drawPaint(canvas, fill);
@@ -190,7 +195,6 @@ let start = (window: Window.t, element: React.syntheticElement) => {
 
           Canvas.drawText(canvas, "Hello, world!", 30.25, 30.25, fill2);
           Canvas.flush(canvas);
-          Sdl2.Gl.swapWindow(window.sdlWindow);
       }
       }
 

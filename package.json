@@ -38,14 +38,19 @@
     "@reason-native/console": "^0.0.3",
     "rench": "^1.9.0",
     "reason-font-manager": "^2.0.0",
-    "reason-sdl2": "^2.10.3002"
+    "reason-sdl2": "^2.10.3002",
+    "reason-skia": "*"
   },
   "resolutions": {
+    "reason-skia": "link:../reason-skia",
     "rebez": "github:jchavarri/rebez#46cbc183",
     "@opam/cmdliner": "1.0.2",
     "rench": "github:revery-ui/rench#4554280",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#dd933fc",
-    "pesy": "0.4.1"
+    "pesy": "0.4.1",
+    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#34947ac97f898c8a94b1731df45aea16f8fc7b3c",
+    "@esy-ocaml/libffi": "esy-ocaml/libffi#599bc3567ecf839240977b6d9aaf0b80f983b5aa",
+    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def"
   },
   "devDependencies": {
     "ocaml": ">=4.6.0 <4.9.0",
