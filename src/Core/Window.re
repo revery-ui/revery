@@ -449,6 +449,23 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   ret;
 };
 
+let startTextInput = (_w: t) => {
+  Sdl2.TextInput.start();
+};
+
+let stopTextInput = (_w: t) => {
+  Sdl2.TextInput.stop();
+};
+
+let isTextInputActive = (_w: t) => {
+  Sdl2.TextInput.isActive();
+};
+
+let setInputRect = (_w: t,  x, y, width, height) => {
+  // TODO: Do we need to apply scale factor here?
+  Sdl2.TextInput.setInputRect(x, y, width, height);
+};
+
 let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
 
 let setPosition = (w: t, x: int, y: int) => {
