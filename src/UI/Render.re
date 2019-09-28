@@ -31,9 +31,9 @@ let render =
   );
 
   /* Layout */
-  let size = Window.getSize(window);
+  let size = Window.getRawSize(window);
   let pixelRatio = Window.getDevicePixelRatio(window);
-  let scaleFactor = Window.getScaleFactor(window);
+  let scaleFactor = Window.getScaleAndZoom(window);
   let adjustedHeight =
     float_of_int(size.height) /. scaleFactor |> int_of_float;
   let adjustedWidth = float_of_int(size.width) /. scaleFactor |> int_of_float;

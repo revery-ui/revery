@@ -4,4 +4,4 @@ type t =
   | BUTTON_RIGHT
   | BUTTON_UNKNOWN;
 
-let convert: Reglfw.Glfw.MouseButton.t => t;
+let convert: Sdl2.MouseButton.t => t;

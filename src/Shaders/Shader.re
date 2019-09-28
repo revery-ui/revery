@@ -1,5 +1,5 @@
-open Reglfw;
-open Reglfw.Glfw;
+open Sdl2;
+open Sdl2.Gl;
 
 type vertexShaderSource = string;
 type fragmentShaderSource = string;
@@ -76,8 +76,8 @@ exception ShaderCompilationException(string);
 let compile = (shader: t) => {
   let (uniforms, attributes, varying, vs, fs) = shader;
 
-  let vertexShader = glCreateShader(Glfw.GL_VERTEX_SHADER);
-  let fragmentShader = glCreateShader(Glfw.GL_FRAGMENT_SHADER);
+  let vertexShader = glCreateShader(Gl.GL_VERTEX_SHADER);
+  let fragmentShader = glCreateShader(Gl.GL_FRAGMENT_SHADER);
 
   let () = glShaderSource(vertexShader, vs);
   let () = glShaderSource(fragmentShader, fs);

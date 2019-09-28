@@ -1,4 +1,4 @@
-open Reglfw;
+open Sdl2;
 open Revery_Shaders;
 
 type t = {
@@ -19,7 +19,7 @@ let create = () => {
 let addVertexChannel =
     (
       builder: t,
-      glType: Glfw.glType,
+      glType: Gl.glType,
       elementCount: int,
       channel: VertexChannel.t,
       vertices: array(float),

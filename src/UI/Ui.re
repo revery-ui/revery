@@ -22,8 +22,8 @@ type renderFunction = React.syntheticElement => unit;
 let getActiveWindow = () => _activeWindow^;
 
 let start = (window: Window.t, element: React.syntheticElement) => {
-  let uiDirty = ref(false);
-  let forceLayout = ref(false);
+  let uiDirty = ref(true);
+  let forceLayout = ref(true);
   let latestElement = ref(element);
 
   let onStale = () => {
@@ -41,45 +41,12 @@ let start = (window: Window.t, element: React.syntheticElement) => {
     Revery_Core.Event.subscribe(
       window.onMouseMove,
       m => {
-        let scaleFactor = Revery_Core.Window.getScaleFactor(window);
+        let scaleFactor = Revery_Core.Window.getScaleAndZoom(window);
         let evt =
           Revery_Core.Events.InternalMouseMove({
             mouseX: m.mouseX /. scaleFactor,
             mouseY: m.mouseY /. scaleFactor,
           });
-        Mouse.dispatch(mouseCursor, evt, rootNode);
-      },
-    );
-
-  let _ignore =
-    Revery_Core.Event.subscribe(
-      window.onMouseDown,
-      m => {
-        let evt = Revery_Core.Events.InternalMouseDown({button: m.button});
-        Mouse.dispatch(mouseCursor, evt, rootNode);
-      },
-    );
-
-  let _ignore =
-    Revery_Core.Event.subscribe(window.onKeyPress, event =>
-      Keyboard.dispatch(Revery_Core.Events.InternalKeyPressEvent(event))
-    );
-
-  let _ignore =
-    Revery_Core.Event.subscribe(window.onKeyDown, event =>
-      Keyboard.dispatch(Revery_Core.Events.InternalKeyDownEvent(event))
-    );
-
-  let _ignore =
-    Revery_Core.Event.subscribe(window.onKeyUp, event =>
-      Keyboard.dispatch(Revery_Core.Events.InternalKeyUpEvent(event))
-    );
-
-  let _ignore =
-    Revery_Core.Event.subscribe(
-      window.onMouseUp,
-      m => {
-        let evt = Revery_Core.Events.InternalMouseUp({button: m.button});
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
@@ -95,12 +62,46 @@ let start = (window: Window.t, element: React.syntheticElement) => {
 
   let _ignore =
     Revery_Core.Event.subscribe(
-      Mouse.onCursorChanged,
-      cursor => {
-        let glfwCursor = Revery_Core.MouseCursors.toGlfwCursor(cursor);
-        Reglfw.Glfw.glfwSetCursor(window.glfwWindow, glfwCursor);
+      window.onMouseDown,
+      m => {
+        let evt = Revery_Core.Events.InternalMouseDown({button: m.button});
+        Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
+
+  let _ignore =
+    Revery_Core.Event.subscribe(window.onKeyDown, event =>
+      Keyboard.dispatch(Revery_Core.Events.InternalKeyDownEvent(event))
+    );
+
+  let _ignore =
+    Revery_Core.Event.subscribe(window.onKeyUp, event =>
+      Keyboard.dispatch(Revery_Core.Events.InternalKeyUpEvent(event))
+    );
+
+  let _ignore =
+    Revery_Core.Event.subscribe(window.onTextInputCommit, event =>
+      Keyboard.dispatch(Revery_Core.Events.InternalTextInputEvent(event))
+    );
+
+  let _ignore =
+    Revery_Core.Event.subscribe(window.onCompositionEdit, event =>
+      Keyboard.dispatch(Revery_Core.Events.InternalTextEditEvent(event))
+    );
+
+  let _ignore =
+    Revery_Core.Event.subscribe(
+      window.onMouseUp,
+      m => {
+        let evt = Revery_Core.Events.InternalMouseUp({button: m.button});
+        Mouse.dispatch(mouseCursor, evt, rootNode);
+      },
+    );
+
+  let _ignore =
+    Revery_Core.Event.subscribe(Mouse.onCursorChanged, cursor => {
+      Revery_Core.MouseCursors.setCursor(cursor)
+    });
 
   let _ignore =
     Revery_Core.Event.subscribe(

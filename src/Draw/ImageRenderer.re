@@ -1,7 +1,7 @@
-open Reglfw.Glfw;
+open Sdl2.Gl;
 open Revery_Core;
 
-module Image = Reglfw.Image;
+module Image = Sdl2.Image;
 
 type t = {
   mutable hasLoaded: bool,

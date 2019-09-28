@@ -4,7 +4,7 @@
  * shader used for specificying a gradient.
  * the gradient is used to draw a box shadow
  */
-open Reglfw.Glfw;
+open Sdl2.Gl;
 open Revery_Shaders;
 
 let attributes: list(ShaderAttribute.t) =

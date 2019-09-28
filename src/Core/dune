@@ -3,4 +3,4 @@
     (public_name Revery.Core)
     (js_of_ocaml (javascript_files file.js))
     (cxx_names file)
-    (libraries threads console.lib str lwt reglfw flex fontkit Rench))
+    (libraries threads console.lib str lwt sdl2 flex fontkit Rench))
