@@ -1,6 +1,6 @@
 (executables
     (names Examples)
-    (preprocess (pps lwt_ppx))
+    (preprocess (pps brisk_jsx lwt_ppx))
     (package Revery)
     (public_names Examples)
     (libraries
