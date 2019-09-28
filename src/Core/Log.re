@@ -1,6 +1,6 @@
 type severity =
   | Info
-  | Error;
+  | Error
   | Performance;
 
 type logFunc = (severity, string) => unit;
