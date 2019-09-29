@@ -9,7 +9,7 @@ void
 revery_alert_win32(void *pWin, const char *szMessage) {
     HWND hwnd = (HWND)pWin;
 
-    int msgboxId = MessageBox(
+    MessageBox(
             hwnd,
             szMessage,
             "Alert",
