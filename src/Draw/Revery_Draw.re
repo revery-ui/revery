@@ -1,3 +1,5 @@
+module Canvas = Canvas;
+
 module Assets = Assets;
 module DebugDraw = DebugDraw;
 module RenderPass = RenderPass;

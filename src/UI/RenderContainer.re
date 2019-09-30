@@ -12,6 +12,7 @@ type t = {
   container: ref(Container.t),
   window: Window.t,
   mouseCursor: Mouse.Cursor.t,
+  canvas: ref(option(Revery_Draw.Canvas.t)),
 };
 
 let create = (window, rootNode, container, mouseCursor) => {
@@ -19,4 +20,5 @@ let create = (window, rootNode, container, mouseCursor) => {
   rootNode,
   container: ref(container),
   mouseCursor,
+  canvas: ref(None),
 };
