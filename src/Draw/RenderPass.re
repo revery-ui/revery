@@ -3,6 +3,7 @@ open Sdl2.Gl;
 
 module DrawContext = {
   type t = {
+    canvas: Canvas.t,
     pixelRatio: float,
     scaleFactor: float,
     screenWidth: int,
@@ -12,6 +13,7 @@ module DrawContext = {
 
   let create =
       (
+        ~canvas,
         ~pixelRatio,
         ~scaleFactor,
         ~screenWidth,
@@ -19,6 +21,7 @@ module DrawContext = {
         ~projection,
         (),
       ) => {
+    canvas,
     pixelRatio,
     scaleFactor,
     screenWidth,
@@ -38,13 +41,12 @@ let getContext = () => {
   };
 };
 
-let startAlphaPass =
-    (~pixelRatio, ~scaleFactor, ~screenWidth, ~screenHeight, ~projection, ()) => {
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+let start=
+    (~canvas, ~pixelRatio, ~scaleFactor, ~screenWidth, ~screenHeight, ~projection, ()) => {
   _activeContext :=
     Some(
       DrawContext.create(
+        ~canvas, 
         ~pixelRatio,
         ~scaleFactor,
         ~screenWidth,
@@ -56,6 +58,5 @@ let startAlphaPass =
 };
 
 let endAlphaPass = () => {
-  glDisable(GL_BLEND);
   _activeContext := None;
 };

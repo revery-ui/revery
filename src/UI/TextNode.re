@@ -26,7 +26,7 @@ class textNode (text: string) = {
     let {color, backgroundColor, fontFamily, fontSize, lineHeight, _} = style;
     let opacity = parentContext.opacity *. style.opacity;
 
-    let lineHeightPx =
+    /*let lineHeightPx =
       Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
 
     /* when style.width & style.height are defined, Layout doesn't call the measure function */
@@ -49,7 +49,7 @@ class textNode (text: string) = {
           line,
         ),
       _lines^,
-    );
+    );*/
   };
   pub setGamma = g => gamma = g;
   pub! setStyle = style => {

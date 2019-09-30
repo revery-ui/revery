@@ -67,13 +67,15 @@ let resize = (~width: int, ~height: int, v: option(t)) => {
   };
 };
 
-/*let save = (v: t) => {
-   Skia.Canvas.save(v.canvas);
+let save = (v: t) => {
+   //Skia.Canvas.save(v.canvas);
+   ();
   };
 
-  let restore = (v: t) => {
-   Skia.Canvas.restore(v.canvas);
-  };*/
+let restore = (v: t) => {
+ //Skia.Canvas.restore(v.canvas);
+ ();
+};
 
 let flush = (v: t) => {
   Skia.Canvas.flush(v.canvas);
