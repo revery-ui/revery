@@ -59,27 +59,28 @@ let _isSome = a =>
   | None => false
   };
 
-let load: (string, int) => t = (fontName: string, size: int) => {
-  let assetPath = Environment.getAssetPath(fontName);
-  switch (InternalCache.find_opt(_cache, fontName, size)) {
-  | Some(v) => v
-  | None =>
-    let isLoading =
-      _isSome(InternalCache.find_opt(_loadingCache, fontName, size));
-    if (!isLoading) {
-      InternalCache.add(_loadingCache, fontName, size, true);
-      let success = fk => {
-        let skiaTypeface = Skia.TypeFace.createFromFile(assetPath, 0);
-        let font = (fk, Some(skiaTypeface));
-        
-        InternalCache.remove(_loadingCache, fontName, size);
-        InternalCache.add(_cache, fontName, size, font);
-        Event.dispatch(onFontLoaded, ());
-        Lwt.return();
+let load: (string, int) => t =
+  (fontName: string, size: int) => {
+    let assetPath = Environment.getAssetPath(fontName);
+    switch (InternalCache.find_opt(_cache, fontName, size)) {
+    | Some(v) => v
+    | None =>
+      let isLoading =
+        _isSome(InternalCache.find_opt(_loadingCache, fontName, size));
+      if (!isLoading) {
+        InternalCache.add(_loadingCache, fontName, size, true);
+        let success = fk => {
+          let skiaTypeface = Skia.TypeFace.createFromFile(assetPath, 0);
+          let font = (fk, Some(skiaTypeface));
+
+          InternalCache.remove(_loadingCache, fontName, size);
+          InternalCache.add(_cache, fontName, size, font);
+          Event.dispatch(onFontLoaded, ());
+          Lwt.return();
+        };
+        let _ = Lwt.bind(Fontkit.load(assetPath, size), success);
+        ();
       };
-      let _ = Lwt.bind(Fontkit.load(assetPath, size), success);
-      ();
+      (Fontkit.dummyFont(size), None);
     };
-    (Fontkit.dummyFont(size), None);
   };
-};

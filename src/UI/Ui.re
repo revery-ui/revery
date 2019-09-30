@@ -121,7 +121,6 @@ let start = (window: Window.t, element: React.syntheticElement) => {
   Window.setRenderCallback(
     window,
     () => {
-
       /*
        * The dirty flag needs to be cleared before rendering,
        * as some events during rendering might trigger a 'dirty',
