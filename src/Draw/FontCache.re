@@ -49,7 +49,9 @@ type fontInfo = (string, int);
 type fontLoaded = Event.t(unit);
 let onFontLoaded: fontLoaded = Event.create();
 
-let _cache: InternalCache.t(Fontkit.fk_face) = InternalCache.create();
+type t = (Fontkit.fk_face, option(Skia.TypeFace.t));
+
+let _cache: InternalCache.t(t) = InternalCache.create();
 let _loadingCache: InternalCache.t(bool) = InternalCache.create();
 let _isSome = a =>
   switch (a) {
@@ -57,24 +59,27 @@ let _isSome = a =>
   | None => false
   };
 
-let load = (fontName: string, size: int) => {
+let load: (string, int) => t = (fontName: string, size: int) => {
   let assetPath = Environment.getAssetPath(fontName);
   switch (InternalCache.find_opt(_cache, fontName, size)) {
-  | Some(fk) => fk
+  | Some(v) => v
   | None =>
     let isLoading =
       _isSome(InternalCache.find_opt(_loadingCache, fontName, size));
     if (!isLoading) {
       InternalCache.add(_loadingCache, fontName, size, true);
       let success = fk => {
+        let skiaTypeface = Skia.TypeFace.createFromFile(assetPath, 0);
+        let font = (fk, Some(skiaTypeface));
+        
         InternalCache.remove(_loadingCache, fontName, size);
-        InternalCache.add(_cache, fontName, size, fk);
+        InternalCache.add(_cache, fontName, size, font);
         Event.dispatch(onFontLoaded, ());
         Lwt.return();
       };
       let _ = Lwt.bind(Fontkit.load(assetPath, size), success);
       ();
     };
-    Fontkit.dummyFont(size);
+    (Fontkit.dummyFont(size), None);
   };
 };

@@ -27,13 +27,13 @@ let _getScaledFontSize = fontSize => {
 };
 
 let getLineHeight = (~fontFamily, ~fontSize, ~lineHeight, ()) => {
-  let font = FontCache.load(fontFamily, fontSize);
+  let (font, _) = FontCache.load(fontFamily, fontSize);
   let metrics = FontRenderer.getNormalizedMetrics(font);
   lineHeight *. metrics.height;
 };
 
 let measure = (~fontFamily, ~fontSize, text) => {
-  let font = FontCache.load(fontFamily, fontSize);
+  let (font, _) = FontCache.load(fontFamily, fontSize);
   FontRenderer.measure(font, text);
 };
 
@@ -95,7 +95,7 @@ let drawString =
   let (shader, uniformWorld) =
     _startShader(~color, ~backgroundColor, ~opacity, ~gamma, ~projection, ());
 
-  let font = FontCache.load(fontFamily, _getScaledFontSize(fontSize));
+  let (font, _) = FontCache.load(fontFamily, _getScaledFontSize(fontSize));
 
   let metrics = FontRenderer.getNormalizedMetrics(font);
   let multiplier = ctx.pixelRatio *. ctx.scaleFactor;
