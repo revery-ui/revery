@@ -22,3 +22,12 @@ let create = (window, rootNode, container, mouseCursor) => {
   mouseCursor,
   canvas: ref(None),
 };
+
+let updateCanvas = (~width, ~height, container: t) => {
+  switch (container.canvas^) {
+  | None => 
+    container.canvas := Revery_Draw.Canvas.create(~width, ~height, ())
+  | Some(_) as v => 
+    container.canvas := Revery_Draw.Canvas.resize(~width, ~height, v);
+  }
+};

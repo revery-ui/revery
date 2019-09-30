@@ -15,7 +15,7 @@ type t = {
   surface: Skia.Surface.t,
 };
 
-let create = (~width, ~height, ()) => {
+let create = (~width: int, ~height: int, ()) => {
   let context = Skia.Gr.Context.makeGl(None);
   switch (context) {
   | None =>
@@ -45,7 +45,7 @@ let create = (~width, ~height, ()) => {
       None;
     | Some(v) =>
       logInfo(
-        Printf.printf("Successfully created canvas: %dx%d", width, height),
+        Printf.sprintf("Successfully created canvas: %dx%d", width, height),
       );
       let surface = v;
       let canvas = Skia.Surface.getCanvas(v);
@@ -54,12 +54,12 @@ let create = (~width, ~height, ()) => {
   };
 };
 
-let resize = (~width, ~height, v: option(t)) => {
+let resize = (~width: int, ~height: int, v: option(t)) => {
   switch (v) {
   | None => None
   | Some(oldSurf) =>
     if (oldSurf.width != width || oldSurf.height != height) {
-      logInfo(Printf.sprintf("Resizing canvas: %dx%d"), width, height);
+      logInfo(Printf.sprintf("Resizing canvas: %dx%d", width, height));
       create(~width, ~height, ());
     } else {
       v;

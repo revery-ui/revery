@@ -21,6 +21,7 @@ let render =
       container: RenderContainer.t,
       component: React.syntheticElement,
     ) => {
+  let renderContainer = container;
   let {rootNode, window, container, _} = container;
 
   AnimationTicker.tick();
@@ -37,6 +38,8 @@ let render =
   let adjustedHeight =
     float_of_int(size.height) /. scaleFactor |> int_of_float;
   let adjustedWidth = float_of_int(size.width) /. scaleFactor |> int_of_float;
+
+  RenderContainer.updateCanvas(~width=size.width, ~height=size.height, renderContainer);
 
   rootNode#setStyle(
     Style.make(
@@ -59,7 +62,13 @@ let render =
     /* Do a first pass for all 'opaque' geometry */
     /* This helps reduce the overhead for the more expensive alpha pass, next */
 
-    Mat4.ortho(
+    switch (renderContainer.canvas^) {
+    | None => ();
+    | Some(canvas) => 
+      Revery_Draw.Canvas.test_draw(canvas);
+    }
+
+    /*Mat4.ortho(
       _projection,
       0.0,
       float_of_int(adjustedWidth),
@@ -81,6 +90,6 @@ let render =
     );
     rootNode#draw(drawContext);
     DebugDraw.draw();
-    RenderPass.endAlphaPass();
+    RenderPass.endAlphaPass();*/
   });
 };
