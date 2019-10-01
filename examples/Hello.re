@@ -10,7 +10,7 @@ let logo = {
     component(hooks => {
       let (logoOpacity, setOpacity, hooks) = Hooks.state(1.0, hooks);
 
-      let (rotation, hooks) =
+      let (rotation, rotationController, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           Animated.options(
@@ -23,7 +23,7 @@ let logo = {
           hooks,
         );
 
-      let (rotationY, hooks) =
+      let (rotationY, rotationYController, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           Animated.options(
@@ -56,6 +56,11 @@ let logo = {
               ]
             />
           </Opacity>
+          <Button onClick={() => rotationController#pause()} title="Pause" />
+          <Button
+            onClick={() => rotationController#restart()}
+            title="Restart"
+          />
         </View>,
       );
     });
@@ -71,7 +76,7 @@ let animatedText = {
     (),
   ) =>
     component(hooks => {
-      let (animatedOpacity, hooks) =
+      let (animatedOpacity, _, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           Animated.options(
@@ -83,7 +88,7 @@ let animatedText = {
           hooks,
         );
 
-      let (translate, hooks) =
+      let (translate, _, hooks) =
         Hooks.animation(
           Animated.floatValue(50.),
           Animated.options(
