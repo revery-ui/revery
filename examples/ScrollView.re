@@ -25,44 +25,42 @@ let innerBox =
   ];
 
 module Sample = {
-  let component = React.component("Sample");
-
-  let createElement = (~children as _, ()) =>
-    component(slots => {
-      let (bounce, setBounce, slots) = Hooks.state(true, slots);
-      (
-        slots,
-        <View style=containerStyle>
-          <Text
-            text="Bounce"
-            style=Style.[
-              marginBottom(10),
-              fontFamily("Roboto-Regular.ttf"),
-              fontSize(20),
-            ]
+  [@component]
+  let make = ((), hooks) => {
+    let (bounce, setBounce, slots) = Hooks.state(true, slots);
+    (
+      slots,
+      <View style=containerStyle>
+        <Text
+          text="Bounce"
+          style=Style.[
+            marginBottom(10),
+            fontFamily("Roboto-Regular.ttf"),
+            fontSize(20),
+          ]
+        />
+        <Checkbox
+          onChange={() => setBounce(!bounce)}
+          checked=bounce
+          style=Style.[marginBottom(10)]
+        />
+        <ScrollView style=outerBox bounce>
+          <Image
+            src="outrun-logo.png"
+            style=Style.[width(512), height(256)]
           />
-          <Checkbox
-            onChange={() => setBounce(!bounce)}
-            checked=bounce
-            style=Style.[marginBottom(10)]
+          <Image
+            src="outrun-logo.png"
+            style=Style.[width(512), height(256)]
           />
-          <ScrollView style=outerBox bounce>
-            <Image
-              src="outrun-logo.png"
-              style=Style.[width(512), height(256)]
-            />
-            <Image
-              src="outrun-logo.png"
-              style=Style.[width(512), height(256)]
-            />
-            <Image
-              src="outrun-logo.png"
-              style=Style.[width(512), height(256)]
-            />
-          </ScrollView>
-        </View>,
-      );
-    });
+          <Image
+            src="outrun-logo.png"
+            style=Style.[width(512), height(256)]
+          />
+        </ScrollView>
+      </View>,
+    );
+  };
 };
 
 let render = () => <Sample />;

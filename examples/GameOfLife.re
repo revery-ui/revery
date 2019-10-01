@@ -261,8 +261,6 @@ module GameOfLife = {
 };
 
 module Row = {
-  let component = React.component("Row");
-
   let style =
     Style.[
       flexDirection(`Row),
@@ -272,13 +270,14 @@ module Row = {
       flexGrow(1),
     ];
 
-  let createElement = (~children, ()) =>
-    component(hooks => (hooks, <View style> ...children </View>));
+  [@component]
+  let make = (~children, (), hooks) => (
+    hooks,
+    <View style> ...children </View>,
+  );
 };
 
 module Column = {
-  let component = React.component("Column");
-
   let style =
     Style.[
       flexDirection(`Column),
@@ -287,13 +286,14 @@ module Column = {
       flexGrow(1),
     ];
 
-  let createElement = (~children, ()) =>
-    component(hooks => (hooks, <View style> ...children </View>));
+  [@component]
+  let make = (~children, (), hooks) => (
+    hooks,
+    <View style> ...children </View>,
+  );
 };
 
 module Cell = {
-  let component = React.component("Column");
-
   let clickableStyle =
     Style.[
       position(`Relative),
@@ -317,15 +317,15 @@ module Cell = {
       merge(~source=baseStyle, ~target=[backgroundColor(Colors.black)])
     );
 
-  let createElement = (~cell, ~onClick, ~children as _, ()) =>
-    component(hooks => {
+  [@component]
+  let make = (~cell, ~onClick, (), hooks) => {
       let style =
         switch (cell) {
         | Alive => <View style=aliveStyle />
         | Dead => <View style=deadStyle />
         };
       (hooks, <Clickable style=clickableStyle onClick> style </Clickable>);
-    });
+    };
 };
 
 let viewPortRender =
@@ -413,12 +413,10 @@ let reducer = (action, state) =>
   };
 
 module GameOfLiveComponent = {
-  let component = React.component("GameOfLiveComponent");
-
   let controlsStyle = Style.[height(120), flexDirection(`Row)];
 
-  let createElement = (~state, ~children as _, ()) =>
-    component(hooks => {
+  [@component]
+  let make = (~state, (), hooks) => {
       let (state, dispatch, hooks) =
         Hooks.reducer(~initialState=state, reducer, hooks);
 
@@ -481,7 +479,7 @@ module GameOfLiveComponent = {
           </View>
         </Column>,
       );
-    });
+    };
 };
 
 let render = () => {

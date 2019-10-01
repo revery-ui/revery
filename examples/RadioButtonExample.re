@@ -3,9 +3,8 @@ open Revery.UI;
 open Revery.UI.Components;
 
 module RadioExample = {
-  let component = React.component("RadioExample");
-  let make = () =>
-    component(hooks => {
+  [@component]
+  let make = ((), hooks) => {
       let (radioVal, setRadioVal, hooks) =
         Hooks.state("Select a button!", hooks);
       (
@@ -48,8 +47,7 @@ module RadioExample = {
           />
         </View>,
       );
-    });
-  let createElement = (~children as _, ()) => make();
+    };
 };
 
 let render = () => <RadioExample />;

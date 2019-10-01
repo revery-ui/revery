@@ -3,7 +3,6 @@ open Revery.UI;
 open Revery.UI.Components;
 
 module TreeView = {
-  let component = React.component("TreeView");
   let stringTree =
     Tree.(
       Node(
@@ -169,16 +168,16 @@ module TreeView = {
         />,
     );
 
-  let createElement = (~children as _, ~renderer=?, ()) =>
-    component(hooks =>
-      switch (renderer) {
-      | Some(fn) => (hooks, <Tree tree=animalKingdom nodeRenderer=fn />)
-      | None => (
-          hooks,
-          <Tree tree=stringTree nodeRenderer=Tree.default emptyRenderer />,
-        )
-      }
-    );
+  [@component]
+  let make = (~renderer=?, (), hooks) => {
+    switch (renderer) {
+    | Some(fn) => (hooks, <Tree tree=animalKingdom nodeRenderer=fn />)
+    | None => (
+        hooks,
+        <Tree tree=stringTree nodeRenderer=Tree.default emptyRenderer />,
+      )
+    };
+  };
 
   let customRenderer = (~indent, content) => {
     open Tree;

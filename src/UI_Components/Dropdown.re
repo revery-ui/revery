@@ -55,7 +55,7 @@ let make =
   let items =
     state._open
       ? List.map(
-          _item =>
+          item =>
             <Clickable
               style=Style.[
                 height(h),
@@ -63,7 +63,7 @@ let make =
                 alignItems(`FlexStart),
                 paddingHorizontal(5),
                 backgroundColor(
-                  _item == state.selected
+                  item == state.selected
                     ? Color.hex("#0078D7") : Colors.transparentWhite,
                 ),
                 borderBottom(
@@ -72,10 +72,10 @@ let make =
                 ),
               ]
               onClick={() => {
-                dispatch(SelectItem(_item));
-                onItemSelected(_item);
+                dispatch(SelectItem(item));
+                onItemSelected(item);
               }}>
-              <Text style=textStyles text={_item.label} />
+              <Text style=textStyles text={item.label} />
             </Clickable>,
           state.items,
         )

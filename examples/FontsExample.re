@@ -52,101 +52,99 @@ module FontComponent = {
     {...state, resolvedFont};
   };
 
-  let component = React.component("Font");
+  [@component]
+  let make = ((), hooks) => {
+    let (state, dispatch, hooks) =
+      Hooks.reducer(~initialState, reducer, hooks);
 
-  let createElement = (~children as _, ()) =>
-    component(hooks => {
-      let (state, dispatch, hooks) =
-        Hooks.reducer(~initialState, reducer, hooks);
+    let fontExample =
+      switch (state.resolvedFont) {
+      | None => React.empty
+      | Some(v) =>
+        <Text
+          text="Lorem ipsum dolor sit amet"
+          style=Style.[fontFamily(v.path), fontSize(24)]
+        />
+      };
 
-      let fontExample =
-        switch (state.resolvedFont) {
-        | None => React.empty
-        | Some(v) =>
-          <Text
-            text="Lorem ipsum dolor sit amet"
-            style=Style.[fontFamily(v.path), fontSize(24)]
-          />
-        };
-
-      (
-        hooks,
-        <Container width=500 height=500>
-          <Center>
-            <Padding padding=10>
-              <Row>
-                <Input
-                  placeholder="Type font name"
-                  onChange={({value, _}) => dispatch(SetFamily(value))}
-                  value={state.family}
+    (
+      hooks,
+      <Container width=500 height=500>
+        <Center>
+          <Padding padding=10>
+            <Row>
+              <Input
+                placeholder="Type font name"
+                onChange={({value, _}) => dispatch(SetFamily(value))}
+                value={state.family}
+              />
+            </Row>
+          </Padding>
+          <Padding padding=10>
+            <Row>
+              <Padding padding=16>
+                <Checkbox
+                  checked={state.bold}
+                  onChange={() => dispatch(SetBold(!state.bold))}
                 />
-              </Row>
-            </Padding>
-            <Padding padding=10>
-              <Row>
-                <Padding padding=16>
-                  <Checkbox
-                    checked={state.bold}
-                    onChange={() => dispatch(SetBold(!state.bold))}
-                  />
-                </Padding>
-                <Center>
-                  <Text
-                    text="Bold"
-                    style=Style.[
-                      fontFamily("Roboto-Regular.ttf"),
-                      fontSize(20),
-                      width(150),
-                    ]
-                  />
-                </Center>
-              </Row>
-            </Padding>
-            <Padding padding=10>
-              <Row>
-                <Padding padding=16>
-                  <Checkbox
-                    checked={state.italic}
-                    onChange={() => dispatch(SetItalic(!state.italic))}
-                  />
-                </Padding>
-                <Center>
-                  <Text
-                    text="Italic"
-                    style=Style.[
-                      fontFamily("Roboto-Regular.ttf"),
-                      fontSize(20),
-                      width(150),
-                    ]
-                  />
-                </Center>
-              </Row>
-            </Padding>
-            <Padding padding=10>
-              <Row>
-                <Padding padding=16>
-                  <Checkbox
-                    checked={state.mono}
-                    onChange={() => dispatch(SetMono(!state.mono))}
-                  />
-                </Padding>
-                <Center>
-                  <Text
-                    text="Mono"
-                    style=Style.[
-                      fontFamily("Roboto-Regular.ttf"),
-                      fontSize(20),
-                      width(150),
-                    ]
-                  />
-                </Center>
-              </Row>
-            </Padding>
-            <Padding padding=16> <Row> fontExample </Row> </Padding>
-          </Center>
-        </Container>,
-      );
-    });
+              </Padding>
+              <Center>
+                <Text
+                  text="Bold"
+                  style=Style.[
+                    fontFamily("Roboto-Regular.ttf"),
+                    fontSize(20),
+                    width(150),
+                  ]
+                />
+              </Center>
+            </Row>
+          </Padding>
+          <Padding padding=10>
+            <Row>
+              <Padding padding=16>
+                <Checkbox
+                  checked={state.italic}
+                  onChange={() => dispatch(SetItalic(!state.italic))}
+                />
+              </Padding>
+              <Center>
+                <Text
+                  text="Italic"
+                  style=Style.[
+                    fontFamily("Roboto-Regular.ttf"),
+                    fontSize(20),
+                    width(150),
+                  ]
+                />
+              </Center>
+            </Row>
+          </Padding>
+          <Padding padding=10>
+            <Row>
+              <Padding padding=16>
+                <Checkbox
+                  checked={state.mono}
+                  onChange={() => dispatch(SetMono(!state.mono))}
+                />
+              </Padding>
+              <Center>
+                <Text
+                  text="Mono"
+                  style=Style.[
+                    fontFamily("Roboto-Regular.ttf"),
+                    fontSize(20),
+                    width(150),
+                  ]
+                />
+              </Center>
+            </Row>
+          </Padding>
+          <Padding padding=16> <Row> fontExample </Row> </Padding>
+        </Center>
+      </Container>,
+    );
+  };
 };
 
 let render = () => {

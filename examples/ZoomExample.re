@@ -2,21 +2,22 @@ open Revery;
 open Revery.UI;
 open Revery.UI.Components;
 
-let zoomButton = (~zoom, ~onClick, ~children as _, ()) => {
-  <Button
-    height=50
-    width=100
-    fontSize=15
-    title={string_of_float(zoom)}
-    onClick={() => onClick(zoom)}
-  />;
+module ZoomButton = {
+  [@component]
+  let make = (~zoom, ~onClick, ()) => {
+    <Button
+      height=50
+      width=100
+      fontSize=15
+      title={string_of_float(zoom)}
+      onClick={() => onClick(zoom)}
+    />;
+  };
 };
 
 module Zoom = {
-  let component = React.component("Zoom");
-
-  let createElement = (~children as _, ()) =>
-    component(hooks => {
+  [@component]
+  let make = ((), hooks) => {
       let window = UI.getActiveWindow();
       let zoomV =
         switch (window) {
@@ -55,16 +56,16 @@ module Zoom = {
               text={"Zoom: " ++ string_of_float(currentZoom)}
             />
             <Row>
-              <zoomButton zoom=0.5 onClick=setZoom />
-              <zoomButton zoom=1.0 onClick=setZoom />
-              <zoomButton zoom=1.25 onClick=setZoom />
-              <zoomButton zoom=1.5 onClick=setZoom />
-              <zoomButton zoom=2.0 onClick=setZoom />
+              <ZoomButton zoom=0.5 onClick=setZoom />
+              <ZoomButton zoom=1.0 onClick=setZoom />
+              <ZoomButton zoom=1.25 onClick=setZoom />
+              <ZoomButton zoom=1.5 onClick=setZoom />
+              <ZoomButton zoom=2.0 onClick=setZoom />
             </Row>
           </Column>
         </Center>,
       );
-    });
+    };
 };
 
 let render = () => <Zoom />;

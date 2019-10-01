@@ -9,10 +9,8 @@ open Revery_UI_Primitives;
  */
 
 module TestRefComponent = {
-  let component = React.component("TestRefComponent");
-
-  let createElement = (~children as _, ~latestRef, ()) =>
-    component(hooks => {
+  [@component]
+  let make = (~latestRef, (), hooks) => {
       let (refFromState, setRef, hooks) = React.Hooks.state(None, hooks);
 
       latestRef := refFromState;
@@ -22,7 +20,7 @@ module TestRefComponent = {
       };
 
       (hooks, <View ref=setRefInState />);
-    });
+    };
 };
 
 test("Reconciler", () => {
