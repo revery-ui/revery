@@ -10,7 +10,7 @@ Simple out-of-box checkbox component
 ]}
 */
 
-let createElement:
+let make:
   (
     ~children: 'a,
     ~checked: bool=?,

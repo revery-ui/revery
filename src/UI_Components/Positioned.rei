@@ -1,6 +1,6 @@
 open Revery_UI;
 
-let createElement:
+let make:
   (
     ~top: int=?,
     ~left: int=?,

@@ -19,7 +19,7 @@ any items outside.
 @param [height] The height of the container, in pixels.
 @param [color] The color of the container.
 */
-let createElement:
+let make:
   (
     ~children: list(React.syntheticElement),
     ~color: Color.t=?,

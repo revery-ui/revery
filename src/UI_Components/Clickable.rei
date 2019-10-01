@@ -17,7 +17,7 @@ This module provides a `<Clickable />` component, loosely inspired by the
 </Clickable>
 ]}
  */
-let createElement:
+let make:
   (
     ~style: list(Revery_UI.Style.viewStyleProps)=?,
     ~onClick: clickFunction=?,

@@ -9,7 +9,7 @@ Simple out-of-box button component
     <Button width=50 height=150 color=Colors.blue />
 ]}
 */
-let createElement:
+let make:
   (
     ~children: 'a,
     ~title: string,
