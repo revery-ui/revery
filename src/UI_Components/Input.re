@@ -351,11 +351,12 @@ let make =
           ~fontSize=inputFontSize,
           startStr,
         );
+      let inputHeight = Selector.select(style, Height, defaultHeight);
       <View
         style=Style.[
           position(`Absolute),
           marginLeft(dimension.width + inputTextMargin + 1),
-          marginTop((defaultHeight - dimension.height) / 2),
+          marginTop((inputHeight - dimension.height) / 2),
         ]>
         <Opacity opacity=cursorOpacity>
           <ContainerComponent width=2 height=inputFontSize color=cursorColor />
