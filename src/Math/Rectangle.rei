@@ -12,3 +12,5 @@ let getWidth: t => float;
 let getHeight: t => float;
 
 let translate: (~x: float=?, ~y: float=?, t) => t;
+
+let show: t => string;

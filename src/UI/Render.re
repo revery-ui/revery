@@ -68,7 +68,6 @@ let render =
       Revery_Draw.Canvas.test_draw(canvas);
     
      let drawContext = NodeDrawContext.create(~canvas, ~zIndex=0, ~opacity=1.0, ());
-    }
 
     /*Mat4.ortho(
       _projection,
@@ -78,11 +77,12 @@ let render =
       0.0,
       1000.0,
       -1000.0,
-    );
+    );*/
 
-    let drawContext = NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
+    // let drawContext = NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
 
-    RenderPass.startAlphaPass(
+    RenderPass.start(
+      ~canvas,
       ~pixelRatio,
       ~scaleFactor,
       ~screenHeight=adjustedHeight,
@@ -91,7 +91,10 @@ let render =
       (),
     );
     rootNode#draw(drawContext);
-    DebugDraw.draw();
-    RenderPass.endAlphaPass();*/
+    //DebugDraw.draw();
+    RenderPass.endAlphaPass();
+
+    Revery_Draw.Canvas.flush(canvas);
+    };
   });
 };

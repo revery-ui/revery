@@ -77,7 +77,7 @@ let render =
       scaleFactor: float,
       r: renderCallback,
     ) => {
-  if (overflow == LayoutTypes.Hidden || overflow == LayoutTypes.Scroll) {
+/*  if (overflow == LayoutTypes.Hidden || overflow == LayoutTypes.Scroll) {
     _startClipRegion(
       worldTransform,
       dimensions,
@@ -85,11 +85,12 @@ let render =
       pixelRatio,
       scaleFactor,
     );
-  };
+  };*/
 
+  // TODO: Clip!
   r();
 
-  if (overflow == LayoutTypes.Hidden || overflow == LayoutTypes.Scroll) {
+  /*if (overflow == LayoutTypes.Hidden || overflow == LayoutTypes.Scroll) {
     _endClipRegion();
-  };
+  };*/
 };

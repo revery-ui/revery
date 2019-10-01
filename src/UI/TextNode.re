@@ -26,7 +26,7 @@ class textNode (text: string) = {
     let {color, backgroundColor, fontFamily, fontSize, lineHeight, _} = style;
     let opacity = parentContext.opacity *. style.opacity;
 
-    /*let lineHeightPx =
+    let lineHeightPx =
       Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
 
     /* when style.width & style.height are defined, Layout doesn't call the measure function */
@@ -34,9 +34,10 @@ class textNode (text: string) = {
       _this#measure(style.width, style.height) |> ignore;
     };
 
+    let { canvas, _ }: NodeDrawContext.t = parentContext;
     List.iteri(
-      (lineNum, line) =>
-        Text.drawString(
+      (lineNum, line) => {
+        /*Text.drawString(
           ~fontFamily,
           ~fontSize,
           ~gamma,
@@ -47,9 +48,15 @@ class textNode (text: string) = {
           ~x=0.,
           ~y=lineHeightPx *. float_of_int(lineNum),
           line,
-        ),
+        )*/
+
+          let y = lineHeightPx *. float_of_int(lineNum);
+          print_endline ("Drawing text: " ++ line ++ " - y: " ++ string_of_float(y));
+          Canvas.drawText(~x=0., ~y, ~fontFamily="", ~fontSize=25., line, canvas);
+        }
+        ,
       _lines^,
-    );*/
+    );
   };
   pub setGamma = g => gamma = g;
   pub! setStyle = style => {

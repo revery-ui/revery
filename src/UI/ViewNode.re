@@ -42,197 +42,6 @@ let renderBorders = (~style, ~width, ~height, ~opacity, ~m, ~world) => {
   let width = width -. leftBorderWidth -. rightBorderWidth;
   let height = height -. topBorderWidth -. bottomBorderWidth;
 
-  let tbc = Color.multiplyAlpha(opacity, topBorderColor);
-  let lbc = Color.multiplyAlpha(opacity, leftBorderColor);
-  let rbc = Color.multiplyAlpha(opacity, rightBorderColor);
-  let bbc = Color.multiplyAlpha(opacity, bottomBorderColor);
-
-  let (shader, setColor) =
-    if (borderRadius != 0.) {
-      let shader = Assets.borderRadiusShader();
-      Shaders.CompiledShader.use(shader.compiledShader);
-      Shaders.CompiledShader.setUniform2fv(
-        shader.uniformResolution,
-        resolution,
-      );
-      Shaders.CompiledShader.setUniform1f(
-        shader.uniformBorderRadius,
-        borderRadius,
-      );
-
-      Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformProjection, m);
-      Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformWorld, world);
-      (
-        shader.compiledShader,
-        c =>
-          Shaders.CompiledShader.setUniform4fv(
-            shader.uniformColor,
-            Color.toVec4(c),
-          ),
-      );
-    } else {
-      let shader = Assets.solidShader();
-      Shaders.CompiledShader.use(shader.compiledShader);
-      Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformProjection, m);
-      Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformWorld, world);
-      (
-        shader.compiledShader,
-        c =>
-          Shaders.CompiledShader.setUniform4fv(
-            shader.uniformColor,
-            Color.toVec4(c),
-          ),
-      );
-    };
-
-  if (topBorderWidth != 0. && tbc.a > 0.001) {
-    setColor(tbc);
-    let topBorderQuad =
-      Assets.quad(
-        ~minX=leftBorderWidth,
-        ~minY=0.,
-        ~maxX=leftBorderWidth +. width,
-        ~maxY=topBorderWidth,
-        (),
-      );
-    Geometry.draw(topBorderQuad, shader);
-    if (leftBorderWidth != 0.) {
-      let topLeftTri =
-        Assets.tri(
-          leftBorderWidth,
-          0.,
-          leftBorderWidth,
-          topBorderWidth,
-          0.,
-          0.,
-        );
-      Geometry.draw(topLeftTri, shader);
-    };
-    if (rightBorderWidth != 0.) {
-      let topRightTri =
-        Assets.tri(
-          leftBorderWidth +. width,
-          0.,
-          leftBorderWidth +. width,
-          topBorderWidth,
-          leftBorderWidth +. width +. rightBorderWidth,
-          0.,
-        );
-      Geometry.draw(topRightTri, shader);
-    };
-  };
-
-  if (leftBorderWidth != 0. && lbc.a > 0.001) {
-    setColor(lbc);
-    let leftBorderQuad =
-      Assets.quad(
-        ~minX=0.,
-        ~minY=topBorderWidth,
-        ~maxX=leftBorderWidth,
-        ~maxY=topBorderWidth +. height,
-        (),
-      );
-    Geometry.draw(leftBorderQuad, shader);
-    if (topBorderWidth != 0.) {
-      let leftTopTri =
-        Assets.tri(
-          0.,
-          topBorderWidth,
-          leftBorderWidth,
-          topBorderWidth,
-          0.,
-          0.,
-        );
-      Geometry.draw(leftTopTri, shader);
-    };
-    if (bottomBorderWidth != 0.) {
-      let leftBottomTri =
-        Assets.tri(
-          0.,
-          topBorderWidth +. height,
-          leftBorderWidth,
-          topBorderWidth +. height,
-          0.,
-          topBorderWidth +. height +. bottomBorderWidth,
-        );
-      Geometry.draw(leftBottomTri, shader);
-    };
-  };
-
-  if (rightBorderWidth != 0. && rbc.a > 0.001) {
-    setColor(rbc);
-    let rightBorderQuad =
-      Assets.quad(
-        ~minX=leftBorderWidth +. width,
-        ~minY=topBorderWidth,
-        ~maxX=leftBorderWidth +. width +. rightBorderWidth,
-        ~maxY=topBorderWidth +. height,
-        (),
-      );
-    Geometry.draw(rightBorderQuad, shader);
-    if (topBorderWidth != 0.) {
-      let rightTopTri =
-        Assets.tri(
-          leftBorderWidth +. width +. rightBorderWidth,
-          topBorderWidth,
-          leftBorderWidth +. width,
-          topBorderWidth,
-          leftBorderWidth +. width +. rightBorderWidth,
-          0.,
-        );
-      Geometry.draw(rightTopTri, shader);
-    };
-    if (bottomBorderWidth != 0.) {
-      let rightBottomTri =
-        Assets.tri(
-          leftBorderWidth +. width +. rightBorderWidth,
-          topBorderWidth +. height,
-          leftBorderWidth +. width,
-          topBorderWidth +. height,
-          leftBorderWidth +. width +. rightBorderWidth,
-          topBorderWidth +. height +. bottomBorderWidth,
-        );
-      Geometry.draw(rightBottomTri, shader);
-    };
-  };
-
-  if (bottomBorderWidth != 0. && bbc.a > 0.001) {
-    setColor(bbc);
-    let bottomBorderQuad =
-      Assets.quad(
-        ~minX=leftBorderWidth,
-        ~minY=topBorderWidth +. height,
-        ~maxX=leftBorderWidth +. width,
-        ~maxY=topBorderWidth +. height +. bottomBorderWidth,
-        (),
-      );
-    Geometry.draw(bottomBorderQuad, shader);
-    if (leftBorderWidth != 0.) {
-      let bottomLeftTri =
-        Assets.tri(
-          leftBorderWidth,
-          topBorderWidth +. height +. bottomBorderWidth,
-          leftBorderWidth,
-          topBorderWidth +. height,
-          0.,
-          topBorderWidth +. height +. bottomBorderWidth,
-        );
-      Geometry.draw(bottomLeftTri, shader);
-    };
-    if (rightBorderWidth != 0.) {
-      let bottomRightTri =
-        Assets.tri(
-          leftBorderWidth +. width,
-          topBorderWidth +. height +. bottomBorderWidth,
-          leftBorderWidth +. width,
-          topBorderWidth +. height,
-          leftBorderWidth +. width +. rightBorderWidth,
-          topBorderWidth +. height +. bottomBorderWidth,
-        );
-      Geometry.draw(bottomRightTri, shader);
-    };
-  };
-
   /* Return new minX, minY, maxX, maxY */
   (
     leftBorderWidth,
@@ -310,16 +119,18 @@ class viewNode (()) = {
     let (minX, minY, maxX, maxY) =
       renderBorders(~style, ~width, ~height, ~opacity, ~m, ~world);
 
+    let { canvas, _ }: NodeDrawContext.t = parentContext;
+
     let color = Color.multiplyAlpha(opacity, style.backgroundColor);
 
-    switch (style.boxShadow) {
+    /*switch (style.boxShadow) {
     | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _} =>
       ()
     | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
-    };
+    };*/
 
     /* Only render if _not_ transparent */
-    if (color.a > 0.001) {
+    /*if (color.a > 0.001) {
       Shapes.drawRect(
         ~transform=world,
         ~x=minX,
@@ -329,7 +140,16 @@ class viewNode (()) = {
         ~color,
         (),
       );
-    };
+    };*/
+
+    let rect = Revery_Math.Rectangle.create(
+        ~x=minX, 
+        ~y=minY, 
+        ~width=maxX -. minX,
+        ~height=maxY -. minY,
+        ());
+    //print_endline ("Drawing: " ++ Revery_Math.Rectangle.show(rect));
+    //Revery_Draw.Canvas.drawRect(canvas, rect /*, TODONOW: Fill */);
 
     _super#draw(parentContext);
   };

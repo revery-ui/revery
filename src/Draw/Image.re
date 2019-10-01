@@ -24,7 +24,7 @@ let drawImage =
       ~resizeMode=ImageResizeMode.Stretch,
       (),
     ) => {
-  let textureShader = Assets.textureShader();
+  /*let textureShader = Assets.textureShader();
   let imgInfo: ImageRenderer.t = ImageRenderer.getTexture(imagePath);
 
   switch (imgInfo.hasLoaded) {
@@ -92,5 +92,7 @@ let drawImage =
         incr(y);
       };
     };
-  };
+  };*/
+
+  ();
 };

@@ -3,6 +3,9 @@
  *
  * Module for integrating with the Skia canvas
  */
+
+module Rectangle = Revery_Math.Rectangle;
+
 open Skia;
 
 let logInfo = Revery_Core.Log.info("Revery.Draw.Canvas");
@@ -81,6 +84,35 @@ let flush = (v: t) => {
   Skia.Canvas.flush(v.canvas);
 };
 
+let toSkiaRect = (rect: Rectangle.t) => {
+  let x = Rectangle.getX(rect);
+  let y = Rectangle.getY(rect);
+  let width = Rectangle.getWidth(rect);
+  let height = Rectangle.getHeight(rect);
+  Rect.makeLtrb(x, y, x +. width, y +. height);
+};
+
+let drawRect = (v: t, rect: Rectangle.t /*, TODO: Fill */) => {
+  let {canvas, _} = v;
+  
+  let fill = Paint.make();
+  Paint.setColor(fill, Color.makeArgb(0xFF, 0x00, 0x00, 0xFF));
+  Canvas.drawRect(canvas, toSkiaRect(rect), fill);
+};
+
+let drawText = (~x, ~y, ~fontFamily, ~fontSize, text, v: t) => {
+  let { canvas, _ } = v;
+  let fill2 = Paint.make();
+  let fontStyle = FontStyle.newFontStyle(500, 20, Upright);
+  let typeface = TypeFace.createFromNameWithFontStyle("Consolas", fontStyle);
+  Paint.setColor(fill2, Color.makeArgb(0xFF, 0xFF, 0xFF, 0xFF));
+  Paint.setTypeFace(fill2, typeface);
+  Paint.setLcdRenderText(fill2, true);
+  Paint.setAntiAlias(fill2, true);
+  Paint.setTextSize(fill2, fontSize);
+  Canvas.drawText(canvas, text, x, y, fill2);
+};
+
 let test_draw = (v: t) => {
   let {canvas, _} = v;
   let fill = Paint.make();
@@ -88,7 +120,7 @@ let test_draw = (v: t) => {
   Canvas.drawPaint(canvas, fill);
 
   Paint.setColor(fill, Color.makeArgb(0xFF, 0x00, 0xFF, 0xFF));
-  let rect = Rect.makeLtrb(100., 100., 540., 380.);
+  let rect = Rect.makeLtrb(20., 100., 110., 120.);
   Canvas.drawRect(canvas, rect, fill);
 
   let fontStyle = FontStyle.newFontStyle(500, 20, Upright);
@@ -102,5 +134,4 @@ let test_draw = (v: t) => {
   Paint.setTextSize(fill2, 25.);
 
   Canvas.drawText(canvas, "Hello, world!", 30.25, 30.25, fill2);
-  Canvas.flush(canvas);
 };

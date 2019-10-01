@@ -1,5 +1,7 @@
 open Reglm;
 
+open Skia;
+
 type t = {
   r: float,
   g: float,
@@ -98,3 +100,16 @@ let show = (color: t) =>
     color.b,
     color.a,
   );
+
+let _toInt = (v: float) => {
+  int_of_float(255. *. v);
+};
+
+let toSkia = (color: t) => {
+  let a = _toInt(color.a);
+  let r = _toInt(color.r);
+  let g = _toInt(color.g);
+  let b = _toInt(color.b);
+
+  Skia.Color.makeArgb(a, r, g, b);
+};
