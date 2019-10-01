@@ -49,6 +49,7 @@ type t = {
   mutable backgroundColor: Color.t,
   sdlWindow: Sdl2.Window.t,
   uniqueId: int,
+  forceScaleFactor: option(float),
   mutable render: windowRenderCallback,
   mutable shouldRender: windowShouldRenderCallback,
   mutable metrics: WindowMetrics.t,
@@ -58,9 +59,6 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
-  // If a scale factor is forced (ie, by a CLI argument),
-  // keep track of it here
-  mutable forceScaleFactor: option(float),
   onKeyDown: Event.t(Key.KeyEvent.t),
   onKeyUp: Event.t(Key.KeyEvent.t),
   onMouseUp: Event.t(mouseButtonEvent),
@@ -326,10 +324,6 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   };
 };
 
-let forceScaleFactor = (scaleFactor: float, w: t) => {
-  w.forceScaleFactor = Some(scaleFactor);
-};
-
 let create = (name: string, options: WindowCreateOptions.t) => {
   log("Starting window creation...");
 
@@ -392,7 +386,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   };
 
   log("Getting window metrics");
-  let metrics = _getMetricsFromGlfwWindow(w);
+  let metrics =
+    _getMetricsFromGlfwWindow(~forceScaleFactor=options.forceScaleFactor, w);
   log("Metrics: " ++ WindowMetrics.show(metrics));
   let ret: t = {
     backgroundColor: options.backgroundColor,
@@ -410,7 +405,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     isComposingText: false,
 
-    forceScaleFactor: None,
+    forceScaleFactor: options.forceScaleFactor,
 
     onMouseMove: Event.create(),
     onMouseWheel: Event.create(),
