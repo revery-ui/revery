@@ -6,11 +6,6 @@ let tick:
   (
     ~tickRate: Time.t=?,
     Time.t => unit,
-    t(
-      Effect.t(Effect.onMount) => 'b,
-      unit,
-      'c,
-      Effect.t(Effect.onMount) => 'd,
-    )
+    t(Effect.t(Effect.onMount) => 'b, 'c)
   ) =>
-  t('b, unit, 'c, 'd);
+  t('b, 'c);

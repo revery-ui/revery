@@ -1,5 +1,3 @@
 open Revery_UI.React.Hooks;
 
-let ref:
-  ('a, t(Ref.t('a) => 'b, unit, 'c, Ref.t('a) => 'd)) =>
-  ('a, 'a => unit, t('b, unit, 'c, 'd));
+let ref: ('a, t(ref('a) => 'b, 'c)) => ('a, 'a => unit, t('b, 'c));
