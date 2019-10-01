@@ -44,7 +44,7 @@
     "rebez": "github:jchavarri/rebez#46cbc183",
     "@opam/cmdliner": "1.0.2",
     "rench": "github:revery-ui/rench#4554280",
-    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#f71ebd5",
+    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#3de26e",
     "pesy": "0.4.1"
   },
   "devDependencies": {
