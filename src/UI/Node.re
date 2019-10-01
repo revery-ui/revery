@@ -60,6 +60,12 @@ class node (()) = {
 
     let ctx = RenderPass.getContext();
 
+      let layout = _layoutNode^.layout;
+    let { canvas, _ }: NodeDrawContext.t = parentContext;
+
+    Revery_Draw.Canvas.save(canvas);
+    Revery_Draw.Canvas.translate(canvas, layout.left |> float_of_int, layout.top |> float_of_int);
+
     Overflow.render(
       worldTransform,
       style.overflow,
@@ -73,6 +79,8 @@ class node (()) = {
         List.iter(c => c#draw(localContext), _this#getChildren());
       },
     );
+    
+    Revery_Draw.Canvas.restore(canvas);
   };
   pub measurements = () => {
     switch (_forcedMeasurements^) {

@@ -129,32 +129,28 @@ class viewNode (()) = {
     | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
     };*/
 
-    /* Only render if _not_ transparent */
-    /*if (color.a > 0.001) {
-      Shapes.drawRect(
-        ~transform=world,
-        ~x=minX,
-        ~y=minY,
-        ~width=maxX -. minX,
-        ~height=maxY -. minY,
-        ~color,
-        (),
-      );
-    };*/
+    if (color.a > 0.001) {
+      let x = dimensions.left |> float_of_int;
+      let width = (dimensions.width) |> float_of_int;
+      let y = dimensions.top |> float_of_int;
+      let height = (dimensions.height) |> float_of_int;
 
-    let rect = Revery_Math.Rectangle.create(
-        ~x=minX, 
-        ~y=minY, 
-        ~width=maxX -. minX,
-        ~height=maxY -. minY,
-        ());
-    //print_endline ("Drawing: " ++ Revery_Math.Rectangle.show(rect));
-    let fill = Skia.Paint.make();
-    let skiaColor = Color.toSkia(color);
-    Skia.Paint.setColor(fill, skiaColor);
-    
-    Revery_Draw.Canvas.drawRect(canvas, rect, fill);
+      let rect = Revery_Math.Rectangle.create(
+          ~x=x,
+          ~y=y,
+          ~width,
+          ~height,
+          ());
+      //print_endline ("Drawing: " ++ Revery_Math.Rectangle.show(rect));
+      let fill = Skia.Paint.make();
+      let skiaColor = Color.toSkia(color);
+      Skia.Paint.setColor(fill, skiaColor);
+      
+      Revery_Draw.Canvas.drawRect(canvas, rect, fill);
+//      Revery_Draw.Canvas.flush(canvas);
+    }
 
     _super#draw(parentContext);
+    // Revery_Draw.Canvas.flush(canvas);
   };
 };

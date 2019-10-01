@@ -71,17 +71,19 @@ let resize = (~width: int, ~height: int, v: option(t)) => {
 };
 
 let save = (v: t) => {
-   //Skia.Canvas.save(v.canvas);
-   ();
+   Skia.Canvas.save(v.canvas);
   };
 
 let restore = (v: t) => {
- //Skia.Canvas.restore(v.canvas);
- ();
+ Skia.Canvas.restore(v.canvas);
 };
 
 let flush = (v: t) => {
   Skia.Canvas.flush(v.canvas);
+};
+
+let translate = (v: t, x: float, y: float) => {
+  Skia.Canvas.translate(v.canvas, x, y);
 };
 
 let toSkiaRect = (rect: Rectangle.t) => {
@@ -100,17 +102,24 @@ let drawRect = (v: t, rect: Rectangle.t, paint) => {
   Canvas.drawRect(canvas, toSkiaRect(rect), paint);
 };
 
-let drawText = (~x, ~y, ~fontFamily, ~fontSize, text, v: t) => {
+let drawText = (~color=Revery_Core.Colors.white, ~x=0., ~y=0., ~fontFamily, ~fontSize, text, v: t) => {
+
+  let (_, skiaTypeface) = FontCache.load(fontFamily, 10);
+  switch (skiaTypeface) {
+  | None => ();
+  | Some(typeface) => 
+
   let { canvas, _ } = v;
   let fill2 = Paint.make();
   let fontStyle = FontStyle.newFontStyle(500, 20, Upright);
-  let typeface = TypeFace.createFromNameWithFontStyle("Consolas", fontStyle);
-  Paint.setColor(fill2, Color.makeArgb(0xFF, 0xFF, 0xFF, 0xFF));
+  //let typeface = TypeFace.createFromNameWithFontStyle("Consolas", fontStyle);
+  Paint.setColor(fill2, Revery_Core.Color.toSkia(color));
   Paint.setTypeFace(fill2, typeface);
   Paint.setLcdRenderText(fill2, true);
   Paint.setAntiAlias(fill2, true);
   Paint.setTextSize(fill2, fontSize);
   Canvas.drawText(canvas, text, x, y, fill2);
+  }
 };
 
 let test_draw = (v: t) => {

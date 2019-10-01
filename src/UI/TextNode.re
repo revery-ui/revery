@@ -34,7 +34,11 @@ class textNode (text: string) = {
       _this#measure(style.width, style.height) |> ignore;
     };
 
+    
+
     let { canvas, _ }: NodeDrawContext.t = parentContext;
+    let dimensions = _this#measurements();
+    Canvas.translate(canvas, float_of_int(dimensions.left), float_of_int(dimensions.top));
     List.iteri(
       (lineNum, line) => {
         /*Text.drawString(
@@ -50,9 +54,10 @@ class textNode (text: string) = {
           line,
         )*/
 
-          let y = lineHeightPx *. float_of_int(lineNum);
-          print_endline ("Drawing text: " ++ line ++ " - y: " ++ string_of_float(y));
-          Canvas.drawText(~x=0., ~y, ~fontFamily="", ~fontSize=25., line, canvas);
+          // TODONOW: How do we calculate the baseline for Skia, instead of this hard-coded 0.8 constant?
+          let y = lineHeightPx *. (float_of_int(lineNum) +. 0.8);
+          //print_endline ("Drawing text: " ++ line ++ " - y: " ++ string_of_float(y));
+          Canvas.drawText(~color, ~x=0., ~y, ~fontFamily, ~fontSize=float_of_int(fontSize), line, canvas);
         }
         ,
       _lines^,
