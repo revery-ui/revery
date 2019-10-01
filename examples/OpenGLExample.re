@@ -30,7 +30,7 @@ module Sample = {
           <OpenGL
             style=outerBox
             render={(transform, _pctx) => {
-              Gl.glClearColor(1.0, 0.0, 0.0, 1.0);
+              /*Gl.glClearColor(1.0, 0.0, 0.0, 1.0);
 
               Revery.Draw.Text.drawString(
                 ~transform,
@@ -52,6 +52,9 @@ module Sample = {
                 ~height=20.,
                 (),
               );
+            }}
+            */
+            ();
             }}
             /* STRESS TEST:
                let iterations = 50000;

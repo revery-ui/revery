@@ -1,6 +1,5 @@
 open Revery_Core;
 open Revery_Draw;
-open Revery_Draw.SolidShader;
 
 module Geometry = Revery_Geometry;
 module Layout = Layout;
@@ -51,6 +50,8 @@ let renderBorders = (~style, ~width, ~height, ~opacity, ~m, ~world) => {
   );
 };
 
+// TODONOW: Bring back drop shadow
+/*
 let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
   let {spreadRadius, blurRadius, xOffset, yOffset, color} = boxShadow;
   let shadowTransform = Mat4.create();
@@ -100,6 +101,7 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
   Geometry.draw(quad, gradientShader.compiledShader);
   ();
 };
+*/
 
 class viewNode (()) = {
   as _this;

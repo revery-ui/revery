@@ -8,8 +8,8 @@ open Reglm;
 open Sdl2.Gl;
 
 open Revery_Core;
-open Revery_Shaders;
-module Geometry = Revery_Geometry;
+//open Revery_Shaders;
+//module Geometry = Revery_Geometry;
 
 let identityMatrix = Mat4.create();
 

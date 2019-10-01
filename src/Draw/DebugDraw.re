@@ -30,7 +30,9 @@ let draw = () =>
       let height = y1 -. y0;
       let width = x1 -. x0;
 
-      Shapes.drawRect(
+      // TODONOW: Bring back debug drawing, but with canvas
+      
+      /*Shapes.drawRect(
         ~transform,
         ~width,
         ~height,
@@ -38,6 +40,6 @@ let draw = () =>
         ~y=y0,
         ~color=Color.rgba(1.0, 0.0, 0.0, 0.2),
         (),
-      );
+      );*/
     };
   };
