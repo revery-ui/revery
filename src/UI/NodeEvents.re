@@ -20,24 +20,27 @@ type mouseWheelEventParams = {
   deltaY: float,
 };
 
+type textInputEventParams = {text: string};
+
+type textEditEventParams = {
+  text: string,
+  start: int,
+  length: int,
+};
+
 /*
   Might be useful to extend in the future
  */
 type focusEventParams = unit;
 
 type keyEventParams = {
-  key: Key.t,
-  scancode: int,
-  altKey: bool,
+  keycode: Key.Keycode.t,
+  scancode: Key.Scancode.t,
+  keymod: Key.Keymod.t,
+  repeat: bool,
   ctrlKey: bool,
+  altKey: bool,
   shiftKey: bool,
-  superKey: bool,
-  isRepeat: bool,
-};
-
-type keyPressEventParams = {
-  codepoint: int,
-  character: string,
 };
 
 module DimensionsChangedEventParams = {
@@ -56,7 +59,9 @@ type event =
   | MouseWheel(mouseWheelEventParams)
   | KeyDown(keyEventParams)
   | KeyUp(keyEventParams)
-  | KeyPress(keyPressEventParams)
+  | TextInput(textInputEventParams)
+  | TextEdit(textEditEventParams)
+  //| KeyPress(keyPressEventParams)
   | MouseEnter(mouseMoveEventParams)
   | MouseLeave(mouseMoveEventParams)
   | MouseOver(mouseMoveEventParams)
@@ -73,7 +78,8 @@ type mouseWheelHandler = mouseWheelEventParams => unit;
 type focusHandler = focusEventParams => unit;
 type keyDownHandler = keyEventParams => unit;
 type keyUpHandler = keyEventParams => unit;
-type keyPressHandler = keyPressEventParams => unit;
+type textInputHandler = textInputEventParams => unit;
+type textEditHandler = textEditEventParams => unit;
 type dimensionsChangedHandler = DimensionsChangedEventParams.t => unit;
 
 type t('a) = {
@@ -90,7 +96,8 @@ type t('a) = {
   onBlur: option(focusHandler),
   onKeyUp: option(keyUpHandler),
   onKeyDown: option(keyDownHandler),
-  onKeyPress: option(keyPressHandler),
+  onTextInput: option(textInputHandler),
+  onTextEdit: option(textEditHandler),
   onDimensionsChanged: option(dimensionsChangedHandler),
 };
 
@@ -107,7 +114,9 @@ let make =
       ~onMouseOut=?,
       ~onFocus=?,
       ~onBlur=?,
-      ~onKeyPress=?,
+      //~onKeyPress=?,
+      ~onTextEdit=?,
+      ~onTextInput=?,
       ~onKeyDown=?,
       ~onKeyUp=?,
       ~onDimensionsChanged=?,
@@ -125,7 +134,8 @@ let make =
     onMouseOut,
     onFocus,
     onBlur,
-    onKeyPress,
+    onTextEdit,
+    onTextInput,
     onKeyDown,
     onKeyUp,
     onDimensionsChanged,

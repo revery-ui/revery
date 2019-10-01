@@ -1,4 +1,4 @@
-open Reglfw.Glfw;
+open Sdl2.Gl;
 open Fontkit;
 
 open Revery_Core;

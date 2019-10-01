@@ -1,18 +1,19 @@
-open Reglfw;
-open Reglfw.Glfw;
+open Sdl2;
+open Sdl2.Gl;
 open Reglm;
 
 open Types;
 
-type attributeNameToLocation = Hashtbl.t(string, attribLocation);
-type attributeChannelToLocation = Hashtbl.t(VertexChannel.t, attribLocation);
-type uniformNameToLocation = Hashtbl.t(string, uniformLocation);
+type attributeNameToLocation = Hashtbl.t(string, Gl.attribLocation);
+type attributeChannelToLocation =
+  Hashtbl.t(VertexChannel.t, Gl.attribLocation);
+type uniformNameToLocation = Hashtbl.t(string, Gl.uniformLocation);
 
 type t = (
   list(ShaderUniform.t),
   list(ShaderAttribute.t),
   list(ShaderVarying.t),
-  Glfw.program,
+  Gl.program,
   attributeNameToLocation,
   attributeChannelToLocation,
   uniformNameToLocation,
@@ -41,7 +42,7 @@ let uniformNameToLocation = (s: t, name: string) => {
   Hashtbl.find_opt(u, name);
 };
 
-let getUniformLocation: (t, string) => uniformLocation =
+let getUniformLocation: (t, string) => Gl.uniformLocation =
   (s, a) => {
     uniformNameToLocation(s, a) |> _getOrThrowUniform(a);
   };
@@ -51,11 +52,11 @@ let getUniformLocation: (t, string) => uniformLocation =
  * minimize calls to OpenGL when possible
  */
 module ShaderCache = {
-  type t = {mutable program: option(Glfw.program)};
+  type t = {mutable program: option(Gl.program)};
 
   let create = () => {program: None};
 
-  let useProgramIfNew = (cache: t, program: Glfw.program, f) => {
+  let useProgramIfNew = (cache: t, program: Gl.program, f) => {
     switch (cache.program) {
     | None =>
       cache.program = Some(program);

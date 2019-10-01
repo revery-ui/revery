@@ -3,7 +3,7 @@
  *
  * Simple texture shader
  */
-open Reglfw.Glfw;
+open Sdl2.Gl;
 open Revery_Shaders;
 
 let attribute: list(ShaderAttribute.t) =

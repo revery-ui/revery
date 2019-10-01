@@ -3,7 +3,7 @@
  *
  * Simple shader demonstrating usage of attributes, uniforms, and varying parameters.
  */
-open Reglfw.Glfw;
+open Sdl2.Gl;
 open Revery_Shaders;
 
 let attribute: list(ShaderAttribute.t) = [

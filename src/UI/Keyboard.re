@@ -1,3 +1,4 @@
+open Revery_Core;
 open NodeEvents;
 
 let dispatch = (event: Revery_Core.Events.internalKeyboardEvent) => {
@@ -7,32 +8,33 @@ let dispatch = (event: Revery_Core.Events.internalKeyboardEvent) => {
   | None => ()
   | Some({handler, _}) =>
     switch (event) {
+    | InternalTextEditEvent({text, start, length}) =>
+      handler(TextEdit({text, start, length}))
+    | InternalTextInputEvent(e) => handler(TextInput({text: e.text}))
     | InternalKeyUpEvent(e) =>
       handler(
         KeyUp({
-          key: e.key,
+          keycode: e.keycode,
           scancode: e.scancode,
-          altKey: e.altKey,
-          ctrlKey: e.ctrlKey,
-          shiftKey: e.shiftKey,
-          superKey: e.superKey,
-          isRepeat: e.isRepeat,
+          repeat: e.repeat,
+          keymod: e.keymod,
+          ctrlKey: Key.Keymod.isControlDown(e.keymod),
+          altKey: Key.Keymod.isAltDown(e.keymod),
+          shiftKey: Key.Keymod.isShiftDown(e.keymod),
         }),
       )
     | InternalKeyDownEvent(e) =>
       handler(
         KeyDown({
-          key: e.key,
+          keycode: e.keycode,
           scancode: e.scancode,
-          altKey: e.altKey,
-          ctrlKey: e.ctrlKey,
-          shiftKey: e.shiftKey,
-          superKey: e.superKey,
-          isRepeat: e.isRepeat,
+          repeat: e.repeat,
+          keymod: e.keymod,
+          ctrlKey: Key.Keymod.isControlDown(e.keymod),
+          altKey: Key.Keymod.isAltDown(e.keymod),
+          shiftKey: Key.Keymod.isShiftDown(e.keymod),
         }),
       )
-    | InternalKeyPressEvent(e) =>
-      handler(KeyPress({codepoint: e.codepoint, character: e.character}))
     }
   };
 };

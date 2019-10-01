@@ -3,20 +3,19 @@ type keyPressEvent = {
   character: string,
 };
 
-type keyEvent = {
-  key: Key.t,
-  scancode: int,
-  altKey: bool,
-  ctrlKey: bool,
-  shiftKey: bool,
-  superKey: bool,
-  isRepeat: bool,
+type textInputEvent = {text: string};
+
+type textEditEvent = {
+  text: string,
+  start: int,
+  length: int,
 };
 
 type internalKeyboardEvent =
-  | InternalKeyUpEvent(keyEvent)
-  | InternalKeyDownEvent(keyEvent)
-  | InternalKeyPressEvent(keyPressEvent);
+  | InternalKeyUpEvent(Key.KeyEvent.t)
+  | InternalKeyDownEvent(Key.KeyEvent.t)
+  | InternalTextEditEvent(textEditEvent)
+  | InternalTextInputEvent(textInputEvent);
 
 type mouseMoveEvent = {
   mouseX: float,

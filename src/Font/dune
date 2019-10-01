@@ -2,4 +2,4 @@
     (name Revery_Font)
     (public_name Revery.Font)
     (preprocess (pps lwt_ppx))
-    (libraries reason-font-manager lwt lwt.unix reglfw flex fontkit rebez.lib Revery_Core Revery_Shaders Revery_Geometry Revery_Math))
+    (libraries reason-font-manager lwt lwt.unix sdl2 flex fontkit rebez.lib Revery_Core Revery_Shaders Revery_Geometry Revery_Math))
