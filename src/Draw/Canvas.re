@@ -92,12 +92,12 @@ let toSkiaRect = (rect: Rectangle.t) => {
   Rect.makeLtrb(x, y, x +. width, y +. height);
 };
 
-let drawRect = (v: t, rect: Rectangle.t /*, TODO: Fill */) => {
+let drawRect = (v: t, rect: Rectangle.t, paint) => {
   let {canvas, _} = v;
   
-  let fill = Paint.make();
-  Paint.setColor(fill, Color.makeArgb(0xFF, 0x00, 0x00, 0xFF));
-  Canvas.drawRect(canvas, toSkiaRect(rect), fill);
+  /*let fill = Paint.make();
+  Paint.setColor(fill, Color.makeArgb(0xFF, 0x00, 0x00, 0xFF));*/
+  Canvas.drawRect(canvas, toSkiaRect(rect), paint);
 };
 
 let drawText = (~x, ~y, ~fontFamily, ~fontSize, text, v: t) => {

@@ -149,7 +149,11 @@ class viewNode (()) = {
         ~height=maxY -. minY,
         ());
     //print_endline ("Drawing: " ++ Revery_Math.Rectangle.show(rect));
-    //Revery_Draw.Canvas.drawRect(canvas, rect /*, TODONOW: Fill */);
+    let fill = Skia.Paint.make();
+    let skiaColor = Color.toSkia(color);
+    Skia.Paint.setColor(fill, skiaColor);
+    
+    Revery_Draw.Canvas.drawRect(canvas, rect, fill);
 
     _super#draw(parentContext);
   };
