@@ -156,13 +156,6 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     animation;
   };
 
-  let pause = animation =>
-    activeAnimations :=
-      List.filter(
-        ({animation: a, _}) => a.id !== animation.id,
-        activeAnimations^,
-      );
-
   let start = (~update=?, ~complete=?, animation) => {
     let activeAnimation = {animation, update, complete};
     let isReverseStartValue =
@@ -260,6 +253,10 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       | exception (Failure(_)) => ()
       };
     };
+    pub activeAnims = () => {
+      Console.log("This animation:" ++ string_of_int(animation.id));
+      List.iter(anim => Console.log(anim.animation.id), activeAnimations^);
+    };
     pub pause = () => {
       self#updateLastActive();
       activeAnimations :=
@@ -274,12 +271,34 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
         animation.startTime =
           Time.to_float_seconds(AnimationTickerImpl.time());
         animation.value.current = 0.0;
-        let newAnim = {
+        let newActiveAnim = {
           animation,
           complete: activeAnim.complete,
           update: activeAnim.update,
         };
-        activeAnimations := List.append([newAnim], activeAnimations^);
+        activeAnimations := List.append([newActiveAnim], activeAnimations^);
+      | None => ()
+      };
+    pub resume = () =>
+      switch (lastActive) {
+      | Some(activeAnim) =>
+        let propDone =
+          (animation.startValue +. animation.value.current)
+          /. animation.toValue;
+        let newStartTime =
+          (AnimationTickerImpl.time() |> Time.toSeconds)
+          -. animation.delay
+          -. propDone
+          *. animation.duration;
+        animation.startTime = newStartTime;
+        let newActiveAnim = {
+          animation,
+          complete: activeAnim.complete,
+          update: activeAnim.update,
+        };
+        activeAnimations := List.append([newActiveAnim], activeAnimations^);
+        ();
+      | None => ()
       };
     pub getAnimation = () => animation;
   };
