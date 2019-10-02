@@ -86,7 +86,7 @@ let _endClipRegion = () => {
   let newStack =
     switch (_clipStack^) {
     | [] => []
-    | [hd, ...tail] => tail
+    | [_hd, ...tail] => tail
     };
 
   switch (List.nth_opt(newStack, 0)) {
