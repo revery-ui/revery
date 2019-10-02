@@ -30,6 +30,20 @@ open Layout;
 
 type renderCallback = unit => unit;
 
+type clipRegion = {
+  x: int,
+  y: int,
+  width: int,
+  height: int,
+};
+
+let _clipStack: ref(list(clipRegion)) = ref([]);
+
+let reset = () => {
+  _clipStack := [];
+  glDisable(GL_SCISSOR_TEST);
+};
+
 let _startClipRegion =
     (
       worldTransform,
@@ -63,9 +77,29 @@ let _startClipRegion =
 
   glEnable(GL_SCISSOR_TEST);
   glScissor(x, y, width, height);
+
+  _clipStack := [{x, y, width, height}, ..._clipStack^];
 };
 
-let _endClipRegion = () => glDisable(GL_SCISSOR_TEST);
+let _endClipRegion = () => {
+  // Pop the old head off the stack...
+  let newStack =
+    switch (_clipStack^) {
+    | [] => []
+    | [hd, ...tail] => tail
+    };
+
+  switch (List.nth_opt(newStack, 0)) {
+  // If there is still an entry, that means our current
+  // Overflow was nested - we should pick up the previous
+  // one and reset it.
+  | Some({x, y, width, height}) => glScissor(x, y, width, height)
+  // Otherwise, we were the first one... so just turn off scissor test.
+  | None => glDisable(GL_SCISSOR_TEST)
+  };
+
+  _clipStack := newStack;
+};
 
 let render =
     (

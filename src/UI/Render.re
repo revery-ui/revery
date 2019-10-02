@@ -79,6 +79,7 @@ let render =
       ~projection=_projection,
       (),
     );
+    Overflow.reset();
     rootNode#draw(drawContext);
     DebugDraw.draw();
     RenderPass.endAlphaPass();
