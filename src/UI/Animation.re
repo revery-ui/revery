@@ -268,32 +268,26 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
         animation.startTime =
           Time.to_float_seconds(AnimationTickerImpl.time());
         animation.value.current = animation.startValue;
-        let newActiveAnim = {
-          animation,
-          complete: activeAnim.complete,
-          update: activeAnim.update,
-        };
-        activeAnimations := List.append([newActiveAnim], activeAnimations^);
+        activeAnimations := List.append([activeAnim], activeAnimations^);
       | None => ()
       };
     pub resume = () =>
       switch (lastActive) {
       | Some(activeAnim) =>
+        // Get the proportion done of the animation
         let propDone =
           (animation.startValue +. animation.value.current)
           /. animation.toValue;
+        // Calculate a new start time based on the proportion done, initial delay, and duration of the animation
         let newStartTime =
           (AnimationTickerImpl.time() |> Time.toSeconds)
           -. animation.delay
           -. propDone
           *. animation.duration;
+        // Set the animation's start time to the new time
         animation.startTime = newStartTime;
-        let newActiveAnim = {
-          animation,
-          complete: activeAnim.complete,
-          update: activeAnim.update,
-        };
-        activeAnimations := List.append([newActiveAnim], activeAnimations^);
+        // Reinsert the last active animation
+        activeAnimations := List.append([activeAnim], activeAnimations^);
         ();
       | None => ()
       };
