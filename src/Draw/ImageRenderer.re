@@ -16,6 +16,7 @@ let _cache: cache = Hashtbl.create(100);
 
 let getTexture = (imagePath: string) => {
   /* TODO: Support url paths? */
+  let imagePath = Environment.getAssetPath(imagePath);
   let cacheResult = Hashtbl.find_opt(_cache, imagePath);
 
   switch (cacheResult) {
@@ -27,7 +28,7 @@ let getTexture = (imagePath: string) => {
 
     Log.info("ImageRender", "Loading from path: " ++ imagePath);
     //let data = Skia.Data.newFromFile(imagePath);
-    let data = Skia.Data.newFromFile("D:/revery/assets/logo.png");
+    let data = Skia.Data.newFromFile(imagePath);
     Log.info("ImageRender", "Got data.");
     let img = Skia.Image.makeFromEncoded(data, None);
     Log.info("ImageRender", "Got image.");
