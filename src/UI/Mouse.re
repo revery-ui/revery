@@ -26,6 +26,116 @@ module Cursor = {
   };
 };
 
+/*
+ * The list values are refs so that an unregister function can be written
+ * easily without introducing ids for each registered listener.
+ */
+type listenerEventState = {
+  onMouseDown: ref(list(ref(option(mouseButtonHandler)))),
+  onMouseMove: ref(list(ref(option(mouseMoveHandler)))),
+  onMouseUp: ref(list(ref(option(mouseButtonHandler)))),
+  onMouseWheel: ref(list(ref(option(mouseWheelHandler)))),
+  onMouseEnter: ref(list(ref(option(mouseMoveHandler)))),
+  onMouseLeave: ref(list(ref(option(mouseMoveHandler)))),
+  onMouseOver: ref(list(ref(option(mouseOverHandler)))),
+  onMouseOut: ref(list(ref(option(mouseMoveHandler)))),
+};
+
+let listenerEventStateInstance: listenerEventState = {
+  onMouseDown: ref([]),
+  onMouseMove: ref([]),
+  onMouseUp: ref([]),
+  onMouseWheel: ref([]),
+  onMouseEnter: ref([]),
+  onMouseLeave: ref([]),
+  onMouseOver: ref([]),
+  onMouseOut: ref([]),
+};
+
+let addListener = (listRef, listener) => {
+  listRef := [listener, ...listRef^];
+  listRef :=
+    List.filter(
+      el =>
+        switch (el^) {
+        | Some(_) => true
+        | None => false
+        },
+      listRef^,
+    );
+};
+
+let registerListeners =
+    (
+      ~onMouseDown=?,
+      ~onMouseMove=?,
+      ~onMouseUp=?,
+      ~onMouseWheel=?,
+      ~onMouseEnter=?,
+      ~onMouseLeave=?,
+      ~onMouseOver=?,
+      ~onMouseOut=?,
+      (),
+    ) => {
+  let onMouseDown = ref(onMouseDown);
+  let onMouseMove = ref(onMouseMove);
+  let onMouseUp = ref(onMouseUp);
+  let onMouseWheel = ref(onMouseWheel);
+  let onMouseEnter = ref(onMouseEnter);
+  let onMouseLeave = ref(onMouseLeave);
+  let onMouseOver = ref(onMouseOver);
+  let onMouseOut = ref(onMouseOut);
+
+  let unregister = () => {
+    onMouseDown := None;
+    onMouseMove := None;
+    onMouseUp := None;
+    onMouseWheel := None;
+    onMouseEnter := None;
+    onMouseLeave := None;
+    onMouseOver := None;
+    onMouseOut := None;
+  };
+
+  addListener(listenerEventStateInstance.onMouseDown, onMouseDown);
+  addListener(listenerEventStateInstance.onMouseMove, onMouseMove);
+  addListener(listenerEventStateInstance.onMouseUp, onMouseUp);
+  addListener(listenerEventStateInstance.onMouseWheel, onMouseWheel);
+  addListener(listenerEventStateInstance.onMouseEnter, onMouseEnter);
+  addListener(listenerEventStateInstance.onMouseLeave, onMouseLeave);
+  addListener(listenerEventStateInstance.onMouseOver, onMouseOver);
+  addListener(listenerEventStateInstance.onMouseOut, onMouseOut);
+
+  unregister;
+};
+
+let callHandlers = (handlers, evt) => {
+  List.iter(
+    handler => {
+      switch (handler^) {
+      | Some(handler) => handler(evt)
+      | None => ()
+      }
+    },
+    handlers,
+  );
+};
+
+let handleListeners = (event: event) => {
+  let state = listenerEventStateInstance;
+  switch (event) {
+  | MouseDown(evt) => callHandlers(state.onMouseDown^, evt)
+  | MouseMove(evt) => callHandlers(state.onMouseMove^, evt)
+  | MouseUp(evt) => callHandlers(state.onMouseUp^, evt)
+  | MouseWheel(evt) => callHandlers(state.onMouseWheel^, evt)
+  | MouseEnter(evt) => callHandlers(state.onMouseEnter^, evt)
+  | MouseLeave(evt) => callHandlers(state.onMouseLeave^, evt)
+  | MouseOver(evt) => callHandlers(state.onMouseOver^, evt)
+  | MouseOut(evt) => callHandlers(state.onMouseOut^, evt)
+  | _ => ()
+  };
+};
+
 type capturedEventState = {
   onMouseDown: ref(option(mouseButtonHandler)),
   onMouseMove: ref(option(mouseMoveHandler)),
@@ -302,6 +412,8 @@ let dispatch =
       } else {
         ();
       };
+
+      handleListeners(eventToSend);
 
       if (!handleCapture(eventToSend)) {
         let deepestNode = getTopMostNode(node, pos);

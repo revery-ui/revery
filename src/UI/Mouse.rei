@@ -14,6 +14,21 @@ module Cursor: {
   let set: (t, Vec2.t) => unit;
 };
 
+let registerListeners:
+  (
+    ~onMouseDown: mouseButtonHandler=?,
+    ~onMouseMove: mouseMoveHandler=?,
+    ~onMouseUp: mouseButtonHandler=?,
+    ~onMouseWheel: mouseWheelHandler=?,
+    ~onMouseEnter: mouseMoveHandler=?,
+    ~onMouseLeave: mouseMoveHandler=?,
+    ~onMouseOver: mouseMoveHandler=?,
+    ~onMouseOut: mouseMoveHandler=?,
+    unit,
+    unit
+  ) =>
+  unit;
+
 let setCapture:
   (
     ~onMouseDown: mouseButtonHandler=?,
