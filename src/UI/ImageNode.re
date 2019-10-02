@@ -28,6 +28,8 @@ class imageNode (imagePath: string) = {
 
     let { canvas, _ }: NodeDrawContext.t = parentContext;
 
+      let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
+      Revery_Draw.Canvas.setMatrix(canvas, skiaWorld);
     Draw.Canvas.drawImage(~x=0., ~y=0., src, canvas); 
 
     /*Draw.Image.drawImage(

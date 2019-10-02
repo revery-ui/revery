@@ -138,8 +138,8 @@ class viewNode (()) = {
       let height = (dimensions.height) |> float_of_int;
 
       let rect = Revery_Math.Rectangle.create(
-          ~x=x,
-          ~y=y,
+          ~x=0.,
+          ~y=0.,
           ~width,
           ~height,
           ());
@@ -147,6 +147,11 @@ class viewNode (()) = {
       let fill = Skia.Paint.make();
       let skiaColor = Color.toSkia(color);
       Skia.Paint.setColor(fill, skiaColor);
+
+      let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
+      //let skiaWorld = Skia.Matrix.make();
+      //Skia.Matrix.setIdentity(skiaWorld);
+      Revery_Draw.Canvas.setMatrix(canvas, skiaWorld);
       
       Revery_Draw.Canvas.drawRect(canvas, rect, fill);
 //      Revery_Draw.Canvas.flush(canvas);

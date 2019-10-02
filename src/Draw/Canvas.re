@@ -105,8 +105,15 @@ let drawRect = (v: t, rect: Rectangle.t, paint) => {
 let drawImage = (~x, ~y, src, v: t) => {
 
   let image = ImageRenderer.getTexture(src);
-  Canvas.drawImage(v.canvas, image, x, y, Paint.make());
+  switch (image) {
+  | None => ()
+  | Some(img) => Canvas.drawImage(v.canvas, img, x, y, None);
+  }
 
+};
+
+let setMatrix = (v: t, mat: Skia.Matrix.t) => {
+  Canvas.setMatrix(v.canvas, mat);
 };
 
 let drawText = (~color=Revery_Core.Colors.white, ~x=0., ~y=0., ~fontFamily, ~fontSize, text, v: t) => {

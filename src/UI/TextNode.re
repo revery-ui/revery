@@ -33,8 +33,11 @@ class textNode (text: string) = {
     };
 
     
-
     let { canvas, _ }: NodeDrawContext.t = parentContext;
+    let world = _this#getWorldTransform();
+    let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
+    Revery_Draw.Canvas.setMatrix(canvas, skiaWorld);
+    
     let dimensions = _this#measurements();
     Canvas.translate(canvas, float_of_int(dimensions.left), float_of_int(dimensions.top));
     List.iteri(
@@ -53,7 +56,7 @@ class textNode (text: string) = {
         )*/
 
           // TODONOW: How do we calculate the baseline for Skia, instead of this hard-coded 0.8 constant?
-          let y = lineHeightPx *. (float_of_int(lineNum) +. 0.8);
+          let y = lineHeightPx *. (float_of_int(lineNum));
           //print_endline ("Drawing text: " ++ line ++ " - y: " ++ string_of_float(y));
           Canvas.drawText(~color, ~x=0., ~y, ~fontFamily, ~fontSize=float_of_int(fontSize), line, canvas);
         }
