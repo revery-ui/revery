@@ -102,6 +102,13 @@ let drawRect = (v: t, rect: Rectangle.t, paint) => {
   Canvas.drawRect(canvas, toSkiaRect(rect), paint);
 };
 
+let drawImage = (~x, ~y, src, v: t) => {
+
+  let image = ImageRenderer.getTexture(src);
+  
+  Canvas.drawImage(v.canvas, image, x, y, Paint.make());
+};
+
 let drawText = (~color=Revery_Core.Colors.white, ~x=0., ~y=0., ~fontFamily, ~fontSize, text, v: t) => {
 
   let (_, skiaTypeface) = FontCache.load(fontFamily, 10);

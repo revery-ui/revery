@@ -26,7 +26,11 @@ class imageNode (imagePath: string) = {
     let dimensions = _this#measurements();
     let world = _this#getWorldTransform();
 
-    Draw.Image.drawImage(
+    let { canvas, _ }: NodeDrawContext.t = parentContext;
+
+    Draw.Canvas.drawImage(~x=0., ~y=0., src, canvas); 
+
+    /*Draw.Image.drawImage(
       ~imagePath=src,
       ~transform=world,
       ~width=float_of_int(dimensions.width),
@@ -35,7 +39,7 @@ class imageNode (imagePath: string) = {
       ~tint=Colors.white,
       ~opacity=_opacity^,
       (),
-    );
+    );*/
   };
   pub setOpacity = f => _opacity := f;
   pub setResizeMode = (mode: ImageResizeMode.t) => {
