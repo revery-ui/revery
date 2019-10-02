@@ -11,7 +11,7 @@ let initialPixels =
     Image.getPixels(initialImage);
   });
 
-type cache = Hashtbl.t(string, Skia.Image.t);
+type cache = Hashtbl.t(string, option(Skia.Image.t));
 let _cache: cache = Hashtbl.create(100);
 
 let getTexture = (imagePath: string) => {
@@ -19,14 +19,17 @@ let getTexture = (imagePath: string) => {
   let cacheResult = Hashtbl.find_opt(_cache, imagePath);
 
   switch (cacheResult) {
-  | Some(r) => r
+  | Some(r) => switch(r) {
+    | Some(_) as v=> v
+    | None => None
+  }
   | None =>
 
     Log.info("ImageRender", "Loading from path: " ++ imagePath);
     //let data = Skia.Data.newFromFile(imagePath);
     let data = Skia.Data.newFromFile("D:/revery/assets/logo.png");
     Log.info("ImageRender", "Got data.");
-    let img = Skia.Image.newFromEncoded(data);
+    let img = Skia.Image.makeFromEncoded(data, None);
     Log.info("ImageRender", "Got image.");
 
     Hashtbl.replace(_cache, imagePath, img);
