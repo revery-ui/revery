@@ -253,10 +253,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       | exception (Failure(_)) => ()
       };
     };
-    pub activeAnims = () => {
-      Console.log("This animation:" ++ string_of_int(animation.id));
-      List.iter(anim => Console.log(anim.animation.id), activeAnimations^);
-    };
+    pub reverse = () => animation.isReverse = !animation.isReverse;
     pub pause = () => {
       self#updateLastActive();
       activeAnimations :=
@@ -270,7 +267,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       | Some(activeAnim) =>
         animation.startTime =
           Time.to_float_seconds(AnimationTickerImpl.time());
-        animation.value.current = 0.0;
+        animation.value.current = animation.startValue;
         let newActiveAnim = {
           animation,
           complete: activeAnim.complete,
