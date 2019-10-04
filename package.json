@@ -32,13 +32,13 @@
     "@opam/js_of_ocaml-lwt": "^3.4.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
-    "brisk-reconciler": "^0.0.1",
+    "brisk-reconciler": "^0.0.2",
     "flex": "^1.2.2",
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
     "rench": "^1.9.0",
     "reason-font-manager": "^2.0.0",
-    "reason-sdl2": "^2.10.3003"
+    "reason-sdl2": "^2.10.3004"
   },
   "resolutions": {
     "rebez": "github:jchavarri/rebez#46cbc183",
