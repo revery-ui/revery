@@ -39,6 +39,7 @@ let setCapture:
     ~onMouseLeave: mouseMoveHandler=?,
     ~onMouseOver: mouseMoveHandler=?,
     ~onMouseOut: mouseMoveHandler=?,
+    ~onMouseLeaveWindow: (unit => unit)=?,
     unit
   ) =>
   unit;
@@ -48,3 +49,5 @@ let releaseCapture: unit => unit;
 let onCursorChanged: Event.t(MouseCursors.t);
 
 let dispatch: (Cursor.t, Events.internalMouseEvents, Node.node) => unit;
+
+let notifyLeaveWindow: unit => unit;

@@ -65,6 +65,8 @@ type t = {
   onMouseMove: Event.t(mouseMoveEvent),
   onMouseWheel: Event.t(mouseWheelEvent),
   onMouseDown: Event.t(mouseButtonEvent),
+  onMouseEnter: Event.t(unit),
+  onMouseLeave: Event.t(unit),
   onCompositionStart: Event.t(unit),
   onCompositionEdit: Event.t(textEditEvent),
   onCompositionEnd: Event.t(unit),
@@ -319,6 +321,8 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.WindowResized(_) => v.areMetricsDirty = true
   | Sdl2.Event.WindowSizeChanged(_) => v.areMetricsDirty = true
   | Sdl2.Event.WindowMoved(_) => v.areMetricsDirty = true
+  | Sdl2.Event.WindowEnter(_) => Event.dispatch(v.onMouseEnter, ())
+  | Sdl2.Event.WindowLeave(_) => Event.dispatch(v.onMouseLeave, ())
   | Sdl2.Event.Quit => ()
   | _ => ()
   };
@@ -411,6 +415,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onMouseWheel: Event.create(),
     onMouseUp: Event.create(),
     onMouseDown: Event.create(),
+    onMouseEnter: Event.create(),
+    onMouseLeave: Event.create(),
 
     onKeyDown: Event.create(),
     onKeyUp: Event.create(),
