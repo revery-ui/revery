@@ -20,7 +20,8 @@ let singleHex =
   Re.Perl.re(
     //"#\\([a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]?[a-f|A-F|0-9]?\\)",
     "#([a-f|A-F|0-9])([a-f|A-F|0-9])([a-f|A-F|0-9])([a-f|A-F|0-9]?[a-f|A-F|0-9]?)",
-  ) |> Re.Perl.compile;
+  )
+  |> Re.Perl.compile;
 
 // Matches:
 // #FFFFFF
@@ -30,7 +31,8 @@ let doubleHex =
   Re.Perl.re(
     //"#\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]?[a-f|A-F|0-9]?\\)",
     "#([a-f|A-F|0-9][a-f|A-F|0-9])([a-f|A-F|0-9][a-f|A-F|0-9])([a-f|A-F|0-9][a-f|A-F|0-9])([a-f|A-F|0-9]?[a-f|A-F|0-9]?)",
-  ) |> Re.Perl.compile;
+  )
+  |> Re.Perl.compile;
 
 exception ColorHexParseException(string);
 
@@ -59,28 +61,24 @@ let parseColor = c => {
 let hex = str =>
   // First, try and parse with the 'double hex' option
   switch (Re.exec_opt(doubleHex, str)) {
-  | Some(matches) => {
+  | Some(matches) =>
     let r = Re.Group.get(matches, 1) |> parseColor;
     let g = Re.Group.get(matches, 2) |> parseColor;
     let b = Re.Group.get(matches, 3) |> parseColor;
     let a = Re.Group.get(matches, 4) |> parseColor;
     rgba(r, g, b, a);
-    }
   | None =>
     // Now, try and parse with the 'single hex' option
     switch (Re.exec_opt(singleHex, str)) {
-    | Some(matches) => {
+    | Some(matches) =>
       let r = Re.Group.get(matches, 1) |> parseColor;
       let g = Re.Group.get(matches, 2) |> parseColor;
       let b = Re.Group.get(matches, 3) |> parseColor;
       let a = Re.Group.get(matches, 4) |> parseColor;
       rgba(r, g, b, a);
-    };
-    | None =>
-      raise(ColorHexParseException("Unable to parse color: " ++ str));
+    | None => raise(ColorHexParseException("Unable to parse color: " ++ str))
     }
-    };
-
+  };
 
 let multiplyAlpha = (opacity: float, color: t) => {
   let ret: t = {...color, a: opacity *. color.a};
