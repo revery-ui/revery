@@ -17,18 +17,20 @@ let rgb = (r, g, b) => {r, g, b, a: 1.0};
 // #FFF00
 //let singleHex = Str.regexp("#\\([a-f\\|A-F\\|0-9]\\)\\([a-f\\|A-F\\|0-9]\\)\\([a-f\\|A-F\\|0-9]\\)\\([a-f\\|A-F\\|0-9]\\)");
 let singleHex =
-  Str.regexp(
-    "#\\([a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]?[a-f|A-F|0-9]?\\)",
-  );
+  Re.Perl.re(
+    //"#\\([a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]?[a-f|A-F|0-9]?\\)",
+    "#([a-f|A-F|0-9])([a-f|A-F|0-9])([a-f|A-F|0-9])([a-f|A-F|0-9]?[a-f|A-F|0-9]?)",
+  ) |> Re.Perl.compile;
 
 // Matches:
 // #FFFFFF
 // #FFFFFF0
 // #FFFFFF00
 let doubleHex =
-  Str.regexp(
-    "#\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]?[a-f|A-F|0-9]?\\)",
-  );
+  Re.Perl.re(
+    //"#\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]?[a-f|A-F|0-9]?\\)",
+    "#([a-f|A-F|0-9][a-f|A-F|0-9])([a-f|A-F|0-9][a-f|A-F|0-9])([a-f|A-F|0-9][a-f|A-F|0-9])([a-f|A-F|0-9]?[a-f|A-F|0-9]?)",
+  ) |> Re.Perl.compile;
 
 exception ColorHexParseException(string);
 
@@ -55,21 +57,30 @@ let parseColor = c => {
 };
 
 let hex = str =>
-  if (Str.string_match(doubleHex, str, 0)) {
-    let r = Str.matched_group(1, str) |> parseColor;
-    let g = Str.matched_group(2, str) |> parseColor;
-    let b = Str.matched_group(3, str) |> parseColor;
-    let a = Str.matched_group(4, str) |> parseColor;
+  // First, try and parse with the 'double hex' option
+  switch (Re.exec_opt(doubleHex, str)) {
+  | Some(matches) => {
+    let r = Re.Group.get(matches, 1) |> parseColor;
+    let g = Re.Group.get(matches, 2) |> parseColor;
+    let b = Re.Group.get(matches, 3) |> parseColor;
+    let a = Re.Group.get(matches, 4) |> parseColor;
     rgba(r, g, b, a);
-  } else if (Str.string_match(singleHex, str, 0)) {
-    let r = Str.matched_group(1, str) |> parseColor;
-    let g = Str.matched_group(2, str) |> parseColor;
-    let b = Str.matched_group(3, str) |> parseColor;
-    let a = Str.matched_group(4, str) |> parseColor;
-    rgba(r, g, b, a);
-  } else {
-    raise(ColorHexParseException("Unable to parse color: " ++ str));
-  };
+    }
+  | None =>
+    // Now, try and parse with the 'single hex' option
+    switch (Re.exec_opt(singleHex, str)) {
+    | Some(matches) => {
+      let r = Re.Group.get(matches, 1) |> parseColor;
+      let g = Re.Group.get(matches, 2) |> parseColor;
+      let b = Re.Group.get(matches, 3) |> parseColor;
+      let a = Re.Group.get(matches, 4) |> parseColor;
+      rgba(r, g, b, a);
+    };
+    | None =>
+      raise(ColorHexParseException("Unable to parse color: " ++ str));
+    }
+    };
+
 
 let multiplyAlpha = (opacity: float, color: t) => {
   let ret: t = {...color, a: opacity *. color.a};
