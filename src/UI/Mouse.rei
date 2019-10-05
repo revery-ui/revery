@@ -39,7 +39,7 @@ let setCapture:
     ~onMouseLeave: mouseMoveHandler=?,
     ~onMouseOver: mouseMoveHandler=?,
     ~onMouseOut: mouseMoveHandler=?,
-    ~onMouseLeaveWindow: (unit => unit)=?,
+    ~onMouseLeaveWindow: unit => unit=?,
     unit
   ) =>
   unit;

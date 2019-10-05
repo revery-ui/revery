@@ -11,7 +11,6 @@
  * We should call them if we want to have multiple windows support.
  */
 
-
 module Log = Revery_Core.Log;
 module Window = Revery_Core.Window;
 

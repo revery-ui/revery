@@ -151,7 +151,7 @@ type capturedEventState = {
 let capturedEventStateInstance: ref(option(capturedEventState)) = ref(None);
 
 let noop0 = () => ();
-let noop1 = (_) => ();
+let noop1 = _ => ();
 
 let releaseCapture = () => {
   capturedEventStateInstance := None;
@@ -170,39 +170,36 @@ let setCapture =
       ~onMouseLeaveWindow=noop0,
       (),
     ) => {
-
   // If there was a previous capture - release
   releaseCapture();
-    
-  capturedEventStateInstance := Some({
-    onMouseDown,
-    onMouseMove,
-    onMouseUp,
-    onMouseWheel,
-    onMouseEnter,
-    onMouseLeave,
-    onMouseOver,
-    onMouseOut,
-    onMouseLeaveWindow,
-  });
-  
+
+  capturedEventStateInstance :=
+    Some({
+      onMouseDown,
+      onMouseMove,
+      onMouseUp,
+      onMouseWheel,
+      onMouseEnter,
+      onMouseLeave,
+      onMouseOver,
+      onMouseOut,
+      onMouseLeaveWindow,
+    });
 };
 
 let notifyLeaveWindow = () => {
   // If we're leaving the window, and we're capturing - stop the capture.
   switch (capturedEventStateInstance^) {
   | None => ()
-  | Some(ce) => ce.onMouseLeaveWindow();
-  }
+  | Some(ce) => ce.onMouseLeaveWindow()
+  };
 };
 
 let handleCapture = (event: event) => {
   let ce = capturedEventStateInstance^;
 
-  switch (
-    ce
-  ) {
-  | None => false 
+  switch (ce) {
+  | None => false
   | Some({
       onMouseDown,
       onMouseMove,
@@ -213,17 +210,34 @@ let handleCapture = (event: event) => {
       onMouseOver,
       onMouseOut,
       onMouseLeaveWindow,
-      _
-    }) => switch(event) {
-      | MouseDown(evt) => onMouseDown(evt); true;
-      | MouseMove(evt) => onMouseMove(evt); true;
-      | MouseUp(evt) => onMouseUp(evt); true;
-      | MouseWheel(evt) => onMouseWheel(evt); true;
-      | MouseEnter(evt) => onMouseEnter(evt); true;
-      | MouseLeave(evt) => onMouseLeave(evt); true;
-      | MouseOver(evt) => onMouseOver(evt); true; 
-      | MouseOut(evt) => onMouseOut(evt); true;
-      | _ => false
+      _,
+    }) =>
+    switch (event) {
+    | MouseDown(evt) =>
+      onMouseDown(evt);
+      true;
+    | MouseMove(evt) =>
+      onMouseMove(evt);
+      true;
+    | MouseUp(evt) =>
+      onMouseUp(evt);
+      true;
+    | MouseWheel(evt) =>
+      onMouseWheel(evt);
+      true;
+    | MouseEnter(evt) =>
+      onMouseEnter(evt);
+      true;
+    | MouseLeave(evt) =>
+      onMouseLeave(evt);
+      true;
+    | MouseOver(evt) =>
+      onMouseOver(evt);
+      true;
+    | MouseOut(evt) =>
+      onMouseOut(evt);
+      true;
+    | _ => false
     }
   };
 };
