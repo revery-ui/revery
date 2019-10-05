@@ -18,7 +18,6 @@ let rgb = (r, g, b) => {r, g, b, a: 1.0};
 //let singleHex = Str.regexp("#\\([a-f\\|A-F\\|0-9]\\)\\([a-f\\|A-F\\|0-9]\\)\\([a-f\\|A-F\\|0-9]\\)\\([a-f\\|A-F\\|0-9]\\)");
 let singleHex =
   Re.Perl.re(
-    //"#\\([a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]?[a-f|A-F|0-9]?\\)",
     "#([a-f|A-F|0-9])([a-f|A-F|0-9])([a-f|A-F|0-9])([a-f|A-F|0-9]?[a-f|A-F|0-9]?)",
   )
   |> Re.Perl.compile;
@@ -29,7 +28,6 @@ let singleHex =
 // #FFFFFF00
 let doubleHex =
   Re.Perl.re(
-    //"#\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9][a-f|A-F|0-9]\\)\\([a-f|A-F|0-9]?[a-f|A-F|0-9]?\\)",
     "#([a-f|A-F|0-9][a-f|A-F|0-9])([a-f|A-F|0-9][a-f|A-F|0-9])([a-f|A-F|0-9][a-f|A-F|0-9])([a-f|A-F|0-9]?[a-f|A-F|0-9]?)",
   )
   |> Re.Perl.compile;
