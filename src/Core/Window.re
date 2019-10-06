@@ -2,6 +2,7 @@ open Events;
 
 type windowRenderCallback = unit => unit;
 type windowShouldRenderCallback = unit => bool;
+type windowCanQuitCallback = unit => bool;
 
 type size = {
   width: int,
@@ -52,6 +53,7 @@ type t = {
   forceScaleFactor: option(float),
   mutable render: windowRenderCallback,
   mutable shouldRender: windowShouldRenderCallback,
+  mutable canQuit: windowCanQuitCallback,
   mutable metrics: WindowMetrics.t,
   mutable areMetricsDirty: bool,
   mutable isRendering: bool,
@@ -396,6 +398,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     render: () => (),
     shouldRender: () => false,
+    canQuit: () => true,
 
     metrics,
     areMetricsDirty: false,
@@ -556,8 +559,12 @@ let destroyWindow = (_w: t) => {
   ();
 };
 
-let shouldClose = (_w: t) => {
-  true;
+let canQuit = (w: t) => {
+  w.canQuit();
+};
+
+let setCanQuitCallback = (w: t, callback: windowCanQuitCallback) => {
+  w.canQuit = callback;
 };
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) =>
