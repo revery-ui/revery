@@ -41,7 +41,8 @@ let generateUniformPixelShaderBlock = (uniforms: list(ShaderUniform.t)) => {
 let generateVaryingBlock = (varying: list(ShaderVarying.t)) =>
   generateBlock(ShaderVarying.toString, varying);
 
-let shaderPreamble = Environment.webGL ? "precision mediump float;" : "";
+let vertexShaderPreamble = "precision highp float";
+let fragmentShaderPreamble = "precision mediump float";
 
 let create =
     (
@@ -52,7 +53,7 @@ let create =
       ~fragmentShader: fragmentShaderSource,
     ) => {
   let vertexShader =
-    shaderPreamble
+    vertexShaderPreamble
     ++ generateAttributeVertexShaderBlock(attributes)
     ++ generateUniformVertexShaderBlock(uniforms)
     ++ generateVaryingBlock(varying)
@@ -61,7 +62,7 @@ let create =
     ++ "}\n";
 
   let fragmentShader =
-    shaderPreamble
+    fragmentShaderPreamble
     ++ generateUniformPixelShaderBlock(uniforms)
     ++ generateVaryingBlock(varying)
     ++ "void main() {\n"
@@ -72,6 +73,7 @@ let create =
 };
 
 exception ShaderCompilationException(string);
+exception ShaderLinkException(string);
 
 let compile = (shader: t) => {
   let (uniforms, attributes, varying, vs, fs) = shader;
@@ -125,18 +127,20 @@ let compile = (shader: t) => {
         attributeChannelToLocation,
         uniformNameToLocation,
       );
-    | LinkFailure(v) => raise(ShaderCompilationException(v))
+    | LinkFailure(v) => raise(ShaderLinkException(v))
     };
   };
+
+  
 
   switch (vsResult, fsResult) {
   | (CompilationSuccess, CompilationSuccess) =>
     linkProgram(vertexShader, fragmentShader)
   | (CompilationFailure(v), CompilationSuccess) =>
-    raise(ShaderCompilationException(v))
+    raise(ShaderCompilationException(v ++ " in vertex shader: " ++ vs))
   | (CompilationSuccess, CompilationFailure(v)) =>
-    raise(ShaderCompilationException(v))
+    raise(ShaderCompilationException(v ++ " in fragment shader: " ++ fs))
   | (CompilationFailure(v1), CompilationFailure(v2)) =>
-    raise(ShaderCompilationException(v1 ++ v2))
+    raise(ShaderCompilationException(v1 ++ " in vertex shader: " ++ vs ++ " and " ++ v2 ++ " in fragment shader: " ++ fs ))
   };
 };
