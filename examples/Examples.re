@@ -27,6 +27,11 @@ let state: state = {
   examples: [
     {name: "Animation", render: _w => Hello.render(), source: "Hello.re"},
     {
+      name: "CanQuit",
+      render: _ => CanQuitExample.render(),
+      source: "CanQuit.re",
+    },
+    {
       name: "Button",
       render: _ => DefaultButton.render(),
       source: "DefaultButton.re",
