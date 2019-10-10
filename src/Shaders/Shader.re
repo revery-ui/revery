@@ -131,8 +131,6 @@ let compile = (shader: t) => {
     };
   };
 
-  
-
   switch (vsResult, fsResult) {
   | (CompilationSuccess, CompilationSuccess) =>
     linkProgram(vertexShader, fragmentShader)
@@ -141,6 +139,16 @@ let compile = (shader: t) => {
   | (CompilationSuccess, CompilationFailure(v)) =>
     raise(ShaderCompilationException(v ++ " in fragment shader: " ++ fs))
   | (CompilationFailure(v1), CompilationFailure(v2)) =>
-    raise(ShaderCompilationException(v1 ++ " in vertex shader: " ++ vs ++ " and " ++ v2 ++ " in fragment shader: " ++ fs ))
+    raise(
+      ShaderCompilationException(
+        v1
+        ++ " in vertex shader: "
+        ++ vs
+        ++ " and "
+        ++ v2
+        ++ " in fragment shader: "
+        ++ fs,
+      ),
+    )
   };
 };
