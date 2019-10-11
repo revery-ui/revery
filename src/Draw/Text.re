@@ -18,20 +18,11 @@ open Fontkit;
  * with the requested fontSize. For example, in a high DPI that has a 3x pixel
  * ratio, we want to render a 3x size bitmap.
  */
-let _getScaledFontSize2 = (~scaleFactor, ~pixelRatio, fontSize) => {
+let _getScaledFontSize = (~scaleFactor, ~pixelRatio, fontSize) => {
   let ret =
     int_of_float(float_of_int(fontSize) *. pixelRatio *. scaleFactor +. 0.5);
   ret;
 };
-
-/*let _getScaledFontSize = fontSize => {
-    let ctx = RenderPass.getContext();
-    _getScaledFontSize2(
-      ~scaleFactor=ctx.scaleFactor,
-      ~pixelRatio=ctx.pixelRatio,
-      fontSize,
-    );
-  };*/
 
 let _getScaledFontSizeFromWindow = (window: option(Window.t), fontSize) => {
   let (scaleFactor, pixelRatio) =
@@ -43,7 +34,7 @@ let _getScaledFontSizeFromWindow = (window: option(Window.t), fontSize) => {
       (sf, pr);
     };
 
-  _getScaledFontSize2(~scaleFactor, ~pixelRatio, fontSize);
+  _getScaledFontSize(~scaleFactor, ~pixelRatio, fontSize);
 };
 
 let getLineHeight = (~window=None, ~fontFamily, ~fontSize, ~lineHeight, ()) => {
