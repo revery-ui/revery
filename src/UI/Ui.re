@@ -66,7 +66,7 @@ let start = (window: Window.t, element: React.syntheticElement) => {
   let _ignore =
     Revery_Core.Event.subscribe(
       window.onMouseLeave,
-      m => {
+      () => {
         log("Mouse leaving window");
         Mouse.notifyLeaveWindow(window);
       },
@@ -75,7 +75,7 @@ let start = (window: Window.t, element: React.syntheticElement) => {
   let _ignore =
     Revery_Core.Event.subscribe(
       window.onMouseEnter,
-      m => {
+      () => {
         log("Mouse entering window");
         Mouse.notifyEnterWindow(window);
       },

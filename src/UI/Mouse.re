@@ -233,7 +233,6 @@ let handleCapture = (event: event) => {
       onMouseLeave,
       onMouseOver,
       onMouseOut,
-      onMouseLeaveWindow,
       _,
     }) =>
     switch (event) {
