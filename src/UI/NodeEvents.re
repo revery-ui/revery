@@ -66,6 +66,8 @@ type event =
   | MouseLeave(mouseMoveEventParams)
   | MouseOver(mouseMoveEventParams)
   | MouseOut(mouseMoveEventParams)
+  | MouseEnterWindow(Window.t)
+  | MouseLeaveWindow(Window.t)
   | Blur
   | Focus;
 
@@ -75,6 +77,7 @@ type mouseMoveHandler = mouseMoveEventParams => unit;
 type mouseOverHandler = mouseMoveEventParams => unit;
 type mouseOutHandler = mouseMoveEventParams => unit;
 type mouseWheelHandler = mouseWheelEventParams => unit;
+type mouseWindowHandler = Window.t => unit;
 type focusHandler = focusEventParams => unit;
 type keyDownHandler = keyEventParams => unit;
 type keyUpHandler = keyEventParams => unit;

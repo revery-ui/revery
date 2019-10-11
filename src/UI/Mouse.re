@@ -39,6 +39,8 @@ type listenerEventState = {
   onMouseLeave: ref(list(ref(option(mouseMoveHandler)))),
   onMouseOver: ref(list(ref(option(mouseOverHandler)))),
   onMouseOut: ref(list(ref(option(mouseMoveHandler)))),
+  onMouseEnterWindow: ref(list(ref(option(mouseWindowHandler)))),
+  onMouseLeaveWindow: ref(list(ref(option(mouseWindowHandler)))),
 };
 
 let listenerEventStateInstance: listenerEventState = {
@@ -50,6 +52,8 @@ let listenerEventStateInstance: listenerEventState = {
   onMouseLeave: ref([]),
   onMouseOver: ref([]),
   onMouseOut: ref([]),
+  onMouseEnterWindow: ref([]),
+  onMouseLeaveWindow: ref([]),
 };
 
 let addListener = (listRef, listener) => {
@@ -75,6 +79,8 @@ let registerListeners =
       ~onMouseLeave=?,
       ~onMouseOver=?,
       ~onMouseOut=?,
+      ~onMouseEnterWindow=?,
+      ~onMouseLeaveWindow=?,
       (),
     ) => {
   let onMouseDown = ref(onMouseDown);
@@ -85,6 +91,8 @@ let registerListeners =
   let onMouseLeave = ref(onMouseLeave);
   let onMouseOver = ref(onMouseOver);
   let onMouseOut = ref(onMouseOut);
+  let onMouseEnterWindow = ref(onMouseEnterWindow);
+  let onMouseLeaveWindow = ref(onMouseLeaveWindow);
 
   let unregister = () => {
     onMouseDown := None;
@@ -95,6 +103,8 @@ let registerListeners =
     onMouseLeave := None;
     onMouseOver := None;
     onMouseOut := None;
+    onMouseEnterWindow := None;
+    onMouseLeaveWindow := None;
   };
 
   addListener(listenerEventStateInstance.onMouseDown, onMouseDown);
@@ -105,6 +115,8 @@ let registerListeners =
   addListener(listenerEventStateInstance.onMouseLeave, onMouseLeave);
   addListener(listenerEventStateInstance.onMouseOver, onMouseOver);
   addListener(listenerEventStateInstance.onMouseOut, onMouseOut);
+  addListener(listenerEventStateInstance.onMouseEnterWindow, onMouseEnterWindow);
+  addListener(listenerEventStateInstance.onMouseLeaveWindow, onMouseLeaveWindow);
 
   unregister;
 };
@@ -132,6 +144,8 @@ let handleListeners = (event: event) => {
   | MouseLeave(evt) => callHandlers(state.onMouseLeave^, evt)
   | MouseOver(evt) => callHandlers(state.onMouseOver^, evt)
   | MouseOut(evt) => callHandlers(state.onMouseOut^, evt)
+  | MouseEnterWindow(evt) => callHandlers(state.onMouseEnterWindow^, evt)
+  | MouseLeaveWindow(evt) => callHandlers(state.onMouseLeaveWindow^, evt)
   | _ => ()
   };
 };
