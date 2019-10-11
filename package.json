@@ -40,7 +40,7 @@
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
     "reason-font-manager": "^2.0.0",
-    "reason-sdl2": "^2.10.3002",
+    "reason-sdl2": "^2.10.3005",
     "rench": "github:revery-ui/rench#4554280",
     "rebez": "github:jchavarri/rebez#46cbc183"
   },
