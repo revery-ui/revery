@@ -2,6 +2,7 @@ open Events;
 
 type windowRenderCallback = unit => unit;
 type windowShouldRenderCallback = unit => bool;
+type windowCanQuitCallback = unit => bool;
 
 type size = {
   width: int,
@@ -49,8 +50,10 @@ type t = {
   mutable backgroundColor: Color.t,
   sdlWindow: Sdl2.Window.t,
   uniqueId: int,
+  forceScaleFactor: option(float),
   mutable render: windowRenderCallback,
   mutable shouldRender: windowShouldRenderCallback,
+  mutable canQuit: windowCanQuitCallback,
   mutable metrics: WindowMetrics.t,
   mutable areMetricsDirty: bool,
   mutable isRendering: bool,
@@ -58,9 +61,6 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
-  // If a scale factor is forced (ie, by a CLI argument),
-  // keep track of it here
-  mutable forceScaleFactor: option(float),
   onKeyDown: Event.t(Key.KeyEvent.t),
   onKeyUp: Event.t(Key.KeyEvent.t),
   onMouseUp: Event.t(mouseButtonEvent),
@@ -326,10 +326,6 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   };
 };
 
-let forceScaleFactor = (scaleFactor: float, w: t) => {
-  w.forceScaleFactor = Some(scaleFactor);
-};
-
 let create = (name: string, options: WindowCreateOptions.t) => {
   log("Starting window creation...");
 
@@ -392,7 +388,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   };
 
   log("Getting window metrics");
-  let metrics = _getMetricsFromGlfwWindow(w);
+  let metrics =
+    _getMetricsFromGlfwWindow(~forceScaleFactor=options.forceScaleFactor, w);
   log("Metrics: " ++ WindowMetrics.show(metrics));
   let ret: t = {
     backgroundColor: options.backgroundColor,
@@ -401,6 +398,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     render: () => (),
     shouldRender: () => false,
+    canQuit: () => true,
 
     metrics,
     areMetricsDirty: false,
@@ -410,7 +408,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     isComposingText: false,
 
-    forceScaleFactor: None,
+    forceScaleFactor: options.forceScaleFactor,
 
     onMouseMove: Event.create(),
     onMouseWheel: Event.create(),
@@ -561,8 +559,12 @@ let destroyWindow = (_w: t) => {
   ();
 };
 
-let shouldClose = (_w: t) => {
-  true;
+let canQuit = (w: t) => {
+  w.canQuit();
+};
+
+let setCanQuitCallback = (w: t, callback: windowCanQuitCallback) => {
+  w.canQuit = callback;
 };
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) =>

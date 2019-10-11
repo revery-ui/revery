@@ -23,7 +23,7 @@
     ],
     "install": [
       "esy-installer Revery.install",
-      "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll $cur__bin': 'echo Build complete'}\""
+      "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': 'echo Build complete'}\""
     ]
   },
   "dependencies": {
@@ -35,7 +35,7 @@
     "@opam/js_of_ocaml-lwt": "^3.4.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
-    "brisk-reconciler": "^0.0.1",
+    "brisk-reconciler": "^0.0.2",
     "flex": "^1.2.2",
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
