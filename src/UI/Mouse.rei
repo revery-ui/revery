@@ -24,6 +24,8 @@ let registerListeners:
     ~onMouseLeave: mouseMoveHandler=?,
     ~onMouseOver: mouseMoveHandler=?,
     ~onMouseOut: mouseMoveHandler=?,
+    ~onMouseEnterWindow: mouseWindowHandler=?,
+    ~onMouseLeaveWindow: mouseWindowHandler=?,
     unit,
     unit
   ) =>
@@ -50,4 +52,5 @@ let onCursorChanged: Event.t(MouseCursors.t);
 
 let dispatch: (Cursor.t, Events.internalMouseEvents, Node.node) => unit;
 
-let notifyLeaveWindow: unit => unit;
+let notifyEnterWindow: Window.t => unit;
+let notifyLeaveWindow: Window.t => unit;

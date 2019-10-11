@@ -66,8 +66,6 @@ type event =
   | MouseLeave(mouseMoveEventParams)
   | MouseOver(mouseMoveEventParams)
   | MouseOut(mouseMoveEventParams)
-  | MouseEnterWindow(Window.t)
-  | MouseLeaveWindow(Window.t)
   | Blur
   | Focus;
 

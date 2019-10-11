@@ -144,8 +144,6 @@ let handleListeners = (event: event) => {
   | MouseLeave(evt) => callHandlers(state.onMouseLeave^, evt)
   | MouseOver(evt) => callHandlers(state.onMouseOver^, evt)
   | MouseOut(evt) => callHandlers(state.onMouseOut^, evt)
-  | MouseEnterWindow(evt) => callHandlers(state.onMouseEnterWindow^, evt)
-  | MouseLeaveWindow(evt) => callHandlers(state.onMouseLeaveWindow^, evt)
   | _ => ()
   };
 };
@@ -201,7 +199,13 @@ let setCapture =
     });
 };
 
-let notifyLeaveWindow = () => {
+let notifyEnterWindow = (win) => {
+  callHandlers(listenerEventStateInstance.onMouseEnterWindow^, win)
+};
+
+let notifyLeaveWindow = (win) => {
+  callHandlers(listenerEventStateInstance.onMouseLeaveWindow^, win)
+  
   // If we're leaving the window, and we're capturing - stop the capture.
   switch (capturedEventStateInstance^) {
   | None => ()
