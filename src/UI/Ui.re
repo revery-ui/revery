@@ -11,6 +11,7 @@
  * We should call them if we want to have multiple windows support.
  */
 
+module Log = Revery_Core.Log;
 module Window = Revery_Core.Window;
 
 open RenderContainer;
@@ -20,6 +21,8 @@ let _activeWindow: ref(option(Window.t)) = ref(None);
 type renderFunction = React.syntheticElement => unit;
 
 let getActiveWindow = () => _activeWindow^;
+
+let log = Log.info("UI");
 
 let start = (window: Window.t, element: React.syntheticElement) => {
   let uiDirty = ref(true);
@@ -57,6 +60,24 @@ let start = (window: Window.t, element: React.syntheticElement) => {
       m => {
         let evt = Revery_Core.Events.InternalMouseWheel(m);
         Mouse.dispatch(mouseCursor, evt, rootNode);
+      },
+    );
+
+  let _ignore =
+    Revery_Core.Event.subscribe(
+      window.onMouseLeave,
+      () => {
+        log("Mouse leaving window");
+        Mouse.notifyLeaveWindow(window);
+      },
+    );
+
+  let _ignore =
+    Revery_Core.Event.subscribe(
+      window.onMouseEnter,
+      () => {
+        log("Mouse entering window");
+        Mouse.notifyEnterWindow(window);
       },
     );
 

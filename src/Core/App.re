@@ -143,6 +143,8 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
         | Sdl2.Event.WindowSizeChanged({windowID, _}) =>
           handleEvent(windowID)
         | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.WindowEnter({windowID}) => handleEvent(windowID)
+        | Sdl2.Event.WindowLeave({windowID}) => handleEvent(windowID)
         | Sdl2.Event.WindowClosed({windowID, _}) =>
           logInfo("Got window closed event: " ++ string_of_int(windowID));
           handleEvent(windowID);
