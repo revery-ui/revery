@@ -43,7 +43,18 @@ let _tryToClose = (app: t, window: Window.t) =>
     );
   };
 
-let quit = (code: int) => exit(code);
+let _tryToCloseAll = (app: t) => {
+  let windows = Hashtbl.to_seq_values(app.windows);
+  Seq.iter(w => _tryToClose(app, w), windows);
+};
+
+let quit = (~code=0, app: t) => {
+  _tryToCloseAll(app);
+  if (Hashtbl.length(app.windows) == 0) {
+    logInfo("Quitting");
+    exit(code);
+  };
+};
 
 let isIdle = (app: t) => app.idleCount >= framesToIdle;
 
@@ -153,10 +164,12 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
           | Some(win) => _tryToClose(appInstance, win)
           };
         | Sdl2.Event.Quit =>
-          if (Hashtbl.length(appInstance.windows) == 0) {
-            logInfo("Quitting");
-            exit(0);
-          }
+          // Sometimes, on Mac, we could get a 'quit' without a
+          // corresponding WindowClosed event - this can happen
+          // if Command+Q is pressed. In that case, we'll try
+          // closing all the windows - and if they all close,
+          // we'll exit the app.
+          quit(~code=0, appInstance)
         | _ => ()
         };
       };
