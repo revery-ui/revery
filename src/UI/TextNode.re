@@ -73,8 +73,8 @@ class textNode (text: string) = {
     let formattedText = TextOverflow.removeLineBreaks(text);
 
     let measure = str =>
-      Text.measure(~fontFamily, ~fontSize, str)
-      |> (value => FontRenderer.(value.width));
+      Text.measure(~window=Ui.getActiveWindow(), ~fontFamily, ~fontSize, str)
+      |> (value => value.width);
 
     let width = measure(formattedText);
     let isOverflowing = width >= maxWidth;
