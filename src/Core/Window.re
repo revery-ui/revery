@@ -539,11 +539,7 @@ let getScaleAndZoom = (w: t) => {
 };
 
 let getIntegerScaleAndZoom = (w: t) => {
-  w
-  |> getScaleAndZoom
-  |> (v) => v +. 0.5
-  |> int_of_float
-  |> float_of_int;
+  w |> getScaleAndZoom |> (v => v +. 0.5 |> int_of_float |> float_of_int);
 };
 
 let getZoom = (w: t) => {
