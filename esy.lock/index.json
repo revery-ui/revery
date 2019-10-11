@@ -1,5 +1,5 @@
 {
-  "checksum": "b0c1cea2829cb9306f4658c04815ce04",
+  "checksum": "1523e2f0c33f12f414b1aeff205d40e4",
   "root": "revery@link-dev:./package.json",
   "node": {
     "revery@link-dev:./package.json": {
@@ -66,7 +66,7 @@
         "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/lwt@opam:4.4.0@0357bb8b",
-        "@opam/lambda-term@opam:2.0.2@119fb081",
+        "@opam/lambda-term@opam:2.0@57c9208c",
         "@opam/fpath@opam:0.7.2@45477b93", "@opam/dune@opam:1.11.4@21d66ccd",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
@@ -88,7 +88,7 @@
       "dependencies": [
         "refmterr@3.2.2@d41d8cd9", "ocaml@4.8.1000@d41d8cd9",
         "@opam/lwt_ppx@opam:1.2.4@369f3faf", "@opam/lwt@opam:4.4.0@0357bb8b",
-        "@opam/lambda-term@opam:2.0.2@119fb081",
+        "@opam/lambda-term@opam:2.0@57c9208c",
         "@opam/js_of_ocaml-lwt@opam:3.4.0@ce99e929",
         "@opam/js_of_ocaml-compiler@opam:3.4.0@d2f7c406",
         "@opam/js_of_ocaml@opam:3.4.0@d8a98a2c",
@@ -1116,20 +1116,20 @@
         "@opam/dune@opam:1.11.4@21d66ccd"
       ]
     },
-    "@opam/lambda-term@opam:2.0.2@119fb081": {
-      "id": "@opam/lambda-term@opam:2.0.2@119fb081",
+    "@opam/lambda-term@opam:2.0@57c9208c": {
+      "id": "@opam/lambda-term@opam:2.0@57c9208c",
       "name": "@opam/lambda-term",
-      "version": "opam:2.0.2",
+      "version": "opam:2.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/46/4602aa4355705909e406513322b4b27e#md5:4602aa4355705909e406513322b4b27e",
-          "archive:https://github.com/ocaml-community/lambda-term/releases/download/2.0.2/lambda-term-2.0.2.tbz#md5:4602aa4355705909e406513322b4b27e"
+          "archive:https://opam.ocaml.org/cache/md5/92/9284c51c2ef18ebf6c17281879f2ff13#md5:9284c51c2ef18ebf6c17281879f2ff13",
+          "archive:https://github.com/ocaml-community/lambda-term/releases/download/2.0/lambda-term-2.0.tbz#md5:9284c51c2ef18ebf6c17281879f2ff13"
         ],
         "opam": {
           "name": "lambda-term",
-          "version": "2.0.2",
-          "path": "esy.lock/opam/lambda-term.2.0.2"
+          "version": "2.0",
+          "path": "esy.lock/opam/lambda-term.2.0"
         }
       },
       "overrides": [],
