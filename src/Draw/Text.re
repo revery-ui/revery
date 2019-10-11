@@ -21,7 +21,6 @@ open Fontkit;
 let _getScaledFontSize2 = (~scaleFactor, ~pixelRatio, fontSize) => {
   let ret =
     int_of_float(float_of_int(fontSize) *. pixelRatio *. scaleFactor +. 0.5);
-  print_endline("_getScaledFontSize2: " ++ string_of_int(ret));
   ret;
 };
 
