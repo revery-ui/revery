@@ -29,16 +29,16 @@ let getWindowById = (app: t, id: int) => {
 };
 
 let _tryToClose = (app: t, window: Window.t) =>
-  if (Window.shouldClose(window)) {
+  if (Window.canQuit(window)) {
     logInfo(
-      "_tryToClose: Window shouldClose is true - closing window: "
+      "_tryToClose: Window canQuit is true - closing window: "
       ++ string_of_int(window.uniqueId),
     );
     Window.destroyWindow(window);
     Hashtbl.remove(app.windows, window.uniqueId);
   } else {
     logInfo(
-      "_tryToClose: Window shouldClose is false "
+      "_tryToClose: Window canQuit is false "
       ++ string_of_int(window.uniqueId),
     );
   };
