@@ -21,11 +21,11 @@ module ShaderPrecision = {
 
   let toString = v =>
     switch (v) {
-      | Default => ""
-      | Low => "lowp"
-      | Medium => "mediump"
-      | High => "highp"
-      };
+    | Default => ""
+    | Low => "lowp"
+    | Medium => "mediump"
+    | High => "highp"
+    };
 };
 
 module ShaderDataType = {
