@@ -41,6 +41,16 @@ module HoverExample = {
       let (state, dispatch, hooks) =
         Hooks.reducer(~initialState, reducer, hooks);
 
+      let hooks = Hooks.effect(OnMount, () => {
+
+        let dispose = Mouse.registerListeners(
+          ~onMouseEnterWindow ={(_) => print_endline ("enter window")},
+          ~onMouseLeaveWindow ={(_) => print_endline ("leave window")},
+          ());
+
+        Some(dispose);
+      }, hooks);
+
       (
         hooks,
         <View
