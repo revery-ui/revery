@@ -13,7 +13,7 @@ type canIdleFunc = unit => bool;
 let getWindows: t => list(Window.t);
 
 /** [quit(c)] causes the App to quit with exit code [c] */
-let quit: int => unit;
+let quit: (~code: int=?, t) => unit;
 
 /** [isIdle(app)] returns true if the app is idling, false othwrise */
 let isIdle: t => bool;
