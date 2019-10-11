@@ -33,7 +33,7 @@ let render =
   /* Layout */
   let size = Window.getRawSize(window);
   let pixelRatio = Window.getDevicePixelRatio(window);
-  let scaleFactor = Window.getIntegerScaleAndZoom(window);
+  let scaleFactor = Window.getScaleAndZoom(window);
   let adjustedHeight =
     float_of_int(size.height) /. scaleFactor |> int_of_float;
   let adjustedWidth = float_of_int(size.width) /. scaleFactor |> int_of_float;

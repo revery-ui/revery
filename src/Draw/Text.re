@@ -54,10 +54,24 @@ let getLineHeight = (~window=None, ~fontFamily, ~fontSize, ~lineHeight, ()) => {
   lineHeight *. metrics.height;
 };
 
+type dimensions = {
+  width: int,
+  height: int,
+};
+
 let measure = (~window=None, ~fontFamily, ~fontSize, text) => {
   let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
   let font = FontCache.load(fontFamily, scaledFontSize);
-  FontRenderer.measure(font, text);
+  let multiplier = switch (window) {
+  | None => 1.0
+  | Some(w) => Window.getScaleAndZoom(w) *. Window.getDevicePixelRatio(w)
+  };
+  
+  let dimensions = FontRenderer.measure(font, text);
+  let ret: dimensions = { width: int_of_float(float_of_int(dimensions.width) /. multiplier +. 0.5),
+  height: int_of_float(float_of_int(dimensions.height) /. multiplier +. 0.5)
+  };
+  ret;
 };
 
 let identityMatrix = Mat4.create();
@@ -127,6 +141,7 @@ let drawString =
 
   let metrics = FontRenderer.getNormalizedMetrics(font);
   let multiplier = ctx.pixelRatio *. ctx.scaleFactor;
+
   /* Position the baseline */
   let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
   ();

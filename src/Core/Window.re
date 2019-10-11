@@ -535,11 +535,10 @@ let getDevicePixelRatio = (w: t) => {
 };
 
 let getScaleAndZoom = (w: t) => {
-  w.metrics.scaleFactor *. w.metrics.zoom;
-};
-
-let getIntegerScaleAndZoom = (w: t) => {
-  w |> getScaleAndZoom |> (v => v +. 0.5 |> int_of_float |> float_of_int);
+  w.metrics.scaleFactor *. w.metrics.zoom +. 0.5
+  /* TODO - SKIA: Allow fractional scale values! */
+  |> int_of_float
+  |> float_of_int;
 };
 
 let getZoom = (w: t) => {
