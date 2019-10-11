@@ -44,7 +44,7 @@ let _tryToClose = (app: t, window: Window.t) =>
   };
 
 let _tryToCloseAll = (app: t) => {
-  let windows = Hashtbl.to_seq_values(appInstance.windows);
+  let windows = Hashtbl.to_seq_values(app.windows);
   Seq.iter(w => _tryToClose(app, w), windows);
 };
 
