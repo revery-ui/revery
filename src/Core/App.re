@@ -167,7 +167,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
           if (Hashtbl.length(appInstance.windows) == 0) {
             logInfo("Quitting");
             exit(0);
-          }
+          };
         | _ => ()
         };
       };
