@@ -4,7 +4,7 @@
  * Core logic for rendering text to screen.
  */
 
-open Reglfw.Glfw;
+open Sdl2.Gl;
 
 open Revery_Core;
 module Geometry = Revery_Geometry;
@@ -19,26 +19,28 @@ open Fontkit;
  * ratio, we want to render a 3x size bitmap.
  */
 let _getScaledFontSize2 = (~scaleFactor, ~pixelRatio, fontSize) => {
-  int_of_float(
-    float_of_int(fontSize) *. pixelRatio *. float_of_int(scaleFactor) +. 0.5,
+  let ret = int_of_float(
+    float_of_int(fontSize) *. pixelRatio *. scaleFactor +. 0.5,
   );
+  print_endline ("_getScaledFontSize2: " ++ string_of_int(ret));
+  ret;
 };
 
-let _getScaledFontSize = fontSize => {
+/*let _getScaledFontSize = fontSize => {
   let ctx = RenderPass.getContext();
   _getScaledFontSize2(
     ~scaleFactor=ctx.scaleFactor,
     ~pixelRatio=ctx.pixelRatio,
     fontSize,
   );
-};
+};*/
 
 let _getScaledFontSizeFromWindow = (window: option(Window.t), fontSize) => {
   let (scaleFactor, pixelRatio) =
     switch (window) {
-    | None => (1, 1.0)
+    | None => (1.0, 1.0)
     | Some(v) =>
-      let sf = Window.getScaleFactor(v);
+      let sf = Window.getScaleAndZoom(v);
       let pr = Window.getDevicePixelRatio(v);
       (sf, pr);
     };
@@ -98,6 +100,7 @@ let _startShader =
 
 let drawString =
     (
+      ~window: option(Window.t),
       ~fontFamily: string,
       ~fontSize: int,
       ~color: Color.t=Colors.white,
@@ -117,10 +120,10 @@ let drawString =
   let (shader, uniformWorld) =
     _startShader(~color, ~backgroundColor, ~opacity, ~gamma, ~projection, ());
 
-  let font = FontCache.load(fontFamily, _getScaledFontSize(fontSize));
+  let font = FontCache.load(fontFamily, _getScaledFontSizeFromWindow(window, fontSize));
 
   let metrics = FontRenderer.getNormalizedMetrics(font);
-  let multiplier = ctx.pixelRatio *. float_of_int(ctx.scaleFactor);
+  let multiplier = ctx.pixelRatio *. ctx.scaleFactor;
   /* Position the baseline */
   let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
   ();

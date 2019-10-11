@@ -1,4 +1,4 @@
-module Color = Color_wrapper;
+module Color = Color;
 module Colors = Colors;
 module Key = Key;
 module MouseButton = MouseButton;
@@ -7,12 +7,13 @@ module MouseCursors = MouseCursors;
 module Window = Window;
 module App = App;
 module Time = Time;
-module Monitor = Monitor;
 
 module Environment = Environment;
 
 module Event = Event;
 module Events = Events;
+
+module Log = Log;
 
 module Performance = Performance;
 module UniqueId = UniqueId;

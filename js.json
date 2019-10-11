@@ -18,11 +18,11 @@
       },
       "resolutions": {
         "rebez": "github:jchavarri/rebez#46cbc183",
-        "@opam/js_of_ocaml": "github:ocsigen/js_of_ocaml:js_of_ocaml.opam#db257ce",
-        "@opam/js_of_ocaml-compiler": "github:ocsigen/js_of_ocaml:js_of_ocaml-compiler.opam#db257ce",
-        "@opam/js_of_ocaml-lwt": "github:ocsigen/js_of_ocaml:js_of_ocaml-lwt.opam#db257ce",
-        "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#3d1ea3a",
+        "rench": "github:revery-ui/rench#4554280",
         "pesy": "0.4.1"
+      },
+      "devDependencies": {
+        "ocaml": ">=4.6.0 <4.9.0"
       }
   }
 }

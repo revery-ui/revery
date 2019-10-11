@@ -37,7 +37,8 @@ let make =
       ~tabindex=?,
       ~onKeyDown=?,
       ~onKeyUp=?,
-      ~onKeyPress=?,
+      ~onTextEdit=?,
+      ~onTextInput=?,
       children: React.syntheticElement,
     ) =>
   component(slots => {
@@ -61,7 +62,6 @@ let make =
           | MouseButton.BUTTON_RIGHT => onRightClick()
           | _ => ()
           };
-
           onAnyClick(mouseEvt);
         }
       | _ => ()
@@ -72,6 +72,7 @@ let make =
          there would a race condition
          Not sure we need fix it though */
       Mouse.releaseCapture();
+      ();
     };
 
     let onMouseDown = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
@@ -93,7 +94,8 @@ let make =
         ?onFocus
         ?onKeyDown
         ?onKeyUp
-        ?onKeyPress
+        ?onTextEdit
+        ?onTextInput
         tabindex
         ref={r => setClickableRef(r)}>
         children
@@ -113,7 +115,8 @@ let createElement =
       ~children,
       ~onKeyDown=?,
       ~onKeyUp=?,
-      ~onKeyPress=?,
+      ~onTextEdit=?,
+      ~onTextInput=?,
       ~componentRef=?,
       (),
     ) =>
@@ -126,7 +129,8 @@ let createElement =
     ~onFocus?,
     ~onKeyDown?,
     ~onKeyUp?,
-    ~onKeyPress?,
+    ~onTextEdit?,
+    ~onTextInput?,
     ~tabindex,
     ~componentRef?,
     React.listToElement(children),

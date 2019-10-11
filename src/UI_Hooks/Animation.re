@@ -5,10 +5,11 @@ open Revery_UI.Animated;
 let reducer = (_a, s) => s + 1;
 
 let animationLoop = (dispatch, v, opts, ()) => {
-  let complete = Tick.interval(_t => dispatch(), Seconds(0.));
+  let complete = Tick.interval(_t => {dispatch()}, Seconds(0.));
   let {stop, _} = tween(v, opts) |> start(~complete);
   Some(
     () => {
+      Log.info("Hooks - Animation", "Stopping animation");
       stop();
       complete();
     },

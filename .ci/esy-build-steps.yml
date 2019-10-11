@@ -14,12 +14,7 @@ steps:
     displayName: 'esy @test install'
   - script: esy @test run
     displayName: 'esy @test run'
-  - script: esy x Examples
-    displayName: 'esy x Examples'
-    continueOnError: true
   - script: esy @js install
     displayName: 'js: esy install'
   - script: esy @js build
     displayName: 'js: esy build'
-  - script: esy create-release
-    displayName: 'esy create-release'

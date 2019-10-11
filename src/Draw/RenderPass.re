@@ -1,10 +1,10 @@
 open Reglm;
-open Reglfw.Glfw;
+open Sdl2.Gl;
 
 module DrawContext = {
   type t = {
     pixelRatio: float,
-    scaleFactor: int,
+    scaleFactor: float,
     screenWidth: int,
     screenHeight: int,
     projection: Mat4.t,

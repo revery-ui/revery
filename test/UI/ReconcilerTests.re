@@ -18,7 +18,6 @@ module TestRefComponent = {
       latestRef := refFromState;
 
       let setRefInState = r => {
-        prerr_endline("SET REF IN STATE");
         setRef(Some(r));
       };
 

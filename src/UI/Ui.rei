@@ -21,3 +21,5 @@ let getActiveWindow: unit => option(Window.t);
 */
 
 let start: (Window.t, React.syntheticElement) => renderFunction;
+
+let getActiveWindow: unit => option(Window.t);

@@ -1,5 +1,3 @@
-open Reglfw.Glfw;
-
 type t =
   | Seconds(float)
   | Milliseconds(float);
@@ -42,4 +40,4 @@ let show = (v: t) => string_of_float(to_float_seconds(v)) ++ "s";
 /**
     [getTime()] returns the current system time [t]
 */
-let getTime = () => of_float_seconds(glfwGetTime());
+let getTime = () => of_float_seconds(Unix.gettimeofday());

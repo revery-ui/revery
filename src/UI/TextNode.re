@@ -34,9 +34,12 @@ class textNode (text: string) = {
       _this#measure(style.width, style.height) |> ignore;
     };
 
+    let window = Ui.getActiveWindow();
+
     List.iteri(
       (lineNum, line) =>
         Text.drawString(
+          ~window,
           ~fontFamily,
           ~fontSize,
           ~gamma,

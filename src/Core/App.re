@@ -1,14 +1,15 @@
-open Reglfw;
-
 type delegatedFunc = unit => unit;
 type idleFunc = unit => unit;
 type canIdleFunc = unit => bool;
 let noop = () => ();
 
+let logError = Log.error("App");
+let logInfo = Log.info("App");
+
 type t = {
-  mutable windows: list(Window.t),
   mutable idleCount: int,
   mutable isFirstRender: bool,
+  windows: Hashtbl.t(int, Window.t),
   onIdle: idleFunc,
   canIdle: ref(canIdleFunc),
 };
@@ -19,7 +20,28 @@ let framesToIdle = 10;
 
 type appInitFunc = t => unit;
 
-let getWindows = (app: t) => app.windows;
+let getWindows = (app: t) => {
+  Hashtbl.to_seq_values(app.windows) |> List.of_seq;
+};
+
+let getWindowById = (app: t, id: int) => {
+  Hashtbl.find_opt(app.windows, id);
+};
+
+let _tryToClose = (app: t, window: Window.t) =>
+  if (Window.canQuit(window)) {
+    logInfo(
+      "_tryToClose: Window canQuit is true - closing window: "
+      ++ string_of_int(window.uniqueId),
+    );
+    Window.destroyWindow(window);
+    Hashtbl.remove(app.windows, window.uniqueId);
+  } else {
+    logInfo(
+      "_tryToClose: Window canQuit is false "
+      ++ string_of_int(window.uniqueId),
+    );
+  };
 
 let quit = (code: int) => exit(code);
 
@@ -58,11 +80,13 @@ let _doPendingMainThreadJobs = () => {
   jobs |> List.rev |> List.iter(f => f());
 };
 
+let flushPendingCallbacks = () => _doPendingMainThreadJobs();
+
 let createWindow =
     (~createOptions=WindowCreateOptions.default, app: t, windowName) => {
   let w = Window.create(windowName, createOptions);
   /* Window.render(w) */
-  app.windows = [w, ...app.windows];
+  Hashtbl.add(app.windows, w.uniqueId, w);
   w;
 };
 
@@ -73,45 +97,91 @@ let _anyWindowsDirty = (app: t) =>
     getWindows(app),
   );
 
-let _checkAndCloseWindows = (app: t) => {
-  let currentWindows = getWindows(app);
-  let windowsToClose =
-    List.filter(w => Window.shouldClose(w), currentWindows);
-  let windowsToKeep =
-    List.filter(w => !Window.shouldClose(w), currentWindows);
-
-  List.iter(w => Window.destroyWindow(w), windowsToClose);
-  app.windows = windowsToKeep;
-};
-
 let start = (~onIdle=noop, initFunc: appInitFunc) => {
   let appInstance: t = {
-    windows: [],
+    windows: Hashtbl.create(1),
     idleCount: 0,
     isFirstRender: true,
     onIdle,
     canIdle: ref(() => true),
   };
 
-  let _ = Glfw.glfwInit();
-  let _ = initFunc(appInstance);
+  let _ = Sdl2.init();
+  let _dispose = initFunc(appInstance);
 
-  let appLoop = (_t: float) => {
-    Glfw.glfwPollEvents();
+  let _flushEvents = () => {
+    let processingEvents = ref(true);
+
+    while (processingEvents^) {
+      let evt = Sdl2.Event.poll();
+      switch (evt) {
+      | None => processingEvents := false
+      | Some(v) =>
+        let handleEvent = windowID => {
+          let window = getWindowById(appInstance, windowID);
+          switch (window) {
+          | Some(win) => Window._handleEvent(v, win)
+          | None =>
+            logError(
+              "Unable to find window with ID: "
+              ++ string_of_int(windowID)
+              ++ " - event: "
+              ++ Sdl2.Event.show(v),
+            )
+          };
+        };
+        switch (v) {
+        | Sdl2.Event.MouseButtonUp({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.MouseButtonDown({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.MouseMotion({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.MouseWheel({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.KeyDown({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.KeyUp({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.TextInput({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.TextEditing({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.WindowResized({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.WindowSizeChanged({windowID, _}) =>
+          handleEvent(windowID)
+        | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID)
+        | Sdl2.Event.WindowEnter({windowID}) => handleEvent(windowID)
+        | Sdl2.Event.WindowLeave({windowID}) => handleEvent(windowID)
+        | Sdl2.Event.WindowClosed({windowID, _}) =>
+          logInfo("Got window closed event: " ++ string_of_int(windowID));
+          handleEvent(windowID);
+          switch (getWindowById(appInstance, windowID)) {
+          | None => ()
+          | Some(win) => _tryToClose(appInstance, win)
+          };
+        | Sdl2.Event.Quit =>
+          if (Hashtbl.length(appInstance.windows) == 0) {
+            logInfo("Quitting");
+            exit(0);
+          }
+        | _ => ()
+        };
+      };
+    };
+  };
+
+  let appLoop = () => {
+    _flushEvents();
+
     Tick.Default.pump();
-
-    _checkAndCloseWindows(appInstance);
 
     if (appInstance.isFirstRender
         || _anyWindowsDirty(appInstance)
         || _anyPendingMainThreadJobs()
         || !appInstance.canIdle^()) {
+      if (appInstance.idleCount > 0) {
+        logInfo("Upshifting into active state.");
+      };
+
       Performance.bench("_doPendingMainThreadJobs", () =>
         _doPendingMainThreadJobs()
       );
-      Performance.bench("renderWindows", () =>
+      Performance.bench("renderWindows", () => {
         List.iter(w => Window.render(w), getWindows(appInstance))
-      );
+      });
 
       appInstance.idleCount = 0;
       appInstance.isFirstRender = false;
@@ -119,6 +189,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       appInstance.idleCount = appInstance.idleCount + 1;
 
       if (appInstance.idleCount === framesToIdle) {
+        logInfo("Downshifting into idle state...");
         appInstance.onIdle();
       };
 
@@ -127,8 +198,8 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
 
     Environment.yield();
 
-    List.length(getWindows(appInstance)) == 0;
+    false;
   };
 
-  Glfw.glfwRenderLoop(appLoop);
+  Sdl2.renderLoop(appLoop);
 };

@@ -1,4 +1,4 @@
-open Reglfw;
+open Sdl2;
 
 open Revery;
 /* open Revery.Draw; */
@@ -30,9 +30,11 @@ module Sample = {
           <OpenGL
             style=outerBox
             render={(transform, _pctx) => {
-              Glfw.glClearColor(1.0, 0.0, 0.0, 1.0);
+              Gl.glClearColor(1.0, 0.0, 0.0, 1.0);
+              let window = getActiveWindow();
 
               Revery.Draw.Text.drawString(
+                ~window,
                 ~transform,
                 ~backgroundColor=Colors.red,
                 ~color=Colors.white,

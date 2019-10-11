@@ -1,4 +1,4 @@
-open Reglfw.Glfw;
+open Sdl2;
 
 /* This module must use lazy values for the cursors, because GLFW will return
    [GLFW_NOT_INITIALIZED] (which renders as an arrow) if this gets called before
@@ -7,15 +7,14 @@ open Reglfw.Glfw;
    leak. */
 type t = [ | `Arrow | `Text | `Pointer | `Crosshair | `HResize | `VResize];
 
-let arrow_lazy = lazy(glfwCreateStandardCursor(GLFW_ARROW_CURSOR));
-let text_lazy = lazy(glfwCreateStandardCursor(GLFW_IBEAM_CURSOR));
-let pointer_lazy = lazy(glfwCreateStandardCursor(GLFW_HAND_CURSOR));
-let crosshair_lazy = lazy(glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR));
-let horizontalResize_lazy =
-  lazy(glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR));
-let verticalResize_lazy = lazy(glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR));
+let arrow_lazy = lazy(Cursor.createSystem(Cursor.Arrow));
+let text_lazy = lazy(Cursor.createSystem(Cursor.IBeam));
+let pointer_lazy = lazy(Cursor.createSystem(Cursor.Hand));
+let crosshair_lazy = lazy(Cursor.createSystem(Cursor.Crosshair));
+let horizontalResize_lazy = lazy(Cursor.createSystem(Cursor.SizeWE));
+let verticalResize_lazy = lazy(Cursor.createSystem(Cursor.SizeNS));
 
-let toGlfwCursor = cursorType => {
+let _toSdlCursor = cursorType => {
   (
     switch (cursorType) {
     | `Arrow => arrow_lazy
@@ -29,9 +28,23 @@ let toGlfwCursor = cursorType => {
   |> Lazy.force;
 };
 
+let setCursor = v => {
+  _toSdlCursor(v) |> Cursor.set;
+};
+
 let arrow = `Arrow;
 let text = `Text;
 let pointer = `Pointer;
 let crosshair = `Crosshair;
 let horizontalResize = `HResize;
 let verticalResize = `VResize;
+
+let show = (v: t) =>
+  switch (v) {
+  | `Arrow => "arrow"
+  | `Text => "text"
+  | `Pointer => "pointer"
+  | `Crosshair => "crosshair"
+  | `HResize => "hresize"
+  | `VResize => "vresize"
+  };

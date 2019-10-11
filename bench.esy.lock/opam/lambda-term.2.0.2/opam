@@ -4,7 +4,7 @@ authors: ["Jérémie Dimino"]
 homepage: "https://github.com/ocaml-community/lambda-term"
 bug-reports: "https://github.com/ocaml-community/lambda-term/issues"
 dev-repo: "git://github.com/ocaml-community/lambda-term.git"
-license: "BSD3"
+license: "BSD-3-Clause"
 build: [
   ["dune" "build" "-p" name "-j" jobs]
   ["dune" "runtest" "-p" name "-j" jobs] {with-test}
