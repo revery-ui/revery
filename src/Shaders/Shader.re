@@ -41,8 +41,25 @@ let generateUniformPixelShaderBlock = (uniforms: list(ShaderUniform.t)) => {
 let generateVaryingBlock = (varying: list(ShaderVarying.t)) =>
   generateBlock(ShaderVarying.toString, varying);
 
-let vertexShaderPreamble = "precision highp float;";
-let fragmentShaderPreamble = "precision mediump float;";
+let vertexShaderPreamble = {|
+#ifdef GL_ES
+precision highp float;
+#else
+#define highp
+#define mediump
+#define lowp
+#endif
+|};
+
+let fragmentShaderPreamble = {|
+#ifdef GL_ES
+precision mediump float;
+#else
+#define highp
+#define mediump
+#define lowp
+#endif
+|};
 
 let create =
     (
