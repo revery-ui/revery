@@ -75,13 +75,36 @@ let _startClipRegion =
   let width = int_of_float(scaleFactor *. pixelRatio *. (maxX -. minX));
   let height = int_of_float(scaleFactor *. pixelRatio *. (maxY -. minY));
 
+  // If a previous 'clip region' is active, we need to compute the intersection
+
+  let currentClipStack = _clipStack^;
+  let currentDimensions = List.nth_opt(currentClipStack, 0);
+  let (x, y, width, height) =
+    switch (currentDimensions) {
+    | None => (x, y, width, height)
+    | Some({x as oldX, y as oldY, width as oldWidth, height as oldHeight}) =>
+      let newX = Stdlib.max(oldX, x);
+      let newY = Stdlib.max(oldY, y);
+      let maxX = Stdlib.min(oldX + oldWidth, x + width);
+      let maxY = Stdlib.min(oldY + oldHeight, y + height);
+      (newX, newY, maxX - newX, maxY - newY);
+    };
+
   glEnable(GL_SCISSOR_TEST);
   glScissor(x, y, width, height);
 
-  _clipStack := [{x, y, width, height}, ..._clipStack^];
+  Printf.printf(
+    "!!-- Starting clip region - x: %d y: %d width: %d height: %d\n",
+    x,
+    y,
+    width,
+    height,
+  );
+  _clipStack := [{x, y, width, height}, ...currentClipStack];
 };
 
 let _endClipRegion = () => {
+  print_endline("!!-- Ending clip region");
   // Pop the old head off the stack...
   let newStack =
     switch (_clipStack^) {
@@ -93,7 +116,16 @@ let _endClipRegion = () => {
   // If there is still an entry, that means our current
   // Overflow was nested - we should pick up the previous
   // one and reset it.
-  | Some({x, y, width, height}) => glScissor(x, y, width, height)
+  | Some({x, y, width, height}) =>
+    Printf.printf(
+      "!!-- Restoring clip region - x: %d y: %d width: %d height: %d\n",
+      x,
+      y,
+      width,
+      height,
+    );
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(x, y, width, height);
   // Otherwise, we were the first one... so just turn off scissor test.
   | None => glDisable(GL_SCISSOR_TEST)
   };
