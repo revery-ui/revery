@@ -79,20 +79,17 @@ let _startClipRegion =
   // of the new, requested clip region and the previous clip region on the stack
   let currentClipStack = _clipStack^;
   let currentDimensions = List.nth_opt(currentClipStack, 0);
-  Printf.printf("!! Original dimensions - x: %d y: %d width: %d height: %d\n", candidateX, candidateY, candidateWidth, candidateHeight);
   let (x, y, width, height) =
     switch (currentDimensions) {
     | None => (candidateX, candidateY, candidateWidth, candidateHeight)
     | Some({x as oldX, y as oldY, width as oldWidth, height as oldHeight}) =>
       let newX = Stdlib.max(oldX, candidateX);
       let newY = Stdlib.max(oldY, candidateY);
-      Printf.printf("!! - newX: %d newY: %d\n", newX, newY);
       let maxX = Stdlib.min(oldX + oldWidth, newX + candidateWidth - (newX - candidateX));
       let maxY = Stdlib.min(oldY + oldHeight, newY + candidateHeight - (newY - candidateY));
       (newX, newY, maxX - newX, maxY - newY);
     };
 
-  Printf.printf("!! After intersection - x: %d y: %d width: %d height: %d\n", x, y, width, height);
   glEnable(GL_SCISSOR_TEST);
   glScissor(x, y, width, height);
 
