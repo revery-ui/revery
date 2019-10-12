@@ -66,30 +66,33 @@ let _startClipRegion =
   let maxX = Vec2.get_x(bbox.max);
   let maxY = Vec2.get_y(bbox.max);
 
-  let x = int_of_float(minX *. pixelRatio *. scaleFactor);
+  let candidateX = int_of_float(minX *. pixelRatio *. scaleFactor);
 
-  let y =
+  let candidateY =
     int_of_float(
       scaleFactor *. pixelRatio *. (float_of_int(screenHeight) -. maxY),
     );
-  let width = int_of_float(scaleFactor *. pixelRatio *. (maxX -. minX));
-  let height = int_of_float(scaleFactor *. pixelRatio *. (maxY -. minY));
+  let candidateWidth = int_of_float(scaleFactor *. pixelRatio *. (maxX -. minX));
+  let candidateHeight = int_of_float(scaleFactor *. pixelRatio *. (maxY -. minY));
 
   // If a previous 'clip region' is active, we need to compute the intersection
   // of the new, requested clip region and the previous clip region on the stack
   let currentClipStack = _clipStack^;
   let currentDimensions = List.nth_opt(currentClipStack, 0);
+  Printf.printf("!! Original dimensions - x: %d y: %d width: %d height: %d\n", candidateX, candidateY, candidateWidth, candidateHeight);
   let (x, y, width, height) =
     switch (currentDimensions) {
-    | None => (x, y, width, height)
+    | None => (candidateX, candidateY, candidateWidth, candidateHeight)
     | Some({x as oldX, y as oldY, width as oldWidth, height as oldHeight}) =>
-      let newX = Stdlib.max(oldX, x);
-      let newY = Stdlib.max(oldY, y);
-      let maxX = Stdlib.min(oldX + oldWidth, x + width);
-      let maxY = Stdlib.min(oldY + oldHeight, y + height);
+      let newX = Stdlib.max(oldX, candidateX);
+      let newY = Stdlib.max(oldY, candidateY);
+      Printf.printf("!! - newX: %d newY: %d\n", newX, newY);
+      let maxX = Stdlib.min(oldX + oldWidth, newX + candidateWidth - (newX - candidateX));
+      let maxY = Stdlib.min(oldY + oldHeight, newY + candidateHeight - (newY - candidateY));
       (newX, newY, maxX - newX, maxY - newY);
     };
 
+  Printf.printf("!! After intersection - x: %d y: %d width: %d height: %d\n", x, y, width, height);
   glEnable(GL_SCISSOR_TEST);
   glScissor(x, y, width, height);
 
