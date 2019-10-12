@@ -72,8 +72,10 @@ let _startClipRegion =
     int_of_float(
       scaleFactor *. pixelRatio *. (float_of_int(screenHeight) -. maxY),
     );
-  let candidateWidth = int_of_float(scaleFactor *. pixelRatio *. (maxX -. minX));
-  let candidateHeight = int_of_float(scaleFactor *. pixelRatio *. (maxY -. minY));
+  let candidateWidth =
+    int_of_float(scaleFactor *. pixelRatio *. (maxX -. minX));
+  let candidateHeight =
+    int_of_float(scaleFactor *. pixelRatio *. (maxY -. minY));
 
   // If a previous 'clip region' is active, we need to compute the intersection
   // of the new, requested clip region and the previous clip region on the stack
@@ -85,8 +87,16 @@ let _startClipRegion =
     | Some({x as oldX, y as oldY, width as oldWidth, height as oldHeight}) =>
       let newX = Stdlib.max(oldX, candidateX);
       let newY = Stdlib.max(oldY, candidateY);
-      let maxX = Stdlib.min(oldX + oldWidth, newX + candidateWidth - (newX - candidateX));
-      let maxY = Stdlib.min(oldY + oldHeight, newY + candidateHeight - (newY - candidateY));
+      let maxX =
+        Stdlib.min(
+          oldX + oldWidth,
+          newX + candidateWidth - (newX - candidateX),
+        );
+      let maxY =
+        Stdlib.min(
+          oldY + oldHeight,
+          newY + candidateHeight - (newY - candidateY),
+        );
       (newX, newY, maxX - newX, maxY - newY);
     };
 
