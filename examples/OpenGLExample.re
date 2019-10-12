@@ -31,8 +31,10 @@ module Sample = {
             style=outerBox
             render={(transform, _pctx) => {
               Gl.glClearColor(1.0, 0.0, 0.0, 1.0);
+              let window = getActiveWindow();
 
               Revery.Draw.Text.drawString(
+                ~window,
                 ~transform,
                 ~backgroundColor=Colors.red,
                 ~color=Colors.white,

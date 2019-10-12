@@ -535,7 +535,12 @@ let getDevicePixelRatio = (w: t) => {
 };
 
 let getScaleAndZoom = (w: t) => {
-  w.metrics.scaleFactor *. w.metrics.zoom;
+  w.metrics.scaleFactor
+  *. w.metrics.zoom
+  +. 0.5
+  /* TODO - SKIA: Allow fractional scale values! */
+  |> int_of_float
+  |> float_of_int;
 };
 
 let getZoom = (w: t) => {

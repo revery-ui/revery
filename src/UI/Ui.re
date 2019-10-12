@@ -21,7 +21,6 @@ let _activeWindow: ref(option(Window.t)) = ref(None);
 type renderFunction = React.syntheticElement => unit;
 
 let getActiveWindow = () => _activeWindow^;
-
 let log = Log.info("UI");
 
 let start = (window: Window.t, element: React.syntheticElement) => {
