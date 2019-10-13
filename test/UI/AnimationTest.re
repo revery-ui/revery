@@ -1,7 +1,7 @@
-open Rejest;
-
 open Revery_UI;
 open Revery_Core;
+
+open TestFramework;
 
 module MakeTicker = (()) => {
   let _currentTime: ref(Time.t) = ref(Time.Seconds(0.));
@@ -16,19 +16,18 @@ module MakeTicker = (()) => {
   };
 };
 
-test("Animation", () => {
-  test("floatValue", () =>
-    test("Initial value set", () => {
+describe("Animation", ({describe, test, _}) => {
+  describe("floatValue", ({test, _}) =>
+    test("Initial value set", ({expect, _}) => {
       module TestTicker =
         MakeTicker({});
       module Animated = Animation.Make(TestTicker);
 
       let myTestValue = Animated.floatValue(0.1);
-      expect(myTestValue.current).toBe(0.1);
+      expect.float(myTestValue.current).toBeCloseTo(0.1);
     })
   );
-
-  test("simple animation", () => {
+  test("simple animation", ({expect, _}) => {
     module TestTicker =
       MakeTicker({});
     module Animated = Animation.Make(TestTicker);
@@ -48,10 +47,10 @@ test("Animation", () => {
     let _playback = Animated.start(myAnimation);
 
     TestTicker.simulateTick(Time.Seconds(1.));
-    expect(myAnimation.value.current).toBe(5.);
+    expect.float(myAnimation.value.current).toBeCloseTo(5.);
   });
 
-  test("animation with quadratic easing", () => {
+  test("animation with quadratic easing", ({expect, _}) => {
     module TestTicker =
       MakeTicker({});
     module Animated = Animation.Make(TestTicker);
@@ -71,10 +70,10 @@ test("Animation", () => {
     let _playback = Animated.start(myAnimation);
 
     TestTicker.simulateTick(Time.Seconds(0.5));
-    expect(myAnimation.value.current).toBe(0.25);
+    expect.float(myAnimation.value.current).toBeCloseTo(0.25);
   });
 
-  test("animation that repeats", () => {
+  test("animation that repeats", ({expect, _}) => {
     module TestTicker =
       MakeTicker({});
     module Animated = Animation.Make(TestTicker);
@@ -94,10 +93,10 @@ test("Animation", () => {
     let _playback = Animated.start(myAnimation);
 
     TestTicker.simulateTick(Time.Seconds(3.));
-    expect(myAnimation.value.current).toBe(5.);
+    expect.float(myAnimation.value.current).toBeCloseTo(5.);
   });
 
-  test("animation with delay", () => {
+  test("animation with delay", ({expect, _}) => {
     module TestTicker =
       MakeTicker({});
     module Animated = Animation.Make(TestTicker);
@@ -117,10 +116,10 @@ test("Animation", () => {
     let _playback = Animated.start(myAnimation);
 
     TestTicker.simulateTick(Time.Seconds(2.));
-    expect(myAnimation.value.current).toBe(5.);
+    expect.float(myAnimation.value.current).toBeCloseTo(5.);
   });
 
-  test("animations are cleaned up", () => {
+  test("animations are cleaned up", ({expect, _}) => {
     module TestTicker =
       MakeTicker({});
     module Animated = Animation.Make(TestTicker);
@@ -141,11 +140,11 @@ test("Animation", () => {
 
     TestTicker.simulateTick(Time.Seconds(3.));
 
-    expect(Animated.anyActiveAnimations()).toBe(false);
-    expect(Animated.getAnimationCount()).toBe(0);
+    expect.bool(Animated.anyActiveAnimations()).toBe(false);
+    expect.int(Animated.getAnimationCount()).toBe(0);
   });
 
-  test("animations can be cancelled", () => {
+  test("animations can be cancelled", ({expect, _}) => {
     module TestTicker =
       MakeTicker({});
     module Animated = Animation.Make(TestTicker);
@@ -168,11 +167,11 @@ test("Animation", () => {
 
     stop();
 
-    expect(Animated.anyActiveAnimations()).toBe(false);
-    expect(Animated.getAnimationCount()).toBe(0);
+    expect.bool(Animated.anyActiveAnimations()).toBeFalse();
+    expect.int(Animated.getAnimationCount()).toBe(0);
   });
 
-  test("chained animations", () => {
+  test("chained animations", ({expect, _}) => {
     module TestTicker =
       MakeTicker({});
     module Animated = Animation.Make(TestTicker);
@@ -205,14 +204,14 @@ test("Animation", () => {
     let _playback = Chain.make(first) |> Chain.add(second) |> Chain.start;
 
     TestTicker.simulateTick(Time.Seconds(1.));
-    expect(first.value.current).toBe(5.);
+    expect.float(first.value.current).toBeCloseTo(5.);
     // Simulate the end of the first, so the second can start
     TestTicker.simulateTick(Time.Seconds(2.));
     TestTicker.simulateTick(Time.Seconds(3.));
-    expect(second.value.current).toBe(5.);
+    expect.float(second.value.current).toBeCloseTo(5.);
   });
 
-  test("chain animations can be cancelled", () => {
+  test("chain animations can be cancelled", ({expect, _}) => {
     module TestTicker =
       MakeTicker({});
     module Animated = Animation.Make(TestTicker);
@@ -249,14 +248,14 @@ test("Animation", () => {
 
     stop();
 
-    expect(Animated.anyActiveAnimations()).toBe(false);
-    expect(Animated.getAnimationCount()).toBe(0);
+    expect.bool(Animated.anyActiveAnimations()).toBeFalse();
+    expect.int(Animated.getAnimationCount()).toBe(0);
   });
 
   let directionTest = (description, direction, before, after) => {
     test(
       description,
-      () => {
+      ({expect, _}) => {
         module TestTicker =
           MakeTicker({});
         module Animated = Animation.Make(TestTicker);
@@ -275,9 +274,9 @@ test("Animation", () => {
           );
         let _playback = Animated.start(myAnimation);
 
-        expect(myAnimation.isReverse).toBe(before);
+        expect.bool(myAnimation.isReverse).toBe(before);
         TestTicker.simulateTick(Time.Seconds(1.));
-        expect(myAnimation.isReverse).toBe(after);
+        expect.bool(myAnimation.isReverse).toBe(after);
       },
     );
   };
@@ -292,7 +291,7 @@ test("Animation", () => {
     false,
   );
 
-  test("animation resets when stopped", () => {
+  test("animation resets when stopped", ({expect, _}) => {
     module TestTicker =
       MakeTicker({});
     module Animated = Animation.Make(TestTicker);
@@ -313,7 +312,7 @@ test("Animation", () => {
     TestTicker.simulateTick(Time.Seconds(1.));
     _playback.stop();
 
-    expect(myAnimation.value.current).toBe(0.);
-    expect(myAnimation.isReverse).toBe(false);
+    expect.float(myAnimation.value.current).toBeCloseTo(0.);
+    expect.bool(myAnimation.isReverse).toBe(false);
   });
 });

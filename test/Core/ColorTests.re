@@ -1,62 +1,58 @@
-open Rejest;
-
 open Revery_Core;
 
-let validateColor = (actual: Color.t, expected: Color.t) => {
-  expect(actual.r).toEqual(expected.r);
-  expect(actual.g).toEqual(expected.g);
-  expect(actual.b).toEqual(expected.b);
-  expect(actual.a).toEqual(expected.a);
-};
+open TestFramework;
 
-test("Color", () =>
-  test("hex parsing", () => {
-    test("16-bit RGB cases", () => {
+
+describe("Color", ({describe, _}) =>
+  describe("hex parsing", ({test, _}) => {
+    test("16-bit RGB cases", ({expect, _}) => {
       let color1 = Color.hex("#000");
       let color2 = Color.hex("#F00");
       let color3 = Color.hex("#0F0");
       let color4 = Color.hex("#00F");
       let color5 = Color.hex("#FFF");
 
-      validateColor(color1, Color.rgb(0., 0., 0.));
-      validateColor(color2, Color.rgb(1., 0., 0.));
-      validateColor(color3, Color.rgb(0., 1., 0.));
-      validateColor(color4, Color.rgb(0., 0., 1.));
-      validateColor(color5, Color.rgb(1., 1., 1.));
+      expect.equal(color1, Color.rgb(0., 0., 0.));
+      expect.equal(color2, Color.rgb(1., 0., 0.));
+      expect.equal(color3, Color.rgb(0., 1., 0.));
+      expect.equal(color4, Color.rgb(0., 0., 1.));
+      expect.equal(color5, Color.rgb(1., 1., 1.));
     });
 
-    test("16-bit RGB w/ alpha", () => {
+    test("16-bit RGB w/ alpha", ({expect, _}) => {
       let color1 = Color.hex("#0000");
       let color2 = Color.hex("#000F");
       let color3 = Color.hex("#000FF");
 
-      validateColor(color1, Color.rgba(0., 0., 0., 0.));
-      validateColor(color2, Color.rgba(0., 0., 0., 1.));
-      validateColor(color3, Color.rgba(0., 0., 0., 1.0));
+      expect.equal(color1, Color.rgba(0., 0., 0., 0.));
+      expect.equal(color2, Color.rgba(0., 0., 0., 1.));
+      expect.equal(color3, Color.rgba(0., 0., 0., 1.0));
     });
-    test("256-bit RGB cases", () => {
+
+    test("256-bit RGB cases", ({expect, _}) => {
       let color1 = Color.hex("#000000");
       let color2 = Color.hex("#FF0000");
       let color3 = Color.hex("#00FF00");
       let color4 = Color.hex("#0000FF");
       let color5 = Color.hex("#FFFFFF");
 
-      validateColor(color1, Color.rgb(0., 0., 0.));
-      validateColor(color2, Color.rgb(1., 0., 0.));
-      validateColor(color3, Color.rgb(0., 1., 0.));
-      validateColor(color4, Color.rgb(0., 0., 1.));
-      validateColor(color5, Color.rgb(1., 1., 1.));
+      expect.equal(color1, Color.rgb(0., 0., 0.));
+      expect.equal(color2, Color.rgb(1., 0., 0.));
+      expect.equal(color3, Color.rgb(0., 1., 0.));
+      expect.equal(color4, Color.rgb(0., 0., 1.));
+      expect.equal(color5, Color.rgb(1., 1., 1.));
     });
-    test("256-bit RGB cases w/ alpha", () => {
+
+    test("256-bit RGB cases w/ alpha", ({expect, _}) => {
       let color1 = Color.hex("#000000F");
       let color2 = Color.hex("#FF0000FF");
       let color3 = Color.hex("#0000000");
       let color4 = Color.hex("#FF000000");
 
-      validateColor(color1, Color.rgba(0., 0., 0., 1.0));
-      validateColor(color2, Color.rgba(1., 0., 0., 1.0));
-      validateColor(color3, Color.rgba(0., 0., 0., 0.));
-      validateColor(color4, Color.rgba(1., 0., 0., 0.0));
+      expect.equal(color1, Color.rgba(0., 0., 0., 1.0));
+      expect.equal(color2, Color.rgba(1., 0., 0., 1.0));
+      expect.equal(color3, Color.rgba(0., 0., 0., 0.));
+      expect.equal(color4, Color.rgba(1., 0., 0., 0.0));
     });
   })
 );

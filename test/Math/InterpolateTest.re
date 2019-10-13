@@ -1,9 +1,11 @@
 open Revery_Math;
 
-open Rejest;
+open TestFramework;
 
-test("interpolate", () => {
-  expect(interpolate(0., 100., 200.)).toBe(100.);
-  expect(interpolate(0.5, 100., 200.)).toBe(150.);
-  expect(interpolate(1., -2., 0.)).toBe(0.);
+describe("interpolate", ({test, _}) => {
+    test("basic cases", ({expect, _}) => {
+      expect.float(interpolate(0., 100., 200.)).toBeCloseTo(100.);
+      expect.float(interpolate(0.5, 100., 200.)).toBeCloseTo(150.);
+      expect.float(interpolate(1., -2., 0.)).toBeCloseTo(0.);
+    });
 });
