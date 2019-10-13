@@ -247,10 +247,7 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
   let shadowTransform = Mat4.create();
 
   /* Widen the size of the shadow based on the spread or blur radius specified */
-  let sizeModifier = switch(inset) {
-    | true => 0.0;
-    | false => spreadRadius +. blurRadius;
-  }
+  let sizeModifier = inset ? 0.0 : spreadRadius +. blurRadius;
 
   let quad =
     Assets.quad(
@@ -261,24 +258,24 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
       (),
     );
 
-  switch(boxShadow.inset) {
-    | true =>
-      Mat4.fromTranslation(shadowTransform, Vec3.create(0., 0., 0.));
-    | false =>
-      Mat4.fromTranslation(shadowTransform, Vec3.create(xOffset, yOffset, 0.));
-  }
+  boxShadow.inset
+    ? Mat4.fromTranslation(shadowTransform, Vec3.create(0., 0., 0.))
+    : Mat4.fromTranslation(
+        shadowTransform,
+        Vec3.create(xOffset, yOffset, 0.),
+      );
 
   let shadowWorldTransform = Mat4.create();
 
-  let shadowOffset = switch(boxShadow.inset) {
-    | true => Vec2.create(xOffset /. width, yOffset /. height)
-    | false => Vec2.create(0., 0.)
-  }
+  let shadowOffset =
+    boxShadow.inset
+      ? Vec2.create(xOffset /. width, yOffset /. height)
+      : Vec2.create(0., 0.);
 
-  let shadowSpread = switch(boxShadow.inset) {
-    | true => Vec2.create(spreadRadius /. width, spreadRadius /. height)
-    | false => Vec2.create(0., 0.)
-  }
+  let shadowSpread =
+    boxShadow.inset
+      ? Vec2.create(spreadRadius /. width, spreadRadius /. height)
+      : Vec2.create(0., 0.);
 
   Mat4.multiply(shadowWorldTransform, world, shadowTransform);
 
@@ -346,9 +343,23 @@ class viewNode (()) = {
     let color = Color.multiplyAlpha(opacity, style.backgroundColor);
 
     switch (style.boxShadow) {
-    | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _, inset: _} =>
+    | {
+        xOffset: 0.,
+        yOffset: 0.,
+        blurRadius: 0.,
+        spreadRadius: 0.,
+        color: _,
+        inset: _,
+      } =>
       ()
-    | {xOffset: _, yOffset: _, blurRadius: _, spreadRadius: _, color: _, inset: true} =>
+    | {
+        xOffset: _,
+        yOffset: _,
+        blurRadius: _,
+        spreadRadius: _,
+        color: _,
+        inset: true,
+      } =>
       ()
     | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
     };
@@ -369,9 +380,23 @@ class viewNode (()) = {
     _super#draw(parentContext);
 
     switch (style.boxShadow) {
-    | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _, inset: _} =>
+    | {
+        xOffset: 0.,
+        yOffset: 0.,
+        blurRadius: 0.,
+        spreadRadius: 0.,
+        color: _,
+        inset: _,
+      } =>
       ()
-    | {xOffset: _, yOffset: _, blurRadius: _, spreadRadius: _, color: _, inset: false} =>
+    | {
+        xOffset: _,
+        yOffset: _,
+        blurRadius: _,
+        spreadRadius: _,
+        color: _,
+        inset: false,
+      } =>
       ()
     | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
     };
