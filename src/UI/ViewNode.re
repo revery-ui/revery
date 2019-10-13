@@ -243,11 +243,14 @@ let renderBorders = (~style, ~width, ~height, ~opacity, ~m, ~world) => {
 };
 
 let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
-  let {spreadRadius, blurRadius, xOffset, yOffset, color} = boxShadow;
+  let {spreadRadius, blurRadius, xOffset, yOffset, color, inset} = boxShadow;
   let shadowTransform = Mat4.create();
 
   /* Widen the size of the shadow based on the spread or blur radius specified */
-  let sizeModifier = spreadRadius +. blurRadius;
+  let sizeModifier = switch(inset) {
+    | true => 0.0;
+    | false => spreadRadius +. blurRadius;
+  }
 
   let quad =
     Assets.quad(
@@ -258,9 +261,24 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
       (),
     );
 
-  Mat4.fromTranslation(shadowTransform, Vec3.create(xOffset, yOffset, 0.));
+  switch(boxShadow.inset) {
+    | true =>
+      Mat4.fromTranslation(shadowTransform, Vec3.create(0., 0., 0.));
+    | false =>
+      Mat4.fromTranslation(shadowTransform, Vec3.create(xOffset, yOffset, 0.));
+  }
 
   let shadowWorldTransform = Mat4.create();
+
+  let shadowOffset = switch(boxShadow.inset) {
+    | true => Vec2.create(xOffset /. width, yOffset /. height)
+    | false => Vec2.create(0., 0.)
+  }
+
+  let shadowSpread = switch(boxShadow.inset) {
+    | true => Vec2.create(spreadRadius /. width, spreadRadius /. height)
+    | false => Vec2.create(0., 0.)
+  }
 
   Mat4.multiply(shadowWorldTransform, world, shadowTransform);
 
@@ -281,6 +299,21 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
   Shaders.CompiledShader.setUniform2fv(
     gradientShader.uniformShadowAmount,
     Vec2.create(blurRadius /. width, blurRadius /. height),
+  );
+
+  Shaders.CompiledShader.setUniform2fv(
+    gradientShader.uniformShadowOffset,
+    shadowOffset,
+  );
+
+  Shaders.CompiledShader.setUniform2fv(
+    gradientShader.uniformShadowSpread,
+    shadowSpread,
+  );
+
+  Shaders.CompiledShader.setUniform1f(
+    gradientShader.uniformShadowInset,
+    inset ? 1. : 0.,
   );
 
   Shaders.CompiledShader.setUniformMatrix4fv(
@@ -313,7 +346,9 @@ class viewNode (()) = {
     let color = Color.multiplyAlpha(opacity, style.backgroundColor);
 
     switch (style.boxShadow) {
-    | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _} =>
+    | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _, inset: _} =>
+      ()
+    | {xOffset: _, yOffset: _, blurRadius: _, spreadRadius: _, color: _, inset: true} =>
       ()
     | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
     };
@@ -332,5 +367,13 @@ class viewNode (()) = {
     };
 
     _super#draw(parentContext);
+
+    switch (style.boxShadow) {
+    | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _, inset: _} =>
+      ()
+    | {xOffset: _, yOffset: _, blurRadius: _, spreadRadius: _, color: _, inset: false} =>
+      ()
+    | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
+    };
   };
 };

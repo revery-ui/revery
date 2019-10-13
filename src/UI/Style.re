@@ -23,6 +23,7 @@ module BoxShadow = {
     blurRadius: float,
     spreadRadius: float,
     color: Color.t,
+    inset: bool,
   };
 
   type t = properties;
@@ -34,6 +35,7 @@ module BoxShadow = {
         ~blurRadius=20.,
         ~spreadRadius=00.,
         ~color=Color.rgba(0., 0., 0., 1.0),
+        ~inset=false,
         (),
       ) => {
     xOffset,
@@ -41,6 +43,7 @@ module BoxShadow = {
     blurRadius,
     spreadRadius,
     color,
+    inset,
   };
 
   let default: t = {
@@ -49,6 +52,7 @@ module BoxShadow = {
     blurRadius: 0.,
     spreadRadius: 0.,
     color: Colors.black,
+    inset: false,
   };
 };
 

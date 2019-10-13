@@ -35,6 +35,21 @@ let uniforms: list(ShaderUniform.t) =
       name: "uShadowAmount",
       usage: FragmentShader,
     },
+    {
+      dataType: ShaderDataType.Vector2,
+      name: "uShadowOffset",
+      usage: FragmentShader,
+    },
+    {
+      dataType: ShaderDataType.Vector2,
+      name: "uShadowSpread",
+      usage: FragmentShader,
+    },
+    {
+      dataType: ShaderDataType.Float,
+      name: "uShadowInset",
+      usage: FragmentShader,
+    },
   ];
 
 let varying =
@@ -53,16 +68,16 @@ let vertexShader =
 |};
 
 let fragmentShader = {|
-  float leftEdgeAmount = smoothstep(0.0, uShadowAmount.x, vTexCoord.x);
-  float rightEdgeAmount = smoothstep(0.0, uShadowAmount.x, 1.0 - vTexCoord.x);
+  float leftEdgeAmount = smoothstep(0.0, uShadowAmount.x, vTexCoord.x + uShadowOffset.x - uShadowSpread.x);
+  float rightEdgeAmount = smoothstep(0.0, uShadowAmount.x, 1.0 - vTexCoord.x - uShadowOffset.x - uShadowSpread.x);
 
-  float topEdgeAmount = smoothstep(0.0, uShadowAmount.y, vTexCoord.y);
-  float bottomEdgeAmount = smoothstep(0.0, uShadowAmount.y, 1.0 - vTexCoord.y);
+  float topEdgeAmount = smoothstep(0.0, uShadowAmount.y, vTexCoord.y + uShadowOffset.y - uShadowSpread.y);
+  float bottomEdgeAmount = smoothstep(0.0, uShadowAmount.y, 1.0 - vTexCoord.y - uShadowOffset.y - uShadowSpread.y);
   float horizontalBlur = min(leftEdgeAmount, rightEdgeAmount);
   float verticalBlur = min(topEdgeAmount, bottomEdgeAmount);
 
   float blur = horizontalBlur * verticalBlur;
-  gl_FragColor = vec4(uShadowColor.rgb, blur);
+  gl_FragColor = vec4(uShadowColor.rgb, abs(uShadowInset - blur));
 |};
 
 type t = {
@@ -70,6 +85,9 @@ type t = {
   uniformProjection: uniformLocation,
   uniformShadowColor: uniformLocation,
   uniformShadowAmount: uniformLocation,
+  uniformShadowOffset: uniformLocation,
+  uniformShadowSpread: uniformLocation,
+  uniformShadowInset: uniformLocation,
   uniformWorld: uniformLocation,
 };
 
@@ -91,6 +109,12 @@ let create = () => {
     CompiledShader.getUniformLocation(compiledShader, "uShadowColor");
   let uniformShadowAmount =
     CompiledShader.getUniformLocation(compiledShader, "uShadowAmount");
+  let uniformShadowOffset =
+    CompiledShader.getUniformLocation(compiledShader, "uShadowOffset");
+  let uniformShadowSpread =
+    CompiledShader.getUniformLocation(compiledShader, "uShadowSpread");
+  let uniformShadowInset =
+    CompiledShader.getUniformLocation(compiledShader, "uShadowInset");
 
   {
     compiledShader,
@@ -98,5 +122,8 @@ let create = () => {
     uniformProjection,
     uniformShadowColor,
     uniformShadowAmount,
+    uniformShadowOffset,
+    uniformShadowSpread,
+    uniformShadowInset,
   };
 };

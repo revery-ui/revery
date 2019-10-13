@@ -26,6 +26,14 @@ let secondBoxStyle =
     height(100),
   ];
 
+let thirdBoxStyle =
+  Style.[
+    backgroundColor(Colors.gray),
+    position(`Relative),
+    width(100),
+    height(100),
+  ];
+
 let firstShadow =
   Style.BoxShadow.make(
     ~yOffset=-10.,
@@ -46,6 +54,17 @@ let secondShadow =
     (),
   );
 
+let thirdShadow =
+  Style.BoxShadow.make(
+    ~yOffset=10.,
+    ~xOffset=-20.,
+    ~blurRadius=20.,
+    ~color=Colors.blue,
+    ~spreadRadius=10.,
+    ~inset=true,
+    (),
+  );
+
 let render = () =>
   <View style=parentStyles>
     <Padding padding=30>
@@ -56,6 +75,11 @@ let render = () =>
     <Padding padding=30>
       <BoxShadow boxShadow=secondShadow>
         <View style=secondBoxStyle />
+      </BoxShadow>
+    </Padding>
+    <Padding padding=30>
+      <BoxShadow boxShadow=thirdShadow>
+        <View style=thirdBoxStyle />
       </BoxShadow>
     </Padding>
   </View>;
