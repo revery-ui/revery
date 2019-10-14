@@ -9,9 +9,7 @@ describe("Environment", ({test, _}) =>
       expect.bool(
         Sys.file_exists(Environment.executingDirectory ++ "test-asset.txt"),
       ).
-        toBe(
-        true,
-      )
+        toBeTrue()
     })
   )
 );

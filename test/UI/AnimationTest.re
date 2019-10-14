@@ -140,7 +140,7 @@ describe("Animation", ({describe, test, _}) => {
 
     TestTicker.simulateTick(Time.Seconds(3.));
 
-    expect.bool(Animated.anyActiveAnimations()).toBe(false);
+    expect.bool(Animated.anyActiveAnimations()).toBeFalse();
     expect.int(Animated.getAnimationCount()).toBe(0);
   });
 
@@ -313,6 +313,6 @@ describe("Animation", ({describe, test, _}) => {
     _playback.stop();
 
     expect.float(myAnimation.value.current).toBeCloseTo(0.);
-    expect.bool(myAnimation.isReverse).toBe(false);
+    expect.bool(myAnimation.isReverse).toBeFalse();
   });
 });

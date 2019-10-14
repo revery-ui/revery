@@ -7,30 +7,19 @@ describe("BoundingBox2d", ({test, _}) => {
     let bbox =
       BoundingBox2d.create(Vec2.create(0., 0.), Vec2.create(400., 600.));
 
-    expect.bool(BoundingBox2d.isPointInside(bbox, Vec2.create(1., 1.))).toBe(
-      true,
-    );
+    expect.bool(BoundingBox2d.isPointInside(bbox, Vec2.create(1., 1.))).
+      toBeTrue();
     expect.bool(BoundingBox2d.isPointInside(bbox, Vec2.create(400., 600.))).
-      toBe(
-      true,
-    );
+      toBeTrue();
     expect.bool(BoundingBox2d.isPointInside(bbox, Vec2.create(399., 599.))).
-      toBe(
-      true,
-    );
+      toBeTrue();
 
     expect.bool(BoundingBox2d.isPointInside(bbox, Vec2.create(401., 599.))).
-      toBe(
-      false,
-    );
+      toBeFalse();
     expect.bool(BoundingBox2d.isPointInside(bbox, Vec2.create(399., 601.))).
-      toBe(
-      false,
-    );
+      toBeFalse();
     expect.bool(BoundingBox2d.isPointInside(bbox, Vec2.create(-1., -1.))).
-      toBe(
-      false,
-    );
+      toBeFalse();
   });
 
   describe("intersection", ({test, _}) => {
@@ -40,32 +29,26 @@ describe("BoundingBox2d", ({test, _}) => {
       let bbox2 =
         BoundingBox2d.create(Vec2.create(0., 0.), Vec2.create(4., 4.));
 
-      expect.bool(BoundingBox2d.intersects(bbox1, bbox2)).toBe(false);
+      expect.bool(BoundingBox2d.intersects(bbox1, bbox2)).toBeFalse();
 
       let leftIntersect =
         BoundingBox2d.create(Vec2.create(4., 4.), Vec2.create(6., 6.));
 
-      expect.bool(BoundingBox2d.intersects(bbox1, leftIntersect)).toBe(
-        true,
-      );
+      expect.bool(BoundingBox2d.intersects(bbox1, leftIntersect)).toBeTrue();
 
       let topIntersect =
         BoundingBox2d.create(Vec2.create(6., 4.), Vec2.create(8., 6.));
 
-      expect.bool(BoundingBox2d.intersects(bbox1, topIntersect)).toBe(true);
+      expect.bool(BoundingBox2d.intersects(bbox1, topIntersect)).toBeTrue();
 
       let rightIntersect =
         BoundingBox2d.create(Vec2.create(7., 6.), Vec2.create(11., 8.));
 
-      expect.bool(BoundingBox2d.intersects(bbox1, rightIntersect)).toBe(
-        true,
-      );
+      expect.bool(BoundingBox2d.intersects(bbox1, rightIntersect)).toBeTrue();
 
       let bottomIntersect =
         BoundingBox2d.create(Vec2.create(6., 9.), Vec2.create(7., 11.));
-      expect.bool(BoundingBox2d.intersects(bbox1, bottomIntersect)).toBe(
-        true,
-      );
+      expect.bool(BoundingBox2d.intersects(bbox1, bottomIntersect)).toBeTrue();
     });
     test("intersect", ({expect, _}) => {
       let areBboxEqual = (b1, b2) => {
@@ -87,9 +70,7 @@ describe("BoundingBox2d", ({test, _}) => {
       expect.bool(
         areBboxEqual(BoundingBox2d.intersect(bbox, bbox2), intersectBbox),
       ).
-        toBe(
-        true,
-      );
+        toBeTrue();
 
       let insideBbox =
         BoundingBox2d.create(Vec2.create(3., 4.), Vec2.create(4., 7.));
@@ -97,9 +78,7 @@ describe("BoundingBox2d", ({test, _}) => {
       expect.bool(
         areBboxEqual(BoundingBox2d.intersect(bbox, insideBbox), insideBbox),
       ).
-        toBe(
-        true,
-      );
+        toBeTrue();
 
       let outsideBbox =
         BoundingBox2d.create(Vec2.create(6., 11.), Vec2.create(7., 12.));
@@ -112,9 +91,7 @@ describe("BoundingBox2d", ({test, _}) => {
           intersectOutsideBbox,
         ),
       ).
-        toBe(
-        true,
-      );
+        toBeTrue();
     });
   });
 

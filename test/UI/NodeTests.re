@@ -14,17 +14,20 @@ describe("NodeTests", ({test, _}) => {
     let parentNode = (new node)();
     let childNode = (new node)();
 
-    expect.equal(childNode#getParent(), None);
+    expect.option(childNode#getParent()).toBeNone();
 
     parentNode#addChild(childNode);
 
     expect.int(List.length(parentNode#getChildren())).toBe(1);
-    expect.equal(childNode#getParent(), Some(parentNode));
+    expect.option(childNode#getParent()).toBe(
+      ~equals=(===),
+      Some(parentNode),
+    );
 
     parentNode#removeChild(childNode);
 
     expect.int(List.length(parentNode#getChildren())).toBe(0);
-    expect.bool(childNode#getParent() == None).toBe(true);
+    expect.option(childNode#getParent()).toBeNone();
   });
 
   describe("hitTest", ({test, _}) => {
@@ -34,7 +37,7 @@ describe("NodeTests", ({test, _}) => {
       Layout.layout(node);
       node#recalculate();
 
-      expect.bool(node#hitTest(Vec2.create(200., 250.))).toBe(true);
+      expect.bool(node#hitTest(Vec2.create(200., 250.))).toBeTrue();
     });
 
     test("simple hitTest returns false case", ({expect, _}) => {
@@ -44,7 +47,7 @@ describe("NodeTests", ({test, _}) => {
       Layout.layout(node);
       node#recalculate();
 
-      expect.bool(node#hitTest(Vec2.create(401., 250.))).toBe(false);
+      expect.bool(node#hitTest(Vec2.create(401., 250.))).toBeFalse();
     });
 
     test("left / top are taken into account", ({expect, _}) => {
@@ -53,8 +56,8 @@ describe("NodeTests", ({test, _}) => {
       Layout.layout(node);
       node#recalculate();
 
-      expect.bool(node#hitTest(Vec2.create(1., 1.))).toBe(false);
-      expect.bool(node#hitTest(Vec2.create(6., 6.))).toBe(true);
+      expect.bool(node#hitTest(Vec2.create(1., 1.))).toBeFalse();
+      expect.bool(node#hitTest(Vec2.create(6., 6.))).toBeTrue();
     });
 
     test("parent transforms are taken into account", ({expect, _}) => {
@@ -70,8 +73,8 @@ describe("NodeTests", ({test, _}) => {
       Layout.layout(parentNode);
       parentNode#recalculate();
 
-      expect.bool(childNode#hitTest(Vec2.create(0., 0.))).toBe(false);
-      expect.bool(childNode#hitTest(Vec2.create(60., 60.))).toBe(true);
+      expect.bool(childNode#hitTest(Vec2.create(0., 0.))).toBeFalse();
+      expect.bool(childNode#hitTest(Vec2.create(60., 60.))).toBeTrue();
     });
   });
 });

@@ -512,7 +512,7 @@ describe("Mouse", ({describe, test, _}) => {
         e.stopPropagation();
         switch (BubbledEvent.activeEvent^) {
         | Some(activeEvent) =>
-          expect.bool(activeEvent.shouldPropagate).toBe(false)
+          expect.bool(activeEvent.shouldPropagate).toBeFalse()
         | None => ()
         };
       | None => ()
@@ -528,7 +528,7 @@ describe("Mouse", ({describe, test, _}) => {
         e.preventDefault();
         switch (BubbledEvent.activeEvent^) {
         | Some(activeEvent) =>
-          expect.bool(activeEvent.defaultPrevented).toBe(true)
+          expect.bool(activeEvent.defaultPrevented).toBeTrue()
         | None => ()
         };
       | None => ()
@@ -594,6 +594,6 @@ describe("Mouse", ({describe, test, _}) => {
     );
 
     expect.int(count^).toBe(1);
-    expect.equal(cursorType^, Cursors.text);
+    expect.same(cursorType^, Cursors.text);
   });
 });
