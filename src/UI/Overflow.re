@@ -84,17 +84,17 @@ let _startClipRegion =
   let (x, y, width, height) =
     switch (currentDimensions) {
     | None => (candidateX, candidateY, candidateWidth, candidateHeight)
-    | Some({x as oldX, y as oldY, width as oldWidth, height as oldHeight}) =>
-      let newX = Stdlib.max(oldX, candidateX);
-      let newY = Stdlib.max(oldY, candidateY);
+    | Some({x, y, width, height }) =>
+      let newX = Stdlib.max(x, candidateX);
+      let newY = Stdlib.max(y, candidateY);
       let maxX =
         Stdlib.min(
-          oldX + oldWidth,
+          x + width,
           newX + candidateWidth - (newX - candidateX),
         );
       let maxY =
         Stdlib.min(
-          oldY + oldHeight,
+          y + height,
           newY + candidateHeight - (newY - candidateY),
         );
       (newX, newY, maxX - newX, maxY - newY);
