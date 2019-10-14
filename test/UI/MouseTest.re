@@ -272,7 +272,9 @@ describe("Mouse", ({describe, test, _}) => {
 
       expect.int(count^).toBe(1);
     });
-    test("does not trigger onMouseUp event for node if outside node", ({expect, _}) => {
+    test(
+      "does not trigger onMouseUp event for node if outside node",
+      ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
 
       let count = ref(0);
@@ -363,7 +365,9 @@ describe("Mouse", ({describe, test, _}) => {
       expect.int(count^).toBe(1);
     });
 
-    test("triggers both onMouseEnter and onMouseLeave event for node", ({expect, _}) => {
+    test(
+      "triggers both onMouseEnter and onMouseLeave event for node",
+      ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       let count = ref(0);
       let f = _evt => count := count^ + 1;
@@ -425,7 +429,9 @@ describe("Mouse", ({describe, test, _}) => {
 
       expect.int(count^).toBe(1);
     });
-    test("triggers both onMouseOver and onMouseOut event for node", ({expect, _}) => {
+    test(
+      "triggers both onMouseOver and onMouseOut event for node",
+      ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       let count = ref(0);
       let f = _evt => count := count^ + 1;
@@ -514,7 +520,8 @@ describe("Mouse", ({describe, test, _}) => {
     });
 
     test(
-      "test that state is updated per event when prevent default is called", ({expect, _}) => {
+      "test that state is updated per event when prevent default is called",
+      ({expect, _}) => {
       let evt = BubbledEvent.make(MouseMove({mouseX: 50., mouseY: 50.}));
       switch (evt) {
       | Some(e) =>
@@ -563,7 +570,8 @@ describe("Mouse", ({describe, test, _}) => {
       expect.int(captureCount^).toBe(1);
     })
   );
-  test("onCursorChangedEvent gets dispatched with proper cursor", ({expect, _}) => {
+  test(
+    "onCursorChangedEvent gets dispatched with proper cursor", ({expect, _}) => {
     module Cursors = Revery_Core.MouseCursors;
 
     let count = ref(0);

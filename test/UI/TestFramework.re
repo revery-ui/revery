@@ -1,7 +1,7 @@
 include Rely.Make({
-    let config =
-        Rely.TestFrameworkConfig.initialize({
-            snapshotDir: "test/UI/__snapshots__",
-            projectDir: "",
-        });
+  let config =
+    Rely.TestFrameworkConfig.initialize({
+      snapshotDir: "test/UI/__snapshots__",
+      projectDir: "",
+    });
 });

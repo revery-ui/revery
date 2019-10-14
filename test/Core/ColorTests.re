@@ -2,7 +2,6 @@ open Revery_Core;
 
 open TestFramework;
 
-
 describe("Color", ({describe, _}) =>
   describe("hex parsing", ({test, _}) => {
     test("16-bit RGB cases", ({expect, _}) => {

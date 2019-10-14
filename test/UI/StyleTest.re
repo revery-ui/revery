@@ -65,14 +65,13 @@ describe("Style API tests", ({test, _}) => {
     expect.equal(styles.borderTop, {color: red, width: 2});
     expect.equal(styles.borderRight, {color: blue, width: 2});
     expect.equal(styles.borderLeft, {color: rebeccaPurple, width: 2});
-    expect.equal(styles.borderHorizontal, {
-      color: paleVioletRed,
-      width: 12,
-    });
+    expect.equal(styles.borderHorizontal, {color: paleVioletRed, width: 12});
     expect.equal(styles.borderVertical, {color: paleTurquoise, width: 18});
   });
 
-  test("Should correctly overwrite the source style if the target exists", ({expect, _}) => {
+  test(
+    "Should correctly overwrite the source style if the target exists",
+    ({expect, _}) => {
     let result =
       merge(
         ~source=[margin(10), color(red), backgroundColor(paleTurquoise)],
@@ -99,7 +98,8 @@ describe("Style API tests", ({test, _}) => {
     expect.equal(found, `BackgroundColor(paleTurquoise));
   });
 
-  test("Should correctly select a style from a list of styles", ({expect, _}) => {
+  test(
+    "Should correctly select a style from a list of styles", ({expect, _}) => {
     let l = [fontFamily("Test-Font"), fontSize(20)];
     let ff = Selector.select(l, FontFamily, "Failed");
     let fs = Selector.select(l, FontSize, 10);
@@ -107,7 +107,9 @@ describe("Style API tests", ({test, _}) => {
     expect.int(fs).toBe(20);
   });
 
-  test("Should use a fallback if the correct style is not present", ({expect, _}) => {
+  test(
+    "Should use a fallback if the correct style is not present",
+    ({expect, _}) => {
     let l = [color(black), height(20)];
     let fb = Selector.select(l, Top, 10);
     expect.int(fb).toBe(10);

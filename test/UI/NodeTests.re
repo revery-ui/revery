@@ -4,30 +4,30 @@ open Revery_UI;
 open TestFramework;
 
 describe("NodeTests", ({test, _}) => {
-    test("no children initially", ({expect, _}) => {
-        let node = new node();
+  test("no children initially", ({expect, _}) => {
+    let node = (new node)();
 
-        expect.int(List.length(node#getChildren())).toBe(0);
-    });
-
-    test("add / remove child", ({expect, _}) => {
-      let parentNode = (new node)();
-      let childNode = (new node)();
-
-      expect.equal(childNode#getParent(), None);
-
-      parentNode#addChild(childNode);
-
-      expect.int(List.length(parentNode#getChildren())).toBe(1);
-      expect.equal(childNode#getParent(), Some(parentNode));
-
-      parentNode#removeChild(childNode);
-
-      expect.int(List.length(parentNode#getChildren())).toBe(0);
-      expect.bool(childNode#getParent() == None).toBe(true);
+    expect.int(List.length(node#getChildren())).toBe(0);
   });
 
-describe("hitTest", ({test, _}) => {
+  test("add / remove child", ({expect, _}) => {
+    let parentNode = (new node)();
+    let childNode = (new node)();
+
+    expect.equal(childNode#getParent(), None);
+
+    parentNode#addChild(childNode);
+
+    expect.int(List.length(parentNode#getChildren())).toBe(1);
+    expect.equal(childNode#getParent(), Some(parentNode));
+
+    parentNode#removeChild(childNode);
+
+    expect.int(List.length(parentNode#getChildren())).toBe(0);
+    expect.bool(childNode#getParent() == None).toBe(true);
+  });
+
+  describe("hitTest", ({test, _}) => {
     test("simple hitTest returns true case", ({expect, _}) => {
       let node = (new node)();
       node#setStyle(Style.make(~width=400, ~height=500, ()));
