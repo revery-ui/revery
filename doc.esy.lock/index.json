@@ -1,5 +1,5 @@
 {
-  "checksum": "404b5827c60e74809f3f16f011c65614",
+  "checksum": "5d23da31c4a8e20773e7fefd19c5753b",
   "root": "revery@link-dev:./package.json",
   "node": {
     "wordwrap@0.0.3@d41d8cd9": {
@@ -63,6 +63,7 @@
         "reason-fontkit@2.7.0@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "http-server@0.11.1@d41d8cd9",
         "flex@1.2.2@d41d8cd9", "brisk-reconciler@0.0.2@d41d8cd9",
+        "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/odoc@opam:1.4.2@187ed639",
         "@opam/lwt_ppx@opam:1.2.4@369f3faf", "@opam/lwt@opam:4.4.0@0357bb8b",
