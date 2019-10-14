@@ -1,9 +1,9 @@
-open Rejest;
-
 open Revery_Core;
 
-test("Memoize", () => {
-  test("Simple memoization", () => {
+open TestFramework;
+
+describe("Memoize", ({test, _}) => {
+  test("Simple memoization", ({expect, _}) => {
     let v = ref(0);
     let testFunction =
       Memoize.make(_a => {
@@ -14,11 +14,11 @@ test("Memoize", () => {
     let t0 = testFunction(0);
     let t1 = testFunction(0);
 
-    expect(t0).toEqual(1);
-    expect(t1).toEqual(1);
+    expect.int(t0).toBe(1);
+    expect.int(t1).toBe(1);
   });
 
-  test("Memoizes multiple arguments", () => {
+  test("Memoizes multiple arguments", ({expect, _}) => {
     let v = ref(0);
     let testFunction =
       Memoize.make(a => {
@@ -31,9 +31,9 @@ test("Memoize", () => {
     let t2 = testFunction("a");
     let t3 = testFunction("b");
 
-    expect(t0).toEqual("a1");
-    expect(t1).toEqual("b2");
-    expect(t2).toEqual("a1");
-    expect(t3).toEqual("b2");
+    expect.string(t0).toEqual("a1");
+    expect.string(t1).toEqual("b2");
+    expect.string(t2).toEqual("a1");
+    expect.string(t3).toEqual("b2");
   });
 });
