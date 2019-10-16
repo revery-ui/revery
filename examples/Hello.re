@@ -11,7 +11,7 @@ let logo = {
       let (logoOpacity, setOpacity, hooks) = Hooks.state(1.0, hooks);
       let (text, setText, hooks) = Hooks.state("ABC", hooks);
 
-      let (rotation, rotationController, hooks) =
+      let (rotation, pauseRotation, restartRotation, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           Animated.options(
@@ -24,7 +24,7 @@ let logo = {
           hooks,
         );
 
-      let (rotationY, rotationYController, hooks) =
+      let (rotationY, pauseRotationY, restartRotationY, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           Animated.options(
@@ -62,8 +62,9 @@ let logo = {
               width=100
               onClick={
                 () => {
-                  rotationYController#pause();
-                  rotationController#pause();
+                  pauseRotation();
+                  pauseRotationY();
+                  ();
                 }
               }
               title="Pause"
@@ -72,18 +73,8 @@ let logo = {
               width=100
               onClick={
                 () => {
-                  rotationYController#resume();
-                  rotationController#resume();
-                }
-              }
-              title="Resume"
-            />
-            <Button
-              width=100
-              onClick={
-                () => {
-                  rotationYController#restart();
-                  rotationController#restart();
+                  restartRotation();
+                  restartRotationY();
                 }
               }
               title="Restart"
@@ -104,7 +95,7 @@ let animatedText = {
     (),
   ) =>
     component(hooks => {
-      let (animatedOpacity, _, hooks) =
+      let (animatedOpacity, _, _, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           Animated.options(
@@ -116,7 +107,7 @@ let animatedText = {
           hooks,
         );
 
-      let (translate, _, hooks) =
+      let (translate, _, _, hooks) =
         Hooks.animation(
           Animated.floatValue(50.),
           Animated.options(

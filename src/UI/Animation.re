@@ -177,6 +177,8 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     playback;
   };
 
+  let getTime = () => AnimationTickerImpl.time();
+
   module Chain = {
     type t = {animations: list(animation)};
     let make = animation => {animations: [animation]};
@@ -228,67 +230,4 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   Event.subscribe(AnimationTickerImpl.onTick, t =>
     tick(Time.to_float_seconds(t))
   );
-
-  class animationController (_animation: animation) = {
-    as self;
-    val animation = _animation;
-    val mutable completer = None;
-    val mutable lastActive =
-      List.find_opt(a => a.animation.id == _animation.id, activeAnimations^);
-    pub updateLastActive = () =>
-      lastActive = (
-        switch (
-          List.find_opt(
-            a => a.animation.id == animation.id,
-            activeAnimations^,
-          )
-        ) {
-        | None => lastActive
-        | la => la
-        }
-      );
-    pub reverse = () => animation.isReverse = !animation.isReverse;
-    pub pause = () => {
-      self#updateLastActive();
-      activeAnimations :=
-        List.filter(
-          ({animation: a, _}) => a.id !== animation.id,
-          activeAnimations^,
-        );
-    };
-    pub restart = () =>
-      switch (lastActive) {
-      | Some(activeAnim) =>
-        animation.startTime =
-          Time.to_float_seconds(AnimationTickerImpl.time());
-        animation.value.current = animation.startValue;
-        let complete =
-          switch (completer) {
-          | Some(x) => Some(x())
-          | None => None
-          };
-        let newActiveAnim = {animation, update: activeAnim.update, complete};
-        activeAnimations := [newActiveAnim, ...activeAnimations^];
-        ();
-      | None => ()
-      };
-    pub resume = () =>
-      switch (lastActive) {
-      | Some(activeAnim) =>
-        let propDone =
-          (animation.startValue +. animation.value.current)
-          /. animation.toValue;
-        let newStartTime =
-          (AnimationTickerImpl.time() |> Time.toSeconds)
-          -. animation.delay
-          -. propDone
-          *. animation.duration;
-        animation.startTime = newStartTime;
-        activeAnimations := [activeAnim, ...activeAnimations^];
-        ();
-      | None => ()
-      };
-    pub getAnimation = () => animation;
-    pub setCompleter = (c: (unit, unit) => unit) => completer = Some(c);
-  };
 };

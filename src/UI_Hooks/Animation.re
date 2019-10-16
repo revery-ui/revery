@@ -4,13 +4,9 @@ open Revery_UI.Animated;
 
 let reducer = (_a, s) => s + 1;
 
-let animationLoop = (dispatch, animation, controller, ()) => {
-  // Creates an interval timer that continually executes (every 0 seconds)
-  let completer = () => Tick.interval(_t => dispatch(), Seconds(0.))
+let animationLoop = (dispatch, animation, completer, ()) => {
   let complete = completer();
   let {pause, stop} = animation |> start(~complete);
-  controller#updateLastActive();
-  controller#setCompleter(completer);
   Some(
     () => {
       stop();
@@ -21,13 +17,43 @@ let animationLoop = (dispatch, animation, controller, ()) => {
 
 let animation = (v: animationValue, opts: animationOptions, slots) => {
   let (animation, _, slots) = Ref.ref(tween(v, opts), slots);
-  let (controller, _, slots) = Ref.ref(new animationController(animation), slots);
   let (_, dispatch, slots) =
     Reducer.reducer(~initialState=0, reducer, slots);
+  let completer = () => Tick.interval(_t => dispatch(), Seconds(0.));
+
+  let restart = () => {
+    animation.startTime = Time.to_float_seconds(getTime());
+    animation.value.current = animation.startValue;
+    let newActiveAnim = {
+      animation,
+      update: None,
+      complete: Some(completer()),
+    };
+    activeAnimations := [newActiveAnim, ...activeAnimations^];
+  };
+
+  let pause = () => {
+    activeAnimations :=
+      List.filter(
+        ({animation: a, _}) => a.id !== animation.id,
+        activeAnimations^,
+      );
+    () => {
+      let newActiveAnim = {
+        animation,
+        update: None,
+        complete: Some(completer()),
+      };
+      activeAnimations := [newActiveAnim, ...activeAnimations^];
+    };
+  };
 
   let slots =
-    Effect.effect(OnMount, animationLoop(dispatch, animation, controller), slots);
+    Effect.effect(
+      OnMount,
+      animationLoop(dispatch, animation, completer),
+      slots,
+    );
 
-
-  (animation.value.current, controller, slots);
+  (animation.value.current, pause, restart, slots);
 };
