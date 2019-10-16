@@ -232,6 +232,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   class animationController (_animation: animation) = {
     as self;
     val animation = _animation;
+    val mutable completer = None;
     val mutable lastActive =
       switch (
         List.nth(
@@ -268,7 +269,17 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
         animation.startTime =
           Time.to_float_seconds(AnimationTickerImpl.time());
         animation.value.current = animation.startValue;
-        activeAnimations := List.append([activeAnim], activeAnimations^);
+        let complete = switch (completer) {
+          | Some(x) => Some(x())
+          | None => None
+        };
+        let newActiveAnim = {
+          animation,
+          update: activeAnim.update,
+          complete
+        }
+        activeAnimations := List.append([newActiveAnim], activeAnimations^);
+        ();
       | None => ()
       };
     pub resume = () =>
@@ -292,5 +303,6 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       | None => ()
       };
     pub getAnimation = () => animation;
+    pub setCompleter = (c : unit => ((unit => unit))) => completer = Some(c);
   };
 };

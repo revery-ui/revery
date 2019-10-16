@@ -6,10 +6,11 @@ let reducer = (_a, s) => s + 1;
 
 let animationLoop = (dispatch, animation, controller, ()) => {
   // Creates an interval timer that continually executes (every 0 seconds)
-  let complete = Tick.interval(_t => dispatch(), Seconds(0.));
-  // Starts the animation
+  let completer = () => Tick.interval(_t => dispatch(), Seconds(0.))
+  let complete = completer();
   let {pause, stop} = animation |> start(~complete);
   controller#updateLastActive();
+  controller#setCompleter(completer);
   Some(
     () => {
       stop();
