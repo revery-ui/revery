@@ -363,23 +363,24 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     ++ string_of_int(height),
   );
   let w = Sdl2.Window.create(width, height, name);
+  log("Window created successfully.");
+  let uniqueId = Sdl2.Window.getId(w);
+  log("Window id: " ++ string_of_int(uniqueId));
 
   // We need to let Windows know that we are DPI-aware and that we are going to
   // properly handle scaling. This is a no-op on other platforms.
   Sdl2.Window.setWin32ProcessDPIAware(w);
 
-  let uniqueId = Sdl2.Window.getId(w);
-  log("Window created - id: " ++ string_of_int(uniqueId));
-
   log("Setting window context");
   let _ = Sdl2.Gl.setup(w);
+  log("GL setup.");
   let version = Sdl2.Gl.glGetString(Sdl2.Gl.Version);
   let vendor = Sdl2.Gl.glGetString(Sdl2.Gl.Vendor);
   let shadingLanguageVersion =
     Sdl2.Gl.glGetString(Sdl2.Gl.ShadingLanguageVersion);
   log(
     Printf.sprintf(
-      "Gl setup - version: %s vendor: %s shadingLanguageVersion: %s\n",
+      "OpenGL hardware info - version: %s vendor: %s shadingLanguageVersion: %s\n",
       version,
       vendor,
       shadingLanguageVersion,
