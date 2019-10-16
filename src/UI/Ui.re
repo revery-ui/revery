@@ -40,6 +40,9 @@ let start = (window: Window.t, element: React.syntheticElement) => {
   let ui = RenderContainer.create(window, rootNode, container, mouseCursor);
 
   let _ignore =
+    Revery_Core.Event.subscribe(window.onExposed, () => {uiDirty := true});
+
+  let _ignore =
     Revery_Core.Event.subscribe(
       window.onMouseMove,
       m => {

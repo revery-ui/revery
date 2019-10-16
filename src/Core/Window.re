@@ -61,6 +61,7 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
+  onExposed: Event.t(unit),
   onKeyDown: Event.t(Key.KeyEvent.t),
   onKeyUp: Event.t(Key.KeyEvent.t),
   onMouseUp: Event.t(mouseButtonEvent),
@@ -325,6 +326,7 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.WindowMoved(_) => v.areMetricsDirty = true
   | Sdl2.Event.WindowEnter(_) => Event.dispatch(v.onMouseEnter, ())
   | Sdl2.Event.WindowLeave(_) => Event.dispatch(v.onMouseLeave, ())
+  | Sdl2.Event.WindowExposed(_) => Event.dispatch(v.onExposed, ())
   | Sdl2.Event.Quit => ()
   | _ => ()
   };
@@ -424,6 +426,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     isComposingText: false,
 
     forceScaleFactor: options.forceScaleFactor,
+
+    onExposed: Event.create(),
 
     onMouseMove: Event.create(),
     onMouseWheel: Event.create(),
