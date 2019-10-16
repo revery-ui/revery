@@ -67,6 +67,9 @@ let runOnMainThread = f => {
   _mainThreadPendingFunctions := [f, ..._mainThreadPendingFunctions^];
   _anyPendingWork := true;
   Mutex.unlock(_mainThreadMutex);
+
+  // If we're 'idle' - in a [waitTimeout], dispatch an event to wake up the main thread
+  Sdl2.Event.push();
 };
 
 let _anyPendingMainThreadJobs = () => {
@@ -120,28 +123,21 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
   let _ = Sdl2.init();
   let _dispose = initFunc(appInstance);
 
-  let _flushEvents = () => {
-    let processingEvents = ref(true);
-
-    while (processingEvents^) {
-      let evt = Sdl2.Event.poll();
-      switch (evt) {
-      | None => processingEvents := false
-      | Some(v) =>
+  let _handleEvent = (evt) => {
         let handleEvent = windowID => {
           let window = getWindowById(appInstance, windowID);
           switch (window) {
-          | Some(win) => Window._handleEvent(v, win)
+          | Some(win) => Window._handleEvent(evt, win)
           | None =>
             logError(
               "Unable to find window with ID: "
               ++ string_of_int(windowID)
               ++ " - event: "
-              ++ Sdl2.Event.show(v),
+              ++ Sdl2.Event.show(evt),
             )
           };
         };
-        switch (v) {
+        switch (evt) {
         | Sdl2.Event.MouseButtonUp({windowID, _}) => handleEvent(windowID)
         | Sdl2.Event.MouseButtonDown({windowID, _}) => handleEvent(windowID)
         | Sdl2.Event.MouseMotion({windowID, _}) => handleEvent(windowID)
@@ -173,6 +169,16 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
           quit(~code=0, appInstance)
         | _ => ()
         };
+      };
+
+  let _flushEvents = () => {
+    let processingEvents = ref(true);
+
+    while (processingEvents^) {
+      let evt = Sdl2.Event.poll();
+      switch (evt) {
+      | None => processingEvents := false
+      | Some(v) => _handleEvent(v);
       };
     };
   };
@@ -207,7 +213,11 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
         appInstance.onIdle();
       };
 
-      Environment.sleep(Milliseconds(1.));
+      let evt = Sdl2.Event.waitTimeout(100);
+      switch (evt) {
+      | None => ()
+      | Some(evt) => _handleEvent(evt);
+      }
     };
 
     Environment.yield();
