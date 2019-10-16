@@ -9,6 +9,7 @@ let logo = {
   (~children as _: list(React.syntheticElement), ()) =>
     component(hooks => {
       let (logoOpacity, setOpacity, hooks) = Hooks.state(1.0, hooks);
+      let (text, setText, hooks) = Hooks.state("ABC", hooks);
 
       let (rotation, rotationController, hooks) =
         Hooks.animation(
@@ -42,7 +43,7 @@ let logo = {
 
       (
         hooks,
-        <View onMouseDown onMouseUp>
+        <View>
           <Opacity opacity=logoOpacity>
             <Image
               src="outrun-logo.png"
@@ -56,11 +57,38 @@ let logo = {
               ]
             />
           </Opacity>
-          <Button onClick={() => rotationController#pause()} title="Pause" />
-          <Button
-            onClick={() => rotationController#restart()}
-            title="Restart"
-          />
+          <Row>
+            <Button
+              width=100
+              onClick={
+                () => {
+                  rotationYController#pause();
+                  rotationController#pause();
+                }
+              }
+              title="Pause"
+            />
+            <Button
+              width=100
+              onClick={
+                () => {
+                  rotationYController#resume();
+                  rotationController#resume();
+                }
+              }
+              title="Resume"
+            />
+            <Button
+              width=100
+              onClick={
+                () => {
+                  rotationYController#restart();
+                  rotationController#restart();
+                }
+              }
+              title="Restart"
+            />
+          </Row>
         </View>,
       );
     });
