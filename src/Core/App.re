@@ -153,6 +153,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
         | Sdl2.Event.WindowResized({windowID, _}) => handleEvent(windowID)
         | Sdl2.Event.WindowSizeChanged({windowID, _}) =>
           handleEvent(windowID)
+        | Sdl2.Event.WindowExposed({windowID, _}) => handleEvent(windowID)
         | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID)
         | Sdl2.Event.WindowEnter({windowID}) => handleEvent(windowID)
         | Sdl2.Event.WindowLeave({windowID}) => handleEvent(windowID)
