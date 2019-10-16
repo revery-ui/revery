@@ -268,7 +268,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
           | None => None
           };
         let newActiveAnim = {animation, update: activeAnim.update, complete};
-        activeAnimations := List.append([newActiveAnim], activeAnimations^);
+        activeAnimations := [newActiveAnim, ...activeAnimations^];
         ();
       | None => ()
       };
@@ -284,7 +284,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
           -. propDone
           *. animation.duration;
         animation.startTime = newStartTime;
-        activeAnimations := List.append([activeAnim], activeAnimations^);
+        activeAnimations := [activeAnim, ...activeAnimations^];
         ();
       | None => ()
       };
