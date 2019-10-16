@@ -234,26 +234,19 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     val animation = _animation;
     val mutable completer = None;
     val mutable lastActive =
-      switch (
-        List.nth(
-          List.filter(
-            a => a.animation.id == _animation.id,
+      List.find_opt(a => a.animation.id == _animation.id, activeAnimations^);
+    pub updateLastActive = () =>
+      lastActive = (
+        switch (
+          List.find_opt(
+            a => a.animation.id == animation.id,
             activeAnimations^,
-          ),
-          0,
-        )
-      ) {
-      | x => Some(x)
-      | exception (Failure(_)) => None
-      };
-    pub updateLastActive = () => {
-      let l =
-        List.filter(a => a.animation.id == animation.id, activeAnimations^);
-      switch (List.nth(l, 0)) {
-      | x => lastActive = Some(x)
-      | exception (Failure(_)) => ()
-      };
-    };
+          )
+        ) {
+        | None => lastActive
+        | la => la
+        }
+      );
     pub reverse = () => animation.isReverse = !animation.isReverse;
     pub pause = () => {
       self#updateLastActive();
@@ -269,15 +262,12 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
         animation.startTime =
           Time.to_float_seconds(AnimationTickerImpl.time());
         animation.value.current = animation.startValue;
-        let complete = switch (completer) {
+        let complete =
+          switch (completer) {
           | Some(x) => Some(x())
           | None => None
-        };
-        let newActiveAnim = {
-          animation,
-          update: activeAnim.update,
-          complete
-        }
+          };
+        let newActiveAnim = {animation, update: activeAnim.update, complete};
         activeAnimations := List.append([newActiveAnim], activeAnimations^);
         ();
       | None => ()
@@ -285,24 +275,20 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     pub resume = () =>
       switch (lastActive) {
       | Some(activeAnim) =>
-        // Get the proportion done of the animation
         let propDone =
           (animation.startValue +. animation.value.current)
           /. animation.toValue;
-        // Calculate a new start time based on the proportion done, initial delay, and duration of the animation
         let newStartTime =
           (AnimationTickerImpl.time() |> Time.toSeconds)
           -. animation.delay
           -. propDone
           *. animation.duration;
-        // Set the animation's start time to the new time
         animation.startTime = newStartTime;
-        // Reinsert the last active animation
         activeAnimations := List.append([activeAnim], activeAnimations^);
         ();
       | None => ()
       };
     pub getAnimation = () => animation;
-    pub setCompleter = (c : unit => ((unit => unit))) => completer = Some(c);
+    pub setCompleter = (c: (unit, unit) => unit) => completer = Some(c);
   };
 };
