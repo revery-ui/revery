@@ -120,6 +120,11 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
   let _ = Sdl2.init();
   let _dispose = initFunc(appInstance);
 
+  // By default, SDL2 suppresses the screen saver and sleep mode
+  // (this makes sense for games!). However, we should not be blocking
+  // sleep / screensavers for Revery applications.
+  let _ = Sdl2.ScreenSaver.enable();
+
   let _flushEvents = () => {
     let processingEvents = ref(true);
 
