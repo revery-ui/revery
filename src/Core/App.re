@@ -123,6 +123,8 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
   let _ = Sdl2.init();
   let _dispose = initFunc(appInstance);
 
+  let _ = Sdl2.ScreenSaver.enable();
+
   let _handleEvent = (evt) => {
         let handleEvent = windowID => {
           let window = getWindowById(appInstance, windowID);
@@ -213,11 +215,15 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
         appInstance.onIdle();
       };
 
-      let evt = Sdl2.Event.waitTimeout(100);
+      let evt = Sdl2.Event.wait();
       switch (evt) {
+      | Ok(evt) => _handleEvent(evt);
+      | Error(_) => ();
+      }
+      /*switch (evt) {
       | None => ()
       | Some(evt) => _handleEvent(evt);
-      }
+      }*/
     };
 
     Environment.yield();
