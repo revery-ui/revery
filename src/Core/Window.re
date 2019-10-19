@@ -61,6 +61,7 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
+  onExposed: Event.t(unit),
   onKeyDown: Event.t(Key.KeyEvent.t),
   onKeyUp: Event.t(Key.KeyEvent.t),
   onMouseUp: Event.t(mouseButtonEvent),
@@ -325,6 +326,7 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.WindowMoved(_) => v.areMetricsDirty = true
   | Sdl2.Event.WindowEnter(_) => Event.dispatch(v.onMouseEnter, ())
   | Sdl2.Event.WindowLeave(_) => Event.dispatch(v.onMouseLeave, ())
+  | Sdl2.Event.WindowExposed(_) => Event.dispatch(v.onExposed, ())
   | Sdl2.Event.Quit => ()
   | _ => ()
   };
@@ -361,23 +363,24 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     ++ string_of_int(height),
   );
   let w = Sdl2.Window.create(width, height, name);
+  log("Window created successfully.");
+  let uniqueId = Sdl2.Window.getId(w);
+  log("Window id: " ++ string_of_int(uniqueId));
 
   // We need to let Windows know that we are DPI-aware and that we are going to
   // properly handle scaling. This is a no-op on other platforms.
   Sdl2.Window.setWin32ProcessDPIAware(w);
 
-  let uniqueId = Sdl2.Window.getId(w);
-  log("Window created - id: " ++ string_of_int(uniqueId));
-
   log("Setting window context");
   let _ = Sdl2.Gl.setup(w);
+  log("GL setup.");
   let version = Sdl2.Gl.glGetString(Sdl2.Gl.Version);
   let vendor = Sdl2.Gl.glGetString(Sdl2.Gl.Vendor);
   let shadingLanguageVersion =
     Sdl2.Gl.glGetString(Sdl2.Gl.ShadingLanguageVersion);
   log(
     Printf.sprintf(
-      "Gl setup - version: %s vendor: %s shadingLanguageVersion: %s\n",
+      "OpenGL hardware info - version: %s vendor: %s shadingLanguageVersion: %s\n",
       version,
       vendor,
       shadingLanguageVersion,
@@ -424,6 +427,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     isComposingText: false,
 
     forceScaleFactor: options.forceScaleFactor,
+
+    onExposed: Event.create(),
 
     onMouseMove: Event.create(),
     onMouseWheel: Event.create(),
@@ -535,7 +540,12 @@ let getDevicePixelRatio = (w: t) => {
 };
 
 let getScaleAndZoom = (w: t) => {
-  w.metrics.scaleFactor *. w.metrics.zoom;
+  w.metrics.scaleFactor
+  *. w.metrics.zoom
+  +. 0.5
+  /* TODO - SKIA: Allow fractional scale values! */
+  |> int_of_float
+  |> float_of_int;
 };
 
 let getZoom = (w: t) => {

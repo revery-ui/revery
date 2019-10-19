@@ -1,5 +1,5 @@
 {
-  "checksum": "404b5827c60e74809f3f16f011c65614",
+  "checksum": "4d903269112ccbf20dfc6519c9a94b78",
   "root": "revery@link-dev:./package.json",
   "node": {
     "wordwrap@0.0.3@d41d8cd9": {
@@ -58,11 +58,12 @@
         "reperf@1.4.0@d41d8cd9",
         "rench@github:revery-ui/rench#4554280@d41d8cd9",
         "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9",
-        "reason-sdl2@2.10.3006@d41d8cd9",
+        "reason-sdl2@2.10.3007@d41d8cd9",
         "reason-gl-matrix@0.9.9305@d41d8cd9",
         "reason-fontkit@2.7.0@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "http-server@0.11.1@d41d8cd9",
         "flex@1.2.2@d41d8cd9", "brisk-reconciler@0.0.2@d41d8cd9",
+        "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/odoc@opam:1.4.2@187ed639",
         "@opam/lwt_ppx@opam:1.2.4@369f3faf", "@opam/lwt@opam:4.4.0@0357bb8b",
@@ -190,14 +191,14 @@
       ],
       "devDependencies": []
     },
-    "reason-sdl2@2.10.3006@d41d8cd9": {
-      "id": "reason-sdl2@2.10.3006@d41d8cd9",
+    "reason-sdl2@2.10.3007@d41d8cd9": {
+      "id": "reason-sdl2@2.10.3007@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "2.10.3006",
+      "version": "2.10.3007",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3006.tgz#sha1:1ca853d8cca5c8ba8c075ad3ee20ea75fa5bc60d"
+          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3007.tgz#sha1:dd89fec21269a26fa557b16026a5fdefbbce704c"
         ]
       },
       "overrides": [],
@@ -284,20 +285,20 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "portfinder@1.0.24@d41d8cd9": {
-      "id": "portfinder@1.0.24@d41d8cd9",
+    "portfinder@1.0.25@d41d8cd9": {
+      "id": "portfinder@1.0.25@d41d8cd9",
       "name": "portfinder",
-      "version": "1.0.24",
+      "version": "1.0.25",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/portfinder/-/portfinder-1.0.24.tgz#sha1:11efbc6865f12f37624b6531ead1d809ed965cfa"
+          "archive:https://registry.npmjs.org/portfinder/-/portfinder-1.0.25.tgz#sha1:254fd337ffba869f4b9d37edc298059cb4d35eca"
         ]
       },
       "overrides": [],
       "dependencies": [
-        "mkdirp@0.5.1@d41d8cd9", "debug@2.6.9@d41d8cd9",
-        "async@1.5.2@d41d8cd9"
+        "mkdirp@0.5.1@d41d8cd9", "debug@3.2.6@d41d8cd9",
+        "async@2.6.3@d41d8cd9"
       ],
       "devDependencies": []
     },
@@ -367,20 +368,6 @@
         "type": "install",
         "source": [
           "archive:https://registry.npmjs.org/ms/-/ms-2.1.2.tgz#sha1:d09d1f357b443f493382a8eb3ccd183872ae6009"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "ms@2.0.0@d41d8cd9": {
-      "id": "ms@2.0.0@d41d8cd9",
-      "name": "ms",
-      "version": "2.0.0",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/ms/-/ms-2.0.0.tgz#sha1:5608aeadfc00be6c2901df5f9861788de0d597c8"
         ]
       },
       "overrides": [],
@@ -457,6 +444,20 @@
       "dependencies": [],
       "devDependencies": []
     },
+    "lodash@4.17.15@d41d8cd9": {
+      "id": "lodash@4.17.15@d41d8cd9",
+      "name": "lodash",
+      "version": "4.17.15",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/lodash/-/lodash-4.17.15.tgz#sha1:b447f6670a0455bbfeedd11392eff330ea097548"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
     "http-server@0.11.1@d41d8cd9": {
       "id": "http-server@0.11.1@d41d8cd9",
       "name": "http-server",
@@ -469,7 +470,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "union@0.4.6@d41d8cd9", "portfinder@1.0.24@d41d8cd9",
+        "union@0.4.6@d41d8cd9", "portfinder@1.0.25@d41d8cd9",
         "optimist@0.6.1@d41d8cd9", "opener@1.4.3@d41d8cd9",
         "http-proxy@1.18.0@d41d8cd9", "ecstatic@3.3.2@d41d8cd9",
         "corser@2.0.1@d41d8cd9", "colors@1.0.3@d41d8cd9"
@@ -639,20 +640,6 @@
       "dependencies": [ "ms@2.1.2@d41d8cd9" ],
       "devDependencies": []
     },
-    "debug@2.6.9@d41d8cd9": {
-      "id": "debug@2.6.9@d41d8cd9",
-      "name": "debug",
-      "version": "2.6.9",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/debug/-/debug-2.6.9.tgz#sha1:5d128515df134ff327e90a4c93f4e077a536341f"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [ "ms@2.0.0@d41d8cd9" ],
-      "devDependencies": []
-    },
     "corser@2.0.1@d41d8cd9": {
       "id": "corser@2.0.1@d41d8cd9",
       "name": "corser",
@@ -698,18 +685,18 @@
       ],
       "devDependencies": []
     },
-    "async@1.5.2@d41d8cd9": {
-      "id": "async@1.5.2@d41d8cd9",
+    "async@2.6.3@d41d8cd9": {
+      "id": "async@2.6.3@d41d8cd9",
       "name": "async",
-      "version": "1.5.2",
+      "version": "2.6.3",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/async/-/async-1.5.2.tgz#sha1:ec6a61ae56480c0c3cb241c95618e20892f9672a"
+          "archive:https://registry.npmjs.org/async/-/async-2.6.3.tgz#sha1:d72625e2344a3656e3a3ad4fa749fa83299d82ff"
         ]
       },
       "overrides": [],
-      "dependencies": [],
+      "dependencies": [ "lodash@4.17.15@d41d8cd9" ],
       "devDependencies": []
     },
     "@reason-native/rely@3.1.0@d41d8cd9": {

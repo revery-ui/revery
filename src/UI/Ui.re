@@ -21,7 +21,6 @@ let _activeWindow: ref(option(Window.t)) = ref(None);
 type renderFunction = React.syntheticElement => unit;
 
 let getActiveWindow = () => _activeWindow^;
-
 let log = Log.info("UI");
 
 let start = (window: Window.t, element: React.syntheticElement) => {
@@ -39,6 +38,9 @@ let start = (window: Window.t, element: React.syntheticElement) => {
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
   let container = Container.create(rootNode);
   let ui = RenderContainer.create(window, rootNode, container, mouseCursor);
+
+  let _ignore =
+    Revery_Core.Event.subscribe(window.onExposed, () => {uiDirty := true});
 
   let _ignore =
     Revery_Core.Event.subscribe(

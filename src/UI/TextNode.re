@@ -34,9 +34,12 @@ class textNode (text: string) = {
       _this#measure(style.width, style.height) |> ignore;
     };
 
+    let window = Ui.getActiveWindow();
+
     List.iteri(
       (lineNum, line) =>
         Text.drawString(
+          ~window,
           ~fontFamily,
           ~fontSize,
           ~gamma,
@@ -70,8 +73,8 @@ class textNode (text: string) = {
     let formattedText = TextOverflow.removeLineBreaks(text);
 
     let measure = str =>
-      Text.measure(~fontFamily, ~fontSize, str)
-      |> (value => FontRenderer.(value.width));
+      Text.measure(~window=Ui.getActiveWindow(), ~fontFamily, ~fontSize, str)
+      |> (value => value.width);
 
     let width = measure(formattedText);
     let isOverflowing = width >= maxWidth;
