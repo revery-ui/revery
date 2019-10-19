@@ -1,5 +1,5 @@
 {
-  "checksum": "a7568735da35e0200da4818e7526bb28",
+  "checksum": "03d77f41db7269a11bd9187b3329928a",
   "root": "revery@link-dev:./package.json",
   "node": {
     "revery@link-dev:./package.json": {
@@ -13,8 +13,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "reperf@1.4.0@d41d8cd9",
-        "rench@github:revery-ui/rench#4554280@d41d8cd9",
+        "reperf@1.4.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9",
         "reason-sdl2@2.10.3007@d41d8cd9",
         "reason-gl-matrix@0.9.9305@d41d8cd9",
@@ -53,27 +52,26 @@
       ],
       "devDependencies": []
     },
-    "rench@github:revery-ui/rench#4554280@d41d8cd9": {
-      "id": "rench@github:revery-ui/rench#4554280@d41d8cd9",
+    "rench@1.9.1@d41d8cd9": {
+      "id": "rench@1.9.1@d41d8cd9",
       "name": "rench",
-      "version": "github:revery-ui/rench#4554280",
+      "version": "1.9.1",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/rench#4554280" ]
+        "source": [
+          "archive:https://registry.npmjs.org/rench/-/rench-1.9.1.tgz#sha1:ad050a25752890d3ed52a780c6fe35e7634f7451"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.2.2@d41d8cd9", "ocaml@4.8.1000@d41d8cd9",
-        "@reason-native/rely@3.1.0@d41d8cd9",
+        "refmterr@3.2.2@d41d8cd9", "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/lwt@opam:4.4.0@0357bb8b",
         "@opam/lambda-term@opam:2.0.2@119fb081",
         "@opam/fpath@opam:0.7.2@45477b93", "@opam/dune@opam:1.11.4@21d66ccd",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
-      "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@21d66ccd"
-      ]
+      "devDependencies": []
     },
     "rejest@1.3.0@d41d8cd9": {
       "id": "rejest@1.3.0@d41d8cd9",

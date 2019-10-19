@@ -3,7 +3,9 @@
   "version": "0.28.0",
   "description": "App toolkit built with Reason",
   "license": "MIT",
-  "bugs": { "url": "https://github.com/bryphe/revery/issues" },
+  "bugs": {
+    "url": "https://github.com/bryphe/revery/issues"
+  },
   "scripts": {
     "build": "esy b",
     "build:release": "esy b dune build --profile=release --root . -j4",
@@ -16,7 +18,9 @@
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
-    "build": [ "dune build -p Revery -j4" ],
+    "build": [
+      "dune build -p Revery -j4"
+    ],
     "install": [
       "esy-installer Revery.install",
       "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': 'echo Build complete'}\""
@@ -26,7 +30,6 @@
     "@esy-ocaml/reason": "^3.4.0",
     "reason-fontkit": "^2.7.0",
     "reason-gl-matrix": "^0.9.9305",
-    "rebez": "*",
     "@opam/js_of_ocaml": "^3.4.0",
     "@opam/js_of_ocaml-compiler": "^3.4.0",
     "@opam/js_of_ocaml-lwt": "^3.4.0",
@@ -37,14 +40,13 @@
     "@reason-native/rely": "*",
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
-    "rench": "^1.9.0",
     "reason-font-manager": "^2.0.0",
+    "rench": "^1.9.1",
+    "rebez": "github:jchavarri/rebez#46cbc183",
     "reason-sdl2": "^2.10.3007"
   },
   "resolutions": {
-    "rebez": "github:jchavarri/rebez#46cbc183",
     "@opam/cmdliner": "1.0.2",
-    "rench": "github:revery-ui/rench#4554280",
     "pesy": "0.4.1"
   },
   "devDependencies": {
