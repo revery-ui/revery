@@ -215,15 +215,11 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
         appInstance.onIdle();
       };
 
-      let evt = Sdl2.Event.wait();
+      let evt = Sdl2.Event.waitTimeout(250);
       switch (evt) {
-      | Ok(evt) => _handleEvent(evt);
-      | Error(_) => ();
-      }
-      /*switch (evt) {
       | None => ()
       | Some(evt) => _handleEvent(evt);
-      }*/
+      }
     };
 
     Environment.yield();
