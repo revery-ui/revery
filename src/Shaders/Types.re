@@ -20,15 +20,11 @@ module ShaderPrecision = {
     | High;
 
   let toString = v =>
-    switch (Environment.webGL, v) {
-    | (false, _) => ""
-    | (true, p) =>
-      switch (p) {
-      | Default => ""
-      | Low => "lowp"
-      | Medium => "mediump"
-      | High => "highp"
-      }
+    switch (v) {
+    | Default => ""
+    | Low => "lowp"
+    | Medium => "mediump"
+    | High => "highp"
     };
 };
 

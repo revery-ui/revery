@@ -27,6 +27,11 @@ let state: state = {
   examples: [
     {name: "Animation", render: _w => Hello.render(), source: "Hello.re"},
     {
+      name: "CanQuit",
+      render: _ => CanQuitExample.render(),
+      source: "CanQuit.re",
+    },
+    {
       name: "Button",
       render: _ => DefaultButton.render(),
       source: "DefaultButton.re",
@@ -127,7 +132,7 @@ let state: state = {
       source: "ZoomExample.re",
     },
   ],
-  selectedExample: "Animation",
+  selectedExample: "Calculator",
 };
 
 let getExampleByName = (state: state, example: string) =>
@@ -207,8 +212,10 @@ module ExampleHost = {
             Animated.cancelAll();
 
             let sourceFile = getSourceForSample(state, x.name);
+            prerr_endline("SOURCE FILE: " ++ sourceFile);
             notifyExampleSwitched(sourceFile);
             dispatch(SelectExample(x.name));
+            ();
           }}
         />;
       };
@@ -265,11 +272,8 @@ let init = app => {
 
   let maximized = Environment.webGL;
 
-  let dimensions: Monitor.size =
-    Monitor.getPrimaryMonitor() |> Monitor.getSize;
-
-  let windowWidth = dimensions.width / 2;
-  let windowHeight = dimensions.height / 2;
+  let windowWidth = 800;
+  let windowHeight = 480;
 
   Console.log("Hello from example app");
   Console.log([1, 2, 3]);
@@ -290,10 +294,10 @@ let init = app => {
 
   if (Environment.webGL) {
     Window.maximize(win);
+    ();
   } else {
-    let xPosition = (dimensions.width - windowWidth) / 2;
-    let yPosition = (dimensions.height - windowHeight) / 2;
-    Window.setPos(win, xPosition, yPosition);
+    Window.center(win);
+    ();
   };
 
   let _ignore = UI.start(win, <ExampleHost win />);

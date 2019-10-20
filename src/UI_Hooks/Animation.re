@@ -9,6 +9,7 @@ let animationLoop = (dispatch, animation, completer, ()) => {
   let {pause, stop} = animation |> start(~complete);
   Some(
     () => {
+      Log.info("Hooks - Animation", "Stopping animation");
       stop();
       complete();
     },

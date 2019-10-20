@@ -14,7 +14,7 @@ let createElement:
   (
     ~children: 'a,
     ~checked: bool=?,
-    ~checkedColor: Color.Rgba'.t=?,
+    ~checkedColor: Revery_Core.Color.t=?,
     ~style: list(Revery_UI.Style.viewStyleProps)=?,
     ~onChange: unit => unit=?,
     unit

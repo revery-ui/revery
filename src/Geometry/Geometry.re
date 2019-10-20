@@ -1,4 +1,4 @@
-open Reglfw;
+open Sdl2;
 open Revery_Shaders;
 
 type t = {
@@ -18,6 +18,6 @@ let draw = (geometry: t, shader: CompiledShader.t) => {
 
   switch (geometry.indexBuffer) {
   | Some(ib) => IndexBuffer.draw(ib)
-  | None => Glfw.glDrawArrays(GL_TRIANGLES, 0, geometry.vertexCount)
+  | None => Gl.glDrawArrays(GL_TRIANGLES, 0, geometry.vertexCount)
   };
 };

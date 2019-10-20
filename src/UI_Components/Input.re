@@ -24,7 +24,7 @@ type cursorUpdate = {
 type changeEvent = {
   value: string,
   character: string,
-  key: Key.t,
+  keycode: Key.Keycode.t,
   altKey: bool,
   ctrlKey: bool,
   shiftKey: bool,
@@ -221,11 +221,11 @@ let make =
         slots,
       );
 
-    let handleKeyPress = (event: NodeEvents.keyPressEventParams) => {
+    let handleTextInput = (event: NodeEvents.textInputEventParams) => {
       let createChangeEvent = value => {
         value,
-        key: Key.fromString(event.character),
-        character: event.character,
+        keycode: 0,
+        character: event.text,
         altKey: false,
         ctrlKey: false,
         shiftKey: false,
@@ -237,43 +237,39 @@ let make =
       switch (valueAsProp) {
       | Some(v) =>
         let {newString, _} =
-          addCharacter(v, event.character, state.cursorPosition);
+          addCharacter(v, event.text, state.cursorPosition);
         onChange(createChangeEvent(newString));
       | None =>
         let {newString, cursorPosition} =
-          addCharacter(
-            state.internalValue,
-            event.character,
-            state.cursorPosition,
-          );
+          addCharacter(state.internalValue, event.text, state.cursorPosition);
         dispatch(UpdateText({newString, cursorPosition}));
         onChange(createChangeEvent(newString));
       };
     };
 
     let handleKeyDown = (event: NodeEvents.keyEventParams) => {
+      let character = Key.Keycode.getName(event.keycode);
       let createChangeEvent = inputString => {
         value: inputString,
-        character: Key.toString(event.key),
-        key: event.key,
-        altKey: event.altKey,
-        ctrlKey: event.ctrlKey,
-        shiftKey: event.shiftKey,
-        superKey: event.superKey,
+        character,
+        keycode: event.keycode,
+        altKey: Key.Keymod.isAltDown(event.keymod),
+        ctrlKey: Key.Keymod.isControlDown(event.keymod),
+        shiftKey: Key.Keymod.isShiftDown(event.keymod),
+        superKey: Key.Keymod.isGuiDown(event.keymod),
       };
 
       dispatch(ResetCursorTimer);
-
-      switch (event.key) {
-      | Key.KEY_LEFT =>
+      switch (event.keycode) {
+      | v when Key.Keycode.left == v =>
         onKeyDown(event);
         dispatch(
           CursorPosition({inputString: valueToDisplay, change: (-1)}),
         );
-      | Key.KEY_RIGHT =>
+      | v when Key.Keycode.right == v =>
         onKeyDown(event);
         dispatch(CursorPosition({inputString: valueToDisplay, change: 1}));
-      | Key.KEY_DELETE =>
+      | v when Key.Keycode.delete == v =>
         // We should manage both cases
         removeCharacterAfter(valueToDisplay, state.cursorPosition)
         |> (
@@ -287,7 +283,7 @@ let make =
           }
         )
 
-      | Key.KEY_BACKSPACE =>
+      | v when Key.Keycode.backspace == v =>
         removeCharacterBefore(valueToDisplay, state.cursorPosition)
         |> (
           update => {
@@ -299,7 +295,7 @@ let make =
             onChange(createChangeEvent(update.newString));
           }
         )
-      | Key.KEY_ESCAPE =>
+      | v when Key.Keycode.escape == v =>
         onKeyDown(event);
         Focus.loseFocus();
       | _ => onKeyDown(event)
@@ -347,15 +343,17 @@ let make =
         getStringParts(state.cursorPosition, valueToDisplay);
       let dimension =
         Revery_Draw.Text.measure(
+          ~window=Revery_UI.getActiveWindow(),
           ~fontFamily=inputFontFamily,
           ~fontSize=inputFontSize,
           startStr,
         );
+      let inputHeight = Selector.select(style, Height, defaultHeight);
       <View
         style=Style.[
           position(`Absolute),
           marginLeft(dimension.width + inputTextMargin + 1),
-          marginTop((defaultHeight - dimension.height) / 2),
+          marginTop((inputHeight - dimension.height) / 2),
         ]>
         <Opacity opacity=cursorOpacity>
           <ContainerComponent width=2 height=inputFontSize color=cursorColor />
@@ -388,14 +386,16 @@ let make =
         onFocus={() => {
           dispatch(ResetCursorTimer);
           dispatch(SetFocus(true));
+          Sdl2.TextInput.start();
         }}
         onBlur={() => {
           dispatch(ResetCursorTimer);
           dispatch(SetFocus(false));
+          Sdl2.TextInput.stop();
         }}
         componentRef={autofocus ? Focus.focus : ignore}
         onKeyDown=handleKeyDown
-        onKeyPress=handleKeyPress>
+        onTextInput=handleTextInput>
         <View style=viewStyles>
           cursor
           {hasPlaceholder ? placeholderText : inputText}

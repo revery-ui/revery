@@ -1,16 +1,15 @@
-open Reglfw;
-
-module Color = Color_wrapper;
-
 open Events;
 
 type windowRenderCallback = unit => unit;
 type windowShouldRenderCallback = unit => bool;
+type windowCanQuitCallback = unit => bool;
 
 type size = {
   width: int,
   height: int,
 };
+
+let log = Log.info("Window");
 
 module WindowMetrics = {
   type t = {
@@ -34,33 +33,50 @@ module WindowMetrics = {
   };
 
   let show = (v: t) => {
-    " DevicePixelRatio: "
-    ++ string_of_float(v.devicePixelRatio)
-    ++ " ScaleFactor: "
-    ++ string_of_float(v.scaleFactor)
-    ++ " Zoom: "
-    ++ string_of_float(v.zoom);
+    Printf.sprintf(
+      "DevicePixelRatio: %f ScaleFactor: %f Zoom: %f Raw Dimensions: %dx%dpx Framebuffer: %dx%dpx",
+      v.devicePixelRatio,
+      v.scaleFactor,
+      v.zoom,
+      v.size.width,
+      v.size.height,
+      v.framebufferSize.width,
+      v.framebufferSize.height,
+    );
   };
 };
 
 type t = {
   mutable backgroundColor: Color.t,
-  glfwWindow: Glfw.Window.t,
+  sdlWindow: Sdl2.Window.t,
+  uniqueId: int,
+  forceScaleFactor: option(float),
   mutable render: windowRenderCallback,
   mutable shouldRender: windowShouldRenderCallback,
+  mutable canQuit: windowCanQuitCallback,
   mutable metrics: WindowMetrics.t,
   mutable areMetricsDirty: bool,
   mutable isRendering: bool,
   mutable requestedWidth: option(int),
   mutable requestedHeight: option(int),
-  onKeyPress: Event.t(keyPressEvent),
-  onKeyDown: Event.t(keyEvent),
-  onKeyUp: Event.t(keyEvent),
+  // True if composition (IME) is active
+  mutable isComposingText: bool,
+  onExposed: Event.t(unit),
+  onKeyDown: Event.t(Key.KeyEvent.t),
+  onKeyUp: Event.t(Key.KeyEvent.t),
   onMouseUp: Event.t(mouseButtonEvent),
   onMouseMove: Event.t(mouseMoveEvent),
-  onMouseDown: Event.t(mouseButtonEvent),
   onMouseWheel: Event.t(mouseWheelEvent),
+  onMouseDown: Event.t(mouseButtonEvent),
+  onMouseEnter: Event.t(unit),
+  onMouseLeave: Event.t(unit),
+  onCompositionStart: Event.t(unit),
+  onCompositionEdit: Event.t(textEditEvent),
+  onCompositionEnd: Event.t(unit),
+  onTextInputCommit: Event.t(textInputEvent),
 };
+
+let getUniqueId = (w: t) => w.uniqueId;
 
 let isDirty = (w: t) =>
   if (w.shouldRender() || w.areMetricsDirty) {
@@ -73,17 +89,68 @@ let isDirty = (w: t) =>
     };
   };
 
-let _getMetricsFromGlfwWindow = glfwWindow => {
-  let glfwSize = Glfw.glfwGetWindowSize(glfwWindow);
-  let glfwFramebufferSize = Glfw.glfwGetFramebufferSize(glfwWindow);
+let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
+  switch (forceScaleFactor) {
+  // If a scale factor is forced... prefer that!
+  | Some(v) => v
+  // Otherwise, the way we figure out the scale factor depends on the platform
+  | None =>
+    switch (Environment.os) {
+    // Mac is easy... there isn't any scaling factor.  The window is automatically
+    // proportioned for us. The scaling is handled by the ratio of size / framebufferSize.
+    | Mac => 1.0
+    // On Windows, we need to try a Win32 API to get the scale factor
+    | Windows =>
+      let scale = Sdl2.Window.getWin32ScaleFactor(sdlWindow);
+      log(
+        "_getScaleFactor - from getWin32ScaleFactor: "
+        ++ string_of_float(scale),
+      );
+      scale;
 
-  let scaleFactor = float_of_int(Monitor.getScaleFactor());
+    // On Linux, there's a few other things to try:
+    // - First, we'll look for a [GDK_SCALE] environment variable, and prefer that.
+    // - Otherwise, we'll try and infer it from the DPI.
+    | Linux =>
+      switch (Rench.Environment.getEnvironmentVariable("GDK_SCALE")) {
+      | Some(v) =>
+        // TODO
+        log("_getScaleFactor - Linux - got GDK_SCALE variable: " ++ v);
+        switch (Float.of_string_opt(v)) {
+        | Some(v) => v
+        | None => 1.0
+        };
+      | None =>
+        let display = Sdl2.Window.getDisplay(sdlWindow);
+        let dpi = Sdl2.Display.getDPI(display);
+        let avgDpi = (dpi.hdpi +. dpi.vdpi +. dpi.ddpi) /. 3.0;
+        let scaleFactor = max(1.0, floor(avgDpi /. 96.0));
+        log(
+          "_getScaleFactor - Linux - inferring from DPI: "
+          ++ string_of_float(scaleFactor),
+        );
+        scaleFactor;
+      }
+    | _ => 1.0
+    }
+  };
+};
+
+let _getMetricsFromGlfwWindow = (~forceScaleFactor=None, sdlWindow) => {
+  let glfwSize = Sdl2.Window.getSize(sdlWindow);
+  let glfwFramebufferSize = Sdl2.Gl.getDrawableSize(sdlWindow);
+
+  let scaleFactor = _getScaleFactor(~forceScaleFactor, sdlWindow);
 
   let devicePixelRatio =
     float_of_int(glfwFramebufferSize.width) /. float_of_int(glfwSize.width);
 
+  // We keep track of the RAW / unscaled sizes internally
+  let width = glfwSize.width;
+  let height = glfwSize.height;
+
   WindowMetrics.create(
-    ~size={width: glfwSize.width, height: glfwSize.height},
+    ~size={width, height},
     ~framebufferSize={
       width: glfwFramebufferSize.width,
       height: glfwFramebufferSize.height,
@@ -97,28 +164,68 @@ let _getMetricsFromGlfwWindow = glfwWindow => {
 let _updateMetrics = (w: t) => {
   let previousZoom = w.metrics.zoom;
   w.metrics = {
-    ..._getMetricsFromGlfwWindow(w.glfwWindow),
+    ...
+      _getMetricsFromGlfwWindow(
+        ~forceScaleFactor=w.forceScaleFactor,
+        w.sdlWindow,
+      ),
     zoom: previousZoom,
   };
   w.areMetricsDirty = false;
+  log("_updateMetrics - new metrics: " ++ WindowMetrics.show(w.metrics));
 };
 
-let setSize = (w: t, width: int, height: int) =>
-  if (width != w.metrics.size.width || height != w.metrics.size.height) {
+let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
+  log(
+    "setRawSize - dimensions adjusted after scaling: "
+    ++ string_of_int(adjWidth)
+    ++ " x "
+    ++ string_of_int(adjHeight),
+  );
+
+  if (adjWidth != win.metrics.size.width
+      || adjHeight != win.metrics.size.height) {
     /*
      *  Don't resize in the middle of a render -
      *  we'll queue up the render operation for next time.
      */
-    if (w.isRendering) {
-      w.requestedWidth = Some(width);
-      w.requestedHeight = Some(height);
+    if (win.isRendering) {
+      log("setRawSize - queuing for next render");
+      win.requestedWidth = Some(adjWidth);
+      win.requestedHeight = Some(adjHeight);
     } else {
-      Glfw.glfwSetWindowSize(w.glfwWindow, width, height);
-      w.requestedWidth = None;
-      w.requestedHeight = None;
-      w.areMetricsDirty = true;
+      log("setRawSize - calling Sdl2.Window.setSize");
+      Sdl2.Window.setSize(win.sdlWindow, adjWidth, adjHeight);
+      win.requestedWidth = None;
+      win.requestedHeight = None;
+      win.areMetricsDirty = true;
+      let size = Sdl2.Window.getSize(win.sdlWindow);
+      log(
+        "setRawSize: SDL size reported after resize: "
+        ++ string_of_int(size.width)
+        ++ "x"
+        ++ string_of_int(size.height),
+      );
     };
   };
+};
+
+let setScaledSize = (win: t, width: int, height: int) => {
+  log(
+    "setScaledSize - calling with: "
+    ++ string_of_int(width)
+    ++ "x"
+    ++ string_of_int(height),
+  );
+  // On platforms that return a non-unit scale factor (Windows and Linux),
+  // we also have to scale the window size by the scale factor
+  let adjWidth =
+    int_of_float(float_of_int(width) *. win.metrics.scaleFactor);
+  let adjHeight =
+    int_of_float(float_of_int(height) *. win.metrics.scaleFactor);
+
+  setRawSize(win, adjWidth, adjHeight);
+};
 
 let setZoom = (w: t, zoom: float) => {
   w.metrics = {...w.metrics, zoom: max(zoom, 0.1)};
@@ -127,7 +234,7 @@ let setZoom = (w: t, zoom: float) => {
 
 let _resizeIfNecessary = (w: t) =>
   switch (w.requestedWidth, w.requestedHeight) {
-  | (Some(width), Some(height)) => setSize(w, width, height)
+  | (Some(width), Some(height)) => setRawSize(w, width, height)
   | _ => ()
   };
 
@@ -140,54 +247,145 @@ let render = (w: t) => {
   };
 
   w.isRendering = true;
-  Performance.bench("glfwMakeContextCurrent", () =>
-    Glfw.glfwMakeContextCurrent(w.glfwWindow)
-  );
+  /*  Performance.bench("glfwMakeContextCurrent", () =>
+        ()
+        //Gl.setup(w.sdlWindow)
+      );*/
 
-  Glfw.glViewport(
+  Sdl2.Gl.glViewport(
     0,
     0,
     w.metrics.framebufferSize.width,
     w.metrics.framebufferSize.height,
   );
-  /* glClearDepth(1.0); */
-  /* glEnable(GL_DEPTH_TEST); */
-  /* glDepthFunc(GL_LEQUAL); */
 
-  Glfw.glDisable(GL_DEPTH_TEST);
+  /*Gl.glClearDepth(1.0);
+    Gl.glEnable(GL_DEPTH_TEST);
+    Gl.glDepthFunc(GL_LEQUAL);*/
+
+  Sdl2.Gl.glDisable(GL_DEPTH_TEST);
 
   let color = w.backgroundColor;
-  Glfw.glClearColor(color.r, color.g, color.b, color.a);
+  Sdl2.Gl.glClearColor(color.r, color.g, color.b, color.a);
 
   w.render();
 
-  Performance.bench("glfwSwapBuffers", () =>
-    Glfw.glfwSwapBuffers(w.glfwWindow)
-  );
+  Performance.bench("swapWindow", () => Sdl2.Gl.swapWindow(w.sdlWindow));
   w.isRendering = false;
 };
 
-let create = (name: string, options: WindowCreateOptions.t) => {
-  let log = Log.info("Window::create");
+let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
+  switch (sdlEvent) {
+  | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
+    let wheelEvent: Events.mouseWheelEvent = {
+      deltaX: float_of_int(deltaX),
+      deltaY: float_of_int(deltaY),
+    };
+    Event.dispatch(v.onMouseWheel, wheelEvent);
+  | Sdl2.Event.MouseMotion({x, y, _}) =>
+    let mouseEvent: Events.mouseMoveEvent = {
+      mouseX: float_of_int(x),
+      mouseY: float_of_int(y),
+    };
+    Event.dispatch(v.onMouseMove, mouseEvent);
+  | Sdl2.Event.MouseButtonUp(_) =>
+    let mouseButtonEvent: Events.mouseButtonEvent = {
+      button: MouseButton.BUTTON_LEFT,
+    };
+    Event.dispatch(v.onMouseUp, mouseButtonEvent);
+  | Sdl2.Event.MouseButtonDown(_) =>
+    let mouseButtonEvent: Events.mouseButtonEvent = {
+      button: MouseButton.BUTTON_LEFT,
+    };
+    Event.dispatch(v.onMouseDown, mouseButtonEvent);
+  | Sdl2.Event.KeyDown({keycode, keymod, scancode, repeat, _}) =>
+    let keyEvent: Key.KeyEvent.t = {keycode, scancode, keymod, repeat};
+    Event.dispatch(v.onKeyDown, keyEvent);
+  | Sdl2.Event.KeyUp({keycode, keymod, scancode, repeat, _}) =>
+    let keyEvent: Key.KeyEvent.t = {keycode, scancode, keymod, repeat};
+    Event.dispatch(v.onKeyUp, keyEvent);
+  | Sdl2.Event.TextEditing(te) =>
+    if (!v.isComposingText) {
+      Event.dispatch(v.onCompositionStart, ());
+      v.isComposingText = true;
+    };
 
-  log("Creating window hints...");
-  Glfw.glfwDefaultWindowHints();
-  Glfw.glfwWindowHint(GLFW_RESIZABLE, options.resizable);
-  Glfw.glfwWindowHint(GLFW_VISIBLE, options.visible);
-  Glfw.glfwWindowHint(GLFW_MAXIMIZED, options.maximized);
-  Glfw.glfwWindowHint(GLFW_DECORATED, options.decorated);
-  log("Window hints created successfully.");
+    Event.dispatch(
+      v.onCompositionEdit,
+      {text: te.text, start: te.start, length: te.length},
+    );
+  | Sdl2.Event.TextInput(ti) =>
+    if (v.isComposingText) {
+      Event.dispatch(v.onCompositionEnd, ());
+      v.isComposingText = false;
+    };
 
-  log("Using vsync: " ++ string_of_bool(options.vsync));
-  switch (options.vsync) {
-  | false => Glfw.glfwSwapInterval(0)
+    Event.dispatch(v.onTextInputCommit, {text: ti.text});
+  | Sdl2.Event.WindowResized(_) => v.areMetricsDirty = true
+  | Sdl2.Event.WindowSizeChanged(_) => v.areMetricsDirty = true
+  | Sdl2.Event.WindowMoved(_) => v.areMetricsDirty = true
+  | Sdl2.Event.WindowEnter(_) => Event.dispatch(v.onMouseEnter, ())
+  | Sdl2.Event.WindowLeave(_) => Event.dispatch(v.onMouseLeave, ())
+  | Sdl2.Event.WindowExposed(_) => Event.dispatch(v.onExposed, ())
+  | Sdl2.Event.Quit => ()
   | _ => ()
   };
+};
 
-  log("Creating window " ++ name);
-  let w = Glfw.glfwCreateWindow(options.width, options.height, name);
+let create = (name: string, options: WindowCreateOptions.t) => {
+  log("Starting window creation...");
+
+  log("Using vsync: " ++ string_of_bool(options.vsync));
+
+  switch (options.vsync) {
+  | false => Sdl2.Gl.setSwapInterval(0)
+  | true => Sdl2.Gl.setSwapInterval(1)
+  };
+
+  let width =
+    switch (options.width) {
+    | 0 => 800
+    | v => v
+    };
+
+  let height =
+    switch (options.height) {
+    | 0 => 480
+    | v => v
+    };
+
+  log(
+    "Creating window "
+    ++ name
+    ++ " width: "
+    ++ string_of_int(width)
+    ++ " height: "
+    ++ string_of_int(height),
+  );
+  let w = Sdl2.Window.create(width, height, name);
+  log("Window created successfully.");
+  let uniqueId = Sdl2.Window.getId(w);
+  log("Window id: " ++ string_of_int(uniqueId));
+
+  // We need to let Windows know that we are DPI-aware and that we are going to
+  // properly handle scaling. This is a no-op on other platforms.
+  Sdl2.Window.setWin32ProcessDPIAware(w);
+
   log("Setting window context");
-  Glfw.glfwMakeContextCurrent(w);
+  let _ = Sdl2.Gl.setup(w);
+  log("GL setup.");
+  let version = Sdl2.Gl.glGetString(Sdl2.Gl.Version);
+  let vendor = Sdl2.Gl.glGetString(Sdl2.Gl.Vendor);
+  let shadingLanguageVersion =
+    Sdl2.Gl.glGetString(Sdl2.Gl.ShadingLanguageVersion);
+  log(
+    Printf.sprintf(
+      "OpenGL hardware info - version: %s vendor: %s shadingLanguageVersion: %s\n",
+      version,
+      vendor,
+      shadingLanguageVersion,
+    ),
+  );
 
   switch (options.icon) {
   | None =>
@@ -198,20 +396,27 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     let relativeImagePath = execDir ++ path;
 
     log("Loading icon from: " ++ relativeImagePath);
-    Glfw.glfwSetWindowIcon(w, relativeImagePath);
-    log("Icon loaded successfully.");
+    switch (Sdl2.Surface.createFromImagePath(relativeImagePath)) {
+    | Ok(v) =>
+      log("Icon loaded successfully.");
+      Sdl2.Window.setIcon(w, v);
+      log("Icon set successfully.");
+    | Error(msg) => log("Error loading icon: " ++ msg)
+    };
   };
 
   log("Getting window metrics");
-  let metrics = _getMetricsFromGlfwWindow(w);
+  let metrics =
+    _getMetricsFromGlfwWindow(~forceScaleFactor=options.forceScaleFactor, w);
   log("Metrics: " ++ WindowMetrics.show(metrics));
-
   let ret: t = {
     backgroundColor: options.backgroundColor,
-    glfwWindow: w,
+    sdlWindow: w,
+    uniqueId,
 
     render: () => (),
     shouldRender: () => false,
+    canQuit: () => true,
 
     metrics,
     areMetricsDirty: false,
@@ -219,127 +424,128 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     requestedWidth: None,
     requestedHeight: None,
 
-    onKeyPress: Event.create(),
+    isComposingText: false,
+
+    forceScaleFactor: options.forceScaleFactor,
+
+    onExposed: Event.create(),
+
+    onMouseMove: Event.create(),
+    onMouseWheel: Event.create(),
+    onMouseUp: Event.create(),
+    onMouseDown: Event.create(),
+    onMouseEnter: Event.create(),
+    onMouseLeave: Event.create(),
+
     onKeyDown: Event.create(),
     onKeyUp: Event.create(),
 
-    onMouseMove: Event.create(),
-    onMouseUp: Event.create(),
-    onMouseDown: Event.create(),
-    onMouseWheel: Event.create(),
+    onCompositionStart: Event.create(),
+    onCompositionEdit: Event.create(),
+    onCompositionEnd: Event.create(),
+    onTextInputCommit: Event.create(),
+  };
+  setScaledSize(ret, width, height);
+  Sdl2.Window.center(w);
+
+  if (options.maximized) {
+    Sdl2.Window.maximize(w);
   };
 
-  Glfw.glfwSetFramebufferSizeCallback(
-    w,
-    (_w, _width, _height) => {
-      ret.areMetricsDirty = true;
-      render(ret);
-    },
-  );
+  if (!options.decorated) {
+    Sdl2.Window.setBordered(w, false);
+  };
 
-  Glfw.glfwSetWindowSizeCallback(
-    w,
-    (_w, _width, _height) => {
-      ret.areMetricsDirty = true;
-      render(ret);
-    },
-  );
+  if (!options.resizable) {
+    Sdl2.Window.setResizable(w, false);
+  };
 
-  Glfw.glfwSetWindowPosCallback(w, (_w, _x, _y) =>
-    ret.areMetricsDirty = true
-  );
+  if (options.visible) {
+    Sdl2.Window.show(w);
+  };
 
-  Glfw.glfwSetKeyCallback(
-    w,
-    (_w, key, scancode, buttonState, m) => {
-      let evt: keyEvent = {
-        key: Key.convert(key),
-        scancode,
-        ctrlKey: Glfw.Modifier.isControlPressed(m),
-        shiftKey: Glfw.Modifier.isShiftPressed(m),
-        altKey: Glfw.Modifier.isAltPressed(m),
-        superKey: Glfw.Modifier.isSuperPressed(m),
-        isRepeat: buttonState == GLFW_REPEAT,
-      };
+  _updateMetrics(ret);
 
-      switch (buttonState) {
-      | GLFW_PRESS => Event.dispatch(ret.onKeyDown, evt)
-      | GLFW_REPEAT => Event.dispatch(ret.onKeyDown, evt)
-      | GLFW_RELEASE => Event.dispatch(ret.onKeyUp, evt)
-      };
-    },
-  );
-
-  Glfw.glfwSetCharCallback(
-    w,
-    (_, codepoint) => {
-      let uchar = Uchar.of_int(codepoint);
-      let character =
-        switch (Uchar.is_char(uchar)) {
-        | true => String.make(1, Uchar.to_char(uchar))
-        | _ => ""
-        };
-      let keyPressEvent: keyPressEvent = {codepoint, character};
-      Event.dispatch(ret.onKeyPress, keyPressEvent);
-    },
-  );
-
-  Glfw.glfwSetMouseButtonCallback(
-    w,
-    (_w, mouseButton, buttonState, _modifier) => {
-      let evt: mouseButtonEvent = {button: MouseButton.convert(mouseButton)};
-      switch (buttonState) {
-      | GLFW_PRESS => Event.dispatch(ret.onMouseDown, evt)
-      | GLFW_REPEAT => Event.dispatch(ret.onMouseDown, evt)
-      | GLFW_RELEASE => Event.dispatch(ret.onMouseUp, evt)
-      };
-    },
-  );
-
-  Glfw.glfwSetScrollCallback(
-    w,
-    (_w, deltaX, deltaY) => {
-      let evt: mouseWheelEvent = {deltaX, deltaY};
-      Event.dispatch(ret.onMouseWheel, evt);
-    },
-  );
-
-  Glfw.glfwSetCursorPosCallback(
-    w,
-    (_w, x: float, y: float) => {
-      let evt: mouseMoveEvent = {mouseX: x, mouseY: y};
-
-      Event.dispatch(ret.onMouseMove, evt);
-    },
-  );
   ret;
+};
+
+let startTextInput = (_w: t) => {
+  Sdl2.TextInput.start();
+};
+
+let stopTextInput = (_w: t) => {
+  Sdl2.TextInput.stop();
+};
+
+let isTextInputActive = (_w: t) => {
+  Sdl2.TextInput.isActive();
+};
+
+let setInputRect = (_w: t, x, y, width, height) => {
+  // TODO: Do we need to apply scale factor here?
+  Sdl2.TextInput.setInputRect(
+    x,
+    y,
+    width,
+    height,
+  );
 };
 
 let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
 
-let setPos = (w: t, x: int, y: int) =>
-  Glfw.glfwSetWindowPos(w.glfwWindow, x, y);
+let setPosition = (w: t, x: int, y: int) => {
+  Sdl2.Window.setPosition(w.sdlWindow, x, y);
+  w.areMetricsDirty = true;
+};
 
-let show = w => Glfw.glfwShowWindow(w.glfwWindow);
+let center = (w: t) => {
+  Sdl2.Window.center(w.sdlWindow);
+};
 
-let hide = w => Glfw.glfwHideWindow(w.glfwWindow);
+let show = w => {
+  Sdl2.Window.show(w.sdlWindow);
+};
 
-let getSize = (w: t) => {
-  w.metrics.size;
+let hide = w => {
+  Sdl2.Window.hide(w.sdlWindow);
+};
+
+let getRawSize = (w: t) => {
+  let width = w.metrics.size.width;
+  let height = w.metrics.size.height;
+
+  let ret: size = {width, height};
+  ret;
+};
+
+let getScaledSize = (w: t) => {
+  let rawSize = getRawSize(w);
+  {
+    width: int_of_float(float_of_int(rawSize.width) /. w.metrics.scaleFactor),
+    height:
+      int_of_float(float_of_int(rawSize.height) /. w.metrics.scaleFactor),
+  };
 };
 
 let getFramebufferSize = (w: t) => {
   w.metrics.framebufferSize;
 };
 
-let maximize = (w: t) => Glfw.glfwMaximizeWindow(w.glfwWindow);
+let maximize = (w: t) => {
+  Sdl2.Window.maximize(w.sdlWindow);
+};
 
 let getDevicePixelRatio = (w: t) => {
   w.metrics.devicePixelRatio;
 };
 
-let getScaleFactor = (w: t) => {
-  w.metrics.scaleFactor *. w.metrics.zoom;
+let getScaleAndZoom = (w: t) => {
+  w.metrics.scaleFactor
+  *. w.metrics.zoom
+  +. 0.5
+  /* TODO - SKIA: Allow fractional scale values! */
+  |> int_of_float
+  |> float_of_int;
 };
 
 let getZoom = (w: t) => {
@@ -347,7 +553,7 @@ let getZoom = (w: t) => {
 };
 
 let takeScreenshot = (w: t, filename: string) => {
-  open Glfw;
+  open Sdl2;
 
   let width = w.metrics.framebufferSize.width;
   let height = w.metrics.framebufferSize.height;
@@ -368,7 +574,7 @@ let takeScreenshot = (w: t, filename: string) => {
      can force this by triggering a new render) and then taking the
      screenshot */
   render(w);
-  glReadPixels(0, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+  Gl.glReadPixels(0, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
   let image = Image.create(pixels);
 
@@ -376,9 +582,17 @@ let takeScreenshot = (w: t, filename: string) => {
   Image.destroy(image);
 };
 
-let destroyWindow = (w: t) => Glfw.glfwDestroyWindow(w.glfwWindow);
+let destroyWindow = (_w: t) => {
+  ();
+};
 
-let shouldClose = (w: t) => Glfw.glfwWindowShouldClose(w.glfwWindow);
+let canQuit = (w: t) => {
+  w.canQuit();
+};
+
+let setCanQuitCallback = (w: t, callback: windowCanQuitCallback) => {
+  w.canQuit = callback;
+};
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) =>
   w.render = callback;

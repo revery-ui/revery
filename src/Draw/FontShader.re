@@ -3,7 +3,7 @@
  *
  * Simple texture shader
  */
-open Reglfw.Glfw;
+open Sdl2.Gl;
 open Revery_Shaders;
 
 let attribute: list(ShaderAttribute.t) =
@@ -43,7 +43,10 @@ let varying =
     },
   ];
 
-let vsShader = SolidShader.vsShader ++ "\n" ++ {|
+let vsShader = {|
+   vec4 pos = vec4(aPosition.x, aPosition.y, 1.0, 1.0);
+   gl_Position = uProjection * uWorld * pos;
+   vColor = uColor;
    vTexCoord = aTexCoord;
 |};
 
