@@ -13,7 +13,6 @@ module IntMap =
     let compare = compare;
   });
 
-
 module Make = (ClockImpl: Clock) => {
   module TickId =
     UniqueId.Make({});
@@ -49,8 +48,12 @@ module Make = (ClockImpl: Clock) => {
     f(v);
   };
 
-  let show = () => _activeTickers^
-  |> List.fold_left((prev, curr) => showTickFunction(curr) ++ ", " ++ prev, "");
+  let show = () =>
+    _activeTickers^
+    |> List.fold_left(
+         (prev, curr) => showTickFunction(curr) ++ ", " ++ prev,
+         "",
+       );
 
   let pump = () => {
     // Add any newly-scheduled tickers
@@ -59,12 +62,17 @@ module Make = (ClockImpl: Clock) => {
 
     // Clear any pending tickers
     let cancelled = _cancelledTickers^;
-    _activeTickers := List.fold_left((prev, curr) => {
-     switch (IntMap.find_opt(curr.id, cancelled)) {
-     | None => [curr, ...prev]
-     | Some(_) => prev;
-     }
-    }, [], _activeTickers^);
+    _activeTickers :=
+      List.fold_left(
+        (prev, curr) => {
+          switch (IntMap.find_opt(curr.id, cancelled)) {
+          | None => [curr, ...prev]
+          | Some(_) => prev
+          }
+        },
+        [],
+        _activeTickers^,
+      );
     _cancelledTickers := IntMap.empty;
 
     let currentTime = Time.to_float_seconds(ClockImpl.time());
