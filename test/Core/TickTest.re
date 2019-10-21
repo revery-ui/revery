@@ -31,6 +31,34 @@ describe("Ticker", ({describe, _}) => {
 
       expect.int(callCount^).toBe(1);
     });
+    test("nested tick - tick gets scheduled when called from inside tick", ({expect, _}) => {
+      
+      let outerCallCount = ref(0);
+      let innerCallCount = ref(0);
+      
+      let _ignore = Tick.timeout(() => {
+        incr(outerCallCount);
+        let _ignore = Tick.timeout(() => incr(innerCallCount), Seconds(0.11));
+        }, Seconds(0.));
+      TestTicker.incrementTime(Seconds(0.11));
+      Tick.pump();
+
+      expect.int(outerCallCount^).toBe(1);
+      expect.int(innerCallCount^).toBe(0);
+      
+      TestTicker.incrementTime(Seconds(0.11));
+      Tick.pump();
+      
+      expect.int(outerCallCount^).toBe(1);
+      expect.int(innerCallCount^).toBe(1);
+
+      // Incrementing again, the timeout should've expired - so no additional increment
+      TestTicker.incrementTime(Seconds(1.01));
+      Tick.pump();
+      
+      expect.int(outerCallCount^).toBe(1);
+      expect.int(innerCallCount^).toBe(1);
+    });
     test("doesn't call if canceled", ({expect, _}) => {
       let callCount = ref(0);
       let cancel = Tick.timeout(() => incr(callCount), Seconds(1.));

@@ -7,6 +7,13 @@ module DefaultClock = {
 type callback = Time.t => unit;
 type dispose = unit => unit;
 
+module IntMap =
+  Map.Make({
+    type t = int;
+    let compare = compare;
+  });
+
+
 module Make = (ClockImpl: Clock) => {
   module TickId =
     UniqueId.Make({});
@@ -23,7 +30,13 @@ module Make = (ClockImpl: Clock) => {
     f: callback,
   };
 
+  let showTickFunction = (v: tickFunction) => {
+    string_of_int(v.id);
+  };
+
   let _activeTickers: ref(list(tickFunction)) = ref([]);
+  let _scheduledTickers: ref(list(tickFunction)) = ref([]);
+  let _cancelledTickers: ref(IntMap.t(bool)) = ref(IntMap.empty);
 
   let _filterMap = (v: list(option('a))): list('a) => {
     let rec f = v =>
@@ -36,7 +49,24 @@ module Make = (ClockImpl: Clock) => {
     f(v);
   };
 
+  let show = () => _activeTickers^
+  |> List.fold_left((prev, curr) => showTickFunction(curr) ++ ", " ++ prev, "");
+
   let pump = () => {
+    // Add any newly-scheduled tickers
+    _activeTickers := List.concat([_scheduledTickers^, _activeTickers^]);
+    _scheduledTickers := [];
+
+    // Clear any pending tickers
+    let cancelled = _cancelledTickers^;
+    _activeTickers := List.fold_left((prev, curr) => {
+     switch (IntMap.find_opt(curr.id, cancelled)) {
+     | None => [curr, ...prev]
+     | Some(_) => prev;
+     }
+    }, [], _activeTickers^);
+    _cancelledTickers := IntMap.empty;
+
     let currentTime = Time.to_float_seconds(ClockImpl.time());
 
     let f = (tf: tickFunction) => {
@@ -63,7 +93,7 @@ module Make = (ClockImpl: Clock) => {
   };
 
   let _clear = (id: int, ()) => {
-    _activeTickers := List.filter(v => v.id !== id, _activeTickers^);
+    _cancelledTickers := IntMap.add(id, true, _cancelledTickers^);
   };
 
   let interval = (f: callback, frequency: Time.t) => {
@@ -77,7 +107,7 @@ module Make = (ClockImpl: Clock) => {
       f,
     };
 
-    _activeTickers := List.append([tf], _activeTickers^);
+    _scheduledTickers := [tf, ..._scheduledTickers^];
     _clear(id);
   };
 
@@ -96,7 +126,7 @@ module Make = (ClockImpl: Clock) => {
       f,
     };
 
-    _activeTickers := List.append([tf], _activeTickers^);
+    _scheduledTickers := [tf, ..._scheduledTickers^];
     _clear(id);
   };
 };
