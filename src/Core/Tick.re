@@ -11,7 +11,12 @@ module Make = (ClockImpl: Clock) => {
   module TickId =
     UniqueId.Make({});
 
+  type tickType =
+  | Timeout
+  | Interval;
+
   type tickFunction = {
+    tickType: tickType,
     id: int,
     lastExecutionTime: Time.t,
     frequency: Time.t,
@@ -19,6 +24,17 @@ module Make = (ClockImpl: Clock) => {
   };
 
   let _activeTickers: ref(list(tickFunction)) = ref([]);
+
+  let _filterMap = (v: list(option('a))): list('a) => {
+    let rec f = v =>
+    switch (v) {
+    | [Some(hd), ...tail]  => [hd, ...f(tail)];
+    | [None, ...tail] => f(tail);
+    | [] => [];
+    };
+
+    f(v);
+  };
 
   let pump = () => {
     let currentTime = Time.to_float_seconds(ClockImpl.time());
@@ -30,13 +46,18 @@ module Make = (ClockImpl: Clock) => {
 
       if (nextTime <= currentTime) {
         let elapsedTime = Time.of_float_seconds(currentTime -. lastTime);
-        tf.f(elapsedTime);
-        {...tf, lastExecutionTime: Time.of_float_seconds(currentTime)};
+        ignore(tf.f(elapsedTime));
+        switch(tf.tickType) {
+        | Timeout => None
+        | Interval => Some({...tf, lastExecutionTime: Time.of_float_seconds(currentTime)});
+        }
       } else {
-        tf;
+        Some(tf);
       };
     };
-    _activeTickers := List.map(f, _activeTickers^);
+    _activeTickers := _activeTickers^
+    |> List.map(f)
+    |> _filterMap;
   };
 
   let _clear = (id: int, ()) => {
@@ -47,6 +68,7 @@ module Make = (ClockImpl: Clock) => {
     let id = TickId.getUniqueId();
 
     let tf: tickFunction = {
+      tickType: Interval,
       id,
       lastExecutionTime: ClockImpl.time(),
       frequency,
@@ -62,10 +84,10 @@ module Make = (ClockImpl: Clock) => {
 
     let f = _ => {
       f();
-      _clear(id, ());
     };
 
     let tf: tickFunction = {
+      tickType: Timeout,
       id,
       lastExecutionTime: ClockImpl.time(),
       frequency: waitTime,

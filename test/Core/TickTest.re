@@ -15,7 +15,36 @@ module TestTicker = {
 
 module Tick = Revery_Core.Internal.Tick.Make(TestTicker);
 
-describe("Ticker", ({test, _}) => {
+describe("Ticker", ({describe, _}) => {
+describe("timeout", ({test, _}) => {
+  test("calls once after tick time", ({expect, _}) => {
+    let callCount = ref(0);
+    let _ignore = Tick.timeout(() => incr(callCount), Seconds(1.));
+    TestTicker.incrementTime(Seconds(1.01));
+    Tick.pump();
+
+    expect.int(callCount^).toBe(1);
+
+    // Incrementing again, the timeout should've expired - so no additional increment
+    TestTicker.incrementTime(Seconds(1.01));
+    Tick.pump();
+    
+    expect.int(callCount^).toBe(1);
+  });
+  test("doesn't call if canceled", ({expect, _}) => {
+    let callCount = ref(0);
+    let cancel = Tick.timeout(() => incr(callCount), Seconds(1.));
+    TestTicker.incrementTime(Seconds(0.5));
+    Tick.pump();
+
+    cancel();
+    TestTicker.incrementTime(Seconds(0.51));
+    Tick.pump();
+
+    expect.int(callCount^).toBe(0);
+  });
+});
+describe("interval", ({test, _}) => {
   test("calls after tick time", ({expect, _}) => {
     let callCount = ref(0);
 
@@ -56,5 +85,6 @@ describe("Ticker", ({test, _}) => {
     TestTicker.incrementTime(Seconds(2.));
     Tick.pump();
     expect.int(callCount^).toBe(1);
+  });
   });
 });
