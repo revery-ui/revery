@@ -8,8 +8,7 @@ let logo = {
 
   (~children as _: list(React.syntheticElement), ()) =>
     component(hooks => {
-      let (logoOpacity, setOpacity, hooks) = Hooks.state(1.0, hooks);
-      let (text, setText, hooks) = Hooks.state("ABC", hooks);
+      let (logoOpacity, _setOpacity, hooks) = Hooks.state(1.0, hooks);
 
       let (rotation, pauseRotation, restartRotation, hooks) =
         Hooks.animation(
@@ -37,10 +36,6 @@ let logo = {
           hooks,
         );
 
-      let onMouseDown = _ => setOpacity(0.5);
-
-      let onMouseUp = _ => setOpacity(1.0);
-
       (
         hooks,
         <View>
@@ -61,8 +56,8 @@ let logo = {
             <Button
               width=100
               onClick={() => {
-                pauseRotation();
-                pauseRotationY();
+                pauseRotation() |> ignore;
+                pauseRotationY() |> ignore;
                 ();
               }}
               title="Pause"

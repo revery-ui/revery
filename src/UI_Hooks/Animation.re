@@ -4,9 +4,9 @@ open Revery_UI.Animated;
 
 let reducer = (_a, s) => s + 1;
 
-let animationLoop = (dispatch, animation, completer, ()) => {
+let animationLoop = (animation, completer, ()) => {
   let complete = completer();
-  let {pause, stop} = animation |> start(~complete);
+  let {stop, _} = animation |> start(~complete);
   Some(
     () => {
       Log.info("Hooks - Animation", "Stopping animation");
@@ -50,11 +50,7 @@ let animation = (v: animationValue, opts: animationOptions, slots) => {
   };
 
   let slots =
-    Effect.effect(
-      OnMount,
-      animationLoop(dispatch, animation, completer),
-      slots,
-    );
+    Effect.effect(OnMount, animationLoop(animation, completer), slots);
 
   (animation.value.current, pause, restart, slots);
 };
