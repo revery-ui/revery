@@ -8,7 +8,6 @@ type size = {
   width: int,
   height: int,
 };
-
 let log = Log.info("Window");
 
 module WindowMetrics = {
@@ -88,6 +87,10 @@ let isDirty = (w: t) =>
     | _ => false
     };
   };
+
+let setTitle = (v: t, title: string) => {
+  Sdl2.Window.setTitle(v.sdlWindow, title);
+};
 
 let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
   switch (forceScaleFactor) {
