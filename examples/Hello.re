@@ -54,7 +54,7 @@ let logo = {
           </Opacity>
           <Row>
             <Button
-              width=100
+              width=200
               onClick={() => {
                 pauseRotation() |> ignore;
                 pauseRotationY() |> ignore;
@@ -63,7 +63,7 @@ let logo = {
               title="Pause"
             />
             <Button
-              width=100
+              width=200
               onClick={() => {
                 restartRotation();
                 restartRotationY();
