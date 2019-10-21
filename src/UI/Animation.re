@@ -107,8 +107,8 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   let tickAnimation = (clock: float, {animation: anim, update, complete}) => {
     let t = anim.easing(getLocalTime(clock, anim));
     let (startValue, toValue) =
-      anim.isReverse ?
-        (anim.toValue, anim.startValue) : (anim.startValue, anim.toValue);
+      anim.isReverse
+        ? (anim.toValue, anim.startValue) : (anim.startValue, anim.toValue);
 
     if (t >= 1.) {
       if (anim.repeat) {

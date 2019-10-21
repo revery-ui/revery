@@ -60,23 +60,19 @@ let logo = {
           <Row>
             <Button
               width=100
-              onClick={
-                () => {
-                  pauseRotation();
-                  pauseRotationY();
-                  ();
-                }
-              }
+              onClick={() => {
+                pauseRotation();
+                pauseRotationY();
+                ();
+              }}
               title="Pause"
             />
             <Button
               width=100
-              onClick={
-                () => {
-                  restartRotation();
-                  restartRotationY();
-                }
-              }
+              onClick={() => {
+                restartRotation();
+                restartRotationY();
+              }}
               title="Restart"
             />
           </Row>
