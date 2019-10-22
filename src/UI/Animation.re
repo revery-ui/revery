@@ -53,12 +53,11 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
 
   let activeAnimations: ref(list(activeAnimation)) = ref([]);
 
-  let isActive = animation => {
+  let isActive = animation =>
     List.length(
       List.filter(a => a.animation.id == animation.id, activeAnimations^),
     )
     > 0;
-  };
 
   type animationOptions = {
     duration: Time.t,
@@ -69,10 +68,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     direction: animationDirection,
   };
 
-  let floatValue: float => animationValue =
-    (v: float) => {
-      {current: v};
-    };
+  let floatValue: float => animationValue = (v: float) => {current: v};
 
   let options =
       (
@@ -171,9 +167,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     let removeAnimation = l =>
       List.filter(({animation: a, _}) => a.id !== animation.id, l);
     let playback = {
-      pause: () => {
-        activeAnimations := removeAnimation(activeAnimations^);
-      },
+      pause: () => activeAnimations := removeAnimation(activeAnimations^),
       stop: () => {
         animation.value.current = animation.startValue;
         animation.isReverse = isReverseStartValue;
@@ -183,6 +177,8 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     playback;
   };
 
+  let getTime = () => AnimationTickerImpl.time();
+
   module Chain = {
     type t = {animations: list(animation)};
     let make = animation => {animations: [animation]};
@@ -191,7 +187,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     };
     let start = (~update=?, ~complete=?, {animations: l}) => {
       let currentPlayback = ref(None);
-      let rec runAnimation = (animations, index) => {
+      let rec runAnimation = (animations, index) =>
         switch (animations) {
         | [a, ...xl] =>
           let playback =
@@ -199,21 +195,18 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
           currentPlayback := Some(playback);
         | [] => optCall(complete, ())
         };
-      };
       runAnimation(List.rev(l), 0);
       let playback = {
-        pause: () => {
+        pause: () =>
           switch (currentPlayback^) {
           | Some(p) => p.pause()
           | None => ()
-          };
-        },
-        stop: () => {
+          },
+        stop: () =>
           switch (currentPlayback^) {
           | Some(p) => p.stop()
           | None => ()
-          };
-        },
+          },
       };
       playback;
     };
