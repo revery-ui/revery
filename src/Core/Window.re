@@ -467,6 +467,11 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     Sdl2.Window.show(w);
   };
 
+  // onivim/oni2#791
+  // Set a minimum size for the window
+  // TODO: Make configurable
+  Sdl2.Window.setMinimumSize(w, 200, 100);
+
   _updateMetrics(ret);
 
   ret;
