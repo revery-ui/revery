@@ -1,80 +1,36 @@
 # Steps for restoring project cache
 
 steps:
-  - bash: 'mkdir -p $(Build.StagingDirectory)'
-    condition: and(eq(variables['Build.Reason'], 'PullRequest'), and(succeeded(), ne(variables['Build.SourceBranch'], variables['System.PullRequest.TargetBranch'])))
-    displayName: '[Cache][Publish] Create cache directory'
-
-  - task: Bash@3
-    condition: and(eq(variables['Build.Reason'], 'PullRequest'), and(succeeded(), ne(variables['Build.SourceBranch'], variables['System.PullRequest.TargetBranch'])))
-    displayName: '[Cache][Restore] Restoring build cache using REST API'
-    continueOnError: true
+  - task: DownloadBuildArtifacts@0
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+    displayName: '[Cache][Restore] Restore install'
     inputs:
-      targetType: 'inline' # Optional. Options: filePath, inline
-      script: |
-        # If org name is reasonml then REST_BASE will be: https://dev.azure.com/reasonml/
-        REST_BASE="${SYSTEM_TEAMFOUNDATIONCOLLECTIONURI}"
-        PROJ="$SYSTEM_TEAMPROJECT"
-        ART_NAME="cache-${AGENT_OS}-install"
-        fetchLatestBuild() {
-          PREFIX="branchName=refs%2Fheads%2F"
-          BRANCH=${PREFIX}${SYSTEM_PULLREQUEST_TARGETBRANCH}
-          FILTER='deletedFilter=excludeDeleted&statusFilter=completed&resultFilter=succeeded'
-          LATEST='queryOrder=finishTimeDescending&$top=1'
-          REST_BUILDS="$REST_BASE/$PROJ/_apis/build/builds?${FILTER}&${BRANCH}&${LATEST}&api-version=4.1"
-          echo "Rest call for builds: $REST_BUILDS"
-          REST_BUILDS_RESP=$(curl "$REST_BUILDS")
-          if [[ $REST_BUILDS_RESP =~ (\"web\":\{\"href\":\")([^\"]*) ]]; then LATEST_BUILD_PAGE="${BASH_REMATCH[2]}"; else LATEST_BUILD_PAGE=""; fi
-          if [[ $REST_BUILDS_RESP =~ (\"badge\":\{\"href\":\")([^\"]*) ]]; then LATEST_BUILD_BADGE="${BASH_REMATCH[2]}"; else LATEST_BUILD_BADGE=""; fi
-          if [[ $REST_BUILDS_RESP =~ (\"id\":)([^,]*) ]]; then LATEST_BUILD_ID="${BASH_REMATCH[2]}"; else LATEST_BUILD_ID=""; fi
-        }
-        fetchLatestBuild
-        fetchArtifactURL() {
-          REST_ART="$REST_BASE/$PROJ/_apis/build/builds/$LATEST_BUILD_ID/artifacts?artifactName=$ART_NAME&api-version=4.1"
-          echo "Rest call for artifacts: $REST_ART"
-          if [[ $(curl $REST_ART) =~ (downloadUrl\":\")([^\"]*) ]]; then LATEST_ART_URL="${BASH_REMATCH[2]}"; else LATEST_ART_URL=""; fi
-        }
-        downloadArtifactAndContinue() {
-          if [ -z "$LATEST_ART_URL" ]
-          then
-            echo "No latest artifact for merge-target branch found at URL $REST_ART"
-          else
-            curl "$LATEST_ART_URL" > "${BUILD_STAGINGDIRECTORY}/$ART_NAME.zip"
-            cd $BUILD_STAGINGDIRECTORY
-            unzip "$ART_NAME.zip"
-            echo "Using Dependency cache for buildID: $LATEST_BUILD_ID"
-            echo "Build log for build that produced the cache: $LATEST_BUILD_PAGE"
-            echo "Build badge for build that produced the cache: $LATEST_BUILD_BADGE"
-            echo "Build artifact from build that produced the cache: $LATEST_ART_URL"
-            echo "Restoring build cache into:"
-            mkdir -p $ESY__CACHE_INSTALL_PATH
-            if [ "$AGENT_OS" == "Windows_NT" ]; then
-              # tar on windows sees staging directory is D:/ as remote host.
-              # need to convert it to unix ironically
-              # not sure why single quotes are needed.
-              STAGE_DIR=$( cygpath --unix ${BUILD_STAGINGDIRECTORY} )
-            else
-              STAGE_DIR="${BUILD_STAGINGDIRECTORY}"
-            fi
-            echo $ESY__CACHE_INSTALL_PATH
-            echo $STAGE_DIR
-            cd $STAGE_DIR
-            if [ -d _export ]; then
-              echo "Cached builds to import"
-              ls _export
-              esy import-dependencies ./_export
-            else
-              echo "No _export directory to import from build cache"
-              ls $STAGE_DIR
-            fi
-          fi
-        }
-        fetchArtifactURL
-        downloadArtifactAndContinue
-      
+        buildType: 'specific'
+        project: '$(System.TeamProject)'
+        pipeline: '$(Build.DefinitionName)'
+        branchName: 'refs/heads/master'
+        buildVersionToDownload: 'latestFromBranch'
+        downloadType: 'single'
+        artifactName: 'cache-$(Agent.OS)-install'
+        downloadPath: '$(STAGING_DIRECTORY)'
+    continueOnError: true
+
+  - bash: 'mkdir -p $(ESY__CACHE_INSTALL_PATH)'
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+    displayName: '[Cache][Restore] Create cache directory'
+
+  # - bash: 'cd $(ESY__NPM_ROOT) && tar -xf $(STAGING_DIRECTORY_UNIX)/cache-$(Agent.OS)-install/npm-cache.tar -C .'
+  #   continueOnError: true
+  #   condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+  #   displayName: '[Cache][Restore] Untar npm cache directory'
+
+  - bash: 'cd $(ESY__CACHE_INSTALL_PATH) && tar -xf $(STAGING_DIRECTORY_UNIX)/cache-$(Agent.OS)-install/esy-cache.tar -C .'
+    continueOnError: true
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+    displayName: '[Cache][Restore] Untar esy cache directory'
 
   - bash: 'rm -rf *'
     continueOnError: true
-    workingDirectory: '$(Build.StagingDirectory)'
-    condition: and(eq(variables['Build.Reason'], 'PullRequest'), and(succeeded(), ne(variables['Build.SourceBranch'], variables['System.PullRequest.TargetBranch'])))
+    workingDirectory: '$(STAGING_DIRECTORY)'
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     displayName: '[Cache][Restore] Clean up'
