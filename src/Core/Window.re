@@ -335,15 +335,17 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   };
 };
 
-let create = (name: string, options: WindowCreateOptions.t) => {
-  log("Starting window creation...");
-
-  log("Using vsync: " ++ string_of_bool(options.vsync));
+let setVsync = (vsync: Vsync.t) => {
+  log("Using vsync: " ++ Vsync.show(vsync));
 
   switch (options.vsync) {
-  | false => Sdl2.Gl.setSwapInterval(0)
-  | true => Sdl2.Gl.setSwapInterval(1)
+  | Vsync.Immediate => Sdl2.Gl.setSwapInterval(0)
+  | Vsync.Synchronized => Sdl2.Gl.setSwapInterval(1)
   };
+};
+
+let create = (name: string, options: WindowCreateOptions.t) => {
+  log("Starting window creation...");
 
   let width =
     switch (options.width) {
@@ -369,6 +371,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   log("Window created successfully.");
   let uniqueId = Sdl2.Window.getId(w);
   log("Window id: " ++ string_of_int(uniqueId));
+
+  setVsync(options.vsync);
 
   // We need to let Windows know that we are DPI-aware and that we are going to
   // properly handle scaling. This is a no-op on other platforms.
