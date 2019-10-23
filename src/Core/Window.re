@@ -335,9 +335,11 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   };
 };
 
-let setVsync = (
-  _window: t, // TODO: Multiple windows - set context
-  vsync: Vsync.t) => {
+let setVsync =
+    (
+      _window: t, // TODO: Multiple windows - set context
+      vsync: Vsync.t,
+    ) => {
   log("Using vsync: " ++ Vsync.show(vsync));
 
   switch (vsync) {
