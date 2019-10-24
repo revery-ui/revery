@@ -1,7 +1,631 @@
 {
-  "checksum": "cfaaf95fdd6043c6e29eee60cdf83c0e",
+  "checksum": "378560864cea802b845035027e90603c",
   "root": "revery@link-dev:./package.json",
   "node": {
+    "yargs-parser@13.1.1@d41d8cd9": {
+      "id": "yargs-parser@13.1.1@d41d8cd9",
+      "name": "yargs-parser",
+      "version": "13.1.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/yargs-parser/-/yargs-parser-13.1.1.tgz#sha1:d26058532aa06d365fe091f6a1fc06b2f7e5eca0"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "decamelize@1.2.0@d41d8cd9", "camelcase@5.3.1@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "yargs@13.3.0@d41d8cd9": {
+      "id": "yargs@13.3.0@d41d8cd9",
+      "name": "yargs",
+      "version": "13.3.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/yargs/-/yargs-13.3.0.tgz#sha1:4c657a55e07e5f2cf947f8a366567c04a0dedc83"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "yargs-parser@13.1.1@d41d8cd9", "y18n@4.0.0@d41d8cd9",
+        "which-module@2.0.0@d41d8cd9", "string-width@3.1.0@d41d8cd9",
+        "set-blocking@2.0.0@d41d8cd9",
+        "require-main-filename@2.0.0@d41d8cd9",
+        "require-directory@2.1.1@d41d8cd9", "get-caller-file@2.0.5@d41d8cd9",
+        "find-up@3.0.0@d41d8cd9", "cliui@5.0.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "y18n@4.0.0@d41d8cd9": {
+      "id": "y18n@4.0.0@d41d8cd9",
+      "name": "y18n",
+      "version": "4.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/y18n/-/y18n-4.0.0.tgz#sha1:95ef94f85ecc81d007c264e190a120f0a3c8566b"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "xtend@4.0.2@d41d8cd9": {
+      "id": "xtend@4.0.2@d41d8cd9",
+      "name": "xtend",
+      "version": "4.0.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/xtend/-/xtend-4.0.2.tgz#sha1:bb72779f5fa465186b1f438f674fa347fdb5db54"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "wrap-ansi@5.1.0@d41d8cd9": {
+      "id": "wrap-ansi@5.1.0@d41d8cd9",
+      "name": "wrap-ansi",
+      "version": "5.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/wrap-ansi/-/wrap-ansi-5.1.0.tgz#sha1:1fd1f67235d5b6d0fee781056001bfb694c03b09"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "strip-ansi@5.2.0@d41d8cd9", "string-width@3.1.0@d41d8cd9",
+        "ansi-styles@3.2.1@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "wordwrap@0.0.3@d41d8cd9": {
+      "id": "wordwrap@0.0.3@d41d8cd9",
+      "name": "wordwrap",
+      "version": "0.0.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.3.tgz#sha1:a3d5da6cd5c0bc0008d37234bbaf1bed63059107"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "which-module@2.0.0@d41d8cd9": {
+      "id": "which-module@2.0.0@d41d8cd9",
+      "name": "which-module",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/which-module/-/which-module-2.0.0.tgz#sha1:d9ef07dce77b9902b8a3a8fa4b31c3e3f7e6e87a"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "validate-npm-package-license@3.0.4@d41d8cd9": {
+      "id": "validate-npm-package-license@3.0.4@d41d8cd9",
+      "name": "validate-npm-package-license",
+      "version": "3.0.4",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/validate-npm-package-license/-/validate-npm-package-license-3.0.4.tgz#sha1:fc91f6b9c7ba15c857f4cb2c5defeec39d4f410a"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "spdx-expression-parse@3.0.0@d41d8cd9", "spdx-correct@3.1.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "util-deprecate@1.0.2@d41d8cd9": {
+      "id": "util-deprecate@1.0.2@d41d8cd9",
+      "name": "util-deprecate",
+      "version": "1.0.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz#sha1:450d4dc9fa70de732762fbd2d4a28981419a0ccf"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "uglify-js@3.6.3@d41d8cd9": {
+      "id": "uglify-js@3.6.3@d41d8cd9",
+      "name": "uglify-js",
+      "version": "3.6.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/uglify-js/-/uglify-js-3.6.3.tgz#sha1:1351533bbe22cc698f012589ed6bd4cbd971bff8"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "source-map@0.6.1@d41d8cd9", "commander@2.20.3@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "typedarray@0.0.6@d41d8cd9": {
+      "id": "typedarray@0.0.6@d41d8cd9",
+      "name": "typedarray",
+      "version": "0.0.6",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz#sha1:867ac74e3864187b1d3d47d996a78ec5c8830777"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "trim-off-newlines@1.0.1@d41d8cd9": {
+      "id": "trim-off-newlines@1.0.1@d41d8cd9",
+      "name": "trim-off-newlines",
+      "version": "1.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/trim-off-newlines/-/trim-off-newlines-1.0.1.tgz#sha1:9f9ba9d9efa8764c387698bcbfeb2c848f11adb3"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "trim-newlines@2.0.0@d41d8cd9": {
+      "id": "trim-newlines@2.0.0@d41d8cd9",
+      "name": "trim-newlines",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/trim-newlines/-/trim-newlines-2.0.0.tgz#sha1:b403d0b91be50c331dfc4b82eeceb22c3de16d20"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "trim-newlines@1.0.0@d41d8cd9": {
+      "id": "trim-newlines@1.0.0@d41d8cd9",
+      "name": "trim-newlines",
+      "version": "1.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/trim-newlines/-/trim-newlines-1.0.0.tgz#sha1:5887966bb582a4503a41eb524f7d35011815a613"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "through2@3.0.1@d41d8cd9": {
+      "id": "through2@3.0.1@d41d8cd9",
+      "name": "through2",
+      "version": "3.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/through2/-/through2-3.0.1.tgz#sha1:39276e713c3302edf9e388dd9c812dd3b825bd5a"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "readable-stream@3.4.0@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "through2@2.0.5@d41d8cd9": {
+      "id": "through2@2.0.5@d41d8cd9",
+      "name": "through2",
+      "version": "2.0.5",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/through2/-/through2-2.0.5.tgz#sha1:01c1e39eb31d07cb7d03a96a70823260b23132cd"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "xtend@4.0.2@d41d8cd9", "readable-stream@2.3.6@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "through@2.3.8@d41d8cd9": {
+      "id": "through@2.3.8@d41d8cd9",
+      "name": "through",
+      "version": "2.3.8",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/through/-/through-2.3.8.tgz#sha1:0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "text-extensions@2.0.0@d41d8cd9": {
+      "id": "text-extensions@2.0.0@d41d8cd9",
+      "name": "text-extensions",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/text-extensions/-/text-extensions-2.0.0.tgz#sha1:43eabd1b495482fae4a2bf65e5f56c29f69220f6"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "supports-color@5.5.0@d41d8cd9": {
+      "id": "supports-color@5.5.0@d41d8cd9",
+      "name": "supports-color",
+      "version": "5.5.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/supports-color/-/supports-color-5.5.0.tgz#sha1:e2e69a44ac8772f78a1ec0b35b689df6530efc8f"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "has-flag@3.0.0@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "strip-indent@2.0.0@d41d8cd9": {
+      "id": "strip-indent@2.0.0@d41d8cd9",
+      "name": "strip-indent",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/strip-indent/-/strip-indent-2.0.0.tgz#sha1:5ef8db295d01e6ed6cbf7aab96998d7822527b68"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "strip-indent@1.0.1@d41d8cd9": {
+      "id": "strip-indent@1.0.1@d41d8cd9",
+      "name": "strip-indent",
+      "version": "1.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/strip-indent/-/strip-indent-1.0.1.tgz#sha1:0c7962a6adefa7bbd4ac366460a638552ae1a0a2"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "get-stdin@4.0.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "strip-bom@3.0.0@d41d8cd9": {
+      "id": "strip-bom@3.0.0@d41d8cd9",
+      "name": "strip-bom",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/strip-bom/-/strip-bom-3.0.0.tgz#sha1:2334c18e9c759f7bdd56fdef7e9ae3d588e68ed3"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "strip-bom@2.0.0@d41d8cd9": {
+      "id": "strip-bom@2.0.0@d41d8cd9",
+      "name": "strip-bom",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/strip-bom/-/strip-bom-2.0.0.tgz#sha1:6219a85616520491f35788bdbf1447a99c7e6b0e"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "is-utf8@0.2.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "strip-ansi@5.2.0@d41d8cd9": {
+      "id": "strip-ansi@5.2.0@d41d8cd9",
+      "name": "strip-ansi",
+      "version": "5.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/strip-ansi/-/strip-ansi-5.2.0.tgz#sha1:8c9a536feb6afc962bdfa5b104a5091c1ad9c0ae"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "ansi-regex@4.1.0@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "stringify-package@1.0.0@d41d8cd9": {
+      "id": "stringify-package@1.0.0@d41d8cd9",
+      "name": "stringify-package",
+      "version": "1.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/stringify-package/-/stringify-package-1.0.0.tgz#sha1:e02828089333d7d45cd8c287c30aa9a13375081b"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "string_decoder@1.3.0@d41d8cd9": {
+      "id": "string_decoder@1.3.0@d41d8cd9",
+      "name": "string_decoder",
+      "version": "1.3.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/string_decoder/-/string_decoder-1.3.0.tgz#sha1:42f114594a46cf1a8e30b0a84f56c78c3edac21e"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "safe-buffer@5.2.0@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "string_decoder@1.1.1@d41d8cd9": {
+      "id": "string_decoder@1.1.1@d41d8cd9",
+      "name": "string_decoder",
+      "version": "1.1.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/string_decoder/-/string_decoder-1.1.1.tgz#sha1:9cf1611ba62685d7030ae9e4ba34149c3af03fc8"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "safe-buffer@5.1.2@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "string-width@3.1.0@d41d8cd9": {
+      "id": "string-width@3.1.0@d41d8cd9",
+      "name": "string-width",
+      "version": "3.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/string-width/-/string-width-3.1.0.tgz#sha1:22767be21b62af1081574306f69ac51b62203961"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "strip-ansi@5.2.0@d41d8cd9",
+        "is-fullwidth-code-point@2.0.0@d41d8cd9",
+        "emoji-regex@7.0.3@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "standard-version@7.0.0@d41d8cd9": {
+      "id": "standard-version@7.0.0@d41d8cd9",
+      "name": "standard-version",
+      "version": "7.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/standard-version/-/standard-version-7.0.0.tgz#sha1:4ce10ea5d20270ed4a32b22d15cce5fd1f1a5bbb"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "yargs@13.3.0@d41d8cd9", "stringify-package@1.0.0@d41d8cd9",
+        "semver@6.3.0@d41d8cd9", "git-semver-tags@3.0.0@d41d8cd9",
+        "fs-access@1.0.1@d41d8cd9", "find-up@4.1.0@d41d8cd9",
+        "figures@3.0.0@d41d8cd9", "dotgitignore@2.1.0@d41d8cd9",
+        "detect-newline@3.0.0@d41d8cd9", "detect-indent@6.0.0@d41d8cd9",
+        "conventional-recommended-bump@6.0.0@d41d8cd9",
+        "conventional-changelog-config-spec@2.0.0@d41d8cd9",
+        "conventional-changelog@3.1.9@d41d8cd9", "chalk@2.4.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "split2@2.2.0@d41d8cd9": {
+      "id": "split2@2.2.0@d41d8cd9",
+      "name": "split2",
+      "version": "2.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/split2/-/split2-2.2.0.tgz#sha1:186b2575bcf83e85b7d18465756238ee4ee42493"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "through2@2.0.5@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "split@1.0.1@d41d8cd9": {
+      "id": "split@1.0.1@d41d8cd9",
+      "name": "split",
+      "version": "1.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/split/-/split-1.0.1.tgz#sha1:605bd9be303aa59fb35f9229fbea0ddec9ea07d9"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "through@2.3.8@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "spdx-license-ids@3.0.5@d41d8cd9": {
+      "id": "spdx-license-ids@3.0.5@d41d8cd9",
+      "name": "spdx-license-ids",
+      "version": "3.0.5",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/spdx-license-ids/-/spdx-license-ids-3.0.5.tgz#sha1:3694b5804567a458d3c8045842a6358632f62654"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "spdx-expression-parse@3.0.0@d41d8cd9": {
+      "id": "spdx-expression-parse@3.0.0@d41d8cd9",
+      "name": "spdx-expression-parse",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/spdx-expression-parse/-/spdx-expression-parse-3.0.0.tgz#sha1:99e119b7a5da00e05491c9fa338b7904823b41d0"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "spdx-license-ids@3.0.5@d41d8cd9", "spdx-exceptions@2.2.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "spdx-exceptions@2.2.0@d41d8cd9": {
+      "id": "spdx-exceptions@2.2.0@d41d8cd9",
+      "name": "spdx-exceptions",
+      "version": "2.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/spdx-exceptions/-/spdx-exceptions-2.2.0.tgz#sha1:2ea450aee74f2a89bfb94519c07fcd6f41322977"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "spdx-correct@3.1.0@d41d8cd9": {
+      "id": "spdx-correct@3.1.0@d41d8cd9",
+      "name": "spdx-correct",
+      "version": "3.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/spdx-correct/-/spdx-correct-3.1.0.tgz#sha1:fb83e504445268f154b074e218c87c003cd31df4"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "spdx-license-ids@3.0.5@d41d8cd9",
+        "spdx-expression-parse@3.0.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "source-map@0.6.1@d41d8cd9": {
+      "id": "source-map@0.6.1@d41d8cd9",
+      "name": "source-map",
+      "version": "0.6.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz#sha1:74722af32e9614e9c287a8d0bbde48b5e2f1a263"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "signal-exit@3.0.2@d41d8cd9": {
+      "id": "signal-exit@3.0.2@d41d8cd9",
+      "name": "signal-exit",
+      "version": "3.0.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/signal-exit/-/signal-exit-3.0.2.tgz#sha1:b5fdc08f1287ea1178628e415e25132b73646c6d"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "set-blocking@2.0.0@d41d8cd9": {
+      "id": "set-blocking@2.0.0@d41d8cd9",
+      "name": "set-blocking",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/set-blocking/-/set-blocking-2.0.0.tgz#sha1:045f9782d011ae9a6803ddd382b24392b3d890f7"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "semver@6.3.0@d41d8cd9": {
+      "id": "semver@6.3.0@d41d8cd9",
+      "name": "semver",
+      "version": "6.3.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/semver/-/semver-6.3.0.tgz#sha1:ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "semver@5.7.1@d41d8cd9": {
+      "id": "semver@5.7.1@d41d8cd9",
+      "name": "semver",
+      "version": "5.7.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/semver/-/semver-5.7.1.tgz#sha1:a954f931aeba508d307bbf069eff0c01c96116f7"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "safe-buffer@5.2.0@d41d8cd9": {
+      "id": "safe-buffer@5.2.0@d41d8cd9",
+      "name": "safe-buffer",
+      "version": "5.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.0.tgz#sha1:b74daec49b1148f88c64b68d49b1e815c1f2f519"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "safe-buffer@5.1.2@d41d8cd9": {
+      "id": "safe-buffer@5.1.2@d41d8cd9",
+      "name": "safe-buffer",
+      "version": "5.1.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz#sha1:991ec69d296e0313747d59bdfd2b745c35f8828d"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
     "revery@link-dev:./package.json": {
       "id": "revery@link-dev:./package.json",
       "name": "revery",
@@ -13,12 +637,14 @@
       },
       "overrides": [],
       "dependencies": [
-        "reperf@1.4.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
+        "standard-version@7.0.0@d41d8cd9", "reperf@1.4.0@d41d8cd9",
+        "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9",
         "reason-sdl2@2.10.3008@d41d8cd9",
         "reason-gl-matrix@0.9.9305@d41d8cd9",
         "reason-fontkit@2.7.0@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "flex@1.2.2@d41d8cd9",
+        "conventional-changelog-conventionalcommits@4.2.1@d41d8cd9",
         "brisk-reconciler@0.0.2@d41d8cd9",
         "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
@@ -32,6 +658,48 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/merlin@opam:3.3.2@7a364181",
         "@opam/dune@opam:1.11.4@21d66ccd"
       ]
+    },
+    "resolve@1.12.0@d41d8cd9": {
+      "id": "resolve@1.12.0@d41d8cd9",
+      "name": "resolve",
+      "version": "1.12.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/resolve/-/resolve-1.12.0.tgz#sha1:3fc644a35c84a48554609ff26ec52b66fa577df6"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "path-parse@1.0.6@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "require-main-filename@2.0.0@d41d8cd9": {
+      "id": "require-main-filename@2.0.0@d41d8cd9",
+      "name": "require-main-filename",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/require-main-filename/-/require-main-filename-2.0.0.tgz#sha1:d0b329ecc7cc0f61649f62215be69af54aa8989b"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "require-directory@2.1.1@d41d8cd9": {
+      "id": "require-directory@2.1.1@d41d8cd9",
+      "name": "require-directory",
+      "version": "2.1.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/require-directory/-/require-directory-2.1.1.tgz#sha1:8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
     },
     "reperf@1.4.0@d41d8cd9": {
       "id": "reperf@1.4.0@d41d8cd9",
@@ -50,6 +718,20 @@
         "@opam/printbox@opam:0.2@9f070302",
         "@opam/dune@opam:1.11.4@21d66ccd", "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
+      "devDependencies": []
+    },
+    "repeating@2.0.1@d41d8cd9": {
+      "id": "repeating@2.0.1@d41d8cd9",
+      "name": "repeating",
+      "version": "2.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/repeating/-/repeating-2.0.1.tgz#sha1:5214c53a926d3552707527fbab415dbc08d06dda"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "is-finite@1.0.2@d41d8cd9" ],
       "devDependencies": []
     },
     "rench@1.9.1@d41d8cd9": {
@@ -113,6 +795,38 @@
         "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:1.11.4@21d66ccd",
         "@opam/atdgen@opam:2.0.0@5d912e07",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "redent@2.0.0@d41d8cd9": {
+      "id": "redent@2.0.0@d41d8cd9",
+      "name": "redent",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/redent/-/redent-2.0.0.tgz#sha1:c1b2007b42d57eb1389079b3c8333639d5e1ccaa"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "strip-indent@2.0.0@d41d8cd9", "indent-string@3.2.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "redent@1.0.0@d41d8cd9": {
+      "id": "redent@1.0.0@d41d8cd9",
+      "name": "redent",
+      "version": "1.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/redent/-/redent-1.0.0.tgz#sha1:cf916ab1fd5f1f16dfb20822dd6ec7f730c2afde"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "strip-indent@1.0.1@d41d8cd9", "indent-string@2.1.0@d41d8cd9"
       ],
       "devDependencies": []
     },
@@ -212,6 +926,202 @@
       ],
       "devDependencies": []
     },
+    "readable-stream@3.4.0@d41d8cd9": {
+      "id": "readable-stream@3.4.0@d41d8cd9",
+      "name": "readable-stream",
+      "version": "3.4.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/readable-stream/-/readable-stream-3.4.0.tgz#sha1:a51c26754658e0a3c21dbf59163bd45ba6f447fc"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "util-deprecate@1.0.2@d41d8cd9", "string_decoder@1.3.0@d41d8cd9",
+        "inherits@2.0.4@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "readable-stream@2.3.6@d41d8cd9": {
+      "id": "readable-stream@2.3.6@d41d8cd9",
+      "name": "readable-stream",
+      "version": "2.3.6",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz#sha1:b11c27d88b8ff1fbe070643cf94b0c79ae1b0aaf"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "util-deprecate@1.0.2@d41d8cd9", "string_decoder@1.1.1@d41d8cd9",
+        "safe-buffer@5.1.2@d41d8cd9", "process-nextick-args@2.0.1@d41d8cd9",
+        "isarray@1.0.0@d41d8cd9", "inherits@2.0.4@d41d8cd9",
+        "core-util-is@1.0.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "read-pkg-up@3.0.0@d41d8cd9": {
+      "id": "read-pkg-up@3.0.0@d41d8cd9",
+      "name": "read-pkg-up",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/read-pkg-up/-/read-pkg-up-3.0.0.tgz#sha1:3ed496685dba0f8fe118d0691dc51f4a1ff96f07"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "read-pkg@3.0.0@d41d8cd9", "find-up@2.1.0@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "read-pkg-up@1.0.1@d41d8cd9": {
+      "id": "read-pkg-up@1.0.1@d41d8cd9",
+      "name": "read-pkg-up",
+      "version": "1.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/read-pkg-up/-/read-pkg-up-1.0.1.tgz#sha1:9d63c13276c065918d57f002a57f40a1b643fb02"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "read-pkg@1.1.0@d41d8cd9", "find-up@1.1.2@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "read-pkg@3.0.0@d41d8cd9": {
+      "id": "read-pkg@3.0.0@d41d8cd9",
+      "name": "read-pkg",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/read-pkg/-/read-pkg-3.0.0.tgz#sha1:9cbc686978fee65d16c00e2b19c237fcf6e38389"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "path-type@3.0.0@d41d8cd9", "normalize-package-data@2.5.0@d41d8cd9",
+        "load-json-file@4.0.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "read-pkg@1.1.0@d41d8cd9": {
+      "id": "read-pkg@1.1.0@d41d8cd9",
+      "name": "read-pkg",
+      "version": "1.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/read-pkg/-/read-pkg-1.1.0.tgz#sha1:f5ffaa5ecd29cb31c0474bca7d756b6bb29e3f28"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "path-type@1.1.0@d41d8cd9", "normalize-package-data@2.5.0@d41d8cd9",
+        "load-json-file@1.1.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "quick-lru@1.1.0@d41d8cd9": {
+      "id": "quick-lru@1.1.0@d41d8cd9",
+      "name": "quick-lru",
+      "version": "1.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/quick-lru/-/quick-lru-1.1.0.tgz#sha1:4360b17c61136ad38078397ff11416e186dcfbb8"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "q@1.5.1@d41d8cd9": {
+      "id": "q@1.5.1@d41d8cd9",
+      "name": "q",
+      "version": "1.5.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/q/-/q-1.5.1.tgz#sha1:7e32f75b41381291d04611f1bf14109ac00651d7"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "process-nextick-args@2.0.1@d41d8cd9": {
+      "id": "process-nextick-args@2.0.1@d41d8cd9",
+      "name": "process-nextick-args",
+      "version": "2.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/process-nextick-args/-/process-nextick-args-2.0.1.tgz#sha1:7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "pinkie-promise@2.0.1@d41d8cd9": {
+      "id": "pinkie-promise@2.0.1@d41d8cd9",
+      "name": "pinkie-promise",
+      "version": "2.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/pinkie-promise/-/pinkie-promise-2.0.1.tgz#sha1:2135d6dfa7a358c069ac9b178776288228450ffa"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "pinkie@2.0.4@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "pinkie@2.0.4@d41d8cd9": {
+      "id": "pinkie@2.0.4@d41d8cd9",
+      "name": "pinkie",
+      "version": "2.0.4",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/pinkie/-/pinkie-2.0.4.tgz#sha1:72556b80cfa0d48a974e80e77248e80ed4f7f870"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "pify@3.0.0@d41d8cd9": {
+      "id": "pify@3.0.0@d41d8cd9",
+      "name": "pify",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/pify/-/pify-3.0.0.tgz#sha1:e5a4acd2c101fdf3d9a4d07f0dbc4db49dd28176"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "pify@2.3.0@d41d8cd9": {
+      "id": "pify@2.3.0@d41d8cd9",
+      "name": "pify",
+      "version": "2.3.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/pify/-/pify-2.3.0.tgz#sha1:ed141a6ac043a849ea588498e7dca8b15330e90c"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
     "pesy@0.4.1@d41d8cd9": {
       "id": "pesy@0.4.1@d41d8cd9",
       "name": "pesy",
@@ -226,6 +1136,251 @@
       "dependencies": [],
       "devDependencies": []
     },
+    "path-type@3.0.0@d41d8cd9": {
+      "id": "path-type@3.0.0@d41d8cd9",
+      "name": "path-type",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/path-type/-/path-type-3.0.0.tgz#sha1:cef31dc8e0a1a3bb0d105c0cd97cf3bf47f4e36f"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "pify@3.0.0@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "path-type@1.1.0@d41d8cd9": {
+      "id": "path-type@1.1.0@d41d8cd9",
+      "name": "path-type",
+      "version": "1.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/path-type/-/path-type-1.1.0.tgz#sha1:59c44f7ee491da704da415da5a4070ba4f8fe441"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "pinkie-promise@2.0.1@d41d8cd9", "pify@2.3.0@d41d8cd9",
+        "graceful-fs@4.2.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "path-parse@1.0.6@d41d8cd9": {
+      "id": "path-parse@1.0.6@d41d8cd9",
+      "name": "path-parse",
+      "version": "1.0.6",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/path-parse/-/path-parse-1.0.6.tgz#sha1:d62dbb5679405d72c4737ec58600e9ddcf06d24c"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "path-exists@4.0.0@d41d8cd9": {
+      "id": "path-exists@4.0.0@d41d8cd9",
+      "name": "path-exists",
+      "version": "4.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/path-exists/-/path-exists-4.0.0.tgz#sha1:513bdbe2d3b95d7762e8c1137efa195c6c61b5b3"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "path-exists@3.0.0@d41d8cd9": {
+      "id": "path-exists@3.0.0@d41d8cd9",
+      "name": "path-exists",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/path-exists/-/path-exists-3.0.0.tgz#sha1:ce0ebeaa5f78cb18925ea7d810d7b59b010fd515"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "path-exists@2.1.0@d41d8cd9": {
+      "id": "path-exists@2.1.0@d41d8cd9",
+      "name": "path-exists",
+      "version": "2.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/path-exists/-/path-exists-2.1.0.tgz#sha1:0feb6c64f0fc518d9a754dd5efb62c7022761f4b"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "pinkie-promise@2.0.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "parse-json@4.0.0@d41d8cd9": {
+      "id": "parse-json@4.0.0@d41d8cd9",
+      "name": "parse-json",
+      "version": "4.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/parse-json/-/parse-json-4.0.0.tgz#sha1:be35f5425be1f7f6c747184f98a788cb99477ee0"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "json-parse-better-errors@1.0.2@d41d8cd9", "error-ex@1.3.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "parse-json@2.2.0@d41d8cd9": {
+      "id": "parse-json@2.2.0@d41d8cd9",
+      "name": "parse-json",
+      "version": "2.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/parse-json/-/parse-json-2.2.0.tgz#sha1:f480f40434ef80741f8469099f8dea18f55a4dc9"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "error-ex@1.3.2@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "parse-github-repo-url@1.4.1@d41d8cd9": {
+      "id": "parse-github-repo-url@1.4.1@d41d8cd9",
+      "name": "parse-github-repo-url",
+      "version": "1.4.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/parse-github-repo-url/-/parse-github-repo-url-1.4.1.tgz#sha1:9e7d8bb252a6cb6ba42595060b7bf6df3dbc1f50"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "p-try@2.2.0@d41d8cd9": {
+      "id": "p-try@2.2.0@d41d8cd9",
+      "name": "p-try",
+      "version": "2.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/p-try/-/p-try-2.2.0.tgz#sha1:cb2868540e313d61de58fafbe35ce9004d5540e6"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "p-try@1.0.0@d41d8cd9": {
+      "id": "p-try@1.0.0@d41d8cd9",
+      "name": "p-try",
+      "version": "1.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/p-try/-/p-try-1.0.0.tgz#sha1:cbc79cdbaf8fd4228e13f621f2b1a237c1b207b3"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "p-locate@4.1.0@d41d8cd9": {
+      "id": "p-locate@4.1.0@d41d8cd9",
+      "name": "p-locate",
+      "version": "4.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/p-locate/-/p-locate-4.1.0.tgz#sha1:a3428bb7088b3a60292f66919278b7c297ad4f07"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "p-limit@2.2.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "p-locate@3.0.0@d41d8cd9": {
+      "id": "p-locate@3.0.0@d41d8cd9",
+      "name": "p-locate",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/p-locate/-/p-locate-3.0.0.tgz#sha1:322d69a05c0264b25997d9f40cd8a891ab0064a4"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "p-limit@2.2.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "p-locate@2.0.0@d41d8cd9": {
+      "id": "p-locate@2.0.0@d41d8cd9",
+      "name": "p-locate",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/p-locate/-/p-locate-2.0.0.tgz#sha1:20a0103b222a70c8fd39cc2e580680f3dde5ec43"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "p-limit@1.3.0@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "p-limit@2.2.1@d41d8cd9": {
+      "id": "p-limit@2.2.1@d41d8cd9",
+      "name": "p-limit",
+      "version": "2.2.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/p-limit/-/p-limit-2.2.1.tgz#sha1:aa07a788cc3151c939b5131f63570f0dd2009537"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "p-try@2.2.0@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "p-limit@1.3.0@d41d8cd9": {
+      "id": "p-limit@1.3.0@d41d8cd9",
+      "name": "p-limit",
+      "version": "1.3.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/p-limit/-/p-limit-1.3.0.tgz#sha1:b86bd5f0c25690911c7590fcbfc2010d54b3ccb8"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "p-try@1.0.0@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "optimist@0.6.1@d41d8cd9": {
+      "id": "optimist@0.6.1@d41d8cd9",
+      "name": "optimist",
+      "version": "0.6.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/optimist/-/optimist-0.6.1.tgz#sha1:da3ea74686fa21a19a111c326e90eb15a0196686"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "wordwrap@0.0.3@d41d8cd9", "minimist@0.0.10@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
     "ocaml@4.8.1000@d41d8cd9": {
       "id": "ocaml@4.8.1000@d41d8cd9",
       "name": "ocaml",
@@ -238,6 +1393,796 @@
       },
       "overrides": [],
       "dependencies": [],
+      "devDependencies": []
+    },
+    "object-assign@4.1.1@d41d8cd9": {
+      "id": "object-assign@4.1.1@d41d8cd9",
+      "name": "object-assign",
+      "version": "4.1.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz#sha1:2109adc7965887cfc05cbbd442cac8bfbb360863"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "number-is-nan@1.0.1@d41d8cd9": {
+      "id": "number-is-nan@1.0.1@d41d8cd9",
+      "name": "number-is-nan",
+      "version": "1.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/number-is-nan/-/number-is-nan-1.0.1.tgz#sha1:097b602b53422a522c1afb8790318336941a011d"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "null-check@1.0.0@d41d8cd9": {
+      "id": "null-check@1.0.0@d41d8cd9",
+      "name": "null-check",
+      "version": "1.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/null-check/-/null-check-1.0.0.tgz#sha1:977dffd7176012b9ec30d2a39db5cf72a0439edd"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "normalize-package-data@2.5.0@d41d8cd9": {
+      "id": "normalize-package-data@2.5.0@d41d8cd9",
+      "name": "normalize-package-data",
+      "version": "2.5.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/normalize-package-data/-/normalize-package-data-2.5.0.tgz#sha1:e66db1838b200c1dfc233225d12cb36520e234a8"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "validate-npm-package-license@3.0.4@d41d8cd9",
+        "semver@5.7.1@d41d8cd9", "resolve@1.12.0@d41d8cd9",
+        "hosted-git-info@2.8.5@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "neo-async@2.6.1@d41d8cd9": {
+      "id": "neo-async@2.6.1@d41d8cd9",
+      "name": "neo-async",
+      "version": "2.6.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/neo-async/-/neo-async-2.6.1.tgz#sha1:ac27ada66167fa8849a6addd837f6b189ad2081c"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "modify-values@1.0.1@d41d8cd9": {
+      "id": "modify-values@1.0.1@d41d8cd9",
+      "name": "modify-values",
+      "version": "1.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/modify-values/-/modify-values-1.0.1.tgz#sha1:b3939fa605546474e3e3e3c63d64bd43b4ee6022"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "minimist-options@3.0.2@d41d8cd9": {
+      "id": "minimist-options@3.0.2@d41d8cd9",
+      "name": "minimist-options",
+      "version": "3.0.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/minimist-options/-/minimist-options-3.0.2.tgz#sha1:fba4c8191339e13ecf4d61beb03f070103f3d954"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "is-plain-obj@1.1.0@d41d8cd9", "arrify@1.0.1@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "minimist@1.2.0@d41d8cd9": {
+      "id": "minimist@1.2.0@d41d8cd9",
+      "name": "minimist",
+      "version": "1.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz#sha1:a35008b20f41383eec1fb914f4cd5df79a264284"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "minimist@0.0.10@d41d8cd9": {
+      "id": "minimist@0.0.10@d41d8cd9",
+      "name": "minimist",
+      "version": "0.0.10",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/minimist/-/minimist-0.0.10.tgz#sha1:de3f98543dbf96082be48ad1a0c7cda836301dcf"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "minimatch@3.0.4@d41d8cd9": {
+      "id": "minimatch@3.0.4@d41d8cd9",
+      "name": "minimatch",
+      "version": "3.0.4",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/minimatch/-/minimatch-3.0.4.tgz#sha1:5166e286457f03306064be5497e8dbb0c3d32083"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "brace-expansion@1.1.11@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "meow@4.0.1@d41d8cd9": {
+      "id": "meow@4.0.1@d41d8cd9",
+      "name": "meow",
+      "version": "4.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/meow/-/meow-4.0.1.tgz#sha1:d48598f6f4b1472f35bf6317a95945ace347f975"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "trim-newlines@2.0.0@d41d8cd9", "redent@2.0.0@d41d8cd9",
+        "read-pkg-up@3.0.0@d41d8cd9",
+        "normalize-package-data@2.5.0@d41d8cd9",
+        "minimist-options@3.0.2@d41d8cd9", "minimist@1.2.0@d41d8cd9",
+        "loud-rejection@1.6.0@d41d8cd9", "decamelize-keys@1.1.0@d41d8cd9",
+        "camelcase-keys@4.2.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "meow@3.7.0@d41d8cd9": {
+      "id": "meow@3.7.0@d41d8cd9",
+      "name": "meow",
+      "version": "3.7.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/meow/-/meow-3.7.0.tgz#sha1:72cb668b425228290abbfa856892587308a801fb"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "trim-newlines@1.0.0@d41d8cd9", "redent@1.0.0@d41d8cd9",
+        "read-pkg-up@1.0.1@d41d8cd9", "object-assign@4.1.1@d41d8cd9",
+        "normalize-package-data@2.5.0@d41d8cd9", "minimist@1.2.0@d41d8cd9",
+        "map-obj@1.0.1@d41d8cd9", "loud-rejection@1.6.0@d41d8cd9",
+        "decamelize@1.2.0@d41d8cd9", "camelcase-keys@2.1.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "map-obj@2.0.0@d41d8cd9": {
+      "id": "map-obj@2.0.0@d41d8cd9",
+      "name": "map-obj",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/map-obj/-/map-obj-2.0.0.tgz#sha1:a65cd29087a92598b8791257a523e021222ac1f9"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "map-obj@1.0.1@d41d8cd9": {
+      "id": "map-obj@1.0.1@d41d8cd9",
+      "name": "map-obj",
+      "version": "1.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/map-obj/-/map-obj-1.0.1.tgz#sha1:d933ceb9205d82bdcf4886f6742bdc2b4dea146d"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "loud-rejection@1.6.0@d41d8cd9": {
+      "id": "loud-rejection@1.6.0@d41d8cd9",
+      "name": "loud-rejection",
+      "version": "1.6.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/loud-rejection/-/loud-rejection-1.6.0.tgz#sha1:5b46f80147edee578870f086d04821cf998e551f"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "signal-exit@3.0.2@d41d8cd9", "currently-unhandled@0.4.1@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "lodash.templatesettings@4.2.0@d41d8cd9": {
+      "id": "lodash.templatesettings@4.2.0@d41d8cd9",
+      "name": "lodash.templatesettings",
+      "version": "4.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/lodash.templatesettings/-/lodash.templatesettings-4.2.0.tgz#sha1:e481310f049d3cf6d47e912ad09313b154f0fb33"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "lodash._reinterpolate@3.0.0@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "lodash.template@4.5.0@d41d8cd9": {
+      "id": "lodash.template@4.5.0@d41d8cd9",
+      "name": "lodash.template",
+      "version": "4.5.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/lodash.template/-/lodash.template-4.5.0.tgz#sha1:f976195cf3f347d0d5f52483569fe8031ccce8ab"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "lodash.templatesettings@4.2.0@d41d8cd9",
+        "lodash._reinterpolate@3.0.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "lodash.ismatch@4.4.0@d41d8cd9": {
+      "id": "lodash.ismatch@4.4.0@d41d8cd9",
+      "name": "lodash.ismatch",
+      "version": "4.4.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/lodash.ismatch/-/lodash.ismatch-4.4.0.tgz#sha1:756cb5150ca3ba6f11085a78849645f188f85f37"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "lodash._reinterpolate@3.0.0@d41d8cd9": {
+      "id": "lodash._reinterpolate@3.0.0@d41d8cd9",
+      "name": "lodash._reinterpolate",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/lodash._reinterpolate/-/lodash._reinterpolate-3.0.0.tgz#sha1:0ccf2d89166af03b3663c796538b75ac6e114d9d"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "lodash@4.17.15@d41d8cd9": {
+      "id": "lodash@4.17.15@d41d8cd9",
+      "name": "lodash",
+      "version": "4.17.15",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/lodash/-/lodash-4.17.15.tgz#sha1:b447f6670a0455bbfeedd11392eff330ea097548"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "locate-path@5.0.0@d41d8cd9": {
+      "id": "locate-path@5.0.0@d41d8cd9",
+      "name": "locate-path",
+      "version": "5.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/locate-path/-/locate-path-5.0.0.tgz#sha1:1afba396afd676a6d42504d0a67a3a7eb9f62aa0"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "p-locate@4.1.0@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "locate-path@3.0.0@d41d8cd9": {
+      "id": "locate-path@3.0.0@d41d8cd9",
+      "name": "locate-path",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/locate-path/-/locate-path-3.0.0.tgz#sha1:dbec3b3ab759758071b58fe59fc41871af21400e"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "path-exists@3.0.0@d41d8cd9", "p-locate@3.0.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "locate-path@2.0.0@d41d8cd9": {
+      "id": "locate-path@2.0.0@d41d8cd9",
+      "name": "locate-path",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/locate-path/-/locate-path-2.0.0.tgz#sha1:2b568b265eec944c6d9c0de9c3dbbbca0354cd8e"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "path-exists@3.0.0@d41d8cd9", "p-locate@2.0.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "load-json-file@4.0.0@d41d8cd9": {
+      "id": "load-json-file@4.0.0@d41d8cd9",
+      "name": "load-json-file",
+      "version": "4.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/load-json-file/-/load-json-file-4.0.0.tgz#sha1:2f5f45ab91e33216234fd53adab668eb4ec0993b"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "strip-bom@3.0.0@d41d8cd9", "pify@3.0.0@d41d8cd9",
+        "parse-json@4.0.0@d41d8cd9", "graceful-fs@4.2.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "load-json-file@1.1.0@d41d8cd9": {
+      "id": "load-json-file@1.1.0@d41d8cd9",
+      "name": "load-json-file",
+      "version": "1.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/load-json-file/-/load-json-file-1.1.0.tgz#sha1:956905708d58b4bab4c2261b04f59f31c99374c0"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "strip-bom@2.0.0@d41d8cd9", "pinkie-promise@2.0.1@d41d8cd9",
+        "pify@2.3.0@d41d8cd9", "parse-json@2.2.0@d41d8cd9",
+        "graceful-fs@4.2.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "jsonparse@1.3.1@d41d8cd9": {
+      "id": "jsonparse@1.3.1@d41d8cd9",
+      "name": "jsonparse",
+      "version": "1.3.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/jsonparse/-/jsonparse-1.3.1.tgz#sha1:3f4dae4a91fac315f71062f8521cc239f1366280"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "json-stringify-safe@5.0.1@d41d8cd9": {
+      "id": "json-stringify-safe@5.0.1@d41d8cd9",
+      "name": "json-stringify-safe",
+      "version": "5.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#sha1:1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "json-parse-better-errors@1.0.2@d41d8cd9": {
+      "id": "json-parse-better-errors@1.0.2@d41d8cd9",
+      "name": "json-parse-better-errors",
+      "version": "1.0.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#sha1:bb867cfb3450e69107c131d1c514bab3dc8bcaa9"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "isarray@1.0.0@d41d8cd9": {
+      "id": "isarray@1.0.0@d41d8cd9",
+      "name": "isarray",
+      "version": "1.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz#sha1:bb935d48582cba168c06834957a54a3e07124f11"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "is-utf8@0.2.1@d41d8cd9": {
+      "id": "is-utf8@0.2.1@d41d8cd9",
+      "name": "is-utf8",
+      "version": "0.2.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/is-utf8/-/is-utf8-0.2.1.tgz#sha1:4b0da1442104d1b336340e80797e865cf39f7d72"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "is-text-path@2.0.0@d41d8cd9": {
+      "id": "is-text-path@2.0.0@d41d8cd9",
+      "name": "is-text-path",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/is-text-path/-/is-text-path-2.0.0.tgz#sha1:b2484e2b720a633feb2e85b67dc193ff72c75636"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "text-extensions@2.0.0@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "is-plain-obj@1.1.0@d41d8cd9": {
+      "id": "is-plain-obj@1.1.0@d41d8cd9",
+      "name": "is-plain-obj",
+      "version": "1.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/is-plain-obj/-/is-plain-obj-1.1.0.tgz#sha1:71a50c8429dfca773c92a390a4a03b39fcd51d3e"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "is-obj@1.0.1@d41d8cd9": {
+      "id": "is-obj@1.0.1@d41d8cd9",
+      "name": "is-obj",
+      "version": "1.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/is-obj/-/is-obj-1.0.1.tgz#sha1:3e4729ac1f5fde025cd7d83a896dab9f4f67db0f"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "is-fullwidth-code-point@2.0.0@d41d8cd9": {
+      "id": "is-fullwidth-code-point@2.0.0@d41d8cd9",
+      "name": "is-fullwidth-code-point",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/is-fullwidth-code-point/-/is-fullwidth-code-point-2.0.0.tgz#sha1:a3b30a5c4f199183167aaab93beefae3ddfb654f"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "is-finite@1.0.2@d41d8cd9": {
+      "id": "is-finite@1.0.2@d41d8cd9",
+      "name": "is-finite",
+      "version": "1.0.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/is-finite/-/is-finite-1.0.2.tgz#sha1:cc6677695602be550ef11e8b4aa6305342b6d0aa"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "number-is-nan@1.0.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "is-arrayish@0.2.1@d41d8cd9": {
+      "id": "is-arrayish@0.2.1@d41d8cd9",
+      "name": "is-arrayish",
+      "version": "0.2.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/is-arrayish/-/is-arrayish-0.2.1.tgz#sha1:77c99840527aa8ecb1a8ba697b80645a7a926a9d"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "ini@1.3.5@d41d8cd9": {
+      "id": "ini@1.3.5@d41d8cd9",
+      "name": "ini",
+      "version": "1.3.5",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/ini/-/ini-1.3.5.tgz#sha1:eee25f56db1c9ec6085e0c22778083f596abf927"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "inherits@2.0.4@d41d8cd9": {
+      "id": "inherits@2.0.4@d41d8cd9",
+      "name": "inherits",
+      "version": "2.0.4",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/inherits/-/inherits-2.0.4.tgz#sha1:0fa2c64f932917c3433a0ded55363aae37416b7c"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "indent-string@3.2.0@d41d8cd9": {
+      "id": "indent-string@3.2.0@d41d8cd9",
+      "name": "indent-string",
+      "version": "3.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/indent-string/-/indent-string-3.2.0.tgz#sha1:4a5fd6d27cc332f37e5419a504dbb837105c9289"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "indent-string@2.1.0@d41d8cd9": {
+      "id": "indent-string@2.1.0@d41d8cd9",
+      "name": "indent-string",
+      "version": "2.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/indent-string/-/indent-string-2.1.0.tgz#sha1:8e2d48348742121b4a8218b7a137e9a52049dc80"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "repeating@2.0.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "hosted-git-info@2.8.5@d41d8cd9": {
+      "id": "hosted-git-info@2.8.5@d41d8cd9",
+      "name": "hosted-git-info",
+      "version": "2.8.5",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/hosted-git-info/-/hosted-git-info-2.8.5.tgz#sha1:759cfcf2c4d156ade59b0b2dfabddc42a6b9c70c"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "has-flag@3.0.0@d41d8cd9": {
+      "id": "has-flag@3.0.0@d41d8cd9",
+      "name": "has-flag",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/has-flag/-/has-flag-3.0.0.tgz#sha1:b5d454dc2199ae225699f3467e5a07f3b955bafd"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "handlebars@4.4.5@d41d8cd9": {
+      "id": "handlebars@4.4.5@d41d8cd9",
+      "name": "handlebars",
+      "version": "4.4.5",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/handlebars/-/handlebars-4.4.5.tgz#sha1:1b1f94f9bfe7379adda86a8b73fb570265a0dddd"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "uglify-js@3.6.3@d41d8cd9", "source-map@0.6.1@d41d8cd9",
+        "optimist@0.6.1@d41d8cd9", "neo-async@2.6.1@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "graceful-fs@4.2.2@d41d8cd9": {
+      "id": "graceful-fs@4.2.2@d41d8cd9",
+      "name": "graceful-fs",
+      "version": "4.2.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.2.tgz#sha1:6f0952605d0140c1cfdb138ed005775b92d67b02"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "gitconfiglocal@1.0.0@d41d8cd9": {
+      "id": "gitconfiglocal@1.0.0@d41d8cd9",
+      "name": "gitconfiglocal",
+      "version": "1.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/gitconfiglocal/-/gitconfiglocal-1.0.0.tgz#sha1:41d045f3851a5ea88f03f24ca1c6178114464b9b"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "ini@1.3.5@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "git-semver-tags@3.0.0@d41d8cd9": {
+      "id": "git-semver-tags@3.0.0@d41d8cd9",
+      "name": "git-semver-tags",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/git-semver-tags/-/git-semver-tags-3.0.0.tgz#sha1:fe10147824657662c82efd9341f0fa59f74ddcba"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "semver@6.3.0@d41d8cd9", "meow@4.0.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "git-semver-tags@2.0.3@d41d8cd9": {
+      "id": "git-semver-tags@2.0.3@d41d8cd9",
+      "name": "git-semver-tags",
+      "version": "2.0.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/git-semver-tags/-/git-semver-tags-2.0.3.tgz#sha1:48988a718acf593800f99622a952a77c405bfa34"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "semver@6.3.0@d41d8cd9", "meow@4.0.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "git-remote-origin-url@2.0.0@d41d8cd9": {
+      "id": "git-remote-origin-url@2.0.0@d41d8cd9",
+      "name": "git-remote-origin-url",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/git-remote-origin-url/-/git-remote-origin-url-2.0.0.tgz#sha1:5282659dae2107145a11126112ad3216ec5fa65f"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "pify@2.3.0@d41d8cd9", "gitconfiglocal@1.0.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "git-raw-commits@2.0.0@d41d8cd9": {
+      "id": "git-raw-commits@2.0.0@d41d8cd9",
+      "name": "git-raw-commits",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/git-raw-commits/-/git-raw-commits-2.0.0.tgz#sha1:d92addf74440c14bcc5c83ecce3fb7f8a79118b5"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "through2@2.0.5@d41d8cd9", "split2@2.2.0@d41d8cd9",
+        "meow@4.0.1@d41d8cd9", "lodash.template@4.5.0@d41d8cd9",
+        "dargs@4.1.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "get-stdin@4.0.1@d41d8cd9": {
+      "id": "get-stdin@4.0.1@d41d8cd9",
+      "name": "get-stdin",
+      "version": "4.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/get-stdin/-/get-stdin-4.0.1.tgz#sha1:b968c6b0a04384324902e8bf1a5df32579a450fe"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "get-pkg-repo@1.4.0@d41d8cd9": {
+      "id": "get-pkg-repo@1.4.0@d41d8cd9",
+      "name": "get-pkg-repo",
+      "version": "1.4.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/get-pkg-repo/-/get-pkg-repo-1.4.0.tgz#sha1:c73b489c06d80cc5536c2c853f9e05232056972d"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "through2@2.0.5@d41d8cd9", "parse-github-repo-url@1.4.1@d41d8cd9",
+        "normalize-package-data@2.5.0@d41d8cd9", "meow@3.7.0@d41d8cd9",
+        "hosted-git-info@2.8.5@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "get-caller-file@2.0.5@d41d8cd9": {
+      "id": "get-caller-file@2.0.5@d41d8cd9",
+      "name": "get-caller-file",
+      "version": "2.0.5",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/get-caller-file/-/get-caller-file-2.0.5.tgz#sha1:4f94412a82db32f36e3b0b9741f8a97feb031f7e"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "fs-access@1.0.1@d41d8cd9": {
+      "id": "fs-access@1.0.1@d41d8cd9",
+      "name": "fs-access",
+      "version": "1.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/fs-access/-/fs-access-1.0.1.tgz#sha1:d6a87f262271cefebec30c553407fb995da8777a"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "null-check@1.0.0@d41d8cd9" ],
       "devDependencies": []
     },
     "flex@1.2.2@d41d8cd9": {
@@ -255,6 +2200,80 @@
         "refmterr@3.2.2@d41d8cd9", "@opam/dune@opam:1.11.4@21d66ccd",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
+      "devDependencies": []
+    },
+    "find-up@4.1.0@d41d8cd9": {
+      "id": "find-up@4.1.0@d41d8cd9",
+      "name": "find-up",
+      "version": "4.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/find-up/-/find-up-4.1.0.tgz#sha1:97afe7d6cdc0bc5928584b7c8d7b16e8a9aa5d19"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "path-exists@4.0.0@d41d8cd9", "locate-path@5.0.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "find-up@3.0.0@d41d8cd9": {
+      "id": "find-up@3.0.0@d41d8cd9",
+      "name": "find-up",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/find-up/-/find-up-3.0.0.tgz#sha1:49169f1d7993430646da61ecc5ae355c21c97b73"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "locate-path@3.0.0@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "find-up@2.1.0@d41d8cd9": {
+      "id": "find-up@2.1.0@d41d8cd9",
+      "name": "find-up",
+      "version": "2.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/find-up/-/find-up-2.1.0.tgz#sha1:45d1b7e506c717ddd482775a2b77920a3c0c57a7"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "locate-path@2.0.0@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "find-up@1.1.2@d41d8cd9": {
+      "id": "find-up@1.1.2@d41d8cd9",
+      "name": "find-up",
+      "version": "1.1.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/find-up/-/find-up-1.1.2.tgz#sha1:6b2e9822b1a2ce0a60ab64d610eccad53cb24d0f"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "pinkie-promise@2.0.1@d41d8cd9", "path-exists@2.1.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "figures@3.0.0@d41d8cd9": {
+      "id": "figures@3.0.0@d41d8cd9",
+      "name": "figures",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/figures/-/figures-3.0.0.tgz#sha1:756275c964646163cc6f9197c7a0295dbfd04de9"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "escape-string-regexp@1.0.5@d41d8cd9" ],
       "devDependencies": []
     },
     "esy-sdl2@2.0.10004@d41d8cd9": {
@@ -313,6 +2332,688 @@
       "dependencies": [],
       "devDependencies": []
     },
+    "escape-string-regexp@1.0.5@d41d8cd9": {
+      "id": "escape-string-regexp@1.0.5@d41d8cd9",
+      "name": "escape-string-regexp",
+      "version": "1.0.5",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#sha1:1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "error-ex@1.3.2@d41d8cd9": {
+      "id": "error-ex@1.3.2@d41d8cd9",
+      "name": "error-ex",
+      "version": "1.3.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/error-ex/-/error-ex-1.3.2.tgz#sha1:b4ac40648107fdcdcfae242f428bea8a14d4f1bf"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "is-arrayish@0.2.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "emoji-regex@7.0.3@d41d8cd9": {
+      "id": "emoji-regex@7.0.3@d41d8cd9",
+      "name": "emoji-regex",
+      "version": "7.0.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/emoji-regex/-/emoji-regex-7.0.3.tgz#sha1:933a04052860c85e83c122479c4748a8e4c72156"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "dotgitignore@2.1.0@d41d8cd9": {
+      "id": "dotgitignore@2.1.0@d41d8cd9",
+      "name": "dotgitignore",
+      "version": "2.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/dotgitignore/-/dotgitignore-2.1.0.tgz#sha1:a4b15a4e4ef3cf383598aaf1dfa4a04bcc089b7b"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "minimatch@3.0.4@d41d8cd9", "find-up@3.0.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "dot-prop@3.0.0@d41d8cd9": {
+      "id": "dot-prop@3.0.0@d41d8cd9",
+      "name": "dot-prop",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/dot-prop/-/dot-prop-3.0.0.tgz#sha1:1b708af094a49c9a0e7dbcad790aba539dac1177"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "is-obj@1.0.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "detect-newline@3.0.0@d41d8cd9": {
+      "id": "detect-newline@3.0.0@d41d8cd9",
+      "name": "detect-newline",
+      "version": "3.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/detect-newline/-/detect-newline-3.0.0.tgz#sha1:8ae477c089e51872c264531cd6547719c0b86b2f"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "detect-indent@6.0.0@d41d8cd9": {
+      "id": "detect-indent@6.0.0@d41d8cd9",
+      "name": "detect-indent",
+      "version": "6.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/detect-indent/-/detect-indent-6.0.0.tgz#sha1:0abd0f549f69fc6659a254fe96786186b6f528fd"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "decamelize-keys@1.1.0@d41d8cd9": {
+      "id": "decamelize-keys@1.1.0@d41d8cd9",
+      "name": "decamelize-keys",
+      "version": "1.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/decamelize-keys/-/decamelize-keys-1.1.0.tgz#sha1:d171a87933252807eb3cb61dc1c1445d078df2d9"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "map-obj@1.0.1@d41d8cd9", "decamelize@1.2.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "decamelize@1.2.0@d41d8cd9": {
+      "id": "decamelize@1.2.0@d41d8cd9",
+      "name": "decamelize",
+      "version": "1.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/decamelize/-/decamelize-1.2.0.tgz#sha1:f6534d15148269b20352e7bee26f501f9a191290"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "dateformat@3.0.3@d41d8cd9": {
+      "id": "dateformat@3.0.3@d41d8cd9",
+      "name": "dateformat",
+      "version": "3.0.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/dateformat/-/dateformat-3.0.3.tgz#sha1:a6e37499a4d9a9cf85ef5872044d62901c9889ae"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "dargs@4.1.0@d41d8cd9": {
+      "id": "dargs@4.1.0@d41d8cd9",
+      "name": "dargs",
+      "version": "4.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/dargs/-/dargs-4.1.0.tgz#sha1:03a9dbb4b5c2f139bf14ae53f0b8a2a6a86f4e17"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "number-is-nan@1.0.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "currently-unhandled@0.4.1@d41d8cd9": {
+      "id": "currently-unhandled@0.4.1@d41d8cd9",
+      "name": "currently-unhandled",
+      "version": "0.4.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/currently-unhandled/-/currently-unhandled-0.4.1.tgz#sha1:988df33feab191ef799a61369dd76c17adf957ea"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "array-find-index@1.0.2@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "core-util-is@1.0.2@d41d8cd9": {
+      "id": "core-util-is@1.0.2@d41d8cd9",
+      "name": "core-util-is",
+      "version": "1.0.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.2.tgz#sha1:b5fd54220aa2bc5ab57aab7140c940754503c1a7"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "conventional-recommended-bump@6.0.0@d41d8cd9": {
+      "id": "conventional-recommended-bump@6.0.0@d41d8cd9",
+      "name": "conventional-recommended-bump",
+      "version": "6.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-recommended-bump/-/conventional-recommended-bump-6.0.0.tgz#sha1:bdafad56bc32bc04d58dbbd8bd6b750375500edc"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "q@1.5.1@d41d8cd9", "meow@4.0.1@d41d8cd9",
+        "git-semver-tags@3.0.0@d41d8cd9", "git-raw-commits@2.0.0@d41d8cd9",
+        "conventional-commits-parser@3.0.5@d41d8cd9",
+        "conventional-commits-filter@2.0.2@d41d8cd9",
+        "conventional-changelog-preset-loader@2.2.0@d41d8cd9",
+        "concat-stream@2.0.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "conventional-commits-parser@3.0.5@d41d8cd9": {
+      "id": "conventional-commits-parser@3.0.5@d41d8cd9",
+      "name": "conventional-commits-parser",
+      "version": "3.0.5",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-commits-parser/-/conventional-commits-parser-3.0.5.tgz#sha1:df471d6cb3f6fecfd1356ac72e0b577dbdae0a9c"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "trim-off-newlines@1.0.1@d41d8cd9", "through2@3.0.1@d41d8cd9",
+        "split2@2.2.0@d41d8cd9", "meow@4.0.1@d41d8cd9",
+        "lodash@4.17.15@d41d8cd9", "is-text-path@2.0.0@d41d8cd9",
+        "JSONStream@1.3.5@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "conventional-commits-filter@2.0.2@d41d8cd9": {
+      "id": "conventional-commits-filter@2.0.2@d41d8cd9",
+      "name": "conventional-commits-filter",
+      "version": "2.0.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-commits-filter/-/conventional-commits-filter-2.0.2.tgz#sha1:f122f89fbcd5bb81e2af2fcac0254d062d1039c1"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "modify-values@1.0.1@d41d8cd9", "lodash.ismatch@4.4.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "conventional-changelog-writer@4.0.9@d41d8cd9": {
+      "id": "conventional-changelog-writer@4.0.9@d41d8cd9",
+      "name": "conventional-changelog-writer",
+      "version": "4.0.9",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-changelog-writer/-/conventional-changelog-writer-4.0.9.tgz#sha1:44ac4c48121bc90e71cb2947e1ea1a6c222ccd7f"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "through2@3.0.1@d41d8cd9", "split@1.0.1@d41d8cd9",
+        "semver@6.3.0@d41d8cd9", "meow@4.0.1@d41d8cd9",
+        "lodash@4.17.15@d41d8cd9", "json-stringify-safe@5.0.1@d41d8cd9",
+        "handlebars@4.4.5@d41d8cd9", "dateformat@3.0.3@d41d8cd9",
+        "conventional-commits-filter@2.0.2@d41d8cd9",
+        "compare-func@1.3.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "conventional-changelog-preset-loader@2.2.0@d41d8cd9": {
+      "id": "conventional-changelog-preset-loader@2.2.0@d41d8cd9",
+      "name": "conventional-changelog-preset-loader",
+      "version": "2.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-changelog-preset-loader/-/conventional-changelog-preset-loader-2.2.0.tgz#sha1:571e2b3d7b53d65587bea9eedf6e37faa5db4fcc"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "conventional-changelog-jshint@2.0.3@d41d8cd9": {
+      "id": "conventional-changelog-jshint@2.0.3@d41d8cd9",
+      "name": "conventional-changelog-jshint",
+      "version": "2.0.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-changelog-jshint/-/conventional-changelog-jshint-2.0.3.tgz#sha1:ef6e2caf2ee6ffdfda78fcdf7ce87cf6c512d728"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "q@1.5.1@d41d8cd9", "compare-func@1.3.2@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "conventional-changelog-jquery@3.0.6@d41d8cd9": {
+      "id": "conventional-changelog-jquery@3.0.6@d41d8cd9",
+      "name": "conventional-changelog-jquery",
+      "version": "3.0.6",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-changelog-jquery/-/conventional-changelog-jquery-3.0.6.tgz#sha1:460236ad8fb1d29ff932a14fe4e3a45379b63c5e"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "q@1.5.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "conventional-changelog-express@2.0.1@d41d8cd9": {
+      "id": "conventional-changelog-express@2.0.1@d41d8cd9",
+      "name": "conventional-changelog-express",
+      "version": "2.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-changelog-express/-/conventional-changelog-express-2.0.1.tgz#sha1:fea2231d99a5381b4e6badb0c1c40a41fcacb755"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "q@1.5.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "conventional-changelog-eslint@3.0.4@d41d8cd9": {
+      "id": "conventional-changelog-eslint@3.0.4@d41d8cd9",
+      "name": "conventional-changelog-eslint",
+      "version": "3.0.4",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-changelog-eslint/-/conventional-changelog-eslint-3.0.4.tgz#sha1:8f4736a23e0cd97e890e76fccc287db2f205f2ff"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "q@1.5.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "conventional-changelog-ember@2.0.4@d41d8cd9": {
+      "id": "conventional-changelog-ember@2.0.4@d41d8cd9",
+      "name": "conventional-changelog-ember",
+      "version": "2.0.4",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-changelog-ember/-/conventional-changelog-ember-2.0.4.tgz#sha1:c29b78e4af7825cbecb6c3fd6086ca5c09471ac1"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "q@1.5.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "conventional-changelog-core@3.2.3@d41d8cd9": {
+      "id": "conventional-changelog-core@3.2.3@d41d8cd9",
+      "name": "conventional-changelog-core",
+      "version": "3.2.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-changelog-core/-/conventional-changelog-core-3.2.3.tgz#sha1:b31410856f431c847086a7dcb4d2ca184a7d88fb"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "through2@3.0.1@d41d8cd9", "read-pkg-up@3.0.0@d41d8cd9",
+        "read-pkg@3.0.0@d41d8cd9", "q@1.5.1@d41d8cd9",
+        "normalize-package-data@2.5.0@d41d8cd9", "lodash@4.17.15@d41d8cd9",
+        "git-semver-tags@2.0.3@d41d8cd9",
+        "git-remote-origin-url@2.0.0@d41d8cd9",
+        "git-raw-commits@2.0.0@d41d8cd9", "get-pkg-repo@1.4.0@d41d8cd9",
+        "dateformat@3.0.3@d41d8cd9",
+        "conventional-commits-parser@3.0.5@d41d8cd9",
+        "conventional-changelog-writer@4.0.9@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "conventional-changelog-conventionalcommits@4.2.1@d41d8cd9": {
+      "id": "conventional-changelog-conventionalcommits@4.2.1@d41d8cd9",
+      "name": "conventional-changelog-conventionalcommits",
+      "version": "4.2.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-changelog-conventionalcommits/-/conventional-changelog-conventionalcommits-4.2.1.tgz#sha1:d6cb2e2c5d7bfca044a08b9dba84b4082e1a1bd9"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "q@1.5.1@d41d8cd9", "lodash@4.17.15@d41d8cd9",
+        "compare-func@1.3.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "conventional-changelog-config-spec@2.0.0@d41d8cd9": {
+      "id": "conventional-changelog-config-spec@2.0.0@d41d8cd9",
+      "name": "conventional-changelog-config-spec",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-changelog-config-spec/-/conventional-changelog-config-spec-2.0.0.tgz#sha1:a9e8c9225d4a922d25f4ac501e454274ae4ad0b3"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "conventional-changelog-codemirror@2.0.3@d41d8cd9": {
+      "id": "conventional-changelog-codemirror@2.0.3@d41d8cd9",
+      "name": "conventional-changelog-codemirror",
+      "version": "2.0.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-changelog-codemirror/-/conventional-changelog-codemirror-2.0.3.tgz#sha1:ebc088154684f8f5171446b8d546ba6b460d46f2"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "q@1.5.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "conventional-changelog-atom@2.0.3@d41d8cd9": {
+      "id": "conventional-changelog-atom@2.0.3@d41d8cd9",
+      "name": "conventional-changelog-atom",
+      "version": "2.0.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-changelog-atom/-/conventional-changelog-atom-2.0.3.tgz#sha1:3bd14280aa09fe3ec49a0e8fe97b5002db02aad4"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "q@1.5.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "conventional-changelog-angular@5.0.5@d41d8cd9": {
+      "id": "conventional-changelog-angular@5.0.5@d41d8cd9",
+      "name": "conventional-changelog-angular",
+      "version": "5.0.5",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-changelog-angular/-/conventional-changelog-angular-5.0.5.tgz#sha1:69b541bcf3e538a8578b1e5fbaabe9bd8f572b57"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "q@1.5.1@d41d8cd9", "compare-func@1.3.2@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "conventional-changelog@3.1.9@d41d8cd9": {
+      "id": "conventional-changelog@3.1.9@d41d8cd9",
+      "name": "conventional-changelog",
+      "version": "3.1.9",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/conventional-changelog/-/conventional-changelog-3.1.9.tgz#sha1:5a6a19dadc1e4080c2db8dcddd00a6c0077c55a4"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "conventional-changelog-preset-loader@2.2.0@d41d8cd9",
+        "conventional-changelog-jshint@2.0.3@d41d8cd9",
+        "conventional-changelog-jquery@3.0.6@d41d8cd9",
+        "conventional-changelog-express@2.0.1@d41d8cd9",
+        "conventional-changelog-eslint@3.0.4@d41d8cd9",
+        "conventional-changelog-ember@2.0.4@d41d8cd9",
+        "conventional-changelog-core@3.2.3@d41d8cd9",
+        "conventional-changelog-conventionalcommits@4.2.1@d41d8cd9",
+        "conventional-changelog-codemirror@2.0.3@d41d8cd9",
+        "conventional-changelog-atom@2.0.3@d41d8cd9",
+        "conventional-changelog-angular@5.0.5@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "concat-stream@2.0.0@d41d8cd9": {
+      "id": "concat-stream@2.0.0@d41d8cd9",
+      "name": "concat-stream",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/concat-stream/-/concat-stream-2.0.0.tgz#sha1:414cf5af790a48c60ab9be4527d56d5e41133cb1"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "typedarray@0.0.6@d41d8cd9", "readable-stream@3.4.0@d41d8cd9",
+        "inherits@2.0.4@d41d8cd9", "buffer-from@1.1.1@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "concat-map@0.0.1@d41d8cd9": {
+      "id": "concat-map@0.0.1@d41d8cd9",
+      "name": "concat-map",
+      "version": "0.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz#sha1:d8a96bd77fd68df7793a73036a3ba0d5405d477b"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "compare-func@1.3.2@d41d8cd9": {
+      "id": "compare-func@1.3.2@d41d8cd9",
+      "name": "compare-func",
+      "version": "1.3.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/compare-func/-/compare-func-1.3.2.tgz#sha1:99dd0ba457e1f9bc722b12c08ec33eeab31fa648"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "dot-prop@3.0.0@d41d8cd9", "array-ify@1.0.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "commander@2.20.3@d41d8cd9": {
+      "id": "commander@2.20.3@d41d8cd9",
+      "name": "commander",
+      "version": "2.20.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/commander/-/commander-2.20.3.tgz#sha1:fd485e84c03eb4881c20722ba48035e8531aeb33"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "color-name@1.1.3@d41d8cd9": {
+      "id": "color-name@1.1.3@d41d8cd9",
+      "name": "color-name",
+      "version": "1.1.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/color-name/-/color-name-1.1.3.tgz#sha1:a7d0558bd89c42f795dd42328f740831ca53bc25"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "color-convert@1.9.3@d41d8cd9": {
+      "id": "color-convert@1.9.3@d41d8cd9",
+      "name": "color-convert",
+      "version": "1.9.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/color-convert/-/color-convert-1.9.3.tgz#sha1:bb71850690e1f136567de629d2d5471deda4c1e8"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "color-name@1.1.3@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "cliui@5.0.0@d41d8cd9": {
+      "id": "cliui@5.0.0@d41d8cd9",
+      "name": "cliui",
+      "version": "5.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/cliui/-/cliui-5.0.0.tgz#sha1:deefcfdb2e800784aa34f46fa08e06851c7bbbc5"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "wrap-ansi@5.1.0@d41d8cd9", "strip-ansi@5.2.0@d41d8cd9",
+        "string-width@3.1.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "chalk@2.4.2@d41d8cd9": {
+      "id": "chalk@2.4.2@d41d8cd9",
+      "name": "chalk",
+      "version": "2.4.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/chalk/-/chalk-2.4.2.tgz#sha1:cd42541677a54333cf541a49108c1432b44c9424"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "supports-color@5.5.0@d41d8cd9",
+        "escape-string-regexp@1.0.5@d41d8cd9", "ansi-styles@3.2.1@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "camelcase-keys@4.2.0@d41d8cd9": {
+      "id": "camelcase-keys@4.2.0@d41d8cd9",
+      "name": "camelcase-keys",
+      "version": "4.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/camelcase-keys/-/camelcase-keys-4.2.0.tgz#sha1:a2aa5fb1af688758259c32c141426d78923b9b77"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "quick-lru@1.1.0@d41d8cd9", "map-obj@2.0.0@d41d8cd9",
+        "camelcase@4.1.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "camelcase-keys@2.1.0@d41d8cd9": {
+      "id": "camelcase-keys@2.1.0@d41d8cd9",
+      "name": "camelcase-keys",
+      "version": "2.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/camelcase-keys/-/camelcase-keys-2.1.0.tgz#sha1:308beeaffdf28119051efa1d932213c91b8f92e7"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "map-obj@1.0.1@d41d8cd9", "camelcase@2.1.1@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "camelcase@5.3.1@d41d8cd9": {
+      "id": "camelcase@5.3.1@d41d8cd9",
+      "name": "camelcase",
+      "version": "5.3.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/camelcase/-/camelcase-5.3.1.tgz#sha1:e3c9b31569e106811df242f715725a1f4c494320"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "camelcase@4.1.0@d41d8cd9": {
+      "id": "camelcase@4.1.0@d41d8cd9",
+      "name": "camelcase",
+      "version": "4.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/camelcase/-/camelcase-4.1.0.tgz#sha1:d545635be1e33c542649c69173e5de6acfae34dd"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "camelcase@2.1.1@d41d8cd9": {
+      "id": "camelcase@2.1.1@d41d8cd9",
+      "name": "camelcase",
+      "version": "2.1.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/camelcase/-/camelcase-2.1.1.tgz#sha1:7c1d16d679a1bbe59ca02cacecfb011e201f5a1f"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "buffer-from@1.1.1@d41d8cd9": {
+      "id": "buffer-from@1.1.1@d41d8cd9",
+      "name": "buffer-from",
+      "version": "1.1.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/buffer-from/-/buffer-from-1.1.1.tgz#sha1:32713bc028f75c02fdb710d7c7bcec1f2c6070ef"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
     "brisk-reconciler@0.0.2@d41d8cd9": {
       "id": "brisk-reconciler@0.0.2@d41d8cd9",
       "name": "brisk-reconciler",
@@ -327,6 +3028,122 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@21d66ccd",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "brace-expansion@1.1.11@d41d8cd9": {
+      "id": "brace-expansion@1.1.11@d41d8cd9",
+      "name": "brace-expansion",
+      "version": "1.1.11",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.11.tgz#sha1:3c7fcbf529d87226f3d2f52b966ff5271eb441dd"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "concat-map@0.0.1@d41d8cd9", "balanced-match@1.0.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "balanced-match@1.0.0@d41d8cd9": {
+      "id": "balanced-match@1.0.0@d41d8cd9",
+      "name": "balanced-match",
+      "version": "1.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.0.tgz#sha1:89b4d199ab2bee49de164ea02b89ce462d71b767"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "arrify@1.0.1@d41d8cd9": {
+      "id": "arrify@1.0.1@d41d8cd9",
+      "name": "arrify",
+      "version": "1.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/arrify/-/arrify-1.0.1.tgz#sha1:898508da2226f380df904728456849c1501a4b0d"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "array-ify@1.0.0@d41d8cd9": {
+      "id": "array-ify@1.0.0@d41d8cd9",
+      "name": "array-ify",
+      "version": "1.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/array-ify/-/array-ify-1.0.0.tgz#sha1:9e528762b4a9066ad163a6962a364418e9626ece"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "array-find-index@1.0.2@d41d8cd9": {
+      "id": "array-find-index@1.0.2@d41d8cd9",
+      "name": "array-find-index",
+      "version": "1.0.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/array-find-index/-/array-find-index-1.0.2.tgz#sha1:df010aa1287e164bbda6f9723b0a96a1ec4187a1"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "ansi-styles@3.2.1@d41d8cd9": {
+      "id": "ansi-styles@3.2.1@d41d8cd9",
+      "name": "ansi-styles",
+      "version": "3.2.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/ansi-styles/-/ansi-styles-3.2.1.tgz#sha1:41fbb20243e50b12be0f04b8dedbf07520ce841d"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "color-convert@1.9.3@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "ansi-regex@4.1.0@d41d8cd9": {
+      "id": "ansi-regex@4.1.0@d41d8cd9",
+      "name": "ansi-regex",
+      "version": "4.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/ansi-regex/-/ansi-regex-4.1.0.tgz#sha1:8b9f8f08cf1acb843756a839ca8c7e3168c51997"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "JSONStream@1.3.5@d41d8cd9": {
+      "id": "JSONStream@1.3.5@d41d8cd9",
+      "name": "JSONStream",
+      "version": "1.3.5",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/JSONStream/-/JSONStream-1.3.5.tgz#sha1:3208c1f08d3a4d99261ab64f92302bc15e111ca0"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "through@2.3.8@d41d8cd9", "jsonparse@1.3.1@d41d8cd9"
       ],
       "devDependencies": []
     },
