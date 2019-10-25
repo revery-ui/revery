@@ -38,6 +38,8 @@ let make =
       children: React.syntheticElement,
     ) =>
   component(slots => {
+    let (dummy, setDummy, slots) = Hooks.state(0, slots);
+
     let (actualScrollTop, dispatch, slots) =
       Hooks.reducer(~initialState=scrollTop, reducer, slots);
     let (outerRef: option(Revery_UI.node), setOuterRef, slots) =
@@ -52,6 +54,17 @@ let make =
       TranslateX((-1.) *. float_of_int(actualScrollLeft)),
       TranslateY((-1.) *. float_of_int(actualScrollTop)),
     ];
+
+    let slots =
+      Hooks.effect(
+        Revery_UI.React.Hooks.Effect.If((!==), children),
+        () => {
+          setDummy(dummy + 1);
+
+          None;
+        },
+        slots,
+      );
 
     let (horizontalScrollBar, verticalScrollBar, scroll) =
       switch (outerRef) {
