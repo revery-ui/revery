@@ -22,6 +22,7 @@ module Theme = {
   let disabledButtonBackground = Colors.darkSeaGreen;
   let selectedButtonBackground = Colors.seaGreen;
   let buttonTextColor = Color.rgb(0.96, 1., 0.96);
+  let dangerColor = Colors.indianRed;
 }
 
 module Filter = {
@@ -200,6 +201,16 @@ module Todo = {
         Theme.fontFamily,
         fontSize(Theme.fontSize),
         color(isChecked ? Theme.dimmedTextColor : Theme.textColor),
+        flexGrow(1),
+      ];
+
+    let removeButton = isHovered =>
+      Style.[
+        color(isHovered ? Theme.dangerColor : Colors.transparentWhite),
+        fontSize(Theme.fontSize),
+        fontFamily("FontAwesome5FreeSolid.otf"),
+        transform(Transform.[TranslateY(2.)]),
+        marginRight(6),
       ];
   }
 
@@ -211,14 +222,22 @@ module Todo = {
 
   let component = React.component("TodoMVC");
 
-  let createElement = (~children as _, ~task, ~onToggle, ()) =>
-    component(hooks => (
-      hooks,
-      <View style=Styles.box>
-        <Checkbox isChecked={task.isDone} onToggle />
-        <Text style=Styles.text(task.isDone) text={task.task} />
-      </View>
-    ));
+  let createElement = (~children as _, ~task, ~onToggle, ~onRemove, ()) =>
+    component(hooks => {
+      let (isHovered, setHovered, hooks) =
+        Hooks.state(false, hooks);
+
+      (
+        hooks,
+        <View style=Styles.box onMouseOver={_ => setHovered(true)} onMouseOut={_ => setHovered(false)}>
+          <Checkbox isChecked={task.isDone} onToggle />
+          <Text style=Styles.text(task.isDone) text={task.task} />
+          <Clickable onClick=onRemove>
+            <Text text={||} style=Styles.removeButton(isHovered) />
+          </Clickable>
+        </View>
+      )
+    });
 }
 
 module TodoMVC = {
@@ -281,15 +300,16 @@ module TodoMVC = {
   }
 
   type action =
-    | AddTodo
-    | ChangeFilter(Filter.t)
-    | UpdateInputTextValue(string)
-    | ToggleTaskState(int)
+    | Add
+    | SetFilter(Filter.t)
+    | UpdateInput(string)
+    | Toggle(int)
+    | Remove(int)
     | ToggleAll;
 
   let reducer = (action: action, state: state) =>
     switch (action) {
-    | AddTodo => {
+    | Add => {
         ...state,
         todos: [
           {id: state.nextId, task: state.inputValue, isDone: false},
@@ -299,9 +319,9 @@ module TodoMVC = {
         nextId: state.nextId + 1,
       }
 
-    | UpdateInputTextValue(text) => {...state, inputValue: text}
+    | UpdateInput(text) => {...state, inputValue: text}
     
-    | ToggleTaskState(id) =>
+    | Toggle(id) =>
       let todos =
         List.map(
           (item: Todo.t) => item.id == id ? {...item, isDone: !item.isDone} : item,
@@ -309,7 +329,11 @@ module TodoMVC = {
         );
       {...state, todos};
 
-    | ChangeFilter(filter) => {...state, filter}
+    | Remove(id) =>
+      let todos = List.filter((item: Todo.t) => item.id != id, state.todos);
+      {...state, todos};
+
+    | SetFilter(filter) => {...state, filter}
     
     | ToggleAll =>
       let areAllCompleted = List.for_all((item: Todo.t) => item.isDone, state.todos);
@@ -340,7 +364,7 @@ module TodoMVC = {
         );
 
       let filterButtonsView = {
-        let onSelect = filter => dispatch(ChangeFilter(filter));
+        let onSelect = filter => dispatch(SetFilter(filter));
 
         let button = filter =>
           <Button
@@ -357,8 +381,8 @@ module TodoMVC = {
       };
 
       let addTodoView = {
-        let onInput = value => dispatch(UpdateInputTextValue(value));
-        let onSubmit = () => dispatch(AddTodo);
+        let onInput = value => dispatch(UpdateInput(value));
+        let onSubmit = () => dispatch(Add);
         let onToggleAll = () => dispatch(ToggleAll);
         let areAllCompleted = List.for_all((item: Todo.t) => item.isDone, todos);
 
@@ -366,13 +390,21 @@ module TodoMVC = {
       };
 
       let todoListView = {
-        let onToggle = (task: Todo.t) => () => dispatch(ToggleTaskState(task.id));
+        let onToggle = id => () => dispatch(Toggle(id));
+        let onRemove = id => () => dispatch(Remove(id));
 
         <ScrollView style=Styles.todoList>
           <View>
             ...{
-              filteredTodos
-              |> List.map(task => <Todo task onToggle=onToggle(task)/>)
+              List.map(
+                (task: Todo.t) =>
+                  <Todo
+                    task
+                    onToggle=onToggle(task.id)
+                    onRemove=onRemove(task.id)
+                  />,
+                filteredTodos
+              )
             }
           </View>
         </ScrollView>
