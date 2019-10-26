@@ -8,10 +8,12 @@ module Constants = {
 
 module Theme = {
   let fontFamily = Style.fontFamily("Roboto-Regular.ttf");
-  let fontSize = 12;
+  let fontSize = 16;
 
   let appBackground = Color.rgb(0.9, 0.93, 0.9);
-  let textColor = Color.rgb(0.3, 0.33, 0.3);
+  let textColor = Color.rgb(0.3, 0.32, 0.3);
+  let dimmedTextColor = Color.rgb(0.8, 0.83, 0.8);
+  let titleTextColor = Colors.darkSeaGreen;
 
   let panelBackground = Colors.white;
   let panelBorder = Style.border(~width=1, ~color=Color.rgb(0.85, 0.88, 0.85));
@@ -43,8 +45,9 @@ module Button = {
         position(`Relative),
         justifyContent(`Center),
         alignItems(`Center),
-        paddingVertical(4),
-        paddingHorizontal(8),
+        paddingVertical(6),
+        paddingHorizontal(12),
+        marginHorizontal(4),
         backgroundColor(
           switch (isDisabled, isSelected) {
           | (true, _) => Theme.disabledButtonBackground
@@ -124,6 +127,60 @@ module Checkbox = {
     ));
 }
 
+module AddTodo = {
+  module Styles = {
+    let container =
+      Style.[
+        flexDirection(`Row),
+        backgroundColor(Theme.panelBackground),
+        Theme.panelBorder,
+        margin(2),
+        alignItems(`Center),
+      ];
+
+    let toggleAll =
+      Style.[
+        color(Theme.textColor),
+        fontSize(Theme.fontSize),
+        fontFamily("FontAwesome5FreeSolid.otf"),
+        transform(Transform.[TranslateY(2.)]),
+        marginLeft(12),
+      ];
+
+    let input =
+      Style.[
+        fontSize(int_of_float(float_of_int(Theme.fontSize) *. 1.25)),
+        border(~width=0, ~color=Colors.transparentWhite),
+      ];
+  }
+
+  let component = React.component("TodoMVC");
+
+  let createElement = (~children as _, ~text, ~onInput, ~onSubmit, ()) =>
+    component(hooks => {
+      let onKeyDown = (event: NodeEvents.keyEventParams) =>
+        if (event.keycode == 13) {
+          onSubmit();
+        };
+      
+      (
+        hooks,
+        <View style=Styles.container>
+          <Clickable onClick=((_) => ())>
+            <Text text={||} style=Styles.toggleAll />
+          </Clickable>
+          <Input
+            style=Styles.input
+            placeholder="Add your Todo here"
+            value=text
+            onChange={({value, _}) => onInput(value)}
+            onKeyDown
+          />
+        </View>
+      )
+    });
+}
+
 module Todo = {
   module Styles = {
     let box =
@@ -137,12 +194,12 @@ module Todo = {
         Theme.panelBorder,
       ];
 
-    let text = 
+    let text = isChecked =>
       Style.[
         margin(6),
         Theme.fontFamily,
         fontSize(Theme.fontSize),
-        color(Theme.textColor),
+        color(isChecked ? Theme.dimmedTextColor : Theme.textColor),
       ];
   }
 
@@ -159,14 +216,14 @@ module Todo = {
       hooks,
       <View style=Styles.box>
         <Checkbox isChecked={task.isDone} onToggle />
-        <Text style=Styles.text text={task.task} />
+        <Text style=Styles.text(task.isDone) text={task.task} />
       </View>
     ));
 }
 
 module TodoMVC = {
   module Styles = {
-    let container =
+    let appContainer =
       Style.[
         position(`Absolute),
         top(0),
@@ -177,6 +234,24 @@ module TodoMVC = {
         justifyContent(`Center),
         flexDirection(`Column),
         backgroundColor(Theme.appBackground),
+        paddingVertical(2),
+        paddingHorizontal(6),
+        overflow(`Hidden),
+      ];
+
+    let title =
+      Style.[
+        Theme.fontFamily,
+        fontSize(Theme.fontSize * 4),
+        color(Theme.titleTextColor),
+        alignSelf(`Center),
+        marginBottom(Theme.fontSize / 4),
+        marginTop(Theme.fontSize * 2),
+      ];
+
+    let todoList =
+      Style.[
+        flexGrow(1),
       ];
 
     let filterButtonsContainer =
@@ -186,24 +261,6 @@ module TodoMVC = {
         justifyContent(`Center),
       ];
 
-    let addTodoContainer =
-      Style.[
-        flexDirection(`Row),
-      ]
-
-    let input =
-      Style.[
-        fontSize(int_of_float(float_of_int(Theme.fontSize) *. 1.25)),
-        backgroundColor(Theme.panelBackground),
-        border(~width=0, ~color=Colors.transparentWhite),
-      ];
-
-    let todoList =
-      Style.[
-        flexGrow(1),
-        paddingVertical(2),
-        paddingHorizontal(6),
-      ];
   }
 
   type state = {
@@ -288,17 +345,9 @@ module TodoMVC = {
 
       let addTodoView = {
         let onInput = value => dispatch(UpdateInputTextValue(value));
-        let onButtonClick = () => dispatch(AddTodo);
+        let onSubmit = () => dispatch(AddTodo);
 
-        <View style=Styles.addTodoContainer>
-          <Input
-            style=Styles.input
-            placeholder="Add your Todo here"
-            value=inputValue
-            onChange={({value, _}) => onInput(value)}
-          />
-          <Button label="+" isDisabled={inputValue == ""} onClick=onButtonClick />
-        </View>
+        <AddTodo text=inputValue onInput onSubmit />
       };
 
       let todoListView = {
@@ -316,10 +365,11 @@ module TodoMVC = {
 
       (
         hooks,
-        <View style=Styles.container>
-          {filterButtonsView}
+        <View style=Styles.appContainer>
+          <Text text="todoMVC" style=Styles.title />
           {addTodoView}
           {todoListView}
+          {filterButtonsView}
         </View>,
       );
     });
