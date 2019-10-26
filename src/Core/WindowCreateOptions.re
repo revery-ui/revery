@@ -33,7 +33,7 @@ type t = {
 
     This can decrease tearing, but also limits the frame rate to the monito refresh rate.
   */
-  vsync: bool,
+  vsync: Vsync.t,
   /*
       [icon] is an optional path to an icon to show in the window frame.
    */
@@ -54,7 +54,7 @@ let create =
       ~width=800,
       ~height=600,
       ~backgroundColor=Colors.cornflowerBlue,
-      ~vsync=true,
+      ~vsync=Vsync.Synchronized,
       ~icon=None,
       ~forceScaleFactor=None,
       (),

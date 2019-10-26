@@ -4,9 +4,9 @@ open Revery_UI.Animated;
 
 let reducer = (_a, s) => s + 1;
 
-let animationLoop = (dispatch, v, opts, ()) => {
-  let complete = Tick.interval(_t => {dispatch()}, Seconds(0.));
-  let {stop, _} = tween(v, opts) |> start(~complete);
+let animationLoop = (animation, completer, ()) => {
+  let complete = completer();
+  let {stop, _} = animation |> start(~complete);
   Some(
     () => {
       Log.info("Hooks - Animation", "Stopping animation");
@@ -17,12 +17,40 @@ let animationLoop = (dispatch, v, opts, ()) => {
 };
 
 let animation = (v: animationValue, opts: animationOptions, slots) => {
-  let (currentV, _, slots) = Ref.ref(v, slots);
+  let (animation, _, slots) = Ref.ref(tween(v, opts), slots);
   let (_, dispatch, slots) =
     Reducer.reducer(~initialState=0, reducer, slots);
+  let completer = () => Tick.interval(_t => dispatch(), Seconds(0.));
+
+  let restart = () => {
+    animation.startTime = Time.to_float_seconds(getTime());
+    animation.value.current = animation.startValue;
+    let newActiveAnim = {
+      animation,
+      update: None,
+      complete: Some(completer()),
+    };
+    activeAnimations := [newActiveAnim, ...activeAnimations^];
+  };
+
+  let pause = () => {
+    activeAnimations :=
+      List.filter(
+        ({animation: a, _}) => a.id !== animation.id,
+        activeAnimations^,
+      );
+    () => {
+      let newActiveAnim = {
+        animation,
+        update: None,
+        complete: Some(completer()),
+      };
+      activeAnimations := [newActiveAnim, ...activeAnimations^];
+    };
+  };
 
   let slots =
-    Effect.effect(OnMount, animationLoop(dispatch, currentV, opts), slots);
+    Effect.effect(OnMount, animationLoop(animation, completer), slots);
 
-  (currentV.current, slots);
+  (animation.value.current, pause, restart, slots);
 };

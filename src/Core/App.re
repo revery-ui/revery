@@ -67,6 +67,9 @@ let runOnMainThread = f => {
   _mainThreadPendingFunctions := [f, ..._mainThreadPendingFunctions^];
   _anyPendingWork := true;
   Mutex.unlock(_mainThreadMutex);
+
+  // If we're 'idle' - in a [waitTimeout], dispatch an event to wake up the main thread
+  Sdl2.Event.push();
 };
 
 let _anyPendingMainThreadJobs = () => {
@@ -120,10 +123,54 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
   let _ = Sdl2.init();
   let _dispose = initFunc(appInstance);
 
-  // By default, SDL2 suppresses the screen saver and sleep mode
-  // (this makes sense for games!). However, we should not be blocking
-  // sleep / screensavers for Revery applications.
   let _ = Sdl2.ScreenSaver.enable();
+
+  let _handleEvent = evt => {
+    let handleEvent = windowID => {
+      let window = getWindowById(appInstance, windowID);
+      switch (window) {
+      | Some(win) => Window._handleEvent(evt, win)
+      | None =>
+        logError(
+          "Unable to find window with ID: "
+          ++ string_of_int(windowID)
+          ++ " - event: "
+          ++ Sdl2.Event.show(evt),
+        )
+      };
+    };
+    switch (evt) {
+    | Sdl2.Event.MouseButtonUp({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.MouseButtonDown({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.MouseMotion({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.MouseWheel({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.KeyDown({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.KeyUp({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.TextInput({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.TextEditing({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.WindowResized({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.WindowSizeChanged({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.WindowExposed({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.WindowEnter({windowID}) => handleEvent(windowID)
+    | Sdl2.Event.WindowLeave({windowID}) => handleEvent(windowID)
+    | Sdl2.Event.WindowClosed({windowID, _}) =>
+      logInfo("Got window closed event: " ++ string_of_int(windowID));
+      handleEvent(windowID);
+      switch (getWindowById(appInstance, windowID)) {
+      | None => ()
+      | Some(win) => _tryToClose(appInstance, win)
+      };
+    | Sdl2.Event.Quit =>
+      // Sometimes, on Mac, we could get a 'quit' without a
+      // corresponding WindowClosed event - this can happen
+      // if Command+Q is pressed. In that case, we'll try
+      // closing all the windows - and if they all close,
+      // we'll exit the app.
+      quit(~code=0, appInstance)
+    | _ => ()
+    };
+  };
 
   let _flushEvents = () => {
     let processingEvents = ref(true);
@@ -132,52 +179,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       let evt = Sdl2.Event.poll();
       switch (evt) {
       | None => processingEvents := false
-      | Some(v) =>
-        let handleEvent = windowID => {
-          let window = getWindowById(appInstance, windowID);
-          switch (window) {
-          | Some(win) => Window._handleEvent(v, win)
-          | None =>
-            logError(
-              "Unable to find window with ID: "
-              ++ string_of_int(windowID)
-              ++ " - event: "
-              ++ Sdl2.Event.show(v),
-            )
-          };
-        };
-        switch (v) {
-        | Sdl2.Event.MouseButtonUp({windowID, _}) => handleEvent(windowID)
-        | Sdl2.Event.MouseButtonDown({windowID, _}) => handleEvent(windowID)
-        | Sdl2.Event.MouseMotion({windowID, _}) => handleEvent(windowID)
-        | Sdl2.Event.MouseWheel({windowID, _}) => handleEvent(windowID)
-        | Sdl2.Event.KeyDown({windowID, _}) => handleEvent(windowID)
-        | Sdl2.Event.KeyUp({windowID, _}) => handleEvent(windowID)
-        | Sdl2.Event.TextInput({windowID, _}) => handleEvent(windowID)
-        | Sdl2.Event.TextEditing({windowID, _}) => handleEvent(windowID)
-        | Sdl2.Event.WindowResized({windowID, _}) => handleEvent(windowID)
-        | Sdl2.Event.WindowSizeChanged({windowID, _}) =>
-          handleEvent(windowID)
-        | Sdl2.Event.WindowExposed({windowID, _}) => handleEvent(windowID)
-        | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID)
-        | Sdl2.Event.WindowEnter({windowID}) => handleEvent(windowID)
-        | Sdl2.Event.WindowLeave({windowID}) => handleEvent(windowID)
-        | Sdl2.Event.WindowClosed({windowID, _}) =>
-          logInfo("Got window closed event: " ++ string_of_int(windowID));
-          handleEvent(windowID);
-          switch (getWindowById(appInstance, windowID)) {
-          | None => ()
-          | Some(win) => _tryToClose(appInstance, win)
-          };
-        | Sdl2.Event.Quit =>
-          // Sometimes, on Mac, we could get a 'quit' without a
-          // corresponding WindowClosed event - this can happen
-          // if Command+Q is pressed. In that case, we'll try
-          // closing all the windows - and if they all close,
-          // we'll exit the app.
-          quit(~code=0, appInstance)
-        | _ => ()
-        };
+      | Some(v) => _handleEvent(v)
       };
     };
   };
@@ -212,7 +214,11 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
         appInstance.onIdle();
       };
 
-      Environment.sleep(Milliseconds(1.));
+      let evt = Sdl2.Event.waitTimeout(250);
+      switch (evt) {
+      | None => ()
+      | Some(evt) => _handleEvent(evt)
+      };
     };
 
     Environment.yield();

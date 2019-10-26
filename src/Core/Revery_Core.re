@@ -21,6 +21,7 @@ module UniqueId = UniqueId;
 module TextWrapping = TextWrapping;
 module TextOverflow = TextOverflow;
 
+module Vsync = Vsync;
 module WindowCreateOptions = WindowCreateOptions;
 
 /*

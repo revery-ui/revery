@@ -8,9 +8,9 @@ let logo = {
 
   (~children as _: list(React.syntheticElement), ()) =>
     component(hooks => {
-      let (logoOpacity, setOpacity, hooks) = Hooks.state(1.0, hooks);
+      let (logoOpacity, _setOpacity, hooks) = Hooks.state(1.0, hooks);
 
-      let (rotation, hooks) =
+      let (rotation, pauseRotation, restartRotation, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           Animated.options(
@@ -23,7 +23,7 @@ let logo = {
           hooks,
         );
 
-      let (rotationY, hooks) =
+      let (rotationY, pauseRotationY, restartRotationY, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           Animated.options(
@@ -36,13 +36,9 @@ let logo = {
           hooks,
         );
 
-      let onMouseDown = _ => setOpacity(0.5);
-
-      let onMouseUp = _ => setOpacity(1.0);
-
       (
         hooks,
-        <View onMouseDown onMouseUp>
+        <View>
           <Opacity opacity=logoOpacity>
             <Image
               src="outrun-logo.png"
@@ -56,6 +52,25 @@ let logo = {
               ]
             />
           </Opacity>
+          <Row>
+            <Button
+              width=200
+              onClick={() => {
+                pauseRotation() |> ignore;
+                pauseRotationY() |> ignore;
+                ();
+              }}
+              title="Pause"
+            />
+            <Button
+              width=200
+              onClick={() => {
+                restartRotation();
+                restartRotationY();
+              }}
+              title="Restart"
+            />
+          </Row>
         </View>,
       );
     });
@@ -71,7 +86,7 @@ let animatedText = {
     (),
   ) =>
     component(hooks => {
-      let (animatedOpacity, hooks) =
+      let (animatedOpacity, _, _, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           Animated.options(
@@ -83,7 +98,7 @@ let animatedText = {
           hooks,
         );
 
-      let (translate, hooks) =
+      let (translate, _, _, hooks) =
         Hooks.animation(
           Animated.floatValue(50.),
           Animated.options(

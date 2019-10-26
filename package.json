@@ -40,10 +40,10 @@
     "reason-font-manager": "^2.0.0",
     "reason-fontkit": "^2.7.0",
     "reason-gl-matrix": "^0.9.9305",
-    "reason-sdl2": "^2.10.3007",
     "rebez": "github:jchavarri/rebez#03fa3b7",
     "rench": "^1.9.1",
-    "reperf": "^1.4.0"
+    "reperf": "^1.4.0",
+    "reason-sdl2": "^2.10.3008"
   },
   "resolutions": {
     "@opam/cmdliner": "1.0.2"

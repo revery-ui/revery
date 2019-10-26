@@ -8,7 +8,6 @@ type size = {
   width: int,
   height: int,
 };
-
 let log = Log.info("Window");
 
 module WindowMetrics = {
@@ -88,6 +87,10 @@ let isDirty = (w: t) =>
     | _ => false
     };
   };
+
+let setTitle = (v: t, title: string) => {
+  Sdl2.Window.setTitle(v.sdlWindow, title);
+};
 
 let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
   switch (forceScaleFactor) {
@@ -332,15 +335,21 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   };
 };
 
+let setVsync =
+    (
+      _window: t, // TODO: Multiple windows - set context
+      vsync: Vsync.t,
+    ) => {
+  log("Using vsync: " ++ Vsync.show(vsync));
+
+  switch (vsync) {
+  | Vsync.Immediate => Sdl2.Gl.setSwapInterval(0)
+  | Vsync.Synchronized => Sdl2.Gl.setSwapInterval(1)
+  };
+};
+
 let create = (name: string, options: WindowCreateOptions.t) => {
   log("Starting window creation...");
-
-  log("Using vsync: " ++ string_of_bool(options.vsync));
-
-  switch (options.vsync) {
-  | false => Sdl2.Gl.setSwapInterval(0)
-  | true => Sdl2.Gl.setSwapInterval(1)
-  };
 
   let width =
     switch (options.width) {
@@ -447,6 +456,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   };
   setScaledSize(ret, width, height);
   Sdl2.Window.center(w);
+  setVsync(ret, options.vsync);
 
   if (options.maximized) {
     Sdl2.Window.maximize(w);
@@ -463,6 +473,11 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   if (options.visible) {
     Sdl2.Window.show(w);
   };
+
+  // onivim/oni2#791
+  // Set a minimum size for the window
+  // TODO: Make configurable
+  Sdl2.Window.setMinimumSize(w, 200, 100);
 
   _updateMetrics(ret);
 
