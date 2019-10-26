@@ -27,14 +27,14 @@ module Theme = {
 module Filter = {
   type t =
     | All
-    | Completed
-    | NotCompleted;
+    | Active
+    | Completed;
 
   let show = (v: t) =>
     switch (v) {
     | All => "All"
+    | Active => "Active"
     | Completed => "Completed"
-    | NotCompleted => "Not Completed"
     };
 };
 
@@ -138,9 +138,9 @@ module AddTodo = {
         alignItems(`Center),
       ];
 
-    let toggleAll =
+    let toggleAll = areAllCompleted =>
       Style.[
-        color(Theme.textColor),
+        color(areAllCompleted ? Theme.textColor : Theme.dimmedTextColor),
         fontSize(Theme.fontSize),
         fontFamily("FontAwesome5FreeSolid.otf"),
         transform(Transform.[TranslateY(2.)]),
@@ -156,7 +156,7 @@ module AddTodo = {
 
   let component = React.component("TodoMVC");
 
-  let createElement = (~children as _, ~text, ~onInput, ~onSubmit, ()) =>
+  let createElement = (~children as _, ~text, ~areAllCompleted, ~onInput, ~onSubmit, ~onToggleAll, ()) =>
     component(hooks => {
       let onKeyDown = (event: NodeEvents.keyEventParams) =>
         if (event.keycode == 13) {
@@ -166,8 +166,8 @@ module AddTodo = {
       (
         hooks,
         <View style=Styles.container>
-          <Clickable onClick=((_) => ())>
-            <Text text={||} style=Styles.toggleAll />
+          <Clickable onClick=onToggleAll>
+            <Text text={||} style=Styles.toggleAll(areAllCompleted) />
           </Clickable>
           <Input
             style=Styles.input
@@ -284,7 +284,8 @@ module TodoMVC = {
     | AddTodo
     | ChangeFilter(Filter.t)
     | UpdateInputTextValue(string)
-    | ToggleTaskState(int);
+    | ToggleTaskState(int)
+    | ToggleAll;
 
   let reducer = (action: action, state: state) =>
     switch (action) {
@@ -297,7 +298,9 @@ module TodoMVC = {
         inputValue: "",
         nextId: state.nextId + 1,
       }
+
     | UpdateInputTextValue(text) => {...state, inputValue: text}
+    
     | ToggleTaskState(id) =>
       let todos =
         List.map(
@@ -305,7 +308,17 @@ module TodoMVC = {
           state.todos,
         );
       {...state, todos};
+
     | ChangeFilter(filter) => {...state, filter}
+    
+    | ToggleAll =>
+      let areAllCompleted = List.for_all((item: Todo.t) => item.isDone, state.todos);
+      let todos =
+        List.map(
+          (item: Todo.t) => {...item, isDone: !areAllCompleted},
+          state.todos,
+        );
+      {...state, todos};
     };
 
   let component = React.component("TodoMVC");
@@ -320,8 +333,8 @@ module TodoMVC = {
           task =>
             switch (filter) {
             | All => true
+            | Active => !task.Todo.isDone
             | Completed => task.Todo.isDone
-            | NotCompleted => !task.Todo.isDone
             },
           todos,
         );
@@ -338,16 +351,18 @@ module TodoMVC = {
 
         <View style=Styles.filterButtonsContainer>
           {button(All)}
+          {button(Active)}
           {button(Completed)}
-          {button(NotCompleted)}
         </View>
       };
 
       let addTodoView = {
         let onInput = value => dispatch(UpdateInputTextValue(value));
         let onSubmit = () => dispatch(AddTodo);
+        let onToggleAll = () => dispatch(ToggleAll);
+        let areAllCompleted = List.for_all((item: Todo.t) => item.isDone, todos);
 
-        <AddTodo text=inputValue onInput onSubmit />
+        <AddTodo text=inputValue areAllCompleted onInput onSubmit onToggleAll />
       };
 
       let todoListView = {
