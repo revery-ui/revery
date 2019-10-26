@@ -6,6 +6,22 @@ module Constants = {
   let fontSize = 12;
 }
 
+module Theme = {
+  let fontFamily = Style.fontFamily("Roboto-Regular.ttf");
+  let fontSize = 12;
+
+  let appBackground = Color.rgb(0.9, 0.93, 0.9);
+  let textColor = Color.rgb(0.3, 0.33, 0.3);
+
+  let panelBackground = Colors.white;
+  let panelBorder = Style.border(~width=1, ~color=Color.rgb(0.85, 0.88, 0.85));
+
+  let buttonBackground = Colors.mediumSeaGreen;
+  let disabledButtonBackground = Colors.darkSeaGreen;
+  let selectedButtonBackground = Colors.seaGreen;
+  let buttonTextColor = Color.rgb(0.96, 1., 0.96);
+}
+
 module Filter = {
   type t =
     | All
@@ -21,25 +37,28 @@ module Filter = {
 };
 
 module Button = {
-  let noop = () => ();
-
   module Styles = {
-    let box = (~disabled, ~isSelected) =>
+    let box = (~isDisabled, ~isSelected) =>
       Style.[
         position(`Relative),
-        backgroundColor(disabled ? Colors.dimGrey : isSelected ? Colors.lightSkyBlue : Colors.dodgerBlue),
         justifyContent(`Center),
         alignItems(`Center),
-        border(~width=1, ~color=Colors.white),
         paddingVertical(4),
         paddingHorizontal(8),
+        backgroundColor(
+          switch (isDisabled, isSelected) {
+          | (true, _) => Theme.disabledButtonBackground
+          | (false, true) => Theme.selectedButtonBackground
+          | (false, false) => Theme.buttonBackground
+          }
+        ),
       ];
 
     let text = 
       Style.[
-        fontSize(Constants.fontSize),
-        fontFamily("Roboto-Regular.ttf"),
-        color(Colors.white),
+        Theme.fontFamily,
+        fontSize(Theme.fontSize),
+        color(Theme.buttonTextColor),
         textWrap(TextWrapping.NoWrap),
       ];
   }
@@ -50,8 +69,8 @@ module Button = {
       (
         ~children as _,
         ~label,
-        ~onClick=noop,
-        ~disabled=false,
+        ~onClick=?,
+        ~isDisabled=false,
         ~isSelected=false,
         ~tabindex=?,
         ~onFocus=?,
@@ -62,9 +81,8 @@ module Button = {
     component(slots =>
       (
         slots,
-        <Clickable
-          onClick={disabled ? noop : onClick} ?onFocus ?onBlur ?tabindex>
-          <View style=Styles.box(~disabled, ~isSelected)>
+        <Clickable ?onClick ?onFocus ?onBlur ?tabindex>
+          <View style=Styles.box(~isDisabled, ~isSelected)>
             <Text style=Styles.text text=label />
           </View>
         </Clickable>,
@@ -78,19 +96,20 @@ module Checkbox = {
   module Styles = {
     let box = isChecked =>
       Style.[
-        width(24),
-        height(24),
-        border(~width=1, ~color=Colors.gray),
-        backgroundColor(isChecked ? Colors.dodgerBlue : Colors.transparentWhite),
+        width(int_of_float(float_of_int(Theme.fontSize) *. 1.5)),
+        height(int_of_float(float_of_int(Theme.fontSize) *. 1.5)),
         justifyContent(`Center),
         alignItems(`Center),
+        Theme.panelBorder,
+        backgroundColor(isChecked ? Theme.buttonBackground : Colors.transparentWhite),
       ];
 
     let checkmark = isChecked =>
       Style.[
-        color(isChecked ? Colors.white : Colors.black),
-        fontSize(16),
+        color(isChecked ? Theme.panelBackground : Colors.transparentWhite),
+        fontSize(Theme.fontSize),
         fontFamily("FontAwesome5FreeSolid.otf"),
+        /* transform(Transform.[TranslateX(1.), TranslateY(2.)]), */
       ];
   }
 
@@ -109,17 +128,21 @@ module Todo = {
   module Styles = {
     let box =
       Style.[
-        backgroundColor(Colors.white),
         flexDirection(`Row),
-        margin(4),
+        margin(2),
+        paddingVertical(4),
+        paddingHorizontal(8),
+        alignItems(`Center),
+        backgroundColor(Theme.panelBackground),
+        Theme.panelBorder,
       ];
 
     let text = 
       Style.[
-        color(Colors.black),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(16),
-        margin(2),
+        margin(6),
+        Theme.fontFamily,
+        fontSize(Theme.fontSize),
+        color(Theme.textColor),
       ];
   }
 
@@ -153,7 +176,7 @@ module TodoMVC = {
         alignItems(`Stretch),
         justifyContent(`Center),
         flexDirection(`Column),
-        backgroundColor(Colors.whiteSmoke),
+        backgroundColor(Theme.appBackground),
       ];
 
     let filterButtonsContainer =
@@ -170,13 +193,16 @@ module TodoMVC = {
 
     let input =
       Style.[
-        fontSize(16),
+        fontSize(int_of_float(float_of_int(Theme.fontSize) *. 1.25)),
+        backgroundColor(Theme.panelBackground),
+        border(~width=0, ~color=Colors.transparentWhite),
       ];
 
     let todoList =
       Style.[
         flexGrow(1),
-        border(~width=1, ~color=Colors.black),
+        paddingVertical(2),
+        paddingHorizontal(6),
       ];
   }
 
@@ -271,7 +297,7 @@ module TodoMVC = {
             value=inputValue
             onChange={({value, _}) => onInput(value)}
           />
-          <Button label="+" disabled={inputValue == ""} onClick=onButtonClick />
+          <Button label="+" isDisabled={inputValue == ""} onClick=onButtonClick />
         </View>
       };
 
