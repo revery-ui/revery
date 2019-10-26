@@ -1,4 +1,5 @@
 include Animation;
+include Spring;
 include Effect;
 include Reducer;
 include Ref;

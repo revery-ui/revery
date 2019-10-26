@@ -26,6 +26,7 @@ type state = {
 let state: state = {
   examples: [
     {name: "Animation", render: _w => Hello.render(), source: "Hello.re"},
+    {name: "Spring", render: _w => Spring.render(), source: "Spring.re"},
     {
       name: "Button",
       render: _ => DefaultButton.render(),
@@ -127,7 +128,7 @@ let state: state = {
       source: "ZoomExample.re",
     },
   ],
-  selectedExample: "Calculator",
+  selectedExample: "Spring",
 };
 
 let getExampleByName = (state: state, example: string) =>
