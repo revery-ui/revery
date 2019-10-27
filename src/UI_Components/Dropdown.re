@@ -37,7 +37,13 @@ let textStyles =
 let noop = _item => ();
 
 let%component make =
-              (~items, ~onItemSelected, ~width as w=200, ~height as h=50, ()) => {
+              (
+                ~items: list(item('a)),
+                ~onItemSelected,
+                ~width as w=200,
+                ~height as h=50,
+                (),
+              ) => {
   let initialState = {items, selected: List.nth(items, 0), _open: false};
 
   let%hook (state, dispatch) = Hooks.reducer(~initialState, reducer);

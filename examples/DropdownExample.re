@@ -30,7 +30,7 @@ module DropdownExample = {
 
     <View style=containerStyle>
       <Text style=textStyle text={"Selected Item: " ++ selectedItem.label} />
-      <Dropdown items onItemSelected={item => setSelectedItem(item)} />
+      <Dropdown items onItemSelected={item => setSelectedItem(_ => item)} />
     </View>;
   };
 };
