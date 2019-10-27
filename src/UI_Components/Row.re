@@ -1,7 +1,7 @@
 open Revery_UI;
 open Revery_UI_Primitives;
 
-let%component make = (~children, ()) => {
+let make = (~children, ()) => {
   let style =
     Style.[
       flexDirection(`Row),

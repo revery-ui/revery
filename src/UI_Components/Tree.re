@@ -109,7 +109,7 @@ let rec renderTree = (~indent=0, ~nodeRenderer, ~emptyRenderer, t) => {
    narrow down the type signature of the "tree" to whaterver type the
    default takes making it no longer generalisable
  */
-let%component make = (~tree, ~nodeRenderer, ~emptyRenderer=None, ()) => {
+let make = (~tree, ~nodeRenderer, ~emptyRenderer=None, ()) => {
   let componentTree = renderTree(tree, ~nodeRenderer, ~emptyRenderer);
   <View> ...componentTree </View>;
 };

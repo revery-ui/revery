@@ -11,14 +11,14 @@ let defaultStyle =
 
 let noop = _c => ();
 
-let%component make =
-              (
-                ~checked=false,
-                ~checkedColor=Colors.dodgerBlue,
-                ~style=defaultStyle,
-                ~onChange=noop,
-                (),
-              ) => {
+let make =
+    (
+      ~checked=false,
+      ~checkedColor=Colors.dodgerBlue,
+      ~style=defaultStyle,
+      ~onChange=noop,
+      (),
+    ) => {
   let stylesToUse = Style.merge(~source=defaultStyle, ~target=style);
   let bgColor = checked ? checkedColor : Colors.transparentWhite;
   let checkedContent = checked ? {||} : "";
