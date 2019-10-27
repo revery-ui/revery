@@ -12,7 +12,7 @@ let%nativeComponent make =
                       ~style=emptyTextStyle,
                       ~text="",
                       ~gamma=2.2,
-                      ~children,
+                      ~children=React.empty,
                       (),
                       hooks,
                     ) => (

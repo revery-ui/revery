@@ -48,8 +48,8 @@ let%component make =
    */
   let v =
     if (value != initialValue) {
-      setInitialValue(value);
-      setV(value);
+      setInitialValue(_ => value);
+      setV(_ => value);
       value;
     } else {
       v;

@@ -25,7 +25,7 @@ let isMouseInsideRef = (ref: node, mouseX: float, mouseY: float) => {
 
 let%component make =
               (
-                ~style,
+                ~style=[],
                 ~onClick: clickFunction=noop,
                 ~onRightClick: clickFunction=noop,
                 ~onAnyClick: clickFunctionWithEvt=noopEvt,

@@ -130,7 +130,6 @@ let defaultStyles =
 
 let%component make =
               (
-                ~children as _,
                 ~style=defaultStyles,
                 ~placeholderColor=Colors.grey,
                 ~cursorColor=Colors.black,
@@ -138,7 +137,7 @@ let%component make =
                 ~placeholder="",
                 ~onKeyDown=_ => (),
                 ~onChange=_ => (),
-                ~value=?,
+                ~value as valueAsProp=?,
                 (),
               ) => {
   let%hook (state, dispatch) =
@@ -210,7 +209,7 @@ let%component make =
             );
           };
         };
-        setInputValueRef(valueToDisplay);
+        setInputValueRef(_ => valueToDisplay);
         None;
       },
     );
