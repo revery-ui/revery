@@ -4,7 +4,7 @@ open Revery.UI.Components;
 
 module Constants = {
   let fontSize = 12;
-}
+};
 
 module Theme = {
   let fontFamily = Style.fontFamily("Roboto-Regular.ttf");
@@ -17,18 +17,14 @@ module Theme = {
   let titleTextColor = Color.rgb(0.85, 0.8, 0.9);
 
   let panelBackground = Color.rgb(0.98, 0.94, 1.);
-  let panelBorder = Style.border(~width=1, ~color=Color.rgb(0.85, 0.88, 0.85));
-
-  /* let buttonBackground = Colors.mediumSeaGreen;
-  let disabledButtonBackground = Colors.darkSeaGreen;
-  let selectedButtonBackground = Colors.seaGreen;
-  let buttonTextColor = Color.rgb(0.96, 1., 0.96); */
+  let panelBorder =
+    Style.border(~width=1, ~color=Color.rgb(0.85, 0.88, 0.85));
 
   let buttonColor = Colors.mediumPurple;
   let hoveredButtonColor = Color.rgb(0.7, 0.6, 0.8);
 
   let dangerColor = Colors.indianRed;
-}
+};
 
 module Filter = {
   type t =
@@ -61,19 +57,19 @@ module Button = {
             | (true, _) => Theme.buttonColor
             | (false, true) => Theme.hoveredButtonColor
             | (false, false) => Colors.transparentWhite
-            }
+            },
         ),
         borderRadius(2.),
       ];
 
-    let text = 
+    let text =
       Style.[
         Theme.fontFamily,
         fontSize(Theme.rem(0.8)),
         color(Theme.buttonColor),
         textWrap(TextWrapping.NoWrap),
       ];
-  }
+  };
 
   let component = React.component("Button");
 
@@ -90,23 +86,21 @@ module Button = {
         (),
       ) =>
     component(hooks => {
-      let (isHovered, setHovered, hooks) =
-        Hooks.state(false, hooks);
+      let (isHovered, setHovered, hooks) = Hooks.state(false, hooks);
 
       (
         hooks,
         <Clickable ?onClick ?onFocus ?onBlur ?tabindex>
           <View
-            style=Styles.box(~isSelected, ~isHovered) 
+            style={Styles.box(~isSelected, ~isHovered)}
             onMouseOver={_ => setHovered(true)}
-            onMouseOut={_ => setHovered(false)}
-            >
+            onMouseOut={_ => setHovered(false)}>
             <Text style=Styles.text text=label />
           </View>
         </Clickable>,
-      )
+      );
     });
-}
+};
 
 module Checkbox = {
   let component = React.component("Checkbox");
@@ -119,7 +113,9 @@ module Checkbox = {
         justifyContent(`Center),
         alignItems(`Center),
         Theme.panelBorder,
-        backgroundColor(isChecked ? Theme.buttonColor : Colors.transparentWhite),
+        backgroundColor(
+          isChecked ? Theme.buttonColor : Colors.transparentWhite,
+        ),
       ];
 
     let checkmark = isChecked =>
@@ -129,18 +125,23 @@ module Checkbox = {
         fontFamily("FontAwesome5FreeSolid.otf"),
         transform(Transform.[TranslateY(2.)]),
       ];
-  }
+  };
 
   let createElement = (~children as _, ~isChecked, ~onToggle, ()) =>
-    component(hooks => (
-      hooks,
-      <Clickable onClick=onToggle>
-        <View style=Styles.box(isChecked)>
-          <Text text={isChecked ? {||} : ""} style=Styles.checkmark(isChecked) />
-        </View>
-      </Clickable>,
-    ));
-}
+    component(hooks =>
+      (
+        hooks,
+        <Clickable onClick=onToggle>
+          <View style={Styles.box(isChecked)}>
+            <Text
+              text={isChecked ? {||} : ""}
+              style={Styles.checkmark(isChecked)}
+            />
+          </View>
+        </Clickable>,
+      )
+    );
+};
 
 module AddTodo = {
   module Styles = {
@@ -164,27 +165,37 @@ module AddTodo = {
       ];
 
     let input =
-      Style.[
-        fontSize(Theme.fontSize),
-        border(~width=0, ~color=Colors.transparentWhite),
-        width(4000), // Not ideal, should be possible to use flexGrow(1) instead
-      ];
-  }
+      Style.
+        [
+          fontSize(Theme.fontSize),
+          border(~width=0, ~color=Colors.transparentWhite),
+          width(4000),
+        ]; // Not ideal, should be possible to use flexGrow(1) instead
+  };
 
   let component = React.component("AddTodo");
 
-  let createElement = (~children as _, ~text, ~areAllCompleted, ~onInput, ~onSubmit, ~onToggleAll, ()) =>
+  let createElement =
+      (
+        ~children as _,
+        ~text,
+        ~areAllCompleted,
+        ~onInput,
+        ~onSubmit,
+        ~onToggleAll,
+        (),
+      ) =>
     component(hooks => {
       let onKeyDown = (event: NodeEvents.keyEventParams) =>
         if (event.keycode == 13) {
           onSubmit();
         };
-      
+
       (
         hooks,
         <View style=Styles.container>
           <Clickable onClick=onToggleAll>
-            <Text text={||} style=Styles.toggleAll(areAllCompleted) />
+            <Text text={||} style={Styles.toggleAll(areAllCompleted)} />
           </Clickable>
           <Input
             style=Styles.input
@@ -193,10 +204,10 @@ module AddTodo = {
             onChange={({value, _}) => onInput(value)}
             onKeyDown
           />
-        </View>
-      )
+        </View>,
+      );
     });
-}
+};
 
 module Todo = {
   module Styles = {
@@ -228,7 +239,7 @@ module Todo = {
         transform(Transform.[TranslateY(2.)]),
         marginRight(6),
       ];
-  }
+  };
 
   type t = {
     id: int,
@@ -240,29 +251,28 @@ module Todo = {
 
   let createElement = (~children as _, ~task, ~onToggle, ~onRemove, ()) =>
     component(hooks => {
-      let (isHovered, setHovered, hooks) =
-        Hooks.state(false, hooks);
+      let (isHovered, setHovered, hooks) = Hooks.state(false, hooks);
 
       (
         hooks,
-        <View style=Styles.box onMouseOver={_ => setHovered(true)} onMouseOut={_ => setHovered(false)}>
+        <View
+          style=Styles.box
+          onMouseOver={_ => setHovered(true)}
+          onMouseOut={_ => setHovered(false)}>
           <Checkbox isChecked={task.isDone} onToggle />
-          <Text style=Styles.text(task.isDone) text={task.task} />
+          <Text style={Styles.text(task.isDone)} text={task.task} />
           <Clickable onClick=onRemove>
-            <Text text={||} style=Styles.removeButton(isHovered) />
+            <Text text={||} style={Styles.removeButton(isHovered)} />
           </Clickable>
-        </View>
-      )
+        </View>,
+      );
     });
-}
+};
 
 module Footer = {
   module Styles = {
     let container =
-      Style.[
-        flexDirection(`Row),
-        justifyContent(`SpaceBetween)
-      ];
+      Style.[flexDirection(`Row), justifyContent(`SpaceBetween)];
 
     let filterButtonsContainer =
       Style.[
@@ -274,11 +284,7 @@ module Footer = {
         alignSelf(`Center),
       ];
 
-    let leftFlexContainer =
-      Style.[
-        flexGrow(1),
-        width(0),
-      ];
+    let leftFlexContainer = Style.[flexGrow(1), width(0)];
 
     let rightFlexContainer =
       Style.[
@@ -303,11 +309,20 @@ module Footer = {
         color(isHovered ? Theme.hoveredButtonColor : Theme.buttonColor),
         textWrap(TextWrapping.NoWrap),
       ];
-  }
+  };
 
   let component = React.component("Footer");
 
-  let createElement = (~children as _, ~activeCount, ~completedCount, ~currentFilter, ~onSelectFilter, ~onClearCompleted, ()) =>
+  let createElement =
+      (
+        ~children as _,
+        ~activeCount,
+        ~completedCount,
+        ~currentFilter,
+        ~onSelectFilter,
+        ~onClearCompleted,
+        (),
+      ) =>
     component(hooks => {
       let itemsLeft = {
         let text =
@@ -316,7 +331,7 @@ module Footer = {
           | n => Printf.sprintf("%i items left", n)
           };
 
-        <Text text style=Styles.itemsLeft />
+        <Text text style=Styles.itemsLeft />;
       };
 
       let filterButtonsView = {
@@ -331,12 +346,11 @@ module Footer = {
           {button(All)}
           {button(Active)}
           {button(Completed)}
-        </View>
+        </View>;
       };
 
       let (hooks, clearCompleted) = {
-        let (isHovered, setHovered, hooks) =
-          Hooks.state(false, hooks);
+        let (isHovered, setHovered, hooks) = Hooks.state(false, hooks);
 
         let text =
           switch (completedCount) {
@@ -347,27 +361,25 @@ module Footer = {
         (
           hooks,
           <Clickable onClick=onClearCompleted>
-            <View onMouseOver={_ => setHovered(true)} onMouseOut={_ => setHovered(false)}>
-              <Text text style=Styles.clearCompleted(isHovered) />
+            <View
+              onMouseOver={_ => setHovered(true)}
+              onMouseOut={_ => setHovered(false)}>
+              <Text text style={Styles.clearCompleted(isHovered)} />
             </View>
-          </Clickable>
-        )
+          </Clickable>,
+        );
       };
 
       (
         hooks,
         <View style=Styles.container>
-          <View style=Styles.leftFlexContainer>
-            {itemsLeft}
-          </View>
-          {filterButtonsView}
-          <View style=Styles.rightFlexContainer>
-            {clearCompleted}
-          </View>
-        </View>
-      )
+          <View style=Styles.leftFlexContainer> itemsLeft </View>
+          filterButtonsView
+          <View style=Styles.rightFlexContainer> clearCompleted </View>
+        </View>,
+      );
     });
-}
+};
 
 module TodoMVC = {
   module Styles = {
@@ -397,11 +409,8 @@ module TodoMVC = {
         textWrap(TextWrapping.NoWrap),
       ];
 
-    let todoList =
-      Style.[
-        flexGrow(1),
-      ];
-  }
+    let todoList = Style.[flexGrow(1)];
+  };
 
   type state = {
     todos: list(Todo.t),
@@ -411,14 +420,15 @@ module TodoMVC = {
   };
 
   let initialState = {
-    todos: Todo.[
-      { id: 0, task: "Buy Milk", isDone: false },
-      { id: 1, task: "Wag the Dog", isDone: true },
-    ],
+    todos:
+      Todo.[
+        {id: 0, task: "Buy Milk", isDone: false},
+        {id: 1, task: "Wag the Dog", isDone: true},
+      ],
     filter: All,
     inputValue: "",
-    nextId: 2
-  }
+    nextId: 2,
+  };
 
   type action =
     | Add
@@ -435,18 +445,19 @@ module TodoMVC = {
         ...state,
         todos: [
           {id: state.nextId, task: state.inputValue, isDone: false},
-          ...state.todos
+          ...state.todos,
         ],
         inputValue: "",
         nextId: state.nextId + 1,
       }
 
     | UpdateInput(text) => {...state, inputValue: text}
-    
+
     | Toggle(id) =>
       let todos =
         List.map(
-          (item: Todo.t) => item.id == id ? {...item, isDone: !item.isDone} : item,
+          (item: Todo.t) =>
+            item.id == id ? {...item, isDone: !item.isDone} : item,
           state.todos,
         );
       {...state, todos};
@@ -456,9 +467,10 @@ module TodoMVC = {
       {...state, todos};
 
     | SetFilter(filter) => {...state, filter}
-    
+
     | ToggleAll =>
-      let areAllCompleted = List.for_all((item: Todo.t) => item.isDone, state.todos);
+      let areAllCompleted =
+        List.for_all((item: Todo.t) => item.isDone, state.todos);
       let todos =
         List.map(
           (item: Todo.t) => {...item, isDone: !areAllCompleted},
@@ -479,21 +491,28 @@ module TodoMVC = {
         Hooks.reducer(~initialState, reducer, hooks);
 
       let header = {
-        <Text text="todoMVC" style=Styles.title />
+        <Text text="todoMVC" style=Styles.title />;
       };
 
       let addTodoView = {
         let onInput = value => dispatch(UpdateInput(value));
         let onSubmit = () => dispatch(Add);
         let onToggleAll = () => dispatch(ToggleAll);
-        let areAllCompleted = List.for_all((item: Todo.t) => item.isDone, todos);
+        let areAllCompleted =
+          List.for_all((item: Todo.t) => item.isDone, todos);
 
-        <AddTodo text=inputValue areAllCompleted onInput onSubmit onToggleAll />
+        <AddTodo
+          text=inputValue
+          areAllCompleted
+          onInput
+          onSubmit
+          onToggleAll
+        />;
       };
 
       let todoListView = {
-        let onToggle = id => () => dispatch(Toggle(id));
-        let onRemove = id => () => dispatch(Remove(id));
+        let onToggle = (id, ()) => dispatch(Toggle(id));
+        let onRemove = (id, ()) => dispatch(Remove(id));
         let filteredTodos =
           List.filter(
             task =>
@@ -507,43 +526,43 @@ module TodoMVC = {
 
         <ScrollView style=Styles.todoList>
           <View>
-            ...{
-              List.map(
-                (task: Todo.t) =>
-                  <Todo
-                    task
-                    onToggle=onToggle(task.id)
-                    onRemove=onRemove(task.id)
-                  />,
-                filteredTodos
-              )
-            }
+            ...{List.map(
+              (task: Todo.t) =>
+                <Todo
+                  task
+                  onToggle={onToggle(task.id)}
+                  onRemove={onRemove(task.id)}
+                />,
+              filteredTodos,
+            )}
           </View>
-        </ScrollView>
+        </ScrollView>;
       };
 
       let footer = {
         let onSelectFilter = filter => dispatch(SetFilter(filter));
         let onClearCompleted = () => dispatch(ClearCompleted);
         let activeCount =
-          todos
-          |> List.filter((item: Todo.t) => !item.isDone)
-          |> List.length;
+          todos |> List.filter((item: Todo.t) => !item.isDone) |> List.length;
         let completedCount =
-          todos
-          |> List.filter((item: Todo.t) => item.isDone)
-          |> List.length;
+          todos |> List.filter((item: Todo.t) => item.isDone) |> List.length;
 
-        <Footer activeCount completedCount currentFilter onSelectFilter onClearCompleted />
+        <Footer
+          activeCount
+          completedCount
+          currentFilter
+          onSelectFilter
+          onClearCompleted
+        />;
       };
 
       (
         hooks,
         <View style=Styles.appContainer>
-          {header}
-          {addTodoView}
-          {todoListView}
-          {footer}
+          header
+          addTodoView
+          todoListView
+          footer
         </View>,
       );
     });
