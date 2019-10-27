@@ -4,26 +4,21 @@ open Revery_UI_Primitives;
 
 let noop = () => ();
 
-[@component]
-let make =
-    (
-      ~children as _,
-      ~title,
-      ~onClick=noop,
-      ~color as c=Colors.dodgerBlue,
-      ~fontSize as size=40,
-      ~width as w=300,
-      ~height as h=100,
-      ~disabled=false,
-      ~tabindex=?,
-      ~onFocus=?,
-      ~onBlur=?,
-      ~fontFamily as family="Roboto-Regular.ttf",
-      (),
-      /* children, */
-      slots,
-    ) => (
-  slots,
+let%component make =
+              (
+                ~title,
+                ~onClick=noop,
+                ~color as c=Colors.dodgerBlue,
+                ~fontSize as size=40,
+                ~width as w=300,
+                ~height as h=100,
+                ~disabled=false,
+                ~tabindex=?,
+                ~onFocus=?,
+                ~onBlur=?,
+                ~fontFamily as family="Roboto-Regular.ttf",
+                (),
+              ) =>
   <Clickable onClick={disabled ? noop : onClick} ?onFocus ?onBlur ?tabindex>
     <View
       style=Style.[
@@ -44,5 +39,4 @@ let make =
         text=title
       />
     </View>
-  </Clickable>,
-);
+  </Clickable>;

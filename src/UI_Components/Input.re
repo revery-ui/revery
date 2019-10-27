@@ -128,21 +128,20 @@ let defaultStyles =
     backgroundColor(Colors.transparentWhite),
   ];
 
-[@component]
-let make =
-    (
-      ~style,
-      ~autofocus,
-      ~placeholder,
-      ~cursorColor,
-      ~placeholderColor,
-      ~onChange,
-      ~onKeyDown,
-      ~value as valueAsProp,
-      (),
-      slots,
-    ) => {
-  let (state, dispatch, slots) =
+let%component make =
+              (
+                ~children as _,
+                ~style=defaultStyles,
+                ~placeholderColor=Colors.grey,
+                ~cursorColor=Colors.black,
+                ~autofocus=false,
+                ~placeholder="",
+                ~onKeyDown=_ => (),
+                ~onChange=_ => (),
+                ~value=?,
+                (),
+              ) => {
+  let%hook (state, dispatch) =
     Hooks.reducer(
       ~initialState={
         internalValue: "",
@@ -155,7 +154,6 @@ let make =
         isFocused: false,
       },
       reducer,
-      slots,
     );
 
   let valueToDisplay =
@@ -164,20 +162,18 @@ let make =
     | None => state.internalValue
     };
 
-  let slots =
+  let%hook () =
     Hooks.effect(
       OnMount,
       () => {
         let clear = Tick.interval(_ => dispatch(CursorTimer), Seconds(0.1));
         Some(clear);
       },
-      slots,
     );
 
-  let (inputValueRef, setInputValueRef, slots) =
-    Hooks.ref(valueToDisplay, slots);
+  let%hook (inputValueRef, setInputValueRef) = Hooks.ref(valueToDisplay);
 
-  let slots =
+  let%hook () =
     Hooks.effect(
       If((!=), valueToDisplay),
       () => {
@@ -217,7 +213,6 @@ let make =
         setInputValueRef(valueToDisplay);
         None;
       },
-      slots,
     );
 
   let handleTextInput = (event: NodeEvents.textInputEventParams) => {
@@ -373,51 +368,23 @@ let make =
   /*
      component
    */
-  (
-    slots,
-    <Clickable
-      onFocus={() => {
-        dispatch(ResetCursorTimer);
-        dispatch(SetFocus(true));
-        Sdl2.TextInput.start();
-      }}
-      onBlur={() => {
-        dispatch(ResetCursorTimer);
-        dispatch(SetFocus(false));
-        Sdl2.TextInput.stop();
-      }}
-      componentRef={autofocus ? Focus.focus : ignore}
-      onKeyDown=handleKeyDown
-      onTextInput=handleTextInput>
-      <View style=viewStyles>
-        cursor
-        {hasPlaceholder ? placeholderText : inputText}
-      </View>
-    </Clickable>,
-  );
+  <Clickable
+    onFocus={() => {
+      dispatch(ResetCursorTimer);
+      dispatch(SetFocus(true));
+      Sdl2.TextInput.start();
+    }}
+    onBlur={() => {
+      dispatch(ResetCursorTimer);
+      dispatch(SetFocus(false));
+      Sdl2.TextInput.stop();
+    }}
+    componentRef={autofocus ? Focus.focus : ignore}
+    onKeyDown=handleKeyDown
+    onTextInput=handleTextInput>
+    <View style=viewStyles>
+      cursor
+      {hasPlaceholder ? placeholderText : inputText}
+    </View>
+  </Clickable>;
 };
-
-let make =
-    (
-      ~children as _,
-      ~style=defaultStyles,
-      ~placeholderColor=Colors.grey,
-      ~cursorColor=Colors.black,
-      ~autofocus=false,
-      ~placeholder="",
-      ~onKeyDown=_ => (),
-      ~onChange=_ => (),
-      ~value=?,
-      (),
-    ) =>
-  make(
-    ~value,
-    ~style,
-    ~placeholder,
-    ~autofocus,
-    ~cursorColor,
-    ~placeholderColor,
-    ~onKeyDown,
-    ~onChange,
-    (),
-  );

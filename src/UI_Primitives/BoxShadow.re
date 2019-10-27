@@ -2,9 +2,7 @@ open Revery_UI;
 open React;
 open Style;
 
-[@nativeComponent]
-let make = (~boxShadow=BoxShadow.make(), ~children, (), hooks) => (
-  hooks,
+let%nativeComponent make = (~boxShadow=BoxShadow.make(), ~children, (), hooks) => (
   {
     make: () => {
       let styles = Style.make(~boxShadow, ());
@@ -18,5 +16,9 @@ let make = (~boxShadow=BoxShadow.make(), ~children, (), hooks) => (
       node;
     },
     children,
+    insertNode,
+    deleteNode,
+    moveNode,
   },
+  hooks,
 );

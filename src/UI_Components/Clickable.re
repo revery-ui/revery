@@ -23,27 +23,24 @@ let isMouseInsideRef = (ref: node, mouseX: float, mouseY: float) => {
   BoundingBox2d.isPointInside(clickableDimensions, pointVec);
 };
 
-[@component]
-let make =
-    (
-      ~style,
-      ~onClick: clickFunction=noop,
-      ~onRightClick: clickFunction=noop,
-      ~onAnyClick: clickFunctionWithEvt=noopEvt,
-      ~componentRef=?,
-      ~onBlur=?,
-      ~onFocus=?,
-      ~tabindex=?,
-      ~onKeyDown=?,
-      ~onKeyUp=?,
-      ~onTextEdit=?,
-      ~onTextInput=?,
-      ~children,
-      (),
-      slots,
-    ) => {
-  let (clickableRef, setClickableRefOption, slots) =
-    Hooks.state(None, slots);
+let%component make =
+              (
+                ~style,
+                ~onClick: clickFunction=noop,
+                ~onRightClick: clickFunction=noop,
+                ~onAnyClick: clickFunctionWithEvt=noopEvt,
+                ~componentRef=?,
+                ~onBlur=?,
+                ~onFocus=?,
+                ~tabindex=?,
+                ~onKeyDown=?,
+                ~onKeyUp=?,
+                ~onTextEdit=?,
+                ~onTextInput=?,
+                ~children,
+                (),
+              ) => {
+  let%hook (clickableRef, setClickableRefOption) = Hooks.state(None);
 
   let setClickableRef = r => {
     switch (componentRef) {
@@ -85,20 +82,17 @@ let make =
 
   let style = Style.[cursor(MouseCursors.pointer), ...style];
 
-  (
-    slots,
-    <View
-      style
-      onMouseDown
-      ?onBlur
-      ?onFocus
-      ?onKeyDown
-      ?onKeyUp
-      ?onTextEdit
-      ?onTextInput
-      tabindex
-      ref={r => setClickableRef(r)}>
-      ...children
-    </View>,
-  );
+  <View
+    style
+    onMouseDown
+    ?onBlur
+    ?onFocus
+    ?onKeyDown
+    ?onKeyUp
+    ?onTextEdit
+    ?onTextInput
+    tabindex
+    ref={r => setClickableRef(r)}>
+    ...children
+  </View>;
 };

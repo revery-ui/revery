@@ -15,51 +15,45 @@ let defaultStyle =
     fontFamily("Roboto-Regular.ttf"),
   ];
 
-[@component]
-let make =
-    (
-      ~defaultSelected,
-      ~buttons: list(button('a)),
-      ~iconSize,
-      ~style,
-      ~onChange,
-      (),
-      slots,
-    ) => {
+let%component make =
+              (
+                ~defaultSelected,
+                ~buttons: list(button('a)),
+                ~iconSize,
+                ~style,
+                ~onChange,
+                (),
+              ) => {
   let defaultVal = List.nth(buttons, defaultSelected).value;
-  let (checkedVal, setCheckedVal, slots) =
-    React.Hooks.state(defaultVal, slots);
+  let%hook (checkedVal, setCheckedVal) = React.Hooks.state(defaultVal);
 
   let icon = v => v == checkedVal ? {||} : {||};
 
-  (
-    slots,
-    <View style=Style.[justifyContent(`Center), alignItems(`Center)]>
-      ...{
-           buttons
-           |> List.map(button =>
-                <Clickable
-                  onClick={() => {
-                    setCheckedVal(button.value);
-                    onChange(button.value);
-                  }}
+  <View style=Style.[justifyContent(`Center), alignItems(`Center)]>
+    ...{
+         buttons
+         |> List.map(button =>
+              <Clickable
+                onClick={() => {
+                  setCheckedVal(button.value);
+                  onChange(button.value);
+                }}
+                style=Style.[
+                  justifyContent(`Center),
+                  flexDirection(`Row),
+                  alignItems(`Center),
+                  height(30),
+                ]>
+                <Text
+                  text={icon(button.value)}
                   style=Style.[
-                    justifyContent(`Center),
-                    flexDirection(`Row),
-                    alignItems(`Center),
-                    height(30),
-                  ]>
-                  <Text
-                    text={icon(button.value)}
-                    style=Style.[
-                      fontSize(iconSize),
-                      fontFamily("FontAwesome5FreeSolid.otf"),
-                    ]
-                  />
-                  <Text text={button.text} style />
-                </Clickable>
-              )
-         }
-    </View>,
-  );
+                    fontSize(iconSize),
+                    fontFamily("FontAwesome5FreeSolid.otf"),
+                  ]
+                />
+                <Text text={button.text} style />
+              </Clickable>
+            )
+       }
+  </View>;
 };

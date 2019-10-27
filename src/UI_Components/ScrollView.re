@@ -27,24 +27,21 @@ let reducer = (action, _state) => {
   };
 };
 
-[@component]
-let make =
-    (
-      ~style,
-      ~scrollLeft=0,
-      ~scrollTop=0,
-      ~bounce=defaultBounce,
-      ~children: React.syntheticElement,
-      (),
-      slots,
-    ) => {
-  let (actualScrollTop, dispatch, slots) =
-    Hooks.reducer(~initialState=scrollTop, reducer, slots);
-  let (outerRef: option(Revery_UI.node), setOuterRef, slots) =
-    Hooks.state(None, slots);
-  let (actualScrollLeft, setScrollLeft, slots) =
-    Hooks.state(scrollLeft, slots);
-  let (bouncingState, setBouncingState, slots) = Hooks.state(Idle, slots);
+let%component make =
+              (
+                ~style,
+                ~scrollLeft=0,
+                ~scrollTop=0,
+                ~bounce=defaultBounce,
+                ~children: React.syntheticElement,
+                (),
+              ) => {
+  let%hook (actualScrollTop, dispatch) =
+    Hooks.reducer(~initialState=scrollTop, reducer);
+  let%hook (outerRef: option(Revery_UI.node), setOuterRef) =
+    Hooks.state(None);
+  let%hook (actualScrollLeft, setScrollLeft) = Hooks.state(scrollLeft);
+  let%hook (bouncingState, setBouncingState) = Hooks.state(Idle);
 
   let scrollBarThickness = 10;
 
@@ -212,19 +209,16 @@ let make =
       height(scrollBarThickness),
     ];
 
-  (
-    slots,
-    <View style>
-      <View
-        onMouseWheel=scroll
-        ref={r => setOuterRef(Some(r))}
-        style=Style.[flexGrow(1), position(`Relative), overflow(`Scroll)]>
-        <View style=innerStyle> ...children </View>
-        <View style=verticalScrollbarContainerStyle> verticalScrollBar </View>
-        <View style=horizontalScrollbarContainerStyle>
-          horizontalScrollBar
-        </View>
+  <View style>
+    <View
+      onMouseWheel=scroll
+      ref={r => setOuterRef(Some(r))}
+      style=Style.[flexGrow(1), position(`Relative), overflow(`Scroll)]>
+      <View style=innerStyle> ...children </View>
+      <View style=verticalScrollbarContainerStyle> verticalScrollBar </View>
+      <View style=horizontalScrollbarContainerStyle>
+        horizontalScrollBar
       </View>
-    </View>,
-  );
+    </View>
+  </View>;
 };

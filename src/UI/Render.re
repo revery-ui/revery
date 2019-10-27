@@ -19,7 +19,7 @@ let render =
     (
       ~forceLayout=false,
       container: RenderContainer.t,
-      component: React.syntheticElement,
+      component: React.element('node),
     ) => {
   let {rootNode, window, container, _} = container;
 

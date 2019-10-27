@@ -17,25 +17,23 @@ let getStyles: (option(int), option(int), Style.t) => Style.t =
     style;
   };
 
-[@nativeComponent]
-let make =
-    (
-      ~onMouseDown=?,
-      ~onMouseMove=?,
-      ~onMouseUp=?,
-      ~onMouseWheel=?,
-      ~ref=?,
-      ~resizeMode=ImageResizeMode.Stretch,
-      ~opacity=1.0,
-      ~width=?,
-      ~height=?,
-      ~src="",
-      ~style=Style.emptyImageStyle,
-      ~children,
-      (),
-      hooks,
-    ) => (
-  hooks,
+let%nativeComponent make =
+                    (
+                      ~onMouseDown=?,
+                      ~onMouseMove=?,
+                      ~onMouseUp=?,
+                      ~onMouseWheel=?,
+                      ~ref=?,
+                      ~resizeMode=ImageResizeMode.Stretch,
+                      ~opacity=1.0,
+                      ~width=?,
+                      ~height=?,
+                      ~src="",
+                      ~style=Style.emptyImageStyle,
+                      ~children,
+                      (),
+                      hooks,
+                    ) => (
   {
     make: () => {
       let styles = Style.create(~style, ()) |> getStyles(width, height);
@@ -75,5 +73,9 @@ let make =
       node;
     },
     children,
+    insertNode,
+    deleteNode,
+    moveNode,
   },
+  hooks,
 );

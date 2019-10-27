@@ -25,4 +25,4 @@ let make:
     ~fontFamily: string=?,
     unit
   ) =>
-  Revery_UI.React.syntheticElement;
+  Revery_UI.React.element;

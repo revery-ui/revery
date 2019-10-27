@@ -2,22 +2,20 @@ open Revery_UI;
 open Style;
 open React;
 
-[@nativeComponent]
-let make =
-    (
-      ~onMouseDown=?,
-      ~onMouseMove=?,
-      ~onMouseUp=?,
-      ~onMouseWheel=?,
-      ~ref=?,
-      ~style=emptyTextStyle,
-      ~text="",
-      ~gamma=2.2,
-      ~children,
-      (),
-      hooks,
-    ) => (
-  hooks,
+let%nativeComponent make =
+                    (
+                      ~onMouseDown=?,
+                      ~onMouseMove=?,
+                      ~onMouseUp=?,
+                      ~onMouseWheel=?,
+                      ~ref=?,
+                      ~style=emptyTextStyle,
+                      ~text="",
+                      ~gamma=2.2,
+                      ~children,
+                      (),
+                      hooks,
+                    ) => (
   {
     make: () => {
       let styles = create(~style, ());
@@ -56,5 +54,9 @@ let make =
       node;
     },
     children,
+    insertNode,
+    deleteNode,
+    moveNode,
   },
+  hooks,
 );

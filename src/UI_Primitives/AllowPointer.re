@@ -1,11 +1,10 @@
 open Revery_UI;
 open React;
+
 let ignorePointerStyle =
   Style.make(~pointerEvents=Style.PointerEvents.Allow, ());
 
-[@nativeComponent]
-let make = (~children, (), hooks) => (
-  hooks,
+let%nativeComponent make = (~children, (), hooks) => (
   {
     make: () => {
       let node = PrimitiveNodeFactory.get().createNode();
@@ -16,5 +15,9 @@ let make = (~children, (), hooks) => (
       node;
     },
     children,
+    insertNode,
+    deleteNode,
+    moveNode,
   },
+  hooks,
 );

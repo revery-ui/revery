@@ -11,43 +11,38 @@ let defaultStyle =
 
 let noop = _c => ();
 
-[@component]
-let make =
-    (
-      ~checked=false,
-      ~checkedColor=Colors.dodgerBlue,
-      ~style=defaultStyle,
-      ~onChange=noop,
-      (),
-      slots,
-    ) => {
+let%component make =
+              (
+                ~checked=false,
+                ~checkedColor=Colors.dodgerBlue,
+                ~style=defaultStyle,
+                ~onChange=noop,
+                (),
+              ) => {
   let stylesToUse = Style.merge(~source=defaultStyle, ~target=style);
   let bgColor = checked ? checkedColor : Colors.transparentWhite;
   let checkedContent = checked ? {||} : "";
 
-  (
-    slots,
-    <Clickable onClick=onChange>
-      <View
-        style=Style.(
-          merge(
-            ~source=[
-              backgroundColor(bgColor),
-              justifyContent(`Center),
-              alignItems(`Center),
-            ],
-            ~target=stylesToUse,
-          )
-        )>
-        <Text
-          text=checkedContent
-          style=Style.[
-            color(checked ? Colors.white : Colors.black),
-            fontSize(30),
-            fontFamily("FontAwesome5FreeSolid.otf"),
-          ]
-        />
-      </View>
-    </Clickable>,
-  );
+  <Clickable onClick=onChange>
+    <View
+      style=Style.(
+        merge(
+          ~source=[
+            backgroundColor(bgColor),
+            justifyContent(`Center),
+            alignItems(`Center),
+          ],
+          ~target=stylesToUse,
+        )
+      )>
+      <Text
+        text=checkedContent
+        style=Style.[
+          color(checked ? Colors.white : Colors.black),
+          fontSize(30),
+          fontFamily("FontAwesome5FreeSolid.otf"),
+        ]
+      />
+    </View>
+  </Clickable>;
 };

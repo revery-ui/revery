@@ -1,12 +1,12 @@
 open Revery_UI;
 
-let make:
+let%component make:
   (
     ~top: int=?,
     ~left: int=?,
     ~right: int=?,
     ~bottom: int=?,
-    ~children: list(React.syntheticElement),
+    ~children: list(React.element),
     unit
   ) =>
-  React.syntheticElement;
+  React.element;

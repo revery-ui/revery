@@ -1,9 +1,7 @@
 open Revery_UI;
 open React;
 
-[@nativeComponent]
-let make = (~padding, ~children, (), hooks) => (
-  hooks,
+let%nativeComponent make = (~padding, ~children, (), hooks) => (
   {
     make: () => {
       let styles = Style.make(~padding, ());
@@ -17,5 +15,9 @@ let make = (~padding, ~children, (), hooks) => (
       node;
     },
     children,
+    insertNode,
+    deleteNode,
+    moveNode,
   },
+  hooks,
 );

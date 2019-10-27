@@ -36,21 +36,18 @@ let textStyles =
 
 let noop = _item => ();
 
-[@component]
-let make =
-    (
-      ~items,
-      ~onItemSelected,
-      ~width as w=200,
-      ~height as h=50,
-      ~children as _,
-      (),
-      slots,
-    ) => {
+let%component make =
+              (
+                ~items,
+                ~onItemSelected,
+                ~width as w=200,
+                ~height as h=50,
+                ~children as _,
+                (),
+                hooks,
+              ) => {
   let initialState = {items, selected: List.nth(items, 0), _open: false};
-
-  let (state, dispatch, slots) =
-    Hooks.reducer(~initialState, reducer, slots);
+  let%hook (state, dispatch) = Hooks.reducer(~initialState, reducer);
 
   let items =
     state._open
@@ -81,59 +78,56 @@ let make =
         )
       : [];
 
-  (
-    slots,
-    <View
-      style=Style.[
-        position(`Relative),
-        backgroundColor(Colors.white),
-        width(w),
-      ]>
-      <Clickable onClick={() => dispatch(ShowDropdown)}>
-        <View
-          style=Style.[
-            flexDirection(`Row),
-            height(h),
-            justifyContent(`SpaceBetween),
-            paddingHorizontal(5),
-            border(
-              ~width=float_of_int(h) *. 0.05 |> int_of_float,
-              ~color=Colors.black,
-            ),
-          ]>
-          <View
-            style=Style.[
-              width(float_of_int(w) *. 0.8 |> int_of_float),
-              justifyContent(`Center),
-              overflow(`Hidden),
-            ]>
-            <Text style=textStyles text={state.selected.label} />
-          </View>
-          <Text
-            style=Style.[
-              fontSize(30),
-              color(Colors.black),
-              fontFamily("FontAwesome5FreeSolid.otf"),
-              paddingRight(5),
-              alignSelf(`Center),
-            ]
-            text={||}
-          />
-        </View>
-      </Clickable>
+  <View
+    style=Style.[
+      position(`Relative),
+      backgroundColor(Colors.white),
+      width(w),
+    ]>
+    <Clickable onClick={() => dispatch(ShowDropdown)}>
       <View
         style=Style.[
-          position(`Absolute),
-          top(h),
-          backgroundColor(Colors.white),
-          borderHorizontal(
+          flexDirection(`Row),
+          height(h),
+          justifyContent(`SpaceBetween),
+          paddingHorizontal(5),
+          border(
             ~width=float_of_int(h) *. 0.05 |> int_of_float,
             ~color=Colors.black,
           ),
-          overflow(`Hidden),
         ]>
-        ...items
+        <View
+          style=Style.[
+            width(float_of_int(w) *. 0.8 |> int_of_float),
+            justifyContent(`Center),
+            overflow(`Hidden),
+          ]>
+          <Text style=textStyles text={state.selected.label} />
+        </View>
+        <Text
+          style=Style.[
+            fontSize(30),
+            color(Colors.black),
+            fontFamily("FontAwesome5FreeSolid.otf"),
+            paddingRight(5),
+            alignSelf(`Center),
+          ]
+          text={||}
+        />
       </View>
-    </View>,
-  );
+    </Clickable>
+    <View
+      style=Style.[
+        position(`Absolute),
+        top(h),
+        backgroundColor(Colors.white),
+        borderHorizontal(
+          ~width=float_of_int(h) *. 0.05 |> int_of_float,
+          ~color=Colors.black,
+        ),
+        overflow(`Hidden),
+      ]>
+      ...items
+    </View>
+  </View>;
 };

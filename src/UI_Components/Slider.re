@@ -18,31 +18,29 @@ let noop = () => ();
 type valueChangedFunction = float => unit;
 let noopValueChanged = _f => ();
 
-[@component]
-let make =
-    (
-      ~children as _,
-      ~onValueChanged=noopValueChanged,
-      ~minimumValue=0.,
-      ~maximumValue=1.,
-      ~value=0.,
-      ~vertical=false,
-      ~thumbLength=15,
-      ~sliderLength=100,
-      ~thumbThickness=15,
-      ~trackThickness=5,
-      ~maximumTrackColor=Colors.darkGray,
-      ~minimumTrackColor=Color.hex("#90f7ff"),
-      ~thumbColor=Colors.gray,
-      (),
-      hooks,
-    ) => {
-  let (slideRef, setSlideRefOption, hooks) = Hooks.state(None, hooks);
-  let (thumbRef, setThumbRefOption, hooks) = Hooks.state(None, hooks);
-  let (isActive, setActive, hooks) = Hooks.state(false, hooks);
+let%component make =
+              (
+                ~children as _,
+                ~onValueChanged=noopValueChanged,
+                ~minimumValue=0.,
+                ~maximumValue=1.,
+                ~value=0.,
+                ~vertical=false,
+                ~thumbLength=15,
+                ~sliderLength=100,
+                ~thumbThickness=15,
+                ~trackThickness=5,
+                ~maximumTrackColor=Colors.darkGray,
+                ~minimumTrackColor=Color.hex("#90f7ff"),
+                ~thumbColor=Colors.gray,
+                (),
+              ) => {
+  let%hook (slideRef, setSlideRefOption) = Hooks.state(None);
+  let%hook (thumbRef, setThumbRefOption) = Hooks.state(None);
+  let%hook (isActive, setActive) = Hooks.state(false);
   /* Initial value is used to detect if the 'value' parameter ever changes */
-  let (initialValue, setInitialValue, hooks) = Hooks.state(value, hooks);
-  let (v, setV, hooks) = Hooks.state(value, hooks);
+  let%hook (initialValue, setInitialValue) = Hooks.state(value);
+  let%hook (v, setV) = Hooks.state(value);
 
   /*
    * If the slider value is updated (controlled),
@@ -100,7 +98,7 @@ let make =
     setActive(false);
   };
 
-  let hooks =
+  let%hook () =
     Hooks.effect(
       Always,
       () => {
@@ -141,7 +139,6 @@ let make =
             },
         );
       },
-      hooks,
     );
 
   let onMouseDown = (evt: NodeEvents.mouseButtonEventParams) =>
@@ -205,24 +202,21 @@ let make =
       backgroundColor(sliderBackgroundColor),
     ];
 
-  (
-    hooks,
-    <Opacity opacity=sliderOpacity>
-      <View onMouseDown style ref={r => setSlideRef(r)}>
-        <View style=beforeTrackStyle />
-        <View
-          ref={r => setThumbRef(r)}
-          style=Style.[
-            position(`Absolute),
-            height(vertical ? thumbWidth : thumbHeight),
-            width(vertical ? thumbHeight : thumbWidth),
-            left(vertical ? 0 : thumbPosition),
-            top(vertical ? thumbPosition : 0),
-            backgroundColor(thumbColor),
-          ]
-        />
-        <View style=afterTrackStyle />
-      </View>
-    </Opacity>,
-  );
+  <Opacity opacity=sliderOpacity>
+    <View onMouseDown style ref={r => setSlideRef(r)}>
+      <View style=beforeTrackStyle />
+      <View
+        ref={r => setThumbRef(r)}
+        style=Style.[
+          position(`Absolute),
+          height(vertical ? thumbWidth : thumbHeight),
+          width(vertical ? thumbHeight : thumbWidth),
+          left(vertical ? 0 : thumbPosition),
+          top(vertical ? thumbPosition : 0),
+          backgroundColor(thumbColor),
+        ]
+      />
+      <View style=afterTrackStyle />
+    </View>
+  </Opacity>;
 };

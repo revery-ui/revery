@@ -1,8 +1,7 @@
 open Revery_UI;
 open Revery_UI_Primitives;
 
-[@component]
-let make = (~children, (), hooks) => {
+let%component make = (~children, ()) => {
   let style =
     Style.[
       flexDirection(`Column),
@@ -10,5 +9,5 @@ let make = (~children, (), hooks) => {
       justifyContent(`Center),
     ];
 
-  (hooks, <View style> ...children </View>);
+  <View style> ...children </View>;
 };

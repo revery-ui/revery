@@ -3,6 +3,5 @@ open Revery_UI_Primitives;
 
 let style = (w, h) => Style.[position(`Relative), width(w), height(h)];
 
-[@component]
-let make = (~width as w, ~height as h, ~children, ()) =>
+let%component make = (~width as w, ~height as h, ~children, ()) =>
   <View style={style(w, h)}> ...children </View>;

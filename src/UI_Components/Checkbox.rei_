@@ -10,7 +10,7 @@ Simple out-of-box checkbox component
 ]}
 */
 
-let make:
+let%component make:
   (
     ~children: 'a,
     ~checked: bool=?,
@@ -19,4 +19,4 @@ let make:
     ~onChange: unit => unit=?,
     unit
   ) =>
-  Revery_UI.React.syntheticElement;
+  Revery_UI.React.element;
