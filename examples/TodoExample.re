@@ -9,6 +9,7 @@ module Constants = {
 module Theme = {
   let fontFamily = Style.fontFamily("Roboto-Regular.ttf");
   let fontSize = 16;
+  let rem = factor => int_of_float(float_of_int(fontSize) *. factor);
 
   let appBackground = Color.rgb(0.9, 0.93, 0.9);
   let textColor = Color.rgb(0.3, 0.32, 0.3);
@@ -18,10 +19,14 @@ module Theme = {
   let panelBackground = Colors.white;
   let panelBorder = Style.border(~width=1, ~color=Color.rgb(0.85, 0.88, 0.85));
 
-  let buttonBackground = Colors.mediumSeaGreen;
+  /* let buttonBackground = Colors.mediumSeaGreen;
   let disabledButtonBackground = Colors.darkSeaGreen;
   let selectedButtonBackground = Colors.seaGreen;
-  let buttonTextColor = Color.rgb(0.96, 1., 0.96);
+  let buttonTextColor = Color.rgb(0.96, 1., 0.96); */
+
+  let buttonColor = Colors.mediumSeaGreen;
+  let hoveredButtonColor = Colors.darkSeaGreen;
+
   let dangerColor = Colors.indianRed;
 }
 
@@ -41,28 +46,31 @@ module Filter = {
 
 module Button = {
   module Styles = {
-    let box = (~isDisabled, ~isSelected) =>
+    let box = (~isSelected, ~isHovered) =>
       Style.[
         position(`Relative),
         justifyContent(`Center),
         alignItems(`Center),
-        paddingVertical(6),
-        paddingHorizontal(12),
-        marginHorizontal(4),
-        backgroundColor(
-          switch (isDisabled, isSelected) {
-          | (true, _) => Theme.disabledButtonBackground
-          | (false, true) => Theme.selectedButtonBackground
-          | (false, false) => Theme.buttonBackground
-          }
+        paddingVertical(Theme.rem(0.15)),
+        paddingHorizontal(Theme.rem(0.5)),
+        marginHorizontal(Theme.rem(0.2)),
+        border(
+          ~width=1,
+          ~color=
+            switch (isSelected, isHovered) {
+            | (true, _) => Theme.buttonColor
+            | (false, true) => Theme.hoveredButtonColor
+            | (false, false) => Colors.transparentWhite
+            }
         ),
+        borderRadius(2.),
       ];
 
     let text = 
       Style.[
         Theme.fontFamily,
-        fontSize(Theme.fontSize),
-        color(Theme.buttonTextColor),
+        fontSize(Theme.rem(0.8)),
+        color(Theme.buttonColor),
         textWrap(TextWrapping.NoWrap),
       ];
   }
@@ -81,17 +89,23 @@ module Button = {
         ~onBlur=?,
         (),
       ) =>
-    /* children, */
-    component(slots =>
+    component(hooks => {
+      let (isHovered, setHovered, hooks) =
+        Hooks.state(false, hooks);
+
       (
-        slots,
+        hooks,
         <Clickable ?onClick ?onFocus ?onBlur ?tabindex>
-          <View style=Styles.box(~isDisabled, ~isSelected)>
+          <View
+            style=Styles.box(~isSelected, ~isHovered) 
+            onMouseOver={_ => setHovered(true)}
+            onMouseOut={_ => setHovered(false)}
+            >
             <Text style=Styles.text text=label />
           </View>
         </Clickable>,
       )
-    );
+    });
 }
 
 module Checkbox = {
@@ -100,12 +114,12 @@ module Checkbox = {
   module Styles = {
     let box = isChecked =>
       Style.[
-        width(int_of_float(float_of_int(Theme.fontSize) *. 1.5)),
-        height(int_of_float(float_of_int(Theme.fontSize) *. 1.5)),
+        width(Theme.rem(1.5)),
+        height(Theme.rem(1.5)),
         justifyContent(`Center),
         alignItems(`Center),
         Theme.panelBorder,
-        backgroundColor(isChecked ? Theme.buttonBackground : Colors.transparentWhite),
+        backgroundColor(isChecked ? Theme.buttonColor : Colors.transparentWhite),
       ];
 
     let checkmark = isChecked =>
@@ -113,7 +127,7 @@ module Checkbox = {
         color(isChecked ? Theme.panelBackground : Colors.transparentWhite),
         fontSize(Theme.fontSize),
         fontFamily("FontAwesome5FreeSolid.otf"),
-        /* transform(Transform.[TranslateX(1.), TranslateY(2.)]), */
+        transform(Transform.[TranslateY(2.)]),
       ];
   }
 
