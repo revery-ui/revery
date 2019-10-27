@@ -3,8 +3,7 @@ open Revery.UI.Components;
 open Revery.Platform;
 
 module NativeExamples = {
-  [@component]
-  let make = (~window, (), hooks) => {
+  let make = (~window) => {
     let increment = () => {
       Dialog.alert(window, "Hello, world");
     };
@@ -20,12 +19,9 @@ module NativeExamples = {
         right(0),
       ];
 
-    (
-      hooks,
-      <View style=containerStyle>
-        <Button title="Alert" onClick=increment />
-      </View>,
-    );
+    <View style=containerStyle>
+      <Button title="Alert" onClick=increment />
+    </View>;
   };
 };
 

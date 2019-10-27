@@ -59,9 +59,7 @@ let reducer = (action: action, state: state) =>
   };
 
 module FilterSection = {
-  [@component]
-  let make = (~currentFilter, ~onPickingFilter, (), hooks) => (
-    hooks,
+  let make = (~currentFilter, ~onPickingFilter, ()) =>
     <View
       style=Style.[
         flexDirection(`Row),
@@ -108,28 +106,24 @@ module FilterSection = {
         }
         onClick={() => onPickingFilter(NotCompleted)}
       />
-    </View>,
-  );
+    </View>;
 };
 
 module Example = {
-  [@component]
-  let make = ((), hooks) => {
-    let ({todos, inputValue, filter, _}, dispatch, hooks) =
+  let%component make = () => {
+    let%hook ({todos, inputValue, filter, _}, dispatch) =
       Hooks.reducer(
         ~initialState={todos: [], filter: All, inputValue: "", nextId: 0},
         reducer,
-        hooks,
       );
 
-    let hooks =
+    let%hook () =
       Hooks.effect(
         OnMount,
         () => {
           let unsubscribe = () => ();
           Some(unsubscribe);
         },
-        hooks,
       );
 
     let renderTodo = task =>
@@ -161,56 +155,52 @@ module Example = {
       );
 
     let listOfTodos = List.map(renderTodo, filteredList);
-    (
-      hooks,
-      <View
-        style=Style.[
-          position(`Absolute),
-          top(0),
-          bottom(0),
-          left(0),
-          right(0),
-          alignItems(`Center),
-          justifyContent(`Center),
-          flexDirection(`Column),
-          backgroundColor(Colors.white),
-        ]>
-        <FilterSection
-          currentFilter=filter
-          onPickingFilter={filter => dispatch(ChangeFilter(filter))}
+
+    <View
+      style=Style.[
+        position(`Absolute),
+        top(0),
+        bottom(0),
+        left(0),
+        right(0),
+        alignItems(`Center),
+        justifyContent(`Center),
+        flexDirection(`Column),
+        backgroundColor(Colors.white),
+      ]>
+      <FilterSection
+        currentFilter=filter
+        onPickingFilter={filter => dispatch(ChangeFilter(filter))}
+      />
+      <View style=Style.[flexDirection(`Row)]>
+        <Input
+          style=Style.[width(400)]
+          placeholder="Add your Todo here"
+          value=inputValue
+          onChange={({value, _}) => dispatch(UpdateInputTextValue(value))}
         />
-        <View style=Style.[flexDirection(`Row)]>
-          <Input
-            style=Style.[width(400)]
-            placeholder="Add your Todo here"
-            value=inputValue
-            onChange={({value, _}) =>
-              dispatch(UpdateInputTextValue(value))
+        <Button
+          width=50
+          height=50
+          disabled={
+            switch (inputValue) {
+            | "" => true
+            | _ => false
             }
-          />
-          <Button
-            width=50
-            height=50
-            disabled={
-              switch (inputValue) {
-              | "" => true
-              | _ => false
-              }
-            }
-            title="+"
-            onClick={() => dispatch(AddTodo)}
-          />
-        </View>
-        <ScrollView
-          style=Style.[
-            height(200),
-            width(450),
-            border(~width=1, ~color=Colors.black),
-          ]>
-          <View> ...listOfTodos </View>
-        </ScrollView>
-      </View>,
-    );
+          }
+          title="+"
+          onClick={() => dispatch(AddTodo)}
+        />
+      </View>
+      <ScrollView
+        style=Style.[
+          height(200),
+          width(450),
+          border(~width=1, ~color=Colors.black),
+        ]>
+        <View> ...listOfTodos </View>
+      </ScrollView>
+    </View>;
   };
 };
 

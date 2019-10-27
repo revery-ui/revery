@@ -168,14 +168,10 @@ module TreeView = {
         />,
     );
 
-  [@component]
-  let make = (~renderer=?, (), hooks) => {
+  let make = (~renderer=?, ()) => {
     switch (renderer) {
-    | Some(fn) => (hooks, <Tree tree=animalKingdom nodeRenderer=fn />)
-    | None => (
-        hooks,
-        <Tree tree=stringTree nodeRenderer=Tree.default emptyRenderer />,
-      )
+    | Some(fn) => <Tree tree=animalKingdom nodeRenderer=fn />
+    | None => <Tree tree=stringTree nodeRenderer=Tree.default emptyRenderer />
     };
   };
 

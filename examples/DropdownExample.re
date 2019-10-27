@@ -24,18 +24,14 @@ module DropdownExample = {
     {value: 5, label: "A really, really, really long option"},
   ];
 
-  [@component]
-  let make = ((), hooks) => {
-    let (selectedItem, setSelectedItem, hooks) =
-      Hooks.state(List.nth(items, 0), hooks);
+  let%component make = () => {
+    let%hook (selectedItem, setSelectedItem) =
+      Hooks.state(List.nth(items, 0));
 
-    (
-      hooks,
-      <View style=containerStyle>
-        <Text style=textStyle text={"Selected Item: " ++ selectedItem.label} />
-        <Dropdown items onItemSelected={item => setSelectedItem(item)} />
-      </View>,
-    );
+    <View style=containerStyle>
+      <Text style=textStyle text={"Selected Item: " ++ selectedItem.label} />
+      <Dropdown items onItemSelected={item => setSelectedItem(item)} />
+    </View>;
   };
 };
 

@@ -270,11 +270,7 @@ module Row = {
       flexGrow(1),
     ];
 
-  [@component]
-  let make = (~children, (), hooks) => (
-    hooks,
-    <View style> ...children </View>,
-  );
+  let make = (~children, ()) => <View style> ...children </View>;
 };
 
 module Column = {
@@ -286,11 +282,7 @@ module Column = {
       flexGrow(1),
     ];
 
-  [@component]
-  let make = (~children, (), hooks) => (
-    hooks,
-    <View style> ...children </View>,
-  );
+  let make = (~children, ()) => <View style> ...children </View>;
 };
 
 module Cell = {
@@ -317,15 +309,14 @@ module Cell = {
       merge(~source=baseStyle, ~target=[backgroundColor(Colors.black)])
     );
 
-  [@component]
-  let make = (~cell, ~onClick, (), hooks) => {
-      let style =
-        switch (cell) {
-        | Alive => <View style=aliveStyle />
-        | Dead => <View style=deadStyle />
-        };
-      (hooks, <Clickable style=clickableStyle onClick> style </Clickable>);
-    };
+  let make = (~cell, ~onClick, ()) => {
+    let style =
+      switch (cell) {
+      | Alive => <View style=aliveStyle />
+      | Dead => <View style=deadStyle />
+      };
+    <Clickable style=clickableStyle onClick> style </Clickable>;
+  };
 };
 
 let viewPortRender =
@@ -415,71 +406,66 @@ let reducer = (action, state) =>
 module GameOfLiveComponent = {
   let controlsStyle = Style.[height(120), flexDirection(`Row)];
 
-  [@component]
-  let make = (~state, (), hooks) => {
-      let (state, dispatch, hooks) =
-        Hooks.reducer(~initialState=state, reducer, hooks);
+  let%component make = (~state, ()) => {
+    let%hook (state, dispatch) = Hooks.reducer(~initialState=state, reducer);
 
-      let hooks =
-        Hooks.effect(OnMount, () => Some(() => dispatch(StopTimer)), hooks);
+    let%hook () =
+      Hooks.effect(OnMount, () => Some(() => dispatch(StopTimer)));
 
-      let toggleAlive = pos => dispatch(ToggleAlive(pos));
+    let toggleAlive = pos => dispatch(ToggleAlive(pos));
 
-      let startStop = () =>
-        state.isRunning
-          ? dispatch(StopTimer)
-          : {
-            let dispose =
-              Tick.interval(t => dispatch(TimerTick(t)), Seconds(0.));
-            dispatch(StartTimer(dispose));
-          };
+    let startStop = () =>
+      state.isRunning
+        ? dispatch(StopTimer)
+        : {
+          let dispose =
+            Tick.interval(t => dispatch(TimerTick(t)), Seconds(0.));
+          dispatch(StartTimer(dispose));
+        };
 
-      (
-        hooks,
-        <Column>
-          <Row>
-            ...{viewPortRender(state.viewPort, state.universe, toggleAlive)}
-          </Row>
-          <View style=controlsStyle>
-            <Button
-              fontFamily="FontAwesome5FreeSolid.otf"
-              title={state.isRunning ? {||} : {||}}
-              onClick=startStop
-            />
-            <Button
-              fontFamily="FontAwesome5FreeSolid.otf"
-              title={||}
-              onClick={_ => dispatch(MoveViewPort(North))}
-            />
-            <Button
-              fontFamily="FontAwesome5FreeSolid.otf"
-              title={||}
-              onClick={_ => dispatch(MoveViewPort(South))}
-            />
-            <Button
-              fontFamily="FontAwesome5FreeSolid.otf"
-              title={||}
-              onClick={_ => dispatch(MoveViewPort(East))}
-            />
-            <Button
-              fontFamily="FontAwesome5FreeSolid.otf"
-              title={||}
-              onClick={_ => dispatch(MoveViewPort(West))}
-            />
-            <Button
-              fontFamily="FontAwesome5FreeSolid.otf"
-              title={||}
-              onClick={_ => dispatch(ZoomViewPort(ZoomIn))}
-            />
-            <Button
-              fontFamily="FontAwesome5FreeSolid.otf"
-              title={||}
-              onClick={_ => dispatch(ZoomViewPort(ZoomOut))}
-            />
-          </View>
-        </Column>,
-      );
-    };
+    <Column>
+      <Row>
+        ...{viewPortRender(state.viewPort, state.universe, toggleAlive)}
+      </Row>
+      <View style=controlsStyle>
+        <Button
+          fontFamily="FontAwesome5FreeSolid.otf"
+          title={state.isRunning ? {||} : {||}}
+          onClick=startStop
+        />
+        <Button
+          fontFamily="FontAwesome5FreeSolid.otf"
+          title={||}
+          onClick={_ => dispatch(MoveViewPort(North))}
+        />
+        <Button
+          fontFamily="FontAwesome5FreeSolid.otf"
+          title={||}
+          onClick={_ => dispatch(MoveViewPort(South))}
+        />
+        <Button
+          fontFamily="FontAwesome5FreeSolid.otf"
+          title={||}
+          onClick={_ => dispatch(MoveViewPort(East))}
+        />
+        <Button
+          fontFamily="FontAwesome5FreeSolid.otf"
+          title={||}
+          onClick={_ => dispatch(MoveViewPort(West))}
+        />
+        <Button
+          fontFamily="FontAwesome5FreeSolid.otf"
+          title={||}
+          onClick={_ => dispatch(ZoomViewPort(ZoomIn))}
+        />
+        <Button
+          fontFamily="FontAwesome5FreeSolid.otf"
+          title={||}
+          onClick={_ => dispatch(ZoomViewPort(ZoomOut))}
+        />
+      </View>
+    </Column>;
+  };
 };
 
 let render = () => {

@@ -4,11 +4,10 @@ open Revery.UI;
 open Revery.UI.Components;
 
 let logo = {
-  [@component]
-  let make = ((), hooks) => {
-    let (logoOpacity, setOpacity, hooks) = Hooks.state(1.0, hooks);
+  let%component make = () => {
+    let%hook (logoOpacity, setOpacity) = Hooks.state(1.0);
 
-    let (rotation, hooks) =
+    let%hook rotation =
       Hooks.animation(
         Animated.floatValue(0.),
         Animated.options(
@@ -18,10 +17,9 @@ let logo = {
           ~repeat=true,
           (),
         ),
-        hooks,
       );
 
-    let (rotationY, hooks) =
+    let%hook (rotationY, hooks) =
       Hooks.animation(
         Animated.floatValue(0.),
         Animated.options(
@@ -31,39 +29,34 @@ let logo = {
           ~repeat=true,
           (),
         ),
-        hooks,
       );
 
-    let onMouseDown = _ => setOpacity(0.5);
+    let onMouseDown = _ => setOpacity(_ => 0.5);
 
-    let onMouseUp = _ => setOpacity(1.0);
+    let onMouseUp = _ => setOpacity(_ => 1.0);
 
-    (
-      hooks,
-      <View onMouseDown onMouseUp>
-        <Opacity opacity=logoOpacity>
-          <Image
-            src="outrun-logo.png"
-            style=Style.[
-              width(512),
-              height(256),
-              transform([
-                Transform.RotateY(Angle.from_radians(rotationY)),
-                Transform.RotateX(Angle.from_radians(rotation)),
-              ]),
-            ]
-          />
-        </Opacity>
-      </View>,
-    );
+    <View onMouseDown onMouseUp>
+      <Opacity opacity=logoOpacity>
+        <Image
+          src="outrun-logo.png"
+          style=Style.[
+            width(512),
+            height(256),
+            transform([
+              Transform.RotateY(Angle.from_radians(rotationY)),
+              Transform.RotateX(Angle.from_radians(rotation)),
+            ]),
+          ]
+        />
+      </Opacity>
+    </View>;
   };
   ();
 };
 
 let animatedText = {
-  [@component]
-  let make = (~text: string, ~delay: float, (), hooks) => {
-    let (animatedOpacity, hooks) =
+  let%component make = (~text: string, ~delay: float, ()) => {
+    let%hook animatedOpacity =
       Hooks.animation(
         Animated.floatValue(0.),
         Animated.options(
@@ -72,10 +65,9 @@ let animatedText = {
           ~delay=Seconds(delay),
           (),
         ),
-        hooks,
       );
 
-    let (translate, hooks) =
+    let%hook translate =
       Hooks.animation(
         Animated.floatValue(50.),
         Animated.options(
@@ -84,7 +76,6 @@ let animatedText = {
           ~delay=Seconds(delay),
           (),
         ),
-        hooks,
       );
 
     let textHeaderStyle =
@@ -96,12 +87,9 @@ let animatedText = {
         transform([Transform.TranslateY(translate)]),
       ];
 
-    (
-      hooks,
-      <Opacity opacity=animatedOpacity>
-        <Text style=textHeaderStyle text />
-      </Opacity>,
-    );
+    <Opacity opacity=animatedOpacity>
+      <Text style=textHeaderStyle text />
+    </Opacity>;
   };
   ();
 };

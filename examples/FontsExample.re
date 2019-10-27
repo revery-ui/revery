@@ -52,10 +52,8 @@ module FontComponent = {
     {...state, resolvedFont};
   };
 
-  [@component]
-  let make = ((), hooks) => {
-    let (state, dispatch, hooks) =
-      Hooks.reducer(~initialState, reducer, hooks);
+  let%component make = () => {
+    let%hook (state, dispatch) = Hooks.reducer(~initialState, reducer);
 
     let fontExample =
       switch (state.resolvedFont) {
@@ -67,83 +65,80 @@ module FontComponent = {
         />
       };
 
-    (
-      hooks,
-      <Container width=500 height=500>
-        <Center>
-          <Padding padding=10>
-            <Row>
-              <Input
-                placeholder="Type font name"
-                onChange={({value, _}) => dispatch(SetFamily(value))}
-                value={state.family}
+    <Container width=500 height=500>
+      <Center>
+        <Padding padding=10>
+          <Row>
+            <Input
+              placeholder="Type font name"
+              onChange={({value, _}) => dispatch(SetFamily(value))}
+              value={state.family}
+            />
+          </Row>
+        </Padding>
+        <Padding padding=10>
+          <Row>
+            <Padding padding=16>
+              <Checkbox
+                checked={state.bold}
+                onChange={() => dispatch(SetBold(!state.bold))}
               />
-            </Row>
-          </Padding>
-          <Padding padding=10>
-            <Row>
-              <Padding padding=16>
-                <Checkbox
-                  checked={state.bold}
-                  onChange={() => dispatch(SetBold(!state.bold))}
-                />
-              </Padding>
-              <Center>
-                <Text
-                  text="Bold"
-                  style=Style.[
-                    fontFamily("Roboto-Regular.ttf"),
-                    fontSize(20),
-                    width(150),
-                  ]
-                />
-              </Center>
-            </Row>
-          </Padding>
-          <Padding padding=10>
-            <Row>
-              <Padding padding=16>
-                <Checkbox
-                  checked={state.italic}
-                  onChange={() => dispatch(SetItalic(!state.italic))}
-                />
-              </Padding>
-              <Center>
-                <Text
-                  text="Italic"
-                  style=Style.[
-                    fontFamily("Roboto-Regular.ttf"),
-                    fontSize(20),
-                    width(150),
-                  ]
-                />
-              </Center>
-            </Row>
-          </Padding>
-          <Padding padding=10>
-            <Row>
-              <Padding padding=16>
-                <Checkbox
-                  checked={state.mono}
-                  onChange={() => dispatch(SetMono(!state.mono))}
-                />
-              </Padding>
-              <Center>
-                <Text
-                  text="Mono"
-                  style=Style.[
-                    fontFamily("Roboto-Regular.ttf"),
-                    fontSize(20),
-                    width(150),
-                  ]
-                />
-              </Center>
-            </Row>
-          </Padding>
-          <Padding padding=16> <Row> fontExample </Row> </Padding>
-        </Center>
-      </Container>,
-    );
+            </Padding>
+            <Center>
+              <Text
+                text="Bold"
+                style=Style.[
+                  fontFamily("Roboto-Regular.ttf"),
+                  fontSize(20),
+                  width(150),
+                ]
+              />
+            </Center>
+          </Row>
+        </Padding>
+        <Padding padding=10>
+          <Row>
+            <Padding padding=16>
+              <Checkbox
+                checked={state.italic}
+                onChange={() => dispatch(SetItalic(!state.italic))}
+              />
+            </Padding>
+            <Center>
+              <Text
+                text="Italic"
+                style=Style.[
+                  fontFamily("Roboto-Regular.ttf"),
+                  fontSize(20),
+                  width(150),
+                ]
+              />
+            </Center>
+          </Row>
+        </Padding>
+        <Padding padding=10>
+          <Row>
+            <Padding padding=16>
+              <Checkbox
+                checked={state.mono}
+                onChange={() => dispatch(SetMono(!state.mono))}
+              />
+            </Padding>
+            <Center>
+              <Text
+                text="Mono"
+                style=Style.[
+                  fontFamily("Roboto-Regular.ttf"),
+                  fontSize(20),
+                  width(150),
+                ]
+              />
+            </Center>
+          </Row>
+        </Padding>
+        <Padding padding=16> <Row> fontExample </Row> </Padding>
+      </Center>
+    </Container>;
   };
 };
 

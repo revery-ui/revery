@@ -20,9 +20,7 @@ let outerBox =
   Style.[width(450), height(450), backgroundColor(Colors.black)];
 
 module Sample = {
-  [@component]
-  let make = ((), hooks) => (
-    hooks,
+  let make = () => {
     <View style=containerStyle>
       <OpenGL
         style=outerBox
@@ -67,8 +65,8 @@ module Sample = {
            };
            */
       />
-    </View>,
-  );
+    </View>;
+  };
 };
 
 let render = () => <Sample />;

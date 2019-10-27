@@ -25,41 +25,38 @@ let innerBox =
   ];
 
 module Sample = {
-  [@component]
-  let make = ((), hooks) => {
-    let (bounce, setBounce, slots) = Hooks.state(true, slots);
-    (
-      slots,
-      <View style=containerStyle>
-        <Text
-          text="Bounce"
-          style=Style.[
-            marginBottom(10),
-            fontFamily("Roboto-Regular.ttf"),
-            fontSize(20),
-          ]
+  let%component make = () => {
+    let (bounce, setBounce) = Hooks.state(true);
+
+    <View style=containerStyle>
+      <Text
+        text="Bounce"
+        style=Style.[
+          marginBottom(10),
+          fontFamily("Roboto-Regular.ttf"),
+          fontSize(20),
+        ]
+      />
+      <Checkbox
+        onChange={() => setBounce(_ => !bounce)}
+        checked=bounce
+        style=Style.[marginBottom(10)]
+      />
+      <ScrollView style=outerBox bounce>
+        <Image
+          src="outrun-logo.png"
+          style=Style.[width(512), height(256)]
         />
-        <Checkbox
-          onChange={() => setBounce(!bounce)}
-          checked=bounce
-          style=Style.[marginBottom(10)]
+        <Image
+          src="outrun-logo.png"
+          style=Style.[width(512), height(256)]
         />
-        <ScrollView style=outerBox bounce>
-          <Image
-            src="outrun-logo.png"
-            style=Style.[width(512), height(256)]
-          />
-          <Image
-            src="outrun-logo.png"
-            style=Style.[width(512), height(256)]
-          />
-          <Image
-            src="outrun-logo.png"
-            style=Style.[width(512), height(256)]
-          />
-        </ScrollView>
-      </View>,
-    );
+        <Image
+          src="outrun-logo.png"
+          style=Style.[width(512), height(256)]
+        />
+      </ScrollView>
+    </View>;
   };
 };
 

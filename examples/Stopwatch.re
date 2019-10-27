@@ -33,9 +33,8 @@ module Clock = {
       }
     };
 
-  [@component]
-  let make = ((), hooks) => {
-    let (state, dispatch, hooks) =
+  let%component make = () => {
+    let%hook (state, dispatch) =
       Hooks.reducer(
         ~initialState={
           isRunning: false,
@@ -43,15 +42,13 @@ module Clock = {
           elapsedTime: Seconds(0.),
         },
         reducer,
-        hooks,
       );
 
     /*
      * We'll make sure to dispatch the 'Stop' action when unmounting,
      * so we don't have a runaway timer!
      */
-    let hooks =
-      Hooks.effect(OnMount, () => Some(() => dispatch(Stop)), hooks);
+    let%hook () = Hooks.effect(OnMount, () => Some(() => dispatch(Stop)));
 
     let startStop = () =>
       state.isRunning
@@ -74,54 +71,49 @@ module Clock = {
     let getMarcherPosition = t =>
       sin(Time.to_float_seconds(t) *. 2. *. pi) /. 2. +. 0.5;
 
-    (
-      hooks,
+    <View
+      style=Style.[
+        position(`Absolute),
+        justifyContent(`Center),
+        alignItems(`Center),
+        bottom(0),
+        top(0),
+        left(0),
+        right(0),
+      ]>
       <View
         style=Style.[
-          position(`Absolute),
-          justifyContent(`Center),
-          alignItems(`Center),
-          bottom(0),
-          top(0),
-          left(0),
-          right(0),
+          margin(20),
+          width(150),
+          borderBottom(~color=Colors.gray, ~width=2),
         ]>
-        <View
+        <Text
           style=Style.[
-            margin(20),
-            width(150),
-            borderBottom(~color=Colors.gray, ~width=2),
-          ]>
-          <Text
+            color(Colors.white),
+            fontFamily("Roboto-Regular.ttf"),
+            fontSize(24),
+            marginVertical(20),
+            width(200),
+          ]
+          text={string_of_float(state.elapsedTime |> Time.to_float_seconds)}
+        />
+        <Opacity opacity=marcherOpacity>
+          <View
             style=Style.[
-              color(Colors.white),
-              fontFamily("Roboto-Regular.ttf"),
-              fontSize(24),
-              marginVertical(20),
-              width(200),
+              position(`Absolute),
+              bottom(0),
+              left(
+                int_of_float(getMarcherPosition(state.elapsedTime) *. 146.),
+              ),
+              width(4),
+              height(4),
+              backgroundColor(Color.hex("#90f7ff")),
             ]
-            text={string_of_float(state.elapsedTime |> Time.to_float_seconds)}
           />
-          <Opacity opacity=marcherOpacity>
-            <View
-              style=Style.[
-                position(`Absolute),
-                bottom(0),
-                left(
-                  int_of_float(
-                    getMarcherPosition(state.elapsedTime) *. 146.,
-                  ),
-                ),
-                width(4),
-                height(4),
-                backgroundColor(Color.hex("#90f7ff")),
-              ]
-            />
-          </Opacity>
-        </View>
-        <Button title=buttonText onClick=startStop />
-      </View>,
-    );
+        </Opacity>
+      </View>
+      <Button title=buttonText onClick=startStop />
+    </View>;
   };
 };
 

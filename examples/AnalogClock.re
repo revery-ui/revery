@@ -41,26 +41,23 @@ module AnalogClock = {
     };
   };
 
-  [@component]
-  let make = ((), slots) => {
-    let (state, dispatch, slots) =
+  let%component make = () => {
+    let%hook (state, dispatch) =
       Hooks.reducer(
         ~initialState={currentTime: Unix.time() |> Unix.localtime},
         reducer,
-        slots,
       );
 
     let {hourDegrees, minuteDegrees, secondDegrees}: DegreeUtils.t =
       state.currentTime |> DegreeUtils.getDegreesFromTime;
 
-    let slots =
+    let%hook () =
       Hooks.effect(
         OnMount,
         () => {
           let clear = Tick.interval(_ => dispatch(UpdateTime), Seconds(1.));
           Some(clear);
         },
-        slots,
       );
 
     let containerStyle =
@@ -136,16 +133,13 @@ module AnalogClock = {
         )
       );
 
-    (
-      slots,
-      <View style=containerStyle>
-        <View style=clockContainer>
-          <View style=secondsStyle />
-          <View style=minutesStyle />
-          <View style=hourStyle />
-        </View>
-      </View>,
-    );
+    <View style=containerStyle>
+      <View style=clockContainer>
+        <View style=secondsStyle />
+        <View style=minutesStyle />
+        <View style=hourStyle />
+      </View>
+    </View>;
   };
 };
 

@@ -8,8 +8,7 @@ let inactiveBackgroundColor = Color.hex("#272d39");
 let selectionHighlight = Color.hex("#90f7ff");
 
 module ActionButton = {
-  [@component]
-  let make = (~name, ~onClick, (), hooks) => {
+  let make = (~name, ~onClick, ()) => {
     let wrapperStyle =
       Style.[
         backgroundColor(selectionHighlight),
@@ -22,28 +21,25 @@ module ActionButton = {
         fontSize(14),
         margin(16),
       ];
-    (
-      hooks,
-      <Clickable style=wrapperStyle onClick>
-        <Text style=textHeaderStyle text=name />
-      </Clickable>,
-    );
+
+    <Clickable style=wrapperStyle onClick>
+      <Text style=textHeaderStyle text=name />
+    </Clickable>;
   };
 };
 
 module CaptureArea = {
-  [@component]
-  let make = (~w, (), hooks) => {
-    let (count, setCount, hooks) = Hooks.state(0, hooks);
-    let (file, setFile, hooks) = Hooks.state(None, hooks);
+  let%component make = (~w, ()) => {
+    let (count, setCount) = Hooks.state(0);
+    let (file, setFile) = Hooks.state(None);
 
     let capture = () => {
       let exed = Environment.getExecutingDirectory();
       let filename = Printf.sprintf("Scrot_%d.tga", count);
       let fullname = exed ++ filename;
       Window.takeScreenshot(w, fullname);
-      setCount(count + 1);
-      setFile(Some(filename));
+      setCount(_ => count + 1);
+      setFile(_ => Some(filename));
     };
 
     let viewStyle =
@@ -58,16 +54,13 @@ module CaptureArea = {
 
     let imageStyle = Style.[width(400), height(300)];
 
-    (
-      hooks,
-      <View style=viewStyle>
-        <ActionButton name="Take a screenshot!" onClick=capture />
-        {switch (file) {
-         | None => <View />
-         | Some(src) => <Image style=imageStyle src />
-         }}
-      </View>,
-    );
+    <View style=viewStyle>
+      <ActionButton name="Take a screenshot!" onClick=capture />
+      {switch (file) {
+       | None => <View />
+       | Some(src) => <Image style=imageStyle src />
+       }}
+    </View>;
   };
 };
 

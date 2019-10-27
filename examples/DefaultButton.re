@@ -3,9 +3,8 @@ open Revery.UI;
 open Revery.UI.Components;
 
 module DefaultButtonWithCounter = {
-  [@component]
-  let make = ((), hooks) => {
-    let (count, setCount, hooks) = Hooks.state(0, hooks);
+  let%component make = () => {
+    let%hook (count, setCount) = Hooks.state(0);
     let increment = () => setCount(count + 1);
 
     let containerStyle =
@@ -28,16 +27,14 @@ module DefaultButtonWithCounter = {
       ];
 
     let countStr = string_of_int(count);
-    (
-      hooks,
-      <View style=containerStyle>
-        <View style=countContainer>
-          <Text style=countStyle text=countStr />
-        </View>
-        <Button title="click me!" onClick=increment />
-        <Button disabled=true title="(disabled)" onClick=increment />
-      </View>,
-    );
+
+    <View style=containerStyle>
+      <View style=countContainer>
+        <Text style=countStyle text=countStr />
+      </View>
+      <Button title="click me!" onClick=increment />
+      <Button disabled=true title="(disabled)" onClick=increment />
+    </View>;
   };
 };
 

@@ -47,7 +47,7 @@ let%component make =
     | Some(fn) => fn(r)
     | None => ()
     };
-    setClickableRefOption(Some(r));
+    setClickableRefOption(_ => Some(r));
   };
 
   let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) => {

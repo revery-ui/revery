@@ -142,8 +142,7 @@ let getRenderFunctionSelector: (state, Window.t) => React.syntheticElement =
   (s: state) => getExampleByName(s, s.selectedExample) |> (a => a.render);
 
 module ExampleButton = {
-  [@component]
-  let make = (~isActive, ~name, ~onClick, (), hooks) => {
+  let make = (~isActive, ~name, ~onClick, ()) => {
     let highlightColor =
       isActive ? selectionHighlight : Colors.transparentWhite;
 
@@ -165,14 +164,11 @@ module ExampleButton = {
         margin(16),
       ];
 
-    (
-      hooks,
-      <Opacity opacity=buttonOpacity>
-        <Clickable style=wrapperStyle onClick>
-          <Text style=textHeaderStyle text=name />
-        </Clickable>
-      </Opacity>,
-    );
+    <Opacity opacity=buttonOpacity>
+      <Clickable style=wrapperStyle onClick>
+        <Text style=textHeaderStyle text=name />
+      </Clickable>
+    </Opacity>;
   };
 };
 
@@ -185,10 +181,8 @@ let reducer = (action: action, state: state) =>
   };
 
 module ExampleHost = {
-  [@component]
-  let make = (~win, (), hooks) => {
-    let (state, dispatch, hooks) =
-      Hooks.reducer(~initialState=state, reducer, hooks);
+  let%component make = (~win, ()) => {
+    let%hook (state, dispatch) = Hooks.reducer(~initialState=state, reducer);
 
     let renderButton = (x: example) => {
       let isActive = String.equal(x.name, state.selectedExample);
@@ -216,45 +210,42 @@ module ExampleHost = {
     let exampleRender = getRenderFunctionSelector(state);
     let example = exampleRender(win);
 
-    (
-      hooks,
-      <View
-        onMouseWheel={_evt => ()}
+    <View
+      onMouseWheel={_evt => ()}
+      style=Style.[
+        position(`Absolute),
+        justifyContent(`Center),
+        alignItems(`Center),
+        backgroundColor(bgColor),
+        bottom(0),
+        top(0),
+        left(0),
+        right(0),
+        flexDirection(`Row),
+      ]>
+      <ScrollView
         style=Style.[
           position(`Absolute),
-          justifyContent(`Center),
-          alignItems(`Center),
-          backgroundColor(bgColor),
-          bottom(0),
           top(0),
           left(0),
-          right(0),
-          flexDirection(`Row),
+          width(175),
+          bottom(0),
+          backgroundColor(bgColor),
         ]>
-        <ScrollView
-          style=Style.[
-            position(`Absolute),
-            top(0),
-            left(0),
-            width(175),
-            bottom(0),
-            backgroundColor(bgColor),
-          ]>
-          <View> ...buttons </View>
-        </ScrollView>
-        <View
-          style=Style.[
-            position(`Absolute),
-            top(0),
-            left(175),
-            right(0),
-            bottom(0),
-            backgroundColor(activeBackgroundColor),
-          ]>
-          example
-        </View>
-      </View>,
-    );
+        <View> ...buttons </View>
+      </ScrollView>
+      <View
+        style=Style.[
+          position(`Absolute),
+          top(0),
+          left(175),
+          right(0),
+          bottom(0),
+          backgroundColor(activeBackgroundColor),
+        ]>
+        example
+      </View>
+    </View>;
   };
 };
 
