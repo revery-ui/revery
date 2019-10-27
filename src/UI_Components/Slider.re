@@ -20,7 +20,6 @@ let noopValueChanged = _f => ();
 
 let%component make =
               (
-                ~children as _,
                 ~onValueChanged=noopValueChanged,
                 ~minimumValue=0.,
                 ~maximumValue=1.,
@@ -55,9 +54,9 @@ let%component make =
       v;
     };
 
-  let setSlideRef = r => setSlideRefOption(Some(r));
+  let setSlideRef = r => setSlideRefOption(_ => Some(r));
 
-  let setThumbRef = r => setThumbRefOption(Some(r));
+  let setThumbRef = r => setThumbRefOption(_ => Some(r));
 
   let availableWidth =
     switch (slideRef, thumbRef) {
@@ -90,12 +89,12 @@ let%component make =
 
     let normalizedValue =
       thumbPosition /. w *. (maximumValue -. minimumValue) +. minimumValue;
-    setV(normalizedValue);
+    setV(_ => normalizedValue);
     onValueChanged(normalizedValue);
   };
 
   let sliderComplete = () => {
-    setActive(false);
+    setActive(_ => false);
   };
 
   let%hook () =
@@ -153,7 +152,7 @@ let%component make =
       let endPosition = startPosition +. w;
 
       sliderUpdate(w, startPosition, endPosition, evt.mouseX, evt.mouseY);
-      setActive(true);
+      setActive(_ => true);
     | _ => ()
     };
 
@@ -203,10 +202,10 @@ let%component make =
     ];
 
   <Opacity opacity=sliderOpacity>
-    <View onMouseDown style ref={r => setSlideRef(r)}>
+    <View onMouseDown style ref=setSlideRef>
       <View style=beforeTrackStyle />
       <View
-        ref={r => setThumbRef(r)}
+        ref=setThumbRef
         style=Style.[
           position(`Absolute),
           height(vertical ? thumbWidth : thumbHeight),

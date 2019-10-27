@@ -6,6 +6,7 @@ type button('a) = {
   text: string,
   value: 'a,
 };
+
 let defaultStyle =
   Style.[
     width(100),
@@ -16,35 +17,45 @@ let defaultStyle =
   ];
 
 let%component make =
-              (~defaultSelected, ~buttons, ~iconSize, ~style, ~onChange, ()) => {
+              (
+                ~defaultSelected,
+                ~buttons: list(button('a)),
+                ~iconSize,
+                ~style,
+                ~onChange,
+                (),
+              ) => {
   let defaultVal = List.nth(buttons, defaultSelected).value;
   let%hook (checkedVal, setCheckedVal) = React.Hooks.state(defaultVal);
 
   let icon = v => v == checkedVal ? {||} : {||};
 
+  let buttons =
+    buttons
+    |> List.map(button =>
+         <Clickable
+           onClick={() => {
+             setCheckedVal(_ => button.value);
+             onChange(button.value);
+           }}
+           style=Style.[
+             justifyContent(`Center),
+             flexDirection(`Row),
+             alignItems(`Center),
+             height(30),
+           ]>
+           <Text
+             text={icon(button.value)}
+             style=Style.[
+               fontSize(iconSize),
+               fontFamily("FontAwesome5FreeSolid.otf"),
+             ]
+           />
+           <Text text={button.text} style />
+         </Clickable>
+       );
+
   <View style=Style.[justifyContent(`Center), alignItems(`Center)]>
-    {buttons
-     |> List.map(button =>
-          <Clickable
-            onClick={() => {
-              setCheckedVal(_ => button.value);
-              onChange(button.value);
-            }}
-            style=Style.[
-              justifyContent(`Center),
-              flexDirection(`Row),
-              alignItems(`Center),
-              height(30),
-            ]>
-            <Text
-              text={icon(button.value)}
-              style=Style.[
-                fontSize(iconSize),
-                fontFamily("FontAwesome5FreeSolid.otf"),
-              ]
-            />
-            <Text text={button.text} style />
-          </Clickable>
-        )}
+    {buttons |> Revery_UI.React.listToElement}
   </View>;
 };

@@ -16,7 +16,7 @@ let%nativeComponent make =
                       ~ref=?,
                       ~style=Style.emptyViewStyle,
                       ~tabindex=None,
-                      ~children,
+                      ~children=React.empty,
                       ~onKeyDown=?,
                       ~onKeyUp=?,
                       ~onTextInput=?,

@@ -111,5 +111,5 @@ let rec renderTree = (~indent=0, ~nodeRenderer, ~emptyRenderer, t) => {
  */
 let make = (~tree, ~nodeRenderer, ~emptyRenderer=None, ()) => {
   let componentTree = renderTree(tree, ~nodeRenderer, ~emptyRenderer);
-  <View> ...componentTree </View>;
+  <View> {componentTree |> React.listToElement} </View>;
 };

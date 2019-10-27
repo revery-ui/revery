@@ -120,7 +120,7 @@ let%component make =
         ),
         overflow(`Hidden),
       ]>
-      ...items
+      {items |> React.listToElement}
     </View>
   </View>;
 };

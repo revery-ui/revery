@@ -209,7 +209,7 @@ let%component make =
             );
           };
         };
-        setInputValueRef(_ => valueToDisplay);
+        setInputValueRef(valueToDisplay);
         None;
       },
     );

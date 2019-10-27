@@ -12,7 +12,7 @@ type bouncingState =
   | Bouncing(direction, Animated.playback)
   | Idle;
 
-let empty = React.[];
+let empty = React.empty;
 
 let scrollTrackColor = Color.rgba(0.0, 0.0, 0.0, 0.4);
 let scrollThumbColor = Color.rgba(0.5, 0.5, 0.5, 0.4);
@@ -33,7 +33,7 @@ let%component make =
                 ~scrollLeft=0,
                 ~scrollTop=0,
                 ~bounce=defaultBounce,
-                ~children: React.syntheticElement,
+                ~children,
                 (),
               ) => {
   let%hook (actualScrollTop, dispatch) =
@@ -110,7 +110,7 @@ let%component make =
       let horizontalScrollbar =
         isHorizontalScrollbarVisible
           ? <Slider
-              onValueChanged={v => setScrollLeft(- int_of_float(v))}
+              onValueChanged={v => setScrollLeft(_ => - int_of_float(v))}
               minimumValue=0.
               maximumValue={float_of_int(maxWidth)}
               sliderLength={outerMeasurements.width}
@@ -133,10 +133,10 @@ let%component make =
         switch (bouncingState) {
         | Bouncing(Top, playback) when wheelEvent.deltaY < 0. =>
           playback.stop();
-          setBouncingState(Idle);
+          setBouncingState(_ => Idle);
         | Bouncing(Bottom, playback) when wheelEvent.deltaY > 0. =>
           playback.stop();
-          setBouncingState(Idle);
+          setBouncingState(_ => Idle);
         | Bouncing(_) => ()
         | Idle when !bounce && (isAtTop || isAtBottom) =>
           let clampedScrollTop = isAtTop ? 0 : maxHeight;
@@ -172,7 +172,7 @@ let%component make =
             |> Chain.start(~update=v =>
                  dispatch(ScrollUpdated(int_of_float(v)))
                );
-          setBouncingState(Bouncing(direction, playback));
+          setBouncingState(_ => Bouncing(direction, playback));
         | Idle => dispatch(ScrollUpdated(newScrollTop))
         };
       };
@@ -212,9 +212,9 @@ let%component make =
   <View style>
     <View
       onMouseWheel=scroll
-      ref={r => setOuterRef(Some(r))}
+      ref={r => setOuterRef(_ => Some(r))}
       style=Style.[flexGrow(1), position(`Relative), overflow(`Scroll)]>
-      <View style=innerStyle> ...children </View>
+      <View style=innerStyle> {children |> React.listToElement} </View>
       <View style=verticalScrollbarContainerStyle> verticalScrollBar </View>
       <View style=horizontalScrollbarContainerStyle>
         horizontalScrollBar
