@@ -26,7 +26,7 @@ let innerBox =
 
 module Sample = {
   let%component make = () => {
-    let (bounce, setBounce) = Hooks.state(true);
+    let%hook (bounce, setBounce) = Hooks.state(true);
 
     <View style=containerStyle>
       <Text

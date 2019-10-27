@@ -30,8 +30,8 @@ module ActionButton = {
 
 module CaptureArea = {
   let%component make = (~w, ()) => {
-    let (count, setCount) = Hooks.state(0);
-    let (file, setFile) = Hooks.state(None);
+    let%hook (count, setCount) = Hooks.state(0);
+    let%hook (file, setFile) = Hooks.state(None);
 
     let capture = () => {
       let exed = Environment.getExecutingDirectory();

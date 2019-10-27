@@ -22,7 +22,8 @@ module Example = {
   };
 
   let%component make = () => {
-    let ({first, second}, setValue) = Hooks.state({first: "", second: ""});
+    let%hook ({first, second}, setValue) =
+      Hooks.state({first: "", second: ""});
 
     <View style=containerStyle>
       <View

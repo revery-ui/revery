@@ -19,7 +19,7 @@ let logo = {
         ),
       );
 
-    let%hook (rotationY, hooks) =
+    let%hook rotationY =
       Hooks.animation(
         Animated.floatValue(0.),
         Animated.options(

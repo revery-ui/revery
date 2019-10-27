@@ -15,7 +15,7 @@ module ZoomButton = {
 };
 
 module Zoom = {
-  let%component make = ((), hooks) => {
+  let%component make = () => {
     let window = UI.getActiveWindow();
     let zoomV =
       switch (window) {
@@ -45,24 +45,21 @@ module Zoom = {
 
     print_endline("Zoomv: " ++ string_of_float(currentZoom));
 
-    (
-      hooks,
-      <Center>
-        <Column>
-          <Text
-            style=textStyle
-            text={"Zoom: " ++ string_of_float(currentZoom)}
-          />
-          <Row>
-            <ZoomButton zoom=0.5 onClick=setZoom />
-            <ZoomButton zoom=1.0 onClick=setZoom />
-            <ZoomButton zoom=1.25 onClick=setZoom />
-            <ZoomButton zoom=1.5 onClick=setZoom />
-            <ZoomButton zoom=2.0 onClick=setZoom />
-          </Row>
-        </Column>
-      </Center>,
-    );
+    <Center>
+      <Column>
+        <Text
+          style=textStyle
+          text={"Zoom: " ++ string_of_float(currentZoom)}
+        />
+        <Row>
+          <ZoomButton zoom=0.5 onClick=setZoom />
+          <ZoomButton zoom=1.0 onClick=setZoom />
+          <ZoomButton zoom=1.25 onClick=setZoom />
+          <ZoomButton zoom=1.5 onClick=setZoom />
+          <ZoomButton zoom=2.0 onClick=setZoom />
+        </Row>
+      </Column>
+    </Center>;
   };
 };
 
