@@ -151,6 +151,7 @@ module AddTodo = {
         Theme.panelBorder,
         margin(2),
         alignItems(`Center),
+        overflow(`Hidden),
       ];
 
     let toggleAll = areAllCompleted =>
@@ -164,8 +165,9 @@ module AddTodo = {
 
     let input =
       Style.[
-        fontSize(Theme.rem(1.25)),
+        fontSize(Theme.fontSize),
         border(~width=0, ~color=Colors.transparentWhite),
+        width(4000), // Not ideal, should be possible to use flexGrow(1) instead
       ];
   }
 
