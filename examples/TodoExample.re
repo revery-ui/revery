@@ -11,12 +11,12 @@ module Theme = {
   let fontSize = 16;
   let rem = factor => int_of_float(float_of_int(fontSize) *. factor);
 
-  let appBackground = Color.rgb(0.9, 0.93, 0.9);
-  let textColor = Color.rgb(0.3, 0.32, 0.3);
-  let dimmedTextColor = Color.rgb(0.8, 0.83, 0.8);
-  let titleTextColor = Colors.darkSeaGreen;
+  let appBackground = Color.rgb(0.91, 0.9, 0.95);
+  let textColor = Color.rgb(0.35, 0.3, 0.4);
+  let dimmedTextColor = Color.rgb(0.81, 0.8, 0.84);
+  let titleTextColor = Color.rgb(0.85, 0.8, 0.9);
 
-  let panelBackground = Colors.white;
+  let panelBackground = Color.rgb(0.98, 0.94, 1.);
   let panelBorder = Style.border(~width=1, ~color=Color.rgb(0.85, 0.88, 0.85));
 
   /* let buttonBackground = Colors.mediumSeaGreen;
@@ -24,8 +24,8 @@ module Theme = {
   let selectedButtonBackground = Colors.seaGreen;
   let buttonTextColor = Color.rgb(0.96, 1., 0.96); */
 
-  let buttonColor = Colors.mediumSeaGreen;
-  let hoveredButtonColor = Colors.darkSeaGreen;
+  let buttonColor = Colors.mediumPurple;
+  let hoveredButtonColor = Color.rgb(0.7, 0.6, 0.8);
 
   let dangerColor = Colors.indianRed;
 }
