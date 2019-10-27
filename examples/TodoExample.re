@@ -164,12 +164,12 @@ module AddTodo = {
 
     let input =
       Style.[
-        fontSize(int_of_float(float_of_int(Theme.fontSize) *. 1.25)),
+        fontSize(Theme.rem(1.25)),
         border(~width=0, ~color=Colors.transparentWhite),
       ];
   }
 
-  let component = React.component("TodoMVC");
+  let component = React.component("AddTodo");
 
   let createElement = (~children as _, ~text, ~areAllCompleted, ~onInput, ~onSubmit, ~onToggleAll, ()) =>
     component(hooks => {
@@ -234,7 +234,7 @@ module Todo = {
     isDone: bool,
   };
 
-  let component = React.component("TodoMVC");
+  let component = React.component("Todo");
 
   let createElement = (~children as _, ~task, ~onToggle, ~onRemove, ()) =>
     component(hooks => {
@@ -249,6 +249,119 @@ module Todo = {
           <Clickable onClick=onRemove>
             <Text text={||} style=Styles.removeButton(isHovered) />
           </Clickable>
+        </View>
+      )
+    });
+}
+
+module Footer = {
+  module Styles = {
+    let container =
+      Style.[
+        flexDirection(`Row),
+        justifyContent(`SpaceBetween)
+      ];
+
+    let filterButtonsContainer =
+      Style.[
+        flexGrow(1),
+        width(0),
+        flexDirection(`Row),
+        alignItems(`Center),
+        justifyContent(`Center),
+        alignSelf(`Center),
+      ];
+
+    let leftFlexContainer =
+      Style.[
+        flexGrow(1),
+        width(0),
+      ];
+
+    let rightFlexContainer =
+      Style.[
+        flexGrow(1),
+        width(0),
+        flexDirection(`Row),
+        justifyContent(`FlexEnd),
+      ];
+
+    let itemsLeft =
+      Style.[
+        Theme.fontFamily,
+        fontSize(Theme.rem(0.85)),
+        color(Theme.buttonColor),
+        textWrap(TextWrapping.NoWrap),
+      ];
+
+    let clearCompleted = isHovered =>
+      Style.[
+        Theme.fontFamily,
+        fontSize(Theme.rem(0.85)),
+        color(isHovered ? Theme.hoveredButtonColor : Theme.buttonColor),
+        textWrap(TextWrapping.NoWrap),
+      ];
+  }
+
+  let component = React.component("Footer");
+
+  let createElement = (~children as _, ~activeCount, ~completedCount, ~currentFilter, ~onSelectFilter, ~onClearCompleted, ()) =>
+    component(hooks => {
+      let itemsLeft = {
+        let text =
+          switch (activeCount) {
+          | 1 => "1 item left"
+          | n => Printf.sprintf("%i items left", n)
+          };
+
+        <Text text style=Styles.itemsLeft />
+      };
+
+      let filterButtonsView = {
+        let button = filter =>
+          <Button
+            label={Filter.show(filter)}
+            isSelected={currentFilter == filter}
+            onClick={() => onSelectFilter(filter)}
+          />;
+
+        <View style=Styles.filterButtonsContainer>
+          {button(All)}
+          {button(Active)}
+          {button(Completed)}
+        </View>
+      };
+
+      let (hooks, clearCompleted) = {
+        let (isHovered, setHovered, hooks) =
+          Hooks.state(false, hooks);
+
+        let text =
+          switch (completedCount) {
+          | 0 => ""
+          | n => Printf.sprintf("Clear completed (%i)", n)
+          };
+
+        (
+          hooks,
+          <Clickable onClick=onClearCompleted>
+            <View onMouseOver={_ => setHovered(true)} onMouseOut={_ => setHovered(false)}>
+              <Text text style=Styles.clearCompleted(isHovered) />
+            </View>
+          </Clickable>
+        )
+      };
+
+      (
+        hooks,
+        <View style=Styles.container>
+          <View style=Styles.leftFlexContainer>
+            {itemsLeft}
+          </View>
+          {filterButtonsView}
+          <View style=Styles.rightFlexContainer>
+            {clearCompleted}
+          </View>
         </View>
       )
     });
@@ -275,25 +388,17 @@ module TodoMVC = {
     let title =
       Style.[
         Theme.fontFamily,
-        fontSize(Theme.fontSize * 4),
+        fontSize(Theme.rem(4.)),
         color(Theme.titleTextColor),
         alignSelf(`Center),
-        marginBottom(Theme.fontSize / 4),
-        marginTop(Theme.fontSize * 2),
+        marginTop(Theme.rem(2.)),
+        textWrap(TextWrapping.NoWrap),
       ];
 
     let todoList =
       Style.[
         flexGrow(1),
       ];
-
-    let filterButtonsContainer =
-      Style.[
-        flexDirection(`Row),
-        alignItems(`Center),
-        justifyContent(`Center),
-      ];
-
   }
 
   type state = {
@@ -319,7 +424,8 @@ module TodoMVC = {
     | UpdateInput(string)
     | Toggle(int)
     | Remove(int)
-    | ToggleAll;
+    | ToggleAll
+    | ClearCompleted;
 
   let reducer = (action: action, state: state) =>
     switch (action) {
@@ -357,6 +463,10 @@ module TodoMVC = {
           state.todos,
         );
       {...state, todos};
+
+    | ClearCompleted =>
+      let todos = List.filter((item: Todo.t) => !item.isDone, state.todos);
+      {...state, todos};
     };
 
   let component = React.component("TodoMVC");
@@ -366,32 +476,8 @@ module TodoMVC = {
       let ({todos, inputValue, filter as currentFilter, _}, dispatch, hooks) =
         Hooks.reducer(~initialState, reducer, hooks);
 
-      let filteredTodos =
-        List.filter(
-          task =>
-            switch (filter) {
-            | All => true
-            | Active => !task.Todo.isDone
-            | Completed => task.Todo.isDone
-            },
-          todos,
-        );
-
-      let filterButtonsView = {
-        let onSelect = filter => dispatch(SetFilter(filter));
-
-        let button = filter =>
-          <Button
-            label={Filter.show(filter)}
-            isSelected={currentFilter == filter}
-            onClick={() => onSelect(filter)}
-          />;
-
-        <View style=Styles.filterButtonsContainer>
-          {button(All)}
-          {button(Active)}
-          {button(Completed)}
-        </View>
+      let header = {
+        <Text text="todoMVC" style=Styles.title />
       };
 
       let addTodoView = {
@@ -406,6 +492,16 @@ module TodoMVC = {
       let todoListView = {
         let onToggle = id => () => dispatch(Toggle(id));
         let onRemove = id => () => dispatch(Remove(id));
+        let filteredTodos =
+          List.filter(
+            task =>
+              switch (filter) {
+              | All => true
+              | Active => !task.Todo.isDone
+              | Completed => task.Todo.isDone
+              },
+            todos,
+          );
 
         <ScrollView style=Styles.todoList>
           <View>
@@ -424,13 +520,28 @@ module TodoMVC = {
         </ScrollView>
       };
 
+      let footer = {
+        let onSelectFilter = filter => dispatch(SetFilter(filter));
+        let onClearCompleted = () => dispatch(ClearCompleted);
+        let activeCount =
+          todos
+          |> List.filter((item: Todo.t) => !item.isDone)
+          |> List.length;
+        let completedCount =
+          todos
+          |> List.filter((item: Todo.t) => item.isDone)
+          |> List.length;
+
+        <Footer activeCount completedCount currentFilter onSelectFilter onClearCompleted />
+      };
+
       (
         hooks,
         <View style=Styles.appContainer>
-          <Text text="todoMVC" style=Styles.title />
+          {header}
           {addTodoView}
           {todoListView}
-          {filterButtonsView}
+          {footer}
         </View>,
       );
     });
