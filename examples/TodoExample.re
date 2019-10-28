@@ -78,7 +78,6 @@ module Button = {
         ~children as _,
         ~label,
         ~onClick=?,
-        ~isDisabled=false,
         ~isSelected=false,
         ~tabindex=?,
         ~onFocus=?,
@@ -165,12 +164,11 @@ module AddTodo = {
       ];
 
     let input =
-      Style.
-        [
-          fontSize(Theme.fontSize),
-          border(~width=0, ~color=Colors.transparentWhite),
-          width(4000),
-        ]; // Not ideal, should be possible to use flexGrow(1) instead
+      Style.[
+        fontSize(Theme.fontSize),
+        border(~width=0, ~color=Colors.transparentWhite),
+        width(4000),
+      ]; // Not ideal, should be possible to use flexGrow(1) instead
   };
 
   let component = React.component("AddTodo");
