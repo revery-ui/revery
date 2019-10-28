@@ -1,5 +1,5 @@
 {
-  "checksum": "bcb396b8d9a28a48f801c502b082ee96",
+  "checksum": "b2fce297e256fdae9b6b4ff417229da6",
   "root": "revery@link-dev:./package.json",
   "node": {
     "wordwrap@0.0.3@d41d8cd9": {
@@ -56,7 +56,7 @@
       "overrides": [ "doc.json" ],
       "dependencies": [
         "reperf@1.4.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
-        "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9",
+        "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-sdl2@2.10.3008@d41d8cd9",
         "reason-gl-matrix@0.9.9305@d41d8cd9",
         "reason-fontkit@2.7.0@d41d8cd9",
@@ -173,17 +173,16 @@
       ],
       "devDependencies": []
     },
-    "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9": {
-      "id": "rebez@github:jchavarri/rebez#46cbc183@d41d8cd9",
+    "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9": {
+      "id": "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
       "name": "rebez",
-      "version": "github:jchavarri/rebez#46cbc183",
+      "version": "github:jchavarri/rebez#03fa3b7",
       "source": {
         "type": "install",
-        "source": [ "github:jchavarri/rebez#46cbc183" ]
+        "source": [ "github:jchavarri/rebez#03fa3b7" ]
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.2.2@d41d8cd9", "pesy@0.4.1@d41d8cd9",
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@21d66ccd",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
@@ -298,20 +297,6 @@
         "mkdirp@0.5.1@d41d8cd9", "debug@3.2.6@d41d8cd9",
         "async@2.6.3@d41d8cd9"
       ],
-      "devDependencies": []
-    },
-    "pesy@0.4.1@d41d8cd9": {
-      "id": "pesy@0.4.1@d41d8cd9",
-      "name": "pesy",
-      "version": "0.4.1",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/pesy/-/pesy-0.4.1.tgz#sha1:37b3faccb3ecdb37f4bf3d95d04ffbd2633247af"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
       "devDependencies": []
     },
     "optimist@0.6.1@d41d8cd9": {
