@@ -11,16 +11,16 @@ open Revery_UI_Primitives;
 module TestRefComponent = {
   [@component]
   let make = (~latestRef, (), hooks) => {
-      let (refFromState, setRef, hooks) = React.Hooks.state(None, hooks);
+    let (refFromState, setRef, hooks) = React.Hooks.state(None, hooks);
 
-      latestRef := refFromState;
+    latestRef := refFromState;
 
-      let setRefInState = r => {
-        setRef(Some(r));
-      };
-
-      (hooks, <View ref=setRefInState />);
+    let setRefInState = r => {
+      setRef(Some(r));
     };
+
+    (hooks, <View ref=setRefInState />);
+  };
 };
 
 test("Reconciler", () => {
