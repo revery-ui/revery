@@ -56,6 +56,6 @@ let%component make =
        );
 
   <View style=Style.[justifyContent(`Center), alignItems(`Center)]>
-    {buttons |> Revery_UI.React.listToElement}
+    {buttons |> React.listToElement}
   </View>;
 };

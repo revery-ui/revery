@@ -1,7 +1,7 @@
 open Revery_UI;
 open Revery_UI_Primitives;
 
-let make = (~children, ()) => {
+let make = (~children=React.empty, ()) => {
   let style =
     Style.[
       flexDirection(`Row),
@@ -9,5 +9,5 @@ let make = (~children, ()) => {
       justifyContent(`Center),
     ];
 
-  <View style> ...children </View>;
+  <View style> children </View>;
 };

@@ -5,7 +5,7 @@ open Revery.UI.Components;
 module DefaultButtonWithCounter = {
   let%component make = () => {
     let%hook (count, setCount) = Hooks.state(0);
-    let increment = () => setCount(count + 1);
+    let increment = () => setCount(_ => count + 1);
 
     let containerStyle =
       Style.[justifyContent(`Center), alignItems(`Center)];

@@ -30,7 +30,7 @@ let%nativeComponent make =
                       ~height=?,
                       ~src="",
                       ~style=Style.emptyImageStyle,
-                      ~children,
+                      ~children=React.empty,
                       (),
                       hooks,
                     ) => (

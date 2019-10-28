@@ -14,7 +14,7 @@ let selectionHighlight = Color.hex("#90f7ff");
 
 type example = {
   name: string,
-  render: Window.t => React.syntheticElement,
+  render: Window.t => React.element(React.node),
   source: string,
 };
 
@@ -138,7 +138,7 @@ let getSourceForSample = (state: state, example: string) =>
 
 let noop = () => ();
 
-let getRenderFunctionSelector: (state, Window.t) => React.syntheticElement =
+let getRenderFunctionSelector: (state, Window.t) => React.element(React.node) =
   (s: state) => getExampleByName(s, s.selectedExample) |> (a => a.render);
 
 module ExampleButton = {
@@ -232,7 +232,7 @@ module ExampleHost = {
           bottom(0),
           backgroundColor(bgColor),
         ]>
-        <View> ...buttons </View>
+        <View> {buttons |> React.listToElement} </View>
       </ScrollView>
       <View
         style=Style.[

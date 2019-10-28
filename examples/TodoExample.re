@@ -198,7 +198,7 @@ module Example = {
           width(450),
           border(~width=1, ~color=Colors.black),
         ]>
-        <View> ...listOfTodos </View>
+        <View> {listOfTodos |> React.listToElement} </View>
       </ScrollView>
     </View>;
   };

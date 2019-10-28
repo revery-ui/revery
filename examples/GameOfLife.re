@@ -337,13 +337,14 @@ let viewPortRender =
   List.map(
     x =>
       <Column>
-        ...{List.map(
-          y =>
-            <Row>
-              <Cell cell={cell((x, y))} onClick={() => onClick((x, y))} />
-            </Row>,
-          rows,
-        )}
+        {List.map(
+           y =>
+             <Row>
+               <Cell cell={cell((x, y))} onClick={() => onClick((x, y))} />
+             </Row>,
+           rows,
+         )
+         |> React.listToElement}
       </Column>,
     cols,
   );
@@ -425,7 +426,8 @@ module GameOfLiveComponent = {
 
     <Column>
       <Row>
-        ...{viewPortRender(state.viewPort, state.universe, toggleAlive)}
+        {viewPortRender(state.viewPort, state.universe, toggleAlive)
+         |> React.listToElement}
       </Row>
       <View style=controlsStyle>
         <Button

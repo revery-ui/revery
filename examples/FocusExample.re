@@ -7,7 +7,7 @@ module SimpleButton = {
     let%hook (count, setCount) = Hooks.state(0);
     let%hook (focused, setFocus) = Hooks.state(false);
 
-    let increment = () => setCount(count + 1);
+    let increment = () => setCount(_ => count + 1);
 
     let txt = focused ? "Focused" : "Unfocused";
     let textContent = txt ++ " me: " ++ string_of_int(count);
@@ -15,8 +15,8 @@ module SimpleButton = {
     <Clickable
       onClick=increment
       tabindex=0
-      onFocus={() => setFocus(true)}
-      onBlur={() => setFocus(false)}>
+      onFocus={() => setFocus(_ => true)}
+      onBlur={() => setFocus(_ => false)}>
       <View
         style=Style.[
           backgroundColor(Color.rgba(1., 1., 1., 0.1)),

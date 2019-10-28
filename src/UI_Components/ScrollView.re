@@ -33,7 +33,7 @@ let%component make =
                 ~scrollLeft=0,
                 ~scrollTop=0,
                 ~bounce=defaultBounce,
-                ~children,
+                ~children=React.empty,
                 (),
               ) => {
   let%hook (actualScrollTop, dispatch) =
@@ -214,7 +214,7 @@ let%component make =
       onMouseWheel=scroll
       ref={r => setOuterRef(_ => Some(r))}
       style=Style.[flexGrow(1), position(`Relative), overflow(`Scroll)]>
-      <View style=innerStyle> {children |> React.listToElement} </View>
+      <View style=innerStyle> children </View>
       <View style=verticalScrollbarContainerStyle> verticalScrollBar </View>
       <View style=horizontalScrollbarContainerStyle>
         horizontalScrollBar

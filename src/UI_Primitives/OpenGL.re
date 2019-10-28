@@ -15,7 +15,7 @@ let%nativeComponent make =
                       ~onFocus=?,
                       ~ref=?,
                       ~style=Style.emptyViewStyle,
-                      ~children,
+                      ~children=React.empty,
                       ~onKeyDown=?,
                       ~onKeyUp=?,
                       ~onDimensionsChanged=?,

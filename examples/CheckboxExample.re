@@ -24,7 +24,7 @@ module Check = {
       ]>
       <Checkbox
         checked=first
-        onChange={() => setCheckboxState({first: !first, second})}
+        onChange={() => setCheckboxState(_ => {first: !first, second})}
         style=Style.[marginBottom(10)]
       />
       <Text
@@ -37,7 +37,7 @@ module Check = {
       />
       <Checkbox
         checkedColor=Colors.green
-        onChange={() => setCheckboxState({second: !second, first})}
+        onChange={() => setCheckboxState(_ => {second: !second, first})}
         style=Style.[border(~width=2, ~color=Colors.green)]
         checked=second
       />
