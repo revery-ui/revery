@@ -114,7 +114,7 @@ module Checkbox = {
         Theme.panelBorder,
       ];
 
-    let checkmark = isChecked =>
+    let checkmark =
       Style.[
         color(Theme.hoveredButtonColor),
         fontSize(Theme.fontSize),
@@ -129,10 +129,7 @@ module Checkbox = {
         hooks,
         <Clickable onClick=onToggle>
           <View style=Styles.box>
-            <Text
-              text={isChecked ? {||} : ""}
-              style={Styles.checkmark(isChecked)}
-            />
+            <Text text={isChecked ? {||} : ""} style=Styles.checkmark />
           </View>
         </Clickable>,
       )
