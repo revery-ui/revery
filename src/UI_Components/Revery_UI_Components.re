@@ -22,4 +22,6 @@ module ScrollView = ScrollView;
 module Slider = Slider;
 module Stack = Stack;
 module RadioButtons = RadioButtons;
+module RadioButtonsInt = RadioButtons.Make({type t = int;});
+module RadioButtonsString = RadioButtons.Make({type t = string;});
 module Tree = Tree;

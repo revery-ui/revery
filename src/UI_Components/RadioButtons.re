@@ -2,9 +2,10 @@ open Revery_UI;
 open Revery_Core;
 open Revery_UI_Primitives;
 
-type button('a) = {
+module Make = (Type: {type t;}) => {
+type button = {
   text: string,
-  value: 'a,
+  value: Type.t,
 };
 
 let defaultStyle =
@@ -19,7 +20,7 @@ let defaultStyle =
 let%component make =
               (
                 ~defaultSelected,
-                ~buttons: list(button('a)),
+                ~buttons: list(button),
                 ~iconSize,
                 ~style,
                 ~onChange,
@@ -58,4 +59,5 @@ let%component make =
   <View style=Style.[justifyContent(`Center), alignItems(`Center)]>
     {buttons |> React.listToElement}
   </View>;
+};
 };
