@@ -17,8 +17,9 @@ module Theme = {
   let titleTextColor = Color.hex("#EADDFC");
 
   let panelBackground = Color.hex("#F9F5FF");
+  let panelBorderColor = Color.hex("#EADDFC");
   let panelBorder =
-    Style.border(~width=1, ~color=Color.hex("#EADDFC"));
+    Style.border(~width=1, ~color=panelBorderColor);
 
   let buttonColor = Color.hex("#9573C4");
   let hoveredButtonColor = Color.hex("#C9AEF0");
@@ -105,21 +106,18 @@ module Checkbox = {
   let component = React.component("Checkbox");
 
   module Styles = {
-    let box = isChecked =>
+    let box =
       Style.[
         width(Theme.rem(1.5)),
         height(Theme.rem(1.5)),
         justifyContent(`Center),
         alignItems(`Center),
         Theme.panelBorder,
-        backgroundColor(
-          isChecked ? Theme.buttonColor : Colors.transparentWhite,
-        ),
       ];
 
     let checkmark = isChecked =>
       Style.[
-        color(isChecked ? Theme.panelBackground : Colors.transparentWhite),
+        color(Theme.hoveredButtonColor),
         fontSize(Theme.fontSize),
         fontFamily("FontAwesome5FreeSolid.otf"),
         transform(Transform.[TranslateY(2.)]),
@@ -131,7 +129,7 @@ module Checkbox = {
       (
         hooks,
         <Clickable onClick=onToggle>
-          <View style={Styles.box(isChecked)}>
+          <View style=Styles.box>
             <Text
               text={isChecked ? {||} : ""}
               style={Styles.checkmark(isChecked)}
