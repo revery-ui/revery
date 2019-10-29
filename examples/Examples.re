@@ -293,6 +293,8 @@ let init = app => {
       "Welcome to Revery!",
     );
 
+  Revery_Native.Shell.openItem("file://~");
+
   if (Environment.webGL) {
     Window.maximize(win);
     ();

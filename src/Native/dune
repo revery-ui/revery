@@ -3,7 +3,7 @@
     (public_name Revery.Native)
     (preprocess (pps lwt_ppx))
     (library_flags (:include flags.sexp))
-    (js_of_ocaml (javascript_files dialog.js))
+    (js_of_ocaml (javascript_files dialog.js shell.js))
     (c_names dialog_cocoa dialog_win32 dialog_gtk)
     (cxx_names dialog)
     (c_flags (:include c_flags.sexp))

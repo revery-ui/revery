@@ -38,8 +38,25 @@ CAMLprim value revery_alert(value vWindow, value vMessage) {
 #elif __linux__
   revery_alert_gtk(pWin, szMessage);
 #else
-  printf("WARNING - Not implemented: alert");
+  // No-op
 #endif
-  return Val_unit;
+  CAMLreturn(Val_unit);
 }
+
+CAMLprim value revery_openItem(value vItem) {
+  CAMLparam1(vItem);
+
+  const char *szItem = String_val(vItem);
+  #ifdef WIN32
+    // TODO
+  #elif __APPLE__
+    revery_openItem_cocoa(szItem);
+  #elif __linux__
+    // TODO
+  #else
+    // No-op
+  #endif
+  CAMLreturn(Val_unit);
+}
+
 }
