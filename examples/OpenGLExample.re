@@ -28,13 +28,14 @@ module Sample = {
           Gl.glClearColor(1.0, 0.0, 0.0, 1.0);
 
           Revery.Draw.Text.drawString(
-            ~transform,
             ~backgroundColor=Colors.red,
             ~color=Colors.white,
             ~fontFamily="Roboto-Regular.ttf",
             ~fontSize=20,
+            ~transform,
             ~x=25.,
             ~y=25.,
+            ~window=None,
             "Hello!",
           );
 
