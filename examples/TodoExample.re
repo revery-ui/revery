@@ -18,8 +18,7 @@ module Theme = {
 
   let panelBackground = Color.hex("#F9F5FF");
   let panelBorderColor = Color.hex("#EADDFC");
-  let panelBorder =
-    Style.border(~width=1, ~color=panelBorderColor);
+  let panelBorder = Style.border(~width=1, ~color=panelBorderColor);
 
   let buttonColor = Color.hex("#9573C4");
   let hoveredButtonColor = Color.hex("#C9AEF0");
