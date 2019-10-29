@@ -358,24 +358,27 @@ let%component make =
       | false => 0.0
     );
 
-  let cursor = {
-    let (startStr, _) = getStringParts(state.cursorPosition, valueToDisplay);
-    let dimension =
-      Revery_Draw.Text.measure(
-        ~fontFamily=inputFontFamily,
-        ~fontSize=inputFontSize,
-        startStr,
-      );
-    <View
-      style=Style.[
-        position(`Absolute),
-        marginLeft(dimension.width + inputTextMargin + 1),
-        marginTop((defaultHeight - dimension.height) / 2),
-      ]>
-      <Opacity opacity=cursorOpacity>
-        <ContainerComponent width=2 height=inputFontSize color=cursorColor />
-      </Opacity>
-    </View>;
+  module Cursor = {
+    let make = () => {
+      let (startStr, _) =
+        getStringParts(state.cursorPosition, valueToDisplay);
+      let dimension =
+        Revery_Draw.Text.measure(
+          ~fontFamily=inputFontFamily,
+          ~fontSize=inputFontSize,
+          startStr,
+        );
+      <View
+        style=Style.[
+          position(`Absolute),
+          marginLeft(dimension.width + inputTextMargin + 1),
+          marginTop((defaultHeight - dimension.height) / 2),
+        ]>
+        <Opacity opacity=cursorOpacity>
+          <ContainerComponent width=2 height=inputFontSize color=cursorColor />
+        </Opacity>
+      </View>;
+    };
   };
 
   let makeTextComponent = content =>
@@ -412,7 +415,7 @@ let%component make =
     onKeyDown=handleKeyDown
     onTextInput=handleTextInput>
     <View style=viewStyles>
-      cursor
+      <Cursor />
       {hasPlaceholder ? placeholderText : inputText}
     </View>
   </Clickable>;
