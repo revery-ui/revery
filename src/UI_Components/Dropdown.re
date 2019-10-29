@@ -3,23 +3,23 @@ open Revery_Core;
 open Revery_UI_Primitives;
 
 module Hooks = Revery_UI_Hooks;
-
-type item('a) = {
-  value: 'a,
+module Make = (Type: {type t;}) => {
+type item = {
+  value: Type.t,
   label: string,
 };
 
-type items('a) = list(item('a));
+type items = list(item);
 
-type state('a) = {
-  items: items('a),
-  selected: item('a),
+type state = {
+  items: items,
+  selected: item,
   _open: bool,
 };
 
-type action('a) =
+type action =
   | ShowDropdown
-  | SelectItem(item('a));
+  | SelectItem(item);
 
 let reducer = (action, state) =>
   switch (action) {
@@ -38,7 +38,7 @@ let noop = _item => ();
 
 let%component make =
               (
-                ~items: list(item('a)),
+                ~items: list(item),
                 ~onItemSelected,
                 ~width as w=200,
                 ~height as h=50,
@@ -129,4 +129,5 @@ let%component make =
       {items |> React.listToElement}
     </View>
   </View>;
+};
 };

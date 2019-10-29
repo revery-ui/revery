@@ -12,6 +12,8 @@ module ClipContainer = ClipContainer;
 module Column = Column;
 module Container = Container;
 module Dropdown = Dropdown;
+module DropdownInt = Dropdown.Make({type t = int;});
+module DropdownString = Dropdown.Make({type t = string;});
 module ExpandContainer = ExpandContainer;
 module Input = Input;
 module Positioned = Positioned;
