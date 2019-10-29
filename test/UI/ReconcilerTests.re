@@ -1,7 +1,7 @@
-open Rejest;
-
 open Revery_UI;
 open Revery_UI_Primitives;
+
+open TestFramework;
 
 /*
  * This module tests the integration of the Brisk reconciler - `React` -
@@ -23,17 +23,17 @@ module TestRefComponent = {
   };
 };
 
-test("Reconciler", () => {
-  test("reconcile adds a child", () => {
+describe("Reconciler", ({test, _}) => {
+  test("reconcile adds a child", ({expect, _}) => {
     let rootNode = (new viewNode)();
 
     let container = Container.create(rootNode);
     Container.update(container, <View />) |> ignore;
 
-    expect(List.length(rootNode#getChildren())).toBe(1);
+    expect.int(List.length(rootNode#getChildren())).toBe(1);
   });
 
-  test("ref: returns value of node", () => {
+  test("ref: returns value of node", ({expect, _}) => {
     let rootNode = (new viewNode)();
 
     let container = Container.create(rootNode);
@@ -50,12 +50,12 @@ test("Reconciler", () => {
     switch (referenceNode^) {
     | Some(r) =>
       let actualChild = rootNode#firstChild();
-      expect(actualChild#getInternalId()).toBe(r#getInternalId());
-    | None => expect(0).toBe(1)
+      expect.same(actualChild#getInternalId(), r#getInternalId());
+    | None => expect.int(0).toBe(1)
     };
   });
 
-  test("ref: validate ref gets passed back to component", () => {
+  test("ref: validate ref gets passed back to component", ({expect, _}) => {
     let rootNode = (new viewNode)();
 
     let container = Container.create(rootNode);
@@ -76,12 +76,12 @@ test("Reconciler", () => {
     Container.update(update1, <TestRefComponent latestRef />) |> ignore;
 
     switch (latestRef^) {
-    | Some(_) => expect(1).toBe(1)
-    | None => expect(0).toBe(1)
+    | Some(_) => expect.int(1).toBe(1)
+    | None => expect.int(0).toBe(1)
     };
   });
 
-  test("layout: onDimensionsChanged gets dispatched", () => {
+  test("layout: onDimensionsChanged gets dispatched", ({expect, _}) => {
     let rootNode = (new viewNode)();
     let container = Container.create(rootNode);
     rootNode#setStyle(
@@ -109,9 +109,9 @@ test("Reconciler", () => {
     rootNode#recalculate();
     rootNode#flushCallbacks();
 
-    expect(callCount^).toBe(1);
-    expect(lastWidth^).toBe(100);
-    expect(lastHeight^).toBe(200);
+    expect.int(callCount^).toBe(1);
+    expect.int(lastWidth^).toBe(100);
+    expect.int(lastHeight^).toBe(200);
 
     /* Shouldn't dispatch if width/height hasn't change! */
     let update2 =
@@ -121,7 +121,7 @@ test("Reconciler", () => {
     rootNode#recalculate();
     rootNode#flushCallbacks();
 
-    expect(callCount^).toBe(1);
+    expect.int(callCount^).toBe(1);
 
     /* Should update if the size was somehow changed.. */
     rootNode#setStyle(
@@ -133,8 +133,8 @@ test("Reconciler", () => {
     rootNode#recalculate();
     rootNode#flushCallbacks();
 
-    expect(callCount^).toBe(2);
-    expect(lastWidth^).toBe(300);
-    expect(lastHeight^).toBe(400);
+    expect.int(callCount^).toBe(2);
+    expect.int(lastWidth^).toBe(300);
+    expect.int(lastHeight^).toBe(400);
   });
 });

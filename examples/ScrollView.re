@@ -38,14 +38,15 @@ module Sample = {
         ]
       />
       <Checkbox
-        onChange={() => setBounce(_ => !bounce)}
+        onChange={() => setBounce(!bounce)}
         checked=bounce
         style=Style.[marginBottom(10)]
       />
       <ScrollView style=outerBox bounce>
         <Image
           src="outrun-logo.png"
-          style=Style.[width(512), height(256)]
+          /* Exercise the case in #579 */
+          style=Style.[overflow(`Hidden), width(512), height(256)]
         />
         <Image
           src="outrun-logo.png"

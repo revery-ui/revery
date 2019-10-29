@@ -28,152 +28,159 @@ let reducer = (action, _state) => {
 };
 
 let%component make =
-              (
-                ~style,
-                ~scrollLeft=0,
-                ~scrollTop=0,
-                ~bounce=defaultBounce,
-                ~children=React.empty,
-                (),
-              ) => {
-  let%hook (actualScrollTop, dispatch) =
-    Hooks.reducer(~initialState=scrollTop, reducer);
-  let%hook (outerRef: option(Revery_UI.node), setOuterRef) =
-    Hooks.state(None);
-  let%hook (actualScrollLeft, setScrollLeft) = Hooks.state(scrollLeft);
-  let%hook (bouncingState, setBouncingState) = Hooks.state(Idle);
+    (
+      ~style,
+      ~scrollLeft=0,
+      ~scrollTop=0,
+      ~bounce=defaultBounce,
+      children=React.empty,
+      ()
+    ) => {
+    let%hook (actualScrollTop, dispatch) =
+      Hooks.reducer(~initialState=scrollTop, reducer);
+    let%hook (outerRef: option(Revery_UI.node), setOuterRef) =
+      Hooks.state(None);
+    let%hook (actualScrollLeft, setScrollLeft) =
+      Hooks.state(scrollLeft);
+    let%hook (bouncingState, setBouncingState) = Hooks.state(Idle);
 
-  let scrollBarThickness = 10;
+    let scrollBarThickness = 10;
 
-  let innerViewTransform = [
-    TranslateX((-1.) *. float_of_int(actualScrollLeft)),
-    TranslateY((-1.) *. float_of_int(actualScrollTop)),
-  ];
+    let innerViewTransform = [
+      TranslateX((-1.) *. float_of_int(actualScrollLeft)),
+      TranslateY((-1.) *. float_of_int(actualScrollTop)),
+    ];
 
-  let (horizontalScrollBar, verticalScrollBar, scroll) =
-    switch (outerRef) {
-    | Some(outer) =>
-      let inner = outer#firstChild();
-      let childMeasurements = inner#measurements();
-      let outerMeasurements = outer#measurements();
+    let (horizontalScrollBar, verticalScrollBar, scroll) =
+      switch (outerRef) {
+      | Some(outer) =>
+        let inner = outer#firstChild();
+        let childMeasurements = inner#measurements();
+        let outerMeasurements = outer#measurements();
 
-      let maxHeight = childMeasurements.height - outerMeasurements.height;
-      let maxWidth = childMeasurements.width - outerMeasurements.width;
+        let maxHeight =
+          max(0, childMeasurements.height - outerMeasurements.height);
+        let maxWidth = childMeasurements.width - outerMeasurements.width;
 
-      /*
-       * TODO: #287
-       * prerr_endline ("Child width: " ++ string_of_int(childMeasurements.width));
-       * prerr_endline ("Container width: " ++ string_of_int(outerMeasurements.width));
-       * This can be removed once #287 is fixed
-       */
+        /*
+         * TODO: #287
+         * prerr_endline ("Child width: " ++ string_of_int(childMeasurements.width));
+         * prerr_endline ("Container width: " ++ string_of_int(outerMeasurements.width));
+         * This can be removed once #287 is fixed
+         */
 
-      let verticalThumbHeight =
-        childMeasurements.height > 0
-          ? outerMeasurements.height
-            * outerMeasurements.height
-            / childMeasurements.height
-          : 1;
-      let horizontalThumbHeight =
-        childMeasurements.width > 0
-          ? outerMeasurements.width
-            * outerMeasurements.width
-            / childMeasurements.width
-          : 1;
+        let verticalThumbHeight =
+          childMeasurements.height > 0
+            ? outerMeasurements.height
+              * outerMeasurements.height
+              / childMeasurements.height
+            : 1;
+        let horizontalThumbHeight =
+          childMeasurements.width > 0
+            ? outerMeasurements.width
+              * outerMeasurements.width
+              / childMeasurements.width
+            : 1;
 
-      let isVerticalScrollbarVisible = maxHeight > 0;
-      let isHorizontalScrollbarVisible = maxWidth > 0;
+        let isVerticalScrollbarVisible = maxHeight > 0;
+        let isHorizontalScrollbarVisible = maxWidth > 0;
 
-      let verticalScrollBar =
-        isVerticalScrollbarVisible
-          ? <Slider
-              onValueChanged={v => dispatch(ScrollUpdated(int_of_float(v)))}
-              minimumValue=0.
-              maximumValue={float_of_int(maxHeight)}
-              sliderLength={outerMeasurements.height}
-              thumbLength=verticalThumbHeight
-              value={float_of_int(actualScrollTop)}
-              trackThickness=scrollBarThickness
-              thumbThickness=scrollBarThickness
-              minimumTrackColor=scrollTrackColor
-              maximumTrackColor=scrollTrackColor
-              thumbColor=scrollThumbColor
-              vertical=true
-            />
-          : empty;
+        let verticalScrollBar =
+          isVerticalScrollbarVisible
+            ? <Slider
+                onValueChanged={v =>
+                  dispatch(ScrollUpdated(int_of_float(v)))
+                }
+                minimumValue=0.
+                maximumValue={float_of_int(maxHeight)}
+                sliderLength={outerMeasurements.height}
+                thumbLength=verticalThumbHeight
+                value={float_of_int(actualScrollTop)}
+                trackThickness=scrollBarThickness
+                thumbThickness=scrollBarThickness
+                minimumTrackColor=scrollTrackColor
+                maximumTrackColor=scrollTrackColor
+                thumbColor=scrollThumbColor
+                vertical=true
+              />
+            : empty;
 
-      /* TODO: #287
-       * Need to investigate why the child width is not being reported (expanded) correctly.
-       * Currently, the child width is clamped to the parent.
-       * Is this a bug in flex?
-       * Or something we need to fix in our styling?
-       */
-      let horizontalScrollbar =
-        isHorizontalScrollbarVisible
-          ? <Slider
-              onValueChanged={v => setScrollLeft(_ => - int_of_float(v))}
-              minimumValue=0.
-              maximumValue={float_of_int(maxWidth)}
-              sliderLength={outerMeasurements.width}
-              thumbLength=horizontalThumbHeight
-              trackThickness=scrollBarThickness
-              thumbThickness=scrollBarThickness
-              minimumTrackColor=scrollTrackColor
-              maximumTrackColor=scrollTrackColor
-              thumbColor=scrollThumbColor
-            />
-          : empty;
+        /* TODO: #287
+         * Need to investigate why the child width is not being reported (expanded) correctly.
+         * Currently, the child width is clamped to the parent.
+         * Is this a bug in flex?
+         * Or something we need to fix in our styling?
+         */
+        let horizontalScrollbar =
+          isHorizontalScrollbarVisible
+            ? <Slider
+                onValueChanged={v => setScrollLeft(_prevValue => - int_of_float(v))}
+                minimumValue=0.
+                maximumValue={float_of_int(maxWidth)}
+                sliderLength={outerMeasurements.width}
+                thumbLength=horizontalThumbHeight
+                trackThickness=scrollBarThickness
+                thumbThickness=scrollBarThickness
+                minimumTrackColor=scrollTrackColor
+                maximumTrackColor=scrollTrackColor
+                thumbColor=scrollThumbColor
+              />
+            : empty;
 
-      let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
-        let newScrollTop =
-          actualScrollTop - int_of_float(wheelEvent.deltaY *. 25.);
+        let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
+          let newScrollTop =
+            actualScrollTop - int_of_float(wheelEvent.deltaY *. 25.);
 
-        let isAtTop = newScrollTop < 0;
-        let isAtBottom = newScrollTop > maxHeight;
+          let isAtTop = newScrollTop < 0;
+          let isAtBottom = newScrollTop > maxHeight;
 
-        switch (bouncingState) {
-        | Bouncing(Top, playback) when wheelEvent.deltaY < 0. =>
-          playback.stop();
-          setBouncingState(_ => Idle);
-        | Bouncing(Bottom, playback) when wheelEvent.deltaY > 0. =>
-          playback.stop();
-          setBouncingState(_ => Idle);
-        | Bouncing(_) => ()
-        | Idle when !bounce && (isAtTop || isAtBottom) =>
-          let clampedScrollTop = isAtTop ? 0 : maxHeight;
-          dispatch(ScrollUpdated(clampedScrollTop));
-        | Idle when bounce && (isAtTop || isAtBottom) =>
-          open Animated;
-          let direction = isAtTop ? Top : Bottom;
-          let bounceAwayAnim = {
-            toValue: float_of_int(newScrollTop),
-            duration: Milliseconds(100.),
-            delay: Seconds(0.),
-            repeat: false,
-            easing: Easing.cubicBezier(0.23, 1., 0.32, 1.),
-            direction: `Normal,
-          };
-          let bounceBackAnim = {
-            toValue: isAtTop ? 0. : float_of_int(maxHeight),
-            duration: Milliseconds(800.),
-            delay: Seconds(0.),
-            repeat: false,
-            easing: Easing.cubicBezier(0.23, 1., 0.32, 1.),
-            direction: `Normal,
-          };
-          let playback =
-            tween(floatValue(float_of_int(actualScrollTop)), bounceAwayAnim)
-            |> Chain.make
-            |> Chain.add(
-                 tween(
-                   floatValue(float_of_int(newScrollTop)),
-                   bounceBackAnim,
-                 ),
-               )
-            |> Chain.start(~update=v =>
-                 dispatch(ScrollUpdated(int_of_float(v)))
-               );
-          setBouncingState(_ => Bouncing(direction, playback));
-        | Idle => dispatch(ScrollUpdated(newScrollTop))
+          switch (bouncingState) {
+          | Bouncing(Top, playback) when wheelEvent.deltaY < 0. =>
+            playback.stop();
+            setBouncingState(_prevState => Idle);
+          | Bouncing(Bottom, playback) when wheelEvent.deltaY > 0. =>
+            playback.stop();
+            setBouncingState(_prevState => Idle);
+          | Bouncing(_) => ()
+          | Idle when !bounce && (isAtTop || isAtBottom) =>
+            let clampedScrollTop = isAtTop ? 0 : maxHeight;
+            dispatch(ScrollUpdated(clampedScrollTop));
+          | Idle when bounce && (isAtTop || isAtBottom) =>
+            open Animated;
+            let direction = isAtTop ? Top : Bottom;
+            let bounceAwayAnim = {
+              toValue: float_of_int(newScrollTop),
+              duration: Milliseconds(100.),
+              delay: Seconds(0.),
+              repeat: false,
+              easing: Easing.cubicBezier(0.23, 1., 0.32, 1.),
+              direction: `Normal,
+            };
+            let bounceBackAnim = {
+              toValue: isAtTop ? 0. : float_of_int(maxHeight),
+              duration: Milliseconds(800.),
+              delay: Seconds(0.),
+              repeat: false,
+              easing: Easing.cubicBezier(0.23, 1., 0.32, 1.),
+              direction: `Normal,
+            };
+            let playback =
+              tween(
+                floatValue(float_of_int(actualScrollTop)),
+                bounceAwayAnim,
+              )
+              |> Chain.make
+              |> Chain.add(
+                   tween(
+                     floatValue(float_of_int(newScrollTop)),
+                     bounceBackAnim,
+                   ),
+                 )
+              |> Chain.start(~update=v =>
+                   dispatch(ScrollUpdated(int_of_float(v)))
+                 );
+            setBouncingState(_prevState => Bouncing(direction, playback));
+          | Idle => dispatch(ScrollUpdated(newScrollTop))
         };
       };
 

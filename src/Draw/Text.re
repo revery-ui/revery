@@ -18,23 +18,53 @@ open Fontkit;
  * with the requested fontSize. For example, in a high DPI that has a 3x pixel
  * ratio, we want to render a 3x size bitmap.
  */
-let _getScaledFontSize = fontSize => {
-  let ctx = RenderPass.getContext();
-
-  int_of_float(
-    float_of_int(fontSize) *. ctx.pixelRatio *. ctx.scaleFactor +. 0.5,
-  );
+let _getScaledFontSize = (~scaleFactor, ~pixelRatio, fontSize) => {
+  let ret =
+    int_of_float(float_of_int(fontSize) *. pixelRatio *. scaleFactor +. 0.5);
+  ret;
 };
 
-let getLineHeight = (~fontFamily, ~fontSize, ~lineHeight, ()) => {
-  let font = FontCache.load(fontFamily, fontSize);
+let _getScaledFontSizeFromWindow = (window: option(Window.t), fontSize) => {
+  let (scaleFactor, pixelRatio) =
+    switch (window) {
+    | None => (1.0, 1.0)
+    | Some(v) =>
+      let sf = Window.getScaleAndZoom(v);
+      let pr = Window.getDevicePixelRatio(v);
+      (sf, pr);
+    };
+
+  _getScaledFontSize(~scaleFactor, ~pixelRatio, fontSize);
+};
+
+let getLineHeight = (~window=None, ~fontFamily, ~fontSize, ~lineHeight, ()) => {
+  let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
+  let font = FontCache.load(fontFamily, scaledFontSize);
   let metrics = FontRenderer.getNormalizedMetrics(font);
   lineHeight *. metrics.height;
 };
 
-let measure = (~fontFamily, ~fontSize, text) => {
-  let font = FontCache.load(fontFamily, fontSize);
-  FontRenderer.measure(font, text);
+type dimensions = {
+  width: int,
+  height: int,
+};
+
+let measure = (~window=None, ~fontFamily, ~fontSize, text) => {
+  let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
+  let font = FontCache.load(fontFamily, scaledFontSize);
+  let multiplier =
+    switch (window) {
+    | None => 1.0
+    | Some(w) => Window.getScaleAndZoom(w) *. Window.getDevicePixelRatio(w)
+    };
+
+  let dimensions = FontRenderer.measure(font, text);
+  let ret: dimensions = {
+    width: int_of_float(float_of_int(dimensions.width) /. multiplier +. 0.5),
+    height:
+      int_of_float(float_of_int(dimensions.height) /. multiplier +. 0.5),
+  };
+  ret;
 };
 
 let identityMatrix = Mat4.create();
@@ -76,6 +106,7 @@ let _startShader =
 
 let drawString =
     (
+      ~window: option(Window.t),
       ~fontFamily: string,
       ~fontSize: int,
       ~color: Color.t=Colors.white,
@@ -95,10 +126,15 @@ let drawString =
   let (shader, uniformWorld) =
     _startShader(~color, ~backgroundColor, ~opacity, ~gamma, ~projection, ());
 
-  let font = FontCache.load(fontFamily, _getScaledFontSize(fontSize));
+  let font =
+    FontCache.load(
+      fontFamily,
+      _getScaledFontSizeFromWindow(window, fontSize),
+    );
 
   let metrics = FontRenderer.getNormalizedMetrics(font);
   let multiplier = ctx.pixelRatio *. ctx.scaleFactor;
+
   /* Position the baseline */
   let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
   ();

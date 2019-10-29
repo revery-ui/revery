@@ -33,11 +33,16 @@ type t = {
 
     This can decrease tearing, but also limits the frame rate to the monito refresh rate.
   */
-  vsync: bool,
+  vsync: Vsync.t,
   /*
       [icon] is an optional path to an icon to show in the window frame.
    */
   icon: option(string),
+  /*
+       [forceScaleFactor] is an optional value to force scaling factor. Scaling affects both the outer window dimensions,
+       as well as the scaling of UI elements.
+   */
+  forceScaleFactor: option(float),
 };
 
 let create =
@@ -49,8 +54,9 @@ let create =
       ~width=800,
       ~height=600,
       ~backgroundColor=Colors.cornflowerBlue,
-      ~vsync=true,
+      ~vsync=Vsync.Synchronized,
       ~icon=None,
+      ~forceScaleFactor=None,
       (),
     ) => {
   resizable,
@@ -60,6 +66,7 @@ let create =
   width,
   height,
   backgroundColor,
+  forceScaleFactor,
   vsync,
   icon,
 };

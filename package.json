@@ -1,6 +1,6 @@
 {
   "name": "revery",
-  "version": "0.26.0",
+  "version": "0.28.0",
   "description": "App toolkit built with Reason",
   "license": "MIT",
   "bugs": {
@@ -26,26 +26,27 @@
     ],
     "install": [
       "esy-installer Revery.install",
-      "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll $cur__bin': 'echo Build complete'}\""
+      "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': 'echo Build complete'}\""
     ]
   },
   "dependencies": {
     "@esy-ocaml/reason": "^3.4.0",
     "reason-fontkit": "^2.7.0",
     "reason-gl-matrix": "^0.9.9305",
-    "rebez": "*",
     "@opam/js_of_ocaml": "^3.4.0",
     "@opam/js_of_ocaml-compiler": "^3.4.0",
     "@opam/js_of_ocaml-lwt": "^3.4.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
-    "@brisk/brisk-reconciler": "*",
+    "brisk-reconciler": "^0.0.2",
     "flex": "^1.2.2",
+    "@reason-native/rely": "*",
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
-    "rench": "^1.9.0",
     "reason-font-manager": "^2.0.0",
-    "reason-sdl2": "^2.10.3002"
+    "rench": "^1.9.1",
+    "rebez": "github:jchavarri/rebez#03fa3b7",
+    "reason-sdl2": "^2.10.3008"
   },
   "resolutions": {
     "rebez": "github:jchavarri/rebez#46cbc183",

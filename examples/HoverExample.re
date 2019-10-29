@@ -37,6 +37,21 @@ module HoverExample = {
   let%component make = () => {
     let%hook (state, dispatch) = Hooks.reducer(~initialState, reducer);
 
+    let%hook () =
+      Hooks.effect(
+        OnMount,
+        () => {
+          let dispose =
+            Mouse.registerListeners(
+              ~onMouseEnterWindow=_ => print_endline("enter window"),
+              ~onMouseLeaveWindow=_ => print_endline("leave window"),
+              (),
+            );
+
+          Some(dispose);
+        },
+      );
+
     <View
       style=Style.[
         flexDirection(`Row),
