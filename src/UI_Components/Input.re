@@ -315,9 +315,21 @@ let%component make =
 
   let viewStyles = Style.extractViewStyles(allStyles);
 
+  let inputFontSize = Selector.select(style, FontSize, 18);
+  let inputColor = Selector.select(style, Color, Colors.black);
+  let inputFontFamily =
+    Selector.select(style, FontFamily, "Roboto-Regular.ttf");
+
+  let cursorOpacity =
+    state.isFocused
+    |> (
+      fun
+      | true => state.cursorTimer <= Time.Seconds(0.5) ? 1.0 : 0.0
+      | false => 0.0
+    );
+
   let cursor = {
-    let (startStr, _) =
-      getStringParts(state.cursorPosition, valueToDisplay);
+    let (startStr, _) = getStringParts(state.cursorPosition, valueToDisplay);
     let dimension =
       Revery_Draw.Text.measure(
         ~window=Revery_UI.getActiveWindow(),

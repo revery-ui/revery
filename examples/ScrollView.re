@@ -38,7 +38,7 @@ module Sample = {
         ]
       />
       <Checkbox
-        onChange={() => setBounce(!bounce)}
+        onChange={() => setBounce(isBounce => !isBounce)}
         checked=bounce
         style=Style.[marginBottom(10)]
       />

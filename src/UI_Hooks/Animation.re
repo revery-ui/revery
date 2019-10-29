@@ -18,8 +18,7 @@ let animationLoop = (animation, completer, ()) => {
 
 let animation = (v: animationValue, opts: animationOptions) => {
   let%hook (animation, _) = Ref.ref(tween(v, opts));
-  let%hook (_, dispatch) =
-    Reducer.reducer(~initialState=0, reducer);
+  let%hook (_, dispatch) = Reducer.reducer(~initialState=0, reducer);
   let completer = () => Tick.interval(_t => dispatch(), Seconds(0.));
 
   let restart = () => {
@@ -49,8 +48,7 @@ let animation = (v: animationValue, opts: animationOptions) => {
     };
   };
 
-  let%hook ()) =
-    Effect.effect(OnMount, animationLoop(animation, completer),);
+  let%hook () = Effect.effect(OnMount, animationLoop(animation, completer));
 
   (animation.value.current, pause, restart);
 };
