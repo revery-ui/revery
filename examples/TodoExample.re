@@ -278,6 +278,7 @@ module Footer = {
         alignItems(`Center),
         justifyContent(`Center),
         alignSelf(`Center),
+        transform(Transform.[TranslateY(-2.)]),
       ];
 
     let leftFlexContainer = Style.[flexGrow(1), width(0)];
