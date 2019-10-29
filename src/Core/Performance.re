@@ -39,9 +39,7 @@ let isBenchmarking =
 
 let bench: (string, performanceFunction('a)) => 'a =
   (name, f) =>
-    switch (isBenchmarking) {
-    | false => f()
-    | true =>
+    if (isBenchmarking) {
       nestingLevel := nestingLevel^ + 1;
       let startTime = Unix.gettimeofday();
       let startCounters = GarbageCollector.counters();
@@ -63,4 +61,6 @@ let bench: (string, performanceFunction('a)) => 'a =
 
       nestingLevel := nestingLevel^ - 1;
       ret;
+    } else {
+      f();
     };

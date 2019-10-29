@@ -329,9 +329,7 @@ class node (()) = {
   pub toLayoutNode = (~force, ()) => {
     let layoutStyle = _layoutStyle;
 
-    switch (_isLayoutDirty || force) {
-    | false => _layoutNode
-    | true =>
+    if (_isLayoutDirty || force) {
       let childNodes =
         List.map(c => c#toLayoutNode(~force, ()), _this#getChildren());
 
@@ -348,6 +346,8 @@ class node (()) = {
 
       _layoutNode = node;
       node;
+    } else {
+      _layoutNode;
     };
   };
   pri _queueCallback = (cb: callback) => {
