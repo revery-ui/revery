@@ -11,19 +11,19 @@ module Theme = {
   let fontSize = 16;
   let rem = factor => int_of_float(float_of_int(fontSize) *. factor);
 
-  let appBackground = Color.rgb(0.91, 0.9, 0.95);
-  let textColor = Color.rgb(0.35, 0.3, 0.4);
-  let dimmedTextColor = Color.rgb(0.81, 0.8, 0.84);
-  let titleTextColor = Color.rgb(0.85, 0.8, 0.9);
+  let appBackground = Color.hex("#f4edfe");
+  let textColor = Color.hex("#513B70");
+  let dimmedTextColor = Color.hex("#DAC5F7");
+  let titleTextColor = Color.hex("#EADDFC");
 
-  let panelBackground = Color.rgb(0.98, 0.94, 1.);
+  let panelBackground = Color.hex("#F9F5FF");
   let panelBorder =
-    Style.border(~width=1, ~color=Color.rgb(0.85, 0.88, 0.85));
+    Style.border(~width=1, ~color=Color.hex("#EADDFC"));
 
-  let buttonColor = Colors.mediumPurple;
-  let hoveredButtonColor = Color.rgb(0.7, 0.6, 0.8);
+  let buttonColor = Color.hex("#9573C4");
+  let hoveredButtonColor = Color.hex("#C9AEF0");
 
-  let dangerColor = Colors.indianRed;
+  let dangerColor = Color.hex("#f7c5c6");
 };
 
 module Filter = {
