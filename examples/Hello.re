@@ -19,7 +19,7 @@ module Logo = {
         ),
       );
 
-    let%hook (rotationY, pauseRotation, restartRotation) =
+    let%hook (rotationY, pauseRotationY, restartRotationY) =
       Hooks.animation(
         Animated.floatValue(0.),
         Animated.options(
@@ -31,11 +31,7 @@ module Logo = {
         ),
       );
 
-    let onMouseDown = _ => setOpacity(_ => 0.5);
-
-    let onMouseUp = _ => setOpacity(_ => 1.0);
-
-    <View onMouseDown onMouseUp>
+    <View>
       <Opacity opacity=logoOpacity>
         <Image
           src="outrun-logo.png"
@@ -49,6 +45,25 @@ module Logo = {
           ]
         />
       </Opacity>
+      <Row>
+        <Button
+          width=200
+          onClick={() => {
+            pauseRotation() |> ignore;
+            pauseRotationY() |> ignore;
+            ();
+          }}
+          title="Pause"
+        />
+        <Button
+          width=200
+          onClick={() => {
+            restartRotation();
+            restartRotationY();
+          }}
+          title="Restart"
+        />
+      </Row>
     </View>;
   };
 };
