@@ -331,12 +331,7 @@ let make =
       Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
     let cursorOpacity =
-      state.isFocused
-      |> (
-        fun
-        | true => state.cursorTimer <= Time.Seconds(0.5) ? 1.0 : 0.0
-        | false => 0.0
-      );
+      state.isFocused && state.cursorTimer <= Time.Seconds(0.5) ? 1.0 : 0.0;
 
     let cursor = {
       let (startStr, _) =
