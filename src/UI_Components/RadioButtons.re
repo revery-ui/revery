@@ -21,9 +21,9 @@ module Make = (Type: {type t;}) => {
                 (
                   ~defaultSelected,
                   ~buttons: list(button),
-                  ~iconSize,
-                  ~style,
-                  ~onChange,
+                  ~iconSize=12,
+                  ~style=defaultStyle,
+                  ~onChange=_ => (),
                   (),
                 ) => {
     let defaultVal = List.nth(buttons, defaultSelected).value;

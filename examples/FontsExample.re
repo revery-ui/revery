@@ -64,7 +64,8 @@ module FontComponent = {
           style=Style.[fontFamily(v.path), fontSize(24)]
         />
       };
-    let children = [
+
+    <Container width=500 height=500>
       <Center>
         <Padding padding=10>
           <Row>
@@ -136,12 +137,11 @@ module FontComponent = {
           </Row>
         </Padding>
         <Padding padding=16> <Row> fontExample </Row> </Padding>
-      </Center>,
-    ];
-    <Container width=500 height=500> ...children </Container>;
+      </Center>
+    </Container>;
   };
 };
 
 let render = () => {
-  <Text text="Not implemented" />;
+  <FontComponent />;
 };

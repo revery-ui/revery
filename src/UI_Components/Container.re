@@ -4,7 +4,7 @@ open Revery_UI_Primitives;
 
 let make =
     (
-      ~children=[React.empty],
+      ~children=React.empty,
       ~color=Colors.transparentWhite,
       ~width as w,
       ~height as h,
@@ -13,5 +13,5 @@ let make =
   let c = color;
   let style = Style.[width(w), height(h), backgroundColor(c)];
 
-  <View style> {children |> React.listToElement} </View>;
+  <View style> children </View>;
 };

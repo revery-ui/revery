@@ -28,7 +28,6 @@ module RadioExample = {
         }
         defaultSelected=0
         iconSize=20
-        style=[]
         buttons=[
           {text: "Button 1", value: 1},
           {text: "Button 2", value: 2},
