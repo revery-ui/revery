@@ -16,8 +16,8 @@ let animationLoop = (animation, completer, ()) => {
   );
 };
 
-let animation = (v: animationValue, opts: animationOptions, slots) => {
-  let (animation, _, slots) = Ref.ref(tween(v, opts), slots);
+let animation' = (v: animationValue, opts: animationOptions, slots) => {
+  let (animation, setAnim, slots) = Ref.ref(tween(v, opts), slots);
   let (_, dispatch, slots) =
     Reducer.reducer(~initialState=0, reducer, slots);
   let completer = () => Tick.interval(_t => dispatch(), Seconds(0.));
@@ -52,5 +52,10 @@ let animation = (v: animationValue, opts: animationOptions, slots) => {
   let slots =
     Effect.effect(OnMount, animationLoop(animation, completer), slots);
 
+  (animation, pause, restart, setAnim, slots);
+};
+let animation = (v, opts, slots) => {
+  let (animation, pause, restart, _setAnim, slots) =
+    animation'(v, opts, slots);
   (animation.value.current, pause, restart, slots);
 };

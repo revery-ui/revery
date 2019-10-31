@@ -132,7 +132,7 @@ let state: state = {
       source: "ZoomExample.re",
     },
   ],
-  selectedExample: "TodoMVC",
+  selectedExample: "Animation",
 };
 
 let getExampleByName = (state: state, example: string) =>
