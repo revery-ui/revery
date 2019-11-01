@@ -54,26 +54,26 @@ let logo = {
                 ]),
               ]
             />
+            <Row>
+              <Button
+                width=200
+                onClick={() => {
+                  pauseRotation() |> ignore;
+                  pauseRotationY() |> ignore;
+                  ();
+                }}
+                title="Pause"
+              />
+              <Button
+                width=200
+                onClick={() => {
+                  restartRotation();
+                  restartRotationY();
+                }}
+                title="Restart"
+              />
+            </Row>
           </Opacity>
-          <Row>
-            <Button
-              width=200
-              onClick={() => {
-                pauseRotation() |> ignore;
-                pauseRotationY() |> ignore;
-                ();
-              }}
-              title="Pause"
-            />
-            <Button
-              width=200
-              onClick={() => {
-                restartRotation();
-                restartRotationY();
-              }}
-              title="Restart"
-            />
-          </Row>
           <Row>
             <Button
               width=200

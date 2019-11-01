@@ -15,8 +15,12 @@ let transition =
     let animation =
       tween(value, options(~toValue, ~duration, ~delay, ~repeat, ()));
     // only for cleaning purpose we don't restart it
-    let _ignore = pauseAnim();
-    let newActiveAnim = {animation, update: None, complete: None};
+    let _: unit => unit = pauseAnim();
+    let newActiveAnim = {
+      animation,
+      update: None,
+      complete: Some(() => animation.value.current = toValue),
+    };
     addAnimation(newActiveAnim);
     setAnim(animation);
   };
