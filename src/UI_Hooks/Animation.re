@@ -30,22 +30,18 @@ let animation' = (v: animationValue, opts: animationOptions, slots) => {
       update: None,
       complete: Some(completer()),
     };
-    activeAnimations := [newActiveAnim, ...activeAnimations^];
+    addAnimation(newActiveAnim);
   };
 
   let pause = () => {
-    activeAnimations :=
-      List.filter(
-        ({animation: a, _}) => a.id !== animation.id,
-        activeAnimations^,
-      );
+    removeAnimation(animation);
     () => {
       let newActiveAnim = {
         animation,
         update: None,
         complete: Some(completer()),
       };
-      activeAnimations := [newActiveAnim, ...activeAnimations^];
+      addAnimation(newActiveAnim);
     };
   };
 

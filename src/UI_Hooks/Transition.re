@@ -17,7 +17,7 @@ let transition =
     // only for cleaning purpose we don't restart it
     let _ignore = pauseAnim();
     let newActiveAnim = {animation, update: None, complete: None};
-    activeAnimations := [newActiveAnim, ...activeAnimations^];
+    addAnimation(newActiveAnim);
     setAnim(animation);
   };
   (value.current, setAnim, slots);
