@@ -10,8 +10,6 @@ let logo = {
     component(hooks => {
       let (transitionedOpacity, setTransitionedOpacity, hooks) =
         Hooks.transition(1., ~duration=Seconds(1.), hooks);
-      Printf.printf("transitionedOpacity: %f\n", transitionedOpacity);
-      flush(stdout);
 
       let (rotation, pauseRotation, restartRotation, hooks) =
         Hooks.animation(
