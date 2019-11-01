@@ -16,6 +16,7 @@ let animationLoop = (animation, completer, ()) => {
   );
 };
 
+module Transition = {
 let animation' = (v: animationValue, opts: animationOptions, slots) => {
   let (animation, setAnim, slots) = Ref.ref(tween(v, opts), slots);
   let (_, dispatch, slots) =
@@ -50,8 +51,35 @@ let animation' = (v: animationValue, opts: animationOptions, slots) => {
 
   (animation, pause, restart, setAnim, slots);
 };
+
+  let transition =
+      (toValue, ~delay=Time.Seconds(0.0), ~duration=Time.Seconds(1.), slots) => {
+    let repeat = false;
+    let ({value, _}, pauseAnim, _restartAnim, setAnim, slots) =
+      animation'(
+        floatValue(toValue),
+        options(~toValue, ~duration, ~delay=Time.Seconds(0.0), ~repeat, ()),
+        slots,
+      );
+    let setAnim = toValue => {
+      let animation =
+        tween(value, options(~toValue, ~duration, ~delay, ~repeat, ()));
+      // only for cleaning purpose we don't restart it
+      let _: unit => unit = pauseAnim();
+      let newActiveAnim = {
+        animation,
+        update: None,
+        complete: Some(() => animation.value.current = toValue),
+      };
+      addAnimation(newActiveAnim);
+      setAnim(animation);
+    };
+    (value.current, setAnim, slots);
+  };
+};
+
 let animation = (v, opts, slots) => {
   let (animation, pause, restart, _setAnim, slots) =
-    animation'(v, opts, slots);
+    Transition.animation'(v, opts, slots);
   (animation.value.current, pause, restart, slots);
 };
