@@ -8,7 +8,7 @@ let logo = {
 
   (~children as _: list(React.syntheticElement), ()) =>
     component(hooks => {
-      let (transitionedOpacity, setTransitionedOpacity, hooks) =
+      let (transitionedOpacity, transitionOpacityTo, hooks) =
         Hooks.transition(1., ~duration=Seconds(1.), hooks);
 
       let (rotation, pauseRotation, restartRotation, hooks) =
@@ -75,12 +75,12 @@ let logo = {
           <Row>
             <Button
               width=200
-              onClick={() => setTransitionedOpacity(1.)}
+              onClick={() => transitionOpacityTo(1.)}
               title="Show it"
             />
             <Button
               width=200
-              onClick={() => setTransitionedOpacity(0.)}
+              onClick={() => transitionOpacityTo(0.)}
               title="Hide it"
             />
           </Row>

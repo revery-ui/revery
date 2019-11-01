@@ -61,9 +61,12 @@ module Transition = {
         options(~toValue, ~duration, ~delay=Time.Seconds(0.0), ~repeat, ()),
         slots,
       );
-    let setAnim = toValue => {
+    let setAnim = (~immediate=false, toValue) => {
       let animation =
-        tween(value, options(~toValue, ~duration, ~delay, ~repeat, ()));
+        tween(
+          immediate ? floatValue(toValue) : value,
+          options(~toValue, ~duration, ~delay, ~repeat, ()),
+        );
       // only for cleaning purpose we don't restart it
       let _: unit => unit = pauseAnim();
       let newActiveAnim = {

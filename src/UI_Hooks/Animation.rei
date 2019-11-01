@@ -31,7 +31,7 @@ module Transition: {
         'b,
       )
     ) =>
-    (float, float => unit, t('a, 'b));
+    (float, (~immediate: bool=?, float) => unit, t('a, 'b));
 };
 
 let animation:
