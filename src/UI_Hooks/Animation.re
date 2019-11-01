@@ -17,26 +17,15 @@ let animationLoop = (animation, completer, ()) => {
 };
 
 module Transition = {
-let animation' = (v: animationValue, opts: animationOptions, slots) => {
-  let (animation, setAnim, slots) = Ref.ref(tween(v, opts), slots);
-  let (_, dispatch, slots) =
-    Reducer.reducer(~initialState=0, reducer, slots);
-  let completer = () => Tick.interval(_t => dispatch(), Seconds(0.));
+  let animation' = (v: animationValue, opts: animationOptions, slots) => {
+    let (animation, setAnim, slots) = Ref.ref(tween(v, opts), slots);
+    let (_, dispatch, slots) =
+      Reducer.reducer(~initialState=0, reducer, slots);
+    let completer = () => Tick.interval(_t => dispatch(), Seconds(0.));
 
-  let restart = () => {
-    animation.startTime = Time.to_float_seconds(getTime());
-    animation.value.current = animation.startValue;
-    let newActiveAnim = {
-      animation,
-      update: None,
-      complete: Some(completer()),
-    };
-    addAnimation(newActiveAnim);
-  };
-
-  let pause = () => {
-    removeAnimation(animation);
-    () => {
+    let restart = () => {
+      animation.startTime = Time.to_float_seconds(getTime());
+      animation.value.current = animation.startValue;
       let newActiveAnim = {
         animation,
         update: None,
@@ -44,13 +33,24 @@ let animation' = (v: animationValue, opts: animationOptions, slots) => {
       };
       addAnimation(newActiveAnim);
     };
+
+    let pause = () => {
+      removeAnimation(animation);
+      () => {
+        let newActiveAnim = {
+          animation,
+          update: None,
+          complete: Some(completer()),
+        };
+        addAnimation(newActiveAnim);
+      };
+    };
+
+    let slots =
+      Effect.effect(OnMount, animationLoop(animation, completer), slots);
+
+    (animation, pause, restart, setAnim, slots);
   };
-
-  let slots =
-    Effect.effect(OnMount, animationLoop(animation, completer), slots);
-
-  (animation, pause, restart, setAnim, slots);
-};
 
   let transition =
       (toValue, ~delay=Time.Seconds(0.0), ~duration=Time.Seconds(1.), slots) => {
