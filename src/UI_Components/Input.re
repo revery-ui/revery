@@ -136,6 +136,8 @@ let make =
       ~placeholder,
       ~cursorColor,
       ~placeholderColor,
+      ~onFocus as focusCallback,
+      ~onBlur as blurCallback,
       ~onChange,
       ~onKeyDown,
       ~value as valueAsProp,
@@ -381,11 +383,13 @@ let make =
         onFocus={() => {
           dispatch(ResetCursorTimer);
           dispatch(SetFocus(true));
+          focusCallback();
           Sdl2.TextInput.start();
         }}
         onBlur={() => {
           dispatch(ResetCursorTimer);
           dispatch(SetFocus(false));
+          blurCallback();
           Sdl2.TextInput.stop();
         }}
         componentRef={autofocus ? Focus.focus : ignore}
@@ -407,6 +411,8 @@ let createElement =
       ~cursorColor=Colors.black,
       ~autofocus=false,
       ~placeholder="",
+      ~onFocus=() => (),
+      ~onBlur=() => (),
       ~onKeyDown=_ => (),
       ~onChange=_ => (),
       ~value=?,
@@ -417,6 +423,8 @@ let createElement =
     ~style,
     ~placeholder,
     ~autofocus,
+    ~onFocus,
+    ~onBlur,
     ~cursorColor,
     ~placeholderColor,
     ~onKeyDown,
