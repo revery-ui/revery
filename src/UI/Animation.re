@@ -53,11 +53,21 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
 
   let activeAnimations: ref(list(activeAnimation)) = ref([]);
 
+  let addAnimation = anim => activeAnimations := [anim, ...activeAnimations^];
+
+  let cancel = (anim: animation) =>
+    activeAnimations :=
+      List.filter(
+        ({animation: a, _}) => a.id !== anim.id,
+        activeAnimations^,
+      );
+
+  let removeAnimation = cancel; // naming consistency with addAnimation defined above
+
+  let cancelAll = () => activeAnimations := [];
+
   let isActive = animation =>
-    List.length(
-      List.filter(a => a.animation.id == animation.id, activeAnimations^),
-    )
-    > 0;
+    List.exists(a => a.animation.id == animation.id, activeAnimations^);
 
   type animationOptions = {
     duration: Time.t,
@@ -163,15 +173,13 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       || animation.direction == `AlternateReverse;
     animation.startTime = Time.to_float_seconds(AnimationTickerImpl.time());
     animation.isReverse = isReverseStartValue;
-    activeAnimations := List.append([activeAnimation], activeAnimations^);
-    let removeAnimation = l =>
-      List.filter(({animation: a, _}) => a.id !== animation.id, l);
+    addAnimation(activeAnimation);
     let playback = {
-      pause: () => activeAnimations := removeAnimation(activeAnimations^),
+      pause: () => removeAnimation(activeAnimation.animation),
       stop: () => {
         animation.value.current = animation.startValue;
         animation.isReverse = isReverseStartValue;
-        activeAnimations := removeAnimation(activeAnimations^);
+        removeAnimation(activeAnimation.animation);
       },
     };
     playback;
@@ -211,15 +219,6 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       playback;
     };
   };
-
-  let cancel = (anim: animation) =>
-    activeAnimations :=
-      List.filter(
-        ({animation: a, _}) => a.id !== anim.id,
-        activeAnimations^,
-      );
-
-  let cancelAll = () => activeAnimations := [];
 
   let tick = (t: float) => {
     List.iter(tickAnimation(t), activeAnimations^);

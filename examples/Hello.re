@@ -8,7 +8,8 @@ let logo = {
 
   (~children as _: list(React.syntheticElement), ()) =>
     component(hooks => {
-      let (logoOpacity, _setOpacity, hooks) = Hooks.state(1.0, hooks);
+      let (transitionedOpacity, transitionOpacityTo, hooks) =
+        Hooks.transition(1., ~duration=Seconds(1.), hooks);
 
       let (rotation, pauseRotation, restartRotation, hooks) =
         Hooks.animation(
@@ -39,7 +40,7 @@ let logo = {
       (
         hooks,
         <View>
-          <Opacity opacity=logoOpacity>
+          <Opacity opacity=transitionedOpacity>
             <Image
               src="outrun-logo.png"
               style=Style.[
@@ -51,24 +52,36 @@ let logo = {
                 ]),
               ]
             />
+            <Row>
+              <Button
+                width=200
+                onClick={() => {
+                  pauseRotation() |> ignore;
+                  pauseRotationY() |> ignore;
+                  ();
+                }}
+                title="Pause"
+              />
+              <Button
+                width=200
+                onClick={() => {
+                  restartRotation();
+                  restartRotationY();
+                }}
+                title="Restart"
+              />
+            </Row>
           </Opacity>
           <Row>
             <Button
               width=200
-              onClick={() => {
-                pauseRotation() |> ignore;
-                pauseRotationY() |> ignore;
-                ();
-              }}
-              title="Pause"
+              onClick={() => transitionOpacityTo(1.)}
+              title="Show it"
             />
             <Button
               width=200
-              onClick={() => {
-                restartRotation();
-                restartRotationY();
-              }}
-              title="Restart"
+              onClick={() => transitionOpacityTo(0.)}
+              title="Hide it"
             />
           </Row>
         </View>,
