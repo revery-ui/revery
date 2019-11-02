@@ -195,15 +195,15 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     };
     let start = (~update=?, ~complete=?, {animations: l}) => {
       let currentPlayback = ref(None);
-      let rec runAnimation = (animations, index) =>
+      let rec runAnimation = animations =>
         switch (animations) {
         | [a, ...xl] =>
           let playback =
-            a |> start(~update?, ~complete=() => runAnimation(xl, index + 1));
+            a |> start(~update?, ~complete=() => runAnimation(xl));
           currentPlayback := Some(playback);
         | [] => optCall(complete, ())
         };
-      runAnimation(List.rev(l), 0);
+      runAnimation(List.rev(l));
       let playback = {
         pause: () =>
           switch (currentPlayback^) {
