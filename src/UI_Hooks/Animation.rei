@@ -23,9 +23,10 @@ module Transition: {
   */
   let transition:
     (
-      float,
-      ~delay: Revery_Core.Time.t=?,
       ~duration: Revery_Core.Time.t=?,
+      ~delay: Revery_Core.Time.t=?,
+      float,
+      ~easing: Revery_UI.Easing.t=?,
       t(
         (ref(animation), Reducer.t(int), Effect.t(Effect.onMount)) => 'a,
         'b,

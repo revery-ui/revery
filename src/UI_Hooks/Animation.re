@@ -1,6 +1,7 @@
 /* Hooks specific to Revery */
 open Revery_Core;
 open Revery_UI.Animated;
+open Revery_UI.Easing;
 
 let reducer = (_a, s) => s + 1;
 
@@ -53,7 +54,13 @@ module Transition = {
   };
 
   let transition =
-      (toValue, ~delay=Time.Seconds(0.0), ~duration=Time.Seconds(1.), slots) => {
+      (
+        ~duration=Time.Seconds(1.),
+        ~delay=Time.Seconds(0.0),
+        toValue,
+        ~easing=linear,
+        slots,
+      ) => {
     let repeat = false;
     let ({value, _}, pauseAnim, _restartAnim, setAnim, slots) =
       animation'(
@@ -65,7 +72,7 @@ module Transition = {
       let animation =
         tween(
           immediate ? floatValue(toValue) : value,
-          options(~toValue, ~duration, ~delay, ~repeat, ()),
+          options(~duration, ~delay, ~toValue, ~easing, ~repeat, ()),
         );
       // only for cleaning purpose we don't restart it
       let _: unit => unit = pauseAnim();
