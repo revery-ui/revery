@@ -19,7 +19,7 @@
     "resolutions": {
       "rebez": "github:jchavarri/rebez#46cbc183",
       "rench": "github:revery-ui/rench#4554280",
-      "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#a0fe3a9",
+      "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#0a2e476",
       "pesy": "0.4.1"
     },
     "devDependencies": {
