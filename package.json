@@ -21,9 +21,6 @@
     "build": [
       "dune build -p Revery -j4"
     ],
-    "buildDev": [
-      "refmterr dune build --only-packages Revery -j4"
-    ],
     "install": [
       "esy-installer Revery.install",
       "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': 'echo Build complete'}\""
