@@ -15,7 +15,7 @@ let make:
     ~checked: bool=?,
     ~checkedColor: Revery_Core__.Color.t=?,
     ~style: list(Revery_UI.Style.viewStyleProps)=?,
-    ~onChange: Revery_UI_Components__.Clickable.clickFunction=?,
+    ~onChange: unit => unit=?,
     unit
   ) =>
   Brisk_reconciler.element(Revery_UI.React.node);

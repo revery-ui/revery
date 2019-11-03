@@ -12,7 +12,7 @@ Simple out-of-box button component
 let make:
   (
     ~title: String.t,
-    ~onClick: Revery_UI_Components__.Clickable.clickFunction=?,
+    ~onClick: unit => unit=?,
     ~color: Revery_Core__.Color.t=?,
     ~fontSize: int=?,
     ~width: int=?,
