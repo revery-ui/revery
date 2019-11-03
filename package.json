@@ -38,7 +38,7 @@
     "@opam/js_of_ocaml-lwt": "^3.4.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
-    "@brisk/brisk-reconciler": "*",
+    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#0a2e476",
     "flex": "^1.2.2",
     "@reason-native/rely": "*",
     "reperf": "^1.4.0",
@@ -49,11 +49,7 @@
     "reason-sdl2": "^2.10.3008"
   },
   "resolutions": {
-    "rebez": "github:jchavarri/rebez#46cbc183",
-    "@opam/cmdliner": "1.0.2",
-    "rench": "github:revery-ui/rench#4554280",
-    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#6ff66fa",
-    "pesy": "0.4.1"
+    "@opam/cmdliner": "1.0.2"
   },
   "devDependencies": {
     "refmterr": "*",
