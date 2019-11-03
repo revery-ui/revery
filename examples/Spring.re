@@ -10,9 +10,6 @@ let logo = {
     component(hooks => {
       let (logoOpacity, setOpacity, hooks) = Hooks.state(0.5, hooks);
 
-      print_endline(
-        "Rendering - logoOpacity: " ++ string_of_float(logoOpacity),
-      );
       let (curr, hooks) =
         Hooks.spring(0.5, Hooks.Spring.Options.create(logoOpacity), hooks);
 

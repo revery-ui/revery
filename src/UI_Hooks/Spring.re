@@ -28,7 +28,6 @@ module Spring = {
   let create = (x: float) => {x, v: 0., a: 0.};
 
   let tick = (spring: t, options: Options.t, deltaT: float) => {
-    print_endline("DELTA T: " ++ string_of_float(deltaT));
     let force =
       Float.abs(spring.x -. options.initialValue) *. options.springConstant;
     let dir = spring.x > options.initialValue ? (-1.) : 1.;
@@ -85,7 +84,6 @@ let spring = (v: float, opts: Spring.Options.t, hooks) => {
     Effect.effect(
       If((!=), v),
       () => {
-        print_endline("RESETING: " ++ string_of_float(v));
         dispatch(Reset(v));
         None;
       },
@@ -96,9 +94,6 @@ let spring = (v: float, opts: Spring.Options.t, hooks) => {
     Effect.effect(
       If((!=), opts),
       () => {
-        print_endline(
-          "RESETING OPTIONS: " ++ string_of_float(opts.initialValue),
-        );
         dispatch(ResetOptions(opts));
         None;
       },
@@ -118,8 +113,6 @@ let spring = (v: float, opts: Spring.Options.t, hooks) => {
       },
       hooks,
     );
-
-  print_endline("Spring value: " ++ Spring.show(curr.spring));
 
   (curr.spring.x, slots);
 };
