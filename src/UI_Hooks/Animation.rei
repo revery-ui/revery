@@ -30,12 +30,7 @@ module Transition: {
       ~delay: Revery_Core.Time.t=?,
       ~duration: Revery_Core.Time.t=?,
       t(
-        (
-          ref(animation),
-          Reducer.t(int),
-          Effect.t(Effect.onMount)
-        ) =>
-        'a,
+        (ref(animation), Reducer.t(int), Effect.t(Effect.onMount)) => 'a,
         'b,
       )
     ) =>
@@ -46,14 +41,6 @@ let animation:
   (
     animationValue,
     animationOptions,
-    t(
-      (
-        ref(animation),
-        Reducer.t(int),
-        Effect.t(Effect.onMount)
-      ) =>
-      'a,
-      'b,
-    )
+    t((ref(animation), Reducer.t(int), Effect.t(Effect.onMount)) => 'a, 'b)
   ) =>
   ((float, (unit, unit) => unit, unit => unit), t('a, 'b));
