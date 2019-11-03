@@ -67,6 +67,8 @@ module Example = {
             placeholderColor=Colors.plum
             cursorColor=Colors.white
             autofocus=true
+            onFocus={() => Console.log("Input example focused")}
+            onBlur={() => Console.log("Input example blurred")}
             onChange={({value, _}) => setValue(_ => {first, second: value})}
             onKeyDown={event => Console.log(event)}
             style=Style.[
