@@ -52,7 +52,7 @@ module Transition = {
   };
 
   let transition =
-      (toValue, ~delay=Time.Seconds(0.0), ~duration=Time.Seconds(1.), slots) => {
+      (toValue, ~delay=Time.Seconds(0.0), ~duration=Time.Seconds(1.)) => {
     let repeat = false;
     let%hook ({value, _}, pauseAnim, _restartAnim, setAnim) =
       animation'(

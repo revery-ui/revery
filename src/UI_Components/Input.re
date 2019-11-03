@@ -129,33 +129,33 @@ let defaultStyles =
   ];
 
 let%component make =
-    (
-      ~style=defaultStyles,
-      ~placeholderColor=Colors.grey,
-      ~cursorColor=Colors.black,
-      ~autofocus=false,
-      ~placeholder="",
-      ~onFocus=() => (),
-      ~onBlur=() => (),
-      ~onKeyDown=_ => (),
-      ~onChange=_ => (),
-      ~value as valueAsProp=?,
-      ()
-    ) => {
-    let%hook (state, dispatch) =
-      Hooks.reducer(
-        ~initialState={
-          internalValue: "",
-          cursorPosition:
-            switch (valueAsProp) {
-            | Some(v) => String.length(v)
-            | None => 0
-            },
-          cursorTimer: Time.Seconds(0.0),
-          isFocused: false,
-        },
-        reducer,
-      );
+              (
+                ~style=defaultStyles,
+                ~placeholderColor=Colors.grey,
+                ~cursorColor=Colors.black,
+                ~autofocus=false,
+                ~placeholder="",
+                ~onFocus as focusCallback=() => (),
+                ~onBlur as blurCallback=() => (),
+                ~onKeyDown=_ => (),
+                ~onChange=_ => (),
+                ~value as valueAsProp=?,
+                (),
+              ) => {
+  let%hook (state, dispatch) =
+    Hooks.reducer(
+      ~initialState={
+        internalValue: "",
+        cursorPosition:
+          switch (valueAsProp) {
+          | Some(v) => String.length(v)
+          | None => 0
+          },
+        cursorTimer: Time.Seconds(0.0),
+        isFocused: false,
+      },
+      reducer,
+    );
 
   let valueToDisplay =
     switch (valueAsProp) {
@@ -323,7 +323,7 @@ let%component make =
     Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
   let cursorOpacity =
-      state.isFocused && state.cursorTimer <= Time.Seconds(0.5) ? 1.0 : 0.0;
+    state.isFocused && state.cursorTimer <= Time.Seconds(0.5) ? 1.0 : 0.0;
 
   let cursor = {
     let (startStr, _) = getStringParts(state.cursorPosition, valueToDisplay);
@@ -347,44 +347,44 @@ let%component make =
     </View>;
   };
 
-    let makeTextComponent = content =>
-      <Text
-        text=content
-        style=Style.[
-          color(hasPlaceholder ? placeholderColor : inputColor),
-          fontFamily(inputFontFamily),
-          fontSize(inputFontSize),
-          alignItems(`Center),
-          justifyContent(`FlexStart),
-          marginLeft(inputTextMargin),
-        ]
-      />;
+  let makeTextComponent = content =>
+    <Text
+      text=content
+      style=Style.[
+        color(hasPlaceholder ? placeholderColor : inputColor),
+        fontFamily(inputFontFamily),
+        fontSize(inputFontSize),
+        alignItems(`Center),
+        justifyContent(`FlexStart),
+        marginLeft(inputTextMargin),
+      ]
+    />;
 
-    let placeholderText = makeTextComponent(placeholder);
-    let inputText = makeTextComponent(valueToDisplay);
+  let placeholderText = makeTextComponent(placeholder);
+  let inputText = makeTextComponent(valueToDisplay);
 
-    /*
-       component
-     */
-      <Clickable
-        onFocus={() => {
-          dispatch(ResetCursorTimer);
-          dispatch(SetFocus(true));
-          focusCallback();
-          Sdl2.TextInput.start();
-        }}
-        onBlur={() => {
-          dispatch(ResetCursorTimer);
-          dispatch(SetFocus(false));
-          blurCallback();
-          Sdl2.TextInput.stop();
-        }}
-        componentRef={autofocus ? Focus.focus : ignore}
-        onKeyDown=handleKeyDown
-        onTextInput=handleTextInput>
-        <View style=viewStyles>
-          cursor
-          {hasPlaceholder ? placeholderText : inputText}
-        </View>
-      </Clickable;
-  };
+  /*
+     component
+   */
+  <Clickable
+    onFocus={() => {
+      dispatch(ResetCursorTimer);
+      dispatch(SetFocus(true));
+      focusCallback();
+      Sdl2.TextInput.start();
+    }}
+    onBlur={() => {
+      dispatch(ResetCursorTimer);
+      dispatch(SetFocus(false));
+      blurCallback();
+      Sdl2.TextInput.stop();
+    }}
+    componentRef={autofocus ? Focus.focus : ignore}
+    onKeyDown=handleKeyDown
+    onTextInput=handleTextInput>
+    <View style=viewStyles>
+      cursor
+      {hasPlaceholder ? placeholderText : inputText}
+    </View>
+  </Clickable>;
+};
