@@ -1,5 +1,5 @@
 {
-  "checksum": "98350d9588784a281aaf29c0bffc5db5",
+  "checksum": "ff5597f5efd82c11542f2d5c3ef9d952",
   "root": "revery@link-dev:./package.json",
   "node": {
     "wordwrap@0.0.3@d41d8cd9": {
@@ -73,8 +73,8 @@
         "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#a0fe3a9@d41d8cd9"
       ],
       "devDependencies": [
-        "refmterr@3.2.2@d41d8cd9", "ocaml@4.8.1000@d41d8cd9",
-        "@opam/merlin@opam:3.3.2@7a364181", "@opam/dune@opam:1.11.4@21d66ccd"
+        "ocaml@4.8.1000@d41d8cd9", "@opam/merlin@opam:3.3.2@7a364181",
+        "@opam/dune@opam:1.11.4@21d66ccd"
       ]
     },
     "requires-port@1.0.0@d41d8cd9": {

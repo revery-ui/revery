@@ -21,9 +21,6 @@
     "build": [
       "dune build -p Revery -j4"
     ],
-    "buildDev": [
-      "refmterr dune build -p Revery -j4"
-    ],
     "install": [
       "esy-installer Revery.install",
       "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': 'echo Build complete'}\""
@@ -52,7 +49,6 @@
     "@opam/cmdliner": "1.0.2"
   },
   "devDependencies": {
-    "refmterr": "*",
     "ocaml": ">=4.6.0 <4.9.0",
     "@opam/merlin": "^3.3.2",
     "@opam/dune": "^1.8.0"

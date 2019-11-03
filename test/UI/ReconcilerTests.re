@@ -9,17 +9,16 @@ open TestFramework;
  */
 
 module TestRefComponent = {
-  [@component]
-  let make = (~latestRef, (), hooks) => {
-    let (refFromState, setRef, hooks) = React.Hooks.state(None, hooks);
+  let%component make = (~latestRef, ()) => {
+    let%hook (refFromState, setRef) = React.Hooks.state(None);
 
     latestRef := refFromState;
 
     let setRefInState = r => {
-      setRef(Some(r));
+      setRef(_prevRef => Some(r));
     };
 
-    (hooks, <View ref=setRefInState />);
+    <View ref=setRefInState />;
   };
 };
 

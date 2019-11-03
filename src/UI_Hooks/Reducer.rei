@@ -1,5 +1,3 @@
-open Revery_UI.React.Hooks;
-
 let reducer:
   (
     ~initialState: 'a,

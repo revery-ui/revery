@@ -1,5 +1,4 @@
 open Revery_Core;
-open Revery_UI;
 
 type tickFunction = Time.t => unit;
 

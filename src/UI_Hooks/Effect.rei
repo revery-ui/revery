@@ -1,5 +1,3 @@
-open Revery_UI.React.Hooks;
-
 let effect:
   (
     Revery_UI.React.Hooks.Effect.condition('a),

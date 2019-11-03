@@ -1,6 +1,3 @@
-open Revery_Core;
-open Revery_UI;
-
 /**
 {2 Description:}
 
