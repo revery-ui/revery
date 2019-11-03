@@ -11,10 +11,9 @@ Simple out-of-box button component
 */
 let make:
   (
-    ~children: 'a,
-    ~title: string,
-    ~onClick: unit => unit=?,
-    ~color: Revery_Core.Color.t=?,
+    ~title: String.t,
+    ~onClick: Revery_UI_Components__.Clickable.clickFunction=?,
+    ~color: Revery_Core__.Color.t=?,
     ~fontSize: int=?,
     ~width: int=?,
     ~height: int=?,
@@ -25,4 +24,4 @@ let make:
     ~fontFamily: string=?,
     unit
   ) =>
-  Revery_UI.React.element;
+  Revery_UI.React.element(Revery_UI.React.node);

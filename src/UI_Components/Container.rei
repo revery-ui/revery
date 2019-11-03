@@ -18,10 +18,10 @@ Usage:
 */
 let make:
   (
-    ~children: list(React.element),
-    ~color: Color.t=?,
+    ~children: Revery_UI.React.element(Revery_UI.React.node)=?,
+    ~color: Revery_Core__.Color.t=?,
     ~width: int,
     ~height: int,
     unit
   ) =>
-  React.element;
+  Brisk_reconciler.element(Revery_UI.viewNode);

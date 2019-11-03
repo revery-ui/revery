@@ -10,13 +10,12 @@ Simple out-of-box checkbox component
 ]}
 */
 
-let%component make:
+let make:
   (
-    ~children: 'a,
     ~checked: bool=?,
-    ~checkedColor: Revery_Core.Color.t=?,
+    ~checkedColor: Revery_Core__.Color.t=?,
     ~style: list(Revery_UI.Style.viewStyleProps)=?,
-    ~onChange: unit => unit=?,
+    ~onChange: Revery_UI_Components__.Clickable.clickFunction=?,
     unit
   ) =>
-  Revery_UI.React.element;
+  Revery_UI.React.element(Revery_UI.React.node);
