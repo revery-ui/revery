@@ -19,6 +19,21 @@ let initialPixels =
 type cache = Hashtbl.t(string, t);
 let _cache: cache = Hashtbl.create(100);
 
+let replaceText = (~replacer, text) =>
+  Str.(global_replace(regexp(text), replacer));
+
+let normaliseUrl = text =>
+  text
+  |> String.escaped
+  |> replaceText(~replacer="", "/")
+  |> replaceText(~replacer="", "//")
+  |> replaceText(~replacer="", "\:")
+  |> replaceText(~replacer="", "\.")
+  |> replaceText(~replacer="", "?")
+  |> replaceText(~replacer="", "=")
+  |> (text => text ++ ".png")
+  |> Fpath.v;
+
 let getTexture = (imagePath: string) => {
   /* TODO: Support url paths? */
   let cacheResult = Hashtbl.find_opt(_cache, imagePath);
@@ -26,9 +41,45 @@ let getTexture = (imagePath: string) => {
   switch (cacheResult) {
   | Some(r) => r
   | None =>
-    /* Create an initial texture container */
-    let fullImagePath = Environment.getAssetPath(imagePath);
+    let isRemote = Uri.scheme(imagePath |> Uri.of_string) |> Option.is_some;
 
+    let fullImagePath =
+      switch (isRemote) {
+      | true =>
+        let fileName = Sys.getcwd() |> Fpath.v;
+        let normalisedImagePath =
+          Fpath.append(fileName, normaliseUrl(imagePath));
+        Cohttp_lwt_unix.Client.get(Uri.of_string(imagePath))
+        |> Lwt.map(((resp, body)) => {
+             Console.log(("ImagePath", imagePath));
+             /* Console.log(("ImageResponse", resp)); */
+             /* Console.log(("ImageBody", body)); */
+
+             body
+             |> Cohttp_lwt.Body.to_string
+             |> Lwt.map(body => {
+                  Console.log((
+                    "Filepath",
+                    normalisedImagePath |> Fpath.to_string,
+                  ));
+
+                  switch (Bos.OS.File.write(normalisedImagePath, body)) {
+                  | Ok(v) => Console.log(("Successfully wrote file", v))
+
+                  | Error(`Msg(msg)) => Console.log(("Error:", msg))
+                  };
+                })
+             |> ignore;
+           })
+        |> ignore;
+
+        Console.log(("ImagePath - Stripped", normalisedImagePath));
+
+        Environment.getAssetPath(normalisedImagePath |> Fpath.to_string);
+      | _ => Environment.getAssetPath(imagePath)
+      };
+
+    /* Create an initial texture container */
     let texture = glCreateTexture();
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

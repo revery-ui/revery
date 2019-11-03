@@ -21,29 +21,36 @@
     "build": [
       "dune build -p Revery -j4"
     ],
+    "buildDev": [
+      "refmterr dune build -p Revery -j4"
+    ],
     "install": [
       "esy-installer Revery.install",
       "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': 'echo Build complete'}\""
     ]
   },
   "dependencies": {
+    "@brisk/brisk-reconciler": "*",
     "@esy-ocaml/reason": "^3.4.0",
-    "reason-fontkit": "^2.7.0",
-    "reason-gl-matrix": "^0.9.9305",
+    "@opam/bos": "0.2.0",
+    "@opam/cohttp": "2.3.0",
+    "@opam/cohttp-lwt-unix": "2.3.0",
     "@opam/js_of_ocaml": "^3.4.0",
     "@opam/js_of_ocaml-compiler": "^3.4.0",
     "@opam/js_of_ocaml-lwt": "^3.4.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
-    "brisk-reconciler": "^0.0.2",
-    "flex": "^1.2.2",
-    "@reason-native/rely": "*",
-    "reperf": "^1.4.0",
+    "@opam/uri": "*",
     "@reason-native/console": "^0.0.3",
+    "@reason-native/rely": "*",
+    "flex": "^1.2.2",
     "reason-font-manager": "^2.0.0",
-    "rench": "^1.9.1",
+    "reason-fontkit": "^2.7.0",
+    "reason-gl-matrix": "^0.9.9305",
+    "reason-sdl2": "^2.10.3008",
     "rebez": "github:jchavarri/rebez#03fa3b7",
-    "reason-sdl2": "^2.10.3008"
+    "rench": "^1.9.1",
+    "reperf": "^1.4.0"
   },
   "resolutions": {
     "@opam/cmdliner": "1.0.2"
