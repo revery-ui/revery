@@ -11,9 +11,9 @@ Simple out-of-box button component
 */
 let make:
   (
-    ~title: String.t,
+    ~title: string,
     ~onClick: unit => unit=?,
-    ~color: Revery_Core__.Color.t=?,
+    ~color: Revery_Core.Color.t=?,
     ~fontSize: int=?,
     ~width: int=?,
     ~height: int=?,

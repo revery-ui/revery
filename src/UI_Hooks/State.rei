@@ -1,6 +1,5 @@
+open Revery_UI.React;
+
 let state:
-  (
-    'a,
-    Revery_UI.React.Hooks.t(Revery_UI.React.Hooks.State.t('a) => 'b, 'c)
-  ) =>
-  (('a, ('a => 'a) => unit), Revery_UI.React.Hooks.t('b, 'c));
+  ('a, Hooks.t(Hooks.State.t('a) => 'b, 'c)) =>
+  (('a, ('a => 'a) => unit), Hooks.t('b, 'c));
