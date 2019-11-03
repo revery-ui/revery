@@ -1,9 +1,9 @@
-open Revery_UI.React;
+open Revery_UI.React.Hooks;
 
 let effect:
   (
-    Hooks.Effect.condition('a),
+    Effect.condition('a),
     unit => option(unit => unit),
-    Hooks.t(Hooks.Effect.t('a) => 'b, 'c)
+    t(Effect.t('a) => 'b, 'c)
   ) =>
-  (unit, Hooks.t('b, 'c));
+  (unit, t('b, 'c));

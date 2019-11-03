@@ -1,4 +1,5 @@
-open Revery_UI.React;
+open Revery_UI.Animated;
+open Revery_UI.React.Hooks;
 
 module Transition: {
   /**
@@ -25,31 +26,31 @@ module Transition: {
       float,
       ~delay: Revery_Core.Time.t=?,
       ~duration: Revery_Core.Time.t=?,
-      Hooks.t(
+      t(
         (
-          ref(Revery_UI.Animated.animation),
-          Hooks.Reducer.t(int),
-          Hooks.Effect.t(Hooks.Effect.onMount)
+          ref(animation),
+          Reducer.t(int),
+          Effect.t(Effect.onMount)
         ) =>
         'a,
         'b,
       )
     ) =>
-    ((float, (~immediate: bool=?, float) => unit), Hooks.t('a, 'b));
+    ((float, (~immediate: bool=?, float) => unit), t('a, 'b));
 };
 
 let animation:
   (
-    Revery_UI.Animated.animationValue,
-    Revery_UI.Animated.animationOptions,
-    Hooks.t(
+    animationValue,
+    animationOptions,
+    t(
       (
-        ref(Revery_UI.Animated.animation),
-        Hooks.Reducer.t(int),
-        Hooks.Effect.t(Hooks.Effect.onMount)
+        ref(animation),
+        Reducer.t(int),
+        Effect.t(Effect.onMount)
       ) =>
       'a,
       'b,
     )
   ) =>
-  ((float, (unit, unit) => unit, unit => unit), Hooks.t('a, 'b));
+  ((float, (unit, unit) => unit, unit => unit), t('a, 'b));
