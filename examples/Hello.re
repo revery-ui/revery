@@ -5,7 +5,8 @@ open Revery.UI.Components;
 
 module Logo = {
   let%component make = () => {
-    let%hook (logoOpacity, setOpacity) = Hooks.state(1.0);
+    let%hook (transitionedOpacity, transitionOpacityTo) =
+      Hooks.transition(1., ~duration=Seconds(1.));
 
     let%hook (rotation, pauseRotation, restartRotation) =
       Hooks.animation(
@@ -32,7 +33,7 @@ module Logo = {
       );
 
     <View>
-      <Opacity opacity=logoOpacity>
+      <Opacity opacity=transitionedOpacity>
         <Image
           src="outrun-logo.png"
           style=Style.[
@@ -44,24 +45,36 @@ module Logo = {
             ]),
           ]
         />
+        <Row>
+          <Button
+            width=200
+            onClick={() => {
+              pauseRotation() |> ignore;
+              pauseRotationY() |> ignore;
+              ();
+            }}
+            title="Pause"
+          />
+          <Button
+            width=200
+            onClick={() => {
+              restartRotation();
+              restartRotationY();
+            }}
+            title="Restart"
+          />
+        </Row>
       </Opacity>
       <Row>
         <Button
           width=200
-          onClick={() => {
-            pauseRotation() |> ignore;
-            pauseRotationY() |> ignore;
-            ();
-          }}
-          title="Pause"
+          onClick={() => transitionOpacityTo(1.)}
+          title="Show it"
         />
         <Button
           width=200
-          onClick={() => {
-            restartRotation();
-            restartRotationY();
-          }}
-          title="Restart"
+          onClick={() => transitionOpacityTo(0.)}
+          title="Hide it"
         />
       </Row>
     </View>;
