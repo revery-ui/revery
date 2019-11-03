@@ -60,7 +60,8 @@ let make =
         let childMeasurements = inner#measurements();
         let outerMeasurements = outer#measurements();
 
-        let maxHeight = childMeasurements.height - outerMeasurements.height;
+        let maxHeight =
+          max(0, childMeasurements.height - outerMeasurements.height);
         let maxWidth = childMeasurements.width - outerMeasurements.width;
 
         /*

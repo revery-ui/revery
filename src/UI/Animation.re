@@ -53,12 +53,21 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
 
   let activeAnimations: ref(list(activeAnimation)) = ref([]);
 
-  let isActive = animation => {
-    List.length(
-      List.filter(a => a.animation.id == animation.id, activeAnimations^),
-    )
-    > 0;
-  };
+  let addAnimation = anim => activeAnimations := [anim, ...activeAnimations^];
+
+  let cancel = (anim: animation) =>
+    activeAnimations :=
+      List.filter(
+        ({animation: a, _}) => a.id !== anim.id,
+        activeAnimations^,
+      );
+
+  let removeAnimation = cancel; // naming consistency with addAnimation defined above
+
+  let cancelAll = () => activeAnimations := [];
+
+  let isActive = animation =>
+    List.exists(a => a.animation.id == animation.id, activeAnimations^);
 
   type animationOptions = {
     duration: Time.t,
@@ -69,10 +78,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     direction: animationDirection,
   };
 
-  let floatValue: float => animationValue =
-    (v: float) => {
-      {current: v};
-    };
+  let floatValue: float => animationValue = (v: float) => {current: v};
 
   let options =
       (
@@ -167,21 +173,19 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       || animation.direction == `AlternateReverse;
     animation.startTime = Time.to_float_seconds(AnimationTickerImpl.time());
     animation.isReverse = isReverseStartValue;
-    activeAnimations := List.append([activeAnimation], activeAnimations^);
-    let removeAnimation = l =>
-      List.filter(({animation: a, _}) => a.id !== animation.id, l);
+    addAnimation(activeAnimation);
     let playback = {
-      pause: () => {
-        activeAnimations := removeAnimation(activeAnimations^);
-      },
+      pause: () => removeAnimation(activeAnimation.animation),
       stop: () => {
         animation.value.current = animation.startValue;
         animation.isReverse = isReverseStartValue;
-        activeAnimations := removeAnimation(activeAnimations^);
+        removeAnimation(activeAnimation.animation);
       },
     };
     playback;
   };
+
+  let getTime = () => AnimationTickerImpl.time();
 
   module Chain = {
     type t = {animations: list(animation)};
@@ -191,7 +195,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     };
     let start = (~update=?, ~complete=?, {animations: l}) => {
       let currentPlayback = ref(None);
-      let rec runAnimation = (animations, index) => {
+      let rec runAnimation = (animations, index) =>
         switch (animations) {
         | [a, ...xl] =>
           let playback =
@@ -199,34 +203,22 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
           currentPlayback := Some(playback);
         | [] => optCall(complete, ())
         };
-      };
       runAnimation(List.rev(l), 0);
       let playback = {
-        pause: () => {
+        pause: () =>
           switch (currentPlayback^) {
           | Some(p) => p.pause()
           | None => ()
-          };
-        },
-        stop: () => {
+          },
+        stop: () =>
           switch (currentPlayback^) {
           | Some(p) => p.stop()
           | None => ()
-          };
-        },
+          },
       };
       playback;
     };
   };
-
-  let cancel = (anim: animation) =>
-    activeAnimations :=
-      List.filter(
-        ({animation: a, _}) => a.id !== anim.id,
-        activeAnimations^,
-      );
-
-  let cancelAll = () => activeAnimations := [];
 
   let tick = (t: float) => {
     List.iter(tickAnimation(t), activeAnimations^);

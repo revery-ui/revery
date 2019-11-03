@@ -8,9 +8,10 @@ let logo = {
 
   (~children as _: list(React.syntheticElement), ()) =>
     component(hooks => {
-      let (logoOpacity, setOpacity, hooks) = Hooks.state(1.0, hooks);
+      let (transitionedOpacity, transitionOpacityTo, hooks) =
+        Hooks.transition(1., ~duration=Seconds(1.), hooks);
 
-      let (rotation, hooks) =
+      let (rotation, pauseRotation, restartRotation, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           Animated.options(
@@ -23,7 +24,7 @@ let logo = {
           hooks,
         );
 
-      let (rotationY, hooks) =
+      let (rotationY, pauseRotationY, restartRotationY, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           Animated.options(
@@ -36,14 +37,10 @@ let logo = {
           hooks,
         );
 
-      let onMouseDown = _ => setOpacity(0.5);
-
-      let onMouseUp = _ => setOpacity(1.0);
-
       (
         hooks,
-        <View onMouseDown onMouseUp>
-          <Opacity opacity=logoOpacity>
+        <View>
+          <Opacity opacity=transitionedOpacity>
             <Image
               src="outrun-logo.png"
               style=Style.[
@@ -55,7 +52,38 @@ let logo = {
                 ]),
               ]
             />
+            <Row>
+              <Button
+                width=200
+                onClick={() => {
+                  pauseRotation() |> ignore;
+                  pauseRotationY() |> ignore;
+                  ();
+                }}
+                title="Pause"
+              />
+              <Button
+                width=200
+                onClick={() => {
+                  restartRotation();
+                  restartRotationY();
+                }}
+                title="Restart"
+              />
+            </Row>
           </Opacity>
+          <Row>
+            <Button
+              width=200
+              onClick={() => transitionOpacityTo(1.)}
+              title="Show it"
+            />
+            <Button
+              width=200
+              onClick={() => transitionOpacityTo(0.)}
+              title="Hide it"
+            />
+          </Row>
         </View>,
       );
     });
@@ -71,7 +99,7 @@ let animatedText = {
     (),
   ) =>
     component(hooks => {
-      let (animatedOpacity, hooks) =
+      let (animatedOpacity, _, _, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           Animated.options(
@@ -83,7 +111,7 @@ let animatedText = {
           hooks,
         );
 
-      let (translate, hooks) =
+      let (translate, _, _, hooks) =
         Hooks.animation(
           Animated.floatValue(50.),
           Animated.options(

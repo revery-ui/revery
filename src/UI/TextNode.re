@@ -15,7 +15,7 @@ class textNode (text: string) = {
   val mutable text = text;
   val mutable gamma = 2.2;
   val mutable _isMeasured = false;
-  val _lines: ref(list(string)) = ref([]);
+  val mutable _lines: list(string) = [];
   inherit (class viewNode)() as _super;
   pub! draw = (parentContext: NodeDrawContext.t) => {
     /* Draw background first */
@@ -34,9 +34,12 @@ class textNode (text: string) = {
       _this#measure(style.width, style.height) |> ignore;
     };
 
+    let window = Ui.getActiveWindow();
+
     List.iteri(
       (lineNum, line) =>
         Text.drawString(
+          ~window,
           ~fontFamily,
           ~fontSize,
           ~gamma,
@@ -48,7 +51,7 @@ class textNode (text: string) = {
           ~y=lineHeightPx *. float_of_int(lineNum),
           line,
         ),
-      _lines^,
+      _lines,
     );
   };
   pub setGamma = g => gamma = g;
@@ -70,8 +73,8 @@ class textNode (text: string) = {
     let formattedText = TextOverflow.removeLineBreaks(text);
 
     let measure = str =>
-      Text.measure(~fontFamily, ~fontSize, str)
-      |> (value => FontRenderer.(value.width));
+      Text.measure(~window=Ui.getActiveWindow(), ~fontFamily, ~fontSize, str)
+      |> (value => value.width);
 
     let width = measure(formattedText);
     let isOverflowing = width >= maxWidth;
@@ -88,7 +91,7 @@ class textNode (text: string) = {
       | (Overflow, _) => text
       };
 
-    _lines := [truncated];
+    _lines = [truncated];
 
     let lineHeightPx =
       Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
@@ -134,7 +137,7 @@ class textNode (text: string) = {
           ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
         );
 
-      _lines := lines;
+      _lines = lines;
 
       let dimensions: Layout.LayoutTypes.dimensions = {
         width: int_of_float(float_of_int(maxWidthLine)),
@@ -150,7 +153,7 @@ class textNode (text: string) = {
         height: d.height,
       };
 
-      _lines := [text];
+      _lines = [text];
 
       dimensions;
     | UserDefined(wrapFunc) =>
@@ -161,7 +164,7 @@ class textNode (text: string) = {
           width,
         );
 
-      _lines := lines;
+      _lines = lines;
 
       let dimensions: Layout.LayoutTypes.dimensions = {
         width: maxWidthLine,

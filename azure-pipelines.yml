@@ -43,8 +43,8 @@ jobs:
   steps:
   - script: brew update
   - script: brew install libpng ragel
-  - template: .ci/use-node.yml
-  - template: .ci/restore-build-cache.yml
+  - script: node --version
+  # - template: .ci/restore-build-cache.yml
   - template: .ci/esy-check-hygiene.yml
   - template: .ci/publish-build-cache.yml
 
@@ -63,8 +63,8 @@ jobs:
   steps:
   - script: brew update
   - script: brew install libpng ragel
-  - template: .ci/use-node.yml
-  - template: .ci/restore-build-cache.yml
+  - script: node --version
+  # - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
   - template: .ci/esy-bench.yml
   - template: .ci/publish-build-cache.yml

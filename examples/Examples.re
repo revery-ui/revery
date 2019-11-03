@@ -28,6 +28,11 @@ let state: state = {
     {name: "Animation", render: _w => Hello.render(), source: "Hello.re"},
     {name: "Spring", render: _w => Spring.render(), source: "Spring.re"},
     {
+      name: "CanQuit",
+      render: _ => CanQuitExample.render(),
+      source: "CanQuit.re",
+    },
+    {
       name: "Button",
       render: _ => DefaultButton.render(),
       source: "DefaultButton.re",
@@ -206,6 +211,7 @@ module ExampleHost = {
              * tracked by briskml/brisk-reconciler#8. We can remove this once it's fixed!
              */
             Animated.cancelAll();
+            Window.setTitle(win, "Revery Example - " ++ x.name);
 
             let sourceFile = getSourceForSample(state, x.name);
             prerr_endline("SOURCE FILE: " ++ sourceFile);

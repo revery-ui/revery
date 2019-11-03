@@ -2,12 +2,12 @@ open Events;
 
 type windowRenderCallback = unit => unit;
 type windowShouldRenderCallback = unit => bool;
+type windowCanQuitCallback = unit => bool;
 
 type size = {
   width: int,
   height: int,
 };
-
 let log = Log.info("Window");
 
 module WindowMetrics = {
@@ -52,6 +52,7 @@ type t = {
   forceScaleFactor: option(float),
   mutable render: windowRenderCallback,
   mutable shouldRender: windowShouldRenderCallback,
+  mutable canQuit: windowCanQuitCallback,
   mutable metrics: WindowMetrics.t,
   mutable areMetricsDirty: bool,
   mutable isRendering: bool,
@@ -59,12 +60,15 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
+  onExposed: Event.t(unit),
   onKeyDown: Event.t(Key.KeyEvent.t),
   onKeyUp: Event.t(Key.KeyEvent.t),
   onMouseUp: Event.t(mouseButtonEvent),
   onMouseMove: Event.t(mouseMoveEvent),
   onMouseWheel: Event.t(mouseWheelEvent),
   onMouseDown: Event.t(mouseButtonEvent),
+  onMouseEnter: Event.t(unit),
+  onMouseLeave: Event.t(unit),
   onCompositionStart: Event.t(unit),
   onCompositionEdit: Event.t(textEditEvent),
   onCompositionEnd: Event.t(unit),
@@ -83,6 +87,10 @@ let isDirty = (w: t) =>
     | _ => false
     };
   };
+
+let setTitle = (v: t, title: string) => {
+  Sdl2.Window.setTitle(v.sdlWindow, title);
+};
 
 let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
   switch (forceScaleFactor) {
@@ -319,20 +327,29 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.WindowResized(_) => v.areMetricsDirty = true
   | Sdl2.Event.WindowSizeChanged(_) => v.areMetricsDirty = true
   | Sdl2.Event.WindowMoved(_) => v.areMetricsDirty = true
+  | Sdl2.Event.WindowEnter(_) => Event.dispatch(v.onMouseEnter, ())
+  | Sdl2.Event.WindowLeave(_) => Event.dispatch(v.onMouseLeave, ())
+  | Sdl2.Event.WindowExposed(_) => Event.dispatch(v.onExposed, ())
   | Sdl2.Event.Quit => ()
   | _ => ()
   };
 };
 
+let setVsync =
+    (
+      _window: t, // TODO: Multiple windows - set context
+      vsync: Vsync.t,
+    ) => {
+  log("Using vsync: " ++ Vsync.show(vsync));
+
+  switch (vsync) {
+  | Vsync.Immediate => Sdl2.Gl.setSwapInterval(0)
+  | Vsync.Synchronized => Sdl2.Gl.setSwapInterval(1)
+  };
+};
+
 let create = (name: string, options: WindowCreateOptions.t) => {
   log("Starting window creation...");
-
-  log("Using vsync: " ++ string_of_bool(options.vsync));
-
-  switch (options.vsync) {
-  | false => Sdl2.Gl.setSwapInterval(0)
-  | true => Sdl2.Gl.setSwapInterval(1)
-  };
 
   let width =
     switch (options.width) {
@@ -355,17 +372,29 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     ++ string_of_int(height),
   );
   let w = Sdl2.Window.create(width, height, name);
+  log("Window created successfully.");
+  let uniqueId = Sdl2.Window.getId(w);
+  log("Window id: " ++ string_of_int(uniqueId));
 
   // We need to let Windows know that we are DPI-aware and that we are going to
   // properly handle scaling. This is a no-op on other platforms.
   Sdl2.Window.setWin32ProcessDPIAware(w);
 
-  let uniqueId = Sdl2.Window.getId(w);
-  log("Window created - id: " ++ string_of_int(uniqueId));
-
   log("Setting window context");
   let _ = Sdl2.Gl.setup(w);
-  log("Gl setup");
+  log("GL setup.");
+  let version = Sdl2.Gl.glGetString(Sdl2.Gl.Version);
+  let vendor = Sdl2.Gl.glGetString(Sdl2.Gl.Vendor);
+  let shadingLanguageVersion =
+    Sdl2.Gl.glGetString(Sdl2.Gl.ShadingLanguageVersion);
+  log(
+    Printf.sprintf(
+      "OpenGL hardware info - version: %s vendor: %s shadingLanguageVersion: %s\n",
+      version,
+      vendor,
+      shadingLanguageVersion,
+    ),
+  );
 
   switch (options.icon) {
   | None =>
@@ -396,6 +425,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     render: () => (),
     shouldRender: () => false,
+    canQuit: () => true,
 
     metrics,
     areMetricsDirty: false,
@@ -407,10 +437,14 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     forceScaleFactor: options.forceScaleFactor,
 
+    onExposed: Event.create(),
+
     onMouseMove: Event.create(),
     onMouseWheel: Event.create(),
     onMouseUp: Event.create(),
     onMouseDown: Event.create(),
+    onMouseEnter: Event.create(),
+    onMouseLeave: Event.create(),
 
     onKeyDown: Event.create(),
     onKeyUp: Event.create(),
@@ -422,6 +456,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   };
   setScaledSize(ret, width, height);
   Sdl2.Window.center(w);
+  setVsync(ret, options.vsync);
 
   if (options.maximized) {
     Sdl2.Window.maximize(w);
@@ -438,6 +473,11 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   if (options.visible) {
     Sdl2.Window.show(w);
   };
+
+  // onivim/oni2#791
+  // Set a minimum size for the window
+  // TODO: Make configurable
+  Sdl2.Window.setMinimumSize(w, 200, 100);
 
   _updateMetrics(ret);
 
@@ -515,7 +555,12 @@ let getDevicePixelRatio = (w: t) => {
 };
 
 let getScaleAndZoom = (w: t) => {
-  w.metrics.scaleFactor *. w.metrics.zoom;
+  w.metrics.scaleFactor
+  *. w.metrics.zoom
+  +. 0.5
+  /* TODO - SKIA: Allow fractional scale values! */
+  |> int_of_float
+  |> float_of_int;
 };
 
 let getZoom = (w: t) => {
@@ -556,8 +601,12 @@ let destroyWindow = (_w: t) => {
   ();
 };
 
-let shouldClose = (_w: t) => {
-  true;
+let canQuit = (w: t) => {
+  w.canQuit();
+};
+
+let setCanQuitCallback = (w: t, callback: windowCanQuitCallback) => {
+  w.canQuit = callback;
 };
 
 let setRenderCallback = (w: t, callback: windowRenderCallback) =>
