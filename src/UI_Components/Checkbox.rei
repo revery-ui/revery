@@ -13,7 +13,7 @@ Simple out-of-box checkbox component
 let make:
   (
     ~checked: bool=?,
-    ~checkedColor: Revery_Core__.Color.t=?,
+    ~checkedColor: Revery_Core.Color.t=?,
     ~style: list(Revery_UI.Style.viewStyleProps)=?,
     ~onChange: unit => unit=?,
     unit
