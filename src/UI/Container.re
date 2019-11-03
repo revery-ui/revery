@@ -23,7 +23,7 @@ let update: (t, React.element(React.reveryNode)) => t =
               deleteNode: React.deleteNode,
               moveNode: React.moveNode,
             },
-            React.empty,
+            element,
           );
         React.RenderedElement.executeHostViewUpdates(updates) |> ignore;
         updates |> React.RenderedElement.executePendingEffects;
