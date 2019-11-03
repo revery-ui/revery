@@ -32,7 +32,7 @@ let%component make =
                 ~componentRef=?,
                 ~onBlur=?,
                 ~onFocus=?,
-                ~tabindex=?,
+                ~tabindex=0,
                 ~onKeyDown=?,
                 ~onKeyUp=?,
                 ~onTextEdit=?,
@@ -91,8 +91,8 @@ let%component make =
     ?onKeyUp
     ?onTextEdit
     ?onTextInput
-    tabindex
+    tabindex={Some(tabindex)}
     ref={r => setClickableRef(r)}>
-    ...children
+    children
   </View>;
 };
