@@ -200,6 +200,7 @@ module ExampleHost = {
            * tracked by briskml/brisk-reconciler#8. We can remove this once it's fixed!
            */
           Animated.cancelAll();
+          Window.setTitle(win, "Revery Example - " ++ x.name);
 
           let sourceFile = getSourceForSample(state, x.name);
           prerr_endline("SOURCE FILE: " ++ sourceFile);
