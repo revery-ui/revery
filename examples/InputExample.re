@@ -40,6 +40,8 @@ module Example = {
             <Input
               placeholder="Insert text here"
               onChange={({value, _}) => setValue({first: value, second})}
+              onFocus={() => Console.log("Input example focused!")}
+              onBlur={() => Console.log("Input example blurred!")}
               value=first
             />
             <Button
