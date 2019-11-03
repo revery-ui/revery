@@ -12,6 +12,9 @@ module Transition: {
   {[
   let (transitionedOpacity, setTransitionedOpacity, hooks) =
     Hooks.transition(1., ~duration=Seconds(1.), hooks);
+  // if you add `(preprocess (pps brisk-reconciler.ppx))` in you dune file
+  let%hook (transitionedOpacity, setTransitionedOpacity) =
+    Hooks.transition(1., ~duration=Seconds(1.));
 
   let onMouseDown  = () => setTransitionedOpacity(0.5);
   let onMouseUp = () => setTransitionedOpacity(1.0);
