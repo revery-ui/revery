@@ -18,4 +18,4 @@ let make:
     ~onChange: Revery_UI_Components__.Clickable.clickFunction=?,
     unit
   ) =>
-  Revery_UI.React.element(Revery_UI.React.node);
+  Brisk_reconciler.element(Revery_UI.React.node);
