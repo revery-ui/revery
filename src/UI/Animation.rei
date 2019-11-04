@@ -22,7 +22,6 @@ module Make:
       pause: unit => unit,
       stop: unit => unit,
     };
-    let isActive: animation => bool;
     type animationOptions = {
       duration: Revery_Core.Time.t,
       delay: Revery_Core.Time.t,
@@ -42,14 +41,12 @@ module Make:
         unit
       ) =>
       animationOptions;
-    let anyActiveAnimations: unit => bool;
     let tween: (float, animationOptions) => animation;
     let start:
       (~update: float => unit=?, ~complete: unit => unit=?, animation) =>
       playback;
     let restart: (~completer: unit => unit, animation) => unit;
     let pause: (~completer: unit => unit, animation) => (unit => unit);
-    let cancelAll: unit => unit;
 
     let getValue: animation => float;
     let setValue: (float, animation) => unit;
