@@ -125,7 +125,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       easing: animationOptions.easing,
       direction: animationOptions.direction,
       isReverse: false,
-      running: false,
+      running: true,
       update: None,
       complete: None,
     };
@@ -154,18 +154,16 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
 
   let getTime = () => AnimationTickerImpl.time();
 
-  let restart = (~completer, animation) => {
+  let restart = (animation) => {
     animation.startTime = Time.to_float_seconds(getTime());
     animation.value = animation.initialValue;
     animation.running = true;
-    animation.complete = Some(completer);
   };
 
-  let pause = (~completer, animation) => {
+  let pause = (animation) => {
     animation.running = false
 
     let resume = () => {
-      animation.complete = Some(completer);
       animation.running = true
     };
     resume

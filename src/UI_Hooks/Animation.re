@@ -1,31 +1,20 @@
 /* Hooks specific to Revery */
+module TickHook = Tick;
 open Revery_Core;
-open Revery_UI.Animated;
+module Animation = Revery_UI.Animated;
 
-let animationLoop = (animation, complete, ()) => {
-  let {stop, _} = animation |> start(~complete);
-  Some(
-    () => {
-      Log.info("Hooks - Animation", "Stopping animation");
-      stop();
-      complete();
-    },
-  );
-};
 
-let animation' = (value: float, opts: animationOptions, slots) => {
-  let (animation, setAnim, slots) = Ref.ref(tween(value, opts), slots);
+let animation' = (value: float, opts: Animation.animationOptions, slots) => {
+  let (animation, setAnim, slots) =
+    Ref.ref(Animation.tween(value, opts), slots);
   let (_, dispatch, slots) =
     Reducer.reducer(~initialState=0, _ => succ, slots);
-  let completer = Tick.interval(_t => dispatch(), Seconds(0.));
-
-  let slots =
-    Effect.effect(OnMount, animationLoop(animation, completer), slots);
+  let slots = TickHook.tick(~tickRate=Seconds(0.), _ => dispatch(), slots);
 
   (
-    getValue(animation),
-    () => pause(~completer, animation),
-    () => restart(~completer, animation),
+    Animation.getValue(animation),
+    () => Animation.pause(animation),
+    () => Animation.restart(animation),
     setAnim,
     slots,
   );
@@ -43,22 +32,17 @@ module Transition = {
     let (value, pauseAnim, _restartAnim, setAnim, slots) =
       animation'(
         toValue,
-        options(~toValue, ~duration, ~delay=Time.Seconds(0.0), ~repeat=false, ()),
+        Animation.options(~toValue, ~duration, ~delay=Time.Seconds(0.0), ~repeat=false, ()),
         slots,
       );
-    let setAnim = (~immediate=false, toValue) => {
-      let animation =
-        tween(
+    let setTarget = (~immediate=false, toValue) => {
+      setAnim(
+        Animation.tween(
           immediate ? toValue : value,
-          options(~toValue, ~duration, ~delay, ~repeat=false, ()),
-        );
-
-      // only for cleaning purpose we don't restart it
-      let _resume: unit => unit = pauseAnim();
-
-      let _: playback = start(animation);
-      setAnim(animation);
+          Animation.options(~toValue, ~duration, ~delay, ~repeat=false, ()),
+        )
+      );
     };
-    (value, setAnim, slots);
+    (value, setTarget, slots);
   };
 };
