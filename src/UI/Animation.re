@@ -99,6 +99,8 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
         let newT = getLocalTime(clock, anim);
         anim.value = interpolate(newT, startValue, toValue);
       } else {
+        anim.value = interpolate(t, startValue, toValue);
+        optCall(anim.update, anim.value);
         optCall(anim.complete, ());
         anim.running = false;
       };
