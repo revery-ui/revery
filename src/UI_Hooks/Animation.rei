@@ -12,6 +12,9 @@ module Transition: {
   {[
   let (transitionedOpacity, setTransitionedOpacity, hooks) =
     Hooks.transition(1., ~duration=Seconds(1.), hooks);
+  // if you add `(preprocess (pps brisk-reconciler.ppx))` in you dune file
+  let%hook (transitionedOpacity, setTransitionedOpacity) =
+    Hooks.transition(1., ~duration=Seconds(1.));
 
   let onMouseDown  = () => setTransitionedOpacity(0.5);
   let onMouseUp = () => setTransitionedOpacity(1.0);
@@ -31,7 +34,7 @@ module Transition: {
         'b,
       )
     ) =>
-    (float, (~immediate: bool=?, float) => unit, t('a, 'b));
+    ((float, (~immediate: bool=?, float) => unit), t('a, 'b));
 };
 
 let animation:
@@ -40,4 +43,4 @@ let animation:
     animationOptions,
     t((ref(animation), Reducer.t(int), Effect.t(Effect.onMount)) => 'a, 'b)
   ) =>
-  (float, (unit, unit) => unit, unit => unit, t('a, 'b));
+  ((float, (unit, unit) => unit, unit => unit), t('a, 'b));

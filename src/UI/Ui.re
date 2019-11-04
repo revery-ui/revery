@@ -18,12 +18,12 @@ open RenderContainer;
 
 let _activeWindow: ref(option(Window.t)) = ref(None);
 
-type renderFunction = React.syntheticElement => unit;
+type renderFunction = React.element(React.reveryNode) => unit;
 
 let getActiveWindow = () => _activeWindow^;
 let log = Log.info("UI");
 
-let start = (window: Window.t, element: React.syntheticElement) => {
+let start = (window: Window.t, element: React.element(React.reveryNode)) => {
   let uiDirty = ref(true);
   let forceLayout = ref(true);
   let latestElement = ref(element);
@@ -161,7 +161,7 @@ let start = (window: Window.t, element: React.syntheticElement) => {
     },
   );
 
-  let render = (element: React.syntheticElement) => {
+  let render = (element: React.element(React.reveryNode)) => {
     latestElement := element;
     uiDirty := true;
   };

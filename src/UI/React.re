@@ -1,5 +1,5 @@
-let onStale = Reconciler.onStale;
+include Reconciler;
 
-module React = Brisk_reconciler.Make(Reconciler);
+module React = Brisk_reconciler;
 
 include React;
