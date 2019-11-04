@@ -179,9 +179,6 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     animation.value;
   };
 
-  let setValue = (value, animation) =>
-    animation.value = value;
-
   module Chain = {
     type t = {animations: list(animation)};
     let make = animation => {animations: [animation]};

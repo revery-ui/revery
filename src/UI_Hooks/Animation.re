@@ -56,7 +56,7 @@ module Transition = {
       // only for cleaning purpose we don't restart it
       let _resume: unit => unit = pauseAnim();
 
-      let _: playback = start(animation, ~complete=() => setValue(toValue, animation));
+      let _: playback = start(animation);
       setAnim(animation);
     };
     (value, setAnim, slots);

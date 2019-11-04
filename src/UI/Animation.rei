@@ -49,7 +49,6 @@ module Make:
     let pause: (~completer: unit => unit, animation) => (unit => unit);
 
     let getValue: animation => float;
-    let setValue: (float, animation) => unit;
 
     module Chain: {
       type t = {animations: list(animation)};
