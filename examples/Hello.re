@@ -13,7 +13,7 @@ let logo = {
 
       let (rotation, pauseRotation, restartRotation, hooks) =
         Hooks.animation(
-          Animated.floatValue(0.),
+          0.,
           Animated.options(
             ~toValue=6.28,
             ~duration=Seconds(8.),
@@ -26,7 +26,7 @@ let logo = {
 
       let (rotationY, pauseRotationY, restartRotationY, hooks) =
         Hooks.animation(
-          Animated.floatValue(0.),
+          0.,
           Animated.options(
             ~toValue=6.28,
             ~duration=Seconds(4.),
@@ -101,7 +101,7 @@ let animatedText = {
     component(hooks => {
       let (animatedOpacity, _, _, hooks) =
         Hooks.animation(
-          Animated.floatValue(0.),
+          0.,
           Animated.options(
             ~toValue=1.0,
             ~duration=Seconds(1.),
@@ -113,7 +113,7 @@ let animatedText = {
 
       let (translate, _, _, hooks) =
         Hooks.animation(
-          Animated.floatValue(50.),
+          50.,
           Animated.options(
             ~toValue=1.0,
             ~duration=Seconds(0.5),

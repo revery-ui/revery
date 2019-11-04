@@ -168,13 +168,13 @@ let make =
             };
             let playback =
               tween(
-                floatValue(float_of_int(actualScrollTop)),
+                float_of_int(actualScrollTop),
                 bounceAwayAnim,
               )
               |> Chain.make
               |> Chain.add(
                    tween(
-                     floatValue(float_of_int(newScrollTop)),
+                     float_of_int(newScrollTop),
                      bounceBackAnim,
                    ),
                  )

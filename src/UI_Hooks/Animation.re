@@ -2,10 +2,7 @@
 open Revery_Core;
 open Revery_UI.Animated;
 
-let reducer = (_a, s) => s + 1;
-
-let animationLoop = (animation, completer, ()) => {
-  let complete = completer();
+let animationLoop = (animation, complete, ()) => {
   let {stop, _} = animation |> start(~complete);
   Some(
     () => {
@@ -16,73 +13,52 @@ let animationLoop = (animation, completer, ()) => {
   );
 };
 
+let animation' = (value: float, opts: animationOptions, slots) => {
+  let (animation, setAnim, slots) = Ref.ref(tween(value, opts), slots);
+  let (_, dispatch, slots) =
+    Reducer.reducer(~initialState=0, _ => succ, slots);
+  let completer = Tick.interval(_t => dispatch(), Seconds(0.));
+
+  let slots =
+    Effect.effect(OnMount, animationLoop(animation, completer), slots);
+
+  (
+    getValue(animation),
+    () => pause(~completer, animation),
+    () => restart(~completer, animation),
+    setAnim,
+    slots,
+  );
+};
+
+let animation = (v, opts, slots) => {
+  let (value, pause, restart, _setAnim, slots) =
+    animation'(v, opts, slots);
+  (value, pause, restart, slots);
+};
+
 module Transition = {
-  let animation' = (v: animationValue, opts: animationOptions, slots) => {
-    let (animation, setAnim, slots) = Ref.ref(tween(v, opts), slots);
-    let (_, dispatch, slots) =
-      Reducer.reducer(~initialState=0, reducer, slots);
-    let completer = () => Tick.interval(_t => dispatch(), Seconds(0.));
-
-    let restart = () => {
-      animation.startTime = Time.to_float_seconds(getTime());
-      animation.value.current = animation.startValue;
-      let newActiveAnim = {
-        animation,
-        update: None,
-        complete: Some(completer()),
-      };
-      addAnimation(newActiveAnim);
-    };
-
-    let pause = () => {
-      removeAnimation(animation);
-      () => {
-        let newActiveAnim = {
-          animation,
-          update: None,
-          complete: Some(completer()),
-        };
-        addAnimation(newActiveAnim);
-      };
-    };
-
-    let slots =
-      Effect.effect(OnMount, animationLoop(animation, completer), slots);
-
-    (animation, pause, restart, setAnim, slots);
-  };
-
   let transition =
       (toValue, ~delay=Time.Seconds(0.0), ~duration=Time.Seconds(1.), slots) => {
-    let repeat = false;
-    let ({value, _}, pauseAnim, _restartAnim, setAnim, slots) =
+    let (value, pauseAnim, _restartAnim, setAnim, slots) =
       animation'(
-        floatValue(toValue),
-        options(~toValue, ~duration, ~delay=Time.Seconds(0.0), ~repeat, ()),
+        toValue,
+        options(~toValue, ~duration, ~delay=Time.Seconds(0.0), ~repeat=false, ()),
         slots,
       );
     let setAnim = (~immediate=false, toValue) => {
       let animation =
         tween(
-          immediate ? floatValue(toValue) : value,
-          options(~toValue, ~duration, ~delay, ~repeat, ()),
+          immediate ? toValue : value,
+          options(~toValue, ~duration, ~delay, ~repeat=false, ()),
         );
+
       // only for cleaning purpose we don't restart it
-      let _: unit => unit = pauseAnim();
-      let newActiveAnim = {
-        animation,
-        update: None,
-        complete: Some(() => animation.value.current = toValue),
-      };
-      addAnimation(newActiveAnim);
+      let _resume: unit => unit = pauseAnim();
+
+      let _: playback = start(animation, ~complete=() => setValue(toValue, animation));
       setAnim(animation);
     };
-    (value.current, setAnim, slots);
+    (value, setAnim, slots);
   };
-};
-
-let animation = (v, opts, slots) => {
-  let (animation, pause, restart, _setAnim, slots) =
-    Transition.animation'(v, opts, slots);
-  (animation.value.current, pause, restart, slots);
 };

@@ -36,7 +36,7 @@ module Transition: {
 
 let animation:
   (
-    animationValue,
+    float,
     animationOptions,
     t((ref(animation), Reducer.t(int), Effect.t(Effect.onMount)) => 'a, 'b)
   ) =>
