@@ -21,19 +21,13 @@ type animationDirection = [
 ];
 
 module Make = (AnimationTickerImpl: AnimationTicker) => {
-
-  module AnimationId =
-    UniqueId.Make({});
-
   type animation = {
-    id: int,
     delay: float,
     mutable startTime: float,
     duration: float,
     initialValue: float,
     toValue: float,
     mutable value: float,
-    mutable time: float,
     repeat: bool,
     easing: Easing.t,
     direction: animationDirection,
@@ -113,14 +107,12 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   let tween =
       (initialValue: float, animationOptions: animationOptions) => {
     let animation = {
-      id: AnimationId.getUniqueId(),
       delay: Time.toSeconds(animationOptions.delay),
       duration: Time.toSeconds(animationOptions.duration),
       toValue: animationOptions.toValue,
       repeat: animationOptions.repeat,
       value: initialValue,
       startTime: Time.toSeconds(AnimationTickerImpl.time()),
-      time: Time.toSeconds(AnimationTickerImpl.time()),
       initialValue,
       easing: animationOptions.easing,
       direction: animationOptions.direction,
