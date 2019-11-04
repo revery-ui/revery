@@ -1,29 +1,18 @@
 /* Hooks specific to Revery */
+module TickHook = Tick;
 open Revery_Core;
-open Revery_UI.Animated;
+module Animation = Revery_UI.Animated;
 
-let animationLoop = (animation, complete, ()) => {
-  let {stop, _} = animation |> start(~complete);
-  Some(
-    () => {
-      Log.info("Hooks - Animation", "Stopping animation");
-      stop();
-      complete();
-    },
-  );
-};
 
-let animation' = (value: float, opts: animationOptions) => {
-  let%hook (animation, setAnim) = Ref.ref(tween(value, opts));
+let animation' = (value: float, opts: Animation.animationOptions) => {
+  let%hook (animation, setAnim) = Ref.ref(Animation.tween(value, opts));
   let%hook (_, dispatch) = Reducer.reducer(~initialState=0, _ => succ);
-  let completer = Tick.interval(_t => dispatch(), Time.zero);
-
-  let%hook () = Effect.effect(OnMount, animationLoop(animation, completer));
+  let%hook () = TickHook.tick(~tickRate=Time.zero, _ => dispatch());
 
   (
-    getValue(animation),
-    () => pause(~completer, animation),
-    () => restart(~completer, animation),
+    Animation.getValue(animation),
+    () => Animation.pause(animation),
+    () => Animation.restart(animation),
     setAnim,
   );
 };
@@ -38,21 +27,16 @@ module Transition = {
     let%hook (value, pauseAnim, _restartAnim, setAnim) =
       animation'(
         toValue,
-        options(~toValue, ~duration, ~delay=Time.zero, ~repeat=false, ()),
+        Animation.options(~toValue, ~duration, ~delay=Time.zero, ~repeat=false, ()),
       );
-    let setAnim = (~immediate=false, toValue) => {
-      let animation =
-        tween(
+    let setTarget = (~immediate=false, toValue) => {
+      setAnim(
+        Animation.tween(
           immediate ? toValue : value,
-          options(~toValue, ~duration, ~delay, ~repeat=false, ()),
-        );
-
-      // only for cleaning purpose we don't restart it
-      let _resume: unit => unit = pauseAnim();
-
-      let _: playback = start(animation);
-      setAnim(animation);
+          Animation.options(~toValue, ~duration, ~delay, ~repeat=false, ()),
+        )
+      );
     };
-    (value, setAnim);
+    (value, setTarget);
   };
 };

@@ -45,8 +45,8 @@ module Make:
     let start:
       (~update: float => unit=?, ~complete: unit => unit=?, animation) =>
       playback;
-    let restart: (~completer: unit => unit, animation) => unit;
-    let pause: (~completer: unit => unit, animation) => (unit => unit);
+    let restart: animation => unit;
+    let pause: animation => (unit => unit);
 
     let getValue: animation => float;
 
