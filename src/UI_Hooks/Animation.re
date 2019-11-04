@@ -2,10 +2,7 @@
 open Revery_Core;
 open Revery_UI.Animated;
 
-let reducer = (_a, s) => s + 1;
-
-let animationLoop = (animation, completer, ()) => {
-  let complete = completer();
+let animationLoop = (animation, complete, ()) => {
   let {stop, _} = animation |> start(~complete);
   Some(
     () => {
@@ -16,70 +13,47 @@ let animationLoop = (animation, completer, ()) => {
   );
 };
 
+let animation' = (value: float, opts: animationOptions) => {
+  let%hook (animation, setAnim) = Ref.ref(tween(value, opts));
+  let%hook (_, dispatch) = Reducer.reducer(~initialState=0, _ => succ);
+  let completer = Tick.interval(_t => dispatch(), Time.zero);
+
+  let%hook () = Effect.effect(OnMount, animationLoop(animation, completer));
+
+  (
+    getValue(animation),
+    () => pause(~completer, animation),
+    () => restart(~completer, animation),
+    setAnim,
+  );
+};
+
+let animation = (v, opts) => {
+  let%hook (value, pause, restart, _setAnim) = animation'(v, opts);
+  (value, pause, restart);
+};
+
 module Transition = {
-  let animation' = (v: animationValue, opts: animationOptions) => {
-    let%hook (animation, setAnim) = Ref.ref(tween(v, opts));
-    let%hook (_, dispatch) = Reducer.reducer(~initialState=0, reducer);
-    let completer = () => Tick.interval(_t => dispatch(), Time.zero);
-
-    let restart = () => {
-      animation.startTime = Time.toSeconds(Time.now());
-      animation.value.current = animation.startValue;
-      let newActiveAnim = {
-        animation,
-        update: None,
-        complete: Some(completer()),
-      };
-      addAnimation(newActiveAnim);
-    };
-
-    let pause = () => {
-      removeAnimation(animation);
-      () => {
-        let newActiveAnim = {
-          animation,
-          update: None,
-          complete: Some(completer()),
-        };
-        addAnimation(newActiveAnim);
-      };
-    };
-
-    let%hook () =
-      Effect.effect(OnMount, animationLoop(animation, completer));
-
-    (animation, pause, restart, setAnim);
-  };
-
   let transition = (toValue, ~delay=Time.zero, ~duration=Time.seconds(1.)) => {
-    let repeat = false;
-    let%hook ({value, _}, pauseAnim, _restartAnim, setAnim) =
+    let%hook (value, pauseAnim, _restartAnim, setAnim) =
       animation'(
-        floatValue(toValue),
-        options(~toValue, ~duration, ~delay=Time.zero, ~repeat, ()),
+        toValue,
+        options(~toValue, ~duration, ~delay=Time.zero, ~repeat=false, ()),
       );
     let setAnim = (~immediate=false, toValue) => {
       let animation =
         tween(
-          immediate ? floatValue(toValue) : value,
-          options(~toValue, ~duration, ~delay, ~repeat, ()),
+          immediate ? toValue : value,
+          options(~toValue, ~duration, ~delay, ~repeat=false, ()),
         );
+
       // only for cleaning purpose we don't restart it
-      let _: unit => unit = pauseAnim();
-      let newActiveAnim = {
-        animation,
-        update: None,
-        complete: Some(() => animation.value.current = toValue),
-      };
-      addAnimation(newActiveAnim);
+      let _resume: unit => unit = pauseAnim();
+
+      let _: playback =
+        start(animation, ~complete=() => setValue(toValue, animation));
       setAnim(animation);
     };
-    (value.current, setAnim);
+    (value, setAnim);
   };
-};
-
-let animation = (v, opts) => {
-  let%hook (animation, pause, restart, _setAnim) =
-    Transition.animation'(v, opts);
-  (animation.value.current, pause, restart);
 };

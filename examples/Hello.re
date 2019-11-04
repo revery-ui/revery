@@ -10,7 +10,7 @@ module Logo = {
 
     let%hook (rotation, pauseRotation, restartRotation) =
       Hooks.animation(
-        Animated.floatValue(0.),
+        0.,
         Animated.options(
           ~toValue=6.28,
           ~duration=Time.seconds(8.),
@@ -22,7 +22,7 @@ module Logo = {
 
     let%hook (rotationY, pauseRotationY, restartRotationY) =
       Hooks.animation(
-        Animated.floatValue(0.),
+        0.,
         Animated.options(
           ~toValue=6.28,
           ~duration=Time.seconds(4.),
@@ -85,7 +85,7 @@ module AnimatedText = {
   let%component make = (~text: string, ~delay: float, ()) => {
     let%hook (animatedOpacity, _, _) =
       Hooks.animation(
-        Animated.floatValue(0.),
+        0.,
         Animated.options(
           ~toValue=1.0,
           ~duration=Time.seconds(1.),
@@ -96,10 +96,10 @@ module AnimatedText = {
 
     let%hook (translate, _, _) =
       Hooks.animation(
-        Animated.floatValue(50.),
+        0.,
         Animated.options(
           ~toValue=1.0,
-          ~duration=Time.seconds(0.5),
+          ~duration=Time.seconds(1.),
           ~delay=Time.seconds(delay),
           (),
         ),

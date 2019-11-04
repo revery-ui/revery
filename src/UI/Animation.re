@@ -21,7 +21,6 @@ type animationDirection = [
 ];
 
 module Make = (AnimationTickerImpl: AnimationTicker) => {
-  type animationValue = {mutable current: float};
 
   module AnimationId =
     UniqueId.Make({});
@@ -31,9 +30,9 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     delay: float,
     mutable startTime: float,
     duration: float,
-    startValue: float,
+    initialValue: float,
     toValue: float,
-    value: animationValue,
+    mutable value: float,
     repeat: bool,
     easing: Easing.t,
     direction: animationDirection,
@@ -55,14 +54,12 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
 
   let addAnimation = anim => activeAnimations := [anim, ...activeAnimations^];
 
-  let cancel = (anim: animation) =>
+  let removeAnimation = (anim: animation) =>
     activeAnimations :=
       List.filter(
         ({animation: a, _}) => a.id !== anim.id,
         activeAnimations^,
       );
-
-  let removeAnimation = cancel; // naming consistency with addAnimation defined above
 
   let cancelAll = () => activeAnimations := [];
 
@@ -77,8 +74,6 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     easing: float => float,
     direction: animationDirection,
   };
-
-  let floatValue: float => animationValue = (v: float) => {current: v};
 
   let options =
       (
@@ -118,7 +113,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     let t = anim.easing(getLocalTime(clock, anim));
     let (startValue, toValue) =
       anim.isReverse
-        ? (anim.toValue, anim.startValue) : (anim.startValue, anim.toValue);
+        ? (anim.toValue, anim.initialValue) : (anim.initialValue, anim.toValue);
 
     if (t >= 1.) {
       if (anim.repeat) {
@@ -130,13 +125,13 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
         anim.startTime = anim.startTime +. anim.delay +. anim.duration;
 
         let newT = getLocalTime(clock, anim);
-        anim.value.current = interpolate(newT, startValue, toValue);
+        anim.value = interpolate(newT, startValue, toValue);
       } else {
         optCall(complete, ());
       };
     } else {
-      anim.value.current = interpolate(t, startValue, toValue);
-      optCall(update, anim.value.current);
+      anim.value = interpolate(t, startValue, toValue);
+      optCall(update, anim.value);
     };
   };
 
@@ -149,16 +144,16 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   };
 
   let tween =
-      (animationValue: animationValue, animationOptions: animationOptions) => {
+      (initialValue: float, animationOptions: animationOptions) => {
     let animation = {
       id: AnimationId.getUniqueId(),
       delay: Time.toSeconds(animationOptions.delay),
       duration: Time.toSeconds(animationOptions.duration),
       toValue: animationOptions.toValue,
       repeat: animationOptions.repeat,
-      value: animationValue,
+      value: initialValue,
       startTime: Time.toSeconds(AnimationTickerImpl.time()),
-      startValue: animationValue.current,
+      initialValue,
       easing: animationOptions.easing,
       direction: animationOptions.direction,
       isReverse: false,
@@ -177,7 +172,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     let playback = {
       pause: () => removeAnimation(activeAnimation.animation),
       stop: () => {
-        animation.value.current = animation.startValue;
+        animation.value = animation.initialValue;
         animation.isReverse = isReverseStartValue;
         removeAnimation(activeAnimation.animation);
       },
@@ -186,6 +181,37 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   };
 
   let getTime = () => AnimationTickerImpl.time();
+
+  let restart = (~completer, animation) => {
+    animation.startTime = Time.toSeconds(getTime());
+    animation.value = animation.initialValue;
+    let newActiveAnim = {
+      animation,
+      update: None,
+      complete: Some(completer),
+    };
+    addAnimation(newActiveAnim);
+  };
+
+  let pause = (~completer, animation) => {
+    removeAnimation(animation);
+
+    let resume = () => {
+      let newActiveAnim = {
+        animation,
+        update: None,
+        complete: Some(completer),
+      };
+      addAnimation(newActiveAnim);
+    };
+    resume
+  };
+
+  let getValue = (animation) =>
+    animation.value;
+
+  let setValue = (value, animation) =>
+    animation.value = value;
 
   module Chain = {
     type t = {animations: list(animation)};
