@@ -136,7 +136,7 @@ let start = (window: Window.t, element: React.syntheticElement) => {
     );
 
   Window.setShouldRenderCallback(window, () =>
-    uiDirty^ || Animated.anyActiveAnimations()
+    uiDirty^
   );
   Window.setRenderCallback(
     window,
