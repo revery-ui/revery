@@ -1,5 +1,4 @@
 open Revery_Core;
-open Revery_Math;
 
 module type AnimationTicker = {
   let time: unit => Time.t;

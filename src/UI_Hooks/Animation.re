@@ -24,7 +24,7 @@ let animation = (v, opts) => {
 
 module Transition = {
   let transition = (toValue, ~delay=Time.zero, ~duration=Time.seconds(1.)) => {
-    let%hook (value, pauseAnim, _restartAnim, setAnim) =
+    let%hook (value, _pauseAnim, _restartAnim, setAnim) =
       animation'(
         toValue,
         Animation.options(~toValue, ~duration, ~delay=Time.zero, ~repeat=false, ()),
