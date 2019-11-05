@@ -48,13 +48,14 @@ let mountIfEffect = (condition, handler) => {
 let timer = (~tickRate=Time.zero, ~active=true, ()) => {
   let%hook (time, setTime) =
     reducer(~initialState=Time.now(), t => t);
-  let%hook (startTime, setStartTime) = state(time);
+  let%hook (startTime, setStartTime) = Ref.ref(time);
 
   let onTick = _dt => setTime(_t => Time.now());
 
   let%hook () =
     mountIfEffect(If((!=), active), () =>
       if (active) {
+        setStartTime(Time.(Time.now() - time - startTime));
         let dispose = Revery_Core.Tick.interval(onTick, tickRate);
         Some(dispose);
       } else {
@@ -63,7 +64,7 @@ let timer = (~tickRate=Time.zero, ~active=true, ()) => {
     );
 
   let reset = () => {
-    setStartTime(_ => time);
+    setStartTime(time);
   };
 
   (Time.(time - startTime), reset);
