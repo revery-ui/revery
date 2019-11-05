@@ -6,8 +6,8 @@ open Revery.UI.Components;
 module Logo = {
   let%component make = () => {
     let%hook (transitionedOpacity, transitionOpacityTo) = Hooks.transition(1.);
-    let%hook (timerActive, setTimerActive) = Hooks.state(true);
-    let%hook (time, resetTimer) = Hooks.timer(~active=timerActive, ());
+    let%hook (isTimerActive, setTimerActive) = Hooks.state(true);
+    let%hook (time, resetTimer) = Hooks.timer(~active=isTimerActive, ());
 
     let rotationX =
       Animation.animate(~delay=Time.seconds(1.), Time.seconds(9.), ~repeat=true)
@@ -34,10 +34,8 @@ module Logo = {
         <Row>
           <Button
             width=200
-            onClick={() => {
-              setTimerActive(_ => false);
-            }}
-            title="Pause"
+            onClick={() => setTimerActive(_ => !isTimerActive)}
+            title={isTimerActive ? "Pause" : "Resume"}
           />
           <Button
             width=200
