@@ -5,32 +5,18 @@ open Revery.UI.Components;
 
 module Logo = {
   let%component make = () => {
-    let%hook (transitionedOpacity, transitionOpacityTo) =
-      Hooks.transition(1., ~duration=Time.seconds(1.));
+    let%hook (transitionedOpacity, transitionOpacityTo) = Hooks.transition(1.);
+    let%hook (timerActive, setTimerActive) = Hooks.state(true);
+    let%hook (time, resetTimer) = Hooks.timer(~active=timerActive, ());
 
-    let%hook (rotation, pauseRotation, restartRotation) =
-      Hooks.animation(
-        0.,
-        Animated.options(
-          ~toValue=6.28,
-          ~duration=Time.seconds(8.),
-          ~delay=Time.seconds(1.0),
-          ~repeat=true,
-          (),
-        ),
-      );
-
-    let%hook (rotationY, pauseRotationY, restartRotationY) =
-      Hooks.animation(
-        0.,
-        Animated.options(
-          ~toValue=6.28,
-          ~duration=Time.seconds(4.),
-          ~delay=Time.seconds(0.5),
-          ~repeat=true,
-          (),
-        ),
-      );
+    let rotationX =
+      Animation.animate(~delay=Time.seconds(1.), Time.seconds(9.), ~repeat=true)
+      |> Animation.tween'(0., 6.28)
+      |> animate => animate(time);
+    let rotationY =
+      Animation.animate(~delay=Time.seconds(0.5), Time.seconds(4.), ~repeat=true)
+      |> Animation.tween'(0., 6.28)
+      |> animate => animate(time);
 
     <View>
       <Opacity opacity=transitionedOpacity>
@@ -41,7 +27,7 @@ module Logo = {
             height(256),
             transform([
               Transform.RotateY(Angle.from_radians(rotationY)),
-              Transform.RotateX(Angle.from_radians(rotation)),
+              Transform.RotateX(Angle.from_radians(rotationX)),
             ]),
           ]
         />
@@ -49,17 +35,15 @@ module Logo = {
           <Button
             width=200
             onClick={() => {
-              pauseRotation() |> ignore;
-              pauseRotationY() |> ignore;
-              ();
+              setTimerActive(_ => false);
             }}
             title="Pause"
           />
           <Button
             width=200
             onClick={() => {
-              restartRotation();
-              restartRotationY();
+              setTimerActive(_ => true);
+              resetTimer();
             }}
             title="Restart"
           />
@@ -83,27 +67,18 @@ module Logo = {
 
 module AnimatedText = {
   let%component make = (~text: string, ~delay: float, ()) => {
-    let%hook (animatedOpacity, _, _) =
-      Hooks.animation(
-        0.,
-        Animated.options(
-          ~toValue=1.0,
-          ~duration=Time.seconds(1.),
-          ~delay=Time.seconds(delay),
-          (),
-        ),
-      );
-
-    let%hook (translate, _, _) =
-      Hooks.animation(
-        0.,
-        Animated.options(
-          ~toValue=1.0,
-          ~duration=Time.seconds(1.),
-          ~delay=Time.seconds(delay),
-          (),
-        ),
-      );
+    let%hook (animatedOpacity) =
+      Hooks.animation(Animation.(
+        animate(Time.seconds(1.), ~delay=Time.seconds(delay))
+        |> ease(Easing.easeOut)
+        |> tween'(0., 1.)
+      ));
+    let%hook (translate) =
+      Hooks.animation(Animation.(
+        animate(Time.seconds(0.5), ~delay=Time.seconds(delay))
+        |> ease(Easing.easeOut)
+        |> tween'(50., 0.)
+      ));
 
     let textHeaderStyle =
       Style.[

@@ -9,7 +9,7 @@ type direction =
   | Top
   | Bottom;
 type bouncingState =
-  | Bouncing(direction, Animated.playback)
+  | Bouncing({ direction, newScrollTop: int, startTime: Time.t })
   | Idle;
 
 let empty = React.empty;
@@ -42,6 +42,44 @@ let%component make =
     Hooks.state(None);
   let%hook (actualScrollLeft, setScrollLeft) = Hooks.state(scrollLeft);
   let%hook (bouncingState, setBouncingState) = Hooks.state(Idle);
+  let%hook time = Hooks.time();
+
+  let actualScrollTop =
+    switch ((bouncingState, outerRef)) {
+    | (Bouncing({direction, newScrollTop, startTime}), Some(outer)) =>
+      let inner = outer#firstChild();
+      let childMeasurements = inner#measurements();
+      let outerMeasurements = outer#measurements();
+
+      let maxHeight =
+        max(0, childMeasurements.height - outerMeasurements.height);
+
+      let bounceAwayAnim =
+        Animation.animate(Time.milliseconds(100.))
+        |> Animation.ease(Easing.cubicBezier(0.23, 1., 0.32, 1.))
+        |> Animation.tween(
+            float_of_int(actualScrollTop),
+            float_of_int(newScrollTop),
+          );
+      let bounceBackAnim =
+        Animation.animate(Time.milliseconds(800.))
+        |> Animation.ease(Easing.cubicBezier(0.23, 1., 0.32, 1.))
+        |> Animation.tween(
+            float_of_int(newScrollTop),
+            newScrollTop < 0 ? 0. : float_of_int(maxHeight),
+          );
+      let bounceAnim = bounceAwayAnim |> Animation.andThen(~next=bounceBackAnim);
+      switch (bounceAnim(Time.(time - startTime))) {
+      | Delayed => actualScrollTop
+      | Running(value) => int_of_float(value)
+      | Complete(_) =>
+        setBouncingState(_ => Idle)
+        actualScrollTop
+      };
+
+    | _ =>
+      actualScrollTop
+    };
 
   let scrollBarThickness = 10;
 
@@ -134,55 +172,20 @@ let%component make =
         let isAtBottom = newScrollTop > maxHeight;
 
         switch (bouncingState) {
-        | Bouncing(Top, playback) when wheelEvent.deltaY < 0. =>
-          playback.stop();
+        | Bouncing({ direction: Top }) when wheelEvent.deltaY < 0. =>
           setBouncingState(_ => Idle);
-        | Bouncing(Bottom, playback) when wheelEvent.deltaY > 0. =>
-          playback.stop();
+        | Bouncing({ direction: Bottom }) when wheelEvent.deltaY > 0. =>
           setBouncingState(_ => Idle);
         | Bouncing(_) => ()
         | Idle when !bounce && (isAtTop || isAtBottom) =>
           let clampedScrollTop = isAtTop ? 0 : maxHeight;
           dispatch(ScrollUpdated(clampedScrollTop));
         | Idle when bounce && (isAtTop || isAtBottom) =>
-          open Animated;
           let direction = isAtTop ? Top : Bottom;
-          let bounceAwayAnim = {
-            toValue: float_of_int(newScrollTop),
-            duration: Time.milliseconds(100.),
-            delay: Time.zero,
-            repeat: false,
-            easing: Easing.cubicBezier(0.23, 1., 0.32, 1.),
-            direction: `Normal,
-          };
-          let bounceBackAnim = {
-            toValue: isAtTop ? 0. : float_of_int(maxHeight),
-            duration: Time.milliseconds(800.),
-            delay: Time.zero,
-            repeat: false,
-            easing: Easing.cubicBezier(0.23, 1., 0.32, 1.),
-            direction: `Normal,
-          };
-          let playback =
-            tween(
-              float_of_int(actualScrollTop),
-              bounceAwayAnim,
-            )
-            |> Chain.make
-            |> Chain.add(
-                  tween(
-                    float_of_int(newScrollTop),
-                    bounceBackAnim,
-                  ),
-                )
-            |> Chain.start(~update=v =>
-                  dispatch(ScrollUpdated(int_of_float(v)))
-                );
-          setBouncingState(_ => Bouncing(direction, playback));
+          setBouncingState(_ => Bouncing({direction, newScrollTop, startTime: time}));
         | Idle => dispatch(ScrollUpdated(newScrollTop))
         };
       };
-
     (horizontalScrollbar, verticalScrollBar, scroll);
   | _ => (empty, empty, (_ => ()))
   };
