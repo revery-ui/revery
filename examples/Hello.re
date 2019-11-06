@@ -11,14 +11,16 @@ module Logo = {
 
     let rotationX =
       Animation.(
-        animate(Time.seconds(9.), ~repeat=true)
+        animate(Time.seconds(9.))
+        |> repeat
         |> delay(Time.seconds(1.))
         |> tween'(0., 6.28)
         |> animate => animate(time)
       );
     let rotationY =
       Animation.(
-        animate(Time.seconds(4.), ~repeat=true)
+        animate(Time.seconds(4.))
+        |> repeat
         |> delay(Time.seconds(0.5))
         |> tween'(0., 6.28)
         |> animate => animate(time)

@@ -11,8 +11,7 @@ type result =
 /**
  * `time` is assumed to start at 0
  */
-let animate =
-    (~repeat=false, duration, time) => {
+let animate = (duration, time) => {
   let time = Time.toSeconds(time);
   let duration = Time.toSeconds(duration);
 
@@ -21,7 +20,7 @@ let animate =
 
   if (normalizedTime < 0.) {
     Delayed;
-  } else if (!repeat && normalizedTime > 1.) {
+  } else if (normalizedTime > 1.) {
     Complete(Time.seconds(duration));
   } else {
     Running(mod_float(normalizedTime, 1.));
@@ -38,6 +37,17 @@ let delay = (delay, animate, time) => {
     animate(Time.ofSeconds(time -. delay))
   };
 };
+
+let repeat = (animate, time) =>
+  switch (animate(time)) {
+  | Complete(elapsed) =>
+    let elapsed = Time.toSeconds(elapsed);
+    let time = Time.toSeconds(time);
+    let remainder = elapsed == 0. ? 0. : mod_float(time, elapsed);
+    animate(Time.ofSeconds(remainder))
+
+  | result => result
+  };
 
 let ease = (easing, animate, time) =>
   switch (animate(time)) {
