@@ -2,56 +2,62 @@ open Revery_UI;
 
 open TestFramework;
 
+let valueAt = (t, anim) => Animation.apply(Time.seconds(t), anim) |> fst;
+
+// This is just to avoid having to coerce to float for every test if using normalizedTime
+let floatify = Animation.tween(0., 1.);
+
 describe("Animation", ({test, _}) => {
-  test("simple animation", ({expect, _}) => {
-    let myAnimation =
-      Animation.(
-        animate(Time.seconds(2.)) |> tween(0., 10.)
-      );
+  test("tween", ({expect, _}) => {
+    let anim = Animation.(animate(Time.seconds(1.)) |> tween(100., 110.));
 
-    let (value, _state) = Animation.apply(Time.seconds(1.), myAnimation);
-    expect.float(value).toBeCloseTo(5.);
+    expect.float(valueAt(-2., anim)).toBeCloseTo(100.);
+    expect.float(valueAt(0.25, anim)).toBeCloseTo(102.5);
+    expect.float(valueAt(0.5, anim)).toBeCloseTo(105.);
+    expect.float(valueAt(0.75, anim)).toBeCloseTo(107.5);
+    expect.float(valueAt(2., anim)).toBeCloseTo(110.);
   });
 
-  test("animation with quadratic easing", ({expect, _}) => {
-    let myAnimation =
-      Animation.(
-        animate(Time.seconds(1.)) |> ease(Easing.quadratic)
-      );
+  test("ease", ({expect, _}) => {
+    let anim =
+      Animation.(animate(Time.seconds(1.))
+      |> ease(Easing.quadratic))
+      |> floatify;
 
-    let (value, _state) = Animation.apply(Time.seconds(0.5), myAnimation);
-    expect.float(value :> float).toBeCloseTo(0.25);
+    expect.float(valueAt(-2., anim)).toBeCloseTo(0.);
+    expect.float(valueAt(0.25, anim)).toBeCloseTo(0.0625);
+    expect.float(valueAt(0.5, anim)).toBeCloseTo(0.25);
+    expect.float(valueAt(0.75, anim)).toBeCloseTo(0.5625);
+    expect.float(valueAt(2., anim)).toBeCloseTo(1.);
   });
 
-  test("animation that repeats", ({expect, _}) => {
-    let myAnimation =
-      Animation.(
-        animate(TIme.seconds(2.)) |> tween(0., 10.) |> repeat
-      );
+  test("repeat", ({expect, _}) => {
+    let anim = Animation.(animate(Time.seconds(1.)) |> repeat |> floatify);
 
-  test("animation with delay", ({expect, _}) => {
-    let myAnimation =
-      Animation.(
-        animate(Time.seconds(2.)) |> tween(0., 10.) |> delay(Time.seconds(1.))
-      );
+    expect.float(valueAt(-2., anim)).toBeCloseTo(0.);
+    expect.float(valueAt(0.75, anim)).toBeCloseTo(0.75);
+    expect.float(valueAt(1.5, anim)).toBeCloseTo(0.5);
+    expect.float(valueAt(4.66, anim)).toBeCloseTo(0.66);
+  });
+
+  test("delay", ({expect, _}) => {
+    let anim = Animation.(animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> floatify);
     
-    let (value, _state) = Animation.apply(Time.seconds(2.), myAnimation);
-    expect.float(value).toBeCloseTo(5.);
+    expect.float(valueAt(-2., anim)).toBeCloseTo(0.);
+    expect.float(valueAt(0.75, anim)).toBeCloseTo(0.);
+    expect.float(valueAt(1.5, anim)).toBeCloseTo(0.5);
+    expect.float(valueAt(4.66, anim)).toBeCloseTo(1.);
   });
 
-  test("chained animations", ({expect, _}) => {
-    let first =
-      Animation.(
-        animate(Time.seconds(2.)) |> tween(0., 10.)
-      );
-    let second =
-      Animation.(
-        animate(Time.seconds(2.)) |> tween(10., 0.)
-      );
-    let combined = Animation.andThen(first, ~next=second);
+  test("andThen", ({expect, _}) => {
+    let first = Animation.(animate(Time.seconds(1.)) |> tween(0., 10.));
+    let second = Animation.(animate(Time.seconds(1.)) |> tween(30., 20.));
+    let anim = Animation.andThen(first, ~next=second);
 
-    expect.float(fst(Animation.apply(Time.seconds(1.), combined))).toBeCloseTo(5.);
-    expect.float(fst(Animation.apply(Time.seconds(3.), combined))).toBeCloseTo(5.);
+    expect.float(valueAt(-2., anim)).toBeCloseTo(0.);
+    expect.float(valueAt(0.75, anim)).toBeCloseTo(7.5);
+    expect.float(valueAt(1.5, anim)).toBeCloseTo(25.);
+    expect.float(valueAt(4.66, anim)).toBeCloseTo(20.);
   });
 
   // TODO
