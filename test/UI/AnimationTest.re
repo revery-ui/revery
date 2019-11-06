@@ -36,7 +36,7 @@ describe("Animation", ({describe, test, _}) => {
       Animated.tween(
         Animated.floatValue(0.),
         {
-          duration: Time.Seconds(2.),
+          duration: Time.seconds(2.),
           delay: Time.zero,
           toValue: 10.,
           repeat: false,
@@ -46,7 +46,7 @@ describe("Animation", ({describe, test, _}) => {
       );
     let _playback = Animated.start(myAnimation);
 
-    TestTicker.simulateTick(Time.Seconds(1.));
+    TestTicker.simulateTick(Time.seconds(1.));
     expect.float(myAnimation.value.current).toBeCloseTo(5.);
   });
 
@@ -59,7 +59,7 @@ describe("Animation", ({describe, test, _}) => {
       Animated.tween(
         Animated.floatValue(0.),
         {
-          duration: Time.Seconds(1.),
+          duration: Time.seconds(1.),
           delay: Time.zero,
           toValue: 1.,
           repeat: false,
@@ -69,7 +69,7 @@ describe("Animation", ({describe, test, _}) => {
       );
     let _playback = Animated.start(myAnimation);
 
-    TestTicker.simulateTick(Time.Seconds(0.5));
+    TestTicker.simulateTick(Time.seconds(0.5));
     expect.float(myAnimation.value.current).toBeCloseTo(0.25);
   });
 
@@ -82,7 +82,7 @@ describe("Animation", ({describe, test, _}) => {
       Animated.tween(
         Animated.floatValue(0.),
         {
-          duration: Time.Seconds(2.),
+          duration: Time.seconds(2.),
           delay: Time.zero,
           toValue: 10.,
           repeat: true,
@@ -92,7 +92,7 @@ describe("Animation", ({describe, test, _}) => {
       );
     let _playback = Animated.start(myAnimation);
 
-    TestTicker.simulateTick(Time.Seconds(3.));
+    TestTicker.simulateTick(Time.seconds(3.));
     expect.float(myAnimation.value.current).toBeCloseTo(5.);
   });
 
@@ -105,8 +105,8 @@ describe("Animation", ({describe, test, _}) => {
       Animated.tween(
         Animated.floatValue(0.),
         {
-          duration: Time.Seconds(2.),
-          delay: Time.Seconds(1.),
+          duration: Time.seconds(2.),
+          delay: Time.seconds(1.),
           toValue: 10.,
           repeat: false,
           easing: Easing.linear,
@@ -115,7 +115,7 @@ describe("Animation", ({describe, test, _}) => {
       );
     let _playback = Animated.start(myAnimation);
 
-    TestTicker.simulateTick(Time.Seconds(2.));
+    TestTicker.simulateTick(Time.seconds(2.));
     expect.float(myAnimation.value.current).toBeCloseTo(5.);
   });
 
@@ -128,7 +128,7 @@ describe("Animation", ({describe, test, _}) => {
       Animated.tween(
         Animated.floatValue(0.),
         {
-          duration: Time.Seconds(1.),
+          duration: Time.seconds(1.),
           delay: Time.zero,
           toValue: 10.,
           repeat: false,
@@ -138,7 +138,7 @@ describe("Animation", ({describe, test, _}) => {
       );
     let _playback = Animated.start(myAnimation);
 
-    TestTicker.simulateTick(Time.Seconds(3.));
+    TestTicker.simulateTick(Time.seconds(3.));
 
     expect.bool(Animated.anyActiveAnimations()).toBeFalse();
     expect.int(Animated.getAnimationCount()).toBe(0);
@@ -153,7 +153,7 @@ describe("Animation", ({describe, test, _}) => {
       Animated.tween(
         Animated.floatValue(0.),
         {
-          duration: Time.Seconds(1.),
+          duration: Time.seconds(1.),
           delay: Time.zero,
           toValue: 10.,
           repeat: false,
@@ -163,7 +163,7 @@ describe("Animation", ({describe, test, _}) => {
       );
     let {Animated.stop, _} = Animated.start(myAnimation);
 
-    TestTicker.simulateTick(Time.Seconds(0.1));
+    TestTicker.simulateTick(Time.seconds(0.1));
 
     stop();
 
@@ -181,7 +181,7 @@ describe("Animation", ({describe, test, _}) => {
       Animated.tween(
         Animated.floatValue(0.),
         {
-          duration: Time.Seconds(2.),
+          duration: Time.seconds(2.),
           delay: Time.zero,
           toValue: 10.,
           repeat: false,
@@ -193,7 +193,7 @@ describe("Animation", ({describe, test, _}) => {
       Animated.tween(
         Animated.floatValue(first.toValue),
         {
-          duration: Time.Seconds(2.),
+          duration: Time.seconds(2.),
           delay: Time.zero,
           toValue: 0.,
           repeat: false,
@@ -203,11 +203,11 @@ describe("Animation", ({describe, test, _}) => {
       );
     let _playback = Chain.make(first) |> Chain.add(second) |> Chain.start;
 
-    TestTicker.simulateTick(Time.Seconds(1.));
+    TestTicker.simulateTick(Time.seconds(1.));
     expect.float(first.value.current).toBeCloseTo(5.);
     // Simulate the end of the first, so the second can start
-    TestTicker.simulateTick(Time.Seconds(2.));
-    TestTicker.simulateTick(Time.Seconds(3.));
+    TestTicker.simulateTick(Time.seconds(2.));
+    TestTicker.simulateTick(Time.seconds(3.));
     expect.float(second.value.current).toBeCloseTo(5.);
   });
 
@@ -221,7 +221,7 @@ describe("Animation", ({describe, test, _}) => {
       Animated.tween(
         Animated.floatValue(0.),
         {
-          duration: Time.Seconds(2.),
+          duration: Time.seconds(2.),
           delay: Time.zero,
           toValue: 10.,
           repeat: false,
@@ -233,7 +233,7 @@ describe("Animation", ({describe, test, _}) => {
       Animated.tween(
         Animated.floatValue(first.toValue),
         {
-          duration: Time.Seconds(2.),
+          duration: Time.seconds(2.),
           delay: Time.zero,
           toValue: 0.,
           repeat: false,
@@ -244,7 +244,7 @@ describe("Animation", ({describe, test, _}) => {
     let {Animated.stop, _} =
       Chain.make(first) |> Chain.add(second) |> Chain.start;
 
-    TestTicker.simulateTick(Time.Seconds(0.1));
+    TestTicker.simulateTick(Time.seconds(0.1));
 
     stop();
 
@@ -264,7 +264,7 @@ describe("Animation", ({describe, test, _}) => {
           Animated.tween(
             Animated.floatValue(0.),
             {
-              duration: Time.Seconds(0.5),
+              duration: Time.seconds(0.5),
               delay: Time.zero,
               toValue: 10.,
               repeat: true,
@@ -275,7 +275,7 @@ describe("Animation", ({describe, test, _}) => {
         let _playback = Animated.start(myAnimation);
 
         expect.bool(myAnimation.isReverse).toBe(before);
-        TestTicker.simulateTick(Time.Seconds(1.));
+        TestTicker.simulateTick(Time.seconds(1.));
         expect.bool(myAnimation.isReverse).toBe(after);
       },
     );
@@ -300,7 +300,7 @@ describe("Animation", ({describe, test, _}) => {
       Animated.tween(
         Animated.floatValue(0.),
         {
-          duration: Time.Seconds(0.5),
+          duration: Time.seconds(0.5),
           delay: Time.zero,
           toValue: 10.,
           repeat: true,
@@ -309,7 +309,7 @@ describe("Animation", ({describe, test, _}) => {
         },
       );
     let _playback = Animated.start(myAnimation);
-    TestTicker.simulateTick(Time.Seconds(1.));
+    TestTicker.simulateTick(Time.seconds(1.));
     _playback.stop();
 
     expect.float(myAnimation.value.current).toBeCloseTo(0.);
