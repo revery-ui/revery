@@ -226,7 +226,5 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       List.filter(a => !isComplete(t, a), activeAnimations^);
   };
 
-  Event.subscribe(AnimationTickerImpl.onTick, t =>
-    tick(Time.toSeconds(t))
-  );
+  Event.subscribe(AnimationTickerImpl.onTick, t => tick(Time.toSeconds(t)));
 };

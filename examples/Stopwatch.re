@@ -27,8 +27,7 @@ module Clock = {
       ret;
     | TimerTick(t) => {
         ...s,
-        elapsedTime:
-          s.isRunning ? Time.(s.elapsedTime + t) : s.elapsedTime,
+        elapsedTime: s.isRunning ? Time.(s.elapsedTime + t) : s.elapsedTime,
       }
     };
 
@@ -101,9 +100,7 @@ module Clock = {
                 marginVertical(20),
                 width(200),
               ]
-              text={string_of_float(
-                state.elapsedTime |> Time.toSeconds,
-              )}
+              text={string_of_float(state.elapsedTime |> Time.toSeconds)}
             />
             <Opacity opacity=marcherOpacity>
               <View

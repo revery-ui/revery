@@ -85,11 +85,7 @@ module Make = (ClockImpl: Clock) => {
         ignore(tf.f(elapsedTime));
         switch (tf.tickType) {
         | Timeout => None
-        | Interval =>
-          Some({
-            ...tf,
-            lastExecutionTime: currentTime,
-          })
+        | Interval => Some({...tf, lastExecutionTime: currentTime})
         };
       } else {
         Some(tf);
