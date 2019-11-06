@@ -46,7 +46,7 @@ let%component make =
 
   let actualScrollTop =
     switch ((bouncingState, outerRef)) {
-    | (Bouncing({direction, newScrollTop, startTime}), Some(outer)) =>
+    | (Bouncing({newScrollTop, startTime, _}), Some(outer)) =>
       let inner = outer#firstChild();
       let childMeasurements = inner#measurements();
       let outerMeasurements = outer#measurements();
@@ -71,7 +71,7 @@ let%component make =
       let bounceAnim = bounceAwayAnim |> Animation.andThen(~next=bounceBackAnim);
       switch (bounceAnim |> Animation.apply(Time.(time - startTime))) {
       | (_, Delayed) => actualScrollTop
-      | (_, Running(value)) => int_of_float(value)
+      | (_, Running(value)) => int_of_float(value :> float)
       | (_, Complete(_)) =>
         setBouncingState(_ => Idle)
         actualScrollTop
@@ -172,9 +172,9 @@ let%component make =
         let isAtBottom = newScrollTop > maxHeight;
 
         switch (bouncingState) {
-        | Bouncing({ direction: Top }) when wheelEvent.deltaY < 0. =>
+        | Bouncing({ direction: Top, _ }) when wheelEvent.deltaY < 0. =>
           setBouncingState(_ => Idle);
-        | Bouncing({ direction: Bottom }) when wheelEvent.deltaY > 0. =>
+        | Bouncing({ direction: Bottom, _ }) when wheelEvent.deltaY > 0. =>
           setBouncingState(_ => Idle);
         | Bouncing(_) => ()
         | Idle when !bounce && (isAtTop || isAtBottom) =>
