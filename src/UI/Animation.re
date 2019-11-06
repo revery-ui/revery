@@ -10,6 +10,10 @@ and state =
   | Running(normalizedTime)
   | Complete(Time.t); // Elapsed time
 
+
+let const = (constant, _time) =>
+  (constant, Complete(Time.Seconds(0.)));
+
 /**
  * `time` is assumed to start at 0
  */

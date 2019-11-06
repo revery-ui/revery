@@ -12,6 +12,7 @@ type state =
   | Running(normalizedTime)
   | Complete(Time.t); // Elapsed time
 
+let const: 'a => t('a);
 let animate: Time.t => t(normalizedTime);
 let delay: (Time.t, t('a)) => t('a);
 let repeat: t('a) => t('a);
