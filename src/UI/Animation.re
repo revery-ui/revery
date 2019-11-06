@@ -3,12 +3,12 @@ open Revery_Math;
 
 type t('a) = Time.t => ('a, state)
 
+and normalizedTime = float // Elapsed time in the interval [0., 1.]
+
 and state =
   | Delayed
-  | Running(float) // Elapsed time, normalized, i.e. in the range [0., 1.]
+  | Running(normalizedTime)
   | Complete(Time.t); // Elapsed time
-
-type normalizedTime = float;
 
 /**
  * `time` is assumed to start at 0
@@ -66,6 +66,30 @@ let andThen = (current, ~next, time) =>
   switch (current(time)) {
   | (_, Complete(elapsed)) => next(Time.ofSeconds(Time.toSeconds(time) -. Time.toSeconds(elapsed)))
   | result => result
+  };
+
+let zip = ((a, b), time) =>
+  switch (a(time), b(time)) {
+  | ((aValue, Delayed), (bValue, Delayed)) =>
+    ((aValue, bValue), Delayed)
+
+  | ((aValue, Running(aElapsed)), (bValue, Running(bElapsed))) =>
+    ((aValue, bValue), Running((aElapsed +. bElapsed) /. 2.))
+
+  | ((aValue, Complete(aElapsed)), (bValue, Complete(bElapsed))) =>
+    ((aValue, bValue), Complete(Time.ofSeconds(Float.max(Time.toSeconds(aElapsed), Time.toSeconds(bElapsed)))))
+
+  | ((aValue, Complete(_)), (bValue, Running(elapsed)))
+  | ((aValue, Running(elapsed)), (bValue, Complete(_))) =>
+    ((aValue, bValue), Running((1. +. elapsed) /. 2.))
+
+  | ((aValue, Delayed), (bValue, Running(elapsed)))
+  | ((aValue, Running(elapsed)), (bValue, Delayed)) =>
+    ((aValue, bValue), Running(elapsed /. 2.))
+
+  | ((aValue, Delayed), (bValue, Complete(_)))
+  | ((aValue, Complete(_)), (bValue, Delayed)) =>
+    ((aValue, bValue), Running(0.5))
   };
 
 let apply = (time, animate) =>
