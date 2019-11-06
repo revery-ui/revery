@@ -8,6 +8,10 @@ let ofSeconds = t => t;
 let toSeconds = seconds;
 
 let increment = (+.)
+let (+) = (+.)
+let (-) = (-.)
+let (*) = (*.)
+let (/) = (/.)
 
 let show = t => string_of_float(t) ++ "s";
 

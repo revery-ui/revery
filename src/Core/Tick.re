@@ -75,22 +75,20 @@ module Make = (ClockImpl: Clock) => {
       );
     _cancelledTickers := IntMap.empty;
 
-    let currentTime = Time.toSeconds(ClockImpl.time());
+    let currentTime = ClockImpl.time();
 
     let f = (tf: tickFunction) => {
-      let lastTime = Time.toSeconds(tf.lastExecutionTime);
-      let frequency = Time.toSeconds(tf.frequency);
-      let nextTime = lastTime +. frequency;
+      let nextTime = Time.(tf.lastExecutionTime + tf.frequency);
 
       if (nextTime <= currentTime) {
-        let elapsedTime = Time.ofSeconds(currentTime -. lastTime);
+        let elapsedTime = Time.(currentTime - tf.lastExecutionTime);
         ignore(tf.f(elapsedTime));
         switch (tf.tickType) {
         | Timeout => None
         | Interval =>
           Some({
             ...tf,
-            lastExecutionTime: Time.ofSeconds(currentTime),
+            lastExecutionTime: currentTime,
           })
         };
       } else {

@@ -99,7 +99,7 @@ let reducer = (action, state) =>
   | CursorTimer => {
       ...state,
       cursorTimer:
-        Time.toSeconds(state.cursorTimer) >= 1.
+        Time.(state.cursorTimer >= seconds(1.))
           ? Time.seconds(0.0)
           : Time.increment(state.cursorTimer, Time.seconds(0.1)),
     }

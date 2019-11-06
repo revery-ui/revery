@@ -15,6 +15,11 @@ let ofSeconds: float => t;
 let toSeconds: t => float;
 
 let increment: (t, t) => t;
+let (+): (t, t) => t;
+let (-): (t, t) => t;
+let (*): (t, float) => t;
+let (/): (t, float) => t;
+
 let show: t => string;
 
 /**

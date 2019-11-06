@@ -1,5 +1,4 @@
 open Revery;
-open Revery.Time;
 open Revery.Math;
 open Revery.UI;
 open Revery.UI.Components;
@@ -29,7 +28,7 @@ module Clock = {
     | TimerTick(t) => {
         ...s,
         elapsedTime:
-          s.isRunning ? Time.increment(s.elapsedTime, t) : s.elapsedTime,
+          s.isRunning ? Time.(s.elapsedTime + t) : s.elapsedTime,
       }
     };
 

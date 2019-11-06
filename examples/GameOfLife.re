@@ -1,5 +1,4 @@
 open Revery;
-open Revery.Time;
 open Revery.UI;
 open Revery.UI.Components;
 
