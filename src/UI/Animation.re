@@ -83,7 +83,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   let options =
       (
         ~duration=Time.seconds(1.0),
-        ~delay=Time.seconds(0.0),
+        ~delay=Time.zero,
         ~repeat=false,
         ~easing=Easing.linear,
         ~direction=`Normal,

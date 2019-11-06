@@ -107,7 +107,7 @@ let reducer = (action, state) =>
   | UpdateText({newString, _}) =>
     state.isFocused
       ? {...state, isFocused: true, internalValue: newString} : state
-  | ResetCursorTimer => {...state, cursorTimer: Time.seconds(0.0)}
+  | ResetCursorTimer => {...state, cursorTimer: Time.zero}
   };
 
 let defaultHeight = 50;
@@ -154,7 +154,7 @@ let make =
             | Some(v) => String.length(v)
             | None => 0
             },
-          cursorTimer: Time.seconds(0.0),
+          cursorTimer: Time.zero,
           isFocused: false,
         },
         reducer,

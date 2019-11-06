@@ -53,12 +53,12 @@ module Transition = {
   };
 
   let transition =
-      (toValue, ~delay=Time.seconds(0.0), ~duration=Time.seconds(1.), slots) => {
+      (toValue, ~delay=Time.zero, ~duration=Time.seconds(1.), slots) => {
     let repeat = false;
     let ({value, _}, pauseAnim, _restartAnim, setAnim, slots) =
       animation'(
         floatValue(toValue),
-        options(~toValue, ~duration, ~delay=Time.seconds(0.0), ~repeat, ()),
+        options(~toValue, ~duration, ~delay=Time.zero, ~repeat, ()),
         slots,
       );
     let setAnim = (~immediate=false, toValue) => {
