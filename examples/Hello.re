@@ -4,25 +4,19 @@ open Revery.UI;
 open Revery.UI.Components;
 
 module Logo = {
+  let rotationAnimation =
+    Animation.(
+      zip((
+        animate(Time.seconds(9.)) |> tween(0., 6.28) |> repeat |> delay(Time.seconds(1.)),
+        animate(Time.seconds(4.)) |> tween(0., 6.28) |> repeat |> delay(Time.seconds(0.5)),
+      ))
+    );
+
   let%component make = () => {
     let%hook (transitionedOpacity, transitionOpacityTo) = Hooks.transition(1.);
-    let%hook (isTimerActive, setTimerActive) = Hooks.state(true);
-    let%hook (time, resetTimer) = Hooks.timer(~active=isTimerActive, ());
-
-    let ((rotationX, rotationY), _) =
-      Animation.(
-        zip((
-          animate(Time.seconds(9.))
-          |> tween(0., 6.28)
-          |> repeat
-          |> delay(Time.seconds(1.)),
-          animate(Time.seconds(4.))
-          |> tween(0., 6.28)
-          |> repeat
-          |> delay(Time.seconds(0.5)),
-        ))
-        |> apply(time)
-      );
+    let%hook (shouldRotate, setShouldRotate) = Hooks.state(true);
+    let%hook ((rotationX, rotationY), _animationState, resetRotation) =
+      Hooks.animation(rotationAnimation, ~active=shouldRotate);
 
     <View>
       <Opacity opacity=transitionedOpacity>
@@ -40,14 +34,14 @@ module Logo = {
         <Row>
           <Button
             width=200
-            onClick={() => setTimerActive(_ => !isTimerActive)}
-            title={isTimerActive ? "Pause" : "Resume"}
+            onClick={() => setShouldRotate((!))}
+            title={shouldRotate ? "Pause" : "Resume"}
           />
           <Button
             width=200
             onClick={() => {
-              setTimerActive(_ => true);
-              resetTimer();
+              setShouldRotate(_ => true);
+              resetRotation();
             }}
             title="Restart"
           />
@@ -71,14 +65,14 @@ module Logo = {
 
 module AnimatedText = {
   let%component make = (~text: string, ~delay: float, ()) => {
-    let%hook (animatedOpacity, _) =
+    let%hook (animatedOpacity, _state, _reset) =
       Hooks.animation(Animation.(
         animate(Time.seconds(1.))
         |> delay(Time.seconds(1.))
         |> ease(Easing.easeOut)
         |> tween(0., 1.)
       ));
-    let%hook (translate, _) =
+    let%hook (translate, _state, _reset) =
       Hooks.animation(
         Animation.animate(Time.seconds(0.5))
         |> Animation.delay(Time.seconds(delay))

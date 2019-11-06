@@ -70,13 +70,13 @@ let timer = (~tickRate=Time.zero, ~active=true, ()) => {
   (Time.(time - startTime), reset);
 };
 
-let animation = animation => {
-  let%hook (time, _reset) = timer();
+let animation = (~active=?, animation) => {
+  let%hook (time, resetTimer) = timer(~active?, ());
 
   let (value, animationState) =
     Animation.apply(time, animation);
 
-  (value, animationState);
+  (value, animationState, resetTimer);
 };
 
 let transition = (~duration=Time.seconds(1.), ~delay=Time.zero, startValue) => {
