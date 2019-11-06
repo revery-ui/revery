@@ -2,12 +2,15 @@ open Revery_Core;
 
 type t('a);
 
+/**
+ * Normalized time in the interval [0., 1.]
+ */
+type normalizedTime = pri float;
+
 type state =
   | Delayed
-  | Running(float) // Elapsed time, normalized, i.e. in the range [0., 1.]
+  | Running(normalizedTime)
   | Complete(Time.t); // Elapsed time
-
-type normalizedTime = pri float;
 
 let animate: Time.t => t(normalizedTime);
 let delay: (Time.t, t('a)) => t('a);

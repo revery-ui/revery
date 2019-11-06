@@ -3,7 +3,7 @@ open Revery_Math;
 
 type t('a) = Time.t => ('a, state)
 
-and normalizedTime = float // Elapsed time in the interval [0., 1.]
+and normalizedTime = float
 
 and state =
   | Delayed
