@@ -22,6 +22,6 @@ let (/): (t, float) => t;
 let show: t => string;
 
 /**
-    [getTime()] returns the current system time [t]
+    [now()] returns the current system time [t]
 */
-let getTime: unit => t;
+let now: unit => t;

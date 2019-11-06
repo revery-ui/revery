@@ -24,7 +24,7 @@ module Transition = {
     let completer = () => Tick.interval(_t => dispatch(), Time.zero);
 
     let restart = () => {
-      animation.startTime = Time.toSeconds(getTime());
+      animation.startTime = Time.toSeconds(Time.now());
       animation.value.current = animation.startValue;
       let newActiveAnim = {
         animation,

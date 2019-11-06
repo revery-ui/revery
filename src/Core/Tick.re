@@ -1,7 +1,7 @@
 module type Clock = {let time: unit => Time.t;};
 
 module DefaultClock = {
-  let time = () => Time.getTime();
+  let time = () => Time.now();
 };
 
 type callback = Time.t => unit;
