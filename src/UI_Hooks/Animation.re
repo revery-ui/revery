@@ -21,7 +21,7 @@ module Transition = {
     let (animation, setAnim, slots) = Ref.ref(tween(v, opts), slots);
     let (_, dispatch, slots) =
       Reducer.reducer(~initialState=0, reducer, slots);
-    let completer = () => Tick.interval(_t => dispatch(), Time.seconds(0.));
+    let completer = () => Tick.interval(_t => dispatch(), Time.zero);
 
     let restart = () => {
       animation.startTime = Time.toSeconds(getTime());

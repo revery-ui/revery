@@ -4,7 +4,7 @@ open Revery_Core;
 open TestFramework;
 
 module MakeTicker = (()) => {
-  let _currentTime: ref(Time.t) = ref(Time.Seconds(0.));
+  let _currentTime: ref(Time.t) = ref(Time.zero);
 
   let time = () => _currentTime^;
 
@@ -37,7 +37,7 @@ describe("Animation", ({describe, test, _}) => {
         Animated.floatValue(0.),
         {
           duration: Time.Seconds(2.),
-          delay: Time.Seconds(0.),
+          delay: Time.zero,
           toValue: 10.,
           repeat: false,
           easing: Easing.linear,
@@ -60,7 +60,7 @@ describe("Animation", ({describe, test, _}) => {
         Animated.floatValue(0.),
         {
           duration: Time.Seconds(1.),
-          delay: Time.Seconds(0.),
+          delay: Time.zero,
           toValue: 1.,
           repeat: false,
           easing: Easing.quadratic,
@@ -83,7 +83,7 @@ describe("Animation", ({describe, test, _}) => {
         Animated.floatValue(0.),
         {
           duration: Time.Seconds(2.),
-          delay: Time.Seconds(0.),
+          delay: Time.zero,
           toValue: 10.,
           repeat: true,
           easing: Easing.linear,
@@ -129,7 +129,7 @@ describe("Animation", ({describe, test, _}) => {
         Animated.floatValue(0.),
         {
           duration: Time.Seconds(1.),
-          delay: Time.Seconds(0.),
+          delay: Time.zero,
           toValue: 10.,
           repeat: false,
           easing: Easing.linear,
@@ -154,7 +154,7 @@ describe("Animation", ({describe, test, _}) => {
         Animated.floatValue(0.),
         {
           duration: Time.Seconds(1.),
-          delay: Time.Seconds(0.),
+          delay: Time.zero,
           toValue: 10.,
           repeat: false,
           easing: Easing.linear,
@@ -182,7 +182,7 @@ describe("Animation", ({describe, test, _}) => {
         Animated.floatValue(0.),
         {
           duration: Time.Seconds(2.),
-          delay: Time.Seconds(0.),
+          delay: Time.zero,
           toValue: 10.,
           repeat: false,
           easing: Easing.linear,
@@ -194,7 +194,7 @@ describe("Animation", ({describe, test, _}) => {
         Animated.floatValue(first.toValue),
         {
           duration: Time.Seconds(2.),
-          delay: Time.Seconds(0.),
+          delay: Time.zero,
           toValue: 0.,
           repeat: false,
           easing: Easing.linear,
@@ -222,7 +222,7 @@ describe("Animation", ({describe, test, _}) => {
         Animated.floatValue(0.),
         {
           duration: Time.Seconds(2.),
-          delay: Time.Seconds(0.),
+          delay: Time.zero,
           toValue: 10.,
           repeat: false,
           easing: Easing.linear,
@@ -234,7 +234,7 @@ describe("Animation", ({describe, test, _}) => {
         Animated.floatValue(first.toValue),
         {
           duration: Time.Seconds(2.),
-          delay: Time.Seconds(0.),
+          delay: Time.zero,
           toValue: 0.,
           repeat: false,
           easing: Easing.linear,
@@ -265,7 +265,7 @@ describe("Animation", ({describe, test, _}) => {
             Animated.floatValue(0.),
             {
               duration: Time.Seconds(0.5),
-              delay: Time.Seconds(0.),
+              delay: Time.zero,
               toValue: 10.,
               repeat: true,
               easing: Easing.linear,
@@ -301,7 +301,7 @@ describe("Animation", ({describe, test, _}) => {
         Animated.floatValue(0.),
         {
           duration: Time.Seconds(0.5),
-          delay: Time.Seconds(0.),
+          delay: Time.zero,
           toValue: 10.,
           repeat: true,
           easing: Easing.linear,

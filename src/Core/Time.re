@@ -1,5 +1,6 @@
 type t = float
 
+let zero = 0.
 let seconds = t => t;
 let milliseconds = t => t /. 1000.;
 

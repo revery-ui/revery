@@ -21,10 +21,10 @@ module Clock = {
 
   let reducer = (a, s) =>
     switch (a) {
-    | Start(f) => {dispose: f, isRunning: true, elapsedTime: Time.seconds(0.)}
+    | Start(f) => {dispose: f, isRunning: true, elapsedTime: Time.zero}
     | Stop =>
       s.dispose();
-      let ret = {dispose: noop, isRunning: false, elapsedTime: Time.seconds(0.)};
+      let ret = {dispose: noop, isRunning: false, elapsedTime: Time.zero};
       ret;
     | TimerTick(t) => {
         ...s,
@@ -42,7 +42,7 @@ module Clock = {
           ~initialState={
             isRunning: false,
             dispose: noop,
-            elapsedTime: Time.seconds(0.),
+            elapsedTime: Time.zero,
           },
           reducer,
           hooks,
@@ -64,7 +64,7 @@ module Clock = {
            */
           : {
             let dispose =
-              Tick.interval(t => dispatch(TimerTick(t)), Time.seconds(0.));
+              Tick.interval(t => dispatch(TimerTick(t)), Time.zero);
 
             /* We'll also keep a handle on the dispose function so we can make sure its called on stop*/
             dispatch(Start(dispose));
