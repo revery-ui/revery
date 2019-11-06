@@ -51,15 +51,16 @@ let repeat = (animate, time) =>
   | result => result
   };
 
-let ease = (easing, animate, time) =>
+let map = (f, animate, time) =>
   switch (animate(time)) {
-  | (t, state) => (easing(t), state)
+  | (t, state) => (f(t), state)
   };
 
-let tween = (start, finish, animate, time) =>
-  switch (animate(time)) {
-  | (t, state) => (interpolate(start, finish, t), state)
-  };
+let ease = (easing, animate) =>
+  map(easing, animate);
+
+let tween = (start, finish, animate) =>
+  map(interpolate(start, finish), animate);
 
 let andThen = (current, ~next, time) =>
   switch (current(time)) {
