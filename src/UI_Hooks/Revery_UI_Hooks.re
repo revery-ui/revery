@@ -70,11 +70,11 @@ let timer = (~tickRate=Time.zero, ~active=true, ()) => {
   (Time.(time - startTime), reset);
 };
 
-let animation = animate => {
+let animation = animation => {
   let%hook (time, _reset) = timer();
 
   let (value, animationState) =
-    animate(time);
+    Animation.apply(time, animation);
 
   (value, animationState);
 };
@@ -88,7 +88,7 @@ let transition = (~duration=Time.seconds(1.), ~delay=Time.zero, startValue) => {
     Animation.animate(duration)
     |> Animation.delay(delay)
     |> Animation.tween(startValue, targetValue)
-    |> (animate => animate(time))
+    |> Animation.apply(time);
 
   let setTargetValue = newTarget => {
     resetTimer();

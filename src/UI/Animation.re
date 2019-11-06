@@ -64,3 +64,6 @@ let tween = (start, finish, animate, time) =>
   switch (animate(time)) {
   | (t, state) => (interpolate(start, finish, t), state)
   };
+
+let apply = (time, animate) =>
+  animate(time);

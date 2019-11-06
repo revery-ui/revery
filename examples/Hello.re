@@ -15,7 +15,7 @@ module Logo = {
         |> repeat
         |> delay(Time.seconds(1.))
         |> tween(0., 6.28)
-        |> animate => animate(time)
+        |> apply(time)
       );
     let (rotationY, _) =
       Animation.(
@@ -23,7 +23,7 @@ module Logo = {
         |> repeat
         |> delay(Time.seconds(0.5))
         |> tween(0., 6.28)
-        |> animate => animate(time)
+        |> apply(time)
       );
 
     <View>
