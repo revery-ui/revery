@@ -15,6 +15,7 @@ type state =
 let animate: Time.t => t(normalizedTime);
 let delay: (Time.t, t('a)) => t('a);
 let repeat: t('a) => t('a);
+let alternatingRepeat: t('a) => t('a);
 let ease: (Easing.t, t(normalizedTime)) => t(normalizedTime);
 let tween: (float, float, t(normalizedTime)) => t(float);
 let map: ('a => 'b, t('a)) => t('b);

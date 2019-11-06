@@ -51,6 +51,20 @@ let repeat = (animate, time) =>
   | result => result
   };
 
+let alternatingRepeat = (animate, time) =>
+  switch (animate(time)) {
+  | (_, Complete(elapsed)) =>
+    let elapsed = Time.toSeconds(elapsed);
+    let time = Time.toSeconds(time);
+    let iteration = int_of_float(floor(time));
+    let shouldReverse = iteration mod 2 != 0; // if not divisble by 2
+    let remainder = elapsed == 0. ? 0. : mod_float(time, elapsed);
+    let t = shouldReverse ? elapsed -. remainder : remainder;
+    animate(Time.ofSeconds(t))
+
+  | result => result
+  };
+
 let map = (f, animate, time) =>
   switch (animate(time)) {
   | (t, state) => (f(t), state)

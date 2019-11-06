@@ -20,9 +20,7 @@ describe("Animation", ({test, _}) => {
 
   test("ease", ({expect, _}) => {
     let anim =
-      Animation.(animate(Time.seconds(1.))
-      |> ease(Easing.quadratic))
-      |> floatify;
+      Animation.(animate(Time.seconds(1.)) |> ease(Easing.quadratic)) |> floatify;
 
     expect.float(valueAt(-2., anim)).toBeCloseTo(0.);
     expect.float(valueAt(0.25, anim)).toBeCloseTo(0.0625);
@@ -36,13 +34,26 @@ describe("Animation", ({test, _}) => {
 
     expect.float(valueAt(-2., anim)).toBeCloseTo(0.);
     expect.float(valueAt(0.75, anim)).toBeCloseTo(0.75);
-    expect.float(valueAt(1.5, anim)).toBeCloseTo(0.5);
+    expect.float(valueAt(1.75, anim)).toBeCloseTo(0.75);
+    expect.float(valueAt(3.66, anim)).toBeCloseTo(0.66);
+    expect.float(valueAt(4.66, anim)).toBeCloseTo(0.66);
+  });
+
+  test("alternatingRepeat", ({expect, _}) => {
+    let anim =
+      Animation.(animate(Time.seconds(1.)) |> alternatingRepeat |> floatify);
+
+    expect.float(valueAt(-2., anim)).toBeCloseTo(0.);
+    expect.float(valueAt(0.75, anim)).toBeCloseTo(0.75);
+    expect.float(valueAt(1.75, anim)).toBeCloseTo(0.25);
+    expect.float(valueAt(3.66, anim)).toBeCloseTo(0.34);
     expect.float(valueAt(4.66, anim)).toBeCloseTo(0.66);
   });
 
   test("delay", ({expect, _}) => {
-    let anim = Animation.(animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> floatify);
-    
+    let anim =
+      Animation.(animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> floatify);
+
     expect.float(valueAt(-2., anim)).toBeCloseTo(0.);
     expect.float(valueAt(0.75, anim)).toBeCloseTo(0.);
     expect.float(valueAt(1.5, anim)).toBeCloseTo(0.5);
@@ -59,15 +70,4 @@ describe("Animation", ({test, _}) => {
     expect.float(valueAt(1.5, anim)).toBeCloseTo(25.);
     expect.float(valueAt(4.66, anim)).toBeCloseTo(20.);
   });
-
-  // TODO
-  /* test("alternating animation", ({expect, _}) => {
-    let myAnimation =
-      Animation.(
-        animate(Time.seconds(2.) |> tween(0., 10.) |> alternatingRepeat
-      );
-    
-    let (value, _state) = Animation.apply(Time.seconds(2.5), myAnimation);
-    expect.float(value).toBeCloseTo(7.5);
-  }); */
 });
