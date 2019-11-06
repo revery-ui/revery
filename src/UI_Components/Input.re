@@ -99,9 +99,10 @@ let reducer = (action, state) =>
   | CursorTimer => {
       ...state,
       cursorTimer:
-        Time.(state.cursorTimer >= seconds(1.))
-          ? Time.seconds(0.0)
-          : Time.increment(state.cursorTimer, Time.seconds(0.1)),
+        Time.(
+          state.cursorTimer >= seconds(1.)
+            ? zero : state.cursorTimer + milliseconds(100.)
+        ),
     }
   | UpdateText({newString, _}) =>
     state.isFocused

@@ -7,7 +7,6 @@ let milliseconds = t => t /. 1000.;
 let ofSeconds = t => t;
 let toSeconds = seconds;
 
-let increment = (+.)
 let (+) = (+.)
 let (-) = (-.)
 let (*) = (*.)
