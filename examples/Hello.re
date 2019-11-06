@@ -10,13 +10,19 @@ module Logo = {
     let%hook (time, resetTimer) = Hooks.timer(~active=isTimerActive, ());
 
     let rotationX =
-      Animation.animate(~delay=Time.seconds(1.), Time.seconds(9.), ~repeat=true)
-      |> Animation.tween'(0., 6.28)
-      |> animate => animate(time);
+      Animation.(
+        animate(Time.seconds(9.), ~repeat=true)
+        |> delay(Time.seconds(1.))
+        |> tween'(0., 6.28)
+        |> animate => animate(time)
+      );
     let rotationY =
-      Animation.animate(~delay=Time.seconds(0.5), Time.seconds(4.), ~repeat=true)
-      |> Animation.tween'(0., 6.28)
-      |> animate => animate(time);
+      Animation.(
+        animate(Time.seconds(4.), ~repeat=true)
+        |> delay(Time.seconds(0.5))
+        |> tween'(0., 6.28)
+        |> animate => animate(time)
+      );
 
     <View>
       <Opacity opacity=transitionedOpacity>
@@ -67,16 +73,18 @@ module AnimatedText = {
   let%component make = (~text: string, ~delay: float, ()) => {
     let%hook (animatedOpacity) =
       Hooks.animation(Animation.(
-        animate(Time.seconds(1.), ~delay=Time.seconds(delay))
+        animate(Time.seconds(1.))
+        |> delay(Time.seconds(1.))
         |> ease(Easing.easeOut)
         |> tween'(0., 1.)
       ));
     let%hook (translate) =
-      Hooks.animation(Animation.(
-        animate(Time.seconds(0.5), ~delay=Time.seconds(delay))
-        |> ease(Easing.easeOut)
-        |> tween'(50., 0.)
-      ));
+      Hooks.animation(
+        Animation.animate(Time.seconds(0.5))
+        |> Animation.delay(Time.seconds(delay))
+        |> Animation.ease(Easing.easeOut)
+        |> Animation.tween'(50., 0.)
+      );
 
     let textHeaderStyle =
       Style.[

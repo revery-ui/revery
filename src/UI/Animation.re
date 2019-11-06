@@ -8,21 +8,16 @@ type result =
   | Running(float) // Returns a value in the interval [0., 1.]
   | Complete(Time.t); // Returns elapsed time
 
-let getLocalTime = (delay, duration, startTime, time) => {};
-
 /**
  * `time` is assumed to start at 0
  */
 let animate =
-    (~delay=Time.zero, ~repeat=false, duration, time) => {
+    (~repeat=false, duration, time) => {
   let time = Time.toSeconds(time);
-  let delay = Time.toSeconds(delay);
   let duration = Time.toSeconds(duration);
 
-  let normalizedTime = {
-    let endTime = delay +. duration;
-    (time -. delay) /. (endTime -. delay);
-  };
+  let normalizedTime =
+    time /. duration;
 
   if (normalizedTime < 0.) {
     Delayed;
@@ -30,6 +25,17 @@ let animate =
     Complete(Time.seconds(duration));
   } else {
     Running(mod_float(normalizedTime, 1.));
+  };
+};
+
+let delay = (delay, animate, time) => {
+  let delay = Time.toSeconds(delay) ;
+  let time = Time.toSeconds(time);
+
+  if (delay > time) {
+    Delayed
+  } else {
+    animate(Time.ofSeconds(time -. delay))
   };
 };
 

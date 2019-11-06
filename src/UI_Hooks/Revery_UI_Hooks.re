@@ -82,11 +82,10 @@ let transition = (~duration=Time.seconds(1.), ~delay=Time.zero, startValue) => {
     state((startValue, startValue));
 
   let value =
-    Animation.(
-      animate(duration, ~delay)
-      |> tween'(startValue, targetValue)
-      |> (animate => animate(time))
-    );
+    Animation.animate(duration)
+    |> Animation.delay(delay)
+    |> Animation.tween'(startValue, targetValue)
+    |> (animate => animate(time))
 
   let setTargetValue = newTarget => {
     resetTimer();
