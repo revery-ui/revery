@@ -12,7 +12,7 @@ and state =
 
 
 let const = (constant, _time) =>
-  (constant, Complete(Time.Seconds(0.)));
+  (constant, Complete(Time.zero));
 
 /**
  * `time` is assumed to start at 0

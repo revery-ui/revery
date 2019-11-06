@@ -5,11 +5,8 @@ open Revery_UI_Primitives;
 
 module Hooks = Revery_UI_Hooks;
 
-type direction =
-  | Top
-  | Bottom;
 type bouncingState =
-  | Bouncing({ direction, newScrollTop: int, startTime: Time.t })
+  | Bouncing(int)
   | Idle;
 
 let empty = React.empty;
@@ -27,6 +24,23 @@ let reducer = (action, _state) => {
   };
 };
 
+let bounceAnimation = (~origin, ~force) =>
+  Animation.(
+    {
+      let bounceAway =
+        animate(Time.milliseconds(100.))
+        |> ease(Easing.cubicBezier(0.23, 1., 0.32, 1.))
+        |> tween(float(origin), float(origin + force));
+
+      let bounceBack =
+        Animation.animate(Time.milliseconds(800.))
+        |> ease(Easing.cubicBezier(0.23, 1., 0.32, 1.))
+        |> tween(float(origin + force), float(origin));
+
+      bounceAway |> andThen(~next=bounceBack) |> map(int_of_float);
+    }
+  );
+
 let%component make =
               (
                 ~style,
@@ -42,44 +56,20 @@ let%component make =
     Hooks.state(None);
   let%hook (actualScrollLeft, setScrollLeft) = Hooks.state(scrollLeft);
   let%hook (bouncingState, setBouncingState) = Hooks.state(Idle);
-  let%hook time = Hooks.time();
 
-  let actualScrollTop =
-    switch ((bouncingState, outerRef)) {
-    | (Bouncing({newScrollTop, startTime, _}), Some(outer)) =>
-      let inner = outer#firstChild();
-      let childMeasurements = inner#measurements();
-      let outerMeasurements = outer#measurements();
-
-      let maxHeight =
-        max(0, childMeasurements.height - outerMeasurements.height);
-
-      let bounceAwayAnim =
-        Animation.animate(Time.milliseconds(100.))
-        |> Animation.ease(Easing.cubicBezier(0.23, 1., 0.32, 1.))
-        |> Animation.tween(
-            float_of_int(actualScrollTop),
-            float_of_int(newScrollTop),
-          );
-      let bounceBackAnim =
-        Animation.animate(Time.milliseconds(800.))
-        |> Animation.ease(Easing.cubicBezier(0.23, 1., 0.32, 1.))
-        |> Animation.tween(
-            float_of_int(newScrollTop),
-            newScrollTop < 0 ? 0. : float_of_int(maxHeight),
-          );
-      let bounceAnim = bounceAwayAnim |> Animation.andThen(~next=bounceBackAnim);
-      switch (bounceAnim |> Animation.apply(Time.(time - startTime))) {
-      | (_, Delayed) => actualScrollTop
-      | (_, Running(value)) => int_of_float(value :> float)
-      | (_, Complete(_)) =>
-        setBouncingState(_ => Idle)
-        actualScrollTop
-      };
-
-    | _ =>
-      actualScrollTop
+  let bounceAnimation =
+    switch (bouncingState) {
+    | Idle => Animation.const(actualScrollTop)
+    | Bouncing(force) => bounceAnimation(~origin=actualScrollTop, ~force)
     };
+
+  let%hook (actualScrollTop, bounceAnimationState, resetBouncing) =
+    Hooks.animation(bounceAnimation, ~active=bouncingState != Idle);
+
+  switch (bounceAnimationState) {
+  | Complete(_) => setBouncingState(_ => Idle)
+  | _ => ()
+  };
 
   let scrollBarThickness = 10;
 
@@ -165,24 +155,25 @@ let%component make =
           : empty;
 
       let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
-        let newScrollTop =
-          actualScrollTop - int_of_float(wheelEvent.deltaY *. 25.);
+        let delta = int_of_float(wheelEvent.deltaY *. 25.);
+        let newScrollTop = actualScrollTop - delta;
 
         let isAtTop = newScrollTop < 0;
         let isAtBottom = newScrollTop > maxHeight;
 
         switch (bouncingState) {
-        | Bouncing({ direction: Top, _ }) when wheelEvent.deltaY < 0. =>
-          setBouncingState(_ => Idle);
-        | Bouncing({ direction: Bottom, _ }) when wheelEvent.deltaY > 0. =>
-          setBouncingState(_ => Idle);
+        | Bouncing(force) when force < 0 && wheelEvent.deltaY < 0. =>
+          setBouncingState(_ => Idle)
+        | Bouncing(force) when force > 0 && wheelEvent.deltaY > 0. =>
+          setBouncingState(_ => Idle)
         | Bouncing(_) => ()
         | Idle when !bounce && (isAtTop || isAtBottom) =>
           let clampedScrollTop = isAtTop ? 0 : maxHeight;
           dispatch(ScrollUpdated(clampedScrollTop));
         | Idle when bounce && (isAtTop || isAtBottom) =>
-          let direction = isAtTop ? Top : Bottom;
-          setBouncingState(_ => Bouncing({direction, newScrollTop, startTime: time}));
+          setBouncingState(_ => Bouncing(- delta * 2));
+          resetBouncing();
+          dispatch(ScrollUpdated(isAtTop ? 0 : maxHeight));
         | Idle => dispatch(ScrollUpdated(newScrollTop))
         };
       };
