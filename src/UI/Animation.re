@@ -1,12 +1,12 @@
 open Revery_Core;
 open Revery_Math;
 
-type t = Time.t => float;
+type t('a) = Time.t => ('a, state)
 
-type result =
+and state =
   | Delayed
-  | Running(float) // Returns a value in the interval [0., 1.]
-  | Complete(Time.t); // Returns elapsed time
+  | Running(float) // Elapsed time, normalized, i.e. in the range [0., 1.]
+  | Complete(Time.t); // Elapsed time
 
 /**
  * `time` is assumed to start at 0
@@ -19,11 +19,11 @@ let animate = (duration, time) => {
     time /. duration;
 
   if (normalizedTime < 0.) {
-    Delayed;
+    (0., Delayed);
   } else if (normalizedTime > 1.) {
-    Complete(Time.seconds(duration));
+    (1., Complete(Time.ofSeconds(duration)));
   } else {
-    Running(mod_float(normalizedTime, 1.));
+    (normalizedTime, Running(normalizedTime));
   };
 };
 
@@ -32,7 +32,7 @@ let delay = (delay, animate, time) => {
   let time = Time.toSeconds(time);
 
   if (delay > time) {
-    Delayed
+    (fst(animate(Time.ofSeconds(0.))), Delayed)
   } else {
     animate(Time.ofSeconds(time -. delay))
   };
@@ -40,7 +40,7 @@ let delay = (delay, animate, time) => {
 
 let repeat = (animate, time) =>
   switch (animate(time)) {
-  | Complete(elapsed) =>
+  | (_, Complete(elapsed)) =>
     let elapsed = Time.toSeconds(elapsed);
     let time = Time.toSeconds(time);
     let remainder = elapsed == 0. ? 0. : mod_float(time, elapsed);
@@ -51,27 +51,18 @@ let repeat = (animate, time) =>
 
 let ease = (easing, animate, time) =>
   switch (animate(time)) {
-  | Running(v) => Running(easing(v))
-  | result => result
+  | (t, state) => (easing(t), state)
   };
 
 let andThen = (current, ~next, time) =>
   switch (current(time)) {
-  | Complete(elapsed) => next(Time.ofSeconds(Time.toSeconds(time) -. Time.toSeconds(elapsed)))
+  | (_, Complete(elapsed)) => next(Time.ofSeconds(Time.toSeconds(time) -. Time.toSeconds(elapsed)))
   | result => result
   };
 
 let tween = (start, finish, animate, time) =>
   switch (animate(time)) {
-  | Running(t) => Running(t |> interpolate(start, finish))
-  | result => result
-  };
-
-let tween' = (start, finish, animate, time) =>
-  switch (tween(start, finish, animate, time)) {
-  | Delayed => start
-  | Running(t) => t
-  | Complete(_) => finish
+  | (t, state) => (interpolate(start, finish, t), state)
   };
 
 let defaultTimer = () => Time.now();
@@ -95,10 +86,10 @@ let rec run =
     Tick.interval(
       _dt =>
         switch (animate(Time.ofSeconds(time -. startTime))) {
-        | Delayed => ()
-        | Running(t) => onUpdate(t)
-        | Complete(_) =>
-          onUpdate(1.);
+        | (_, Delayed) => ()
+        | (t, Running(_)) => onUpdate(t)
+        | (t, Complete(_)) =>
+          onUpdate(t);
           onComplete();
           raise(Tick.Stop);
         },

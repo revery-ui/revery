@@ -70,9 +70,9 @@ let%component make =
           );
       let bounceAnim = bounceAwayAnim |> Animation.andThen(~next=bounceBackAnim);
       switch (bounceAnim(Time.(time - startTime))) {
-      | Delayed => actualScrollTop
-      | Running(value) => int_of_float(value)
-      | Complete(_) =>
+      | (_, Delayed) => actualScrollTop
+      | (_, Running(value)) => int_of_float(value)
+      | (_, Complete(_)) =>
         setBouncingState(_ => Idle)
         actualScrollTop
       };

@@ -9,20 +9,20 @@ module Logo = {
     let%hook (isTimerActive, setTimerActive) = Hooks.state(true);
     let%hook (time, resetTimer) = Hooks.timer(~active=isTimerActive, ());
 
-    let rotationX =
+    let (rotationX, _) =
       Animation.(
         animate(Time.seconds(9.))
         |> repeat
         |> delay(Time.seconds(1.))
-        |> tween'(0., 6.28)
+        |> tween(0., 6.28)
         |> animate => animate(time)
       );
-    let rotationY =
+    let (rotationY, _) =
       Animation.(
         animate(Time.seconds(4.))
         |> repeat
         |> delay(Time.seconds(0.5))
-        |> tween'(0., 6.28)
+        |> tween(0., 6.28)
         |> animate => animate(time)
       );
 
@@ -73,19 +73,19 @@ module Logo = {
 
 module AnimatedText = {
   let%component make = (~text: string, ~delay: float, ()) => {
-    let%hook (animatedOpacity) =
+    let%hook (animatedOpacity, _) =
       Hooks.animation(Animation.(
         animate(Time.seconds(1.))
         |> delay(Time.seconds(1.))
         |> ease(Easing.easeOut)
-        |> tween'(0., 1.)
+        |> tween(0., 1.)
       ));
-    let%hook (translate) =
+    let%hook (translate, _) =
       Hooks.animation(
         Animation.animate(Time.seconds(0.5))
         |> Animation.delay(Time.seconds(delay))
         |> Animation.ease(Easing.easeOut)
-        |> Animation.tween'(50., 0.)
+        |> Animation.tween(50., 0.)
       );
 
     let textHeaderStyle =
