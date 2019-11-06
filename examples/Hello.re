@@ -9,20 +9,18 @@ module Logo = {
     let%hook (isTimerActive, setTimerActive) = Hooks.state(true);
     let%hook (time, resetTimer) = Hooks.timer(~active=isTimerActive, ());
 
-    let (rotationX, _) =
+    let ((rotationX, rotationY), _) =
       Animation.(
-        animate(Time.seconds(9.))
-        |> repeat
-        |> delay(Time.seconds(1.))
-        |> tween(0., 6.28)
-        |> apply(time)
-      );
-    let (rotationY, _) =
-      Animation.(
-        animate(Time.seconds(4.))
-        |> repeat
-        |> delay(Time.seconds(0.5))
-        |> tween(0., 6.28)
+        zip((
+          animate(Time.seconds(9.))
+          |> tween(0., 6.28)
+          |> repeat
+          |> delay(Time.seconds(1.)),
+          animate(Time.seconds(4.))
+          |> tween(0., 6.28)
+          |> repeat
+          |> delay(Time.seconds(0.5)),
+        ))
         |> apply(time)
       );
 
