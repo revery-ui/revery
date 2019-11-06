@@ -8,6 +8,8 @@ and state =
   | Running(float) // Elapsed time, normalized, i.e. in the range [0., 1.]
   | Complete(Time.t); // Elapsed time
 
+type normalizedTime = float;
+
 /**
  * `time` is assumed to start at 0
  */
@@ -54,15 +56,15 @@ let ease = (easing, animate, time) =>
   | (t, state) => (easing(t), state)
   };
 
+let tween = (start, finish, animate, time) =>
+  switch (animate(time)) {
+  | (t, state) => (interpolate(start, finish, t), state)
+  };
+
 let andThen = (current, ~next, time) =>
   switch (current(time)) {
   | (_, Complete(elapsed)) => next(Time.ofSeconds(Time.toSeconds(time) -. Time.toSeconds(elapsed)))
   | result => result
-  };
-
-let tween = (start, finish, animate, time) =>
-  switch (animate(time)) {
-  | (t, state) => (interpolate(start, finish, t), state)
   };
 
 let apply = (time, animate) =>

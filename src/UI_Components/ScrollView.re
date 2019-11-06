@@ -69,7 +69,7 @@ let%component make =
             newScrollTop < 0 ? 0. : float_of_int(maxHeight),
           );
       let bounceAnim = bounceAwayAnim |> Animation.andThen(~next=bounceBackAnim);
-      switch (bounceAnim(Time.(time - startTime))) {
+      switch (bounceAnim |> Animation.apply(Time.(time - startTime))) {
       | (_, Delayed) => actualScrollTop
       | (_, Running(value)) => int_of_float(value)
       | (_, Complete(_)) =>
