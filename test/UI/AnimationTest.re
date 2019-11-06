@@ -60,6 +60,15 @@ describe("Animation", ({test, _}) => {
     expect.float(valueAt(4.66, anim)).toBeCloseTo(1.);
   });
 
+  test("map", ({expect, _}) => {
+    let anim =
+      Animation.(animate(Seconds(1.)) |> floatify |> map(string_of_float));
+
+    expect.string(valueAt(-2., anim)).toEqual("0.");
+    expect.string(valueAt(0.75, anim)).toEqual("0.75");
+    expect.string(valueAt(1.5, anim)).toEqual("1.");
+  });
+
   test("andThen", ({expect, _}) => {
     let first = Animation.(animate(Time.seconds(1.)) |> tween(0., 10.));
     let second = Animation.(animate(Time.seconds(1.)) |> tween(30., 20.));
