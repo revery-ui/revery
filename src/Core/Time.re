@@ -28,16 +28,19 @@ let ofSeconds = of_float_seconds;
 */
 let toSeconds = to_float_seconds;
 
+let seconds = t => Seconds(t);
+let milliseconds = t => Milliseconds(t);
+
 let increment: (t, t) => t =
   (previousTime, duration) => {
-    of_float_seconds(
-      to_float_seconds(previousTime) +. to_float_seconds(duration),
+    ofSeconds(
+      toSeconds(previousTime) +. toSeconds(duration),
     );
   };
 
-let show = (v: t) => string_of_float(to_float_seconds(v)) ++ "s";
+let show = (v: t) => string_of_float(toSeconds(v)) ++ "s";
 
 /**
     [getTime()] returns the current system time [t]
 */
-let getTime = () => of_float_seconds(Unix.gettimeofday());
+let getTime = () => ofSeconds(Unix.gettimeofday());

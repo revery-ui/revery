@@ -21,10 +21,10 @@ module Clock = {
 
   let reducer = (a, s) =>
     switch (a) {
-    | Start(f) => {dispose: f, isRunning: true, elapsedTime: Seconds(0.)}
+    | Start(f) => {dispose: f, isRunning: true, elapsedTime: Time.seconds(0.)}
     | Stop =>
       s.dispose();
-      let ret = {dispose: noop, isRunning: false, elapsedTime: Seconds(0.)};
+      let ret = {dispose: noop, isRunning: false, elapsedTime: Time.seconds(0.)};
       ret;
     | TimerTick(t) => {
         ...s,
@@ -42,7 +42,7 @@ module Clock = {
           ~initialState={
             isRunning: false,
             dispose: noop,
-            elapsedTime: Seconds(0.),
+            elapsedTime: Time.seconds(0.),
           },
           reducer,
           hooks,
@@ -64,7 +64,7 @@ module Clock = {
            */
           : {
             let dispose =
-              Tick.interval(t => dispatch(TimerTick(t)), Seconds(0.));
+              Tick.interval(t => dispatch(TimerTick(t)), Time.seconds(0.));
 
             /* We'll also keep a handle on the dispose function so we can make sure its called on stop*/
             dispatch(Start(dispose));
@@ -74,7 +74,7 @@ module Clock = {
 
       let marcherOpacity = state.isRunning ? 1.0 : 0.0;
       let getMarcherPosition = t =>
-        sin(Time.to_float_seconds(t) *. 2. *. pi) /. 2. +. 0.5;
+        sin(Time.toSeconds(t) *. 2. *. pi) /. 2. +. 0.5;
 
       (
         hooks,
@@ -103,7 +103,7 @@ module Clock = {
                 width(200),
               ]
               text={string_of_float(
-                state.elapsedTime |> Time.to_float_seconds,
+                state.elapsedTime |> Time.toSeconds,
               )}
             />
             <Opacity opacity=marcherOpacity>

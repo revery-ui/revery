@@ -82,8 +82,8 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
 
   let options =
       (
-        ~duration=Time.Seconds(1.0),
-        ~delay=Time.Seconds(0.0),
+        ~duration=Time.seconds(1.0),
+        ~delay=Time.seconds(0.0),
         ~repeat=false,
         ~easing=Easing.linear,
         ~direction=`Normal,
@@ -143,7 +143,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   let getAnimationCount = () => List.length(activeAnimations^);
 
   let anyActiveAnimations = () => {
-    let t = Time.to_float_seconds(AnimationTickerImpl.time());
+    let t = Time.toSeconds(AnimationTickerImpl.time());
     let anims = List.filter(hasStarted(t), activeAnimations^);
     List.length(anims) > 0;
   };
@@ -152,12 +152,12 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
       (animationValue: animationValue, animationOptions: animationOptions) => {
     let animation = {
       id: AnimationId.getUniqueId(),
-      delay: Time.to_float_seconds(animationOptions.delay),
-      duration: Time.to_float_seconds(animationOptions.duration),
+      delay: Time.toSeconds(animationOptions.delay),
+      duration: Time.toSeconds(animationOptions.duration),
       toValue: animationOptions.toValue,
       repeat: animationOptions.repeat,
       value: animationValue,
-      startTime: Time.to_float_seconds(AnimationTickerImpl.time()),
+      startTime: Time.toSeconds(AnimationTickerImpl.time()),
       startValue: animationValue.current,
       easing: animationOptions.easing,
       direction: animationOptions.direction,
@@ -171,7 +171,7 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
     let isReverseStartValue =
       animation.direction == `Reverse
       || animation.direction == `AlternateReverse;
-    animation.startTime = Time.to_float_seconds(AnimationTickerImpl.time());
+    animation.startTime = Time.toSeconds(AnimationTickerImpl.time());
     animation.isReverse = isReverseStartValue;
     addAnimation(activeAnimation);
     let playback = {
@@ -227,6 +227,6 @@ module Make = (AnimationTickerImpl: AnimationTicker) => {
   };
 
   Event.subscribe(AnimationTickerImpl.onTick, t =>
-    tick(Time.to_float_seconds(t))
+    tick(Time.toSeconds(t))
   );
 };

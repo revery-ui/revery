@@ -9,15 +9,15 @@ let logo = {
   (~children as _: list(React.syntheticElement), ()) =>
     component(hooks => {
       let (transitionedOpacity, transitionOpacityTo, hooks) =
-        Hooks.transition(1., ~duration=Seconds(1.), hooks);
+        Hooks.transition(1., ~duration=Time.seconds(1.), hooks);
 
       let (rotation, pauseRotation, restartRotation, hooks) =
         Hooks.animation(
           Animated.floatValue(0.),
           Animated.options(
             ~toValue=6.28,
-            ~duration=Seconds(8.),
-            ~delay=Seconds(1.0),
+            ~duration=Time.seconds(8.),
+            ~delay=Time.seconds(1.0),
             ~repeat=true,
             (),
           ),
@@ -29,8 +29,8 @@ let logo = {
           Animated.floatValue(0.),
           Animated.options(
             ~toValue=6.28,
-            ~duration=Seconds(4.),
-            ~delay=Seconds(0.5),
+            ~duration=Time.seconds(4.),
+            ~delay=Time.seconds(0.5),
             ~repeat=true,
             (),
           ),
@@ -104,8 +104,8 @@ let animatedText = {
           Animated.floatValue(0.),
           Animated.options(
             ~toValue=1.0,
-            ~duration=Seconds(1.),
-            ~delay=Seconds(delay),
+            ~duration=Time.seconds(1.),
+            ~delay=Time.seconds(delay),
             (),
           ),
           hooks,
@@ -116,8 +116,8 @@ let animatedText = {
           Animated.floatValue(50.),
           Animated.options(
             ~toValue=1.0,
-            ~duration=Seconds(0.5),
-            ~delay=Seconds(delay),
+            ~duration=Time.seconds(0.5),
+            ~delay=Time.seconds(delay),
             (),
           ),
           hooks,

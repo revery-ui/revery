@@ -2,7 +2,7 @@ module Time = Revery_Core.Time;
 
 module Hooks = Revery_UI.React.Hooks;
 
-let tick = (~tickRate=Time.Seconds(1.), onTick, hooks) =>
+let tick = (~tickRate=Time.seconds(1.), onTick, hooks) =>
   Hooks.effect(
     OnMount,
     () => {

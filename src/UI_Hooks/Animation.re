@@ -21,10 +21,10 @@ module Transition = {
     let (animation, setAnim, slots) = Ref.ref(tween(v, opts), slots);
     let (_, dispatch, slots) =
       Reducer.reducer(~initialState=0, reducer, slots);
-    let completer = () => Tick.interval(_t => dispatch(), Seconds(0.));
+    let completer = () => Tick.interval(_t => dispatch(), Time.seconds(0.));
 
     let restart = () => {
-      animation.startTime = Time.to_float_seconds(getTime());
+      animation.startTime = Time.toSeconds(getTime());
       animation.value.current = animation.startValue;
       let newActiveAnim = {
         animation,
@@ -53,12 +53,12 @@ module Transition = {
   };
 
   let transition =
-      (toValue, ~delay=Time.Seconds(0.0), ~duration=Time.Seconds(1.), slots) => {
+      (toValue, ~delay=Time.seconds(0.0), ~duration=Time.seconds(1.), slots) => {
     let repeat = false;
     let ({value, _}, pauseAnim, _restartAnim, setAnim, slots) =
       animation'(
         floatValue(toValue),
-        options(~toValue, ~duration, ~delay=Time.Seconds(0.0), ~repeat, ()),
+        options(~toValue, ~duration, ~delay=Time.seconds(0.0), ~repeat, ()),
         slots,
       );
     let setAnim = (~immediate=false, toValue) => {
