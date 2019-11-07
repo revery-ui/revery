@@ -19,20 +19,27 @@ let initialPixels =
 type cache = Hashtbl.t(string, t);
 let _cache: cache = Hashtbl.create(100);
 
-let replaceText = (~replacer, text) =>
-  Str.(global_replace(regexp(text), replacer));
-
-let normaliseUrl = text =>
-  text
-  |> String.escaped
-  |> replaceText(~replacer="", "/")
-  |> replaceText(~replacer="", "//")
-  |> replaceText(~replacer="", "\:")
-  |> replaceText(~replacer="", "\.")
-  |> replaceText(~replacer="", "?")
-  |> replaceText(~replacer="", "=")
-  |> (text => text ++ ".png")
+let normaliseUrl = (~text, ~extension) =>
+  Str.(global_replace(regexp("[^a-zA-Z0-9_]"), "", text))
+  |> (text => text ++ extension)
   |> Fpath.v;
+
+let toFileExtension =
+  fun
+  | Some(mediaType) =>
+    switch (mediaType) {
+    | "image/apng" => ".apng"
+    | "image/bmp" => ".bmp"
+    | "image/gif" => ".gif"
+    | "image/x-icon" => ".ico"
+    | "image/jpeg" => ".jpg"
+    | "image/png" => ".png"
+    | "image/svg+xml" => ".svg"
+    | "image/tiff" => ".tif"
+    | "image/webp" => ".webp"
+    | _ => ".png"
+    }
+  | _ => ".png";
 
 let getTexture = (imagePath: string) => {
   /* TODO: Support url paths? */
@@ -41,42 +48,47 @@ let getTexture = (imagePath: string) => {
   switch (cacheResult) {
   | Some(r) => r
   | None =>
-    let isRemote = Uri.scheme(imagePath |> Uri.of_string) |> Option.is_some;
+    /* check if path has http or https */
+    let isRemote = imagePath |> Uri.of_string |> Uri.scheme |> Option.is_some;
 
-    let fullImagePath =
-      switch (isRemote) {
-      | true =>
-        let fileName = Sys.getcwd() |> Fpath.v;
-        let normalisedImagePath =
-          Fpath.append(fileName, normaliseUrl(imagePath));
-        Cohttp_lwt_unix.Client.get(Uri.of_string(imagePath))
-        |> Lwt.map(((resp, body)) => {
-             Console.log(("ImagePath", imagePath));
-             /* Console.log(("ImageResponse", resp)); */
-             /* Console.log(("ImageBody", body)); */
+    let imageLoadPromise =
+      if (isRemote) {
+        /* TODO: handle all error-cases */
+        let%lwt image =
+          Cohttp_lwt_unix.Client.get(Uri.of_string(imagePath))
+          |> Lwt.map(((resp, body)) => {
+               let cwd = Sys.getcwd() |> Fpath.v;
+               let fileExtension =
+                 Cohttp.(Header.get_media_type(resp |> Response.headers))
+                 |> toFileExtension;
+               let normalisedImagePath =
+                 Fpath.append(
+                   cwd,
+                   normaliseUrl(~text=imagePath, ~extension=fileExtension),
+                 );
 
-             body
-             |> Cohttp_lwt.Body.to_string
-             |> Lwt.map(body => {
-                  Console.log((
-                    "Filepath",
-                    normalisedImagePath |> Fpath.to_string,
-                  ));
+               let%lwt image =
+                 body
+                 |> Cohttp_lwt.Body.to_string
+                 |> Lwt.map(body => {
+                      switch (Bos.OS.File.write(normalisedImagePath, body)) {
+                      | Ok(v) =>
+                        Image.load(normalisedImagePath |> Fpath.to_string)
+                      | Error(`Msg(msg)) =>
+                        /* TODO: handle this */
+                        Image.load(normalisedImagePath |> Fpath.to_string)
+                      }
+                    });
 
-                  switch (Bos.OS.File.write(normalisedImagePath, body)) {
-                  | Ok(v) => Console.log(("Successfully wrote file", v))
+               Bos.OS.File.delete(~must_exist=true, normalisedImagePath)
+               |> ignore;
 
-                  | Error(`Msg(msg)) => Console.log(("Error:", msg))
-                  };
-                })
-             |> ignore;
-           })
-        |> ignore;
+               image;
+             });
 
-        Console.log(("ImagePath - Stripped", normalisedImagePath));
-
-        Environment.getAssetPath(normalisedImagePath |> Fpath.to_string);
-      | _ => Environment.getAssetPath(imagePath)
+        image;
+      } else {
+        Image.load(Environment.getAssetPath(imagePath));
       };
 
     /* Create an initial texture container */
@@ -95,8 +107,6 @@ let getTexture = (imagePath: string) => {
       GL_UNSIGNED_BYTE,
       initialPixels,
     );
-
-    let imageLoadPromise = Image.load(fullImagePath);
 
     let ret: t = {hasLoaded: false, texture, width: 1, height: 1};
 
