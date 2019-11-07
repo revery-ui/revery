@@ -57,20 +57,20 @@ let%component make =
   let%hook (actualScrollLeft, setScrollLeft) = Hooks.state(scrollLeft);
   let%hook (bouncingState, setBouncingState) = Hooks.state(Idle);
 
-  let bounceAnimation =
+  let%hook (actualScrollTop, bounceAnimationState, resetBouncingAnimation) =
     switch (bouncingState) {
-    | Idle => Animation.const(actualScrollTop)
-    | Bouncing(force) => bounceAnimation(~origin=actualScrollTop, ~force)
+    | Idle => 
+      Hooks.animation(Animation.const(actualScrollTop));
+
+    | Bouncing(force) => 
+      Hooks.animation(
+        bounceAnimation(~origin=actualScrollTop, ~force),
+        ~onComplete=() => setBouncingState(_ => Idle),
+      );
     };
-
-  let%hook (actualScrollTop, bounceAnimationState, resetBouncing) =
-    Hooks.animation(bounceAnimation, ~onComplete=() =>
-      setBouncingState(_ => Idle)
-    );
-
-  switch (bounceAnimationState) {
-  | Complete(_) => setBouncingState(_ => Idle)
-  | _ => ()
+  let setBouncingState = state => {
+    resetBouncingAnimation();
+    setBouncingState(state);
   };
 
   let scrollBarThickness = 10;
@@ -172,7 +172,6 @@ let%component make =
           dispatch(ScrollUpdated(clampedScrollTop));
         | Idle when bounce && (isAtTop || isAtBottom) =>
           setBouncingState(_ => Bouncing(- delta * 2));
-          resetBouncing();
           dispatch(ScrollUpdated(isAtTop ? 0 : maxHeight));
         | Idle => dispatch(ScrollUpdated(newScrollTop))
         };
