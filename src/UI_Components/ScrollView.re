@@ -64,7 +64,9 @@ let%component make =
     };
 
   let%hook (actualScrollTop, bounceAnimationState, resetBouncing) =
-    Hooks.animation(bounceAnimation, ~active=bouncingState != Idle);
+    Hooks.animation(bounceAnimation, ~onComplete=() =>
+      setBouncingState(_ => Idle)
+    );
 
   switch (bounceAnimationState) {
   | Complete(_) => setBouncingState(_ => Idle)
@@ -90,11 +92,11 @@ let%component make =
       let maxWidth = childMeasurements.width - outerMeasurements.width;
 
       /*
-        * TODO: #287
-        * prerr_endline ("Child width: " ++ string_of_int(childMeasurements.width));
-        * prerr_endline ("Container width: " ++ string_of_int(outerMeasurements.width));
-        * This can be removed once #287 is fixed
-        */
+       * TODO: #287
+       * prerr_endline ("Child width: " ++ string_of_int(childMeasurements.width));
+       * prerr_endline ("Container width: " ++ string_of_int(outerMeasurements.width));
+       * This can be removed once #287 is fixed
+       */
 
       let verticalThumbHeight =
         childMeasurements.height > 0
@@ -115,9 +117,7 @@ let%component make =
       let verticalScrollBar =
         isVerticalScrollbarVisible
           ? <Slider
-              onValueChanged={v =>
-                dispatch(ScrollUpdated(int_of_float(v)))
-              }
+              onValueChanged={v => dispatch(ScrollUpdated(int_of_float(v)))}
               minimumValue=0.
               maximumValue={float_of_int(maxHeight)}
               sliderLength={outerMeasurements.height}
@@ -133,11 +133,11 @@ let%component make =
           : empty;
 
       /* TODO: #287
-        * Need to investigate why the child width is not being reported (expanded) correctly.
-        * Currently, the child width is clamped to the parent.
-        * Is this a bug in flex?
-        * Or something we need to fix in our styling?
-        */
+       * Need to investigate why the child width is not being reported (expanded) correctly.
+       * Currently, the child width is clamped to the parent.
+       * Is this a bug in flex?
+       * Or something we need to fix in our styling?
+       */
       let horizontalScrollbar =
         isHorizontalScrollbarVisible
           ? <Slider
@@ -177,9 +177,9 @@ let%component make =
         | Idle => dispatch(ScrollUpdated(newScrollTop))
         };
       };
-    (horizontalScrollbar, verticalScrollBar, scroll);
-  | _ => (empty, empty, (_ => ()))
-  };
+      (horizontalScrollbar, verticalScrollBar, scroll);
+    | _ => (empty, empty, (_ => ()))
+    };
 
   let innerStyle =
     Style.[

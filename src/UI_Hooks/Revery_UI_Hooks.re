@@ -70,7 +70,7 @@ let timer = (~tickRate=Time.zero, ~active=true, ()) => {
   (Time.(time - startTime), reset);
 };
 
-let animation = (~active=true, animation) => {
+let animation = (~active=true, ~onComplete=() => (), animation) => {
   let%hook (isCompleted, setCompleted) = state(false);
   let%hook (time, resetTimer) = timer(~active=active && !isCompleted, ());
 
@@ -79,7 +79,9 @@ let animation = (~active=true, animation) => {
 
   // Stop timer when animation completes
   switch (animationState) {
-  | Complete(_) => setCompleted(_ => true);
+  | Complete(_) =>
+    onComplete();
+    setCompleted(_ => true);
   | _ => ();
   };
 
