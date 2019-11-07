@@ -59,14 +59,13 @@ let%component make =
 
   let%hook (actualScrollTop, bounceAnimationState, resetBouncingAnimation) =
     switch (bouncingState) {
-    | Idle => 
-      Hooks.animation(Animation.const(actualScrollTop));
+    | Idle => Hooks.animation(Animation.const(actualScrollTop))
 
-    | Bouncing(force) => 
+    | Bouncing(force) =>
       Hooks.animation(
-        bounceAnimation(~origin=actualScrollTop, ~force),
-        ~onComplete=() => setBouncingState(_ => Idle),
-      );
+        bounceAnimation(~origin=actualScrollTop, ~force), ~onComplete=() =>
+        setBouncingState(_ => Idle)
+      )
     };
   let setBouncingState = state => {
     resetBouncingAnimation();

@@ -20,7 +20,8 @@ describe("Animation", ({test, _}) => {
 
   test("ease", ({expect, _}) => {
     let anim =
-      Animation.(animate(Time.seconds(1.)) |> ease(Easing.quadratic)) |> floatify;
+      Animation.(animate(Time.seconds(1.)) |> ease(Easing.quadratic))
+      |> floatify;
 
     expect.float(valueAt(-2., anim)).toBeCloseTo(0.);
     expect.float(valueAt(0.25, anim)).toBeCloseTo(0.0625);
@@ -52,7 +53,9 @@ describe("Animation", ({test, _}) => {
 
   test("delay", ({expect, _}) => {
     let anim =
-      Animation.(animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> floatify);
+      Animation.(
+        animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> floatify
+      );
 
     expect.float(valueAt(-2., anim)).toBeCloseTo(0.);
     expect.float(valueAt(0.75, anim)).toBeCloseTo(0.);

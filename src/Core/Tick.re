@@ -105,7 +105,7 @@ module Make = (ClockImpl: Clock) => {
     let id = TickId.getUniqueId();
 
     let f = t =>
-      try (f(t)) {
+      try(f(t)) {
       | Stop => _clear(id, ())
       };
 

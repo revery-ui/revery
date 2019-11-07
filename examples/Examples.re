@@ -246,7 +246,7 @@ module ExampleHost = {
         ]>
         example
       </View>
-    </View>
+    </View>;
   };
 };
 

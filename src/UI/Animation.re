@@ -10,9 +10,7 @@ and state =
   | Running(normalizedTime)
   | Complete(Time.t); // Elapsed time
 
-
-let const = (constant, _time) =>
-  (constant, Complete(Time.zero));
+let const = (constant, _time) => (constant, Complete(Time.zero));
 
 /**
  * `time` is assumed to start at 0
@@ -21,8 +19,7 @@ let animate = (duration, time) => {
   let time = Time.toSeconds(time);
   let duration = Time.toSeconds(duration);
 
-  let normalizedTime =
-    time /. duration;
+  let normalizedTime = time /. duration;
 
   if (normalizedTime < 0.) {
     (0., Delayed);
@@ -34,13 +31,13 @@ let animate = (duration, time) => {
 };
 
 let delay = (delay, animate, time) => {
-  let delay = Time.toSeconds(delay) ;
+  let delay = Time.toSeconds(delay);
   let time = Time.toSeconds(time);
 
   if (delay > time) {
-    (fst(animate(Time.ofSeconds(0.))), Delayed)
+    (fst(animate(Time.ofSeconds(0.))), Delayed);
   } else {
-    animate(Time.ofSeconds(time -. delay))
+    animate(Time.ofSeconds(time -. delay));
   };
 };
 
@@ -50,7 +47,7 @@ let repeat = (animate, time) =>
     let elapsed = Time.toSeconds(elapsed);
     let time = Time.toSeconds(time);
     let remainder = elapsed == 0. ? 0. : mod_float(time, elapsed);
-    animate(Time.ofSeconds(remainder))
+    animate(Time.ofSeconds(remainder));
 
   | result => result
   };
@@ -64,7 +61,7 @@ let alternatingRepeat = (animate, time) =>
     let shouldReverse = iteration mod 2 != 0; // if not divisble by 2
     let remainder = elapsed == 0. ? 0. : mod_float(time, elapsed);
     let t = shouldReverse ? elapsed -. remainder : remainder;
-    animate(Time.ofSeconds(t))
+    animate(Time.ofSeconds(t));
 
   | result => result
   };
@@ -74,41 +71,53 @@ let map = (f, animate, time) =>
   | (t, state) => (f(t), state)
   };
 
-let ease = (easing, animate) =>
-  map(easing, animate);
+let ease = (easing, animate) => map(easing, animate);
 
 let tween = (start, finish, animate) =>
   map(interpolate(start, finish), animate);
 
 let andThen = (current, ~next, time) =>
   switch (current(time)) {
-  | (_, Complete(elapsed)) => next(Time.ofSeconds(Time.toSeconds(time) -. Time.toSeconds(elapsed)))
+  | (_, Complete(elapsed)) =>
+    next(Time.ofSeconds(Time.toSeconds(time) -. Time.toSeconds(elapsed)))
   | result => result
   };
 
 let zip = ((a, b), time) =>
   switch (a(time), b(time)) {
-  | ((aValue, Delayed), (bValue, Delayed)) =>
-    ((aValue, bValue), Delayed)
+  | ((aValue, Delayed), (bValue, Delayed)) => ((aValue, bValue), Delayed)
 
-  | ((aValue, Running(aElapsed)), (bValue, Running(bElapsed))) =>
-    ((aValue, bValue), Running((aElapsed +. bElapsed) /. 2.))
+  | ((aValue, Running(aElapsed)), (bValue, Running(bElapsed))) => (
+      (aValue, bValue),
+      Running((aElapsed +. bElapsed) /. 2.),
+    )
 
-  | ((aValue, Complete(aElapsed)), (bValue, Complete(bElapsed))) =>
-    ((aValue, bValue), Complete(Time.ofSeconds(Float.max(Time.toSeconds(aElapsed), Time.toSeconds(bElapsed)))))
+  | ((aValue, Complete(aElapsed)), (bValue, Complete(bElapsed))) => (
+      (aValue, bValue),
+      Complete(
+        Time.ofSeconds(
+          Float.max(Time.toSeconds(aElapsed), Time.toSeconds(bElapsed)),
+        ),
+      ),
+    )
 
   | ((aValue, Complete(_)), (bValue, Running(elapsed)))
-  | ((aValue, Running(elapsed)), (bValue, Complete(_))) =>
-    ((aValue, bValue), Running((1. +. elapsed) /. 2.))
+  | ((aValue, Running(elapsed)), (bValue, Complete(_))) => (
+      (aValue, bValue),
+      Running((1. +. elapsed) /. 2.),
+    )
 
   | ((aValue, Delayed), (bValue, Running(elapsed)))
-  | ((aValue, Running(elapsed)), (bValue, Delayed)) =>
-    ((aValue, bValue), Running(elapsed /. 2.))
+  | ((aValue, Running(elapsed)), (bValue, Delayed)) => (
+      (aValue, bValue),
+      Running(elapsed /. 2.),
+    )
 
   | ((aValue, Delayed), (bValue, Complete(_)))
-  | ((aValue, Complete(_)), (bValue, Delayed)) =>
-    ((aValue, bValue), Running(0.5))
+  | ((aValue, Complete(_)), (bValue, Delayed)) => (
+      (aValue, bValue),
+      Running(0.5),
+    )
   };
 
-let apply = (time, animate) =>
-  animate(time);
+let apply = (time, animate) => animate(time);

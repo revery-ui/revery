@@ -135,9 +135,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
       },
     );
 
-  Window.setShouldRenderCallback(window, () =>
-    uiDirty^
-  );
+  Window.setShouldRenderCallback(window, () => uiDirty^);
   Window.setRenderCallback(
     window,
     () => {

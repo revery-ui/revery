@@ -7,8 +7,7 @@ include State;
 include Tick;
 
 let time = (~tickRate=Time.zero, ()) => {
-  let%hook (time, setTime) =
-    reducer(~initialState=Time.now(), t => t);
+  let%hook (time, setTime) = reducer(~initialState=Time.now(), t => t);
   let%hook () = tick(~tickRate, _dt => setTime(_t => Time.now()));
 
   time;
@@ -43,11 +42,11 @@ let mountIfEffect = (condition, handler) => {
         handler();
       },
     );
+  ();
 };
 
 let timer = (~tickRate=Time.zero, ~active=true, ()) => {
-  let%hook (time, setTime) =
-    reducer(~initialState=Time.now(), t => t);
+  let%hook (time, setTime) = reducer(~initialState=Time.now(), t => t);
   let%hook (startTime, setStartTime) = Ref.ref(time);
 
   let onTick = _dt => setTime(_t => Time.now());
@@ -60,7 +59,7 @@ let timer = (~tickRate=Time.zero, ~active=true, ()) => {
         Some(dispose);
       } else {
         None;
-      },
+      }
     );
 
   let reset = () => {
@@ -74,15 +73,14 @@ let animation = (~active=true, ~onComplete=() => (), animation) => {
   let%hook (isCompleted, setCompleted) = state(false);
   let%hook (time, resetTimer) = timer(~active=active && !isCompleted, ());
 
-  let (value, animationState) =
-    Animation.apply(time, animation);
+  let (value, animationState) = Animation.apply(time, animation);
 
   // Stop timer when animation completes
   switch (animationState) {
   | Complete(_) =>
     onComplete();
     setCompleted(_ => true);
-  | _ => ();
+  | _ => ()
   };
 
   let reset = () => {
