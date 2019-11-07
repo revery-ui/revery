@@ -70,25 +70,37 @@ let timer = (~tickRate=Time.zero, ~active=true, ()) => {
   (Time.(time - startTime), reset);
 };
 
-let animation = (~active=?, animation) => {
-  let%hook (time, resetTimer) = timer(~active?, ());
+let animation = (~active=true, animation) => {
+  let%hook (isCompleted, setCompleted) = state(false);
+  let%hook (time, resetTimer) = timer(~active=active && !isCompleted, ());
 
   let (value, animationState) =
     Animation.apply(time, animation);
 
-  (value, animationState, resetTimer);
+  // Stop timer when animation completes
+  switch (animationState) {
+  | Complete(_) => setCompleted(_ => true);
+  | _ => ();
+  };
+
+  let reset = () => {
+    setCompleted(_ => false);
+    resetTimer();
+  };
+
+  (value, animationState, reset);
 };
 
 let transition = (~duration=Time.seconds(1.), ~delay=Time.zero, startValue) => {
-  let%hook (time, resetTimer) = timer();
   let%hook ((startValue, targetValue), setTargetValue) =
     state((startValue, startValue));
 
-  let (value, _animationState) =
+  let anim =
     Animation.animate(duration)
     |> Animation.delay(delay)
-    |> Animation.tween(startValue, targetValue)
-    |> Animation.apply(time);
+    |> Animation.tween(startValue, targetValue);
+
+  let%hook (value, _animationState, resetTimer) = animation(anim);
 
   let setTargetValue = newTarget => {
     resetTimer();
