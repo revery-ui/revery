@@ -53,10 +53,11 @@ let getTexture = (imagePath: string) => {
 
     let imageLoadPromise =
       if (isRemote) {
-        /* TODO: handle all error-cases */
+        /* TODO: what happens if we don't get a response */
         let%lwt image =
           Cohttp_lwt_unix.Client.get(Uri.of_string(imagePath))
           |> Lwt.map(((resp, body)) => {
+               /* TODO: this only uses the CWD, make this configurable or default to sys temp? */
                let cwd = Sys.getcwd() |> Fpath.v;
                let fileExtension =
                  Cohttp.(Header.get_media_type(resp |> Response.headers))
@@ -80,6 +81,7 @@ let getTexture = (imagePath: string) => {
                       }
                     });
 
+               /* TODO: handle error */
                Bos.OS.File.delete(~must_exist=true, normalisedImagePath)
                |> ignore;
 
