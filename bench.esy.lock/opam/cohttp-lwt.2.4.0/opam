@@ -29,8 +29,8 @@ depends: [
   "dune" {>= "1.1.0"}
   "cohttp" {=version}
   "lwt" {>= "2.5.0"}
-  "sexplib0" {< "v0.13"}
-  "ppx_sexp_conv" {>= "v0.9.0" & < "v0.13"}
+  "sexplib0"
+  "ppx_sexp_conv" {>= "v0.9.0"}
   "logs"
 ]
 build: [
@@ -41,9 +41,9 @@ build: [
 dev-repo: "git+https://github.com/mirage/ocaml-cohttp.git"
 url {
   src:
-    "https://github.com/mirage/ocaml-cohttp/releases/download/v2.3.0/cohttp-v2.3.0.tbz"
+    "https://github.com/mirage/ocaml-cohttp/releases/download/v2.4.0/cohttp-v2.4.0.tbz"
   checksum: [
-    "sha256=f179ec35d00ecc57e8326fb11de5f6a769ee49ecd0dffacce6530f0695297125"
-    "sha512=2e49f435d6bf4ea8ed55c0c62d27aeec63cb21a97bf4be8f40f6c39fbcec1d37044a1e91d47f2156e2df18fda778f78da12d4b6e5a76775e89b9e059feab194d"
+    "sha256=b2dc17836e7dd5803bb919aff5dde1b9a071becb874c8a4afc81b2a466c792f4"
+    "sha512=73a5ef380ea6aad421870b526e5e1305ad0a0d14cee7ca7fdbf5a94f878c66bc91a9f7c30327caaf235f3e55c678299ad55645ef2899e11b137efb6ecfc5d0be"
   ]
 }

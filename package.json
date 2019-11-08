@@ -40,6 +40,7 @@
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#6ff66fa",
+    "fetch-core": "github:lessp/reason-fetch:fetch-core.json#a0abf96",
     "@reason-native/console": "^0.0.3",
     "@reason-native/rely": "*",
     "flex": "^1.2.2",

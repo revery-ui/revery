@@ -1,5 +1,6 @@
 open Sdl2.Gl;
 open Revery_Core;
+open Revery_Fetch;
 
 module Image = Sdl2.Image;
 
@@ -26,19 +27,15 @@ let normaliseUrl = (~text, ~extension) =>
 
 let toFileExtension =
   fun
-  | Some(mediaType) =>
-    switch (mediaType) {
-    | "image/apng" => ".apng"
-    | "image/bmp" => ".bmp"
-    | "image/gif" => ".gif"
-    | "image/x-icon" => ".ico"
-    | "image/jpeg" => ".jpg"
-    | "image/png" => ".png"
-    | "image/svg+xml" => ".svg"
-    | "image/tiff" => ".tif"
-    | "image/webp" => ".webp"
-    | _ => ".png"
-    }
+  | "image/apng" => ".apng"
+  | "image/bmp" => ".bmp"
+  | "image/gif" => ".gif"
+  | "image/x-icon" => ".ico"
+  | "image/jpeg" => ".jpg"
+  | "image/png" => ".png"
+  | "image/svg+xml" => ".svg"
+  | "image/tiff" => ".tif"
+  | "image/webp" => ".webp"
   | _ => ".png";
 
 let getTexture = (imagePath: string) => {
@@ -48,45 +45,57 @@ let getTexture = (imagePath: string) => {
   switch (cacheResult) {
   | Some(r) => r
   | None =>
-    /* check if path has http or https */
+    /* naive check if path has http or https */
     let isRemote = imagePath |> Uri.of_string |> Uri.scheme |> Option.is_some;
 
     let imageLoadPromise =
       if (isRemote) {
-        /* TODO: what happens if we don't get a response */
-        let%lwt image =
-          Cohttp_lwt_unix.Client.get(Uri.of_string(imagePath))
-          |> Lwt.map(((resp, body)) => {
-               /* TODO: this only uses the CWD, make this configurable or default to sys temp? */
-               let cwd = Sys.getcwd() |> Fpath.v;
-               let fileExtension =
-                 Cohttp.(Header.get_media_type(resp |> Response.headers))
-                 |> toFileExtension;
-               let normalisedImagePath =
-                 Fpath.append(
-                   cwd,
-                   normaliseUrl(~text=imagePath, ~extension=fileExtension),
-                 );
+        let%lwt maybePathAndImage =
+          Fetch.fetch(imagePath)
+          |> Lwt.map(
+               fun
+               | Ok({Fetch.Response.body, headers}) => {
+                   let fileExtension =
+                     headers
+                     |> Fetch.Headers.get(~key="content-type")
+                     |> Option.value(~default="")
+                     |> toFileExtension;
 
-               let%lwt image =
-                 body
-                 |> Cohttp_lwt.Body.to_string
-                 |> Lwt.map(body => {
-                      switch (Bos.OS.File.write(normalisedImagePath, body)) {
-                      | Ok(v) =>
-                        Image.load(normalisedImagePath |> Fpath.to_string)
-                      | Error(`Msg(msg)) =>
-                        /* TODO: handle this */
-                        Image.load(normalisedImagePath |> Fpath.to_string)
-                      }
-                    });
+                   Fpath.(
+                     Some((
+                       append(
+                         /* TODO: use a system temporary folder? */
+                         Sys.getcwd() |> v,
+                         normaliseUrl(
+                           ~text=imagePath,
+                           ~extension=fileExtension,
+                         ),
+                       ),
+                       Fetch.Response.Body.toString(body),
+                     ))
+                   );
+                 }
+               | Error(_) => None,
+             );
 
-               /* TODO: handle error */
-               Bos.OS.File.delete(~must_exist=true, normalisedImagePath)
-               |> ignore;
+        let image =
+          switch (maybePathAndImage) {
+          | Some((normalisedImagePath, body)) =>
+            switch (Bos.OS.File.write(normalisedImagePath, body)) {
+            | Ok(_unit) => Image.load(normalisedImagePath |> Fpath.to_string)
+            | Error(`Msg(_msg)) =>
+              /* TODO: handle this */
+              Image.load(Environment.getAssetPath(imagePath))
+            }
+          | None => Image.load(Environment.getAssetPath(imagePath))
+          };
 
-               image;
-             });
+        /* TODO: handle error */
+        switch (maybePathAndImage) {
+        | Some((path, _image)) =>
+          Bos.OS.File.delete(~must_exist=true, path) |> ignore
+        | None => ()
+        };
 
         image;
       } else {

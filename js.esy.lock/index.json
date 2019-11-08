@@ -1,5 +1,5 @@
 {
-  "checksum": "3d6655da258cfb9d696e0aa0c4847e38",
+  "checksum": "00c3df0b04aedb95221f5b3e05a092cc",
   "root": "revery@link-dev:./package.json",
   "node": {
     "wordwrap@0.0.3@d41d8cd9": {
@@ -62,7 +62,9 @@
         "reason-gl-matrix@0.9.9305@d41d8cd9",
         "reason-fontkit@2.7.0@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "http-server@0.11.1@d41d8cd9",
-        "flex@1.2.2@d41d8cd9", "@reason-native/rely@3.1.0@d41d8cd9",
+        "flex@1.2.2@d41d8cd9",
+        "fetch-core@github:lessp/reason-fetch:fetch-core.json#a0abf96@d41d8cd9",
+        "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/merlin-extend@opam:0.4@64c45329",
         "@opam/lwt_ppx@opam:1.2.4@369f3faf", "@opam/lwt@opam:4.4.0@0357bb8b",
@@ -538,6 +540,22 @@
       "dependencies": [
         "refmterr@3.2.2@d41d8cd9", "@opam/dune@opam:1.11.4@21d66ccd",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "fetch-core@github:lessp/reason-fetch:fetch-core.json#a0abf96@d41d8cd9": {
+      "id":
+        "fetch-core@github:lessp/reason-fetch:fetch-core.json#a0abf96@d41d8cd9",
+      "name": "fetch-core",
+      "version": "github:lessp/reason-fetch:fetch-core.json#a0abf96",
+      "source": {
+        "type": "install",
+        "source": [ "github:lessp/reason-fetch:fetch-core.json#a0abf96" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/reason@opam:3.5.2@f689c2cb",
+        "@opam/dune@opam:1.11.4@21d66ccd"
       ],
       "devDependencies": []
     },
@@ -1182,6 +1200,39 @@
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@21d66ccd"
+      ]
+    },
+    "@opam/reason@opam:3.5.2@f689c2cb": {
+      "id": "@opam/reason@opam:3.5.2@f689c2cb",
+      "name": "@opam/reason",
+      "version": "opam:3.5.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/66/66c54296009e0f6cbc8e93aa01105cbb#md5:66c54296009e0f6cbc8e93aa01105cbb",
+          "archive:https://registry.npmjs.org/@esy-ocaml/reason/-/reason-3.5.2.tgz#md5:66c54296009e0f6cbc8e93aa01105cbb"
+        ],
+        "opam": {
+          "name": "reason",
+          "version": "3.5.2",
+          "path": "js.esy.lock/opam/reason.3.5.2"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.4@dc720aef",
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/ocaml-migrate-parsetree@opam:1.4.0@0c4ec62d",
+        "@opam/merlin-extend@opam:0.4@64c45329",
+        "@opam/menhir@opam:20190924@004407ff",
+        "@opam/dune@opam:1.11.4@21d66ccd", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.4@dc720aef",
+        "@opam/ocaml-migrate-parsetree@opam:1.4.0@0c4ec62d",
+        "@opam/merlin-extend@opam:0.4@64c45329",
+        "@opam/menhir@opam:20190924@004407ff",
+        "@opam/dune@opam:1.11.4@21d66ccd"
       ]
     },
     "@opam/react@opam:1.2.1@0e11855f": {
@@ -2610,7 +2661,7 @@
         "@opam/lwt@opam:4.4.0@0357bb8b", "@opam/logs@opam:0.7.0@1d03143e",
         "@opam/fmt@opam:0.8.8@01c3a23c", "@opam/dune@opam:1.11.4@21d66ccd",
         "@opam/conduit-lwt-unix@opam:2.0.2@bc0b9179",
-        "@opam/cohttp-lwt@opam:2.3.0@7e374a27",
+        "@opam/cohttp-lwt@opam:2.4.0@c42f716e",
         "@opam/cmdliner@opam:1.0.4@93208aac",
         "@opam/base-unix@opam:base@87d0b2eb",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
@@ -2620,25 +2671,25 @@
         "@opam/lwt@opam:4.4.0@0357bb8b", "@opam/logs@opam:0.7.0@1d03143e",
         "@opam/fmt@opam:0.8.8@01c3a23c", "@opam/dune@opam:1.11.4@21d66ccd",
         "@opam/conduit-lwt-unix@opam:2.0.2@bc0b9179",
-        "@opam/cohttp-lwt@opam:2.3.0@7e374a27",
+        "@opam/cohttp-lwt@opam:2.4.0@c42f716e",
         "@opam/cmdliner@opam:1.0.4@93208aac",
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
-    "@opam/cohttp-lwt@opam:2.3.0@7e374a27": {
-      "id": "@opam/cohttp-lwt@opam:2.3.0@7e374a27",
+    "@opam/cohttp-lwt@opam:2.4.0@c42f716e": {
+      "id": "@opam/cohttp-lwt@opam:2.4.0@c42f716e",
       "name": "@opam/cohttp-lwt",
-      "version": "opam:2.3.0",
+      "version": "opam:2.4.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/f1/f179ec35d00ecc57e8326fb11de5f6a769ee49ecd0dffacce6530f0695297125#sha256:f179ec35d00ecc57e8326fb11de5f6a769ee49ecd0dffacce6530f0695297125",
-          "archive:https://github.com/mirage/ocaml-cohttp/releases/download/v2.3.0/cohttp-v2.3.0.tbz#sha256:f179ec35d00ecc57e8326fb11de5f6a769ee49ecd0dffacce6530f0695297125"
+          "archive:https://opam.ocaml.org/cache/sha256/b2/b2dc17836e7dd5803bb919aff5dde1b9a071becb874c8a4afc81b2a466c792f4#sha256:b2dc17836e7dd5803bb919aff5dde1b9a071becb874c8a4afc81b2a466c792f4",
+          "archive:https://github.com/mirage/ocaml-cohttp/releases/download/v2.4.0/cohttp-v2.4.0.tbz#sha256:b2dc17836e7dd5803bb919aff5dde1b9a071becb874c8a4afc81b2a466c792f4"
         ],
         "opam": {
           "name": "cohttp-lwt",
-          "version": "2.3.0",
-          "path": "js.esy.lock/opam/cohttp-lwt.2.3.0"
+          "version": "2.4.0",
+          "path": "js.esy.lock/opam/cohttp-lwt.2.4.0"
         }
       },
       "overrides": [],

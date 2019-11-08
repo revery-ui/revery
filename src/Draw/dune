@@ -2,5 +2,5 @@
     (name Revery_Draw)
     (public_name Revery.Draw)
     (preprocess (pps lwt_ppx))
-    (libraries brisk-reconciler bos cohttp cohttp-lwt-unix lwt lwt.unix sdl2 flex fontkit rebez.lib Revery_Core Revery_Shaders
-               Revery_Geometry Revery_Math uri))
+    (libraries brisk-reconciler bos lwt lwt.unix sdl2 flex fontkit rebez.lib Revery_Core Revery_Shaders
+               Revery_Geometry Revery_Math Revery_Fetch uri))
