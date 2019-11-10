@@ -14,6 +14,10 @@ let ( *. ) = ( *. );
 let (/) = (/.);
 let (/.) = (/.);
 
+let max = Float.max;
+let min = Float.min;
+let (mod) = mod_float;
+
 let show = t => string_of_float(t) ++ "s";
 
 let now = Unix.gettimeofday;
