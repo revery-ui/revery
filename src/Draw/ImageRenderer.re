@@ -72,21 +72,27 @@ let getTexture = (imagePath: string) => {
              );
 
         let image =
-          switch (maybePathAndImage) {
-          | Some((normalisedImagePath, body)) =>
-            switch (Bos.OS.File.write(normalisedImagePath, body)) {
-            | Ok(_unit) => Image.load(normalisedImagePath |> Fpath.to_string)
-            | Error(`Msg(_msg)) =>
-              /* TODO: handle this */
-              Image.load(Environment.getAssetPath(imagePath))
-            }
-          | None => Image.load(Environment.getAssetPath(imagePath))
-          };
+          maybePathAndImage
+          |> Option.map(((imageFilePath, imageData)) => {
+               switch (Bos.OS.File.write(imageFilePath, imageData)) {
+               | Ok(_unit) => Fpath.to_string(imageFilePath)
+               | Error(`Msg(error)) =>
+                 /* TODO: handle this */
+                 Log.error("Error creating temporary image:", error);
+                 Environment.getAssetPath(imagePath);
+               }
+             })
+          |> Option.value(~default=Environment.getAssetPath(imagePath))
+          |> Image.load;
 
-        /* TODO: handle error */
         switch (maybePathAndImage) {
         | Some((path, _image)) =>
-          Bos.OS.File.delete(~must_exist=true, path) |> ignore
+          /* TODO: handle error? */
+          switch (Bos.OS.File.delete(~must_exist=true, path)) {
+          | Ok(_) => ()
+          | Error(`Msg(error)) =>
+            Log.error("Error deleting temporary image", error)
+          }
         | None => ()
         };
 
