@@ -16,38 +16,29 @@ let const = (constant, _time) => (constant, Complete(Time.zero));
  * `time` is assumed to start at 0
  */
 let animate = (duration, time) => {
-  let time = Time.toSeconds(time);
-  let duration = Time.toSeconds(duration);
-
-  let normalizedTime = time /. duration;
+  let normalizedTime = Time.(toSeconds(time / duration));
 
   if (normalizedTime < 0.) {
     (0., Delayed);
   } else if (normalizedTime > 1.) {
-    (1., Complete(Time.ofSeconds(duration)));
+    (1., Complete(duration));
   } else {
     (normalizedTime, Running(normalizedTime));
   };
 };
 
-let delay = (delay, animate, time) => {
-  let delay = Time.toSeconds(delay);
-  let time = Time.toSeconds(time);
-
+let delay = (delay, animate, time) =>
   if (delay > time) {
-    (fst(animate(Time.ofSeconds(0.))), Delayed);
+    (fst(animate(Time.zero)), Delayed);
   } else {
-    animate(Time.ofSeconds(time -. delay));
+    animate(Time.(time - delay));
   };
-};
 
 let repeat = (animate, time) =>
   switch (animate(time)) {
   | (_, Complete(elapsed)) =>
-    let elapsed = Time.toSeconds(elapsed);
-    let time = Time.toSeconds(time);
-    let remainder = elapsed == 0. ? 0. : mod_float(time, elapsed);
-    animate(Time.ofSeconds(remainder));
+    let remainder = elapsed == Time.zero ? Time.zero : Time.(time mod elapsed);
+    animate(remainder);
 
   | result => result
   };
@@ -55,13 +46,10 @@ let repeat = (animate, time) =>
 let alternatingRepeat = (animate, time) =>
   switch (animate(time)) {
   | (_, Complete(elapsed)) =>
-    let elapsed = Time.toSeconds(elapsed);
-    let time = Time.toSeconds(time);
-    let iteration = int_of_float(floor(time));
+    let iteration = int_of_float(floor(Time.toSeconds(time)));
     let shouldReverse = iteration mod 2 != 0; // if not divisble by 2
-    let remainder = elapsed == 0. ? 0. : mod_float(time, elapsed);
-    let t = shouldReverse ? elapsed -. remainder : remainder;
-    animate(Time.ofSeconds(t));
+    let remainder = elapsed == Time.zero ? Time.zero : Time.(time mod elapsed);
+    animate(shouldReverse ? Time.(elapsed - remainder) : remainder);
 
   | result => result
   };
@@ -78,8 +66,7 @@ let tween = (start, finish, animate) =>
 
 let andThen = (current, ~next, time) =>
   switch (current(time)) {
-  | (_, Complete(elapsed)) =>
-    next(Time.ofSeconds(Time.toSeconds(time) -. Time.toSeconds(elapsed)))
+  | (_, Complete(elapsed)) => next(Time.(time - elapsed))
   | result => result
   };
 
@@ -94,11 +81,7 @@ let zip = ((a, b), time) =>
 
   | ((aValue, Complete(aElapsed)), (bValue, Complete(bElapsed))) => (
       (aValue, bValue),
-      Complete(
-        Time.ofSeconds(
-          Float.max(Time.toSeconds(aElapsed), Time.toSeconds(bElapsed)),
-        ),
-      ),
+      Complete(Time.max(aElapsed, bElapsed)),
     )
 
   | ((aValue, Complete(_)), (bValue, Running(elapsed)))

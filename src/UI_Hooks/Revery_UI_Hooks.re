@@ -54,7 +54,7 @@ let timer = (~tickRate=Time.zero, ~active=true, ()) => {
   let%hook () =
     mountIfEffect(If((!=), active), () =>
       if (active) {
-        setStartTime(Time.(Time.now() - time - startTime));
+        setStartTime(Time.(now() - (time - startTime)));
         let dispose = Revery_Core.Tick.interval(onTick, tickRate);
         Some(dispose);
       } else {

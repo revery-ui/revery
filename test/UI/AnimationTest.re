@@ -1,3 +1,4 @@
+open Revery_Core;
 open Revery_UI;
 
 open TestFramework;
@@ -65,7 +66,9 @@ describe("Animation", ({test, _}) => {
 
   test("map", ({expect, _}) => {
     let anim =
-      Animation.(animate(Seconds(1.)) |> floatify |> map(string_of_float));
+      Animation.(
+        animate(Time.seconds(1.)) |> floatify |> map(string_of_float)
+      );
 
     expect.string(valueAt(-2., anim)).toEqual("0.");
     expect.string(valueAt(0.75, anim)).toEqual("0.75");
