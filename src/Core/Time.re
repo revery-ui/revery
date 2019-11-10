@@ -14,4 +14,4 @@ let (/) = (/.);
 
 let show = t => string_of_float(t) ++ "s";
 
-let now = () => Unix.gettimeofday();
+let now = Unix.gettimeofday;
