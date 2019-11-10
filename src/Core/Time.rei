@@ -5,12 +5,12 @@ let seconds: float => t;
 let milliseconds: float => t;
 
 /**
-  [ofSeconds(time)] converts the time [t] to a float value representing the time in seconds.
+  [ofSeconds(seconds)] converts the value seconds to a [t] representing the time.
 */
 let ofSeconds: float => t;
 
 /**
-  [ofSeconds(seconds)] converts the value seconds to a [t] representing the time in seconds.
+  [toSeconds(time)] converts the time [t] to a float value representing the time in seconds.
 */
 let toSeconds: t => float;
 
