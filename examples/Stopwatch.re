@@ -100,7 +100,7 @@ module Clock = {
                 marginVertical(20),
                 width(200),
               ]
-              text=Time.show(state.elapsedTime)
+              text={Time.show(state.elapsedTime)}
             />
             <Opacity opacity=marcherOpacity>
               <View
