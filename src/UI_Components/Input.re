@@ -168,7 +168,8 @@ let%component make =
     Hooks.effect(
       OnMount,
       () => {
-        let clear = Tick.interval(_ => dispatch(CursorTimer), Time.Seconds(0.1));
+        let clear =
+          Tick.interval(_ => dispatch(CursorTimer), Time.seconds(0.1));
         Some(clear);
       },
     );
@@ -320,7 +321,7 @@ let%component make =
     Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
   let cursorOpacity =
-    state.isFocused && state.cursorTimer <= Time.Seconds(0.5) ? 1.0 : 0.0;
+    state.isFocused && state.cursorTimer <= Time.seconds(0.5) ? 1.0 : 0.0;
 
   let cursor = {
     let (startStr, _) = getStringParts(state.cursorPosition, valueToDisplay);

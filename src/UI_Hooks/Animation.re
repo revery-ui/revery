@@ -51,8 +51,7 @@ module Transition = {
     (animation, pause, restart, setAnim);
   };
 
-  let transition =
-      (toValue, ~delay=Time.zero, ~duration=Time.seconds(1.)) => {
+  let transition = (toValue, ~delay=Time.zero, ~duration=Time.seconds(1.)) => {
     let repeat = false;
     let%hook ({value, _}, pauseAnim, _restartAnim, setAnim) =
       animation'(
