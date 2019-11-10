@@ -10,7 +10,9 @@ let toSeconds = t => t;
 let (+) = (+.);
 let (-) = (-.);
 let ( * ) = ( *. );
+let ( *. ) = ( *. );
 let (/) = (/.);
+let (/.) = (/.);
 
 let show = t => string_of_float(t) ++ "s";
 
