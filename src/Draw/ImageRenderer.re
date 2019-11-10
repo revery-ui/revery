@@ -20,10 +20,7 @@ let initialPixels =
 type cache = Hashtbl.t(string, t);
 let _cache: cache = Hashtbl.create(100);
 
-let normaliseUrl = (~text, ~extension) =>
-  Str.(global_replace(regexp("[^a-zA-Z0-9_]"), "", text))
-  |> (text => text ++ extension)
-  |> Fpath.v;
+let cleanUrl = url => Str.(global_replace(regexp("[^a-zA-Z0-9_]"), "", url));
 
 let toFileExtension =
   fun
@@ -45,7 +42,7 @@ let getTexture = (imagePath: string) => {
   switch (cacheResult) {
   | Some(r) => r
   | None =>
-    /* naive check if path has http or https */
+    /* will this suffice? */
     let isRemote = imagePath |> Uri.of_string |> Uri.scheme |> Option.is_some;
 
     let imageLoadPromise =
@@ -54,7 +51,7 @@ let getTexture = (imagePath: string) => {
           Fetch.fetch(imagePath)
           |> Lwt.map(
                fun
-               | Ok({Fetch.Response.body, headers}) => {
+               | Ok({Fetch.Response.body, headers, _}) => {
                    let fileExtension =
                      headers
                      |> Fetch.Headers.get(~key="content-type")
@@ -64,12 +61,8 @@ let getTexture = (imagePath: string) => {
                    Fpath.(
                      Some((
                        append(
-                         /* TODO: use a system temporary folder? */
-                         Sys.getcwd() |> v,
-                         normaliseUrl(
-                           ~text=imagePath,
-                           ~extension=fileExtension,
-                         ),
+                         Filename.get_temp_dir_name() |> v,
+                         cleanUrl(imagePath) ++ fileExtension |> v,
                        ),
                        Fetch.Response.Body.toString(body),
                      ))

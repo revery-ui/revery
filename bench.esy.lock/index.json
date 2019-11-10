@@ -1,5 +1,5 @@
 {
-  "checksum": "b84144e57b3e75fad501663fbf784fb9",
+  "checksum": "9c8739e5103f3d14f9356d5508ecb8c0",
   "root": "revery@link-dev:./package.json",
   "node": {
     "revery@link-dev:./package.json": {
@@ -19,7 +19,7 @@
         "reason-gl-matrix@0.9.9305@d41d8cd9",
         "reason-fontkit@2.7.0@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "flex@1.2.2@d41d8cd9",
-        "fetch-core@github:lessp/reason-fetch:fetch-core.json#a0abf96@d41d8cd9",
+        "fetch-core@0.1.0-alpha.1@d41d8cd9",
         "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/lwt_ppx@opam:1.2.4@369f3faf", "@opam/lwt@opam:4.4.0@0357bb8b",
@@ -245,14 +245,15 @@
       ],
       "devDependencies": []
     },
-    "fetch-core@github:lessp/reason-fetch:fetch-core.json#a0abf96@d41d8cd9": {
-      "id":
-        "fetch-core@github:lessp/reason-fetch:fetch-core.json#a0abf96@d41d8cd9",
+    "fetch-core@0.1.0-alpha.1@d41d8cd9": {
+      "id": "fetch-core@0.1.0-alpha.1@d41d8cd9",
       "name": "fetch-core",
-      "version": "github:lessp/reason-fetch:fetch-core.json#a0abf96",
+      "version": "0.1.0-alpha.1",
       "source": {
         "type": "install",
-        "source": [ "github:lessp/reason-fetch:fetch-core.json#a0abf96" ]
+        "source": [
+          "archive:https://registry.npmjs.org/fetch-core/-/fetch-core-0.1.0-alpha.1.tgz#sha1:6826b8fa8fc0a7c1f145c210531a52fd643f671c"
+        ]
       },
       "overrides": [],
       "dependencies": [
