@@ -1,8 +1,6 @@
 open Revery_UI;
 open Revery_UI_Primitives;
 
-module X = Revery_UI.Brisk_jsx_runtime;
-
 let make = (~top=?, ~left=?, ~right=?, ~bottom=?, ~children, ()) => {
   let style =
     switch (top, left, right, bottom) {
