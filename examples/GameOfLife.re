@@ -1,5 +1,4 @@
 open Revery;
-open Revery.Time;
 open Revery.UI;
 open Revery.UI.Components;
 
@@ -408,66 +407,66 @@ module GameOfLiveComponent = {
   let controlsStyle = Style.[height(120), flexDirection(`Row)];
 
   let%component make = (~state, ()) => {
-    let%hook (state, dispatch) = Hooks.reducer(~initialState=state, reducer);
+      let%hook (state, dispatch) =
+        Hooks.reducer(~initialState=state, reducer);
 
-    let%hook () =
-      Hooks.effect(OnMount, () => Some(() => dispatch(StopTimer)));
+      let% () =
+        Hooks.effect(OnMount, () => Some(() => dispatch(StopTimer)));
 
-    let toggleAlive = pos => dispatch(ToggleAlive(pos));
+      let toggleAlive = pos => dispatch(ToggleAlive(pos));
 
-    let startStop = () =>
-      state.isRunning
-        ? dispatch(StopTimer)
-        : {
-          let dispose =
-            Tick.interval(t => dispatch(TimerTick(t)), Seconds(0.));
-          dispatch(StartTimer(dispose));
-        };
+      let startStop = () =>
+        state.isRunning
+          ? dispatch(StopTimer)
+          : {
+            let dispose =
+              Tick.interval(t => dispatch(TimerTick(t)), Time.zero);
+            dispatch(StartTimer(dispose));
+          };
 
-    <Column>
-      <Row>
-        {viewPortRender(state.viewPort, state.universe, toggleAlive)
-         |> React.listToElement}
-      </Row>
-      <View style=controlsStyle>
-        <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
-          title={state.isRunning ? {||} : {||}}
-          onClick=startStop
-        />
-        <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
-          title={||}
-          onClick={_ => dispatch(MoveViewPort(North))}
-        />
-        <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
-          title={||}
-          onClick={_ => dispatch(MoveViewPort(South))}
-        />
-        <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
-          title={||}
-          onClick={_ => dispatch(MoveViewPort(East))}
-        />
-        <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
-          title={||}
-          onClick={_ => dispatch(MoveViewPort(West))}
-        />
-        <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
-          title={||}
-          onClick={_ => dispatch(ZoomViewPort(ZoomIn))}
-        />
-        <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
-          title={||}
-          onClick={_ => dispatch(ZoomViewPort(ZoomOut))}
-        />
-      </View>
-    </Column>;
-  };
+        <Column>
+          <Row>
+            ...{viewPortRender(state.viewPort, state.universe, toggleAlive)}
+          </Row>
+          <View style=controlsStyle>
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              title={state.isRunning ? {||} : {||}}
+              onClick=startStop
+            />
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              title={||}
+              onClick={_ => dispatch(MoveViewPort(North))}
+            />
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              title={||}
+              onClick={_ => dispatch(MoveViewPort(South))}
+            />
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              title={||}
+              onClick={_ => dispatch(MoveViewPort(East))}
+            />
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              title={||}
+              onClick={_ => dispatch(MoveViewPort(West))}
+            />
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              title={||}
+              onClick={_ => dispatch(ZoomViewPort(ZoomIn))}
+            />
+            <Button
+              fontFamily="FontAwesome5FreeSolid.otf"
+              title={||}
+              onClick={_ => dispatch(ZoomViewPort(ZoomOut))}
+            />
+          </View>
+        </Column>
+    };
 };
 
 let render = () => {
