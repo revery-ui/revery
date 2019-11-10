@@ -152,16 +152,16 @@ let make =
             let direction = isAtTop ? Top : Bottom;
             let bounceAwayAnim = {
               toValue: float_of_int(newScrollTop),
-              duration: Milliseconds(100.),
-              delay: Seconds(0.),
+              duration: Time.milliseconds(100.),
+              delay: Time.zero,
               repeat: false,
               easing: Easing.cubicBezier(0.23, 1., 0.32, 1.),
               direction: `Normal,
             };
             let bounceBackAnim = {
               toValue: isAtTop ? 0. : float_of_int(maxHeight),
-              duration: Milliseconds(800.),
-              delay: Seconds(0.),
+              duration: Time.milliseconds(800.),
+              delay: Time.zero,
               repeat: false,
               easing: Easing.cubicBezier(0.23, 1., 0.32, 1.),
               direction: `Normal,

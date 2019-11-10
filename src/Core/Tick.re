@@ -1,7 +1,7 @@
 module type Clock = {let time: unit => Time.t;};
 
 module DefaultClock = {
-  let time = () => Time.getTime();
+  let time = Time.now;
 };
 
 type callback = Time.t => unit;
@@ -75,23 +75,17 @@ module Make = (ClockImpl: Clock) => {
       );
     _cancelledTickers := IntMap.empty;
 
-    let currentTime = Time.to_float_seconds(ClockImpl.time());
+    let currentTime = ClockImpl.time();
 
     let f = (tf: tickFunction) => {
-      let lastTime = Time.to_float_seconds(tf.lastExecutionTime);
-      let frequency = Time.to_float_seconds(tf.frequency);
-      let nextTime = lastTime +. frequency;
+      let nextTime = Time.(tf.lastExecutionTime + tf.frequency);
 
       if (nextTime <= currentTime) {
-        let elapsedTime = Time.of_float_seconds(currentTime -. lastTime);
+        let elapsedTime = Time.(currentTime - tf.lastExecutionTime);
         ignore(tf.f(elapsedTime));
         switch (tf.tickType) {
         | Timeout => None
-        | Interval =>
-          Some({
-            ...tf,
-            lastExecutionTime: Time.of_float_seconds(currentTime),
-          })
+        | Interval => Some({...tf, lastExecutionTime: currentTime})
         };
       } else {
         Some(tf);

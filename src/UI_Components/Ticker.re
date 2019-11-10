@@ -9,7 +9,7 @@ let noop: tickFunction = _ => ();
 
 let component = React.component("Container");
 
-let createElement = (~children, ~onTick=noop, ~tickRate=Time.Seconds(1.), ()) =>
+let createElement = (~children, ~onTick=noop, ~tickRate=Time.seconds(1.), ()) =>
   component(hooks => {
     let hooks =
       Hooks.effect(

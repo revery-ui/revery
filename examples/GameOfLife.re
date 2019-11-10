@@ -1,5 +1,4 @@
 open Revery;
-open Revery.Time;
 open Revery.UI;
 open Revery.UI.Components;
 
@@ -432,7 +431,7 @@ module GameOfLiveComponent = {
           ? dispatch(StopTimer)
           : {
             let dispose =
-              Tick.interval(t => dispatch(TimerTick(t)), Seconds(0.));
+              Tick.interval(t => dispatch(TimerTick(t)), Time.zero);
             dispatch(StartTimer(dispose));
           };
 
