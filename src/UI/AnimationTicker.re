@@ -6,6 +6,6 @@ open Revery_Core;
 
 let onTick: Event.t(Time.t) = Event.create();
 
-let time = () => Time.getTime();
+let time = Time.now;
 
 let tick = () => Event.dispatch(onTick, time());

@@ -20,10 +20,10 @@ module Transition = {
   let animation' = (v: animationValue, opts: animationOptions) => {
     let%hook (animation, setAnim) = Ref.ref(tween(v, opts));
     let%hook (_, dispatch) = Reducer.reducer(~initialState=0, reducer);
-    let completer = () => Tick.interval(_t => dispatch(), Seconds(0.));
+    let completer = () => Tick.interval(_t => dispatch(), Time.zero);
 
     let restart = () => {
-      animation.startTime = Time.to_float_seconds(getTime());
+      animation.startTime = Time.toSeconds(Time.now());
       animation.value.current = animation.startValue;
       let newActiveAnim = {
         animation,
@@ -51,13 +51,12 @@ module Transition = {
     (animation, pause, restart, setAnim);
   };
 
-  let transition =
-      (toValue, ~delay=Time.Seconds(0.0), ~duration=Time.Seconds(1.)) => {
+  let transition = (toValue, ~delay=Time.zero, ~duration=Time.seconds(1.)) => {
     let repeat = false;
     let%hook ({value, _}, pauseAnim, _restartAnim, setAnim) =
       animation'(
         floatValue(toValue),
-        options(~toValue, ~duration, ~delay=Time.Seconds(0.0), ~repeat, ()),
+        options(~toValue, ~duration, ~delay=Time.zero, ~repeat, ()),
       );
     let setAnim = (~immediate=false, toValue) => {
       let animation =

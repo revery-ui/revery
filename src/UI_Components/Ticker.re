@@ -11,7 +11,7 @@ let%component make =
               (
                 ~children=React.empty,
                 ~onTick=noop,
-                ~tickRate=Time.Seconds(1.),
+                ~tickRate=Time.seconds(1.),
                 (),
               ) => {
   let%hook () =

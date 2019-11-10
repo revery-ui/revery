@@ -1,5 +1,4 @@
 open Revery;
-open Revery.Time;
 open Revery.Math;
 open Revery.UI;
 open Revery.UI.Components;
@@ -21,15 +20,14 @@ module Clock = {
 
   let reducer = (a, s) =>
     switch (a) {
-    | Start(f) => {dispose: f, isRunning: true, elapsedTime: Seconds(0.)}
+    | Start(f) => {dispose: f, isRunning: true, elapsedTime: Time.zero}
     | Stop =>
       s.dispose();
-      let ret = {dispose: noop, isRunning: false, elapsedTime: Seconds(0.)};
+      let ret = {dispose: noop, isRunning: false, elapsedTime: Time.zero};
       ret;
     | TimerTick(t) => {
         ...s,
-        elapsedTime:
-          s.isRunning ? Time.increment(s.elapsedTime, t) : s.elapsedTime,
+        elapsedTime: s.isRunning ? Time.(s.elapsedTime + t) : s.elapsedTime,
       }
     };
 
@@ -39,7 +37,7 @@ module Clock = {
         ~initialState={
           isRunning: false,
           dispose: noop,
-          elapsedTime: Seconds(0.),
+          elapsedTime: Time.zero,
         },
         reducer,
       );
@@ -59,7 +57,7 @@ module Clock = {
          */
         : {
           let dispose =
-            Tick.interval(t => dispatch(TimerTick(t)), Seconds(0.));
+            Tick.interval(t => dispatch(TimerTick(t)), Time.zero);
 
           /* We'll also keep a handle on the dispose function so we can make sure its called on stop*/
           dispatch(Start(dispose));
@@ -69,7 +67,7 @@ module Clock = {
 
     let marcherOpacity = state.isRunning ? 1.0 : 0.0;
     let getMarcherPosition = t =>
-      sin(Time.to_float_seconds(t) *. 2. *. pi) /. 2. +. 0.5;
+      sin(Time.toSeconds(t) *. 2. *. pi) /. 2. +. 0.5;
 
     <View
       style=Style.[
@@ -95,7 +93,7 @@ module Clock = {
             marginVertical(20),
             width(200),
           ]
-          text={string_of_float(state.elapsedTime |> Time.to_float_seconds)}
+          text={Time.show(state.elapsedTime)}
         />
         <Opacity opacity=marcherOpacity>
           <View

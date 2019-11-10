@@ -30,7 +30,5 @@ module React = React;
 module Focus = Focus;
 module Dimensions = Dimensions;
 
-module Brisk_jsx_runtime = React;
-
 let start = Ui.start;
 let getActiveWindow = Ui.getActiveWindow;

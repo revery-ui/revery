@@ -55,7 +55,8 @@ module AnalogClock = {
       Hooks.effect(
         OnMount,
         () => {
-          let clear = Tick.interval(_ => dispatch(UpdateTime), Seconds(1.));
+          let clear =
+            Tick.interval(_ => dispatch(UpdateTime), Time.seconds(1.));
           Some(clear);
         },
       );

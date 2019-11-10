@@ -99,14 +99,15 @@ let reducer = (action, state) =>
   | CursorTimer => {
       ...state,
       cursorTimer:
-        state.cursorTimer >= Time.Seconds(1.0)
-          ? Time.Seconds(0.0)
-          : Time.increment(state.cursorTimer, Time.Seconds(0.1)),
+        Time.(
+          state.cursorTimer >= seconds(1.)
+            ? zero : state.cursorTimer + milliseconds(100.)
+        ),
     }
   | UpdateText({newString, _}) =>
     state.isFocused
       ? {...state, isFocused: true, internalValue: newString} : state
-  | ResetCursorTimer => {...state, cursorTimer: Time.Seconds(0.0)}
+  | ResetCursorTimer => {...state, cursorTimer: Time.zero}
   };
 
 let defaultHeight = 50;
@@ -151,7 +152,7 @@ let%component make =
           | Some(v) => String.length(v)
           | None => 0
           },
-        cursorTimer: Time.Seconds(0.0),
+        cursorTimer: Time.zero,
         isFocused: false,
       },
       reducer,
@@ -167,7 +168,8 @@ let%component make =
     Hooks.effect(
       OnMount,
       () => {
-        let clear = Tick.interval(_ => dispatch(CursorTimer), Seconds(0.1));
+        let clear =
+          Tick.interval(_ => dispatch(CursorTimer), Time.seconds(0.1));
         Some(clear);
       },
     );
@@ -296,10 +298,6 @@ let%component make =
 
   let hasPlaceholder = String.length(valueToDisplay) < 1;
 
-  /*
-     computed styles
-   */
-
   let allStyles =
     Style.(
       merge(
@@ -323,7 +321,7 @@ let%component make =
     Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
   let cursorOpacity =
-    state.isFocused && state.cursorTimer <= Time.Seconds(0.5) ? 1.0 : 0.0;
+    state.isFocused && state.cursorTimer <= Time.seconds(0.5) ? 1.0 : 0.0;
 
   let cursor = {
     let (startStr, _) = getStringParts(state.cursorPosition, valueToDisplay);

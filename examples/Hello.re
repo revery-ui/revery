@@ -6,15 +6,15 @@ open Revery.UI.Components;
 module Logo = {
   let%component make = () => {
     let%hook (transitionedOpacity, transitionOpacityTo) =
-      Hooks.transition(1., ~duration=Seconds(1.));
+      Hooks.transition(1., ~duration=Time.seconds(1.));
 
     let%hook (rotation, pauseRotation, restartRotation) =
       Hooks.animation(
         Animated.floatValue(0.),
         Animated.options(
           ~toValue=6.28,
-          ~duration=Seconds(8.),
-          ~delay=Seconds(1.0),
+          ~duration=Time.seconds(8.),
+          ~delay=Time.seconds(1.0),
           ~repeat=true,
           (),
         ),
@@ -25,8 +25,8 @@ module Logo = {
         Animated.floatValue(0.),
         Animated.options(
           ~toValue=6.28,
-          ~duration=Seconds(4.),
-          ~delay=Seconds(0.5),
+          ~duration=Time.seconds(4.),
+          ~delay=Time.seconds(0.5),
           ~repeat=true,
           (),
         ),
@@ -88,8 +88,8 @@ module AnimatedText = {
         Animated.floatValue(0.),
         Animated.options(
           ~toValue=1.0,
-          ~duration=Seconds(1.),
-          ~delay=Seconds(delay),
+          ~duration=Time.seconds(1.),
+          ~delay=Time.seconds(delay),
           (),
         ),
       );
@@ -99,8 +99,8 @@ module AnimatedText = {
         Animated.floatValue(50.),
         Animated.options(
           ~toValue=1.0,
-          ~duration=Seconds(0.5),
-          ~delay=Seconds(delay),
+          ~duration=Time.seconds(0.5),
+          ~delay=Time.seconds(delay),
           (),
         ),
       );
@@ -120,7 +120,7 @@ module AnimatedText = {
   };
 };
 
-let render = () => {
+let render = () =>
   <Center>
     <Row>
       <AnimatedText delay=0.0 text="Welcome" />
@@ -129,4 +129,3 @@ let render = () => {
     </Row>
     <Logo />
   </Center>;
-};
