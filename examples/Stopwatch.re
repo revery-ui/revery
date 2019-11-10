@@ -100,7 +100,7 @@ module Clock = {
                 marginVertical(20),
                 width(200),
               ]
-              text={string_of_float(state.elapsedTime |> Time.toSeconds)}
+              text=Time.show(state.elapsedTime)
             />
             <Opacity opacity=marcherOpacity>
               <View
