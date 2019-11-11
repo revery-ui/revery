@@ -22,4 +22,7 @@ let tween: (float, float, t(normalizedTime)) => t(float);
 let map: ('a => 'b, t('a)) => t('b);
 let andThen: (t('a), ~next: t('a)) => t('a);
 let zip: ((t('a), t('b))) => t(('a, 'b));
+
 let apply: (Time.t, t('a)) => ('a, state);
+let valueAt: (Time.t, t('a)) => 'a;
+let stateAt: (Time.t, t('a)) => state;

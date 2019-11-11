@@ -104,3 +104,9 @@ let zip = ((a, b), time) =>
   };
 
 let apply = (time, animate) => animate(time);
+
+let valueAt = (time, animate) =>
+  fst(animate(time));
+
+let stateAt = (time, animate) =>
+  snd(animate(time));
