@@ -14,7 +14,7 @@ let selectionHighlight = Color.hex("#90f7ff");
 
 type example = {
   name: string,
-  render: Window.t => React.syntheticElement,
+  render: Window.t => React.element(React.node),
   source: string,
 };
 
@@ -143,44 +143,38 @@ let getSourceForSample = (state: state, example: string) =>
 
 let noop = () => ();
 
-let getRenderFunctionSelector: (state, Window.t) => React.syntheticElement =
+let getRenderFunctionSelector: (state, Window.t) => React.element(React.node) =
   (s: state) => getExampleByName(s, s.selectedExample) |> (a => a.render);
 
 module ExampleButton = {
-  let component = React.component("ExampleButton");
+  let make = (~isActive, ~name, ~onClick, ()) => {
+    let highlightColor =
+      isActive ? selectionHighlight : Colors.transparentWhite;
 
-  let createElement = (~children as _, ~isActive, ~name, ~onClick, ()) =>
-    component(hooks => {
-      let highlightColor =
-        isActive ? selectionHighlight : Colors.transparentWhite;
+    let buttonOpacity = 1.0;
+    let bgColor = isActive ? activeBackgroundColor : inactiveBackgroundColor;
 
-      let buttonOpacity = 1.0;
-      let bgColor = isActive ? activeBackgroundColor : inactiveBackgroundColor;
+    let wrapperStyle =
+      Style.[
+        borderLeft(~width=4, ~color=highlightColor),
+        backgroundColor(bgColor),
+      ];
 
-      let wrapperStyle =
-        Style.[
-          borderLeft(~width=4, ~color=highlightColor),
-          backgroundColor(bgColor),
-        ];
+    let textColor = isActive ? Colors.white : Colors.grey;
+    let textHeaderStyle =
+      Style.[
+        color(textColor),
+        fontFamily("Roboto-Regular.ttf"),
+        fontSize(14),
+        margin(16),
+      ];
 
-      let textColor = isActive ? Colors.white : Colors.grey;
-      let textHeaderStyle =
-        Style.[
-          color(textColor),
-          fontFamily("Roboto-Regular.ttf"),
-          fontSize(14),
-          margin(16),
-        ];
-
-      (
-        hooks,
-        <Opacity opacity=buttonOpacity>
-          <Clickable style=wrapperStyle onClick>
-            <Text style=textHeaderStyle text=name />
-          </Clickable>
-        </Opacity>,
-      );
-    });
+    <Opacity opacity=buttonOpacity>
+      <Clickable style=wrapperStyle onClick>
+        <Text style=textHeaderStyle text=name />
+      </Clickable>
+    </Opacity>;
+  };
 };
 
 type action =
@@ -192,80 +186,73 @@ let reducer = (action: action, state: state) =>
   };
 
 module ExampleHost = {
-  let component = React.component("ExampleHost");
+  let%component make = (~win, ()) => {
+    let%hook (state, dispatch) = Hooks.reducer(~initialState=state, reducer);
 
-  let createElement = (~children as _, ~win, ()) =>
-    component(hooks => {
-      let (state, dispatch, hooks) =
-        Hooks.reducer(~initialState=state, reducer, hooks);
+    let renderButton = (x: example) => {
+      let isActive = String.equal(x.name, state.selectedExample);
+      <ExampleButton
+        isActive
+        name={x.name}
+        onClick={_ => {
+          /*
+           * TEMPORARY WORKAROUND: The animations don't always get stopped when switching examples,
+           * tracked by briskml/brisk-reconciler#8. We can remove this once it's fixed!
+           */
+          Animated.cancelAll();
+          Window.setTitle(win, "Revery Example - " ++ x.name);
 
-      let renderButton = (x: example) => {
-        let isActive = String.equal(x.name, state.selectedExample);
-        <ExampleButton
-          isActive
-          name={x.name}
-          onClick={_ => {
-            /*
-             * TEMPORARY WORKAROUND: The animations don't always get stopped when switching examples,
-             * tracked by briskml/brisk-reconciler#8. We can remove this once it's fixed!
-             */
-            Animated.cancelAll();
-            Window.setTitle(win, "Revery Example - " ++ x.name);
+          let sourceFile = getSourceForSample(state, x.name);
+          prerr_endline("SOURCE FILE: " ++ sourceFile);
+          notifyExampleSwitched(sourceFile);
+          dispatch(SelectExample(x.name));
+          ();
+        }}
+      />;
+    };
 
-            let sourceFile = getSourceForSample(state, x.name);
-            prerr_endline("SOURCE FILE: " ++ sourceFile);
-            notifyExampleSwitched(sourceFile);
-            dispatch(SelectExample(x.name));
-            ();
-          }}
-        />;
-      };
+    let buttons = List.map(renderButton, state.examples);
 
-      let buttons = List.map(renderButton, state.examples);
+    let exampleRender = getRenderFunctionSelector(state);
+    let example = exampleRender(win);
 
-      let exampleRender = getRenderFunctionSelector(state);
-      let example = exampleRender(win);
-
-      (
-        hooks,
-        <View
-          onMouseWheel={_evt => ()}
-          style=Style.[
-            position(`Absolute),
-            justifyContent(`Center),
-            alignItems(`Center),
-            backgroundColor(bgColor),
-            bottom(0),
-            top(0),
-            left(0),
-            right(0),
-            flexDirection(`Row),
-          ]>
-          <ScrollView
-            style=Style.[
-              position(`Absolute),
-              top(0),
-              left(0),
-              width(175),
-              bottom(0),
-              backgroundColor(bgColor),
-            ]>
-            <View> ...buttons </View>
-          </ScrollView>
-          <View
-            style=Style.[
-              position(`Absolute),
-              top(0),
-              left(175),
-              right(0),
-              bottom(0),
-              backgroundColor(activeBackgroundColor),
-            ]>
-            example
-          </View>
-        </View>,
-      );
-    });
+    <View
+      onMouseWheel={_evt => ()}
+      style=Style.[
+        position(`Absolute),
+        justifyContent(`Center),
+        alignItems(`Center),
+        backgroundColor(bgColor),
+        bottom(0),
+        top(0),
+        left(0),
+        right(0),
+        flexDirection(`Row),
+      ]>
+      <ScrollView
+        style=Style.[
+          position(`Absolute),
+          top(0),
+          left(0),
+          width(175),
+          bottom(0),
+          backgroundColor(bgColor),
+        ]>
+        <View> {buttons |> React.listToElement} </View>
+      </ScrollView>
+      <View
+        style=Style.[
+          position(`Absolute),
+          top(0),
+          left(175),
+          right(0),
+          bottom(0),
+          backgroundColor(activeBackgroundColor),
+        ]>
+        example
+      </View>
+    </View>;
+  };
 };
 
 let init = app => {

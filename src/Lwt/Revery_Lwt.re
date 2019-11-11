@@ -33,6 +33,6 @@ let startEventLoop = () => {
           Lwt_sequence.iter_l(wakener => Lwt.wakeup(wakener, ()), tmp);
         };
       }),
-    Seconds(0.),
+    Time.zero,
   );
 };

@@ -1,28 +1,29 @@
 {
   "source": "./package.json",
   "scripts": {
-      "run": "esy '@js' x bash -c 'http-server #{self.bin}'"
+    "run": "esy '@js' x bash -c 'http-server #{self.bin}'"
   },
   "override": {
-      "build": ["dune build --root . -j4"],
-      "install": [
-          "esy-installer Revery.install",
-          "esy-installer ReveryExampleJs.install"
-      ],
-      "dependencies": {
-        "@opam/js_of_ocaml": "*",
-        "@opam/js_of_ocaml-compiler": "*",
-        "@opam/js_of_ocaml-lwt": "*",
-        "http-server": "*",
-        "@opam/merlin-extend": "0.4"
-      },
-      "resolutions": {
-        "rebez": "github:jchavarri/rebez#46cbc183",
-        "rench": "github:revery-ui/rench#4554280",
-        "pesy": "0.4.1"
-      },
-      "devDependencies": {
-        "ocaml": ">=4.6.0 <4.9.0"
-      }
+    "build": ["dune build --root . -j4"],
+    "install": [
+      "esy-installer Revery.install",
+      "esy-installer ReveryExampleJs.install"
+    ],
+    "dependencies": {
+      "@opam/js_of_ocaml": "*",
+      "@opam/js_of_ocaml-compiler": "*",
+      "@opam/js_of_ocaml-lwt": "*",
+      "http-server": "*",
+      "@opam/merlin-extend": "0.4"
+    },
+    "resolutions": {
+      "rebez": "github:jchavarri/rebez#46cbc183",
+      "rench": "github:revery-ui/rench#4554280",
+      "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#0a2e476",
+      "pesy": "0.4.1"
+    },
+    "devDependencies": {
+      "ocaml": ">=4.6.0 <4.9.0"
+    }
   }
 }

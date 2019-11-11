@@ -1,13 +1,12 @@
 open Revery_Core;
-open Revery_Core.Time;
 
 open TestFramework;
 
 module TestTicker = {
-  let _time: ref(Time.t) = ref(Seconds(0.));
+  let _time: ref(Time.t) = ref(Time.zero);
 
   let incrementTime = (time: Time.t) => {
-    _time := Time.increment(_time^, time);
+    _time := Time.(_time^ + time);
   };
 
   let time = () => _time^;
@@ -19,14 +18,14 @@ describe("Ticker", ({describe, _}) => {
   describe("timeout", ({test, _}) => {
     test("calls once after tick time", ({expect, _}) => {
       let callCount = ref(0);
-      let _ignore = Tick.timeout(() => incr(callCount), Seconds(1.));
-      TestTicker.incrementTime(Seconds(1.01));
+      let _ignore = Tick.timeout(() => incr(callCount), Time.seconds(1.));
+      TestTicker.incrementTime(Time.seconds(1.01));
       Tick.pump();
 
       expect.int(callCount^).toBe(1);
 
       // Incrementing again, the timeout should've expired - so no additional increment
-      TestTicker.incrementTime(Seconds(1.01));
+      TestTicker.incrementTime(Time.seconds(1.01));
       Tick.pump();
 
       expect.int(callCount^).toBe(1);
@@ -42,25 +41,25 @@ describe("Ticker", ({describe, _}) => {
           () => {
             incr(outerCallCount);
             let _ignore =
-              Tick.timeout(() => incr(innerCallCount), Seconds(0.11));
+              Tick.timeout(() => incr(innerCallCount), Time.seconds(0.11));
             ();
           },
-          Seconds(0.),
+          Time.zero,
         );
-      TestTicker.incrementTime(Seconds(0.11));
+      TestTicker.incrementTime(Time.seconds(0.11));
       Tick.pump();
 
       expect.int(outerCallCount^).toBe(1);
       expect.int(innerCallCount^).toBe(0);
 
-      TestTicker.incrementTime(Seconds(0.11));
+      TestTicker.incrementTime(Time.seconds(0.11));
       Tick.pump();
 
       expect.int(outerCallCount^).toBe(1);
       expect.int(innerCallCount^).toBe(1);
 
       // Incrementing again, the timeout should've expired - so no additional increment
-      TestTicker.incrementTime(Seconds(1.01));
+      TestTicker.incrementTime(Time.seconds(1.01));
       Tick.pump();
 
       expect.int(outerCallCount^).toBe(1);
@@ -68,12 +67,12 @@ describe("Ticker", ({describe, _}) => {
     });
     test("doesn't call if canceled", ({expect, _}) => {
       let callCount = ref(0);
-      let cancel = Tick.timeout(() => incr(callCount), Seconds(1.));
-      TestTicker.incrementTime(Seconds(0.5));
+      let cancel = Tick.timeout(() => incr(callCount), Time.seconds(1.));
+      TestTicker.incrementTime(Time.seconds(0.5));
       Tick.pump();
 
       cancel();
-      TestTicker.incrementTime(Seconds(0.51));
+      TestTicker.incrementTime(Time.seconds(0.51));
       Tick.pump();
 
       expect.int(callCount^).toBe(0);
@@ -84,9 +83,9 @@ describe("Ticker", ({describe, _}) => {
       let callCount = ref(0);
 
       let _ignore =
-        Tick.interval(_ => callCount := callCount^ + 1, Seconds(1.));
+        Tick.interval(_ => callCount := callCount^ + 1, Time.seconds(1.));
 
-      TestTicker.incrementTime(Seconds(1.01));
+      TestTicker.incrementTime(Time.seconds(1.01));
 
       expect.int(callCount^).toBe(0);
       Tick.pump();
@@ -95,11 +94,11 @@ describe("Ticker", ({describe, _}) => {
       Tick.pump();
       expect.int(callCount^).toBe(1);
 
-      TestTicker.incrementTime(Seconds(0.9));
+      TestTicker.incrementTime(Time.seconds(0.9));
       Tick.pump();
       expect.int(callCount^).toBe(1);
 
-      TestTicker.incrementTime(Seconds(0.11));
+      TestTicker.incrementTime(Time.seconds(0.11));
       Tick.pump();
       expect.int(callCount^).toBe(2);
     });
@@ -108,9 +107,9 @@ describe("Ticker", ({describe, _}) => {
       let callCount = ref(0);
 
       let stop =
-        Tick.interval(_ => callCount := callCount^ + 1, Seconds(1.));
+        Tick.interval(_ => callCount := callCount^ + 1, Time.seconds(1.));
 
-      TestTicker.incrementTime(Seconds(1.01));
+      TestTicker.incrementTime(Time.seconds(1.01));
 
       expect.int(callCount^).toBe(0);
       Tick.pump();
@@ -118,7 +117,7 @@ describe("Ticker", ({describe, _}) => {
 
       stop();
 
-      TestTicker.incrementTime(Seconds(2.));
+      TestTicker.incrementTime(Time.seconds(2.));
       Tick.pump();
       expect.int(callCount^).toBe(1);
     });

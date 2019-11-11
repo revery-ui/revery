@@ -18,14 +18,13 @@ let animationLoop = (animation, completer, ()) => {
 };
 
 module Transition = {
-  let animation' = (v: animationValue, opts: animationOptions, slots) => {
-    let (animation, setAnim, slots) = Ref.ref(tween(v, opts), slots);
-    let (_, dispatch, slots) =
-      Reducer.reducer(~initialState=0, reducer, slots);
-    let completer = () => Tick.interval(_t => dispatch(), Seconds(0.));
+  let animation' = (v: animationValue, opts: animationOptions) => {
+    let%hook (animation, setAnim) = Ref.ref(tween(v, opts));
+    let%hook (_, dispatch) = Reducer.reducer(~initialState=0, reducer);
+    let completer = () => Tick.interval(_t => dispatch(), Time.zero);
 
     let restart = () => {
-      animation.startTime = Time.to_float_seconds(getTime());
+      animation.startTime = Time.toSeconds(Time.now());
       animation.value.current = animation.startValue;
       let newActiveAnim = {
         animation,
@@ -47,26 +46,24 @@ module Transition = {
       };
     };
 
-    let slots =
-      Effect.effect(OnMount, animationLoop(animation, completer), slots);
+    let%hook () =
+      Effect.effect(OnMount, animationLoop(animation, completer));
 
-    (animation, pause, restart, setAnim, slots);
+    (animation, pause, restart, setAnim);
   };
 
   let transition =
       (
-        ~duration=Time.Seconds(1.),
-        ~delay=Time.Seconds(0.0),
+        ~duration=Time.seconds(1.),
+        ~delay=Time.zero,
         toValue,
         ~easing=linear,
-        slots,
       ) => {
     let repeat = false;
-    let ({value, _}, pauseAnim, _restartAnim, setAnim, slots) =
+    let%hook ({value, _}, pauseAnim, _restartAnim, setAnim) =
       animation'(
         floatValue(toValue),
-        options(~toValue, ~duration, ~delay=Time.Seconds(0.0), ~repeat, ()),
-        slots,
+        options(~toValue, ~duration, ~delay=Time.zero, ~repeat, ()),
       );
     let setAnim = (~immediate=false, toValue) => {
       let animation =
@@ -84,12 +81,12 @@ module Transition = {
       addAnimation(newActiveAnim);
       setAnim(animation);
     };
-    (value.current, setAnim, slots);
+    (value.current, setAnim);
   };
 };
 
-let animation = (v, opts, slots) => {
-  let (animation, pause, restart, _setAnim, slots) =
-    Transition.animation'(v, opts, slots);
-  (animation.value.current, pause, restart, slots);
+let animation = (v, opts) => {
+  let%hook (animation, pause, restart, _setAnim) =
+    Transition.animation'(v, opts);
+  (animation.value.current, pause, restart);
 };
