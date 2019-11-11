@@ -9,20 +9,17 @@ open TestFramework;
  */
 
 module TestRefComponent = {
-  let component = React.component("TestRefComponent");
+  let%component make = (~latestRef, ()) => {
+    let%hook (refFromState, setRef) = React.Hooks.state(None);
 
-  let createElement = (~children as _, ~latestRef, ()) =>
-    component(hooks => {
-      let (refFromState, setRef, hooks) = React.Hooks.state(None, hooks);
+    latestRef := refFromState;
 
-      latestRef := refFromState;
+    let setRefInState = r => {
+      setRef(_prevRef => Some(r));
+    };
 
-      let setRefInState = r => {
-        setRef(Some(r));
-      };
-
-      (hooks, <View ref=setRefInState />);
-    });
+    <View ref=setRefInState />;
+  };
 };
 
 describe("Reconciler", ({test, _}) => {

@@ -1,21 +1,30 @@
 type state = {
-  rendered: React.RenderedElement.t,
-  previousElement: React.syntheticElement,
+  rendered: React.RenderedElement.t(React.reveryNode, React.reveryNode),
+  previousElement: React.element(React.reveryNode),
 };
 
 type t = {
-  node: Reconciler.reveryNode,
+  node: React.reveryNode,
   state: option(state),
 };
 
-let create: Reconciler.reveryNode => t = n => {node: n, state: None};
+let create: React.reveryNode => t = n => {node: n, state: None};
 
-let update: (t, React.syntheticElement) => t =
+let update: (t, React.element(React.reveryNode)) => t =
   ({node, state}, element) => {
     let newRendered =
       switch (state) {
       | None =>
-        let updates = React.RenderedElement.render(node, element);
+        let updates =
+          React.RenderedElement.render(
+            {
+              node,
+              insertNode: React.insertNode,
+              deleteNode: React.deleteNode,
+              moveNode: React.moveNode,
+            },
+            element,
+          );
         React.RenderedElement.executeHostViewUpdates(updates) |> ignore;
         updates |> React.RenderedElement.executePendingEffects;
       | Some(s) =>

@@ -1,5 +1,4 @@
 open Revery_Core;
-open Revery_UI;
 
 type tickFunction = Time.t => unit;
 
@@ -19,11 +18,12 @@ let tick tick = (t) => print_endline("Time: " ++ string_of_float(Time.toSeconds(
 @param [onTick] Callback function, called for each tick.
 @param [tickRate] Frequency of calling the [onTick] function.
 */
-let createElement:
+let make:
   (
-    ~children: list(React.syntheticElement),
+    ~key: Brisk_reconciler.Key.t=?,
+    ~children: Revery_UI.React.element(Revery_UI.React.node)=?,
     ~onTick: tickFunction=?,
-    ~tickRate: Time.t=?,
+    ~tickRate: Revery_Core.Time.t=?,
     unit
   ) =>
-  React.syntheticElement;
+  Brisk_reconciler.element(Revery_UI.viewNode);

@@ -23,115 +23,76 @@ let isMouseInsideRef = (ref: node, mouseX: float, mouseY: float) => {
   BoundingBox2d.isPointInside(clickableDimensions, pointVec);
 };
 
-let component = React.component("Clickable");
+let%component make =
+              (
+                ~style=[],
+                ~onClick: clickFunction=noop,
+                ~onRightClick: clickFunction=noop,
+                ~onAnyClick: clickFunctionWithEvt=noopEvt,
+                ~componentRef=?,
+                ~onBlur=?,
+                ~onFocus=?,
+                ~tabindex=0,
+                ~onKeyDown=?,
+                ~onKeyUp=?,
+                ~onTextEdit=?,
+                ~onTextInput=?,
+                ~children,
+                (),
+              ) => {
+  let%hook (clickableRef, setClickableRefOption) = Hooks.state(None);
 
-let make =
-    (
-      ~style,
-      ~onClick: clickFunction=noop,
-      ~onRightClick: clickFunction=noop,
-      ~onAnyClick: clickFunctionWithEvt=noopEvt,
-      ~componentRef=?,
-      ~onBlur=?,
-      ~onFocus=?,
-      ~tabindex=?,
-      ~onKeyDown=?,
-      ~onKeyUp=?,
-      ~onTextEdit=?,
-      ~onTextInput=?,
-      children: React.syntheticElement,
-    ) =>
-  component(slots => {
-    let (clickableRef, setClickableRefOption, slots) =
-      Hooks.state(None, slots);
+  let setClickableRef = r => {
+    switch (componentRef) {
+    | Some(fn) => fn(r)
+    | None => ()
+    };
+    setClickableRefOption(_ => Some(r));
+  };
 
-    let setClickableRef = r => {
-      switch (componentRef) {
-      | Some(fn) => fn(r)
-      | None => ()
-      };
-      setClickableRefOption(Some(r));
+  let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
+    switch (clickableRef) {
+    | Some(clickable) =>
+      if (isMouseInsideRef(clickable, mouseEvt.mouseX, mouseEvt.mouseY)) {
+        switch (mouseEvt.button) {
+        | MouseButton.BUTTON_LEFT => onClick()
+        | MouseButton.BUTTON_RIGHT => onRightClick()
+        | _ => ()
+        };
+        onAnyClick(mouseEvt);
+      }
+    | _ => ()
     };
 
-    let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
-      switch (clickableRef) {
-      | Some(clickable) =>
-        if (isMouseInsideRef(clickable, mouseEvt.mouseX, mouseEvt.mouseY)) {
-          switch (mouseEvt.button) {
-          | MouseButton.BUTTON_LEFT => onClick()
-          | MouseButton.BUTTON_RIGHT => onRightClick()
-          | _ => ()
-          };
-          onAnyClick(mouseEvt);
-        }
-      | _ => ()
-      };
+    /* TODO Releasing capture in here means
+       if multiple buttons are pressed simutaneously
+       there would a race condition
+       Not sure we need fix it though */
+    Mouse.releaseCapture();
+    ();
+  };
 
-      /* TODO Releasing capture in here means
-         if multiple buttons are pressed simutaneously
-         there would a race condition
-         Not sure we need fix it though */
-      Mouse.releaseCapture();
-      ();
+  let onMouseDown = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
+    switch (mouseEvt.button) {
+    | MouseButton.BUTTON_LEFT =>
+      Mouse.setCapture(~onMouseUp=evt => onMouseUp(evt), ())
+    | _ => Mouse.setCapture(~onMouseUp=evt => onMouseUp(evt), ())
     };
+  };
 
-    let onMouseDown = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
-      switch (mouseEvt.button) {
-      | MouseButton.BUTTON_LEFT =>
-        Mouse.setCapture(~onMouseUp=evt => onMouseUp(evt), ())
-      | _ => Mouse.setCapture(~onMouseUp=evt => onMouseUp(evt), ())
-      };
-    };
+  let style = Style.[cursor(MouseCursors.pointer), ...style];
 
-    let style = Style.[cursor(MouseCursors.pointer), ...style];
-
-    (
-      slots,
-      <View
-        style
-        onMouseDown
-        ?onBlur
-        ?onFocus
-        ?onKeyDown
-        ?onKeyUp
-        ?onTextEdit
-        ?onTextInput
-        tabindex
-        ref={r => setClickableRef(r)}>
-        children
-      </View>,
-    );
-  });
-
-let createElement =
-    (
-      ~style=[],
-      ~onClick: clickFunction=noop,
-      ~onRightClick: clickFunction=noop,
-      ~onAnyClick: clickFunctionWithEvt=noopEvt,
-      ~onBlur=?,
-      ~onFocus=?,
-      ~tabindex=0,
-      ~children,
-      ~onKeyDown=?,
-      ~onKeyUp=?,
-      ~onTextEdit=?,
-      ~onTextInput=?,
-      ~componentRef=?,
-      (),
-    ) =>
-  make(
-    ~style,
-    ~onClick,
-    ~onRightClick,
-    ~onAnyClick,
-    ~onBlur?,
-    ~onFocus?,
-    ~onKeyDown?,
-    ~onKeyUp?,
-    ~onTextEdit?,
-    ~onTextInput?,
-    ~tabindex,
-    ~componentRef?,
-    React.listToElement(children),
-  );
+  <View
+    style
+    onMouseDown
+    ?onBlur
+    ?onFocus
+    ?onKeyDown
+    ?onKeyUp
+    ?onTextEdit
+    ?onTextInput
+    tabindex={Some(tabindex)}
+    ref={r => setClickableRef(r)}>
+    children
+  </View>;
+};

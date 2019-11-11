@@ -1,8 +1,8 @@
 (library
     (name Revery)
+    (preprocess (pps brisk-reconciler.ppx lwt_ppx))
     (public_name Revery)
     (libraries console.lib lwt lwt.unix sdl2 Revery_Core Revery_Font Revery_Draw Revery_Math Revery_Shaders Revery_Geometry Revery_UI Revery_UI_Components Revery_Native Revery_UI_Primitives Revery_UI_Hooks))
-
 (documentation
    (package Revery)
    (mld_files index))

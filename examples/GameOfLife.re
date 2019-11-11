@@ -260,8 +260,6 @@ module GameOfLife = {
 };
 
 module Row = {
-  let component = React.component("Row");
-
   let style =
     Style.[
       flexDirection(`Row),
@@ -271,13 +269,10 @@ module Row = {
       flexGrow(1),
     ];
 
-  let createElement = (~children, ()) =>
-    component(hooks => (hooks, <View style> ...children </View>));
+  let make = (~children, ()) => <View style> ...children </View>;
 };
 
 module Column = {
-  let component = React.component("Column");
-
   let style =
     Style.[
       flexDirection(`Column),
@@ -286,13 +281,10 @@ module Column = {
       flexGrow(1),
     ];
 
-  let createElement = (~children, ()) =>
-    component(hooks => (hooks, <View style> ...children </View>));
+  let make = (~children, ()) => <View style> ...children </View>;
 };
 
 module Cell = {
-  let component = React.component("Column");
-
   let clickableStyle =
     Style.[
       position(`Relative),
@@ -316,15 +308,14 @@ module Cell = {
       merge(~source=baseStyle, ~target=[backgroundColor(Colors.black)])
     );
 
-  let createElement = (~cell, ~onClick, ~children as _, ()) =>
-    component(hooks => {
-      let style =
-        switch (cell) {
-        | Alive => <View style=aliveStyle />
-        | Dead => <View style=deadStyle />
-        };
-      (hooks, <Clickable style=clickableStyle onClick> style </Clickable>);
-    });
+  let make = (~cell, ~onClick, ()) => {
+    let style =
+      switch (cell) {
+      | Alive => <View style=aliveStyle />
+      | Dead => <View style=deadStyle />
+      };
+    <Clickable style=clickableStyle onClick> style </Clickable>;
+  };
 };
 
 let viewPortRender =
@@ -345,13 +336,14 @@ let viewPortRender =
   List.map(
     x =>
       <Column>
-        ...{List.map(
-          y =>
-            <Row>
-              <Cell cell={cell((x, y))} onClick={() => onClick((x, y))} />
-            </Row>,
-          rows,
-        )}
+        {List.map(
+           y =>
+             <Row>
+               <Cell cell={cell((x, y))} onClick={() => onClick((x, y))} />
+             </Row>,
+           rows,
+         )
+         |> React.listToElement}
       </Column>,
     cols,
   );
@@ -412,75 +404,69 @@ let reducer = (action, state) =>
   };
 
 module GameOfLiveComponent = {
-  let component = React.component("GameOfLiveComponent");
-
   let controlsStyle = Style.[height(120), flexDirection(`Row)];
 
-  let createElement = (~state, ~children as _, ()) =>
-    component(hooks => {
-      let (state, dispatch, hooks) =
-        Hooks.reducer(~initialState=state, reducer, hooks);
+  let%component make = (~state, ()) => {
+    let%hook (state, dispatch) = Hooks.reducer(~initialState=state, reducer);
 
-      let hooks =
-        Hooks.effect(OnMount, () => Some(() => dispatch(StopTimer)), hooks);
+    let%hook () =
+      Hooks.effect(OnMount, () => Some(() => dispatch(StopTimer)));
 
-      let toggleAlive = pos => dispatch(ToggleAlive(pos));
+    let toggleAlive = pos => dispatch(ToggleAlive(pos));
 
-      let startStop = () =>
-        state.isRunning
-          ? dispatch(StopTimer)
-          : {
-            let dispose =
-              Tick.interval(t => dispatch(TimerTick(t)), Time.zero);
-            dispatch(StartTimer(dispose));
-          };
+    let startStop = () =>
+      state.isRunning
+        ? dispatch(StopTimer)
+        : {
+          let dispose =
+            Tick.interval(t => dispatch(TimerTick(t)), Time.zero);
+          dispatch(StartTimer(dispose));
+        };
 
-      (
-        hooks,
-        <Column>
-          <Row>
-            ...{viewPortRender(state.viewPort, state.universe, toggleAlive)}
-          </Row>
-          <View style=controlsStyle>
-            <Button
-              fontFamily="FontAwesome5FreeSolid.otf"
-              title={state.isRunning ? {||} : {||}}
-              onClick=startStop
-            />
-            <Button
-              fontFamily="FontAwesome5FreeSolid.otf"
-              title={||}
-              onClick={_ => dispatch(MoveViewPort(North))}
-            />
-            <Button
-              fontFamily="FontAwesome5FreeSolid.otf"
-              title={||}
-              onClick={_ => dispatch(MoveViewPort(South))}
-            />
-            <Button
-              fontFamily="FontAwesome5FreeSolid.otf"
-              title={||}
-              onClick={_ => dispatch(MoveViewPort(East))}
-            />
-            <Button
-              fontFamily="FontAwesome5FreeSolid.otf"
-              title={||}
-              onClick={_ => dispatch(MoveViewPort(West))}
-            />
-            <Button
-              fontFamily="FontAwesome5FreeSolid.otf"
-              title={||}
-              onClick={_ => dispatch(ZoomViewPort(ZoomIn))}
-            />
-            <Button
-              fontFamily="FontAwesome5FreeSolid.otf"
-              title={||}
-              onClick={_ => dispatch(ZoomViewPort(ZoomOut))}
-            />
-          </View>
-        </Column>,
-      );
-    });
+    <Column>
+      <Row>
+        {viewPortRender(state.viewPort, state.universe, toggleAlive)
+         |> React.listToElement}
+      </Row>
+      <View style=controlsStyle>
+        <Button
+          fontFamily="FontAwesome5FreeSolid.otf"
+          title={state.isRunning ? {||} : {||}}
+          onClick=startStop
+        />
+        <Button
+          fontFamily="FontAwesome5FreeSolid.otf"
+          title={||}
+          onClick={_ => dispatch(MoveViewPort(North))}
+        />
+        <Button
+          fontFamily="FontAwesome5FreeSolid.otf"
+          title={||}
+          onClick={_ => dispatch(MoveViewPort(South))}
+        />
+        <Button
+          fontFamily="FontAwesome5FreeSolid.otf"
+          title={||}
+          onClick={_ => dispatch(MoveViewPort(East))}
+        />
+        <Button
+          fontFamily="FontAwesome5FreeSolid.otf"
+          title={||}
+          onClick={_ => dispatch(MoveViewPort(West))}
+        />
+        <Button
+          fontFamily="FontAwesome5FreeSolid.otf"
+          title={||}
+          onClick={_ => dispatch(ZoomViewPort(ZoomIn))}
+        />
+        <Button
+          fontFamily="FontAwesome5FreeSolid.otf"
+          title={||}
+          onClick={_ => dispatch(ZoomViewPort(ZoomOut))}
+        />
+      </View>
+    </Column>;
+  };
 };
 
 let render = () => {

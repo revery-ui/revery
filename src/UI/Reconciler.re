@@ -2,7 +2,7 @@
  *
  * This implements a reconciler for our UI primitives.
  * This is the 'back-end' for our React API - we hand this
- * over to the Brisk_reconciler.Make functor, and get our
+ * over to the Brisk_reconciler, and get our
  * nice React API that works against Revery's node tree.
  */
 
@@ -29,9 +29,4 @@ let moveNode = (~parent, ~child as _, ~from as _, ~to_ as _) => {
   parent;
 };
 
-let markAsStale = () => {
-  Event.dispatch(onStale, ());
-};
-
-let beginChanges = () => ();
-let commitChanges = () => ();
+Brisk_reconciler.addStaleTreeHandler(() => Event.dispatch(onStale, ()));

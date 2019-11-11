@@ -7,20 +7,22 @@ module Hooks = Revery_UI_Hooks;
 type tickFunction = Time.t => unit;
 let noop: tickFunction = _ => ();
 
-let component = React.component("Container");
+let%component make =
+              (
+                ~children=React.empty,
+                ~onTick=noop,
+                ~tickRate=Time.seconds(1.),
+                (),
+              ) => {
+  let%hook () =
+    Hooks.effect(
+      OnMount,
+      () => {
+        let dispose = Revery_Core.Tick.interval(onTick, tickRate);
 
-let createElement = (~children, ~onTick=noop, ~tickRate=Time.seconds(1.), ()) =>
-  component(hooks => {
-    let hooks =
-      Hooks.effect(
-        OnMount,
-        () => {
-          let dispose = Revery_Core.Tick.interval(onTick, tickRate);
+        Some(dispose);
+      },
+    );
 
-          Some(dispose);
-        },
-        hooks,
-      );
-
-    (hooks, <View> ...children </View>);
-  });
+  <View> children </View>;
+};
