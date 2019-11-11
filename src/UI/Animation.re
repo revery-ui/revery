@@ -31,7 +31,10 @@ let delay = (delay, animate, time) =>
   if (delay > time) {
     (fst(animate(Time.zero)), Delayed);
   } else {
-    animate(Time.(time - delay));
+    switch (animate(Time.(time - delay))) {
+    | (value, Complete(elapsed)) => (value, Complete(Time.(elapsed + delay)))
+    | result => result
+    };
   };
 
 let repeat = (animate, time) =>
