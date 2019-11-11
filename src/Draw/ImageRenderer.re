@@ -58,15 +58,15 @@ let getTexture = (imagePath: string) => {
                      |> Option.value(~default="")
                      |> toFileExtension;
 
-                   Fpath.(
-                     Some((
+                   let filePath =
+                     Fpath.(
                        append(
                          Filename.get_temp_dir_name() |> v,
                          cleanUrl(imagePath) ++ fileExtension |> v,
-                       ),
-                       Fetch.Response.Body.toString(body),
-                     ))
-                   );
+                       )
+                     );
+
+                   Some((filePath, Fetch.Response.Body.toString(body)));
                  }
                | Error(_) => None,
              );
