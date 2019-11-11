@@ -6,7 +6,7 @@ Simple out-of-box button component
 {2 Usage:}
 
 {[
-    <Button width=50 height=150 color=Colors.blue />
+    <Button width=50 height=150 color=Colors.blue title="Ok"/>
 ]}
 */
 let make:
