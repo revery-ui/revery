@@ -16,9 +16,7 @@ let textStyle =
   Style.[fontFamily("Roboto-Regular.ttf"), fontSize(20), marginBottom(20)];
 
 module DropdownExample = {
-  let component = React.component("DropDownExample");
-
-  let items: Dropdown.items(int) = [
+  let items: DropdownInt.items = [
     {value: 1, label: "First option"},
     {value: 2, label: "Second option"},
     {value: 3, label: "Third option"},
@@ -26,22 +24,14 @@ module DropdownExample = {
     {value: 5, label: "A really, really, really long option"},
   ];
 
-  let createElement = (~children as _, ()) =>
-    component(hooks => {
-      let (selectedItem, setSelectedItem, hooks) =
-        Hooks.state(List.nth(items, 0), hooks);
-
-      (
-        hooks,
-        <View style=containerStyle>
-          <Text
-            style=textStyle
-            text={"Selected Item: " ++ selectedItem.label}
-          />
-          <Dropdown items onItemSelected={item => setSelectedItem(item)} />
-        </View>,
-      );
-    });
+  let%component make = () => {
+    let%hook (selectedItem, setSelectedItem) =
+      Hooks.state(List.nth(items, 0));
+    <View style=containerStyle>
+      <Text style=textStyle text={"Selected Item: " ++ selectedItem.label} />
+      <DropdownInt items onItemSelected={item => setSelectedItem(_ => item)} />
+    </View>;
+  };
 };
 
 let render = () => <DropdownExample />;

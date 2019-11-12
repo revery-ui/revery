@@ -4,3 +4,8 @@
 # to CRLF. This causes problems for shell scripts, as bash
 # gets choked up on the extra `\r` character.
 *.sh text eol=lf
+
+# Hide lockfile updates
+*esy.lock/* linguist-generated
+
+

@@ -22,8 +22,6 @@ type tree('a) =
   | Empty
   | Node(content('a), list(tree('a)));
 
-let component = React.component("Tree");
-
 let defaultNodeStyles = Style.[flexDirection(`Row), marginVertical(5)];
 
 let rec findNode = (nodeID, tr) =>
@@ -111,9 +109,7 @@ let rec renderTree = (~indent=0, ~nodeRenderer, ~emptyRenderer, t) => {
    narrow down the type signature of the "tree" to whaterver type the
    default takes making it no longer generalisable
  */
-let createElement =
-    (~tree, ~nodeRenderer, ~emptyRenderer=None, ~children as _, ()) =>
-  component(slots => {
-    let componentTree = renderTree(tree, ~nodeRenderer, ~emptyRenderer);
-    (slots, <View> ...componentTree </View>);
-  });
+let make = (~tree, ~nodeRenderer, ~emptyRenderer=None, ()) => {
+  let componentTree = renderTree(tree, ~nodeRenderer, ~emptyRenderer);
+  <View> {componentTree |> React.listToElement} </View>;
+};

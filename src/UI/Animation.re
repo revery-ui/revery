@@ -1,232 +1,98 @@
 open Revery_Core;
 open Revery_Math;
 
-module type AnimationTicker = {
-  let time: unit => Time.t;
-
-  let onTick: Event.t(Time.t);
+module NormalizedTime = {
+  type t = float;
+  let fromFloat = t => Float.max(0., Float.min(1., t));
 };
 
-let optCall = (opt, param) =>
-  switch (opt) {
-  | Some(f) => f(param)
-  | None => ()
+type t('a) = Time.t => ('a, state)
+
+and state =
+  | Delayed
+  | Running
+  | Complete(Time.t); // Elapsed time
+
+let const = (constant, _time) => (constant, Complete(Time.zero));
+
+/**
+ * `time` is assumed to start at 0
+ */
+let animate = (duration, time) => {
+  let normalizedTime = Time.(toSeconds(time / duration));
+
+  if (normalizedTime < 0.) {
+    (0., Delayed);
+  } else if (normalizedTime > 1.) {
+    (1., Complete(duration));
+  } else {
+    (normalizedTime, Running);
   };
-
-type animationDirection = [
-  | `Normal
-  | `Reverse
-  | `Alternate
-  | `AlternateReverse
-];
-
-module Make = (AnimationTickerImpl: AnimationTicker) => {
-  type animationValue = {mutable current: float};
-
-  module AnimationId =
-    UniqueId.Make({});
-
-  type animation = {
-    id: int,
-    delay: float,
-    mutable startTime: float,
-    duration: float,
-    startValue: float,
-    toValue: float,
-    value: animationValue,
-    repeat: bool,
-    easing: Easing.t,
-    direction: animationDirection,
-    mutable isReverse: bool,
-  };
-
-  type activeAnimation = {
-    animation,
-    update: option(float => unit),
-    complete: option(unit => unit),
-  };
-
-  type playback = {
-    pause: unit => unit,
-    stop: unit => unit,
-  };
-
-  let activeAnimations: ref(list(activeAnimation)) = ref([]);
-
-  let addAnimation = anim => activeAnimations := [anim, ...activeAnimations^];
-
-  let cancel = (anim: animation) =>
-    activeAnimations :=
-      List.filter(
-        ({animation: a, _}) => a.id !== anim.id,
-        activeAnimations^,
-      );
-
-  let removeAnimation = cancel; // naming consistency with addAnimation defined above
-
-  let cancelAll = () => activeAnimations := [];
-
-  let isActive = animation =>
-    List.exists(a => a.animation.id == animation.id, activeAnimations^);
-
-  type animationOptions = {
-    duration: Time.t,
-    delay: Time.t,
-    toValue: float,
-    repeat: bool,
-    easing: float => float,
-    direction: animationDirection,
-  };
-
-  let floatValue: float => animationValue = (v: float) => {current: v};
-
-  let options =
-      (
-        ~duration=Time.Seconds(1.0),
-        ~delay=Time.Seconds(0.0),
-        ~repeat=false,
-        ~easing=Easing.linear,
-        ~direction=`Normal,
-        ~toValue: float,
-        (),
-      ) => {
-    duration,
-    delay,
-    toValue,
-    repeat,
-    easing,
-    direction,
-  };
-
-  let getLocalTime = (clock: float, anim: animation) => {
-    let adjustedStart = anim.startTime +. anim.delay;
-    let endTime = adjustedStart +. anim.duration;
-    (clock -. adjustedStart) /. (endTime -. adjustedStart);
-  };
-
-  let hasStarted = (clock: float, {animation, _}) => {
-    let t = getLocalTime(clock, animation);
-    t > 0.;
-  };
-
-  let isComplete = (clock: float, {animation: anim, _}) => {
-    let t = getLocalTime(clock, anim);
-    t > 1. && !anim.repeat;
-  };
-
-  let tickAnimation = (clock: float, {animation: anim, update, complete}) => {
-    let t = anim.easing(getLocalTime(clock, anim));
-    let (startValue, toValue) =
-      anim.isReverse
-        ? (anim.toValue, anim.startValue) : (anim.startValue, anim.toValue);
-
-    if (t >= 1.) {
-      if (anim.repeat) {
-        if (anim.direction == `Alternate || anim.direction == `AlternateReverse) {
-          anim.isReverse = !anim.isReverse;
-        };
-
-        /* If the anim is set to repeat and the time has expired, restart */
-        anim.startTime = anim.startTime +. anim.delay +. anim.duration;
-
-        let newT = getLocalTime(clock, anim);
-        anim.value.current = interpolate(newT, startValue, toValue);
-      } else {
-        optCall(complete, ());
-      };
-    } else {
-      anim.value.current = interpolate(t, startValue, toValue);
-      optCall(update, anim.value.current);
-    };
-  };
-
-  let getAnimationCount = () => List.length(activeAnimations^);
-
-  let anyActiveAnimations = () => {
-    let t = Time.to_float_seconds(AnimationTickerImpl.time());
-    let anims = List.filter(hasStarted(t), activeAnimations^);
-    List.length(anims) > 0;
-  };
-
-  let tween =
-      (animationValue: animationValue, animationOptions: animationOptions) => {
-    let animation = {
-      id: AnimationId.getUniqueId(),
-      delay: Time.to_float_seconds(animationOptions.delay),
-      duration: Time.to_float_seconds(animationOptions.duration),
-      toValue: animationOptions.toValue,
-      repeat: animationOptions.repeat,
-      value: animationValue,
-      startTime: Time.to_float_seconds(AnimationTickerImpl.time()),
-      startValue: animationValue.current,
-      easing: animationOptions.easing,
-      direction: animationOptions.direction,
-      isReverse: false,
-    };
-    animation;
-  };
-
-  let start = (~update=?, ~complete=?, animation) => {
-    let activeAnimation = {animation, update, complete};
-    let isReverseStartValue =
-      animation.direction == `Reverse
-      || animation.direction == `AlternateReverse;
-    animation.startTime = Time.to_float_seconds(AnimationTickerImpl.time());
-    animation.isReverse = isReverseStartValue;
-    addAnimation(activeAnimation);
-    let playback = {
-      pause: () => removeAnimation(activeAnimation.animation),
-      stop: () => {
-        animation.value.current = animation.startValue;
-        animation.isReverse = isReverseStartValue;
-        removeAnimation(activeAnimation.animation);
-      },
-    };
-    playback;
-  };
-
-  let getTime = () => AnimationTickerImpl.time();
-
-  module Chain = {
-    type t = {animations: list(animation)};
-    let make = animation => {animations: [animation]};
-    let add = (animation, {animations: l}) => {
-      animations: List.cons(animation, l),
-    };
-    let start = (~update=?, ~complete=?, {animations: l}) => {
-      let currentPlayback = ref(None);
-      let rec runAnimation = (animations, index) =>
-        switch (animations) {
-        | [a, ...xl] =>
-          let playback =
-            a |> start(~update?, ~complete=() => runAnimation(xl, index + 1));
-          currentPlayback := Some(playback);
-        | [] => optCall(complete, ())
-        };
-      runAnimation(List.rev(l), 0);
-      let playback = {
-        pause: () =>
-          switch (currentPlayback^) {
-          | Some(p) => p.pause()
-          | None => ()
-          },
-        stop: () =>
-          switch (currentPlayback^) {
-          | Some(p) => p.stop()
-          | None => ()
-          },
-      };
-      playback;
-    };
-  };
-
-  let tick = (t: float) => {
-    List.iter(tickAnimation(t), activeAnimations^);
-    activeAnimations :=
-      List.filter(a => !isComplete(t, a), activeAnimations^);
-  };
-
-  Event.subscribe(AnimationTickerImpl.onTick, t =>
-    tick(Time.to_float_seconds(t))
-  );
 };
+
+let delay = (delay, animate, time) =>
+  if (delay > time) {
+    (fst(animate(Time.zero)), Delayed);
+  } else {
+    switch (animate(Time.(time - delay))) {
+    | (value, Complete(elapsed)) => (
+        value,
+        Complete(Time.(elapsed + delay)),
+      )
+    | result => result
+    };
+  };
+
+let repeat = (animate, time) =>
+  switch (animate(time)) {
+  | (_, Complete(elapsed)) =>
+    let remainder = elapsed == Time.zero ? Time.zero : Time.(time mod elapsed);
+    animate(remainder);
+
+  | result => result
+  };
+
+let alternatingRepeat = (animate, time) =>
+  switch (animate(time)) {
+  | (_, Complete(elapsed)) =>
+    let iteration = int_of_float(floor(Time.toSeconds(time)));
+    let shouldReverse = iteration mod 2 != 0; // if not divisble by 2
+    let remainder = elapsed == Time.zero ? Time.zero : Time.(time mod elapsed);
+    animate(shouldReverse ? Time.(elapsed - remainder) : remainder);
+
+  | result => result
+  };
+
+let map = (f, animate, time) =>
+  switch (animate(time)) {
+  | (t, state) => (f(t), state)
+  };
+
+let ease = (easing, animate) => map(easing, animate);
+
+let tween = (start, finish, animate) =>
+  map(interpolate(start, finish), animate);
+
+let andThen = (current, ~next, time) =>
+  switch (current(time)) {
+  | (_, Complete(elapsed)) => next(Time.(time - elapsed))
+  | result => result
+  };
+
+let zip = ((a, b), time) =>
+  switch (a(time), b(time)) {
+  | ((aValue, Delayed), (bValue, Delayed)) => ((aValue, bValue), Delayed)
+
+  | ((aValue, Complete(aElapsed)), (bValue, Complete(bElapsed))) => (
+      (aValue, bValue),
+      Complete(Time.max(aElapsed, bElapsed)),
+    )
+
+  | ((aValue, _), (bValue, _)) => ((aValue, bValue), Running)
+  };
+
+let apply = (time, animate) => animate(time);
+
+let valueAt = (time, animate) => fst(animate(time));
+
+let stateAt = (time, animate) => snd(animate(time));
