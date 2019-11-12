@@ -3,31 +3,26 @@ open Revery.Math;
 open Revery.UI;
 open Revery.UI.Components;
 
-let logo = {
-  let component = React.component("logo");
+module Logo = {
+  let%component make = () => {
 
-  (~children as _: list(React.syntheticElement), ()) =>
-    component(hooks => {
-      let (logoOpacity, setOpacity, hooks) = Hooks.state(0.5, hooks);
+      let%hook (logoOpacity, setOpacity) = Hooks.state(0.5);
 
-      let (curr, hooks) =
-        Hooks.spring(0.5, Hooks.Spring.Options.create(logoOpacity), hooks);
+      let%hook (curr) =
+        Hooks.spring(0.5, Hooks.Spring.Options.create(logoOpacity));
 
-      let onMouseDown = _ => setOpacity(1.0);
+      let onMouseDown = _ => setOpacity(_ => 1.0);
 
-      let onMouseUp = _ => setOpacity(0.5);
+      let onMouseUp = _ => setOpacity(_ => 0.5);
 
-      (
-        hooks,
         <View onMouseDown onMouseUp>
           <Container
             width={curr *. 512. |> int_of_float}
             height=128
             color=Colors.yellow
           />
-        </View>,
-      );
-    });
+        </View>
+    };
 };
 
-let render = () => <Center> <logo /> </Center>;
+let render = () => <Center> <Logo /> </Center>;
