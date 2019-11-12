@@ -99,8 +99,15 @@ module Make = (ClockImpl: Clock) => {
     _cancelledTickers := IntMap.add(id, true, _cancelledTickers^);
   };
 
+  exception Stop;
+
   let interval = (f: callback, frequency: Time.t) => {
     let id = TickId.getUniqueId();
+
+    let f = t =>
+      try(f(t)) {
+      | Stop => _clear(id, ())
+      };
 
     let tf: tickFunction = {
       tickType: Interval,
@@ -117,7 +124,7 @@ module Make = (ClockImpl: Clock) => {
   let timeout = (f, waitTime: Time.t) => {
     let id = TickId.getUniqueId();
 
-    let f = _ => {
+    let f = _t => {
       f();
     };
 

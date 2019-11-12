@@ -1,318 +1,475 @@
-open Revery_UI;
 open Revery_Core;
+open Revery_UI;
 
 open TestFramework;
 
-module MakeTicker = (()) => {
-  let _currentTime: ref(Time.t) = ref(Time.zero);
+// This is just to avoid having to coerce to float for every test that uses NormalizedTime.t
+let floatify = Animation.tween(0., 1.);
 
-  let time = () => _currentTime^;
-
-  let onTick: Event.t(Time.t) = Event.create();
-
-  let simulateTick = (time: Time.t) => {
-    _currentTime := time;
-    Event.dispatch(onTick, time);
-  };
-};
-
-describe("Animation", ({describe, test, _}) => {
-  describe("floatValue", ({test, _}) =>
-    test("Initial value set", ({expect, _}) => {
-      module TestTicker =
-        MakeTicker({});
-      module Animated = Animation.Make(TestTicker);
-
-      let myTestValue = Animated.floatValue(0.1);
-      expect.float(myTestValue.current).toBeCloseTo(0.1);
-    })
-  );
-  test("simple animation", ({expect, _}) => {
-    module TestTicker =
-      MakeTicker({});
-    module Animated = Animation.Make(TestTicker);
-
-    let myAnimation =
-      Animated.tween(
-        Animated.floatValue(0.),
-        {
-          duration: Time.seconds(2.),
-          delay: Time.zero,
-          toValue: 10.,
-          repeat: false,
-          easing: Easing.linear,
-          direction: `Normal,
-        },
-      );
-    let _playback = Animated.start(myAnimation);
-
-    TestTicker.simulateTick(Time.seconds(1.));
-    expect.float(myAnimation.value.current).toBeCloseTo(5.);
+describe("Animation", ({describe, _}) => {
+  describe("const", ({test, _}) => {
+    assertMany(
+      "examples",
+      test,
+      Animation.[
+        const(3) |> valueAt(Time.zero) == 3,
+        const(3) |> valueAt(Time.seconds(-42.)) == 3,
+        const(3) |> valueAt(Time.seconds(42.)) == 3,
+        const(3) |> stateAt(Time.seconds(-42.)) == Complete(Time.zero),
+        const(3) |> stateAt(Time.seconds(42.)) == Complete(Time.zero),
+        const("rhino") |> valueAt(Time.zero) == "rhino",
+      ],
+    )
   });
 
-  test("animation with quadratic easing", ({expect, _}) => {
-    module TestTicker =
-      MakeTicker({});
-    module Animated = Animation.Make(TestTicker);
-
-    let myAnimation =
-      Animated.tween(
-        Animated.floatValue(0.),
-        {
-          duration: Time.seconds(1.),
-          delay: Time.zero,
-          toValue: 1.,
-          repeat: false,
-          easing: Easing.quadratic,
-          direction: `Normal,
-        },
-      );
-    let _playback = Animated.start(myAnimation);
-
-    TestTicker.simulateTick(Time.seconds(0.5));
-    expect.float(myAnimation.value.current).toBeCloseTo(0.25);
+  describe("animate", ({test, _}) => {
+    assertMany(
+      "examples",
+      test,
+      Animation.[
+        (animate(Time.seconds(5.)) |> valueAt(Time.zero) :> float) == 0.0,
+        (animate(Time.seconds(5.)) |> valueAt(Time.seconds(-42.)) :> float)
+        == 0.0,
+        (animate(Time.seconds(5.)) |> valueAt(Time.seconds(1.)) :> float)
+        == 0.2,
+        (animate(Time.seconds(5.)) |> valueAt(Time.seconds(42.)) :> float)
+        == 1.0,
+        animate(Time.seconds(5.)) |> stateAt(Time.zero) == Running,
+        animate(Time.seconds(5.)) |> stateAt(Time.seconds(-42.)) == Delayed,
+        animate(Time.seconds(5.)) |> stateAt(Time.seconds(1.)) == Running,
+        animate(Time.seconds(5.))
+        |> stateAt(Time.seconds(42.)) == Complete(Time.seconds(5.)),
+      ],
+    )
   });
 
-  test("animation that repeats", ({expect, _}) => {
-    module TestTicker =
-      MakeTicker({});
-    module Animated = Animation.Make(TestTicker);
+  describe("delay", ({test, _}) => {
+    test("basics", ({expect, _}) => {
+      open Animation;
 
-    let myAnimation =
-      Animated.tween(
-        Animated.floatValue(0.),
-        {
-          duration: Time.seconds(2.),
-          delay: Time.zero,
-          toValue: 10.,
-          repeat: true,
-          easing: Easing.linear,
-          direction: `Normal,
-        },
-      );
-    let _playback = Animated.start(myAnimation);
+      let anim =
+        animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> floatify;
 
-    TestTicker.simulateTick(Time.seconds(3.));
-    expect.float(myAnimation.value.current).toBeCloseTo(5.);
-  });
+      expect.float(anim |> valueAt(Time.seconds(-2.))).toBeCloseTo(0.);
+      expect.float(anim |> valueAt(Time.seconds(0.75))).toBeCloseTo(0.);
+      expect.float(anim |> valueAt(Time.seconds(1.5))).toBeCloseTo(0.5);
+      expect.float(anim |> valueAt(Time.seconds(4.66))).toBeCloseTo(1.);
+    });
 
-  test("animation with delay", ({expect, _}) => {
-    module TestTicker =
-      MakeTicker({});
-    module Animated = Animation.Make(TestTicker);
-
-    let myAnimation =
-      Animated.tween(
-        Animated.floatValue(0.),
-        {
-          duration: Time.seconds(2.),
-          delay: Time.seconds(1.),
-          toValue: 10.,
-          repeat: false,
-          easing: Easing.linear,
-          direction: `Normal,
-        },
-      );
-    let _playback = Animated.start(myAnimation);
-
-    TestTicker.simulateTick(Time.seconds(2.));
-    expect.float(myAnimation.value.current).toBeCloseTo(5.);
-  });
-
-  test("animations are cleaned up", ({expect, _}) => {
-    module TestTicker =
-      MakeTicker({});
-    module Animated = Animation.Make(TestTicker);
-
-    let myAnimation =
-      Animated.tween(
-        Animated.floatValue(0.),
-        {
-          duration: Time.seconds(1.),
-          delay: Time.zero,
-          toValue: 10.,
-          repeat: false,
-          easing: Easing.linear,
-          direction: `Normal,
-        },
-      );
-    let _playback = Animated.start(myAnimation);
-
-    TestTicker.simulateTick(Time.seconds(3.));
-
-    expect.bool(Animated.anyActiveAnimations()).toBeFalse();
-    expect.int(Animated.getAnimationCount()).toBe(0);
-  });
-
-  test("animations can be cancelled", ({expect, _}) => {
-    module TestTicker =
-      MakeTicker({});
-    module Animated = Animation.Make(TestTicker);
-
-    let myAnimation =
-      Animated.tween(
-        Animated.floatValue(0.),
-        {
-          duration: Time.seconds(1.),
-          delay: Time.zero,
-          toValue: 10.,
-          repeat: false,
-          easing: Easing.linear,
-          direction: `Normal,
-        },
-      );
-    let {Animated.stop, _} = Animated.start(myAnimation);
-
-    TestTicker.simulateTick(Time.seconds(0.1));
-
-    stop();
-
-    expect.bool(Animated.anyActiveAnimations()).toBeFalse();
-    expect.int(Animated.getAnimationCount()).toBe(0);
-  });
-
-  test("chained animations", ({expect, _}) => {
-    module TestTicker =
-      MakeTicker({});
-    module Animated = Animation.Make(TestTicker);
-    module Chain = Animated.Chain;
-
-    let first =
-      Animated.tween(
-        Animated.floatValue(0.),
-        {
-          duration: Time.seconds(2.),
-          delay: Time.zero,
-          toValue: 10.,
-          repeat: false,
-          easing: Easing.linear,
-          direction: `Normal,
-        },
-      );
-    let second =
-      Animated.tween(
-        Animated.floatValue(first.toValue),
-        {
-          duration: Time.seconds(2.),
-          delay: Time.zero,
-          toValue: 0.,
-          repeat: false,
-          easing: Easing.linear,
-          direction: `Normal,
-        },
-      );
-    let _playback = Chain.make(first) |> Chain.add(second) |> Chain.start;
-
-    TestTicker.simulateTick(Time.seconds(1.));
-    expect.float(first.value.current).toBeCloseTo(5.);
-    // Simulate the end of the first, so the second can start
-    TestTicker.simulateTick(Time.seconds(2.));
-    TestTicker.simulateTick(Time.seconds(3.));
-    expect.float(second.value.current).toBeCloseTo(5.);
-  });
-
-  test("chain animations can be cancelled", ({expect, _}) => {
-    module TestTicker =
-      MakeTicker({});
-    module Animated = Animation.Make(TestTicker);
-    module Chain = Animated.Chain;
-
-    let first =
-      Animated.tween(
-        Animated.floatValue(0.),
-        {
-          duration: Time.seconds(2.),
-          delay: Time.zero,
-          toValue: 10.,
-          repeat: false,
-          easing: Easing.linear,
-          direction: `Normal,
-        },
-      );
-    let second =
-      Animated.tween(
-        Animated.floatValue(first.toValue),
-        {
-          duration: Time.seconds(2.),
-          delay: Time.zero,
-          toValue: 0.,
-          repeat: false,
-          easing: Easing.linear,
-          direction: `Normal,
-        },
-      );
-    let {Animated.stop, _} =
-      Chain.make(first) |> Chain.add(second) |> Chain.start;
-
-    TestTicker.simulateTick(Time.seconds(0.1));
-
-    stop();
-
-    expect.bool(Animated.anyActiveAnimations()).toBeFalse();
-    expect.int(Animated.getAnimationCount()).toBe(0);
-  });
-
-  let directionTest = (description, direction, before, after) => {
-    test(
-      description,
-      ({expect, _}) => {
-        module TestTicker =
-          MakeTicker({});
-        module Animated = Animation.Make(TestTicker);
-
-        let myAnimation =
-          Animated.tween(
-            Animated.floatValue(0.),
-            {
-              duration: Time.seconds(0.5),
-              delay: Time.zero,
-              toValue: 10.,
-              repeat: true,
-              easing: Easing.linear,
-              direction,
-            },
-          );
-        let _playback = Animated.start(myAnimation);
-
-        expect.bool(myAnimation.isReverse).toBe(before);
-        TestTicker.simulateTick(Time.seconds(1.));
-        expect.bool(myAnimation.isReverse).toBe(after);
-      },
+    assertMany(
+      "examples",
+      test,
+      Animation.[
+        (
+          animate(Time.seconds(1.))
+          |> delay(Time.seconds(1.))
+          |> valueAt(Time.seconds(-2.)) :> float
+        )
+        == 0.0,
+        (
+          animate(Time.seconds(1.))
+          |> delay(Time.seconds(1.))
+          |> valueAt(Time.seconds(0.75)) :> float
+        )
+        == 0.0,
+        (
+          animate(Time.seconds(1.))
+          |> delay(Time.seconds(1.))
+          |> valueAt(Time.seconds(1.5)) :> float
+        )
+        == 0.5,
+        (
+          animate(Time.seconds(1.))
+          |> delay(Time.seconds(1.))
+          |> valueAt(Time.seconds(4.66)) :> float
+        )
+        == 1.0,
+        animate(Time.seconds(1.))
+        |> delay(Time.seconds(1.))
+        |> stateAt(Time.seconds(-2.)) == Delayed,
+        animate(Time.seconds(1.))
+        |> delay(Time.seconds(1.))
+        |> stateAt(Time.seconds(0.75)) == Delayed,
+        animate(Time.seconds(1.))
+        |> delay(Time.seconds(1.))
+        |> stateAt(Time.seconds(1.5)) == Running,
+        animate(Time.seconds(1.))
+        |> delay(Time.seconds(1.))
+        |> stateAt(Time.seconds(4.66)) == Complete(Time.seconds(2.)),
+      ],
     );
-  };
 
-  directionTest("animation that does not alternate", `Normal, false, false);
-  directionTest("animation that is in reverse", `Reverse, true, true);
-  directionTest("animation that alternates", `Alternate, false, true);
-  directionTest(
-    "animation that alternates in reverse",
-    `AlternateReverse,
-    true,
-    false,
-  );
+    test("should accumulate", ({expect, _}) => {
+      open Animation;
 
-  test("animation resets when stopped", ({expect, _}) => {
-    module TestTicker =
-      MakeTicker({});
-    module Animated = Animation.Make(TestTicker);
+      let anim =
+        animate(Time.seconds(1.))
+        |> delay(Time.seconds(1.2))
+        |> delay(Time.seconds(2.3))
+        |> floatify;
 
-    let myAnimation =
-      Animated.tween(
-        Animated.floatValue(0.),
+      Animation.(
         {
-          duration: Time.seconds(0.5),
-          delay: Time.zero,
-          toValue: 10.,
-          repeat: true,
-          easing: Easing.linear,
-          direction: `Alternate,
-        },
+          expect.ext.animationState(stateAt(Time.seconds(3.49), anim)).
+            toEqual(
+            Delayed,
+          );
+          expect.ext.animationState(stateAt(Time.seconds(3.5), anim)).
+            toEqual(
+            Running,
+          );
+          expect.ext.animationState(stateAt(Time.seconds(4.), anim)).toEqual(
+            Running,
+          );
+          expect.ext.animationState(stateAt(Time.seconds(5.), anim)).toEqual(
+            Complete(Time.seconds(4.5)),
+          );
+        }
       );
-    let _playback = Animated.start(myAnimation);
-    TestTicker.simulateTick(Time.seconds(1.));
-    _playback.stop();
+    });
+  });
 
-    expect.float(myAnimation.value.current).toBeCloseTo(0.);
-    expect.bool(myAnimation.isReverse).toBeFalse();
+  describe("repeat", ({test, _}) => {
+    test("basics", ({expect, _}) => {
+      open Animation;
+
+      let anim = animate(Time.seconds(1.)) |> repeat |> floatify;
+
+      expect.float(anim |> valueAt(Time.seconds(-2.))).toBeCloseTo(0.);
+      expect.float(anim |> valueAt(Time.seconds(0.75))).toBeCloseTo(0.75);
+      expect.float(anim |> valueAt(Time.seconds(1.75))).toBeCloseTo(0.75);
+      expect.float(anim |> valueAt(Time.seconds(3.66))).toBeCloseTo(0.66);
+      expect.ext.animationState(anim |> stateAt(Time.seconds(3.66))).toEqual(
+        Running,
+      );
+      expect.float(anim |> valueAt(Time.seconds(4.66))).toBeCloseTo(0.66);
+    });
+
+    assertMany(
+      "examples",
+      test,
+      Animation.[
+        (
+          animate(Time.seconds(1.)) |> repeat |> valueAt(Time.seconds(-2.)) :> float
+        )
+        == 0.0,
+        (
+          animate(Time.seconds(1.)) |> repeat |> valueAt(Time.seconds(0.75)) :> float
+        )
+        == 0.75,
+        (
+          animate(Time.seconds(1.)) |> repeat |> valueAt(Time.seconds(1.75)) :> float
+        )
+        == 0.75,
+        (
+          animate(Time.seconds(1.)) |> repeat |> valueAt(Time.seconds(3.66)) :> float
+        )
+        =~. 0.66,
+        (
+          animate(Time.seconds(1.)) |> repeat |> valueAt(Time.seconds(4.66)) :> float
+        )
+        =~. 0.66,
+        animate(Time.seconds(1.))
+        |> repeat
+        |> stateAt(Time.seconds(-2.)) == Delayed,
+        animate(Time.seconds(1.))
+        |> repeat
+        |> stateAt(Time.seconds(4.66)) == Running,
+      ],
+    );
+  });
+
+  describe("alternatingRepeat", ({test, _}) => {
+    test("nbasics", ({expect, _}) => {
+      open Animation;
+
+      let anim = animate(Time.seconds(1.)) |> alternatingRepeat |> floatify;
+
+      expect.float(anim |> valueAt(Time.seconds(-2.))).toBeCloseTo(0.);
+      expect.float(anim |> valueAt(Time.seconds(0.75))).toBeCloseTo(0.75);
+      expect.float(anim |> valueAt(Time.seconds(1.75))).toBeCloseTo(0.25);
+      expect.float(anim |> valueAt(Time.seconds(3.66))).toBeCloseTo(0.34);
+      expect.float(anim |> valueAt(Time.seconds(4.66))).toBeCloseTo(0.66);
+    });
+
+    assertMany(
+      "examples",
+      test,
+      Animation.[
+        (
+          animate(Time.seconds(1.))
+          |> alternatingRepeat
+          |> valueAt(Time.seconds(-2.)) :> float
+        )
+        == 0.0,
+        (
+          animate(Time.seconds(1.))
+          |> alternatingRepeat
+          |> valueAt(Time.seconds(0.75)) :> float
+        )
+        == 0.75,
+        (
+          animate(Time.seconds(1.))
+          |> alternatingRepeat
+          |> valueAt(Time.seconds(1.75)) :> float
+        )
+        == 0.25,
+        (
+          animate(Time.seconds(1.))
+          |> alternatingRepeat
+          |> valueAt(Time.seconds(3.66)) :> float
+        )
+        =~. 0.34,
+        (
+          animate(Time.seconds(1.))
+          |> alternatingRepeat
+          |> valueAt(Time.seconds(4.66)) :> float
+        )
+        =~. 0.66,
+        animate(Time.seconds(1.))
+        |> alternatingRepeat
+        |> stateAt(Time.seconds(-2.)) == Delayed,
+        animate(Time.seconds(1.))
+        |> alternatingRepeat
+        |> stateAt(Time.seconds(4.66)) == Running,
+      ],
+    );
+  });
+
+  describe("ease", ({test, _}) => {
+    test("basics", ({expect, _}) => {
+      open Animation;
+
+      let anim =
+        animate(Time.seconds(1.)) |> ease(Easing.quadratic) |> floatify;
+
+      expect.float(anim |> valueAt(Time.seconds(-2.))).toBeCloseTo(0.);
+      expect.float(anim |> valueAt(Time.seconds(0.25))).toBeCloseTo(
+        0.0625,
+      );
+      expect.float(anim |> valueAt(Time.seconds(0.5))).toBeCloseTo(0.25);
+      expect.float(anim |> valueAt(Time.seconds(0.75))).toBeCloseTo(
+        0.5625,
+      );
+      expect.float(anim |> valueAt(Time.seconds(2.))).toBeCloseTo(1.);
+    });
+
+    assertMany(
+      "examples",
+      test,
+      Animation.[
+        (
+          animate(Time.seconds(1.))
+          |> ease(Easing.quadratic)
+          |> valueAt(Time.seconds(-2.)) :> float
+        )
+        == 0.0,
+        (
+          animate(Time.seconds(1.))
+          |> ease(Easing.quadratic)
+          |> valueAt(Time.seconds(0.25)) :> float
+        )
+        == 0.0625,
+        (
+          animate(Time.seconds(1.))
+          |> ease(Easing.quadratic)
+          |> valueAt(Time.seconds(0.5)) :> float
+        )
+        == 0.25,
+        (
+          animate(Time.seconds(1.))
+          |> ease(Easing.quadratic)
+          |> valueAt(Time.seconds(0.75)) :> float
+        )
+        =~. 0.5625,
+        (
+          animate(Time.seconds(1.))
+          |> ease(Easing.quadratic)
+          |> valueAt(Time.seconds(4.66)) :> float
+        )
+        =~. 1.0,
+      ],
+    );
+  });
+
+  describe("ease", ({test, _}) => {
+    test("basics", ({expect, _}) => {
+      open Animation;
+
+      let anim = animate(Time.seconds(1.)) |> tween(100., 110.);
+
+      expect.float(anim |> valueAt(Time.seconds(-2.))).toBeCloseTo(100.);
+      expect.float(anim |> valueAt(Time.seconds(0.25))).toBeCloseTo(102.5);
+      expect.float(anim |> valueAt(Time.seconds(0.5))).toBeCloseTo(105.);
+      expect.float(anim |> valueAt(Time.seconds(0.75))).toBeCloseTo(107.5);
+      expect.float(anim |> valueAt(Time.seconds(2.))).toBeCloseTo(110.);
+    });
+
+    assertMany(
+      "examples",
+      test,
+      Animation.[
+        animate(Time.seconds(1.))
+        |> tween(2., 5.)
+        |> valueAt(Time.zero) == 2.0,
+        animate(Time.seconds(1.))
+        |> tween(2., 5.)
+        |> valueAt(Time.seconds(0.5)) == 3.5,
+        animate(Time.seconds(1.))
+        |> tween(2., 5.)
+        |> valueAt(Time.seconds(-42.)) == 2.0,
+        animate(Time.seconds(1.))
+        |> tween(2., 5.)
+        |> valueAt(Time.seconds(42.)) == 5.0,
+      ],
+    );
+  });
+
+  describe("map", ({test, _}) => {
+    test("basics", ({expect, _}) => {
+      open Animation;
+
+      let anim =
+        animate(Time.seconds(1.)) |> floatify |> map(string_of_float);
+
+      expect.string(anim |> valueAt(Time.seconds(-2.))).toEqual("0.");
+      expect.string(anim |> valueAt(Time.seconds(0.75))).toEqual("0.75");
+      expect.string(anim |> valueAt(Time.seconds(1.5))).toEqual("1.");
+    });
+
+    assertMany(
+      "examples",
+      test,
+      Animation.[
+        animate(Time.seconds(1.))
+        |> map(n => string_of_float((n: NormalizedTime.t :> float)))
+        |> valueAt(Time.seconds(0.33)) == "0.33",
+      ],
+    );
+  });
+
+  describe("andThen", ({test, _}) => {
+    test("basics", ({expect, _}) => {
+      open Animation;
+
+      let first = animate(Time.seconds(1.)) |> tween(0., 10.);
+      let second = animate(Time.seconds(1.)) |> tween(30., 20.);
+      let anim = andThen(first, ~next=second);
+
+      expect.float(anim |> valueAt(Time.seconds(-2.))).toBeCloseTo(0.);
+      expect.float(anim |> valueAt(Time.seconds(0.75))).toBeCloseTo(7.5);
+      expect.float(anim |> valueAt(Time.seconds(1.5))).toBeCloseTo(25.);
+      expect.float(anim |> valueAt(Time.seconds(4.66))).toBeCloseTo(20.);
+    });
+
+    assertMany(
+      "examples",
+      test,
+      Animation.[
+        (
+          animate(Time.seconds(1.))
+          |> andThen(~next=animate(Time.seconds(2.)))
+          |> valueAt(Time.seconds(1.)) :> float
+        )
+        == 1.0,
+        (
+          animate(Time.seconds(1.))
+          |> andThen(~next=animate(Time.seconds(2.)))
+          |> valueAt(Time.seconds(2.)) :> float
+        )
+        == 0.5,
+      ],
+    );
+  });
+
+  describe("zip", ({test, _}) => {
+    test("basics", ({expect, _}) => {
+      open Animation;
+
+      let first = animate(Time.seconds(1.)) |> tween(0., 10.);
+      let second = animate(Time.seconds(1.)) |> tween(30., 20.);
+      let anim = zip((first, second));
+
+      expect.float(anim |> valueAt(Time.seconds(-2.)) |> fst).toBeCloseTo(
+        0.,
+      );
+      expect.float(anim |> valueAt(Time.seconds(-2.)) |> snd).toBeCloseTo(
+        30.,
+      );
+      expect.float(anim |> valueAt(Time.seconds(0.75)) |> fst).toBeCloseTo(
+        7.5,
+      );
+      expect.float(anim |> valueAt(Time.seconds(0.75)) |> snd).toBeCloseTo(
+        22.5,
+      );
+      expect.float(anim |> valueAt(Time.seconds(1.5)) |> fst).toBeCloseTo(
+        10.,
+      );
+      expect.float(anim |> valueAt(Time.seconds(1.5)) |> snd).toBeCloseTo(
+        20.,
+      );
+      expect.float(anim |> valueAt(Time.seconds(4.66)) |> fst).toBeCloseTo(
+        10.,
+      );
+      expect.float(anim |> valueAt(Time.seconds(4.66)) |> snd).toBeCloseTo(
+        20.,
+      );
+    });
+
+    assertMany(
+      "examples",
+      test,
+      Animation.[
+        (
+          zip((animate(Time.seconds(1.)), animate(Time.seconds(2.))))
+          |> valueAt(Time.seconds(1.))
+          |> fst :> float
+        )
+        == 1.0,
+        (
+          zip((animate(Time.seconds(1.)), animate(Time.seconds(2.))))
+          |> valueAt(Time.seconds(1.))
+          |> snd :> float
+        )
+        == 0.5,
+      ],
+    );
+  });
+
+  describe("apply", ({test, _}) => {
+    assertMany(
+      "examples",
+      test,
+      Animation.[
+        (
+          animate(Time.seconds(1.)) |> apply(Time.seconds(0.33)) |> fst :> float
+        )
+        == 0.33,
+        animate(Time.seconds(1.))
+        |> apply(Time.seconds(0.33))
+        |> snd == Running,
+      ],
+    )
+  });
+
+  describe("valueAt", ({test, _}) => {
+    assertMany(
+      "examples",
+      test,
+      Animation.[
+        (animate(Time.seconds(1.)) |> valueAt(Time.seconds(0.33)) :> float)
+        == 0.33,
+      ],
+    )
+  });
+
+  describe("stateAt", ({test, _}) => {
+    assertMany(
+      "examples",
+      test,
+      Animation.[
+        animate(Time.seconds(1.)) |> stateAt(Time.seconds(0.33)) == Running,
+      ],
+    )
   });
 });
