@@ -63,13 +63,13 @@ let animate: Time.t => t(NormalizedTime.t);
  *
  * Examples:
  *   (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.seconds(-2)) :> float) == 0.0,
- *   (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.milliseconds(750)) :> float) == 0.0,
- *   (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.milliseconds(1500)) :> float) == 0.5,
- *   (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.milliseconds(4660)) :> float) == 1.0,
- *   animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.milliseconds(-2)) == Delayed,
- *   animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.milliseconds(750)) == Delayed,
- *   animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.milliseconds(1500)) == Running,
- *   animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.milliseconds(4660)) == Complete(Time.seconds(2)),
+ *   (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.ms(750)) :> float) == 0.0,
+ *   (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.ms(1500)) :> float) == 0.5,
+ *   (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.ms(4660)) :> float) == 1.0,
+ *   animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.ms(-2)) == Delayed,
+ *   animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.ms(750)) == Delayed,
+ *   animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.ms(1500)) == Running,
+ *   animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.ms(4660)) == Complete(Time.seconds(2)),
  */
 let delay: (Time.t, t('a)) => t('a);
 
@@ -80,12 +80,12 @@ let delay: (Time.t, t('a)) => t('a);
  *
  * Examples:
  *   (animate(Time.seconds(1)) |> repeat |> valueAt(Time.seconds(-2)) :> float) == 0.0,
- *   (animate(Time.seconds(1)) |> repeat |> valueAt(Time.milliseconds(750)) :> float) == 0.75,
- *   (animate(Time.seconds(1)) |> repeat |> valueAt(Time.milliseconds(1750)) :> float) == 0.75,
- *   (animate(Time.seconds(1)) |> repeat |> valueAt(Time.milliseconds(3660)) :> float) =~. 0.66,
- *   (animate(Time.seconds(1)) |> repeat |> valueAt(Time.milliseconds(4660)) :> float) =~. 0.66,
+ *   (animate(Time.seconds(1)) |> repeat |> valueAt(Time.ms(750)) :> float) == 0.75,
+ *   (animate(Time.seconds(1)) |> repeat |> valueAt(Time.ms(1750)) :> float) == 0.75,
+ *   (animate(Time.seconds(1)) |> repeat |> valueAt(Time.ms(3660)) :> float) =~. 0.66,
+ *   (animate(Time.seconds(1)) |> repeat |> valueAt(Time.ms(4660)) :> float) =~. 0.66,
  *   animate(Time.seconds(1)) |> repeat |> stateAt(Time.seconds(-2)) == Delayed,
- *   animate(Time.seconds(1)) |> repeat |> stateAt(Time.milliseconds(4660)) == Running,
+ *   animate(Time.seconds(1)) |> repeat |> stateAt(Time.ms(4660)) == Running,
  */
 let repeat: t('a) => t('a);
 
@@ -96,12 +96,12 @@ let repeat: t('a) => t('a);
  *
  * Examples:
  *   (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.seconds(-2.)) :> float) == 0.0,
- *   (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.milliseconds(750)) :> float) == 0.75,
- *   (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.milliseconds(1750)) :> float) == 0.25,
- *   (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.milliseconds(3660)) :> float) =~. 0.34,
- *   (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.milliseconds(4660)) :> float) =~. 0.66,
+ *   (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.ms(750)) :> float) == 0.75,
+ *   (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.ms(1750)) :> float) == 0.25,
+ *   (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.ms(3660)) :> float) =~. 0.34,
+ *   (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.ms(4660)) :> float) =~. 0.66,
  *   animate(Time.seconds(1)) |> alternatingRepeat |> stateAt(Time.seconds(-2)) == Delayed,
- *   animate(Time.seconds(1)) |> alternatingRepeat |> stateAt(Time.milliseconds(4660)) == Running,
+ *   animate(Time.seconds(1)) |> alternatingRepeat |> stateAt(Time.ms(4660)) == Running,
  */
 let alternatingRepeat: t('a) => t('a);
 
@@ -113,10 +113,10 @@ let alternatingRepeat: t('a) => t('a);
  *
  * Examples:
  *   (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.seconds(-2)) :> float) == 0.0,
- *   (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.milliseconds(250)) :> float) == 0.0625,
- *   (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.milliseconds(500)) :> float) == 0.25,
- *   (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.milliseconds(750)) :> float) =~. 0.5625,
- *   (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.milliseconds(4660)) :> float) =~. 1.0,
+ *   (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.ms(250)) :> float) == 0.0625,
+ *   (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.ms(500)) :> float) == 0.25,
+ *   (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.ms(750)) :> float) =~. 0.5625,
+ *   (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.ms(4660)) :> float) =~. 1.0,
  */
 let ease: (Easing.t, t(NormalizedTime.t)) => t(NormalizedTime.t);
 
@@ -125,7 +125,7 @@ let ease: (Easing.t, t(NormalizedTime.t)) => t(NormalizedTime.t);
  *
  * Examples:
  *   animate(Time.seconds(1)) |> tween(2., 5.) |> valueAt(Time.zero) == 2.0,
- *   animate(Time.seconds(1)) |> tween(2., 5.) |> valueAt(Time.milliseconds(500)) == 3.5,
+ *   animate(Time.seconds(1)) |> tween(2., 5.) |> valueAt(Time.ms(500)) == 3.5,
  *   animate(Time.seconds(1)) |> tween(2., 5.) |> valueAt(Time.seconds(-42)) == 2.0,
  *   animate(Time.seconds(1)) |> tween(2., 5.) |> valueAt(Time.seconds(42)) == 5.0,
  */
@@ -135,7 +135,7 @@ let tween: (float, float, t(NormalizedTime.t)) => t(float);
  * `map(f)` maps the animated value according to the given function `f`
  *
  * Examples:
- *   animate(Time.seconds(1)) |> map(n => string_of_float(n: NormalizedTime.t :> float)) |> valueAt(Time.milliseconds(330)) == "0.33",
+ *   animate(Time.seconds(1)) |> map(n => string_of_float(n: NormalizedTime.t :> float)) |> valueAt(Time.ms(330)) == "0.33",
  */
 let map: ('a => 'b, t('a)) => t('b);
 
@@ -161,8 +161,8 @@ let zip: ((t('a), t('b))) => t(('a, 'b));
  * `apply(time)` returns the vale and state of the animation at the given `time`
  *
  * Examples:
- *   (animate(Time.seconds(1)) |> apply(Time.milliseconds(330)) |> fst :> float) == 0.33,
- *   animate(Time.seconds(1)) |> apply(Time.milliseconds(330)) |> snd == Running,
+ *   (animate(Time.seconds(1)) |> apply(Time.ms(330)) |> fst :> float) == 0.33,
+ *   animate(Time.seconds(1)) |> apply(Time.ms(330)) |> snd == Running,
  */
 let apply: (Time.t, t('a)) => ('a, state);
 
@@ -170,7 +170,7 @@ let apply: (Time.t, t('a)) => ('a, state);
  * `valueAt(time)` returns the value of the animation at the given `time`
  *
  * Examples:
- *   (animate(Time.seconds(1)) |> valueAt(Time.milliseconds(330)) :> float) == 0.33,
+ *   (animate(Time.seconds(1)) |> valueAt(Time.ms(330)) :> float) == 0.33,
  */
 let valueAt: (Time.t, t('a)) => 'a;
 
@@ -178,6 +178,6 @@ let valueAt: (Time.t, t('a)) => 'a;
  * `stateAt(time)` returns the state of the animation at the given `time`
  *
  * Examples:
- *   animate(Time.seconds(1)) |> stateAt(Time.milliseconds(330)) == Running,
+ *   animate(Time.seconds(1)) |> stateAt(Time.ms(330)) == Running,
  */
 let stateAt: (Time.t, t('a)) => state;

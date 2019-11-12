@@ -14,7 +14,7 @@ module Logo = {
         animate(Time.seconds(4))
         |> tween(0., 6.28)
         |> repeat
-        |> delay(Time.milliseconds(500)),
+        |> delay(Time.ms(500)),
       ))
     );
 
@@ -83,7 +83,7 @@ module AnimatedText = {
       );
     let%hook (translate, _state, _reset) =
       Hooks.animation(
-        Animation.animate(Time.milliseconds(500))
+        Animation.animate(Time.ms(500))
         |> Animation.delay(delay)
         |> Animation.ease(Easing.easeOut)
         |> Animation.tween(50., 0.),
@@ -108,7 +108,7 @@ let render = () =>
   <Center>
     <Row>
       <AnimatedText delay=Time.zero text="Welcome" />
-      <AnimatedText delay={Time.milliseconds(500)} text="to" />
+      <AnimatedText delay={Time.ms(500)} text="to" />
       <AnimatedText delay={Time.seconds(1)} text="Revery" />
     </Row>
     <Logo />

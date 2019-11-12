@@ -3,6 +3,7 @@ type t;
 let zero: t;
 let seconds: int => t;
 let milliseconds: int => t;
+let ms: int => t;
 
 /**
   [ofSeconds(seconds)] converts a float value in seconds to a [t] representing the time.
