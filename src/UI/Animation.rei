@@ -15,7 +15,7 @@ type t('value);
 
 /**
  * `state` is the state of the animation.
- * 
+ *
  *   `Delayed` means it has yet to start
  *   `Running` means it has started and not yet finished.
  *   `Complete(elapsed)` means it has completed in `elapsed` time.
@@ -59,7 +59,7 @@ let const: 'a => t('a);
 let animate: Time.t => t(NormalizedTime.t);
 
 /**
- * `delay(time)` will effectively extend the the reuslt of applying `Time.zero` 
+ * `delay(time)` will effectively extend the the reuslt of applying `Time.zero`
  *
  * Examples:
  *   (animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> valueAt(Time.seconds(-2.)) :> float) == 0.0,
@@ -75,7 +75,7 @@ let delay: (Time.t, t('a)) => t('a);
 
 /**
  * `repeat` will repeat the animation ad infinitum
- * 
+ *
  * Note that it will not repat "backwards", that is, in negative time.
  *
  * Examples:
@@ -91,7 +91,7 @@ let repeat: t('a) => t('a);
 
 /**
  * `alternatingRepeat` will repeat the animation back and forth ad infinitum
- * 
+ *
  * Note that it will not repat "backwards", that is, in negative time.
  *
  * Examples:
@@ -107,7 +107,7 @@ let alternatingRepeat: t('a) => t('a);
 
 /**
  * `ease(start, end)` will transform the animated value according to the given easing function.
- * 
+ *
  * Note that easing only works in normalized time space, and therefore requires
  * an animation in normalized time even if the easing functions themselves don't.
  *
