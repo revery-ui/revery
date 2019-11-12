@@ -5,11 +5,16 @@ type t('a);
 /**
  * Normalized time in the interval [0., 1.]
  */
-type normalizedTime = pri float;
+module NormalizedTime: {
+  type t = pri float;
+  let fromFloat: float => t;
+};
+
+type t('a);
 
 type state =
   | Delayed
-  | Running(normalizedTime)
+  | Running
   | Complete(Time.t); // Elapsed time
 
 let const: 'a => t('a);

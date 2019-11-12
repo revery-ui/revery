@@ -1,13 +1,16 @@
 open Revery_Core;
 open Revery_Math;
 
-type t('a) = Time.t => ('a, state)
+module NormalizedTime = {
+  type t = float;
+  let fromFloat = t => Float.max(0., Float.min(1., t));
+};
 
-and normalizedTime = float
+type t('a) = Time.t => ('a, state)
 
 and state =
   | Delayed
-  | Running(normalizedTime)
+  | Running
   | Complete(Time.t); // Elapsed time
 
 let const = (constant, _time) => (constant, Complete(Time.zero));
@@ -23,7 +26,7 @@ let animate = (duration, time) => {
   } else if (normalizedTime > 1.) {
     (1., Complete(duration));
   } else {
-    (normalizedTime, Running(normalizedTime));
+    (normalizedTime, Running);
   };
 };
 
@@ -32,7 +35,10 @@ let delay = (delay, animate, time) =>
     (fst(animate(Time.zero)), Delayed);
   } else {
     switch (animate(Time.(time - delay))) {
-    | (value, Complete(elapsed)) => (value, Complete(Time.(elapsed + delay)))
+    | (value, Complete(elapsed)) => (
+        value,
+        Complete(Time.(elapsed + delay)),
+      )
     | result => result
     };
   };
@@ -77,39 +83,16 @@ let zip = ((a, b), time) =>
   switch (a(time), b(time)) {
   | ((aValue, Delayed), (bValue, Delayed)) => ((aValue, bValue), Delayed)
 
-  | ((aValue, Running(aElapsed)), (bValue, Running(bElapsed))) => (
-      (aValue, bValue),
-      Running((aElapsed +. bElapsed) /. 2.),
-    )
-
   | ((aValue, Complete(aElapsed)), (bValue, Complete(bElapsed))) => (
       (aValue, bValue),
       Complete(Time.max(aElapsed, bElapsed)),
     )
 
-  | ((aValue, Complete(_)), (bValue, Running(elapsed)))
-  | ((aValue, Running(elapsed)), (bValue, Complete(_))) => (
-      (aValue, bValue),
-      Running((1. +. elapsed) /. 2.),
-    )
-
-  | ((aValue, Delayed), (bValue, Running(elapsed)))
-  | ((aValue, Running(elapsed)), (bValue, Delayed)) => (
-      (aValue, bValue),
-      Running(elapsed /. 2.),
-    )
-
-  | ((aValue, Delayed), (bValue, Complete(_)))
-  | ((aValue, Complete(_)), (bValue, Delayed)) => (
-      (aValue, bValue),
-      Running(0.5),
-    )
+  | ((aValue, _), (bValue, _)) => ((aValue, bValue), Running)
   };
 
 let apply = (time, animate) => animate(time);
 
-let valueAt = (time, animate) =>
-  fst(animate(time));
+let valueAt = (time, animate) => fst(animate(time));
 
-let stateAt = (time, animate) =>
-  snd(animate(time));
+let stateAt = (time, animate) => snd(animate(time));
