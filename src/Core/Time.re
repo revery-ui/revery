@@ -1,10 +1,10 @@
 type t = float;
 
 let zero = 0.;
-let seconds = t => t;
-let milliseconds = t => t /. 1000.;
+let seconds = t => float(t);
+let milliseconds = t => float(t) /. 1000.;
 
-let ofSeconds = seconds;
+let ofSeconds = t => t;
 let toSeconds = t => t;
 
 let (+) = (+.);

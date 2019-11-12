@@ -28,12 +28,12 @@ let bounceAnimation = (~origin, ~force) =>
   Animation.(
     {
       let bounceAway =
-        animate(Time.milliseconds(100.))
+        animate(Time.milliseconds(100))
         |> ease(Easing.cubicBezier(0.23, 1., 0.32, 1.))
         |> tween(float(origin), float(origin + force));
 
       let bounceBack =
-        Animation.animate(Time.milliseconds(800.))
+        Animation.animate(Time.milliseconds(800))
         |> ease(Easing.cubicBezier(0.23, 1., 0.32, 1.))
         |> tween(float(origin + force), float(origin));
 

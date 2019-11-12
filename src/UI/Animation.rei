@@ -30,10 +30,10 @@ type state =
  *
  * Examples:
  *   const(3) |> valueAt(Time.zero) == 3,
- *   const(3) |> valueAt(Time.seconds(-42.)) == 3,
- *   const(3) |> valueAt(Time.seconds(42.)) == 3,
- *   const(3) |> stateAt(Time.seconds(-42.)) == Complete(Time.zero),
- *   const(3) |> stateAt(Time.seconds(42.)) == Complete(Time.zero),
+ *   const(3) |> valueAt(Time.seconds(-42)) == 3,
+ *   const(3) |> valueAt(Time.seconds(42)) == 3,
+ *   const(3) |> stateAt(Time.seconds(-42)) == Complete(Time.zero),
+ *   const(3) |> stateAt(Time.seconds(42)) == Complete(Time.zero),
  *   const("rhino") |> valueAt(Time.zero) == "rhino",
  */
 let const: 'a => t('a);
@@ -47,14 +47,14 @@ let const: 'a => t('a);
  * `(value, Running(value))` where `value` is in the interval [0., 1.].
  *
  * Examples:
- *   (animate(Time.seconds(5.)) |> valueAt(Time.zero) :> float) == 0.0,
- *   (animate(Time.seconds(5.)) |> valueAt(Time.seconds(-42.)) :> float) == 0.0,
- *   (animate(Time.seconds(5.)) |> valueAt(Time.seconds(1.)) :> float) == 0.2,
- *   (animate(Time.seconds(5.)) |> valueAt(Time.seconds(42.)) :> float) == 1.0,
- *   animate(Time.seconds(5.)) |> stateAt(Time.zero) == Running,
- *   animate(Time.seconds(5.)) |> stateAt(Time.seconds(-42.)) == Delayed,
- *   animate(Time.seconds(5.)) |> stateAt(Time.seconds(1.)) == Running,
- *   animate(Time.seconds(5.)) |> stateAt(Time.seconds(42.)) == Complete(Time.seconds(5.)),
+ *   (animate(Time.seconds(5)) |> valueAt(Time.zero) :> float) == 0.0,
+ *   (animate(Time.seconds(5)) |> valueAt(Time.seconds(-42)) :> float) == 0.0,
+ *   (animate(Time.seconds(5)) |> valueAt(Time.seconds(1)) :> float) == 0.2,
+ *   (animate(Time.seconds(5)) |> valueAt(Time.seconds(42)) :> float) == 1.0,
+ *   animate(Time.seconds(5)) |> stateAt(Time.zero) == Running,
+ *   animate(Time.seconds(5)) |> stateAt(Time.seconds(-42)) == Delayed,
+ *   animate(Time.seconds(5)) |> stateAt(Time.seconds(1)) == Running,
+ *   animate(Time.seconds(5)) |> stateAt(Time.seconds(42)) == Complete(Time.seconds(5)),
  */
 let animate: Time.t => t(NormalizedTime.t);
 
@@ -62,14 +62,14 @@ let animate: Time.t => t(NormalizedTime.t);
  * `delay(time)` will effectively extend the the reuslt of applying `Time.zero`
  *
  * Examples:
- *   (animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> valueAt(Time.seconds(-2.)) :> float) == 0.0,
- *   (animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> valueAt(Time.seconds(0.75)) :> float) == 0.0,
- *   (animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> valueAt(Time.seconds(1.5)) :> float) == 0.5,
- *   (animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> valueAt(Time.seconds(4.66)) :> float) == 1.0,
- *   animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> stateAt(Time.seconds(-2.)) == Delayed,
- *   animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> stateAt(Time.seconds(0.75)) == Delayed,
- *   animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> stateAt(Time.seconds(1.5)) == Running,
- *   animate(Time.seconds(1.)) |> delay(Time.seconds(1.)) |> stateAt(Time.seconds(4.66)) == Complete(Time.seconds(2.)),
+ *   (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.seconds(-2)) :> float) == 0.0,
+ *   (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.milliseconds(750)) :> float) == 0.0,
+ *   (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.milliseconds(1500)) :> float) == 0.5,
+ *   (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.milliseconds(4660)) :> float) == 1.0,
+ *   animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.milliseconds(-2)) == Delayed,
+ *   animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.milliseconds(750)) == Delayed,
+ *   animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.milliseconds(1500)) == Running,
+ *   animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.milliseconds(4660)) == Complete(Time.seconds(2)),
  */
 let delay: (Time.t, t('a)) => t('a);
 
@@ -79,13 +79,13 @@ let delay: (Time.t, t('a)) => t('a);
  * Note that it will not repat "backwards", that is, in negative time.
  *
  * Examples:
- *   (animate(Time.seconds(1.)) |> repeat |> valueAt(Time.seconds(-2.)) :> float) == 0.0,
- *   (animate(Time.seconds(1.)) |> repeat |> valueAt(Time.seconds(0.75)) :> float) == 0.75,
- *   (animate(Time.seconds(1.)) |> repeat |> valueAt(Time.seconds(1.75)) :> float) == 0.75,
- *   (animate(Time.seconds(1.)) |> repeat |> valueAt(Time.seconds(3.66)) :> float) =~. 0.66,
- *   (animate(Time.seconds(1.)) |> repeat |> valueAt(Time.seconds(4.66)) :> float) =~. 0.66,
- *   animate(Time.seconds(1.)) |> repeat |> stateAt(Time.seconds(-2.)) == Delayed,
- *   animate(Time.seconds(1.)) |> repeat |> stateAt(Time.seconds(4.66)) == Running,
+ *   (animate(Time.seconds(1)) |> repeat |> valueAt(Time.seconds(-2)) :> float) == 0.0,
+ *   (animate(Time.seconds(1)) |> repeat |> valueAt(Time.milliseconds(750)) :> float) == 0.75,
+ *   (animate(Time.seconds(1)) |> repeat |> valueAt(Time.milliseconds(1750)) :> float) == 0.75,
+ *   (animate(Time.seconds(1)) |> repeat |> valueAt(Time.milliseconds(3660)) :> float) =~. 0.66,
+ *   (animate(Time.seconds(1)) |> repeat |> valueAt(Time.milliseconds(4660)) :> float) =~. 0.66,
+ *   animate(Time.seconds(1)) |> repeat |> stateAt(Time.seconds(-2)) == Delayed,
+ *   animate(Time.seconds(1)) |> repeat |> stateAt(Time.milliseconds(4660)) == Running,
  */
 let repeat: t('a) => t('a);
 
@@ -95,13 +95,13 @@ let repeat: t('a) => t('a);
  * Note that it will not repat "backwards", that is, in negative time.
  *
  * Examples:
- *   (animate(Time.seconds(1.)) |> alternatingRepeat |> valueAt(Time.seconds(-2.)) :> float) == 0.0,
- *   (animate(Time.seconds(1.)) |> alternatingRepeat |> valueAt(Time.seconds(0.75)) :> float) == 0.75,
- *   (animate(Time.seconds(1.)) |> alternatingRepeat |> valueAt(Time.seconds(1.75)) :> float) == 0.25,
- *   (animate(Time.seconds(1.)) |> alternatingRepeat |> valueAt(Time.seconds(3.66)) :> float) =~. 0.34,
- *   (animate(Time.seconds(1.)) |> alternatingRepeat |> valueAt(Time.seconds(4.66)) :> float) =~. 0.66,
- *   animate(Time.seconds(1.)) |> alternatingRepeat |> stateAt(Time.seconds(-2.)) == Delayed,
- *   animate(Time.seconds(1.)) |> alternatingRepeat |> stateAt(Time.seconds(4.66)) == Running,
+ *   (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.seconds(-2.)) :> float) == 0.0,
+ *   (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.milliseconds(750)) :> float) == 0.75,
+ *   (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.milliseconds(1750)) :> float) == 0.25,
+ *   (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.milliseconds(3660)) :> float) =~. 0.34,
+ *   (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.milliseconds(4660)) :> float) =~. 0.66,
+ *   animate(Time.seconds(1)) |> alternatingRepeat |> stateAt(Time.seconds(-2)) == Delayed,
+ *   animate(Time.seconds(1)) |> alternatingRepeat |> stateAt(Time.milliseconds(4660)) == Running,
  */
 let alternatingRepeat: t('a) => t('a);
 
@@ -112,11 +112,11 @@ let alternatingRepeat: t('a) => t('a);
  * an animation in normalized time even if the easing functions themselves don't.
  *
  * Examples:
- *   (animate(Time.seconds(1.)) |> ease(Easing.quadratic) |> valueAt(Time.seconds(-2.)) :> float) == 0.0,
- *   (animate(Time.seconds(1.)) |> ease(Easing.quadratic) |> valueAt(Time.seconds(0.25)) :> float) == 0.0625,
- *   (animate(Time.seconds(1.)) |> ease(Easing.quadratic) |> valueAt(Time.seconds(0.5)) :> float) == 0.25,
- *   (animate(Time.seconds(1.)) |> ease(Easing.quadratic) |> valueAt(Time.seconds(0.75)) :> float) =~. 0.5625,
- *   (animate(Time.seconds(1.)) |> ease(Easing.quadratic) |> valueAt(Time.seconds(4.66)) :> float) =~. 1.0,
+ *   (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.seconds(-2)) :> float) == 0.0,
+ *   (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.milliseconds(250)) :> float) == 0.0625,
+ *   (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.milliseconds(500)) :> float) == 0.25,
+ *   (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.milliseconds(750)) :> float) =~. 0.5625,
+ *   (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.milliseconds(4660)) :> float) =~. 1.0,
  */
 let ease: (Easing.t, t(NormalizedTime.t)) => t(NormalizedTime.t);
 
@@ -124,10 +124,10 @@ let ease: (Easing.t, t(NormalizedTime.t)) => t(NormalizedTime.t);
  * `tween(start, end)` maps normalized time to the interval [start, end]
  *
  * Examples:
- *   animate(Time.seconds(1.)) |> tween(2., 5.) |> valueAt(Time.zero) == 2.0,
- *   animate(Time.seconds(1.)) |> tween(2., 5.) |> valueAt(Time.seconds(0.5)) == 3.5,
- *   animate(Time.seconds(1.)) |> tween(2., 5.) |> valueAt(Time.seconds(-42.)) == 2.0,
- *   animate(Time.seconds(1.)) |> tween(2., 5.) |> valueAt(Time.seconds(42.)) == 5.0,
+ *   animate(Time.seconds(1)) |> tween(2., 5.) |> valueAt(Time.zero) == 2.0,
+ *   animate(Time.seconds(1)) |> tween(2., 5.) |> valueAt(Time.milliseconds(500)) == 3.5,
+ *   animate(Time.seconds(1)) |> tween(2., 5.) |> valueAt(Time.seconds(-42)) == 2.0,
+ *   animate(Time.seconds(1)) |> tween(2., 5.) |> valueAt(Time.seconds(42)) == 5.0,
  */
 let tween: (float, float, t(NormalizedTime.t)) => t(float);
 
@@ -135,7 +135,7 @@ let tween: (float, float, t(NormalizedTime.t)) => t(float);
  * `map(f)` maps the animated value according to the given function `f`
  *
  * Examples:
- *   animate(Time.seconds(1.)) |> map(n => string_of_float(n: NormalizedTime.t :> float)) |> valueAt(Time.seconds(0.33)) == "0.33",
+ *   animate(Time.seconds(1)) |> map(n => string_of_float(n: NormalizedTime.t :> float)) |> valueAt(Time.milliseconds(330)) == "0.33",
  */
 let map: ('a => 'b, t('a)) => t('b);
 
@@ -143,8 +143,8 @@ let map: ('a => 'b, t('a)) => t('b);
  * `andThen(a, ~next:b)` runs `a` and `b` in sequence.
  *
  * Examples:
- *   (animate(Time.seconds(1.)) |> andThen(~next=animate(Time.seconds(2.))) |> valueAt(Time.seconds(1.)) :> float) == 1.0,
- *   (animate(Time.seconds(1.)) |> andThen(~next=animate(Time.seconds(2.))) |> valueAt(Time.seconds(2.)) :> float) == 0.5,
+ *   (animate(Time.seconds(1)) |> andThen(~next=animate(Time.seconds(2))) |> valueAt(Time.seconds(1)) :> float) == 1.0,
+ *   (animate(Time.seconds(1)) |> andThen(~next=animate(Time.seconds(2))) |> valueAt(Time.seconds(2)) :> float) == 0.5,
  */
 let andThen: (t('a), ~next: t('a)) => t('a);
 
@@ -152,8 +152,8 @@ let andThen: (t('a), ~next: t('a)) => t('a);
  * `zip((a, b))` runs `a` and `b` in parallel and returns their values as a tuple.
  *
  * Examples:
- *   (zip((animate(Time.seconds(1.)), animate(Time.seconds(2.)))) |> valueAt(Time.seconds(1.)) |> fst :> float) == 1.0,
- *   (zip((animate(Time.seconds(1.)), animate(Time.seconds(2.)))) |> valueAt(Time.seconds(1.)) |> snd :> float) == 0.5,
+ *   (zip((animate(Time.seconds(1)), animate(Time.seconds(2)))) |> valueAt(Time.seconds(1)) |> fst :> float) == 1.0,
+ *   (zip((animate(Time.seconds(1)), animate(Time.seconds(2)))) |> valueAt(Time.seconds(1)) |> snd :> float) == 0.5,
  */
 let zip: ((t('a), t('b))) => t(('a, 'b));
 
@@ -161,8 +161,8 @@ let zip: ((t('a), t('b))) => t(('a, 'b));
  * `apply(time)` returns the vale and state of the animation at the given `time`
  *
  * Examples:
- *   (animate(Time.seconds(1.)) |> apply(Time.seconds(0.33)) |> fst :> float) == 0.33,
- *   animate(Time.seconds(1.)) |> apply(Time.seconds(0.33)) |> snd == Running,
+ *   (animate(Time.seconds(1)) |> apply(Time.milliseconds(330)) |> fst :> float) == 0.33,
+ *   animate(Time.seconds(1)) |> apply(Time.milliseconds(330)) |> snd == Running,
  */
 let apply: (Time.t, t('a)) => ('a, state);
 
@@ -170,7 +170,7 @@ let apply: (Time.t, t('a)) => ('a, state);
  * `valueAt(time)` returns the value of the animation at the given `time`
  *
  * Examples:
- *   (animate(Time.seconds(1.)) |> valueAt(Time.seconds(0.33)) :> float) == 0.33,
+ *   (animate(Time.seconds(1)) |> valueAt(Time.milliseconds(330)) :> float) == 0.33,
  */
 let valueAt: (Time.t, t('a)) => 'a;
 
@@ -178,6 +178,6 @@ let valueAt: (Time.t, t('a)) => 'a;
  * `stateAt(time)` returns the state of the animation at the given `time`
  *
  * Examples:
- *   animate(Time.seconds(1.)) |> stateAt(Time.seconds(0.33)) == Running,
+ *   animate(Time.seconds(1)) |> stateAt(Time.milliseconds(330)) == Running,
  */
 let stateAt: (Time.t, t('a)) => state;
