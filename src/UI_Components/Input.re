@@ -12,7 +12,7 @@ module Caret = {
         switch (action) {
         | `Reset => Time.zero
         | `Tick(time) =>
-          Time.(state >= seconds(interval) ? zero : state + time)
+          Time.(state >= interval * 2.0 ? zero : state + time)
         }
       });
 
@@ -23,14 +23,14 @@ module Caret = {
           let clear =
             Tick.interval(
               time => dispatch(`Tick(time)),
-              Time.milliseconds(interval),
+              Time.milliseconds(1.0),
             );
           Some(clear);
         },
       );
 
     let caretOpacity =
-      isFocused && state <= Time.seconds(interval /. 2.) ? 1.0 : 0.0;
+      isFocused && state <= interval ? 1.0 : 0.0;
 
     (caretOpacity, () => dispatch(`Reset));
   };
@@ -183,7 +183,7 @@ let%component make =
     };
 
   let%hook (cursorOpacity, resetCursor) =
-    Caret.use(~interval=1.0, ~isFocused=state.isFocused);
+    Caret.use(~interval=Time.seconds(0.5), ~isFocused=state.isFocused);
 
   let%hook (inputValueRef, setInputValueRef) = Hooks.ref(valueToDisplay);
 
