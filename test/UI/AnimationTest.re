@@ -27,14 +27,18 @@ describe("Animation", ({describe, _}) => {
       "examples",
       test,
       Animation.[
-    (animate(Time.seconds(5)) |> valueAt(Time.zero) :> float) == 0.0,
-    (animate(Time.seconds(5)) |> valueAt(Time.seconds(-42)) :> float) == 0.0,
-    (animate(Time.seconds(5)) |> valueAt(Time.seconds(1)) :> float) == 0.2,
-    (animate(Time.seconds(5)) |> valueAt(Time.seconds(42)) :> float) == 1.0,
-    animate(Time.seconds(5)) |> stateAt(Time.zero) == Running,
-    animate(Time.seconds(5)) |> stateAt(Time.seconds(-42)) == Delayed,
-    animate(Time.seconds(5)) |> stateAt(Time.seconds(1)) == Running,
-    animate(Time.seconds(5)) |> stateAt(Time.seconds(42)) == Complete(Time.seconds(5)),
+        (animate(Time.seconds(5)) |> valueAt(Time.zero) :> float) == 0.0,
+        (animate(Time.seconds(5)) |> valueAt(Time.seconds(-42)) :> float)
+        == 0.0,
+        (animate(Time.seconds(5)) |> valueAt(Time.seconds(1)) :> float)
+        == 0.2,
+        (animate(Time.seconds(5)) |> valueAt(Time.seconds(42)) :> float)
+        == 1.0,
+        animate(Time.seconds(5)) |> stateAt(Time.zero) == Running,
+        animate(Time.seconds(5)) |> stateAt(Time.seconds(-42)) == Delayed,
+        animate(Time.seconds(5)) |> stateAt(Time.seconds(1)) == Running,
+        animate(Time.seconds(5))
+        |> stateAt(Time.seconds(42)) == Complete(Time.seconds(5)),
       ],
     )
   });
@@ -56,14 +60,42 @@ describe("Animation", ({describe, _}) => {
       "examples",
       test,
       Animation.[
-    (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.seconds(-2)) :> float) == 0.0,
-    (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.ms(750)) :> float) == 0.0,
-    (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.ms(1500)) :> float) == 0.5,
-    (animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> valueAt(Time.ms(4660)) :> float) == 1.0,
-    animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.ms(-2)) == Delayed,
-    animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.ms(750)) == Delayed,
-    animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.ms(1500)) == Running,
-    animate(Time.seconds(1)) |> delay(Time.seconds(1)) |> stateAt(Time.ms(4660)) == Complete(Time.seconds(2)),
+        (
+          animate(Time.seconds(1))
+          |> delay(Time.seconds(1))
+          |> valueAt(Time.seconds(-2)) :> float
+        )
+        == 0.0,
+        (
+          animate(Time.seconds(1))
+          |> delay(Time.seconds(1))
+          |> valueAt(Time.ms(750)) :> float
+        )
+        == 0.0,
+        (
+          animate(Time.seconds(1))
+          |> delay(Time.seconds(1))
+          |> valueAt(Time.ms(1500)) :> float
+        )
+        == 0.5,
+        (
+          animate(Time.seconds(1))
+          |> delay(Time.seconds(1))
+          |> valueAt(Time.ms(4660)) :> float
+        )
+        == 1.0,
+        animate(Time.seconds(1))
+        |> delay(Time.seconds(1))
+        |> stateAt(Time.ms(-2)) == Delayed,
+        animate(Time.seconds(1))
+        |> delay(Time.seconds(1))
+        |> stateAt(Time.ms(750)) == Delayed,
+        animate(Time.seconds(1))
+        |> delay(Time.seconds(1))
+        |> stateAt(Time.ms(1500)) == Running,
+        animate(Time.seconds(1))
+        |> delay(Time.seconds(1))
+        |> stateAt(Time.ms(4660)) == Complete(Time.seconds(2)),
       ],
     );
 
@@ -78,12 +110,10 @@ describe("Animation", ({describe, _}) => {
 
       Animation.(
         {
-          expect.ext.animationState(stateAt(Time.ms(3499), anim)).
-            toEqual(
+          expect.ext.animationState(stateAt(Time.ms(3499), anim)).toEqual(
             Delayed,
           );
-          expect.ext.animationState(stateAt(Time.ms(3500), anim)).
-            toEqual(
+          expect.ext.animationState(stateAt(Time.ms(3500), anim)).toEqual(
             Running,
           );
           expect.ext.animationState(stateAt(Time.seconds(4), anim)).toEqual(
@@ -117,13 +147,32 @@ describe("Animation", ({describe, _}) => {
       "examples",
       test,
       Animation.[
-    (animate(Time.seconds(1)) |> repeat |> valueAt(Time.seconds(-2)) :> float) == 0.0,
-    (animate(Time.seconds(1)) |> repeat |> valueAt(Time.ms(750)) :> float) == 0.75,
-    (animate(Time.seconds(1)) |> repeat |> valueAt(Time.ms(1750)) :> float) == 0.75,
-    (animate(Time.seconds(1)) |> repeat |> valueAt(Time.ms(3660)) :> float) =~. 0.66,
-    (animate(Time.seconds(1)) |> repeat |> valueAt(Time.ms(4660)) :> float) =~. 0.66,
-    animate(Time.seconds(1)) |> repeat |> stateAt(Time.seconds(-2)) == Delayed,
-    animate(Time.seconds(1)) |> repeat |> stateAt(Time.ms(4660)) == Running,
+        (
+          animate(Time.seconds(1)) |> repeat |> valueAt(Time.seconds(-2)) :> float
+        )
+        == 0.0,
+        (
+          animate(Time.seconds(1)) |> repeat |> valueAt(Time.ms(750)) :> float
+        )
+        == 0.75,
+        (
+          animate(Time.seconds(1)) |> repeat |> valueAt(Time.ms(1750)) :> float
+        )
+        == 0.75,
+        (
+          animate(Time.seconds(1)) |> repeat |> valueAt(Time.ms(3660)) :> float
+        )
+        =~. 0.66,
+        (
+          animate(Time.seconds(1)) |> repeat |> valueAt(Time.ms(4660)) :> float
+        )
+        =~. 0.66,
+        animate(Time.seconds(1))
+        |> repeat
+        |> stateAt(Time.seconds(-2)) == Delayed,
+        animate(Time.seconds(1))
+        |> repeat
+        |> stateAt(Time.ms(4660)) == Running,
       ],
     );
   });
@@ -145,13 +194,42 @@ describe("Animation", ({describe, _}) => {
       "examples",
       test,
       Animation.[
-    (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.seconds(-2)) :> float) == 0.0,
-    (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.ms(750)) :> float) == 0.75,
-    (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.ms(1750)) :> float) == 0.25,
-    (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.ms(3660)) :> float) =~. 0.34,
-    (animate(Time.seconds(1)) |> alternatingRepeat |> valueAt(Time.ms(4660)) :> float) =~. 0.66,
-    animate(Time.seconds(1)) |> alternatingRepeat |> stateAt(Time.seconds(-2)) == Delayed,
-    animate(Time.seconds(1)) |> alternatingRepeat |> stateAt(Time.ms(4660)) == Running,
+        (
+          animate(Time.seconds(1))
+          |> alternatingRepeat
+          |> valueAt(Time.seconds(-2)) :> float
+        )
+        == 0.0,
+        (
+          animate(Time.seconds(1))
+          |> alternatingRepeat
+          |> valueAt(Time.ms(750)) :> float
+        )
+        == 0.75,
+        (
+          animate(Time.seconds(1))
+          |> alternatingRepeat
+          |> valueAt(Time.ms(1750)) :> float
+        )
+        == 0.25,
+        (
+          animate(Time.seconds(1))
+          |> alternatingRepeat
+          |> valueAt(Time.ms(3660)) :> float
+        )
+        =~. 0.34,
+        (
+          animate(Time.seconds(1))
+          |> alternatingRepeat
+          |> valueAt(Time.ms(4660)) :> float
+        )
+        =~. 0.66,
+        animate(Time.seconds(1))
+        |> alternatingRepeat
+        |> stateAt(Time.seconds(-2)) == Delayed,
+        animate(Time.seconds(1))
+        |> alternatingRepeat
+        |> stateAt(Time.ms(4660)) == Running,
       ],
     );
   });
@@ -164,13 +242,9 @@ describe("Animation", ({describe, _}) => {
         animate(Time.seconds(1)) |> ease(Easing.quadratic) |> floatify;
 
       expect.float(anim |> valueAt(Time.seconds(-2))).toBeCloseTo(0.);
-      expect.float(anim |> valueAt(Time.ms(250))).toBeCloseTo(
-        0.0625,
-      );
+      expect.float(anim |> valueAt(Time.ms(250))).toBeCloseTo(0.0625);
       expect.float(anim |> valueAt(Time.ms(500))).toBeCloseTo(0.25);
-      expect.float(anim |> valueAt(Time.ms(750))).toBeCloseTo(
-        0.5625,
-      );
+      expect.float(anim |> valueAt(Time.ms(750))).toBeCloseTo(0.5625);
       expect.float(anim |> valueAt(Time.seconds(2))).toBeCloseTo(1.);
     });
 
@@ -178,11 +252,36 @@ describe("Animation", ({describe, _}) => {
       "examples",
       test,
       Animation.[
-    (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.seconds(-2)) :> float) == 0.0,
-    (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.ms(250)) :> float) == 0.0625,
-    (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.ms(500)) :> float) == 0.25,
-    (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.ms(750)) :> float) =~. 0.5625,
-    (animate(Time.seconds(1)) |> ease(Easing.quadratic) |> valueAt(Time.ms(4660)) :> float) =~. 1.0,
+        (
+          animate(Time.seconds(1))
+          |> ease(Easing.quadratic)
+          |> valueAt(Time.seconds(-2)) :> float
+        )
+        == 0.0,
+        (
+          animate(Time.seconds(1))
+          |> ease(Easing.quadratic)
+          |> valueAt(Time.ms(250)) :> float
+        )
+        == 0.0625,
+        (
+          animate(Time.seconds(1))
+          |> ease(Easing.quadratic)
+          |> valueAt(Time.ms(500)) :> float
+        )
+        == 0.25,
+        (
+          animate(Time.seconds(1))
+          |> ease(Easing.quadratic)
+          |> valueAt(Time.ms(750)) :> float
+        )
+        =~. 0.5625,
+        (
+          animate(Time.seconds(1))
+          |> ease(Easing.quadratic)
+          |> valueAt(Time.ms(4660)) :> float
+        )
+        =~. 1.0,
       ],
     );
   });
@@ -204,10 +303,18 @@ describe("Animation", ({describe, _}) => {
       "examples",
       test,
       Animation.[
-    animate(Time.seconds(1)) |> tween(2., 5.) |> valueAt(Time.zero) == 2.0,
-    animate(Time.seconds(1)) |> tween(2., 5.) |> valueAt(Time.ms(500)) == 3.5,
-    animate(Time.seconds(1)) |> tween(2., 5.) |> valueAt(Time.seconds(-42)) == 2.0,
-    animate(Time.seconds(1)) |> tween(2., 5.) |> valueAt(Time.seconds(42)) == 5.0,
+        animate(Time.seconds(1))
+        |> tween(2., 5.)
+        |> valueAt(Time.zero) == 2.0,
+        animate(Time.seconds(1))
+        |> tween(2., 5.)
+        |> valueAt(Time.ms(500)) == 3.5,
+        animate(Time.seconds(1))
+        |> tween(2., 5.)
+        |> valueAt(Time.seconds(-42)) == 2.0,
+        animate(Time.seconds(1))
+        |> tween(2., 5.)
+        |> valueAt(Time.seconds(42)) == 5.0,
       ],
     );
   });
@@ -283,24 +390,12 @@ describe("Animation", ({describe, _}) => {
       expect.float(anim |> valueAt(Time.seconds(-2)) |> snd).toBeCloseTo(
         30.,
       );
-      expect.float(anim |> valueAt(Time.ms(750)) |> fst).toBeCloseTo(
-        7.5,
-      );
-      expect.float(anim |> valueAt(Time.ms(750)) |> snd).toBeCloseTo(
-        22.5,
-      );
-      expect.float(anim |> valueAt(Time.ms(1500)) |> fst).toBeCloseTo(
-        10.,
-      );
-      expect.float(anim |> valueAt(Time.ms(1500)) |> snd).toBeCloseTo(
-        20.,
-      );
-      expect.float(anim |> valueAt(Time.ms(4660)) |> fst).toBeCloseTo(
-        10.,
-      );
-      expect.float(anim |> valueAt(Time.ms(4660)) |> snd).toBeCloseTo(
-        20.,
-      );
+      expect.float(anim |> valueAt(Time.ms(750)) |> fst).toBeCloseTo(7.5);
+      expect.float(anim |> valueAt(Time.ms(750)) |> snd).toBeCloseTo(22.5);
+      expect.float(anim |> valueAt(Time.ms(1500)) |> fst).toBeCloseTo(10.);
+      expect.float(anim |> valueAt(Time.ms(1500)) |> snd).toBeCloseTo(20.);
+      expect.float(anim |> valueAt(Time.ms(4660)) |> fst).toBeCloseTo(10.);
+      expect.float(anim |> valueAt(Time.ms(4660)) |> snd).toBeCloseTo(20.);
     });
 
     assertMany(
@@ -328,13 +423,9 @@ describe("Animation", ({describe, _}) => {
       "examples",
       test,
       Animation.[
-        (
-          animate(Time.seconds(1)) |> apply(Time.ms(330)) |> fst :> float
-        )
+        (animate(Time.seconds(1)) |> apply(Time.ms(330)) |> fst :> float)
         == 0.33,
-        animate(Time.seconds(1))
-        |> apply(Time.ms(330))
-        |> snd == Running,
+        animate(Time.seconds(1)) |> apply(Time.ms(330)) |> snd == Running,
       ],
     )
   });

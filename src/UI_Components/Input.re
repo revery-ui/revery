@@ -168,8 +168,7 @@ let%component make =
     Hooks.effect(
       OnMount,
       () => {
-        let clear =
-          Tick.interval(_ => dispatch(CursorTimer), Time.ms(100));
+        let clear = Tick.interval(_ => dispatch(CursorTimer), Time.ms(100));
         Some(clear);
       },
     );
