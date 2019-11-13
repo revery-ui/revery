@@ -32,7 +32,7 @@ module Filter = {
     | Active
     | Completed;
 
-  let show = (v: t) =>
+  let toString = (v: t) =>
     switch (v) {
     | All => "All"
     | Active => "Active"
@@ -292,7 +292,7 @@ module Footer = {
     let filterButtonsView = {
       let button = filter =>
         <Button
-          label={Filter.show(filter)}
+          label={Filter.toString(filter)}
           isSelected={currentFilter == filter}
           onClick={() => onSelectFilter(filter)}
         />;

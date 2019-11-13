@@ -2,13 +2,13 @@ module Scancode = {
   type t = Sdl2.Scancode.t;
 
   let getName = Sdl2.Scancode.getName;
-  let show = getName;
+  let toString = getName;
 };
 
 module Keycode = {
   include Sdl2.Keycode;
 
-  let show = getName;
+  let toString = getName;
 };
 
 module Keymod = {

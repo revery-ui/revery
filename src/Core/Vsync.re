@@ -11,7 +11,7 @@ let toInt = v =>
   //| Adaptive => -1
   };
 
-let show = v =>
+let toString = v =>
   switch (v) {
   | Immediate => "Immediate"
   | Synchronized => "Synchronized"

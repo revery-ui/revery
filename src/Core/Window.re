@@ -31,7 +31,7 @@ module WindowMetrics = {
     zoom: 1.0,
   };
 
-  let show = (v: t) => {
+  let toString = (v: t) => {
     Printf.sprintf(
       "DevicePixelRatio: %f ScaleFactor: %f Zoom: %f Raw Dimensions: %dx%dpx Framebuffer: %dx%dpx",
       v.devicePixelRatio,
@@ -175,7 +175,7 @@ let _updateMetrics = (w: t) => {
     zoom: previousZoom,
   };
   w.areMetricsDirty = false;
-  log("_updateMetrics - new metrics: " ++ WindowMetrics.show(w.metrics));
+  log("_updateMetrics - new metrics: " ++ WindowMetrics.toString(w.metrics));
 };
 
 let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
@@ -340,7 +340,7 @@ let setVsync =
       _window: t, // TODO: Multiple windows - set context
       vsync: Vsync.t,
     ) => {
-  log("Using vsync: " ++ Vsync.show(vsync));
+  log("Using vsync: " ++ Vsync.toString(vsync));
 
   switch (vsync) {
   | Vsync.Immediate => Sdl2.Gl.setSwapInterval(0)
@@ -417,7 +417,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   log("Getting window metrics");
   let metrics =
     _getMetricsFromGlfwWindow(~forceScaleFactor=options.forceScaleFactor, w);
-  log("Metrics: " ++ WindowMetrics.show(metrics));
+  log("Metrics: " ++ WindowMetrics.toString(metrics));
   let ret: t = {
     backgroundColor: options.backgroundColor,
     sdlWindow: w,
@@ -517,7 +517,7 @@ let center = (w: t) => {
   Sdl2.Window.center(w.sdlWindow);
 };
 
-let show = w => {
+let toString = w => {
   Sdl2.Window.show(w.sdlWindow);
 };
 

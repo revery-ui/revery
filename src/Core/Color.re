@@ -97,7 +97,7 @@ let equals = (a: t, b: t) => {
   && Float.equal(a.a, b.a);
 };
 
-let show = (color: t) =>
+let toString = (color: t) =>
   Printf.sprintf(
     "(r: %f g: %f b: %f a: %f)",
     color.r,
