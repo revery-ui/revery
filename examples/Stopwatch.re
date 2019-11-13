@@ -67,7 +67,7 @@ module Clock = {
 
     let marcherOpacity = state.isRunning ? 1.0 : 0.0;
     let getMarcherPosition = t =>
-      sin(Time.toSeconds(t) *. 2. *. pi) /. 2. +. 0.5;
+      sin(Time.toFloatSeconds(t) *. 2. *. pi) /. 2. +. 0.5;
 
     <View
       style=Style.[

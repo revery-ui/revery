@@ -100,8 +100,8 @@ let reducer = (action, state) =>
       ...state,
       cursorTimer:
         Time.(
-          state.cursorTimer >= seconds(1.)
-            ? zero : state.cursorTimer + milliseconds(100.)
+          state.cursorTimer >= seconds(1)
+            ? zero : state.cursorTimer + ms(100)
         ),
     }
   | UpdateText({newString, _}) =>
@@ -168,8 +168,7 @@ let%component make =
     Hooks.effect(
       OnMount,
       () => {
-        let clear =
-          Tick.interval(_ => dispatch(CursorTimer), Time.seconds(0.1));
+        let clear = Tick.interval(_ => dispatch(CursorTimer), Time.ms(100));
         Some(clear);
       },
     );
@@ -321,7 +320,7 @@ let%component make =
     Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
   let cursorOpacity =
-    state.isFocused && state.cursorTimer <= Time.seconds(0.5) ? 1.0 : 0.0;
+    state.isFocused && state.cursorTimer <= Time.ms(500) ? 1.0 : 0.0;
 
   let cursor = {
     let (startStr, _) = getStringParts(state.cursorPosition, valueToDisplay);

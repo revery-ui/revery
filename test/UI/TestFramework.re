@@ -32,7 +32,7 @@ let animationStateExtensions = (actual, {createMatcher}) => {
         | (Delayed, Delayed)
         | (Running, Running) => pass
         | (Complete(a), Complete(b))
-            when Time.toSeconds(a) =~. Time.toSeconds(b) => pass
+            when Time.toFloatSeconds(a) =~. Time.toFloatSeconds(b) => pass
         | _ =>
           let failureMessage =
             Printf.sprintf(

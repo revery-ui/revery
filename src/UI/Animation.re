@@ -19,7 +19,7 @@ let const = (constant, _time) => (constant, Complete(Time.zero));
  * `time` is assumed to start at 0
  */
 let animate = (duration, time) => {
-  let normalizedTime = Time.(toSeconds(time / duration));
+  let normalizedTime = Time.(toFloatSeconds(time / duration));
 
   if (normalizedTime < 0.) {
     (0., Delayed);
@@ -55,7 +55,7 @@ let repeat = (animate, time) =>
 let alternatingRepeat = (animate, time) =>
   switch (animate(time)) {
   | (_, Complete(elapsed)) =>
-    let iteration = int_of_float(floor(Time.toSeconds(time)));
+    let iteration = int_of_float(floor(Time.toFloatSeconds(time)));
     let shouldReverse = iteration mod 2 != 0; // if not divisble by 2
     let remainder = elapsed == Time.zero ? Time.zero : Time.(time mod elapsed);
     animate(shouldReverse ? Time.(elapsed - remainder) : remainder);
