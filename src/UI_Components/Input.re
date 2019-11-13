@@ -36,10 +36,7 @@ module Cursor = {
         OnMount,
         () => {
           let clear =
-            Tick.interval(
-              time => dispatch(Tick(time)),
-              Time.ms(16),
-            );
+            Tick.interval(time => dispatch(Tick(time)), Time.ms(16));
           Some(clear);
         },
       );
