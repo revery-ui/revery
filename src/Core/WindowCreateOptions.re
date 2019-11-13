@@ -5,7 +5,7 @@ type t = {
     If [visible] is true, the window will be visible immediately upon creation.
 
     If [visible] is false, the window will be invisible, and will require a call
-    to Window.show to make it visible. Can be useful to hide transient UI states.
+    to Window.toString to make it visible. Can be useful to hide transient UI states.
   */
   visible: bool,
   /**

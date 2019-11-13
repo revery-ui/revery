@@ -9,4 +9,4 @@ let crosshair: t;
 let horizontalResize: t;
 let verticalResize: t;
 
-let show: t => string;
+let toString: t => string;

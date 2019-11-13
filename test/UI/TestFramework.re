@@ -18,7 +18,7 @@ let animationStateExtensions = (actual, {createMatcher}) => {
       | Delayed => "Delayed"
       | Running => "Running"
       | Complete(elapsed) =>
-        Printf.sprintf("Complete(%s)", Time.show(elapsed))
+        Printf.sprintf("Complete(%s)", Time.toString(elapsed))
     );
 
   let createStateMatcher =

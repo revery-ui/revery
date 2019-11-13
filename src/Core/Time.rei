@@ -26,7 +26,7 @@ let max: (t, t) => t;
 let min: (t, t) => t;
 let (mod): (t, t) => t;
 
-let show: t => string;
+let toString: t => string;
 
 /**
     [now()] returns the current system time [t]

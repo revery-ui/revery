@@ -12,4 +12,4 @@ module Discovery = Discovery;
 type t = FontManager.FontDescriptor.t;
 
 let find = Discovery.find;
-let show = Discovery.show;
+let toString = Discovery.toString;

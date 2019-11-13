@@ -14,4 +14,4 @@ let find =
     ) =>
   FontManager.findFont(~weight, ~width, ~mono, ~italic, ~family, ());
 
-let show = FontManager.FontDescriptor.show;
+let toString = FontManager.FontDescriptor.show;
