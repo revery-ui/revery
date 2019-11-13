@@ -23,8 +23,6 @@ let render =
     ) => {
   let {rootNode, window, container, _} = container;
 
-  AnimationTicker.tick();
-
   /* Perform reconciliation */
   Performance.bench("reconcile", () =>
     container := Container.update(container^, component)

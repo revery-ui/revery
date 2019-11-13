@@ -9,7 +9,7 @@ module Rectangle = Rectangle;
 let clamp = (f: float, min: float, max: float) =>
   f < min ? min : f > max ? max : f;
 
-let interpolate = (t: float, fromValue: float, toValue: float) => {
+let interpolate = (fromValue, toValue, t) => {
   let t = clamp(t, 0., 1.);
 
   fromValue +. (toValue -. fromValue) *. t;

@@ -10,7 +10,13 @@ let toSeconds = t => t;
 let (+) = (+.);
 let (-) = (-.);
 let ( * ) = ( *. );
+let ( *. ) = ( *. );
 let (/) = (/.);
+let (/.) = (/.);
+
+let max = Float.max;
+let min = Float.min;
+let (mod) = mod_float;
 
 let show = t => string_of_float(t) ++ "s";
 
