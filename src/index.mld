@@ -123,7 +123,7 @@ The basic component building block is simply a {b pure function}, that returns a
 Example:
 
 {[
-    let squareBox = (~children as _, ()) => <Container width=10 height=10 color=Colors.red />;
+    let squareBox = () => <Container width=10 height=10 color=Colors.red />;
 ]}
 
 Properties can be specified as {b named arguments}.
@@ -131,12 +131,10 @@ Properties can be specified as {b named arguments}.
 Example:
 
 {[
-    let wideBox = (~children as _, ~width: int, ()) => <Container width height=10 color=Colors.red />;
+    let wideBox = (~width: int, ()) => <Container width height=10 color=Colors.red />;
 ]}
 
-Note that the [~children as _] is used to ignore the [children] argument when it is not used (otherwise, there will be a compiler warning.)
-
-You may instead decide you wish to render the children, for example:
+You can accept children through through the [~children] property, for example:
 
 {[
     let boxWithChildren = (~children, ()) => <Container width=10 height=10 color=Colors.red>children</Container>;
@@ -146,19 +144,18 @@ You may instead decide you wish to render the children, for example:
 
 For components that manage state, or have side effects, you'll want to encapsulate those using {b hooks}!
 
-A component that uses hooks must create a handle via [React.component], for example:
+A component that uses hooks can be created using [let%component], for example:
 
 {[
-    let componentWithHooks = {
-        let component = React.component("componentWithHooks");
-        (~children, ()) => component(hooks => {
-           let (state, setState, hooks) = Hooks.state(0, hooks);
+    let%component componentWithHooks = {
+        (~children, ()) => {
+           let%hook (state, setState) = Hooks.state(0);
 
-           (hooks, <Button text=string_of_int(state) onClick={(_) => setState(state + 1)}/>)
-        });
+           <Button text=string_of_int(state) onClick={(_) => setState(state => state + 1)}/>;
+        };
     };
 ]}
 
-Hooks components still return a function with named arguments representing the properties, but there is a nested call to [component(hooks => ...] - a hooks component is a {i function that takes a hooks object}, and then {i returns a tuple of [(hooks, element)]}.
+Hooks components still return a function with named arguments representing the properties, but behind the scenes a hooks component is a {i function that takes a hooks object}, and then {i returns a tuple of [(hooks, element)]}. This complexity is hidden away for you using syntax sugar in a manner similar to how async/await hides promises in JavaScript for example.
 
 In effect, Revery components should always be pure functions - given a set of props, and a hooks, the output should always be the same.
