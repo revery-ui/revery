@@ -5,14 +5,40 @@ open Revery_UI_Primitives;
 
 module Hooks = Revery_UI_Hooks;
 
-module Caret = {
+module Cursor = {
+  type toggle =
+    | On
+    | Off;
+
+  type state = {
+    time: Time.t,
+    toggle,
+  };
+
+  type action =
+    | Reset
+    | Tick(Time.t);
+
   let use = (~interval, ~isFocused) => {
     let%hook (state, dispatch) =
-      Hooks.reducer(~initialState=Time.zero, (action, state) => {
+      Hooks.reducer(
+        ~initialState={time: Time.zero, toggle: Off}, (action, state) => {
         switch (action) {
-        | `Reset => Time.zero
-        | `Tick(time) =>
-          Time.(state >= interval * 2.0 ? zero : state + time)
+        | Reset => {toggle: On, time: Time.zero}
+        | Tick(increasedTime) =>
+          let newTime = Time.(state.time + increasedTime);
+
+          /* if newTime is above the interval a `Tick` has passed */
+          newTime >= interval
+            ? {
+              toggle:
+                switch (state.toggle) {
+                | On => Off
+                | Off => On
+                },
+              time: Time.zero,
+            }
+            : {...state, time: newTime};
         }
       });
 
@@ -22,17 +48,21 @@ module Caret = {
         () => {
           let clear =
             Tick.interval(
-              time => dispatch(`Tick(time)),
-              Time.milliseconds(1.0),
+              time => dispatch(Tick(time)),
+              Time.milliseconds(16.0),
             );
           Some(clear);
         },
       );
 
-    let caretOpacity =
-      isFocused && state <= interval ? 1.0 : 0.0;
+    let cursorOpacity =
+      switch (isFocused, state.toggle) {
+      | (true, Off)
+      | (false, _) => 0.0
+      | (true, On) => 1.0
+      };
 
-    (caretOpacity, () => dispatch(`Reset));
+    (cursorOpacity, () => dispatch(Reset));
   };
 };
 
@@ -183,7 +213,7 @@ let%component make =
     };
 
   let%hook (cursorOpacity, resetCursor) =
-    Caret.use(~interval=Time.seconds(0.5), ~isFocused=state.isFocused);
+   Cursor.use(~interval=Time.seconds(0.5), ~isFocused=state.isFocused);
 
   let%hook (inputValueRef, setInputValueRef) = Hooks.ref(valueToDisplay);
 
