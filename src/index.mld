@@ -147,12 +147,10 @@ For components that manage state, or have side effects, you'll want to encapsula
 A component that uses hooks can be created using [let%component], for example:
 
 {[
-    let%component componentWithHooks = {
-        (~children, ()) => {
-           let%hook (state, setState) = Hooks.state(0);
+    let%component componentWithHooks = (~children, ()) => {
+      let%hook (state, setState) = Hooks.state(0);
 
-           <Button text=string_of_int(state) onClick={(_) => setState(state => state + 1)}/>;
-        };
+      <Button text=string_of_int(state) onClick={(_) => setState(state => state + 1)}/>;
     };
 ]}
 
