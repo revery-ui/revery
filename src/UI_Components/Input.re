@@ -213,7 +213,7 @@ let%component make =
     };
 
   let%hook (cursorOpacity, resetCursor) =
-   Cursor.use(~interval=Time.seconds(0.5), ~isFocused=state.isFocused);
+    Cursor.use(~interval=Time.seconds(0.5), ~isFocused=state.isFocused);
 
   let%hook (inputValueRef, setInputValueRef) = Hooks.ref(valueToDisplay);
 
