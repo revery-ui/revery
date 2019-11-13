@@ -38,7 +38,7 @@ module Cursor = {
           let clear =
             Tick.interval(
               time => dispatch(Tick(time)),
-              Time.milliseconds(16.0),
+              Time.ms(16),
             );
           Some(clear);
         },
@@ -197,7 +197,7 @@ let%component make =
     };
 
   let%hook (cursorOpacity, resetCursor) =
-    Cursor.use(~interval=Time.seconds(0.5), ~isFocused=state.isFocused);
+    Cursor.use(~interval=Time.ms(500), ~isFocused=state.isFocused);
 
   let%hook (inputValueRef, setInputValueRef) = Hooks.ref(valueToDisplay);
 
