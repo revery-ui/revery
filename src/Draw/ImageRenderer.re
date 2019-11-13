@@ -20,81 +20,88 @@ let initialPixels =
 type cache = Hashtbl.t(string, t);
 let _cache: cache = Hashtbl.create(100);
 
-let cleanUrl = url => Str.(global_replace(regexp("[^a-zA-Z0-9_]"), "", url));
+module Utils = {
+  module Text = {
+    let onlyAlphaNumeric = text =>
+      Str.(global_replace(regexp("[^a-zA-Z0-9_]"), "", text));
+  };
 
-let toFileExtension =
-  fun
-  | "image/apng" => ".apng"
-  | "image/bmp" => ".bmp"
-  | "image/gif" => ".gif"
-  | "image/x-icon" => ".ico"
-  | "image/jpeg" => ".jpg"
-  | "image/png" => ".png"
-  | "image/svg+xml" => ".svg"
-  | "image/tiff" => ".tif"
-  | "image/webp" => ".webp"
-  | _ => ".png";
+  module RemoteImage = {
+    let extensionOfMediaType =
+      fun
+      | "image/apng" => ".apng"
+      | "image/bmp" => ".bmp"
+      | "image/gif" => ".gif"
+      | "image/x-icon" => ".ico"
+      | "image/jpeg" => ".jpg"
+      | "image/png" => ".png"
+      | "image/svg+xml" => ".svg"
+      | "image/tiff" => ".tif"
+      | "image/webp" => ".webp"
+      | _ => ".png";
+
+    type t = {
+      data: string,
+      fileExtension: string,
+    };
+
+    let fetch = url =>
+      Fetch.(
+        fetch(url)
+        |> Lwt.map(
+             fun
+             | Ok({Response.body, headers, _}) => {
+                 let fileExtension =
+                   headers
+                   |> Headers.get(~name="content-type")
+                   |> Option.value(~default="")
+                   |> extensionOfMediaType;
+
+                 Some({data: Response.Body.toString(body), fileExtension});
+               }
+             | Error(_) => None,
+           )
+      );
+  };
+};
 
 let getTexture = (imagePath: string) => {
-  /* TODO: Support url paths? */
   let cacheResult = Hashtbl.find_opt(_cache, imagePath);
+  let remoteImagePath = ref(None);
 
   switch (cacheResult) {
-  | Some(r) => r
+  | Some(cachedResult) => cachedResult
   | None =>
     /* will this suffice? */
     let isRemote = imagePath |> Uri.of_string |> Uri.scheme |> Option.is_some;
 
     let imageLoadPromise =
       if (isRemote) {
-        let%lwt maybePathAndImage =
-          Fetch.fetch(imagePath)
-          |> Lwt.map(
-               fun
-               | Ok({Fetch.Response.body, headers, _}) => {
-                   let fileExtension =
-                     headers
-                     |> Fetch.Headers.get(~key="content-type")
-                     |> Option.value(~default="")
-                     |> toFileExtension;
-
-                   let filePath =
-                     Fpath.(
-                       append(
-                         Filename.get_temp_dir_name() |> v,
-                         cleanUrl(imagePath) ++ fileExtension |> v,
-                       )
-                     );
-
-                   Some((filePath, Fetch.Response.Body.toString(body)));
-                 }
-               | Error(_) => None,
-             );
+        let%lwt remoteImage = Utils.RemoteImage.fetch(imagePath);
 
         let image =
-          maybePathAndImage
-          |> Option.map(((imageFilePath, imageData)) => {
-               switch (Bos.OS.File.write(imageFilePath, imageData)) {
-               | Ok(_unit) => Fpath.to_string(imageFilePath)
-               | Error(`Msg(error)) =>
-                 /* TODO: handle this */
-                 Log.error("Error creating temporary image:", error);
-                 Environment.getAssetPath(imagePath);
-               }
-             })
-          |> Option.value(~default=Environment.getAssetPath(imagePath))
-          |> Image.load;
+          switch (remoteImage) {
+          | Some(remoteImage) =>
+            let filePath =
+              Fpath.append(
+                Environment.getTempDirectory() |> Fpath.v,
+                Utils.Text.onlyAlphaNumeric(imagePath)
+                ++ remoteImage.fileExtension
+                |> Fpath.v,
+              );
 
-        switch (maybePathAndImage) {
-        | Some((path, _image)) =>
-          /* TODO: handle error? */
-          switch (Bos.OS.File.delete(~must_exist=true, path)) {
-          | Ok(_) => ()
-          | Error(`Msg(error)) =>
-            Log.error("Error deleting temporary image", error)
-          }
-        | None => ()
-        };
+            switch (Bos.OS.File.write(filePath, remoteImage.data)) {
+            | Ok(_unit) =>
+              remoteImagePath := Some(filePath |> Fpath.to_string);
+              Image.load(filePath |> Fpath.to_string);
+            | Error(`Msg(error)) =>
+              /* TODO: handle this */
+              Log.error("Error creating temporary image:", error);
+              failwith("Could not write image to file");
+            };
+
+          | None => failwith("Error while fetching image")
+          };
 
         image;
       } else {
@@ -135,6 +142,18 @@ let getTexture = (imagePath: string) => {
       ret.hasLoaded = true;
       ret.width = width;
       ret.height = height;
+
+      switch (remoteImagePath^) {
+      | Some(remoteImage) =>
+        switch (Bos.OS.File.delete(~must_exist=true, remoteImage |> Fpath.v)) {
+        | Ok(_) => ()
+        | Error(`Msg(error)) =>
+          /* TODO: handle error? */
+          Log.error("Error deleting temporary image", error)
+        }
+      | None => ()
+      };
+
       Lwt.return();
     };
 

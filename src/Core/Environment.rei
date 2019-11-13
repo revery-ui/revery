@@ -32,6 +32,17 @@ let executingDirectory: string;
 let getWorkingDirectory: unit => string;
 
 /**
+  [getTempDirectory]
+
+  Unix:
+  returns the value of the TMPDIR environment variable or "/tmp" if not set.
+
+  Windows:
+  returns the value of the TMPDIR environment variable or "." not set.
+*/
+let getTempDirectory: unit => string;
+
+/**
 [getAssetPath] resolves a path to an absolute path. If the path is not already
 absolute, it is assumed to be relative to the current binary.
 */

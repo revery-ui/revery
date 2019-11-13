@@ -9,12 +9,12 @@ module IO = {
     module Headers: {
       include (module type of Headers);
 
-      let get: (~key: string, list(Headers.t)) => option(string);
+      let get: (~name: string, list(Headers.t)) => option(string);
     } = {
       include Headers;
 
-      let get = (~key, headers) =>
-        Cohttp.Header.get(headers |> Cohttp.Header.of_list, key);
+      let get = (~name, headers) =>
+        Cohttp.Header.get(headers |> Cohttp.Header.of_list, name);
     };
 
     module Body = {
