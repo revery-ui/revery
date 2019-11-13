@@ -16,8 +16,14 @@ let toSeconds: t => float;
 
 let (+): (t, t) => t;
 let (-): (t, t) => t;
-let ( * ): (t, float) => t;
-let (/): (t, float) => t;
+let ( * ): (t, t) => t;
+let ( *. ): (t, float) => t;
+let (/): (t, t) => t;
+let (/.): (t, float) => t;
+
+let max: (t, t) => t;
+let min: (t, t) => t;
+let (mod): (t, t) => t;
 
 let show: t => string;
 

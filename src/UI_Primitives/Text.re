@@ -8,6 +8,10 @@ let%nativeComponent make =
                       ~onMouseMove=?,
                       ~onMouseUp=?,
                       ~onMouseWheel=?,
+                      ~onMouseEnter=?,
+                      ~onMouseLeave=?,
+                      ~onMouseOver=?,
+                      ~onMouseOut=?,
                       ~ref=?,
                       ~style=emptyTextStyle,
                       ~text="",
@@ -26,6 +30,10 @@ let%nativeComponent make =
           ~onMouseMove?,
           ~onMouseUp?,
           ~onMouseWheel?,
+          ~onMouseEnter?,
+          ~onMouseLeave?,
+          ~onMouseOver?,
+          ~onMouseOut?,
           (),
         );
       let node = PrimitiveNodeFactory.get().createTextNode(text);
@@ -42,6 +50,10 @@ let%nativeComponent make =
           ~onMouseMove?,
           ~onMouseUp?,
           ~onMouseWheel?,
+          ~onMouseEnter?,
+          ~onMouseLeave?,
+          ~onMouseOver?,
+          ~onMouseOut?,
           (),
         );
 
