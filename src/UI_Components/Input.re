@@ -6,13 +6,9 @@ open Revery_UI_Primitives;
 module Hooks = Revery_UI_Hooks;
 
 module Cursor = {
-  type toggle =
-    | On
-    | Off;
-
   type state = {
     time: Time.t,
-    toggle,
+    isOn: bool,
   };
 
   type action =
@@ -22,22 +18,15 @@ module Cursor = {
   let use = (~interval, ~isFocused) => {
     let%hook (state, dispatch) =
       Hooks.reducer(
-        ~initialState={time: Time.zero, toggle: Off}, (action, state) => {
+        ~initialState={time: Time.zero, isOn: false}, (action, state) => {
         switch (action) {
-        | Reset => {toggle: On, time: Time.zero}
+        | Reset => {isOn: true, time: Time.zero}
         | Tick(increasedTime) =>
           let newTime = Time.(state.time + increasedTime);
 
           /* if newTime is above the interval a `Tick` has passed */
           newTime >= interval
-            ? {
-              toggle:
-                switch (state.toggle) {
-                | On => Off
-                | Off => On
-                },
-              time: Time.zero,
-            }
+            ? {isOn: !state.isOn, time: Time.zero}
             : {...state, time: newTime};
         }
       });
@@ -55,12 +44,7 @@ module Cursor = {
         },
       );
 
-    let cursorOpacity =
-      switch (isFocused, state.toggle) {
-      | (true, Off)
-      | (false, _) => 0.0
-      | (true, On) => 1.0
-      };
+    let cursorOpacity = isFocused && state.isOn ? 1.0 : 0.0;
 
     (cursorOpacity, () => dispatch(Reset));
   };
