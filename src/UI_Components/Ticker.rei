@@ -10,7 +10,7 @@ The [Ticker] component is a helper that calls a specific function periodically a
 {2 Usage:}
 
 {[
-let tick tick = (t) => print_endline("Time: " ++ string_of_float(Time.toSeconds(t)));
+let tick tick = (t) => print_endline("Time: " ++ string_of_float(Time.toFloatSeconds(t)));
 
 <Ticker onTick=tick tickRate=Seconds(1.0) />
 ]}

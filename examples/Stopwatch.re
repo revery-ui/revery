@@ -67,7 +67,7 @@ module Clock = {
 
     let marcherOpacity = state.isRunning ? 1.0 : 0.0;
     let getMarcherPosition = t =>
-      sin(Time.toSeconds(t) *. 2. *. pi) /. 2. +. 0.5;
+      sin(Time.toFloatSeconds(t) *. 2. *. pi) /. 2. +. 0.5;
 
     <View
       style=Style.[
@@ -93,7 +93,7 @@ module Clock = {
             marginVertical(20),
             width(200),
           ]
-          text={Time.show(state.elapsedTime)}
+          text={Time.toString(state.elapsedTime)}
         />
         <Opacity opacity=marcherOpacity>
           <View

@@ -91,7 +91,7 @@ let animation = (~active=true, ~onComplete=() => (), animation) => {
   (value, animationState, reset);
 };
 
-let transition = (~duration=Time.seconds(1.), ~delay=Time.zero, startValue) => {
+let transition = (~duration=Time.seconds(1), ~delay=Time.zero, startValue) => {
   let%hook ((startValue, targetValue), setTargetValue) =
     state((startValue, startValue));
 

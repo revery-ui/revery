@@ -18,7 +18,7 @@ let getBounds = (v: t) => {
   (x0, y0, x1, y1);
 };
 
-let show = (v: t) => {
+let toString = (v: t) => {
   let (x0, y0, x1, y1) = getBounds(v);
 
   "x0: "

@@ -9,7 +9,7 @@ module MemoryAllocations = {
     majorWords: int,
   };
 
-  let show = ({minorWords, promotedWords, majorWords}: t) => {
+  let toString = ({minorWords, promotedWords, majorWords}: t) => {
     "| minor: "
     ++ string_of_int(minorWords)
     ++ " | major: "
@@ -56,7 +56,7 @@ let bench: (string, performanceFunction('a)) => 'a =
         ++ string_of_float((endTime -. startTime) *. 1000.)
         ++ "ms"
         ++ " Memory: "
-        ++ MemoryAllocations.show(allocations),
+        ++ MemoryAllocations.toString(allocations),
       );
 
       nestingLevel := nestingLevel^ - 1;

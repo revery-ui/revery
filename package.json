@@ -56,7 +56,7 @@
     "@opam/cmdliner": "1.0.2"
   },
   "devDependencies": {
-    "ocaml": ">=4.6.0 <4.9.0",
+    "ocaml": ">=4.6.0 <4.8.0",
     "@opam/merlin": "^3.3.2",
     "@opam/dune": "^1.8.0"
   }

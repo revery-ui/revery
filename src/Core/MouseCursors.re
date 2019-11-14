@@ -39,7 +39,7 @@ let crosshair = `Crosshair;
 let horizontalResize = `HResize;
 let verticalResize = `VResize;
 
-let show = (v: t) =>
+let toString = (v: t) =>
   switch (v) {
   | `Arrow => "arrow"
   | `Text => "text"

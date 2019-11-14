@@ -49,7 +49,7 @@ module Make = (ClockImpl: Clock) => {
     f(v);
   };
 
-  let show = () =>
+  let toString = () =>
     _activeTickers^
     |> List.fold_left(
          (prev, curr) => showTickFunction(curr) ++ ", " ++ prev,

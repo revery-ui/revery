@@ -7,14 +7,14 @@ module Logo = {
   let rotationAnimation =
     Animation.(
       zip((
-        animate(Time.seconds(9.))
+        animate(Time.seconds(9))
         |> tween(0., 6.28)
         |> repeat
-        |> delay(Time.seconds(1.)),
-        animate(Time.seconds(4.))
+        |> delay(Time.seconds(1)),
+        animate(Time.seconds(4))
         |> tween(0., 6.28)
         |> repeat
-        |> delay(Time.seconds(0.5)),
+        |> delay(Time.ms(500)),
       ))
     );
 
@@ -71,20 +71,20 @@ module Logo = {
 };
 
 module AnimatedText = {
-  let%component make = (~text: string, ~delay: float, ()) => {
+  let%component make = (~text: string, ~delay: Time.t, ()) => {
     let%hook (animatedOpacity, _state, _reset) =
       Hooks.animation(
         Animation.(
-          animate(Time.seconds(1.))
-          |> delay(Time.seconds(1.))
+          animate(Time.seconds(1))
+          |> delay(Time.seconds(1))
           |> ease(Easing.easeOut)
           |> tween(0., 1.)
         ),
       );
     let%hook (translate, _state, _reset) =
       Hooks.animation(
-        Animation.animate(Time.seconds(0.5))
-        |> Animation.delay(Time.seconds(delay))
+        Animation.animate(Time.ms(500))
+        |> Animation.delay(delay)
         |> Animation.ease(Easing.easeOut)
         |> Animation.tween(50., 0.),
       );
@@ -107,9 +107,9 @@ module AnimatedText = {
 let render = () =>
   <Center>
     <Row>
-      <AnimatedText delay=0.0 text="Welcome" />
-      <AnimatedText delay=0.5 text="to" />
-      <AnimatedText delay=1. text="Revery" />
+      <AnimatedText delay=Time.zero text="Welcome" />
+      <AnimatedText delay={Time.ms(500)} text="to" />
+      <AnimatedText delay={Time.seconds(1)} text="Revery" />
     </Row>
     <Logo />
   </Center>;

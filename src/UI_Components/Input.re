@@ -5,11 +5,52 @@ open Revery_UI_Primitives;
 
 module Hooks = Revery_UI_Hooks;
 
+module Cursor = {
+  type state = {
+    time: Time.t,
+    isOn: bool,
+  };
+
+  type action =
+    | Reset
+    | Tick(Time.t);
+
+  let use = (~interval, ~isFocused) => {
+    let%hook (state, dispatch) =
+      Hooks.reducer(
+        ~initialState={time: Time.zero, isOn: false}, (action, state) => {
+        switch (action) {
+        | Reset => {isOn: true, time: Time.zero}
+        | Tick(increasedTime) =>
+          let newTime = Time.(state.time + increasedTime);
+
+          /* if newTime is above the interval a `Tick` has passed */
+          newTime >= interval
+            ? {isOn: !state.isOn, time: Time.zero}
+            : {...state, time: newTime};
+        }
+      });
+
+    let%hook () =
+      Hooks.effect(
+        OnMount,
+        () => {
+          let clear =
+            Tick.interval(time => dispatch(Tick(time)), Time.ms(16));
+          Some(clear);
+        },
+      );
+
+    let cursorOpacity = isFocused && state.isOn ? 1.0 : 0.0;
+
+    (cursorOpacity, () => dispatch(Reset));
+  };
+};
+
 type state = {
   isFocused: bool,
   internalValue: string,
   cursorPosition: int,
-  cursorTimer: Time.t,
 };
 
 type textUpdate = {
@@ -33,10 +74,8 @@ type changeEvent = {
 
 type action =
   | CursorPosition(cursorUpdate)
-  | CursorTimer
   | SetFocus(bool)
-  | UpdateText(textUpdate)
-  | ResetCursorTimer;
+  | UpdateText(textUpdate);
 
 let getStringParts = (index, str) => {
   switch (index) {
@@ -96,18 +135,9 @@ let reducer = (action, state) =>
       cursorPosition:
         getSafeStringBounds(inputString, state.cursorPosition, change),
     }
-  | CursorTimer => {
-      ...state,
-      cursorTimer:
-        Time.(
-          state.cursorTimer >= seconds(1.)
-            ? zero : state.cursorTimer + milliseconds(100.)
-        ),
-    }
   | UpdateText({newString, _}) =>
     state.isFocused
       ? {...state, isFocused: true, internalValue: newString} : state
-  | ResetCursorTimer => {...state, cursorTimer: Time.zero}
   };
 
 let defaultHeight = 50;
@@ -152,7 +182,6 @@ let%component make =
           | Some(v) => String.length(v)
           | None => 0
           },
-        cursorTimer: Time.zero,
         isFocused: false,
       },
       reducer,
@@ -164,15 +193,8 @@ let%component make =
     | None => state.internalValue
     };
 
-  let%hook () =
-    Hooks.effect(
-      OnMount,
-      () => {
-        let clear =
-          Tick.interval(_ => dispatch(CursorTimer), Time.seconds(0.1));
-        Some(clear);
-      },
-    );
+  let%hook (cursorOpacity, resetCursor) =
+    Cursor.use(~interval=Time.ms(500), ~isFocused=state.isFocused);
 
   let%hook (inputValueRef, setInputValueRef) = Hooks.ref(valueToDisplay);
 
@@ -229,7 +251,7 @@ let%component make =
       superKey: false,
     };
 
-    dispatch(ResetCursorTimer);
+    resetCursor();
 
     switch (valueAsProp) {
     | Some(v) =>
@@ -255,7 +277,8 @@ let%component make =
       superKey: Key.Keymod.isGuiDown(event.keymod),
     };
 
-    dispatch(ResetCursorTimer);
+    resetCursor();
+
     switch (event.keycode) {
     | v when Key.Keycode.left == v =>
       onKeyDown(event);
@@ -320,9 +343,6 @@ let%component make =
   let inputFontFamily =
     Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
-  let cursorOpacity =
-    state.isFocused && state.cursorTimer <= Time.seconds(0.5) ? 1.0 : 0.0;
-
   let cursor = {
     let (startStr, _) = getStringParts(state.cursorPosition, valueToDisplay);
     let dimension =
@@ -366,13 +386,13 @@ let%component make =
    */
   <Clickable
     onFocus={() => {
-      dispatch(ResetCursorTimer);
+      resetCursor();
       dispatch(SetFocus(true));
       focusCallback();
       Sdl2.TextInput.start();
     }}
     onBlur={() => {
-      dispatch(ResetCursorTimer);
+      resetCursor();
       dispatch(SetFocus(false));
       blurCallback();
       Sdl2.TextInput.stop();

@@ -10,7 +10,7 @@ let webGL = !isNative;
 let sleep = (t: Time.t) =>
   /* No-op in JS */
   if (isNative) {
-    Unix.sleepf(Time.toSeconds(t));
+    Unix.sleepf(Time.toFloatSeconds(t));
   };
 
 external yield: unit => unit = "caml_thread_yield";
