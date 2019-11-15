@@ -1,20 +1,11 @@
 module IO = {
-  module Headers = Fetch_Core.Headers;
-
   module Response = {
     module Status = {
       include Fetch_Core.Response.Status;
     };
 
-    module Headers: {
-      include (module type of Headers);
-
-      let get: (~name: string, list(Headers.t)) => option(string);
-    } = {
-      include Headers;
-
-      let get = (~name, headers) =>
-        Cohttp.Header.get(headers |> Cohttp.Header.of_list, name);
+    module Headers = {
+      include Fetch_Core.Headers;
     };
 
     module Body = {
@@ -84,12 +75,3 @@ module IO = {
 };
 
 include Fetch_Core.Fetchify.Make(IO);
-
-module Headers = {
-  include Fetch_Core.Headers;
-  include IO.Response.Headers;
-};
-
-module Response = {
-  include IO.Response;
-};

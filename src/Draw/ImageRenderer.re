@@ -20,6 +20,25 @@ let initialPixels =
 type cache = Hashtbl.t(string, t);
 let _cache: cache = Hashtbl.create(100);
 
+module Option = {
+  let value = (~default, a) =>
+    switch (a) {
+    | Some(v) => v
+    | None => default
+    };
+
+  let map = (f, value) =>
+    switch (value) {
+    | Some(v) => Some(f(v))
+    | None => None
+    };
+
+  let isSome =
+    fun
+    | Some(_) => true
+    | _ => false;
+};
+
 module Utils = {
   module Text = {
     let onlyAlphaNumeric = text =>
@@ -47,13 +66,14 @@ module Utils = {
 
     let fetch = url =>
       Fetch.(
-        fetch(url)
+        get(url)
         |> Lwt.map(
              fun
              | Ok({Response.body, headers, _}) => {
                  let fileExtension =
                    headers
-                   |> Headers.get(~name="content-type")
+                   |> List.find_opt(((k, _v)) => k == "content-type")
+                   |> Option.map(((_k, v)) => v)
                    |> Option.value(~default="")
                    |> extensionOfMediaType;
 
@@ -73,7 +93,7 @@ let getTexture = (imagePath: string) => {
   | Some(cachedResult) => cachedResult
   | None =>
     /* will this suffice? */
-    let isRemote = imagePath |> Uri.of_string |> Uri.scheme |> Option.is_some;
+    let isRemote = imagePath |> Uri.of_string |> Uri.scheme |> Option.isSome;
 
     let imageLoadPromise =
       if (isRemote) {

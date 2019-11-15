@@ -42,7 +42,7 @@
     "@opam/lwt": "^4.0.0",
     "@reason-native/console": "^0.0.3",
     "@reason-native/rely": "*",
-    "fetch-core": "0.1.0-alpha.1",
+    "fetch-core": "0.1.0-alpha.2",
     "flex": "^1.2.2",
     "reason-font-manager": "^2.0.0",
     "reason-fontkit": "^2.7.0",
