@@ -1,5 +1,5 @@
 {
-  "checksum": "60dab3fbe23e7cb2de04a1b5ece36490",
+  "checksum": "301903136d3d86faf19bc5fa365acafd",
   "root": "revery@link-dev:./package.json",
   "node": {
     "wordwrap@0.0.3@d41d8cd9": {
@@ -61,7 +61,7 @@
         "reason-gl-matrix@0.9.9305@d41d8cd9",
         "reason-fontkit@2.7.0@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "http-server@0.11.1@d41d8cd9",
-        "flex@1.2.2@d41d8cd9", "fetch-core@0.1.0-alpha.1@d41d8cd9",
+        "flex@1.2.2@d41d8cd9", "fetch-core@0.1.0-alpha.2@d41d8cd9",
         "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/odoc@opam:1.4.2@6f058006",
@@ -525,14 +525,14 @@
       ],
       "devDependencies": []
     },
-    "fetch-core@0.1.0-alpha.1@d41d8cd9": {
-      "id": "fetch-core@0.1.0-alpha.1@d41d8cd9",
+    "fetch-core@0.1.0-alpha.2@d41d8cd9": {
+      "id": "fetch-core@0.1.0-alpha.2@d41d8cd9",
       "name": "fetch-core",
-      "version": "0.1.0-alpha.1",
+      "version": "0.1.0-alpha.2",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/fetch-core/-/fetch-core-0.1.0-alpha.1.tgz#sha1:6826b8fa8fc0a7c1f145c210531a52fd643f671c"
+          "archive:https://registry.npmjs.org/fetch-core/-/fetch-core-0.1.0-alpha.2.tgz#sha1:8ea2720faeacb6e656c35a52fe11ec7feea04715"
         ]
       },
       "overrides": [],
