@@ -22,8 +22,7 @@ module Example = {
   };
 
   let%component make = () => {
-    let%hook ({first, second}, setValue) =
-      Hooks.state({first: "", second: ""});
+    let%hook ({first, _}, setValue) = Hooks.state({first: "", second: ""});
 
     <View style=containerStyle>
       <View
@@ -34,7 +33,9 @@ module Example = {
         ]>
         <Input
           placeholder="Insert text here"
-          onChange={({value, _}) => setValue(_ => {first: value, second})}
+          onChange={(value, _) =>
+            setValue(state => {...state, first: value})
+          }
           value=first
         />
         <Button
@@ -42,14 +43,14 @@ module Example = {
           width=100
           fontSize=15
           title="Reset"
-          onClick={() => setValue(_ => {first: "", second})}
+          onClick={() => setValue(state => {...state, first: ""})}
         />
         <Button
           height=50
           width=100
           fontSize=15
           title="Set value"
-          onClick={() => setValue(_ => {first: "New value", second})}
+          onClick={() => setValue(state => {...state, first: "New value"})}
         />
       </View>
       <Padding padding=20>
@@ -69,7 +70,9 @@ module Example = {
             autofocus=true
             onFocus={() => Console.log("Input example focused")}
             onBlur={() => Console.log("Input example blurred")}
-            onChange={({value, _}) => setValue(_ => {first, second: value})}
+            onChange={(value, _) =>
+              setValue(state => {...state, second: value})
+            }
             onKeyDown={event => Console.log(event)}
             style=Style.[
               backgroundColor(Colors.paleVioletRed),

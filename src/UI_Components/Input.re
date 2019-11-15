@@ -47,21 +47,20 @@ module Cursor = {
   };
 };
 
+// TODO: remove after 4.08
+module Option = {
+  let value = (~default) =>
+    fun
+    | Some(x) => x
+    | None => default;
+};
+
 type state = {
-  isFocused: bool,
-  internalValue: string,
+  isFocused: bool, // TODO: Violates single source of truth
+  value: string,
   cursorPosition: int,
 };
 
-type textUpdate = {
-  newString: string,
-  cursorPosition: int,
-};
-
-type cursorUpdate = {
-  inputString: string,
-  change: int,
-};
 type changeEvent = {
   value: string,
   character: string,
@@ -73,9 +72,9 @@ type changeEvent = {
 };
 
 type action =
-  | CursorPosition(cursorUpdate)
-  | SetFocus(bool)
-  | UpdateText(textUpdate);
+  | Focus
+  | Blur
+  | TextInput(string, int);
 
 let getStringParts = (index, str) => {
   switch (index) {
@@ -104,7 +103,7 @@ let removeCharacterBefore = (word, cursorPosition) => {
   let (startStr, endStr) = getStringParts(cursorPosition, word);
   let nextPosition = getSafeStringBounds(startStr, cursorPosition, -1);
   let newString = Str.string_before(startStr, nextPosition) ++ endStr;
-  {newString, cursorPosition: nextPosition};
+  (newString, nextPosition);
 };
 
 let removeCharacterAfter = (word, cursorPosition) => {
@@ -117,27 +116,19 @@ let removeCharacterAfter = (word, cursorPosition) => {
       | _ => Str.last_chars(endStr, String.length(endStr) - 1)
       }
     );
-  {newString, cursorPosition};
+  (newString, cursorPosition);
 };
 
 let addCharacter = (word, char, index) => {
   let (startStr, endStr) = getStringParts(index, word);
-  {
-    newString: startStr ++ char ++ endStr,
-    cursorPosition: String.length(startStr) + 1,
-  };
+  (startStr ++ char ++ endStr, String.length(startStr) + 1);
 };
+
 let reducer = (action, state) =>
   switch (action) {
-  | SetFocus(isFocused) => {...state, isFocused}
-  | CursorPosition({inputString, change}) => {
-      ...state,
-      cursorPosition:
-        getSafeStringBounds(inputString, state.cursorPosition, change),
-    }
-  | UpdateText({newString, _}) =>
-    state.isFocused
-      ? {...state, isFocused: true, internalValue: newString} : state
+  | Focus => {...state, isFocused: true}
+  | Blur => {...state, isFocused: false}
+  | TextInput(value, cursorPosition) => {...state, value, cursorPosition}
   };
 
 let defaultHeight = 50;
@@ -166,160 +157,92 @@ let%component make =
                 ~cursorColor=Colors.black,
                 ~autofocus=false,
                 ~placeholder="",
-                ~onFocus as focusCallback=() => (),
-                ~onBlur as blurCallback=() => (),
+                ~onFocus=() => (),
+                ~onBlur=() => (),
                 ~onKeyDown=_ => (),
-                ~onChange=_ => (),
-                ~value as valueAsProp=?,
+                ~onChange=(_, _) => (),
+                ~value=?,
+                ~cursorPosition=?,
                 (),
               ) => {
   let%hook (state, dispatch) =
     Hooks.reducer(
       ~initialState={
-        internalValue: "",
-        cursorPosition:
-          switch (valueAsProp) {
-          | Some(v) => String.length(v)
-          | None => 0
-          },
         isFocused: false,
+        value: Option.value(value, ~default=""),
+        cursorPosition: Option.value(cursorPosition, ~default=0),
       },
       reducer,
     );
 
-  let valueToDisplay =
-    switch (valueAsProp) {
-    | Some(v) => v
-    | None => state.internalValue
-    };
+  let value = Option.value(value, ~default=state.value);
+
+  let cursorPosition =
+    Option.value(cursorPosition, ~default=state.cursorPosition);
 
   let%hook (cursorOpacity, resetCursor) =
     Cursor.use(~interval=Time.ms(500), ~isFocused=state.isFocused);
 
-  let%hook (inputValueRef, setInputValueRef) = Hooks.ref(valueToDisplay);
+  let handleFocus = () => {
+    resetCursor();
+    onFocus();
+    Sdl2.TextInput.start();
+    dispatch(Focus);
+  };
 
-  let%hook () =
-    Hooks.effect(
-      If((!=), valueToDisplay),
-      () => {
-        let oldValueLength = String.length(inputValueRef);
-        let newValueLength = String.length(valueToDisplay);
-        switch (abs(oldValueLength - newValueLength)) {
-        | lengthDiff when lengthDiff != 1 =>
-          // Set cursor at the end
-          dispatch(
-            CursorPosition({
-              inputString: valueToDisplay,
-              change: String.length(valueToDisplay) - state.cursorPosition,
-            }),
-          )
-        | _ =>
-          let (oldStart, _oldEnd) =
-            getStringParts(state.cursorPosition, inputValueRef);
-          let (newStart, _newEnd) =
-            getStringParts(state.cursorPosition, valueToDisplay);
+  let handleBlur = () => {
+    resetCursor();
+    onBlur();
+    Sdl2.TextInput.stop();
+    dispatch(Blur);
+  };
 
-          if (oldStart == newStart) {
-            if (newValueLength > oldValueLength)
-              {
-                // One character was added
-                dispatch(
-                  CursorPosition({inputString: valueToDisplay, change: 1}),
-                );
-              };
-              // One characted was removed from the right side of the cursor (Delete key)
-          } else {
-            // One character was removed from the left side of the cursor (Backspace)
-            dispatch(
-              CursorPosition({inputString: valueToDisplay, change: (-1)}),
-            );
-          };
-        };
-        setInputValueRef(valueToDisplay);
-        None;
-      },
-    );
+  // TODO:This ought to be in the reducer, but since reducer calls are deferred
+  // the ordering of side-effects can't be guaranteed.
+  //
+  // Refactor when https://github.com/briskml/brisk-reconciler/issues/54 has been fixed
+  let update = (value, cursorPosition) => {
+    onChange(value, cursorPosition);
+    dispatch(TextInput(value, cursorPosition));
+  };
 
   let handleTextInput = (event: NodeEvents.textInputEventParams) => {
-    let createChangeEvent = value => {
-      value,
-      keycode: 0,
-      character: event.text,
-      altKey: false,
-      ctrlKey: false,
-      shiftKey: false,
-      superKey: false,
-    };
-
     resetCursor();
-
-    switch (valueAsProp) {
-    | Some(v) =>
-      let {newString, _} = addCharacter(v, event.text, state.cursorPosition);
-      onChange(createChangeEvent(newString));
-    | None =>
-      let {newString, cursorPosition} =
-        addCharacter(state.internalValue, event.text, state.cursorPosition);
-      dispatch(UpdateText({newString, cursorPosition}));
-      onChange(createChangeEvent(newString));
-    };
+    let (value, cursorPosition) =
+      addCharacter(value, event.text, cursorPosition);
+    update(value, cursorPosition);
   };
 
   let handleKeyDown = (event: NodeEvents.keyEventParams) => {
-    let character = Key.Keycode.getName(event.keycode);
-    let createChangeEvent = inputString => {
-      value: inputString,
-      character,
-      keycode: event.keycode,
-      altKey: Key.Keymod.isAltDown(event.keymod),
-      ctrlKey: Key.Keymod.isControlDown(event.keymod),
-      shiftKey: Key.Keymod.isShiftDown(event.keymod),
-      superKey: Key.Keymod.isGuiDown(event.keymod),
-    };
-
     resetCursor();
+    onKeyDown(event);
 
     switch (event.keycode) {
     | v when Key.Keycode.left == v =>
-      onKeyDown(event);
-      dispatch(CursorPosition({inputString: valueToDisplay, change: (-1)}));
+      let cursorPosition = getSafeStringBounds(value, cursorPosition, -1);
+      update(value, cursorPosition);
+
     | v when Key.Keycode.right == v =>
-      onKeyDown(event);
-      dispatch(CursorPosition({inputString: valueToDisplay, change: 1}));
+      let cursorPosition = getSafeStringBounds(value, cursorPosition, 1);
+      update(value, cursorPosition);
+
     | v when Key.Keycode.delete == v =>
-      // We should manage both cases
-      removeCharacterAfter(valueToDisplay, state.cursorPosition)
-      |> (
-        update => {
-          switch (valueAsProp) {
-          | Some(_) => ()
-          | None => dispatch(UpdateText(update))
-          };
-          onKeyDown(event);
-          onChange(createChangeEvent(update.newString));
-        }
-      )
+      let (value, cursorPosition) =
+        removeCharacterAfter(value, cursorPosition);
+      update(value, cursorPosition);
 
     | v when Key.Keycode.backspace == v =>
-      removeCharacterBefore(valueToDisplay, state.cursorPosition)
-      |> (
-        update => {
-          switch (valueAsProp) {
-          | Some(_) => ()
-          | None => dispatch(UpdateText(update))
-          };
-          onKeyDown(event);
-          onChange(createChangeEvent(update.newString));
-        }
-      )
-    | v when Key.Keycode.escape == v =>
-      onKeyDown(event);
-      Focus.loseFocus();
-    | _ => onKeyDown(event)
+      let (value, cursorPosition) =
+        removeCharacterBefore(value, cursorPosition);
+      update(value, cursorPosition);
+
+    | v when Key.Keycode.escape == v => Focus.loseFocus()
+
+    | _ => ()
     };
   };
 
-  let hasPlaceholder = String.length(valueToDisplay) < 1;
+  let showPlaceholder = value == "";
 
   let allStyles =
     Style.(
@@ -344,7 +267,7 @@ let%component make =
     Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
   let cursor = {
-    let (startStr, _) = getStringParts(state.cursorPosition, valueToDisplay);
+    let (startStr, _) = getStringParts(cursorPosition, value);
     let dimension =
       Revery_Draw.Text.measure(
         ~window=Revery_UI.getActiveWindow(),
@@ -365,11 +288,11 @@ let%component make =
     </View>;
   };
 
-  let makeTextComponent = content =>
+  let textComponent =
     <Text
-      text=content
+      text={showPlaceholder ? placeholder : value}
       style=Style.[
-        color(hasPlaceholder ? placeholderColor : inputColor),
+        color(showPlaceholder ? placeholderColor : inputColor),
         fontFamily(inputFontFamily),
         fontSize(inputFontSize),
         alignItems(`Center),
@@ -378,31 +301,15 @@ let%component make =
       ]
     />;
 
-  let placeholderText = makeTextComponent(placeholder);
-  let inputText = makeTextComponent(valueToDisplay);
-
   /*
      component
    */
   <Clickable
-    onFocus={() => {
-      resetCursor();
-      dispatch(SetFocus(true));
-      focusCallback();
-      Sdl2.TextInput.start();
-    }}
-    onBlur={() => {
-      resetCursor();
-      dispatch(SetFocus(false));
-      blurCallback();
-      Sdl2.TextInput.stop();
-    }}
+    onFocus=handleFocus
+    onBlur=handleBlur
     componentRef={autofocus ? Focus.focus : ignore}
     onKeyDown=handleKeyDown
     onTextInput=handleTextInput>
-    <View style=viewStyles>
-      cursor
-      {hasPlaceholder ? placeholderText : inputText}
-    </View>
+    <View style=viewStyles> cursor textComponent </View>
   </Clickable>;
 };

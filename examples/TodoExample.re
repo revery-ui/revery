@@ -166,7 +166,7 @@ module AddTodo = {
         style=Styles.input
         placeholder="Add your Todo here"
         value=text
-        onChange={({value, _}) => onInput(value)}
+        onChange={(value, _) => onInput(value)}
         onKeyDown
       />
     </View>;
