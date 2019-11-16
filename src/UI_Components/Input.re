@@ -175,6 +175,8 @@ let%component make =
       reducer,
     );
 
+  let%hook (textRef, setTextRef) = Hooks.ref(None);
+
   let value = Option.value(value, ~default=state.value);
 
   let cursorPosition =
@@ -266,6 +268,52 @@ let%component make =
   let inputFontFamily =
     Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
+  let handleClick = (event: NodeEvents.mouseButtonEventParams) => {
+    let rec offsetLeft = node => {
+      let Dimensions.{left, _} = node#measurements();
+      switch (node#getParent()) {
+      | Some(parent) => left + offsetLeft(parent)
+      | None => left
+      };
+    };
+
+    let indexNearestOffset = offset => {
+      open Revery_Draw;
+
+      let rec loop = (i, last) =>
+        if (i > String.length(value)) {
+          i - 1;
+        } else {
+          let substring = String.sub(value, 0, i);
+          let Text.{width, _} =
+            Text.measure(
+              ~fontSize=inputFontSize,
+              ~fontFamily=inputFontFamily,
+              substring,
+            );
+
+          if (width > offset) {
+            let isCurrentNearest = width - offset < offset - last;
+            isCurrentNearest ? i : i - 1;
+          } else {
+            loop(i + 1, width);
+          };
+        };
+
+      loop(1, 0);
+    };
+
+    switch (textRef) {
+    | Some(node) =>
+      let offset = int_of_float(event.mouseX) - offsetLeft(node);
+      let cursorPosition = indexNearestOffset(offset);
+      resetCursor();
+      update(value, cursorPosition);
+
+    | None => ()
+    };
+  };
+
   let cursor = {
     let (startStr, _) = getStringParts(cursorPosition, value);
     let dimension =
@@ -290,6 +338,7 @@ let%component make =
 
   let textComponent =
     <Text
+      ref={node => setTextRef(Some(node))}
       text={showPlaceholder ? placeholder : value}
       style=Style.[
         color(showPlaceholder ? placeholderColor : inputColor),
@@ -301,13 +350,11 @@ let%component make =
       ]
     />;
 
-  /*
-     component
-   */
   <Clickable
     onFocus=handleFocus
     onBlur=handleBlur
     componentRef={autofocus ? Focus.focus : ignore}
+    onAnyClick=handleClick
     onKeyDown=handleKeyDown
     onTextInput=handleTextInput>
     <View style=viewStyles> cursor textComponent </View>
