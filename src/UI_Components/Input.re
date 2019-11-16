@@ -131,30 +131,35 @@ let reducer = (action, state) =>
   | TextInput(value, cursorPosition) => {...state, value, cursorPosition}
   };
 
-let defaultHeight = 50;
-let defaultWidth = 200;
-let inputTextMargin = 10;
+module Constants = {
+  let defaultHeight = 50;
+  let defaultWidth = 200;
+  let textMargin = 10;
+};
 
-let defaultStyles =
-  Style.[
-    color(Colors.black),
-    width(defaultWidth),
-    height(defaultHeight),
-    border(
-      /*
-         The default border width should be 5% of the full input height
-       */
-      ~width=float_of_int(defaultHeight) *. 0.05 |> int_of_float,
-      ~color=Colors.black,
-    ),
-    backgroundColor(Colors.transparentWhite),
-  ];
+module Styles = {
+  let defaultPlaceholderColor = Colors.grey;
+  let defaultCursorColor = Colors.black;
+
+  let default =
+    Style.[
+      color(Colors.black),
+      width(Constants.defaultWidth),
+      height(Constants.defaultHeight),
+      border(
+        // The default border width should be 5% of the full input height
+        ~width=float_of_int(Constants.defaultHeight) *. 0.05 |> int_of_float,
+        ~color=Colors.black,
+      ),
+      backgroundColor(Colors.transparentWhite),
+    ];
+};
 
 let%component make =
               (
-                ~style=defaultStyles,
-                ~placeholderColor=Colors.grey,
-                ~cursorColor=Colors.black,
+                ~style=Styles.default,
+                ~placeholderColor=Styles.defaultPlaceholderColor,
+                ~cursorColor=Styles.defaultCursorColor,
                 ~autofocus=false,
                 ~placeholder="",
                 ~onFocus=() => (),
@@ -184,6 +189,43 @@ let%component make =
 
   let%hook (cursorOpacity, resetCursor) =
     Cursor.use(~interval=Time.ms(500), ~isFocused=state.isFocused);
+
+  let showPlaceholder = value == "";
+
+  module Styles = {
+    open Style;
+    include Styles;
+
+    let fontSize = Selector.select(style, FontSize, 18);
+    let textColor = Selector.select(style, Color, Colors.black);
+    let fontFamily = Selector.select(style, FontFamily, "Roboto-Regular.ttf");
+
+    let all =
+      merge(
+        ~source=[
+          flexDirection(`Row),
+          alignItems(`Center),
+          justifyContent(`FlexStart),
+          overflow(`Hidden),
+          cursor(MouseCursors.text),
+          ...default,
+        ],
+        ~target=style,
+      );
+
+    let view =
+      merge(~source=[overflow(`Hidden)], ~target=extractViewStyles(all));
+
+    let text = [
+      color(showPlaceholder ? placeholderColor : textColor),
+      Style.fontFamily(fontFamily),
+      Style.fontSize(fontSize),
+      alignItems(`Center),
+      justifyContent(`FlexStart),
+      marginLeft(Constants.textMargin),
+      textWrap(TextWrapping.NoWrap),
+    ];
+  };
 
   let handleFocus = () => {
     resetCursor();
@@ -244,30 +286,6 @@ let%component make =
     };
   };
 
-  let showPlaceholder = value == "";
-
-  let allStyles =
-    Style.(
-      merge(
-        ~source=[
-          flexDirection(`Row),
-          alignItems(`Center),
-          justifyContent(`FlexStart),
-          overflow(`Hidden),
-          cursor(MouseCursors.text),
-          ...defaultStyles,
-        ],
-        ~target=style,
-      )
-    );
-
-  let viewStyles = Style.extractViewStyles(allStyles);
-
-  let inputFontSize = Selector.select(style, FontSize, 18);
-  let inputColor = Selector.select(style, Color, Colors.black);
-  let inputFontFamily =
-    Selector.select(style, FontFamily, "Roboto-Regular.ttf");
-
   let handleClick = (event: NodeEvents.mouseButtonEventParams) => {
     let rec offsetLeft = node => {
       let Dimensions.{left, _} = node#measurements();
@@ -287,8 +305,8 @@ let%component make =
           let substring = String.sub(value, 0, i);
           let Text.{width, _} =
             Text.measure(
-              ~fontSize=inputFontSize,
-              ~fontFamily=inputFontFamily,
+              ~fontSize=Styles.fontSize,
+              ~fontFamily=Styles.fontFamily,
               substring,
             );
 
@@ -319,19 +337,19 @@ let%component make =
     let dimension =
       Revery_Draw.Text.measure(
         ~window=Revery_UI.getActiveWindow(),
-        ~fontFamily=inputFontFamily,
-        ~fontSize=inputFontSize,
+        ~fontFamily=Styles.fontFamily,
+        ~fontSize=Styles.fontSize,
         startStr,
       );
-    let inputHeight = Selector.select(style, Height, defaultHeight);
+    let inputHeight = Selector.select(style, Height, Constants.defaultHeight);
     <View
       style=Style.[
         position(`Absolute),
-        marginLeft(dimension.width + inputTextMargin + 1),
+        marginLeft(dimension.width + Constants.textMargin + 1),
         marginTop((inputHeight - dimension.height) / 2),
       ]>
       <Opacity opacity=cursorOpacity>
-        <ContainerComponent width=2 height=inputFontSize color=cursorColor />
+        <ContainerComponent width=2 height=Styles.fontSize color=cursorColor />
       </Opacity>
     </View>;
   };
@@ -340,14 +358,7 @@ let%component make =
     <Text
       ref={node => setTextRef(Some(node))}
       text={showPlaceholder ? placeholder : value}
-      style=Style.[
-        color(showPlaceholder ? placeholderColor : inputColor),
-        fontFamily(inputFontFamily),
-        fontSize(inputFontSize),
-        alignItems(`Center),
-        justifyContent(`FlexStart),
-        marginLeft(inputTextMargin),
-      ]
+      style=Styles.text
     />;
 
   <Clickable
@@ -357,6 +368,6 @@ let%component make =
     onAnyClick=handleClick
     onKeyDown=handleKeyDown
     onTextInput=handleTextInput>
-    <View style=viewStyles> cursor textComponent </View>
+    <View style=Styles.view> cursor textComponent </View>
   </Clickable>;
 };
