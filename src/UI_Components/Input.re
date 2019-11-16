@@ -53,6 +53,22 @@ module Option = {
     fun
     | Some(x) => x
     | None => default;
+
+  let bind = (o, f) =>
+    switch (o) {
+    | Some(x) => f(x)
+    | None => None
+    };
+
+  let map = f =>
+    fun
+    | Some(x) => Some(f(x))
+    | None => None;
+
+  let join =
+    fun
+    | Some(x) => x
+    | None => None;
 };
 
 type state = {
@@ -135,6 +151,7 @@ module Constants = {
   let defaultHeight = 50;
   let defaultWidth = 200;
   let textMargin = 10;
+  let cursorWidth = 2;
 };
 
 module Styles = {
@@ -179,18 +196,13 @@ let%component make =
       },
       reducer,
     );
-
   let%hook (textRef, setTextRef) = Hooks.ref(None);
+  let%hook (scrollOffset, setScrollOffset) = Hooks.state(0);
 
   let value = Option.value(value, ~default=state.value);
-
+  let showPlaceholder = value == "";
   let cursorPosition =
     Option.value(cursorPosition, ~default=state.cursorPosition);
-
-  let%hook (cursorOpacity, resetCursor) =
-    Cursor.use(~interval=Time.ms(500), ~isFocused=state.isFocused);
-
-  let showPlaceholder = value == "";
 
   module Styles = {
     open Style;
@@ -200,7 +212,7 @@ let%component make =
     let textColor = Selector.select(style, Color, Colors.black);
     let fontFamily = Selector.select(style, FontFamily, "Roboto-Regular.ttf");
 
-    let all =
+    let _all =
       merge(
         ~source=[
           flexDirection(`Row),
@@ -213,8 +225,24 @@ let%component make =
         ~target=style,
       );
 
-    let view =
-      merge(~source=[overflow(`Hidden)], ~target=extractViewStyles(all));
+    let box = extractViewStyles(_all);
+
+    let marginContainer = [
+      flexDirection(`Row),
+      alignItems(`Center),
+      justifyContent(`FlexStart),
+      marginLeft(Constants.textMargin),
+      marginRight(Constants.textMargin),
+      flexGrow(1),
+    ];
+
+    let cursor = offset => [
+      position(`Absolute),
+      marginTop(2),
+      transform(Transform.[TranslateX(float(offset))]),
+    ];
+
+    let textContainer = [flexGrow(1), overflow(`Hidden)];
 
     let text = [
       color(showPlaceholder ? placeholderColor : textColor),
@@ -222,10 +250,53 @@ let%component make =
       Style.fontSize(fontSize),
       alignItems(`Center),
       justifyContent(`FlexStart),
-      marginLeft(Constants.textMargin),
       textWrap(TextWrapping.NoWrap),
+      transform(Transform.[TranslateX(float(- scrollOffset))]),
     ];
   };
+
+  let measureTextWidth = text => {
+    let dimensions =
+      Revery_Draw.Text.measure(
+        ~window=Revery_UI.getActiveWindow(),
+        ~fontFamily=Styles.fontFamily,
+        ~fontSize=Styles.fontSize,
+        text,
+      );
+
+    dimensions.width;
+  };
+
+  let%hook (cursorOpacity, resetCursor) =
+    Cursor.use(~interval=Time.ms(500), ~isFocused=state.isFocused);
+
+  let%hook () =
+    Hooks.effect(
+      If((!=), cursorPosition),
+      () => {
+        let cursorOffset =
+          measureTextWidth(String.sub(value, 0, cursorPosition));
+
+        switch (Option.bind(textRef, r => r#getParent())) {
+        | Some(containerNode) =>
+          let container: Dimensions.t = containerNode#measurements();
+
+          setScrollOffset(scrollOffset =>
+            if (cursorOffset < scrollOffset) {
+              // out of view to the left, so align with left edge
+              cursorOffset;
+            } else if (cursorOffset - scrollOffset > container.width) {
+              // out of view to the right, so align with right edge
+              cursorOffset - container.width;
+            } else {
+              scrollOffset;
+            }
+          );
+        | None => ()
+        };
+        None;
+      },
+    );
 
   let handleFocus = () => {
     resetCursor();
@@ -296,19 +367,11 @@ let%component make =
     };
 
     let indexNearestOffset = offset => {
-      open Revery_Draw;
-
       let rec loop = (i, last) =>
         if (i > String.length(value)) {
           i - 1;
         } else {
-          let substring = String.sub(value, 0, i);
-          let Text.{width, _} =
-            Text.measure(
-              ~fontSize=Styles.fontSize,
-              ~fontFamily=Styles.fontFamily,
-              substring,
-            );
+          let width = measureTextWidth(String.sub(value, 0, i));
 
           if (width > offset) {
             let isCurrentNearest = width - offset < offset - last;
@@ -323,7 +386,8 @@ let%component make =
 
     switch (textRef) {
     | Some(node) =>
-      let offset = int_of_float(event.mouseX) - offsetLeft(node);
+      let offset =
+        int_of_float(event.mouseX) - offsetLeft(node) + scrollOffset;
       let cursorPosition = indexNearestOffset(offset);
       resetCursor();
       update(value, cursorPosition);
@@ -332,29 +396,24 @@ let%component make =
     };
   };
 
-  let cursor = {
+  let cursor = () => {
     let (startStr, _) = getStringParts(cursorPosition, value);
-    let dimension =
-      Revery_Draw.Text.measure(
-        ~window=Revery_UI.getActiveWindow(),
-        ~fontFamily=Styles.fontFamily,
-        ~fontSize=Styles.fontSize,
-        startStr,
-      );
-    let inputHeight = Selector.select(style, Height, Constants.defaultHeight);
-    <View
-      style=Style.[
-        position(`Absolute),
-        marginLeft(dimension.width + Constants.textMargin + 1),
-        marginTop((inputHeight - dimension.height) / 2),
-      ]>
+    let textWidth = measureTextWidth(startStr);
+
+    let offset = textWidth - scrollOffset;
+
+    <View style={Styles.cursor(offset)}>
       <Opacity opacity=cursorOpacity>
-        <ContainerComponent width=2 height=Styles.fontSize color=cursorColor />
+        <ContainerComponent
+          width=Constants.cursorWidth
+          height=Styles.fontSize
+          color=cursorColor
+        />
       </Opacity>
     </View>;
   };
 
-  let textComponent =
+  let text = () =>
     <Text
       ref={node => setTextRef(Some(node))}
       text={showPlaceholder ? placeholder : value}
@@ -368,6 +427,11 @@ let%component make =
     onAnyClick=handleClick
     onKeyDown=handleKeyDown
     onTextInput=handleTextInput>
-    <View style=Styles.view> cursor textComponent </View>
+    <View style=Styles.box>
+      <View style=Styles.marginContainer>
+        <cursor />
+        <View style=Styles.textContainer> <text /> </View>
+      </View>
+    </View>
   </Clickable>;
 };
