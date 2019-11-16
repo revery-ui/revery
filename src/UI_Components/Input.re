@@ -197,7 +197,7 @@ let%component make =
       reducer,
     );
   let%hook (textRef, setTextRef) = Hooks.ref(None);
-  let%hook (scrollOffset, setScrollOffset) = Hooks.state(0);
+  let%hook (scrollOffset, _setScrollOffset) = Hooks.state(ref(0));
 
   let value = Option.value(value, ~default=state.value);
   let showPlaceholder = value == "";
@@ -251,7 +251,7 @@ let%component make =
       alignItems(`Center),
       justifyContent(`FlexStart),
       textWrap(TextWrapping.NoWrap),
-      transform(Transform.[TranslateX(float(- scrollOffset))]),
+      transform(Transform.[TranslateX(float(- scrollOffset^))]),
     ];
   };
 
@@ -270,33 +270,25 @@ let%component make =
   let%hook (cursorOpacity, resetCursor) =
     Cursor.use(~interval=Time.ms(500), ~isFocused=state.isFocused);
 
-  let%hook () =
-    Hooks.effect(
-      If((!=), cursorPosition),
-      () => {
-        let cursorOffset =
-          measureTextWidth(String.sub(value, 0, cursorPosition));
+  let () = {
+    let cursorOffset =
+        measureTextWidth(String.sub(value, 0, cursorPosition));
 
-        switch (Option.bind(textRef, r => r#getParent())) {
-        | Some(containerNode) =>
-          let container: Dimensions.t = containerNode#measurements();
+    switch (Option.bind(textRef, r => r#getParent())) {
+    | Some(containerNode) =>
+      let container: Dimensions.t = containerNode#measurements();
 
-          setScrollOffset(scrollOffset =>
-            if (cursorOffset < scrollOffset) {
-              // out of view to the left, so align with left edge
-              cursorOffset;
-            } else if (cursorOffset - scrollOffset > container.width) {
-              // out of view to the right, so align with right edge
-              cursorOffset - container.width;
-            } else {
-              scrollOffset;
-            }
-          );
-        | None => ()
-        };
-        None;
-      },
-    );
+      if (cursorOffset < scrollOffset^) {
+        // out of view to the left, so align with left edge
+        scrollOffset := cursorOffset;
+      } else if (cursorOffset - scrollOffset^ > container.width) {
+        // out of view to the right, so align with right edge
+        scrollOffset := cursorOffset - container.width;
+      }
+
+    | None => ()
+    };
+  };
 
   let handleFocus = () => {
     resetCursor();
@@ -387,7 +379,7 @@ let%component make =
     switch (textRef) {
     | Some(node) =>
       let offset =
-        int_of_float(event.mouseX) - offsetLeft(node) + scrollOffset;
+        int_of_float(event.mouseX) - offsetLeft(node) + scrollOffset^;
       let cursorPosition = indexNearestOffset(offset);
       resetCursor();
       update(value, cursorPosition);
@@ -400,7 +392,7 @@ let%component make =
     let (startStr, _) = getStringParts(cursorPosition, value);
     let textWidth = measureTextWidth(startStr);
 
-    let offset = textWidth - scrollOffset;
+    let offset = textWidth - scrollOffset^;
 
     <View style={Styles.cursor(offset)}>
       <Opacity opacity=cursorOpacity>
