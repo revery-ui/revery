@@ -272,7 +272,7 @@ let%component make =
 
   let () = {
     let cursorOffset =
-        measureTextWidth(String.sub(value, 0, cursorPosition));
+      measureTextWidth(String.sub(value, 0, cursorPosition));
 
     switch (Option.bind(textRef, r => r#getParent())) {
     | Some(containerNode) =>
@@ -284,7 +284,7 @@ let%component make =
       } else if (cursorOffset - scrollOffset^ > container.width) {
         // out of view to the right, so align with right edge
         scrollOffset := cursorOffset - container.width;
-      }
+      };
 
     | None => ()
     };
@@ -350,14 +350,6 @@ let%component make =
   };
 
   let handleClick = (event: NodeEvents.mouseButtonEventParams) => {
-    let rec offsetLeft = node => {
-      let Dimensions.{left, _} = node#measurements();
-      switch (node#getParent()) {
-      | Some(parent) => left + offsetLeft(parent)
-      | None => left
-      };
-    };
-
     let indexNearestOffset = offset => {
       let rec loop = (i, last) =>
         if (i > String.length(value)) {
@@ -378,9 +370,9 @@ let%component make =
 
     switch (textRef) {
     | Some(node) =>
-      let offset =
-        int_of_float(event.mouseX) - offsetLeft(node) + scrollOffset^;
-      let cursorPosition = indexNearestOffset(offset);
+      let sceneOffsets: Offset.t = node#getSceneOffsets();
+      let textOffset = int_of_float(event.mouseX) - sceneOffsets.left + scrollOffset^;
+      let cursorPosition = indexNearestOffset(textOffset);
       resetCursor();
       update(value, cursorPosition);
 

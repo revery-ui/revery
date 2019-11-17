@@ -90,6 +90,15 @@ class node (()) = {
   pub forceMeasurements = (dimensions: Dimensions.t) => {
     _forcedMeasurements = Some(dimensions);
   };
+  pub getSceneOffsets = () => {
+    let Dimensions.{left, top, _} = _this#measurements();
+    switch (_parent) {
+    | Some(parent) =>
+      let parentOffsets = parent#getSceneOffsets();
+      Offset.{left: left + parentOffsets.left, top: top + parentOffsets.top};
+    | None => Offset.{left, top}
+    };
+  };
   pub getInternalId = () => _internalId;
   pub getTabIndex = () => _tabIndex;
   pub setTabIndex = index => _tabIndex = index;
