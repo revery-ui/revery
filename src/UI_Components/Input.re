@@ -350,15 +350,18 @@ let%component make =
   };
 
   let handleClick = (event: NodeEvents.mouseButtonEventParams) => {
-    open Revery_Draw;
-
     switch (textRef) {
     | Some(node) =>
       let sceneOffsets: Offset.t = node#getSceneOffsets();
       let textOffset =
         int_of_float(event.mouseX) - sceneOffsets.left + scrollOffset^;
       let cursorPosition =
-        Text.indexNearestOffset(~measure=measureTextWidth, value, textOffset);
+        Revery_Draw.Text.indexNearestOffset(
+          ~measure=measureTextWidth,
+          value,
+          textOffset,
+        );
+
       resetCursor();
       update(value, cursorPosition);
 

@@ -74,8 +74,7 @@ let indexNearestOffset = (~measure, text, offset) => {
     if (i > length) {
       i - 1;
     } else {
-      let width =
-        measure(String.sub(text, 0, i));
+      let width = measure(String.sub(text, 0, i));
 
       if (width > offset) {
         let isCurrentNearest = width - offset < offset - last;
