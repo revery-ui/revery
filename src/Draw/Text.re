@@ -49,7 +49,7 @@ type dimensions = {
   height: int,
 };
 
-let measure = (~window=None, ~fontFamily, ~fontSize, text) => {
+let measure = (~window=?, ~fontFamily, ~fontSize, text) => {
   let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
   let font = FontCache.load(fontFamily, scaledFontSize);
   let multiplier =
