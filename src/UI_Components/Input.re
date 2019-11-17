@@ -350,29 +350,15 @@ let%component make =
   };
 
   let handleClick = (event: NodeEvents.mouseButtonEventParams) => {
-    let indexNearestOffset = offset => {
-      let rec loop = (i, last) =>
-        if (i > String.length(value)) {
-          i - 1;
-        } else {
-          let width = measureTextWidth(String.sub(value, 0, i));
-
-          if (width > offset) {
-            let isCurrentNearest = width - offset < offset - last;
-            isCurrentNearest ? i : i - 1;
-          } else {
-            loop(i + 1, width);
-          };
-        };
-
-      loop(1, 0);
-    };
+    open Revery_Draw;
 
     switch (textRef) {
     | Some(node) =>
       let sceneOffsets: Offset.t = node#getSceneOffsets();
-      let textOffset = int_of_float(event.mouseX) - sceneOffsets.left + scrollOffset^;
-      let cursorPosition = indexNearestOffset(textOffset);
+      let textOffset =
+        int_of_float(event.mouseX) - sceneOffsets.left + scrollOffset^;
+      let cursorPosition =
+        Text.indexNearestOffset(~measure=measureTextWidth, value, textOffset);
       resetCursor();
       update(value, cursorPosition);
 
