@@ -202,7 +202,8 @@ let%component make =
   let value = Option.value(value, ~default=state.value);
   let showPlaceholder = value == "";
   let cursorPosition =
-    Option.value(cursorPosition, ~default=state.cursorPosition);
+    Option.value(cursorPosition, ~default=state.cursorPosition)
+    |> min(String.length(value));
 
   module Styles = {
     open Style;
