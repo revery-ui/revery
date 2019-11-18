@@ -91,13 +91,14 @@ let animation = (~active=true, ~onComplete=() => (), animation) => {
   (value, animationState, reset);
 };
 
-let transition = (~duration=Time.seconds(1), ~delay=Time.zero, startValue) => {
+let transition = (~duration=Time.seconds(1), ~delay=Time.zero, ~easing=Easing.linear, startValue) => {
   let%hook ((startValue, targetValue), setTargetValue) =
     state((startValue, startValue));
 
   let anim =
     Animation.animate(duration)
     |> Animation.delay(delay)
+    |> Animation.ease(easing)
     |> Animation.tween(startValue, targetValue);
 
   let%hook (value, _animationState, resetTimer) = animation(anim);
