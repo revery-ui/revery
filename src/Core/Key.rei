@@ -2,7 +2,7 @@ module Scancode: {
   type t = int;
 
   let getName: t => string;
-  let show: t => string;
+  let toString: t => string;
 };
 
 module Keycode: {
@@ -11,7 +11,7 @@ module Keycode: {
   let getName: t => string;
 
   let ofScancode: Scancode.t => t;
-  let show: t => string;
+  let toString: t => string;
   let toScancode: t => Scancode.t;
 
   // Incrementally add these as needed from:

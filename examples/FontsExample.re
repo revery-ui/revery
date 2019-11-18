@@ -45,7 +45,7 @@ module FontComponent = {
       );
 
     switch (resolvedFont) {
-    | Some(v) => print_endline("New font: " ++ Font.show(v))
+    | Some(v) => print_endline("New font: " ++ Font.toString(v))
     | None => ()
     };
 

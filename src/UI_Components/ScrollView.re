@@ -5,11 +5,8 @@ open Revery_UI_Primitives;
 
 module Hooks = Revery_UI_Hooks;
 
-type direction =
-  | Top
-  | Bottom;
 type bouncingState =
-  | Bouncing(direction, Animated.playback)
+  | Bouncing(int)
   | Idle;
 
 let empty = React.empty;
@@ -27,6 +24,23 @@ let reducer = (action, _state) => {
   };
 };
 
+let bounceAnimation = (~origin, ~force) =>
+  Animation.(
+    {
+      let bounceAway =
+        animate(Time.ms(100))
+        |> ease(Easing.cubicBezier(0.23, 1., 0.32, 1.))
+        |> tween(float(origin), float(origin + force));
+
+      let bounceBack =
+        Animation.animate(Time.ms(800))
+        |> ease(Easing.cubicBezier(0.23, 1., 0.32, 1.))
+        |> tween(float(origin + force), float(origin));
+
+      bounceAway |> andThen(~next=bounceBack) |> map(int_of_float);
+    }
+  );
+
 let%component make =
               (
                 ~style,
@@ -42,6 +56,21 @@ let%component make =
     Hooks.state(None);
   let%hook (actualScrollLeft, setScrollLeft) = Hooks.state(scrollLeft);
   let%hook (bouncingState, setBouncingState) = Hooks.state(Idle);
+
+  let%hook (actualScrollTop, _bounceAnimationState, resetBouncingAnimation) =
+    switch (bouncingState) {
+    | Idle => Hooks.animation(Animation.const(actualScrollTop))
+
+    | Bouncing(force) =>
+      Hooks.animation(
+        bounceAnimation(~origin=actualScrollTop, ~force), ~onComplete=() =>
+        setBouncingState(_ => Idle)
+      )
+    };
+  let setBouncingState = state => {
+    resetBouncingAnimation();
+    setBouncingState(state);
+  };
 
   let scrollBarThickness = 10;
 
@@ -111,9 +140,7 @@ let%component make =
       let horizontalScrollbar =
         isHorizontalScrollbarVisible
           ? <Slider
-              onValueChanged={v =>
-                setScrollLeft(_prevValue => - int_of_float(v))
-              }
+              onValueChanged={v => setScrollLeft(_ => - int_of_float(v))}
               minimumValue=0.
               maximumValue={float_of_int(maxWidth)}
               sliderLength={outerMeasurements.width}
@@ -127,59 +154,27 @@ let%component make =
           : empty;
 
       let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
-        let newScrollTop =
-          actualScrollTop - int_of_float(wheelEvent.deltaY *. 25.);
+        let delta = int_of_float(wheelEvent.deltaY *. 25.);
+        let newScrollTop = actualScrollTop - delta;
 
         let isAtTop = newScrollTop < 0;
         let isAtBottom = newScrollTop > maxHeight;
 
         switch (bouncingState) {
-        | Bouncing(Top, playback) when wheelEvent.deltaY < 0. =>
-          playback.stop();
-          setBouncingState(_prevState => Idle);
-        | Bouncing(Bottom, playback) when wheelEvent.deltaY > 0. =>
-          playback.stop();
-          setBouncingState(_prevState => Idle);
+        | Bouncing(force) when force < 0 && wheelEvent.deltaY < 0. =>
+          setBouncingState(_ => Idle)
+        | Bouncing(force) when force > 0 && wheelEvent.deltaY > 0. =>
+          setBouncingState(_ => Idle)
         | Bouncing(_) => ()
         | Idle when !bounce && (isAtTop || isAtBottom) =>
           let clampedScrollTop = isAtTop ? 0 : maxHeight;
           dispatch(ScrollUpdated(clampedScrollTop));
         | Idle when bounce && (isAtTop || isAtBottom) =>
-          open Animated;
-          let direction = isAtTop ? Top : Bottom;
-          let bounceAwayAnim = {
-            toValue: float_of_int(newScrollTop),
-            duration: Time.milliseconds(100.),
-            delay: Time.zero,
-            repeat: false,
-            easing: Easing.cubicBezier(0.23, 1., 0.32, 1.),
-            direction: `Normal,
-          };
-          let bounceBackAnim = {
-            toValue: isAtTop ? 0. : float_of_int(maxHeight),
-            duration: Time.milliseconds(800.),
-            delay: Time.zero,
-            repeat: false,
-            easing: Easing.cubicBezier(0.23, 1., 0.32, 1.),
-            direction: `Normal,
-          };
-          let playback =
-            tween(floatValue(float_of_int(actualScrollTop)), bounceAwayAnim)
-            |> Chain.make
-            |> Chain.add(
-                 tween(
-                   floatValue(float_of_int(newScrollTop)),
-                   bounceBackAnim,
-                 ),
-               )
-            |> Chain.start(~update=v =>
-                 dispatch(ScrollUpdated(int_of_float(v)))
-               );
-          setBouncingState(_prevState => Bouncing(direction, playback));
+          setBouncingState(_ => Bouncing(- delta * 2));
+          dispatch(ScrollUpdated(isAtTop ? 0 : maxHeight));
         | Idle => dispatch(ScrollUpdated(newScrollTop))
         };
       };
-
       (horizontalScrollbar, verticalScrollBar, scroll);
     | _ => (empty, empty, (_ => ()))
     };
