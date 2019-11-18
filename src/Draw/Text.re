@@ -139,8 +139,6 @@ let drawString =
   let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
   ();
 
-  let outerTransform = Mat4.create();
-  Mat4.fromTranslation(outerTransform, Vec3.create(0.0, baseline, 0.0));
   let render = (s: Fontkit.fk_shape, x: float, y: float) => {
     let glyph = FontRenderer.getGlyph(font, s.glyphId);
 
@@ -159,24 +157,11 @@ let drawString =
     glBindTexture(GL_TEXTURE_2D, texture);
     /* TODO: Bind texture */
 
-    let glyphTransform = Mat4.create();
-    Mat4.fromTranslation(
-      glyphTransform,
-      Vec3.create(
-        x +. bearingX +. width /. 2.,
-        y +. height *. 0.5 -. bearingY,
-        0.0,
-      ),
-    );
-
-    let scaleTransform = Mat4.create();
-    Mat4.fromScaling(scaleTransform, Vec3.create(width, height, 1.0));
-
-    let local = Mat4.create();
-    Mat4.multiply(local, glyphTransform, scaleTransform);
-
-    let xform = Mat4.create();
-    Mat4.multiply(xform, outerTransform, local);
+    let xform = Mat4.createFromTranslationAndScale(width, height, 1.0, 
+      x +. bearingX +. width /. 2.,
+      baseline +. y +. height *. 0.5 -. bearingY,
+      0.
+        );
     Mat4.multiply(xform, transform, xform);
 
     CompiledShader.setUniformMatrix4fv(uniformWorld, xform);
