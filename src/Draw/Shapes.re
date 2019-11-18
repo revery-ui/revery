@@ -26,21 +26,22 @@ let drawRect =
 
   if (color.a > 0.001) {
     /*let world = Mat4.create();
-    Mat4.fromScaling(world, Vec3.create(width, height, 1.0));
+      Mat4.fromScaling(world, Vec3.create(width, height, 1.0));
 
-    let translate = Mat4.create();
-    Mat4.fromTranslation(
-      translate,
-      Vec3.create(x +. width /. 2., y +. height /. 2., 0.0),
-    );*/
+      let translate = Mat4.create();
+      Mat4.fromTranslation(
+        translate,
+        Vec3.create(x +. width /. 2., y +. height /. 2., 0.0),
+      );*/
 
-    let world = Mat4.createFromTranslationAndScale(
-      width,
-      height, 
-      1.0,
-      x +. width /. 2.,
-      y +. height /. 2.,
-      0.
+    let world =
+      Mat4.createFromTranslationAndScale(
+        width,
+        height,
+        1.0,
+        x +. width /. 2.,
+        y +. height /. 2.,
+        0.,
       );
 
     Mat4.multiply(world, transform, world);
