@@ -403,8 +403,8 @@ let%component make =
     onTextInput=handleTextInput>
     <View style=Styles.box>
       <View style=Styles.marginContainer>
-        <cursor />
         <View style=Styles.textContainer> <text /> </View>
+        <cursor />
       </View>
     </View>
   </Clickable>;
