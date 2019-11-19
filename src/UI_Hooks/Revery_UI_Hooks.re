@@ -16,7 +16,7 @@ let time = (~tickRate=Time.zero, ()) => {
 // TODO: Workaround for https://github.com/briskml/brisk-reconciler/issues/27
 // Remove when fixed
 let mountIfEffect = (condition, handler) => {
-  let%hook (maybeDispose, _setDispose) = state(Pervasives.ref(None));
+  let%hook (maybeDispose, _setDispose) = state(Stdlib.ref(None));
   let mountCleanup = () =>
     switch (maybeDispose^) {
     | Some(dispose) =>
