@@ -71,5 +71,11 @@ let create = () => {
   let uniformColor =
     CompiledShader.getUniformLocation(compiledShader, "uColor");
 
-  {compiledShader, uniformLocal, uniformWorld, uniformProjection, uniformColor};
+  {
+    compiledShader,
+    uniformLocal,
+    uniformWorld,
+    uniformProjection,
+    uniformColor,
+  };
 };

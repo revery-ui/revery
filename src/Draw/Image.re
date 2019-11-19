@@ -36,7 +36,10 @@ let drawImage =
 
     CompiledShader.setUniformMatrix4fv(textureShader.uniformWorld, world);
     CompiledShader.setUniformMatrix4fv(textureShader.uniformProjection, m);
-    CompiledShader.setUniformMatrix4fv(textureShader.uniformLocal, identityMatrix);
+    CompiledShader.setUniformMatrix4fv(
+      textureShader.uniformLocal,
+      identityMatrix,
+    );
 
     CompiledShader.setUniform4fv(
       textureShader.uniformColor,
