@@ -16,12 +16,12 @@ let time = (~tickRate=Time.zero, ()) => {
 // TODO: Workaround for https://github.com/briskml/brisk-reconciler/issues/27
 // Remove when fixed
 let mountIfEffect = (condition, handler) => {
-  let%hook (maybeDispose, setDispose) = Ref.ref(None);
+  let%hook (maybeDispose, _setDispose) = state(Stdlib.ref(None));
   let mountCleanup = () =>
-    switch (maybeDispose) {
+    switch (maybeDispose^) {
     | Some(dispose) =>
       dispose();
-      setDispose(None);
+      maybeDispose := None;
     | None => ()
     };
 
@@ -29,7 +29,7 @@ let mountIfEffect = (condition, handler) => {
     effect(
       OnMount,
       () => {
-        setDispose(handler());
+        maybeDispose := handler();
         Some(mountCleanup);
       },
     );
@@ -42,6 +42,7 @@ let mountIfEffect = (condition, handler) => {
         handler();
       },
     );
+
   ();
 };
 
