@@ -45,7 +45,7 @@ let varying =
 
 let vsShader = {|
    vec4 pos = vec4(aPosition.x, aPosition.y, 1.0, 1.0);
-   gl_Position = uProjection * uWorld * pos;
+   gl_Position = uProjection * uWorld * uLocal * pos;
    vColor = uColor;
    vTexCoord = aTexCoord;
 |};
@@ -62,6 +62,7 @@ let vsShader = {|
 module Default = {
   type t = {
     compiledShader: CompiledShader.t,
+    uniformLocal: uniformLocation,
     uniformWorld: uniformLocation,
     uniformProjection: uniformLocation,
     uniformColor: uniformLocation,
@@ -82,6 +83,8 @@ module Default = {
         ~fragmentShader=fsShader,
       );
     let compiledShader = Shader.compile(shader);
+    let uniformLocal =
+      CompiledShader.getUniformLocation(compiledShader, "uLocal");
     let uniformWorld =
       CompiledShader.getUniformLocation(compiledShader, "uWorld");
     let uniformProjection =
@@ -89,7 +92,13 @@ module Default = {
     let uniformColor =
       CompiledShader.getUniformLocation(compiledShader, "uColor");
 
-    {compiledShader, uniformWorld, uniformProjection, uniformColor};
+    {
+      compiledShader,
+      uniformLocal,
+      uniformWorld,
+      uniformProjection,
+      uniformColor,
+    };
   };
 };
 
@@ -116,6 +125,7 @@ module GammaCorrected = {
 
   type t = {
     compiledShader: CompiledShader.t,
+    uniformLocal: uniformLocation,
     uniformWorld: uniformLocation,
     uniformProjection: uniformLocation,
     uniformColor: uniformLocation,
@@ -134,6 +144,8 @@ module GammaCorrected = {
         ~fragmentShader=fsShader,
       );
     let compiledShader = Shader.compile(shader);
+    let uniformLocal =
+      CompiledShader.getUniformLocation(compiledShader, "uLocal");
     let uniformWorld =
       CompiledShader.getUniformLocation(compiledShader, "uWorld");
     let uniformProjection =
@@ -150,6 +162,7 @@ module GammaCorrected = {
 
     {
       compiledShader,
+      uniformLocal,
       uniformWorld,
       uniformProjection,
       uniformColor,

@@ -70,6 +70,7 @@ type t = {
   uniformProjection: uniformLocation,
   uniformShadowColor: uniformLocation,
   uniformShadowAmount: uniformLocation,
+  uniformLocal: uniformLocation,
   uniformWorld: uniformLocation,
 };
 
@@ -83,6 +84,8 @@ let create = () => {
       ~fragmentShader,
     );
   let compiledShader = Shader.compile(shader);
+  let uniformLocal =
+    CompiledShader.getUniformLocation(compiledShader, "uLocal");
   let uniformWorld =
     CompiledShader.getUniformLocation(compiledShader, "uWorld");
   let uniformProjection =
@@ -94,6 +97,7 @@ let create = () => {
 
   {
     compiledShader,
+    uniformLocal,
     uniformWorld,
     uniformProjection,
     uniformShadowColor,

@@ -12,6 +12,8 @@ open Style;
 open Style.Border;
 open Style.BoxShadow;
 
+let identityMatrix = Mat4.create();
+
 let renderBorders = (~style, ~width, ~height, ~opacity, ~m, ~world) => {
   let borderStyle = (side, axis, border) =>
     Layout.Encoding.(
@@ -75,6 +77,10 @@ let renderBorders = (~style, ~width, ~height, ~opacity, ~m, ~world) => {
       Shaders.CompiledShader.use(shader.compiledShader);
       Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformProjection, m);
       Shaders.CompiledShader.setUniformMatrix4fv(shader.uniformWorld, world);
+      Shaders.CompiledShader.setUniformMatrix4fv(
+        shader.uniformLocal,
+        identityMatrix,
+      );
       (
         shader.compiledShader,
         c =>
@@ -286,6 +292,11 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
   Shaders.CompiledShader.setUniformMatrix4fv(
     gradientShader.uniformWorld,
     shadowWorldTransform,
+  );
+
+  Shaders.CompiledShader.setUniformMatrix4fv(
+    gradientShader.uniformLocal,
+    identityMatrix,
   );
 
   Geometry.draw(quad, gradientShader.compiledShader);
