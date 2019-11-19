@@ -25,7 +25,7 @@ let drawRect =
   let ctx = RenderPass.getContext();
 
   if (color.a > 0.001) {
-    let world =
+    let local =
       Mat4.createFromTranslationAndScale(
         width,
         height,
@@ -35,8 +35,6 @@ let drawRect =
         0.,
       );
 
-    Mat4.multiply(world, transform, world);
-
     let quad = Assets.quad();
     let shader = Assets.solidShader();
     CompiledShader.use(shader.compiledShader);
@@ -45,7 +43,8 @@ let drawRect =
       shader.uniformProjection,
       ctx.projection,
     );
-    CompiledShader.setUniformMatrix4fv(shader.uniformWorld, world);
+    CompiledShader.setUniformMatrix4fv(shader.uniformLocal, local);
+    CompiledShader.setUniformMatrix4fv(shader.uniformWorld, transform);
     CompiledShader.setUniform4fv(shader.uniformColor, Color.toVec4(color));
 
     Geometry.draw(quad, shader.compiledShader);

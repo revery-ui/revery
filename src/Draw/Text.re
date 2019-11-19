@@ -90,7 +90,7 @@ let _startShader =
     CompiledShader.setUniform1f(shader.uniformGamma, gamma);
     CompiledShader.setUniform1f(shader.uniformOpacity, opacity);
 
-    (shader.compiledShader, shader.uniformWorld);
+    (shader.compiledShader, shader.uniformWorld, shader.uniformLocal);
   } else {
     let shader = Assets.fontDefaultShader();
     let colorMultipliedAlpha = Color.multiplyAlpha(opacity, color);
@@ -101,7 +101,7 @@ let _startShader =
       Color.toVec4(colorMultipliedAlpha),
     );
 
-    (shader.compiledShader, shader.uniformWorld);
+    (shader.compiledShader, shader.uniformWorld, shader.uniformLocal);
   };
 
 let drawString =
@@ -123,7 +123,7 @@ let drawString =
   let projection = ctx.projection;
   let quad = Assets.quad();
 
-  let (shader, uniformWorld) =
+  let (shader, uniformWorld, uniformLocal) =
     _startShader(~color, ~backgroundColor, ~opacity, ~gamma, ~projection, ());
 
   let font =
@@ -166,9 +166,9 @@ let drawString =
         baseline +. y +. height *. 0.5 -. bearingY,
         0.,
       );
-    Mat4.multiply(xform, transform, xform);
 
-    CompiledShader.setUniformMatrix4fv(uniformWorld, xform);
+    CompiledShader.setUniformMatrix4fv(uniformLocal, xform);
+    CompiledShader.setUniformMatrix4fv(uniformWorld, transform);
 
     Geometry.draw(quad, shader);
 
