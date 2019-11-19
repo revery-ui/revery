@@ -77,16 +77,6 @@ type state = {
   cursorPosition: int,
 };
 
-type changeEvent = {
-  value: string,
-  character: string,
-  keycode: Key.Keycode.t,
-  altKey: bool,
-  ctrlKey: bool,
-  shiftKey: bool,
-  superKey: bool,
-};
-
 type action =
   | Focus
   | Blur
