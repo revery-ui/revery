@@ -26,7 +26,7 @@
     ],
     "install": [
       "esy-installer Revery.install",
-      "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': 'echo Build complete'}\""
+      "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': ':'}\""
     ]
   },
   "dependencies": {
@@ -46,7 +46,7 @@
     "flex": "^1.2.2",
     "reason-font-manager": "^2.0.0",
     "reason-fontkit": "^2.7.0",
-    "reason-gl-matrix": "^0.9.9305",
+    "reason-gl-matrix": "^0.9.9306",
     "rebez": "github:jchavarri/rebez#03fa3b7",
     "rench": "^1.9.1",
     "reperf": "^1.4.0",

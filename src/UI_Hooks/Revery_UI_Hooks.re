@@ -16,12 +16,12 @@ let time = (~tickRate=Time.zero, ()) => {
 // TODO: Workaround for https://github.com/briskml/brisk-reconciler/issues/27
 // Remove when fixed
 let mountIfEffect = (condition, handler) => {
-  let%hook (maybeDispose, setDispose) = Ref.ref(None);
+  let%hook (maybeDispose, _setDispose) = state(Stdlib.ref(None));
   let mountCleanup = () =>
-    switch (maybeDispose) {
+    switch (maybeDispose^) {
     | Some(dispose) =>
       dispose();
-      setDispose(None);
+      maybeDispose := None;
     | None => ()
     };
 
@@ -29,7 +29,7 @@ let mountIfEffect = (condition, handler) => {
     effect(
       OnMount,
       () => {
-        setDispose(handler());
+        maybeDispose := handler();
         Some(mountCleanup);
       },
     );
@@ -42,6 +42,7 @@ let mountIfEffect = (condition, handler) => {
         handler();
       },
     );
+
   ();
 };
 
@@ -91,13 +92,20 @@ let animation = (~active=true, ~onComplete=() => (), animation) => {
   (value, animationState, reset);
 };
 
-let transition = (~duration=Time.seconds(1), ~delay=Time.zero, startValue) => {
+let transition =
+    (
+      ~duration=Time.seconds(1),
+      ~delay=Time.zero,
+      ~easing=Easing.linear,
+      startValue,
+    ) => {
   let%hook ((startValue, targetValue), setTargetValue) =
     state((startValue, startValue));
 
   let anim =
     Animation.animate(duration)
     |> Animation.delay(delay)
+    |> Animation.ease(easing)
     |> Animation.tween(startValue, targetValue);
 
   let%hook (value, _animationState, resetTimer) = animation(anim);

@@ -23,6 +23,7 @@ module TextOverflow = TextOverflow;
 
 module Vsync = Vsync;
 module WindowCreateOptions = WindowCreateOptions;
+module WindowStyles = WindowStyles;
 
 /*
  * Internally exposed modules, just for testing.

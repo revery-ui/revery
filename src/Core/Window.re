@@ -92,6 +92,12 @@ let setTitle = (v: t, title: string) => {
   Sdl2.Window.setTitle(v.sdlWindow, title);
 };
 
+let setTitlebarTransparent = (w: Sdl2.Window.t) =>
+  switch (Environment.os) {
+  | Mac => Sdl2.Window.setMacTitlebarTransparent(w)
+  | _ => ()
+  };
+
 let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
   switch (forceScaleFactor) {
   // If a scale factor is forced... prefer that!
@@ -472,6 +478,11 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   if (options.visible) {
     Sdl2.Window.show(w);
+  };
+
+  switch (options.titlebarStyle) {
+  | System => ()
+  | Transparent => setTitlebarTransparent(w)
   };
 
   // onivim/oni2#791
