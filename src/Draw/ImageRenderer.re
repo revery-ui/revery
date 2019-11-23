@@ -20,6 +20,7 @@ let initialPixels =
 type cache = Hashtbl.t(string, t);
 let _cache: cache = Hashtbl.create(100);
 
+/* TODO: remove after 4.08 */
 module Option = {
   let value = (~default, a) =>
     switch (a) {
@@ -33,56 +34,52 @@ module Option = {
     | None => None
     };
 
-  let isSome =
+  let is_some =
     fun
     | Some(_) => true
     | _ => false;
 };
 
-module Utils = {
-  module Text = {
-    let onlyAlphaNumeric = text =>
-      Str.(global_replace(regexp("[^a-zA-Z0-9_]"), "", text));
+let removeNonAlphanumeric = text =>
+  Str.(global_replace(regexp("[^a-zA-Z0-9_]"), "", text));
+
+module RemoteImage = {
+  let extensionOfMediaType =
+    fun
+    | "image/apng" => ".apng"
+    | "image/bmp" => ".bmp"
+    | "image/gif" => ".gif"
+    | "image/x-icon" => ".ico"
+    | "image/jpeg" => ".jpg"
+    | "image/png" => ".png"
+    | "image/svg+xml" => ".svg"
+    | "image/tiff" => ".tif"
+    | "image/webp" => ".webp"
+    | _ => ".png";
+
+  type t = {
+    data: string,
+    fileExtension: string,
   };
 
-  module RemoteImage = {
-    let extensionOfMediaType =
-      fun
-      | "image/apng" => ".apng"
-      | "image/bmp" => ".bmp"
-      | "image/gif" => ".gif"
-      | "image/x-icon" => ".ico"
-      | "image/jpeg" => ".jpg"
-      | "image/png" => ".png"
-      | "image/svg+xml" => ".svg"
-      | "image/tiff" => ".tif"
-      | "image/webp" => ".webp"
-      | _ => ".png";
+  let fetch = url =>
+    Fetch.(
+      get(url)
+      |> Lwt.map(
+           fun
+           | Ok({Response.body, headers, _}) => {
+               let fileExtension =
+                 headers
+                 |> List.find_opt(((k, _v)) => k == "content-type")
+                 |> Option.map(((_k, v)) => v)
+                 |> Option.value(~default="")
+                 |> extensionOfMediaType;
 
-    type t = {
-      data: string,
-      fileExtension: string,
-    };
-
-    let fetch = url =>
-      Fetch.(
-        get(url)
-        |> Lwt.map(
-             fun
-             | Ok({Response.body, headers, _}) => {
-                 let fileExtension =
-                   headers
-                   |> List.find_opt(((k, _v)) => k == "content-type")
-                   |> Option.map(((_k, v)) => v)
-                   |> Option.value(~default="")
-                   |> extensionOfMediaType;
-
-                 Some({data: Response.Body.toString(body), fileExtension});
-               }
-             | Error(_) => None,
-           )
-      );
-  };
+               Some({data: Response.Body.toString(body), fileExtension});
+             }
+           | Error(_) => None,
+         )
+    );
 };
 
 let getTexture = (imagePath: string) => {
@@ -93,11 +90,11 @@ let getTexture = (imagePath: string) => {
   | Some(cachedResult) => cachedResult
   | None =>
     /* will this suffice? */
-    let isRemote = imagePath |> Uri.of_string |> Uri.scheme |> Option.isSome;
+    let isRemote = imagePath |> Uri.of_string |> Uri.scheme |> Option.is_some;
 
     let imageLoadPromise =
       if (isRemote) {
-        let%lwt remoteImage = Utils.RemoteImage.fetch(imagePath);
+        let%lwt remoteImage = RemoteImage.fetch(imagePath);
 
         let image =
           switch (remoteImage) {
@@ -105,7 +102,7 @@ let getTexture = (imagePath: string) => {
             let filePath =
               Fpath.append(
                 Environment.getTempDirectory() |> Fpath.v,
-                Utils.Text.onlyAlphaNumeric(imagePath)
+                removeNonAlphanumeric(imagePath)
                 ++ remoteImage.fileExtension
                 |> Fpath.v,
               );
