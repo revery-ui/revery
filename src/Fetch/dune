@@ -1,4 +1,4 @@
 (library
  (name Revery_Fetch)
  (public_name Revery.Fetch)
- (libraries fetch-core cohttp cohttp-lwt-unix lwt lwt.unix))
+ (libraries fetch-native-lwt))
