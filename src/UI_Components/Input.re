@@ -144,22 +144,77 @@ module Constants = {
   let cursorWidth = 2;
 };
 
+type textAttributes = {
+  fontFamily: string,
+  fontSize: int,
+  color: Color.t,
+};
+
 module Styles = {
+  open Style;
+
   let defaultPlaceholderColor = Colors.grey;
   let defaultCursorColor = Colors.black;
 
-  let default =
-    Style.[
-      color(Colors.black),
-      width(Constants.defaultWidth),
-      height(Constants.defaultHeight),
-      border(
-        // The default border width should be 5% of the full input height
-        ~width=float_of_int(Constants.defaultHeight) *. 0.05 |> int_of_float,
-        ~color=Colors.black,
-      ),
-      backgroundColor(Colors.transparentWhite),
-    ];
+  let default = [
+    color(Colors.black),
+    width(Constants.defaultWidth),
+    height(Constants.defaultHeight),
+    border(
+      // The default border width should be 5% of the full input height
+      ~width=float_of_int(Constants.defaultHeight) *. 0.05 |> int_of_float,
+      ~color=Colors.black,
+    ),
+    backgroundColor(Colors.transparentWhite),
+  ];
+
+  let _all = (~style) =>
+    merge(
+      ~source=[
+        flexDirection(`Row),
+        alignItems(`Center),
+        justifyContent(`FlexStart),
+        overflow(`Hidden),
+        cursor(MouseCursors.text),
+        ...default,
+      ],
+      ~target=style,
+    );
+
+  let box = (~style) => extractViewStyles(_all(~style));
+
+  let marginContainer = [
+    flexDirection(`Row),
+    alignItems(`Center),
+    justifyContent(`FlexStart),
+    marginLeft(Constants.textMargin),
+    marginRight(Constants.textMargin),
+    flexGrow(1),
+  ];
+
+  let cursor = (~offset) => [
+    position(`Absolute),
+    marginTop(2),
+    transform(Transform.[TranslateX(float(offset))]),
+  ];
+
+  let textContainer = [flexGrow(1), overflow(`Hidden)];
+
+  let text =
+      (
+        ~showPlaceholder,
+        ~scrollOffset,
+        ~placeholderColor,
+        ~textAttrs: textAttributes,
+      ) => [
+    color(showPlaceholder ? placeholderColor : textAttrs.color),
+    Style.fontFamily(textAttrs.fontFamily),
+    Style.fontSize(textAttrs.fontSize),
+    alignItems(`Center),
+    justifyContent(`FlexStart),
+    textWrap(TextWrapping.NoWrap),
+    transform(Transform.[TranslateX(float(- scrollOffset^))]),
+  ];
 };
 
 let%component make =
@@ -189,69 +244,24 @@ let%component make =
   let%hook (textRef, setTextRef) = Hooks.ref(None);
   let%hook (scrollOffset, _setScrollOffset) = Hooks.state(ref(0));
 
+  let textAttrs = {
+    fontFamily: Selector.select(style, FontFamily, "Roboto-Regular.ttf"),
+    fontSize: Selector.select(style, FontSize, 18),
+    color: Selector.select(style, Color, Colors.black),
+  };
+
   let value = Option.value(value, ~default=state.value);
   let showPlaceholder = value == "";
   let cursorPosition =
     Option.value(cursorPosition, ~default=state.cursorPosition)
     |> min(String.length(value));
 
-  module Styles = {
-    open Style;
-    include Styles;
-
-    let fontSize = Selector.select(style, FontSize, 18);
-    let textColor = Selector.select(style, Color, Colors.black);
-    let fontFamily = Selector.select(style, FontFamily, "Roboto-Regular.ttf");
-
-    let _all =
-      merge(
-        ~source=[
-          flexDirection(`Row),
-          alignItems(`Center),
-          justifyContent(`FlexStart),
-          overflow(`Hidden),
-          cursor(MouseCursors.text),
-          ...default,
-        ],
-        ~target=style,
-      );
-
-    let box = extractViewStyles(_all);
-
-    let marginContainer = [
-      flexDirection(`Row),
-      alignItems(`Center),
-      justifyContent(`FlexStart),
-      marginLeft(Constants.textMargin),
-      marginRight(Constants.textMargin),
-      flexGrow(1),
-    ];
-
-    let cursor = offset => [
-      position(`Absolute),
-      marginTop(2),
-      transform(Transform.[TranslateX(float(offset))]),
-    ];
-
-    let textContainer = [flexGrow(1), overflow(`Hidden)];
-
-    let text = [
-      color(showPlaceholder ? placeholderColor : textColor),
-      Style.fontFamily(fontFamily),
-      Style.fontSize(fontSize),
-      alignItems(`Center),
-      justifyContent(`FlexStart),
-      textWrap(TextWrapping.NoWrap),
-      transform(Transform.[TranslateX(float(- scrollOffset^))]),
-    ];
-  };
-
   let measureTextWidth = text => {
     let dimensions =
       Revery_Draw.Text.measure(
         ~window=?Revery_UI.getActiveWindow(),
-        ~fontFamily=Styles.fontFamily,
-        ~fontSize=Styles.fontSize,
+        ~fontFamily=textAttrs.fontFamily,
+        ~fontSize=textAttrs.fontSize,
         text,
       );
 
@@ -366,11 +376,11 @@ let%component make =
 
     let offset = textWidth - scrollOffset^;
 
-    <View style={Styles.cursor(offset)}>
+    <View style={Styles.cursor(~offset)}>
       <Opacity opacity=cursorOpacity>
         <ContainerComponent
           width=Constants.cursorWidth
-          height=Styles.fontSize
+          height={textAttrs.fontSize}
           color=cursorColor
         />
       </Opacity>
@@ -381,7 +391,12 @@ let%component make =
     <Text
       ref={node => setTextRef(Some(node))}
       text={showPlaceholder ? placeholder : value}
-      style=Styles.text
+      style={Styles.text(
+        ~showPlaceholder,
+        ~scrollOffset,
+        ~placeholderColor,
+        ~textAttrs,
+      )}
     />;
 
   <Clickable
@@ -391,7 +406,7 @@ let%component make =
     onAnyClick=handleClick
     onKeyDown=handleKeyDown
     onTextInput=handleTextInput>
-    <View style=Styles.box>
+    <View style={Styles.box(~style)}>
       <View style=Styles.marginContainer>
         <View style=Styles.textContainer> <text /> </View>
         <cursor />
