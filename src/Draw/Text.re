@@ -49,7 +49,7 @@ type dimensions = {
   height: int,
 };
 
-let measure = (~window=None, ~fontFamily, ~fontSize, text) => {
+let measure = (~window=?, ~fontFamily, ~fontSize, text) => {
   let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
   let font = FontCache.load(fontFamily, scaledFontSize);
   let multiplier =
@@ -65,6 +65,26 @@ let measure = (~window=None, ~fontFamily, ~fontSize, text) => {
       int_of_float(float_of_int(dimensions.height) /. multiplier +. 0.5),
   };
   ret;
+};
+
+let indexNearestOffset = (~measure, text, offset) => {
+  let length = String.length(text);
+
+  let rec loop = (~last, i) =>
+    if (i > length) {
+      i - 1;
+    } else {
+      let width = measure(String.sub(text, 0, i));
+
+      if (width > offset) {
+        let isCurrentNearest = width - offset < offset - last;
+        isCurrentNearest ? i : i - 1;
+      } else {
+        loop(~last=width, i + 1);
+      };
+    };
+
+  loop(~last=0, 1);
 };
 
 let identityMatrix = Mat4.create();

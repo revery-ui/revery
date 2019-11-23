@@ -71,7 +71,7 @@ module FontComponent = {
           <Row>
             <Input
               placeholder="Type font name"
-              onChange={({value, _}) => dispatch(SetFamily(value))}
+              onChange={(value, _) => dispatch(SetFamily(value))}
               value={state.family}
             />
           </Row>
