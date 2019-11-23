@@ -1,0 +1,42 @@
+opam-version: "2.0"
+maintainer: "Spiros Eliopoulos <spiros@inhabitedtype.com>"
+authors: [ "Spiros Eliopoulos <spiros@inhabitedtype.com>" ]
+license: "BSD-3-clause"
+homepage: "https://github.com/inhabitedtype/bigstringaf"
+bug-reports: "https://github.com/inhabitedtype/bigstringaf/issues"
+dev-repo: "git+https://github.com/inhabitedtype/bigstringaf.git"
+build: [
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name] {with-test}
+]
+depends: [
+  "dune"
+  "alcotest" {with-test}
+  "bigarray-compat"
+  "ocaml" {>= "4.03.0"}
+]
+depopts: [
+  "mirage-xen-posix"
+  "ocaml-freestanding"
+]
+conflicts: [
+  "mirage-xen-posix" {< "3.1.0"}
+  "ocaml-freestanding" {< "0.4.1"}
+]
+synopsis: "Bigstring intrinsics and fast blits based on memcpy/memmove"
+description: """
+Bigstring intrinsics and fast blits based on memcpy/memmove
+
+The OCaml compiler has a bunch of intrinsics for Bigstrings, but they're not
+widely-known, sometimes misused, and so programs that use Bigstrings are slower
+than they have to be. And even if a library got that part right and exposed the
+intrinsics properly, the compiler doesn't have any fast blits between
+Bigstrings and other string-like types.
+
+So here they are. Go crazy.
+"""
+url {
+  src: "https://github.com/inhabitedtype/bigstringaf/archive/0.6.0.tar.gz"
+  checksum: "md5=390382a1ac34e129f7b7f49540d94c9a"
+}

@@ -1,0 +1,24 @@
+opam-version: "2.0"
+maintainer: "Spiros Eliopoulos <spiros@inhabitedtype.com>"
+authors: [ "Spiros Eliopoulos <spiros@inhabitedtype.com>" ]
+license: "BSD-3-Clause"
+homepage: "https://github.com/inhabitedtype/faraday"
+bug-reports: "https://github.com/inhabitedtype/faraday/issues"
+dev-repo: "git+https://github.com/inhabitedtype/faraday.git"
+build: [
+  ["jbuilder" "subst" "-p" name] {pinned}
+  ["jbuilder" "build" "-p" name "-j" jobs]
+  ["jbuilder" "runtest" "-p" name] {with-test}
+]
+depends: [
+  "ocaml" {>= "4.02.0"}
+  "jbuilder" {>= "1.0+beta10"}
+  "faraday-lwt"
+  "lwt" {>= "2.7.0"}
+  "base-unix"
+]
+synopsis: "Lwt_unix support for Faraday"
+url {
+  src: "https://github.com/inhabitedtype/faraday/archive/0.7.0.tar.gz"
+  checksum: "md5=d37a5f1663570f9c75f0b4b4cdb7ec9c"
+}

@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Spiros Eliopoulos <spiros@inhabitedtype.com>"
+authors: [ "Spiros Eliopoulos <spiros@inhabitedtype.com>" ]
+license: "BSD-3-Clause"
+homepage: "https://github.com/inhabitedtype/faraday"
+bug-reports: "https://github.com/inhabitedtype/faraday/issues"
+dev-repo: "git+https://github.com/inhabitedtype/faraday.git"
+build: [
+  ["jbuilder" "subst" "-p" name] {pinned}
+  ["jbuilder" "build" "-p" name "-j" jobs]
+  ["jbuilder" "runtest" "-p" name] {with-test}
+]
+depends: [
+  "ocaml" {>= "4.02.0"}
+  "jbuilder" {>= "1.0+beta10"}
+  "alcotest" {with-test & >= "0.4.1"}
+  "bigstringaf"
+]
+synopsis: "A library for writing fast and memory-efficient serializers."
+description: """
+Faraday is a library for writing fast and memory-efficient serializers. Its
+core type and related operation gives the user fine-grained control over
+copying and allocation behavior while serializing user-defined types, and
+presents the output in a form that makes it possible to use vectorized write
+operations, such as the writev system call, or any other platform or
+application-specific output APIs."""
+url {
+  src: "https://github.com/inhabitedtype/faraday/archive/0.7.0.tar.gz"
+  checksum: "md5=d37a5f1663570f9c75f0b4b4cdb7ec9c"
+}

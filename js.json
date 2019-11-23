@@ -20,7 +20,10 @@
       "rebez": "github:jchavarri/rebez#46cbc183",
       "rench": "github:revery-ui/rench#4554280",
       "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#0a2e476",
-      "pesy": "0.4.1"
+      "pesy": "0.4.1",
+      "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#76b461bed081c64908fb1fdfa076ab2c936ca622",
+      "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#76b461bed081c64908fb1fdfa076ab2c936ca622",
+      "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#76b461bed081c64908fb1fdfa076ab2c936ca622"
     },
     "devDependencies": {
       "ocaml": ">=4.6.0 <4.9.0"

@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Daniel Bünzli <daniel.buenzl i@erratique.ch>"
+authors: ["Daniel Bünzli <daniel.buenzl i@erratique.ch>"]
+homepage: "http://erratique.ch/software/hmap"
+doc: "http://erratique.ch/software/hmap/doc"
+license: "ISC"
+dev-repo: "git+http://erratique.ch/repos/hmap.git"
+bug-reports: "http://github.com/dbuenzli/hmap/issues"
+tags: ["data-structure" "org:erratique"]
+depends: [
+  "ocaml" {>= "4.02.0"}
+  "ocamlfind" {build}
+  "ocamlbuild" {build}
+  "topkg" {build}
+]
+build: [[
+  "ocaml" "pkg/pkg.ml" "build"
+          "--pinned" "%{pinned}%" ]]
+synopsis: "Heterogeneous value maps for OCaml"
+description: """
+Hmap provides heterogeneous value maps for OCaml. These maps bind keys
+to values with arbitrary types. Keys witness the type of the value
+they are bound to which allows to add and lookup bindings in a type
+safe manner.
+
+Hmap has no dependency and is distributed under the ISC license."""
+url {
+  src: "http://erratique.ch/software/hmap/releases/hmap-0.8.1.tbz"
+  checksum: "md5=04169252265a11d852e1547445177196"
+}

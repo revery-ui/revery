@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Spiros Eliopoulos <spiros@inhabitedtype.com>"
+authors: [ "Spiros Eliopoulos <spiros@inhabitedtype.com>" ]
+license: "BSD-3-clause"
+homepage: "https://github.com/inhabitedtype/angstrom"
+bug-reports: "https://github.com/inhabitedtype/angstrom/issues"
+dev-repo: "git+https://github.com/inhabitedtype/angstrom.git"
+build: [
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
+depends: [
+  "ocaml" {>= "4.03.0"}
+  "dune" {>= "1.0"}
+  "alcotest" {with-test & >= "0.8.1"}
+  "bigstringaf"
+  "result"
+]
+synopsis: "Parser combinators built for speed and memory-efficiency"
+description: """
+Angstrom is a parser-combinator library that makes it easy to write efficient,
+expressive, and reusable parsers suitable for high-performance applications. It
+exposes monadic and applicative interfaces for composition, and supports
+incremental input through buffered and unbuffered interfaces. Both interfaces
+give the user total control over the blocking behavior of their application,
+with the unbuffered interface enabling zero-copy IO. Parsers are backtracking by
+default and support unbounded lookahead."""
+url {
+  src: "https://github.com/inhabitedtype/angstrom/archive/0.12.1.tar.gz"
+  checksum: "md5=b253d5bf5468a19408689523458cfe81"
+}
