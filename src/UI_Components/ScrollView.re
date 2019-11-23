@@ -59,7 +59,9 @@ let%component make =
 
   let%hook (actualScrollTop, _bounceAnimationState, resetBouncingAnimation) =
     switch (bouncingState) {
-    | Idle => Hooks.animation(Animation.const(actualScrollTop))
+    | Idle =>
+      // TODO: Why isn't Animation.const always sufficient to stop the timer?
+      Hooks.animation(~active=false, Animation.const(actualScrollTop))
 
     | Bouncing(force) =>
       Hooks.animation(
