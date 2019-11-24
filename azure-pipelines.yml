@@ -49,6 +49,10 @@ jobs:
   - script: node --version
   # - template: .ci/restore-build-cache.yml
   - template: .ci/esy-check-hygiene.yml
+  - script: ls -lA /Users/runner
+  - script: ls -lA /Users/runner/runners
+  - script: echo _________________________________________________________________________________________________
+  - script: ls -lA /Users/Shared
   - template: .ci/publish-build-cache.yml
 
 - job: MacOS
