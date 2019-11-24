@@ -42,7 +42,7 @@ jobs:
 
   steps:
   - script: ls -lA /Users/runner
-  -script: echo _________________________________________________________________________________________________
+  - script: echo _________________________________________________________________________________________________
   - script: ls -lA /Users/Shared
   - script: brew update
   - script: brew install libpng ragel
