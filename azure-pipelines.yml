@@ -41,8 +41,9 @@ jobs:
     # ESY__NPM_ROOT: /usr/local/lib/node_modules/esy
 
   steps:
-  - script: ls /Users/runner
-  - script: ls /Users/Shared
+  - script: ls -lA /Users/runner
+  -script: echo _________________________________________________________________________________________________
+  - script: ls -lA /Users/Shared
   - script: brew update
   - script: brew install libpng ragel
   - script: node --version
