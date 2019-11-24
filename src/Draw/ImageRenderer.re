@@ -27,8 +27,8 @@ let getTexture = (imagePath: string) => {
   | None =>
 
     Log.info("ImageRender", "Loading from path: " ++ imagePath);
-    //let data = Skia.Data.newFromFile(imagePath);
-    let data = Skia.Data.newFromFile(imagePath);
+    //let data = Skia.Data.makeFromFileName(imagePath);
+    let data = Skia.Data.makeFromFileName(imagePath);
     Log.info("ImageRender", "Got data.");
     let img = Skia.Image.makeFromEncoded(data, None);
     Log.info("ImageRender", "Got image.");

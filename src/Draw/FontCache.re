@@ -49,7 +49,7 @@ type fontInfo = (string, int);
 type fontLoaded = Event.t(unit);
 let onFontLoaded: fontLoaded = Event.create();
 
-type t = (Fontkit.fk_face, option(Skia.TypeFace.t));
+type t = (Fontkit.fk_face, option(Skia.Typeface.t));
 
 let _cache: InternalCache.t(t) = InternalCache.create();
 let _loadingCache: InternalCache.t(bool) = InternalCache.create();
@@ -70,7 +70,7 @@ let load: (string, int) => t =
       if (!isLoading) {
         InternalCache.add(_loadingCache, fontName, size, true);
         let success = fk => {
-          let skiaTypeface = Skia.TypeFace.createFromFile(assetPath, 0);
+          let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
           let font = (fk, Some(skiaTypeface));
 
           InternalCache.remove(_loadingCache, fontName, size);

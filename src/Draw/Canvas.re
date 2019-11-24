@@ -125,10 +125,10 @@ let drawText = (~color=Revery_Core.Colors.white, ~x=0., ~y=0., ~fontFamily, ~fon
 
   let { canvas, _ } = v;
   let fill2 = Paint.make();
-  let fontStyle = FontStyle.newFontStyle(500, 20, Upright);
-  //let typeface = TypeFace.createFromNameWithFontStyle("Consolas", fontStyle);
+  let fontStyle = FontStyle.make(500, 20, Upright);
+  //let typeface = Typeface.makeFromName("Consolas", fontStyle);
   Paint.setColor(fill2, Revery_Core.Color.toSkia(color));
-  Paint.setTypeFace(fill2, typeface);
+  Paint.setTypeface(fill2, typeface);
   Paint.setLcdRenderText(fill2, true);
   Paint.setAntiAlias(fill2, true);
   Paint.setTextSize(fill2, fontSize);
@@ -146,12 +146,12 @@ let test_draw = (v: t) => {
   let rect = Rect.makeLtrb(20., 100., 110., 120.);
   Canvas.drawRect(canvas, rect, fill);
 
-  let fontStyle = FontStyle.newFontStyle(500, 20, Upright);
-  let typeface = TypeFace.createFromNameWithFontStyle("Consolas", fontStyle);
+  let fontStyle = FontStyle.make(500, 20, Upright);
+  let typeface = Typeface.makeFromName("Consolas", fontStyle);
 
   let fill2 = Paint.make();
   Paint.setColor(fill2, Color.makeArgb(0xFF, 0xFF, 0xFF, 0xFF));
-  Paint.setTypeFace(fill2, typeface);
+  Paint.setTypeface(fill2, typeface);
   Paint.setLcdRenderText(fill2, true);
   Paint.setAntiAlias(fill2, true);
   Paint.setTextSize(fill2, 25.);
