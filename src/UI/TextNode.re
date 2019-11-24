@@ -26,8 +26,11 @@ class textNode (text: string) = {
 
     let ascentPx =
       Text.getAscent(~fontFamily, ~fontSize, ());
+    let descentPx =
+      Text.getDescent(~fontFamily, ~fontSize, ());
     let lineHeightPx =
       lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
+    let leadingPx = lineHeightPx -. ascentPx -. descentPx;
 
     /* when style.width & style.height are defined, Layout doesn't call the measure function */
     if (!_isMeasured) {
@@ -43,7 +46,7 @@ class textNode (text: string) = {
     let dimensions = _this#measurements();
     Canvas.translate(canvas, float_of_int(dimensions.left), float_of_int(dimensions.top));
     List.iteri(
-      (lineNum, line) => {
+      (lineIndex, line) => {
         /*Text.drawString(
           ~fontFamily,
           ~fontSize,
@@ -53,13 +56,13 @@ class textNode (text: string) = {
           ~opacity,
           ~transform=_this#getWorldTransform(),
           ~x=0.,
-          ~y=lineHeightPx *. float_of_int(lineNum),
+          ~y=lineHeightPx *. float_of_int(lineIndex),
           line,
         )*/
 
-          let y = (lineHeightPx *. float_of_int(lineNum)) -. ascentPx;
+          let baselineY = leadingPx /. 2. +. ascentPx +. lineHeightPx *. float_of_int(lineIndex);
           // print_endline ("Drawing text: " ++ line ++ " - y: " ++ string_of_float(y));
-          Canvas.drawText(~color, ~x=0., ~y, ~fontFamily, ~fontSize=float_of_int(fontSize), line, canvas);
+          Canvas.drawText(~color, ~x=0., ~y=baselineY, ~fontFamily, ~fontSize=float_of_int(fontSize), line, canvas);
         }
         ,
       _lines^,
