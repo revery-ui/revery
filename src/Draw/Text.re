@@ -24,10 +24,25 @@ let _getScaledFontSize = fontSize => {
   );
 };
 
-let getLineHeight = (~fontFamily, ~fontSize, ~lineHeight, ()) => {
+let _getFontMetrics = (~fontFamily, ~fontSize) => {
   let (font, _) = FontCache.load(fontFamily, fontSize);
   let metrics = FontRenderer.getNormalizedMetrics(font);
-  lineHeight *. metrics.height;
+  metrics;
+};
+
+let getLineHeight = (~fontFamily, ~fontSize, ()) => {
+  let metrics = _getFontMetrics(~fontFamily, ~fontSize);
+  metrics.height;
+};
+
+let getAscent = (~fontFamily, ~fontSize, ()) => {
+  let metrics = _getFontMetrics(~fontFamily, ~fontSize);
+  metrics.ascent;
+};
+
+let getDescent = (~fontFamily, ~fontSize, ()) => {
+  let metrics = _getFontMetrics(~fontFamily, ~fontSize);
+  metrics.descent;
 };
 
 let measure = (~fontFamily, ~fontSize, text) => {

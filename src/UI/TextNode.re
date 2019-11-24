@@ -24,8 +24,10 @@ class textNode (text: string) = {
     let {color, backgroundColor, fontFamily, fontSize, lineHeight, _} = style;
     let opacity = parentContext.opacity *. style.opacity;
 
+    let ascentPx =
+      Text.getAscent(~fontFamily, ~fontSize, ());
     let lineHeightPx =
-      Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
+      lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
 
     /* when style.width & style.height are defined, Layout doesn't call the measure function */
     if (!_isMeasured) {
@@ -55,9 +57,8 @@ class textNode (text: string) = {
           line,
         )*/
 
-          // TODONOW: How do we calculate the baseline for Skia, instead of this hard-coded 0.8 constant?
-          let y = lineHeightPx *. (float_of_int(lineNum));
-          //print_endline ("Drawing text: " ++ line ++ " - y: " ++ string_of_float(y));
+          let y = (lineHeightPx *. float_of_int(lineNum)) -. ascentPx;
+          // print_endline ("Drawing text: " ++ line ++ " - y: " ++ string_of_float(y));
           Canvas.drawText(~color, ~x=0., ~y, ~fontFamily, ~fontSize=float_of_int(fontSize), line, canvas);
         }
         ,
@@ -104,7 +105,7 @@ class textNode (text: string) = {
     _lines := [truncated];
 
     let lineHeightPx =
-      Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
+      lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
 
     {width, height: int_of_float(lineHeightPx)};
   };
@@ -134,7 +135,7 @@ class textNode (text: string) = {
   pub handleTextWrapping = (width, style) => {
     let {textWrap, fontFamily, fontSize, lineHeight, _}: Style.t = style;
     let lineHeightPx =
-      Text.getLineHeight(~fontFamily, ~fontSize, ~lineHeight, ());
+      lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
 
     switch (textWrap) {
     | WhitespaceWrap =>
