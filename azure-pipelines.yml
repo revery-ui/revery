@@ -36,7 +36,7 @@ jobs:
   variables:
     STAGING_DIRECTORY: /Users/runner/STAGING
     STAGING_DIRECTORY_UNIX: /Users/runner/STAGING
-    ESY__CACHE_INSTALL_PATH: /Users/runner/.esy/3____________________________________________________________________/i
+    ESY__CACHE_INSTALL_PATH: /Users/runner/.esy/3__________________________________________________________________/i
     ESY__CACHE_SOURCE_TARBALL_PATH: /Users/runner/.esy/source/i
     # ESY__NPM_ROOT: /usr/local/lib/node_modules/esy
 
@@ -49,7 +49,7 @@ jobs:
   - script: node --version
   # - template: .ci/restore-build-cache.yml
   - template: .ci/esy-check-hygiene.yml
-  - script: ls -lA /Users/runner
+  - script: ls -lA /Users/runner/.esy
   - script: ls -lA /Users/runner/runners
   - script: echo _________________________________________________________________________________________________
   - script: ls -lA /Users/Shared
