@@ -63,6 +63,6 @@ CAMLprim value revery_alertOpenFiles(value vStartDirectory, value vFileTypes, va
   char** fileList = revery_open_files_cocoa(startDirectory, NULL, title);
 #endif
 
-  return Val_unit;
+  CAMLreturn(Val_unit);
 }
 }
