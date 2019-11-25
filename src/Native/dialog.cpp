@@ -5,6 +5,8 @@
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
 
+
+
 #ifdef WIN32
 #include "ReveryWin32.h"
 #elif __APPLE__
@@ -12,6 +14,9 @@
 #else
 #include "ReveryGtk.h"
 #endif
+
+#define Val_none Val_int(0)
+#define Some_val(v) Field(v,0)
 
 extern "C" {
 CAMLprim value revery_alertSupported() {
@@ -40,6 +45,24 @@ CAMLprim value revery_alert(value vWindow, value vMessage) {
 #else
   printf("WARNING - Not implemented: alert");
 #endif
+  return Val_unit;
+}
+
+CAMLprim value revery_alertOpenFiles(value vStartDirectory, value vFileTypes, value vTitle) {
+  CAMLparam3(vStartDirectory, vFileTypes, vTitle);
+
+  char *startDirectory = NULL;
+
+  char *title = String_val(vTitle);
+
+  if (vStartDirectory != Val_none) {
+    startDirectory = String_val(Some_val(vStartDirectory));
+  }
+
+#ifdef __APPLE__
+  char** fileList = revery_open_files_cocoa(startDirectory, NULL, title);
+#endif
+
   return Val_unit;
 }
 }

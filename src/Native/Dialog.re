@@ -1,5 +1,6 @@
-//open Reglfw.Glfw;
-
 [@noalloc] external alertSupported: unit => bool = "revery_alertSupported";
 
-// [@noalloc] external alert: (NativeWindow.t, string) => unit = "revery_alert";
+[@noalloc]
+external openFiles:
+  (~startDirectory: string=?, ~fileTypes: list(string)=?, string) => unit =
+  "revery_alertOpenFiles";

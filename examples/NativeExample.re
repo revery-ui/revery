@@ -2,11 +2,11 @@ open Revery.UI;
 open Revery.UI.Components;
 open Revery.Platform;
 
+open Revery.Native;
+
 module NativeExamples = {
   let make = (~window, ()) => {
-    let increment = () => {
-      Dialog.alert(window, "Hello, world");
-    };
+    let increment = () => Revery.Native.Dialog.openFiles("Hello, world");
 
     let containerStyle =
       Style.[

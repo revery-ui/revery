@@ -70,7 +70,11 @@ let state: state = {
       render: _ => Stopwatch.render(),
       source: "Stopwatch.re",
     },
-    {name: "Native", render: w => Native.render(w), source: "Native.re"},
+    {
+      name: "Native",
+      render: w => NativeExample.render(w),
+      source: "NativeExample.re",
+    },
     {
       name: "Input",
       render: _ => InputExample.render(),
@@ -194,15 +198,17 @@ module ExampleHost = {
       <ExampleButton
         isActive
         name={x.name}
-        onClick={_ => {
-          Window.setTitle(win, "Revery Example - " ++ x.name);
+        onClick={
+          _ => {
+            Window.setTitle(win, "Revery Example - " ++ x.name);
 
-          let sourceFile = getSourceForSample(state, x.name);
-          prerr_endline("SOURCE FILE: " ++ sourceFile);
-          notifyExampleSwitched(sourceFile);
-          dispatch(SelectExample(x.name));
-          ();
-        }}
+            let sourceFile = getSourceForSample(state, x.name);
+            prerr_endline("SOURCE FILE: " ++ sourceFile);
+            notifyExampleSwitched(sourceFile);
+            dispatch(SelectExample(x.name));
+            ();
+          }
+        }
       />;
     };
 
