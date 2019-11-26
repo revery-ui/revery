@@ -4,7 +4,7 @@
 #include <caml/callback.h>
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
-
+#include <string.h>
 
 
 #ifdef WIN32
@@ -16,6 +16,14 @@
 #endif
 
 #define Val_none Val_int(0)
+static value Val_some(value v) {
+  CAMLparam1(v);
+  CAMLlocal1(some);
+  some = caml_alloc(1, 0);
+  Store_field(some, 0, v);
+  CAMLreturn(some);
+}
+
 #define Some_val(v) Field(v,0)
 
 extern "C" {
@@ -58,11 +66,37 @@ CAMLprim value revery_alertOpenFiles(value vStartDirectory, value vFileTypes, va
   if (vStartDirectory != Val_none) {
     startDirectory = String_val(Some_val(vStartDirectory));
   }
-
+  char** fileList;
 #ifdef __APPLE__
-  char** fileList = revery_open_files_cocoa(startDirectory, NULL, title);
+  fileList = revery_open_files_cocoa(startDirectory, NULL, title);
 #endif
 
-  CAMLreturn(Val_unit);
+  if (fileList) {
+    CAMLlocal1(camlArr);
+
+    int len = sizeof(fileList) / sizeof(char*);
+
+    camlArr = caml_alloc(len, 0);
+
+
+    for (int i = 0; i < len; i++) {
+      int strl = strlen(fileList[i]);
+      char str[len + 1];
+      for (int j = 0; j < strl; j++) {
+        str[j] = fileList[i][j];
+      }
+      str[strl] = '\0';
+
+      for (int j = 0; j <= strl; j++) {
+        printf("%c\n", str[j]);
+      }
+
+      Store_field(camlArr, i, caml_copy_string(str));
+    }
+
+    CAMLreturn(Val_some(camlArr));
+  } else {
+    CAMLreturn(Val_none);
+  }
 }
 }

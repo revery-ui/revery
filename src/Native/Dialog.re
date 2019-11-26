@@ -2,5 +2,6 @@
 
 [@noalloc]
 external openFiles:
-  (~startDirectory: string=?, ~fileTypes: list(string)=?, string) => unit =
+  (~startDirectory: string=?, ~fileTypes: list(string)=?, string) =>
+  option(array(string)) =
   "revery_alertOpenFiles";

@@ -1,3 +1,4 @@
+open Revery;
 open Revery.UI;
 open Revery.UI.Components;
 open Revery.Platform;
@@ -5,8 +6,27 @@ open Revery.Platform;
 open Revery.Native;
 
 module NativeExamples = {
-  let make = (~window, ()) => {
-    let increment = () => Revery.Native.Dialog.openFiles("Hello, world");
+  let%component make = () => {
+    let%hook (fileListOpt, setFileListOpt) = Hooks.state(None);
+
+    let openFile = () => {
+      let o = Revery.Native.Dialog.openFiles("Hello, world");
+      switch (o) {
+      | Some(a) => Array.iter(x => Console.log("" ++ x), a)
+      | None => ()
+      };
+      setFileListOpt(_ => o);
+    };
+
+    let renderFilePath = (path: string) =>
+      <Text
+        style=Style.[
+          color(Colors.white),
+          fontFamily("Roboto-Regular.ttf"),
+          fontSize(12),
+        ]
+        text=path
+      />;
 
     let containerStyle =
       Style.[
@@ -20,9 +40,19 @@ module NativeExamples = {
       ];
 
     <View style=containerStyle>
-      <Button title="Alert" onClick=increment />
+      <Button title="Open File" onClick=openFile />
+      {
+        switch (fileListOpt) {
+        | Some(fileList) =>
+          fileList
+          |> Array.map(renderFilePath)
+          |> Array.to_list
+          |> React.listToElement
+        | None => <View />
+        }
+      }
     </View>;
   };
 };
 
-let render = window => <NativeExamples window />;
+let render = window => <NativeExamples />;
