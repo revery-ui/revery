@@ -72,7 +72,7 @@ CAMLprim value revery_alertOpenFiles(value vStartDirectory, value vFileTypes, va
 #endif
 
   if (fileList) {
-    CAMLlocal1(camlArr);
+    CAMLlocal2(camlArr, mlData);
 
     int len = sizeof(fileList) / sizeof(char*);
 
@@ -81,17 +81,12 @@ CAMLprim value revery_alertOpenFiles(value vStartDirectory, value vFileTypes, va
 
     for (int i = 0; i < len; i++) {
       int strl = strlen(fileList[i]);
-      char str[len + 1];
-      for (int j = 0; j < strl; j++) {
-        str[j] = fileList[i][j];
-      }
-      str[strl] = '\0';
 
-      for (int j = 0; j <= strl; j++) {
-        printf("%c\n", str[j]);
-      }
+      mlData = caml_alloc_string(strl);
 
-      Store_field(camlArr, i, caml_copy_string(str));
+      memcpy(String_val(mlData), fileList[i], strl);
+
+      Store_field(camlArr, i, mlData);
     }
 
     CAMLreturn(Val_some(camlArr));

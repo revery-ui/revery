@@ -42,7 +42,7 @@ const char** revery_open_files_cocoa(const char *startDir, char *fileTypes[], co
         int size = [urls count];
         const char *ret[size];
         for (int i = 0; i < size; i++) {
-            NSString *tmp = [[urls objectAtIndex:i] absoluteString];
+            NSString *tmp = [[urls objectAtIndex:i] path];
             ret[i] = [tmp UTF8String];
         }
         return ret;

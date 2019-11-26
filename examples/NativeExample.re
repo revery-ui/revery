@@ -12,7 +12,16 @@ module NativeExamples = {
     let openFile = () => {
       let o = Revery.Native.Dialog.openFiles("Hello, world");
       switch (o) {
-      | Some(a) => Array.iter(x => Console.log("" ++ x), a)
+      | Some(a) =>
+        Array.iter(
+          x => {
+            Console.log("WORKS:");
+            Console.log(x);
+            Console.log("CRASHES:");
+            Console.log("" ++ x);
+          },
+          a,
+        )
       | None => ()
       };
       setFileListOpt(_ => o);
