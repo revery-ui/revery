@@ -388,9 +388,11 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   log("Setting window context");
   let _ = Sdl2.Gl.setup(w);
-  log("GL setup.");
+  log("GL setup. Checking GL version...");
   let version = Sdl2.Gl.glGetString(Sdl2.Gl.Version);
+  log("Checking GL vendor...");
   let vendor = Sdl2.Gl.glGetString(Sdl2.Gl.Vendor);
+  log("Checking GL shading language version...");
   let shadingLanguageVersion =
     Sdl2.Gl.glGetString(Sdl2.Gl.ShadingLanguageVersion);
   log(
