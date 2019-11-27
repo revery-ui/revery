@@ -10,24 +10,17 @@ module NativeExamples = {
     let%hook (fileListOpt, setFileListOpt) = Hooks.state(None);
 
     let openFile = () => {
-      let o = Revery.Native.Dialog.openFiles("Hello, world");
-      switch (o) {
-      | Some(a) =>
-        Array.iter(
-          x => {
-            Console.log("WORKS:");
-            Console.log(x);
-            Console.log("CRASHES:");
-            Console.log("" ++ x);
-          },
-          a,
-        )
-      | None => ()
-      };
+      let o =
+        Revery.Native.Dialog.openFiles(
+          ~allowMultipleFiles=true,
+          ~title="Revery Open File Example",
+          (),
+        );
       setFileListOpt(_ => o);
     };
 
-    let renderFilePath = (path: string) =>
+    let renderFilePath = (path: string) => {
+      Console.log(path);
       <Text
         style=Style.[
           color(Colors.white),
@@ -36,6 +29,7 @@ module NativeExamples = {
         ]
         text=path
       />;
+    };
 
     let containerStyle =
       Style.[

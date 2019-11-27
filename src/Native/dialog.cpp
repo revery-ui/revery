@@ -56,38 +56,66 @@ CAMLprim value revery_alert(value vWindow, value vMessage) {
   return Val_unit;
 }
 
-CAMLprim value revery_alertOpenFiles(value vStartDirectory, value vFileTypes, value vTitle) {
-  CAMLparam3(vStartDirectory, vFileTypes, vTitle);
+CAMLprim value revery_alertOpenFiles(value vStartDirectory, value vFileTypes, value vAllowMultipleFiles, value vTitle, value vUnit) {
+  CAMLparam5(vStartDirectory, vFileTypes, vAllowMultipleFiles, vTitle, vUnit);
 
   char *startDirectory = NULL;
 
-  char *title = String_val(vTitle);
+  // Initialize an array of filetypes
+  char **fileTypes = NULL;
+  int fileTypesSize = 0;
+
+  // title from OCaml -> C
+  char *title = NULL;
+  if (vTitle != Val_none)
+    title = String_val(Some_val(vTitle));
+
+  int allowMultipleFiles = 0;
+
+  // allowMultipleFiles from OCaml -> C
+  if (vAllowMultipleFiles != Val_none) {
+    allowMultipleFiles = Bool_val(Some_val(vAllowMultipleFiles));
+  }
+
+
+  if (vFileTypes != Val_none) {
+    CAMLlocal1(camlArr);
+    camlArr = Some_val(vFileTypes);
+    fileTypesSize = Wosize_val(camlArr);
+
+    // Allocate space for an array
+    fileTypes = (char**) malloc(sizeof(char*) * fileTypesSize);
+
+    // Populate the array with the CAML array;
+    for (int i = 0; i < fileTypesSize; i++) {
+      char* str = String_val(Field(camlArr, i));
+      fileTypes[i] = str;
+    }
+  }
 
   if (vStartDirectory != Val_none) {
     startDirectory = String_val(Some_val(vStartDirectory));
   }
+
+
   char** fileList;
+
 #ifdef __APPLE__
-  fileList = revery_open_files_cocoa(startDirectory, NULL, title);
+  fileList = revery_open_files_cocoa(startDirectory, fileTypes, fileTypesSize, allowMultipleFiles, title);
 #endif
 
   if (fileList) {
-    CAMLlocal2(camlArr, mlData);
+    CAMLlocal1(camlArr);
 
-    int len = sizeof(fileList) / sizeof(char*);
-
+    int len = -1;
+    while (fileList[++len] != NULL) {}
     camlArr = caml_alloc(len, 0);
 
-
     for (int i = 0; i < len; i++) {
-      int strl = strlen(fileList[i]);
-
-      mlData = caml_alloc_string(strl);
-
-      memcpy(String_val(mlData), fileList[i], strl);
-
-      Store_field(camlArr, i, mlData);
+      Store_field(camlArr, i, caml_copy_string(fileList[i]));
     }
+
+    free(fileList);
 
     CAMLreturn(Val_some(camlArr));
   } else {

@@ -15,38 +15,60 @@ void revery_alert_cocoa(void *pWin, const char *szMessage) {
     [alert runModal];
 }
 
-const char** revery_open_files_cocoa(const char *startDir, char *fileTypes[], const char *title) {
+const char** revery_open_files_cocoa(const char *startDir, char *fileTypes[], int fileTypesSize, int allowMultipleFiles, const char *title) {
+    /* Creates an empty NSArray of filetypes (NSString's)
+        If [fileTypes] is not null, copy the C-strings to NSString's to the NSArray
+    */
     NSArray *nsFileTypes = NULL;
     if (fileTypes) {
-        int count = 0;
-        while (fileTypes[count] != NULL) count++;
-        NSMutableArray *tmpArr = [[NSMutableArray alloc] initWithCapacity: count];
-        for (int i = 0; i < count; i++) {
-            [tmpArr addObject: [NSString stringWithCString: fileTypes[i] encoding: NSUTF8StringEncoding]];
+        NSMutableArray *tmpArr = [[NSMutableArray alloc] initWithCapacity: fileTypesSize];
+        for (int i = 0; i < fileTypesSize; i++) {
+            // Convert char* -> NSString
+            NSString *str = [NSString stringWithCString: fileTypes[i] encoding: NSUTF8StringEncoding];
+            [tmpArr addObject: str];
         }
         nsFileTypes = tmpArr;
     }
+    // The actual dialog itself
     NSOpenPanel *panel = [NSOpenPanel openPanel];
-    [panel setAllowsMultipleSelection:false];
-    [panel setFloatingPanel:YES];
+    // We can directly set this because it will either be 0 or 1 (0 default)
+    [panel setAllowsMultipleSelection: allowMultipleFiles];
+
     if (startDir) {
+        // If [startDir] is not NULL, convert it to an NSString...
         NSString *urlString = [NSString stringWithCString: startDir encoding: NSUTF8StringEncoding];
-        NSLog(urlString);
+        // ...and then to an NSURL
         NSURL *url = [NSURL fileURLWithPath: urlString];
         [panel setDirectoryURL:url];
     }
+
+    if (title)
+        [panel setMessage:[NSString stringWithCString: title encoding: NSUTF8StringEncoding]];
+
+    if (nsFileTypes)
+        [panel setAllowedFileTypes: nsFileTypes];
+
+    // Run the actual panel/modal
     NSInteger result = [panel runModal];
 
+    // If a file(s) was selected...
     if (result == NSModalResponseOK) {
+        // ...get the list of URLs
         NSArray *urls = [panel URLs];
+        /* Create a C-array with the size + 1 of the NSArray
+            We NULL terminate it so we can get the size in the main function
+        */
         int size = [urls count];
-        const char *ret[size];
+        const char **ret = malloc((size + 1) * sizeof(char*));
+        // Copy the NSArray to the C-array
         for (int i = 0; i < size; i++) {
             NSString *tmp = [[urls objectAtIndex:i] path];
-            ret[i] = [tmp UTF8String];
+            ret[i] = [tmp cStringUsingEncoding: NSASCIIStringEncoding];
         }
+        ret[size] = NULL;
         return ret;
     } else {
+        // ... else return NULL
         return NULL;
     }
 }
