@@ -70,12 +70,7 @@ CAMLprim value revery_alertOpenFiles(value vStartDirectory, value vFileTypes, va
   if (vTitle != Val_none)
     title = String_val(Some_val(vTitle));
 
-  int allowMultipleFiles = 0;
-
-  // allowMultipleFiles from OCaml -> C
-  if (vAllowMultipleFiles != Val_none) {
-    allowMultipleFiles = Bool_val(Some_val(vAllowMultipleFiles));
-  }
+  int allowMultipleFiles = Bool_val(vAllowMultipleFiles);
 
 
   if (vFileTypes != Val_none) {
