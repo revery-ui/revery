@@ -12,7 +12,7 @@ module Spring = {
       springConstant: float,
     };
 
-    let create = (~damping=12., ~springConstant=180., initialValue) => {
+    let create = (~damping=12., ~springConstant=180., ~initialValue, ()) => {
       initialValue,
       damping,
       springConstant,
@@ -29,10 +29,10 @@ module Spring = {
 
   let create = (position: float) => {position, velocity: 0., acceleration: 0.};
 
-  let tick = (spring: t, options: Options.t, deltaT: float) => {
+  let tick = (target: float, spring: t, options: Options.t, deltaT: float) => {
     let force =
-      Float.abs(spring.position -. options.initialValue) *. options.springConstant;
-    let dir = spring.position > options.initialValue ? (-1.) : 1.;
+      Float.abs(target -. spring.position) *. options.springConstant;
+    let dir = spring.position > target ? (-1.) : 1.;
 
     let acceleration = dir *. force -. options.damping *. spring.velocity;
     let velocity = spring.velocity +. acceleration *. deltaT;
@@ -47,6 +47,7 @@ module Spring = {
 };
 
 type state = {
+  target: float,
   options: Spring.Options.t,
   spring: Spring.t,
   isActive: bool,
@@ -54,7 +55,8 @@ type state = {
 
 let initialState = (springVal, options) => {
   options,
-  spring: Spring.create(springVal),
+  target: springVal,
+  spring: Spring.create(options.initialValue),
   isActive: true,
 };
 
@@ -67,12 +69,12 @@ let springReducer: (action, state) => state =
   (action, state) =>
     switch (action) {
     | Tick(time) when state.isActive =>
-      let spring = Spring.tick(state.spring, state.options, time);
+      let spring = Spring.tick(state.target, state.spring, state.options, time);
       {...state, spring, isActive: Spring.isActive(spring)};
     | Reset(springVal) => {
         ...state,
+        target: springVal,
         isActive: true,
-        spring: Spring.create(springVal),
       }
     | ResetOptions(options) => {...state, isActive: true, options}
     | _ => state
@@ -83,7 +85,14 @@ let spring = (v: float, opts: Spring.Options.t) => {
   let%hook (curr, dispatch) =
     Reducer.reducer(~initialState=initialState(v, opts), springReducer);
 
-  let%hook () = Tick.tick(~tickRate=Time.zero, dt => dispatch(Tick(Time.toSeconds(dt))));
+  let%hook (time, _) = Timer.timer(
+    ~active=Spring.isActive(curr.spring),
+    ~tickRate=Time.zero,
+    ());
+
+  if (curr.isActive) {
+    dispatch(Tick(0.016));
+  };
 
   let%hook () =
     Effect.effect(

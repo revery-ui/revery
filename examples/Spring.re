@@ -9,7 +9,7 @@ module Logo = {
       let%hook (logoOpacity, setOpacity) = Hooks.state(0.5);
 
       let%hook (curr) =
-        Hooks.spring(0.5, Hooks.Spring.Options.create(logoOpacity));
+        Hooks.spring(logoOpacity, Hooks.Spring.Options.create(~initialValue=logoOpacity, ()));
 
       let onMouseDown = _ => setOpacity(_ => 1.0);
 

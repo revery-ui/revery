@@ -3,6 +3,7 @@ open Revery_UI;
 include Effect;
 include Reducer;
 include Ref;
+include Spring;
 include State;
 include Tick;
 
