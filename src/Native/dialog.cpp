@@ -84,7 +84,7 @@ CAMLprim value revery_alertOpenFiles_native(
         fileTypesSize = Wosize_val(camlArr);
 
         // Allocate space for an array
-        fileTypes = (char **)malloc(sizeof(char *) * fileTypesSize);
+        fileTypes = (char **)malloc(sizeof(*fileTypes) * fileTypesSize);
 
         // Populate the array with the CAML array;
         for (int i = 0; i < fileTypesSize; i++) {
