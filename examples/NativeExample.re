@@ -69,16 +69,14 @@ module NativeExamples = {
         />
       </Row>
       <Button title="Open File" onClick=openFile />
-      {
-        switch (fileListOpt) {
-        | Some(fileList) =>
-          fileList
-          |> Array.map(renderFilePath)
-          |> Array.to_list
-          |> React.listToElement
-        | None => <View />
-        }
-      }
+      {switch (fileListOpt) {
+       | Some(fileList) =>
+         fileList
+         |> Array.map(renderFilePath)
+         |> Array.to_list
+         |> React.listToElement
+       | None => <View />
+       }}
     </View>;
   };
 };
