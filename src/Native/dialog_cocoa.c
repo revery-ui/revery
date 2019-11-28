@@ -15,12 +15,10 @@ void revery_alert_cocoa(void *pWin, const char *szMessage) {
     [alert runModal];
 }
 
-const char **revery_open_files_cocoa(const char *startDir, char *fileTypes[],
-                                     int fileTypesSize, int allowMultiple,
-                                     int canChooseFiles,
-                                     int canChooseDirectories,
-                                     const char *buttonText,
-                                     const char *title) {
+const char **revery_open_files_cocoa(
+    const char *startDir, char *fileTypes[], int fileTypesSize,
+    int allowMultiple, int canChooseFiles, int canChooseDirectories,
+    int showHidden, const char *buttonText, const char *title) {
     /* Creates an empty NSArray of filetypes (NSString's)
         If [fileTypes] is not null, copy the C-strings to NSString's to the
        NSArray
@@ -43,6 +41,7 @@ const char **revery_open_files_cocoa(const char *startDir, char *fileTypes[],
     [panel setAllowsMultipleSelection:allowMultiple];
     [panel setCanChooseFiles:canChooseFiles];
     [panel setCanChooseDirectories:canChooseDirectories];
+    [panel setShowsHiddenFiles:showHidden];
 
     if (startDir) {
         // If [startDir] is not NULL, convert it to an NSString...

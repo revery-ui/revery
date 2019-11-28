@@ -8,11 +8,13 @@ module NativeExamples = {
   let%component make = () => {
     let%hook (fileListOpt, setFileListOpt) = Hooks.state(None);
     let%hook (allowMultiple, setAllowMultiple) = Hooks.state(false);
+    let%hook (showHidden, setShowHidden) = Hooks.state(false);
 
     let openFile = () => {
       let o =
         Dialog.openFiles(
           ~allowMultiple,
+          ~showHidden,
           ~title="Revery Open File Example",
           ~buttonText=
             allowMultiple ? "Open file(s) in Revery" : "Open file in Revery",
@@ -20,6 +22,13 @@ module NativeExamples = {
         );
       setFileListOpt(_ => o);
     };
+
+    let optionStyle =
+      Style.[
+        color(Colors.white),
+        fontFamily("Roboto-Regular.ttf"),
+        fontSize(20),
+      ];
 
     let renderFilePath = (path: string) =>
       <Text
@@ -44,29 +53,32 @@ module NativeExamples = {
 
     <View style=containerStyle>
       <Row>
-        <Text
-          style=Style.[
-            color(Colors.white),
-            fontFamily("Roboto-Regular.ttf"),
-            fontSize(20),
-          ]
-          text="Allow Multiple?"
-        />
+        <Text style=optionStyle text="Allow multiple?" />
         <Checkbox
           checked=allowMultiple
           checkedColor=Colors.green
           onChange={() => setAllowMultiple(am => !am)}
         />
       </Row>
+      <Row>
+        <Text style=optionStyle text="Show hidden?" />
+        <Checkbox
+          checked=showHidden
+          checkedColor=Colors.green
+          onChange={() => setShowHidden(sh => !sh)}
+        />
+      </Row>
       <Button title="Open File" onClick=openFile />
-      {switch (fileListOpt) {
-       | Some(fileList) =>
-         fileList
-         |> Array.map(renderFilePath)
-         |> Array.to_list
-         |> React.listToElement
-       | None => <View />
-       }}
+      {
+        switch (fileListOpt) {
+        | Some(fileList) =>
+          fileList
+          |> Array.map(renderFilePath)
+          |> Array.to_list
+          |> React.listToElement
+        | None => <View />
+        }
+      }
     </View>;
   };
 };

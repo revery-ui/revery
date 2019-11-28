@@ -57,8 +57,8 @@ CAMLprim value revery_alert(value vWindow, value vMessage) {
 
 CAMLprim value revery_alertOpenFiles_native(
     value vStartDirectory, value vFileTypes, value vAllowMultiple,
-    value vCanChooseFiles, value vCanChooseDirectories, value vButtonText,
-    value vTitle, value vUnit) {
+    value vCanChooseFiles, value vCanChooseDirectories, value vShowHidden,
+    value vButtonText, value vTitle, value vUnit) {
     CAMLparam5(vStartDirectory, vFileTypes, vAllowMultiple, vCanChooseFiles,
                vCanChooseDirectories);
     CAMLxparam3(vButtonText, vTitle, vUnit);
@@ -77,6 +77,7 @@ CAMLprim value revery_alertOpenFiles_native(
     int allowMultiple = Bool_val(vAllowMultiple);
     int canChooseFiles = Bool_val(vCanChooseFiles);
     int canChooseDirectories = Bool_val(vCanChooseDirectories);
+    int showHidden = Bool_val(vShowHidden);
 
     if (vFileTypes != Val_none) {
         CAMLlocal1(camlArr);
@@ -104,9 +105,9 @@ CAMLprim value revery_alertOpenFiles_native(
     char **fileList;
 
 #ifdef __APPLE__
-    fileList = revery_open_files_cocoa(startDirectory, fileTypes, fileTypesSize,
-                                       allowMultiple, canChooseFiles,
-                                       canChooseDirectories, buttonText, title);
+    fileList = revery_open_files_cocoa(
+        startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
+        canChooseDirectories, showHidden, buttonText, title);
 #endif
 
     if (fileList) {
@@ -131,6 +132,7 @@ CAMLprim value revery_alertOpenFiles_native(
 
 CAMLprim value revery_alertOpenFiles_bytcode(value *argv, int argn) {
     return revery_alertOpenFiles_native(argv[0], argv[1], argv[2], argv[3],
-                                        argv[4], argv[5], argv[6], argv[7]);
+                                        argv[4], argv[5], argv[6], argv[7],
+                                        argv[8]);
 }
 }

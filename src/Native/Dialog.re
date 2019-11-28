@@ -7,6 +7,7 @@ external _openFiles:
     ~allowMultiple: bool,
     ~canChooseFiles: bool,
     ~canChooseDirectories: bool,
+    ~showHidden: bool,
     ~buttonText: option(string),
     ~title: option(string),
     unit
@@ -21,6 +22,7 @@ let openFiles =
       ~allowMultiple=false,
       ~canChooseFiles=true,
       ~canChooseDirectories=false,
+      ~showHidden=false,
       ~buttonText=?,
       ~title=?,
       (),
@@ -31,6 +33,7 @@ let openFiles =
     ~allowMultiple,
     ~canChooseFiles,
     ~canChooseDirectories,
+    ~showHidden,
     ~buttonText,
     ~title,
     (),
