@@ -27,6 +27,7 @@ module Container = Container;
 module React = React;
 module Focus = Focus;
 module Dimensions = Dimensions;
+module Offset = Offset;
 
 let start = Ui.start;
 let getActiveWindow = Ui.getActiveWindow;

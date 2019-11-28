@@ -1,11 +1,12 @@
 type t = float;
 
 let zero = 0.;
-let seconds = t => t;
-let milliseconds = t => t /. 1000.;
+let seconds = t => float(t);
+let milliseconds = t => float(t) /. 1000.;
+let ms = milliseconds;
 
-let ofSeconds = seconds;
-let toSeconds = t => t;
+let ofFloatSeconds = t => t;
+let toFloatSeconds = t => t;
 
 let (+) = (+.);
 let (-) = (-.);
@@ -18,6 +19,6 @@ let max = Float.max;
 let min = Float.min;
 let (mod) = mod_float;
 
-let show = t => string_of_float(t) ++ "s";
+let toString = t => string_of_float(t) ++ "s";
 
 let now = Unix.gettimeofday;

@@ -49,7 +49,7 @@ type dimensions = {
   height: int,
 };
 
-let measure = (~window=None, ~fontFamily, ~fontSize, text) => {
+let measure = (~window=?, ~fontFamily, ~fontSize, text) => {
   let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
   let font = FontCache.load(fontFamily, scaledFontSize);
   let multiplier =
@@ -65,6 +65,26 @@ let measure = (~window=None, ~fontFamily, ~fontSize, text) => {
       int_of_float(float_of_int(dimensions.height) /. multiplier +. 0.5),
   };
   ret;
+};
+
+let indexNearestOffset = (~measure, text, offset) => {
+  let length = String.length(text);
+
+  let rec loop = (~last, i) =>
+    if (i > length) {
+      i - 1;
+    } else {
+      let width = measure(String.sub(text, 0, i));
+
+      if (width > offset) {
+        let isCurrentNearest = width - offset < offset - last;
+        isCurrentNearest ? i : i - 1;
+      } else {
+        loop(~last=width, i + 1);
+      };
+    };
+
+  loop(~last=0, 1);
 };
 
 let identityMatrix = Mat4.create();
@@ -90,7 +110,7 @@ let _startShader =
     CompiledShader.setUniform1f(shader.uniformGamma, gamma);
     CompiledShader.setUniform1f(shader.uniformOpacity, opacity);
 
-    (shader.compiledShader, shader.uniformWorld);
+    (shader.compiledShader, shader.uniformWorld, shader.uniformLocal);
   } else {
     let shader = Assets.fontDefaultShader();
     let colorMultipliedAlpha = Color.multiplyAlpha(opacity, color);
@@ -101,7 +121,7 @@ let _startShader =
       Color.toVec4(colorMultipliedAlpha),
     );
 
-    (shader.compiledShader, shader.uniformWorld);
+    (shader.compiledShader, shader.uniformWorld, shader.uniformLocal);
   };
 
 let drawString =
@@ -123,7 +143,7 @@ let drawString =
   let projection = ctx.projection;
   let quad = Assets.quad();
 
-  let (shader, uniformWorld) =
+  let (shader, uniformWorld, uniformLocal) =
     _startShader(~color, ~backgroundColor, ~opacity, ~gamma, ~projection, ());
 
   let font =
@@ -139,8 +159,6 @@ let drawString =
   let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
   ();
 
-  let outerTransform = Mat4.create();
-  Mat4.fromTranslation(outerTransform, Vec3.create(0.0, baseline, 0.0));
   let render = (s: Fontkit.fk_shape, x: float, y: float) => {
     let glyph = FontRenderer.getGlyph(font, s.glyphId);
 
@@ -159,27 +177,18 @@ let drawString =
     glBindTexture(GL_TEXTURE_2D, texture);
     /* TODO: Bind texture */
 
-    let glyphTransform = Mat4.create();
-    Mat4.fromTranslation(
-      glyphTransform,
-      Vec3.create(
+    let xform =
+      Mat4.createFromTranslationAndScale(
+        width,
+        height,
+        1.0,
         x +. bearingX +. width /. 2.,
-        y +. height *. 0.5 -. bearingY,
-        0.0,
-      ),
-    );
+        baseline +. y +. height *. 0.5 -. bearingY,
+        0.,
+      );
 
-    let scaleTransform = Mat4.create();
-    Mat4.fromScaling(scaleTransform, Vec3.create(width, height, 1.0));
-
-    let local = Mat4.create();
-    Mat4.multiply(local, glyphTransform, scaleTransform);
-
-    let xform = Mat4.create();
-    Mat4.multiply(xform, outerTransform, local);
-    Mat4.multiply(xform, transform, xform);
-
-    CompiledShader.setUniformMatrix4fv(uniformWorld, xform);
+    CompiledShader.setUniformMatrix4fv(uniformLocal, xform);
+    CompiledShader.setUniformMatrix4fv(uniformWorld, transform);
 
     Geometry.draw(quad, shader);
 

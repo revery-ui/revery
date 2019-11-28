@@ -45,7 +45,7 @@ module FontComponent = {
       );
 
     switch (resolvedFont) {
-    | Some(v) => print_endline("New font: " ++ Font.show(v))
+    | Some(v) => print_endline("New font: " ++ Font.toString(v))
     | None => ()
     };
 
@@ -71,7 +71,7 @@ module FontComponent = {
           <Row>
             <Input
               placeholder="Type font name"
-              onChange={({value, _}) => dispatch(SetFamily(value))}
+              onChange={(value, _) => dispatch(SetFamily(value))}
               value={state.family}
             />
           </Row>
