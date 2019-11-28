@@ -4,13 +4,34 @@ external _openFiles:
   (
     ~startDirectory: option(string),
     ~fileTypes: option(array(string)),
-    ~allowMultipleFiles: bool,
+    ~allowMultiple: bool,
+    ~canChooseFiles: bool,
+    ~canChooseDirectories: bool,
+    ~buttonText: option(string),
     ~title: option(string),
     unit
   ) =>
   option(array(string)) =
-  "revery_alertOpenFiles";
+  "revery_alertOpenFiles_bytecode" "revery_alertOpenFiles_native";
 
 let openFiles =
-    (~startDirectory=?, ~fileTypes=?, ~allowMultipleFiles=false, ~title=?, ()) =>
-  _openFiles(~startDirectory, ~fileTypes, ~allowMultipleFiles, ~title, ());
+    (
+      ~startDirectory=?,
+      ~fileTypes=?,
+      ~allowMultiple=false,
+      ~canChooseFiles=true,
+      ~canChooseDirectories=false,
+      ~buttonText=?,
+      ~title=?,
+      (),
+    ) =>
+  _openFiles(
+    ~startDirectory,
+    ~fileTypes,
+    ~allowMultiple,
+    ~canChooseFiles,
+    ~canChooseDirectories,
+    ~buttonText,
+    ~title,
+    (),
+  );
