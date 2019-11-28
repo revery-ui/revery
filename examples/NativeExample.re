@@ -1,7 +1,6 @@
 open Revery;
 open Revery.UI;
 open Revery.UI.Components;
-open Revery.Platform;
 
 open Revery.Native;
 
@@ -12,7 +11,7 @@ module NativeExamples = {
 
     let openFile = () => {
       let o =
-        Revery.Native.Dialog.openFiles(
+        Dialog.openFiles(
           ~allowMultiple,
           ~title="Revery Open File Example",
           ~buttonText=

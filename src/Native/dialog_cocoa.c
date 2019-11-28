@@ -69,6 +69,9 @@ const char **revery_open_files_cocoa(const char *startDir, char *fileTypes[],
     // Run the actual panel/modal
     NSInteger result = [panel runModal];
 
+    [panel release];
+    [nsFileTypes release];
+
     // If a file(s) was selected...
     if (result == NSModalResponseOK) {
         // ...get the list of URLs
