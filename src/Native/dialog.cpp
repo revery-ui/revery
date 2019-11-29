@@ -108,6 +108,10 @@ CAMLprim value revery_alertOpenFiles_native(
     fileList = revery_open_files_cocoa(
         startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
         canChooseDirectories, showHidden, buttonText, title);
+#elif __linux__
+    fileList = revery_open_files_gtk(
+        startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
+        canChooseDirectories, showHidden, buttonText, title);
 #endif
 
     if (fileList) {
