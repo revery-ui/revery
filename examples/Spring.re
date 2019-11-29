@@ -62,6 +62,8 @@ let logo = {
 
       let imageWidth = 512 |> float_of_int |> (s => s *. curr |> int_of_float);
 
+      let float_to_string = v => v |> int_of_float |> string_of_int;
+
       (
         hooks,
         <Center>
@@ -77,11 +79,12 @@ let logo = {
               <Slider
                 onValueChanged=setDamping
                 value=damping
+                minimumValue=1.
                 maximumValue=100.
               />
               <Text
                 style=textStyle
-                text={"Value: " ++ string_of_float(damping)}
+                text={"Value: " ++ float_to_string(damping)}
               />
             </View>
             <View style=sliderContainerStyle>
@@ -89,11 +92,12 @@ let logo = {
               <Slider
                 onValueChanged=setStiffness
                 value=stiffness
-                maximumValue=300.
+                minimumValue=1.
+                maximumValue=500.
               />
               <Text
                 style=textStyle
-                text={"Stiffness: " ++ string_of_float(stiffness)}
+                text={"Stiffness: " ++ float_to_string(stiffness)}
               />
             </View>
           </View>
