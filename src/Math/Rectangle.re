@@ -31,5 +31,3 @@ let translate = (~x=0., ~y=0., v: t) => {
 
   create(~x, ~y, ~width, ~height, ());
 };
-
-let show = (v: t) => BoundingBox2d.show(v);

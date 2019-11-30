@@ -1,23 +1,15 @@
-open Rejest;
-
 open Revery_Core;
 
-let validateColor = (actual: Color.t, expected: Color.t) => {
-  expect(actual.r).toEqual(expected.r);
-  expect(actual.g).toEqual(expected.g);
-  expect(actual.b).toEqual(expected.b);
-  expect(actual.a).toEqual(expected.a);
-};
+open TestFramework;
 
-test("Environment", () =>
-  test("executingDirectory", () =>
-    test("validate we can load a file adjacent to the executable", () =>
-      expect(
+describe("Environment", ({test, _}) =>
+  test("executingDirectory", _ =>
+    test(
+      "validate we can load a file adjacent to the executable", ({expect, _}) => {
+      expect.bool(
         Sys.file_exists(Environment.executingDirectory ++ "test-asset.txt"),
       ).
-        toEqual(
-        true,
-      )
-    )
+        toBeTrue()
+    })
   )
 );

@@ -12,6 +12,14 @@ module ClipContainer = ClipContainer;
 module Column = Column;
 module Container = Container;
 module Dropdown = Dropdown;
+module DropdownInt =
+  Dropdown.Make({
+    type t = int;
+  });
+module DropdownString =
+  Dropdown.Make({
+    type t = string;
+  });
 module ExpandContainer = ExpandContainer;
 module Input = Input;
 module Positioned = Positioned;
@@ -20,4 +28,13 @@ module ScrollView = ScrollView;
 module Slider = Slider;
 module Stack = Stack;
 module RadioButtons = RadioButtons;
+module RadioButtonsInt =
+  RadioButtons.Make({
+    type t = int;
+  });
+module RadioButtonsString =
+  RadioButtons.Make({
+    type t = string;
+  });
+module Ticker = Ticker;
 module Tree = Tree;

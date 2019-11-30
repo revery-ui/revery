@@ -1,9 +1,11 @@
 {
   "name": "revery",
-  "version": "0.26.0",
+  "version": "0.29.0",
   "description": "App toolkit built with Reason",
   "license": "MIT",
-  "bugs": { "url": "https://github.com/bryphe/revery/issues" },
+  "bugs": {
+    "url": "https://github.com/bryphe/revery/issues"
+  },
   "scripts": {
     "build": "esy b",
     "build:release": "esy b dune build --profile=release --root . -j4",
@@ -16,43 +18,47 @@
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
-    "build": [ "dune build -p Revery -j4" ],
+    "build": [
+      "dune build -p Revery -j4"
+    ],
+    "buildEnv": {
+      "CC": "x86_64-w64-mingw32-gcc"
+    },
     "install": [
       "esy-installer Revery.install",
-      "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll $cur__bin': 'echo Build complete'}\""
+      "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': ':'}\""
     ]
   },
   "dependencies": {
     "@esy-ocaml/reason": "^3.4.0",
-    "reason-fontkit": "^2.7.0",
-    "reason-gl-matrix": "^0.9.9305",
-    "rebez": "*",
+    "reason-fontkit": "^2.8.0",
+    "reason-gl-matrix": "^0.9.9306",
     "@opam/js_of_ocaml": "^3.4.0",
     "@opam/js_of_ocaml-compiler": "^3.4.0",
     "@opam/js_of_ocaml-lwt": "^3.4.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
-    "brisk-reconciler": "^0.0.1",
+    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#0a2e476",
     "flex": "^1.2.2",
+    "@reason-native/rely": "*",
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
-    "rench": "^1.9.0",
     "reason-font-manager": "^2.0.0",
-    "reason-sdl2": "^2.10.3002",
+    "rench": "^1.9.1",
+    "rebez": "github:jchavarri/rebez#03fa3b7",
+    "reason-sdl2": "^2.10.3010",
     "reason-skia": "*"
   },
   "resolutions": {
-    "reason-skia": "link:../reason-skia",
-    "rebez": "github:jchavarri/rebez#46cbc183",
-    "@opam/cmdliner": "1.0.2",
-    "rench": "github:revery-ui/rench#4554280",
-    "pesy": "0.4.1",
-    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#34947ac97f898c8a94b1731df45aea16f8fc7b3c",
     "@esy-ocaml/libffi": "esy-ocaml/libffi#599bc3567ecf839240977b6d9aaf0b80f983b5aa",
-    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def"
+    "@opam/cmdliner": "1.0.2",
+    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
+    "esy-skia": "link:../esy-skia",
+    "reason-skia": "link:../reason-skia",
+    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#34947ac97f898c8a94b1731df45aea16f8fc7b3c"
   },
   "devDependencies": {
-    "ocaml": ">=4.6.0 <4.9.0",
+    "ocaml": ">=4.6.0 <4.8.0",
     "@opam/merlin": "^3.3.2",
     "@opam/dune": "^1.8.0"
   }

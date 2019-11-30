@@ -11,37 +11,60 @@ open Revery_Math;
 
 open Fontkit;
 
-/*
- * Get the size of the bitmap we use for rendering text. This is rarely 1:1
- * with the requested fontSize. For example, in a high DPI that has a 3x pixel
- * ratio, we want to render a 3x size bitmap.
- */
-let _getScaledFontSize = fontSize => {
-  let ctx = RenderPass.getContext();
-
-  int_of_float(
-    float_of_int(fontSize) *. ctx.pixelRatio *. ctx.scaleFactor +. 0.5,
-  );
-};
-
-let _getFontMetrics = (~fontFamily, ~fontSize) => {
+let _getFontMetrics = (~fontFamily, ~fontSize, ()) => {
   let (font, _) = FontCache.load(fontFamily, fontSize);
   let metrics = FontRenderer.getNormalizedMetrics(font);
   metrics;
 };
 
 let getLineHeight = (~fontFamily, ~fontSize, ()) => {
-  let metrics = _getFontMetrics(~fontFamily, ~fontSize);
+  let metrics = _getFontMetrics(~fontFamily, ~fontSize, ());
   metrics.height;
 };
 
 let getAscent = (~fontFamily, ~fontSize, ()) => {
-  let metrics = _getFontMetrics(~fontFamily, ~fontSize);
+  let metrics = _getFontMetrics(~fontFamily, ~fontSize, ());
   metrics.ascent;
+};
+type dimensions = {
+  width: int,
+  height: int,
+};
+
+let measure = (~fontFamily, ~fontSize, text) => {
+  let (font, _) = FontCache.load(fontFamily, fontSize);
+
+  let dimensions = FontRenderer.measure(font, text);
+  let ret: dimensions = {
+    width: int_of_float(float_of_int(dimensions.width) +. 0.5),
+    height:
+      int_of_float(float_of_int(dimensions.height) +. 0.5),
+  };
+  ret;
+};
+
+let indexNearestOffset = (~measure, text, offset) => {
+  let length = String.length(text);
+
+  let rec loop = (~last, i) =>
+    if (i > length) {
+      i - 1;
+    } else {
+      let width = measure(String.sub(text, 0, i));
+
+      if (width > offset) {
+        let isCurrentNearest = width - offset < offset - last;
+        isCurrentNearest ? i : i - 1;
+      } else {
+        loop(~last=width, i + 1);
+      };
+    };
+
+  loop(~last=0, 1);
 };
 
 let getDescent = (~fontFamily, ~fontSize, ()) => {
-  let metrics = _getFontMetrics(~fontFamily, ~fontSize);
+  let metrics = _getFontMetrics(~fontFamily, ~fontSize, ());
   metrics.descent;
 };
 

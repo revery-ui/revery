@@ -26,8 +26,6 @@ let reducer = (action: action, state) => {
   };
 };
 module HoverExample = {
-  let component = React.component("HoverExample");
-
   let initialState = {
     parentBackground: Colors.darkGray,
     childOneBackground: Colors.blanchedAlmond,
@@ -36,97 +34,101 @@ module HoverExample = {
     childFourBackground: Colors.cornflowerBlue,
   };
 
-  let createElement = (~children as _, ()) =>
-    component(hooks => {
-      let (state, dispatch, hooks) =
-        Hooks.reducer(~initialState, reducer, hooks);
+  let%component make = () => {
+    let%hook (state, dispatch) = Hooks.reducer(~initialState, reducer);
 
-      (
-        hooks,
+    let%hook () =
+      Hooks.effect(
+        OnMount,
+        () => {
+          let dispose =
+            Mouse.registerListeners(
+              ~onMouseEnterWindow=_ => print_endline("enter window"),
+              ~onMouseLeaveWindow=_ => print_endline("leave window"),
+              (),
+            );
+
+          Some(dispose);
+        },
+      );
+
+    <View
+      style=Style.[
+        flexDirection(`Row),
+        justifyContent(`Center),
+        alignItems(`Center),
+        width(500),
+        height(500),
+        backgroundColor(state.parentBackground),
+      ]
+      onMouseOver={_ => dispatch(SetParentBackground(Colors.lightGray))}
+      onMouseOut={_ =>
+        dispatch(SetParentBackground(initialState.parentBackground))
+      }>
+      <View
+        style=Style.[
+          flexDirection(`Row),
+          flexWrap(`Wrap),
+          justifyContent(`SpaceAround),
+          alignItems(`Center),
+        ]>
         <View
           style=Style.[
-            flexDirection(`Row),
-            justifyContent(`Center),
-            alignItems(`Center),
-            width(500),
-            height(500),
-            backgroundColor(state.parentBackground),
+            width(175),
+            height(175),
+            backgroundColor(state.childOneBackground),
           ]
-          onMouseOver={_ => dispatch(SetParentBackground(Colors.lightGray))}
+          onMouseEnter={_ =>
+            dispatch(SetChildOneBackground(Colors.aquamarine))
+          }
+          onMouseLeave={_ =>
+            dispatch(SetChildOneBackground(initialState.childOneBackground))
+          }
+        />
+        <View
+          style=Style.[
+            width(175),
+            height(175),
+            backgroundColor(state.childTwoBackground),
+          ]
+          onMouseOver={_ =>
+            dispatch(SetChildTwoBackground(Colors.forestGreen))
+          }
           onMouseOut={_ =>
-            dispatch(SetParentBackground(initialState.parentBackground))
-          }>
-          <View
-            style=Style.[
-              flexDirection(`Row),
-              flexWrap(`Wrap),
-              justifyContent(`SpaceAround),
-              alignItems(`Center),
-            ]>
-            <View
-              style=Style.[
-                width(175),
-                height(175),
-                backgroundColor(state.childOneBackground),
-              ]
-              onMouseEnter={_ =>
-                dispatch(SetChildOneBackground(Colors.aquamarine))
-              }
-              onMouseLeave={_ =>
-                dispatch(
-                  SetChildOneBackground(initialState.childOneBackground),
-                )
-              }
-            />
-            <View
-              style=Style.[
-                width(175),
-                height(175),
-                backgroundColor(state.childTwoBackground),
-              ]
-              onMouseOver={_ =>
-                dispatch(SetChildTwoBackground(Colors.forestGreen))
-              }
-              onMouseOut={_ =>
-                dispatch(
-                  SetChildTwoBackground(initialState.childTwoBackground),
-                )
-              }
-            />
-            <View
-              style=Style.[
-                width(175),
-                height(175),
-                backgroundColor(state.childThreeBackground),
-              ]
-              onMouseOver={_ =>
-                dispatch(SetChildThreeBackground(Colors.darkSalmon))
-              }
-              onMouseOut={_ =>
-                dispatch(
-                  SetChildThreeBackground(initialState.childThreeBackground),
-                )
-              }
-            />
-            <View
-              style=Style.[
-                width(175),
-                height(175),
-                backgroundColor(state.childFourBackground),
-              ]
-              onMouseEnter={_ =>
-                dispatch(SetChildFourBackground(Colors.tomato))
-              }
-              onMouseLeave={_ =>
-                dispatch(
-                  SetChildFourBackground(initialState.childFourBackground),
-                )
-              }
-            />
-          </View>
-        </View>,
-      );
-    });
+            dispatch(SetChildTwoBackground(initialState.childTwoBackground))
+          }
+        />
+        <View
+          style=Style.[
+            width(175),
+            height(175),
+            backgroundColor(state.childThreeBackground),
+          ]
+          onMouseOver={_ =>
+            dispatch(SetChildThreeBackground(Colors.darkSalmon))
+          }
+          onMouseOut={_ =>
+            dispatch(
+              SetChildThreeBackground(initialState.childThreeBackground),
+            )
+          }
+        />
+        <View
+          style=Style.[
+            width(175),
+            height(175),
+            backgroundColor(state.childFourBackground),
+          ]
+          onMouseEnter={_ => dispatch(SetChildFourBackground(Colors.tomato))}
+          onMouseLeave={_ =>
+            dispatch(
+              SetChildFourBackground(initialState.childFourBackground),
+            )
+          }
+        />
+      </View>
+    </View>;
+  };
 };
 
 let render = () => {

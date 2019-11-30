@@ -116,8 +116,8 @@ Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com
 - [flex](https://github.com/jordwalke/flex) by @jordwalke
 - [briskml](https://github.com/briskml)
     - [brisk-reconciler](https://github.com/briskml/brisk-reconciler) - the "native React" implementation.
-- [reason-glfw](https://github.com/bryphe/reason-glfw)
-    - [GLFW](https://www.glfw.org)
+- [reason-sdl2](https://github.com/revery-ui/reason-sdl2)
+    - [SDL2](https://www.libsdl.org)
     - [stb-image](https://github.com/nothings/stb)
 - [reason-fontkit](https://github.com/bryphe/reason-fontkit)
     - [freetype2](https://www.freetype.org)

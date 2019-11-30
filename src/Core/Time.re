@@ -1,43 +1,24 @@
-type t =
-  | Seconds(float)
-  | Milliseconds(float);
+type t = float;
 
-/**
-@deprecated Replaced by [toSeconds]
-*/
-[@deprecated]
-let of_float_seconds = (v: float) => Seconds(v);
+let zero = 0.;
+let seconds = t => float(t);
+let milliseconds = t => float(t) /. 1000.;
+let ms = milliseconds;
 
-/**
-@deprecated Replaced by [ofSeconds]
-*/
-[@deprecated]
-let to_float_seconds = (v: t) =>
-  switch (v) {
-  | Seconds(x) => x
-  | Milliseconds(x) => x /. 1000.
-  };
+let ofFloatSeconds = t => t;
+let toFloatSeconds = t => t;
 
-/**
-  [ofSeconds(time)] converts the time [t] to a float value representing the time in seconds.
-*/
-let ofSeconds = of_float_seconds;
+let (+) = (+.);
+let (-) = (-.);
+let ( * ) = ( *. );
+let ( *. ) = ( *. );
+let (/) = (/.);
+let (/.) = (/.);
 
-/**
-  [ofSeconds(seconds)] converts the value seconds to a [t] representing the time in seconds.
-*/
-let toSeconds = to_float_seconds;
+let max = Float.max;
+let min = Float.min;
+let (mod) = mod_float;
 
-let increment: (t, t) => t =
-  (previousTime, duration) => {
-    of_float_seconds(
-      to_float_seconds(previousTime) +. to_float_seconds(duration),
-    );
-  };
+let toString = t => string_of_float(t) ++ "s";
 
-let show = (v: t) => string_of_float(to_float_seconds(v)) ++ "s";
-
-/**
-    [getTime()] returns the current system time [t]
-*/
-let getTime = () => of_float_seconds(Unix.gettimeofday());
+let now = Unix.gettimeofday;

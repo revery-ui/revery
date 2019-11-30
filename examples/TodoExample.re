@@ -2,222 +2,511 @@ open Revery;
 open Revery.UI;
 open Revery.UI.Components;
 
-type todo = {
-  id: int,
-  task: string,
-  isDone: bool,
+module Constants = {
+  let fontSize = 12;
+};
+
+module Theme = {
+  let fontFamily = Style.fontFamily("Roboto-Regular.ttf");
+  let fontSize = 16;
+  let rem = factor => int_of_float(float_of_int(fontSize) *. factor);
+
+  let appBackground = Color.hex("#f4edfe");
+  let textColor = Color.hex("#513B70");
+  let dimmedTextColor = Color.hex("#DAC5F7");
+  let titleTextColor = Color.hex("#EADDFC");
+
+  let panelBackground = Color.hex("#F9F5FF");
+  let panelBorderColor = Color.hex("#EADDFC");
+  let panelBorder = Style.border(~width=1, ~color=panelBorderColor);
+
+  let buttonColor = Color.hex("#9573C4");
+  let hoveredButtonColor = Color.hex("#C9AEF0");
+
+  let dangerColor = Color.hex("#f7c5c6");
 };
 
 module Filter = {
   type t =
     | All
-    | Completed
-    | NotCompleted;
+    | Active
+    | Completed;
 
-  let show = (v: t) =>
+  let toString = (v: t) =>
     switch (v) {
     | All => "All"
+    | Active => "Active"
     | Completed => "Completed"
-    | NotCompleted => "NotCompleted"
     };
 };
 
-type state = {
-  todos: list(todo),
-  filter: Filter.t,
-  inputValue: string,
-  nextId: int,
-};
-
-type action =
-  | AddTodo
-  | ChangeFilter(Filter.t)
-  | UpdateInputTextValue(string)
-  | ToggleTaskState(int);
-
-let reducer = (action: action, state: state) =>
-  switch (action) {
-  | AddTodo => {
-      ...state,
-      todos:
-        List.append(
-          state.todos,
-          [{id: state.nextId, task: state.inputValue, isDone: false}],
+module Button = {
+  module Styles = {
+    let box = (~isSelected, ~isHovered) =>
+      Style.[
+        position(`Relative),
+        justifyContent(`Center),
+        alignItems(`Center),
+        paddingVertical(Theme.rem(0.15)),
+        paddingHorizontal(Theme.rem(0.5)),
+        marginHorizontal(Theme.rem(0.2)),
+        border(
+          ~width=1,
+          ~color=
+            switch (isSelected, isHovered) {
+            | (true, _) => Theme.buttonColor
+            | (false, true) => Theme.hoveredButtonColor
+            | (false, false) => Colors.transparentWhite
+            },
         ),
-      inputValue: "",
-      nextId: state.nextId + 1,
-    }
-  | UpdateInputTextValue(text) => {...state, inputValue: text}
-  | ToggleTaskState(id) =>
-    let todos =
-      List.map(
-        item => item.id == id ? {...item, isDone: !item.isDone} : item,
-        state.todos,
-      );
-    {...state, todos};
-  | ChangeFilter(filter) => {...state, filter}
+        borderRadius(2.),
+      ];
+
+    let text =
+      Style.[
+        Theme.fontFamily,
+        fontSize(Theme.rem(0.8)),
+        color(Theme.buttonColor),
+        textWrap(TextWrapping.NoWrap),
+      ];
   };
 
-module FilterSection = {
-  let component = React.component("FilterSection");
+  let%component make =
+                (
+                  ~label,
+                  ~onClick=?,
+                  ~isSelected=false,
+                  ~tabindex=?,
+                  ~onFocus=?,
+                  ~onBlur=?,
+                  (),
+                ) => {
+    let%hook (isHovered, setHovered) = Hooks.state(false);
 
-  let createElement = (~children as _, ~currentFilter, ~onPickingFilter, ()) =>
-    component(hooks =>
-      (
-        hooks,
-        <View
-          style=Style.[
-            flexDirection(`Row),
-            width(500),
-            alignItems(`Center),
-            justifyContent(`Center),
-          ]>
-          <Button
-            height=50
-            width=150
-            fontSize=15
-            title={Filter.show(Filter.All)}
-            color={
-              switch (currentFilter) {
-              | Filter.All => Colors.dodgerBlue
-              | _ => Colors.lightSkyBlue
-              }
-            }
-            onClick={() => onPickingFilter(Filter.All)}
-          />
-          <Button
-            height=50
-            width=150
-            fontSize=15
-            title={Filter.show(Completed)}
-            color={
-              switch (currentFilter) {
-              | Completed => Colors.dodgerBlue
-              | _ => Colors.lightSkyBlue
-              }
-            }
-            onClick={() => onPickingFilter(Completed)}
-          />
-          <Button
-            height=50
-            width=150
-            fontSize=15
-            title={Filter.show(NotCompleted)}
-            color={
-              switch (currentFilter) {
-              | NotCompleted => Colors.dodgerBlue
-              | _ => Colors.lightSkyBlue
-              }
-            }
-            onClick={() => onPickingFilter(NotCompleted)}
-          />
-        </View>,
-      )
-    );
+    <Clickable ?onClick ?onFocus ?onBlur ?tabindex>
+      <View
+        style={Styles.box(~isSelected, ~isHovered)}
+        onMouseOver={_ => setHovered(_wasHovered => true)}
+        onMouseOut={_ => setHovered(_wasHovered => false)}>
+        <Text style=Styles.text text=label />
+      </View>
+    </Clickable>;
+  };
 };
 
-module Example = {
-  let component = React.component("TodoMVC");
+module Checkbox = {
+  module Styles = {
+    let box =
+      Style.[
+        width(Theme.rem(1.5)),
+        height(Theme.rem(1.5)),
+        justifyContent(`Center),
+        alignItems(`Center),
+        Theme.panelBorder,
+      ];
 
-  let createElement = (~children as _, ()) =>
-    component(hooks => {
-      let ({todos, inputValue, filter, _}, dispatch, hooks) =
-        Hooks.reducer(
-          ~initialState={todos: [], filter: All, inputValue: "", nextId: 0},
-          reducer,
-          hooks,
+    let checkmark =
+      Style.[
+        color(Theme.hoveredButtonColor),
+        fontSize(Theme.fontSize),
+        fontFamily("FontAwesome5FreeSolid.otf"),
+        transform(Transform.[TranslateY(2.)]),
+      ];
+  };
+
+  let make = (~isChecked, ~onToggle, ()) => {
+    <Clickable onClick=onToggle>
+      <View style=Styles.box>
+        <Text text={isChecked ? {||} : ""} style=Styles.checkmark />
+      </View>
+    </Clickable>;
+  };
+};
+
+module AddTodo = {
+  module Styles = {
+    let container =
+      Style.[
+        flexDirection(`Row),
+        backgroundColor(Theme.panelBackground),
+        Theme.panelBorder,
+        margin(2),
+        alignItems(`Center),
+        overflow(`Hidden),
+      ];
+
+    let toggleAll = areAllCompleted =>
+      Style.[
+        color(areAllCompleted ? Theme.textColor : Theme.dimmedTextColor),
+        fontSize(Theme.fontSize),
+        fontFamily("FontAwesome5FreeSolid.otf"),
+        transform(Transform.[TranslateY(2.)]),
+        marginLeft(12),
+      ];
+
+    let input =
+      Style.[
+        fontSize(Theme.fontSize),
+        border(~width=0, ~color=Colors.transparentWhite),
+        width(4000),
+      ]; // Not ideal, should be possible to use flexGrow(1) instead
+  };
+
+  let make = (~text, ~areAllCompleted, ~onInput, ~onSubmit, ~onToggleAll, ()) => {
+    let onKeyDown = (event: NodeEvents.keyEventParams) =>
+      if (event.keycode == 13) {
+        onSubmit();
+      };
+
+    <View style=Styles.container>
+      <Clickable onClick=onToggleAll>
+        <Text text={||} style={Styles.toggleAll(areAllCompleted)} />
+      </Clickable>
+      <Input
+        style=Styles.input
+        placeholder="Add your Todo here"
+        value=text
+        onChange={(value, _) => onInput(value)}
+        onKeyDown
+      />
+    </View>;
+  };
+};
+
+module Todo = {
+  module Styles = {
+    let box =
+      Style.[
+        flexDirection(`Row),
+        margin(2),
+        paddingVertical(4),
+        paddingHorizontal(8),
+        alignItems(`Center),
+        backgroundColor(Theme.panelBackground),
+        Theme.panelBorder,
+      ];
+
+    let text = isChecked =>
+      Style.[
+        margin(6),
+        Theme.fontFamily,
+        fontSize(Theme.fontSize),
+        color(isChecked ? Theme.dimmedTextColor : Theme.textColor),
+        flexGrow(1),
+      ];
+
+    let removeButton = isHovered =>
+      Style.[
+        color(isHovered ? Theme.dangerColor : Colors.transparentWhite),
+        fontSize(Theme.fontSize),
+        fontFamily("FontAwesome5FreeSolid.otf"),
+        transform(Transform.[TranslateY(2.)]),
+        marginRight(6),
+      ];
+  };
+
+  type t = {
+    id: int,
+    task: string,
+    isDone: bool,
+  };
+
+  let%component make = (~task, ~onToggle, ~onRemove, ()) => {
+    let%hook (isHovered, setHovered) = Hooks.state(false);
+
+    <View
+      style=Styles.box
+      onMouseOver={_ => setHovered(_wasHovered => true)}
+      onMouseOut={_ => setHovered(_wasHovered => false)}>
+      <Checkbox isChecked={task.isDone} onToggle />
+      <Text style={Styles.text(task.isDone)} text={task.task} />
+      <Clickable onClick=onRemove>
+        <Text text={||} style={Styles.removeButton(isHovered)} />
+      </Clickable>
+    </View>;
+  };
+};
+
+module Footer = {
+  module Styles = {
+    let container =
+      Style.[flexDirection(`Row), justifyContent(`SpaceBetween)];
+
+    let filterButtonsContainer =
+      Style.[
+        flexGrow(1),
+        width(0),
+        flexDirection(`Row),
+        alignItems(`Center),
+        justifyContent(`Center),
+        alignSelf(`Center),
+        transform(Transform.[TranslateY(-2.)]),
+      ];
+
+    let leftFlexContainer = Style.[flexGrow(1), width(0)];
+
+    let rightFlexContainer =
+      Style.[
+        flexGrow(1),
+        width(0),
+        flexDirection(`Row),
+        justifyContent(`FlexEnd),
+      ];
+
+    let itemsLeft =
+      Style.[
+        Theme.fontFamily,
+        fontSize(Theme.rem(0.85)),
+        color(Theme.buttonColor),
+        textWrap(TextWrapping.NoWrap),
+      ];
+
+    let clearCompleted = isHovered =>
+      Style.[
+        Theme.fontFamily,
+        fontSize(Theme.rem(0.85)),
+        color(isHovered ? Theme.hoveredButtonColor : Theme.buttonColor),
+        textWrap(TextWrapping.NoWrap),
+      ];
+  };
+
+  let make =
+      (
+        ~activeCount,
+        ~completedCount,
+        ~currentFilter,
+        ~onSelectFilter,
+        ~onClearCompleted,
+        (),
+      ) => {
+    let itemsLeft = {
+      let text =
+        switch (activeCount) {
+        | 1 => "1 item left"
+        | n => Printf.sprintf("%i items left", n)
+        };
+
+      <Text text style=Styles.itemsLeft />;
+    };
+
+    let filterButtonsView = {
+      let button = filter =>
+        <Button
+          label={Filter.toString(filter)}
+          isSelected={currentFilter == filter}
+          onClick={() => onSelectFilter(filter)}
+        />;
+
+      <View style=Styles.filterButtonsContainer>
+        {button(All)}
+        {button(Active)}
+        {button(Completed)}
+      </View>;
+    };
+
+    module ClearCompleted = {
+      let%component make = (~onClearCompleted, ~completedCount, ()) => {
+        let%hook (isHovered, setHovered) = Hooks.state(false);
+
+        let text =
+          switch (completedCount) {
+          | 0 => ""
+          | n => Printf.sprintf("Clear completed (%i)", n)
+          };
+
+        <Clickable onClick=onClearCompleted>
+          <View
+            onMouseOver={_ => setHovered(_wasHovered => true)}
+            onMouseOut={_ => setHovered(_wasHovered => false)}>
+            <Text text style={Styles.clearCompleted(isHovered)} />
+          </View>
+        </Clickable>;
+      };
+    };
+
+    <View style=Styles.container>
+      <View style=Styles.leftFlexContainer> itemsLeft </View>
+      filterButtonsView
+      <View style=Styles.rightFlexContainer>
+        <ClearCompleted onClearCompleted completedCount />
+      </View>
+    </View>;
+  };
+};
+
+module TodoMVC = {
+  module Styles = {
+    let appContainer =
+      Style.[
+        position(`Absolute),
+        top(0),
+        bottom(0),
+        left(0),
+        right(0),
+        alignItems(`Stretch),
+        justifyContent(`Center),
+        flexDirection(`Column),
+        backgroundColor(Theme.appBackground),
+        paddingVertical(2),
+        paddingHorizontal(6),
+        overflow(`Hidden),
+      ];
+
+    let title =
+      Style.[
+        Theme.fontFamily,
+        fontSize(Theme.rem(4.)),
+        color(Theme.titleTextColor),
+        alignSelf(`Center),
+        marginTop(Theme.rem(2.)),
+        textWrap(TextWrapping.NoWrap),
+      ];
+
+    let todoList = Style.[flexGrow(1)];
+  };
+
+  type state = {
+    todos: list(Todo.t),
+    filter: Filter.t,
+    inputValue: string,
+    nextId: int,
+  };
+
+  let initialState = {
+    todos:
+      Todo.[
+        {id: 0, task: "Buy Milk", isDone: false},
+        {id: 1, task: "Wag the Dog", isDone: true},
+      ],
+    filter: All,
+    inputValue: "",
+    nextId: 2,
+  };
+
+  type action =
+    | Add
+    | SetFilter(Filter.t)
+    | UpdateInput(string)
+    | Toggle(int)
+    | Remove(int)
+    | ToggleAll
+    | ClearCompleted;
+
+  let reducer = (action: action, state: state) =>
+    switch (action) {
+    | Add => {
+        ...state,
+        todos: [
+          {id: state.nextId, task: state.inputValue, isDone: false},
+          ...state.todos,
+        ],
+        inputValue: "",
+        nextId: state.nextId + 1,
+      }
+
+    | UpdateInput(text) => {...state, inputValue: text}
+
+    | Toggle(id) =>
+      let todos =
+        List.map(
+          (item: Todo.t) =>
+            item.id == id ? {...item, isDone: !item.isDone} : item,
+          state.todos,
         );
+      {...state, todos};
 
-      let hooks =
-        Hooks.effect(
-          OnMount,
-          () => {
-            let unsubscribe = () => ();
-            Some(unsubscribe);
-          },
-          hooks,
+    | Remove(id) =>
+      let todos = List.filter((item: Todo.t) => item.id != id, state.todos);
+      {...state, todos};
+
+    | SetFilter(filter) => {...state, filter}
+
+    | ToggleAll =>
+      let areAllCompleted =
+        List.for_all((item: Todo.t) => item.isDone, state.todos);
+      let todos =
+        List.map(
+          (item: Todo.t) => {...item, isDone: !areAllCompleted},
+          state.todos,
         );
+      {...state, todos};
 
-      let renderTodo = task =>
-        <View style=Style.[flexDirection(`Row)]>
-          <Checkbox
-            checked={task.isDone}
-            onChange={() => dispatch(ToggleTaskState(task.id))}
-          />
-          <Text
-            style=Style.[
-              color(Colors.black),
-              fontFamily("Roboto-Regular.ttf"),
-              fontSize(20),
-              margin(4),
-            ]
-            text={task.task}
-          />
-        </View>;
+    | ClearCompleted =>
+      let todos = List.filter((item: Todo.t) => !item.isDone, state.todos);
+      {...state, todos};
+    };
 
-      let filteredList =
+  let%component make = () => {
+    let%hook ({todos, inputValue, filter as currentFilter, _}, dispatch) =
+      Hooks.reducer(~initialState, reducer);
+
+    let header = {
+      <Text text="todoMVC" style=Styles.title />;
+    };
+
+    let addTodoView = {
+      let onInput = value => dispatch(UpdateInput(value));
+      let onSubmit = () => dispatch(Add);
+      let onToggleAll = () => dispatch(ToggleAll);
+      let areAllCompleted =
+        List.for_all((item: Todo.t) => item.isDone, todos);
+
+      <AddTodo text=inputValue areAllCompleted onInput onSubmit onToggleAll />;
+    };
+
+    let todoListView = {
+      let onToggle = (id, ()) => dispatch(Toggle(id));
+      let onRemove = (id, ()) => dispatch(Remove(id));
+      let filteredTodos =
         List.filter(
           task =>
             switch (filter) {
             | All => true
-            | Completed => task.isDone
-            | NotCompleted => !task.isDone
+            | Active => !task.Todo.isDone
+            | Completed => task.Todo.isDone
             },
           todos,
         );
 
-      let listOfTodos = List.map(renderTodo, filteredList);
-      (
-        hooks,
-        <View
-          style=Style.[
-            position(`Absolute),
-            top(0),
-            bottom(0),
-            left(0),
-            right(0),
-            alignItems(`Center),
-            justifyContent(`Center),
-            flexDirection(`Column),
-            backgroundColor(Colors.white),
-          ]>
-          <FilterSection
-            currentFilter=filter
-            onPickingFilter={filter => dispatch(ChangeFilter(filter))}
-          />
-          <View style=Style.[flexDirection(`Row)]>
-            <Input
-              style=Style.[width(400)]
-              placeholder="Add your Todo here"
-              value=inputValue
-              onChange={({value, _}) =>
-                dispatch(UpdateInputTextValue(value))
-              }
-            />
-            <Button
-              width=50
-              height=50
-              disabled={
-                switch (inputValue) {
-                | "" => true
-                | _ => false
-                }
-              }
-              title="+"
-              onClick={() => dispatch(AddTodo)}
-            />
-          </View>
-          <ScrollView
-            style=Style.[
-              height(200),
-              width(450),
-              border(~width=1, ~color=Colors.black),
-            ]>
-            <View> ...listOfTodos </View>
-          </ScrollView>
-        </View>,
-      );
-    });
+      <ScrollView style=Styles.todoList>
+        <View>
+          {List.map(
+             (task: Todo.t) =>
+               <Todo
+                 task
+                 onToggle={onToggle(task.id)}
+                 onRemove={onRemove(task.id)}
+               />,
+             filteredTodos,
+           )
+           |> React.listToElement}
+        </View>
+      </ScrollView>;
+    };
+
+    let footer = {
+      let onSelectFilter = filter => dispatch(SetFilter(filter));
+      let onClearCompleted = () => dispatch(ClearCompleted);
+      let activeCount =
+        todos |> List.filter((item: Todo.t) => !item.isDone) |> List.length;
+      let completedCount =
+        todos |> List.filter((item: Todo.t) => item.isDone) |> List.length;
+      <Footer
+        activeCount
+        completedCount
+        currentFilter
+        onSelectFilter
+        onClearCompleted
+      />;
+    };
+
+    <View style=Styles.appContainer>
+      header
+      addTodoView
+      todoListView
+      footer
+    </View>;
+  };
 };
 
-let render = () => <Example />;
+let render = () => <TodoMVC />;

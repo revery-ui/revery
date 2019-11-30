@@ -17,12 +17,10 @@ let render =
     (
       ~forceLayout=false,
       container: RenderContainer.t,
-      component: React.syntheticElement,
+      component: React.element('node),
     ) => {
   let renderContainer = container;
   let {rootNode, window, container, _} = container;
-
-  AnimationTicker.tick();
 
   /* Perform reconciliation */
   Performance.bench("reconcile", () =>
@@ -79,6 +77,7 @@ let render =
       ~screenWidth=adjustedWidth,
       (),
     );
+    Overflow.reset();
     rootNode#draw(drawContext);
     //DebugDraw.draw();
     RenderPass.endAlphaPass();

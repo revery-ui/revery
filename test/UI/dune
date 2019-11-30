@@ -1,5 +1,6 @@
 (library
     (name Revery_UI_Test)
-    (library_flags (-linkall))
+    (library_flags (-linkall -g))
     (modules (:standard))
-    (libraries Revery_UI Revery_UI_Primitives Revery_Math rejest))
+    (preprocess (pps brisk-reconciler.ppx))
+    (libraries Revery_UI Revery_UI_Primitives Revery_Math rely.lib))

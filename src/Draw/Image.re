@@ -8,8 +8,6 @@ open Reglm;
 open Sdl2.Gl;
 
 open Revery_Core;
-//open Revery_Shaders;
-//module Geometry = Revery_Geometry;
 
 let identityMatrix = Mat4.create();
 
@@ -27,9 +25,7 @@ let drawImage =
   /*let textureShader = Assets.textureShader();
   let imgInfo: ImageRenderer.t = ImageRenderer.getTexture(imagePath);
 
-  switch (imgInfo.hasLoaded) {
-  | false => ()
-  | true =>
+  if (imgInfo.hasLoaded) {
     let ctx = RenderPass.getContext();
     CompiledShader.use(textureShader.compiledShader);
     let m = ctx.projection;
@@ -38,6 +34,10 @@ let drawImage =
 
     CompiledShader.setUniformMatrix4fv(textureShader.uniformWorld, world);
     CompiledShader.setUniformMatrix4fv(textureShader.uniformProjection, m);
+    CompiledShader.setUniformMatrix4fv(
+      textureShader.uniformLocal,
+      identityMatrix,
+    );
 
     CompiledShader.setUniform4fv(
       textureShader.uniformColor,

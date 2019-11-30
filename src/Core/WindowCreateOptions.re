@@ -5,7 +5,7 @@ type t = {
     If [visible] is true, the window will be visible immediately upon creation.
 
     If [visible] is false, the window will be invisible, and will require a call
-    to Window.show to make it visible. Can be useful to hide transient UI states.
+    to Window.toString to make it visible. Can be useful to hide transient UI states.
   */
   visible: bool,
   /**
@@ -16,6 +16,11 @@ type t = {
     If [decorated] is true, the window will be framed with the OS-specific adorners.
     */
   decorated: bool,
+  /**
+   [titlebarStyle] sets the appearance of the titlebar. Eventually this will be platform
+   independent, but as of right now, Transparent only works on macOS.
+    */
+  titlebarStyle: WindowStyles.titlebar,
   /**
     [width] is the initial horizontal size of the [Window]
     */
@@ -33,11 +38,16 @@ type t = {
 
     This can decrease tearing, but also limits the frame rate to the monito refresh rate.
   */
-  vsync: bool,
+  vsync: Vsync.t,
   /*
       [icon] is an optional path to an icon to show in the window frame.
    */
   icon: option(string),
+  /*
+       [forceScaleFactor] is an optional value to force scaling factor. Scaling affects both the outer window dimensions,
+       as well as the scaling of UI elements.
+   */
+  forceScaleFactor: option(float),
 };
 
 let create =
@@ -46,20 +56,24 @@ let create =
       ~visible=true,
       ~maximized=false,
       ~decorated=true,
+      ~titlebarStyle=WindowStyles.System,
       ~width=800,
       ~height=600,
       ~backgroundColor=Colors.cornflowerBlue,
-      ~vsync=true,
+      ~vsync=Vsync.Synchronized,
       ~icon=None,
+      ~forceScaleFactor=None,
       (),
     ) => {
   resizable,
   visible,
   maximized,
   decorated,
+  titlebarStyle,
   width,
   height,
   backgroundColor,
+  forceScaleFactor,
   vsync,
   icon,
 };

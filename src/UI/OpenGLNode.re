@@ -1,7 +1,5 @@
 open Reglm;
 
-module Shaders = Revery_Shaders;
-module Geometry = Revery_Geometry;
 module RenderPass = Revery_Draw.RenderPass;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;

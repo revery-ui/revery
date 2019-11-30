@@ -18,8 +18,8 @@ class imageNode (imagePath: string) = {
   as _this;
   val mutable src = imagePath;
   inherit (class node)() as _super;
-  val _opacity: ref(float) = ref(1.0);
-  val _resizeMode: ref(ImageResizeMode.t) = ref(ImageResizeMode.Stretch);
+  val mutable _opacity = 1.0;
+  val mutable _resizeMode = ImageResizeMode.Stretch;
   pub! draw = (parentContext: NodeDrawContext.t) => {
     /* Draw background first */
     _super#draw(parentContext);
@@ -37,15 +37,15 @@ class imageNode (imagePath: string) = {
       ~transform=world,
       ~width=float_of_int(dimensions.width),
       ~height=float_of_int(dimensions.height),
-      ~resizeMode=uiToDrawResizeMode(_resizeMode^),
+      ~resizeMode=uiToDrawResizeMode(_resizeMode),
       ~tint=Colors.white,
-      ~opacity=_opacity^,
+      ~opacity=_opacity,
       (),
     );*/
   };
-  pub setOpacity = f => _opacity := f;
+  pub setOpacity = f => _opacity = f;
   pub setResizeMode = (mode: ImageResizeMode.t) => {
-    _resizeMode := mode;
+    _resizeMode = mode;
   };
   pub setSrc = newSrc => {
     src = newSrc;
