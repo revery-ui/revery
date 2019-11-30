@@ -10,7 +10,7 @@ module SpringyLogo = {
     let%hook imageWidth =
       Hooks.spring(
         targetPosition,
-        Hooks.Spring.Options.create(
+        Spring.Options.create(
           ~damping,
           ~stiffness,
           ~initialValue=2.0,
@@ -94,7 +94,7 @@ module Example = {
 
     <Center>
       <Center> <SpringyLogo stiffness damping /> </Center>
-      <View style=containerStyle>
+      <View style=Styles.containerStyle>
         <SliderControl
           text="Damping: "
           minimumValue=1.
