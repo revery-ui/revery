@@ -1,10 +1,5 @@
-/* Hooks specific to Revery */
-module Tick_ = Tick;
-open Revery_Core;
-
+module Time = Revery_Core.Time;
 module SpringModel = Revery_UI.Spring;
-
-module Tick = Tick_;
 
 type state = {
   target: float,
