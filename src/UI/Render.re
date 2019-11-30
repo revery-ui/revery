@@ -11,8 +11,6 @@ open Revery_Math;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
-let _projection = Mat4.create();
-
 open RenderContainer;
 
 let render =
@@ -34,18 +32,20 @@ let render =
   /* Layout */
   let size = Window.getRawSize(window);
   let pixelRatio = Window.getDevicePixelRatio(window);
-  let scaleFactor = Window.getScaleAndZoom(window);
+  let scaleAndZoomFactor = Window.getScaleAndZoom(window);
+  let canvasScalingFactor = pixelRatio *. scaleAndZoomFactor;
   let adjustedHeight =
-    float_of_int(size.height) /. scaleFactor |> int_of_float;
-  let adjustedWidth = float_of_int(size.width) /. scaleFactor |> int_of_float;
+    float_of_int(size.height) /. scaleAndZoomFactor |> int_of_float;
+  let adjustedWidth = float_of_int(size.width) /. scaleAndZoomFactor |> int_of_float;
 
-  RenderContainer.updateCanvas(~width=size.width, ~height=size.height, renderContainer);
+  RenderContainer.updateCanvas(window, renderContainer);
 
   rootNode#setStyle(
     Style.make(
       ~position=LayoutTypes.Relative,
       ~width=adjustedWidth,
       ~height=adjustedHeight,
+      ~transform=[Transform.ScaleX(canvasScalingFactor), ScaleY(canvasScalingFactor)],
       (),
     ),
   );
@@ -69,25 +69,14 @@ let render =
     
      let drawContext = NodeDrawContext.create(~canvas, ~zIndex=0, ~opacity=1.0, ());
 
-    /*Mat4.ortho(
-      _projection,
-      0.0,
-      float_of_int(adjustedWidth),
-      float_of_int(adjustedHeight),
-      0.0,
-      1000.0,
-      -1000.0,
-    );*/
-
     // let drawContext = NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
 
     RenderPass.start(
       ~canvas,
       ~pixelRatio,
-      ~scaleFactor,
+      ~scaleFactor=scaleAndZoomFactor,
       ~screenHeight=adjustedHeight,
       ~screenWidth=adjustedWidth,
-      ~projection=_projection,
       (),
     );
     rootNode#draw(drawContext);

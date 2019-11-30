@@ -11,14 +11,10 @@ open Skia;
 let logInfo = Revery_Core.Log.info("Revery.Draw.Canvas");
 let logError = Revery_Core.Log.error("Revery.Draw.Canvas");
 
-type t = {
-  width: int,
-  height: int,
-  canvas: Skia.Canvas.t,
-  surface: Skia.Surface.t,
-};
+// TODO bind SkCanvas#getSurface and directly use the canvas
+type t = Skia.Surface.t;
 
-let create = (~width: int, ~height: int, ()) => {
+let create = (window: Revery_Core.Window.t) => {
   let context = Skia.Gr.Context.makeGl(None);
   switch (context) {
   | None =>
@@ -30,8 +26,10 @@ let create = (~width: int, ~height: int, ()) => {
         Unsigned.UInt.of_int(0),
         Unsigned.UInt.of_int(0x8058),
       );
+
+    let framebufferSize = window.metrics.framebufferSize;
     let backendRenderTarget =
-      Gr.BackendRenderTarget.makeGl(width, height, 0, 8, framebufferInfo);
+      Gr.BackendRenderTarget.makeGl(framebufferSize.width, framebufferSize.height, 0, 8, framebufferInfo);
     let surfaceProps = SurfaceProps.make(Unsigned.UInt32.of_int(0), RgbH);
     switch (
       Surface.makeFromBackendRenderTarget(
@@ -48,22 +46,29 @@ let create = (~width: int, ~height: int, ()) => {
       None;
     | Some(v) =>
       logInfo(
-        Printf.sprintf("Successfully created canvas: %dx%d", width, height),
+        Printf.sprintf("Successfully created canvas: %dx%d", framebufferSize.width, framebufferSize.height),
       );
       let surface = v;
-      let canvas = Skia.Surface.getCanvas(v);
-      Some({surface, canvas, width, height});
+      Some(surface);
     };
   };
 };
 
-let resize = (~width: int, ~height: int, v: option(t)) => {
+let resize = (window: Revery_Core.Window.t, v: option(t)) => {
   switch (v) {
   | None => None
-  | Some(oldSurf) =>
-    if (oldSurf.width != width || oldSurf.height != height) {
-      logInfo(Printf.sprintf("Resizing canvas: %dx%d", width, height));
-      create(~width, ~height, ());
+  | Some(existingCanvas) =>
+    if (Surface.getWidth(existingCanvas) != window.metrics.framebufferSize.width || Surface.getHeight(existingCanvas) != window.metrics.framebufferSize.height) {
+      logInfo(
+        Printf.sprintf(
+          "Resizing canvas: %dx%d->%dx%d",
+          Surface.getWidth(existingCanvas),
+          Surface.getHeight(existingCanvas),
+          window.metrics.framebufferSize.width,
+          window.metrics.framebufferSize.height
+        )
+      );
+      create(window);
     } else {
       v;
     }
@@ -71,19 +76,19 @@ let resize = (~width: int, ~height: int, v: option(t)) => {
 };
 
 let save = (v: t) => {
-   Skia.Canvas.save(v.canvas);
+   Skia.Canvas.save(Surface.getCanvas(v));
   };
 
 let restore = (v: t) => {
- Skia.Canvas.restore(v.canvas);
+ Skia.Canvas.restore(Surface.getCanvas(v));
 };
 
 let flush = (v: t) => {
-  Skia.Canvas.flush(v.canvas);
+  Skia.Canvas.flush(Surface.getCanvas(v));
 };
 
 let translate = (v: t, x: float, y: float) => {
-  Skia.Canvas.translate(v.canvas, x, y);
+  Skia.Canvas.translate(Surface.getCanvas(v), x, y);
 };
 
 let toSkiaRect = (rect: Rectangle.t) => {
@@ -95,25 +100,20 @@ let toSkiaRect = (rect: Rectangle.t) => {
 };
 
 let drawRect = (v: t, rect: Rectangle.t, paint) => {
-  let {canvas, _} = v;
-  
-  /*let fill = Paint.make();
-  Paint.setColor(fill, Color.makeArgb(0xFF, 0x00, 0x00, 0xFF));*/
-  Canvas.drawRect(canvas, toSkiaRect(rect), paint);
+  Canvas.drawRect(Surface.getCanvas(v), toSkiaRect(rect), paint);
 };
 
 let drawImage = (~x, ~y, src, v: t) => {
-
   let image = ImageRenderer.getTexture(src);
   switch (image) {
   | None => ()
-  | Some(img) => Canvas.drawImage(v.canvas, img, x, y, None);
+  | Some(img) => Canvas.drawImage(Surface.getCanvas(v), img, x, y, None);
   }
 
 };
 
 let setMatrix = (v: t, mat: Skia.Matrix.t) => {
-  Canvas.setMatrix(v.canvas, mat);
+  Canvas.setMatrix(Surface.getCanvas(v), mat);
 };
 
 let drawText = (~color=Revery_Core.Colors.white, ~x=0., ~y=0., ~fontFamily, ~fontSize, text, v: t) => {
@@ -123,21 +123,20 @@ let drawText = (~color=Revery_Core.Colors.white, ~x=0., ~y=0., ~fontFamily, ~fon
   | None => ();
   | Some(typeface) => 
 
-  let { canvas, _ } = v;
   let fill2 = Paint.make();
   let fontStyle = FontStyle.make(500, 20, Upright);
-  //let typeface = Typeface.makeFromName("Consolas", fontStyle);
   Paint.setColor(fill2, Revery_Core.Color.toSkia(color));
   Paint.setTypeface(fill2, typeface);
   Paint.setLcdRenderText(fill2, true);
   Paint.setAntiAlias(fill2, true);
   Paint.setTextSize(fill2, fontSize);
-  Canvas.drawText(canvas, text, x, y, fill2);
+  Canvas.drawText(Surface.getCanvas(v), text, x, y, fill2);
   }
 };
 
 let test_draw = (v: t) => {
-  let {canvas, _} = v;
+  let canvas = Surface.getCanvas(v);
+  
   let fill = Paint.make();
   Paint.setColor(fill, Color.makeArgb(0xFF, 0x00, 0x00, 0x00));
   Canvas.drawPaint(canvas, fill);

@@ -11,7 +11,7 @@ open Style;
 open Style.Border;
 open Style.BoxShadow;
 
-let renderBorders = (~style, ~width, ~height, ~opacity, ~m, ~world) => {
+let renderBorders = (~style, ~width, ~height, ~opacity) => {
   let borderStyle = (side, axis, border) =>
     Layout.Encoding.(
       if (side.width !== cssUndefined) {
@@ -117,9 +117,8 @@ class viewNode (()) = {
 
     let world = _this#getWorldTransform();
 
-    let m = ctx.projection;
     let (minX, minY, maxX, maxY) =
-      renderBorders(~style, ~width, ~height, ~opacity, ~m, ~world);
+      renderBorders(~style, ~width, ~height, ~opacity);
 
     let { canvas, _ }: NodeDrawContext.t = parentContext;
 
@@ -128,7 +127,7 @@ class viewNode (()) = {
     /*switch (style.boxShadow) {
     | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _} =>
       ()
-    | boxShadow => renderShadow(~boxShadow, ~width, ~height, ~world, ~m)
+    | boxShadow => renderShadow(~boxShadow, ~width, ~height)
     };*/
 
     if (color.a > 0.001) {

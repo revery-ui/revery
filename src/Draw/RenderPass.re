@@ -8,7 +8,6 @@ module DrawContext = {
     scaleFactor: float,
     screenWidth: int,
     screenHeight: int,
-    projection: Mat4.t,
   };
 
   let create =
@@ -18,7 +17,6 @@ module DrawContext = {
         ~scaleFactor,
         ~screenWidth,
         ~screenHeight,
-        ~projection,
         (),
       ) => {
     canvas,
@@ -26,7 +24,6 @@ module DrawContext = {
     scaleFactor,
     screenWidth,
     screenHeight,
-    projection,
   };
 };
 
@@ -42,7 +39,7 @@ let getContext = () => {
 };
 
 let start=
-    (~canvas, ~pixelRatio, ~scaleFactor, ~screenWidth, ~screenHeight, ~projection, ()) => {
+    (~canvas, ~pixelRatio, ~scaleFactor, ~screenWidth, ~screenHeight, ()) => {
   _activeContext :=
     Some(
       DrawContext.create(
@@ -51,7 +48,6 @@ let start=
         ~scaleFactor,
         ~screenWidth,
         ~screenHeight,
-        ~projection,
         (),
       ),
     );

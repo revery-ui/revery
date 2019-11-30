@@ -30,6 +30,7 @@ class textNode (text: string) = {
       Text.getDescent(~fontFamily, ~fontSize, ());
     let lineHeightPx =
       lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
+    // TODO something about the leading seems to be off, it creates too much space
     let leadingPx = lineHeightPx -. ascentPx -. descentPx;
 
     /* when style.width & style.height are defined, Layout doesn't call the measure function */

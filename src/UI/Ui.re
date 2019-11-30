@@ -46,8 +46,8 @@ let start = (window: Window.t, element: React.syntheticElement) => {
         let scaleFactor = Revery_Core.Window.getScaleAndZoom(window);
         let evt =
           Revery_Core.Events.InternalMouseMove({
-            mouseX: m.mouseX /. scaleFactor,
-            mouseY: m.mouseY /. scaleFactor,
+            mouseX: m.mouseX,
+            mouseY: m.mouseY,
           });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
