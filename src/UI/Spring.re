@@ -46,6 +46,9 @@ let _isActive = (acceleration, velocity) =>
 let tick = (target: float, spring: t, options: Options.t, newTime: Time.t) => {
   let deltaT = Time.(newTime - spring.currentTime) |> Time.toFloatSeconds;
   if (deltaT > 0.) {
+    // Cap the delta at 33 milliseconds / 30 FPS
+    // This is important if the animation has been inactive!
+    let deltaT = min(deltaT, 0.033);
     let force = Float.abs(target -. spring.position) *. options.stiffness;
     let dir = spring.position > target ? (-1.) : 1.;
 
