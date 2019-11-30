@@ -1,5 +1,6 @@
 #ifdef __linux__
 #include <gtk/gtk.h>
+#include <string.h>
 
 // The callback to g_signal_connect MUST be an `activate` function
 static void activate(GtkApplication *app, const char *user_data) {
@@ -52,12 +53,25 @@ const char **revery_open_files_gtk(const char *startDir, char *fileTypes[],
     GtkWidget *dialog = gtk_file_chooser_dialog_new(
         dialogTitle, NULL, action, "Cancel", GTK_RESPONSE_CANCEL, okButtonText,
         GTK_RESPONSE_ACCEPT, NULL);
-    result = gtk_dialog_run(GTK_DIALOG(dialog));
+    GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
+
+    if (fileTypes) {
+        char *wildcard = "*.";
+        GtkFileFilter *filter = gtk_file_filter_new();
+        for (int i = 0; i < fileTypesSize; i++) {
+            char *fileType = fileTypes[i];
+            char *pattern = malloc(strlen(wildcard) + strlen(fileType) + 1);
+            strcpy(pattern, wildcard);
+            strcat(pattern, fileType);
+            gtk_file_filter_add_pattern(filter, pattern);
+        }
+        gtk_file_chooser_add_filter(chooser, filter);
+    }
 
     const char **ret = NULL;
+    result = gtk_dialog_run(GTK_DIALOG(dialog));
 
     if (result == GTK_RESPONSE_ACCEPT) {
-        GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
         GSList *filenames = gtk_file_chooser_get_filenames(chooser);
         int size = g_slist_length(filenames);
         ret = malloc((size + 1) * sizeof(char *));
