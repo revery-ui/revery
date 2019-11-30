@@ -1,7 +1,6 @@
 open Effect;
 open Reducer;
 open Tick;
-open Ref;
 open State;
 
 let time = (~tickRate=Time.zero, ()) => {

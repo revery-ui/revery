@@ -1,5 +1,4 @@
 /* Hooks specific to Revery */
-module Tick_ = Tick;
 open Revery_Core;
 
 module Options = {
