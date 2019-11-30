@@ -34,26 +34,41 @@ void revery_alert_gtk(void *pWin, const char *szMessage) {
 }
 
 const char **revery_open_files_gtk(const char *startDir, char *fileTypes[],
-                                     int fileTypesSize, int allowMultiple,
-                                     int canChooseFiles,
-                                     int canChooseDirectories, int showHidden,
-                                     const char *buttonText,
-                                     const char *title) {
+                                   int fileTypesSize, int allowMultiple,
+                                   int canChooseFiles, int canChooseDirectories,
+                                   int showHidden, const char *buttonText,
+                                   const char *title) {
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
     gint result;
     const char *okButtonText = (buttonText ? buttonText : "Open");
     const char *dialogTitle = (title ? title : "Open File(s) and/or Folder(s)");
-    gtk_init(NULL, NULL);
-    GtkWidget *dialog = gtk_file_chooser_dialog_new(dialogTitle, NULL, action, "Cancel", GTK_RESPONSE_CANCEL, okButtonText, GTK_RESPONSE_ACCEPT, NULL);
+
+    GtkApplication *app;
+    app = gtk_application_new("org.gtk.revery", G_APPLICATION_FLAGS_NONE);
+    /* argv the final argument to run can be set to NULL in which case argc
+     * should be set to 0 */
+    g_application_run(G_APPLICATION(app), 0, NULL);
+
+    GtkWidget *dialog = gtk_file_chooser_dialog_new(
+        dialogTitle, NULL, action, "Cancel", GTK_RESPONSE_CANCEL, okButtonText,
+        GTK_RESPONSE_ACCEPT, NULL);
     result = gtk_dialog_run(GTK_DIALOG(dialog));
+
+    const char **ret = NULL;
 
     if (result == GTK_RESPONSE_ACCEPT) {
         GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
         GSList *filenames = gtk_file_chooser_get_filenames(chooser);
-
+        int size = g_slist_length(filenames);
+        ret = malloc((size + 1) * sizeof(char *));
+        for (int i = 0; i < size; i++) {
+            ret[i] = (char *) g_slist_nth_data(filenames, i);
+        }
+        ret[size] = NULL;
     }
 
     gtk_widget_destroy(dialog);
-    return NULL;
+    g_object_unref(app);
+    return ret;
 }
 #endif

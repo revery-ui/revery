@@ -116,7 +116,6 @@ CAMLprim value revery_alertOpenFiles_native(
 
     if (fileList) {
         CAMLlocal1(camlArr);
-
         int len = -1;
         while (fileList[++len] != NULL) {
         }
