@@ -2,6 +2,7 @@ module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 
 module Animation = Animation;
+module Spring = Spring;
 module Easing = Easing;
 
 module ImageResizeMode = ImageResizeMode;
