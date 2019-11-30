@@ -1,6 +1,10 @@
 # Steps for restoring project cache
 
 steps:
+  - bash: 'mkdir -p $(ESY__CACHE_INSTALL_PATH)'
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+    displayName: '[Cache][Restore] Create cache directory'
+
   - task: DownloadBuildArtifacts@0
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     displayName: '[Cache][Restore] Restore install'
@@ -14,10 +18,6 @@ steps:
         artifactName: 'cache-$(Agent.OS)-install'
         downloadPath: '$(STAGING_DIRECTORY)'
     continueOnError: true
-
-  - bash: 'mkdir -p $(ESY__CACHE_INSTALL_PATH)'
-    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
-    displayName: '[Cache][Restore] Create cache directory'
 
   # - bash: 'cd $(ESY__NPM_ROOT) && tar -xf $(STAGING_DIRECTORY_UNIX)/cache-$(Agent.OS)-install/npm-cache.tar -C .'
   #   continueOnError: true
