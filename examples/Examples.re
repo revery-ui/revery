@@ -26,7 +26,11 @@ type state = {
 let state: state = {
   examples: [
     {name: "Animation", render: _w => Hello.render(), source: "Hello.re"},
-    {name: "Spring", render: _w => SpringExample.render(), source: "SpringExample.re"},
+    {
+      name: "Spring",
+      render: _w => SpringExample.render(),
+      source: "SpringExample.re",
+    },
     {
       name: "CanQuit",
       render: _ => CanQuitExample.render(),

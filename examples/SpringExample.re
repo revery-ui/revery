@@ -10,12 +10,7 @@ module SpringyLogo = {
     let%hook imageWidth =
       Hooks.spring(
         targetPosition,
-        Spring.Options.create(
-          ~damping,
-          ~stiffness,
-          ~initialValue=2.0,
-          (),
-        ),
+        Spring.Options.create(~damping, ~stiffness, ~initialValue=2.0, ()),
       );
 
     let onMouseDown = _ => setTargetPosition(_ => 2.0);
@@ -76,7 +71,6 @@ module SliderControl = {
     </View>;
   };
 };
-
 
 module Example = {
   module Styles = {

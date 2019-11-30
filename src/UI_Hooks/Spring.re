@@ -39,14 +39,13 @@ let springReducer: (action, state) => state =
 
 let spring = (v: float, opts: SpringModel.Options.t) => {
   let%hook (curr, dispatch) =
-    Reducer.reducer(~initialState=initialState(v, opts, Time.now()), springReducer);
+    Reducer.reducer(
+      ~initialState=initialState(v, opts, Time.now()),
+      springReducer,
+    );
 
   let%hook (time, _) =
-    Timer.timer(
-      ~active=curr.isActive,
-      ~tickRate=Time.zero,
-      (),
-    );
+    Timer.timer(~active=curr.isActive, ~tickRate=Time.zero, ());
 
   if (curr.isActive) {
     dispatch(Tick(time));

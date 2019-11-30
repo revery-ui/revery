@@ -1,13 +1,14 @@
 open Revery_Core;
 
-module Options {
+module Options: {
   type t = {
     stiffness: float,
     damping: float,
     initialValue: float,
   };
 
-  let create: (~stiffness:float=?, ~damping:float=?, ~initialValue: float=?, unit) => t;
+  let create:
+    (~stiffness: float=?, ~damping: float=?, ~initialValue: float=?, unit) => t;
 
   // Some basic presets
   let default: t;
@@ -16,7 +17,7 @@ module Options {
   let stiff: t;
   let slow: t;
   let molasses: t;
-}
+};
 
 type t;
 
