@@ -41,18 +41,11 @@ jobs:
     # ESY__NPM_ROOT: /usr/local/lib/node_modules/esy
 
   steps:
-  - script: ls -lA /Users/runner
-  - script: echo _________________________________________________________________________________________________
-  - script: ls -lA /Users/Shared
   - script: brew update
   - script: brew install libpng ragel
   - script: node --version
   - template: .ci/restore-build-cache.yml
   - template: .ci/esy-check-hygiene.yml
-  - script: ls -lA /Users/runner/.esy
-  - script: ls -lA /Users/runner/runners
-  - script: echo _________________________________________________________________________________________________
-  - script: ls -lA /Users/Shared
   - template: .ci/publish-build-cache.yml
 
 - job: MacOS
