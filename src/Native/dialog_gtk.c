@@ -58,6 +58,8 @@ void activate_filechooser(GtkApplication *app, struct FileChooserOptions *option
         GTK_RESPONSE_ACCEPT, NULL);
     GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
 
+    gtk_file_chooser_set_show_hidden(chooser, options->showHidden);
+
     if (options->fileTypes) {
         char *wildcard = "*.";
         char *name = "";
@@ -73,6 +75,9 @@ void activate_filechooser(GtkApplication *app, struct FileChooserOptions *option
         gtk_file_filter_set_name(filter, name);
         gtk_file_chooser_add_filter(chooser, filter);
     }
+
+
+
     result = gtk_dialog_run(GTK_DIALOG(dialog));
 
     if (result == GTK_RESPONSE_ACCEPT) {
