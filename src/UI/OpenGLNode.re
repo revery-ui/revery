@@ -28,12 +28,9 @@ class openGLNode (()) = {
     switch (render) {
     | Some(r) =>
       Overflow.render(
-        worldTransform,
+        parentContext.canvas,
         LayoutTypes.Hidden,
         dimensions,
-        ctx.screenHeight,
-        ctx.pixelRatio,
-        ctx.scaleFactor,
         () =>
         r(worldTransform, parentContext)
       )

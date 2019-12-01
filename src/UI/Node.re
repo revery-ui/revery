@@ -57,19 +57,16 @@ class node (()) = {
 
     let ctx = RenderPass.getContext();
 
-      let layout = _layoutNode.layout;
+    let layout = _layoutNode.layout;
     let { canvas, _ }: NodeDrawContext.t = parentContext;
 
     Revery_Draw.Canvas.save(canvas);
     Revery_Draw.Canvas.translate(canvas, layout.left |> float_of_int, layout.top |> float_of_int);
 
     Overflow.render(
-      worldTransform,
+      canvas,
       style.overflow,
       dimensions,
-      ctx.screenHeight,
-      ctx.pixelRatio,
-      ctx.scaleFactor,
       () => {
         let localContext =
           NodeDrawContext.createFromParent(parentContext, style.opacity);

@@ -112,10 +112,6 @@ let drawImage = (~x, ~y, src, v: t) => {
 
 };
 
-let setMatrix = (v: t, mat: Skia.Matrix.t) => {
-  Canvas.setMatrix(Surface.getCanvas(v), mat);
-};
-
 let drawText = (~color=Revery_Core.Colors.white, ~x=0., ~y=0., ~fontFamily, ~fontSize, text, v: t) => {
 
   let (_, skiaTypeface) = FontCache.load(fontFamily, 10);
@@ -132,6 +128,14 @@ let drawText = (~color=Revery_Core.Colors.white, ~x=0., ~y=0., ~fontFamily, ~fon
   Paint.setTextSize(fill2, fontSize);
   Canvas.drawText(Surface.getCanvas(v), text, x, y, fill2);
   }
+};
+
+let setMatrix = (v: t, mat: Skia.Matrix.t) => {
+  Canvas.setMatrix(Surface.getCanvas(v), mat);
+};
+
+let clipRect = (v: t, rect: Rectangle.t) => {
+  Canvas.clipRect(Surface.getCanvas(v), toSkiaRect(rect), Intersect, true);
 };
 
 let test_draw = (v: t) => {

@@ -77,7 +77,6 @@ let render =
       ~screenWidth=adjustedWidth,
       (),
     );
-    Overflow.reset();
     rootNode#draw(drawContext);
     //DebugDraw.draw();
     RenderPass.endAlphaPass();
