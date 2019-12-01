@@ -60,14 +60,17 @@ void activate_filechooser(GtkApplication *app, struct FileChooserOptions *option
 
     if (options->fileTypes) {
         char *wildcard = "*.";
+        char *name = "";
         GtkFileFilter *filter = gtk_file_filter_new();
         for (int i = 0; i < options->fileTypesSize; i++) {
             char *fileType = options->fileTypes[i];
             char *pattern = malloc(strlen(wildcard) + strlen(fileType) + 1);
             strcpy(pattern, wildcard);
             strcat(pattern, fileType);
+            name = g_strjoin(" ", name, pattern, NULL);
             gtk_file_filter_add_pattern(filter, pattern);
         }
+        gtk_file_filter_set_name(filter, name);
         gtk_file_chooser_add_filter(chooser, filter);
     }
     result = gtk_dialog_run(GTK_DIALOG(dialog));
