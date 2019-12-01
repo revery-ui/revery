@@ -119,8 +119,7 @@ class node (()) = {
   pub getStyle = () => _style;
   pub setEvents = events => _events = events;
   pub getEvents = () => _events;
-  pub getChildren = () =>
-    _children;
+  pub getChildren = () => _children;
   pub getWorldTransform = () => {
     let state = _cachedNodeState |> getOrThrow("getWorldTransform");
     state.worldTransform;
@@ -259,34 +258,31 @@ class node (()) = {
     let bboxClipped = _this#getBoundingBoxClipped();
     BoundingBox2d.isPointInside(bboxClipped, p);
   };
-
   pub addChild = (child: node, position: int) => {
     let rec insert = (i, node, before, after) =>
       if (i > 0) {
         switch (after) {
-          | [] => after
-          | [head, ...tail] => insert(i - 1, node, [head, ...before], tail)
-        }
+        | [] => after
+        | [head, ...tail] => insert(i - 1, node, [head, ...before], tail)
+        };
       } else if (i == 0) {
-        insert(i - 1, node, before, [node, ...after])
+        insert(i - 1, node, before, [node, ...after]);
       } else {
         switch (before) {
-          | [] => after
-          | [head, ...tail] => insert(i, node, tail, [head, ...after])
-        }
+        | [] => after
+        | [head, ...tail] => insert(i, node, tail, [head, ...after])
+        };
       };
     _children = insert(position, child, [], _children);
     child#_setParent(Some((_this :> node)));
     _this#markLayoutDirty();
   };
-
   pub removeChild = (n: node) => {
     _children =
       List.filter(c => c#getInternalId() != n#getInternalId(), _children);
     n#_setParent(None);
     _this#markLayoutDirty();
   };
-
   pub firstChild = () => List.hd(_this#getChildren());
   pub getParent = () => _parent;
   pub getMeasureFunction = () => None;
