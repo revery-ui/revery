@@ -23,6 +23,7 @@ class textNode (text: string) = {
 
     let {color, backgroundColor, fontFamily, fontSize, lineHeight, _} = style;
     let opacity = parentContext.opacity *. style.opacity;
+    let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 
     let ascentPx =
       Text.getAscent(~fontFamily, ~fontSize, ());
@@ -30,7 +31,6 @@ class textNode (text: string) = {
       Text.getDescent(~fontFamily, ~fontSize, ());
     let lineHeightPx =
       lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
-    // TODO something about the leading seems to be off, it creates too much space
     let leadingPx = lineHeightPx -. ascentPx -. descentPx;
 
     /* when style.width & style.height are defined, Layout doesn't call the measure function */
@@ -44,26 +44,28 @@ class textNode (text: string) = {
     let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
     Revery_Draw.Canvas.setMatrix(canvas, skiaWorld);
     
-    let dimensions = _this#measurements();
-    Canvas.translate(canvas, float_of_int(dimensions.left), float_of_int(dimensions.top));
     List.iteri(
       (lineIndex, line) => {
-        /*Text.drawString(
-          ~fontFamily,
-          ~fontSize,
-          ~gamma,
-          ~color,
-          ~backgroundColor,
-          ~opacity,
-          ~transform=_this#getWorldTransform(),
-          ~x=0.,
-          ~y=lineHeightPx *. float_of_int(lineIndex),
-          line,
-        )*/
+          let baselineY = (leadingPx /. 2. *. 0.) +. ascentPx +. (lineHeightPx *. float_of_int(lineIndex));
 
-          let baselineY = leadingPx /. 2. +. ascentPx +. lineHeightPx *. float_of_int(lineIndex);
+          // let dimensions = _this#measurements();
+          // // print_endline ("Drawing text: " ++ line ++ " - y: " ++ string_of_float(y));
+          // let emHeightPx = ascentPx +. descentPx;       
+          // print_endline("fontSize: " ++ string_of_int(fontSize) ++ ", emHeightPx: " ++ string_of_float(emHeightPx));
+          // let lineRect = Revery_Math.Rectangle.create(~x=0., ~y=baselineY -. ascentPx, ~width=float_of_int(dimensions.width), ~height=emHeightPx, ());
+          // let backgroundColor = Skia.Color.makeArgb(0xAA, 0x33, 0xFF, 0x33);
+          // let backgroundPaint = Skia.Paint.make();      
+          // Skia.Paint.setColor(backgroundPaint, backgroundColor);
+          // Canvas.drawRect(canvas, lineRect, backgroundPaint);
+
+          // let leadingRect = Revery_Math.Rectangle.create(~x=0., ~y=baselineY +. descentPx, ~width=float_of_int(dimensions.width), ~height=leadingPx, ());
+          // let leadingColor = Skia.Color.makeArgb(0xAA, 0xFF, 0x33, 0x33);
+          // let leadingPaint = Skia.Paint.make();
+          // Skia.Paint.setColor(leadingPaint, leadingColor);
+          // Canvas.drawRect(canvas, leadingRect, leadingPaint)
+
           // print_endline ("Drawing text: " ++ line ++ " - y: " ++ string_of_float(y));
-          Canvas.drawText(~color, ~x=0., ~y=baselineY, ~fontFamily, ~fontSize=float_of_int(fontSize), line, canvas);
+          Canvas.drawText(~color=colorWithAppliedOpacity, ~x=0., ~y=baselineY, ~fontFamily, ~fontSize=float_of_int(fontSize), line, canvas);
         }
         ,
       _lines,
