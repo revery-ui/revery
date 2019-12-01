@@ -28,15 +28,6 @@ type cachedNodeState = {
 };
 class node (()) = {
   as _this;
-  /* We use revChildren for appending, as appending to the _head_ of a list
-   * is much cheaper than appending to the _tail_ of a list.
-   * However, we often want the child in the 'correct' order - so we'll track
-   * when we've made changes to `_revChildren`, and update `_children` on request
-   * if `_revChildren` is dirty. `_childrenInvalid` tracks if `_children` needs
-   * to be updated.
-   */
-  val mutable _revChildren: list(node) = [];
-  val mutable _childrenInvalid = false;
   val mutable _children: list(node) = [];
   val mutable _style: Style.t = Style.defaultStyle;
   val mutable _layoutStyle: LayoutTypes.cssStyle = Layout.LayoutSupport.defaultStyle;
@@ -128,15 +119,8 @@ class node (()) = {
   pub getStyle = () => _style;
   pub setEvents = events => _events = events;
   pub getEvents = () => _events;
-  pub getRevChildren = () => _revChildren;
   pub getChildren = () =>
-    if (_childrenInvalid) {
-      _childrenInvalid = false;
-      _children = List.rev(_revChildren);
-      _children;
-    } else {
-      _children;
-    };
+    _children;
   pub getWorldTransform = () => {
     let state = _cachedNodeState |> getOrThrow("getWorldTransform");
     state.worldTransform;
@@ -228,8 +212,6 @@ class node (()) = {
     let bboxClipped = _this#_recalculateBoundingBoxClipped(worldTransform);
     let depth = _this#_recalculateDepth();
 
-    _children = List.rev(_revChildren);
-
     _cachedNodeState =
       Some({transform, worldTransform, bbox, bboxClipped, depth});
 
@@ -277,19 +259,34 @@ class node (()) = {
     let bboxClipped = _this#getBoundingBoxClipped();
     BoundingBox2d.isPointInside(bboxClipped, p);
   };
-  pub addChild = (n: node) => {
-    _revChildren = [n, ..._revChildren];
-    _childrenInvalid = true;
-    n#_setParent(Some((_this :> node)));
+
+  pub addChild = (child: node, position: int) => {
+    let rec insert = (i, node, before, after) =>
+      if (i > 0) {
+        switch (after) {
+          | [] => after
+          | [head, ...tail] => insert(i - 1, node, [head, ...before], tail)
+        }
+      } else if (i == 0) {
+        insert(i - 1, node, before, [node, ...after])
+      } else {
+        switch (before) {
+          | [] => after
+          | [head, ...tail] => insert(i, node, tail, [head, ...after])
+        }
+      };
+    _children = insert(position, child, [], _children);
+    child#_setParent(Some((_this :> node)));
     _this#markLayoutDirty();
   };
+
   pub removeChild = (n: node) => {
-    _revChildren =
-      List.filter(c => c#getInternalId() != n#getInternalId(), _revChildren);
-    _childrenInvalid = true;
+    _children =
+      List.filter(c => c#getInternalId() != n#getInternalId(), _children);
     n#_setParent(None);
     _this#markLayoutDirty();
   };
+
   pub firstChild = () => List.hd(_this#getChildren());
   pub getParent = () => _parent;
   pub getMeasureFunction = () => None;

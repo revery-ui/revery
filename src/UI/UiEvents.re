@@ -101,7 +101,7 @@ let getTopMostNode = (node: node, pos) => {
 
       let ignored = mode == Ignore;
 
-      let revChildren = node#getRevChildren();
+      let revChildren = List.rev(node#getChildren());
       let ret =
         switch (revChildren) {
         | [] => ignored ? None : Some(node)
