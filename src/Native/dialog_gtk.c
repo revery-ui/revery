@@ -34,32 +34,35 @@ void revery_alert_gtk(void *pWin, const char *szMessage) {
     g_object_unref(app);
 }
 
-const char **revery_open_files_gtk(const char *startDir, char *fileTypes[],
-                                   int fileTypesSize, int allowMultiple,
-                                   int canChooseFiles, int canChooseDirectories,
-                                   int showHidden, const char *buttonText,
-                                   const char *title) {
+struct FileChooserOptions {
+    const char *startDir;
+    char **fileTypes;
+    int fileTypesSize;
+    int allowMultiple;
+    int canChooseFiles;
+    int canChooseDirectories;
+    int showHidden;
+    const char *buttonText;
+    const char *title;
+    const char **result;
+};
+
+void activate_filechooser(GtkApplication *app, struct FileChooserOptions *options) {
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
     gint result;
-    const char *okButtonText = (buttonText ? buttonText : "Open");
-    const char *dialogTitle = (title ? title : "Open File(s) and/or Folder(s)");
-
-    GtkApplication *app;
-    app = gtk_application_new("org.gtk.revery", G_APPLICATION_FLAGS_NONE);
-    /* argv the final argument to run can be set to NULL in which case argc
-     * should be set to 0 */
-    g_application_run(G_APPLICATION(app), 0, NULL);
+    const char *okButtonText = (options->buttonText ? options->buttonText : "Open");
+    const char *dialogTitle = (options->title ? options->title : "Open File(s) and/or Folder(s)");
 
     GtkWidget *dialog = gtk_file_chooser_dialog_new(
         dialogTitle, NULL, action, "Cancel", GTK_RESPONSE_CANCEL, okButtonText,
         GTK_RESPONSE_ACCEPT, NULL);
     GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
 
-    if (fileTypes) {
+    if (options->fileTypes) {
         char *wildcard = "*.";
         GtkFileFilter *filter = gtk_file_filter_new();
-        for (int i = 0; i < fileTypesSize; i++) {
-            char *fileType = fileTypes[i];
+        for (int i = 0; i < options->fileTypesSize; i++) {
+            char *fileType = options->fileTypes[i];
             char *pattern = malloc(strlen(wildcard) + strlen(fileType) + 1);
             strcpy(pattern, wildcard);
             strcat(pattern, fileType);
@@ -67,22 +70,51 @@ const char **revery_open_files_gtk(const char *startDir, char *fileTypes[],
         }
         gtk_file_chooser_add_filter(chooser, filter);
     }
-
-    const char **ret = NULL;
     result = gtk_dialog_run(GTK_DIALOG(dialog));
 
     if (result == GTK_RESPONSE_ACCEPT) {
         GSList *filenames = gtk_file_chooser_get_filenames(chooser);
         int size = g_slist_length(filenames);
-        ret = malloc((size + 1) * sizeof(char *));
+        options->result = malloc((size + 1) * sizeof(char *));
         for (int i = 0; i < size; i++) {
-            ret[i] = (char *) g_slist_nth_data(filenames, i);
+            options->result[i] = (char *) g_slist_nth_data(filenames, i);
         }
-        ret[size] = NULL;
+        options->result[size] = NULL;
+    } else {
+        options->result = NULL;
     }
 
     gtk_widget_destroy(dialog);
+}
+
+const char **revery_open_files_gtk(const char *startDir, char *fileTypes[],
+                                   int fileTypesSize, int allowMultiple,
+                                   int canChooseFiles, int canChooseDirectories,
+                                   int showHidden, const char *buttonText,
+                                   const char *title) {
+    struct FileChooserOptions options = {
+        startDir,
+        fileTypes,
+        fileTypesSize,
+        allowMultiple,
+        canChooseFiles,
+        canChooseDirectories,
+        showHidden,
+        buttonText,
+        title,
+        NULL
+    };
+
+    GtkApplication *app;
+    app = gtk_application_new("org.gtk.revery", G_APPLICATION_FLAGS_NONE);
+    g_signal_connect(app, "activate", G_CALLBACK(activate_filechooser),
+                     (gpointer)&options);
+    /* argv the final argument to run can be set to NULL in which case argc
+     * should be set to 0 */
+    g_application_run(G_APPLICATION(app), 0, NULL);
+
+
     g_object_unref(app);
-    return ret;
+    return options.result;
 }
 #endif
