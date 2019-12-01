@@ -48,7 +48,7 @@ struct FileChooserOptions {
 };
 
 void activate_filechooser(GtkApplication *app, struct FileChooserOptions *options) {
-    GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
+    GtkFileChooserAction action = options->canChooseDirectories ? GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER : GTK_FILE_CHOOSER_ACTION_OPEN;
     gint result;
     const char *okButtonText = (options->buttonText ? options->buttonText : "Open");
     const char *dialogTitle = (options->title ? options->title : "Open File(s) and/or Folder(s)");
@@ -59,6 +59,7 @@ void activate_filechooser(GtkApplication *app, struct FileChooserOptions *option
     GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
 
     gtk_file_chooser_set_show_hidden(chooser, options->showHidden);
+    gtk_file_chooser_set_select_multiple(chooser, options->allowMultiple);
 
     if (options->fileTypes) {
         char *wildcard = "*.";
@@ -75,8 +76,6 @@ void activate_filechooser(GtkApplication *app, struct FileChooserOptions *option
         gtk_file_filter_set_name(filter, name);
         gtk_file_chooser_add_filter(chooser, filter);
     }
-
-
 
     result = gtk_dialog_run(GTK_DIALOG(dialog));
 
