@@ -16,7 +16,7 @@ describe("NodeTests", ({test, _}) => {
 
     expect.option(childNode#getParent()).toBeNone();
 
-    parentNode#addChild(childNode);
+    parentNode#addChild(childNode, 0);
 
     expect.int(List.length(parentNode#getChildren())).toBe(1);
     expect.option(childNode#getParent()).toBe(
@@ -68,7 +68,7 @@ describe("NodeTests", ({test, _}) => {
 
       let childNode = (new node)();
       childNode#setStyle(Style.make(~width=25, ~height=25, ()));
-      parentNode#addChild(childNode);
+      parentNode#addChild(childNode, 0);
 
       Layout.layout(parentNode);
       parentNode#recalculate();
