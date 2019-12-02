@@ -6,6 +6,27 @@ module RenderPass = Revery_Draw.RenderPass;
 
 open Revery_Math;
 
+module ListEx = {
+  let insert = (i, node, list) => {
+    let rec loop = (i, before, after) =>
+      if (i > 0) {
+        switch (after) {
+        | [] => loop(0, before, after)
+        | [head, ...tail] => loop(i - 1, [head, ...before], tail)
+        };
+      } else if (i == 0) {
+        loop(i - 1, before, [node, ...after]);
+      } else {
+        switch (before) {
+        | [] => after
+        | [head, ...tail] => loop(i, tail, [head, ...after])
+        };
+      };
+
+    loop(i, [], list);
+  };
+};
+
 module UniqueId =
   Revery_Core.UniqueId.Make({});
 
@@ -259,21 +280,7 @@ class node (()) = {
     BoundingBox2d.isPointInside(bboxClipped, p);
   };
   pub addChild = (child: node, position: int) => {
-    let rec insert = (i, node, before, after) =>
-      if (i > 0) {
-        switch (after) {
-        | [] => insert(0, node, before, after)
-        | [head, ...tail] => insert(i - 1, node, [head, ...before], tail)
-        };
-      } else if (i == 0) {
-        insert(i - 1, node, before, [node, ...after]);
-      } else {
-        switch (before) {
-        | [] => after
-        | [head, ...tail] => insert(i, node, tail, [head, ...after])
-        };
-      };
-    _children = insert(position, child, [], _children);
+    _children = ListEx.insert(position, child, _children);
     child#_setParent(Some((_this :> node)));
     _this#markLayoutDirty();
   };
