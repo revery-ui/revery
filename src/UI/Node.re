@@ -262,7 +262,7 @@ class node (()) = {
     let rec insert = (i, node, before, after) =>
       if (i > 0) {
         switch (after) {
-        | [] => after
+        | [] => insert(0, node, before, after)
         | [head, ...tail] => insert(i - 1, node, [head, ...before], tail)
         };
       } else if (i == 0) {
