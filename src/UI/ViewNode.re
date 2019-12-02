@@ -318,6 +318,7 @@ class viewNode (()) = {
     let style = _super#getStyle();
     let opacity = style.opacity *. parentContext.opacity;
 
+    // TODO find a way to only manage the matrix stack in Node
     let world = _this#getWorldTransform();
 
     /*

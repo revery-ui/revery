@@ -61,7 +61,8 @@ class node (()) = {
     let { canvas, _ }: NodeDrawContext.t = parentContext;
 
     Revery_Draw.Canvas.save(canvas);
-    Revery_Draw.Canvas.translate(canvas, layout.left |> float_of_int, layout.top |> float_of_int);
+    let skiaWorldTransform = Revery_Math.Matrix.toSkiaMatrix(worldTransform);
+    Revery_Draw.Canvas.setMatrix(canvas, skiaWorldTransform);
 
     Overflow.render(
       canvas,
