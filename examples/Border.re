@@ -3,7 +3,7 @@ open Revery.UI;
 
 let defaultStyle =
   Style.[
-    backgroundColor(Colors.white),
+    backgroundColor(Color.multiplyAlpha(0.2, Colors.white)),
     position(`Relative),
     left(100),
     top(100),

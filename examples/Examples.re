@@ -137,7 +137,7 @@ let state: state = {
       source: "ZoomExample.re",
     },
   ],
-  selectedExample: "Calculator",
+  selectedExample: "Border",
 };
 
 let getExampleByName = (state: state, example: string) =>

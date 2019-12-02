@@ -103,6 +103,10 @@ let drawRect = (v: t, rect: Rectangle.t, paint) => {
   Canvas.drawRect(Surface.getCanvas(v), toSkiaRect(rect), paint);
 };
 
+let drawRRect = (v: t, rRect: Skia.RRect.t, paint) => {
+  Canvas.drawRRect(Surface.getCanvas(v), rRect, paint);
+};
+
 let drawImage = (~x, ~y, src, v: t) => {
   let image = ImageRenderer.getTexture(src);
   switch (image) {
@@ -113,7 +117,6 @@ let drawImage = (~x, ~y, src, v: t) => {
 };
 
 let drawText = (~color=Revery_Core.Colors.white, ~x=0., ~y=0., ~fontFamily, ~fontSize, text, v: t) => {
-
   let (_, skiaTypeface) = FontCache.load(fontFamily, 10);
   switch (skiaTypeface) {
   | None => ();
@@ -134,8 +137,16 @@ let setMatrix = (v: t, mat: Skia.Matrix.t) => {
   Canvas.setMatrix(Surface.getCanvas(v), mat);
 };
 
-let clipRect = (v: t, rect: Rectangle.t) => {
-  Canvas.clipRect(Surface.getCanvas(v), toSkiaRect(rect), Intersect, true);
+let clipRect = (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rect: Rectangle.t) => {
+  Canvas.clipRect(Surface.getCanvas(v), toSkiaRect(rect), clipOp, antiAlias);
+};
+
+let clipRRect = (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rRect: Skia.RRect.t) => {
+  Canvas.clipRRect(Surface.getCanvas(v), rRect, clipOp, antiAlias);
+};
+
+let clipPath = (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, path: Skia.Path.t) => {
+  Canvas.clipPath(Surface.getCanvas(v), path, clipOp, antiAlias);
 };
 
 let test_draw = (v: t) => {
