@@ -34,129 +34,136 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
   let (bottomBorderWidth, bottomBorderColor) =
     borderStyle(style.borderBottom, style.borderVertical, style.border);
 
-  let innerRRect = Skia.RRect.make();
-  Skia.RRect.setRectRadii(
-    innerRRect,
-    Skia.Rect.makeLtrb(
-      leftBorderWidth,
-      topBorderWidth,
-      Skia.RRect.getWidth(outerRRect) -. rightBorderWidth,
-      Skia.RRect.getHeight(outerRRect) -. bottomBorderWidth,
-    ),
-    Skia.Vector.make(
-      borderRadius -. leftBorderWidth,
-      borderRadius -. topBorderWidth,
-    ),
-    Skia.Vector.make(
-      borderRadius -. rightBorderWidth,
-      borderRadius -. topBorderWidth,
-    ),
-    Skia.Vector.make(
-      borderRadius -. rightBorderWidth,
-      borderRadius -. bottomBorderWidth,
-    ),
-    Skia.Vector.make(
-      borderRadius -. leftBorderWidth,
-      borderRadius -. bottomBorderWidth,
-    ),
-  );
-
-  let tbc = Color.multiplyAlpha(opacity, topBorderColor);
-  let lbc = Color.multiplyAlpha(opacity, leftBorderColor);
-  let rbc = Color.multiplyAlpha(opacity, rightBorderColor);
-  let bbc = Color.multiplyAlpha(opacity, bottomBorderColor);
-
-  let borderPaint = Skia.Paint.make();
-  Skia.Paint.setAntiAlias(borderPaint, true);
-
-  if (topBorderWidth != 0. && tbc.a > 0.001) {
-    Revery_Draw.Canvas.save(canvas);
-
-    let outerLength = Skia.RRect.getWidth(outerRRect);
-    let vectorScalingFactor = outerLength /. (leftBorderWidth +. rightBorderWidth);
-    let clippingTriangle = Skia.Path.make();
-    Skia.Path.moveTo(clippingTriangle, 0., 0.);
-    Skia.Path.lineTo(
-      clippingTriangle,
-      vectorScalingFactor *. leftBorderWidth,
-      vectorScalingFactor *. topBorderWidth,
+  if (
+    leftBorderWidth === 0. &&
+    topBorderWidth === 0. &&
+    rightBorderWidth === 0. &&
+    bottomBorderWidth === 0.
+  ) {
+    outerRRect;
+  } else {
+    let innerRRect = Skia.RRect.make();
+    Skia.RRect.setNinePatch(
+      innerRRect,
+      Skia.Rect.makeLtrb(
+        leftBorderWidth,
+        topBorderWidth,
+        Skia.RRect.getWidth(outerRRect) -. rightBorderWidth,
+        Skia.RRect.getHeight(outerRRect) -. bottomBorderWidth,
+      ),
+      // TODO For some reason, the clipping won't work with radii assigned - this needs to be revisited
+      0., 0., 0., 0.,
+      // max(borderRadius -. leftBorderWidth, 0.),
+      // max(borderRadius -. topBorderWidth, 0.),
+      // max(borderRadius -. rightBorderWidth, 0.),
+      // max(borderRadius -. bottomBorderWidth, 0.),
     );
-    Skia.Path.lineTo(clippingTriangle, outerLength, 0.); 
-    Skia.Path.lineTo(clippingTriangle, 0., 0.);
-    Revery_Draw.Canvas.clipPath(canvas, ~clipOp=Intersect, clippingTriangle);
-    Revery_Draw.Canvas.clipRRect(canvas, ~clipOp=Difference, innerRRect);
+  
+    let tbc = Color.multiplyAlpha(opacity, topBorderColor);
+    let lbc = Color.multiplyAlpha(opacity, leftBorderColor);
+    let rbc = Color.multiplyAlpha(opacity, rightBorderColor);
+    let bbc = Color.multiplyAlpha(opacity, bottomBorderColor);
+  
+    let borderPaint = Skia.Paint.make();
+    Skia.Paint.setAntiAlias(borderPaint, true);
 
-    Skia.Paint.setColor(borderPaint, Color.toSkia(tbc));
+    let outerWidth = Skia.RRect.getWidth(outerRRect);
+    let outerHeight = Skia.RRect.getHeight(outerRRect);
+    // We use these for finding the points where the color border lines in the corners would meet
+    // in the center area so that we can correctly crop borders that follow a rounded center
+    // shape
+    let horizontalExtrapolationFactor = outerWidth /. (leftBorderWidth +. rightBorderWidth);
+    let verticalExtrapolationFactor = outerHeight /. (topBorderWidth +. bottomBorderWidth);
+  
+    if (topBorderWidth != 0. && tbc.a > 0.001) {
+      Revery_Draw.Canvas.save(canvas);
+  
+      let clippingTriangle = Skia.Path.make();
+      Skia.Path.moveTo(clippingTriangle, 0., 0.);
+      Skia.Path.lineTo(
+        clippingTriangle,
+        horizontalExtrapolationFactor *. leftBorderWidth,
+        horizontalExtrapolationFactor *. topBorderWidth,
+      );
+      Skia.Path.lineTo(clippingTriangle, outerWidth, 0.); 
+      Skia.Path.lineTo(clippingTriangle, 0., 0.);
+      Revery_Draw.Canvas.clipPath(canvas, clippingTriangle);
+      Revery_Draw.Canvas.clipRRect(canvas, ~clipOp=Difference, innerRRect);
+  
+      Skia.Paint.setColor(borderPaint, Color.toSkia(tbc));
+      Revery_Draw.Canvas.drawRRect(canvas, outerRRect, borderPaint);
+  
+      Revery_Draw.Canvas.restore(canvas);
+    };
+  
+    if (leftBorderWidth != 0. && lbc.a > 0.001) {
+      Revery_Draw.Canvas.save(canvas);
+   
+      let clippingTriangle = Skia.Path.make();
+      Skia.Path.moveTo(clippingTriangle, 0., outerHeight); 
+      Skia.Path.lineTo(clippingTriangle, 0., 0.);
+      Skia.Path.lineTo(
+        clippingTriangle,
+        verticalExtrapolationFactor *. leftBorderWidth,
+        verticalExtrapolationFactor *. topBorderWidth,
+      );
+      Skia.Path.lineTo(clippingTriangle, 0., outerHeight);
+      Revery_Draw.Canvas.clipPath(canvas, clippingTriangle);
+      Revery_Draw.Canvas.clipRRect(canvas, ~clipOp=Difference, innerRRect);
+  
+      Skia.Paint.setColor(borderPaint, Color.toSkia(lbc));
+      Revery_Draw.Canvas.drawRRect(canvas, outerRRect, borderPaint);
 
-    Revery_Draw.Canvas.drawRRect(canvas, outerRRect, borderPaint);
+      Revery_Draw.Canvas.restore(canvas);
+    };
+  
+    if (rightBorderWidth != 0. && rbc.a > 0.001) {
+      Revery_Draw.Canvas.save(canvas);
+   
+      let clippingTriangle = Skia.Path.make();
+      Skia.Path.moveTo(clippingTriangle, outerWidth, 0.); 
+      Skia.Path.lineTo(clippingTriangle, outerWidth, outerHeight);
+      Skia.Path.lineTo(
+        clippingTriangle,
+        outerWidth -. horizontalExtrapolationFactor *. rightBorderWidth,
+        horizontalExtrapolationFactor *. topBorderWidth,
+      );
+      Skia.Path.lineTo(clippingTriangle, outerWidth, 0.);
+      Revery_Draw.Canvas.clipPath(canvas, clippingTriangle);
+      Revery_Draw.Canvas.clipRRect(canvas, ~clipOp=Difference, innerRRect);
+  
+      Skia.Paint.setColor(borderPaint, Color.toSkia(rbc));
+  
+      Revery_Draw.Canvas.drawRRect(canvas, outerRRect, borderPaint);
 
-    Revery_Draw.Canvas.restore(canvas);
+      Revery_Draw.Canvas.restore(canvas);
+    };
+  
+    // FIXME something about the bottom and right border seems to be off
+    if (bottomBorderWidth != 0. && bbc.a > 0.001) {
+      Revery_Draw.Canvas.save(canvas);
+   
+      let clippingTriangle = Skia.Path.make();
+      Skia.Path.moveTo(clippingTriangle, outerWidth, outerHeight); 
+      Skia.Path.lineTo(clippingTriangle, 0., outerHeight);
+      Skia.Path.lineTo(
+        clippingTriangle,
+        verticalExtrapolationFactor *. leftBorderWidth,
+        outerHeight -. verticalExtrapolationFactor *. bottomBorderWidth,
+      );
+      Skia.Path.lineTo(clippingTriangle, outerWidth, outerHeight);
+      Revery_Draw.Canvas.clipPath(canvas, clippingTriangle);
+      Revery_Draw.Canvas.clipRRect(canvas, ~clipOp=Difference, innerRRect);
+  
+      Skia.Paint.setColor(borderPaint, Color.toSkia(bbc));
+  
+      Revery_Draw.Canvas.drawRRect(canvas, outerRRect, borderPaint);
+
+      Revery_Draw.Canvas.restore(canvas);
+    };
+  
+    innerRRect;
   };
-
-  // if (leftBorderWidth != 0. && lbc.a > 0.001) {
-  //   Revery_Draw.Canvas.save(canvas);
-
-  //   let clippingTrapezoid = Skia.Path.make();
-  //   Skia.Path.moveTo(clippingTrapezoid, 0., topBorderWidth +. height +. bottomBorderWidth);
-  //   Skia.Path.lineTo(clippingTrapezoid, 0., 0.); 
-  //   Skia.Path.lineTo(clippingTrapezoid, leftBorderWidth, topBorderWidth);
-  //   Skia.Path.lineTo(clippingTrapezoid, leftBorderWidth, topBorderWidth +. height);
-  //   Skia.Path.lineTo(clippingTrapezoid, 0., topBorderWidth +. height +. bottomBorderWidth);
-  //   Revery_Draw.Canvas.clipPath(canvas, clippingTrapezoid);
-    
-  //   Skia.Paint.setColor(borderPaint, Color.toSkia(lbc));
-  //   Skia.Paint.setStrokeWidth(borderPaint, leftBorderWidth);
-
-  //   Skia.RRect.setRectXy(rRect, rect, borderRadius, borderRadius);
-  //   Skia.RRect.outset(rRect, leftBorderWidth /. 2., 0.);
-  //   Revery_Draw.Canvas.drawRRect(canvas, rRect, borderPaint);
-
-  //   Revery_Draw.Canvas.restore(canvas);
-  // };
-
-  // if (rightBorderWidth != 0. && rbc.a > 0.001) {
-  //   Revery_Draw.Canvas.save(canvas);
-
-  //   let clippingTrapezoid = Skia.Path.make();
-  //   Skia.Path.moveTo(clippingTrapezoid, leftBorderWidth +. width +. rightBorderWidth, 0.);
-  //   Skia.Path.lineTo(clippingTrapezoid, leftBorderWidth +. width +. rightBorderWidth, topBorderWidth +. height +. bottomBorderWidth); 
-  //   Skia.Path.lineTo(clippingTrapezoid, leftBorderWidth +. width, topBorderWidth +. height);
-  //   Skia.Path.lineTo(clippingTrapezoid, leftBorderWidth +. width, topBorderWidth);
-  //   Skia.Path.lineTo(clippingTrapezoid, leftBorderWidth +. width +. rightBorderWidth, 0.);
-  //   Revery_Draw.Canvas.clipPath(canvas, clippingTrapezoid);
-
-  //   Skia.Paint.setColor(borderPaint, Color.toSkia(rbc));
-  //   Skia.Paint.setStrokeWidth(borderPaint, rightBorderWidth);
-
-  //   Skia.RRect.setRectXy(rRect, rect, borderRadius, borderRadius);
-  //   Skia.RRect.outset(rRect, 0., rightBorderWidth /. 2.);
-  //   Revery_Draw.Canvas.drawRRect(canvas, rRect, borderPaint);
-    
-  //   Revery_Draw.Canvas.restore(canvas);
-  // };
-
-  // if (bottomBorderWidth != 0. && bbc.a > 0.001) {
-  //   Revery_Draw.Canvas.save(canvas);
-
-  //   let clippingTrapezoid = Skia.Path.make();
-  //   Skia.Path.moveTo(clippingTrapezoid, leftBorderWidth +. width +. rightBorderWidth, topBorderWidth +. height +. bottomBorderWidth);
-  //   Skia.Path.lineTo(clippingTrapezoid, 0., topBorderWidth +. height +. bottomBorderWidth); 
-  //   Skia.Path.lineTo(clippingTrapezoid, leftBorderWidth, topBorderWidth +. height);
-  //   Skia.Path.lineTo(clippingTrapezoid, leftBorderWidth +. width, topBorderWidth +. height);
-  //   Skia.Path.lineTo(clippingTrapezoid, leftBorderWidth +. width +. rightBorderWidth, topBorderWidth +. height +. bottomBorderWidth);
-  //   Revery_Draw.Canvas.clipPath(canvas, clippingTrapezoid);
-
-  //   Skia.Paint.setColor(borderPaint, Color.toSkia(bbc));
-  //   Skia.Paint.setStrokeWidth(borderPaint, bottomBorderWidth);
-
-  //   Skia.RRect.setRectXy(rRect, rect, borderRadius, borderRadius);
-  //   Skia.RRect.outset(rRect, bottomBorderWidth /. 2., 0.);
-  //   Revery_Draw.Canvas.drawRRect(canvas, rRect, borderPaint);
-
-  //   Revery_Draw.Canvas.restore(canvas);
-  // };
-
-  innerRRect;
 };
 
 // TODONOW: Bring back drop shadow
