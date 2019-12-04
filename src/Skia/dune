@@ -1,0 +1,4 @@
+(library
+    (name Revery_Skia)
+    (public_name Revery.Skia)
+    (libraries threads console.lib str lwt sdl2 skia flex fontkit))

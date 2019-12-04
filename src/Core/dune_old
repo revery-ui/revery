@@ -2,4 +2,4 @@
     (name Revery_Core)
     (public_name Revery.Core)
     (cxx_names file)
-    (libraries threads console.lib str lwt sdl2 skia flex fontkit Rench re))
+    (libraries skia threads str lwt sdl2))

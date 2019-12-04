@@ -55,7 +55,8 @@
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
     "esy-skia": "link:../esy-skia",
     "reason-skia": "link:../reason-skia",
-    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#34947ac97f898c8a94b1731df45aea16f8fc7b3c"
+    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#34947ac97f898c8a94b1731df45aea16f8fc7b3c",
+    "reason-fontkit": "link:../reason-fontkit"
   },
   "devDependencies": {
     "ocaml": ">=4.6.0 <4.8.0",
