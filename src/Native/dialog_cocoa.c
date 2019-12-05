@@ -85,6 +85,7 @@ const char **revery_open_files_cocoa(
             NSString *tmp = [[urls objectAtIndex:i] path];
             ret[i] = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
         }
+        [urls release];
         ret[size] = NULL;
         return ret;
     } else {
