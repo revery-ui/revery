@@ -91,8 +91,8 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
     let horizontalExtrapolationFactor = outerWidth /. (leftBorderWidth +. rightBorderWidth);
     let verticalExtrapolationFactor = outerHeight /. (topBorderWidth +. bottomBorderWidth);
 
-    let hasLeftOrRightBorder = horizontalExtrapolationFactor !== infinity;
-    let hasTopOrBottomBorder = verticalExtrapolationFactor !== infinity;
+    let hasLeftOrRightBorder = leftBorderWidth !== 0. || rightBorderWidth !== 0.;
+    let hasTopOrBottomBorder = topBorderWidth !== 0. || bottomBorderWidth !== 0.;
 
     let leftBorderClippingPath = 
    
