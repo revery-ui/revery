@@ -12,6 +12,8 @@ module Draw = Revery_Draw;
 module Geometry = Revery_Geometry;
 module Math = Revery_Math;
 module Shaders = Revery_Shaders;
+module Native = Revery_Native;
+
 module UI = {
   include Revery_UI;
   include Revery_UI_Primitives;
