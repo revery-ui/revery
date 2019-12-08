@@ -96,24 +96,20 @@ module NativeExamples = {
         />
       </Row>
       <Button title="Open File" onClick=openFile />
-      {
-        switch (fileListOpt) {
-        | Some(fileList) =>
-          fileList
-          |> Array.map(renderFilePath)
-          |> Array.to_list
-          |> React.listToElement
-        | None => <View />
-        }
-      }
+      {switch (fileListOpt) {
+       | Some(fileList) =>
+         fileList
+         |> Array.map(renderFilePath)
+         |> Array.to_list
+         |> React.listToElement
+       | None => <View />
+       }}
       <Text style=titleStyle text="Icon Progress Bar" />
       <Slider
-        onValueChanged={
-          x => {
-            setIconProgressValue(_ => x);
-            setProgress(x);
-          }
-        }
+        onValueChanged={x => {
+          setIconProgressValue(_ => x);
+          setProgress(x);
+        }}
         maximumValue=1.0
       />
       <Text
