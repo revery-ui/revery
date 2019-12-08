@@ -10,8 +10,24 @@ module NativeExamples = {
     let%hook (allowMultiple, setAllowMultiple) = Hooks.state(false);
     let%hook (showHidden, setShowHidden) = Hooks.state(false);
 
-    let iconProgress = IconProgress.registerNamed("Native Example");
+    let%hook (iconProgressOpt, setIconProgressOpt) = Hooks.state(None);
     let%hook (iconProgressValue, setIconProgressValue) = Hooks.state(0.);
+
+    let%hook _ =
+      Hooks.effect(
+        OnMount,
+        () => {
+          let ip = IconProgress.register();
+          setIconProgressOpt(_ => Some(ip));
+          Some(() => IconProgress.deregister(ip));
+        },
+      );
+
+    let setProgress = v =>
+      switch (iconProgressOpt) {
+      | Some(ip) => IconProgress.setProgress(ip, v)
+      | None => ()
+      };
 
     let openFile = () => {
       let o =
@@ -95,7 +111,7 @@ module NativeExamples = {
         onValueChanged={
           x => {
             setIconProgressValue(_ => x);
-            IconProgress.setProgress(iconProgress, x);
+            setProgress(x);
           }
         }
         maximumValue=1.0

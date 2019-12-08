@@ -7,4 +7,5 @@ char** revery_open_files_cocoa(const char* startDir, char* fileTypes[],
                                const char* title);
 void* revery_register_icon_progress_cocoa();
 void revery_set_icon_progress_cocoa(void* ip, double progress);
+void revery_deregister_icon_progress_cocoa(void* ip);
 }

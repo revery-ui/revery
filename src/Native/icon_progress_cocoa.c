@@ -15,7 +15,6 @@ void *revery_register_icon_progress_cocoa() {
     [progress_indicator setMaxValue:1];
     [progress_indicator setHidden:NO];
     [dock_tile.contentView addSubview:progress_indicator];
-    NSLog(@"Registered icon progress");
     return (void *)progress_indicator;
 }
 
@@ -25,8 +24,15 @@ void revery_set_icon_progress_cocoa(void *ip, double progress) {
     [progress_indicator setMaxValue:1];
     [progress_indicator setDoubleValue:progress];
     [progress_indicator setHidden:NO];
-    [progress_indicator setIndeterminate:NO];
     [[NSApp dockTile] display];
+}
+
+void revery_deregister_icon_progress_cocoa(void *ip) {
+    NSProgressIndicator *progress_indicator = (NSProgressIndicator *)ip;
+    [progress_indicator setHidden:YES];
+    [progress_indicator release];
+    [[NSApp dockTile] display];
+
 }
 
 #endif
