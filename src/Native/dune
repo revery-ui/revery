@@ -8,7 +8,7 @@
     (cxx_names dialog icon_progress)
     (c_flags (:include c_flags.sexp))
     (c_library_flags (:include c_library_flags.sexp))
-    (libraries sdl2 Revery_Core))
+    (libraries sdl2))
 
 (rule
 (targets flags.sexp c_flags.sexp c_library_flags.sexp)

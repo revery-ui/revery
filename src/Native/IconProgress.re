@@ -1,5 +1,3 @@
-open Revery_Core;
-
 type t;
 
 external register: unit => t = "revery_registerIconProgress";
