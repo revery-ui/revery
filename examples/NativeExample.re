@@ -10,6 +10,25 @@ module NativeExamples = {
     let%hook (allowMultiple, setAllowMultiple) = Hooks.state(false);
     let%hook (showHidden, setShowHidden) = Hooks.state(false);
 
+    let%hook (iconProgressOpt, setIconProgressOpt) = Hooks.state(None);
+    let%hook (iconProgressValue, setIconProgressValue) = Hooks.state(0.);
+
+    let%hook _ =
+      Hooks.effect(
+        OnMount,
+        () => {
+          let ip = IconProgress.register();
+          setIconProgressOpt(_ => Some(ip));
+          Some(() => IconProgress.deregister(ip));
+        },
+      );
+
+    let setProgress = v =>
+      switch (iconProgressOpt) {
+      | Some(ip) => IconProgress.setProgress(ip, v)
+      | None => ()
+      };
+
     let openFile = () => {
       let o =
         Dialog.openFiles(
@@ -24,6 +43,13 @@ module NativeExamples = {
     };
 
     let optionStyle =
+      Style.[
+        color(Colors.white),
+        fontFamily("Roboto-Regular.ttf"),
+        fontSize(14),
+      ];
+
+    let titleStyle =
       Style.[
         color(Colors.white),
         fontFamily("Roboto-Regular.ttf"),
@@ -52,6 +78,7 @@ module NativeExamples = {
       ];
 
     <View style=containerStyle>
+      <Text style=titleStyle text="Open Files and Folders" />
       <Row>
         <Text style=optionStyle text="Allow multiple?" />
         <Checkbox
@@ -77,6 +104,18 @@ module NativeExamples = {
          |> React.listToElement
        | None => <View />
        }}
+      <Text style=titleStyle text="Icon Progress Bar" />
+      <Slider
+        onValueChanged={x => {
+          setIconProgressValue(_ => x);
+          setProgress(x);
+        }}
+        maximumValue=1.0
+      />
+      <Text
+        style=optionStyle
+        text={"Progress: " ++ string_of_float(iconProgressValue)}
+      />
     </View>;
   };
 };
