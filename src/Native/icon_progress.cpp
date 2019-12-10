@@ -32,6 +32,8 @@ CAMLprim value revery_registerIconProgress() {
     void *ret;
 #ifdef __APPLE__
     ret = revery_register_icon_progress_cocoa();
+#elif WIN32
+    ret = revery_register_icon_progress_win32();
 #endif
     CAMLreturn((value)ret);
 }

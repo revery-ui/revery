@@ -16,6 +16,25 @@ let get_linux_config c =
     | None -> default
     | Some conf -> {libs= conf.libs; cflags= conf.cflags; flags= []} )
 
+let libPath = "-L" ^ (Sys.getenv "SDL2_LIB_PATH")
+
+let ccopt s = ["-ccopt"; s]
+let cclib s = ["-cclib"; s]
+
+let get_win32_config () =
+  {
+    cflags= ["-I"; (Sys.getenv "SDL2_INCLUDE_PATH")];
+    libs= [];
+    flags= []
+        @ ccopt(libPath)
+        @ cclib("-lSDL2")
+        @ cclib("-lgdi32")
+        @ cclib("-lcomdlg32")
+        @ cclib("-luuid")
+        @ cclib("-loleaut32")
+        @ cclib("-lole32")
+  }
+
 let uname () =
   let ic = Unix.open_process_in "uname" in
   let uname = input_line ic in
@@ -34,6 +53,7 @@ let () =
         match get_os with
         | Mac -> get_mac_config ()
         | Linux -> get_linux_config c
+        | Windows -> get_win32_config ()
         | _ -> {libs= []; flags= []; cflags= []}
       in
       C.Flags.write_sexp "flags.sexp" conf.flags ;
