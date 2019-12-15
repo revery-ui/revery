@@ -21,7 +21,6 @@ let render =
       container: RenderContainer.t,
       component: React.element('node),
     ) => {
-
   Log.info("UI", "BEGIN: Render frame");
   let {rootNode, window, container, _} = container;
 
