@@ -41,7 +41,12 @@ let getLineHeight = (~window, ~fontFamily, ~fontSize, ~lineHeight, ()) => {
   let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
   let font = FontCache.load(fontFamily, scaledFontSize);
   let metrics = FontRenderer.getNormalizedMetrics(font);
-  lineHeight *. metrics.height;
+  let multiplier =
+    switch (window) {
+    | None => 1.0
+    | Some(w) => Window.getScaleAndZoom(w) *. Window.getDevicePixelRatio(w)
+    };
+  lineHeight *. metrics.height /. multiplier;
 };
 
 type dimensions = {
