@@ -37,7 +37,7 @@ let _getScaledFontSizeFromWindow = (window: option(Window.t), fontSize) => {
   _getScaledFontSize(~scaleFactor, ~pixelRatio, fontSize);
 };
 
-let getLineHeight = (~window=None, ~fontFamily, ~fontSize, ~lineHeight, ()) => {
+let getLineHeight = (~window, ~fontFamily, ~fontSize, ~lineHeight, ()) => {
   let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
   let font = FontCache.load(fontFamily, scaledFontSize);
   let metrics = FontRenderer.getNormalizedMetrics(font);
@@ -49,7 +49,7 @@ type dimensions = {
   height: int,
 };
 
-let measure = (~window=?, ~fontFamily, ~fontSize, text) => {
+let measure = (~window, ~fontFamily, ~fontSize, text) => {
   let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
   let font = FontCache.load(fontFamily, scaledFontSize);
   let multiplier =
