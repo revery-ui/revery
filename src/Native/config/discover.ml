@@ -2,19 +2,19 @@ module C = Configurator.V1
 
 type os = Windows | Mac | Linux | Unknown
 
-type config = {libs: string list; cflags: string list; flags: string list}
+type config = {libs: string list; cflags: string list; cxxflags: string list; flags: string list}
 
 let get_mac_config () =
-  {cflags= ["-I"; "."; "-x"; "objective-c"]; libs= []; flags= []}
+  {cflags= ["-I"; "."; "-x"; "objective-c"]; cxxflags= ["-x"; "objective-c++"]; libs= []; flags= []}
 
 let get_linux_config c =
-  let default = {libs= []; cflags= []; flags= []} in
+  let default = {libs= []; cflags= []; cxxflags= []; flags= []} in
   match C.Pkg_config.get c with
   | None -> default
   | Some pc -> (
     match C.Pkg_config.query pc ~package:"gtk+-3.0" with
     | None -> default
-    | Some conf -> {libs= conf.libs; cflags= conf.cflags; flags= []} )
+    | Some conf -> {libs= conf.libs; cflags= conf.cflags; cxxflags= []; flags= []} )
 
 let uname () =
   let ic = Unix.open_process_in "uname" in
@@ -34,8 +34,9 @@ let () =
         match get_os with
         | Mac -> get_mac_config ()
         | Linux -> get_linux_config c
-        | _ -> {libs= []; flags= []; cflags= []}
+        | _ -> {libs= []; flags= []; cxxflags= []; cflags= []}
       in
       C.Flags.write_sexp "flags.sexp" conf.flags ;
       C.Flags.write_sexp "c_flags.sexp" conf.cflags ;
+      C.Flags.write_sexp "cxx_flags.sexp" conf.cxxflags ;
       C.Flags.write_sexp "c_library_flags.sexp" conf.libs )
