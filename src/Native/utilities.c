@@ -2,7 +2,7 @@
 #include <caml/callback.h>
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
-#import <caml/threads.h>
+#include <caml/threads.h>
 
 /* Sourced from Brisk's `BriskCocoa`
     Thank you @wokalski!
