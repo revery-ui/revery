@@ -5,16 +5,14 @@ open Revery.UI.Components;
 open Revery.Native;
 
 module Example = {
-  let%component make = () => {
-    let%hook (notification, setNotification) =
-      Hooks.state(
-        Notification.create(
-          ~title="Revery Test",
-          ~body="This is a test!",
-          ~mute=false,
-          ~onClick=() => Console.log("Notification clicked!"),
-          (),
-        ),
+  let make = () => {
+    let notification =
+      Notification.create(
+        ~title="Revery Test",
+        ~body="This is a test!",
+        ~mute=false,
+        ~onClick=() => Console.log("Notification clicked!"),
+        (),
       );
     <View>
       <Center>
