@@ -1,3 +1,5 @@
+open Revery_Native;
+
 type delegatedFunc = unit => unit;
 type idleFunc = unit => unit;
 type canIdleFunc = unit => bool;
@@ -183,6 +185,8 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       };
     };
   };
+
+  Cocoa.setAppDelegate();
 
   let appLoop = () => {
     _flushEvents();

@@ -5,4 +5,6 @@ char** revery_open_files_cocoa(const char* startDir, char* fileTypes[],
                                int canChooseFiles, int canChooseDirectories,
                                int showHidden, const char* buttonText,
                                const char* title);
+void revery_dispatchNotification_cocoa(const char* title, const char* body,
+                                  long onClickFunc, int mute);
 }
