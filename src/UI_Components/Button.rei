@@ -6,15 +6,14 @@ Simple out-of-box button component
 {2 Usage:}
 
 {[
-    <Button width=50 height=150 color=Colors.blue />
+    <Button width=50 height=150 color=Colors.blue title="Ok"/>
 ]}
 */
-let createElement:
+let make:
   (
-    ~children: 'a,
     ~title: string,
-    ~onClick: unit => unit=?,
-    ~color: Color.Rgba'.t=?,
+    ~onClick: Clickable.clickFunction=?,
+    ~color: Revery_Core.Color.t=?,
     ~fontSize: int=?,
     ~width: int=?,
     ~height: int=?,
@@ -25,4 +24,4 @@ let createElement:
     ~fontFamily: string=?,
     unit
   ) =>
-  Revery_UI.React.syntheticElement;
+  Brisk_reconciler.element(Revery_UI.React.node);

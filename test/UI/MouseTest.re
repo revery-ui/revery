@@ -1,7 +1,7 @@
-open Rejest;
-
 open Revery_UI;
 open UiEvents;
+
+open TestFramework;
 
 let createNodeWithStyle = style => {
   let node = (new node)();
@@ -11,9 +11,9 @@ let createNodeWithStyle = style => {
   node;
 };
 
-test("Mouse", () => {
-  test("pointer events", () => {
-    test("ignore allows pointer events to pass through", () => {
+describe("Mouse", ({describe, test, _}) => {
+  describe("pointer events", ({test, _}) => {
+    test("ignore allows pointer events to pass through", ({expect, _}) => {
       /* We'll create a few nodes:
            - Root
              - Node 1
@@ -72,10 +72,10 @@ test("Mouse", () => {
         ),
       );
 
-      node1#addChild(node2);
-      node3#addChild(node4);
-      rootNode#addChild(node1);
-      rootNode#addChild(node3);
+      node1#addChild(node2, 0);
+      node3#addChild(node4, 0);
+      rootNode#addChild(node1, 0);
+      rootNode#addChild(node3, 1);
 
       Layout.layout(rootNode);
       rootNode#recalculate();
@@ -101,11 +101,11 @@ test("Mouse", () => {
         rootNode,
       );
 
-      expect(child2HitCount^).toBe(0);
-      expect(child4HitCount^).toBe(1);
+      expect.int(child2HitCount^).toBe(0);
+      expect.int(child4HitCount^).toBe(1);
     });
 
-    test("ignore allows pointer events to pass through", () => {
+    test("ignore allows pointer events to pass through", ({expect, _}) => {
       /* We'll create a few nodes:
            - Root
              - Node 1
@@ -152,10 +152,10 @@ test("Mouse", () => {
         ),
       );
 
-      node1#addChild(node2);
-      node3#addChild(node4);
-      rootNode#addChild(node1);
-      rootNode#addChild(node3);
+      node1#addChild(node2, 0);
+      node3#addChild(node4, 0);
+      rootNode#addChild(node1, 0);
+      rootNode#addChild(node3, 1);
 
       Layout.layout(rootNode);
       rootNode#recalculate();
@@ -180,14 +180,14 @@ test("Mouse", () => {
         InternalMouseDown({button: BUTTON_LEFT}),
         rootNode,
       );
-      expect(child2HitCount^).toBe(1);
-      expect(child4HitCount^).toBe(0);
+      expect.int(child2HitCount^).toBe(1);
+      expect.int(child4HitCount^).toBe(0);
     });
   });
-  test("layers", ()
+  describe("layers", ({test, _})
     // Regression test for: https://github.com/onivim/oni2/issues/665
     =>
-      test("event is dispatched to topmost node", () => {
+      test("event is dispatched to topmost node", ({expect, _}) => {
         /* We'll create a few nodes:
              - Root
                - Node 1
@@ -221,9 +221,9 @@ test("Mouse", () => {
         let node2 = createChildNode();
         let node3 = createChildNode();
 
-        node1#addChild(node2);
-        rootNode#addChild(node1);
-        rootNode#addChild(node3);
+        node1#addChild(node2, 0);
+        rootNode#addChild(node1, 0);
+        rootNode#addChild(node3, 1);
 
         Layout.layout(rootNode);
         rootNode#recalculate();
@@ -249,12 +249,12 @@ test("Mouse", () => {
           rootNode,
         );
 
-        expect(child2HitCount^).toBe(0);
-        expect(child3HitCount^).toBe(1);
+        expect.int(child2HitCount^).toBe(0);
+        expect.int(child3HitCount^).toBe(1);
       })
     );
-  test("dispatch", () => {
-    test("triggers onMouseDown event for node", () => {
+  describe("dispatch", ({test, _}) => {
+    test("triggers onMouseDown event for node", ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
 
       let count = ref(0);
@@ -270,9 +270,11 @@ test("Mouse", () => {
       );
       Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
 
-      expect(count^).toBe(1);
+      expect.int(count^).toBe(1);
     });
-    test("does not trigger onMouseUp event for node if outside node", () => {
+    test(
+      "does not trigger onMouseUp event for node if outside node",
+      ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
 
       let count = ref(0);
@@ -288,9 +290,9 @@ test("Mouse", () => {
       );
       Mouse.dispatch(cursor, InternalMouseUp({button: BUTTON_LEFT}), node);
 
-      expect(count^).toBe(0);
+      expect.int(count^).toBe(0);
     });
-    test("does trigger onFocus for node", () => {
+    test("does trigger onFocus for node", ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       Mouse.Cursor.set(cursor, Revery_Math.Vec2.create(50.0, 50.0));
 
@@ -303,11 +305,11 @@ test("Mouse", () => {
 
       Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
 
-      expect(count^).toBe(1);
+      expect.int(count^).toBe(1);
     });
     test(
       "does trigger onBlur for node after cursor is pressed outside the node",
-      () => {
+      ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       Mouse.Cursor.set(cursor, Revery_Math.Vec2.create(50.0, 50.0));
 
@@ -320,10 +322,10 @@ test("Mouse", () => {
       Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
       Mouse.Cursor.set(cursor, Revery_Math.Vec2.create(200.0, 200.0));
       Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
-      expect(count^).toBe(1);
+      expect.int(count^).toBe(1);
     });
 
-    test("triggers onMouseEnter event for node", () => {
+    test("triggers onMouseEnter event for node", ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       let count = ref(0);
       let f = _evt => count := count^ + 1;
@@ -337,10 +339,10 @@ test("Mouse", () => {
         node,
       );
 
-      expect(count^).toBe(1);
+      expect.int(count^).toBe(1);
     });
 
-    test("triggers onMouseLeave event for node", () => {
+    test("triggers onMouseLeave event for node", ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       let count = ref(0);
       let f = _evt => count := count^ + 1;
@@ -360,10 +362,12 @@ test("Mouse", () => {
         node,
       );
 
-      expect(count^).toBe(1);
+      expect.int(count^).toBe(1);
     });
 
-    test("triggers both onMouseEnter and onMouseLeave event for node", () => {
+    test(
+      "triggers both onMouseEnter and onMouseLeave event for node",
+      ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       let count = ref(0);
       let f = _evt => count := count^ + 1;
@@ -383,10 +387,10 @@ test("Mouse", () => {
         node,
       );
 
-      expect(count^).toBe(2);
+      expect.int(count^).toBe(2);
     });
 
-    test("triggers onMouseOver event for node", () => {
+    test("triggers onMouseOver event for node", ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       let count = ref(0);
       let f = _evt => count := count^ + 1;
@@ -400,10 +404,10 @@ test("Mouse", () => {
         node,
       );
 
-      expect(count^).toBe(1);
+      expect.int(count^).toBe(1);
     });
 
-    test("triggers onMouseOut event for node", () => {
+    test("triggers onMouseOut event for node", ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       let count = ref(0);
       let f = _evt => count := count^ + 1;
@@ -423,9 +427,11 @@ test("Mouse", () => {
         node,
       );
 
-      expect(count^).toBe(1);
+      expect.int(count^).toBe(1);
     });
-    test("triggers both onMouseOver and onMouseOut event for node", () => {
+    test(
+      "triggers both onMouseOver and onMouseOut event for node",
+      ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       let count = ref(0);
       let f = _evt => count := count^ + 1;
@@ -446,10 +452,10 @@ test("Mouse", () => {
         node,
       );
 
-      expect(count^).toBe(2);
+      expect.int(count^).toBe(2);
     });
 
-    test("onMouseOver and onMouseOut should bubble", () => {
+    test("onMouseOver and onMouseOut should bubble", ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       let count = ref(0);
       let f = _evt => count := count^ + 1;
@@ -475,7 +481,7 @@ test("Mouse", () => {
         NodeEvents.make(~onMouseOut=f, ~onMouseOver=f, ()),
       );
 
-      parentNode#addChild(childNode);
+      parentNode#addChild(childNode, 0);
 
       Mouse.dispatch(
         cursor,
@@ -492,21 +498,21 @@ test("Mouse", () => {
       /**
        * It should call mouseOver parent, mouseOut parent, mouseOver child and mouseOver parent
        */
-      expect(count^).toBe(4);
+      expect.int(count^).toBe(4);
     });
   });
 
-  test("bubbleEvent", () => {
+  describe("bubbleEvent", ({test, _}) => {
     test(
       "test that state is updated per event when stop propagation is called",
-      () => {
+      ({expect, _}) => {
       let evt = BubbledEvent.make(MouseMove({mouseX: 50., mouseY: 50.}));
       switch (evt) {
       | Some(e) =>
         e.stopPropagation();
         switch (BubbledEvent.activeEvent^) {
         | Some(activeEvent) =>
-          expect(activeEvent.shouldPropagate).toBe(false)
+          expect.bool(activeEvent.shouldPropagate).toBeFalse()
         | None => ()
         };
       | None => ()
@@ -514,14 +520,15 @@ test("Mouse", () => {
     });
 
     test(
-      "test that state is updated per event when prevent default is called", () => {
+      "test that state is updated per event when prevent default is called",
+      ({expect, _}) => {
       let evt = BubbledEvent.make(MouseMove({mouseX: 50., mouseY: 50.}));
       switch (evt) {
       | Some(e) =>
         e.preventDefault();
         switch (BubbledEvent.activeEvent^) {
         | Some(activeEvent) =>
-          expect(activeEvent.defaultPrevented).toBe(true)
+          expect.bool(activeEvent.defaultPrevented).toBeTrue()
         | None => ()
         };
       | None => ()
@@ -529,8 +536,8 @@ test("Mouse", () => {
     });
   });
 
-  test("setCapture/releaseCapture", () =>
-    test("captured events override dispatching to node", () => {
+  describe("setCapture/releaseCapture", ({test, _}) =>
+    test("captured events override dispatching to node", ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
 
       let nodeCount = ref(0);
@@ -553,17 +560,18 @@ test("Mouse", () => {
 
       Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
 
-      expect(nodeCount^).toBe(0);
-      expect(captureCount^).toBe(1);
+      expect.int(nodeCount^).toBe(0);
+      expect.int(captureCount^).toBe(1);
 
       Mouse.releaseCapture();
       Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
 
-      expect(nodeCount^).toBe(1);
-      expect(captureCount^).toBe(1);
+      expect.int(nodeCount^).toBe(1);
+      expect.int(captureCount^).toBe(1);
     })
   );
-  test("onCursorChangedEvent gets dispatched with proper cursor", () => {
+  test(
+    "onCursorChangedEvent gets dispatched with proper cursor", ({expect, _}) => {
     module Cursors = Revery_Core.MouseCursors;
 
     let count = ref(0);
@@ -585,7 +593,7 @@ test("Mouse", () => {
       node,
     );
 
-    expect(count^).toBe(1);
-    expect(cursorType^).toBe(Cursors.text);
+    expect.int(count^).toBe(1);
+    expect.same(cursorType^, Cursors.text);
   });
 });

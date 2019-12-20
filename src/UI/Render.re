@@ -19,11 +19,10 @@ let render =
     (
       ~forceLayout=false,
       container: RenderContainer.t,
-      component: React.syntheticElement,
+      component: React.element('node),
     ) => {
+  Log.info("UI", "BEGIN: Render frame");
   let {rootNode, window, container, _} = container;
-
-  AnimationTicker.tick();
 
   /* Perform reconciliation */
   Performance.bench("reconcile", () =>
@@ -31,9 +30,9 @@ let render =
   );
 
   /* Layout */
-  let size = Window.getSize(window);
+  let size = Window.getRawSize(window);
   let pixelRatio = Window.getDevicePixelRatio(window);
-  let scaleFactor = Window.getScaleFactor(window);
+  let scaleFactor = Window.getScaleAndZoom(window);
   let adjustedHeight =
     float_of_int(size.height) /. scaleFactor |> int_of_float;
   let adjustedWidth = float_of_int(size.width) /. scaleFactor |> int_of_float;
@@ -79,8 +78,10 @@ let render =
       ~projection=_projection,
       (),
     );
+    Overflow.reset();
     rootNode#draw(drawContext);
     DebugDraw.draw();
     RenderPass.endAlphaPass();
   });
+  Log.info("UI", "END: Render frame");
 };

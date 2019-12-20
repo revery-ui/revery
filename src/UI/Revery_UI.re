@@ -1,9 +1,8 @@
 module Shaders = Revery_Shaders;
 module Geometry = Revery_Geometry;
 
-module Animated = Animated;
 module Animation = Animation;
-module AnimationTicker = AnimationTicker;
+module Spring = Spring;
 module Easing = Easing;
 
 module ImageResizeMode = ImageResizeMode;
@@ -29,6 +28,7 @@ module Container = Container;
 module React = React;
 module Focus = Focus;
 module Dimensions = Dimensions;
+module Offset = Offset;
 
 let start = Ui.start;
 let getActiveWindow = Ui.getActiveWindow;

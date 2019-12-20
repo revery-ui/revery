@@ -1,4 +1,4 @@
-module Color = Color_wrapper;
+module Color = Color;
 module Colors = Colors;
 module Key = Key;
 module MouseButton = MouseButton;
@@ -7,7 +7,6 @@ module MouseCursors = MouseCursors;
 module Window = Window;
 module App = App;
 module Time = Time;
-module Monitor = Monitor;
 
 module Environment = Environment;
 
@@ -22,7 +21,9 @@ module UniqueId = UniqueId;
 module TextWrapping = TextWrapping;
 module TextOverflow = TextOverflow;
 
+module Vsync = Vsync;
 module WindowCreateOptions = WindowCreateOptions;
+module WindowStyles = WindowStyles;
 
 /*
  * Internally exposed modules, just for testing.
@@ -58,3 +59,9 @@ module Lazy = {
 
   let make = (f: t('a)): t('a) => Memoize.make(f);
 };
+
+/**
+ * Polyfill for a couple 4.08 function.
+ * TODO: Remove after moving oni2 to 4.08
+ */
+module Float = Float;

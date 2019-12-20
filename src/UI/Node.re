@@ -6,6 +6,27 @@ module RenderPass = Revery_Draw.RenderPass;
 
 open Revery_Math;
 
+module ListEx = {
+  let insert = (i, node, list) => {
+    let rec loop = (i, before, after) =>
+      if (i > 0) {
+        switch (after) {
+        | [] => loop(0, before, after)
+        | [head, ...tail] => loop(i - 1, [head, ...before], tail)
+        };
+      } else if (i == 0) {
+        loop(i - 1, before, [node, ...after]);
+      } else {
+        switch (before) {
+        | [] => after
+        | [head, ...tail] => loop(i, tail, [head, ...after])
+        };
+      };
+
+    loop(i, [], list);
+  };
+};
+
 module UniqueId =
   Revery_Core.UniqueId.Make({});
 
@@ -28,31 +49,21 @@ type cachedNodeState = {
 };
 class node (()) = {
   as _this;
-  /* We use revChildren for appending, as appending to the _head_ of a list
-   * is much cheaper than appending to the _tail_ of a list.
-   * However, we often want the child in the 'correct' order - so we'll track
-   * when we've made changes to `_revChildren`, and update `_children` on request
-   * if `_revChildren` is dirty. `_childrenInvalid` tracks if `_children` needs
-   * to be updated.
-   */
-  val _revChildren: ref(list(node)) = ref([]);
-  val _childrenInvalid: ref(bool) = ref(false);
-  val _children: ref(list(node)) = ref([]);
-  val _style: ref(Style.t) = ref(Style.defaultStyle);
-  val _layoutStyle: ref(LayoutTypes.cssStyle) =
-    ref(Layout.LayoutSupport.defaultStyle);
-  val _events: ref(NodeEvents.t(node)) = ref(NodeEvents.make());
-  val _layoutNode = ref(Layout.createNode([||], Layout.defaultStyle));
-  val _parent: ref(option(node)) = ref(None);
-  val _internalId: int = UniqueId.getUniqueId();
-  val _tabIndex: ref(option(int)) = ref(None);
-  val _hasFocus: ref(bool) = ref(false);
-  val _cachedNodeState: ref(option(cachedNodeState)) = ref(None);
-  val _queuedCallbacks: ref(list(callback)) = ref([]);
-  val _lastDimensions: ref(NodeEvents.DimensionsChangedEventParams.t) =
-    ref(NodeEvents.DimensionsChangedEventParams.create());
-  val _isLayoutDirty = ref(true);
-  val _forcedMeasurements: ref(option(Dimensions.t)) = ref(None);
+  val mutable _children: list(node) = [];
+  val mutable _style: Style.t = Style.defaultStyle;
+  val mutable _layoutStyle: LayoutTypes.cssStyle = Layout.LayoutSupport.defaultStyle;
+  val mutable _events: NodeEvents.t(node) = NodeEvents.make();
+  val mutable _layoutNode = Layout.createNode([||], Layout.defaultStyle);
+  val mutable _parent: option(node) = None;
+  val _internalId = UniqueId.getUniqueId();
+  val mutable _tabIndex: option(int) = None;
+  val mutable _hasFocus = false;
+  val mutable _cachedNodeState: option(cachedNodeState) = None;
+  val mutable _queuedCallbacks: list(callback) = [];
+  val mutable _lastDimensions: NodeEvents.DimensionsChangedEventParams.t =
+    NodeEvents.DimensionsChangedEventParams.create();
+  val mutable _isLayoutDirty = true;
+  val mutable _forcedMeasurements: option(Dimensions.t) = None;
   pub draw = (parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
@@ -75,10 +86,10 @@ class node (()) = {
     );
   };
   pub measurements = () => {
-    switch (_forcedMeasurements^) {
+    switch (_forcedMeasurements) {
     | Some(v) => v
     | None =>
-      let layout = _layoutNode^.layout;
+      let layout = _layoutNode.layout;
       Dimensions.create(
         ~left=layout.left,
         ~top=layout.top,
@@ -89,64 +100,65 @@ class node (()) = {
     };
   };
   pub forceMeasurements = (dimensions: Dimensions.t) => {
-    _forcedMeasurements := Some(dimensions);
+    _forcedMeasurements = Some(dimensions);
+  };
+  pub getSceneOffsets = () => {
+    let Dimensions.{left, top, _} = _this#measurements();
+    switch (_parent) {
+    | Some(parent) =>
+      let parentOffsets = parent#getSceneOffsets();
+      Offset.{left: left + parentOffsets.left, top: top + parentOffsets.top};
+    | None => Offset.{left, top}
+    };
   };
   pub getInternalId = () => _internalId;
-  pub getTabIndex = () => _tabIndex^;
-  pub setTabIndex = index => _tabIndex := index;
+  pub getTabIndex = () => _tabIndex;
+  pub setTabIndex = index => _tabIndex = index;
   pub markLayoutDirty = () => {
-    _isLayoutDirty^
+    _isLayoutDirty
       ? ()
       : {
         switch (_this#getParent()) {
         | Some(p) => p#markLayoutDirty()
         | None => ()
         };
-        _isLayoutDirty := true;
+        _isLayoutDirty = true;
       };
   };
   pub setStyle = style =>
-    if (style != _style^) {
-      _style := style;
+    if (style != _style) {
+      _style = style;
 
-      let lastLayoutStyle = _layoutStyle^;
+      let lastLayoutStyle = _layoutStyle;
       let newLayoutStyle = Style.toLayoutNode(style);
-      _layoutStyle := newLayoutStyle;
+      _layoutStyle = newLayoutStyle;
 
-      if (lastLayoutStyle != _layoutStyle^) {
+      if (lastLayoutStyle != _layoutStyle) {
         _this#markLayoutDirty();
       };
     };
-  pub getStyle = () => _style^;
-  pub setEvents = events => _events := events;
-  pub getEvents = () => _events^;
-  pub getRevChildren = () => _revChildren^;
-  pub getChildren = () =>
-    if (_childrenInvalid^) {
-      _childrenInvalid := false;
-      _children := List.rev(_revChildren^);
-      _children^;
-    } else {
-      _children^;
-    };
+  pub getStyle = () => _style;
+  pub setEvents = events => _events = events;
+  pub getEvents = () => _events;
+  pub getChildren = () => _children;
   pub getWorldTransform = () => {
-    let state = _cachedNodeState^ |> getOrThrow("getWorldTransform");
+    let state = _cachedNodeState |> getOrThrow("getWorldTransform");
     state.worldTransform;
   };
   pub getTransform = () => {
-    let state = _cachedNodeState^ |> getOrThrow("getTransform");
+    let state = _cachedNodeState |> getOrThrow("getTransform");
     state.transform;
   };
   pub getBoundingBox = () => {
-    let state = _cachedNodeState^ |> getOrThrow("getBoundingBox");
+    let state = _cachedNodeState |> getOrThrow("getBoundingBox");
     state.bbox;
   };
   pub getBoundingBoxClipped = () => {
-    let state = _cachedNodeState^ |> getOrThrow("getBoundingBoxClipped");
+    let state = _cachedNodeState |> getOrThrow("getBoundingBoxClipped");
     state.bboxClipped;
   };
   pub getDepth = () => {
-    let state = _cachedNodeState^ |> getOrThrow("getDepth");
+    let state = _cachedNodeState |> getOrThrow("getDepth");
     state.depth;
   };
   pri _recalculateTransform = () => {
@@ -172,7 +184,7 @@ class node (()) = {
   pri _recalculateWorldTransform = localTransform => {
     let xform = localTransform;
     let world =
-      switch (_parent^) {
+      switch (_parent) {
       | None => Mat4.create()
       | Some(p) => p#getWorldTransform()
       };
@@ -208,27 +220,25 @@ class node (()) = {
     };
   };
   pri _recalculateDepth = () =>
-    switch (_parent^) {
+    switch (_parent) {
     | None => 0
     | Some(p) => p#getDepth() + 1
     };
   pub recalculate = () => {
-    _isLayoutDirty := false;
+    _isLayoutDirty = false;
     let transform = _this#_recalculateTransform();
     let worldTransform = _this#_recalculateWorldTransform(transform);
     let bbox = _this#_recalculateBoundingBox(worldTransform);
     let bboxClipped = _this#_recalculateBoundingBoxClipped(worldTransform);
     let depth = _this#_recalculateDepth();
 
-    _children := List.rev(_revChildren^);
-
-    _cachedNodeState :=
+    _cachedNodeState =
       Some({transform, worldTransform, bbox, bboxClipped, depth});
 
-    List.iter(c => c#recalculate(), _children^);
+    List.iter(c => c#recalculate(), _children);
 
     /* Check if dimensions are different, if so, we need to queue up a dimensions changed event */
-    let lastDimensions = _lastDimensions^;
+    let lastDimensions = _lastDimensions;
     let newDimensions = _this#measurements();
 
     if (lastDimensions.width != newDimensions.width
@@ -238,7 +248,7 @@ class node (()) = {
         width: newDimensions.width,
         height: newDimensions.height,
       };
-      _lastDimensions := evt;
+      _lastDimensions = evt;
       switch (maybeOnDimensionsChanged) {
       | Some(cb) =>
         /*
@@ -260,7 +270,7 @@ class node (()) = {
     };
   };
   pub hasRendered = () => {
-    switch (_cachedNodeState^) {
+    switch (_cachedNodeState) {
     | Some(_) => true
     | None => false
     };
@@ -269,21 +279,19 @@ class node (()) = {
     let bboxClipped = _this#getBoundingBoxClipped();
     BoundingBox2d.isPointInside(bboxClipped, p);
   };
-  pub addChild = (n: node) => {
-    _revChildren := [n, ..._revChildren^];
-    _childrenInvalid := true;
-    n#_setParent(Some((_this :> node)));
+  pub addChild = (child: node, position: int) => {
+    _children = ListEx.insert(position, child, _children);
+    child#_setParent(Some((_this :> node)));
     _this#markLayoutDirty();
   };
   pub removeChild = (n: node) => {
-    _revChildren :=
-      List.filter(c => c#getInternalId() != n#getInternalId(), _revChildren^);
-    _childrenInvalid := true;
+    _children =
+      List.filter(c => c#getInternalId() != n#getInternalId(), _children);
     n#_setParent(None);
     _this#markLayoutDirty();
   };
   pub firstChild = () => List.hd(_this#getChildren());
-  pub getParent = () => _parent^;
+  pub getParent = () => _parent;
   pub getMeasureFunction = () => None;
   pub handleEvent = (evt: NodeEvents.event) => {
     let _ =
@@ -318,19 +326,19 @@ class node (()) = {
         };
       | (KeyDown(e), {onKeyDown: Some(cb), _}) => cb(e)
       | (KeyUp(e), {onKeyUp: Some(cb), _}) => cb(e)
-      | (KeyPress(e), {onKeyPress: Some(cb), _}) => cb(e)
+      | (TextInput(e), {onTextInput: Some(cb), _}) => cb(e)
+      | (TextEdit(e), {onTextEdit: Some(cb), _}) => cb(e)
+      | (TextInput(_), _)
+      | (TextEdit(_), _)
       | (KeyDown(_), _)
-      | (KeyUp(_), _)
-      | (KeyPress(_), _) => ()
+      | (KeyUp(_), _) => ()
       };
     ();
   };
   pub toLayoutNode = (~force, ()) => {
-    let layoutStyle = _layoutStyle^;
+    let layoutStyle = _layoutStyle;
 
-    switch (_isLayoutDirty^ || force) {
-    | false => _layoutNode^
-    | true =>
+    if (_isLayoutDirty || force) {
       let childNodes =
         List.map(c => c#toLayoutNode(~force, ()), _this#getChildren());
 
@@ -345,24 +353,26 @@ class node (()) = {
           )
         };
 
-      _layoutNode := node;
+      _layoutNode = node;
       node;
+    } else {
+      _layoutNode;
     };
   };
   pri _queueCallback = (cb: callback) => {
-    _queuedCallbacks := List.append([cb], _queuedCallbacks^);
+    _queuedCallbacks = List.append([cb], _queuedCallbacks);
   };
   pub flushCallbacks = () => {
     let f = cb => cb();
-    List.iter(f, _queuedCallbacks^);
-    _queuedCallbacks := [];
+    List.iter(f, _queuedCallbacks);
+    _queuedCallbacks = [];
 
     let fc = c => c#flushCallbacks();
     List.iter(fc, _this#getChildren());
   };
   /* TODO: This should really be private - it should never be explicitly set */
   pub _setParent = (n: option(node)) => {
-    _parent := n;
+    _parent = n;
 
     /* Dispatch ref event if we just got attached */
     switch (n) {
@@ -387,15 +397,15 @@ class node (()) = {
     _this#markLayoutDirty();
   };
   pub canBeFocused = () =>
-    switch (_tabIndex^) {
+    switch (_tabIndex) {
     | Some(_) => true
     | None => false
     };
   pub focus = () => {
-    _hasFocus := true;
+    _hasFocus = true;
   };
   pub blur = () => {
-    _hasFocus := false;
+    _hasFocus = false;
   };
 };
 

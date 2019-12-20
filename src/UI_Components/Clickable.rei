@@ -17,20 +17,23 @@ This module provides a `<Clickable />` component, loosely inspired by the
 </Clickable>
 ]}
  */
-let createElement:
+
+let make:
   (
+    ~key: Brisk_reconciler.Key.t=?,
     ~style: list(Revery_UI.Style.viewStyleProps)=?,
     ~onClick: clickFunction=?,
     ~onRightClick: clickFunction=?,
     ~onAnyClick: clickFunctionWithEvt=?,
+    ~componentRef: Revery_UI.node => unit=?,
     ~onBlur: Revery_UI.NodeEvents.focusHandler=?,
     ~onFocus: Revery_UI.NodeEvents.focusHandler=?,
     ~tabindex: int=?,
-    ~children: list(Revery_UI.React.syntheticElement),
     ~onKeyDown: Revery_UI.NodeEvents.keyDownHandler=?,
     ~onKeyUp: Revery_UI.NodeEvents.keyUpHandler=?,
-    ~onKeyPress: Revery_UI.NodeEvents.keyPressHandler=?,
-    ~componentRef: Revery_UI.node => unit=?,
+    ~onTextEdit: Revery_UI.NodeEvents.textEditHandler=?,
+    ~onTextInput: Revery_UI.NodeEvents.textInputHandler=?,
+    ~children: Brisk_reconciler.element(Revery_UI.React.node),
     unit
   ) =>
-  Revery_UI.React.syntheticElement;
+  Brisk_reconciler.element(Revery_UI.React.node);

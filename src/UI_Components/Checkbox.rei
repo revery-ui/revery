@@ -10,13 +10,12 @@ Simple out-of-box checkbox component
 ]}
 */
 
-let createElement:
+let make:
   (
-    ~children: 'a,
     ~checked: bool=?,
-    ~checkedColor: Color.Rgba'.t=?,
+    ~checkedColor: Revery_Core.Color.t=?,
     ~style: list(Revery_UI.Style.viewStyleProps)=?,
     ~onChange: unit => unit=?,
     unit
   ) =>
-  Revery_UI.React.syntheticElement;
+  Brisk_reconciler.element(Revery_UI.React.node);

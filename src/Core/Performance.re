@@ -1,5 +1,3 @@
-open Reglfw.Glfw;
-
 type performanceFunction('a) = unit => 'a;
 
 let nestingLevel = ref(0);
@@ -11,7 +9,7 @@ module MemoryAllocations = {
     majorWords: int,
   };
 
-  let show = ({minorWords, promotedWords, majorWords}: t) => {
+  let toString = ({minorWords, promotedWords, majorWords}: t) => {
     "| minor: "
     ++ string_of_int(minorWords)
     ++ " | major: "
@@ -34,27 +32,23 @@ let getMemoryAllocations = (startCounters, endCounters) => {
 };
 
 let isBenchmarking =
-  switch (Sys.getenv_opt("REVERY_DEBUG")) {
+  switch (Sys.getenv_opt("REVERY_PERF")) {
   | Some(_) => true
   | None => false
   };
 
 let bench: (string, performanceFunction('a)) => 'a =
   (name, f) =>
-    switch (isBenchmarking) {
-    | false => f()
-    | true =>
+    if (isBenchmarking) {
       nestingLevel := nestingLevel^ + 1;
-      let startTime = glfwGetTime();
+      let startTime = Unix.gettimeofday();
       let startCounters = GarbageCollector.counters();
-      print_endline(
-        String.make(nestingLevel^, '-') ++ "[BEGIN: " ++ name ++ "]",
-      );
+      Log.perf(String.make(nestingLevel^, '-') ++ "[BEGIN: " ++ name ++ "]");
       let ret = f();
-      let endTime = glfwGetTime();
+      let endTime = Unix.gettimeofday();
       let endCounters = GarbageCollector.counters();
       let allocations = getMemoryAllocations(startCounters, endCounters);
-      print_endline(
+      Log.perf(
         String.make(nestingLevel^, '-')
         ++ "[END: "
         ++ name
@@ -62,9 +56,11 @@ let bench: (string, performanceFunction('a)) => 'a =
         ++ string_of_float((endTime -. startTime) *. 1000.)
         ++ "ms"
         ++ " Memory: "
-        ++ MemoryAllocations.show(allocations),
+        ++ MemoryAllocations.toString(allocations),
       );
 
       nestingLevel := nestingLevel^ - 1;
       ret;
+    } else {
+      f();
     };

@@ -1,6 +1,3 @@
-open Revery_Core;
-open Revery_UI;
-
 /**
 {2 Description:}
 
@@ -19,12 +16,12 @@ any items outside.
 @param [height] The height of the container, in pixels.
 @param [color] The color of the container.
 */
-let createElement:
+let make:
   (
-    ~children: list(React.syntheticElement),
-    ~color: Color.t=?,
+    ~children: Revery_UI.React.React.element(Revery_UI.React.node),
+    ~color: Revery_Core.Color.t=?,
     ~width: int,
     ~height: int,
     unit
   ) =>
-  React.syntheticElement;
+  Brisk_reconciler.element(Revery_UI.viewNode);

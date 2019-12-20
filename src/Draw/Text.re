@@ -4,7 +4,7 @@
  * Core logic for rendering text to screen.
  */
 
-open Reglfw.Glfw;
+open Sdl2.Gl;
 
 open Revery_Core;
 module Geometry = Revery_Geometry;
@@ -18,23 +18,78 @@ open Fontkit;
  * with the requested fontSize. For example, in a high DPI that has a 3x pixel
  * ratio, we want to render a 3x size bitmap.
  */
-let _getScaledFontSize = fontSize => {
-  let ctx = RenderPass.getContext();
-
-  int_of_float(
-    float_of_int(fontSize) *. ctx.pixelRatio *. ctx.scaleFactor +. 0.5,
-  );
+let _getScaledFontSize = (~scaleFactor, ~pixelRatio, fontSize) => {
+  let ret =
+    int_of_float(float_of_int(fontSize) *. pixelRatio *. scaleFactor +. 0.5);
+  ret;
 };
 
-let getLineHeight = (~fontFamily, ~fontSize, ~lineHeight, ()) => {
-  let font = FontCache.load(fontFamily, fontSize);
+let _getScaledFontSizeFromWindow = (window: option(Window.t), fontSize) => {
+  let (scaleFactor, pixelRatio) =
+    switch (window) {
+    | None => (1.0, 1.0)
+    | Some(v) =>
+      let sf = Window.getScaleAndZoom(v);
+      let pr = Window.getDevicePixelRatio(v);
+      (sf, pr);
+    };
+
+  _getScaledFontSize(~scaleFactor, ~pixelRatio, fontSize);
+};
+
+let getLineHeight = (~window, ~fontFamily, ~fontSize, ~lineHeight, ()) => {
+  let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
+  let font = FontCache.load(fontFamily, scaledFontSize);
   let metrics = FontRenderer.getNormalizedMetrics(font);
-  lineHeight *. metrics.height;
+  let multiplier =
+    switch (window) {
+    | None => 1.0
+    | Some(w) => Window.getScaleAndZoom(w) *. Window.getDevicePixelRatio(w)
+    };
+  lineHeight *. metrics.height /. multiplier;
 };
 
-let measure = (~fontFamily, ~fontSize, text) => {
-  let font = FontCache.load(fontFamily, fontSize);
-  FontRenderer.measure(font, text);
+type dimensions = {
+  width: int,
+  height: int,
+};
+
+let measure = (~window, ~fontFamily, ~fontSize, text) => {
+  let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
+  let font = FontCache.load(fontFamily, scaledFontSize);
+  let multiplier =
+    switch (window) {
+    | None => 1.0
+    | Some(w) => Window.getScaleAndZoom(w) *. Window.getDevicePixelRatio(w)
+    };
+
+  let dimensions = FontRenderer.measure(font, text);
+  let ret: dimensions = {
+    width: int_of_float(float_of_int(dimensions.width) /. multiplier +. 0.5),
+    height:
+      int_of_float(float_of_int(dimensions.height) /. multiplier +. 0.5),
+  };
+  ret;
+};
+
+let indexNearestOffset = (~measure, text, offset) => {
+  let length = String.length(text);
+
+  let rec loop = (~last, i) =>
+    if (i > length) {
+      i - 1;
+    } else {
+      let width = measure(String.sub(text, 0, i));
+
+      if (width > offset) {
+        let isCurrentNearest = width - offset < offset - last;
+        isCurrentNearest ? i : i - 1;
+      } else {
+        loop(~last=width, i + 1);
+      };
+    };
+
+  loop(~last=0, 1);
 };
 
 let identityMatrix = Mat4.create();
@@ -60,7 +115,7 @@ let _startShader =
     CompiledShader.setUniform1f(shader.uniformGamma, gamma);
     CompiledShader.setUniform1f(shader.uniformOpacity, opacity);
 
-    (shader.compiledShader, shader.uniformWorld);
+    (shader.compiledShader, shader.uniformWorld, shader.uniformLocal);
   } else {
     let shader = Assets.fontDefaultShader();
     let colorMultipliedAlpha = Color.multiplyAlpha(opacity, color);
@@ -71,11 +126,12 @@ let _startShader =
       Color.toVec4(colorMultipliedAlpha),
     );
 
-    (shader.compiledShader, shader.uniformWorld);
+    (shader.compiledShader, shader.uniformWorld, shader.uniformLocal);
   };
 
 let drawString =
     (
+      ~window: option(Window.t),
       ~fontFamily: string,
       ~fontSize: int,
       ~color: Color.t=Colors.white,
@@ -92,19 +148,22 @@ let drawString =
   let projection = ctx.projection;
   let quad = Assets.quad();
 
-  let (shader, uniformWorld) =
+  let (shader, uniformWorld, uniformLocal) =
     _startShader(~color, ~backgroundColor, ~opacity, ~gamma, ~projection, ());
 
-  let font = FontCache.load(fontFamily, _getScaledFontSize(fontSize));
+  let font =
+    FontCache.load(
+      fontFamily,
+      _getScaledFontSizeFromWindow(window, fontSize),
+    );
 
   let metrics = FontRenderer.getNormalizedMetrics(font);
   let multiplier = ctx.pixelRatio *. ctx.scaleFactor;
+
   /* Position the baseline */
   let baseline = (metrics.height -. metrics.descenderSize) /. multiplier;
   ();
 
-  let outerTransform = Mat4.create();
-  Mat4.fromTranslation(outerTransform, Vec3.create(0.0, baseline, 0.0));
   let render = (s: Fontkit.fk_shape, x: float, y: float) => {
     let glyph = FontRenderer.getGlyph(font, s.glyphId);
 
@@ -123,27 +182,18 @@ let drawString =
     glBindTexture(GL_TEXTURE_2D, texture);
     /* TODO: Bind texture */
 
-    let glyphTransform = Mat4.create();
-    Mat4.fromTranslation(
-      glyphTransform,
-      Vec3.create(
+    let xform =
+      Mat4.createFromTranslationAndScale(
+        width,
+        height,
+        1.0,
         x +. bearingX +. width /. 2.,
-        y +. height *. 0.5 -. bearingY,
-        0.0,
-      ),
-    );
+        baseline +. y +. height *. 0.5 -. bearingY,
+        0.,
+      );
 
-    let scaleTransform = Mat4.create();
-    Mat4.fromScaling(scaleTransform, Vec3.create(width, height, 1.0));
-
-    let local = Mat4.create();
-    Mat4.multiply(local, glyphTransform, scaleTransform);
-
-    let xform = Mat4.create();
-    Mat4.multiply(xform, outerTransform, local);
-    Mat4.multiply(xform, transform, xform);
-
-    CompiledShader.setUniformMatrix4fv(uniformWorld, xform);
+    CompiledShader.setUniformMatrix4fv(uniformLocal, xform);
+    CompiledShader.setUniformMatrix4fv(uniformWorld, transform);
 
     Geometry.draw(quad, shader);
 
