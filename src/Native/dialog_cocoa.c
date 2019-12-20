@@ -14,7 +14,6 @@ void revery_alert_cocoa(void *pWin, const char *szMessage) {
     [alert runModal];
     [alert release];
     [message release];
-    [view release];
 }
 
 const char **revery_open_files_cocoa(
