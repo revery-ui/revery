@@ -14,21 +14,26 @@ caml_open_sync_raw(value vFileName, value vSuccess, value vFailure) {
     FILE *pFile = fopen("binary.dat", "rb");
 
     if (!pFile) {
-        caml_callback(vFailure, caml_copy_string("Unable to load file"));
+        caml_callback(vFailure, caml_copy_string("caml_open_sync_raw: Unable to load file"));
     } else {
         fseek(pFile, 0, SEEK_END);
         long lSize = ftell(pFile);
         fseek(pFile, 0, SEEK_SET);
 
         char *pData = (char *)malloc(lSize + 1);
-        fread(pData, lSize, 1, pFile);
+        lSize -= fread(pData, lSize, 1, pFile);
 
         fclose(pFile);
 
-        long dims[1];
-        dims[0] = lSize;
-        value ba = caml_ba_alloc(CAML_BA_UINT8 | CAML_BA_C_LAYOUT, 1, pData, (intnat*)dims);
-        caml_callback(vSuccess, ba);
+        if (!lSize && ferror(pFile))
+            caml_callback(vFailure, caml_copy_string("caml_open_sync_raw: Unable to complete read."));
+        else
+        {
+            long dims[1];
+            dims[0] = lSize;
+            value ba = caml_ba_alloc(CAML_BA_UINT8 | CAML_BA_C_LAYOUT, 1, pData, (intnat*)dims);
+            caml_callback(vSuccess, ba);
+        }
     }
 
     CAMLreturn(Val_unit);
