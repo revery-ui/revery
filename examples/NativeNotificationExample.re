@@ -20,6 +20,10 @@ module Example = {
           title="Dispatch!"
           onClick={() => Notification.dispatch(notification)}
         />
+        <Button
+          title="Schedule 5s From Now!"
+          onClick={() => Notification.scheduleFromNow(5, notification)}
+        />
       </Center>
     </View>;
   };

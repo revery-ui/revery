@@ -14,3 +14,5 @@ let create =
 };
 
 external dispatch: t => unit = "revery_dispatchNotification";
+external scheduleFromNow: (int, t) => unit =
+  "revery_scheduleNotificationFromNow";
