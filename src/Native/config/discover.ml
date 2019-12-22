@@ -34,7 +34,8 @@ let () =
         match get_os with
         | Mac -> get_mac_config ()
         | Linux -> get_linux_config c
-        | _ -> {libs= []; flags= []; cxxflags= []; cflags= []}
+        | Windows -> {libs= []; flags= []; cxxflags= ["-fPIC"]; cflags= []}
+        | Unknown | _ -> {libs= []; flags= []; cxxflags= []; cflags= []}
       in
       C.Flags.write_sexp "flags.sexp" conf.flags ;
       C.Flags.write_sexp "c_flags.sexp" conf.cflags ;
