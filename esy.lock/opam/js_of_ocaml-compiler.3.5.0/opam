@@ -14,7 +14,7 @@ environment like browsers and Node.js
 build: [["dune" "build" "-p" name "-j" jobs]]
 
 depends: [
-  "ocaml" {>= "4.02.0"}
+  "ocaml" {>= "4.02.0" & < "4.10"}
   "dune" {>= "1.11.1"}
   "ppx_expect" {with-test & >= "0.12.0"}
   "cmdliner"
