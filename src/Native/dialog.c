@@ -101,7 +101,7 @@ CAMLprim value revery_alertOpenFiles_native(
         buttonText = String_val(Some_val(vButtonText));
     }
 
-    char **fileList;
+    char **fileList = NULL;
 
 #ifdef __APPLE__
     fileList = revery_open_files_cocoa(
@@ -111,6 +111,15 @@ CAMLprim value revery_alertOpenFiles_native(
     fileList = revery_open_files_gtk(
         startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
         canChooseDirectories, showHidden, buttonText, title);
+#else
+  (void)showHidden;
+  (void)canChooseDirectories;
+  (void)canChooseFiles;
+  (void)allowMultiple;
+  (void)title;
+  (void)buttonText;
+  (void)startDirectory;
+  (void)fileList;
 #endif
 
     if (fileList) {
