@@ -14,7 +14,7 @@ let get_linux_config c =
   | Some pc -> (
     match C.Pkg_config.query pc ~package:"gtk+-3.0" with
     | None -> default
-    | Some conf -> {libs= conf.libs; cflags= conf.cflags; cxxflags= []; flags= []} )
+    | Some conf -> {libs= conf.libs; cflags= conf.cflags; cxxflags= ["-fPIC"]; flags= []} )
 
 let uname () =
   let ic = Unix.open_process_in "uname" in
