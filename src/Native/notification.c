@@ -6,6 +6,7 @@
 #include <caml/mlvalues.h>
 #include <string.h>
 
+#define UNUSED(x) (void)(x)
 
 #ifdef WIN32
 #include "ReveryWin32.h"
@@ -32,6 +33,11 @@ CAMLprim value revery_dispatchNotification(value vNotificationT) {
     mute = Int_val(Field(vNotificationT, 3));
 #ifdef __APPLE__
     revery_dispatchNotification_cocoa(title, body, onClickCaml, mute);
+#else
+UNUSED(title);
+UNUSED(body);
+UNUSED(mute);
+UNUSED(onClickCaml);
 #endif
     CAMLreturn(Val_unit);
 }
@@ -43,14 +49,21 @@ CAMLprim value revery_scheduleNotificationFromNow(value vSeconds, value vNotific
     const char *body;
     int mute;
     int seconds;
+    value onClickCaml;
 
     title = String_val(Field(vNotificationT, 0));
     body = String_val(Field(vNotificationT, 1));
-    value onClickCaml = Field(vNotificationT, 2);
+    onClickCaml = Field(vNotificationT, 2);
     mute = Int_val(Field(vNotificationT, 3));
     seconds = Int_val(vSeconds);
 #ifdef __APPLE__
     revery_scheduleNotificationFromNow_cocoa(title, body, onClickCaml, mute, seconds);
+#else
+UNUSED(title);
+UNUSED(body);
+UNUSED(mute);
+UNUSED(seconds);
+UNUSED(onClickCaml);
 #endif
     CAMLreturn(Val_unit);
 }
