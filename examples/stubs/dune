@@ -1,5 +1,6 @@
 (library 
   (name ExampleStubs)
   (c_names example_stubs)
+  (c_flags :standard -Wall -Wextra -Werror)
   (js_of_ocaml (javascript_files example_stubs.js))
 )

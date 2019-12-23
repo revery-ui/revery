@@ -4,6 +4,8 @@
 
 #import "utilities.h"
 
+#define UNUSED(x) (void)(x)
+
 // Implementation of ReveryAppDelegate
 @implementation ReveryAppDelegate
 
@@ -22,6 +24,7 @@
   Assigns self as the notification center delegate
 */
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
+  UNUSED(notification);
   [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
 }
 
@@ -30,6 +33,7 @@
 */
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center
        didActivateNotification:(NSUserNotification *)notification {
+  UNUSED(center);
   NSNumber *num = _notificationActions[[notification identifier]];
   long ocamlFunc = [num longValue];
   revery_caml_call(ocamlFunc);
@@ -40,6 +44,8 @@
 */
 - (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center
      shouldPresentNotification:(NSUserNotification *)notification {
+  UNUSED(center);
+  UNUSED(notification);
   return YES;
 }
 @end

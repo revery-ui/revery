@@ -1,4 +1,4 @@
-extern "C" {
+
 void revery_alert_cocoa(void *pWin, const char *szMessage);
 char **revery_open_files_cocoa(const char *startDir, char *fileTypes[],
                                int fileTypesSize, int allowMultiple,
@@ -11,4 +11,3 @@ void revery_scheduleNotificationFromNow_cocoa(const char *title,
                                               const char *body,
                                               long onClickFunc, int mute,
                                               int seconds);
-}

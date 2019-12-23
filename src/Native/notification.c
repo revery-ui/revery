@@ -16,17 +16,9 @@
 #endif
 
 #define Val_none Val_int(0)
-static value Val_some(value v) {
-    CAMLparam1(v);
-    CAMLlocal1(some);
-    some = caml_alloc(1, 0);
-    Store_field(some, 0, v);
-    CAMLreturn(some);
-}
 
 #define Some_val(v) Field(v, 0)
 
-extern "C" {
 CAMLprim value revery_dispatchNotification(value vNotificationT) {
     CAMLparam1(vNotificationT);
 
@@ -61,5 +53,4 @@ CAMLprim value revery_scheduleNotificationFromNow(value vSeconds, value vNotific
     revery_scheduleNotificationFromNow_cocoa(title, body, onClickCaml, mute, seconds);
 #endif
     CAMLreturn(Val_unit);
-}
 }
