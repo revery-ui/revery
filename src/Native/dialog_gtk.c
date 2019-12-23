@@ -4,11 +4,12 @@
 
 // The callback to g_signal_connect MUST be an `activate` function
 static void activate(GtkApplication *app, const char *user_data) {
+    (void)app;
     GtkWidget *dialog;
 
     GtkDialogFlags flags = GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT;
     dialog = gtk_message_dialog_new(NULL, flags, GTK_MESSAGE_INFO,
-                                    GTK_BUTTONS_CLOSE, user_data);
+                                    GTK_BUTTONS_CLOSE, "%s", user_data);
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
 }
@@ -24,6 +25,7 @@ void revery_alert_gtk(void *pWin, const char *szMessage) {
      * gtk application reference when a glfw window is created that can be
      * reused?
      */
+    (void)pWin;
     GtkApplication *app;
     app = gtk_application_new("org.gtk.revery", G_APPLICATION_FLAGS_NONE);
     g_signal_connect(app, "activate", G_CALLBACK(activate),
@@ -48,6 +50,7 @@ struct FileChooserOptions {
 };
 
 void activate_filechooser(GtkApplication *app, struct FileChooserOptions *options) {
+    (void)app;
     GtkFileChooserAction action = options->canChooseDirectories ? GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER : GTK_FILE_CHOOSER_ACTION_OPEN;
     gint result;
     const char *okButtonText = (options->buttonText ? options->buttonText : "Open");
