@@ -1,5 +1,5 @@
 {
-  "checksum": "77dd831d493f241b02ebdd9138a9b085",
+  "checksum": "df5410b9ec90e2f97ab8434b512bd573",
   "root": "revery@link-dev:./package.json",
   "node": {
     "wordwrap@0.0.3@d41d8cd9": {
@@ -75,7 +75,9 @@
         "reason-gl-matrix@0.9.9306@d41d8cd9",
         "reason-fontkit@2.8.3@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "http-server@0.12.0@d41d8cd9",
-        "flex@1.2.2@d41d8cd9", "@reason-native/rely@3.1.0@d41d8cd9",
+        "flex@1.2.2@d41d8cd9",
+        "esy-skia@github:revery-ui/esy-skia#ff2e46d@d41d8cd9",
+        "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/odoc@opam:1.4.2@11b715bb",
         "@opam/lwt_ppx@opam:2.0.0@9a61dd37", "@opam/lwt@opam:4.5.0@677655b4",
@@ -138,7 +140,7 @@
         "refmterr@3.3.0@d41d8cd9", "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/lambda-term@opam:2.0.2@119fb081",
+        "@opam/lambda-term@opam:2.0.1@bc36657b",
         "@opam/fpath@opam:0.7.2@45477b93", "@opam/dune@opam:1.11.4@a7ccb7ae",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
@@ -192,7 +194,8 @@
       "overrides": [],
       "dependencies": [
         "refmterr@3.3.0@d41d8cd9", "reason-gl-matrix@0.9.9306@d41d8cd9",
-        "esy-sdl2@2.0.10005@d41d8cd9", "esy-cmake@0.3.5@d41d8cd9",
+        "esy-sdl2@2.0.10005@d41d8cd9",
+        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9",
         "@opam/lwt_ppx@opam:2.0.0@9a61dd37", "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/js_of_ocaml-lwt@opam:3.5.2@6ea3e3c2",
         "@opam/js_of_ocaml-compiler@opam:3.5.0@9ea7292f",
@@ -525,6 +528,21 @@
       "dependencies": [],
       "devDependencies": []
     },
+    "esy-skia@github:revery-ui/esy-skia#ff2e46d@d41d8cd9": {
+      "id": "esy-skia@github:revery-ui/esy-skia#ff2e46d@d41d8cd9",
+      "name": "esy-skia",
+      "version": "github:revery-ui/esy-skia#ff2e46d",
+      "source": {
+        "type": "install",
+        "source": [ "github:revery-ui/esy-skia#ff2e46d" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "esy-libjpeg-turbo@github:prometheansacrifice/libjpeg-turbo#50e8e32c48@d41d8cd9",
+        "@esy-cross/ninja-build@1.8.2001@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
     "esy-sdl2@2.0.10005@d41d8cd9": {
       "id": "esy-sdl2@2.0.10005@d41d8cd9",
       "name": "esy-sdl2",
@@ -539,6 +557,39 @@
       "dependencies": [],
       "devDependencies": []
     },
+    "esy-nasm@github:prometheansacrifice/esy-nasm#6240bdbb164476558d3738812fbbe48f66cc904a@d41d8cd9": {
+      "id":
+        "esy-nasm@github:prometheansacrifice/esy-nasm#6240bdbb164476558d3738812fbbe48f66cc904a@d41d8cd9",
+      "name": "esy-nasm",
+      "version":
+        "github:prometheansacrifice/esy-nasm#6240bdbb164476558d3738812fbbe48f66cc904a",
+      "source": {
+        "type": "install",
+        "source": [
+          "github:prometheansacrifice/esy-nasm#6240bdbb164476558d3738812fbbe48f66cc904a"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
+    "esy-libjpeg-turbo@github:prometheansacrifice/libjpeg-turbo#50e8e32c48@d41d8cd9": {
+      "id":
+        "esy-libjpeg-turbo@github:prometheansacrifice/libjpeg-turbo#50e8e32c48@d41d8cd9",
+      "name": "esy-libjpeg-turbo",
+      "version": "github:prometheansacrifice/libjpeg-turbo#50e8e32c48",
+      "source": {
+        "type": "install",
+        "source": [ "github:prometheansacrifice/libjpeg-turbo#50e8e32c48" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "esy-nasm@github:prometheansacrifice/esy-nasm#6240bdbb164476558d3738812fbbe48f66cc904a@d41d8cd9",
+        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9",
+        "@esy-cross/ninja-build@1.8.2001@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
     "esy-harfbuzz@1.9.1005@d41d8cd9": {
       "id": "esy-harfbuzz@1.9.1005@d41d8cd9",
       "name": "esy-harfbuzz",
@@ -550,7 +601,9 @@
         ]
       },
       "overrides": [],
-      "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
+      "dependencies": [
+        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9"
+      ],
       "devDependencies": []
     },
     "esy-freetype2@2.9.1006@d41d8cd9": {
@@ -564,18 +617,19 @@
         ]
       },
       "overrides": [],
-      "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
+      "dependencies": [
+        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9"
+      ],
       "devDependencies": []
     },
-    "esy-cmake@0.3.5@d41d8cd9": {
-      "id": "esy-cmake@0.3.5@d41d8cd9",
+    "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9": {
+      "id":
+        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9",
       "name": "esy-cmake",
-      "version": "0.3.5",
+      "version": "github:prometheansacrifice/esy-cmake#2a47392def755",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/esy-cmake/-/esy-cmake-0.3.5.tgz#sha1:2df0bdfe9317fbcded5f463fca1f346464494c7a"
-        ]
+        "source": [ "github:prometheansacrifice/esy-cmake#2a47392def755" ]
       },
       "overrides": [],
       "dependencies": [],
@@ -1593,20 +1647,20 @@
         "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
-    "@opam/lambda-term@opam:2.0.2@119fb081": {
-      "id": "@opam/lambda-term@opam:2.0.2@119fb081",
+    "@opam/lambda-term@opam:2.0.1@bc36657b": {
+      "id": "@opam/lambda-term@opam:2.0.1@bc36657b",
       "name": "@opam/lambda-term",
-      "version": "opam:2.0.2",
+      "version": "opam:2.0.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/46/4602aa4355705909e406513322b4b27e#md5:4602aa4355705909e406513322b4b27e",
-          "archive:https://github.com/ocaml-community/lambda-term/releases/download/2.0.2/lambda-term-2.0.2.tbz#md5:4602aa4355705909e406513322b4b27e"
+          "archive:https://opam.ocaml.org/cache/md5/4b/4b4b8480fe1280e1ed2a34ed93d16675#md5:4b4b8480fe1280e1ed2a34ed93d16675",
+          "archive:https://github.com/ocaml-community/lambda-term/releases/download/2.0.1/lambda-term-2.0.1.tbz#md5:4b4b8480fe1280e1ed2a34ed93d16675"
         ],
         "opam": {
           "name": "lambda-term",
-          "version": "2.0.2",
-          "path": "doc.esy.lock/opam/lambda-term.2.0.2"
+          "version": "2.0.1",
+          "path": "doc.esy.lock/opam/lambda-term.2.0.1"
         }
       },
       "overrides": [],
@@ -2290,6 +2344,20 @@
         "@opam/menhir@opam:20190924@004407ff",
         "@opam/dune@opam:1.11.4@a7ccb7ae"
       ],
+      "devDependencies": []
+    },
+    "@esy-cross/ninja-build@1.8.2001@d41d8cd9": {
+      "id": "@esy-cross/ninja-build@1.8.2001@d41d8cd9",
+      "name": "@esy-cross/ninja-build",
+      "version": "1.8.2001",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/@esy-cross/ninja-build/-/ninja-build-1.8.2001.tgz#sha1:d223b3b9e73e14ef2f241ddc522fa330f94b8602"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
       "devDependencies": []
     },
     "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#0a2e476@d41d8cd9": {
