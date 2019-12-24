@@ -23,7 +23,6 @@ int menu_compare(value v1, value v2) {
 ** Encapsulation of opaque menu handles (of type s_menu)
 ** as OCaml custom blocks.
 */
-
 static struct custom_operations menu_ops = {
     "com.outrunlabs.www.revery.menu",
     custom_finalize_default,

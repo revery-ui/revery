@@ -1,7 +1,7 @@
 (library
     (name Revery_Native)
     (public_name Revery.Native)
-    (preprocess (pps lwt_ppx))
+    (preprocess (pps brisk-reconciler.ppx lwt_ppx))
     (library_flags (:include flags.sexp))
     (js_of_ocaml (javascript_files dialog.js menu.js))
     (c_names
@@ -12,10 +12,10 @@
         shell shell_cocoa shell_gtk shell_win32
         utilities
         ReveryAppDelegate ReveryAppDelegate_func
-        ReveryProgressBar menu)
+        ReveryProgressBar menu  menu_win32)
     (c_flags :standard -Wall -Wextra -Werror (:include c_flags.sexp))
     (c_library_flags (:include c_library_flags.sexp))
-    (libraries sdl2))
+    (libraries brisk-reconciler sdl2))
 
 (copy_files cocoa/*)
 
