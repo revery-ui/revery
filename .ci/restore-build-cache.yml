@@ -24,7 +24,7 @@ steps:
   #   condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
   #   displayName: '[Cache][Restore] Untar npm cache directory'
 
-  - bash: 'cd $(ESY__CACHE_INSTALL_PATH) && tar -xf $(STAGING_DIRECTORY_UNIX)/cache-$(Agent.OS)-install/esy-cache.tar -C .'
+  - bash: 'cd $(ESY__CACHE_INSTALL_PATH) && tar -xf $(STAGING_DIRECTORY)/cache-$(Agent.OS)-install/esy-cache.tar -C .'
     continueOnError: true
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     displayName: '[Cache][Restore] Untar esy cache directory'
