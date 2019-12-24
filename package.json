@@ -44,10 +44,12 @@
     "rench": "^1.9.1",
     "rebez": "github:jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3011",
-    "esy-skia": "github:revery-ui/esy-skia#ff2e46d"
+    "reason-skia": "github:manuhornung/reason-skia#d26e3dd"
   },
   "resolutions": {
     "@opam/cmdliner": "1.0.2",
+    "@esy-ocaml/libffi": "esy-ocaml/libffi#599bc3567",
+    "esy-skia": "revery-ui/esy-skia#ff2e46d",
     "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#34947ac97",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755"
   },
