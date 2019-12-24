@@ -198,63 +198,27 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
   };
 };
 
-// TODONOW: Bring back drop shadow
-/*
-let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
+let makeShadowImageFilter = (boxShadow) => {
   let {spreadRadius, blurRadius, xOffset, yOffset, color} = boxShadow;
-  let shadowTransform = Mat4.create();
+  
+  // Per spec, sigma is exactly half the blur radius:
+  // https://www.w3.org/TR/css-backgrounds-3/#shadow-blur
+  // https://html.spec.whatwg.org/C/#when-shadows-are-drawn
+  let sigma = 0.5 *. blurRadius;
+  print_endline("sigms:" ++ string_of_float(sigma));
 
-  /* Widen the size of the shadow based on the spread or blur radius specified */
-  let sizeModifier = spreadRadius +. blurRadius;
-
-  let quad =
-    Assets.quad(
-      ~minX=0.,
-      ~minY=0.,
-      ~maxX=width +. sizeModifier,
-      ~maxY=height +. sizeModifier,
-      (),
-    );
-
-  Mat4.fromTranslation(shadowTransform, Vec3.create(xOffset, yOffset, 0.));
-
-  let shadowWorldTransform = Mat4.create();
-
-  Mat4.multiply(shadowWorldTransform, world, shadowTransform);
-
-  let gradientShader = Assets.gradientShader();
-
-  Shaders.CompiledShader.use(gradientShader.compiledShader);
-
-  Shaders.CompiledShader.setUniformMatrix4fv(
-    gradientShader.uniformProjection,
-    m,
+  // TODO spreadRadius is unused - find out if this should be removed
+  Skia.ImageFilter.makeDropShadow(
+    xOffset,
+    yOffset,
+    sigma,
+    sigma,
+    Color.toSkia(color),
+    DrawShadowAndForeground,
+    None,
+    None,
   );
-
-  Shaders.CompiledShader.setUniform3fv(
-    gradientShader.uniformShadowColor,
-    Color.toVec3(color),
-  );
-
-  Shaders.CompiledShader.setUniform2fv(
-    gradientShader.uniformShadowAmount,
-    Vec2.create(blurRadius /. width, blurRadius /. height),
-  );
-
-  Shaders.CompiledShader.setUniformMatrix4fv(
-    gradientShader.uniformWorld,
-    shadowWorldTransform,
-  );
-
-  Shaders.CompiledShader.setUniformMatrix4fv(
-    gradientShader.uniformLocal,
-    identityMatrix,
-  );
-
-  Geometry.draw(quad, gradientShader.compiledShader);
-  ();
 };
-*/
 
 class viewNode (()) = {
   as _this;
@@ -287,15 +251,22 @@ class viewNode (()) = {
     
     let innerRRect = renderBorders(~canvas, ~style, ~outerRRect, ~opacity);
 
-    /*switch (style.boxShadow) {
-    | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _} =>
-      ()
-    | boxShadow => renderShadow(~boxShadow, ~width, ~height)
-    };*/
-
     let color = Color.multiplyAlpha(opacity, style.backgroundColor);
     if (color.a > 0.001) {
       let fill = Skia.Paint.make();
+
+      // switch (style.boxShadow) {
+      // | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _} =>
+        // ()
+      // | boxShadow => {
+        if (style.boxShadow.blurRadius != 0.) {
+          print_endline("drawing shadow..." ++ string_of_float(style.boxShadow.blurRadius));
+        };
+        let shadowImageFilter = makeShadowImageFilter(style.boxShadow);
+        Skia.Paint.setImageFilter(fill, shadowImageFilter);
+      // }
+      // };
+
       let skiaColor = Color.toSkia(color);
       Skia.Paint.setColor(fill, skiaColor);
       

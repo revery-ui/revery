@@ -62,6 +62,9 @@ class node (()) = {
     NodeEvents.DimensionsChangedEventParams.create();
   val mutable _isLayoutDirty = true;
   val mutable _forcedMeasurements: option(Dimensions.t) = None;
+
+  val mutable _hasHadNonZeroBlurRadius = false;
+  
   pub draw = (parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
@@ -131,6 +134,10 @@ class node (()) = {
   };
   pub setStyle = style =>
     if (style != _style) {
+      if (style.boxShadow.blurRadius != 0. || _hasHadNonZeroBlurRadius) {
+        print_endline("Setting style: " ++ string_of_float(style.boxShadow.blurRadius));
+        _hasHadNonZeroBlurRadius = true;
+      };
       _style = style;
 
       let lastLayoutStyle = _layoutStyle;
@@ -141,7 +148,10 @@ class node (()) = {
         _this#markLayoutDirty();
       };
     };
-  pub getStyle = () => _style;
+  pub getStyle = () => {
+    // print_endline("Returning style: " ++ string_of_float(_style.boxShadow.blurRadius));
+    _style;
+  };
   pub setEvents = events => _events = events;
   pub getEvents = () => _events;
   pub getChildren = () => _children;
