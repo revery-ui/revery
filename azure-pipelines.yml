@@ -11,8 +11,7 @@ jobs:
     vmImage: 'Ubuntu 16.04'
 
   variables:
-    STAGING_DIRECTORY: /home/vsts/STAGING
-    STAGING_DIRECTORY_UNIX: /home/vsts/STAGING
+    STAGING_DIRECTORY: $(Build.StagingDirectory)
     ESY__CACHE_INSTALL_PATH: /home/vsts/.esy/3_____________________________________________________________________/i
     ESY__CACHE_SOURCE_TARBALL_PATH: /home/vsts/.esy/source/i
     # ESY__NPM_ROOT: /opt/hostedtoolcache/node/8.14.0/x64/lib/node_modules/esy
@@ -34,8 +33,7 @@ jobs:
     vmImage: 'macOS 10.13'
 
   variables:
-    STAGING_DIRECTORY: /Users/runner/STAGING
-    STAGING_DIRECTORY_UNIX: /Users/runner/STAGING
+    STAGING_DIRECTORY: $(Build.StagingDirectory)
     ESY__CACHE_INSTALL_PATH: /Users/runner/.esy/3__________________________________________________________________/i
     ESY__CACHE_SOURCE_TARBALL_PATH: /Users/runner/.esy/source/i
     # ESY__NPM_ROOT: /usr/local/lib/node_modules/esy
@@ -54,8 +52,7 @@ jobs:
     vmImage: 'macOS 10.13'
 
   variables:
-    STAGING_DIRECTORY: /Users/runner/STAGING
-    STAGING_DIRECTORY_UNIX: /Users/runner/STAGING
+    STAGING_DIRECTORY: $(Build.StagingDirectory)
     ESY__CACHE_INSTALL_PATH: /Users/runner/.esy/3__________________________________________________________________/i
     ESY__CACHE_SOURCE_TARBALL_PATH: /Users/runner/.esy/source/i
     # ESY__NPM_ROOT: /usr/local/lib/node_modules/esy
@@ -75,8 +72,7 @@ jobs:
     vmImage: 'vs2017-win2016'
 
   variables:
-    STAGING_DIRECTORY: C:\Users\VssAdministrator\STAGING
-    STAGING_DIRECTORY_UNIX: /C/Users/VssAdministrator/STAGING
+    STAGING_DIRECTORY: $(Build.StagingDirectory)
     ESY__CACHE_INSTALL_PATH: /C/Users/VssAdministrator/.esy/3_/i
     ESY__CACHE_SOURCE_TARBALL_PATH: /C/Users/VssAdministrator/.esy/source/i
     # ESY__NPM_ROOT: /C/npm/prefix/node_modules/esy
