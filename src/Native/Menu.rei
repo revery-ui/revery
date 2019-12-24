@@ -1,0 +1,1 @@
+let menuSupported: unit => bool;

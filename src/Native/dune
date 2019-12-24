@@ -4,7 +4,7 @@
     (preprocess (pps lwt_ppx))
     (library_flags (:include flags.sexp))
     (js_of_ocaml (javascript_files dialog.js))
-    (c_names dialog dialog_cocoa dialog_win32 dialog_gtk)
+    (c_names dialog dialog_cocoa dialog_win32 dialog_gtk menu)
     (c_flags :standard -Wall -Wextra -Werror (:include c_flags.sexp))
     (c_library_flags (:include c_library_flags.sexp))
     (libraries sdl2))
