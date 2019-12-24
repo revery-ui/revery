@@ -15,8 +15,8 @@ type node = reveryNode;
 
 let onStale: Event.t(unit) = Event.create();
 
-let insertNode = (~parent: node, ~child: node, ~position as _) => {
-  parent#addChild(child);
+let insertNode = (~parent: node, ~child: node, ~position) => {
+  parent#addChild(child, position);
   parent;
 };
 

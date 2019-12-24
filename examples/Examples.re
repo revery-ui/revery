@@ -75,7 +75,11 @@ let state: state = {
       render: _ => Stopwatch.render(),
       source: "Stopwatch.re",
     },
-    {name: "Native", render: w => Native.render(w), source: "Native.re"},
+    {
+      name: "Native",
+      render: _ => NativeExample.render(),
+      source: "NativeExample.re",
+    },
     {
       name: "Input",
       render: _ => InputExample.render(),

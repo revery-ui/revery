@@ -72,10 +72,10 @@ describe("Mouse", ({describe, test, _}) => {
         ),
       );
 
-      node1#addChild(node2);
-      node3#addChild(node4);
-      rootNode#addChild(node1);
-      rootNode#addChild(node3);
+      node1#addChild(node2, 0);
+      node3#addChild(node4, 0);
+      rootNode#addChild(node1, 0);
+      rootNode#addChild(node3, 1);
 
       Layout.layout(rootNode);
       rootNode#recalculate();
@@ -152,10 +152,10 @@ describe("Mouse", ({describe, test, _}) => {
         ),
       );
 
-      node1#addChild(node2);
-      node3#addChild(node4);
-      rootNode#addChild(node1);
-      rootNode#addChild(node3);
+      node1#addChild(node2, 0);
+      node3#addChild(node4, 0);
+      rootNode#addChild(node1, 0);
+      rootNode#addChild(node3, 1);
 
       Layout.layout(rootNode);
       rootNode#recalculate();
@@ -221,9 +221,9 @@ describe("Mouse", ({describe, test, _}) => {
         let node2 = createChildNode();
         let node3 = createChildNode();
 
-        node1#addChild(node2);
-        rootNode#addChild(node1);
-        rootNode#addChild(node3);
+        node1#addChild(node2, 0);
+        rootNode#addChild(node1, 0);
+        rootNode#addChild(node3, 1);
 
         Layout.layout(rootNode);
         rootNode#recalculate();
@@ -481,7 +481,7 @@ describe("Mouse", ({describe, test, _}) => {
         NodeEvents.make(~onMouseOut=f, ~onMouseOver=f, ()),
       );
 
-      parentNode#addChild(childNode);
+      parentNode#addChild(childNode, 0);
 
       Mouse.dispatch(
         cursor,

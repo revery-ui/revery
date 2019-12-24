@@ -10,6 +10,8 @@ module Console = Console;
 module Font = Revery_Font;
 module Draw = Revery_Draw;
 module Math = Revery_Math;
+module Native = Revery_Native;
+
 module UI = {
   include Revery_UI;
   include Revery_UI_Primitives;

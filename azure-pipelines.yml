@@ -34,17 +34,17 @@ jobs:
     vmImage: 'macOS 10.13'
 
   variables:
-    STAGING_DIRECTORY: /Users/vsts/STAGING
-    STAGING_DIRECTORY_UNIX: /Users/vsts/STAGING
-    ESY__CACHE_INSTALL_PATH: /Users/vsts/.esy/3____________________________________________________________________/i
-    ESY__CACHE_SOURCE_TARBALL_PATH: /Users/vsts/.esy/source/i
+    STAGING_DIRECTORY: /Users/runner/STAGING
+    STAGING_DIRECTORY_UNIX: /Users/runner/STAGING
+    ESY__CACHE_INSTALL_PATH: /Users/runner/.esy/3__________________________________________________________________/i
+    ESY__CACHE_SOURCE_TARBALL_PATH: /Users/runner/.esy/source/i
     # ESY__NPM_ROOT: /usr/local/lib/node_modules/esy
 
   steps:
   - script: brew update
   - script: brew install libpng ragel
   - script: node --version
-  # - template: .ci/restore-build-cache.yml
+  - template: .ci/restore-build-cache.yml
   - template: .ci/esy-check-hygiene.yml
   - template: .ci/publish-build-cache.yml
 
@@ -54,17 +54,17 @@ jobs:
     vmImage: 'macOS 10.13'
 
   variables:
-    STAGING_DIRECTORY: /Users/vsts/STAGING
-    STAGING_DIRECTORY_UNIX: /Users/vsts/STAGING
-    ESY__CACHE_INSTALL_PATH: /Users/vsts/.esy/3____________________________________________________________________/i
-    ESY__CACHE_SOURCE_TARBALL_PATH: /Users/vsts/.esy/source/i
+    STAGING_DIRECTORY: /Users/runner/STAGING
+    STAGING_DIRECTORY_UNIX: /Users/runner/STAGING
+    ESY__CACHE_INSTALL_PATH: /Users/runner/.esy/3__________________________________________________________________/i
+    ESY__CACHE_SOURCE_TARBALL_PATH: /Users/runner/.esy/source/i
     # ESY__NPM_ROOT: /usr/local/lib/node_modules/esy
 
   steps:
   - script: brew update
   - script: brew install libpng ragel
   - script: node --version
-  # - template: .ci/restore-build-cache.yml
+  - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
   - template: .ci/esy-bench.yml
   - template: .ci/publish-build-cache.yml

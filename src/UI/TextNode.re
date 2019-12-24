@@ -91,6 +91,8 @@ class textNode (text: string) = {
 
     let formattedText = TextOverflow.removeLineBreaks(text);
 
+    let window = Ui.getActiveWindow();
+
     let measure = str =>
       Text.measure(~fontFamily, ~fontSize, str)
       |> (value => value.width);
@@ -142,6 +144,7 @@ class textNode (text: string) = {
   };
   pub handleTextWrapping = (width, style) => {
     let {textWrap, fontFamily, fontSize, lineHeight, _}: Style.t = style;
+    let window = Ui.getActiveWindow();
     let lineHeightPx =
       lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
 

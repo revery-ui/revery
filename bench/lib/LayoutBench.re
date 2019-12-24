@@ -28,7 +28,7 @@ let rec setupNodeTree =
 
   while (i^ > 0 && depth > 0) {
     let newNode = setupNodeTree(~depth=depth - 1, ~breadth, ());
-    n#addChild(newNode);
+    n#addChild(newNode, 0);
 
     decr(i);
   };

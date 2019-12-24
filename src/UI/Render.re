@@ -20,6 +20,7 @@ let render =
       component: React.element('node),
     ) => {
   let renderContainer = container;
+  Log.info("UI", "BEGIN: Render frame");
   let {rootNode, window, container, _} = container;
 
   /* Perform reconciliation */
@@ -84,4 +85,5 @@ let render =
     Revery_Draw.Canvas.flush(canvas);
     };
   });
+  Log.info("UI", "END: Render frame");
 };
