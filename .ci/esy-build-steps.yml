@@ -5,6 +5,8 @@ steps:
     displayName: 'npm install -g esy@0.5.8'
   - script: esy install
     displayName: 'esy install'
+  - script: esy build-env
+    displayName: 'esy build-env'
   - script: esy build
     displayName: 'esy build'
   - script: esy @test install
