@@ -10,11 +10,10 @@ operating_system == "Darwin";
 
 external setAppDelegate: unit => unit = "revery_cocoaSetAppDelegate";
 
-[%%else]
+[%%else];
 // If we're _not_ on a Mac, define everything as a noop
 
 let _noop = () => ();
 let setAppDelegate = _noop;
 
 [%%endif];
-
