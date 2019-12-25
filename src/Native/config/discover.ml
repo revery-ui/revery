@@ -11,16 +11,16 @@ let get_linux_config c =
   let default = {libs= []; cflags= []; flags= []} in
   match C.Pkg_config.get c with
   | None -> 
-    print_endline ("NO PKG CONFIG AVAILABLE");
+    prerr_endline ("NO PKG CONFIG AVAILABLE");
     default
   | Some pc -> (
-    print_endline ("GOT PKG CONFIG");
+    prerr_endline ("GOT PKG CONFIG");
     match C.Pkg_config.query pc ~package:"gtk+-3.0" with
     | None -> 
-      print_endline "NO MATCH FOR GTK";
+      prerr_endline "NO MATCH FOR GTK";
       default
     | Some conf -> 
-      print_endline "GOT SOMETHING";
+      prerr_endline "GOT SOMETHING";
       {libs= conf.libs; cflags= conf.cflags; flags= []} )
 
 let uname () =
