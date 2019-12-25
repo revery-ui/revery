@@ -19,6 +19,10 @@ jobs:
   steps:
   - script: sudo apt-get update
   - script: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-utils mesa-utils-extra ragel libgtk-3-dev
+  - script: pkg-config --variable pc_path pkg-config
+    displayName: "pkg-config: pc_path"
+  - script: pkg-config --debug gtk+-3.0
+    displayName: "pkg-config: debug gtk"
   - template: .ci/use-node.yml
   - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
