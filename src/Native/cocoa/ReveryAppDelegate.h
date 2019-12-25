@@ -1,3 +1,4 @@
+#ifdef __APPLE__
 #import <Cocoa/Cocoa.h>
 
 /* ReveryAppDelegate
@@ -13,3 +14,4 @@
 */
 @property(nonatomic, strong) NSMutableDictionary *notificationActions;
 @end
+#endif
