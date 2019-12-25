@@ -45,11 +45,9 @@
     "rebez": "github:jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3011",
     "esy-skia": "github:revery-ui/esy-skia#ff2e46d",
-    "@opam/ctypes": "0.15.1",
-    "@opam/ctypes-foreign": "0.4.0"
+    "@esy-ocaml/libffi": "github:esy-ocaml/libffi#599bc3567ecf839240977b6d9aaf0b80f983b5aa"
   },
   "resolutions": {
-    "@esy-ocaml/libffi": "esy-ocaml/libffi#599bc3567ecf839240977b6d9aaf0b80f983b5aa",
     "@opam/cmdliner": "1.0.2",
     "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#34947ac97",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755"
