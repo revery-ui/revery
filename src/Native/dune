@@ -1,7 +1,7 @@
 (library
     (name Revery_Native)
     (public_name Revery.Native)
-    (preprocess (pps lwt_ppx))
+    (preprocess (pps lwt_ppx ppx_optcomp))
     (library_flags (:include flags.sexp))
     (js_of_ocaml (javascript_files dialog.js))
     (c_names dialog dialog_cocoa dialog_win32 dialog_gtk notification notification_cocoa revery_cocoa utilities ReveryAppDelegate)
@@ -10,6 +10,10 @@
     (libraries sdl2))
 
 (copy_files cocoa/*)
+(rule
+    (targets config.ml)
+    (deps (:prebuild ../get-os.sh))
+    (action (run sh %{prebuild})))
 
 (rule
 (targets flags.sexp c_flags.sexp c_library_flags.sexp)
