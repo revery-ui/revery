@@ -17,10 +17,10 @@ let get_linux_config c =
     print_endline ("GOT PKG CONFIG");
     match C.Pkg_config.query pc ~package:"gtk+-3.0" with
     | None -> 
-      print_endline "NO MATCH FOR GTK"
+      print_endline "NO MATCH FOR GTK";
       default
     | Some conf -> 
-      print_endline "GOT SOMETHING"
+      print_endline "GOT SOMETHING";
       {libs= conf.libs; cflags= conf.cflags; flags= []} )
 
 let uname () =
