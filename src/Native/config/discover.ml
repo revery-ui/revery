@@ -4,6 +4,12 @@ type os = Windows | Mac | Linux | Unknown
 
 type config = {libs: string list; cflags: string list; flags: string list}
 
+let () =
+  match Sys.getenv_opt "PKG_CONFIG_PATH" with
+  | None -> prerr_endline ("NO PKG_CONFIG_PATH");
+  | Some(v) -> prerr_endline ("PKG_CONFIG_PATH: " ^ v); 
+;;
+
 let get_mac_config () =
   {cflags= ["-I"; "."; "-x"; "objective-c"]; libs= []; flags= []}
 
