@@ -1,18 +1,15 @@
 {
-  "checksum": "320aecbdb817c104b2f684c382b13aae",
+  "checksum": "a105d0341ea72a1a04a6a03c6e2a00f9",
   "root": "revery@link-dev:./package.json",
   "node": {
-    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#34947ac97f898c8a94b1731df45aea16f8fc7b3c@d41d8cd9": {
+    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9": {
       "id":
-        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#34947ac97f898c8a94b1731df45aea16f8fc7b3c@d41d8cd9",
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9",
       "name": "yarn-pkg-config",
-      "version":
-        "github:esy-ocaml/yarn-pkg-config#34947ac97f898c8a94b1731df45aea16f8fc7b3c",
+      "version": "github:esy-ocaml/yarn-pkg-config#db3a0b6",
       "source": {
         "type": "install",
-        "source": [
-          "github:esy-ocaml/yarn-pkg-config#34947ac97f898c8a94b1731df45aea16f8fc7b3c"
-        ]
+        "source": [ "github:esy-ocaml/yarn-pkg-config#db3a0b6" ]
       },
       "overrides": [],
       "dependencies": [],
@@ -31,7 +28,8 @@
       "dependencies": [
         "reperf@1.4.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-skia@link:../reason-skia", "reason-sdl2@2.10.3011@d41d8cd9",
+        "reason-skia@github:manuhornung/reason-skia#d26e3dd@d41d8cd9",
+        "reason-sdl2@2.10.3011@d41d8cd9",
         "reason-gl-matrix@0.9.9306@d41d8cd9",
         "reason-fontkit@2.8.3@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "flex@1.2.2@d41d8cd9",
@@ -124,15 +122,19 @@
       ],
       "devDependencies": []
     },
-    "reason-skia@link:../reason-skia": {
-      "id": "reason-skia@link:../reason-skia",
+    "reason-skia@github:manuhornung/reason-skia#d26e3dd@d41d8cd9": {
+      "id": "reason-skia@github:manuhornung/reason-skia#d26e3dd@d41d8cd9",
       "name": "reason-skia",
-      "version": "link:../reason-skia",
-      "source": { "type": "link", "path": "../reason-skia" },
+      "version": "github:manuhornung/reason-skia#d26e3dd",
+      "source": {
+        "type": "install",
+        "source": [ "github:manuhornung/reason-skia#d26e3dd" ]
+      },
       "overrides": [],
       "dependencies": [
-        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#34947ac97f898c8a94b1731df45aea16f8fc7b3c@d41d8cd9",
-        "refmterr@3.3.0@d41d8cd9", "esy-skia@link:../esy-skia",
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9",
+        "esy-skia@github:revery-ui/esy-skia#ff2e46d@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/lambda-term@opam:2.0.2@119fb081",
         "@opam/dune@opam:1.11.4@a7ccb7ae",
@@ -251,11 +253,14 @@
       ],
       "devDependencies": []
     },
-    "esy-skia@link:../esy-skia": {
-      "id": "esy-skia@link:../esy-skia",
+    "esy-skia@github:revery-ui/esy-skia#ff2e46d@d41d8cd9": {
+      "id": "esy-skia@github:revery-ui/esy-skia#ff2e46d@d41d8cd9",
       "name": "esy-skia",
-      "version": "link:../esy-skia",
-      "source": { "type": "link", "path": "../esy-skia" },
+      "version": "github:revery-ui/esy-skia#ff2e46d",
+      "source": {
+        "type": "install",
+        "source": [ "github:revery-ui/esy-skia#ff2e46d" ]
+      },
       "overrides": [],
       "dependencies": [
         "esy-libjpeg-turbo@github:prometheansacrifice/libjpeg-turbo#50e8e32c48@d41d8cd9",
@@ -1635,7 +1640,7 @@
         "@opam/conf-pkg-config@opam:1.1@67c69c0c",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9",
-        "@esy-ocaml/libffi@github:esy-ocaml/libffi#599bc3567ecf839240977b6d9aaf0b80f983b5aa@d41d8cd9"
+        "@esy-ocaml/libffi@github:esy-ocaml/libffi#599bc3567@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.7.1004@d41d8cd9", "@opam/integers@opam:0.3.0@d6eefd3a",
@@ -1689,7 +1694,7 @@
         }
       ],
       "dependencies": [
-        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#34947ac97f898c8a94b1731df45aea16f8fc7b3c@d41d8cd9",
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": []
@@ -2055,17 +2060,13 @@
       ],
       "devDependencies": []
     },
-    "@esy-ocaml/libffi@github:esy-ocaml/libffi#599bc3567ecf839240977b6d9aaf0b80f983b5aa@d41d8cd9": {
-      "id":
-        "@esy-ocaml/libffi@github:esy-ocaml/libffi#599bc3567ecf839240977b6d9aaf0b80f983b5aa@d41d8cd9",
+    "@esy-ocaml/libffi@github:esy-ocaml/libffi#599bc3567@d41d8cd9": {
+      "id": "@esy-ocaml/libffi@github:esy-ocaml/libffi#599bc3567@d41d8cd9",
       "name": "@esy-ocaml/libffi",
-      "version":
-        "github:esy-ocaml/libffi#599bc3567ecf839240977b6d9aaf0b80f983b5aa",
+      "version": "github:esy-ocaml/libffi#599bc3567",
       "source": {
         "type": "install",
-        "source": [
-          "github:esy-ocaml/libffi#599bc3567ecf839240977b6d9aaf0b80f983b5aa"
-        ]
+        "source": [ "github:esy-ocaml/libffi#599bc3567" ]
       },
       "overrides": [],
       "dependencies": [],
