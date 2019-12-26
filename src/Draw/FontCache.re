@@ -48,32 +48,32 @@ type fontLoaded = Event.t(unit);
 let onFontLoaded: fontLoaded = Event.create();
 
 type t = {
-  hbFace: Harfbuzz.hb_face,
+  hbFace: option(Harfbuzz.hb_face),
   skiaTypeface: Skia.Typeface.t,
 }
 
-let _cache: InternalCache.t(t) = InternalCache.create();
+let _cache: StringHash.t(t) = StringHash.create(16);
 
 let load: (string) => option(t) =
   (fontName: string) => {
-    let size = 12;
     let assetPath = Environment.getAssetPath(fontName);
-    switch (InternalCache.find_opt(_cache, fontName, size)) {
+    //let _assetPath = "/Users/Library/Comic Sans.ttf";
+    switch (StringHash.find_opt(_cache, assetPath)) {
     | Some(v) => 
-      prerr_endline ("Got font from cache: " ++ fontName);
+      prerr_endline ("Got font from cache: " ++ assetPath);
       Some(v)
     | None =>
           prerr_endline ("Loading font from: " ++ assetPath);
-          let hbFace = Harfbuzz.hb_new_face(assetPath);
+          let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
+          //let hbFace = Harfbuzz.hb_new_face(assetPath);
 
-          switch (hbFace) {
-          | Ok(v) => 
-            let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
-            let font = { hbFace: v, skiaTypeface };
-            InternalCache.add(_cache, fontName, size, font);
-            Event.dispatch(onFontLoaded, ());
-            Some(font)
-          | _ => None;
-          };
-    };
+          /*switch (hbFace) {
+          | Ok(v) => */
+          let font = { hbFace: None, skiaTypeface };
+          StringHash.add(_cache, assetPath, font);
+          Event.dispatch(onFontLoaded, ());
+          Some(font);
+          //| _ => None;
+          //};
   };
+};

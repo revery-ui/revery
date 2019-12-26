@@ -126,7 +126,7 @@ let drawText = (~color=Revery_Core.Colors.white, ~x=0., ~y=0., ~fontFamily, ~fon
   let fill2 = Paint.make();
   //let fontStyle = FontStyle.make(500, 20, Upright);
   Paint.setColor(fill2, Revery_Core.Color.toSkia(color));
-  //Paint.setTypeface(fill2, typeface);
+  Paint.setTypeface(fill2, skiaTypeface);
   Paint.setLcdRenderText(fill2, true);
   Paint.setAntiAlias(fill2, true);
   Paint.setTextSize(fill2, fontSize);
