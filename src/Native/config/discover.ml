@@ -10,18 +10,11 @@ let get_mac_config () =
 let get_linux_config c =
   let default = {libs= []; cflags= []; flags= []} in
   match C.Pkg_config.get c with
-  | None -> 
-    prerr_endline ("NO PKG CONFIG AVAILABLE");
-    default
+  | None -> default
   | Some pc -> (
-    prerr_endline ("GOT PKG CONFIG");
     match C.Pkg_config.query pc ~package:"gtk+-3.0" with
-    | None -> 
-      prerr_endline "NO MATCH FOR GTK";
-      default
-    | Some conf -> 
-      prerr_endline "GOT SOMETHING";
-      {libs= conf.libs; cflags= conf.cflags; flags= []} )
+    | None -> default
+    | Some conf -> {libs= conf.libs; cflags= conf.cflags; flags= []} )
 
 let uname () =
   let ic = Unix.open_process_in "uname" in
