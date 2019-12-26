@@ -186,7 +186,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     };
   };
 
-  Cocoa.setAppDelegate();
+  Revery_Native.init();
 
   let appLoop = () => {
     _flushEvents();

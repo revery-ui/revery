@@ -35,7 +35,6 @@
     "@opam/js_of_ocaml-lwt": "^3.4.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
-    "@opam/ppx_optcomp": "v0.12.0",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#0a2e476",
     "flex": "^1.2.2",
     "@reason-native/rely": "*",
