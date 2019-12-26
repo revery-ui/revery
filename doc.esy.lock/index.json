@@ -1,15 +1,15 @@
 {
-  "checksum": "4fcfb50d440cedebbc788f62abbd5ee0",
+  "checksum": "bc2ca1beeae96b3c6dd5cb3087f161e9",
   "root": "revery@link-dev:./package.json",
   "node": {
-    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#34947ac97@d41d8cd9": {
+    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9": {
       "id":
-        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#34947ac97@d41d8cd9",
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9",
       "name": "yarn-pkg-config",
-      "version": "github:esy-ocaml/yarn-pkg-config#34947ac97",
+      "version": "github:esy-ocaml/yarn-pkg-config#db3a0b6",
       "source": {
         "type": "install",
-        "source": [ "github:esy-ocaml/yarn-pkg-config#34947ac97" ]
+        "source": [ "github:esy-ocaml/yarn-pkg-config#db3a0b6" ]
       },
       "overrides": [],
       "dependencies": [],
@@ -203,7 +203,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#34947ac97@d41d8cd9",
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9",
         "refmterr@3.3.0@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#ff2e46d@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
@@ -2119,7 +2119,7 @@
         }
       ],
       "dependencies": [
-        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#34947ac97@d41d8cd9",
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": []
