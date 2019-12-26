@@ -117,15 +117,16 @@ let drawImage = (~x, ~y, src, v: t) => {
 };
 
 let drawText = (~color=Revery_Core.Colors.white, ~x=0., ~y=0., ~fontFamily, ~fontSize, text, v: t) => {
+  prerr_endline ("FONT FAMILY: " ++ fontFamily);
   let (_, skiaTypeface) = FontCache.load(fontFamily, 10);
   switch (skiaTypeface) {
   | None => ();
   | Some(typeface) => 
 
   let fill2 = Paint.make();
-  let fontStyle = FontStyle.make(500, 20, Upright);
+  //let fontStyle = FontStyle.make(500, 20, Upright);
   Paint.setColor(fill2, Revery_Core.Color.toSkia(color));
-  Paint.setTypeface(fill2, typeface);
+  //Paint.setTypeface(fill2, typeface);
   Paint.setLcdRenderText(fill2, true);
   Paint.setAntiAlias(fill2, true);
   Paint.setTextSize(fill2, fontSize);
@@ -147,28 +148,4 @@ let clipRRect = (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rRect: Skia.
 
 let clipPath = (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, path: Skia.Path.t) => {
   Canvas.clipPath(Surface.getCanvas(v), path, clipOp, antiAlias);
-};
-
-let test_draw = (v: t) => {
-  let canvas = Surface.getCanvas(v);
-  
-  let fill = Paint.make();
-  Paint.setColor(fill, Color.makeArgb(0xFF, 0x00, 0x00, 0x00));
-  Canvas.drawPaint(canvas, fill);
-
-  Paint.setColor(fill, Color.makeArgb(0xFF, 0x00, 0xFF, 0xFF));
-  let rect = Rect.makeLtrb(20., 100., 110., 120.);
-  Canvas.drawRect(canvas, rect, fill);
-
-  let fontStyle = FontStyle.make(500, 20, Upright);
-  let typeface = Typeface.makeFromName("Consolas", fontStyle);
-
-  let fill2 = Paint.make();
-  Paint.setColor(fill2, Color.makeArgb(0xFF, 0xFF, 0xFF, 0xFF));
-  Paint.setTypeface(fill2, typeface);
-  Paint.setLcdRenderText(fill2, true);
-  Paint.setAntiAlias(fill2, true);
-  Paint.setTextSize(fill2, 25.);
-
-  Canvas.drawText(canvas, "Hello, world!", 30.25, 30.25, fill2);
 };

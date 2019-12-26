@@ -61,26 +61,31 @@ let _isSome = a =>
 
 let load: (string, int) => t =
   (fontName: string, size: int) => {
+    let size = 12;
     let assetPath = Environment.getAssetPath(fontName);
     switch (InternalCache.find_opt(_cache, fontName, size)) {
-    | Some(v) => v
+    | Some(v) => 
+      prerr_endline ("Got font from cache: " ++ fontName);
+      v
+
     | None =>
       let isLoading =
         _isSome(InternalCache.find_opt(_loadingCache, fontName, size));
       if (!isLoading) {
         InternalCache.add(_loadingCache, fontName, size, true);
-        let success = fk => {
+        //let success = fk => {
+          prerr_endline ("Loading font from: " ++ assetPath);
           let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
-          let font = (fk, Some(skiaTypeface));
+          let font = (Fontkit.dummyFont(size), Some(skiaTypeface));
 
           InternalCache.remove(_loadingCache, fontName, size);
           InternalCache.add(_cache, fontName, size, font);
           Event.dispatch(onFontLoaded, ());
-          Lwt.return();
-        };
-        let _ = Lwt.bind(Fontkit.load(assetPath, size), success);
-        ();
-      };
-      (Fontkit.dummyFont(size), None);
+        //};
+        //let _ = Lwt.bind(Fontkit.load(assetPath, size), success);
+        font
+      } else {
+        (Fontkit.dummyFont(size), None);
+      }
     };
   };

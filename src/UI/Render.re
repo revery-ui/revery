@@ -64,10 +64,8 @@ let render =
     switch (renderContainer.canvas^) {
     | None => ();
     | Some(canvas) => 
-      Revery_Draw.Canvas.test_draw(canvas);
     
      let drawContext = NodeDrawContext.create(~canvas, ~zIndex=0, ~opacity=1.0, ());
-
     // let drawContext = NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
 
     RenderPass.start(
