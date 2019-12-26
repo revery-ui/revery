@@ -1,7 +1,5 @@
-open Revery;
 open Revery.UI;
 open Revery.UI.Components;
-open Revery.Native;
 open Skia;
 
 let writeOutput = () => {
