@@ -1,5 +1,5 @@
 {
-  "checksum": "a105d0341ea72a1a04a6a03c6e2a00f9",
+  "checksum": "298e5150d6d7f95a12142c1e84a5c58d",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9": {
@@ -30,8 +30,8 @@
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:manuhornung/reason-skia#d26e3dd@d41d8cd9",
         "reason-sdl2@2.10.3011@d41d8cd9",
+        "reason-harfbuzz@1.91.5002@d41d8cd9",
         "reason-gl-matrix@0.9.9306@d41d8cd9",
-        "reason-fontkit@2.8.3@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "flex@1.2.2@d41d8cd9",
         "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
@@ -81,7 +81,7 @@
         "refmterr@3.3.0@d41d8cd9", "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/lambda-term@opam:2.0.2@119fb081",
+        "@opam/lambda-term@opam:2.0.1@bc36657b",
         "@opam/fpath@opam:0.7.2@45477b93", "@opam/dune@opam:1.11.4@a7ccb7ae",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
@@ -136,7 +136,7 @@
         "refmterr@3.3.0@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#ff2e46d@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/lambda-term@opam:2.0.2@119fb081",
+        "@opam/lambda-term@opam:2.0.1@bc36657b",
         "@opam/dune@opam:1.11.4@a7ccb7ae",
         "@opam/ctypes-foreign@opam:0.4.0@72ef8de2",
         "@opam/ctypes@opam:0.15.1@f2708d42",
@@ -167,6 +167,23 @@
       ],
       "devDependencies": []
     },
+    "reason-harfbuzz@1.91.5002@d41d8cd9": {
+      "id": "reason-harfbuzz@1.91.5002@d41d8cd9",
+      "name": "reason-harfbuzz",
+      "version": "1.91.5002",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/reason-harfbuzz/-/reason-harfbuzz-1.91.5002.tgz#sha1:7407dbd6dfe6d4e37671a5a42647e56d881f6741"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.7.1004@d41d8cd9", "esy-harfbuzz@1.9.1005@d41d8cd9",
+        "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
     "reason-gl-matrix@0.9.9306@d41d8cd9": {
       "id": "reason-gl-matrix@0.9.9306@d41d8cd9",
       "name": "reason-gl-matrix",
@@ -181,24 +198,6 @@
       "dependencies": [
         "@opam/js_of_ocaml-compiler@opam:3.5.0@9ea7292f",
         "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/reason@3.5.2@d41d8cd9"
-      ],
-      "devDependencies": []
-    },
-    "reason-fontkit@2.8.3@d41d8cd9": {
-      "id": "reason-fontkit@2.8.3@d41d8cd9",
-      "name": "reason-fontkit",
-      "version": "2.8.3",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-2.8.3.tgz#sha1:84a0086ea98d071cd783d4b7d6896a80ab547935"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "reason-gl-matrix@0.9.9306@d41d8cd9",
-        "esy-harfbuzz@1.9.1005@d41d8cd9", "esy-freetype2@2.9.1006@d41d8cd9",
-        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:1.11.4@a7ccb7ae"
       ],
       "devDependencies": []
     },
@@ -323,22 +322,6 @@
         "type": "install",
         "source": [
           "archive:https://registry.npmjs.org/esy-harfbuzz/-/esy-harfbuzz-1.9.1005.tgz#sha1:04651c73d33ce8004e61fde35a7549a7b9e908b6"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9"
-      ],
-      "devDependencies": []
-    },
-    "esy-freetype2@2.9.1006@d41d8cd9": {
-      "id": "esy-freetype2@2.9.1006@d41d8cd9",
-      "name": "esy-freetype2",
-      "version": "2.9.1006",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/esy-freetype2/-/esy-freetype2-2.9.1006.tgz#sha1:6c32a49543c273b427bbfb56c563e148006978bc"
         ]
       },
       "overrides": [],
@@ -1256,20 +1239,20 @@
         "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
-    "@opam/lambda-term@opam:2.0.2@119fb081": {
-      "id": "@opam/lambda-term@opam:2.0.2@119fb081",
+    "@opam/lambda-term@opam:2.0.1@bc36657b": {
+      "id": "@opam/lambda-term@opam:2.0.1@bc36657b",
       "name": "@opam/lambda-term",
-      "version": "opam:2.0.2",
+      "version": "opam:2.0.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/46/4602aa4355705909e406513322b4b27e#md5:4602aa4355705909e406513322b4b27e",
-          "archive:https://github.com/ocaml-community/lambda-term/releases/download/2.0.2/lambda-term-2.0.2.tbz#md5:4602aa4355705909e406513322b4b27e"
+          "archive:https://opam.ocaml.org/cache/md5/4b/4b4b8480fe1280e1ed2a34ed93d16675#md5:4b4b8480fe1280e1ed2a34ed93d16675",
+          "archive:https://github.com/ocaml-community/lambda-term/releases/download/2.0.1/lambda-term-2.0.1.tbz#md5:4b4b8480fe1280e1ed2a34ed93d16675"
         ],
         "opam": {
           "name": "lambda-term",
-          "version": "2.0.2",
-          "path": "esy.lock/opam/lambda-term.2.0.2"
+          "version": "2.0.1",
+          "path": "esy.lock/opam/lambda-term.2.0.1"
         }
       },
       "overrides": [],

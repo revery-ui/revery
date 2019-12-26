@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "^3.4.0",
-    "reason-fontkit": "^2.8.3",
+    "reason-harfbuzz": "^1.91.5002",
     "reason-gl-matrix": "^0.9.9306",
     "@opam/js_of_ocaml": "^3.4.0",
     "@opam/js_of_ocaml-compiler": "^3.4.0",
