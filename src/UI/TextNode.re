@@ -25,13 +25,19 @@ class textNode (text: string) = {
     let opacity = parentContext.opacity *. style.opacity;
     let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 
-    let ascentPx =
+    // SKIATODO: Get real values for these...
+    /*let ascentPx =
       Text.getAscent(~fontFamily, ~fontSize, ());
     let descentPx =
       Text.getDescent(~fontFamily, ~fontSize, ());
     let lineHeightPx =
       lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
-    let leadingPx = lineHeightPx -. ascentPx -. descentPx;
+    let leadingPx = lineHeightPx -. ascentPx -. descentPx;*/
+    let ascentPx = 0.;
+    let descentPx = 0.;
+    let lineHeightPx = 12.;
+    let leadingPx = 0.;
+    // SKIATODO: End
 
     /* when style.width & style.height are defined, Layout doesn't call the measure function */
     if (!_isMeasured) {
@@ -93,9 +99,12 @@ class textNode (text: string) = {
 
     let window = Ui.getActiveWindow();
 
-    let measure = str =>
+    /*let measure = str =>
       Text.measure(~fontFamily, ~fontSize, str)
-      |> (value => value.width);
+      |> (value => value.width);*/
+
+    // TODO: Real measuring!
+    let measure = str => 100;
 
     let width = measure(formattedText);
     let isOverflowing = width >= maxWidth;
@@ -114,8 +123,13 @@ class textNode (text: string) = {
 
     _lines = [truncated];
 
+
+    // SKIATODO: Real line height
+    let measuredLineHeight = 12.;
     let lineHeightPx =
-      lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
+      lineHeight *. measuredLineHeight;
+      //lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
+    // SKIATODO: end
 
     {width, height: int_of_float(lineHeightPx)};
   };
@@ -143,10 +157,19 @@ class textNode (text: string) = {
     );
   };
   pub handleTextWrapping = (width, style) => {
+
     let {textWrap, fontFamily, fontSize, lineHeight, _}: Style.t = style;
+    
     let window = Ui.getActiveWindow();
+    
+    // SKIATODO: Real line height
+    let measuredLineHeight = 12.;
     let lineHeightPx =
-      lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
+      lineHeight *. measuredLineHeight;
+      //lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
+
+    let measure = (_str) => 100;
+    // SKIATODO: End
 
     switch (textWrap) {
     | WhitespaceWrap =>
@@ -154,7 +177,7 @@ class textNode (text: string) = {
         TextWrapping.wrapText(
           ~text,
           ~measureWidth=
-            str => Text.measure(~fontFamily, ~fontSize, str).width,
+            str => measure(str),
           ~maxWidth=width,
           ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
         );
@@ -169,10 +192,12 @@ class textNode (text: string) = {
 
       dimensions;
     | NoWrap =>
-      let d = Text.measure(~fontFamily, ~fontSize, text);
+      let d = measure(text);
       let dimensions: Layout.LayoutTypes.dimensions = {
-        width: d.width,
-        height: d.height,
+        width: d,
+        height: d,
+        //width: d.width,
+        //height: d.height,
       };
 
       _lines = [text];
@@ -182,7 +207,8 @@ class textNode (text: string) = {
       let (lines, maxWidthLine) =
         wrapFunc(
           text,
-          str => Text.measure(~fontFamily, ~fontSize, str).width,
+          //str => Text.measure(~fontFamily, ~fontSize, str).width,
+          str => measure(str),
           width,
         );
 

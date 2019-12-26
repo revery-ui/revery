@@ -44,48 +44,36 @@ module InternalCache = {
   };
 };
 
-type fontInfo = (string, int);
-
 type fontLoaded = Event.t(unit);
 let onFontLoaded: fontLoaded = Event.create();
 
-type t = (Fontkit.fk_face, option(Skia.Typeface.t));
+type t = {
+  hbFace: Harfbuzz.hb_face,
+  skiaTypeface: Skia.Typeface.t,
+}
 
 let _cache: InternalCache.t(t) = InternalCache.create();
-let _loadingCache: InternalCache.t(bool) = InternalCache.create();
-let _isSome = a =>
-  switch (a) {
-  | Some(_) => true
-  | None => false
-  };
 
-let load: (string, int) => t =
-  (fontName: string, size: int) => {
+let load: (string) => option(t) =
+  (fontName: string) => {
     let size = 12;
     let assetPath = Environment.getAssetPath(fontName);
     switch (InternalCache.find_opt(_cache, fontName, size)) {
     | Some(v) => 
       prerr_endline ("Got font from cache: " ++ fontName);
-      v
-
+      Some(v)
     | None =>
-      let isLoading =
-        _isSome(InternalCache.find_opt(_loadingCache, fontName, size));
-      if (!isLoading) {
-        InternalCache.add(_loadingCache, fontName, size, true);
-        //let success = fk => {
           prerr_endline ("Loading font from: " ++ assetPath);
-          let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
-          let font = (Fontkit.dummyFont(size), Some(skiaTypeface));
+          let hbFace = Harfbuzz.hb_new_face(assetPath);
 
-          InternalCache.remove(_loadingCache, fontName, size);
-          InternalCache.add(_cache, fontName, size, font);
-          Event.dispatch(onFontLoaded, ());
-        //};
-        //let _ = Lwt.bind(Fontkit.load(assetPath, size), success);
-        font
-      } else {
-        (Fontkit.dummyFont(size), None);
-      }
+          switch (hbFace) {
+          | Ok(v) => 
+            let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
+            let font = { hbFace: v, skiaTypeface };
+            InternalCache.add(_cache, fontName, size, font);
+            Event.dispatch(onFontLoaded, ());
+            Some(font)
+          | _ => None;
+          };
     };
   };

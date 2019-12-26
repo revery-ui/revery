@@ -118,11 +118,11 @@ let drawImage = (~x, ~y, src, v: t) => {
 
 let drawText = (~color=Revery_Core.Colors.white, ~x=0., ~y=0., ~fontFamily, ~fontSize, text, v: t) => {
   prerr_endline ("FONT FAMILY: " ++ fontFamily);
-  let (_, skiaTypeface) = FontCache.load(fontFamily, 10);
-  switch (skiaTypeface) {
-  | None => ();
-  | Some(typeface) => 
+  let fontFamily = FontCache.load(fontFamily);
 
+  switch(fontFamily) {
+  | None => ();
+  | Some({skiaTypeface, _}) => {
   let fill2 = Paint.make();
   //let fontStyle = FontStyle.make(500, 20, Upright);
   Paint.setColor(fill2, Revery_Core.Color.toSkia(color));
@@ -131,7 +131,10 @@ let drawText = (~color=Revery_Core.Colors.white, ~x=0., ~y=0., ~fontFamily, ~fon
   Paint.setAntiAlias(fill2, true);
   Paint.setTextSize(fill2, fontSize);
   Canvas.drawText(Surface.getCanvas(v), text, x, y, fill2);
+  
   }
+  }
+  
 };
 
 let setMatrix = (v: t, mat: Skia.Matrix.t) => {

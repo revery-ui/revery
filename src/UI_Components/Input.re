@@ -257,14 +257,17 @@ let%component make =
     |> min(String.length(value));
 
   let measureTextWidth = text => {
-    let dimensions =
+    // SKIATODO: Real font measuring!
+    /*let dimensions =
       Revery_Draw.Text.measure(
         ~fontFamily=textAttrs.fontFamily,
         ~fontSize=textAttrs.fontSize,
         text,
       );
 
-    dimensions.width;
+    dimensions.width;*/
+
+    100;
   };
 
   let%hook (cursorOpacity, resetCursor) =
@@ -355,12 +358,14 @@ let%component make =
       let sceneOffsets: Offset.t = node#getSceneOffsets();
       let textOffset =
         int_of_float(event.mouseX) - sceneOffsets.left + scrollOffset^;
-      let cursorPosition =
+      // SKIATODO: Real font measuring!
+      /*let cursorPosition =
         Revery_Draw.Text.indexNearestOffset(
           ~measure=measureTextWidth,
           value,
           textOffset,
-        );
+        );*/
+      let cursorPosition = 0;
 
       resetCursor();
       update(value, cursorPosition);
