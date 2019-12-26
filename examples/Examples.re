@@ -140,6 +140,11 @@ let state: state = {
       render: _ => ZoomExample.render(),
       source: "ZoomExample.re",
     },
+    {
+      name: "Skia Example",
+      render: _ => SkiaExample.render(),
+      source: "SkiaExample.re",
+    },
   ],
   selectedExample: "Animation",
 };

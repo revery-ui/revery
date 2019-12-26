@@ -6,6 +6,7 @@
     (libraries
         js_of_ocaml
         ExampleStubs
+        skia
         str
         Revery
         flex
