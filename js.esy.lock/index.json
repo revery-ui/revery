@@ -1,5 +1,5 @@
 {
-  "checksum": "ce2ff4961bbeaa96f0904886d533ac6b",
+  "checksum": "dc128bf1df98ccb7c35e880cf098cb31",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63@d41d8cd9": {
@@ -97,6 +97,7 @@
         "@opam/js_of_ocaml-lwt@opam:3.5.2@6ea3e3c2",
         "@opam/js_of_ocaml-compiler@opam:3.5.0@9ea7292f",
         "@opam/js_of_ocaml@opam:3.5.2@c5bae178",
+        "@opam/ctypes-foreign@opam:0.4.0@72ef8de2",
         "@opam/ctypes@opam:0.15.1@f2708d42",
         "@esy-ocaml/reason@3.5.2@d41d8cd9",
         "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#0a2e476@d41d8cd9"
@@ -1968,6 +1969,25 @@
         "@opam/base-threads@opam:base@36803084"
       ]
     },
+    "@opam/ctypes-foreign@opam:0.4.0@72ef8de2": {
+      "id": "@opam/ctypes-foreign@opam:0.4.0@72ef8de2",
+      "name": "@opam/ctypes-foreign",
+      "version": "opam:0.4.0",
+      "source": {
+        "type": "install",
+        "source": [ "no-source:" ],
+        "opam": {
+          "name": "ctypes-foreign",
+          "version": "0.4.0",
+          "path": "js.esy.lock/opam/ctypes-foreign.0.4.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
+    },
     "@opam/ctypes@opam:0.15.1@f2708d42": {
       "id": "@opam/ctypes@opam:0.15.1@f2708d42",
       "name": "@opam/ctypes",
@@ -1993,6 +2013,7 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/integers@opam:0.3.0@d6eefd3a",
+        "@opam/ctypes-foreign@opam:0.4.0@72ef8de2",
         "@opam/conf-pkg-config@opam:1.1@67c69c0c",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9",
