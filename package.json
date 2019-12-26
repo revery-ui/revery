@@ -50,7 +50,7 @@
     "@opam/cmdliner": "1.0.2",
     "@esy-ocaml/libffi": "esy-ocaml/libffi#599bc3567",
     "esy-skia": "revery-ui/esy-skia#ff2e46d",
-    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#34947ac97",
+    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b6",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755"
   },
   "devDependencies": {
