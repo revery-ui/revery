@@ -50,7 +50,7 @@
   "resolutions": {
     "@esy-ocaml/libffi": "esy-ocaml/libffi#599bc3567ecf839240977b6d9aaf0b80f983b5aa",
     "@opam/cmdliner": "1.0.2",
-    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#34947ac97",
+    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b63",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755"
   },
   "devDependencies": {
