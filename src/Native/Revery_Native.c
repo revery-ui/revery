@@ -23,8 +23,6 @@
 CAMLprim value revery_initialize() {
 #ifdef __APPLE__
   revery_cocoaSetAppDelegate();
-#else
-  printf("WARNING: revery_initialize is unimplemented on this platform.");
 #endif
   return Val_unit;
 }
