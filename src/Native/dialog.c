@@ -1,9 +1,6 @@
 #include <stdio.h>
 
-#include <caml/alloc.h>
-#include <caml/callback.h>
-#include <caml/memory.h>
-#include <caml/mlvalues.h>
+#include "caml_tools.h"
 #include <string.h>
 
 #ifdef WIN32
@@ -13,17 +10,6 @@
 #else
 #include "ReveryGtk.h"
 #endif
-
-#define Val_none Val_int(0)
-static value Val_some(value v) {
-    CAMLparam1(v);
-    CAMLlocal1(some);
-    some = caml_alloc(1, 0);
-    Store_field(some, 0, v);
-    CAMLreturn(some);
-}
-
-#define Some_val(v) Field(v, 0)
 
 CAMLprim value revery_alertSupported() {
 #ifdef WIN32

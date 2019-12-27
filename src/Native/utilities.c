@@ -1,7 +1,4 @@
-#include <caml/alloc.h>
-#include <caml/callback.h>
-#include <caml/memory.h>
-#include <caml/mlvalues.h>
+#include "caml_tools.h"
 #include <caml/threads.h>
 
 /* Sourced from Brisk's `BriskCocoa`

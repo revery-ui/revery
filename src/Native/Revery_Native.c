@@ -1,9 +1,6 @@
 #include <stdio.h>
 
-#include <caml/alloc.h>
-#include <caml/callback.h>
-#include <caml/memory.h>
-#include <caml/mlvalues.h>
+#include "caml_tools.h"
 #include <string.h>
 
 #define UNUSED(x) (void)(x)
@@ -15,10 +12,6 @@
 #else
 #include "ReveryGtk.h"
 #endif
-
-#define Val_none Val_int(0)
-
-#define Some_val(v) Field(v, 0)
 
 CAMLprim value revery_initialize() {
 #ifdef __APPLE__
