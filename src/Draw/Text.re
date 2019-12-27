@@ -82,7 +82,7 @@ let measureCharWidth = (~window, ~fontFamily, ~fontSize, char) => {
     };
   let text = String.make(1, char);
   let dimensions = FontRenderer.measure(font, text);
-  float_of_int(dimensions.width) /. multiplier +. 0.5
+  float_of_int(dimensions.width) /. multiplier +. 0.5;
 };
 
 let indexNearestOffset = (~measure, text, offset) => {

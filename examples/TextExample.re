@@ -53,18 +53,15 @@ module SampleText = {
     let%hook (gammaVal, setGamma) = Hooks.state(2.2);
     let%hook (hyphenate, setHyphenate) = Hooks.state(false);
 
-    let textContent = "All work and no play makes Jack a dull boy. "
-                   ++ "The quick brown fox jumps over the lazy dog.";
+    let textContent =
+      "All work and no play makes Jack a dull boy. "
+      ++ "The quick brown fox jumps over the lazy dog.";
     let maxFontSize = 40.;
     let maxWidth = 400.;
     let textFontSize = int_of_float(fontSizeSliderVal);
     let textWidth = int_of_float(widthSliderVal);
     let wrapping =
-      if (hyphenate) {
-        TextWrapping.WrapHyphenate
-      } else {
-        TextWrapping.Wrap
-      };
+      if (hyphenate) {TextWrapping.WrapHyphenate} else {TextWrapping.Wrap};
 
     <View style=containerStyle>
       <View>

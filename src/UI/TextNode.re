@@ -129,25 +129,27 @@ class textNode (text: string) = {
     let lineHeightPx =
       Text.getLineHeight(~window, ~fontFamily, ~fontSize, ~lineHeight, ());
 
-    let measureWidth =
-      str => Text.measureCharWidth(~window, ~fontFamily, ~fontSize, str);
+    let measureWidth = str =>
+      Text.measureCharWidth(~window, ~fontFamily, ~fontSize, str);
     _lines =
       TextWrapping.wrapText(
         ~text,
         ~measureWidth,
         ~maxWidth=float_of_int(width),
-        ~mode=textWrap);
+        ~mode=textWrap,
+      );
 
     let pickWiderLine = (leftWidth, right) => {
-      let rightWidth = Text.measure(~window, ~fontFamily, ~fontSize, right).width;
-      max(leftWidth, rightWidth)
+      let rightWidth =
+        Text.measure(~window, ~fontFamily, ~fontSize, right).width;
+      max(leftWidth, rightWidth);
     };
     let maxWidthLine = List.fold_left(pickWiderLine, 0, _lines);
     {
       width: maxWidthLine,
       height:
         int_of_float(float_of_int(List.length(_lines)) *. lineHeightPx),
-    }
+    };
   };
   pub! getMeasureFunction = () => {
     let measure =
