@@ -10,13 +10,10 @@ build: [
   ["dune" "build" "-p" name "-j" jobs]
 ]
 depends: [
-  "ocaml"             {>= "4.04.2" & < "4.10.0"}
-  "sexplib0"          {>= "v0.12" & < "v0.13"}
-  "dune"              {>= "1.5.1"}
+  "ocaml"    {>= "4.04.2" & < "4.10.0"}
+  "sexplib0" {>= "v0.13" & < "v0.14"}
+  "dune"     {>= "1.5.1"}
   "dune-configurator"
-]
-depopts: [
-  "base-native-int63"
 ]
 synopsis: "Full standard library replacement for OCaml"
 description: "
@@ -34,6 +31,6 @@ provided by companion libraries such as stdio:
   https://github.com/janestreet/stdio
 "
 url {
-  src: "https://github.com/janestreet/base/archive/v0.12.2.tar.gz"
-  checksum: "md5=7150e848a730369a2549d01645fb6c72"
+  src: "https://ocaml.janestreet.com/ocaml-core/v0.13/files/base-v0.13.0.tar.gz"
+  checksum: "md5=527289dbc2c7de748f965d3caae450cb"
 }

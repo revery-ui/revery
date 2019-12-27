@@ -1,5 +1,3 @@
-open Revery_Native;
-
 type delegatedFunc = unit => unit;
 type idleFunc = unit => unit;
 type canIdleFunc = unit => bool;
