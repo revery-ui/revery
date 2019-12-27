@@ -85,7 +85,7 @@ module SampleText = {
               fontFamily("Roboto-Regular.ttf"),
               fontSize(textFontSize),
               lineHeight(1.5),
-              textWrap(TextWrapping.WhitespaceWrap),
+              textWrap(TextWrapping.Wrap),
               width(int_of_float(widthSliderVal)),
               border(~color=Colors.blueViolet, ~width=1),
               backgroundColor(Colors.black),
