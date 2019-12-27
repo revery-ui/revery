@@ -1,5 +1,5 @@
 {
-  "checksum": "37e237aea19a8a255e82f2dd1ba9aad2",
+  "checksum": "0d8366fb1e64aad8d943eba3cac985cd",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9": {
@@ -15,14 +15,14 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "revery-text-wrap@github:ohadrau/revery-text-wrap#fff39ca@d41d8cd9": {
+    "revery-text-wrap@github:ohadrau/revery-text-wrap#38c71c7@d41d8cd9": {
       "id":
-        "revery-text-wrap@github:ohadrau/revery-text-wrap#fff39ca@d41d8cd9",
+        "revery-text-wrap@github:ohadrau/revery-text-wrap#38c71c7@d41d8cd9",
       "name": "revery-text-wrap",
-      "version": "github:ohadrau/revery-text-wrap#fff39ca",
+      "version": "github:ohadrau/revery-text-wrap#38c71c7",
       "source": {
         "type": "install",
-        "source": [ "github:ohadrau/revery-text-wrap#fff39ca" ]
+        "source": [ "github:ohadrau/revery-text-wrap#38c71c7" ]
       },
       "overrides": [],
       "dependencies": [
@@ -42,7 +42,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "revery-text-wrap@github:ohadrau/revery-text-wrap#fff39ca@d41d8cd9",
+        "revery-text-wrap@github:ohadrau/revery-text-wrap#38c71c7@d41d8cd9",
         "reperf@1.4.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:manuhornung/reason-skia#d26e3dd@d41d8cd9",
