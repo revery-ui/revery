@@ -1,7 +1,11 @@
 #include <stdio.h>
 
-#include "caml_tools.h"
-#include <string.h>
+#include <caml/alloc.h>
+#include <caml/callback.h>
+#include <caml/memory.h>
+#include <caml/mlvalues.h>
+
+#include "caml_values.h"
 
 #define UNUSED(x) (void)(x)
 
