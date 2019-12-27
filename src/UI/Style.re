@@ -62,7 +62,6 @@ module PointerEvents = {
 type t = {
   backgroundColor: Color.t,
   boxShadow: BoxShadow.t,
-  color: Color.t,
   width: int,
   height: int,
   position: LayoutTypes.positionType,
@@ -78,11 +77,7 @@ type t = {
   bottom: int,
   left: int,
   right: int,
-  fontFamily,
-  fontSize: int,
-  lineHeight: float,
   pointerEvents: PointerEvents.t,
-  textWrap: TextWrapping.wrapType,
   marginTop: int,
   marginLeft: int,
   marginRight: int,
@@ -101,7 +96,6 @@ type t = {
   padding: int,
   paddingVertical: int,
   paddingHorizontal: int,
-  textOverflow: TextOverflow.t,
   overflow: LayoutTypes.overflow,
   borderTop: Border.t,
   borderLeft: Border.t,
@@ -118,7 +112,6 @@ type t = {
 
 let make =
     (
-      ~textOverflow=TextOverflow.Overflow,
       ~backgroundColor: Color.t=Colors.transparentBlack,
       ~boxShadow=BoxShadow.default,
       ~color: Color.t=Colors.white,
@@ -137,9 +130,6 @@ let make =
       ~bottom=Encoding.cssUndefined,
       ~left=Encoding.cssUndefined,
       ~right=Encoding.cssUndefined,
-      ~fontFamily="",
-      ~fontSize=Encoding.cssUndefined,
-      ~lineHeight=1.2,
       ~textWrap=TextWrapping.WhitespaceWrap,
       ~marginTop=Encoding.cssUndefined,
       ~marginLeft=Encoding.cssUndefined,
@@ -175,7 +165,6 @@ let make =
       _unit: unit,
     ) => {
   let ret: t = {
-    textOverflow,
     backgroundColor,
     boxShadow,
     color,
@@ -194,10 +183,6 @@ let make =
     bottom,
     left,
     right,
-    fontFamily,
-    fontSize,
-    lineHeight,
-    textWrap,
     transform,
     marginTop,
     marginLeft,
@@ -351,24 +336,15 @@ type coreStyleProps = [
   | `PointerEvents(PointerEvents.t)
 ];
 
-type fontProps = [ | `FontFamily(string) | `FontSize(int)];
-
-type textProps = [
-  | `LineHeight(float)
-  | `TextWrap(TextWrapping.wrapType)
-  | `TextOverflow(TextOverflow.t)
-];
-
 /*
    Text and View props take different style properties as such
    these nodes are typed to only allow styles to be specified
    which are relevant to each
  */
-type textStyleProps = [ textProps | fontProps | coreStyleProps];
 type viewStyleProps = [ coreStyleProps];
 type imageStyleProps = [ coreStyleProps];
 
-type allProps = [ coreStyleProps | fontProps | textProps];
+type allProps = [ coreStyleProps ];
 
 let emptyTextStyle: list(textStyleProps) = [];
 let emptyViewStyle: list(viewStyleProps) = [];
@@ -437,11 +413,6 @@ let right = f => `Right(f);
 let bottom = f => `Bottom(f);
 let left = f => `Left(f);
 let top = f => `Top(f);
-
-let fontSize = f => `FontSize(f);
-let fontFamily = f => `FontFamily(f);
-let lineHeight = h => `LineHeight(h);
-let textWrap = w => `TextWrap(w);
 
 let height = h => `Height(h);
 let width = w => `Width(w);
@@ -594,11 +565,6 @@ let applyStyle = (style, styleRule) =>
   | `BorderHorizontal(borderHorizontal) => {...style, borderHorizontal}
   | `BorderRadius(borderRadius) => {...style, borderRadius}
   | `Transform(transform) => {...style, transform}
-  | `FontFamily(fontFamily) => {...style, fontFamily}
-  | `FontSize(fontSize) => {...style, fontSize}
-  | `LineHeight(lineHeight) => {...style, lineHeight}
-  | `TextOverflow(textOverflow) => {...style, textOverflow}
-  | `TextWrap(textWrap) => {...style, textWrap}
   | `Cursor(cursor) => {...style, cursor}
   | `Color(color) => {...style, color}
   | `BackgroundColor(backgroundColor) => {...style, backgroundColor}
