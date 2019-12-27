@@ -4,17 +4,22 @@ type wrapType =
   | WrapHyphenate;
 
 let wrapText = (~text, ~measureWidth, ~maxWidth, ~mode) => {
-  let module C: Wrap.TEXT_WRAP_CONFIG = {
-    let width_of_char = measureWidth
-    let debug = false;
-  };
-  let module W = Wrap.TextWrap(C);
+  let rec list_of_queue = q =>
+    if (Queue.is_empty(q)) {
+      []
+    } else {
+      /* We need to split into two lines because the RHS of ::
+         gets evaluated first, leading to recursion before the
+         item is removed from the queue. */
+      let first = Queue.take(q);
+      [first, ...list_of_queue(q)]
+    };
   switch (mode) {
     | NoWrap =>
       [text]
     | Wrap =>
-      W.wrap(text, ~max_width=maxWidth) |> Wrap.AppendList.to_list
+      Wrap.wrap(text, ~max_width=maxWidth, ~width_of_char=measureWidth) |> list_of_queue
     | WrapHyphenate =>
-      W.wrap(text, ~max_width=maxWidth, ~hyphenate=true) |> Wrap.AppendList.to_list
+      Wrap.wrap(text, ~max_width=maxWidth, ~width_of_char=measureWidth, ~hyphenate=true) |> list_of_queue
   }
 };
