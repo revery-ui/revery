@@ -3,7 +3,7 @@
 
 #define Val_none Val_int(0)
 
-static inline value Val_some(long v) {
+static inline value Val_some(value v) {
   (void)Val_some;
   CAMLparam1(v);
   CAMLlocal1(some);
