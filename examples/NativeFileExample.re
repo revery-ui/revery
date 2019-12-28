@@ -4,7 +4,7 @@ open Revery.UI.Components;
 
 open Revery.Native;
 
-module NativeExamples = {
+module NativeFileExamples = {
   let%component make = () => {
     let%hook (fileListOpt, setFileListOpt) = Hooks.state(None);
     let%hook (allowMultiple, setAllowMultiple) = Hooks.state(false);
@@ -81,4 +81,4 @@ module NativeExamples = {
   };
 };
 
-let render = () => <NativeExamples />;
+let render = () => <NativeFileExamples />;
