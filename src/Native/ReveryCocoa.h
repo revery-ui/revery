@@ -11,4 +11,3 @@ void revery_scheduleNotificationFromNow_cocoa(const char *title,
                                               const char *body,
                                               long onClickFunc, int mute,
                                               int seconds);
-void revery_cocoaSetAppDelegate();

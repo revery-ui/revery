@@ -12,13 +12,15 @@
 #include "ReveryWin32.h"
 #elif __APPLE__
 #include "ReveryCocoa.h"
+#import "ReveryAppDelegate.h"
 #else
 #include "ReveryGtk.h"
 #endif
 
 CAMLprim value revery_initialize() {
 #ifdef __APPLE__
-  revery_cocoaSetAppDelegate();
+  ReveryAppDelegate *delegate = [ReveryAppDelegate new];
+  [NSApp setDelegate:delegate];
 #endif
   return Val_unit;
 }
