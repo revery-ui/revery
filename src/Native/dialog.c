@@ -134,7 +134,7 @@ CAMLprim value revery_alertOpenFiles_native(
   }
 }
 
-CAMLprim value revery_alertOpenFiles_bytcode(value *argv, int argn) {
+CAMLprim value revery_alertOpenFiles_bytecode(value *argv, int argn) {
   (void)argn;
   return revery_alertOpenFiles_native(argv[0], argv[1], argv[2], argv[3],
                                       argv[4], argv[5], argv[6], argv[7],
