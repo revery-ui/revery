@@ -4,4 +4,4 @@
     (js_of_ocaml (javascript_files file.js))
     (c_names file)
     (c_flags :standard -Wall -Wextra -Werror)
-    (libraries threads console.lib str lwt sdl2 flex fontkit Rench re))
+    (libraries threads console.lib str lwt sdl2 flex fontkit Rench re Revery_Native))
