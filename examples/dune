@@ -3,13 +3,17 @@
     (preprocess (pps brisk-reconciler.ppx lwt_ppx))
     (package Revery)
     (public_names Examples)
+    (modes native byte)
+    (ocamlc_flags (:standard -custom))
     (libraries
+        dynlink
         js_of_ocaml
         ExampleStubs
         str
         Revery
         flex
             ))
+
 (install
     (section bin)
     (package Revery)

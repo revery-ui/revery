@@ -104,12 +104,15 @@ module AnimatedText = {
   };
 };
 
-let render = () =>
+let render = () => {
+  let mode = Dynlink.is_native ? "Native" : "Bytecode";
+  let revery = "Revery (" ++ mode ++ ")";
   <Center>
     <Row>
       <AnimatedText delay=Time.zero text="Welcome" />
       <AnimatedText delay={Time.ms(500)} text="to" />
-      <AnimatedText delay={Time.seconds(1)} text="Revery" />
+      <AnimatedText delay={Time.seconds(1)} text=revery />
     </Row>
     <Logo />
   </Center>;
+};
