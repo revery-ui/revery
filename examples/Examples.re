@@ -76,9 +76,14 @@ let state: state = {
       source: "Stopwatch.re",
     },
     {
-      name: "Native",
-      render: _ => NativeExample.render(),
-      source: "NativeExample.re",
+      name: "Native: File(s)/Folders(s)",
+      render: _ => NativeFileExample.render(),
+      source: "NativeFileExample.re",
+    },
+    {
+      name: "Native: Notifications",
+      render: _ => NativeNotificationExample.render(),
+      source: "NativeNotificationExample.re",
     },
     {
       name: "Input",
