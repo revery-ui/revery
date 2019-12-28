@@ -184,6 +184,8 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     };
   };
 
+  Revery_Native.init();
+
   let appLoop = () => {
     _flushEvents();
 
