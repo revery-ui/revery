@@ -9,7 +9,9 @@
   "scripts": {
     "test": "esy b dune runtest",
     "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}",
-    "run": "esy x Examples"
+    "run": "esy x Examples",
+    "run-native": "esy b dune exec examples/Examples.exe",
+    "run-bytecode": "esy b dune exec examples/Examples.bc"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {

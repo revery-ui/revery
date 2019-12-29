@@ -4,7 +4,9 @@
   (pps brisk-reconciler.ppx lwt_ppx))
  (package Revery)
  (public_names Examples)
- (libraries ExampleStubs skia str Revery flex timber))
+ (modes native byte)
+ (ocamlc_flags (:standard -custom))
+ (libraries dynlink ExampleStubs skia str Revery flex timber))
 
 (install
  (section bin)
