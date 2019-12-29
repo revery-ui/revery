@@ -6,9 +6,9 @@
 #include <caml/mlvalues.h>
 
 CAMLprim value revery_example_notify_changed(value vExample) {
-  CAMLparam1(vExample);
-  const char *szExampleSource = String_val(vExample);
+    CAMLparam1(vExample);
+    const char *szExampleSource = String_val(vExample);
 
-  printf("Switched to example: %s\n", szExampleSource);
-  CAMLreturn(Val_unit);
+    printf("Switched to example: %s\n", szExampleSource);
+    CAMLreturn(Val_unit);
 }

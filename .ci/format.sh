@@ -8,7 +8,7 @@ else
     dune build @fmt --auto-promote
 fi
 
-native_output=$(find -E . -regex '.*\.(c|h)' -type f -not -path "*_esy/*" -exec astyle -n -Q --style=google --s2 {} \;)
+native_output=$(find -E . -regex '.*\.(c|h)' -type f -not -path "*_esy/*" -exec astyle -n -Q --style=java --s4 {} \;)
 
 if [[ $native_output ]];
 then
