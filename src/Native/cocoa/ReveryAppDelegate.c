@@ -32,7 +32,7 @@
   Gets the long from the NSDictionary from the notification's identifier and calls it
 */
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center
-       didActivateNotification:(NSUserNotification *)notification {
+  didActivateNotification:(NSUserNotification *)notification {
   UNUSED(center);
   NSNumber *num = _notificationActions[[notification identifier]];
   long ocamlFunc = [num longValue];
@@ -43,7 +43,7 @@
   Always presents the notification
 */
 - (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center
-     shouldPresentNotification:(NSUserNotification *)notification {
+  shouldPresentNotification:(NSUserNotification *)notification {
   UNUSED(center);
   UNUSED(notification);
   return YES;

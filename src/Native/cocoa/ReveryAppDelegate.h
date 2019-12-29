@@ -7,11 +7,11 @@
     delegation for the NSUserNotificationCenter
 */
 @interface ReveryAppDelegate
-    : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate>
-/* [notificationActions] - a mutable dictionary
-  maps NSStrings (notification identifiers) -> NSNumbers
-    (longs which represent OCaml callbacks)
-*/
-@property(nonatomic, strong) NSMutableDictionary *notificationActions;
+  : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate>
+    /* [notificationActions] - a mutable dictionary
+      maps NSStrings (notification identifiers) -> NSNumbers
+        (longs which represent OCaml callbacks)
+    */
+  @property(nonatomic, strong) NSMutableDictionary *notificationActions;
 @end
 #endif

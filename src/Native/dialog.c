@@ -47,9 +47,9 @@ CAMLprim value revery_alert(value vWindow, value vMessage) {
 }
 
 CAMLprim value revery_alertOpenFiles_native(
-    value vStartDirectory, value vFileTypes, value vAllowMultiple,
-    value vCanChooseFiles, value vCanChooseDirectories, value vShowHidden,
-    value vButtonText, value vTitle, value vUnit) {
+  value vStartDirectory, value vFileTypes, value vAllowMultiple,
+  value vCanChooseFiles, value vCanChooseDirectories, value vShowHidden,
+  value vButtonText, value vTitle, value vUnit) {
   CAMLparam5(vStartDirectory, vFileTypes, vAllowMultiple, vCanChooseFiles,
              vCanChooseDirectories);
   CAMLxparam3(vButtonText, vTitle, vUnit);
@@ -98,12 +98,12 @@ CAMLprim value revery_alertOpenFiles_native(
 
 #ifdef __APPLE__
   fileList = revery_open_files_cocoa(
-      startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
-      canChooseDirectories, showHidden, buttonText, title);
+               startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
+               canChooseDirectories, showHidden, buttonText, title);
 #elif __linux__
   fileList = revery_open_files_gtk(
-      startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
-      canChooseDirectories, showHidden, buttonText, title);
+               startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
+               canChooseDirectories, showHidden, buttonText, title);
 #else
   (void)showHidden;
   (void)canChooseDirectories;

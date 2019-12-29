@@ -8,43 +8,43 @@ void revery_dispatchNotification_cocoa(const char *title, const char *body,
                                        long onClickFunc, int mute) {
   NSUserNotification *notification = [[NSUserNotification alloc] autorelease];
   NSUserNotificationCenter *notificationCenter =
-      [NSUserNotificationCenter defaultUserNotificationCenter];
+    [NSUserNotificationCenter defaultUserNotificationCenter];
   ReveryAppDelegate *delegate = (ReveryAppDelegate *)[NSApp delegate];
   NSString *nsTitle =
-      [NSString stringWithCString:title encoding:NSUTF8StringEncoding];
+    [NSString stringWithCString:title encoding:NSUTF8StringEncoding];
   NSString *nsBody =
-      [NSString stringWithCString:body encoding:NSUTF8StringEncoding];
+    [NSString stringWithCString:body encoding:NSUTF8StringEncoding];
 
   NSString *identifier =
-      [NSString stringWithFormat:@"%@:notification:%@",
-                                 [[NSBundle mainBundle] bundleIdentifier],
-                                 [[[NSUUID alloc] init] UUIDString]];
+    [NSString stringWithFormat:@"%@:notification:%@",
+              [[NSBundle mainBundle] bundleIdentifier],
+              [[[NSUUID alloc] init] UUIDString]];
   [notification setIdentifier:identifier];
   [notification setTitle:nsTitle];
   [notification setInformativeText:nsBody];
   [notification setSoundName:mute ? NULL : NSUserNotificationDefaultSoundName];
 
   delegate.notificationActions[identifier] =
-      [NSNumber numberWithLong:onClickFunc];
+    [NSNumber numberWithLong:onClickFunc];
 
   [notificationCenter deliverNotification:notification];
 }
 
 void revery_scheduleNotificationFromNow_cocoa(const char *title, const char *body,
-                                       long onClickFunc, int mute, int seconds) {
+    long onClickFunc, int mute, int seconds) {
   NSUserNotification *notification = [[NSUserNotification alloc] autorelease];
   NSUserNotificationCenter *notificationCenter =
-      [NSUserNotificationCenter defaultUserNotificationCenter];
+    [NSUserNotificationCenter defaultUserNotificationCenter];
   ReveryAppDelegate *delegate = (ReveryAppDelegate *)[NSApp delegate];
   NSString *nsTitle =
-      [NSString stringWithCString:title encoding:NSUTF8StringEncoding];
+    [NSString stringWithCString:title encoding:NSUTF8StringEncoding];
   NSString *nsBody =
-      [NSString stringWithCString:body encoding:NSUTF8StringEncoding];
+    [NSString stringWithCString:body encoding:NSUTF8StringEncoding];
 
   NSString *identifier =
-      [NSString stringWithFormat:@"%@:notification:%@",
-                                 [[NSBundle mainBundle] bundleIdentifier],
-                                 [[[NSUUID alloc] init] UUIDString]];
+    [NSString stringWithFormat:@"%@:notification:%@",
+              [[NSBundle mainBundle] bundleIdentifier],
+              [[[NSUUID alloc] init] UUIDString]];
   [notification setIdentifier:identifier];
   [notification setTitle:nsTitle];
   [notification setInformativeText:nsBody];
@@ -53,7 +53,7 @@ void revery_scheduleNotificationFromNow_cocoa(const char *title, const char *bod
   [notification setDeliveryDate:deliveryDate];
 
   delegate.notificationActions[identifier] =
-      [NSNumber numberWithLong:onClickFunc];
+    [NSNumber numberWithLong:onClickFunc];
 
   [notificationCenter scheduleNotification:notification];
 }
