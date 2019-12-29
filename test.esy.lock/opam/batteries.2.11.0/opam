@@ -1,0 +1,32 @@
+opam-version: "2.0"
+synopsis: "A community-maintained standard library extension"
+maintainer: [
+  "Cedric Cellier <rixed@happyleptic.org>"
+  "Francois Berenger <unixjunkie@sdf.org>"
+  "Gabriel Scherer <gabriel.scherer@gmail.com>"
+  "Thibault Suzanne <thi.suzanne@gmail.com>"
+]
+authors: "OCaml batteries-included team"
+homepage: "http://batteries.forge.ocamlcore.org/"
+bug-reports: "https://github.com/ocaml-batteries-team/batteries-included/issues"
+dev-repo: "git://github.com/ocaml-batteries-team/batteries-included.git"
+license: "LGPL-2.1-or-later with OCaml-LGPL-linking-exception"
+doc: "http://ocaml-batteries-team.github.io/batteries-included/hdoc2/"
+build: [
+  ["ocaml" "setup.ml" "-configure" "--prefix" prefix]
+  [make "all"]
+]
+install: [make "install"]
+remove: ["ocamlfind" "remove" "batteries"]
+depends: [
+  "ocaml" {>= "4.00.0" & < "4.10.0"}
+  "ocamlfind" {build & >= "1.5.3"}
+  "ocamlbuild" {build}
+  "qtest" {with-test & >= "2.5"}
+  "qcheck" {with-test & >= "0.6"}
+  "num"
+]
+url {
+  src: "https://github.com/ocaml-batteries-team/batteries-included/archive/v2.11.0.tar.gz"
+  checksum: "md5=fcdfd57b2473c19fb55149247335d771"
+}
