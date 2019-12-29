@@ -33,7 +33,6 @@
         "reason-gl-matrix@0.9.9306@d41d8cd9",
         "reason-fontkit@2.8.3@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "flex@1.2.2@d41d8cd9",
-        "esy-astyle@github:zbaylin/esy-astyle#59bc21a@d41d8cd9",
         "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/lwt_ppx@opam:2.0.0@9a61dd37", "@opam/lwt@opam:4.5.0@677655b4",
@@ -44,8 +43,9 @@
         "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#0a2e476@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/merlin@opam:3.3.3@d653b06a",
-        "@opam/dune@opam:1.11.4@a7ccb7ae"
+        "ocaml@4.8.1000@d41d8cd9",
+        "esy-astyle@github:zbaylin/esy-astyle#59bc21a@d41d8cd9",
+        "@opam/merlin@opam:3.3.3@d653b06a", "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
     "reperf@1.4.0@d41d8cd9": {
