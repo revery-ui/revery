@@ -134,3 +134,9 @@ Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com
 - [wall](https://github.com/let-def/wall)
 - [elm](https://elm-lang.org/)
 - [reprocessing](https://github.com/Schmavery/reprocessing)
+
+# Hot reload
+
+We don't have a Hot Reload yet but it is on our roadmap. In the meantime, you can check branch [feat/hot-reload](https://github.com/revery-ui/revery/tree/feat/hot-reload) to see the progression.
+
+In the meantime @mbernat has done a [script](https://gist.github.com/mbernat/abf651653c123374037c27377f41d0a0) that allow to relaunch the APP when the binary changed.
