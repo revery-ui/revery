@@ -1,14 +1,16 @@
 set -e
-OS=$(uname)
+OS=$1
 
-if [[ $OS =~ "CYWGIN" ]];
+dune build @fmt --auto-promote
+
+if [[ $OS == "windows" ]];
 then
-    find . -name "*.re" -type f -exec refmt --in-place {} \;
+    # Prevents "Environment too big" error on Windows
+    files=$(/usr/bin/find ./ -type f \( -iname \*.c -o -iname \*.h \) -not -path "*_esy/*")
+    native_output=$(astyle -n -Q --style=java --s4 $files)
 else
-    dune build @fmt --auto-promote
+    native_output=$(find -E . -regex '.*\.(c|h)' -type f -not -path "*_esy/*" -exec astyle -n -Q --style=java --s4 {} \;)
 fi
-
-native_output=$(find -E . -regex '.*\.(c|h)' -type f -not -path "*_esy/*" -exec astyle -n -Q --style=java --s4 {} \;)
 
 if [[ $native_output ]];
 then
