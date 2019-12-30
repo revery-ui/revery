@@ -3,6 +3,8 @@
 #include <windows.h>
 
 #include <caml/custom.h>
+#include <stdio.h>
+#include <stdbool.h>
 
 #include "ReveryWin32.h"
 /*
@@ -43,10 +45,58 @@ static struct custom_operations menu_ops = {
 #endif
 };
 
+static void * g_hook_handle = NULL;
+
+LRESULT CALLBACK WndProc(int msg, WPARAM wParam, LPARAM lParam) {
+    MSG m;
+
+    if (msg == HC_ACTION && wParam == PM_REMOVE) {
+        m = *(MSG *)lParam;
+        if (m.message == WM_COMMAND)
+            printf("uid %d called\n", LOWORD(m.wParam));
+    }
+
+    return CallNextHookEx((void *) NULL, msg, wParam, lParam);
+}
+
+void release_hook(void) {
+    /*
+    ** we are registered only if we add a hook
+    */
+    UnhookWindowsHookEx(g_hook_handle);
+}
+
+value revery_assign_menu_win32(void *pWindow, value vMenu) {
+    /*
+    ** TODO: apply this remarks
+    ** Remarks:
+    **
+    ** The window is redrawn to reflect the menu change.
+    ** A menu can be assigned to any window that is not a child window.
+    **
+    ** The SetMenu function replaces the previous menu, if any,
+    ** but it does not destroy it. An application should call the DestroyMenu
+    ** function to accomplish this task.
+    */
+    return SetMenu(pWindow, Menu_val(vMenu).menu_handle);
+}
+
 value revery_create_menu_win32(void) {
     value ret = alloc_custom(&menu_ops, sizeof(struct s_menu), 0, 1);
 
     Menu_val(ret).menu_handle = CreateMenu();
+
+    return ret;
+}
+
+value revery_menu_insert_node_string_win32(value vMenu, int position, int uid, const char *pMessage) {
+    bool ret = InsertMenu(Menu_val(vMenu).menu_handle, position, MF_BYPOSITION | MF_STRING, uid, pMessage);
+
+    if (!g_hook_handle) {
+        g_hook_handle = SetWindowsHookExW(WH_GETMESSAGE, WndProc, (HINSTANCE)NULL, GetCurrentThreadId());
+
+        atexit(release_hook);
+    }
 
     return ret;
 }

@@ -39,3 +39,36 @@ value revery_create_menu() {
 
     CAMLreturn(ret);
 }
+
+value revery_menu_insert_node_string(value vMenu, value vPosition, value vUid, value vMessage) {
+    CAMLparam4(vMenu, vPosition, vUid, vMessage);
+    const char * pMessage = String_val(vMessage);
+    /*
+    ** void *pMenu = (void *)vMenu;
+    ** it is a custom type
+    */
+    int uid = Int_val(vUid);
+    int position = Int_val(vPosition);
+    value ret = 0;
+
+#ifdef WIN32
+    ret = revery_menu_insert_node_string_win32(vMenu, position, uid, pMessage);
+#elif __APPLE__
+    fprintf(stderr, "WARNING - Not implemented: %s_cocoa", __func__);
+    (void)pMessage;
+    (void)uid;
+    (void)position;
+#elif __linux__
+    fprintf(stderr, "WARNING - Not implemented: %s_gtk", __func__);
+    (void)pMessage;
+    (void)uid;
+    (void)position;
+#else
+    fprintf(stderr, "WARNING - Not implemented: %s", __func__);
+    (void)pMessage;
+    (void)uid;
+    (void)position;
+#endif
+
+    CAMLreturn(Bool_val(ret));
+}

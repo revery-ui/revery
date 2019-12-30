@@ -9,3 +9,10 @@ function revery_create_menu() {
     window.console.error("WARNING - Not implemented: revery_create_menu");
     return;
 }
+
+// Provides: revery_menu_insert_node_string
+function revery_menu_insert_node_string(vMenu, vPosition, vUid, vMessage) {
+    // no-op
+    window.console.error("WARNING - Not implemented: revery_menu_insert_node_string");
+    return;
+}
