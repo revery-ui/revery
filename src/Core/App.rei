@@ -12,8 +12,16 @@ type canIdleFunc = unit => bool;
 /** [getWindows(app)] returns the list of all open [Window.t] instances */
 let getWindows: t => list(Window.t);
 
-/** [quit(c)] causes the App to quit with exit code [c] */
-let quit: (~code: int=?, t) => unit;
+/** 
+[quit(~force, ~code, c)] causes the App to quit with exit code [c] 
+
+[force] specifies whether quit should be forced (default [true]). If [false],
+the canQuit handlers will be run for each window. If [true], the canQuit handlers
+will be ignored.
+
+[code] specifies the exit code. Defaults to [0].
+*/
+let quit: (~force: bool=?, ~code: int=?, t) => unit;
 
 /** [isIdle(app)] returns true if the app is idling, false othwrise */
 let isIdle: t => bool;

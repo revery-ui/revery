@@ -48,7 +48,7 @@ let _tryToCloseAll = (app: t) => {
   Seq.iter(w => _tryToClose(app, w), windows);
 };
 
-let quit = (~code=0, app: t) => {
+let quit = (~force=true, ~code=0, app: t) => {
   _tryToCloseAll(app);
   if (Hashtbl.length(app.windows) == 0) {
     logInfo("Quitting");
@@ -167,7 +167,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       // if Command+Q is pressed. In that case, we'll try
       // closing all the windows - and if they all close,
       // we'll exit the app.
-      quit(~code=0, appInstance)
+      quit(~force=false, ~code=0, appInstance)
     | _ => ()
     };
   };
