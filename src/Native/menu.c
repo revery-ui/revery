@@ -97,3 +97,28 @@ value revery_menu_delete_node_string(value vMenu, value vPosition) {
 
     CAMLreturn(Bool_val(ret));
 }
+
+value revery_assign_menu(value vWindow, value vMenu) {
+    CAMLparam2(vWindow, vMenu);
+    void *pWin = (void *)vWindow;
+    /*
+    ** void *pMenu = (void *)vMenu;
+    ** it is a custom type
+    */
+    value ret = 0;
+
+#ifdef WIN32
+    ret = revery_assign_menu_win32(pWin, vMenu);
+#elif __APPLE__
+    fprintf(stderr, "WARNING - Not implemented: %s_cocoa", __func__);
+    (void)pWin;
+#elif __linux__
+    fprintf(stderr, "WARNING - Not implemented: %s_gtk", __func__);
+    (void)pWin;
+#else
+    fprintf(stderr, "WARNING - Not implemented: %s", __func__);
+    (void)pWin;
+#endif
+
+    CAMLreturn(Bool_val(ret));
+}

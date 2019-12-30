@@ -23,3 +23,10 @@ function revery_menu_delete_node_string(vMenu, vPosition) {
     window.console.error("WARNING - Not implemented: revery_menu_delete_node_string");
     return;
 }
+
+// Provides: revery_assign_menu
+function revery_assign_menu(vWindow, vMenu) {
+    // no-op
+    window.console.error("WARNING - Not implemented: revery_assign_menu");
+    return;
+}

@@ -36,6 +36,9 @@ module MenuItem = {
 
 external createMenu: unit => menu = "revery_create_menu";
 
+external assignMenuNat: (Sdl2.Window.nativeWindow, menu) => bool =
+  "revery_assign_menu";
+
 external insertNode: (menu, int, int, string) => bool =
   "revery_menu_insert_node_string";
 

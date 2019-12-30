@@ -24,6 +24,8 @@ let insertNode: (menu, int, int, string) => bool;
 
 let deleteNode: (menu, int) => bool;
 
+let assignMenuNat: (Sdl2.Window.nativeWindow, menu) => bool;
+
 let make:
   (
     ~key: Brisk_reconciler.Key.t=?,
