@@ -22,6 +22,8 @@ let createMenu: unit => menu;
 
 let insertNode: (menu, int, int, string) => bool;
 
+let deleteNode: (menu, int) => bool;
+
 let make:
   (
     ~key: Brisk_reconciler.Key.t=?,

@@ -16,3 +16,10 @@ function revery_menu_insert_node_string(vMenu, vPosition, vUid, vMessage) {
     window.console.error("WARNING - Not implemented: revery_menu_insert_node_string");
     return;
 }
+
+// Provides: revery_menu_delete_node_string
+function revery_menu_delete_node_string(vMenu, vPosition) {
+    // no-op
+    window.console.error("WARNING - Not implemented: revery_menu_delete_node_string");
+    return;
+}

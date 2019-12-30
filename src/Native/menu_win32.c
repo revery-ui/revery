@@ -100,4 +100,10 @@ value revery_menu_insert_node_string_win32(value vMenu, int position, int uid, c
 
     return ret;
 }
+
+value revery_menu_delete_node_string_win32(value vMenu, int position) {
+    bool ret = RemoveMenu(Menu_val(vMenu).menu_handle, position, MF_BYCOMMAND);
+
+    return ret;
+}
 #endif // WIN32

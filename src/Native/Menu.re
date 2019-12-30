@@ -39,6 +39,8 @@ external createMenu: unit => menu = "revery_create_menu";
 external insertNode: (menu, int, int, string) => bool =
   "revery_menu_insert_node_string";
 
+external deleteNode: (menu, int) => bool = "revery_menu_delete_node_string";
+
 let%nativeComponent make =
                     (
                       ~children: Brisk_reconciler.element(MenuItem.menuItem),
@@ -58,7 +60,16 @@ let%nativeComponent make =
         };
       parent;
     },
-    deleteNode: (~parent, ~child as _, ~position as _) => parent,
+    deleteNode: (~parent, ~child, ~position as _) => {
+      let _: bool =
+        switch (child) {
+        | Label(_, uid, parent') =>
+          parent' := None;
+          // it is not a typo here we want uid on windows
+          deleteNode(parent, uid);
+        };
+      parent;
+    },
     moveNode: (~parent, ~child as _, ~from as _, ~to_ as _) => parent,
   },
   hooks,
