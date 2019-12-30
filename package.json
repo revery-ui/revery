@@ -52,7 +52,8 @@
     "@esy-ocaml/libffi": "esy-ocaml/libffi#599bc3567",
     "esy-skia": "revery-ui/esy-skia#3b4658d",
     "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b6",
-    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755"
+    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
+    "esy-libjpeg-turbo": "bryphe/libjpeg-turbo#12d3cef"
   },
   "devDependencies": {
     "ocaml": ">=4.6.0 <4.8.0",
