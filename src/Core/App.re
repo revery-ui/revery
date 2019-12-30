@@ -49,8 +49,11 @@ let _tryToCloseAll = (app: t) => {
 };
 
 let quit = (~force=true, ~code=0, app: t) => {
-  _tryToCloseAll(app);
-  if (Hashtbl.length(app.windows) == 0) {
+  if (!force) {
+    _tryToCloseAll(app);
+  };
+
+  if (Hashtbl.length(app.windows) == 0 || force) {
     logInfo("Quitting");
     exit(code);
   };
