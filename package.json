@@ -44,7 +44,7 @@
     "rench": "^1.9.1",
     "rebez": "github:jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3011",
-    "reason-skia": "github:revery-ui/reason-skia#2e189a8",
+    "reason-skia": "github:revery-ui/reason-skia#4c1926a",
     "revery-text-wrap": "github:revery-ui/revery-text-wrap#005385c"
   },
   "resolutions": {
