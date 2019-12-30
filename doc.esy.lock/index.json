@@ -1,5 +1,5 @@
 {
-  "checksum": "54445485b3c5d15308221e814753bfe0",
+  "checksum": "d2a1d4656d942e291d70bc0e6defc210",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9": {
@@ -114,8 +114,9 @@
         "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#0a2e476@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/merlin@opam:3.3.3@d653b06a",
-        "@opam/dune@opam:1.11.4@a7ccb7ae"
+        "ocaml@4.8.1000@d41d8cd9",
+        "esy-astyle@github:zbaylin/esy-astyle#59bc21a@d41d8cd9",
+        "@opam/merlin@opam:3.3.3@d653b06a", "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
     "requires-port@1.0.0@d41d8cd9": {
@@ -166,7 +167,7 @@
         "refmterr@3.3.0@d41d8cd9", "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/lambda-term@opam:2.0.1@bc36657b",
+        "@opam/lambda-term@opam:2.0.2@119fb081",
         "@opam/fpath@opam:0.7.2@45477b93", "@opam/dune@opam:1.11.4@a7ccb7ae",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
@@ -221,7 +222,7 @@
         "refmterr@3.3.0@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#3b4658d@d41d8cd9",
         "esy-freetype2@2.9.1006@d41d8cd9", "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/lambda-term@opam:2.0.1@bc36657b",
+        "@opam/lambda-term@opam:2.0.2@119fb081",
         "@opam/dune@opam:1.11.4@a7ccb7ae",
         "@opam/ctypes-foreign@opam:0.4.0@72ef8de2",
         "@opam/ctypes@opam:0.15.1@f2708d42",
@@ -681,6 +682,22 @@
       "overrides": [],
       "dependencies": [],
       "devDependencies": []
+    },
+    "esy-astyle@github:zbaylin/esy-astyle#59bc21a@d41d8cd9": {
+      "id": "esy-astyle@github:zbaylin/esy-astyle#59bc21a@d41d8cd9",
+      "name": "esy-astyle",
+      "version": "github:zbaylin/esy-astyle#59bc21a",
+      "source": {
+        "type": "install",
+        "source": [ "github:zbaylin/esy-astyle#59bc21a" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9"
+      ],
+      "devDependencies": [
+        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9"
+      ]
     },
     "ecstatic@3.3.2@d41d8cd9": {
       "id": "ecstatic@3.3.2@d41d8cd9",
@@ -1694,20 +1711,20 @@
         "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
-    "@opam/lambda-term@opam:2.0.1@bc36657b": {
-      "id": "@opam/lambda-term@opam:2.0.1@bc36657b",
+    "@opam/lambda-term@opam:2.0.2@119fb081": {
+      "id": "@opam/lambda-term@opam:2.0.2@119fb081",
       "name": "@opam/lambda-term",
-      "version": "opam:2.0.1",
+      "version": "opam:2.0.2",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/4b/4b4b8480fe1280e1ed2a34ed93d16675#md5:4b4b8480fe1280e1ed2a34ed93d16675",
-          "archive:https://github.com/ocaml-community/lambda-term/releases/download/2.0.1/lambda-term-2.0.1.tbz#md5:4b4b8480fe1280e1ed2a34ed93d16675"
+          "archive:https://opam.ocaml.org/cache/md5/46/4602aa4355705909e406513322b4b27e#md5:4602aa4355705909e406513322b4b27e",
+          "archive:https://github.com/ocaml-community/lambda-term/releases/download/2.0.2/lambda-term-2.0.2.tbz#md5:4602aa4355705909e406513322b4b27e"
         ],
         "opam": {
           "name": "lambda-term",
-          "version": "2.0.1",
-          "path": "doc.esy.lock/opam/lambda-term.2.0.1"
+          "version": "2.0.2",
+          "path": "doc.esy.lock/opam/lambda-term.2.0.2"
         }
       },
       "overrides": [],

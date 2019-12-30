@@ -10,13 +10,13 @@
     Thank you @wokalski!
 */
 void revery_caml_call_n(value f, int argCount, value *args) {
-  caml_c_thread_register();
-  caml_acquire_runtime_system();
-  caml_callbackN(f, argCount, args);
-  caml_release_runtime_system();
+    caml_c_thread_register();
+    caml_acquire_runtime_system();
+    caml_callbackN(f, argCount, args);
+    caml_release_runtime_system();
 }
 
 void revery_caml_call(value f) {
-  value args[] = {Val_unit};
-  revery_caml_call_n(f, 1, args);
+    value args[] = {Val_unit};
+    revery_caml_call_n(f, 1, args);
 }

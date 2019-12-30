@@ -31,7 +31,7 @@ const char **revery_open_files_cocoa(
         for (int i = 0; i < fileTypesSize; i++) {
             // Convert char* -> NSString
             NSString *str = [NSString stringWithCString:fileTypes[i]
-                                               encoding:NSUTF8StringEncoding];
+                                      encoding:NSUTF8StringEncoding];
             [tmpArr addObject:str];
         }
         nsFileTypes = tmpArr;
@@ -55,14 +55,14 @@ const char **revery_open_files_cocoa(
 
     if (title) {
         [panel setMessage:[NSString stringWithCString:title
-                                             encoding:NSUTF8StringEncoding]];
+                           encoding:NSUTF8StringEncoding]];
         [panel setTitle:[NSString stringWithCString:title
-                                           encoding:NSUTF8StringEncoding]];
+                         encoding:NSUTF8StringEncoding]];
     }
 
     if (buttonText)
         [panel setPrompt:[NSString stringWithCString:buttonText
-                                            encoding:NSUTF8StringEncoding]];
+                          encoding:NSUTF8StringEncoding]];
 
     if (nsFileTypes) [panel setAllowedFileTypes:nsFileTypes];
 

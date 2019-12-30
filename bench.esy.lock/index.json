@@ -1,5 +1,5 @@
 {
-  "checksum": "cfd1864194eb0c82d6350217dc40ffe3",
+  "checksum": "0318847b884b9d87b93835f305fffdbd",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9": {
@@ -57,8 +57,9 @@
         "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#0a2e476@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/merlin@opam:3.3.3@d653b06a",
-        "@opam/dune@opam:1.11.4@a7ccb7ae"
+        "ocaml@4.8.1000@d41d8cd9",
+        "esy-astyle@github:zbaylin/esy-astyle#59bc21a@d41d8cd9",
+        "@opam/merlin@opam:3.3.3@d653b06a", "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
     "reperf@1.4.0@d41d8cd9": {
@@ -372,6 +373,22 @@
       "overrides": [],
       "dependencies": [],
       "devDependencies": []
+    },
+    "esy-astyle@github:zbaylin/esy-astyle#59bc21a@d41d8cd9": {
+      "id": "esy-astyle@github:zbaylin/esy-astyle#59bc21a@d41d8cd9",
+      "name": "esy-astyle",
+      "version": "github:zbaylin/esy-astyle#59bc21a",
+      "source": {
+        "type": "install",
+        "source": [ "github:zbaylin/esy-astyle#59bc21a" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9"
+      ],
+      "devDependencies": [
+        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9"
+      ]
     },
     "@reason-native/rely@3.1.0@d41d8cd9": {
       "id": "@reason-native/rely@3.1.0@d41d8cd9",
