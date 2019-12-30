@@ -18,13 +18,30 @@ type callback('a) = 'a => unit;
 let noopCallback = () => ();
 
 module MenuItem = {
+  external configureInstanceLabel: (menu, int, string) => bool =
+    "revery_menu_item_configure_instance_label";
+
   type menuItem =
     | Label(string, int, ref(option(menu)));
 
   let%nativeComponent make = (~label, ~callback as _=noopCallback, (), hooks) => (
     {
       make: () => Label(label, UIDGenerator.gen(), ref(None)),
-      configureInstance: (~isFirstRender as _, obj) => obj,
+      configureInstance: (~isFirstRender, obj) => {
+        if (!isFirstRender) {
+          switch (obj) {
+          | Label(_, uid, {contents: Some(parent)}) =>
+            let _: bool = configureInstanceLabel(parent, uid, label);
+            ();
+          | Label(_, _, {contents: None}) =>
+            Printf.fprintf(
+              stderr,
+              "WARNING - You encounter a reconcilition issue with your menu",
+            )
+          };
+        };
+        obj;
+      },
       children: Brisk_reconciler.empty,
       insertNode: (~parent, ~child as _, ~position as _) => parent,
       deleteNode: (~parent, ~child as _, ~position as _) => parent,

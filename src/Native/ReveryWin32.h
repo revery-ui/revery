@@ -8,3 +8,4 @@ value revery_assign_menu_win32(void *pWindow, value vMenu);
 value revery_create_menu_win32(void);
 value revery_menu_insert_node_string_win32(value vMenu, int position, int uid, const char *pMessage);
 value revery_menu_delete_node_string_win32(value vMenu, int position);
+value revery_menu_item_configure_instance_label_win32(value vParent, int position, const char *pMessage);

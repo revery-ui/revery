@@ -106,4 +106,10 @@ value revery_menu_delete_node_string_win32(value vMenu, int position) {
 
     return ret;
 }
+
+value revery_menu_item_configure_instance_label_win32(value vMenu, int position, const char *pMessage) {
+    bool ret = ModifyMenuA(Menu_val(vMenu).menu_handle, position, MF_BYCOMMAND, position, pMessage);
+
+    return ret;
+}
 #endif // WIN32

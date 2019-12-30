@@ -30,3 +30,10 @@ function revery_assign_menu(vWindow, vMenu) {
     window.console.error("WARNING - Not implemented: revery_assign_menu");
     return;
 }
+
+// Provides: revery_menu_item_configure_instance_label
+function revery_menu_item_configure_instance_label(vMenu, vPosition, vMessage) {
+    // no-op
+    window.console.error("WARNING - Not implemented: revery_menu_item_configure_instance_label");
+    return;
+}
