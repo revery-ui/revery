@@ -1,5 +1,5 @@
 {
-  "checksum": "c70ba18f4ef9d0ff5454869d6f0ff7d4",
+  "checksum": "d2a1d4656d942e291d70bc0e6defc210",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9": {
@@ -71,20 +71,17 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "revery-text-wrap@github:ohadrau/revery-text-wrap#2029854@d41d8cd9": {
+    "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9": {
       "id":
-        "revery-text-wrap@github:ohadrau/revery-text-wrap#2029854@d41d8cd9",
+        "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
       "name": "revery-text-wrap",
-      "version": "github:ohadrau/revery-text-wrap#2029854",
+      "version": "github:revery-ui/revery-text-wrap#005385c",
       "source": {
         "type": "install",
-        "source": [ "github:ohadrau/revery-text-wrap#2029854" ]
+        "source": [ "github:revery-ui/revery-text-wrap#005385c" ]
       },
       "overrides": [],
-      "dependencies": [
-        "@opam/dune@opam:1.11.4@a7ccb7ae",
-        "@opam/batteries@opam:2.11.0@2e433a84"
-      ],
+      "dependencies": [ "@opam/dune@opam:1.11.4@a7ccb7ae" ],
       "devDependencies": []
     },
     "revery@link-dev:./package.json": {
@@ -98,10 +95,10 @@
       },
       "overrides": [ "doc.json" ],
       "dependencies": [
-        "revery-text-wrap@github:ohadrau/revery-text-wrap#2029854@d41d8cd9",
+        "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
         "reperf@1.4.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-skia@github:manuhornung/reason-skia#d26e3dd@d41d8cd9",
+        "reason-skia@github:revery-ui/reason-skia#4c1926a@d41d8cd9",
         "reason-sdl2@2.10.3011@d41d8cd9",
         "reason-gl-matrix@0.9.9306@d41d8cd9",
         "reason-fontkit@2.8.3@d41d8cd9",
@@ -211,20 +208,20 @@
       ],
       "devDependencies": []
     },
-    "reason-skia@github:manuhornung/reason-skia#d26e3dd@d41d8cd9": {
-      "id": "reason-skia@github:manuhornung/reason-skia#d26e3dd@d41d8cd9",
+    "reason-skia@github:revery-ui/reason-skia#4c1926a@d41d8cd9": {
+      "id": "reason-skia@github:revery-ui/reason-skia#4c1926a@d41d8cd9",
       "name": "reason-skia",
-      "version": "github:manuhornung/reason-skia#d26e3dd",
+      "version": "github:revery-ui/reason-skia#4c1926a",
       "source": {
         "type": "install",
-        "source": [ "github:manuhornung/reason-skia#d26e3dd" ]
+        "source": [ "github:revery-ui/reason-skia#4c1926a" ]
       },
       "overrides": [],
       "dependencies": [
         "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9",
         "refmterr@3.3.0@d41d8cd9",
-        "esy-skia@github:revery-ui/esy-skia#ff2e46d@d41d8cd9",
-        "@opam/lwt@opam:4.5.0@677655b4",
+        "esy-skia@github:revery-ui/esy-skia#3b4658d@d41d8cd9",
+        "esy-freetype2@2.9.1006@d41d8cd9", "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/lambda-term@opam:2.0.2@119fb081",
         "@opam/dune@opam:1.11.4@a7ccb7ae",
         "@opam/ctypes-foreign@opam:0.4.0@72ef8de2",
@@ -580,17 +577,17 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-skia@github:revery-ui/esy-skia#ff2e46d@d41d8cd9": {
-      "id": "esy-skia@github:revery-ui/esy-skia#ff2e46d@d41d8cd9",
+    "esy-skia@github:revery-ui/esy-skia#3b4658d@d41d8cd9": {
+      "id": "esy-skia@github:revery-ui/esy-skia#3b4658d@d41d8cd9",
       "name": "esy-skia",
-      "version": "github:revery-ui/esy-skia#ff2e46d",
+      "version": "github:revery-ui/esy-skia#3b4658d",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/esy-skia#ff2e46d" ]
+        "source": [ "github:revery-ui/esy-skia#3b4658d" ]
       },
       "overrides": [],
       "dependencies": [
-        "esy-libjpeg-turbo@github:prometheansacrifice/libjpeg-turbo#50e8e32c48@d41d8cd9",
+        "esy-libjpeg-turbo@github:bryphe/libjpeg-turbo#12d3cef@d41d8cd9",
         "@esy-cross/ninja-build@1.8.2001@d41d8cd9"
       ],
       "devDependencies": []
@@ -625,14 +622,13 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-libjpeg-turbo@github:prometheansacrifice/libjpeg-turbo#50e8e32c48@d41d8cd9": {
-      "id":
-        "esy-libjpeg-turbo@github:prometheansacrifice/libjpeg-turbo#50e8e32c48@d41d8cd9",
+    "esy-libjpeg-turbo@github:bryphe/libjpeg-turbo#12d3cef@d41d8cd9": {
+      "id": "esy-libjpeg-turbo@github:bryphe/libjpeg-turbo#12d3cef@d41d8cd9",
       "name": "esy-libjpeg-turbo",
-      "version": "github:prometheansacrifice/libjpeg-turbo#50e8e32c48",
+      "version": "github:bryphe/libjpeg-turbo#12d3cef",
       "source": {
         "type": "install",
-        "source": [ "github:prometheansacrifice/libjpeg-turbo#50e8e32c48" ]
+        "source": [ "github:bryphe/libjpeg-turbo#12d3cef" ]
       },
       "overrides": [],
       "dependencies": [
@@ -1493,34 +1489,6 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
-    "@opam/num@opam:1.3@43fe4f7f": {
-      "id": "@opam/num@opam:1.3@43fe4f7f",
-      "name": "@opam/num",
-      "version": "opam:1.3",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/md5/f0/f074e12325e84ebc883b37e5db10403d#md5:f074e12325e84ebc883b37e5db10403d",
-          "archive:https://github.com/ocaml/num/archive/v1.3.tar.gz#md5:f074e12325e84ebc883b37e5db10403d"
-        ],
-        "opam": {
-          "name": "num",
-          "version": "1.3",
-          "path": "doc.esy.lock/opam/num.1.3"
-        }
-      },
-      "overrides": [
-        {
-          "opamoverride":
-            "doc.esy.lock/overrides/opam__s__num_opam__c__1.3_opam_override"
-        }
-      ],
-      "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
-    },
     "@opam/mmap@opam:1.1.0@b85334ff": {
       "id": "@opam/mmap@opam:1.1.0@b85334ff",
       "name": "@opam/mmap",
@@ -2309,32 +2277,6 @@
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/easy-format@opam:1.3.2@0484b3c4",
         "@opam/dune@opam:1.11.4@a7ccb7ae"
-      ]
-    },
-    "@opam/batteries@opam:2.11.0@2e433a84": {
-      "id": "@opam/batteries@opam:2.11.0@2e433a84",
-      "name": "@opam/batteries",
-      "version": "opam:2.11.0",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/md5/fc/fcdfd57b2473c19fb55149247335d771#md5:fcdfd57b2473c19fb55149247335d771",
-          "archive:https://github.com/ocaml-batteries-team/batteries-included/archive/v2.11.0.tar.gz#md5:fcdfd57b2473c19fb55149247335d771"
-        ],
-        "opam": {
-          "name": "batteries",
-          "version": "2.11.0",
-          "path": "doc.esy.lock/opam/batteries.2.11.0"
-        }
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
-        "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
-        "@opam/num@opam:1.3@43fe4f7f", "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/num@opam:1.3@43fe4f7f"
       ]
     },
     "@opam/base-unix@opam:base@87d0b2eb": {
