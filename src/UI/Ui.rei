@@ -18,6 +18,9 @@ type renderFunction = React.element(React.reveryNode) => unit;
   [update(<Button />);]
 */
 
+let setApplicationMenu:
+  Brisk_reconciler.element(Revery_Native.Menu.Menu.menu) => unit;
+
 let start: (Window.t, React.element(React.reveryNode)) => renderFunction;
 
 let getActiveWindow: unit => option(Window.t);

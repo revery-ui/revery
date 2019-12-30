@@ -35,6 +35,33 @@ type mouseBehavior =
 
 let getActiveWindow = () => _activeWindow^;
 
+let _activeMenu: ref(option(menuContainer)) = ref(None);
+
+let setApplicationMenu = menu => {
+  let container = RenderContainer.menuUpdate(_activeMenu^, menu);
+
+  switch (getActiveWindow()) {
+  | None =>
+    Printf.fprintf(
+      stderr,
+      "WARNING - Their is no window where we can plug menu.\n%!",
+    )
+
+  | Some(window) =>
+    if (Revery_Native.Menu.Menu.assignMenuNat(
+          Sdl2.Window.getNativeWindow(Window.getSdlWindow(window)),
+          container.menuHandle,
+        )) {
+      _activeMenu := Some(container);
+    } else {
+      Printf.fprintf(
+        stderr,
+        "WARNING - Can't assign menu. Please open a Github issues.\n%!",
+      );
+    }
+  };
+};
+
 let start = (window: Window.t, element: React.element(React.reveryNode)) => {
   let uiDirty = ref(true);
   let forceLayout = ref(true);
