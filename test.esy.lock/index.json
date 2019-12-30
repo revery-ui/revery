@@ -1,5 +1,5 @@
 {
-  "checksum": "21b78500cf1f2de590f26788e65f406c",
+  "checksum": "6ead08df22e4a542a738bd8240951c7c",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9": {
@@ -42,7 +42,7 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
         "reperf@1.4.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-skia@github:manuhornung/reason-skia#d26e3dd@d41d8cd9",
+        "reason-skia@github:revery-ui/reason-skia#2e189a8@d41d8cd9",
         "reason-sdl2@2.10.3011@d41d8cd9",
         "reason-gl-matrix@0.9.9306@d41d8cd9",
         "reason-fontkit@2.8.3@d41d8cd9",
@@ -136,20 +136,20 @@
       ],
       "devDependencies": []
     },
-    "reason-skia@github:manuhornung/reason-skia#d26e3dd@d41d8cd9": {
-      "id": "reason-skia@github:manuhornung/reason-skia#d26e3dd@d41d8cd9",
+    "reason-skia@github:revery-ui/reason-skia#2e189a8@d41d8cd9": {
+      "id": "reason-skia@github:revery-ui/reason-skia#2e189a8@d41d8cd9",
       "name": "reason-skia",
-      "version": "github:manuhornung/reason-skia#d26e3dd",
+      "version": "github:revery-ui/reason-skia#2e189a8",
       "source": {
         "type": "install",
-        "source": [ "github:manuhornung/reason-skia#d26e3dd" ]
+        "source": [ "github:revery-ui/reason-skia#2e189a8" ]
       },
       "overrides": [],
       "dependencies": [
         "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9",
         "refmterr@3.3.0@d41d8cd9",
-        "esy-skia@github:revery-ui/esy-skia#ff2e46d@d41d8cd9",
-        "@opam/lwt@opam:4.5.0@677655b4",
+        "esy-skia@github:revery-ui/esy-skia#3b4658d@d41d8cd9",
+        "esy-freetype2@2.9.1006@d41d8cd9", "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/lambda-term@opam:2.0.2@119fb081",
         "@opam/dune@opam:1.11.4@a7ccb7ae",
         "@opam/ctypes-foreign@opam:0.4.0@72ef8de2",
@@ -267,13 +267,13 @@
       ],
       "devDependencies": []
     },
-    "esy-skia@github:revery-ui/esy-skia#ff2e46d@d41d8cd9": {
-      "id": "esy-skia@github:revery-ui/esy-skia#ff2e46d@d41d8cd9",
+    "esy-skia@github:revery-ui/esy-skia#3b4658d@d41d8cd9": {
+      "id": "esy-skia@github:revery-ui/esy-skia#3b4658d@d41d8cd9",
       "name": "esy-skia",
-      "version": "github:revery-ui/esy-skia#ff2e46d",
+      "version": "github:revery-ui/esy-skia#3b4658d",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/esy-skia#ff2e46d" ]
+        "source": [ "github:revery-ui/esy-skia#3b4658d" ]
       },
       "overrides": [],
       "dependencies": [
