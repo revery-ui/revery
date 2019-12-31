@@ -14,7 +14,14 @@ module Example = {
         fontFamily("Roboto-Regular.ttf"),
         fontSize(20),
       ];
+    let noteStyle =
+      Style.[
+        color(Colors.white),
+        fontFamily("Roboto-Regular.ttf"),
+        fontSize(16),
+      ];
     <View>
+      <Text style=noteStyle text="NOTE: Works on macOS only." />
       <Center>
         <Text
           style=optionStyle
