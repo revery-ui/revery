@@ -51,12 +51,17 @@ module SampleText = {
     let%hook (fontSizeSliderVal, setFontSize) = Hooks.state(20.);
     let%hook (widthSliderVal, setWidth) = Hooks.state(200.);
     let%hook (gammaVal, setGamma) = Hooks.state(2.2);
+    let%hook (hyphenate, setHyphenate) = Hooks.state(false);
 
-    let textContent = "All work and no play makes Jack a dull boy";
+    let textContent =
+      "All work and no play makes Jack a dull boy. "
+      ++ "The quick brown fox jumps over the lazy dog.";
     let maxFontSize = 40.;
     let maxWidth = 400.;
     let textFontSize = int_of_float(fontSizeSliderVal);
     let textWidth = int_of_float(widthSliderVal);
+    let wrapping =
+      if (hyphenate) {TextWrapping.WrapHyphenate} else {TextWrapping.Wrap};
 
     <View style=containerStyle>
       <View>
@@ -85,7 +90,7 @@ module SampleText = {
               fontFamily("Roboto-Regular.ttf"),
               fontSize(textFontSize),
               lineHeight(1.5),
-              textWrap(TextWrapping.WhitespaceWrap),
+              textWrap(wrapping),
               width(int_of_float(widthSliderVal)),
               border(~color=Colors.blueViolet, ~width=1),
               backgroundColor(Colors.black),
@@ -130,6 +135,15 @@ module SampleText = {
           <Text
             style=textStyle
             text={"Value: " ++ (gammaVal |> string_of_float)}
+          />
+        </View>
+        <View style=controlsStyle>
+          <Text style=textStyle text="Hyphenate?" />
+          <Checkbox
+            checkedColor=Colors.green
+            onChange={() => setHyphenate(h => !h)}
+            style=Style.[border(~width=2, ~color=Colors.green)]
+            checked=hyphenate
           />
         </View>
       </View>
