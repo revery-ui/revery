@@ -48,12 +48,12 @@ let _tryToCloseAll = (app: t) => {
   Seq.iter(w => _tryToClose(app, w), windows);
 };
 
-let quit = (~force=true, ~code=0, app: t) => {
-  if (!force) {
+let quit = (~askNicely=false, ~code=0, app: t) => {
+  if (askNicely) {
     _tryToCloseAll(app);
   };
 
-  if (Hashtbl.length(app.windows) == 0 || force) {
+  if (Hashtbl.length(app.windows) == 0 || !askNicely) {
     logInfo("Quitting");
     exit(code);
   };
