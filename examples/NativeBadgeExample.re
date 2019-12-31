@@ -27,7 +27,7 @@ module Example = {
         />
         <Button
           title="Set badge number!"
-          onClick={() => Badge.setNumber(badgeNumber)}
+          onClick={() => Badge.set(string_of_int(badgeNumber))}
         />
       </Center>
     </View>;

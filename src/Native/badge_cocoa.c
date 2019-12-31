@@ -7,10 +7,10 @@ void revery_hideBadge_cocoa() {
     [[NSApp dockTile] setBadgeLabel:NULL];
 }
 
-void revery_setBadgeNumber_cocoa(char *badgeNumStr) {
-    NSString *nsBadgeNumStr = [NSString stringWithUTF8String:badgeNumStr];
-    [[NSApp dockTile] setBadgeLabel:nsBadgeNumStr];
-    [nsBadgeNumStr release];
+void revery_setBadge_cocoa(char *badgeStr) {
+    NSString *nsBadgeStr = [NSString stringWithUTF8String:badgeStr];
+    [[NSApp dockTile] setBadgeLabel:nsBadgeStr];
+    [nsBadgeStr release];
 }
 
 #endif

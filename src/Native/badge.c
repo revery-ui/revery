@@ -16,17 +16,15 @@
 #include "ReveryGtk.h"
 #endif
 
-CAMLprim value revery_setBadgeNumber(value vBadgeNum) {
-    CAMLparam1(vBadgeNum);
+CAMLprim value revery_setBadge(value vBadgeStr) {
+    CAMLparam1(vBadgeStr);
 
-    int badgeNum = Int_val(vBadgeNum);
-    char badgeNumStr[(int)((ceil(log10(badgeNum)) + 1) * sizeof(char))];
-    sprintf(badgeNumStr, "%d", badgeNum);
+    char *badgeStr = String_val(vBadgeStr);
 
 #ifdef __APPLE__
-    revery_setBadgeNumber_cocoa(badgeNumStr);
+    revery_setBadge_cocoa(badgeStr);
 #else
-    (void)badgeNumStr;
+    (void)badgeStr;
 #endif
 
     CAMLreturn(Val_unit);

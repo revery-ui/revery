@@ -11,5 +11,5 @@ void revery_scheduleNotificationFromNow_cocoa(const char *title,
         const char *body,
         long onClickFunc, int mute,
         int seconds);
-void revery_setBadgeNumber_cocoa(char *badgeNumStr);
+void revery_setBadge_cocoa(char *badgeNumStr);
 void revery_hideBadge_cocoa();
