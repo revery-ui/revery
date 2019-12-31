@@ -43,7 +43,6 @@ jobs:
     displayName: 'docker build'
   - script: docker run --rm --mount src=`pwd`,target=/revery,type=bind centos /bin/bash -c 'cd revery && ls -a'
   - script: docker run --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined --rm --mount src=`pwd`,target=/revery,type=bind centos /bin/bash -c 'cd revery && ./scripts/docker-build.sh'
-  - template: .ci/publish-linux.yml
 
 - job: Hygiene_Checks
   displayName: 'Hygiene Checks'
