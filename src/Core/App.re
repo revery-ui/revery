@@ -170,7 +170,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       // if Command+Q is pressed. In that case, we'll try
       // closing all the windows - and if they all close,
       // we'll exit the app.
-      quit(~force=false, ~code=0, appInstance)
+      quit(~askNicely=true, ~code=0, appInstance)
     | _ => ()
     };
   };
