@@ -64,5 +64,3 @@ let toString = (spring: t) =>
     spring.velocity,
     spring.acceleration,
   );
-
-let position = spring => spring.position;

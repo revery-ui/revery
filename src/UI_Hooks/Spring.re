@@ -7,12 +7,12 @@ let spring = (~target, ~restThreshold=0.1, options) => {
 
   let isActive =
     !Spring.isAtRest(~restThreshold, previousState)
-    || Float.abs(target -. Spring.position(previousState)) > restThreshold;
+    || Float.abs(target -. previousState.position) > restThreshold;
 
   let%hook (time, _) = Timer.timer(~active=isActive, ());
 
   let state = Spring.tick(target, previousState, options, time);
   setPreviousState(state);
 
-  Spring.position(state);
+  state.position
 };
