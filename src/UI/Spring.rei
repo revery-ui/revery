@@ -17,14 +17,15 @@ module Options: {
   let molasses: t;
 };
 
-type t = pri {
-  // [position] is the current position of the 'mass' of the spring
-  // aka, the current value
-  position: float,
-  velocity: float,
-  acceleration: float,
-  time: Time.t,
-};
+type t =
+  pri {
+    // [position] is the current position of the 'mass' of the spring
+    // aka, the current value
+    position: float,
+    velocity: float,
+    acceleration: float,
+    time: Time.t,
+  };
 
 // [create(position, time)] creates a new spring model with a mass at position of [position]
 // starting at time [time].
@@ -39,3 +40,5 @@ let toString: t => string;
 
 // isResting[spring] returns whether the spring is in a restng state
 let isAtRest: (~restThreshold: float=?, t) => bool;
+
+let setPosition: (float, t) => t;

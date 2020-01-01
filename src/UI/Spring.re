@@ -53,7 +53,7 @@ let tick = (target: float, spring: t, options: Options.t, time: Time.t) => {
   };
 };
 
-let isAtRest = (~restThreshold=0.1, {position, acceleration, velocity}) =>
+let isAtRest = (~restThreshold=0.1, {acceleration, velocity, _}) =>
   Float.abs(acceleration) <= restThreshold
   && Float.abs(velocity) <= restThreshold;
 
@@ -64,3 +64,10 @@ let toString = (spring: t) =>
     spring.velocity,
     spring.acceleration,
   );
+
+let setPosition = (position, state) => {
+  ...state,
+  position,
+  velocity: 0.,
+  acceleration: 0.,
+};

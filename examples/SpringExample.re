@@ -6,7 +6,7 @@ module SpringyLogo = {
   let%component make = (~stiffness, ~damping, ()) => {
     let%hook (targetPosition, setTargetPosition) = Hooks.state(1.0);
 
-    let%hook imageWidth =
+    let%hook (imageWidth, _setImmediately) =
       Hooks.spring(
         ~target=targetPosition,
         Spring.Options.create(~damping, ~stiffness, ()),

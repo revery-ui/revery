@@ -14,5 +14,8 @@ let spring = (~target, ~restThreshold=0.1, options) => {
   let state = Spring.tick(target, previousState, options, time);
   setPreviousState(state);
 
-  state.position
+  let setImmediately = position =>
+    setPreviousState(Spring.setPosition(position, previousState));
+
+  (state.position, setImmediately);
 };
