@@ -53,11 +53,9 @@ let tick = (target: float, spring: t, options: Options.t, time: Time.t) => {
   };
 };
 
-let isResting = (target, {position, acceleration, velocity}) => {
-  Float.abs(target -. position) <= 0.001
-  && Float.abs(acceleration) <= 0.001
-  && Float.abs(velocity) <= 0.001;
-};
+let isAtRest = (~restThreshold=0.1, {position, acceleration, velocity}) =>
+  Float.abs(acceleration) <= restThreshold
+  && Float.abs(velocity) <= restThreshold;
 
 let toString = (spring: t) =>
   Printf.sprintf(
@@ -67,4 +65,4 @@ let toString = (spring: t) =>
     spring.acceleration,
   );
 
-let getPosition = spring => spring.position;
+let position = spring => spring.position;

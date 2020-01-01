@@ -1,16 +1,18 @@
 module Time = Revery_Core.Time;
-module SpringModel = Revery_UI.Spring;
+module Spring = Revery_UI.Spring;
 
-let spring = (target, options) => {
+let spring = (~target, ~restThreshold=0.1, options) => {
   let%hook (previousState, setPreviousState) =
-    Ref.ref(SpringModel.create(target, Time.now()));
+    Ref.ref(Spring.create(target, Time.now()));
 
-  let isActive = !SpringModel.isResting(target, previousState);
+  let isActive =
+    !Spring.isAtRest(~restThreshold, previousState)
+    || Float.abs(target -. Spring.position(previousState)) > restThreshold;
 
   let%hook (time, _) = Timer.timer(~active=isActive, ());
 
-  let state = SpringModel.tick(target, previousState, options, time);
+  let state = Spring.tick(target, previousState, options, time);
   setPreviousState(state);
 
-  SpringModel.getPosition(state);
+  Spring.position(state);
 };

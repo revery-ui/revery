@@ -30,7 +30,7 @@ let tick: (float, t, Options.t, Time.t) => t;
 
 let toString: t => string;
 
-let getPosition: t => float;
+let position: t => float;
 
 // isResting[spring] returns whether the spring is in a restng state
-let isResting: (float, t) => bool;
+let isAtRest: (~restThreshold: float=?, t) => bool;
