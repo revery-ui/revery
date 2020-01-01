@@ -4,9 +4,8 @@
 #import <Cocoa/Cocoa.h>
 
 void revery_alert_cocoa(void *pWin, const char *szMessage) {
-    NSWindow *pCocoaWin = (NSWindow *)pWin;
+    (void)pWin;
 
-    NSView *view = [[NSView alloc] init];
     NSAlert *alert = [[NSAlert alloc] init];
     NSString *message = [NSString stringWithUTF8String:szMessage];
     [alert addButtonWithTitle:@"Ok"];
@@ -15,7 +14,6 @@ void revery_alert_cocoa(void *pWin, const char *szMessage) {
     [alert runModal];
     [alert release];
     [message release];
-    [view release];
 }
 
 const char **revery_open_files_cocoa(
@@ -33,7 +31,7 @@ const char **revery_open_files_cocoa(
         for (int i = 0; i < fileTypesSize; i++) {
             // Convert char* -> NSString
             NSString *str = [NSString stringWithCString:fileTypes[i]
-                                               encoding:NSUTF8StringEncoding];
+                                      encoding:NSUTF8StringEncoding];
             [tmpArr addObject:str];
         }
         nsFileTypes = tmpArr;
@@ -57,14 +55,14 @@ const char **revery_open_files_cocoa(
 
     if (title) {
         [panel setMessage:[NSString stringWithCString:title
-                                             encoding:NSUTF8StringEncoding]];
+                           encoding:NSUTF8StringEncoding]];
         [panel setTitle:[NSString stringWithCString:title
-                                           encoding:NSUTF8StringEncoding]];
+                         encoding:NSUTF8StringEncoding]];
     }
 
     if (buttonText)
         [panel setPrompt:[NSString stringWithCString:buttonText
-                                            encoding:NSUTF8StringEncoding]];
+                          encoding:NSUTF8StringEncoding]];
 
     if (nsFileTypes) [panel setAllowedFileTypes:nsFileTypes];
 

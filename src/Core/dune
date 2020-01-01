@@ -2,5 +2,6 @@
     (name Revery_Core)
     (public_name Revery.Core)
     (js_of_ocaml (javascript_files file.js))
-    (cxx_names file)
-    (libraries threads console.lib str lwt sdl2 flex fontkit Rench re))
+    (c_names file)
+    (c_flags :standard -Wall -Wextra -Werror)
+    (libraries threads console.lib str lwt sdl2 flex fontkit Rench re Revery_Native revery-text-wrap))

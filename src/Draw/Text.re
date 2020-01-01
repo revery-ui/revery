@@ -37,11 +37,16 @@ let _getScaledFontSizeFromWindow = (window: option(Window.t), fontSize) => {
   _getScaledFontSize(~scaleFactor, ~pixelRatio, fontSize);
 };
 
-let getLineHeight = (~window=None, ~fontFamily, ~fontSize, ~lineHeight, ()) => {
+let getLineHeight = (~window, ~fontFamily, ~fontSize, ~lineHeight, ()) => {
   let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
   let font = FontCache.load(fontFamily, scaledFontSize);
   let metrics = FontRenderer.getNormalizedMetrics(font);
-  lineHeight *. metrics.height;
+  let multiplier =
+    switch (window) {
+    | None => 1.0
+    | Some(w) => Window.getScaleAndZoom(w) *. Window.getDevicePixelRatio(w)
+    };
+  lineHeight *. metrics.height /. multiplier;
 };
 
 type dimensions = {
@@ -49,7 +54,7 @@ type dimensions = {
   height: int,
 };
 
-let measure = (~window=?, ~fontFamily, ~fontSize, text) => {
+let measure = (~window, ~fontFamily, ~fontSize, text) => {
   let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
   let font = FontCache.load(fontFamily, scaledFontSize);
   let multiplier =
@@ -65,6 +70,19 @@ let measure = (~window=?, ~fontFamily, ~fontSize, text) => {
       int_of_float(float_of_int(dimensions.height) /. multiplier +. 0.5),
   };
   ret;
+};
+
+let measureCharWidth = (~window, ~fontFamily, ~fontSize, char) => {
+  let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
+  let font = FontCache.load(fontFamily, scaledFontSize);
+  let multiplier =
+    switch (window) {
+    | None => 1.0
+    | Some(w) => Window.getScaleAndZoom(w) *. Window.getDevicePixelRatio(w)
+    };
+  let text = String.make(1, char);
+  let dimensions = FontRenderer.measure(font, text);
+  float_of_int(dimensions.width) /. multiplier +. 0.5;
 };
 
 let indexNearestOffset = (~measure, text, offset) => {

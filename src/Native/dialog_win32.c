@@ -9,11 +9,11 @@ void
 revery_alert_win32(void *pWin, const char *szMessage) {
     HWND hwnd = (HWND)pWin;
 
-    int msgboxId = MessageBox(
-            hwnd,
-            szMessage,
-            "Alert",
-            MB_ICONWARNING | MB_OK
-            );
+    MessageBox(
+        hwnd,
+        szMessage,
+        "Alert",
+        MB_ICONWARNING | MB_OK
+    );
 }
 #endif

@@ -12,8 +12,7 @@
     "build:js": "esy b dune build examples/Examples.bc.js",
     "build:js:release": "esy b dune build examples/Examples.bc.js",
     "test": "esy b dune runtest",
-    "format": "esy dune build @fmt --auto-promote",
-    "format:windows": "esy b .ci/format.sh",
+    "format": "esy b bash .ci/format.sh #{os}",
     "run": "esy x Examples"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
@@ -28,7 +27,7 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": "^3.4.0",
-    "reason-fontkit": "^2.8.2",
+    "reason-fontkit": "^2.8.3",
     "reason-gl-matrix": "^0.9.9306",
     "@opam/js_of_ocaml": "^3.4.0",
     "@opam/js_of_ocaml-compiler": "^3.4.0",
@@ -43,14 +42,18 @@
     "reason-font-manager": "^2.0.0",
     "rench": "^1.9.1",
     "rebez": "github:jchavarri/rebez#03fa3b7",
-    "reason-sdl2": "^2.10.3011"
+    "reason-sdl2": "^2.10.3011",
+    "revery-text-wrap": "github:revery-ui/revery-text-wrap#005385c"
   },
   "resolutions": {
-    "@opam/cmdliner": "1.0.2"
+    "@opam/cmdliner": "1.0.2",
+    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b6",
+    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755"
   },
   "devDependencies": {
     "ocaml": ">=4.6.0 <4.8.0",
     "@opam/merlin": "^3.3.2",
-    "@opam/dune": "^1.8.0"
+    "@opam/dune": "^1.8.0",
+    "esy-astyle": "github:zbaylin/esy-astyle#59bc21a"
   }
 }

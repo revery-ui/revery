@@ -1,10 +1,6 @@
 # Steps for restoring project cache
 
 steps:
-  - bash: 'mkdir -p $(ESY__CACHE_INSTALL_PATH)'
-    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
-    displayName: '[Cache][Restore] Create cache directory'
-
   - task: DownloadBuildArtifacts@0
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     displayName: '[Cache][Restore] Restore install'
@@ -19,12 +15,24 @@ steps:
         downloadPath: '$(STAGING_DIRECTORY)'
     continueOnError: true
 
-  # - bash: 'cd $(ESY__NPM_ROOT) && tar -xf $(STAGING_DIRECTORY_UNIX)/cache-$(Agent.OS)-install/npm-cache.tar -C .'
+  - bash: 'mkdir -p $(ESY__CACHE_INSTALL_PATH)'
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+    displayName: '[Cache][Restore] Create cache directory'
+
+  # - bash: 'cd $(ESY__NPM_ROOT) && tar -xf $(STAGING_DIRECTORY)/cache-$(Agent.OS)-install/npm-cache.tar -C .'
   #   continueOnError: true
   #   condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
   #   displayName: '[Cache][Restore] Untar npm cache directory'
 
-  - bash: 'cd $(ESY__CACHE_INSTALL_PATH) && tar -xf $(STAGING_DIRECTORY_UNIX)/cache-$(Agent.OS)-install/esy-cache.tar -C .'
+  - bash: |
+      cd $(ESY__CACHE_INSTALL_PATH)
+      pwd
+      STDIR=$STAGING_DIRECTORY
+      if [ "$AGENT_OS" == "Windows_NT" ]; then
+        STDIR=$( cygpath --unix --absolute "$STAGING_DIRECTORY")
+      fi
+      echo "STDIR: $STDIR"
+      tar -xf "$STDIR/cache-$(Agent.OS)-install/esy-cache.tar" -C .
     continueOnError: true
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     displayName: '[Cache][Restore] Untar esy cache directory'
