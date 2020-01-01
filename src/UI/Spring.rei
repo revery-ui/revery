@@ -33,4 +33,4 @@ let toString: t => string;
 let getPosition: t => float;
 
 // isResting[spring] returns whether the spring is in a restng state
-let isResting: t => bool;
+let isResting: (float, t) => bool;
