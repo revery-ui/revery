@@ -17,35 +17,40 @@
 #endif
 
 CAMLprim value revery_registerIconProgress() {
-    CAMLparam0();
-    void *ret;
+  CAMLparam0();
+  void *ret;
 #ifdef __APPLE__
-    ret = revery_register_icon_progress_cocoa();
+  ret = revery_register_icon_progress_cocoa();
 #elif WIN32
-    ret = revery_register_icon_progress_win32();
+  ret = revery_register_icon_progress_win32();
 #endif
-    CAMLreturn((value)ret);
+  CAMLreturn((value)ret);
 }
 
 CAMLprim value revery_setIconProgress(value vIconProgress, value vProgress) {
-    CAMLparam2(vIconProgress, vProgress);
-    void *ip = (void *)vIconProgress;
-    double progress = Double_val(vProgress);
+  CAMLparam2(vIconProgress, vProgress);
+  void *ip = (void *)vIconProgress;
+  double progress = Double_val(vProgress);
 
 #ifdef __APPLE__
-    revery_set_icon_progress_cocoa(ip, progress);
+  revery_set_icon_progress_cocoa(ip, progress);
+#else
+  (void)progress;
+  (void)ip;
 #endif
 
-    CAMLreturn(Val_unit);
+  CAMLreturn(Val_unit);
 }
 
 CAMLprim value revery_deregisterIconProgress(value vIconProgress) {
-    CAMLparam1(vIconProgress);
-    void *ip = (void *)vIconProgress;
+  CAMLparam1(vIconProgress);
+  void *ip = (void *)vIconProgress;
 
-    #ifdef __APPLE__
-        revery_deregister_icon_progress_cocoa(ip);
-    #endif
+#ifdef __APPLE__
+  revery_deregister_icon_progress_cocoa(ip);
+#else
+  (void)ip;
+#endif
 
-    CAMLreturn(Val_unit);
+  CAMLreturn(Val_unit);
 }

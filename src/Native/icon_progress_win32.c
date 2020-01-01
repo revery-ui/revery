@@ -7,7 +7,6 @@
 
 
 void *revery_register_icon_progress_win32() {
-    HMODULE h = LoadLibrary(TEXT("ole32.dll"));
     CoInitialize(NULL);
     ITaskbarList3 *tbl;
     CoCreateInstance(&CLSID_TaskbarList, NULL, CLSCTX_INPROC_SERVER,
