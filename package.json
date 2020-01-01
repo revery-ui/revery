@@ -12,7 +12,7 @@
     "build:js": "esy b dune build examples/Examples.bc.js",
     "build:js:release": "esy b dune build examples/Examples.bc.js",
     "test": "esy b dune runtest",
-    "format": "esy sh .ci/format.sh #{os}",
+    "format": "esy bash .ci/format.sh #{os}",
     "run": "esy x Examples"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
