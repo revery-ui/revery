@@ -9,7 +9,7 @@ module SpringyLogo = {
     let%hook imageWidth =
       Hooks.spring(
         targetPosition,
-        Spring.Options.create(~damping, ~stiffness, ~initialValue=2.0, ()),
+        Spring.Options.create(~damping, ~stiffness, ()),
       );
 
     let onMouseDown = _ => setTargetPosition(_ => 2.0);

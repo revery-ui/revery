@@ -4,11 +4,9 @@ module Options: {
   type t = {
     stiffness: float,
     damping: float,
-    initialValue: float,
   };
 
-  let create:
-    (~stiffness: float=?, ~damping: float=?, ~initialValue: float=?, unit) => t;
+  let create: (~stiffness: float=?, ~damping: float=?, unit) => t;
 
   // Some basic presets
   let default: t;

@@ -5,14 +5,9 @@ module Options = {
   type t = {
     stiffness: float,
     damping: float,
-    initialValue: float,
   };
 
-  let create = (~stiffness=180., ~damping=12., ~initialValue=0., ()) => {
-    initialValue,
-    damping,
-    stiffness,
-  };
+  let create = (~stiffness=180., ~damping=12., ()) => {damping, stiffness};
 
   // Presets from react-spring: https://www.react-spring.io/docs/hooks/api
   let default = create(~stiffness=170., ~damping=26., ());
@@ -40,6 +35,7 @@ let create = (position: float, time: Time.t) => {
   currentTime: time,
   isActive: true,
 };
+
 let _isActive = (acceleration, velocity) =>
   Float.abs(acceleration) >= 0.001 || Float.abs(velocity) >= 0.001;
 

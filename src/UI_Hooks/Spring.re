@@ -3,15 +3,13 @@ module SpringModel = Revery_UI.Spring;
 
 type state = {
   target: float,
-  options: SpringModel.Options.t,
   spring: SpringModel.t,
   isActive: bool,
 };
 
-let initialState = (springVal, options, time) => {
-  options,
+let initialState = (springVal, time) => {
   target: springVal,
-  spring: SpringModel.create(options.initialValue, time),
+  spring: SpringModel.create(springVal, time),
   isActive: true,
 };
 
@@ -20,49 +18,38 @@ type action =
   | ResetOptions(SpringModel.Options.t)
   | Tick(Time.t);
 
-let springReducer: (action, state) => state =
-  (action, state) =>
-    switch (action) {
-    | Tick(time) when state.isActive =>
-      let spring =
-        SpringModel.tick(state.target, state.spring, state.options, time);
-      {...state, spring, isActive: !SpringModel.isResting(spring)};
-    | Reset(springVal) => {...state, target: springVal, isActive: true}
-    | ResetOptions(options) => {...state, isActive: true, options}
-    | _ => state
-    };
+let springReducer = (options, action, state) =>
+  switch (action) {
+  | Tick(time) when state.isActive =>
+    let spring = SpringModel.tick(state.target, state.spring, options, time);
+    {...state, spring, isActive: !SpringModel.isResting(spring)};
+  | Reset(springVal) => {...state, target: springVal, isActive: true}
+  | ResetOptions(options) => {...state, isActive: true}
+  | _ => state
+  };
 
-let spring = (v: float, opts: SpringModel.Options.t) => {
-  let%hook (curr, dispatch) =
+let spring = (value, options) => {
+  let%hook (state, dispatch) =
     Reducer.reducer(
-      ~initialState=initialState(v, opts, Time.now()),
-      springReducer,
+      ~initialState=initialState(value, Time.now()),
+      springReducer(options),
     );
 
   let%hook (time, _) =
-    Timer.timer(~active=curr.isActive, ~tickRate=Time.zero, ());
+    Timer.timer(~active=state.isActive, ~tickRate=Time.zero, ());
 
-  if (curr.isActive) {
+  if (state.isActive) {
     dispatch(Tick(time));
   };
 
   let%hook () =
     Effect.effect(
-      If((!=), v),
+      If((!=), value),
       () => {
-        dispatch(Reset(v));
+        dispatch(Reset(value));
         None;
       },
     );
 
-  let%hook () =
-    Effect.effect(
-      If((!=), opts),
-      () => {
-        dispatch(ResetOptions(opts));
-        None;
-      },
-    );
-
-  curr.spring |> SpringModel.getPosition;
+  SpringModel.getPosition(state.spring);
 };
