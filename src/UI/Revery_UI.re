@@ -30,5 +30,7 @@ module Focus = Focus;
 module Dimensions = Dimensions;
 module Offset = Offset;
 
+module Hook_p = Hook_p;
+
 let start = Ui.start;
 let getActiveWindow = Ui.getActiveWindow;

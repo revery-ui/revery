@@ -21,7 +21,8 @@ let render =
       container: RenderContainer.t,
       component: React.element('node),
     ) => {
-  Log.info("UI", "BEGIN: Render frame");
+  let generation = ", generation: " ++ string_of_int(Hook_p.gen^);
+  Log.info("UI", "BEGIN: Render frame" ++ generation);
   let {rootNode, window, container, _} = container;
 
   /* Perform reconciliation */
@@ -83,5 +84,5 @@ let render =
     DebugDraw.draw();
     RenderPass.endAlphaPass();
   });
-  Log.info("UI", "END: Render frame");
+  Log.info("UI", "END: Render frame" ++ generation);
 };

@@ -15,8 +15,8 @@
     "format": "esy dune build @fmt --auto-promote",
     "format:windows": "esy b .ci/format.sh",
     "run": "esy x Examples",
-    "run-native": "esy b dune exec examples/Examples.exe",
-    "run-bytecode": "esy b dune exec examples/Examples.bc"
+    "run-native": "esy b dune exec examples/run/Examples.exe",
+    "run-bytecode": "esy b dune exec examples/run/Examples.bc"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {

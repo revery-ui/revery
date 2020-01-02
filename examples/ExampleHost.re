@@ -146,7 +146,7 @@ let state: state = {
       source: "ZoomExample.re",
     },
   ],
-  selectedExample: "Animation",
+  selectedExample: "Button",
 };
 
 let getExampleByName = (state: state, example: string) =>
@@ -264,42 +264,8 @@ module ExampleHost = {
   };
 };
 
-let init = app => {
-  let _ignore = Log.listen((_, msg) => print_endline(msg));
+Hook_p.view := ExampleHost.make;
 
-  let maximized = Environment.webGL;
+Hook_p.increment := s => s + 1;
 
-  let windowWidth = 800;
-  let windowHeight = 480;
-
-  Console.log("Hello from example app");
-  Console.log([1, 2, 3]);
-
-  let win =
-    App.createWindow(
-      ~createOptions=
-        WindowCreateOptions.create(
-          ~width=windowWidth,
-          ~height=windowHeight,
-          ~maximized,
-          ~icon=Some("revery-icon.png"),
-          (),
-        ),
-      app,
-      "Welcome to Revery!",
-    );
-
-  if (Environment.webGL) {
-    Window.maximize(win);
-    ();
-  } else {
-    Window.center(win);
-    ();
-  };
-
-  let _ignore = UI.start(win, <ExampleHost win />);
-  ();
-};
-
-let onIdle = () => print_endline("Example: idle callback triggered");
-App.start(~onIdle, init);
+incr(Hook_p.gen);

@@ -105,7 +105,21 @@ module AnimatedText = {
 };
 
 let render = () => {
-  let mode = Dynlink.is_native ? "Native" : "Bytecode";
+  let mode =
+    switch (Sys.backend_type) {
+    | Native => "Native"
+    | Bytecode => "Bytecode"
+    | Other(string) => string
+    };
+
+  let dyn_mode = Dynlink.is_native;
+
+  let mode =
+    Printf.sprintf(
+      "Sys.backend_type: %s, Dynlink.is_native: %b\n",
+      mode,
+      dyn_mode,
+    );
   let revery = "Revery (" ++ mode ++ ")";
   <Center>
     <Row>
