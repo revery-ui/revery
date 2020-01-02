@@ -10,4 +10,5 @@ let view:
 
 let gen = ref(0);
 
-let increment: ref(int => int) = ref(_ => failwith("Uncaught ReferenceError: view is not defined\n"))
+let increment: ref(int => int) =
+  ref(_ => failwith("Uncaught ReferenceError: view is not defined\n"));
