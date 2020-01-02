@@ -13,4 +13,5 @@ void revery_scheduleNotificationFromNow_cocoa(const char *title,
         int seconds);
 void* revery_getIconHandle_cocoa();
 void revery_setIconProgress_cocoa(void* dt, double progress);
+void revery_setIconProgressIndeterminate_cocoa(void *dt);
 void revery_hideIconProgress_cocoa(void* ip);

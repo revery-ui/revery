@@ -39,7 +39,10 @@ CAMLprim value revery_setIconProgress(value vWin, value vIconHandle,
     */
     // If vProgress "is long", it has no type arguments, and is therefore indeterminate
     if (Is_long(vProgress)) {
-#ifdef WIN32
+#ifdef __APPLE__
+        (void)win;
+        revery_setIconProgressIndeterminate_cocoa(ih);
+#elif WIN32
         revery_setIconProgressIndeterminate_win32(win, ih);
 #endif
     } else if (Is_block(vProgress)) {  // If vProgress "is block", it has a type argument and must be determinate
