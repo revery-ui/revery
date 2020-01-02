@@ -88,6 +88,8 @@ let isDirty = (w: t) =>
     };
   };
 
+let getSdlWindow = (w: t) => w.sdlWindow;
+
 let setTitle = (v: t, title: string) => {
   Sdl2.Window.setTitle(v.sdlWindow, title);
 };

@@ -10,6 +10,7 @@
 
 #ifdef WIN32
 #include "ReveryWin32.h"
+#include <combaseapi.h>
 #elif __APPLE__
 #include "ReveryCocoa.h"
 #import "ReveryAppDelegate.h"
@@ -21,6 +22,8 @@ CAMLprim value revery_initialize() {
 #ifdef __APPLE__
     ReveryAppDelegate *delegate = [ReveryAppDelegate new];
     [NSApp setDelegate:delegate];
+#elif WIN32
+    CoInitialize(NULL);
 #endif
     return Val_unit;
 }

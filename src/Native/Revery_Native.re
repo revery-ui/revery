@@ -1,5 +1,5 @@
 module Dialog = Dialog;
-module IconProgress = IconProgress;
+module Icon = Icon;
 module Notification = Notification;
 
 include Initialization;

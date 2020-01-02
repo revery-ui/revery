@@ -86,6 +86,11 @@ let state: state = {
       source: "NativeNotificationExample.re",
     },
     {
+      name: "Native: Icon Features",
+      render: w => NativeIconExample.render(w),
+      source: "NativeIconExample.re",
+    },
+    {
       name: "Input",
       render: _ => InputExample.render(),
       source: "InputExample.re",
