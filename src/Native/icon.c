@@ -23,6 +23,9 @@ CAMLprim value revery_getIconHandle() {
     ret = revery_getIconHandle_cocoa();
 #elif WIN32
     ret = revery_getIconHandle_win32();
+#else
+    printf("WARNING: revery_getIconHandle is not implemented on this platform.");
+    ret = NULL;
 #endif
     CAMLreturn((value)ret);
 }
@@ -60,6 +63,22 @@ CAMLprim value revery_setIconProgress(value vWin, value vIconHandle,
     // Satisfies the compiler if either setIconProgress or setIconProgressIndeterminate is unavailable on the platform
     (void)win;
     (void)ih;
+
+    CAMLreturn(Val_unit);
+}
+
+CAMLprim value revery_hideIconProgress(value vWin, value vIconHandle) {
+    CAMLparam2(vWin, vIconHandle);
+    void *win = (void *)vWin;
+    void *ih = (void *)vIconHandle;
+
+#ifdef __APPLE__
+    (void)win;
+    revery_hideIconProgress_cocoa(ih);
+#else
+    (void)win;
+    (void)ih;
+#endif
 
     CAMLreturn(Val_unit);
 }

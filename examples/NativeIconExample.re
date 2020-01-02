@@ -6,30 +6,31 @@ open Revery.Native;
 
 module NativeFileExamples = {
   let%component make = (~window as w, ()) => {
-    let%hook (iconProgressOpt, setIconProgressOpt) = Hooks.state(None);
+    let%hook (iconOpt, setIconOpt) = Hooks.state(None);
     let%hook (iconProgressValue, setIconProgressValue) = Hooks.state(0.);
 
     let%hook _ =
       Hooks.effect(
         OnMount,
         () => {
-          let ip = Icon.get();
-          setIconProgressOpt(_ => Some(ip));
-          None;
+          let ih = Icon.get();
+          Icon.setProgress(w |> Window.getSdlWindow, ih, Determinate(0.));
+          setIconOpt(_ => Some(ih));
+          Some(() => Icon.hideProgress(w |> Window.getSdlWindow, ih));
         },
       );
 
     let setProgress = v =>
-      switch (iconProgressOpt) {
-      | Some(ip) =>
-        Icon.setProgress(w |> Window.getSdlWindow, ip, Determinate(v))
+      switch (iconOpt) {
+      | Some(ih) =>
+        Icon.setProgress(w |> Window.getSdlWindow, ih, Determinate(v))
       | None => ()
       };
 
     let setProgressIndeterminate = () =>
-      switch (iconProgressOpt) {
-      | Some(ip) =>
-        Icon.setProgress(w |> Window.getSdlWindow, ip, Indeterminate)
+      switch (iconOpt) {
+      | Some(ih) =>
+        Icon.setProgress(w |> Window.getSdlWindow, ih, Indeterminate)
       | None => ()
       };
 
@@ -61,10 +62,12 @@ module NativeFileExamples = {
     <View style=containerStyle>
       <Text style=titleStyle text="Icon Progress Bar" />
       <Slider
-        onValueChanged={x => {
-          setIconProgressValue(_ => x);
-          setProgress(x);
-        }}
+        onValueChanged={
+          x => {
+            setIconProgressValue(_ => x);
+            setProgress(x);
+          }
+        }
         maximumValue=1.0
       />
       <Text

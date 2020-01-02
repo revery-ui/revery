@@ -54,8 +54,10 @@ void revery_setIconProgressIndeterminate_cocoa(void *dt) {
     [dock_tile display];
 }
 
-void revery_hideIconProgress_cocoa(void *ip) {
-    NSProgressIndicator *progress_indicator = (NSProgressIndicator *)ip;
+void revery_hideIconProgress_cocoa(void *dt) {
+    NSDockTile *dock_tile = (NSDockTile *)dt;
+
+    NSProgressIndicator *progress_indicator = get_progress_indicator(dock_tile);
     [progress_indicator setHidden:YES];
     [progress_indicator release];
     [[NSApp dockTile] display];
