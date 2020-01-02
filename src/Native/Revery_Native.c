@@ -19,8 +19,8 @@
 
 CAMLprim value revery_initialize() {
 #ifdef __APPLE__
-  ReveryAppDelegate *delegate = [ReveryAppDelegate new];
-  [NSApp setDelegate:delegate];
+    ReveryAppDelegate *delegate = [ReveryAppDelegate new];
+    [NSApp setDelegate:delegate];
 #endif
-  return Val_unit;
+    return Val_unit;
 }

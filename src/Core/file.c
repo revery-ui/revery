@@ -27,8 +27,7 @@ caml_open_sync_raw(value vFileName, value vSuccess, value vFailure) {
 
         if (!lSize && ferror(pFile))
             caml_callback(vFailure, caml_copy_string("caml_open_sync_raw: Unable to complete read."));
-        else
-        {
+        else {
             long dims[1];
             dims[0] = lSize;
             value ba = caml_ba_alloc(CAML_BA_UINT8 | CAML_BA_C_LAYOUT, 1, pData, (intnat*)dims);

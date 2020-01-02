@@ -72,6 +72,19 @@ let measure = (~window, ~fontFamily, ~fontSize, text) => {
   ret;
 };
 
+let measureCharWidth = (~window, ~fontFamily, ~fontSize, char) => {
+  let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
+  let font = FontCache.load(fontFamily, scaledFontSize);
+  let multiplier =
+    switch (window) {
+    | None => 1.0
+    | Some(w) => Window.getScaleAndZoom(w) *. Window.getDevicePixelRatio(w)
+    };
+  let text = String.make(1, char);
+  let dimensions = FontRenderer.measure(font, text);
+  float_of_int(dimensions.width) /. multiplier +. 0.5;
+};
+
 let indexNearestOffset = (~measure, text, offset) => {
   let length = String.length(text);
 

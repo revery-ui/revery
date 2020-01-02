@@ -1,1 +1,1 @@
-   void revery_alert_win32(void *pWin, const char* szMessage);
+void revery_alert_win32(void *pWin, const char* szMessage);
