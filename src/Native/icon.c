@@ -75,6 +75,8 @@ CAMLprim value revery_hideIconProgress(value vWin, value vIconHandle) {
 #ifdef __APPLE__
     (void)win;
     revery_hideIconProgress_cocoa(ih);
+#elif WIN32
+    revery_hideIconProgress_win32(win, ih);
 #else
     (void)win;
     (void)ih;

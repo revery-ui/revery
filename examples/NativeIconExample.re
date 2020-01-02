@@ -62,12 +62,10 @@ module NativeFileExamples = {
     <View style=containerStyle>
       <Text style=titleStyle text="Icon Progress Bar" />
       <Slider
-        onValueChanged={
-          x => {
-            setIconProgressValue(_ => x);
-            setProgress(x);
-          }
-        }
+        onValueChanged={x => {
+          setIconProgressValue(_ => x);
+          setProgress(x);
+        }}
         maximumValue=1.0
       />
       <Text

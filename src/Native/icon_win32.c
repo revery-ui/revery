@@ -25,4 +25,10 @@ void revery_setIconProgressIndeterminate_win32(void *win, void *ih) {
     iconHandle->lpVtbl->SetProgressState(iconHandle, window, TBPF_INDETERMINATE);
 }
 
+void revery_hideIconProgress_win32(void *win, void *ih) {
+    HWND window = (HWND)win;
+    ITaskbarList3 *iconHandle = (ITaskbarList3 *)ih;
+    iconHandle->lpVtbl->SetProgressState(iconHandle, window, TBPF_NOPROGRESS);
+}
+
 #endif
