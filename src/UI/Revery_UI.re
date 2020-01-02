@@ -28,6 +28,8 @@ module Focus = Focus;
 module Dimensions = Dimensions;
 module Offset = Offset;
 
+module Hook_p = Hook_p;
+
 type element = React.element(node);
 
 include Ui;

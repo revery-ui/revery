@@ -19,7 +19,8 @@ let render =
       renderContainer: RenderContainer.t,
       component: React.element('node),
     ) => {
-  Log.trace("BEGIN: Render frame");
+  let generation = ", generation: " ++ string_of_int(Hook_p.gen^);
+  Log.trace("BEGIN: Render frame" ++ generation);
   let {rootNode, window, container, _} = renderContainer;
 
   /* Perform reconciliation */
@@ -85,5 +86,5 @@ let render =
       Revery_Draw.CanvasContext.flush(canvas);
     }
   });
-  Log.trace("END: Render frame");
+  Log.trace("END: Render frame" ++ generation);
 };

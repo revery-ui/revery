@@ -1,0 +1,21 @@
+(executables
+ (names Examples)
+ (preprocess
+  (pps brisk-reconciler.ppx lwt_ppx))
+ (package Revery)
+ (public_names Examples)
+ (modes native byte)
+ (ocamlc_flags (:standard -custom))
+ (libraries lib_view dynlink skia str Revery timber))
+
+(install
+ (section bin)
+ (package Revery)
+ (files Info.plist Roboto-Regular.ttf Roboto-RegularItalic.ttf
+   Roboto-Bold.ttf FontAwesome5FreeSolid.otf binary.dat outrun-logo.png
+   outrun-icon.png revery-icon.png))
+
+;(install
+;    (section bin)
+;    (package ReveryExampleJs)
+;    (files index.html Examples.bc.js gl-matrix-min.js))
