@@ -43,7 +43,8 @@ let init = app => {
 };
 
 let load = {
-  let name = "./_esy/default/store/b/revery-db91d94e/default/examples/lib_view.cma";
+  let name = Sys.argv[1];
+  let name = Filename.concat(name, "default/examples/lib_view.cma");
   let name = Dynlink.adapt_filename(name);
   fun
   | () => {
