@@ -27,3 +27,10 @@ CAMLprim value revery_initialize() {
 #endif
     return Val_unit;
 }
+
+CAMLprim value revery_uninitialize() {
+#ifdef WIN32
+    CoUninitialize();
+#endif
+    return Val_unit;
+}
