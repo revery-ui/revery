@@ -43,13 +43,21 @@ let init = app => {
 };
 
 let load = {
-  let name = Sys.argv[1];
+  let name =
+    if (Sys.file_exists("_build") && Sys.is_directory("_build")) {
+      "_build";
+    } else {
+      Sys.argv[1];
+    };
   let name = Filename.concat(name, "default/examples/lib_view.cma");
   let name = Dynlink.adapt_filename(name);
   fun
   | () => {
-      let () = print_endline("We will buil :" ++ name);
+      let () = print_endline("We will build :" ++ name);
+      let start = Unix.gettimeofday();
       let _: int = Sys.command("dune build examples/lib_view.cma");
+      let end_ = Unix.gettimeofday();
+      let () = Printf.printf("Builded in %f seconds\n%!", end_ -. start);
       let () = print_endline("We will load :" ++ name);
       Dynlink.loadfile_private(name);
       /*let () =

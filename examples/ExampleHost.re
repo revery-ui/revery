@@ -266,6 +266,6 @@ module ExampleHost = {
 
 Hook_p.view := ExampleHost.make;
 
-Hook_p.increment := s => s + 1;
+Hook_p.increment := (s => s + 1);
 
 incr(Hook_p.gen);
