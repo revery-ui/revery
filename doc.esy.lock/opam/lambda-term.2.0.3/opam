@@ -17,7 +17,7 @@ depends: [
   "zed"   {>= "2.0.3" & < "3.0"}
   "camomile" {>= "1.0.1"}
   "lwt_react"
-  "dune" {>= "1.0.0"}
+  "dune" {>= "1.1.0"}
 ]
 synopsis: "Terminal manipulation library for OCaml"
 description: """
@@ -29,6 +29,6 @@ for example, ncurses, by providing a native OCaml interface instead of bindings
 to a C library. Lambda-term integrates with zed to provide text edition
 facilities in console applications."""
 url {
-  src: "https://github.com/ocaml-community/lambda-term/releases/download/2.0.2/lambda-term-2.0.2.tbz"
-  checksum: "md5=4602aa4355705909e406513322b4b27e"
+  src: "https://github.com/ocaml-community/lambda-term/releases/download/2.0.3/lambda-term-2.0.3.tbz"
+  checksum: "md5=903b6cc234598d67c7c905dfb5230209"
 }
