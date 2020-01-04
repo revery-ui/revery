@@ -16,22 +16,15 @@ let get_linux_config c =
     | None -> default
     | Some conf -> {libs= conf.libs; cflags= conf.cflags; flags= []} )
 
-let libPath = "-L" ^ (Sys.getenv "SDL2_LIB_PATH")
-
 let ccopt s = ["-ccopt"; s]
 let cclib s = ["-cclib"; s]
 
 let get_win32_config () =
   {
-    cflags= ["-I"; (Sys.getenv "SDL2_INCLUDE_PATH")];
+    cflags= [];
     libs= [];
     flags= []
-        @ ccopt(libPath)
-        @ cclib("-lSDL2")
-        @ cclib("-lgdi32")
-        @ cclib("-lcomdlg32")
         @ cclib("-luuid")
-        @ cclib("-loleaut32")
         @ cclib("-lole32")
   }
 
