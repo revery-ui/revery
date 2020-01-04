@@ -59,13 +59,11 @@ CAMLprim value revery_setIconProgress(value vWin, value vIconHandle,
         revery_setIconProgress_win32(win, ih, progress);
 #else
         fprintf(stderr, "WARNING: %s is not implemented on this platform.", __func__);
+        (void)win;
+        (void)ih;
         (void)progress;
 #endif
     }
-
-    // Satisfies the compiler if either setIconProgress or setIconProgressIndeterminate is unavailable on the platform
-    (void)win;
-    (void)ih;
 
     CAMLreturn(Val_unit);
 }
