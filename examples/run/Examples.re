@@ -46,8 +46,12 @@ let load = {
   let name =
     if (Sys.file_exists("_build") && Sys.is_directory("_build")) {
       "_build";
-    } else {
+    } else if (Array.length(Sys.argv) > 1) {
       Sys.argv[1];
+    }
+    else
+    {
+        Sys.getcwd();
     };
   let name = Filename.concat(name, "default/examples/lib_view.cma");
   let name = Dynlink.adapt_filename(name);
