@@ -43,27 +43,26 @@ let init = app => {
 };
 
 let load = {
-  let name =
+  let filename =
     if (Sys.file_exists("_build") && Sys.is_directory("_build")) {
       "_build";
     } else if (Array.length(Sys.argv) > 1) {
       Sys.argv[1];
-    }
-    else
-    {
-        Sys.getcwd();
+    } else {
+      Sys.getcwd();
     };
-  let name = Filename.concat(name, "default/examples/lib_view.cma");
-  let name = Dynlink.adapt_filename(name);
+  let filename = Filename.concat(filename, "default");
+  let name = Dynlink.adapt_filename("examples/lib_view.cma");
+  let filename = Filename.concat(filename, name);
   fun
   | () => {
-      let () = print_endline("We will build :" ++ name);
+      let () = print_endline("We will build :" ++ filename);
       let start = Unix.gettimeofday();
-      let _: int = Sys.command("dune build examples/lib_view.cma");
+      let _: int = Sys.command("dune build " ++ name);
       let end_ = Unix.gettimeofday();
       let () = Printf.printf("Builded in %f seconds\n%!", end_ -. start);
-      let () = print_endline("We will load :" ++ name);
-      Dynlink.loadfile_private(name);
+      let () = print_endline("We will load :" ++ filename);
+      Dynlink.loadfile_private(filename);
       /*let () =
         try(Dynlink.loadfile_private(name)) {
         | Dynlink.Error(
