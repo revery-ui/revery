@@ -24,7 +24,7 @@ CAMLprim value revery_getIconHandle() {
 #elif WIN32
     ret = revery_getIconHandle_win32();
 #else
-    printf("WARNING: revery_getIconHandle is not implemented on this platform.");
+    fprintf(stderr, "WARNING: %s is not implemented on this platform.", __func__);
     ret = NULL;
 #endif
     CAMLreturn((value)ret);
@@ -47,6 +47,8 @@ CAMLprim value revery_setIconProgress(value vWin, value vIconHandle,
         revery_setIconProgressIndeterminate_cocoa(ih);
 #elif WIN32
         revery_setIconProgressIndeterminate_win32(win, ih);
+#else
+        fprintf(stderr, "WARNING: %s is not implemented on this platform.", __func__);
 #endif
     } else if (Is_block(vProgress)) {  // If vProgress "is block", it has a type argument and must be determinate
         float progress = Double_val(Field(vProgress, 0));
@@ -56,6 +58,7 @@ CAMLprim value revery_setIconProgress(value vWin, value vIconHandle,
 #elif WIN32
         revery_setIconProgress_win32(win, ih, progress);
 #else
+        fprintf(stderr, "WARNING: %s is not implemented on this platform.", __func__);
         (void)progress;
 #endif
     }
