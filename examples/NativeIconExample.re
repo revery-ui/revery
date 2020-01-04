@@ -6,30 +6,37 @@ open Revery.Native;
 
 module NativeFileExamples = {
   let%component make = (~window as w, ()) => {
-    let%hook (iconOpt, setIconOpt) = Hooks.state(None);
-    let%hook (progress, setProgress) = Hooks.state(Icon.Indeterminate);
+    let%hook (iconWithProgress, setIconWithProgress) = Hooks.state(None);
 
-    let%hook _ =
+    let%hook () =
       Hooks.effect(
         OnMount,
         () => {
           let ih = Icon.get();
-          setIconOpt(_ => Some(ih));
+          setIconWithProgress(_ => Some((ih, Icon.Indeterminate)));
           Some(() => Icon.hideProgress(w |> Window.getSdlWindow, ih));
         },
       );
 
-    let%hook _ =
+    let%hook () =
       Hooks.effect(
-        If((!=), progress),
+        If((!=), iconWithProgress),
         () => {
-          switch (iconOpt) {
-          | Some(icon) =>
+          switch (iconWithProgress) {
+          | Some((icon, progress)) =>
             Icon.setProgress(w |> Window.getSdlWindow, icon, progress)
           | None => ()
           };
           None;
         },
+      );
+
+    let setProgress = p =>
+      setIconWithProgress(iwp =>
+        switch (iwp) {
+        | Some((icon, _)) => Some((icon, p))
+        | None => None
+        }
       );
 
     let optionStyle =
@@ -60,7 +67,7 @@ module NativeFileExamples = {
     <View style=containerStyle>
       <Text style=titleStyle text="Icon Progress Bar" />
       <Slider
-        onValueChanged={x => setProgress(_ => Determinate(x))}
+        onValueChanged={x => setProgress(Determinate(x))}
         maximumValue=1.0
       />
       <Text
@@ -68,9 +75,13 @@ module NativeFileExamples = {
         text={
           "Progress: "
           ++ (
-            switch (progress) {
-            | Indeterminate => "Indeterminate"
-            | Determinate(n) => string_of_float(n)
+            switch (iconWithProgress) {
+            | Some((_, progress)) =>
+              switch (progress) {
+              | Indeterminate => "Indeterminate"
+              | Determinate(n) => string_of_float(n)
+              }
+            | None => "Not set"
             }
           )
         }
@@ -80,7 +91,7 @@ module NativeFileExamples = {
         height=24
         width=120
         fontSize=12
-        onClick={() => setProgress(_ => Indeterminate)}
+        onClick={() => setProgress(Indeterminate)}
       />
     </View>;
   };
