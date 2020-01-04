@@ -23,7 +23,10 @@ CAMLprim value revery_initialize() {
     ReveryAppDelegate *delegate = [ReveryAppDelegate new];
     [NSApp setDelegate:delegate];
 #elif WIN32
-    CoInitialize(NULL);
+    HRESULT hr = CoInitialize(NULL);
+    if (hr != S_OK) {
+        fprintf(stderr, "WARNING: COM initialization failed.");
+    }
 #endif
     return Val_unit;
 }
