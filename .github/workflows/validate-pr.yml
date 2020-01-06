@@ -90,32 +90,18 @@ jobs:
       - name: Install doc dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
         run: esy @doc build-dependencies --release
-      - name: Setup git.
-        run: |
-          git remote set-url --push origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
-          git config user.name "Github Runner"
-          git config user.email "runner@runner.github.com"
-          git checkout -b gh-pages
       - name: Generate docs
         run: esy @doc build --release
-      - name: set doc_path
-        id: print_esy_doc_path
-        run: echo ::set-output name=doc_path::$(realpath $(esy "@doc" echo "#{self.target_dir / 'default' / '_doc' / '_html'}"))
-      - run: |
-          echo $GITHUB_ACTOR $DOC_PATH
-          find . -name "*.html"
-          ls $DOC_PATH
-        env:
-          DOC_PATH: ${{ steps.print_esy_doc_path.outputs.doc_path }}
-      - name: Push to gh-pages branch of user fork
-        run: |
-          git add -f $DOC_PATH
-          git status
-          git commit -m "Push docs from $GITHUB_REF"
-          git subtree push --prefix $DOC_PATH origin gh-pages
-        env:
+      - name: Print docs path
+        id: print_docs_path
+        run: node .github/workflows/print_docs_path.js
+      - name: Deploy docs
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOC_PATH: ${{ steps.print_esy_doc_path.outputs.doc_path }}
+          BRANCH: gh-pages
+          CLEAN: true
+          FOLDER: ${{ steps.print_docs_path.outputs.docs_path }}
 
   build:
     name: Build
