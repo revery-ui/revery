@@ -1,9 +1,19 @@
 open Revery;
 open Lib_view;
+/*
 open ExampleHost;
 let a:
-  (~key: Brisk_reconciler.Key.t=?, ~win: Revery.Window.t, unit) =>
+  (~key: Brisk_reconciler.Key.t=?, ~win: Revery.Window.t, ~setGen: 'a, unit) =>
   Brisk_reconciler.element(Revery_UI.viewNode) = ExampleHost.make;
+*/
+let _ignore = (ExampleHost.ExampleHost.make);
+
+module ExampleHost = {
+  let%component make = (~win, ()) => {
+    let%hook (_, setGen) = UI.Hooks.state(UI.Hook_p.gen^);
+    (Revery_UI.Hook_p.view^(~win, ~setGen, ()));
+  }
+}
 
 let init = app => {
   let _ignore = Log.listen((_, msg) => print_endline(msg));
@@ -37,8 +47,7 @@ let init = app => {
     Window.center(win);
     ();
   };
-  //<ExampleHost win />
-  let _ignore = UI.start(win, Revery_UI.Hook_p.view^(~win, ()));
+  let _ignore = UI.start(win, <ExampleHost win />);
   ();
 };
 

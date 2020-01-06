@@ -23,6 +23,8 @@ type renderFunction = React.element(React.reveryNode) => unit;
 let getActiveWindow = () => _activeWindow^;
 let log = Log.info("UI");
 
+let hotReload = Revery_Core.Event.create();
+
 let start = (window: Window.t, element: React.element(React.reveryNode)) => {
   let uiDirty = ref(true);
   let forceLayout = ref(true);
@@ -158,6 +160,12 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
       Render.render(~forceLayout=fl, ui, latestElement^);
     },
   );
+
+  let _ignore = Revery_Core.Event.subscribe(hotReload, () => {
+    uiDirty := true;
+    forceLayout := true;
+    window.render();
+  });
 
   let render = (element: React.element(React.reveryNode)) => {
     latestElement := element;

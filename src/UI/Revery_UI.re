@@ -32,5 +32,6 @@ module Offset = Offset;
 
 module Hook_p = Hook_p;
 
+let hotReload = Ui.hotReload;
 let start = Ui.start;
 let getActiveWindow = Ui.getActiveWindow;

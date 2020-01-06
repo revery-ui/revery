@@ -149,6 +149,8 @@ let state: state = {
   selectedExample: "Button",
 };
 
+let initState = state;
+
 let getExampleByName = (state: state, example: string) =>
   List.filter(x => String.equal(x.name, example), state.examples) |> List.hd;
 
@@ -157,8 +159,8 @@ let getSourceForSample = (state: state, example: string) =>
 
 let noop = () => ();
 
-let getRenderFunctionSelector: (state, Window.t) => React.element(React.node) =
-  (s: state) => getExampleByName(s, s.selectedExample) |> (a => a.render);
+let getRenderFunctionSelector: (state, string, Window.t) => React.element(React.node) =
+  (s: state, selectedExample) => getExampleByName(s, selectedExample) |> (a => a.render);
 
 module ExampleButton = {
   let make = (~isActive, ~name, ~onClick, ()) => {
@@ -199,9 +201,16 @@ let reducer = (action: action, state: state) =>
   | SelectExample(name) => {...state, selectedExample: name}
   };
 
+Revery_Core.Event.dispatch(Revery.UI.hotReload, ());
+
 module ExampleHost = {
-  let%component make = (~win, ()) => {
+  let%component make = (~win, ~setGen, ()) => {
     let%hook (state, dispatch) = Hooks.reducer(~initialState=state, reducer);
+    let%hook () = Hooks.effect(If((!=), Hook_p.gen^), () => {
+        Printf.printf("Hook_p.gen^ <> Hook_p.gen^\n%!");
+        setGen(gen => gen + 1);
+        None
+    });
 
     let renderButton = (x: example) => {
       let isActive = String.equal(x.name, state.selectedExample);
@@ -222,7 +231,7 @@ module ExampleHost = {
 
     let buttons = List.map(renderButton, state.examples);
 
-    let exampleRender = getRenderFunctionSelector(state);
+    let exampleRender = getRenderFunctionSelector(initState, state.selectedExample);
     let example = exampleRender(win);
 
     <View

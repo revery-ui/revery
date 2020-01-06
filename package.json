@@ -16,6 +16,7 @@
     "format:windows": "esy b .ci/format.sh",
     "run": "esy x Examples",
     "run-native": "esy #{os == 'windows' ? 'b ' : ''}dune exec examples/run/Examples.exe #{self.target_dir}",
+    "build-bytecode": "esy #{os == 'windows' ? 'b ' : ''}dune build -w examples/run/Examples.bc",
     "run-bytecode": "esy #{os == 'windows' ? 'b ' : ''}dune exec examples/run/Examples.bc #{self.target_dir}"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
@@ -23,6 +24,7 @@
     "build": [
       "dune build -p Revery -j4"
     ],
+    "buildsInSource": "_build",
     "install": [
       "esy-installer Revery.install",
       "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': ':'}\""
@@ -37,7 +39,7 @@
     "@opam/js_of_ocaml-lwt": "^3.4.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
-    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#0a2e476",
+    "@brisk/brisk-reconciler": "github:Et7f3/brisk-reconciler#15242c34",
     "flex": "^1.2.2",
     "@reason-native/rely": "*",
     "reperf": "^1.4.0",

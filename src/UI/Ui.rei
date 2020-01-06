@@ -18,6 +18,8 @@ type renderFunction = React.element(React.reveryNode) => unit;
   [update(<Button />);]
 */
 
+let hotReload: Revery_Core.Event.t(unit);
+
 let start: (Window.t, React.element(React.reveryNode)) => renderFunction;
 
 let getActiveWindow: unit => option(Window.t);
