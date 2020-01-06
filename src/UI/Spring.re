@@ -19,16 +19,14 @@ module Options = {
 };
 
 type t = {
-  // [position] is the current position of the 'mass' of the spring
-  // aka, the current value
-  position: float,
+  value: float,
   velocity: float,
   acceleration: float,
   time: Time.t,
 };
 
-let create = (position: float, time: Time.t) => {
-  position,
+let create = (value: float, time: Time.t) => {
+  value,
   velocity: 0.,
   acceleration: 0.,
   time,
@@ -40,14 +38,14 @@ let tick = (target: float, spring: t, options: Options.t, time: Time.t) => {
     // Cap the delta at 33 milliseconds / 30 FPS
     // This is important if the animation has been inactive!
     let deltaT = min(deltaT, 0.033);
-    let force = Float.abs(target -. spring.position) *. options.stiffness;
-    let dir = spring.position > target ? (-1.) : 1.;
+    let force = Float.abs(target -. spring.value) *. options.stiffness;
+    let dir = spring.value > target ? (-1.) : 1.;
 
     let acceleration = dir *. force -. options.damping *. spring.velocity;
     let velocity = spring.velocity +. acceleration *. deltaT;
-    let position = spring.position +. velocity *. deltaT;
+    let value = spring.value +. velocity *. deltaT;
 
-    {acceleration, velocity, position, time};
+    {acceleration, velocity, value, time};
   } else {
     {...spring, time};
   };
@@ -60,14 +58,14 @@ let isAtRest = (~restThreshold=0.1, {acceleration, velocity, _}) =>
 let toString = (spring: t) =>
   Printf.sprintf(
     "x: %f v: %f a: %f",
-    spring.position,
+    spring.value,
     spring.velocity,
     spring.acceleration,
   );
 
-let setPosition = (position, state) => {
+let setPosition = (value, state) => {
   ...state,
-  position,
+  value,
   velocity: 0.,
   acceleration: 0.,
 };

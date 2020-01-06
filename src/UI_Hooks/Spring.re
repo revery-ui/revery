@@ -1,13 +1,18 @@
 module Time = Revery_Core.Time;
 module Spring = Revery_UI.Spring;
 
-let spring = (~target, ~restThreshold=0.1, options) => {
-  let%hook (previousState, setPreviousState) =
-    Ref.ref(Spring.create(target, Time.now()));
+let spring = (~target, ~initialState=?, ~restThreshold=0.1, options) => {
+  let initialState =
+    switch (initialState) {
+    | Some(state) => state
+    | None => Spring.create(target, Time.now())
+    };
+
+  let%hook (previousState, setPreviousState) = Ref.ref(initialState);
 
   let isActive =
     !Spring.isAtRest(~restThreshold, previousState)
-    || Float.abs(target -. previousState.position) > restThreshold;
+    || Float.abs(target -. previousState.value) > restThreshold;
 
   let%hook (time, _) = Timer.timer(~active=isActive, ());
 
@@ -17,5 +22,5 @@ let spring = (~target, ~restThreshold=0.1, options) => {
   let setImmediately = position =>
     setPreviousState(Spring.setPosition(position, previousState));
 
-  (state.position, setImmediately);
+  (state.value, setImmediately);
 };

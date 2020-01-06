@@ -9,6 +9,13 @@ module SpringyLogo = {
     let%hook (imageWidth, _setImmediately) =
       Hooks.spring(
         ~target=targetPosition,
+        ~initialState=
+          Spring.{
+            value: 0.,
+            velocity: 10.,
+            acceleration: 0.,
+            time: Time.now(),
+          },
         Spring.Options.create(~damping, ~stiffness, ()),
       );
 
