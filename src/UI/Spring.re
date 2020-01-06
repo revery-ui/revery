@@ -5,14 +5,9 @@ module Options = {
   type t = {
     stiffness: float,
     damping: float,
-    initialValue: float,
   };
 
-  let create = (~stiffness=180., ~damping=12., ~initialValue=0., ()) => {
-    initialValue,
-    damping,
-    stiffness,
-  };
+  let create = (~stiffness=180., ~damping=12., ()) => {damping, stiffness};
 
   // Presets from react-spring: https://www.react-spring.io/docs/hooks/api
   let default = create(~stiffness=170., ~damping=26., ());
@@ -24,57 +19,53 @@ module Options = {
 };
 
 type t = {
-  // [position] is the current position of the 'mass' of the spring
-  // aka, the current value
-  position: float,
+  value: float,
   velocity: float,
   acceleration: float,
-  currentTime: Time.t,
-  isActive: bool,
+  time: Time.t,
 };
 
-let create = (position: float, time: Time.t) => {
-  position,
+let create = (value: float, time: Time.t) => {
+  value,
   velocity: 0.,
   acceleration: 0.,
-  currentTime: time,
-  isActive: true,
+  time,
 };
-let _isActive = (acceleration, velocity) =>
-  Float.abs(acceleration) >= 0.001 || Float.abs(velocity) >= 0.001;
 
-let tick = (target: float, spring: t, options: Options.t, newTime: Time.t) => {
-  let deltaT = Time.(newTime - spring.currentTime) |> Time.toFloatSeconds;
+let tick = (target: float, spring: t, options: Options.t, time: Time.t) => {
+  let deltaT = Time.(time - spring.time) |> Time.toFloatSeconds;
   if (deltaT > 0.) {
     // Cap the delta at 33 milliseconds / 30 FPS
     // This is important if the animation has been inactive!
     let deltaT = min(deltaT, 0.033);
-    let force = Float.abs(target -. spring.position) *. options.stiffness;
-    let dir = spring.position > target ? (-1.) : 1.;
+    let force = Float.abs(target -. spring.value) *. options.stiffness;
+    let dir = spring.value > target ? (-1.) : 1.;
 
     let acceleration = dir *. force -. options.damping *. spring.velocity;
     let velocity = spring.velocity +. acceleration *. deltaT;
-    let position = spring.position +. velocity *. deltaT;
-    {
-      acceleration,
-      velocity,
-      position,
-      currentTime: newTime,
-      isActive: _isActive(acceleration, velocity),
-    };
+    let value = spring.value +. velocity *. deltaT;
+
+    {acceleration, velocity, value, time};
   } else {
-    {...spring, currentTime: newTime, isActive: true};
+    {...spring, time};
   };
 };
 
-let isResting = v => !v.isActive;
+let isAtRest = (~restThreshold=0.1, {acceleration, velocity, _}) =>
+  Float.abs(acceleration) <= restThreshold
+  && Float.abs(velocity) <= restThreshold;
 
 let toString = (spring: t) =>
   Printf.sprintf(
     "x: %f v: %f a: %f",
-    spring.position,
+    spring.value,
     spring.velocity,
     spring.acceleration,
   );
 
-let getPosition = spring => spring.position;
+let setPosition = (value, state) => {
+  ...state,
+  value,
+  velocity: 0.,
+  acceleration: 0.,
+};
