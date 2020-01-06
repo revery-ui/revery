@@ -185,10 +185,18 @@ let state: state = {
   selectedExample: "Button",
 };
 
-let getExampleByName = name =>
-  List.find(example => example.name == name, state.examples);
+let initState = state;
+
+let getExampleByName = (state: state, example: string) =>
+  List.filter(x => String.equal(x.name, example), state.examples) |> List.hd;
+
+let getSourceForSample = (state: state, example: string) =>
+  getExampleByName(state, example) |> (s => s.source);
 
 let noop = () => ();
+
+let getRenderFunctionSelector: (state, string, Window.t) => React.element(React.node) =
+  (s: state, selectedExample) => getExampleByName(s, selectedExample) |> (a => a.render);
 
 module ExampleButton = {
   let make = (~isActive, ~name, ~onClick, ()) => {
@@ -215,19 +223,33 @@ module ExampleButton = {
   };
 };
 
+type action =
+  | SelectExample(string);
+
+let reducer = (action: action, state: state) =>
+  switch (action) {
+  | SelectExample(name) => {...state, selectedExample: name}
+  };
+
+Revery_Core.Event.dispatch(Revery.UI.hotReload, ());
+
 module ExampleHost = {
-  let%component make = (~window, ~initialExample, ()) => {
-    let%hook (selectedExample, setSelectedExample) =
-      Hooks.state(getExampleByName(initialExample));
+  let%component make = (~window, ~initialExample, ~setGen, ()) => {
+    let%hook (state, dispatch) = Hooks.reducer(~initialState={...state, selectedExample: initialExample}, reducer);
+    let%hook () = Hooks.effect(If((!=), Hook_p.gen^), () => {
+        Printf.printf("Hook_p.gen^ <> Hook_p.gen^\n%!");
+        setGen(gen => gen + 1);
+        None
+    });
 
     let renderButton = example => {
-      let isActive = example === selectedExample;
+      let isActive = example.name === state.selectedExample;
       let onClick = _ => {
         Window.setTitle(window, "Revery Example - " ++ example.name);
 
         prerr_endline("SOURCE FILE: " ++ example.source);
         notifyExampleSwitched(example.source);
-        setSelectedExample(_ => example);
+        dispatch(SelectExample(example.name));
       };
 
       <ExampleButton isActive name={example.name} onClick />;
@@ -235,7 +257,8 @@ module ExampleHost = {
 
     let buttons = List.map(renderButton, state.examples);
 
-    let exampleView = selectedExample.render(window);
+    let exampleRender = getRenderFunctionSelector(initState, state.selectedExample);
+    let exampleView = exampleRender(window);
 
     <View
       onMouseWheel={_evt => ()}

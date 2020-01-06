@@ -11,6 +11,7 @@
     "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}",
     "run": "esy x Examples",
     "run-native": "esy #{os == 'windows' ? 'b ' : ''}dune exec examples/run/Examples.exe #{self.target_dir}",
+    "build-bytecode": "esy #{os == 'windows' ? 'b ' : ''}dune build -w examples/run/Examples.bc",
     "run-bytecode": "esy #{os == 'windows' ? 'b ' : ''}dune exec examples/run/Examples.bc #{self.target_dir}"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
@@ -27,6 +28,7 @@
     "build": [
       "dune build -p font-manager,harfbuzz,skia,Revery -j4"
     ],
+    "buildsInSource": "_build",
     "install": [
       "esy-installer font-manager.install",
       "esy-installer harfbuzz.install",
@@ -47,7 +49,7 @@
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/ppx_deriving": "*",
     "@opam/omd": "ocaml/omd:omd.opam#1535e3c",
-    "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d",
+    "@brisk/brisk-reconciler": "github:Et7f3/brisk-reconciler#6e8c85c",
     "esy-freetype2": "^2.9.1007",
     "esy-harfbuzz": "^1.9.1008",
     "esy-sdl2": "^2.0.10008",

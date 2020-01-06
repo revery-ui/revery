@@ -35,6 +35,8 @@ type mouseBehavior =
 
 let getActiveWindow = () => _activeWindow^;
 
+let hotReload = Revery_Core.Event.create();
+
 let start = (window: Window.t, element: React.element(React.reveryNode)) => {
   let uiDirty = ref(true);
   let forceLayout = ref(true);
@@ -172,6 +174,13 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
       Render.render(~forceLayout=fl, ui, latestElement^);
     },
   );
+
+  let _ignore = Revery_Core.Event.subscribe(hotReload, () => {
+    uiDirty := true;
+    forceLayout := true;
+    //ASK: Where is now the function to ask a render ?
+    //window.render();
+  });
 
   let render = (element: React.element(React.reveryNode)) => {
     latestElement := element;
