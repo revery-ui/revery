@@ -27,6 +27,13 @@ module NativeFileExamples = {
       Style.[
         color(Colors.white),
         fontFamily("Roboto-Regular.ttf"),
+        fontSize(14),
+      ];
+
+    let titleStyle =
+      Style.[
+        color(Colors.white),
+        fontFamily("Roboto-Regular.ttf"),
         fontSize(20),
       ];
 
@@ -52,6 +59,7 @@ module NativeFileExamples = {
       ];
 
     <View style=containerStyle>
+      <Text style=titleStyle text="Open Files and Folders" />
       <Row>
         <Text style=optionStyle text="Allow multiple?" />
         <Checkbox

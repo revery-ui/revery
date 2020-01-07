@@ -12,7 +12,7 @@
     "build:js": "esy b dune build examples/Examples.bc.js",
     "build:js:release": "esy b dune build examples/Examples.bc.js",
     "test": "esy b dune runtest",
-    "format": "esy sh .ci/format.sh #{os}",
+    "format": "esy b bash .ci/format.sh #{os}",
     "run": "esy x Examples"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
@@ -43,16 +43,12 @@
     "rench": "^1.9.1",
     "rebez": "github:jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3011",
-    "reason-skia": "github:revery-ui/reason-skia#4c1926a",
     "revery-text-wrap": "github:revery-ui/revery-text-wrap#005385c"
   },
   "resolutions": {
     "@opam/cmdliner": "1.0.2",
-    "@esy-ocaml/libffi": "esy-ocaml/libffi#599bc3567",
-    "esy-skia": "revery-ui/esy-skia#3b4658d",
     "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b6",
-    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
-    "esy-libjpeg-turbo": "bryphe/libjpeg-turbo#12d3cef"
+    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755"
   },
   "devDependencies": {
     "ocaml": ">=4.6.0 <4.8.0",

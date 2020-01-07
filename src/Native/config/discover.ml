@@ -16,6 +16,18 @@ let get_linux_config c =
     | None -> default
     | Some conf -> {libs= conf.libs; cflags= conf.cflags; flags= []} )
 
+let ccopt s = ["-ccopt"; s]
+let cclib s = ["-cclib"; s]
+
+let get_win32_config () =
+  {
+    cflags= [];
+    libs= [];
+    flags= []
+        @ cclib("-luuid")
+        @ cclib("-lole32")
+  }
+
 let uname () =
   let ic = Unix.open_process_in "uname" in
   let uname = input_line ic in
@@ -34,6 +46,7 @@ let () =
         match get_os with
         | Mac -> get_mac_config ()
         | Linux -> get_linux_config c
+        | Windows -> get_win32_config ()
         | _ -> {libs= []; flags= []; cflags= []}
       in
       C.Flags.write_sexp "flags.sexp" conf.flags ;
