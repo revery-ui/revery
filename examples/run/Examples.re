@@ -9,9 +9,8 @@ let a:
 let _ignore = (ExampleHost.ExampleHost.make);
 
 module ExampleHost = {
-  let%component make = (~win, ()) => {
-    let%hook (_, setGen) = UI.Hooks.state(UI.Hook_p.gen^);
-    (Revery_UI.Hook_p.view^(~win, ~setGen, ()));
+  let make = (~win, ()) => {
+    (Revery_UI.Hook_p.view^(~win, ()));
   }
 }
 

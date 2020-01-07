@@ -161,16 +161,15 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     },
   );
 
-  let _ignore = Revery_Core.Event.subscribe(hotReload, () => {
-    uiDirty := true;
-    forceLayout := true;
-    window.render();
-  });
-
   let render = (element: React.element(React.reveryNode)) => {
     latestElement := element;
     uiDirty := true;
   };
+
+  let _ignore = Revery_Core.Event.subscribe(hotReload, () => {
+    forceLayout := true;
+    render(Hook_p.view^(~win=window, ()));
+  });
 
   render;
 };

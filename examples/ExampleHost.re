@@ -204,13 +204,8 @@ let reducer = (action: action, state: state) =>
 Revery_Core.Event.dispatch(Revery.UI.hotReload, ());
 
 module ExampleHost = {
-  let%component make = (~win, ~setGen, ()) => {
+  let%component make = (~win, ()) => {
     let%hook (state, dispatch) = Hooks.reducer(~initialState=state, reducer);
-    let%hook () = Hooks.effect(If((!=), Hook_p.gen^), () => {
-        Printf.printf("Hook_p.gen^ <> Hook_p.gen^\n%!");
-        setGen(gen => gen + 1);
-        None
-    });
 
     let renderButton = (x: example) => {
       let isActive = String.equal(x.name, state.selectedExample);
