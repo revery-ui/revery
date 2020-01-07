@@ -53,6 +53,8 @@ let quit = (~askNicely=false, ~code=0, app: t) => {
     _tryToCloseAll(app);
   };
 
+  Revery_Native.uninit();
+
   if (Hashtbl.length(app.windows) == 0 || !askNicely) {
     logInfo("Quitting");
     exit(code);

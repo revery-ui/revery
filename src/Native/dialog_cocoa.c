@@ -2,6 +2,8 @@
 #include <stdio.h>
 
 #import <Cocoa/Cocoa.h>
+#import "ReveryProgressBar.h"
+
 
 void revery_alert_cocoa(void *pWin, const char *szMessage) {
     (void)pWin;
