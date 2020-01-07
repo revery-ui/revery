@@ -175,17 +175,15 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     },
   );
 
-  let _ignore = Revery_Core.Event.subscribe(hotReload, () => {
-    uiDirty := true;
-    forceLayout := true;
-    //ASK: Where is now the function to ask a render ?
-    //window.render();
-  });
-
   let render = (element: React.element(React.reveryNode)) => {
     latestElement := element;
     uiDirty := true;
   };
+
+  let _ignore = Revery_Core.Event.subscribe(hotReload, () => {
+    forceLayout := true;
+    render(Hook_p.view^(~window, ~initialExample="Animation", ()));
+  });
 
   render;
 };
