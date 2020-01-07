@@ -6,38 +6,34 @@ open Revery.Native;
 
 module NativeFileExamples = {
   let%component make = (~window as w, ()) => {
-    let%hook (iconWithProgress, setIconWithProgress) = Hooks.state(None);
+    let%hook (iconOpt, setIconOpt) = Hooks.state(None);
+    let%hook (progressOpt, setProgressOpt) = Hooks.state(None);
 
     let%hook () =
       Hooks.effect(
         OnMount,
         () => {
           let ih = Icon.get();
-          setIconWithProgress(_ => Some((ih, Icon.Indeterminate)));
+          setIconOpt(_ => Some(ih));
+          setProgressOpt(_ => Some(Icon.Indeterminate));
           Some(() => Icon.hideProgress(w |> Window.getSdlWindow, ih));
         },
       );
 
     let%hook () =
       Hooks.effect(
-        If((!=), iconWithProgress),
+        If((!=), progressOpt),
         () => {
-          switch (iconWithProgress) {
-          | Some((icon, progress)) =>
+          switch (iconOpt, progressOpt) {
+          | (Some(icon), Some(progress)) =>
             Icon.setProgress(w |> Window.getSdlWindow, icon, progress)
-          | None => ()
+          | _ => ()
           };
           None;
         },
       );
 
-    let setProgress = p =>
-      setIconWithProgress(iwp =>
-        switch (iwp) {
-        | Some((icon, _)) => Some((icon, p))
-        | None => None
-        }
-      );
+    let setProgress = p => setProgressOpt(po => Some(p));
 
     let optionStyle =
       Style.[
@@ -51,6 +47,13 @@ module NativeFileExamples = {
         color(Colors.white),
         fontFamily("Roboto-Regular.ttf"),
         fontSize(20),
+      ];
+
+    let noteStyle =
+      Style.[
+        color(Colors.white),
+        fontFamily("Roboto-Regular.ttf"),
+        fontSize(16),
       ];
 
     let containerStyle =
@@ -75,8 +78,8 @@ module NativeFileExamples = {
         text={
           "Progress: "
           ++ (
-            switch (iconWithProgress) {
-            | Some((_, progress)) =>
+            switch (progressOpt) {
+            | Some(progress) =>
               switch (progress) {
               | Indeterminate => "Indeterminate"
               | Determinate(n) => string_of_float(n)
@@ -93,7 +96,24 @@ module NativeFileExamples = {
         fontSize=12
         onClick={() => setProgress(Indeterminate)}
       />
+      <Text style=titleStyle text="Badge" />
+      <Text style=noteStyle text="NOTE: Works on macOS only." />
     </View>;
+    /* <Center>
+         <Text
+           style=optionStyle
+           text={"Badge number: " ++ string_of_int(badgeNumber)}
+         />
+         <Slider
+           onValueChanged={v => setBadgeNumber(_ => int_of_float(v))}
+           minimumValue=1.
+           maximumValue=100.
+         />
+         <Button
+           title="Set badge number!"
+           onClick={() => Badge.set(string_of_int(badgeNumber))}
+         />
+       </Center> */
   };
 };
 

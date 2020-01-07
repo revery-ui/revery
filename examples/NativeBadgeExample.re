@@ -20,24 +20,7 @@ module Example = {
         fontFamily("Roboto-Regular.ttf"),
         fontSize(16),
       ];
-    <View>
-      <Text style=noteStyle text="NOTE: Works on macOS only." />
-      <Center>
-        <Text
-          style=optionStyle
-          text={"Badge number: " ++ string_of_int(badgeNumber)}
-        />
-        <Slider
-          onValueChanged={v => setBadgeNumber(_ => int_of_float(v))}
-          minimumValue=1.
-          maximumValue=100.
-        />
-        <Button
-          title="Set badge number!"
-          onClick={() => Badge.set(string_of_int(badgeNumber))}
-        />
-      </Center>
-    </View>;
+    <View />;
   };
 };
 
