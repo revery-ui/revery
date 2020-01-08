@@ -17,6 +17,11 @@
     if (self) {
         _notificationActions = [NSMutableDictionary new];
     }
+
+    NSString *valueToSave = @"true";
+    [[NSUserDefaults standardUserDefaults] setObject:valueToSave forKey:@"ApplePressAndHoldEnabled"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
     return self;
 }
 
