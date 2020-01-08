@@ -299,16 +299,13 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
       mouseY: float_of_int(y),
     };
     Event.dispatch(v.onMouseMove, mouseEvent);
-  | Sdl2.Event.MouseButtonUp(_) =>
-    let mouseButtonEvent: Events.mouseButtonEvent = {
-      button: MouseButton.BUTTON_LEFT,
-    };
-    Event.dispatch(v.onMouseUp, mouseButtonEvent);
-  | Sdl2.Event.MouseButtonDown(_) =>
-    let mouseButtonEvent: Events.mouseButtonEvent = {
-      button: MouseButton.BUTTON_LEFT,
-    };
-    Event.dispatch(v.onMouseDown, mouseButtonEvent);
+  | Sdl2.Event.MouseButtonUp(event) =>
+    Event.dispatch(v.onMouseUp, {button: MouseButton.convert(event.button)})
+  | Sdl2.Event.MouseButtonDown(event) =>
+    Event.dispatch(
+      v.onMouseDown,
+      {button: MouseButton.convert(event.button)},
+    )
   | Sdl2.Event.KeyDown({keycode, keymod, scancode, repeat, _}) =>
     let keyEvent: Key.KeyEvent.t = {keycode, scancode, keymod, repeat};
     Event.dispatch(v.onKeyDown, keyEvent);
