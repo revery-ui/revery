@@ -86,22 +86,38 @@ CAMLprim value revery_hideIconProgress(value vWin, value vIconHandle) {
     CAMLreturn(Val_unit);
 }
 
-CAMLprim value revery_setIconBadge(value vBadgeStr) {
-    CAMLparam1(vBadgeStr);
+CAMLprim value revery_setIconBadge(value vWin, value vIconHandle, value vBadgeStr) {
+    CAMLparam3(vWin, vIconHandle, vBadgeStr);
+
+    void *win = (void *)vWin;
+    void *ih = (void *)vIconHandle;
 
     char *badgeStr = String_val(vBadgeStr);
 
 #ifdef __APPLE__
-    revery_setBadge_cocoa(badgeStr);
+    (void)win;
+    revery_setIconBadge_cocoa(ih, badgeStr);
 #else
+    (void)win;
+    (void)ih;
     (void)badgeStr;
 #endif
 
     CAMLreturn(Val_unit);
 }
 
-void revery_hideIconBadge() {
+CAMLprim value revery_hideIconBadge(value vWin, value vIconHandle) {
+    CAMLparam2(vWin, vIconHandle);
+
+    void *win = (void *)vWin;
+    void *ih = (void *)vIconHandle;
+
 #ifdef __APPLE__
-    revery_hideBadge_cocoa();
+    (void)win;
+    revery_hideIconBadge_cocoa(ih);
+#else
+    (void)win;
+    (void)ih;
 #endif
+    CAMLreturn(Val_unit);
 }

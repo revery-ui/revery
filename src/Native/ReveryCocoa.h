@@ -11,9 +11,9 @@ void revery_scheduleNotificationFromNow_cocoa(const char *title,
         const char *body,
         long onClickFunc, int mute,
         int seconds);
-void revery_setBadge_cocoa(char *badgeNumStr);
-void revery_hideBadge_cocoa();
 void* revery_getIconHandle_cocoa();
 void revery_setIconProgress_cocoa(void* dt, double progress);
 void revery_setIconProgressIndeterminate_cocoa(void *dt);
 void revery_hideIconProgress_cocoa(void* ip);
+void revery_hideIconBadge_cocoa(void* dt);
+void revery_setIconBadge_cocoa(void* dt, char *badgeStr);

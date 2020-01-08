@@ -8,6 +8,7 @@ module NativeFileExamples = {
   let%component make = (~window as w, ()) => {
     let%hook (iconOpt, setIconOpt) = Hooks.state(None);
     let%hook (progressOpt, setProgressOpt) = Hooks.state(None);
+    let%hook (badgeOpt, setBadgeOpt) = Hooks.state(None);
 
     let%hook () =
       Hooks.effect(
@@ -16,7 +17,12 @@ module NativeFileExamples = {
           let ih = Icon.get();
           setIconOpt(_ => Some(ih));
           setProgressOpt(_ => Some(Icon.Indeterminate));
-          Some(() => Icon.hideProgress(w |> Window.getSdlWindow, ih));
+          Some(
+            () => {
+              Icon.hideProgress(w |> Window.getSdlWindow, ih);
+              Icon.hideBadge(w |> Window.getSdlWindow, ih);
+            },
+          );
         },
       );
 
@@ -33,7 +39,22 @@ module NativeFileExamples = {
         },
       );
 
-    let setProgress = p => setProgressOpt(po => Some(p));
+    let%hook () =
+      Hooks.effect(
+        If((!=), badgeOpt),
+        () => {
+          switch (iconOpt, badgeOpt) {
+          | (Some(icon), Some(badge)) =>
+            Icon.setBadge(w |> Window.getSdlWindow, icon, badge)
+          | _ => ()
+          };
+          None;
+        },
+      );
+
+    let setProgress = p => setProgressOpt(_ => Some(p));
+
+    let setBadge = v => setBadgeOpt(_ => Some(v));
 
     let optionStyle =
       Style.[
@@ -97,23 +118,8 @@ module NativeFileExamples = {
         onClick={() => setProgress(Indeterminate)}
       />
       <Text style=titleStyle text="Badge" />
-      <Text style=noteStyle text="NOTE: Works on macOS only." />
+      <Input placeholder="Badge contents" onChange={(v, _) => setBadge(v)} />
     </View>;
-    /* <Center>
-         <Text
-           style=optionStyle
-           text={"Badge number: " ++ string_of_int(badgeNumber)}
-         />
-         <Slider
-           onValueChanged={v => setBadgeNumber(_ => int_of_float(v))}
-           minimumValue=1.
-           maximumValue=100.
-         />
-         <Button
-           title="Set badge number!"
-           onClick={() => Badge.set(string_of_int(badgeNumber))}
-         />
-       </Center> */
   };
 };
 

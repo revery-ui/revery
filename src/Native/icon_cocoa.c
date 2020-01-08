@@ -63,14 +63,16 @@ void revery_hideIconProgress_cocoa(void *dt) {
     [[NSApp dockTile] display];
 }
 
-void revery_hideBadge_cocoa() {
-    [[NSApp dockTile] setBadgeLabel:NULL];
+void revery_hideIconBadge_cocoa(void* dt) {
+    NSDockTile *dock_tile = (NSDockTile *)dt;
+    [dock_tile setBadgeLabel:NULL];
 }
 
-void revery_setBadge_cocoa(char *badgeStr) {
-    NSString *nsBadgeStr = [NSString stringWithUTF8String:badgeStr];
-    [[NSApp dockTile] setBadgeLabel:nsBadgeStr];
-    [nsBadgeStr release];
+void revery_setIconBadge_cocoa(void* dt, char *badgeStr) {
+    NSDockTile *dock_tile = (NSDockTile *)dt;
+    NSString *ns_badge_str = [NSString stringWithUTF8String:badgeStr];
+    [dock_tile setBadgeLabel:ns_badge_str];
+    [ns_badge_str release];
 }
 
 #endif

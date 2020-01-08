@@ -17,5 +17,13 @@ let setProgress = (w: Sdl2.Window.t, ih, progress) =>
 let hideProgress = (w: Sdl2.Window.t, ih) =>
   _hideProgress(w |> Sdl2.Window.getNativeWindow, ih);
 
-external setBadge: (t, string) => unit = "revery_setIconBadge";
-external hideBadge: t => unit = "revery_hideIconBadge";
+external _setBadge: (Sdl2.Window.nativeWindow, t, string) => unit =
+  "revery_setIconBadge";
+external _hideBadge: (Sdl2.Window.nativeWindow, t) => unit =
+  "revery_hideIconBadge";
+
+let setBadge = (w: Sdl2.Window.t, ih: t, badgeStr: string) =>
+  _setBadge(w |> Sdl2.Window.getNativeWindow, ih, badgeStr);
+
+let hideBadge = (w: Sdl2.Window.t, ih: t) =>
+  _hideBadge(w |> Sdl2.Window.getNativeWindow, ih);
