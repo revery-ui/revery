@@ -1,60 +1,29 @@
 open Node;
 open NodeEvents;
 
-module BubbledEvent = {
-  type bubbledEvent = {
-    id: int,
+module BubbleEvent: {
+  type t =
+    pri {
     event,
-    shouldPropagate: bool,
-    defaultPrevented: bool,
-    stopPropagation: unit => unit,
-    preventDefault: unit => unit,
+    mutable shouldPropagate: bool,
+    mutable defaultPrevented: bool,
   };
 
-  let generateId = () => {
-    let id = ref(1);
-    () => {
-      id := id^ + 1;
-      id^;
-    };
+  let stopPropagation: t => unit;
+  let preventDefault: t => unit;
+  let make: event => t;
+} = {
+  type t = {
+    event,
+    mutable shouldPropagate: bool,
+    mutable defaultPrevented: bool,
   };
 
-  let getId = generateId();
-  let activeEvent = ref(None);
+  let stopPropagation = event => event.shouldPropagate = false;
 
-  let stopPropagation = (id, ()) =>
-    switch (activeEvent^) {
-    | Some(evt) =>
-      if (id == evt.id) {
-        activeEvent := Some({...evt, shouldPropagate: false});
-      }
-    | None => ()
-    };
+  let preventDefault = event => event.defaultPrevented = true;
 
-  let preventDefault = (id, ()) =>
-    switch (activeEvent^) {
-    | Some(evt) =>
-      if (id == evt.id) {
-        activeEvent := Some({...evt, defaultPrevented: true});
-      }
-    | None => ()
-    };
-
-  let make = event => {
-    let id = getId();
-    let wrappedEvent =
-      Some({
-        id,
-        event,
-        shouldPropagate: true,
-        defaultPrevented: false,
-        stopPropagation: stopPropagation(id),
-        preventDefault: preventDefault(id),
-      });
-
-    activeEvent := wrappedEvent;
-    wrappedEvent;
-  };
+  let make = event => {event, shouldPropagate: true, defaultPrevented: false};
 };
 
 let isNodeImpacted = (n, pos) => n#hitTest(pos);
@@ -129,7 +98,7 @@ let getTopMostNode = (node: node, pos) => {
 };
 
 let rec traverseHeirarchy = (node: node, bubbled) =>
-  BubbledEvent.(
+  BubbleEvent.(
     /*
      track if default prevent or propagation stopped per node
      stop traversing node hierarchy if stop propagation is called
@@ -146,9 +115,8 @@ let rec traverseHeirarchy = (node: node, bubbled) =>
 
 let bubble = (node, event: event) => {
   /* Wrap event with preventDefault and stopPropagation */
-  let evt = BubbledEvent.make(event);
-  switch (evt) {
-  | Some(e) => traverseHeirarchy(node, e)
-  | None => ()
-  };
+  traverseHeirarchy(
+    node,
+    BubbleEvent.make(event),
+  );
 };
