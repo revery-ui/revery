@@ -7,28 +7,18 @@
 
 open Revery_UI;
 open Revery_Core;
-open Revery_Math;
 open Revery_UI_Primitives;
 
 module Hooks = Revery_UI_Hooks;
 
-type clickFunction = unit => unit;
-type clickFunctionWithEvt = NodeEvents.mouseButtonEventParams => unit;
-let noop = () => ();
-let noopEvt = _evt => ();
-
-let isMouseInsideRef = (ref: node, mouseX: float, mouseY: float) => {
-  let clickableDimensions: BoundingBox2d.t = ref#getBoundingBoxClipped();
-  let pointVec = Vec2.create(mouseX, mouseY);
-  BoundingBox2d.isPointInside(clickableDimensions, pointVec);
-};
+let isMouseCaptured = ref(false);
 
 let%component make =
               (
                 ~style=[],
-                ~onClick: clickFunction=noop,
-                ~onRightClick: clickFunction=noop,
-                ~onAnyClick: clickFunctionWithEvt=noopEvt,
+                ~onClick=() => (),
+                ~onRightClick=() => (),
+                ~onAnyClick=_event => (),
                 ~componentRef=?,
                 ~onBlur=?,
                 ~onFocus=?,
@@ -40,51 +30,45 @@ let%component make =
                 ~children,
                 (),
               ) => {
-  let%hook (clickableRef, setClickableRefOption) = Hooks.state(None);
+  let%hook (isMouseCapturedHere, _setIsMouseDown) = Hooks.ref(ref(false));
 
-  let setClickableRef = r => {
-    switch (componentRef) {
-    | Some(fn) => fn(r)
-    | None => ()
-    };
-    setClickableRefOption(_ => Some(r));
+  let capture = () => {
+    isMouseCapturedHere := true;
+    isMouseCaptured := true;
+  };
+  let releaseCapture = () => {
+    isMouseCapturedHere := false;
+    isMouseCaptured := false;
   };
 
-  let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
-    switch (clickableRef) {
-    | Some(clickable) =>
-      if (isMouseInsideRef(clickable, mouseEvt.mouseX, mouseEvt.mouseY)) {
-        switch (mouseEvt.button) {
-        | MouseButton.BUTTON_LEFT => onClick()
-        | MouseButton.BUTTON_RIGHT => onRightClick()
-        | _ => ()
-        };
-        onAnyClick(mouseEvt);
-      }
-    | _ => ()
+  let onMouseDown = _event =>
+    if (! isMouseCaptured^) {
+      capture();
     };
-
-    /* TODO Releasing capture in here means
-       if multiple buttons are pressed simutaneously
-       there would a race condition
-       Not sure we need fix it though */
-    Mouse.releaseCapture();
-    ();
-  };
-
-  let onMouseDown = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
-    switch (mouseEvt.button) {
-    | MouseButton.BUTTON_LEFT =>
-      Mouse.setCapture(~onMouseUp=evt => onMouseUp(evt), ())
-    | _ => Mouse.setCapture(~onMouseUp=evt => onMouseUp(evt), ())
+  let onMouseLeave = _event =>
+    if (isMouseCapturedHere^) {
+      releaseCapture();
     };
-  };
+  let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) =>
+    if (isMouseCapturedHere^) {
+      releaseCapture();
+
+      switch (mouseEvt.button) {
+      | MouseButton.BUTTON_LEFT => onClick()
+      | MouseButton.BUTTON_RIGHT => onRightClick()
+      | _ => ()
+      };
+
+      onAnyClick(mouseEvt);
+    };
 
   let style = Style.[cursor(MouseCursors.pointer), ...style];
 
   <View
     style
     onMouseDown
+    onMouseUp
+    onMouseLeave
     ?onBlur
     ?onFocus
     ?onKeyDown
@@ -92,7 +76,7 @@ let%component make =
     ?onTextEdit
     ?onTextInput
     tabindex={Some(tabindex)}
-    ref={r => setClickableRef(r)}>
+    ref=?componentRef>
     children
   </View>;
 };

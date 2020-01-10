@@ -1,8 +1,5 @@
 open Revery_UI;
 
-type clickFunction = unit => unit;
-type clickFunctionWithEvt = NodeEvents.mouseButtonEventParams => unit;
-
 /**
 {2 Description:}
 
@@ -22,9 +19,9 @@ let make:
   (
     ~key: Brisk_reconciler.Key.t=?,
     ~style: list(Revery_UI.Style.viewStyleProps)=?,
-    ~onClick: clickFunction=?,
-    ~onRightClick: clickFunction=?,
-    ~onAnyClick: clickFunctionWithEvt=?,
+    ~onClick: unit => unit=?,
+    ~onRightClick: unit => unit=?,
+    ~onAnyClick: NodeEvents.mouseButtonEventParams => unit=?,
     ~componentRef: Revery_UI.node => unit=?,
     ~onBlur: Revery_UI.NodeEvents.focusHandler=?,
     ~onFocus: Revery_UI.NodeEvents.focusHandler=?,
