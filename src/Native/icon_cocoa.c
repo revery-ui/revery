@@ -60,7 +60,7 @@ void revery_hideIconProgress_cocoa(void *dt) {
     NSProgressIndicator *progress_indicator = get_progress_indicator(dock_tile);
     [progress_indicator setHidden:YES];
     [progress_indicator release];
-    [[NSApp dockTile] display];
+    [dock_tile display];
 }
 
 void revery_hideIconBadge_cocoa(void* dt) {
