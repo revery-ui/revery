@@ -4,10 +4,10 @@ open NodeEvents;
 module BubbleEvent: {
   type t =
     pri {
-    event,
-    mutable shouldPropagate: bool,
-    mutable defaultPrevented: bool,
-  };
+      event,
+      mutable shouldPropagate: bool,
+      mutable defaultPrevented: bool,
+    };
 
   let stopPropagation: t => unit;
   let preventDefault: t => unit;
@@ -71,7 +71,7 @@ let getTopMostNode = (node: node, pos) => {
       let ignored = mode == Ignore;
 
       let revChildren = List.rev(node#getChildren());
-      let ret =
+      let maybeChildNode =
         switch (revChildren) {
         | [] => ignored ? None : Some(node)
         | children =>
@@ -86,15 +86,14 @@ let getTopMostNode = (node: node, pos) => {
           )
         };
 
-      switch (ret) {
+      switch (maybeChildNode) {
       | None => ignored ? None : Some(node)
-      | Some(v) => Some(v)
+      | Some(childNode) => Some(childNode)
       };
     };
   };
 
-  let ret: option(node) = f(node, Default);
-  ret;
+  f(node, Default);
 };
 
 let rec traverseHeirarchy = (node: node, bubbled) =>
