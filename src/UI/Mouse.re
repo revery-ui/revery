@@ -450,10 +450,8 @@ let dispatch =
 
         switch (deepestNode) {
         | None =>
-          /*
-           * if no node found, call bubbled MouseOut on deepestStoredNode if there's some stored nodes
-           * And recursively send mouseLeave events to storedNodes if they exist
-           */
+          // if no node found, call bubbled MouseOut on deepestStoredNode if there's some stored nodes
+          // And recursively send mouseLeave events to storedNodes if they exist
           switch (storedNodesUnderCursor^) {
           | [] => ()
           | [node, ..._] => bubble(node, MouseOut(mouseMoveEventParams))
@@ -464,17 +462,13 @@ let dispatch =
         | Some(deepNode) =>
           switch (storedNodesUnderCursor^) {
           | [] =>
-            /*
-             * If some deepNode is found and there aer no storedNodes
-             * Traverse the tree and call MouseEnter on each  node -  https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
-             * And call bubbled MouseOver on deepNode
-             */
+            // If some deepNode is found and there are no storedNodes
+            // Traverse the tree and call MouseEnter on each  node -  https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
+            // And call bubbled MouseOver on deepNode
             sendMouseEnterEvents(deepNode, mouseMoveEventParams);
             bubble(deepNode, MouseOver(mouseMoveEventParams));
           | [node, ..._] =>
-            /*
-             * Only handle diff if the deepestStoredNode !==  the deepestFoundNode
-             */
+            // Only handle diff if the deepestStoredNode !==  the deepestFoundNode
             if (node#getInternalId() != deepNode#getInternalId()) {
               handleMouseEnterDiff(deepNode, mouseMoveEventParams, ());
             }
