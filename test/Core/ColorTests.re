@@ -2,7 +2,7 @@ open Revery_Core;
 
 open TestFramework;
 
-describe("Color", ({describe, _}) =>
+describe("Color", ({describe, _}) => {
   describe("hex parsing", ({test, _}) => {
     test("16-bit RGB cases", ({expect, _}) => {
       let color1 = Color.hex("#000");
@@ -53,5 +53,31 @@ describe("Color", ({describe, _}) =>
       expect.equal(color3, Color.rgba(0., 0., 0., 0.));
       expect.equal(color4, Color.rgba(1., 0., 0., 0.0));
     });
-  })
-);
+  });
+
+  describe("mix", ({test, _}) => {
+    test("amount = 0", ({expect, _}) => {
+      let start = Colors.red;
+      let stop = Colors.lime;
+
+      expect.equal(Color.mix(~start, ~stop, ~amount=0.), Colors.red);
+    });
+
+    test("amount = 1", ({expect, _}) => {
+      let start = Colors.red;
+      let stop = Colors.lime;
+
+      expect.equal(Color.mix(~start, ~stop, ~amount=1.), Colors.lime);
+    });
+
+    test("amount = 0.5", ({expect, _}) => {
+      let start = Colors.red;
+      let stop = Colors.lime;
+
+      expect.equal(
+        Color.mix(~start, ~stop, ~amount=0.5),
+        Color.{r: 0.5, g: 0.5, b: 0., a: 1.},
+      );
+    });
+  });
+});
