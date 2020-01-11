@@ -11,6 +11,11 @@
 
 (copy_files cocoa/*)
 
+(install
+    (section bin)
+    (package Revery)
+    (files badge.bmp))
+
 (rule
 (targets flags.sexp c_flags.sexp c_library_flags.sexp)
 (deps (:discover config/discover.exe))

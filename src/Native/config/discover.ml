@@ -26,6 +26,8 @@ let get_win32_config () =
     flags= []
         @ cclib("-luuid")
         @ cclib("-lole32")
+        @ cclib("-lgdi32")
+        @ cclib("-lcomctl32")
   }
 
 let uname () =

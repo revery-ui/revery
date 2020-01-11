@@ -97,6 +97,8 @@ CAMLprim value revery_setIconBadge(value vWin, value vIconHandle, value vBadgeSt
 #ifdef __APPLE__
     (void)win;
     revery_setIconBadge_cocoa(ih, badgeStr);
+#elif WIN32
+    revery_setIconBadge_win32(win, ih, badgeStr);
 #else
     (void)win;
     (void)ih;
