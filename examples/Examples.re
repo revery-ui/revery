@@ -150,6 +150,11 @@ let state: state = {
       render: _ => ZoomExample.render(),
       source: "ZoomExample.re",
     },
+    {
+      name: "Nested Clickables",
+      render: _ => NestedClickable.render(),
+      source: "NestedClickable.re",
+    },
   ],
   selectedExample: "Animation",
 };
