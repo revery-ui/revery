@@ -156,7 +156,7 @@ let state: state = {
       source: "NestedClickable.re",
     },
   ],
-  selectedExample: "Nested Clickables",
+  selectedExample: "Animation",
 };
 
 let getExampleByName = (state: state, example: string) =>
