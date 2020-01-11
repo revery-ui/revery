@@ -32,23 +32,19 @@ let%component make =
               ) => {
   let%hook (isMouseCapturedHere, _setIsMouseDown) = Hooks.ref(ref(false));
 
-  let capture = () => {
-    isMouseCapturedHere := true;
-    isMouseCaptured := true;
-  };
-  let releaseCapture = () => {
-    isMouseCapturedHere := false;
-    isMouseCaptured := false;
-  };
-
-  let onMouseDown = _event =>
+  let capture = () =>
     if (! isMouseCaptured^) {
-      capture();
+      isMouseCapturedHere := true;
+      isMouseCaptured := true;
     };
-  let onMouseLeave = _event =>
+  let releaseCapture = () =>
     if (isMouseCapturedHere^) {
-      releaseCapture();
+      isMouseCapturedHere := false;
+      isMouseCaptured := false;
     };
+
+  let onMouseDown = _event => capture();
+  let onMouseLeave = _event => releaseCapture();
   let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) =>
     if (isMouseCapturedHere^) {
       releaseCapture();
@@ -61,6 +57,7 @@ let%component make =
 
       onAnyClick(mouseEvt);
     };
+  let%hook () = Hooks.effect(OnMount, () => Some(releaseCapture));
 
   let style = Style.[cursor(MouseCursors.pointer), ...style];
 
