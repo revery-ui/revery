@@ -9,6 +9,7 @@
         str
         Revery
         flex
+        timber
             ))
 (install
     (section bin)
