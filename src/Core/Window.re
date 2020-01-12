@@ -187,7 +187,7 @@ let _updateMetrics = (w: t) => {
 };
 
 let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
-  Log.debugf(m => m("setRawSize - after scaling: %ix%i", adjWidth,adjHeight));
+  Log.debugf(m => m("setRawSize - calling with: %ix%i", adjWidth, adjHeight));
 
   if (adjWidth != win.metrics.size.width
       || adjHeight != win.metrics.size.height) {
@@ -206,7 +206,7 @@ let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
       win.requestedHeight = None;
       win.areMetricsDirty = true;
       Log.debugf(m => {
-        let Sdl2.Size.{width, height, _} = Sdl2.Window.getSize(win.sdlWindow);
+        let Sdl2.Size.{width, height} = Sdl2.Window.getSize(win.sdlWindow);
         m("setRawSize: SDL size reported after resize: %ux%u", width, height);
       });
     };
