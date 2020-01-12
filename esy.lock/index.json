@@ -1,14 +1,14 @@
 {
-  "checksum": "7d67a8a807d3f0607d5053e490a3ea05",
+  "checksum": "41f8d7fde0605c68491815a9f049de61",
   "root": "revery@link-dev:./package.json",
   "node": {
-    "timber@github:glennsl/timber#739b490@d41d8cd9": {
-      "id": "timber@github:glennsl/timber#739b490@d41d8cd9",
+    "timber@github:glennsl/timber#37ffa07@d41d8cd9": {
+      "id": "timber@github:glennsl/timber#37ffa07@d41d8cd9",
       "name": "timber",
-      "version": "github:glennsl/timber#739b490",
+      "version": "github:glennsl/timber#37ffa07",
       "source": {
         "type": "install",
-        "source": [ "github:glennsl/timber#739b490" ]
+        "source": [ "github:glennsl/timber#37ffa07" ]
       },
       "overrides": [],
       "dependencies": [
@@ -43,7 +43,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "timber@github:glennsl/timber#739b490@d41d8cd9",
+        "timber@github:glennsl/timber#37ffa07@d41d8cd9",
         "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
         "reperf@1.4.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
