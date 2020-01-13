@@ -48,7 +48,7 @@ void revery_setIconBadge_win32(void *win, void *ih, char *badgeStr) {
         displayStr = badgeStr;
     } else {
         // Malloc a string and add the first two characters...
-        displayStr = (char *) malloc((6) * sizeof(char));
+        displayStr = (char *)malloc((6) * sizeof(char));
         displayStr[0] = badgeStr[0];
         displayStr[1] = badgeStr[1];
         // ...an ellipsis...
@@ -96,6 +96,12 @@ void revery_setIconBadge_win32(void *win, void *ih, char *badgeStr) {
     if (strlen(badgeStr) > 3) {
         free(displayStr);
     }
+}
+
+void revery_hideIconBadge_win32(void *win, void *ih) {
+    HWND window = (HWND)win;
+    ITaskbarList3 *iconHandle = (ITaskbarList3 *)ih;
+    iconHandle->lpVtbl->SetOverlayIcon(iconHandle, window, NULL, NULL);
 }
 
 #endif

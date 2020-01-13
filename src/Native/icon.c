@@ -100,6 +100,7 @@ CAMLprim value revery_setIconBadge(value vWin, value vIconHandle, value vBadgeSt
 #elif WIN32
     revery_setIconBadge_win32(win, ih, badgeStr);
 #else
+    fprintf(stderr, "WARNING: %s is not implemented on this platform.", __func__);
     (void)win;
     (void)ih;
     (void)badgeStr;
@@ -117,7 +118,10 @@ CAMLprim value revery_hideIconBadge(value vWin, value vIconHandle) {
 #ifdef __APPLE__
     (void)win;
     revery_hideIconBadge_cocoa(ih);
+#elif WIN32
+    revery_hideIconBadge_win32(win, ih);
 #else
+    fprintf(stderr, "WARNING: %s is not implemented on this platform.", __func__);
     (void)win;
     (void)ih;
 #endif
