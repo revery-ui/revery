@@ -213,17 +213,15 @@ module ExampleHost = {
       <ExampleButton
         isActive
         name={x.name}
-        onClick={
-          _ => {
-            Window.setTitle(win, "Revery Example - " ++ x.name);
+        onClick={_ => {
+          Window.setTitle(win, "Revery Example - " ++ x.name);
 
-            let sourceFile = getSourceForSample(state, x.name);
-            prerr_endline("SOURCE FILE: " ++ sourceFile);
-            notifyExampleSwitched(sourceFile);
-            dispatch(SelectExample(x.name));
-            ();
-          }
-        }
+          let sourceFile = getSourceForSample(state, x.name);
+          prerr_endline("SOURCE FILE: " ++ sourceFile);
+          notifyExampleSwitched(sourceFile);
+          dispatch(SelectExample(x.name));
+          ();
+        }}
       />;
     };
 

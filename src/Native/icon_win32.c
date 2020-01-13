@@ -68,8 +68,8 @@ void revery_setIconBadge_win32(void *win, void *ih, char *badgeStr) {
     // Load the bitmap, and save the old one so we don't leak it
     HBITMAP oldBmp = (HBITMAP)SelectObject(hdc, bmp);
     HFONT hFont = CreateFont(
-        20, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
-        0, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, "Arial");
+                      20, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
+                      0, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, "Arial");
     SelectObject(hdc, hFont);
     // Make sure the text background is transparent
     SetBkMode(hdc, TRANSPARENT);
@@ -83,7 +83,7 @@ void revery_setIconBadge_win32(void *win, void *ih, char *badgeStr) {
     HIMAGELIST imageList = ImageList_Create(32, 32, ILC_COLOR32, 1, 1);
     ImageList_Add(imageList, bmp, NULL);
     HICON hIcon = ImageList_GetIcon(imageList, 0, ILD_IMAGE);
-    
+
     // Set the icon
     iconHandle->lpVtbl->SetOverlayIcon(iconHandle, window, hIcon,
                                        L"Badge number");
