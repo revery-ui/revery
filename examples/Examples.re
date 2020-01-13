@@ -155,6 +155,11 @@ let state: state = {
       render: _ => NestedClickable.render(),
       source: "NestedClickable.re",
     },
+    {
+      name: "Keyed List",
+      render: _ => KeyedListExample.render(),
+      source: "KeyedListExample.re",
+    },
   ],
   selectedExample: "Animation",
 };
