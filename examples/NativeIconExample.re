@@ -70,13 +70,6 @@ module NativeFileExamples = {
         fontSize(20),
       ];
 
-    let noteStyle =
-      Style.[
-        color(Colors.white),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(16),
-      ];
-
     let containerStyle =
       Style.[
         position(`Absolute),
