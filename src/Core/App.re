@@ -53,7 +53,8 @@ let quit = (~askNicely=false, ~code=0, app: t) => {
     _tryToCloseAll(app);
   };
 
-  Revery_Native.uninit();
+  // TODO: Bring back when focus bug is fixed
+  //Revery_Native.uninit();
 
   if (Hashtbl.length(app.windows) == 0 || !askNicely) {
     logInfo("Quitting");
@@ -189,7 +190,8 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     };
   };
 
-  Revery_Native.init();
+  // TODO: Bring back when focus bug is fixed
+  //Revery_Native.init();
 
   let appLoop = () => {
     _flushEvents();
