@@ -48,9 +48,14 @@ let _tryToCloseAll = (app: t) => {
   Seq.iter(w => _tryToClose(app, w), windows);
 };
 
-let quit = (~code=0, app: t) => {
-  _tryToCloseAll(app);
-  if (Hashtbl.length(app.windows) == 0) {
+let quit = (~askNicely=false, ~code=0, app: t) => {
+  if (askNicely) {
+    _tryToCloseAll(app);
+  };
+
+  Revery_Native.uninit();
+
+  if (Hashtbl.length(app.windows) == 0 || !askNicely) {
     logInfo("Quitting");
     exit(code);
   };
@@ -167,7 +172,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       // if Command+Q is pressed. In that case, we'll try
       // closing all the windows - and if they all close,
       // we'll exit the app.
-      quit(~code=0, appInstance)
+      quit(~askNicely=true, ~code=0, appInstance)
     | _ => ()
     };
   };
@@ -183,6 +188,8 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       };
     };
   };
+
+  Revery_Native.init();
 
   let appLoop = () => {
     _flushEvents();

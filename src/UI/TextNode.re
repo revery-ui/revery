@@ -157,53 +157,26 @@ class textNode (text: string) = {
     let lineHeightPx =
       lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
 
-    switch (textWrap) {
-    | WhitespaceWrap =>
-      let (lines, maxWidthLine) =
-        TextWrapping.wrapText(
-          ~text,
-          ~measureWidth=
-            str => Text.measure(~fontFamily, ~fontSize, str).width,
-          ~maxWidth=width,
-          ~wrapHere=TextWrapping.isWhitespaceWrapPoint,
-        );
+    let measureWidth = str =>
+      Text.measureCharWidth(~window, ~fontFamily, ~fontSize, str);
+    _lines =
+      TextWrapping.wrapText(
+        ~text,
+        ~measureWidth,
+        ~maxWidth=float_of_int(width),
+        ~mode=textWrap,
+      );
 
-      _lines = lines;
-
-      let dimensions: Layout.LayoutTypes.dimensions = {
-        width: int_of_float(float_of_int(maxWidthLine)),
-        height:
-          int_of_float(float_of_int(List.length(lines)) *. lineHeightPx),
-      };
-
-      dimensions;
-    | NoWrap =>
-      let d = Text.measure(~fontFamily, ~fontSize, text);
-      let dimensions: Layout.LayoutTypes.dimensions = {
-        width: d.width,
-        height: d.height,
-      };
-
-      _lines = [text];
-
-      dimensions;
-    | UserDefined(wrapFunc) =>
-      let (lines, maxWidthLine) =
-        wrapFunc(
-          text,
-          str => Text.measure(~fontFamily, ~fontSize, str).width,
-          width,
-        );
-
-      _lines = lines;
-
-      let dimensions: Layout.LayoutTypes.dimensions = {
-        width: maxWidthLine,
-        height:
-          int_of_float(float_of_int(List.length(lines)) *. lineHeightPx),
-      };
-
-      dimensions;
+    let pickWiderLine = (leftWidth, right) => {
+      let rightWidth =
+        Text.measure(~fontFamily, ~fontSize, right).width;
+      max(leftWidth, rightWidth);
+    };
+    let maxWidthLine = List.fold_left(pickWiderLine, 0, _lines);
+    {
+      width: maxWidthLine,
+      height:
+        int_of_float(float_of_int(List.length(_lines)) *. lineHeightPx),
     };
   };
   pub! getMeasureFunction = () => {

@@ -4,7 +4,7 @@ open Revery.UI.Components;
 
 open Revery.Native;
 
-module NativeExamples = {
+module NativeFileExamples = {
   let%component make = () => {
     let%hook (fileListOpt, setFileListOpt) = Hooks.state(None);
     let%hook (allowMultiple, setAllowMultiple) = Hooks.state(false);
@@ -24,6 +24,13 @@ module NativeExamples = {
     };
 
     let optionStyle =
+      Style.[
+        color(Colors.white),
+        fontFamily("Roboto-Regular.ttf"),
+        fontSize(14),
+      ];
+
+    let titleStyle =
       Style.[
         color(Colors.white),
         fontFamily("Roboto-Regular.ttf"),
@@ -52,6 +59,7 @@ module NativeExamples = {
       ];
 
     <View style=containerStyle>
+      <Text style=titleStyle text="Open Files and Folders" />
       <Row>
         <Text style=optionStyle text="Allow multiple?" />
         <Checkbox
@@ -81,4 +89,4 @@ module NativeExamples = {
   };
 };
 
-let render = () => <NativeExamples />;
+let render = () => <NativeFileExamples />;

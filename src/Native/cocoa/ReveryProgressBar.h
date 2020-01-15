@@ -1,0 +1,2 @@
+@interface ReveryProgressBar : NSProgressIndicator
+@end

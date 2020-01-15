@@ -13,7 +13,7 @@
 (install
     (section bin)
     (package Revery)
-    (files Roboto-Regular.ttf FontAwesome5FreeSolid.otf binary.dat outrun-logo.png outrun-icon.png revery-icon.png))
+    (files Info.plist Roboto-Regular.ttf FontAwesome5FreeSolid.otf binary.dat outrun-logo.png outrun-icon.png revery-icon.png))
 
 (install
     (section bin)

@@ -57,8 +57,8 @@ void activate_filechooser(GtkApplication *app, struct FileChooserOptions *option
     const char *dialogTitle = (options->title ? options->title : "Open File(s) and/or Folder(s)");
 
     GtkWidget *dialog = gtk_file_chooser_dialog_new(
-        dialogTitle, NULL, action, "Cancel", GTK_RESPONSE_CANCEL, okButtonText,
-        GTK_RESPONSE_ACCEPT, NULL);
+                            dialogTitle, NULL, action, "Cancel", GTK_RESPONSE_CANCEL, okButtonText,
+                            GTK_RESPONSE_ACCEPT, NULL);
     GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
 
     gtk_file_chooser_set_show_hidden(chooser, options->showHidden);
