@@ -40,7 +40,7 @@ class textNode (text: string) = {
     // TODO find a way to only manage the matrix stack in Node
     let world = _this#getWorldTransform();
     let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
-    Revery_Draw.Canvas.setMatrix(canvas, skiaWorld);
+    Revery_Draw.CanvasContext.setMatrix(canvas, skiaWorld);
 
     List.iteri(
       (lineIndex, line) => {
@@ -69,7 +69,7 @@ class textNode (text: string) = {
         // Canvas.drawRect(canvas, leadingRect, leadingPaint)
 
         // print_endline ("Drawing text: " ++ line ++ " - y: " ++ string_of_float(y));
-        Canvas.drawText(
+        CanvasContext.drawText(
           ~color=colorWithAppliedOpacity,
           ~x=0.,
           ~y=baselineY,

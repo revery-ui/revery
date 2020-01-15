@@ -13,7 +13,7 @@ type renderCallback = unit => unit;
 
 let render =
     (
-      canvas: Revery_Draw.Canvas.t,
+      canvas: Revery_Draw.CanvasContext.t,
       overflow: LayoutTypes.overflow,
       dimensions: Dimensions.t,
       r: renderCallback,
@@ -27,13 +27,13 @@ let render =
         ~height=float_of_int(dimensions.height),
         (),
       );
-    Revery_Draw.Canvas.save(canvas);
-    Revery_Draw.Canvas.clipRect(canvas, clippingRect);
+    Revery_Draw.CanvasContext.save(canvas);
+    Revery_Draw.CanvasContext.clipRect(canvas, clippingRect);
   };
 
   r();
 
   if (overflow == LayoutTypes.Hidden || overflow == LayoutTypes.Scroll) {
-    Revery_Draw.Canvas.restore(canvas);
+    Revery_Draw.CanvasContext.restore(canvas);
   };
 };

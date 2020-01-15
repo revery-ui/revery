@@ -1,4 +1,4 @@
-module Canvas = Canvas;
+module CanvasContext = CanvasContext;
 
 module DebugDraw = DebugDraw;
 module RenderPass = RenderPass;

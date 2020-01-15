@@ -12,7 +12,7 @@ type t = {
   container: ref(Container.t),
   window: Window.t,
   mouseCursor: Mouse.Cursor.t,
-  canvas: ref(option(Revery_Draw.Canvas.t)),
+  canvas: ref(option(Revery_Draw.CanvasContext.t)),
 };
 
 let create = (window, rootNode, container, mouseCursor) => {
@@ -25,7 +25,7 @@ let create = (window, rootNode, container, mouseCursor) => {
 
 let updateCanvas = (window, container: t) => {
   switch (container.canvas^) {
-  | None => container.canvas := Revery_Draw.Canvas.create(window)
-  | Some(_) as v => container.canvas := Revery_Draw.Canvas.resize(window, v)
+  | None => container.canvas := Revery_Draw.CanvasContext.create(window)
+  | Some(_) as v => container.canvas := Revery_Draw.CanvasContext.resize(window, v)
   };
 };

@@ -177,7 +177,7 @@ let clipPath =
   Canvas.clipPath(Surface.getCanvas(v), path, clipOp, antiAlias);
 };
 
-let test_draw = (v: t) => {
+/*let test_draw = (v: t) => {
   let canvas = Surface.getCanvas(v);
 
   let fill = Paint.make();
@@ -203,4 +203,4 @@ let test_draw = (v: t) => {
     Canvas.drawText(canvas, "Hello, world!", 30.25, 30.25, fill2);
   | None => ()
   };
-};
+};*/

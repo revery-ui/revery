@@ -30,8 +30,8 @@ class imageNode (imagePath: string) = {
 
     // TODO find a way to only manage the matrix stack in Node
     let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
-    Revery_Draw.Canvas.setMatrix(canvas, skiaWorld);
-    Draw.Canvas.drawImage(~x=0., ~y=0., src, canvas);
+    Revery_Draw.CanvasContext.setMatrix(canvas, skiaWorld);
+    Draw.CanvasContext.drawImage(~x=0., ~y=0., src, canvas);
     /*Draw.Image.drawImage(
         ~imagePath=src,
         ~transform=world,

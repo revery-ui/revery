@@ -3,7 +3,7 @@ open Sdl2.Gl;
 
 module DrawContext = {
   type t = {
-    canvas: Canvas.t,
+    canvas: CanvasContext.t,
     pixelRatio: float,
     scaleFactor: float,
     screenWidth: int,

@@ -6,7 +6,7 @@
 type t = {
   zIndex: int,
   opacity: float,
-  canvas: Revery_Draw.Canvas.t,
+  canvas: Revery_Draw.CanvasContext.t,
 };
 
 let create = (~canvas, ~zIndex: int, ~opacity: float, ()) => {

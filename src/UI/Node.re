@@ -73,9 +73,9 @@ class node (()) = {
     let layout = _layoutNode.layout;
     let {canvas, _}: NodeDrawContext.t = parentContext;
 
-    Revery_Draw.Canvas.save(canvas);
+    Revery_Draw.CanvasContext.save(canvas);
     let skiaWorldTransform = Revery_Math.Matrix.toSkiaMatrix(worldTransform);
-    Revery_Draw.Canvas.setMatrix(canvas, skiaWorldTransform);
+    Revery_Draw.CanvasContext.setMatrix(canvas, skiaWorldTransform);
 
     Overflow.render(
       canvas,
@@ -88,7 +88,7 @@ class node (()) = {
       },
     );
 
-    Revery_Draw.Canvas.restore(canvas);
+    Revery_Draw.CanvasContext.restore(canvas);
   };
   pub measurements = () => {
     switch (_forcedMeasurements) {
