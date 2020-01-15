@@ -204,3 +204,17 @@ let clipPath =
   | None => ()
   };
 };*/
+let _drawRect = drawRect;
+
+module Deprecated = {
+  let drawRect = (~x: float, ~y: float, ~width:float, ~height: float, ~color: Revery_Core.Color.t, v: t) => {
+    let rect =  Rectangle.create(~x, ~y, ~width, ~height, ());
+    let fill = Paint.make();
+    Paint.setColor(fill, Revery_Core.Color.toSkia(color));
+    _drawRect(v, rect, fill);
+  }
+
+  let drawString = (~x: float, ~y: float, ~color: Revery_Core.Color.t, ~fontFamily, ~fontSize, ~text, v: t) => {
+    drawText(~x, ~y, ~color, ~fontFamily, ~fontSize=float_of_int(fontSize), text, v);  
+  }
+};
