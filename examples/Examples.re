@@ -141,9 +141,9 @@ let state: state = {
       source: "HoverExample.re",
     },
     {
-      name: "OpenGL Example",
-      render: _ => OpenGLExample.render(),
-      source: "OpenGLExample.re",
+      name: "Canvas Example",
+      render: _ => CanvasExample.render(),
+      source: "CanvasExample.re",
     },
     {
       name: "Zoom Example",

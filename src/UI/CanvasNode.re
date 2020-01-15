@@ -9,12 +9,13 @@ open ViewNode;
 type renderCallback = (Mat4.t, NodeDrawContext.t) => unit;
 
 /*
- * OpenGLNode
+ * CanvasNode
  *
  * Very simple node that just takes in a `render` callback
- * and calls it during draw.
+ * and calls it during draw with a canvas context -
+ * enabling the use of arbitrary canvas functions.
  */
-class openGLNode (()) = {
+class canvasNode (()) = {
   as _this;
   val mutable render: option(renderCallback) = None;
   inherit (class viewNode)() as _super;
@@ -27,9 +28,12 @@ class openGLNode (()) = {
 
     switch (render) {
     | Some(r) =>
-      Overflow.render(parentContext.canvas, LayoutTypes.Hidden, dimensions, () =>
+      Overflow.render(parentContext.canvas, LayoutTypes.Hidden, dimensions, () => {
+        // canvas save
+        // canvas set transform
         r(worldTransform, parentContext)
-      )
+        //canvas restore
+      })
     | None => ()
     };
   };
