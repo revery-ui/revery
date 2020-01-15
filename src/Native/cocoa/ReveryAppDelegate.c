@@ -35,7 +35,6 @@
   Assigns self as the notification center delegate
 */
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
-    UNUSED(notification);
     [_sdlDelegate applicationDidFinishLaunching:notification];
     [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
 }
