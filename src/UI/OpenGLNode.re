@@ -27,11 +27,7 @@ class openGLNode (()) = {
 
     switch (render) {
     | Some(r) =>
-      Overflow.render(
-        parentContext.canvas,
-        LayoutTypes.Hidden,
-        dimensions,
-        () =>
+      Overflow.render(parentContext.canvas, LayoutTypes.Hidden, dimensions, () =>
         r(worldTransform, parentContext)
       )
     | None => ()

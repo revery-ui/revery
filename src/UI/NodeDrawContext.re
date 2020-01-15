@@ -9,7 +9,11 @@ type t = {
   canvas: Revery_Draw.Canvas.t,
 };
 
-let create = (~canvas, ~zIndex: int, ~opacity: float, ()) => {canvas, zIndex, opacity};
+let create = (~canvas, ~zIndex: int, ~opacity: float, ()) => {
+  canvas,
+  zIndex,
+  opacity,
+};
 
 let createFromParent = (parentContext: t, localOpacity: float) => {
   let zIndex = parentContext.zIndex + 1;

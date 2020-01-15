@@ -25,15 +25,15 @@ let borderStyle = (side, axis, border) =>
 
 let makeTriangle = (aX, aY, bX, bY, cX, cY) => {
   let triangle = Skia.Path.make();
-  Skia.Path.moveTo(triangle, aX, aY); 
+  Skia.Path.moveTo(triangle, aX, aY);
   Skia.Path.lineTo(triangle, bX, bY);
   Skia.Path.lineTo(triangle, cX, cY);
   Skia.Path.lineTo(triangle, aX, aY);
   triangle;
-}
+};
 
 let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
-  let { borderRadius, _ } = style;
+  let {borderRadius, _} = style;
   let (topBorderWidth, topBorderColor) =
     borderStyle(style.borderTop, style.borderVertical, style.border);
   let (leftBorderWidth, leftBorderColor) =
@@ -43,12 +43,10 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
   let (bottomBorderWidth, bottomBorderColor) =
     borderStyle(style.borderBottom, style.borderVertical, style.border);
 
-  if (
-    leftBorderWidth === 0. &&
-    topBorderWidth === 0. &&
-    rightBorderWidth === 0. &&
-    bottomBorderWidth === 0.
-  ) {
+  if (leftBorderWidth === 0.
+      && topBorderWidth === 0.
+      && rightBorderWidth === 0.
+      && bottomBorderWidth === 0.) {
     outerRRect;
   } else {
     let outerWidth = Skia.RRect.getWidth(outerRRect);
@@ -64,18 +62,21 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
         outerHeight -. bottomBorderWidth,
       ),
       // TODO For some reason, the clipping won't work with radii assigned - we need to revisit this
-      0., 0., 0., 0.,
+      0.,
+      0.,
+      0.,
+      0.,
       // max(borderRadius -. leftBorderWidth, 0.),
       // max(borderRadius -. topBorderWidth, 0.),
       // max(borderRadius -. rightBorderWidth, 0.),
       // max(borderRadius -. bottomBorderWidth, 0.),
     );
-  
+
     let tbc = Color.multiplyAlpha(opacity, topBorderColor);
     let lbc = Color.multiplyAlpha(opacity, leftBorderColor);
     let rbc = Color.multiplyAlpha(opacity, rightBorderColor);
     let bbc = Color.multiplyAlpha(opacity, bottomBorderColor);
-  
+
     let borderPaint = Skia.Paint.make();
     Skia.Paint.setAntiAlias(borderPaint, true);
 
@@ -84,96 +85,167 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
     let innerCenterX = leftBorderWidth +. innerWidth /. 2.;
     let innerCenterY = topBorderWidth +. innerHeight /. 2.;
 
-    // We use these for finding the points where the color borders in the corners would intersect 
+    // We use these for finding the points where the color borders in the corners would intersect
     // when extended into the center so that we can correctly draw borders between each two border
     // colors. A trapezoid would work for most cases as well but we need a full triangle for cases
     // with a rounded center shape
-    let horizontalExtrapolationFactor = outerWidth /. (leftBorderWidth +. rightBorderWidth);
-    let verticalExtrapolationFactor = outerHeight /. (topBorderWidth +. bottomBorderWidth);
+    let horizontalExtrapolationFactor =
+      outerWidth /. (leftBorderWidth +. rightBorderWidth);
+    let verticalExtrapolationFactor =
+      outerHeight /. (topBorderWidth +. bottomBorderWidth);
 
-    let hasLeftOrRightBorder = leftBorderWidth !== 0. || rightBorderWidth !== 0.;
-    let hasTopOrBottomBorder = topBorderWidth !== 0. || bottomBorderWidth !== 0.;
+    let hasLeftOrRightBorder =
+      leftBorderWidth !== 0. || rightBorderWidth !== 0.;
+    let hasTopOrBottomBorder =
+      topBorderWidth !== 0. || bottomBorderWidth !== 0.;
 
-    let leftBorderClippingPath = 
-   
-    if (leftBorderWidth != 0. && lbc.a > 0.001) {
-      Revery_Draw.Canvas.save(canvas);
-   
-      let clippingRectangle = Revery_Math.Rectangle.create(~x=0., ~y=0., ~width=innerCenterX, ~height=outerHeight, ());
-      Revery_Draw.Canvas.clipRect(canvas, clippingRectangle);
-      
-      if (hasTopOrBottomBorder) {
-        let imaginaryIntersectionX = verticalExtrapolationFactor *. leftBorderWidth;
-        let imaginaryIntersectionY = verticalExtrapolationFactor *. topBorderWidth;
-        let clippingTriangle = makeTriangle(0., outerHeight, 0., 0., imaginaryIntersectionX, imaginaryIntersectionY);
-        Revery_Draw.Canvas.clipPath(canvas, clippingTriangle);
-      }
+    let leftBorderClippingPath =
+      if (leftBorderWidth != 0. && lbc.a > 0.001) {
+        Revery_Draw.Canvas.save(canvas);
 
-      Revery_Draw.Canvas.clipRRect(canvas, ~clipOp=Difference, innerRRect);
-  
-      Skia.Paint.setColor(borderPaint, Color.toSkia(lbc));
-      Revery_Draw.Canvas.drawRRect(canvas, outerRRect, borderPaint);
+        let clippingRectangle =
+          Revery_Math.Rectangle.create(
+            ~x=0.,
+            ~y=0.,
+            ~width=innerCenterX,
+            ~height=outerHeight,
+            (),
+          );
+        Revery_Draw.Canvas.clipRect(canvas, clippingRectangle);
 
-      Revery_Draw.Canvas.restore(canvas);
-    };
-  
+        if (hasTopOrBottomBorder) {
+          let imaginaryIntersectionX =
+            verticalExtrapolationFactor *. leftBorderWidth;
+          let imaginaryIntersectionY =
+            verticalExtrapolationFactor *. topBorderWidth;
+          let clippingTriangle =
+            makeTriangle(
+              0.,
+              outerHeight,
+              0.,
+              0.,
+              imaginaryIntersectionX,
+              imaginaryIntersectionY,
+            );
+          Revery_Draw.Canvas.clipPath(canvas, clippingTriangle);
+        };
+
+        Revery_Draw.Canvas.clipRRect(canvas, ~clipOp=Difference, innerRRect);
+
+        Skia.Paint.setColor(borderPaint, Color.toSkia(lbc));
+        Revery_Draw.Canvas.drawRRect(canvas, outerRRect, borderPaint);
+
+        Revery_Draw.Canvas.restore(canvas);
+      };
+
     if (topBorderWidth != 0. && tbc.a > 0.001) {
       Revery_Draw.Canvas.save(canvas);
-  
-      let clippingRectangle = Revery_Math.Rectangle.create(~x=0., ~y=0., ~width=outerWidth, ~height=innerCenterY, ());
+
+      let clippingRectangle =
+        Revery_Math.Rectangle.create(
+          ~x=0.,
+          ~y=0.,
+          ~width=outerWidth,
+          ~height=innerCenterY,
+          (),
+        );
       Revery_Draw.Canvas.clipRect(canvas, clippingRectangle);
 
       if (hasLeftOrRightBorder) {
-        let imaginaryIntersectionX = horizontalExtrapolationFactor *. leftBorderWidth;
-        let imaginaryIntersectionY = horizontalExtrapolationFactor *. topBorderWidth;
-        let clippingTriangle = makeTriangle(0., 0., imaginaryIntersectionX, imaginaryIntersectionY, outerWidth, 0.); 
+        let imaginaryIntersectionX =
+          horizontalExtrapolationFactor *. leftBorderWidth;
+        let imaginaryIntersectionY =
+          horizontalExtrapolationFactor *. topBorderWidth;
+        let clippingTriangle =
+          makeTriangle(
+            0.,
+            0.,
+            imaginaryIntersectionX,
+            imaginaryIntersectionY,
+            outerWidth,
+            0.,
+          );
         Revery_Draw.Canvas.clipPath(canvas, clippingTriangle);
-      }
+      };
 
       Revery_Draw.Canvas.clipRRect(canvas, ~clipOp=Difference, innerRRect);
-  
+
       Skia.Paint.setColor(borderPaint, Color.toSkia(tbc));
       Revery_Draw.Canvas.drawRRect(canvas, outerRRect, borderPaint);
-  
+
       Revery_Draw.Canvas.restore(canvas);
     };
- 
+
     if (rightBorderWidth != 0. && rbc.a > 0.001) {
       Revery_Draw.Canvas.save(canvas);
-   
-      let clippingRectangle = Revery_Math.Rectangle.create(~x=innerCenterX, ~y=0., ~width=outerWidth -. innerCenterX, ~height=outerHeight, ());
+
+      let clippingRectangle =
+        Revery_Math.Rectangle.create(
+          ~x=innerCenterX,
+          ~y=0.,
+          ~width=outerWidth -. innerCenterX,
+          ~height=outerHeight,
+          (),
+        );
       Revery_Draw.Canvas.clipRect(canvas, clippingRectangle);
- 
+
       if (hasTopOrBottomBorder) {
-        let imaginaryIntersectionX = outerWidth -. verticalExtrapolationFactor *. rightBorderWidth;
-        let imaginaryIntersectionY = verticalExtrapolationFactor *. topBorderWidth;
-        let clippingTriangle = makeTriangle(outerWidth, 0., outerWidth, outerHeight, imaginaryIntersectionX, imaginaryIntersectionY);
+        let imaginaryIntersectionX =
+          outerWidth -. verticalExtrapolationFactor *. rightBorderWidth;
+        let imaginaryIntersectionY =
+          verticalExtrapolationFactor *. topBorderWidth;
+        let clippingTriangle =
+          makeTriangle(
+            outerWidth,
+            0.,
+            outerWidth,
+            outerHeight,
+            imaginaryIntersectionX,
+            imaginaryIntersectionY,
+          );
         Revery_Draw.Canvas.clipPath(canvas, clippingTriangle);
-      }
+      };
 
       Revery_Draw.Canvas.clipRRect(canvas, ~clipOp=Difference, innerRRect);
-  
+
       Skia.Paint.setColor(borderPaint, Color.toSkia(rbc));
       Revery_Draw.Canvas.drawRRect(canvas, outerRRect, borderPaint);
 
       Revery_Draw.Canvas.restore(canvas);
     };
-  
+
     if (bottomBorderWidth != 0. && bbc.a > 0.001) {
       Revery_Draw.Canvas.save(canvas);
-   
-      let clippingRectangle = Revery_Math.Rectangle.create(~x=0., ~y=innerCenterY, ~width=outerWidth, ~height=outerHeight -. innerCenterY, ());
+
+      let clippingRectangle =
+        Revery_Math.Rectangle.create(
+          ~x=0.,
+          ~y=innerCenterY,
+          ~width=outerWidth,
+          ~height=outerHeight -. innerCenterY,
+          (),
+        );
       Revery_Draw.Canvas.clipRect(canvas, clippingRectangle);
 
       if (hasLeftOrRightBorder) {
-        let imaginaryIntersectionX = horizontalExtrapolationFactor *. leftBorderWidth;
-        let imaginaryIntersectionY = outerHeight -. horizontalExtrapolationFactor *. bottomBorderWidth;
-        let clippingTriangle = makeTriangle(outerWidth, outerHeight, 0., outerHeight, imaginaryIntersectionX, imaginaryIntersectionY);
+        let imaginaryIntersectionX =
+          horizontalExtrapolationFactor *. leftBorderWidth;
+        let imaginaryIntersectionY =
+          outerHeight -. horizontalExtrapolationFactor *. bottomBorderWidth;
+        let clippingTriangle =
+          makeTriangle(
+            outerWidth,
+            outerHeight,
+            0.,
+            outerHeight,
+            imaginaryIntersectionX,
+            imaginaryIntersectionY,
+          );
         Revery_Draw.Canvas.clipPath(canvas, clippingTriangle);
-      }
+      };
 
       Revery_Draw.Canvas.clipRRect(canvas, ~clipOp=Difference, innerRRect);
-  
+
       Skia.Paint.setColor(borderPaint, Color.toSkia(bbc));
       Revery_Draw.Canvas.drawRRect(canvas, outerRRect, borderPaint);
 
@@ -198,9 +270,9 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
   };
 };
 
-let makeShadowImageFilter = (boxShadow) => {
+let makeShadowImageFilter = boxShadow => {
   let {spreadRadius, blurRadius, xOffset, yOffset, color} = boxShadow;
-  
+
   // Per spec, sigma is exactly half the blur radius:
   // https://www.w3.org/TR/css-backgrounds-3/#shadow-blur
   // https://html.spec.whatwg.org/C/#when-shadows-are-drawn
@@ -232,7 +304,7 @@ class viewNode (()) = {
     let style = _super#getStyle();
     let opacity = style.opacity *. parentContext.opacity;
 
-    let { canvas, _ }: NodeDrawContext.t = parentContext;
+    let {canvas, _}: NodeDrawContext.t = parentContext;
     Revery_Draw.Canvas.save(canvas);
 
     // TODO find a way to only manage the matrix stack in Node
@@ -248,7 +320,7 @@ class viewNode (()) = {
       borderRadius,
       borderRadius,
     );
-    
+
     let innerRRect = renderBorders(~canvas, ~style, ~outerRRect, ~opacity);
 
     let color = Color.multiplyAlpha(opacity, style.backgroundColor);
@@ -257,21 +329,23 @@ class viewNode (()) = {
 
       // switch (style.boxShadow) {
       // | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _} =>
-        // ()
+      // ()
       // | boxShadow => {
-        if (style.boxShadow.blurRadius != 0.) {
-          print_endline("drawing shadow..." ++ string_of_float(style.boxShadow.blurRadius));
-        };
-        let shadowImageFilter = makeShadowImageFilter(style.boxShadow);
-        Skia.Paint.setImageFilter(fill, shadowImageFilter);
+      if (style.boxShadow.blurRadius != 0.) {
+        print_endline(
+          "drawing shadow..." ++ string_of_float(style.boxShadow.blurRadius),
+        );
+      };
+      let shadowImageFilter = makeShadowImageFilter(style.boxShadow);
+      Skia.Paint.setImageFilter(fill, shadowImageFilter);
       // }
       // };
 
       let skiaColor = Color.toSkia(color);
       Skia.Paint.setColor(fill, skiaColor);
-      
+
       Revery_Draw.Canvas.drawRRect(canvas, innerRRect, fill);
-    }
+    };
 
     Revery_Draw.Canvas.restore(canvas);
     _super#draw(parentContext);

@@ -16,7 +16,6 @@ let interpolate = (fromValue, toValue, t) => {
 };
 
 module Matrix = {
-  
   let toSkiaMatrix = (mat: Reglm.Mat4.t) => {
     let skiaMat = Skia.Matrix.make();
     let skiaMat44 = Skia.Matrix44.make();
@@ -26,13 +25,13 @@ module Matrix = {
 
     while (col^ < 4) {
       while (row^ < 4) {
-        let idx = (col^ * 4) + row^;
+        let idx = col^ * 4 + row^;
 
         let v = Mat4.get(mat, idx);
         Skia.Matrix44.set(skiaMat44, row^, col^, v);
 
         incr(row);
-      }
+      };
       row := 0;
       incr(col);
     };
@@ -40,5 +39,4 @@ module Matrix = {
     Skia.Matrix44.toMatrix(skiaMat44, skiaMat);
     skiaMat;
   };
-
 };

@@ -25,10 +25,8 @@ class textNode (text: string) = {
     let opacity = parentContext.opacity *. style.opacity;
     let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 
-    let ascentPx =
-      Text.getAscent(~fontFamily, ~fontSize, ());
-    let descentPx =
-      Text.getDescent(~fontFamily, ~fontSize, ());
+    let ascentPx = Text.getAscent(~fontFamily, ~fontSize, ());
+    let descentPx = Text.getDescent(~fontFamily, ~fontSize, ());
     let lineHeightPx =
       lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
     let leadingPx = lineHeightPx -. ascentPx -. descentPx;
@@ -38,37 +36,49 @@ class textNode (text: string) = {
       _this#measure(style.width, style.height) |> ignore;
     };
 
-    
-    let { canvas, _ }: NodeDrawContext.t = parentContext;
+    let {canvas, _}: NodeDrawContext.t = parentContext;
     // TODO find a way to only manage the matrix stack in Node
     let world = _this#getWorldTransform();
     let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
     Revery_Draw.Canvas.setMatrix(canvas, skiaWorld);
-    
+
     List.iteri(
       (lineIndex, line) => {
-          let baselineY = (leadingPx /. 2. *. 0.) +. ascentPx +. (lineHeightPx *. float_of_int(lineIndex));
+        let baselineY =
+          leadingPx
+          /. 2.
+          *. 0.
+          +. ascentPx
+          +. lineHeightPx
+          *. float_of_int(lineIndex);
 
-          // let dimensions = _this#measurements();
-          // // print_endline ("Drawing text: " ++ line ++ " - y: " ++ string_of_float(y));
-          // let emHeightPx = ascentPx +. descentPx;       
-          // print_endline("fontSize: " ++ string_of_int(fontSize) ++ ", emHeightPx: " ++ string_of_float(emHeightPx));
-          // let lineRect = Revery_Math.Rectangle.create(~x=0., ~y=baselineY -. ascentPx, ~width=float_of_int(dimensions.width), ~height=emHeightPx, ());
-          // let backgroundColor = Skia.Color.makeArgb(0xAA, 0x33, 0xFF, 0x33);
-          // let backgroundPaint = Skia.Paint.make();      
-          // Skia.Paint.setColor(backgroundPaint, backgroundColor);
-          // Canvas.drawRect(canvas, lineRect, backgroundPaint);
+        // let dimensions = _this#measurements();
+        // // print_endline ("Drawing text: " ++ line ++ " - y: " ++ string_of_float(y));
+        // let emHeightPx = ascentPx +. descentPx;
+        // print_endline("fontSize: " ++ string_of_int(fontSize) ++ ", emHeightPx: " ++ string_of_float(emHeightPx));
+        // let lineRect = Revery_Math.Rectangle.create(~x=0., ~y=baselineY -. ascentPx, ~width=float_of_int(dimensions.width), ~height=emHeightPx, ());
+        // let backgroundColor = Skia.Color.makeArgb(0xAA, 0x33, 0xFF, 0x33);
+        // let backgroundPaint = Skia.Paint.make();
+        // Skia.Paint.setColor(backgroundPaint, backgroundColor);
+        // Canvas.drawRect(canvas, lineRect, backgroundPaint);
 
-          // let leadingRect = Revery_Math.Rectangle.create(~x=0., ~y=baselineY +. descentPx, ~width=float_of_int(dimensions.width), ~height=leadingPx, ());
-          // let leadingColor = Skia.Color.makeArgb(0xAA, 0xFF, 0x33, 0x33);
-          // let leadingPaint = Skia.Paint.make();
-          // Skia.Paint.setColor(leadingPaint, leadingColor);
-          // Canvas.drawRect(canvas, leadingRect, leadingPaint)
+        // let leadingRect = Revery_Math.Rectangle.create(~x=0., ~y=baselineY +. descentPx, ~width=float_of_int(dimensions.width), ~height=leadingPx, ());
+        // let leadingColor = Skia.Color.makeArgb(0xAA, 0xFF, 0x33, 0x33);
+        // let leadingPaint = Skia.Paint.make();
+        // Skia.Paint.setColor(leadingPaint, leadingColor);
+        // Canvas.drawRect(canvas, leadingRect, leadingPaint)
 
-          // print_endline ("Drawing text: " ++ line ++ " - y: " ++ string_of_float(y));
-          Canvas.drawText(~color=colorWithAppliedOpacity, ~x=0., ~y=baselineY, ~fontFamily, ~fontSize=float_of_int(fontSize), line, canvas);
-        }
-        ,
+        // print_endline ("Drawing text: " ++ line ++ " - y: " ++ string_of_float(y));
+        Canvas.drawText(
+          ~color=colorWithAppliedOpacity,
+          ~x=0.,
+          ~y=baselineY,
+          ~fontFamily,
+          ~fontSize=float_of_int(fontSize),
+          line,
+          canvas,
+        );
+      },
       _lines,
     );
   };
@@ -94,8 +104,7 @@ class textNode (text: string) = {
     let window = Ui.getActiveWindow();
 
     let measure = str =>
-      Text.measure(~fontFamily, ~fontSize, str)
-      |> (value => value.width);
+      Text.measure(~fontFamily, ~fontSize, str) |> (value => value.width);
 
     let width = measure(formattedText);
     let isOverflowing = width >= maxWidth;

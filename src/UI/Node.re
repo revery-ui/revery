@@ -62,9 +62,7 @@ class node (()) = {
     NodeEvents.DimensionsChangedEventParams.create();
   val mutable _isLayoutDirty = true;
   val mutable _forcedMeasurements: option(Dimensions.t) = None;
-
   val mutable _hasHadNonZeroBlurRadius = false;
-  
   pub draw = (parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
@@ -73,7 +71,7 @@ class node (()) = {
     let ctx = RenderPass.getContext();
 
     let layout = _layoutNode.layout;
-    let { canvas, _ }: NodeDrawContext.t = parentContext;
+    let {canvas, _}: NodeDrawContext.t = parentContext;
 
     Revery_Draw.Canvas.save(canvas);
     let skiaWorldTransform = Revery_Math.Matrix.toSkiaMatrix(worldTransform);
@@ -89,7 +87,7 @@ class node (()) = {
         List.iter(c => c#draw(localContext), _this#getChildren());
       },
     );
-    
+
     Revery_Draw.Canvas.restore(canvas);
   };
   pub measurements = () => {
@@ -135,7 +133,9 @@ class node (()) = {
   pub setStyle = style =>
     if (style != _style) {
       if (style.boxShadow.blurRadius != 0. || _hasHadNonZeroBlurRadius) {
-        print_endline("Setting style: " ++ string_of_float(style.boxShadow.blurRadius));
+        print_endline(
+          "Setting style: " ++ string_of_float(style.boxShadow.blurRadius),
+        );
         _hasHadNonZeroBlurRadius = true;
       };
       _style = style;

@@ -11,14 +11,7 @@ module DrawContext = {
   };
 
   let create =
-      (
-        ~canvas,
-        ~pixelRatio,
-        ~scaleFactor,
-        ~screenWidth,
-        ~screenHeight,
-        (),
-      ) => {
+      (~canvas, ~pixelRatio, ~scaleFactor, ~screenWidth, ~screenHeight, ()) => {
     canvas,
     pixelRatio,
     scaleFactor,
@@ -38,12 +31,12 @@ let getContext = () => {
   };
 };
 
-let start=
+let start =
     (~canvas, ~pixelRatio, ~scaleFactor, ~screenWidth, ~screenHeight, ()) => {
   _activeContext :=
     Some(
       DrawContext.create(
-        ~canvas, 
+        ~canvas,
         ~pixelRatio,
         ~scaleFactor,
         ~screenWidth,

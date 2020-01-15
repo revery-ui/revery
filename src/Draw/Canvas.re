@@ -3,7 +3,6 @@
  *
  * Module for integrating with the Skia canvas
  */
-
 module Rectangle = Revery_Math.Rectangle;
 
 open Skia;
@@ -29,7 +28,13 @@ let create = (window: Revery_Core.Window.t) => {
 
     let framebufferSize = window.metrics.framebufferSize;
     let backendRenderTarget =
-      Gr.BackendRenderTarget.makeGl(framebufferSize.width, framebufferSize.height, 0, 8, framebufferInfo);
+      Gr.BackendRenderTarget.makeGl(
+        framebufferSize.width,
+        framebufferSize.height,
+        0,
+        8,
+        framebufferInfo,
+      );
     let surfaceProps = SurfaceProps.make(Unsigned.UInt32.of_int(0), RgbH);
     switch (
       Surface.makeFromBackendRenderTarget(
@@ -46,7 +51,11 @@ let create = (window: Revery_Core.Window.t) => {
       None;
     | Some(v) =>
       logInfo(
-        Printf.sprintf("Successfully created canvas: %dx%d", framebufferSize.width, framebufferSize.height),
+        Printf.sprintf(
+          "Successfully created canvas: %dx%d",
+          framebufferSize.width,
+          framebufferSize.height,
+        ),
       );
       let surface = v;
       Some(surface);
@@ -58,15 +67,18 @@ let resize = (window: Revery_Core.Window.t, v: option(t)) => {
   switch (v) {
   | None => None
   | Some(existingCanvas) =>
-    if (Surface.getWidth(existingCanvas) != window.metrics.framebufferSize.width || Surface.getHeight(existingCanvas) != window.metrics.framebufferSize.height) {
+    if (Surface.getWidth(existingCanvas)
+        != window.metrics.framebufferSize.width
+        || Surface.getHeight(existingCanvas)
+        != window.metrics.framebufferSize.height) {
       logInfo(
         Printf.sprintf(
           "Resizing canvas: %dx%d->%dx%d",
           Surface.getWidth(existingCanvas),
           Surface.getHeight(existingCanvas),
           window.metrics.framebufferSize.width,
-          window.metrics.framebufferSize.height
-        )
+          window.metrics.framebufferSize.height,
+        ),
       );
       create(window);
     } else {
@@ -76,11 +88,11 @@ let resize = (window: Revery_Core.Window.t, v: option(t)) => {
 };
 
 let save = (v: t) => {
-   Skia.Canvas.save(Surface.getCanvas(v));
-  };
+  Skia.Canvas.save(Surface.getCanvas(v));
+};
 
 let restore = (v: t) => {
- Skia.Canvas.restore(Surface.getCanvas(v));
+  Skia.Canvas.restore(Surface.getCanvas(v));
 };
 
 let flush = (v: t) => {
@@ -111,47 +123,63 @@ let drawImage = (~x, ~y, src, v: t) => {
   let image = ImageRenderer.getTexture(src);
   switch (image) {
   | None => ()
-  | Some(img) => Canvas.drawImage(Surface.getCanvas(v), img, x, y, None);
-  }
-
+  | Some(img) => Canvas.drawImage(Surface.getCanvas(v), img, x, y, None)
+  };
 };
 
-let drawText = (~color=Revery_Core.Colors.white, ~x=0., ~y=0., ~fontFamily, ~fontSize, text, v: t) => {
+let drawText =
+    (
+      ~color=Revery_Core.Colors.white,
+      ~x=0.,
+      ~y=0.,
+      ~fontFamily,
+      ~fontSize,
+      text,
+      v: t,
+    ) => {
   let (_, skiaTypeface) = FontCache.load(fontFamily, 10);
   switch (skiaTypeface) {
-  | None => ();
-  | Some(typeface) => 
-
-  let fill2 = Paint.make();
-  let fontStyle = FontStyle.make(500, 20, Upright);
-  Paint.setColor(fill2, Revery_Core.Color.toSkia(color));
-  Paint.setTypeface(fill2, typeface);
-  Paint.setLcdRenderText(fill2, true);
-  Paint.setAntiAlias(fill2, true);
-  Paint.setTextSize(fill2, fontSize);
-  Canvas.drawText(Surface.getCanvas(v), text, x, y, fill2);
-  }
+  | None => ()
+  | Some(typeface) =>
+    let fill2 = Paint.make();
+    let fontStyle = FontStyle.make(500, 20, Upright);
+    Paint.setColor(fill2, Revery_Core.Color.toSkia(color));
+    Paint.setTypeface(fill2, typeface);
+    //Paint.setSubpixelText(fill2, true);
+    Paint.setLcdRenderText(fill2, true);
+    Paint.setAntiAlias(fill2, true);
+    Paint.setTextSize(fill2, fontSize);
+    Canvas.drawText(Surface.getCanvas(v), text, x, y, fill2);
+  };
 };
 
 let setMatrix = (v: t, mat: Skia.Matrix.t) => {
   Canvas.setMatrix(Surface.getCanvas(v), mat);
 };
 
-let clipRect = (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rect: Rectangle.t) => {
-  Canvas.clipRect(Surface.getCanvas(v), toSkiaRect(rect), clipOp, antiAlias);
+let clipRect =
+    (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rect: Rectangle.t) => {
+  Canvas.clipRect(
+    Surface.getCanvas(v),
+    toSkiaRect(rect),
+    clipOp,
+    antiAlias,
+  );
 };
 
-let clipRRect = (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rRect: Skia.RRect.t) => {
+let clipRRect =
+    (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rRect: Skia.RRect.t) => {
   Canvas.clipRRect(Surface.getCanvas(v), rRect, clipOp, antiAlias);
 };
 
-let clipPath = (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, path: Skia.Path.t) => {
+let clipPath =
+    (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, path: Skia.Path.t) => {
   Canvas.clipPath(Surface.getCanvas(v), path, clipOp, antiAlias);
 };
 
 let test_draw = (v: t) => {
   let canvas = Surface.getCanvas(v);
-  
+
   let fill = Paint.make();
   Paint.setColor(fill, Color.makeArgb(0xFF, 0x00, 0x00, 0x00));
   Canvas.drawPaint(canvas, fill);
@@ -161,14 +189,18 @@ let test_draw = (v: t) => {
   Canvas.drawRect(canvas, rect, fill);
 
   let fontStyle = FontStyle.make(500, 20, Upright);
-  let typeface = Typeface.makeFromName("Consolas", fontStyle);
+  let maybeTypeface = Typeface.makeFromName("Consolas", fontStyle);
 
   let fill2 = Paint.make();
   Paint.setColor(fill2, Color.makeArgb(0xFF, 0xFF, 0xFF, 0xFF));
-  Paint.setTypeface(fill2, typeface);
-  Paint.setLcdRenderText(fill2, true);
-  Paint.setAntiAlias(fill2, true);
-  Paint.setTextSize(fill2, 25.);
+  switch (maybeTypeface) {
+  | Some(typeface) =>
+    Paint.setTypeface(fill2, typeface);
+    Paint.setLcdRenderText(fill2, true);
+    Paint.setAntiAlias(fill2, true);
+    Paint.setTextSize(fill2, 25.);
 
-  Canvas.drawText(canvas, "Hello, world!", 30.25, 30.25, fill2);
+    Canvas.drawText(canvas, "Hello, world!", 30.25, 30.25, fill2);
+  | None => ()
+  };
 };

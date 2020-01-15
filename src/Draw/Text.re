@@ -37,8 +37,7 @@ let measure = (~fontFamily, ~fontSize, text) => {
   let dimensions = FontRenderer.measure(font, text);
   let ret: dimensions = {
     width: int_of_float(float_of_int(dimensions.width) +. 0.5),
-    height:
-      int_of_float(float_of_int(dimensions.height) +. 0.5),
+    height: int_of_float(float_of_int(dimensions.height) +. 0.5),
   };
   ret;
 };
@@ -72,4 +71,3 @@ let measure = (~fontFamily, ~fontSize, text) => {
   let (font, _) = FontCache.load(fontFamily, fontSize);
   FontRenderer.measure(font, text);
 };
-

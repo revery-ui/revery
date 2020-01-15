@@ -29,10 +29,9 @@ let draw = () =>
       let (x0, y0, x1, y1) = BoundingBox2d.getBounds(v.bbox);
       let height = y1 -. y0;
       let width = x1 -. x0;
-
-      // TODONOW: Bring back debug drawing, but with canvas
-      
-      /*Shapes.drawRect(
+      ();
+    // TODONOW: Bring back debug drawing, but with canvas
+    /*Shapes.drawRect(
         ~transform,
         ~width,
         ~height,

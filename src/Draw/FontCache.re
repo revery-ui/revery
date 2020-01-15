@@ -71,7 +71,7 @@ let load: (string, int) => t =
         InternalCache.add(_loadingCache, fontName, size, true);
         let success = fk => {
           let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
-          let font = (fk, Some(skiaTypeface));
+          let font = (fk, skiaTypeface);
 
           InternalCache.remove(_loadingCache, fontName, size);
           InternalCache.add(_cache, fontName, size, font);

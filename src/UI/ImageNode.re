@@ -26,23 +26,22 @@ class imageNode (imagePath: string) = {
     let dimensions = _this#measurements();
     let world = _this#getWorldTransform();
 
-    let { canvas, _ }: NodeDrawContext.t = parentContext;
+    let {canvas, _}: NodeDrawContext.t = parentContext;
 
     // TODO find a way to only manage the matrix stack in Node
-      let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
-      Revery_Draw.Canvas.setMatrix(canvas, skiaWorld);
-    Draw.Canvas.drawImage(~x=0., ~y=0., src, canvas); 
-
+    let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
+    Revery_Draw.Canvas.setMatrix(canvas, skiaWorld);
+    Draw.Canvas.drawImage(~x=0., ~y=0., src, canvas);
     /*Draw.Image.drawImage(
-      ~imagePath=src,
-      ~transform=world,
-      ~width=float_of_int(dimensions.width),
-      ~height=float_of_int(dimensions.height),
-      ~resizeMode=uiToDrawResizeMode(_resizeMode),
-      ~tint=Colors.white,
-      ~opacity=_opacity,
-      (),
-    );*/
+        ~imagePath=src,
+        ~transform=world,
+        ~width=float_of_int(dimensions.width),
+        ~height=float_of_int(dimensions.height),
+        ~resizeMode=uiToDrawResizeMode(_resizeMode),
+        ~tint=Colors.white,
+        ~opacity=_opacity,
+        (),
+      );*/
   };
   pub setOpacity = f => _opacity = f;
   pub setResizeMode = (mode: ImageResizeMode.t) => {
