@@ -277,7 +277,7 @@ let makeShadowImageFilter = boxShadow => {
   // https://www.w3.org/TR/css-backgrounds-3/#shadow-blur
   // https://html.spec.whatwg.org/C/#when-shadows-are-drawn
   let sigma = 0.5 *. blurRadius;
-  print_endline("sigms:" ++ string_of_float(sigma));
+  //print_endline("sigms:" ++ string_of_float(sigma));
 
   // TODO spreadRadius is unused - find out if this should be removed
   Skia.ImageFilter.makeDropShadow(
@@ -332,12 +332,12 @@ class viewNode (()) = {
       // ()
       // | boxShadow => {
       if (style.boxShadow.blurRadius != 0.) {
-        print_endline(
+      /*  print_endline(
           "drawing shadow..." ++ string_of_float(style.boxShadow.blurRadius),
-        );
-      };
+        );*/
       let shadowImageFilter = makeShadowImageFilter(style.boxShadow);
       Skia.Paint.setImageFilter(fill, shadowImageFilter);
+      };
       // }
       // };
 
