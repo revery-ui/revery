@@ -12,10 +12,11 @@
 /* init - initializes the AppDelegate
   Assigns a mutable dictionary to notificationActions
 */
-- (id)init {
+- (id)initWithSDLDelegate:(SDLAppDelegate *)sdlDelegate {
     self = [super init];
     if (self) {
         _notificationActions = [NSMutableDictionary new];
+        _sdlDelegate = sdlDelegate;
     }
 
     NSString *valueToSave = @"true";
@@ -25,11 +26,17 @@
     return self;
 }
 
++(id)newWithSDLDelegate:(SDLAppDelegate *)sdlDelegate {
+  return [[ReveryAppDelegate alloc] initWithSDLDelegate:sdlDelegate];
+}
+
+
 /* applicationDidFinishLaunching
   Assigns self as the notification center delegate
 */
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
     UNUSED(notification);
+    [_sdlDelegate applicationDidFinishLaunching:notification];
     [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
 }
 
