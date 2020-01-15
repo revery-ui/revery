@@ -275,7 +275,8 @@ module ExampleHost = {
 };
 
 let init = app => {
-  let _ignore = Log.listen((_, msg) => print_endline(msg));
+  Timber.App.enablePrinting();
+  Timber.App.enableDebugLogging();
 
   let maximized = Environment.webGL;
 

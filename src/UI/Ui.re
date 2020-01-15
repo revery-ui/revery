@@ -11,8 +11,8 @@
  * We should call them if we want to have multiple windows support.
  */
 
-module Log = Revery_Core.Log;
 module Window = Revery_Core.Window;
+module Log = (val Revery_Core.Log.withNamespace("Revery.Ui"));
 
 open RenderContainer;
 
@@ -21,7 +21,6 @@ let _activeWindow: ref(option(Window.t)) = ref(None);
 type renderFunction = React.element(React.reveryNode) => unit;
 
 let getActiveWindow = () => _activeWindow^;
-let log = Log.info("UI");
 
 let start = (window: Window.t, element: React.element(React.reveryNode)) => {
   let uiDirty = ref(true);
@@ -69,7 +68,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Revery_Core.Event.subscribe(
       window.onMouseLeave,
       () => {
-        log("Mouse leaving window");
+        Log.debug("Mouse leaving window");
         Mouse.notifyLeaveWindow(window);
       },
     );
@@ -78,7 +77,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Revery_Core.Event.subscribe(
       window.onMouseEnter,
       () => {
-        log("Mouse entering window");
+        Log.debug("Mouse entering window");
         Mouse.notifyEnterWindow(window);
       },
     );
