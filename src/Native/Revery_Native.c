@@ -18,7 +18,6 @@
 CAMLprim value revery_initialize() {
 #ifdef __APPLE__
     SDLAppDelegate *sdlDelegate = [NSApp delegate];
-// TODO: Bring back when #713 is fixed
     ReveryAppDelegate *delegate = [ReveryAppDelegate newWithSDLDelegate:sdlDelegate];
     [NSApp setDelegate:delegate];
 #elif WIN32
