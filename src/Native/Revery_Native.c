@@ -20,8 +20,9 @@
 
 CAMLprim value revery_initialize() {
 #ifdef __APPLE__
-    ReveryAppDelegate *delegate = [ReveryAppDelegate new];
-    [NSApp setDelegate:delegate];
+// TODO: Bring back when #713 is fixed
+//    ReveryAppDelegate *delegate = [ReveryAppDelegate new];
+//    [NSApp setDelegate:delegate];
 #elif WIN32
     HRESULT hr = CoInitialize(NULL);
     if (hr != S_OK) {
