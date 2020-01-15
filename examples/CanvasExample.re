@@ -1,7 +1,7 @@
 open Sdl2;
 
 open Revery;
-/* open Revery.Draw; */
+ open Revery.Draw;
 open Revery.UI;
 
 let containerStyle =
@@ -24,9 +24,25 @@ module Sample = {
     <View style=containerStyle>
       <Canvas
         style=outerBox
-        render={(transform, _pctx) => {
+        render={canvasContext => {
           //Gl.glClearColor(1.0, 0.0, 0.0, 1.0);
           //let window = getActiveWindow();
+
+          let paint = Skia.Paint.make();
+          Skia.Paint.setColor(paint, Skia.Color.makeArgb(0xFF, 0xFF, 0x00, 0x00));
+
+          let rect = Revery_Math.Rectangle.create(~x=1., ~y=1.0, ~width=100., ~height=200., ());
+          CanvasContext.drawRect(canvasContext, rect, paint);
+
+          CanvasContext.drawText(
+            ~color=Colors.white,
+            ~x=10.0,
+            ~y=20.0,
+            ~fontFamily="Roboto-Regular.ttf",
+            ~fontSize=20.,
+            "Hello, word!",
+            canvasContext,
+          );
           ();
         }}
         // Revery.Draw.Text.drawString(

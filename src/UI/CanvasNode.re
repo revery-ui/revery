@@ -3,10 +3,11 @@ open Reglm;
 module RenderPass = Revery_Draw.RenderPass;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
+module CanvasContext = Revery_Draw.CanvasContext;
 
 open ViewNode;
 
-type renderCallback = (Mat4.t, NodeDrawContext.t) => unit;
+type renderCallback = (CanvasContext.t) => unit;
 
 /*
  * CanvasNode
@@ -23,17 +24,22 @@ class canvasNode (()) = {
     _super#draw(parentContext);
 
     let ctx = RenderPass.getContext();
-    let worldTransform = _this#getWorldTransform();
+    let world = _this#getWorldTransform();
     let dimensions = _this#measurements();
+    let canvas = parentContext.canvas;
 
     switch (render) {
     | Some(r) =>
-      Overflow.render(parentContext.canvas, LayoutTypes.Hidden, dimensions, () => {
+      CanvasContext.save(canvas);
+      let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
+      CanvasContext.setMatrix(canvas, skiaWorld);
+      Overflow.render(canvas, LayoutTypes.Hidden, dimensions, () => {
         // canvas save
         // canvas set transform
-        r(worldTransform, parentContext)
+        r(canvas)
         //canvas restore
       })
+      CanvasContext.restore(canvas);
     | None => ()
     };
   };
