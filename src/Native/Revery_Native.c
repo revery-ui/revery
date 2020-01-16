@@ -1,8 +1,5 @@
 #include <stdio.h>
 
-#include <caml/alloc.h>
-#include <caml/callback.h>
-#include <caml/memory.h>
 #include <caml/mlvalues.h>
 #include <string.h>
 
@@ -20,9 +17,9 @@
 
 CAMLprim value revery_initialize() {
 #ifdef __APPLE__
-// TODO: Bring back when #713 is fixed
-//    ReveryAppDelegate *delegate = [ReveryAppDelegate new];
-//    [NSApp setDelegate:delegate];
+    SDLAppDelegate *sdlDelegate = [NSApp delegate];
+    ReveryAppDelegate *delegate = [ReveryAppDelegate newWithSDLDelegate:sdlDelegate];
+    [NSApp setDelegate:delegate];
 #elif WIN32
     HRESULT hr = CoInitialize(NULL);
     if (hr != S_OK) {
