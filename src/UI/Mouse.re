@@ -6,6 +6,8 @@ open Revery_Math;
 open UiEvents;
 open NodeEvents;
 
+module Log = (val Log.withNamespace("Revery.UI.Mouse"));
+
 module Cursor = {
   /* State needed to track on the cursor */
   type t = {
@@ -428,10 +430,12 @@ let rec handleMouseEnterDiff = (deepestNode, evtParams, ~newNodes=[], ()) => {
 };
 
 let dispatch =
-    (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node) =>
+    (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node) => {
+  let eventToSend = internalToExternalEvent(cursor, evt);
+  Log.debugf(m => m("Dispatching event from node %i: %s", node#getInternalId(), NodeEvents.show_event(eventToSend)));
+
   if (node#hasRendered()) {
     let pos = getPositionFromMouseEvent(cursor, evt);
-    let eventToSend = internalToExternalEvent(cursor, evt);
 
     if (isMouseDownEv(eventToSend)) {
       switch (getFirstFocusable(node, pos)) {
@@ -489,3 +493,4 @@ let dispatch =
 
     Cursor.set(cursor, pos);
   };
+};
