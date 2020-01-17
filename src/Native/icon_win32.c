@@ -47,7 +47,7 @@ void revery_setIconBadge_win32(void *win, void *ih, char *badgeStr) {
     colorRect.left = colorRect.top = 0;
     colorRect.right = 32;
     colorRect.bottom = 32;
-    HBRUSH hBrush = CreateSolidBrush(RGB(244, 67, 54));
+    HBRUSH hBrush = CreateSolidBrush(RGB(238, 17, 17));
 
 
     char *displayStr;
