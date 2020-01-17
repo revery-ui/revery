@@ -1,0 +1,43 @@
+opam-version: "2.0"
+version: "0.4.0"
+maintainer: "yallop@gmail.com"
+homepage: "https://github.com/ocamllabs/ocaml-ctypes"
+dev-repo: "git+http://github.com/ocamllabs/ocaml-ctypes.git"
+bug-reports: "http://github.com/ocamllabs/ocaml-ctypes/issues"
+depexts: [
+  ["libffi-dev"] {os-family = "debian"}
+  ["libffi"] {os = "macos" & os-distribution = "homebrew"}
+  ["libffi"] {os = "macos" & os-distribution = "macports"}
+  ["libffi-devel"] {os-distribution = "centos"}
+  ["libffi-devel"] {os-distribution = "ol"}
+  ["libffi-devel"] {os-distribution = "fedora"}
+  ["libffi-dev"] {os-distribution = "alpine"}
+  ["libffi-devel"] {os-family = "suse"}
+]
+tags: ["org:ocamllabs" "org:mirage"]
+post-messages: [
+  "This package requires libffi on your system" {failure}
+]
+synopsis: "Virtual package for enabling the ctypes.foreign subpackage."
+description: """
+`ctypes-foreign` is just a virtual OPAM package that determines
+whether the foreign subpackage should built as part of ctypes.
+In order to actually get the ctypes package, you should also:
+
+    opam install ctypes ctypes-foreign
+
+You can verify the existence of the ocamlfind subpackage by:
+
+    ocamlfind list | grep ctypes
+
+Which should output something like:
+
+    ctypes              (version: 0.4.1)
+    ctypes.foreign      (version: 0.4.1)
+    ctypes.foreign.base (version: 0.4.1)
+    ctypes.foreign.threaded (version: 0.4.1)
+    ctypes.foreign.unthreaded (version: 0.4.1)
+    ctypes.stubs        (version: 0.4.1)
+    ctypes.top          (version: 0.4.1)"""
+authors: "yallop@gmail.com"
+depends: ["ocaml"]
