@@ -43,7 +43,7 @@
     "rench": "^1.9.1",
     "rebez": "github:jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3011",
-    "reason-skia": "github:revery-ui/reason-skia#31fb68e",
+    "reason-skia": "github:revery-ui/reason-skia#a21361d",
     "revery-text-wrap": "github:revery-ui/revery-text-wrap#005385c",
     "timber": "*"
   },
@@ -52,6 +52,7 @@
     "@opam/cmdliner": "1.0.2",
     "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b6",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
+    "esy-skia": "revery-ui/esy-skia#4e72dea",
     "timber": "glennsl/timber#37ffa07"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 {
-  "checksum": "3e605fa8f51b6a238acb541c0fd421c7",
+  "checksum": "839437b20a6f9aa6a300f2e7a54920e2",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9": {
@@ -60,7 +60,7 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
         "reperf@1.4.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-skia@github:revery-ui/reason-skia#31fb68e@d41d8cd9",
+        "reason-skia@github:revery-ui/reason-skia#a21361d@d41d8cd9",
         "reason-sdl2@2.10.3012@d41d8cd9",
         "reason-gl-matrix@0.9.9306@d41d8cd9",
         "reason-fontkit@2.8.3@d41d8cd9",
@@ -155,18 +155,19 @@
       ],
       "devDependencies": []
     },
-    "reason-skia@github:revery-ui/reason-skia#31fb68e@d41d8cd9": {
-      "id": "reason-skia@github:revery-ui/reason-skia#31fb68e@d41d8cd9",
+    "reason-skia@github:revery-ui/reason-skia#a21361d@d41d8cd9": {
+      "id": "reason-skia@github:revery-ui/reason-skia#a21361d@d41d8cd9",
       "name": "reason-skia",
-      "version": "github:revery-ui/reason-skia#31fb68e",
+      "version": "github:revery-ui/reason-skia#a21361d",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-skia#31fb68e" ]
+        "source": [ "github:revery-ui/reason-skia#a21361d" ]
       },
       "overrides": [],
       "dependencies": [
         "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9",
-        "refmterr@3.3.0@d41d8cd9", "esy-skia@0.6.0@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9",
+        "esy-skia@github:revery-ui/esy-skia#4e72dea@d41d8cd9",
         "esy-freetype2@2.9.1007@d41d8cd9", "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/lambda-term@opam:2.0.3@9465cf1c",
         "@opam/dune@opam:1.11.4@a7ccb7ae",
@@ -285,19 +286,17 @@
       ],
       "devDependencies": []
     },
-    "esy-skia@0.6.0@d41d8cd9": {
-      "id": "esy-skia@0.6.0@d41d8cd9",
+    "esy-skia@github:revery-ui/esy-skia#4e72dea@d41d8cd9": {
+      "id": "esy-skia@github:revery-ui/esy-skia#4e72dea@d41d8cd9",
       "name": "esy-skia",
-      "version": "0.6.0",
+      "version": "github:revery-ui/esy-skia#4e72dea",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/esy-skia/-/esy-skia-0.6.0.tgz#sha1:8afebb69ad8e60b71da3f45b63b30bdd9315a330"
-        ]
+        "source": [ "github:revery-ui/esy-skia#4e72dea" ]
       },
       "overrides": [],
       "dependencies": [
-        "esy-libjpeg-turbo@github:prometheansacrifice/libjpeg-turbo#50e8e32c48@d41d8cd9",
+        "esy-libjpeg-turbo@github:revery-ui/libjpeg-turbo#61e031f@d41d8cd9",
         "@esy-cross/ninja-build@1.8.2001@d41d8cd9"
       ],
       "devDependencies": []
@@ -316,34 +315,30 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-nasm@github:prometheansacrifice/esy-nasm#6240bdbb164476558d3738812fbbe48f66cc904a@d41d8cd9": {
-      "id":
-        "esy-nasm@github:prometheansacrifice/esy-nasm#6240bdbb164476558d3738812fbbe48f66cc904a@d41d8cd9",
+    "esy-nasm@github:revery-ui/esy-nasm#64a802b@d41d8cd9": {
+      "id": "esy-nasm@github:revery-ui/esy-nasm#64a802b@d41d8cd9",
       "name": "esy-nasm",
-      "version":
-        "github:prometheansacrifice/esy-nasm#6240bdbb164476558d3738812fbbe48f66cc904a",
+      "version": "github:revery-ui/esy-nasm#64a802b",
       "source": {
         "type": "install",
-        "source": [
-          "github:prometheansacrifice/esy-nasm#6240bdbb164476558d3738812fbbe48f66cc904a"
-        ]
+        "source": [ "github:revery-ui/esy-nasm#64a802b" ]
       },
       "overrides": [],
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-libjpeg-turbo@github:prometheansacrifice/libjpeg-turbo#50e8e32c48@d41d8cd9": {
+    "esy-libjpeg-turbo@github:revery-ui/libjpeg-turbo#61e031f@d41d8cd9": {
       "id":
-        "esy-libjpeg-turbo@github:prometheansacrifice/libjpeg-turbo#50e8e32c48@d41d8cd9",
+        "esy-libjpeg-turbo@github:revery-ui/libjpeg-turbo#61e031f@d41d8cd9",
       "name": "esy-libjpeg-turbo",
-      "version": "github:prometheansacrifice/libjpeg-turbo#50e8e32c48",
+      "version": "github:revery-ui/libjpeg-turbo#61e031f",
       "source": {
         "type": "install",
-        "source": [ "github:prometheansacrifice/libjpeg-turbo#50e8e32c48" ]
+        "source": [ "github:revery-ui/libjpeg-turbo#61e031f" ]
       },
       "overrides": [],
       "dependencies": [
-        "esy-nasm@github:prometheansacrifice/esy-nasm#6240bdbb164476558d3738812fbbe48f66cc904a@d41d8cd9",
+        "esy-nasm@github:revery-ui/esy-nasm#64a802b@d41d8cd9",
         "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9",
         "@esy-cross/ninja-build@1.8.2001@d41d8cd9"
       ],
