@@ -284,6 +284,12 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
     Color.toVec3(color),
   );
 
+  /* Shaders.CompiledShader.setUniform3fv( */
+  /*   gradientShader, */
+  /*   "uShadowColor", */
+  /*   Color.toVec3(color), */
+  /* ); */
+
   Shaders.CompiledShader.setUniform2fv(
     gradientShader.uniformShadowAmount,
     Vec2.create(blurRadius /. width, blurRadius /. height),
