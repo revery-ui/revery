@@ -37,9 +37,18 @@ void revery_hideIconProgress_win32(void *win, void *ih) {
 void revery_setIconBadge_win32(void *win, void *ih, char *badgeStr) {
     HWND window = (HWND)win;
     ITaskbarList3 *iconHandle = (ITaskbarList3 *)ih;
+
+    HDC hDC = GetDC(NULL);
+
     // Load the badge template into memory
-    HBITMAP bmp = (HBITMAP)LoadImage(NULL, "badge.bmp", IMAGE_BITMAP, 0, 0,
-                                     LR_LOADFROMFILE);
+    HBITMAP bmp = CreateCompatibleBitmap(hDC, 32, 32);
+
+    RECT colorRect;
+    colorRect.left = colorRect.top = 0;
+    colorRect.right = 32;
+    colorRect.bottom = 32;
+    HBRUSH hBrush = CreateSolidBrush(RGB(244, 67, 54));
+
 
     char *displayStr;
 
@@ -57,27 +66,33 @@ void revery_setIconBadge_win32(void *win, void *ih, char *badgeStr) {
         displayStr[5] = '\0';
     }
 
+
     // Create a rect to paint the text into on top of the bitmap
-    RECT rect;
-    rect.left = 0;
+    RECT textRect;
+    textRect.left = 0;
     // Center the text in the rect
-    rect.top = 6;
-    rect.bottom = 32;
-    rect.right = 32;
-    HDC hdc = CreateCompatibleDC(NULL);
+    textRect.top = 6;
+    textRect.bottom = 32;
+    textRect.right = 32;
+
+
+    HDC memHDC = CreateCompatibleDC(hDC);
     // Load the bitmap, and save the old one so we don't leak it
-    HBITMAP oldBmp = (HBITMAP)SelectObject(hdc, bmp);
+    HBITMAP oldBmp = (HBITMAP)SelectObject(memHDC, bmp);
+    FillRect(memHDC, &colorRect, hBrush);
+    DeleteObject(hBrush);
+
     HFONT hFont = CreateFont(
                       20, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
                       0, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, "Arial");
-    SelectObject(hdc, hFont);
+    SelectObject(memHDC, hFont);
     // Make sure the text background is transparent
-    SetBkMode(hdc, TRANSPARENT);
-    SetTextColor(hdc, RGB(255, 255, 255));
-    DrawText(hdc, displayStr, strlen(displayStr), &rect, DT_CENTER | DT_WORDBREAK);
+    SetBkMode(memHDC, TRANSPARENT);
+    SetTextColor(memHDC, RGB(255, 255, 255));
+    DrawText(memHDC, displayStr, strlen(displayStr), &textRect, DT_CENTER | DT_WORDBREAK);
     // Delete the font and the old bitmap
     DeleteObject(hFont);
-    SelectObject(hdc, oldBmp);
+    SelectObject(memHDC, oldBmp);
 
     // This is to convert the HBITMAP into an HICON
     HIMAGELIST imageList = ImageList_Create(32, 32, ILC_COLOR32, 1, 1);
@@ -90,8 +105,8 @@ void revery_setIconBadge_win32(void *win, void *ih, char *badgeStr) {
 
     DeleteObject(imageList);
 
-    // Release the DC
-    ReleaseDC(NULL, hdc);
+    // Delete the DC
+    DeleteDC(memHDC);
 
     if (strlen(badgeStr) > 3) {
         free(displayStr);
