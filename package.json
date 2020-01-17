@@ -17,6 +17,15 @@
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
+    "buildEnv": {
+      "PKG_CONFIG_PATH": "/usr/lib64/pkgconfig:$PKG_CONFIG_PATH"
+    },
+    "exportedEnv": {
+      "PKG_CONFIG_PATH": {
+	"val": "/usr/lib64/pkgconfig:$PKG_CONFIG_PATH",
+        "scope": "global"
+      }
+    },
     "build": [
       "dune build -p Revery -j4"
     ],
