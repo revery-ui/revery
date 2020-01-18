@@ -10,7 +10,9 @@ open Revery_Core;
 open Revery_UI_Primitives;
 
 module Hooks = Revery_UI_Hooks;
-module Log = (val Revery_Core.Log.withNamespace("Revery.Components.Clickable"));
+module Log = (
+  val Revery_Core.Log.withNamespace("Revery.Components.Clickable")
+);
 
 let isMouseCaptured = ref(false);
 
