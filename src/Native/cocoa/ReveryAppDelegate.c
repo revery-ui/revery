@@ -27,7 +27,7 @@
 }
 
 +(id)newWithSDLDelegate:(SDLAppDelegate *)sdlDelegate {
-  return [[ReveryAppDelegate alloc] initWithSDLDelegate:sdlDelegate];
+    return [[ReveryAppDelegate alloc] initWithSDLDelegate:sdlDelegate];
 }
 
 
