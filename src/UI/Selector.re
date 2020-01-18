@@ -45,6 +45,8 @@ type selector('a) =
   | BorderHorizontal: selector(Border.t)
   | BorderVertical: selector(Border.t)
   | Transform: selector(list(Transform.t))
+  | Opacity: selector(float)
+  | BoxShadow: selector(BoxShadow.properties)
   | Cursor: selector(option(MouseCursors.t));
 
 /**
@@ -124,6 +126,9 @@ let rec select:
     | ([`BorderVertical(bv), ...rest], BorderVertical) =>
       select(rest, selector, bv)
     | ([`Transform(tr), ...rest], Transform) => select(rest, selector, tr)
+    | ([`Opacity(op), ...rest], Opacity) => select(rest, selector, op)
+    | ([`BoxShadow(bxsh), ...rest], BoxShadow) =>
+      select(rest, selector, bxsh)
     | ([`Cursor(cur), ...rest], Cursor) => select(rest, selector, cur)
     | ([_, ...rest], _) => select(rest, selector, default)
     };
