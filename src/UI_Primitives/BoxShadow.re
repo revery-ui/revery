@@ -1,6 +1,5 @@
 open Revery_UI;
 open React;
-open Style;
 
 let%nativeComponent make = (~boxShadow=Style.BoxShadow.make(), ~children, (), hooks) => (
   {
