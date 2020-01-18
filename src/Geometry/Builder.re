@@ -39,7 +39,7 @@ let addVertexChannel =
     builder.vertexCount^ == vertexCount
       ? ()
       /* TODO: Raise exception */
-      : print_endline("Vertex count mismatch")
+      : Console.error("Vertex count mismatch")
   };
 };
 

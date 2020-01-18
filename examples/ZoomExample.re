@@ -43,7 +43,7 @@ module Zoom = {
       };
     };
 
-    print_endline("Zoomv: " ++ string_of_float(currentZoom));
+    Console.log("Zoomv: " ++ string_of_float(currentZoom));
 
     <Center>
       <Column>

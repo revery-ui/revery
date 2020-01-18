@@ -11,3 +11,6 @@ module type Logger = {
 };
 
 let withNamespace: string => (module Logger);
+
+let enablePrinting: unit => unit;
+let enableDebugLogging: unit => unit;

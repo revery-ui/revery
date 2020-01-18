@@ -222,7 +222,7 @@ module ExampleHost = {
           Window.setTitle(win, "Revery Example - " ++ x.name);
 
           let sourceFile = getSourceForSample(state, x.name);
-          prerr_endline("SOURCE FILE: " ++ sourceFile);
+          Console.log("SOURCE FILE: " ++ sourceFile);
           notifyExampleSwitched(sourceFile);
           dispatch(SelectExample(x.name));
           ();
@@ -275,6 +275,16 @@ module ExampleHost = {
 };
 
 let init = app => {
+
+  let buffer = Buffer.create(0);
+  let formatter = Format.make_formatter(Buffer.add_substring(buffer), () => {
+    Console.log(Buffer.contents(buffer));
+    Buffer.clear(buffer);
+  });
+
+  Logs.format_reporter(~app=formatter, ~dst=formatter, ())
+  |> Logs.set_reporter;
+
   Timber.App.enablePrinting();
   Timber.App.enableDebugLogging();
 
@@ -312,5 +322,5 @@ let init = app => {
   ();
 };
 
-let onIdle = () => print_endline("Example: idle callback triggered");
+let onIdle = () => Console.log("Example: idle callback triggered");
 App.start(~onIdle, init);

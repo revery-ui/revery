@@ -43,8 +43,8 @@ module HoverExample = {
         () => {
           let dispose =
             Mouse.registerListeners(
-              ~onMouseEnterWindow=_ => print_endline("enter window"),
-              ~onMouseLeaveWindow=_ => print_endline("leave window"),
+              ~onMouseEnterWindow=_ => Console.log("enter window"),
+              ~onMouseLeaveWindow=_ => Console.log("leave window"),
               (),
             );
 
