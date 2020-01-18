@@ -83,6 +83,13 @@ let multiplyAlpha = (opacity: float, color: t) => {
   ret;
 };
 
+let mix = (~start, ~stop, ~amount) => {
+  r: (stop.r -. start.r) *. amount +. start.r,
+  g: (stop.g -. start.g) *. amount +. start.g,
+  b: (stop.b -. start.b) *. amount +. start.b,
+  a: (stop.a -. start.a) *. amount +. start.a,
+};
+
 let toVec3 = (color: t) => Vec3.create(color.r, color.g, color.b);
 let toVec4 = (color: t) => Vec4.create(color.r, color.g, color.b, color.a);
 

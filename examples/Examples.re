@@ -76,9 +76,19 @@ let state: state = {
       source: "Stopwatch.re",
     },
     {
-      name: "Native",
-      render: _ => NativeExample.render(),
-      source: "NativeExample.re",
+      name: "Native: File(s)/Folders(s)",
+      render: _ => NativeFileExample.render(),
+      source: "NativeFileExample.re",
+    },
+    {
+      name: "Native: Notifications",
+      render: _ => NativeNotificationExample.render(),
+      source: "NativeNotificationExample.re",
+    },
+    {
+      name: "Native: Icon Features",
+      render: w => NativeIconExample.render(w),
+      source: "NativeIconExample.re",
     },
     {
       name: "Input",
@@ -139,6 +149,11 @@ let state: state = {
       name: "Zoom Example",
       render: _ => ZoomExample.render(),
       source: "ZoomExample.re",
+    },
+    {
+      name: "Nested Clickables",
+      render: _ => NestedClickable.render(),
+      source: "NestedClickable.re",
     },
     {
       name: "Skia Example",
@@ -265,7 +280,8 @@ module ExampleHost = {
 };
 
 let init = app => {
-  let _ignore = Log.listen((_, msg) => print_endline(msg));
+  Timber.App.enablePrinting();
+  Timber.App.enableDebugLogging();
 
   let maximized = Environment.webGL;
 

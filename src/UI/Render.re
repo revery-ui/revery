@@ -10,6 +10,7 @@ open Revery_Math;
 
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
+module Log = (val Log.withNamespace("Revery.Render"));
 
 let _projection = Mat4.create();
 
@@ -21,7 +22,7 @@ let render =
       container: RenderContainer.t,
       component: React.element('node),
     ) => {
-  Log.info("UI", "BEGIN: Render frame");
+  Log.debug("BEGIN: Render frame");
   let {rootNode, window, container, _} = container;
 
   /* Perform reconciliation */
@@ -83,5 +84,5 @@ let render =
     DebugDraw.draw();
     RenderPass.endAlphaPass();
   });
-  Log.info("UI", "END: Render frame");
+  Log.debug("END: Render frame");
 };

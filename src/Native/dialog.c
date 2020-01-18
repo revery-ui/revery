@@ -4,6 +4,9 @@
 #include <caml/callback.h>
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
+
+#include "caml_values.h"
+
 #include <string.h>
 
 #ifdef WIN32
@@ -13,17 +16,6 @@
 #else
 #include "ReveryGtk.h"
 #endif
-
-#define Val_none Val_int(0)
-static value Val_some(value v) {
-    CAMLparam1(v);
-    CAMLlocal1(some);
-    some = caml_alloc(1, 0);
-    Store_field(some, 0, v);
-    CAMLreturn(some);
-}
-
-#define Some_val(v) Field(v, 0)
 
 CAMLprim value revery_alertSupported() {
 #ifdef WIN32
@@ -71,7 +63,8 @@ CAMLprim value revery_alertOpenFiles_native(
 
     // title from OCaml -> C
     char *title = NULL;
-    if (vTitle != Val_none) title = String_val(Some_val(vTitle));
+    if (vTitle != Val_none)
+        title = String_val(Some_val(vTitle));
 
     int allowMultiple = Bool_val(vAllowMultiple);
     int canChooseFiles = Bool_val(vCanChooseFiles);
@@ -105,21 +98,21 @@ CAMLprim value revery_alertOpenFiles_native(
 
 #ifdef __APPLE__
     fileList = revery_open_files_cocoa(
-        startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
-        canChooseDirectories, showHidden, buttonText, title);
+                   startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
+                   canChooseDirectories, showHidden, buttonText, title);
 #elif __linux__
     fileList = revery_open_files_gtk(
-        startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
-        canChooseDirectories, showHidden, buttonText, title);
+                   startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
+                   canChooseDirectories, showHidden, buttonText, title);
 #else
-  (void)showHidden;
-  (void)canChooseDirectories;
-  (void)canChooseFiles;
-  (void)allowMultiple;
-  (void)title;
-  (void)buttonText;
-  (void)startDirectory;
-  (void)fileList;
+    (void)showHidden;
+    (void)canChooseDirectories;
+    (void)canChooseFiles;
+    (void)allowMultiple;
+    (void)title;
+    (void)buttonText;
+    (void)startDirectory;
+    (void)fileList;
 #endif
 
     if (fileList) {
@@ -141,7 +134,7 @@ CAMLprim value revery_alertOpenFiles_native(
     }
 }
 
-CAMLprim value revery_alertOpenFiles_bytcode(value *argv, int argn) {
+CAMLprim value revery_alertOpenFiles_bytecode(value *argv, int argn) {
     (void)argn;
     return revery_alertOpenFiles_native(argv[0], argv[1], argv[2], argv[3],
                                         argv[4], argv[5], argv[6], argv[7],

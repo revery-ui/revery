@@ -506,33 +506,21 @@ describe("Mouse", ({describe, test, _}) => {
     test(
       "test that state is updated per event when stop propagation is called",
       ({expect, _}) => {
-      let evt = BubbledEvent.make(MouseMove({mouseX: 50., mouseY: 50.}));
-      switch (evt) {
-      | Some(e) =>
-        e.stopPropagation();
-        switch (BubbledEvent.activeEvent^) {
-        | Some(activeEvent) =>
-          expect.bool(activeEvent.shouldPropagate).toBeFalse()
-        | None => ()
-        };
-      | None => ()
-      };
+      let evt = BubbleEvent.make(MouseMove({mouseX: 50., mouseY: 50.}));
+
+      BubbleEvent.stopPropagation(evt);
+
+      expect.bool(evt.shouldPropagate).toBeFalse();
     });
 
     test(
       "test that state is updated per event when prevent default is called",
       ({expect, _}) => {
-      let evt = BubbledEvent.make(MouseMove({mouseX: 50., mouseY: 50.}));
-      switch (evt) {
-      | Some(e) =>
-        e.preventDefault();
-        switch (BubbledEvent.activeEvent^) {
-        | Some(activeEvent) =>
-          expect.bool(activeEvent.defaultPrevented).toBeTrue()
-        | None => ()
-        };
-      | None => ()
-      };
+      let evt = BubbleEvent.make(MouseMove({mouseX: 50., mouseY: 50.}));
+
+      BubbleEvent.preventDefault(evt);
+
+      expect.bool(evt.defaultPrevented).toBeTrue();
     });
   });
 
@@ -570,6 +558,7 @@ describe("Mouse", ({describe, test, _}) => {
       expect.int(captureCount^).toBe(1);
     })
   );
+
   test(
     "onCursorChangedEvent gets dispatched with proper cursor", ({expect, _}) => {
     module Cursors = Revery_Core.MouseCursors;

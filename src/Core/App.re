@@ -1,10 +1,9 @@
+module Log = (val Log.withNamespace("Revery.App"));
+
 type delegatedFunc = unit => unit;
 type idleFunc = unit => unit;
 type canIdleFunc = unit => bool;
 let noop = () => ();
-
-let logError = Log.error("App");
-let logInfo = Log.info("App");
 
 type t = {
   mutable idleCount: int,
@@ -30,17 +29,11 @@ let getWindowById = (app: t, id: int) => {
 
 let _tryToClose = (app: t, window: Window.t) =>
   if (Window.canQuit(window)) {
-    logInfo(
-      "_tryToClose: Window canQuit is true - closing window: "
-      ++ string_of_int(window.uniqueId),
-    );
+    Log.debugf(m => m("canQuit is true for window %i", window.uniqueId));
     Window.destroyWindow(window);
     Hashtbl.remove(app.windows, window.uniqueId);
   } else {
-    logInfo(
-      "_tryToClose: Window canQuit is false "
-      ++ string_of_int(window.uniqueId),
-    );
+    Log.debugf(m => m("canQuit is false for window %i", window.uniqueId));
   };
 
 let _tryToCloseAll = (app: t) => {
@@ -48,10 +41,15 @@ let _tryToCloseAll = (app: t) => {
   Seq.iter(w => _tryToClose(app, w), windows);
 };
 
-let quit = (~code=0, app: t) => {
-  _tryToCloseAll(app);
-  if (Hashtbl.length(app.windows) == 0) {
-    logInfo("Quitting");
+let quit = (~askNicely=false, ~code=0, app: t) => {
+  if (askNicely) {
+    _tryToCloseAll(app);
+  };
+
+  Revery_Native.uninit();
+
+  if (Hashtbl.length(app.windows) == 0 || !askNicely) {
+    Log.info("Quitting");
     exit(code);
   };
 };
@@ -131,11 +129,12 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       switch (window) {
       | Some(win) => Window._handleEvent(evt, win)
       | None =>
-        logError(
-          "Unable to find window with ID: "
-          ++ string_of_int(windowID)
-          ++ " - event: "
-          ++ Sdl2.Event.show(evt),
+        Log.errorf(m =>
+          m(
+            "Unable to find window with ID: %i - event: %s",
+            windowID,
+            Sdl2.Event.show(evt),
+          )
         )
       };
     };
@@ -155,7 +154,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     | Sdl2.Event.WindowEnter({windowID}) => handleEvent(windowID)
     | Sdl2.Event.WindowLeave({windowID}) => handleEvent(windowID)
     | Sdl2.Event.WindowClosed({windowID, _}) =>
-      logInfo("Got window closed event: " ++ string_of_int(windowID));
+      Log.debugf(m => m("Got WindowClosed event for %i", windowID));
       handleEvent(windowID);
       switch (getWindowById(appInstance, windowID)) {
       | None => ()
@@ -167,7 +166,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       // if Command+Q is pressed. In that case, we'll try
       // closing all the windows - and if they all close,
       // we'll exit the app.
-      quit(~code=0, appInstance)
+      quit(~askNicely=true, ~code=0, appInstance)
     | _ => ()
     };
   };
@@ -184,6 +183,8 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     };
   };
 
+  Revery_Native.init();
+
   let appLoop = () => {
     _flushEvents();
 
@@ -194,7 +195,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
         || _anyPendingMainThreadJobs()
         || !appInstance.canIdle^()) {
       if (appInstance.idleCount > 0) {
-        logInfo("Upshifting into active state.");
+        Log.debug("Upshifting into active state.");
       };
 
       Performance.bench("_doPendingMainThreadJobs", () =>
@@ -210,7 +211,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
       appInstance.idleCount = appInstance.idleCount + 1;
 
       if (appInstance.idleCount === framesToIdle) {
-        logInfo("Downshifting into idle state...");
+        Log.debug("Downshifting into idle state...");
         appInstance.onIdle();
       };
 
