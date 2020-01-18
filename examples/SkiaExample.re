@@ -8,30 +8,6 @@ let writeOutput = () => {
     Surface.makeRaster(imageInfo, 0, None);
   };
 
-  // TODO we will need additional tools for setting up an OpenGL context for this to work.
-  // See /tools/gpu inside the skia codebase
-  //
-  // let makeGpuSurface = (width, height) => {
-  //     let glInterfaceOption = Gr.Gl.Interface.makeNative();
-  //     if (glInterfaceOption === None) {
-  //         print_endline("GL Interface Creation failed");
-  //     }
-  //     let glContextOption = Gr.Context.makeGl(glInterfaceOption);
-  //     switch (glContextOption) {
-  //     | None => {
-  //         print_endline("GL Context creation failed");
-  //         None;
-  //     }
-  //     | Some(glContext) => {
-  //         // TODO the following should be made more idiomatic
-  //         let framebufferInfo = Gr.Gl.FramebufferInfo.make(Unsigned.UInt.of_int(0), Unsigned.UInt.of_int(0x8058)); // GR_GL_RGBA8
-  //         let backendRenderTarget = Gr.BackendRenderTarget.makeGl(width, height, 0, 8, Some(framebufferInfo));
-  //         let surfaceProps = SurfaceProps.make(Unsigned.UInt32.of_int(0), Unknown);
-  //         Surface.makeFromBackendRenderTarget(glContext, backendRenderTarget, TopLeft, Rgba8888, None, Some(surfaceProps));
-  //     }
-  //     };
-  // };
-
   let emitPng = (path, surface) => {
     let image = Surface.makeImageSnapshot(surface);
     let data = Image.encodeToData(image);
@@ -84,7 +60,7 @@ let writeOutput = () => {
   let surface = makeSurface(640l, 480l);
   let canvas = Surface.getCanvas(surface);
   draw(canvas);
-  emitPng("skia-c-example.png", surface);
+  emitPng("skia-example.png", surface);
 };
 
 module SkiaExamples = {
@@ -101,7 +77,7 @@ module SkiaExamples = {
       ];
 
     <View style=containerStyle>
-      <Button title="Output Skiar endering" onClick=writeOutput />
+      <Button title="Output skia-example.png" onClick=writeOutput />
     </View>;
   };
 };
