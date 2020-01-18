@@ -108,6 +108,8 @@ void revery_setIconBadge_win32(void *win, void *ih, char *badgeStr) {
     // Delete the DC
     DeleteDC(memHDC);
 
+    ReleaseDC(NULL, hDC);
+
     if (strlen(badgeStr) > 3) {
         free(displayStr);
     }
