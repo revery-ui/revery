@@ -10,7 +10,7 @@ open Revery_Math;
 
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
-module Log = (val Log.withNamespace("Revery.Render"));
+module Log = (val Log.withNamespace("Revery.UI.Render"));
 
 let _projection = Mat4.create();
 

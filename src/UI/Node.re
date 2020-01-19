@@ -6,6 +6,8 @@ module RenderPass = Revery_Draw.RenderPass;
 
 open Revery_Math;
 
+module Log = (val Revery_Core.Log.withNamespace("Revery.UI.Node"));
+
 module ListEx = {
   let insert = (i, node, list) => {
     let rec loop = (i, before, after) =>
@@ -294,46 +296,51 @@ class node (()) = {
   pub getParent = () => _parent;
   pub getMeasureFunction = () => None;
   pub handleEvent = (evt: NodeEvents.event) => {
-    let _ =
-      switch (evt, _this#getEvents()) {
-      | (MouseDown(c), {onMouseDown: Some(cb), _}) => cb(c)
-      | (MouseMove(c), {onMouseMove: Some(cb), _}) => cb(c)
-      | (MouseUp(c), {onMouseUp: Some(cb), _}) => cb(c)
-      | (MouseWheel(c), {onMouseWheel: Some(cb), _}) => cb(c)
-      | (MouseEnter(c), {onMouseEnter: Some(cb), _}) => cb(c)
-      | (MouseLeave(c), {onMouseLeave: Some(cb), _}) => cb(c)
-      | (MouseOver(c), {onMouseOver: Some(cb), _}) => cb(c)
-      | (MouseOut(c), {onMouseOut: Some(cb), _}) => cb(c)
-      | (MouseDown(_), _)
-      | (MouseMove(_), _)
-      | (MouseUp(_), _)
-      | (MouseEnter(_), _)
-      | (MouseLeave(_), _)
-      | (MouseOver(_), _)
-      | (MouseOut(_), _)
-      | (MouseWheel(_), _) => ()
-      | (Focus, p) =>
-        _this#focus();
-        switch (p) {
-        | {onFocus: Some(cb), _} => cb()
-        | _ => ()
-        };
-      | (Blur, p) =>
-        _this#blur();
-        switch (p) {
-        | {onBlur: Some(cb), _} => cb()
-        | _ => ()
-        };
-      | (KeyDown(e), {onKeyDown: Some(cb), _}) => cb(e)
-      | (KeyUp(e), {onKeyUp: Some(cb), _}) => cb(e)
-      | (TextInput(e), {onTextInput: Some(cb), _}) => cb(e)
-      | (TextEdit(e), {onTextEdit: Some(cb), _}) => cb(e)
-      | (TextInput(_), _)
-      | (TextEdit(_), _)
-      | (KeyDown(_), _)
-      | (KeyUp(_), _) => ()
+    // Log.debugf(m =>
+    //   m(
+    //     "Received event on node %i: %s",
+    //     _internalId,
+    //     NodeEvents.show_event(evt),
+    //   )
+    // );
+    switch (evt, _this#getEvents()) {
+    | (MouseDown(c), {onMouseDown: Some(cb), _}) => cb(c)
+    | (MouseMove(c), {onMouseMove: Some(cb), _}) => cb(c)
+    | (MouseUp(c), {onMouseUp: Some(cb), _}) => cb(c)
+    | (MouseWheel(c), {onMouseWheel: Some(cb), _}) => cb(c)
+    | (MouseEnter(c), {onMouseEnter: Some(cb), _}) => cb(c)
+    | (MouseLeave(c), {onMouseLeave: Some(cb), _}) => cb(c)
+    | (MouseOver(c), {onMouseOver: Some(cb), _}) => cb(c)
+    | (MouseOut(c), {onMouseOut: Some(cb), _}) => cb(c)
+    | (MouseDown(_), _)
+    | (MouseMove(_), _)
+    | (MouseUp(_), _)
+    | (MouseEnter(_), _)
+    | (MouseLeave(_), _)
+    | (MouseOver(_), _)
+    | (MouseOut(_), _)
+    | (MouseWheel(_), _) => ()
+    | (Focus, p) =>
+      _this#focus();
+      switch (p) {
+      | {onFocus: Some(cb), _} => cb()
+      | _ => ()
       };
-    ();
+    | (Blur, p) =>
+      _this#blur();
+      switch (p) {
+      | {onBlur: Some(cb), _} => cb()
+      | _ => ()
+      };
+    | (KeyDown(e), {onKeyDown: Some(cb), _}) => cb(e)
+    | (KeyUp(e), {onKeyUp: Some(cb), _}) => cb(e)
+    | (TextInput(e), {onTextInput: Some(cb), _}) => cb(e)
+    | (TextEdit(e), {onTextEdit: Some(cb), _}) => cb(e)
+    | (TextInput(_), _)
+    | (TextEdit(_), _)
+    | (KeyDown(_), _)
+    | (KeyUp(_), _) => ()
+    };
   };
   pub toLayoutNode = (~force, ()) => {
     let layoutStyle = _layoutStyle;
