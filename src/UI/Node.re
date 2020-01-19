@@ -296,14 +296,13 @@ class node (()) = {
   pub getParent = () => _parent;
   pub getMeasureFunction = () => None;
   pub handleEvent = (evt: NodeEvents.event) => {
-    Log.debugf(m =>
-      m(
-        "Received event on node %i: %s",
-        _internalId,
-        NodeEvents.show_event(evt),
-      )
-    );
-
+    // Log.debugf(m =>
+    //   m(
+    //     "Received event on node %i: %s",
+    //     _internalId,
+    //     NodeEvents.show_event(evt),
+    //   )
+    // );
     switch (evt, _this#getEvents()) {
     | (MouseDown(c), {onMouseDown: Some(cb), _}) => cb(c)
     | (MouseMove(c), {onMouseMove: Some(cb), _}) => cb(c)
