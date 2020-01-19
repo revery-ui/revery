@@ -49,29 +49,27 @@ void revery_setIconBadge_win32(void *win, void *ih, char *badgeStr) {
     colorRect.bottom = 32;
     HBRUSH hBrush = CreateSolidBrush(RGB(238, 17, 17));
 
+    int fontSize;
 
-    char *displayStr;
-
-    // Display the full string if it's 3 chars or less
-    if (strlen(badgeStr) <= 3) {
-        displayStr = badgeStr;
-    } else {
-        // Malloc a string and add the first two characters...
-        displayStr = (char *)malloc((6) * sizeof(char));
-        displayStr[0] = badgeStr[0];
-        displayStr[1] = badgeStr[1];
-        // ...an ellipsis...
-        displayStr[2] = displayStr[3] = displayStr[4] = '.';
-        // ...and a null termination.
-        displayStr[5] = '\0';
+    switch (strlen(badgeStr)) {
+        case 1:
+            fontSize = 30;
+            break;
+        case 2:
+            fontSize = 24;
+            break;
+        default:
+            fontSize = 20;
+            break;
     }
+
 
 
     // Create a rect to paint the text into on top of the bitmap
     RECT textRect;
     textRect.left = 0;
     // Center the text in the rect
-    textRect.top = 6;
+    textRect.top = 0;
     textRect.bottom = 32;
     textRect.right = 32;
 
@@ -83,13 +81,13 @@ void revery_setIconBadge_win32(void *win, void *ih, char *badgeStr) {
     DeleteObject(hBrush);
 
     HFONT hFont = CreateFont(
-                      20, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
+                      fontSize, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
                       0, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, "Arial");
     SelectObject(memHDC, hFont);
     // Make sure the text background is transparent
     SetBkMode(memHDC, TRANSPARENT);
     SetTextColor(memHDC, RGB(255, 255, 255));
-    DrawText(memHDC, displayStr, strlen(displayStr), &textRect, DT_CENTER | DT_WORDBREAK);
+    DrawText(memHDC, badgeStr, strlen(badgeStr), &textRect, DT_CENTER | DT_SINGLELINE | DT_VCENTER | DT_END_ELLIPSIS);
     // Delete the font and the old bitmap
     DeleteObject(hFont);
     SelectObject(memHDC, oldBmp);
@@ -109,10 +107,6 @@ void revery_setIconBadge_win32(void *win, void *ih, char *badgeStr) {
     DeleteDC(memHDC);
 
     ReleaseDC(NULL, hDC);
-
-    if (strlen(badgeStr) > 3) {
-        free(displayStr);
-    }
 }
 
 void revery_hideIconBadge_win32(void *win, void *ih) {
