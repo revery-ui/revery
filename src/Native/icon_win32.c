@@ -52,15 +52,15 @@ void revery_setIconBadge_win32(void *win, void *ih, char *badgeStr) {
     int fontSize;
 
     switch (strlen(badgeStr)) {
-        case 1:
-            fontSize = 30;
-            break;
-        case 2:
-            fontSize = 24;
-            break;
-        default:
-            fontSize = 20;
-            break;
+    case 1:
+        fontSize = 30;
+        break;
+    case 2:
+        fontSize = 24;
+        break;
+    default:
+        fontSize = 20;
+        break;
     }
 
 
