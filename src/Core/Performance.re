@@ -2,7 +2,7 @@ type performanceFunction('a) = unit => 'a;
 
 let nestingLevel = ref(0);
 
-module Log = (val Log.withNamespace("Revery.Performance"));
+module Log = (val Log.withNamespace("Revery.Core.Performance"));
 
 module MemoryAllocations = {
   type t = {

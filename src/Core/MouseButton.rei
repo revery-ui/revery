@@ -1,3 +1,4 @@
+[@deriving show]
 type t =
   | BUTTON_LEFT
   | BUTTON_MIDDLE

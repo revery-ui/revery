@@ -8,7 +8,7 @@ type size = {
   width: int,
   height: int,
 };
-module Log = (val Log.withNamespace("Revery.Window"));
+module Log = (val Log.withNamespace("Revery.Core.Window"));
 
 module WindowMetrics = {
   type t = {

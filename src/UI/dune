@@ -1,5 +1,5 @@
 (library
     (name Revery_UI)
     (public_name Revery.UI)
-    (preprocess (pps lwt_ppx))
+    (preprocess (pps lwt_ppx ppx_deriving.show))
     (libraries brisk-reconciler lwt lwt.unix sdl2 flex fontkit rebez.lib Revery_Core Revery_Draw Revery_Shaders Revery_Geometry Revery_Math))
