@@ -51,7 +51,7 @@
     "@opam/cmdliner": "1.0.2",
     "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b6",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
-    "timber": "glennsl/timber#37ffa07"
+    "timber": "glennsl/timber#ae5de6c"
   },
   "devDependencies": {
     "ocaml": ">=4.6.0 <4.8.0",
