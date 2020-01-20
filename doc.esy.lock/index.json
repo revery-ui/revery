@@ -1,5 +1,5 @@
 {
-  "checksum": "990c5537b1276d5af91d63c229340da6",
+  "checksum": "5d290616c0fa86880071f6690807509d",
   "root": "revery@link-dev:./package.json",
   "node": {
     "wordwrap@0.0.3@d41d8cd9": {
@@ -44,13 +44,13 @@
       "dependencies": [ "qs@6.9.1@d41d8cd9" ],
       "devDependencies": []
     },
-    "timber@github:glennsl/timber#37ffa07@d41d8cd9": {
-      "id": "timber@github:glennsl/timber#37ffa07@d41d8cd9",
+    "timber@github:glennsl/timber#ae5de6c@d41d8cd9": {
+      "id": "timber@github:glennsl/timber#ae5de6c@d41d8cd9",
       "name": "timber",
-      "version": "github:glennsl/timber#37ffa07",
+      "version": "github:glennsl/timber#ae5de6c",
       "source": {
         "type": "install",
-        "source": [ "github:glennsl/timber#37ffa07" ]
+        "source": [ "github:glennsl/timber#ae5de6c" ]
       },
       "overrides": [],
       "dependencies": [
@@ -99,7 +99,7 @@
       },
       "overrides": [ "doc.json" ],
       "dependencies": [
-        "timber@github:glennsl/timber#37ffa07@d41d8cd9",
+        "timber@github:glennsl/timber#ae5de6c@d41d8cd9",
         "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
         "reperf@1.4.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
