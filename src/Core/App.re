@@ -109,6 +109,21 @@ let _anyWindowsDirty = (app: t) =>
     getWindows(app),
   );
 
+let initConsole = () =>
+  if (Sys.win32) {
+    // First, try attaching to an existing console.
+    let attachResult = Sdl2.Platform.win32AttachConsole();
+
+    // If that wasn't available - try to allocate a new one.
+    let _code =
+      if (attachResult == 0) {
+        Sdl2.Platform.win32AllocConsole();
+      } else {
+        attachResult;
+      };
+    ();
+  };
+
 let start = (~onIdle=noop, initFunc: appInitFunc) => {
   let appInstance: t = {
     windows: Hashtbl.create(1),

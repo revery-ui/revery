@@ -67,3 +67,8 @@ let createWindow:
   when multiple frames have passed without requiring a render.
 */
 let start: (~onIdle: idleFunc=?, initFunc) => unit;
+
+/** [initConsole] (Windows-only) attaches or allocates a console,
+  to show logging output. No-op on other platforms.
+*/
+let initConsole: unit => unit;
