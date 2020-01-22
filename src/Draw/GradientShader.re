@@ -26,7 +26,7 @@ let uniforms: list(ShaderUniform.t) =
       usage: FragmentShader,
     },
     {
-      dataType: ShaderDataType.Vector3,
+      dataType: ShaderDataType.Vector4,
       name: "uShadowColor",
       usage: FragmentShader,
     },
@@ -62,7 +62,7 @@ let fragmentShader = {|
   float verticalBlur = min(topEdgeAmount, bottomEdgeAmount);
 
   float blur = horizontalBlur * verticalBlur;
-  gl_FragColor = vec4(uShadowColor.rgb, blur);
+  gl_FragColor = vec4(uShadowColor.rgb, uShadowColor.a * blur);
 |};
 
 type t = {

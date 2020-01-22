@@ -279,9 +279,9 @@ let renderShadow = (~boxShadow, ~width, ~height, ~world, ~m) => {
     m,
   );
 
-  Shaders.CompiledShader.setUniform3fv(
+  Shaders.CompiledShader.setUniform4fv(
     gradientShader.uniformShadowColor,
-    Color.toVec3(color),
+    Color.toVec4(color),
   );
 
   Shaders.CompiledShader.setUniform2fv(
