@@ -1,5 +1,5 @@
 {
-  "checksum": "a8f107ed1a6eff39bc13c0dc2ea25327",
+  "checksum": "2625b230e443719bf5be4014562cd436",
   "root": "revery@link-dev:./package.json",
   "node": {
     "wordwrap@0.0.3@d41d8cd9": {
@@ -103,7 +103,7 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
         "reperf@1.4.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-sdl2@2.10.3013@d41d8cd9",
+        "reason-sdl2@2.10.3014@d41d8cd9",
         "reason-gl-matrix@0.9.9306@d41d8cd9",
         "reason-fontkit@2.8.3@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "http-server@0.12.1@d41d8cd9",
@@ -213,14 +213,14 @@
       ],
       "devDependencies": []
     },
-    "reason-sdl2@2.10.3013@d41d8cd9": {
-      "id": "reason-sdl2@2.10.3013@d41d8cd9",
+    "reason-sdl2@2.10.3014@d41d8cd9": {
+      "id": "reason-sdl2@2.10.3014@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "2.10.3013",
+      "version": "2.10.3014",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3013.tgz#sha1:6cfe9903fa513ff1dfaac39f3080a9ff24d166bc"
+          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3014.tgz#sha1:85c5d86d37ed54154cd16e84f0594a03d107bea0"
         ]
       },
       "overrides": [],
