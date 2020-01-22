@@ -14,9 +14,9 @@
           (longs which represent OCaml callbacks)
       */
   @property(nonatomic, strong) NSMutableDictionary *notificationActions;
-  @property(nonatomic, strong) SDLAppDelegate *sdlDelegate;
+@property(nonatomic, strong) SDLAppDelegate *sdlDelegate;
 
-  -(id)initWithSDLDelegate:(SDLAppDelegate *)sdlDelegate;
-  +(id)newWithSDLDelegate:(SDLAppDelegate *)sdlDelegate;
+-(id)initWithSDLDelegate:(SDLAppDelegate *)sdlDelegate;
++(id)newWithSDLDelegate:(SDLAppDelegate *)sdlDelegate;
 @end
 #endif

@@ -9,7 +9,7 @@ type active = {
 type focused = ref(option(active));
 let focused = ref(None);
 
-module Log = (val Log.withNamespace("Focus"));
+module Log = (val Log.withNamespace("Revery.UI.Focus"));
 
 /* Should happen when user clicks anywhere where no focusable node exists */
 let loseFocus = () => {

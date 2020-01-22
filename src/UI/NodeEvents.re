@@ -4,24 +4,29 @@
 
 open Revery_Core;
 
+[@deriving show({with_path: false})]
 type mouseMoveEventParams = {
   mouseX: float,
   mouseY: float,
 };
 
+[@deriving show({with_path: false})]
 type mouseButtonEventParams = {
   mouseX: float,
   mouseY: float,
   button: MouseButton.t,
 };
 
+[@deriving show({with_path: false})]
 type mouseWheelEventParams = {
   deltaX: float,
   deltaY: float,
 };
 
+[@deriving show({with_path: false})]
 type textInputEventParams = {text: string};
 
+[@deriving show({with_path: false})]
 type textEditEventParams = {
   text: string,
   start: int,
@@ -31,12 +36,14 @@ type textEditEventParams = {
 /*
   Might be useful to extend in the future
  */
+[@deriving show({with_path: false})]
 type focusEventParams = unit;
 
+[@deriving show({with_path: false})]
 type keyEventParams = {
-  keycode: Key.Keycode.t,
-  scancode: Key.Scancode.t,
-  keymod: Key.Keymod.t,
+  keycode: [@opaque] Key.Keycode.t,
+  scancode: [@opaque] Key.Scancode.t,
+  keymod: [@opaque] Key.Keymod.t,
   repeat: bool,
   ctrlKey: bool,
   altKey: bool,
@@ -52,6 +59,7 @@ module DimensionsChangedEventParams = {
   let create = (~width=0, ~height=0, ()) => {width, height};
 };
 
+[@deriving show({with_path: false})]
 type event =
   | MouseDown(mouseButtonEventParams)
   | MouseMove(mouseMoveEventParams)
@@ -123,23 +131,20 @@ let make =
       ~onDimensionsChanged=?,
       _unit: unit,
     ) => {
-  let ret: t('a) = {
-    ref,
-    onMouseDown,
-    onMouseMove,
-    onMouseUp,
-    onMouseWheel,
-    onMouseEnter,
-    onMouseLeave,
-    onMouseOver,
-    onMouseOut,
-    onFocus,
-    onBlur,
-    onTextEdit,
-    onTextInput,
-    onKeyDown,
-    onKeyUp,
-    onDimensionsChanged,
-  };
-  ret;
+  ref,
+  onMouseDown,
+  onMouseMove,
+  onMouseUp,
+  onMouseWheel,
+  onMouseEnter,
+  onMouseLeave,
+  onMouseOver,
+  onMouseOut,
+  onFocus,
+  onBlur,
+  onTextEdit,
+  onTextInput,
+  onKeyDown,
+  onKeyUp,
+  onDimensionsChanged,
 };

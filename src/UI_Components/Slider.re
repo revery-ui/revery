@@ -85,7 +85,12 @@ let%component make =
   let sliderUpdate = (w, startPosition, endPosition, mouseX, mouseY) => {
     let mousePosition = vertical ? mouseY : mouseX;
     let thumbPosition =
-      clamp(mousePosition, startPosition, endPosition) -. startPosition;
+      clamp(
+        mousePosition -. float(thumbLength) /. 2.,
+        startPosition,
+        endPosition,
+      )
+      -. startPosition;
 
     let normalizedValue =
       thumbPosition /. w *. (maximumValue -. minimumValue) +. minimumValue;
@@ -169,6 +174,8 @@ let%component make =
     switch (availableWidth) {
     | Some(w) =>
       int_of_float((v -. minimumValue) /. (maximumValue -. minimumValue) *. w)
+      - thumbLength
+      / 2
     | None => 0
     };
 
@@ -184,18 +191,24 @@ let%component make =
   let beforeTrackStyle =
     Style.[
       top(vertical ? 0 : trackMargins),
-      bottom(vertical ? sliderLength - thumbPosition : trackMargins),
+      bottom(
+        vertical
+          ? sliderLength - thumbPosition - thumbWidth / 2 : trackMargins,
+      ),
       left(vertical ? trackMargins : 0),
-      right(vertical ? trackMargins : sliderLength - thumbPosition),
+      right(
+        vertical
+          ? trackMargins : sliderLength - thumbPosition - thumbWidth / 2,
+      ),
       position(`Absolute),
       backgroundColor(minimumTrackColor),
     ];
 
   let afterTrackStyle =
     Style.[
-      top(vertical ? thumbPosition + thumbWidth : trackMargins),
+      top(vertical ? thumbPosition + thumbWidth * 3 / 2 : trackMargins),
       bottom(vertical ? 0 : trackMargins),
-      left(vertical ? trackMargins : thumbPosition + thumbWidth),
+      left(vertical ? trackMargins : thumbPosition + thumbWidth * 3 / 2),
       right(vertical ? trackMargins : 0),
       position(`Absolute),
       backgroundColor(sliderBackgroundColor),
@@ -210,8 +223,8 @@ let%component make =
           position(`Absolute),
           height(vertical ? thumbWidth : thumbHeight),
           width(vertical ? thumbHeight : thumbWidth),
-          left(vertical ? 0 : thumbPosition),
-          top(vertical ? thumbPosition : 0),
+          left(vertical ? 0 : thumbPosition + thumbWidth / 2),
+          top(vertical ? thumbPosition + thumbWidth / 2 : 0),
           backgroundColor(thumbColor),
         ]
       />
