@@ -10,7 +10,7 @@ let parentStyles =
     flexDirection(`Column),
   ];
 
-let firstShadow =
+let blackShadow =
   Style.[
     backgroundColor(Colors.blue),
     position(`Relative),
@@ -26,7 +26,23 @@ let firstShadow =
     marginVertical(30),
   ];
 
-let secondShadow =
+let subtleBlackShadow =
+  Style.[
+    backgroundColor(Colors.teal),
+    position(`Relative),
+    width(100),
+    height(100),
+    boxShadow(
+      ~yOffset=1.,
+      ~xOffset=1.,
+      ~blurRadius=5.,
+      ~color=Color.rgba(0., 0., 0., 0.2),
+      ~spreadRadius=0.,
+    ),
+    marginVertical(30),
+  ];
+
+let greenShadow =
   Style.[
     backgroundColor(Colors.red),
     position(`Relative),
@@ -44,6 +60,7 @@ let secondShadow =
 
 let render = () =>
   <View style=parentStyles>
-    <View style=firstShadow />
-    <View style=secondShadow />
+    <View style=blackShadow />
+    <View style=subtleBlackShadow />
+    <View style=greenShadow />
   </View>;
