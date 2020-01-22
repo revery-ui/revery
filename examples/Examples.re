@@ -155,6 +155,11 @@ let state: state = {
       render: _ => NestedClickable.render(),
       source: "NestedClickable.re",
     },
+    {
+      name: "Skia Example",
+      render: _ => SkiaExample.render(),
+      source: "SkiaExample.re",
+    },
   ],
   selectedExample: "Animation",
 };
