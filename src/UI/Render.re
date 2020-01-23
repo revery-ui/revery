@@ -22,7 +22,7 @@ let render =
       container: RenderContainer.t,
       component: React.element('node),
     ) => {
-  Log.debug("BEGIN: Render frame");
+  Log.trace("BEGIN: Render frame");
   let {rootNode, window, container, _} = container;
 
   /* Perform reconciliation */
@@ -84,5 +84,5 @@ let render =
     DebugDraw.draw();
     RenderPass.endAlphaPass();
   });
-  Log.debug("END: Render frame");
+  Log.trace("END: Render frame");
 };

@@ -43,14 +43,14 @@ let bench: (string, performanceFunction('a)) => 'a =
       nestingLevel := nestingLevel^ + 1;
       let startTime = Unix.gettimeofday();
       let startCounters = GarbageCollector.counters();
-      Log.debugf(m =>
+      Log.tracef(m =>
         m("%s[BEGIN: %s]", String.make(nestingLevel^, '-'), name)
       );
       let ret = f();
       let endTime = Unix.gettimeofday();
       let endCounters = GarbageCollector.counters();
       let allocations = getMemoryAllocations(startCounters, endCounters);
-      Log.debugf(m =>
+      Log.tracef(m =>
         m(
           "%s[END: %s] Time: %fms Memory: %s",
           String.make(nestingLevel^, '-'),

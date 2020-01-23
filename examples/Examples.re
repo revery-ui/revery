@@ -283,7 +283,7 @@ let init = app => {
   Revery.App.initConsole();
 
   Timber.App.enable();
-  Timber.App.setLevel(Timber.Level.trace);
+  Timber.App.setLevel(Timber.Level.perf);
 
   let maximized = Environment.webGL;
 
