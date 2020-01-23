@@ -22,7 +22,7 @@
     },
     "exportedEnv": {
       "PKG_CONFIG_PATH": {
-	"val": "/usr/lib64/pkgconfig:$PKG_CONFIG_PATH",
+        "val": "/usr/lib64/pkgconfig:$PKG_CONFIG_PATH",
         "scope": "global"
       }
     },
@@ -63,7 +63,7 @@
     "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b6",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
     "esy-skia": "revery-ui/esy-skia#91b10c9",
-    "timber": "glennsl/timber#ae5de6c"
+    "timber": "glennsl/timber#ae065bb"
   },
   "devDependencies": {
     "ocaml": ">=4.6.0 <4.8.0",
