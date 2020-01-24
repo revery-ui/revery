@@ -113,7 +113,7 @@ let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
     // On Windows, we need to try a Win32 API to get the scale factor
     | Windows =>
       let scale = Sdl2.Window.getWin32ScaleFactor(sdlWindow);
-      Log.debugf(m =>
+      Log.tracef(m =>
         m("_getScaleFactor - from getWin32ScaleFactor: %f", scale)
       );
       scale;
@@ -125,7 +125,7 @@ let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
       switch (Rench.Environment.getEnvironmentVariable("GDK_SCALE")) {
       | Some(v) =>
         // TODO
-        Log.debug("_getScaleFactor - Linux - got GDK_SCALE variable: " ++ v);
+        Log.trace("_getScaleFactor - Linux - got GDK_SCALE variable: " ++ v);
         switch (Float.of_string_opt(v)) {
         | Some(v) => v
         | None => 1.0
@@ -135,7 +135,7 @@ let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
         let dpi = Sdl2.Display.getDPI(display);
         let avgDpi = (dpi.hdpi +. dpi.vdpi +. dpi.ddpi) /. 3.0;
         let scaleFactor = max(1.0, floor(avgDpi /. 96.0));
-        Log.debugf(m =>
+        Log.tracef(m =>
           m("_getScaleFactor - Linux - inferring from DPI: %f", scaleFactor)
         );
         scaleFactor;
@@ -181,13 +181,13 @@ let _updateMetrics = (w: t) => {
     zoom: previousZoom,
   };
   w.areMetricsDirty = false;
-  Log.debug(
+  Log.trace(
     "_updateMetrics - new metrics: " ++ WindowMetrics.toString(w.metrics),
   );
 };
 
 let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
-  Log.debugf(m => m("setRawSize - calling with: %ix%i", adjWidth, adjHeight));
+  Log.tracef(m => m("setRawSize - calling with: %ix%i", adjWidth, adjHeight));
 
   if (adjWidth != win.metrics.size.width
       || adjHeight != win.metrics.size.height) {
@@ -196,16 +196,16 @@ let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
      *  we'll queue up the render operation for next time.
      */
     if (win.isRendering) {
-      Log.debug("setRawSize - queuing for next render");
+      Log.trace("setRawSize - queuing for next render");
       win.requestedWidth = Some(adjWidth);
       win.requestedHeight = Some(adjHeight);
     } else {
-      Log.debug("setRawSize - calling Sdl2.Window.setSize");
+      Log.trace("setRawSize - calling Sdl2.Window.setSize");
       Sdl2.Window.setSize(win.sdlWindow, adjWidth, adjHeight);
       win.requestedWidth = None;
       win.requestedHeight = None;
       win.areMetricsDirty = true;
-      Log.debugf(m => {
+      Log.tracef(m => {
         let Sdl2.Size.{width, height} = Sdl2.Window.getSize(win.sdlWindow);
         m("setRawSize: SDL size reported after resize: %ux%u", width, height);
       });
@@ -214,7 +214,7 @@ let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
 };
 
 let setScaledSize = (win: t, width: int, height: int) => {
-  Log.debugf(m => m("setScaledSize - calling with: %ux%u", width, height));
+  Log.tracef(m => m("setScaledSize - calling with: %ux%u", width, height));
   // On platforms that return a non-unit scale factor (Windows and Linux),
   // we also have to scale the window size by the scale factor
   let adjWidth =

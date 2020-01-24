@@ -7,7 +7,9 @@ module type Logger = {
   let info: string => unit;
   let debugf: Timber.msgf(_, unit) => unit;
   let debug: string => unit;
-  let fn: (string, 'a => 'b, 'a) => 'b;
+  let tracef: Timber.msgf(_, unit) => unit;
+  let trace: string => unit;
+  let fn: (string, 'a => 'b, ~pp: 'b => string=?, 'a) => 'b;
 };
 
 let withNamespace: string => (module Logger);

@@ -68,7 +68,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Revery_Core.Event.subscribe(
       window.onMouseLeave,
       () => {
-        Log.debug("Mouse leaving window");
+        Log.trace("Mouse leaving window");
         Mouse.notifyLeaveWindow(window);
       },
     );
@@ -77,7 +77,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Revery_Core.Event.subscribe(
       window.onMouseEnter,
       () => {
-        Log.debug("Mouse entering window");
+        Log.trace("Mouse entering window");
         Mouse.notifyEnterWindow(window);
       },
     );

@@ -282,8 +282,8 @@ module ExampleHost = {
 let init = app => {
   Revery.App.initConsole();
 
-  Timber.App.enablePrinting();
-  Timber.App.enableDebugLogging();
+  Timber.App.enable();
+  Timber.App.setLevel(Timber.Level.perf);
 
   let maximized = Environment.webGL;
 
@@ -309,14 +309,11 @@ let init = app => {
 
   if (Environment.webGL) {
     Window.maximize(win);
-    ();
   } else {
     Window.center(win);
-    ();
   };
 
-  let _ignore = UI.start(win, <ExampleHost win />);
-  ();
+  UI.start(win, <ExampleHost win />) |> ignore;
 };
 
 let onIdle = () => print_endline("Example: idle callback triggered");
