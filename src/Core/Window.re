@@ -48,9 +48,9 @@ type t = {
   sdlWindow: Sdl2.Window.t,
   uniqueId: int,
   forceScaleFactor: option(float),
-  mutable render: windowRenderCallback,
-  mutable shouldRender: windowShouldRenderCallback,
-  mutable canQuit: windowCanQuitCallback,
+  mutable render: unit => unit,
+  mutable shouldRender: unit => bool,
+  mutable canQuit: unit => bool,
   mutable metrics: WindowMetrics.t,
   mutable areMetricsDirty: bool,
   mutable isRendering: bool,
@@ -625,12 +625,11 @@ let canQuit = (w: t) => {
   w.canQuit();
 };
 
-let setCanQuitCallback = (w: t, callback: windowCanQuitCallback) => {
-  w.canQuit = callback;
+let setCanQuitCallback = (window: t, callback) => {
+  window.canQuit = callback;
 };
 
-let setRenderCallback = (w: t, callback: windowRenderCallback) =>
-  w.render = callback;
+let setRenderCallback = (window: t, callback) => window.render = callback;
 
-let setShouldRenderCallback = (w: t, callback: windowShouldRenderCallback) =>
-  w.shouldRender = callback;
+let setShouldRenderCallback = (window: t, callback) =>
+  window.shouldRender = callback;
