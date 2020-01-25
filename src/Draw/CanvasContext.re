@@ -119,11 +119,14 @@ let drawRRect = (v: t, rRect: Skia.RRect.t, paint) => {
   Canvas.drawRRect(Surface.getCanvas(v), rRect, paint);
 };
 
-let drawImage = (~x, ~y, src, v: t) => {
+let drawImage = (~x, ~y, ~width, ~height, src, v: t) => {
   let image = ImageRenderer.getTexture(src);
   switch (image) {
   | None => ()
-  | Some(img) => Canvas.drawImage(Surface.getCanvas(v), img, x, y, None)
+  | Some(img) => Canvas.drawImageRect(Surface.getCanvas(v), img, 
+    None,
+    Rect.makeLtrb(x, y, x +. width, y +. height),
+    None);
   };
 };
 
