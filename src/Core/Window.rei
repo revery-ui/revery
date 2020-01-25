@@ -7,37 +7,26 @@ type size = {
   height: int,
 };
 
-type windowRenderCallback = unit => unit;
-type windowShouldRenderCallback = unit => bool;
-type windowCanQuitCallback = unit => bool;
-
-type callback = unit => unit;
-type mouseMoveCallback = mouseMoveEvent => unit;
-type keyEventCallback = Key.KeyEvent.t => unit;
-type mouseButtonCallback = mouseButtonEvent => unit;
-type mouseWheelCallback = mouseWheelEvent => unit;
-type textEditCallback = textEditEvent => unit;
-type textInputCallback = textInputEvent => unit;
 type unsubscribe = unit => unit;
 
-let onFocusGained: (t, callback) => unsubscribe;
-let onFocusLost: (t, callback) => unsubscribe;
-let onMaximized: (t, callback) => unsubscribe;
-let onMinimized: (t, callback) => unsubscribe;
-let onRestored: (t, callback) => unsubscribe;
-let onCompositionStart: (t, callback) => unsubscribe;
-let onCompositionEdit: (t, textEditCallback) => unsubscribe;
-let onCompositionEnd: (t, callback) => unsubscribe;
-let onExposed: (t, callback) => unsubscribe;
-let onKeyDown: (t, keyEventCallback) => unsubscribe;
-let onKeyUp: (t, keyEventCallback) => unsubscribe;
-let onMouseEnter: (t, callback) => unsubscribe;
-let onMouseLeave: (t, callback) => unsubscribe;
-let onMouseMove: (t, mouseMoveCallback) => unsubscribe;
-let onMouseDown: (t, mouseButtonCallback) => unsubscribe;
-let onMouseUp: (t, mouseButtonCallback) => unsubscribe;
-let onMouseWheel: (t, mouseWheelCallback) => unsubscribe;
-let onTextInputCommit: (t, textInputCallback) => unsubscribe;
+let onFocusGained: (t, unit => unit) => unsubscribe;
+let onFocusLost: (t, unit => unit) => unsubscribe;
+let onMaximized: (t, unit => unit) => unsubscribe;
+let onMinimized: (t, unit => unit) => unsubscribe;
+let onRestored: (t, unit => unit) => unsubscribe;
+let onCompositionStart: (t, unit => unit) => unsubscribe;
+let onCompositionEdit: (t, textEditEvent => unit) => unsubscribe;
+let onCompositionEnd: (t, unit => unit) => unsubscribe;
+let onExposed: (t, unit => unit) => unsubscribe;
+let onKeyDown: (t, Key.KeyEvent.t => unit) => unsubscribe;
+let onKeyUp: (t, Key.KeyEvent.t => unit) => unsubscribe;
+let onMouseEnter: (t, unit => unit) => unsubscribe;
+let onMouseLeave: (t, unit => unit) => unsubscribe;
+let onMouseMove: (t, mouseMoveEvent => unit) => unsubscribe;
+let onMouseDown: (t, mouseButtonEvent => unit) => unsubscribe;
+let onMouseUp: (t, mouseButtonEvent => unit) => unsubscribe;
+let onMouseWheel: (t, mouseWheelEvent => unit) => unsubscribe;
+let onTextInputCommit: (t, textInputEvent => unit) => unsubscribe;
 
 let canQuit: t => bool;
 
@@ -69,6 +58,6 @@ let create: (string, WindowCreateOptions.t) => t;
 
 let takeScreenshot: (t, string) => unit;
 
-let setCanQuitCallback: (t, windowCanQuitCallback) => unit;
-let setRenderCallback: (t, windowRenderCallback) => unit;
-let setShouldRenderCallback: (t, windowShouldRenderCallback) => unit;
+let setCanQuitCallback: (t, unit => bool) => unit;
+let setRenderCallback: (t, unit => unit) => unit;
+let setShouldRenderCallback: (t, unit => bool) => unit;

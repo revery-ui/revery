@@ -1,16 +1,5 @@
 open Events;
 
-type windowRenderCallback = unit => unit;
-type windowShouldRenderCallback = unit => bool;
-type windowCanQuitCallback = unit => bool;
-
-type callback = unit => unit;
-type mouseMoveCallback = mouseMoveEvent => unit;
-type keyEventCallback = Key.KeyEvent.t => unit;
-type mouseButtonCallback = mouseButtonEvent => unit;
-type mouseWheelCallback = mouseWheelEvent => unit;
-type textEditCallback = textEditEvent => unit;
-type textInputCallback = textInputEvent => unit;
 type unsubscribe = unit => unit;
 
 type size = {
