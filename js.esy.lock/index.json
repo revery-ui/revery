@@ -1,5 +1,5 @@
 {
-  "checksum": "d6d274c3fecb502c9b09154c3a799b11",
+  "checksum": "332c841cec18576b579d1db7ce36c7da",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9": {
@@ -117,7 +117,7 @@
         "reperf@1.4.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:revery-ui/reason-skia#dae5a5e@d41d8cd9",
-        "reason-sdl2@2.10.3014@d41d8cd9",
+        "reason-sdl2@2.10.3015@d41d8cd9",
         "reason-gl-matrix@0.9.9306@d41d8cd9",
         "reason-fontkit@2.8.3@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "http-server@0.12.1@d41d8cd9",
@@ -249,14 +249,14 @@
       ],
       "devDependencies": []
     },
-    "reason-sdl2@2.10.3014@d41d8cd9": {
-      "id": "reason-sdl2@2.10.3014@d41d8cd9",
+    "reason-sdl2@2.10.3015@d41d8cd9": {
+      "id": "reason-sdl2@2.10.3015@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "2.10.3014",
+      "version": "2.10.3015",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3014.tgz#sha1:85c5d86d37ed54154cd16e84f0594a03d107bea0"
+          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3015.tgz#sha1:86fdd1b5e0702a8ba6ef0ada5be76405d449c78a"
         ]
       },
       "overrides": [],
