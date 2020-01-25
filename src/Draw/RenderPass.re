@@ -4,17 +4,13 @@ open Sdl2.Gl;
 module DrawContext = {
   type t = {
     canvas: CanvasContext.t,
-    pixelRatio: float,
-    scaleFactor: float,
     screenWidth: int,
     screenHeight: int,
   };
 
   let create =
-      (~canvas, ~pixelRatio, ~scaleFactor, ~screenWidth, ~screenHeight, ()) => {
+      (~canvas, ~screenWidth, ~screenHeight, ()) => {
     canvas,
-    pixelRatio,
-    scaleFactor,
     screenWidth,
     screenHeight,
   };
@@ -32,13 +28,11 @@ let getContext = () => {
 };
 
 let start =
-    (~canvas, ~pixelRatio, ~scaleFactor, ~screenWidth, ~screenHeight, ()) => {
+    (~canvas, ~screenWidth, ~screenHeight, ()) => {
   _activeContext :=
     Some(
       DrawContext.create(
         ~canvas,
-        ~pixelRatio,
-        ~scaleFactor,
         ~screenWidth,
         ~screenHeight,
         (),

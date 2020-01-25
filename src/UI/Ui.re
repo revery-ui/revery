@@ -45,7 +45,6 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Revery_Core.Event.subscribe(
       window.onMouseMove,
       m => {
-        let scaleFactor = Revery_Core.Window.getScaleAndZoom(window);
         let evt =
           Revery_Core.Events.InternalMouseMove({
             mouseX: m.mouseX,

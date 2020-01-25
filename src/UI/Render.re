@@ -75,8 +75,6 @@ let render =
 
       RenderPass.start(
         ~canvas,
-        ~pixelRatio,
-        ~scaleFactor=scaleAndZoomFactor,
         ~screenHeight=adjustedHeight,
         ~screenWidth=adjustedWidth,
         (),
