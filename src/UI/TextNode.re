@@ -168,8 +168,7 @@ class textNode (text: string) = {
       );
 
     let pickWiderLine = (leftWidth, right) => {
-      let rightWidth =
-        Text.measure(~fontFamily, ~fontSize, right).width;
+      let rightWidth = Text.measure(~fontFamily, ~fontSize, right).width;
       max(leftWidth, rightWidth);
     };
     let maxWidthLine = List.fold_left(pickWiderLine, 0, _lines);

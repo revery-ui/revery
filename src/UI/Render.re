@@ -10,6 +10,7 @@ open Revery_Math;
 
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
+module Log = (val Log.withNamespace("Revery.UI.Render"));
 
 open RenderContainer;
 
@@ -20,7 +21,7 @@ let render =
       component: React.element('node),
     ) => {
   let renderContainer = container;
-  Log.info("UI", "BEGIN: Render frame");
+  Log.trace("BEGIN: Render frame");
   let {rootNode, window, container, _} = container;
 
   /* Perform reconciliation */
@@ -87,5 +88,5 @@ let render =
       Revery_Draw.CanvasContext.flush(canvas);
     }
   });
-  Log.info("UI", "END: Render frame");
+  Log.trace("END: Render frame");
 };

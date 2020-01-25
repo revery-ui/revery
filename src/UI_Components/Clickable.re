@@ -10,6 +10,7 @@ open Revery_Core;
 open Revery_UI_Primitives;
 
 module Hooks = Revery_UI_Hooks;
+module Log = (val Log.withNamespace("Revery.Components.Clickable"));
 
 let isMouseCaptured = ref(false);
 
@@ -34,11 +35,13 @@ let%component make =
 
   let capture = () =>
     if (! isMouseCaptured^) {
+      Log.trace("Capture");
       isMouseCapturedHere := true;
       isMouseCaptured := true;
     };
   let releaseCapture = () =>
     if (isMouseCapturedHere^) {
+      Log.trace("Release");
       isMouseCapturedHere := false;
       isMouseCaptured := false;
     };

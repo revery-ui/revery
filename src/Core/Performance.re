@@ -2,6 +2,8 @@ type performanceFunction('a) = unit => 'a;
 
 let nestingLevel = ref(0);
 
+module Log = (val Log.withNamespace("Revery.Core.Performance"));
+
 module MemoryAllocations = {
   type t = {
     minorWords: int,
@@ -9,15 +11,13 @@ module MemoryAllocations = {
     majorWords: int,
   };
 
-  let toString = ({minorWords, promotedWords, majorWords}: t) => {
-    "| minor: "
-    ++ string_of_int(minorWords)
-    ++ " | major: "
-    ++ string_of_int(majorWords)
-    ++ " | promoted: "
-    ++ string_of_int(promotedWords)
-    ++ " |";
-  };
+  let toString = ({minorWords, promotedWords, majorWords}: t) =>
+    Printf.sprintf(
+      "| minor: %n | major: %n | promoted: %n |",
+      minorWords,
+      majorWords,
+      promotedWords,
+    );
 };
 let getMemoryAllocations = (startCounters, endCounters) => {
   let (startMinor, startPromoted, startMajor) = startCounters;
@@ -43,20 +43,21 @@ let bench: (string, performanceFunction('a)) => 'a =
       nestingLevel := nestingLevel^ + 1;
       let startTime = Unix.gettimeofday();
       let startCounters = GarbageCollector.counters();
-      Log.perf(String.make(nestingLevel^, '-') ++ "[BEGIN: " ++ name ++ "]");
+      Log.tracef(m =>
+        m("%s[BEGIN: %s]", String.make(nestingLevel^, '-'), name)
+      );
       let ret = f();
       let endTime = Unix.gettimeofday();
       let endCounters = GarbageCollector.counters();
       let allocations = getMemoryAllocations(startCounters, endCounters);
-      Log.perf(
-        String.make(nestingLevel^, '-')
-        ++ "[END: "
-        ++ name
-        ++ "] Time: "
-        ++ string_of_float((endTime -. startTime) *. 1000.)
-        ++ "ms"
-        ++ " Memory: "
-        ++ MemoryAllocations.toString(allocations),
+      Log.tracef(m =>
+        m(
+          "%s[END: %s] Time: %fms Memory: %s",
+          String.make(nestingLevel^, '-'),
+          name,
+          (endTime -. startTime) *. 1000.,
+          MemoryAllocations.toString(allocations),
+        )
       );
 
       nestingLevel := nestingLevel^ - 1;

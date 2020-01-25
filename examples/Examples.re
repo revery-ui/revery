@@ -155,6 +155,11 @@ let state: state = {
       render: _ => NestedClickable.render(),
       source: "NestedClickable.re",
     },
+    {
+      name: "Skia Example",
+      render: _ => SkiaExample.render(),
+      source: "SkiaExample.re",
+    },
   ],
   selectedExample: "Box Shadow",
 };
@@ -275,7 +280,10 @@ module ExampleHost = {
 };
 
 let init = app => {
-  let _ignore = Log.listen((_, msg) => print_endline(msg));
+  Revery.App.initConsole();
+
+  Timber.App.enable();
+  Timber.App.setLevel(Timber.Level.perf);
 
   let maximized = Environment.webGL;
 
@@ -301,14 +309,11 @@ let init = app => {
 
   if (Environment.webGL) {
     Window.maximize(win);
-    ();
   } else {
     Window.center(win);
-    ();
   };
 
-  let _ignore = UI.start(win, <ExampleHost win />);
-  ();
+  UI.start(win, <ExampleHost win />) |> ignore;
 };
 
 let onIdle = () => print_endline("Example: idle callback triggered");

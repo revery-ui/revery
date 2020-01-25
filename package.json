@@ -12,11 +12,20 @@
     "build:js": "esy b dune build examples/Examples.bc.js",
     "build:js:release": "esy b dune build examples/Examples.bc.js",
     "test": "esy b dune runtest",
-    "format": "esy b bash .ci/format.sh #{os}",
+    "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}",
     "run": "esy x Examples"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
+    "buildEnv": {
+      "PKG_CONFIG_PATH": "/usr/lib64/pkgconfig:$PKG_CONFIG_PATH"
+    },
+    "exportedEnv": {
+      "PKG_CONFIG_PATH": {
+        "val": "/usr/lib64/pkgconfig:$PKG_CONFIG_PATH",
+        "scope": "global"
+      }
+    },
     "build": [
       "dune build -p Revery -j4"
     ],
@@ -37,6 +46,7 @@
     "@opam/js_of_ocaml-lwt": "^3.4.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
+    "@opam/ppx_deriving": "*",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#0a2e476",
     "flex": "^1.2.2",
     "@reason-native/rely": "*",
@@ -45,14 +55,18 @@
     "reason-font-manager": "^2.0.0",
     "rench": "^1.9.1",
     "rebez": "github:jchavarri/rebez#03fa3b7",
-    "reason-sdl2": "^2.10.3011",
-    "reason-skia": "github:manuhornung/reason-skia#dbcb40d",
-    "revery-text-wrap": "github:revery-ui/revery-text-wrap#005385c"
+    "reason-sdl2": "^2.10.3015",
+    "reason-skia": "github:revery-ui/reason-skia#dae5a5e",
+    "revery-text-wrap": "github:revery-ui/revery-text-wrap#005385c",
+    "timber": "*"
   },
   "resolutions": {
+    "@esy-ocaml/libffi": "esy-ocaml/libffi#599bc3567",
     "@opam/cmdliner": "1.0.2",
     "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b6",
-    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755"
+    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
+    "esy-skia": "revery-ui/esy-skia#91b10c9",
+    "timber": "glennsl/timber#ae065bb"
   },
   "devDependencies": {
     "ocaml": ">=4.6.0 <4.8.0",

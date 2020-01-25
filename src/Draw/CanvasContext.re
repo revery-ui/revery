@@ -3,12 +3,12 @@
  *
  * Module for integrating with the Skia canvas
  */
+open Revery_Core;
 module Rectangle = Revery_Math.Rectangle;
 
-open Skia;
+module Log = (val Log.withNamespace("Revery.CanvasContext"));
 
-let logInfo = Revery_Core.Log.info("Revery.Draw.Canvas");
-let logError = Revery_Core.Log.error("Revery.Draw.Canvas");
+open Skia;
 
 // TODO bind SkCanvas#getSurface and directly use the canvas
 type t = Skia.Surface.t;
@@ -17,7 +17,7 @@ let create = (window: Revery_Core.Window.t) => {
   let context = Skia.Gr.Context.makeGl(None);
   switch (context) {
   | None =>
-    logError("Unable to create skia context");
+    Log.error("Unable to create skia context");
     None;
   | Some(glContext) =>
     let framebufferInfo =
@@ -47,10 +47,10 @@ let create = (window: Revery_Core.Window.t) => {
       )
     ) {
     | None =>
-      logError("Unable to create skia surface");
+      Log.error("Unable to create skia surface");
       None;
     | Some(v) =>
-      logInfo(
+      Log.info(
         Printf.sprintf(
           "Successfully created canvas: %dx%d",
           framebufferSize.width,
@@ -71,7 +71,7 @@ let resize = (window: Revery_Core.Window.t, v: option(t)) => {
         != window.metrics.framebufferSize.width
         || Surface.getHeight(existingCanvas)
         != window.metrics.framebufferSize.height) {
-      logInfo(
+      Log.info(
         Printf.sprintf(
           "Resizing canvas: %dx%d->%dx%d",
           Surface.getWidth(existingCanvas),
@@ -178,43 +178,68 @@ let clipPath =
 };
 
 /*let test_draw = (v: t) => {
-  let canvas = Surface.getCanvas(v);
+    let canvas = Surface.getCanvas(v);
 
-  let fill = Paint.make();
-  Paint.setColor(fill, Color.makeArgb(0xFF, 0x00, 0x00, 0x00));
-  Canvas.drawPaint(canvas, fill);
+    let fill = Paint.make();
+    Paint.setColor(fill, Color.makeArgb(0xFF, 0x00, 0x00, 0x00));
+    Canvas.drawPaint(canvas, fill);
 
-  Paint.setColor(fill, Color.makeArgb(0xFF, 0x00, 0xFF, 0xFF));
-  let rect = Rect.makeLtrb(20., 100., 110., 120.);
-  Canvas.drawRect(canvas, rect, fill);
+    Paint.setColor(fill, Color.makeArgb(0xFF, 0x00, 0xFF, 0xFF));
+    let rect = Rect.makeLtrb(20., 100., 110., 120.);
+    Canvas.drawRect(canvas, rect, fill);
 
-  let fontStyle = FontStyle.make(500, 20, Upright);
-  let maybeTypeface = Typeface.makeFromName("Consolas", fontStyle);
+    let fontStyle = FontStyle.make(500, 20, Upright);
+    let maybeTypeface = Typeface.makeFromName("Consolas", fontStyle);
 
-  let fill2 = Paint.make();
-  Paint.setColor(fill2, Color.makeArgb(0xFF, 0xFF, 0xFF, 0xFF));
-  switch (maybeTypeface) {
-  | Some(typeface) =>
-    Paint.setTypeface(fill2, typeface);
-    Paint.setLcdRenderText(fill2, true);
-    Paint.setAntiAlias(fill2, true);
-    Paint.setTextSize(fill2, 25.);
+    let fill2 = Paint.make();
+    Paint.setColor(fill2, Color.makeArgb(0xFF, 0xFF, 0xFF, 0xFF));
+    switch (maybeTypeface) {
+    | Some(typeface) =>
+      Paint.setTypeface(fill2, typeface);
+      Paint.setLcdRenderText(fill2, true);
+      Paint.setAntiAlias(fill2, true);
+      Paint.setTextSize(fill2, 25.);
 
-    Canvas.drawText(canvas, "Hello, world!", 30.25, 30.25, fill2);
-  | None => ()
-  };
-};*/
+      Canvas.drawText(canvas, "Hello, world!", 30.25, 30.25, fill2);
+    | None => ()
+    };
+  };*/
 let _drawRect = drawRect;
 
 module Deprecated = {
-  let drawRect = (~x: float, ~y: float, ~width:float, ~height: float, ~color: Revery_Core.Color.t, v: t) => {
-    let rect =  Rectangle.create(~x, ~y, ~width, ~height, ());
+  let drawRect =
+      (
+        ~x: float,
+        ~y: float,
+        ~width: float,
+        ~height: float,
+        ~color: Revery_Core.Color.t,
+        v: t,
+      ) => {
+    let rect = Rectangle.create(~x, ~y, ~width, ~height, ());
     let fill = Paint.make();
     Paint.setColor(fill, Revery_Core.Color.toSkia(color));
     _drawRect(v, rect, fill);
-  }
+  };
 
-  let drawString = (~x: float, ~y: float, ~color: Revery_Core.Color.t, ~fontFamily, ~fontSize, ~text, v: t) => {
-    drawText(~x, ~y, ~color, ~fontFamily, ~fontSize=float_of_int(fontSize), text, v);  
-  }
+  let drawString =
+      (
+        ~x: float,
+        ~y: float,
+        ~color: Revery_Core.Color.t,
+        ~fontFamily,
+        ~fontSize,
+        ~text,
+        v: t,
+      ) => {
+    drawText(
+      ~x,
+      ~y,
+      ~color,
+      ~fontFamily,
+      ~fontSize=float_of_int(fontSize),
+      text,
+      v,
+    );
+  };
 };

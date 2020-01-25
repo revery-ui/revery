@@ -4,6 +4,8 @@ open Revery_Core;
 open Skia;
 module Image = Sdl2.Image;
 
+module Log = (val Log.withNamespace("Revery.ImageRenderer"));
+
 let initialPixels =
   Lazy.make(() => {
     let initialImage = Image.fromColor(255, 0, 0, 255);
@@ -25,12 +27,12 @@ let getTexture = (imagePath: string) => {
     | None => None
     }
   | None =>
-    Log.info("ImageRender", "Loading from path: " ++ imagePath);
+    Log.info("Loading from path: " ++ imagePath);
     //let data = Skia.Data.makeFromFileName(imagePath);
     let data = Skia.Data.makeFromFileName(imagePath);
-    Log.info("ImageRender", "Got data.");
+    Log.info("Got data.");
     let img = Skia.Image.makeFromEncoded(data, None);
-    Log.info("ImageRender", "Got image.");
+    Log.info("Got image.");
 
     Hashtbl.replace(_cache, imagePath, img);
     img;

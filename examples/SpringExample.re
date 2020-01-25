@@ -3,32 +3,14 @@ open Revery.UI;
 open Revery.UI.Components;
 
 module SpringyLogo = {
-  let%component make = (~stiffness, ~damping, ()) => {
-    let%hook (targetPosition, setTargetPosition) = Hooks.state(1.0);
-
-    let%hook (imageWidth, _setImmediately) =
-      Hooks.spring(
-        ~target=targetPosition,
-        ~initialState=
-          Spring.{
-            value: 0.,
-            velocity: 10.,
-            acceleration: 0.,
-            time: Time.now(),
-          },
-        Spring.Options.create(~damping, ~stiffness, ()),
-      );
-
-    let onMouseDown = _ => setTargetPosition(_ => 2.0);
-    let onMouseUp = _ => setTargetPosition(_ => 1.0);
-
-    let imageWidthI = imageWidth *. 256. |> int_of_float;
+  let make = (~width, ~onMouseDown, ~onMouseUp, ()) => {
+    let intWidth = int_of_float(width);
 
     <View onMouseDown onMouseUp>
       <Image
         src="outrun-logo.png"
         style=Style.[
-          width(imageWidthI),
+          width(intWidth),
           height(128),
           cursor(MouseCursors.pointer),
         ]
@@ -91,9 +73,30 @@ module Example = {
   let%component make = () => {
     let%hook (stiffness, setStiffness) = Hooks.state(160.);
     let%hook (damping, setDamping) = Hooks.state(10.);
+    let%hook (targetPosition, setTargetPosition) = Hooks.state(256.0);
+    let%hook (logoWidth, setImmediately) =
+      Hooks.spring(
+        ~target=targetPosition,
+        ~initialState=
+          Spring.{
+            value: 256.,
+            velocity: 100.,
+            acceleration: 0.,
+            time: Time.now(),
+          },
+        ~restThreshold=1.0,
+        Spring.Options.create(~damping, ~stiffness, ()),
+      );
+    let setImmediately = value => {
+      setTargetPosition(_ => value);
+      setImmediately(value);
+    };
+
+    let onMouseDown = _ => setTargetPosition(_ => 512.0);
+    let onMouseUp = _ => setTargetPosition(_ => 256.0);
 
     <Center>
-      <Center> <SpringyLogo stiffness damping /> </Center>
+      <Center> <SpringyLogo width=logoWidth onMouseDown onMouseUp /> </Center>
       <View style=Styles.containerStyle>
         <SliderControl
           text="Damping: "
@@ -108,6 +111,13 @@ module Example = {
           maximumValue=500.
           value=stiffness
           onValueChanged={v => setStiffness(_ => v)}
+        />
+        <SliderControl
+          text="Width: "
+          minimumValue=128.
+          maximumValue=640.
+          value=logoWidth
+          onValueChanged={v => setImmediately(v)}
         />
       </View>
     </Center>;

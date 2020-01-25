@@ -7,7 +7,7 @@ module CanvasContext = Revery_Draw.CanvasContext;
 
 open ViewNode;
 
-type renderCallback = (CanvasContext.t) => unit;
+type renderCallback = CanvasContext.t => unit;
 
 /*
  * CanvasNode
@@ -36,9 +36,11 @@ class canvasNode (()) = {
       Overflow.render(canvas, LayoutTypes.Hidden, dimensions, () => {
         // canvas save
         // canvas set transform
-        r(canvas)
-        //canvas restore
-      })
+        r(
+          canvas,
+          //canvas restore
+        )
+      });
       CanvasContext.restore(canvas);
     | None => ()
     };

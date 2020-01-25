@@ -30,6 +30,10 @@ CAMLprim value revery_dispatchNotification(value vNotificationT) {
     mute = Int_val(Field(vNotificationT, 3));
 #ifdef __APPLE__
     revery_dispatchNotification_cocoa(title, body, onClickCaml, mute);
+    UNUSED(title);
+    UNUSED(body);
+    UNUSED(mute);
+    UNUSED(onClickCaml);
 #else
     UNUSED(title);
     UNUSED(body);
@@ -55,6 +59,10 @@ CAMLprim value revery_scheduleNotificationFromNow(value vSeconds, value vNotific
     seconds = Int_val(vSeconds);
 #ifdef __APPLE__
     revery_scheduleNotificationFromNow_cocoa(title, body, onClickCaml, mute, seconds);
+    UNUSED(title);
+    UNUSED(body);
+    UNUSED(mute);
+    UNUSED(onClickCaml);
 #else
     UNUSED(title);
     UNUSED(body);

@@ -29,7 +29,6 @@ let render =
       );
     Revery_Draw.CanvasContext.save(canvas);
     Revery_Draw.CanvasContext.clipRect(canvas, clippingRect);
-
   };
 
   r();

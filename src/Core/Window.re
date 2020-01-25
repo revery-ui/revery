@@ -8,7 +8,7 @@ type size = {
   width: int,
   height: int,
 };
-let log = Log.info("Window");
+module Log = (val Log.withNamespace("Revery.Core.Window"));
 
 module WindowMetrics = {
   type t = {
@@ -113,9 +113,8 @@ let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
     // On Windows, we need to try a Win32 API to get the scale factor
     | Windows =>
       let scale = Sdl2.Window.getWin32ScaleFactor(sdlWindow);
-      log(
-        "_getScaleFactor - from getWin32ScaleFactor: "
-        ++ string_of_float(scale),
+      Log.tracef(m =>
+        m("_getScaleFactor - from getWin32ScaleFactor: %f", scale)
       );
       scale;
 
@@ -126,7 +125,7 @@ let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
       switch (Rench.Environment.getEnvironmentVariable("GDK_SCALE")) {
       | Some(v) =>
         // TODO
-        log("_getScaleFactor - Linux - got GDK_SCALE variable: " ++ v);
+        Log.trace("_getScaleFactor - Linux - got GDK_SCALE variable: " ++ v);
         switch (Float.of_string_opt(v)) {
         | Some(v) => v
         | None => 1.0
@@ -136,9 +135,8 @@ let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
         let dpi = Sdl2.Display.getDPI(display);
         let avgDpi = (dpi.hdpi +. dpi.vdpi +. dpi.ddpi) /. 3.0;
         let scaleFactor = max(1.0, floor(avgDpi /. 96.0));
-        log(
-          "_getScaleFactor - Linux - inferring from DPI: "
-          ++ string_of_float(scaleFactor),
+        Log.tracef(m =>
+          m("_getScaleFactor - Linux - inferring from DPI: %f", scaleFactor)
         );
         scaleFactor;
       }
@@ -183,16 +181,13 @@ let _updateMetrics = (w: t) => {
     zoom: previousZoom,
   };
   w.areMetricsDirty = false;
-  log("_updateMetrics - new metrics: " ++ WindowMetrics.toString(w.metrics));
+  Log.trace(
+    "_updateMetrics - new metrics: " ++ WindowMetrics.toString(w.metrics),
+  );
 };
 
 let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
-  log(
-    "setRawSize - dimensions adjusted after scaling: "
-    ++ string_of_int(adjWidth)
-    ++ " x "
-    ++ string_of_int(adjHeight),
-  );
+  Log.tracef(m => m("setRawSize - calling with: %ix%i", adjWidth, adjHeight));
 
   if (adjWidth != win.metrics.size.width
       || adjHeight != win.metrics.size.height) {
@@ -201,33 +196,25 @@ let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
      *  we'll queue up the render operation for next time.
      */
     if (win.isRendering) {
-      log("setRawSize - queuing for next render");
+      Log.trace("setRawSize - queuing for next render");
       win.requestedWidth = Some(adjWidth);
       win.requestedHeight = Some(adjHeight);
     } else {
-      log("setRawSize - calling Sdl2.Window.setSize");
+      Log.trace("setRawSize - calling Sdl2.Window.setSize");
       Sdl2.Window.setSize(win.sdlWindow, adjWidth, adjHeight);
       win.requestedWidth = None;
       win.requestedHeight = None;
       win.areMetricsDirty = true;
-      let size = Sdl2.Window.getSize(win.sdlWindow);
-      log(
-        "setRawSize: SDL size reported after resize: "
-        ++ string_of_int(size.width)
-        ++ "x"
-        ++ string_of_int(size.height),
-      );
+      Log.tracef(m => {
+        let Sdl2.Size.{width, height} = Sdl2.Window.getSize(win.sdlWindow);
+        m("setRawSize: SDL size reported after resize: %ux%u", width, height);
+      });
     };
   };
 };
 
 let setScaledSize = (win: t, width: int, height: int) => {
-  log(
-    "setScaledSize - calling with: "
-    ++ string_of_int(width)
-    ++ "x"
-    ++ string_of_int(height),
-  );
+  Log.tracef(m => m("setScaledSize - calling with: %ux%u", width, height));
   // On platforms that return a non-unit scale factor (Windows and Linux),
   // we also have to scale the window size by the scale factor
   let adjWidth =
@@ -345,7 +332,7 @@ let setVsync =
       _window: t, // TODO: Multiple windows - set context
       vsync: Vsync.t,
     ) => {
-  log("Using vsync: " ++ Vsync.toString(vsync));
+  Log.info("Using vsync: " ++ Vsync.toString(vsync));
 
   switch (vsync) {
   | Vsync.Immediate => Sdl2.Gl.setSwapInterval(0)
@@ -354,7 +341,7 @@ let setVsync =
 };
 
 let create = (name: string, options: WindowCreateOptions.t) => {
-  log("Starting window creation...");
+  Log.debug("Starting window creation...");
 
   let width =
     switch (options.width) {
@@ -368,63 +355,55 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     | v => v
     };
 
-  log(
-    "Creating window "
-    ++ name
-    ++ " width: "
-    ++ string_of_int(width)
-    ++ " height: "
-    ++ string_of_int(height),
+  Log.infof(m =>
+    m("Creating window %s width: %u height: %u", name, width, height)
   );
   let w = Sdl2.Window.create(width, height, name);
-  log("Window created successfully.");
+  Log.info("Window created successfully.");
   let uniqueId = Sdl2.Window.getId(w);
-  log("Window id: " ++ string_of_int(uniqueId));
+  Log.debugf(m => m("Window id: %i", uniqueId));
 
   // We need to let Windows know that we are DPI-aware and that we are going to
   // properly handle scaling. This is a no-op on other platforms.
   Sdl2.Window.setWin32ProcessDPIAware(w);
 
-  log("Setting window context");
+  Log.debug("Setting window context");
   let _ = Sdl2.Gl.setup(w);
-  log("GL setup. Checking GL version...");
+  Log.debug("GL setup. Checking GL version...");
   let version = Sdl2.Gl.glGetString(Sdl2.Gl.Version);
-  log("Checking GL vendor...");
+  Log.debug("Checking GL vendor...");
   let vendor = Sdl2.Gl.glGetString(Sdl2.Gl.Vendor);
-  log("Checking GL shading language version...");
+  Log.debug("Checking GL shading language version...");
   let shadingLanguageVersion =
     Sdl2.Gl.glGetString(Sdl2.Gl.ShadingLanguageVersion);
-  log(
-    Printf.sprintf(
-      "OpenGL hardware info - version: %s vendor: %s shadingLanguageVersion: %s\n",
-      version,
-      vendor,
-      shadingLanguageVersion,
-    ),
-  );
+
+  Log.info("OpenGL hardware info:");
+  Log.infof(m => m("  version: %s", version));
+  Log.infof(m => m("  vendor: %s", vendor));
+  Log.infof(m => m("  shadingLanguageVersion: %s", shadingLanguageVersion));
 
   switch (options.icon) {
-  | None =>
-    log("No icon to load.");
-    ();
+  | None => Log.debug("No icon to load.")
+
   | Some(path) =>
     let execDir = Environment.getExecutingDirectory();
     let relativeImagePath = execDir ++ path;
 
-    log("Loading icon from: " ++ relativeImagePath);
+    Log.debug("Loading icon from: " ++ relativeImagePath);
     switch (Sdl2.Surface.createFromImagePath(relativeImagePath)) {
     | Ok(v) =>
-      log("Icon loaded successfully.");
+      Log.debug("Icon loaded successfully.");
       Sdl2.Window.setIcon(w, v);
-      log("Icon set successfully.");
-    | Error(msg) => log("Error loading icon: " ++ msg)
+      Log.debug("Icon set successfully.");
+
+    | Error(msg) => Log.error("Error loading icon: " ++ msg)
     };
   };
 
-  log("Getting window metrics");
+  Log.debug("Getting window metrics");
   let metrics =
     _getMetricsFromGlfwWindow(~forceScaleFactor=options.forceScaleFactor, w);
-  log("Metrics: " ++ WindowMetrics.toString(metrics));
+  Log.debug("Metrics: " ++ WindowMetrics.toString(metrics));
   let ret: t = {
     backgroundColor: options.backgroundColor,
     sdlWindow: w,

@@ -9,11 +9,11 @@ type active = {
 type focused = ref(option(active));
 let focused = ref(None);
 
-let log = Log.info("Focus");
+module Log = (val Log.withNamespace("Revery.UI.Focus"));
 
 /* Should happen when user clicks anywhere where no focusable node exists */
 let loseFocus = () => {
-  log("loseFocus()");
+  Log.trace("loseFocus()");
 
   switch (focused^) {
   | Some({handler, _}) =>
@@ -25,7 +25,7 @@ let loseFocus = () => {
 };
 
 let focus = (node: Node.node) => {
-  log("focus()");
+  Log.trace("focus()");
   let _ = node#handleEvent(Focus);
   focused := Some({handler: node#handleEvent, id: node#getInternalId()});
 };

@@ -1,5 +1,6 @@
 #ifdef __APPLE__
 #import <Cocoa/Cocoa.h>
+#import "SDLAppDelegate.h"
 
 /* ReveryAppDelegate
 
@@ -13,5 +14,9 @@
           (longs which represent OCaml callbacks)
       */
   @property(nonatomic, strong) NSMutableDictionary *notificationActions;
+@property(nonatomic, strong) SDLAppDelegate *sdlDelegate;
+
+-(id)initWithSDLDelegate:(SDLAppDelegate *)sdlDelegate;
++(id)newWithSDLDelegate:(SDLAppDelegate *)sdlDelegate;
 @end
 #endif

@@ -130,7 +130,11 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
           Revery_Draw.CanvasContext.clipPath(canvas, clippingTriangle);
         };
 
-        Revery_Draw.CanvasContext.clipRRect(canvas, ~clipOp=Difference, innerRRect);
+        Revery_Draw.CanvasContext.clipRRect(
+          canvas,
+          ~clipOp=Difference,
+          innerRRect,
+        );
 
         Skia.Paint.setColor(borderPaint, Color.toSkia(lbc));
         Revery_Draw.CanvasContext.drawRRect(canvas, outerRRect, borderPaint);
@@ -168,7 +172,11 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
         Revery_Draw.CanvasContext.clipPath(canvas, clippingTriangle);
       };
 
-      Revery_Draw.CanvasContext.clipRRect(canvas, ~clipOp=Difference, innerRRect);
+      Revery_Draw.CanvasContext.clipRRect(
+        canvas,
+        ~clipOp=Difference,
+        innerRRect,
+      );
 
       Skia.Paint.setColor(borderPaint, Color.toSkia(tbc));
       Revery_Draw.CanvasContext.drawRRect(canvas, outerRRect, borderPaint);
@@ -206,7 +214,11 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
         Revery_Draw.CanvasContext.clipPath(canvas, clippingTriangle);
       };
 
-      Revery_Draw.CanvasContext.clipRRect(canvas, ~clipOp=Difference, innerRRect);
+      Revery_Draw.CanvasContext.clipRRect(
+        canvas,
+        ~clipOp=Difference,
+        innerRRect,
+      );
 
       Skia.Paint.setColor(borderPaint, Color.toSkia(rbc));
       Revery_Draw.CanvasContext.drawRRect(canvas, outerRRect, borderPaint);
@@ -244,7 +256,11 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
         Revery_Draw.CanvasContext.clipPath(canvas, clippingTriangle);
       };
 
-      Revery_Draw.CanvasContext.clipRRect(canvas, ~clipOp=Difference, innerRRect);
+      Revery_Draw.CanvasContext.clipRRect(
+        canvas,
+        ~clipOp=Difference,
+        innerRRect,
+      );
 
       Skia.Paint.setColor(borderPaint, Color.toSkia(bbc));
       Revery_Draw.CanvasContext.drawRRect(canvas, outerRRect, borderPaint);
@@ -332,11 +348,11 @@ class viewNode (()) = {
       // ()
       // | boxShadow => {
       if (style.boxShadow.blurRadius != 0.) {
-      /*  print_endline(
-          "drawing shadow..." ++ string_of_float(style.boxShadow.blurRadius),
-        );*/
-      let shadowImageFilter = makeShadowImageFilter(style.boxShadow);
-      Skia.Paint.setImageFilter(fill, shadowImageFilter);
+        /*  print_endline(
+              "drawing shadow..." ++ string_of_float(style.boxShadow.blurRadius),
+            );*/
+        let shadowImageFilter = makeShadowImageFilter(style.boxShadow);
+        Skia.Paint.setImageFilter(fill, shadowImageFilter);
       };
       // }
       // };
