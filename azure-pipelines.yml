@@ -4,6 +4,10 @@
 # https://aka.ms/yaml
 
 name: $(Build.SourceVersion)
+
+variables:
+  esy__ci_cache_version: v1
+
 jobs:
 - job: Linux
   timeoutInMinutes: 0
