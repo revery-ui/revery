@@ -27,14 +27,15 @@ let getWindowById = (app: t, id: int) => {
   Hashtbl.find_opt(app.windows, id);
 };
 
-let _tryToClose = (app: t, window: Window.t) =>
+let _tryToClose = (app: t, window: Window.t) => {
+  let uniqueId = Window.getUniqueId(window);
   if (Window.canQuit(window)) {
-    Log.debugf(m => m("canQuit is true for window %i", window.uniqueId));
-    Window.destroyWindow(window);
-    Hashtbl.remove(app.windows, window.uniqueId);
+    Log.debugf(m => m("canQuit is true for window %i", uniqueId));
+    Hashtbl.remove(app.windows, uniqueId);
   } else {
-    Log.debugf(m => m("canQuit is false for window %i", window.uniqueId));
+    Log.debugf(m => m("canQuit is false for window %i", uniqueId));
   };
+};
 
 let _tryToCloseAll = (app: t) => {
   let windows = Hashtbl.to_seq_values(app.windows);
@@ -98,7 +99,8 @@ let createWindow =
     (~createOptions=WindowCreateOptions.default, app: t, windowName) => {
   let w = Window.create(windowName, createOptions);
   /* Window.render(w) */
-  Hashtbl.add(app.windows, w.uniqueId, w);
+  let uniqueId = Window.getUniqueId(w);
+  Hashtbl.add(app.windows, uniqueId, w);
   w;
 };
 
@@ -142,7 +144,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     let handleEvent = windowID => {
       let window = getWindowById(appInstance, windowID);
       switch (window) {
-      | Some(win) => Window._handleEvent(evt, win)
+      | Some(win) => Window.handleEvent(evt, win)
       | None =>
         Log.errorf(m =>
           m(

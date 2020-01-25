@@ -4,6 +4,15 @@ type windowRenderCallback = unit => unit;
 type windowShouldRenderCallback = unit => bool;
 type windowCanQuitCallback = unit => bool;
 
+type callback = unit => unit;
+type mouseMoveCallback = mouseMoveEvent => unit;
+type keyEventCallback = Key.KeyEvent.t => unit;
+type mouseButtonCallback = mouseButtonEvent => unit;
+type mouseWheelCallback = mouseWheelEvent => unit;
+type textEditCallback = textEditEvent => unit;
+type textInputCallback = textInputEvent => unit;
+type unsubscribe = unit => unit;
+
 type size = {
   width: int,
   height: int,
@@ -74,6 +83,20 @@ type t = {
   onCompositionEnd: Event.t(unit),
   onTextInputCommit: Event.t(textInputEvent),
 };
+
+let onExposed = w => Event.subscribe(w.onExposed);
+let onKeyDown = w => Event.subscribe(w.onKeyDown);
+let onKeyUp = w => Event.subscribe(w.onKeyUp);
+let onMouseMove = w => Event.subscribe(w.onMouseMove);
+let onMouseWheel = w => Event.subscribe(w.onMouseWheel);
+let onMouseEnter = w => Event.subscribe(w.onMouseEnter);
+let onMouseLeave = w => Event.subscribe(w.onMouseLeave);
+let onMouseDown = w => Event.subscribe(w.onMouseDown);
+let onMouseUp = w => Event.subscribe(w.onMouseUp);
+let onCompositionStart = w => Event.subscribe(w.onCompositionStart);
+let onCompositionEdit = w => Event.subscribe(w.onCompositionEdit);
+let onCompositionEnd = w => Event.subscribe(w.onCompositionEnd);
+let onTextInputCommit = w => Event.subscribe(w.onTextInputCommit);
 
 let getUniqueId = (w: t) => w.uniqueId;
 
@@ -272,7 +295,7 @@ let render = (w: t) => {
   w.isRendering = false;
 };
 
-let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
+let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   switch (sdlEvent) {
   | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
     let wheelEvent: Events.mouseWheelEvent = {
@@ -508,7 +531,7 @@ let center = (w: t) => {
   Sdl2.Window.center(w.sdlWindow);
 };
 
-let toString = w => {
+let show = w => {
   Sdl2.Window.show(w.sdlWindow);
 };
 
@@ -586,10 +609,6 @@ let takeScreenshot = (w: t, filename: string) => {
 
   Image.save(image, filename);
   Image.destroy(image);
-};
-
-let destroyWindow = (_w: t) => {
-  ();
 };
 
 let canQuit = (w: t) => {
