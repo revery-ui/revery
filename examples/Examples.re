@@ -313,6 +313,13 @@ let init = app => {
     Window.center(win);
   };
 
+  let _unsubscribe =
+    Window.onFocusGained(win, () => Console.log("Focus gained"));
+  let _unsubscribe = Window.onFocusLost(win, () => Console.log("Focus lost"));
+  let _unsubscribe = Window.onMaximized(win, () => Console.log("Maximized!"));
+  let _unsubscribe = Window.onMinimized(win, () => Console.log("Minimized!"));
+  let _unsubscribe = Window.onRestored(win, () => Console.log("Restored!"));
+
   UI.start(win, <ExampleHost win />) |> ignore;
 };
 

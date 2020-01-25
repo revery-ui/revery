@@ -20,6 +20,11 @@ type textEditCallback = textEditEvent => unit;
 type textInputCallback = textInputEvent => unit;
 type unsubscribe = unit => unit;
 
+let onFocusGained: (t, callback) => unsubscribe;
+let onFocusLost: (t, callback) => unsubscribe;
+let onMaximized: (t, callback) => unsubscribe;
+let onMinimized: (t, callback) => unsubscribe;
+let onRestored: (t, callback) => unsubscribe;
 let onCompositionStart: (t, callback) => unsubscribe;
 let onCompositionEdit: (t, textEditCallback) => unsubscribe;
 let onCompositionEnd: (t, callback) => unsubscribe;
@@ -45,6 +50,7 @@ let getZoom: t => float;
 let getUniqueId: t => int;
 
 let isDirty: t => bool;
+let isTextInputActive: t => bool;
 
 let center: t => unit;
 let hide: t => unit;

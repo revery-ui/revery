@@ -69,6 +69,8 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
+  onFocusGained: Event.t(unit),
+  onFocusLost: Event.t(unit),
   onExposed: Event.t(unit),
   onKeyDown: Event.t(Key.KeyEvent.t),
   onKeyUp: Event.t(Key.KeyEvent.t),
@@ -78,12 +80,20 @@ type t = {
   onMouseDown: Event.t(mouseButtonEvent),
   onMouseEnter: Event.t(unit),
   onMouseLeave: Event.t(unit),
+  onMaximized: Event.t(unit),
+  onMinimized: Event.t(unit),
+  onRestored: Event.t(unit),
   onCompositionStart: Event.t(unit),
   onCompositionEdit: Event.t(textEditEvent),
   onCompositionEnd: Event.t(unit),
   onTextInputCommit: Event.t(textInputEvent),
 };
 
+let onFocusGained = w => Event.subscribe(w.onFocusGained);
+let onFocusLost = w => Event.subscribe(w.onFocusLost);
+let onMaximized = w => Event.subscribe(w.onMaximized);
+let onMinimized = w => Event.subscribe(w.onMinimized);
+let onRestored = w => Event.subscribe(w.onRestored);
 let onExposed = w => Event.subscribe(w.onExposed);
 let onKeyDown = w => Event.subscribe(w.onKeyDown);
 let onKeyUp = w => Event.subscribe(w.onKeyUp);
@@ -345,6 +355,11 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.WindowEnter(_) => Event.dispatch(v.onMouseEnter, ())
   | Sdl2.Event.WindowLeave(_) => Event.dispatch(v.onMouseLeave, ())
   | Sdl2.Event.WindowExposed(_) => Event.dispatch(v.onExposed, ())
+  | Sdl2.Event.WindowMaximized(_) => Event.dispatch(v.onMaximized, ())
+  | Sdl2.Event.WindowMinimized(_) => Event.dispatch(v.onMinimized, ())
+  | Sdl2.Event.WindowRestored(_) => Event.dispatch(v.onRestored, ())
+  | Sdl2.Event.WindowFocusGained(_) => Event.dispatch(v.onFocusGained, ())
+  | Sdl2.Event.WindowFocusLost(_) => Event.dispatch(v.onFocusLost, ())
   | Sdl2.Event.Quit => ()
   | _ => ()
   };
@@ -446,6 +461,12 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     forceScaleFactor: options.forceScaleFactor,
 
+    onFocusGained: Event.create(),
+    onFocusLost: Event.create(),
+
+    onMinimized: Event.create(),
+    onMaximized: Event.create(),
+    onRestored: Event.create(),
     onExposed: Event.create(),
 
     onMouseMove: Event.create(),
