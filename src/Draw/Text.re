@@ -42,17 +42,11 @@ let measure = (~fontFamily, ~fontSize, text) => {
   ret;
 };
 
-let measureCharWidth = (~window, ~fontFamily, ~fontSize, char) => {
-  //let scaledFontSize = _getScaledFontSizeFromWindow(window, fontSize);
+let measureCharWidth = (~fontFamily, ~fontSize, char) => {
   let (font, _skiaFont) = FontCache.load(fontFamily, fontSize);
-  let multiplier =
-    switch (window) {
-    | None => 1.0
-    | Some(w) => Window.getScaleAndZoom(w) *. Window.getDevicePixelRatio(w)
-    };
   let text = String.make(1, char);
   let dimensions = FontRenderer.measure(font, text);
-  float_of_int(dimensions.width) /. multiplier +. 0.5;
+  dimensions.width |> float_of_int
 };
 
 let indexNearestOffset = (~measure, text, offset) => {

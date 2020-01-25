@@ -97,11 +97,9 @@ class textNode (text: string) = {
   pub textOverflow = (maxWidth): LayoutTypes.dimensions => {
     let {fontFamily, fontSize, lineHeight, textOverflow, _}: Style.t =
       _super#getStyle();
-    let window = Ui.getActiveWindow();
 
     let formattedText = TextOverflow.removeLineBreaks(text);
 
-    let window = Ui.getActiveWindow();
 
     let measure = str =>
       Text.measure(~fontFamily, ~fontSize, str) |> (value => value.width);
@@ -153,12 +151,11 @@ class textNode (text: string) = {
   };
   pub handleTextWrapping = (width, style) => {
     let {textWrap, fontFamily, fontSize, lineHeight, _}: Style.t = style;
-    let window = Ui.getActiveWindow();
     let lineHeightPx =
       lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
 
     let measureWidth = str =>
-      Text.measureCharWidth(~window, ~fontFamily, ~fontSize, str);
+      Text.measureCharWidth(~fontFamily, ~fontSize, str);
     _lines =
       TextWrapping.wrapText(
         ~text,
