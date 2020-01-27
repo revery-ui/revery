@@ -36,16 +36,6 @@ class imageNode (imagePath: string) = {
       src,
       canvas,
     );
-    /*Draw.Image.drawImage(
-        ~imagePath=src,
-        ~transform=world,
-        ~width=float_of_int(dimensions.width),
-        ~height=float_of_int(dimensions.height),
-        ~resizeMode=uiToDrawResizeMode(_resizeMode),
-        ~tint=Colors.white,
-        ~opacity=_opacity,
-        (),
-      );*/
   };
   pub setOpacity = f => _opacity = f;
   pub setResizeMode = (mode: ImageResizeMode.t) => {
