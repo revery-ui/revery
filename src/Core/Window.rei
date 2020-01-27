@@ -39,6 +39,10 @@ let getZoom: t => float;
 let getUniqueId: t => int;
 
 let isDirty: t => bool;
+
+let setInputRect: (t, int, int, int, int) => unit;
+let startTextInput: t => unit;
+let stopTextInput: t => unit;
 let isTextInputActive: t => bool;
 
 let center: t => unit;

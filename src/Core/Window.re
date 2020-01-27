@@ -557,15 +557,6 @@ let getRawSize = (w: t) => {
   ret;
 };
 
-let getScaledSize = (w: t) => {
-  let rawSize = getRawSize(w);
-  {
-    width: int_of_float(float_of_int(rawSize.width) /. w.metrics.scaleFactor),
-    height:
-      int_of_float(float_of_int(rawSize.height) /. w.metrics.scaleFactor),
-  };
-};
-
 let getFramebufferSize = (w: t) => {
   w.metrics.framebufferSize;
 };
