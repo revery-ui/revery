@@ -15,9 +15,6 @@ class textNode (text: string) = {
   val mutable _lines: list(string) = [];
   inherit (class viewNode)() as _super;
   pub! draw = (parentContext: NodeDrawContext.t) => {
-    /* Draw background first */
-    _super#draw(parentContext);
-
     let style = _super#getStyle();
 
     let {color, fontFamily, fontSize, lineHeight, _} = style;
