@@ -4,7 +4,6 @@ include Reglm;
 let pi = 4.0 *. atan(1.);
 
 module BoundingBox2d = BoundingBox2d;
-module Rectangle = Rectangle;
 
 let clamp = (f: float, min: float, max: float) =>
   f < min ? min : f > max ? max : f;

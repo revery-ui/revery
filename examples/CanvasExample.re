@@ -29,14 +29,7 @@ module Sample = {
             Skia.Color.makeArgb(0xFF, 0xFF, 0x00, 0x00),
           );
 
-          let rect =
-            Revery_Math.Rectangle.create(
-              ~x=1.,
-              ~y=1.0,
-              ~width=100.,
-              ~height=200.,
-              (),
-            );
+          let rect = Skia.Rect.makeLtrb(1.0, 1.0, 101., 201.);
           CanvasContext.drawRect(canvasContext, rect, paint);
 
           CanvasContext.drawText(

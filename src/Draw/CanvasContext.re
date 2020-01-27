@@ -4,7 +4,6 @@
  * Module for integrating with the Skia canvas
  */
 open Revery_Core;
-module Rectangle = Revery_Math.Rectangle;
 
 module Log = (val Log.withNamespace("Revery.CanvasContext"));
 
@@ -112,16 +111,8 @@ let translate = (v: t, x: float, y: float) => {
   Skia.Canvas.translate(v.canvas, x, y);
 };
 
-let toSkiaRect = (rect: Rectangle.t) => {
-  let x = Rectangle.getX(rect);
-  let y = Rectangle.getY(rect);
-  let width = Rectangle.getWidth(rect);
-  let height = Rectangle.getHeight(rect);
-  Rect.makeLtrb(x, y, x +. width, y +. height);
-};
-
-let drawRect = (v: t, rect: Rectangle.t, paint) => {
-  Canvas.drawRect(v.canvas, toSkiaRect(rect), paint);
+let drawRect = (v: t, rect: Skia.Rect.t, paint) => {
+  Canvas.drawRect(v.canvas, rect, paint);
 };
 
 let drawRRect = (v: t, rRect: Skia.RRect.t, paint) => {
@@ -180,8 +171,8 @@ let setMatrix = (v: t, mat: Skia.Matrix.t) => {
 };
 
 let clipRect =
-    (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rect: Rectangle.t) => {
-  Canvas.clipRect(v.canvas, toSkiaRect(rect), clipOp, antiAlias);
+    (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rect: Skia.Rect.t) => {
+  Canvas.clipRect(v.canvas, rect, clipOp, antiAlias);
 };
 
 let clipRRect =
@@ -206,7 +197,7 @@ module Deprecated = {
         ~color: Revery_Core.Color.t,
         v: t,
       ) => {
-    let rect = Rectangle.create(~x, ~y, ~width, ~height, ());
+    let rect = Skia.Rect.makeLtrb(x, y, x +. width, y +. height);
     let fill = Paint.make();
     Paint.setColor(fill, Revery_Core.Color.toSkia(color));
     _drawRect(v, rect, fill);

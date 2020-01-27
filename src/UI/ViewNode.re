@@ -101,13 +101,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
       let _id: int = Revery_Draw.CanvasContext.save(canvas);
 
       let clippingRectangle =
-        Revery_Math.Rectangle.create(
-          ~x=0.,
-          ~y=0.,
-          ~width=innerCenterX,
-          ~height=outerHeight,
-          (),
-        );
+        Skia.Rect.makeLtrb(0., 0., innerCenterX, outerHeight);
       Revery_Draw.CanvasContext.clipRect(canvas, clippingRectangle);
 
       if (hasTopOrBottomBorder) {
@@ -143,13 +137,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
       let _id: int = Revery_Draw.CanvasContext.save(canvas);
 
       let clippingRectangle =
-        Revery_Math.Rectangle.create(
-          ~x=0.,
-          ~y=0.,
-          ~width=outerWidth,
-          ~height=innerCenterY,
-          (),
-        );
+        Skia.Rect.makeLtrb(0., 0., outerWidth, innerCenterY);
       Revery_Draw.CanvasContext.clipRect(canvas, clippingRectangle);
 
       if (hasLeftOrRightBorder) {
@@ -185,13 +173,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
       let _id: int = Revery_Draw.CanvasContext.save(canvas);
 
       let clippingRectangle =
-        Revery_Math.Rectangle.create(
-          ~x=innerCenterX,
-          ~y=0.,
-          ~width=outerWidth -. innerCenterX,
-          ~height=outerHeight,
-          (),
-        );
+        Skia.Rect.makeLtrb(innerCenterX, 0., outerWidth, outerHeight);
       Revery_Draw.CanvasContext.clipRect(canvas, clippingRectangle);
 
       if (hasTopOrBottomBorder) {
@@ -227,13 +209,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
       let _id: int = Revery_Draw.CanvasContext.save(canvas);
 
       let clippingRectangle =
-        Revery_Math.Rectangle.create(
-          ~x=0.,
-          ~y=innerCenterY,
-          ~width=outerWidth,
-          ~height=outerHeight -. innerCenterY,
-          (),
-        );
+        Skia.Rect.makeLtrb(0., innerCenterY, outerWidth, outerHeight);
       Revery_Draw.CanvasContext.clipRect(canvas, clippingRectangle);
 
       if (hasLeftOrRightBorder) {
