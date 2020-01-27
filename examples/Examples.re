@@ -154,12 +154,7 @@ let state: state = {
       name: "Nested Clickables",
       render: _ => NestedClickable.render(),
       source: "NestedClickable.re",
-    },
-    {
-      name: "Skia Example",
-      render: _ => SkiaExample.render(),
-      source: "SkiaExample.re",
-    },
+    }
   ],
   selectedExample: "Box Shadow",
 };
