@@ -8,8 +8,7 @@ module DrawContext = {
     screenHeight: int,
   };
 
-  let create =
-      (~canvas, ~screenWidth, ~screenHeight, ()) => {
+  let create = (~canvas, ~screenWidth, ~screenHeight, ()) => {
     canvas,
     screenWidth,
     screenHeight,
@@ -27,17 +26,9 @@ let getContext = () => {
   };
 };
 
-let start =
-    (~canvas, ~screenWidth, ~screenHeight, ()) => {
+let start = (~canvas, ~screenWidth, ~screenHeight, ()) => {
   _activeContext :=
-    Some(
-      DrawContext.create(
-        ~canvas,
-        ~screenWidth,
-        ~screenHeight,
-        (),
-      ),
-    );
+    Some(DrawContext.create(~canvas, ~screenWidth, ~screenHeight, ()));
 };
 
 let endAlphaPass = () => {

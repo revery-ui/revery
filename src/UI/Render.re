@@ -46,10 +46,6 @@ let render =
       ~position=LayoutTypes.Relative,
       ~width=adjustedWidth,
       ~height=adjustedHeight,
-      ~transform=[
-        Transform.ScaleX(canvasScalingFactor),
-        ScaleY(canvasScalingFactor),
-      ],
       (),
     ),
   );
@@ -68,6 +64,17 @@ let render =
     switch (renderContainer.canvas^) {
     | None => ()
     | Some(canvas) =>
+      let rootMatrix = Reglm.Mat4.create();
+      Reglm.Mat4.fromScaling(
+        rootMatrix,
+        Vec3.create(
+          canvasScalingFactor,
+          canvasScalingFactor,
+          canvasScalingFactor,
+        ),
+      );
+      let skiaRoot = Revery_Math.Matrix.toSkiaMatrix(rootMatrix);
+      CanvasContext.setRootTransform(skiaRoot, canvas);
       let drawContext =
         NodeDrawContext.create(~canvas, ~zIndex=0, ~opacity=1.0, ());
 

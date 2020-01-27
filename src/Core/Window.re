@@ -546,8 +546,7 @@ let getDevicePixelRatio = (w: t) => {
 };
 
 let getScaleAndZoom = (w: t) => {
-  w.metrics.scaleFactor
-  *. w.metrics.zoom
+  w.metrics.scaleFactor *. w.metrics.zoom;
 };
 
 let getZoom = (w: t) => {

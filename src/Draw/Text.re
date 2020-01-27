@@ -46,7 +46,7 @@ let measureCharWidth = (~fontFamily, ~fontSize, char) => {
   let (font, _skiaFont) = FontCache.load(fontFamily, fontSize);
   let text = String.make(1, char);
   let dimensions = FontRenderer.measure(font, text);
-  dimensions.width |> float_of_int
+  dimensions.width |> float_of_int;
 };
 
 let indexNearestOffset = (~measure, text, offset) => {

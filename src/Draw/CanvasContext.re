@@ -10,8 +10,11 @@ module Log = (val Log.withNamespace("Revery.CanvasContext"));
 
 open Skia;
 
-// TODO bind SkCanvas#getSurface and directly use the canvas
-type t = Skia.Surface.t;
+type t = {
+  surface: Skia.Surface.t,
+  canvas: Skia.Canvas.t,
+  mutable rootTransform: option(Skia.Matrix.t),
+};
 
 let create = (window: Revery_Core.Window.t) => {
   let context = Skia.Gr.Context.makeGl(None);
@@ -58,7 +61,11 @@ let create = (window: Revery_Core.Window.t) => {
         ),
       );
       let surface = v;
-      Some(surface);
+      Some({
+        surface,
+        canvas: Surface.getCanvas(surface),
+        rootTransform: None,
+      });
     };
   };
 };
@@ -66,16 +73,14 @@ let create = (window: Revery_Core.Window.t) => {
 let resize = (window: Revery_Core.Window.t, v: option(t)) => {
   switch (v) {
   | None => None
-  | Some(existingCanvas) =>
-    if (Surface.getWidth(existingCanvas)
-        != window.metrics.framebufferSize.width
-        || Surface.getHeight(existingCanvas)
-        != window.metrics.framebufferSize.height) {
+  | Some({surface, _} as canvas) as v =>
+    if (Surface.getWidth(surface) != window.metrics.framebufferSize.width
+        || Surface.getHeight(surface) != window.metrics.framebufferSize.height) {
       Log.info(
         Printf.sprintf(
           "Resizing canvas: %dx%d->%dx%d",
-          Surface.getWidth(existingCanvas),
-          Surface.getHeight(existingCanvas),
+          Surface.getWidth(surface),
+          Surface.getHeight(surface),
           window.metrics.framebufferSize.width,
           window.metrics.framebufferSize.height,
         ),
@@ -87,20 +92,24 @@ let resize = (window: Revery_Core.Window.t, v: option(t)) => {
   };
 };
 
+let setRootTransform = (matrix: Skia.Matrix.t, canvas: t) => {
+  canvas.rootTransform = Some(matrix);
+};
+
 let save = (v: t) => {
-  Skia.Canvas.save(Surface.getCanvas(v));
+  Skia.Canvas.save(v.canvas);
 };
 
 let restore = (v: t) => {
-  Skia.Canvas.restore(Surface.getCanvas(v));
+  Skia.Canvas.restore(v.canvas);
 };
 
 let flush = (v: t) => {
-  Skia.Canvas.flush(Surface.getCanvas(v));
+  Skia.Canvas.flush(v.canvas);
 };
 
 let translate = (v: t, x: float, y: float) => {
-  Skia.Canvas.translate(Surface.getCanvas(v), x, y);
+  Skia.Canvas.translate(v.canvas, x, y);
 };
 
 let toSkiaRect = (rect: Rectangle.t) => {
@@ -112,21 +121,25 @@ let toSkiaRect = (rect: Rectangle.t) => {
 };
 
 let drawRect = (v: t, rect: Rectangle.t, paint) => {
-  Canvas.drawRect(Surface.getCanvas(v), toSkiaRect(rect), paint);
+  Canvas.drawRect(v.canvas, toSkiaRect(rect), paint);
 };
 
 let drawRRect = (v: t, rRect: Skia.RRect.t, paint) => {
-  Canvas.drawRRect(Surface.getCanvas(v), rRect, paint);
+  Canvas.drawRRect(v.canvas, rRect, paint);
 };
 
 let drawImage = (~x, ~y, ~width, ~height, src, v: t) => {
   let image = ImageRenderer.getTexture(src);
   switch (image) {
   | None => ()
-  | Some(img) => Canvas.drawImageRect(Surface.getCanvas(v), img, 
-    None,
-    Rect.makeLtrb(x, y, x +. width, y +. height),
-    None);
+  | Some(img) =>
+    Canvas.drawImageRect(
+      v.canvas,
+      img,
+      None,
+      Rect.makeLtrb(x, y, x +. width, y +. height),
+      None,
+    )
   };
 };
 
@@ -152,32 +165,33 @@ let drawText =
     Paint.setLcdRenderText(fill2, true);
     Paint.setAntiAlias(fill2, true);
     Paint.setTextSize(fill2, fontSize);
-    Canvas.drawText(Surface.getCanvas(v), text, x, y, fill2);
+    Canvas.drawText(v.canvas, text, x, y, fill2);
   };
 };
 
 let setMatrix = (v: t, mat: Skia.Matrix.t) => {
-  Canvas.setMatrix(Surface.getCanvas(v), mat);
+  switch (v.rootTransform) {
+  | None => Canvas.setMatrix(v.canvas, mat)
+  | Some(rootMatrix) =>
+    let matrix = Skia.Matrix.make();
+    Skia.Matrix.concat(matrix, rootMatrix, mat);
+    Canvas.setMatrix(v.canvas, matrix);
+  };
 };
 
 let clipRect =
     (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rect: Rectangle.t) => {
-  Canvas.clipRect(
-    Surface.getCanvas(v),
-    toSkiaRect(rect),
-    clipOp,
-    antiAlias,
-  );
+  Canvas.clipRect(v.canvas, toSkiaRect(rect), clipOp, antiAlias);
 };
 
 let clipRRect =
     (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rRect: Skia.RRect.t) => {
-  Canvas.clipRRect(Surface.getCanvas(v), rRect, clipOp, antiAlias);
+  Canvas.clipRRect(v.canvas, rRect, clipOp, antiAlias);
 };
 
 let clipPath =
     (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, path: Skia.Path.t) => {
-  Canvas.clipPath(Surface.getCanvas(v), path, clipOp, antiAlias);
+  Canvas.clipPath(v.canvas, path, clipOp, antiAlias);
 };
 
 /*let test_draw = (v: t) => {

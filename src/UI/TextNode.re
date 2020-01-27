@@ -100,7 +100,6 @@ class textNode (text: string) = {
 
     let formattedText = TextOverflow.removeLineBreaks(text);
 
-
     let measure = str =>
       Text.measure(~fontFamily, ~fontSize, str) |> (value => value.width);
 
