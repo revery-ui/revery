@@ -127,7 +127,7 @@ let _getMax = (fn, v1: Vec3.t, v2: Vec3.t, v3: Vec3.t, v4: Vec3.t) => {
       http://dev.theomader.com/transform-bounding-boxes/
       Significantly less matrix multiplications in that strategy!
    */
-let transform = (bbox: t, m: Mat4.t) => {
+let transform = (bbox: t, m: Skia.Matrix.t) => {
   let minX = Vec2.get_x(bbox.min);
   let minY = Vec2.get_y(bbox.min);
 
@@ -139,10 +139,11 @@ let transform = (bbox: t, m: Mat4.t) => {
   let c3 = Vec3.create(maxX, maxY, 0.0);
   let c4 = Vec3.create(maxX, minY, 0.0);
 
-  Mat4.transformVec3(c1, c1, m);
-  Mat4.transformVec3(c2, c2, m);
-  Mat4.transformVec3(c3, c3, m);
-  Mat4.transformVec3(c4, c4, m);
+  // TODO: FIX! Transform w/ Skia primitives
+  /*Mat4.transformVec3(c1, c1, m);
+    Mat4.transformVec3(c2, c2, m);
+    Mat4.transformVec3(c3, c3, m);
+    Mat4.transformVec3(c4, c4, m);*/
 
   let minX = _getMin(Vec3.get_x, c1, c2, c3, c4);
   let maxX = _getMax(Vec3.get_x, c1, c2, c3, c4);

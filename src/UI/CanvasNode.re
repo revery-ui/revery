@@ -28,8 +28,7 @@ class canvasNode (()) = {
     switch (render) {
     | Some(r) =>
       let _ret: int = CanvasContext.save(canvas);
-      let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
-      CanvasContext.setMatrix(canvas, skiaWorld);
+      CanvasContext.setMatrix(canvas, world);
       Overflow.render(canvas, LayoutTypes.Hidden, dimensions, () => {
         // canvas save
         // canvas set transform

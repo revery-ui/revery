@@ -297,8 +297,8 @@ class viewNode (()) = {
 
     // TODO find a way to only manage the matrix stack in Node
     let world = _this#getWorldTransform();
-    let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
-    Revery_Draw.CanvasContext.setMatrix(canvas, skiaWorld);
+    //let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
+    Revery_Draw.CanvasContext.setMatrix(canvas, world);
 
     let borderRadius = style.borderRadius;
     let outerRRect = Skia.RRect.make();

@@ -33,8 +33,7 @@ class textNode (text: string) = {
     let {canvas, _}: NodeDrawContext.t = parentContext;
     // TODO find a way to only manage the matrix stack in Node
     let world = _this#getWorldTransform();
-    let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
-    Revery_Draw.CanvasContext.setMatrix(canvas, skiaWorld);
+    Revery_Draw.CanvasContext.setMatrix(canvas, world);
 
     List.iteri(
       (lineIndex, line) => {

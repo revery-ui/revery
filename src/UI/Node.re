@@ -41,8 +41,8 @@ let getOrThrow: (string, option('a)) => 'a =
     };
 
 type cachedNodeState = {
-  transform: Mat4.t,
-  worldTransform: Mat4.t,
+  transform: Skia.Matrix.t,
+  worldTransform: Skia.Matrix.t,
   bbox: BoundingBox2d.t,
   bboxClipped: BoundingBox2d.t,
   depth: int,
@@ -73,8 +73,7 @@ class node (()) = {
     let {canvas, _}: NodeDrawContext.t = parentContext;
 
     let _id: int = Revery_Draw.CanvasContext.save(canvas);
-    let skiaWorldTransform = Revery_Math.Matrix.toSkiaMatrix(worldTransform);
-    Revery_Draw.CanvasContext.setMatrix(canvas, skiaWorldTransform);
+    Revery_Draw.CanvasContext.setMatrix(canvas, worldTransform);
 
     Overflow.render(
       canvas,
@@ -176,33 +175,42 @@ class node (()) = {
   };
   pri _recalculateTransform = () => {
     let dimensions = _this#measurements();
-    let matrix = Mat4.create();
-    Mat4.fromTranslation(
-      matrix,
-      Vec3.create(
-        float_of_int(dimensions.left),
-        float_of_int(dimensions.top),
-        0.,
-      ),
-    );
+    let matrix =
+      Skia.Matrix.makeTranslate(
+        dimensions.left |> float_of_int,
+        dimensions.top |> float_of_int,
+      );
+
+    /*Mat4.create();
+      Mat4.fromTranslation(
+        matrix,
+        Vec3.create(
+          float_of_int(dimensions.left),
+          float_of_int(dimensions.top),
+          0.,
+        ),
+      );*/
     let animationTransform =
       Transform.toMat4(
         float_of_int(dimensions.width) /. 2.,
         float_of_int(dimensions.height) /. 2.,
         _this#getStyle().transform,
       );
-    Mat4.multiply(matrix, matrix, animationTransform);
+    Skia.Matrix.preConcat(matrix, animationTransform);
     matrix;
   };
   pri _recalculateWorldTransform = localTransform => {
     let xform = localTransform;
     let world =
       switch (_parent) {
-      | None => Mat4.create()
+      | None =>
+        let m = Skia.Matrix.make();
+        Skia.Matrix.setIdentity(m);
+        m;
       | Some(p) => p#getWorldTransform()
       };
-    let matrix = Mat4.create();
-    Mat4.multiply(matrix, world, xform);
+    let matrix = Skia.Matrix.make();
+    Skia.Matrix.concat(matrix, world, xform);
     matrix;
   };
   pri _recalculateBoundingBox = worldTransform => {

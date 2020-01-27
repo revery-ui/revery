@@ -12,4 +12,4 @@ type t =
   | TranslateX(float)
   | TranslateY(float);
 
-let toMat4: (float, float, list(t)) => Mat4.t;
+let toMat4: (float, float, list(t)) => Skia.Matrix.t;
