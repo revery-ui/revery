@@ -154,7 +154,7 @@ let state: state = {
       name: "Nested Clickables",
       render: _ => NestedClickable.render(),
       source: "NestedClickable.re",
-    }
+    },
   ],
   selectedExample: "Box Shadow",
 };
