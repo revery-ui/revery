@@ -20,7 +20,12 @@ let render =
     ) => {
   if (overflow == LayoutTypes.Hidden || overflow == LayoutTypes.Scroll) {
     let clippingRect =
-      Skia.Rect.makeLtrb(0., 0., float_of_int(dimensions.width), float_of_int(dimensions.height));
+      Skia.Rect.makeLtrb(
+        0.,
+        0.,
+        float_of_int(dimensions.width),
+        float_of_int(dimensions.height),
+      );
 
     let _save: int = Revery_Draw.CanvasContext.save(canvas);
     let () = Revery_Draw.CanvasContext.clipRect(canvas, clippingRect);
