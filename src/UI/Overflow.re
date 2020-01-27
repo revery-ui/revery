@@ -5,8 +5,6 @@
  *
  */
 
-open Revery_Math;
-
 open Layout;
 
 type renderCallback = unit => unit;
