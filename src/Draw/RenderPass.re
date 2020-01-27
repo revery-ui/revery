@@ -1,6 +1,3 @@
-open Reglm;
-open Sdl2.Gl;
-
 module DrawContext = {
   type t = {
     canvas: CanvasContext.t,

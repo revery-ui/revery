@@ -4,13 +4,6 @@
  * Core logic for rendering text to screen.
  */
 
-open Sdl2.Gl;
-
-open Revery_Core;
-open Revery_Math;
-
-open Fontkit;
-
 let _getFontMetrics = (~fontFamily, ~fontSize, ()) => {
   let (font, _) = FontCache.load(fontFamily, fontSize);
   let metrics = FontRenderer.getNormalizedMetrics(font);
@@ -31,16 +24,16 @@ type dimensions = {
   height: int,
 };
 
-let measure = (~fontFamily, ~fontSize, text) => {
-  let (font, _) = FontCache.load(fontFamily, fontSize);
+/*let measure = (~fontFamily, ~fontSize, text) => {
+    let (font, _) = FontCache.load(fontFamily, fontSize);
 
-  let dimensions = FontRenderer.measure(font, text);
-  let ret: dimensions = {
-    width: int_of_float(float_of_int(dimensions.width) +. 0.5),
-    height: int_of_float(float_of_int(dimensions.height) +. 0.5),
-  };
-  ret;
-};
+    let dimensions = FontRenderer.measure(font, text);
+    let ret: dimensions = {
+      width: int_of_float(float_of_int(dimensions.width) +. 0.5),
+      height: int_of_float(float_of_int(dimensions.height) +. 0.5),
+    };
+    ret;
+  };*/
 
 let measureCharWidth = (~fontFamily, ~fontSize, char) => {
   let (font, _skiaFont) = FontCache.load(fontFamily, fontSize);

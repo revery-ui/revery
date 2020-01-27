@@ -1,16 +1,6 @@
-open Sdl2.Gl;
 open Revery_Core;
 
-open Skia;
-module Image = Sdl2.Image;
-
 module Log = (val Log.withNamespace("Revery.ImageRenderer"));
-
-let initialPixels =
-  Lazy.make(() => {
-    let initialImage = Image.fromColor(255, 0, 0, 255);
-    Image.getPixels(initialImage);
-  });
 
 type cache = Hashtbl.t(string, option(Skia.Image.t));
 let _cache: cache = Hashtbl.create(100);

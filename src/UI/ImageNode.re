@@ -1,5 +1,3 @@
-open Revery_Core;
-
 module Draw = Revery_Draw;
 
 module Layout = Layout;

@@ -27,13 +27,15 @@ let render =
         ~height=float_of_int(dimensions.height),
         (),
       );
-    Revery_Draw.CanvasContext.save(canvas);
-    Revery_Draw.CanvasContext.clipRect(canvas, clippingRect);
+    let _save: int = Revery_Draw.CanvasContext.save(canvas);
+    let () = Revery_Draw.CanvasContext.clipRect(canvas, clippingRect);
+    ();
   };
 
   r();
 
   if (overflow == LayoutTypes.Hidden || overflow == LayoutTypes.Scroll) {
-    Revery_Draw.CanvasContext.restore(canvas);
+    let () = Revery_Draw.CanvasContext.restore(canvas);
+    ();
   };
 };

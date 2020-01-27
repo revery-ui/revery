@@ -1,10 +1,8 @@
 open Revery_Core;
-open Revery_Draw;
 
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
-open Reglm;
 open Node;
 open Style;
 open Style.Border;
@@ -99,51 +97,50 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
     let hasTopOrBottomBorder =
       topBorderWidth !== 0. || bottomBorderWidth !== 0.;
 
-    let leftBorderClippingPath =
-      if (leftBorderWidth != 0. && lbc.a > 0.001) {
-        Revery_Draw.CanvasContext.save(canvas);
+    if (leftBorderWidth != 0. && lbc.a > 0.001) {
+      let _id: int = Revery_Draw.CanvasContext.save(canvas);
 
-        let clippingRectangle =
-          Revery_Math.Rectangle.create(
-            ~x=0.,
-            ~y=0.,
-            ~width=innerCenterX,
-            ~height=outerHeight,
-            (),
-          );
-        Revery_Draw.CanvasContext.clipRect(canvas, clippingRectangle);
-
-        if (hasTopOrBottomBorder) {
-          let imaginaryIntersectionX =
-            verticalExtrapolationFactor *. leftBorderWidth;
-          let imaginaryIntersectionY =
-            verticalExtrapolationFactor *. topBorderWidth;
-          let clippingTriangle =
-            makeTriangle(
-              0.,
-              outerHeight,
-              0.,
-              0.,
-              imaginaryIntersectionX,
-              imaginaryIntersectionY,
-            );
-          Revery_Draw.CanvasContext.clipPath(canvas, clippingTriangle);
-        };
-
-        Revery_Draw.CanvasContext.clipRRect(
-          canvas,
-          ~clipOp=Difference,
-          innerRRect,
+      let clippingRectangle =
+        Revery_Math.Rectangle.create(
+          ~x=0.,
+          ~y=0.,
+          ~width=innerCenterX,
+          ~height=outerHeight,
+          (),
         );
+      Revery_Draw.CanvasContext.clipRect(canvas, clippingRectangle);
 
-        Skia.Paint.setColor(borderPaint, Color.toSkia(lbc));
-        Revery_Draw.CanvasContext.drawRRect(canvas, outerRRect, borderPaint);
-
-        Revery_Draw.CanvasContext.restore(canvas);
+      if (hasTopOrBottomBorder) {
+        let imaginaryIntersectionX =
+          verticalExtrapolationFactor *. leftBorderWidth;
+        let imaginaryIntersectionY =
+          verticalExtrapolationFactor *. topBorderWidth;
+        let clippingTriangle =
+          makeTriangle(
+            0.,
+            outerHeight,
+            0.,
+            0.,
+            imaginaryIntersectionX,
+            imaginaryIntersectionY,
+          );
+        Revery_Draw.CanvasContext.clipPath(canvas, clippingTriangle);
       };
 
+      Revery_Draw.CanvasContext.clipRRect(
+        canvas,
+        ~clipOp=Difference,
+        innerRRect,
+      );
+
+      Skia.Paint.setColor(borderPaint, Color.toSkia(lbc));
+      Revery_Draw.CanvasContext.drawRRect(canvas, outerRRect, borderPaint);
+
+      Revery_Draw.CanvasContext.restore(canvas);
+    };
+
     if (topBorderWidth != 0. && tbc.a > 0.001) {
-      Revery_Draw.CanvasContext.save(canvas);
+      let _id: int = Revery_Draw.CanvasContext.save(canvas);
 
       let clippingRectangle =
         Revery_Math.Rectangle.create(
@@ -185,7 +182,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
     };
 
     if (rightBorderWidth != 0. && rbc.a > 0.001) {
-      Revery_Draw.CanvasContext.save(canvas);
+      let _id: int = Revery_Draw.CanvasContext.save(canvas);
 
       let clippingRectangle =
         Revery_Math.Rectangle.create(
@@ -227,7 +224,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
     };
 
     if (bottomBorderWidth != 0. && bbc.a > 0.001) {
-      Revery_Draw.CanvasContext.save(canvas);
+      let _id: int = Revery_Draw.CanvasContext.save(canvas);
 
       let clippingRectangle =
         Revery_Math.Rectangle.create(
@@ -287,7 +284,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
 };
 
 let makeShadowImageFilter = boxShadow => {
-  let {spreadRadius, blurRadius, xOffset, yOffset, color} = boxShadow;
+  let {blurRadius, xOffset, yOffset, color, _} = boxShadow;
 
   // Per spec, sigma is exactly half the blur radius:
   // https://www.w3.org/TR/css-backgrounds-3/#shadow-blur
@@ -312,7 +309,6 @@ class viewNode (()) = {
   as _this;
   inherit (class node)() as _super;
   pub! draw = (parentContext: NodeDrawContext.t) => {
-    let ctx = RenderPass.getContext();
     let dimensions = _this#measurements();
     let width = float_of_int(dimensions.width);
     let height = float_of_int(dimensions.height);
@@ -321,7 +317,7 @@ class viewNode (()) = {
     let opacity = style.opacity *. parentContext.opacity;
 
     let {canvas, _}: NodeDrawContext.t = parentContext;
-    Revery_Draw.CanvasContext.save(canvas);
+    let _id: int = Revery_Draw.CanvasContext.save(canvas);
 
     // TODO find a way to only manage the matrix stack in Node
     let world = _this#getWorldTransform();

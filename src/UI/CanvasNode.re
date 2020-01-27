@@ -1,5 +1,3 @@
-open Reglm;
-
 module RenderPass = Revery_Draw.RenderPass;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
@@ -23,14 +21,13 @@ class canvasNode (()) = {
   pub! draw = (parentContext: NodeDrawContext.t) => {
     _super#draw(parentContext);
 
-    let ctx = RenderPass.getContext();
     let world = _this#getWorldTransform();
     let dimensions = _this#measurements();
     let canvas = parentContext.canvas;
 
     switch (render) {
     | Some(r) =>
-      CanvasContext.save(canvas);
+      let _ret: int = CanvasContext.save(canvas);
       let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
       CanvasContext.setMatrix(canvas, skiaWorld);
       Overflow.render(canvas, LayoutTypes.Hidden, dimensions, () => {

@@ -70,12 +70,9 @@ class node (()) = {
     let worldTransform = _this#getWorldTransform();
     let dimensions = _this#measurements();
 
-    let ctx = RenderPass.getContext();
-
-    let layout = _layoutNode.layout;
     let {canvas, _}: NodeDrawContext.t = parentContext;
 
-    Revery_Draw.CanvasContext.save(canvas);
+    let _id: int = Revery_Draw.CanvasContext.save(canvas);
     let skiaWorldTransform = Revery_Math.Matrix.toSkiaMatrix(worldTransform);
     Revery_Draw.CanvasContext.setMatrix(canvas, skiaWorldTransform);
 

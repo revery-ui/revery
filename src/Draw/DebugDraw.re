@@ -3,7 +3,6 @@
  *
  * Helper to visualize some aspects of the UI, like which element the mouse is over
  */
-open Revery_Core;
 open Revery_Math;
 
 type t = {bbox: BoundingBox2d.t};
@@ -21,7 +20,10 @@ let setActive = (bbox: BoundingBox2d.t) => {
   _activeRect := Some(v);
 };
 
-let draw = () =>
+let paint = Skia.Paint.make();
+Skia.Paint.setColor(paint, Skia.Color.makeArgb(50, 255, 0, 0));
+
+let draw = (canvas: CanvasContext.t) =>
   if (_isEnabled^) {
     switch (_activeRect^) {
     | None => ()
@@ -30,15 +32,7 @@ let draw = () =>
       let height = y1 -. y0;
       let width = x1 -. x0;
       ();
-    // TODONOW: Bring back debug drawing, but with canvas
-    /*Shapes.drawRect(
-        ~transform,
-        ~width,
-        ~height,
-        ~x=x0,
-        ~y=y0,
-        ~color=Color.rgba(1.0, 0.0, 0.0, 0.2),
-        (),
-      );*/
+      let rectangle = Rectangle.create(~x=x0, ~y=y0, ~width, ~height, ());
+      CanvasContext.drawRect(canvas, rectangle, paint);
     };
   };

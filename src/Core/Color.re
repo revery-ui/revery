@@ -1,7 +1,5 @@
 open Reglm;
 
-open Skia;
-
 type t = {
   r: float,
   g: float,

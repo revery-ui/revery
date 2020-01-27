@@ -73,7 +73,7 @@ let create = (window: Revery_Core.Window.t) => {
 let resize = (window: Revery_Core.Window.t, v: option(t)) => {
   switch (v) {
   | None => None
-  | Some({surface, _} as canvas) as v =>
+  | Some({surface, _}) as v =>
     if (Surface.getWidth(surface) != window.metrics.framebufferSize.width
         || Surface.getHeight(surface) != window.metrics.framebufferSize.height) {
       Log.info(
@@ -158,7 +158,7 @@ let drawText =
   | None => ()
   | Some(typeface) =>
     let fill2 = Paint.make();
-    let fontStyle = FontStyle.make(500, 20, Upright);
+    //let fontStyle = FontStyle.make(500, 20, Upright);
     Paint.setColor(fill2, Revery_Core.Color.toSkia(color));
     Paint.setTypeface(fill2, typeface);
     //Paint.setSubpixelText(fill2, true);
