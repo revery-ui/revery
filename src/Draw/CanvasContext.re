@@ -160,7 +160,7 @@ let drawText =
     let fill2 = Paint.make();
     //let fontStyle = FontStyle.make(500, 20, Upright);
     Paint.setColor(fill2, Revery_Core.Color.toSkia(color));
-    //Paint.setTypeface(fill2, typeface);
+    Paint.setTypeface(fill2, typeface);
     //Paint.setSubpixelText(fill2, true);
     Paint.setLcdRenderText(fill2, true);
     Paint.setAntiAlias(fill2, true);

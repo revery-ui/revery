@@ -11,7 +11,6 @@ open ViewNode;
 class textNode (text: string) = {
   as _this;
   val mutable text = text;
-  val mutable gamma = 2.2;
   val mutable _isMeasured = false;
   val mutable _lines: list(string) = [];
   inherit (class viewNode)() as _super;
@@ -26,10 +25,8 @@ class textNode (text: string) = {
     let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 
     let ascentPx = Text.getAscent(~fontFamily, ~fontSize, ());
-    let descentPx = Text.getDescent(~fontFamily, ~fontSize, ());
     let lineHeightPx =
       lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
-    let leadingPx = lineHeightPx -. ascentPx -. descentPx;
 
     /* when style.width & style.height are defined, Layout doesn't call the measure function */
     if (!_isMeasured) {
@@ -59,7 +56,6 @@ class textNode (text: string) = {
       _lines,
     );
   };
-  pub setGamma = g => gamma = g;
   pub! setStyle = style => {
     let lastStyle = _this#getStyle();
     _super#setStyle(style);

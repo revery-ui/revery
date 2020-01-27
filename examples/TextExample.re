@@ -50,7 +50,6 @@ module SampleText = {
   let%component make = () => {
     let%hook (fontSizeSliderVal, setFontSize) = Hooks.state(20.);
     let%hook (widthSliderVal, setWidth) = Hooks.state(200.);
-    let%hook (gammaVal, setGamma) = Hooks.state(2.2);
     let%hook (hyphenate, setHyphenate) = Hooks.state(false);
 
     let textContent =
@@ -68,7 +67,6 @@ module SampleText = {
         <View style=Style.[height(40), marginBottom(8)]>
           <Text
             style={overflowStyles(`Ellipsis, textFontSize, textWidth)}
-            gamma=gammaVal
             text={textContent ++ " " ++ textContent}
           />
         </View>
@@ -79,7 +77,6 @@ module SampleText = {
               textFontSize,
               textWidth,
             )}
-            gamma=gammaVal
             text={textContent ++ " " ++ textContent}
           />
         </View>
@@ -122,19 +119,6 @@ module SampleText = {
           <Text
             style=textStyle
             text={"Value: " ++ (widthSliderVal |> string_of_float)}
-          />
-        </View>
-        <View style=controlsStyle>
-          <Text style=textStyle text="Gamma:" />
-          <Slider
-            onValueChanged={g => setGamma(_ => g)}
-            value=gammaVal
-            minimumValue=1.0
-            maximumValue=3.0
-          />
-          <Text
-            style=textStyle
-            text={"Value: " ++ (gammaVal |> string_of_float)}
           />
         </View>
         <View style=controlsStyle>
