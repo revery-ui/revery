@@ -23,9 +23,6 @@ module Sample = {
       <Canvas
         style=outerBox
         render={canvasContext => {
-          //Gl.glClearColor(1.0, 0.0, 0.0, 1.0);
-          //let window = getActiveWindow();
-
           let paint = Skia.Paint.make();
           Skia.Paint.setColor(
             paint,
@@ -53,42 +50,6 @@ module Sample = {
           );
           ();
         }}
-        // Revery.Draw.Text.drawString(
-        //   ~backgroundColor=Colors.red,
-        //   ~color=Colors.white,
-        //   ~fontFamily="Roboto-Regular.ttf",
-        //   ~fontSize=20,
-        //   ~transform,
-        //   ~x=25.,
-        //   ~y=25.,
-        //   ~window,
-        //   "Hello!",
-        // );
-        // Revery.Draw.Shapes.drawRect(
-        //   ~transform,
-        //   ~color=Colors.green,
-        //   ~x=25.,
-        //   ~y=50.,
-        //   ~width=10.,
-        //   ~height=20.,
-        //   (),
-        // );
-        /* STRESS TEST:
-           let iterations = 50000;
-           let i = ref(0);
-           while (i^ < iterations) {
-             Revery.Draw.Shapes.drawRect(
-               ~transform,
-               ~color=Colors.green,
-               ~x=25.,
-               ~y=50.,
-               ~width=10.,
-               ~height=20.,
-               (),
-             );
-             incr(i);
-           };
-           */
       />
     </View>;
   };
