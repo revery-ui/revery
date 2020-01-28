@@ -73,7 +73,7 @@ let getMetrics: (t, float) => FontMetrics.t =
       Skia.Paint.setTextSize(paint, size);
 
       let metrics = Skia.FontMetrics.make();
-      Skia.Paint.getFontMetrics(paint, metrics, 1.0);
+      let _spacing = Skia.Paint.getFontMetrics(paint, metrics, 1.0);
 
       let ret = FontMetrics.ofSkia(size, metrics);
       Hashtbl.add(metricsCache, size, ret);
