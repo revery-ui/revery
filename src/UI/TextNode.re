@@ -23,8 +23,7 @@ class textNode (text: string) = {
 
     //let ascentPx = Text.getAscent(~fontFamily, ~fontSize, ());
     let descentPx = Text.getDescent(~fontFamily, ~fontSize, ());
-    let lineHeightPx =
-      lineHeight *. fontSize;
+    let lineHeightPx = lineHeight *. fontSize;
 
     /* when style.width & style.height are defined, Layout doesn't call the measure function */
     if (!_isMeasured) {

@@ -51,30 +51,13 @@ type measureResult = {
   height: float,
 };
 
+let _cachedPaint = Skia.Paint.make();
 let measure = (font, size, text: string) => {
   let {height, _}: FontMetrics.t = getNormalizedMetrics(font, size);
   let {skiaFace, _}: FontCache.t = font;
 
-  let paint = Skia.Paint.make();
-  Skia.Paint.setTypeface(paint, skiaFace);
-  Skia.Paint.setTextSize(paint, size);
-  let width = Skia.Paint.measureText(paint, text, None);
-  // TODO: Hook this all back up
-  /*let shapedText = shape(font, text);
-    let x = ref(0);
-
-    Array.iter(
-      shape => {
-        let {advance, _} = getGlyph(font, shape.glyphId);
-        x := x^ + advance;
-      },
-      shapedText,
-    );
-
-    let d: dimensions = {
-      height: int_of_float(height),
-      width: int_of_float(float_of_int(x^) /. 64.0),
-    };
-    d;*/
+  Skia.Paint.setTypeface(_cachedPaint, skiaFace);
+  Skia.Paint.setTextSize(_cachedPaint, size);
+  let width = Skia.Paint.measureText(_cachedPaint, text, None);
   {height, width};
 };
