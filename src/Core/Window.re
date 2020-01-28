@@ -1,8 +1,6 @@
 open Events;
 
-type windowRenderCallback = unit => unit;
-type windowShouldRenderCallback = unit => bool;
-type windowCanQuitCallback = unit => bool;
+type unsubscribe = unit => unit;
 
 type size = {
   width: int,
@@ -50,9 +48,9 @@ type t = {
   sdlWindow: Sdl2.Window.t,
   uniqueId: int,
   forceScaleFactor: option(float),
-  mutable render: windowRenderCallback,
-  mutable shouldRender: windowShouldRenderCallback,
-  mutable canQuit: windowCanQuitCallback,
+  mutable render: unit => unit,
+  mutable shouldRender: unit => bool,
+  mutable canQuit: unit => bool,
   mutable metrics: WindowMetrics.t,
   mutable areMetricsDirty: bool,
   mutable isRendering: bool,
@@ -60,6 +58,8 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
+  onFocusGained: Event.t(unit),
+  onFocusLost: Event.t(unit),
   onExposed: Event.t(unit),
   onKeyDown: Event.t(Key.KeyEvent.t),
   onKeyUp: Event.t(Key.KeyEvent.t),
@@ -69,11 +69,33 @@ type t = {
   onMouseDown: Event.t(mouseButtonEvent),
   onMouseEnter: Event.t(unit),
   onMouseLeave: Event.t(unit),
+  onMaximized: Event.t(unit),
+  onMinimized: Event.t(unit),
+  onRestored: Event.t(unit),
   onCompositionStart: Event.t(unit),
   onCompositionEdit: Event.t(textEditEvent),
   onCompositionEnd: Event.t(unit),
   onTextInputCommit: Event.t(textInputEvent),
 };
+
+let onFocusGained = w => Event.subscribe(w.onFocusGained);
+let onFocusLost = w => Event.subscribe(w.onFocusLost);
+let onMaximized = w => Event.subscribe(w.onMaximized);
+let onMinimized = w => Event.subscribe(w.onMinimized);
+let onRestored = w => Event.subscribe(w.onRestored);
+let onExposed = w => Event.subscribe(w.onExposed);
+let onKeyDown = w => Event.subscribe(w.onKeyDown);
+let onKeyUp = w => Event.subscribe(w.onKeyUp);
+let onMouseMove = w => Event.subscribe(w.onMouseMove);
+let onMouseWheel = w => Event.subscribe(w.onMouseWheel);
+let onMouseEnter = w => Event.subscribe(w.onMouseEnter);
+let onMouseLeave = w => Event.subscribe(w.onMouseLeave);
+let onMouseDown = w => Event.subscribe(w.onMouseDown);
+let onMouseUp = w => Event.subscribe(w.onMouseUp);
+let onCompositionStart = w => Event.subscribe(w.onCompositionStart);
+let onCompositionEdit = w => Event.subscribe(w.onCompositionEdit);
+let onCompositionEnd = w => Event.subscribe(w.onCompositionEnd);
+let onTextInputCommit = w => Event.subscribe(w.onTextInputCommit);
 
 let getUniqueId = (w: t) => w.uniqueId;
 
@@ -272,7 +294,7 @@ let render = (w: t) => {
   w.isRendering = false;
 };
 
-let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
+let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   switch (sdlEvent) {
   | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
     let wheelEvent: Events.mouseWheelEvent = {
@@ -322,6 +344,11 @@ let _handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.WindowEnter(_) => Event.dispatch(v.onMouseEnter, ())
   | Sdl2.Event.WindowLeave(_) => Event.dispatch(v.onMouseLeave, ())
   | Sdl2.Event.WindowExposed(_) => Event.dispatch(v.onExposed, ())
+  | Sdl2.Event.WindowMaximized(_) => Event.dispatch(v.onMaximized, ())
+  | Sdl2.Event.WindowMinimized(_) => Event.dispatch(v.onMinimized, ())
+  | Sdl2.Event.WindowRestored(_) => Event.dispatch(v.onRestored, ())
+  | Sdl2.Event.WindowFocusGained(_) => Event.dispatch(v.onFocusGained, ())
+  | Sdl2.Event.WindowFocusLost(_) => Event.dispatch(v.onFocusLost, ())
   | Sdl2.Event.Quit => ()
   | _ => ()
   };
@@ -423,6 +450,12 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     forceScaleFactor: options.forceScaleFactor,
 
+    onFocusGained: Event.create(),
+    onFocusLost: Event.create(),
+
+    onMinimized: Event.create(),
+    onMaximized: Event.create(),
+    onRestored: Event.create(),
     onExposed: Event.create(),
 
     onMouseMove: Event.create(),
@@ -508,7 +541,7 @@ let center = (w: t) => {
   Sdl2.Window.center(w.sdlWindow);
 };
 
-let toString = w => {
+let show = w => {
   Sdl2.Window.show(w.sdlWindow);
 };
 
@@ -522,15 +555,6 @@ let getRawSize = (w: t) => {
 
   let ret: size = {width, height};
   ret;
-};
-
-let getScaledSize = (w: t) => {
-  let rawSize = getRawSize(w);
-  {
-    width: int_of_float(float_of_int(rawSize.width) /. w.metrics.scaleFactor),
-    height:
-      int_of_float(float_of_int(rawSize.height) /. w.metrics.scaleFactor),
-  };
 };
 
 let getFramebufferSize = (w: t) => {
@@ -588,20 +612,15 @@ let takeScreenshot = (w: t, filename: string) => {
   Image.destroy(image);
 };
 
-let destroyWindow = (_w: t) => {
-  ();
-};
-
 let canQuit = (w: t) => {
   w.canQuit();
 };
 
-let setCanQuitCallback = (w: t, callback: windowCanQuitCallback) => {
-  w.canQuit = callback;
+let setCanQuitCallback = (window: t, callback) => {
+  window.canQuit = callback;
 };
 
-let setRenderCallback = (w: t, callback: windowRenderCallback) =>
-  w.render = callback;
+let setRenderCallback = (window: t, callback) => window.render = callback;
 
-let setShouldRenderCallback = (w: t, callback: windowShouldRenderCallback) =>
-  w.shouldRender = callback;
+let setShouldRenderCallback = (window: t, callback) =>
+  window.shouldRender = callback;
