@@ -56,13 +56,11 @@
     "rench": "^1.9.1",
     "rebez": "github:jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3015",
-    "reason-skia": "github:revery-ui/reason-skia#5254022",
+    "reason-skia": "github:revery-ui/reason-skia#8156d2b",
     "revery-text-wrap": "github:revery-ui/revery-text-wrap#005385c",
     "timber": "*"
   },
   "resolutions": {
-    "reason-harfbuzz": "link:../reason-harfbuzz",
-    "reason-skia": "link:../reason-skia",
     "@esy-ocaml/libffi": "esy-ocaml/libffi#599bc3567",
     "@opam/cmdliner": "1.0.2",
     "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b6",

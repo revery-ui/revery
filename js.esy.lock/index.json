@@ -1,5 +1,5 @@
 {
-  "checksum": "332c841cec18576b579d1db7ce36c7da",
+  "checksum": "0b19459790472b6aa92274a27c5392c5",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9": {
@@ -116,10 +116,10 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
         "reperf@1.4.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-skia@github:revery-ui/reason-skia#dae5a5e@d41d8cd9",
+        "reason-skia@github:revery-ui/reason-skia#8156d2b@d41d8cd9",
         "reason-sdl2@2.10.3015@d41d8cd9",
+        "reason-harfbuzz@1.91.5002@d41d8cd9",
         "reason-gl-matrix@0.9.9306@d41d8cd9",
-        "reason-fontkit@2.8.3@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "http-server@0.12.1@d41d8cd9",
         "flex@1.2.2@d41d8cd9", "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
@@ -227,13 +227,13 @@
       ],
       "devDependencies": []
     },
-    "reason-skia@github:revery-ui/reason-skia#dae5a5e@d41d8cd9": {
-      "id": "reason-skia@github:revery-ui/reason-skia#dae5a5e@d41d8cd9",
+    "reason-skia@github:revery-ui/reason-skia#8156d2b@d41d8cd9": {
+      "id": "reason-skia@github:revery-ui/reason-skia#8156d2b@d41d8cd9",
       "name": "reason-skia",
-      "version": "github:revery-ui/reason-skia#dae5a5e",
+      "version": "github:revery-ui/reason-skia#8156d2b",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-skia#dae5a5e" ]
+        "source": [ "github:revery-ui/reason-skia#8156d2b" ]
       },
       "overrides": [],
       "dependencies": [
@@ -272,6 +272,23 @@
       ],
       "devDependencies": []
     },
+    "reason-harfbuzz@1.91.5002@d41d8cd9": {
+      "id": "reason-harfbuzz@1.91.5002@d41d8cd9",
+      "name": "reason-harfbuzz",
+      "version": "1.91.5002",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/reason-harfbuzz/-/reason-harfbuzz-1.91.5002.tgz#sha1:7407dbd6dfe6d4e37671a5a42647e56d881f6741"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "esy-harfbuzz@1.9.1005@d41d8cd9",
+        "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
     "reason-gl-matrix@0.9.9306@d41d8cd9": {
       "id": "reason-gl-matrix@0.9.9306@d41d8cd9",
       "name": "reason-gl-matrix",
@@ -286,24 +303,6 @@
       "dependencies": [
         "@opam/js_of_ocaml-compiler@opam:3.5.0@9ea7292f",
         "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/reason@3.5.2@d41d8cd9"
-      ],
-      "devDependencies": []
-    },
-    "reason-fontkit@2.8.3@d41d8cd9": {
-      "id": "reason-fontkit@2.8.3@d41d8cd9",
-      "name": "reason-fontkit",
-      "version": "2.8.3",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/reason-fontkit/-/reason-fontkit-2.8.3.tgz#sha1:84a0086ea98d071cd783d4b7d6896a80ab547935"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "reason-gl-matrix@0.9.9306@d41d8cd9",
-        "esy-harfbuzz@1.9.1005@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
-        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:1.11.4@a7ccb7ae"
       ],
       "devDependencies": []
     },
@@ -532,7 +531,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "requires-port@1.0.0@d41d8cd9", "follow-redirects@1.9.0@d41d8cd9",
+        "requires-port@1.0.0@d41d8cd9", "follow-redirects@1.10.0@d41d8cd9",
         "eventemitter3@4.0.0@d41d8cd9"
       ],
       "devDependencies": []
@@ -551,14 +550,14 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "follow-redirects@1.9.0@d41d8cd9": {
-      "id": "follow-redirects@1.9.0@d41d8cd9",
+    "follow-redirects@1.10.0@d41d8cd9": {
+      "id": "follow-redirects@1.10.0@d41d8cd9",
       "name": "follow-redirects",
-      "version": "1.9.0",
+      "version": "1.10.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.9.0.tgz#sha1:8d5bcdc65b7108fe1508649c79c12d732dcedb4f"
+          "archive:https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.10.0.tgz#sha1:01f5263aee921c6a54fb91667f08f4155ce169eb"
         ]
       },
       "overrides": [],
