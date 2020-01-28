@@ -28,7 +28,7 @@ module FontMetrics = {
 
 module ShapeResult = {
   type t = {
-    shapes: Harfbuzz.hb_shape_result,
+    shapes: array(Harfbuzz.hb_shape),
     glyphString: string,
   };
 
