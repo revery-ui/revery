@@ -5,7 +5,7 @@ open TestFramework;
 describe("BoundingBox2d", ({test, _}) => {
   test("isPointInside", ({expect, _}) => {
     let bbox =
-      BoundingBox2d.create(Vec2.create(0., 0.), Vec2.create(400., 600.));
+      BoundingBox2d.create(0., 0., 400., 600.);
 
     expect.bool(BoundingBox2d.isPointInside(bbox, Vec2.create(1., 1.))).
       toBeTrue();
@@ -25,9 +25,9 @@ describe("BoundingBox2d", ({test, _}) => {
   describe("intersection", ({test, _}) => {
     test("intersects", ({expect, _}) => {
       let bbox1 =
-        BoundingBox2d.create(Vec2.create(5., 5.), Vec2.create(10., 10.));
+        BoundingBox2d.create(5., 5., 10., 10.);
       let bbox2 =
-        BoundingBox2d.create(Vec2.create(0., 0.), Vec2.create(4., 4.));
+        BoundingBox2d.create(0., 0., 4., 4.);
 
       expect.bool(BoundingBox2d.intersects(bbox1, bbox2)).toBeFalse();
 
@@ -52,12 +52,7 @@ describe("BoundingBox2d", ({test, _}) => {
     });
     test("intersect", ({expect, _}) => {
       let areBboxEqual = (b1, b2) => {
-        BoundingBox2d.(
-          Vec2.get_x(b1.min) == Vec2.get_x(b2.min)
-          && Vec2.get_y(b1.min) == Vec2.get_y(b2.min)
-          && Vec2.get_x(b1.max) == Vec2.get_x(b2.max)
-          && Vec2.get_y(b1.max) == Vec2.get_y(b2.max)
-        );
+        BoundingBox2d.equals(b1, b2);
       };
       let bbox =
         BoundingBox2d.create(Vec2.create(1., 1.), Vec2.create(5., 10.));

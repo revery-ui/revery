@@ -64,19 +64,22 @@ let%component make =
       let sliderDimensions: BoundingBox2d.t = slider#getBoundingBox();
       let thumbDimensions: BoundingBox2d.t = thumb#getBoundingBox();
 
+      let (sliderX0, sliderY0, sliderX1, sliderY1) = BoundingBox2d.getBounds(sliderDimensions);
+      let (thumbX0, thumbY0, thumbX1, thumbY1) = BoundingBox2d.getBounds(thumbDimensions);
+
       let sliderWidth =
         vertical
-          ? Vec2.get_y(sliderDimensions.max)
-            -. Vec2.get_y(sliderDimensions.min)
-          : Vec2.get_x(sliderDimensions.max)
-            -. Vec2.get_x(sliderDimensions.min);
+          ? sliderY1
+            -. sliderY0
+          : sliderX1
+            -. sliderX0;
 
       let thumbWidth =
         vertical
-          ? Vec2.get_y(thumbDimensions.max)
-            -. Vec2.get_y(thumbDimensions.min)
-          : Vec2.get_x(thumbDimensions.max)
-            -. Vec2.get_x(thumbDimensions.min);
+          ? thumbY1
+            -. thumbY0
+          : thumbX1
+            -. thumbX0;
 
       Some(sliderWidth -. thumbWidth);
     | _ => None
@@ -113,10 +116,11 @@ let%component make =
           | (Some(slider), Some(w)) =>
             let sliderDimensions: BoundingBox2d.t = slider#getBoundingBox();
 
+            let (x0, y0, _x1, _y1) = BoundingBox2d.getBounds(sliderDimensions);
             let startPosition =
               vertical
-                ? Vec2.get_y(sliderDimensions.min)
-                : Vec2.get_x(sliderDimensions.min);
+                ? y0
+                : x0;
             let endPosition = startPosition +. w;
 
             Mouse.setCapture(
@@ -150,10 +154,12 @@ let%component make =
     | (Some(slider), Some(w)) =>
       let sliderDimensions: BoundingBox2d.t = slider#getBoundingBox();
 
+      let (x0, y0, _, _) = BoundingBox2d.getBounds(sliderDimensions);
+
       let startPosition =
         vertical
-          ? Vec2.get_y(sliderDimensions.min)
-          : Vec2.get_x(sliderDimensions.min);
+          ? y0
+          : x0;
       let endPosition = startPosition +. w;
 
       sliderUpdate(w, startPosition, endPosition, evt.mouseX, evt.mouseY);

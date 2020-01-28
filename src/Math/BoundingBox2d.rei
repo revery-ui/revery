@@ -1,13 +1,12 @@
 open Reglm;
 
-type t = {
-  min: Vec2.t,
-  max: Vec2.t,
-};
+type t;
+
+let create: (float, float, float, float) => t;
+
+let equals: (t, t) => bool;
 
 let getBounds: t => (float, float, float, float);
-
-let create: (Vec2.t, Vec2.t) => t;
 
 let intersects: (t, t) => bool;
 
