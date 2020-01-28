@@ -1,17 +1,3 @@
-open Sdl2.Gl;
-
-open Revery_Core;
-
-//let _shapeFont = ((font, text)) => Fontkit.fk_shape(font, text);
-
-//let _memoizedFontShape = Memoize.make(_shapeFont);
-/*type shapeResult = {
-    glyphs:
-  }*/
-let shape = (font, text) => {
-  [];
-};
-
 open FontCache;
 
 let emptyMetrics = size => {
@@ -22,22 +8,6 @@ let _getNormalizedMetrics = (font, fontSize) => {
   FontCache.getMetrics(
     font,
     fontSize,
-    //emptyMetrics(fontSize);
-    // TODO: Fix this
-    /*let metrics = Fontkit.fk_get_metrics(font);
-
-      let ascentF = float_of_int(abs(metrics.ascent));
-      let descentF = float_of_int(abs(metrics.descent));
-      let heightF = float_of_int(metrics.height);
-      let unitsPerEm = float_of_int(metrics.unitsPerEm);
-      let size = float_of_int(metrics.size);
-
-      let height = size *. heightF /. unitsPerEm;
-      let ascent = size *. ascentF /. unitsPerEm;
-      let descent = size *. descentF /. unitsPerEm;
-
-      let ret = {height, ascent, descent};
-      ret;*/
   );
 };
 

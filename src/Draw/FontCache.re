@@ -73,7 +73,6 @@ let load: string => result(t, string) =
     | None =>
       let assetPath = Environment.getAssetPath(fontName);
 
-      // TODO: Cache
       let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
       let harfbuzzFace = Harfbuzz.hb_new_face(assetPath);
 
@@ -104,6 +103,7 @@ let getMetrics: (t, float) => FontMetrics.t =
       Skia.Paint.setTextSize(paint, size);
 
       let metrics = Skia.FontMetrics.make();
+      
       // TODO: Incorporate spacing
       let _spacing = Skia.Paint.getFontMetrics(paint, metrics, 1.0);
 

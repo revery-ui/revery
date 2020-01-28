@@ -8,7 +8,6 @@ type t =
   | Scale(float)
   | ScaleX(float)
   | ScaleY(float)
-  | ScaleZ(float)
   | TranslateX(float)
   | TranslateY(float);
 

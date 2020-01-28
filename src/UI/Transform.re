@@ -9,7 +9,6 @@ type t =
   | Scale(float)
   | ScaleX(float)
   | ScaleY(float)
-  | ScaleZ(float)
   | TranslateX(float)
   | TranslateY(float);
 
@@ -45,10 +44,9 @@ let _toMat4 = (originX: float, originY: float, t) => {
   | RotateY(a) => _rotateWithOrigin(originX, originY, a, 0.0, 1.0, 0.0)
   | RotateZ(a) => _rotateWithOrigin(originX, originY, a, 0.0, 0.0, 1.0)
   | Rotate(a) => _rotateWithOrigin(originX, originY, a, 0.0, 0.0, 1.0)
-  | Scale(a) => Skia.Matrix.makeScale(a, a, a, 1.0)
-  | ScaleX(a) => Skia.Matrix.makeScale(a, 1.0, 1.0, 1.0)
-  | ScaleY(a) => Skia.Matrix.makeScale(1.0, a, 1.0, 1.0)
-  | ScaleZ(a) => Skia.Matrix.makeScale(1.0, 1.0, a, 1.0)
+  | Scale(a) => Skia.Matrix.makeScale(a, a, 0.0, 0.0)
+  | ScaleX(a) => Skia.Matrix.makeScale(a, 1.0, 0.0, 0.0)
+  | ScaleY(a) => Skia.Matrix.makeScale(1.0, a, 0.0, 0.0)
   | TranslateX(a) => Skia.Matrix.makeTranslate(a, 0.)
   | TranslateY(a) => Skia.Matrix.makeTranslate(0., a)
   };
