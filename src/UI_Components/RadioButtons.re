@@ -50,6 +50,7 @@ module Make = (Type: {type t;}) => {
                style=Style.[
                  fontSize(iconSize),
                  fontFamily("FontAwesome5FreeSolid.otf"),
+                 textWrap(TextWrapping.NoWrap),
                ]
              />
              <Text text={button.text} style />

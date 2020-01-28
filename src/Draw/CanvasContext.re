@@ -88,7 +88,7 @@ let resize = (window: Revery_Core.Window.t, v: option(t)) => {
       create(window);
     } else {
       v;
-    }
+    };
   };
 };
 
@@ -147,7 +147,7 @@ let drawText =
     ) => {
   let font = FontCache.load(fontFamily);
   switch (font) {
-  | Error(_msg) => ();
+  | Error(_msg) => ()
   | Ok({skiaFace, _} as font) =>
     let glyphString =
       text |> FontCache.shape(font) |> FontCache.ShapeResult.getGlyphString;

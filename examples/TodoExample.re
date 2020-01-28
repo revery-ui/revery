@@ -110,6 +110,7 @@ module Checkbox = {
       Style.[
         color(Theme.hoveredButtonColor),
         fontSize(Theme.fontSize),
+        textWrap(TextWrapping.NoWrap),
         fontFamily("FontAwesome5FreeSolid.otf"),
         transform(Transform.[TranslateY(2.)]),
       ];
