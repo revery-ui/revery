@@ -28,7 +28,7 @@ let create = (window: Revery_Core.Window.t) => {
         Unsigned.UInt.of_int(0x8058),
       );
 
-    let framebufferSize = window.metrics.framebufferSize;
+    let framebufferSize = Window.getFramebufferSize(window);
     let backendRenderTarget =
       Gr.BackendRenderTarget.makeGl(
         framebufferSize.width,
@@ -73,15 +73,16 @@ let resize = (window: Revery_Core.Window.t, v: option(t)) => {
   switch (v) {
   | None => None
   | Some({surface, _}) as v =>
-    if (Surface.getWidth(surface) != window.metrics.framebufferSize.width
-        || Surface.getHeight(surface) != window.metrics.framebufferSize.height) {
+    let framebufferSize = Window.getFramebufferSize(window);
+    if (Surface.getWidth(surface) != framebufferSize.width
+        || Surface.getHeight(surface) != framebufferSize.height) {
       Log.info(
         Printf.sprintf(
           "Resizing canvas: %dx%d->%dx%d",
           Surface.getWidth(surface),
           Surface.getHeight(surface),
-          window.metrics.framebufferSize.width,
-          window.metrics.framebufferSize.height,
+          framebufferSize.width,
+          framebufferSize.height,
         ),
       );
       create(window);
@@ -146,11 +147,8 @@ let drawText =
     ) => {
   let font = FontCache.load(fontFamily);
   switch (font) {
-  | Error(_msg) => prerr_endline("ERROR: Can't draw with: " ++ fontFamily)
+  | Error(_msg) => ();
   | Ok({skiaFace, _} as font) =>
-    prerr_endline(
-      "Drawing some text with font: " ++ fontFamily ++ " (" ++ text ++ ")",
-    );
     let glyphString =
       text |> FontCache.shape(font) |> FontCache.ShapeResult.getGlyphString;
 
