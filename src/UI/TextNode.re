@@ -21,7 +21,8 @@ class textNode (text: string) = {
     let opacity = parentContext.opacity *. style.opacity;
     let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 
-    let ascentPx = Text.getAscent(~fontFamily, ~fontSize, ());
+    //let ascentPx = Text.getAscent(~fontFamily, ~fontSize, ());
+    let descentPx = Text.getDescent(~fontFamily, ~fontSize, ());
     let lineHeightPx =
       lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
 
@@ -37,7 +38,7 @@ class textNode (text: string) = {
 
     List.iteri(
       (lineIndex, line) => {
-        let baselineY = ascentPx +. lineHeightPx *. float_of_int(lineIndex);
+        let baselineY = (descentPx *. -1.0) +. lineHeightPx *. (float_of_int(lineIndex + 1));
 
         CanvasContext.drawText(
           ~color=colorWithAppliedOpacity,

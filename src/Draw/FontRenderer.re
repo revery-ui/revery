@@ -12,20 +12,15 @@ let shape = (font, text) => {
    []
 }
 
-type normalizedMetrics = {
-  height: float,
-  ascent: float,
-  descent: float,
-};
+open FontCache;
 
-let emptyMetrics: float => normalizedMetrics = (fontSize) => {
-  height: fontSize,
-  ascent: 0.,
-  descent: 0.,
+let emptyMetrics = (size) => {
+  FontCache.FontMetrics.empty(size);
 }
 
 let _getNormalizedMetrics = (font, fontSize) => {
-  emptyMetrics(fontSize);
+  FontCache.getMetrics(font, fontSize);
+  //emptyMetrics(fontSize);
   // TODO: Fix this
   /*let metrics = Fontkit.fk_get_metrics(font);
 
@@ -48,12 +43,18 @@ let _getNormalizedMetrics = (font, fontSize) => {
 let getNormalizedMetrics = (font, fontSize) => _getNormalizedMetrics(font, fontSize);
 
 type measureResult = {
-  width: int,
-  height: int,
+  width: float,
+  height: float,
 }
 
 let measure = (font, size, text: string) => {
-  let {height, _}: normalizedMetrics = getNormalizedMetrics(font, size);
+  let {height, _}: FontMetrics.t = getNormalizedMetrics(font, size);
+  let {skiaFace, _}: FontCache.t = font;
+
+  let paint = Skia.Paint.make();
+  Skia.Paint.setTypeface(paint, skiaFace);
+  Skia.Paint.setTextSize(paint, size);
+  let width = Skia.Paint.measureText(paint, text, None);
   // TODO: Hook this all back up
   /*let shapedText = shape(font, text);
   let x = ref(0);
@@ -71,8 +72,8 @@ let measure = (font, size, text: string) => {
     width: int_of_float(float_of_int(x^) /. 64.0),
   };
   d;*/
-  let d = {
-    height: 1,
-    width: 1,
+  {
+    height,
+    width,
   };
 };

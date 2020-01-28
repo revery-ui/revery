@@ -7,74 +7,86 @@ module StringHash =
     let hash = String.length;
   });
 
-module InternalCache = {
-  type t('a) = StringHash.t(Hashtbl.t(int, 'a));
-
-  let create: unit => t('a) =
-    () => {
-      StringHash.create(10);
-    };
-
-  let _getOrCreateSizeDict = (v: t('a), fontName) => {
-    switch (StringHash.find_opt(v, fontName)) {
-    | Some(x) => x
-    | None =>
-      let result = Hashtbl.create(10);
-      StringHash.add(v, fontName, result);
-      result;
-    };
-  };
-
-  let find_opt = (v: t('a), fontName, size) => {
-    let sizeDictionary = _getOrCreateSizeDict(v, fontName);
-    switch (Hashtbl.find_opt(sizeDictionary, size)) {
-    | Some(v) => Some(v)
-    | None => None
-    };
-  };
-
-  let add = (v: t('a), fontName, size, b) => {
-    let sizeDictionary = _getOrCreateSizeDict(v, fontName);
-    Hashtbl.add(sizeDictionary, size, b);
-  };
-
-  let remove = (v: t('a), fontName, size) => {
-    let sizeDictionary = _getOrCreateSizeDict(v, fontName);
-    Hashtbl.remove(sizeDictionary, size);
-  };
-};
-
-type fontInfo = (string, int);
-
 type fontLoaded = Event.t(unit);
 let onFontLoaded: fontLoaded = Event.create();
 
-type t = (Harfbuzz.hb_face, Skia.Typeface.t);
+module FontMetrics = {
+  type t = {
+    height: float,
+    ascent: float,
+    descent: float,
+  }
 
-let _cache: InternalCache.t(t) = InternalCache.create();
-let _loadingCache: InternalCache.t(bool) = InternalCache.create();
-let _isSome = a =>
-  switch (a) {
-  | Some(_) => true
-  | None => false
-  };
+  let empty = (size: float) => {
+    height: size,
+    ascent: 0.,
+    descent: 0.,
+  }
+
+  let ofSkia = (size: float, metrics: Skia.FontMetrics.t) => {
+    let ascent = Skia.FontMetrics.getAscent(metrics);
+    let descent = Skia.FontMetrics.getDescent(metrics);
+    { height: size, ascent, descent } 
+  }
+}
+
+
+type t = {
+  hbFace: Harfbuzz.hb_face, 
+  skiaFace: Skia.Typeface.t,
+  metricsCache: Hashtbl.t(float, FontMetrics.t),
+  shapeCache: StringHash.t(Harfbuzz.hb_shape_result),
+};
+
+let _cache: StringHash.t(result(t, string)) = StringHash.create(100);
 
 let load: (string) => result(t, string) =
   (fontName: string) => {
-    let assetPath = Environment.getAssetPath(fontName);
+    switch (StringHash.find_opt(_cache, fontName)) {
+    | Some(v) => v 
+    | None =>
+      let assetPath = Environment.getAssetPath(fontName);
 
-    // TODO: Cache
-    let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
-    let harfbuzzFace = Harfbuzz.hb_new_face(assetPath);
+      // TODO: Cache
+      let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
+      let harfbuzzFace = Harfbuzz.hb_new_face(assetPath);
 
-    switch ((skiaTypeface, harfbuzzFace)) {
-    | (Some(skia), Ok(hb)) => 
-      Event.dispatch(onFontLoaded, ());
-      Ok((hb, skia))
-    | (_, Error(msg)) => 
-      Error("Error loading typeface: " ++ msg);
-    | (None, _) => 
-      Error("Error loading typeface.");
+      let metricsCache = Hashtbl.create(16);
+      let shapeCache = StringHash.create(128);
+      
+      let ret = switch ((skiaTypeface, harfbuzzFace)) {
+      | (Some(skiaFace), Ok(hbFace)) => 
+        Event.dispatch(onFontLoaded, ());
+        Ok({
+          hbFace,
+          skiaFace,
+          metricsCache,
+          shapeCache,
+        })
+      | (_, Error(msg)) => 
+        Error("Error loading typeface: " ++ msg);
+      | (None, _) => 
+        Error("Error loading typeface.");
+      };
+
+      StringHash.add(_cache, fontName, ret);
+      ret;
     }
-
   };
+
+let getMetrics: (t, float) => FontMetrics.t = ({skiaFace, metricsCache, _}, size) => {
+  switch (Hashtbl.find_opt(metricsCache, size)) {
+  | Some(v) => v
+  | None =>
+    let paint = Skia.Paint.make();
+    Skia.Paint.setTypeface(paint, skiaFace);
+    Skia.Paint.setTextSize(paint, size);
+
+    let metrics = Skia.FontMetrics.make();
+    Skia.Paint.getFontMetrics(paint, metrics, 1.0);
+
+    let ret = FontMetrics.ofSkia(size, metrics);
+    Hashtbl.add(metricsCache, size, ret);
+    ret;
+  }
+};
