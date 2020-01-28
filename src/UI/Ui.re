@@ -38,12 +38,11 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
   let container = Container.create(rootNode);
   let ui = RenderContainer.create(window, rootNode, container, mouseCursor);
 
-  let _ignore =
-    Revery_Core.Event.subscribe(window.onExposed, () => {uiDirty := true});
+  let _ignore = Window.onExposed(window, () => {uiDirty := true});
 
   let _ignore =
-    Revery_Core.Event.subscribe(
-      window.onMouseMove,
+    Window.onMouseMove(
+      window,
       m => {
         let pixelRatio = Window.getDevicePixelRatio(window);
         let scaleAndZoomFactor = Window.getScaleAndZoom(window);
@@ -58,8 +57,8 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     );
 
   let _ignore =
-    Revery_Core.Event.subscribe(
-      window.onMouseWheel,
+    Window.onMouseWheel(
+      window,
       m => {
         let evt = Revery_Core.Events.InternalMouseWheel(m);
         Mouse.dispatch(mouseCursor, evt, rootNode);
@@ -67,8 +66,8 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     );
 
   let _ignore =
-    Revery_Core.Event.subscribe(
-      window.onMouseLeave,
+    Window.onMouseLeave(
+      window,
       () => {
         Log.trace("Mouse leaving window");
         Mouse.notifyLeaveWindow(window);
@@ -76,8 +75,8 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     );
 
   let _ignore =
-    Revery_Core.Event.subscribe(
-      window.onMouseEnter,
+    Window.onMouseEnter(
+      window,
       () => {
         Log.trace("Mouse entering window");
         Mouse.notifyEnterWindow(window);
@@ -85,8 +84,8 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     );
 
   let _ignore =
-    Revery_Core.Event.subscribe(
-      window.onMouseDown,
+    Window.onMouseDown(
+      window,
       m => {
         let evt = Revery_Core.Events.InternalMouseDown({button: m.button});
         Mouse.dispatch(mouseCursor, evt, rootNode);
@@ -94,28 +93,28 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     );
 
   let _ignore =
-    Revery_Core.Event.subscribe(window.onKeyDown, event =>
+    Window.onKeyDown(window, event =>
       Keyboard.dispatch(Revery_Core.Events.InternalKeyDownEvent(event))
     );
 
   let _ignore =
-    Revery_Core.Event.subscribe(window.onKeyUp, event =>
+    Window.onKeyUp(window, event =>
       Keyboard.dispatch(Revery_Core.Events.InternalKeyUpEvent(event))
     );
 
   let _ignore =
-    Revery_Core.Event.subscribe(window.onTextInputCommit, event =>
+    Window.onTextInputCommit(window, event =>
       Keyboard.dispatch(Revery_Core.Events.InternalTextInputEvent(event))
     );
 
   let _ignore =
-    Revery_Core.Event.subscribe(window.onCompositionEdit, event =>
+    Window.onCompositionEdit(window, event =>
       Keyboard.dispatch(Revery_Core.Events.InternalTextEditEvent(event))
     );
 
   let _ignore =
-    Revery_Core.Event.subscribe(
-      window.onMouseUp,
+    Window.onMouseUp(
+      window,
       m => {
         let evt = Revery_Core.Events.InternalMouseUp({button: m.button});
         Mouse.dispatch(mouseCursor, evt, rootNode);

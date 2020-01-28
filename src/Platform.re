@@ -10,6 +10,6 @@ module Dialog = {
       Information,
       "Revery",
       message,
-      Some(window.sdlWindow),
+      Some(Window.getSdlWindow(window)),
     );
 };
