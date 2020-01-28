@@ -55,7 +55,12 @@ module Button = {
         alignItems(`Center),
       ];
     let textStyle =
-      Style.[color(Colors.black), fontFamily(family), fontSize(32.)];
+      Style.[
+        color(Colors.black),
+        fontFamily(family),
+        fontSize(32.),
+        textWrap(TextWrapping.NoWrap),
+      ];
 
     <Clickable style=clickableStyle onClick>
       <View style=viewStyle> <Text style=textStyle text=contents /> </View>

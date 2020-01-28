@@ -5,10 +5,7 @@ let emptyMetrics = size => {
 };
 
 let _getNormalizedMetrics = (font, fontSize) => {
-  FontCache.getMetrics(
-    font,
-    fontSize,
-  );
+  FontCache.getMetrics(font, fontSize);
 };
 
 //let _memoizedGetNormalizedMetrics = Memoize.make(_getNormalizedMetrics);

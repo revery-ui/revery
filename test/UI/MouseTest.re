@@ -311,7 +311,7 @@ describe("Mouse", ({describe, test, _}) => {
       "does trigger onBlur for node after cursor is pressed outside the node",
       ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
-      Mouse.Cursor.set(~x=50.0, ~y=50.0,cursor);
+      Mouse.Cursor.set(~x=50.0, ~y=50.0, cursor);
 
       let count = ref(0);
       let f = _evt => count := count^ + 1;

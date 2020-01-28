@@ -83,9 +83,14 @@ let load: string => result(t, string) =
         switch (skiaTypeface, harfbuzzFace) {
         | (Some(skiaFace), Ok(hbFace)) =>
           Event.dispatch(onFontLoaded, ());
+          prerr_endline("Loaded : " ++ fontName);
           Ok({hbFace, skiaFace, metricsCache, shapeCache});
-        | (_, Error(msg)) => Error("Error loading typeface: " ++ msg)
-        | (None, _) => Error("Error loading typeface.")
+        | (_, Error(msg)) =>
+          prerr_endline("ERROR LOADING");
+          Error("Error loading typeface: " ++ msg);
+        | (None, _) =>
+          prerr_endline("ERROR LOADING");
+          Error("Error loading typeface.");
         };
 
       StringHash.add(_cache, fontName, ret);
@@ -103,7 +108,7 @@ let getMetrics: (t, float) => FontMetrics.t =
       Skia.Paint.setTextSize(paint, size);
 
       let metrics = Skia.FontMetrics.make();
-      
+
       // TODO: Incorporate spacing
       let _spacing = Skia.Paint.getFontMetrics(paint, metrics, 1.0);
 

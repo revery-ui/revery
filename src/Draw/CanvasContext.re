@@ -146,8 +146,11 @@ let drawText =
     ) => {
   let font = FontCache.load(fontFamily);
   switch (font) {
-  | Error(_msg) => ()
+  | Error(_msg) => prerr_endline("ERROR: Can't draw with: " ++ fontFamily)
   | Ok({skiaFace, _} as font) =>
+    prerr_endline(
+      "Drawing some text with font: " ++ fontFamily ++ " (" ++ text ++ ")",
+    );
     let glyphString =
       text |> FontCache.shape(font) |> FontCache.ShapeResult.getGlyphString;
 
