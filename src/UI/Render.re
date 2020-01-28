@@ -6,7 +6,6 @@
 
 open Revery_Core;
 open Revery_Draw;
-open Revery_Math;
 
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;

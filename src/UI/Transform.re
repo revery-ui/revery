@@ -17,7 +17,6 @@ let _rotateWithOrigin = (x: float, y: float, angle, axisX, axisY, axisZ) => {
   // TODO:
   // This could be made significantly more efficient, with less allocations,
   // by using the pre* and post* operations, instead of set*.
-  let rotation = Skia.Matrix44.makeEmpty();
   let preTranslate = Skia.Matrix44.makeEmpty();
   Skia.Matrix44.setTranslate(preTranslate, (-1.) *. x, (-1.) *. y, 0.0);
 

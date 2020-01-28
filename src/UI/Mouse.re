@@ -1,7 +1,6 @@
 /* Mouse Input */
 open Revery_Core;
 open Revery_Draw;
-open Revery_Math;
 
 open UiEvents;
 open NodeEvents;
