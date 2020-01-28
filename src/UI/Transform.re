@@ -1,4 +1,5 @@
 open Revery_Math;
+open Revery_Math.Angle;
 
 type t =
   | RotateZ(Angle.t)
@@ -13,31 +14,30 @@ type t =
   | TranslateY(float);
 
 let _rotateWithOrigin = (x: float, y: float, angle, axisX, axisY, axisZ) => {
-  let m = Skia.Matrix.make();
-  Skia.Matrix.setIdentity(m); // TODO: Necessary?
-  m;
-  /*let preTranslate = Skia.Matrix.makeTranslate(-1. *. x, -1. *. y);
-    let postTranslate = Mat4.create();
-    let rotation =
-
-    /*Mat4.fromTranslation(
-      preTranslate,
-      Vec3.create((-1.) *. x, (-1.) *. y, 0.),
-    );*/
-
-    let axisX = Vec3.get_x(axis);
-    let axisY = Vec3.get_y(axis);
-    let axisZ = Vec3.get_z(axis);
-    let rotation = switch (angle) {
-    | Degrees(degrees) =>
-    | Radians(radians)
-    };
-    Mat4.fromRotation(rotation, angle, axis);
-    Mat4.fromTranslation(postTranslate, Vec3.create(x, y, 0.));
-
-    Mat4.multiply(m, rotation, preTranslate);
-    Mat4.multiply(m, postTranslate, m);*/
   // TODO:
+  // This could be made significantly more efficient, with less allocations,
+  // by using the pre* and post* operations, instead of set*.
+  let rotation = Skia.Matrix44.makeEmpty();
+  let preTranslate = Skia.Matrix44.makeEmpty();
+  Skia.Matrix44.setTranslate(preTranslate, (-1.) *. x, (-1.) *. y, 0.0);
+
+  let rotation = Skia.Matrix44.makeEmpty();
+  switch (angle) {
+  | Degrees(deg) =>
+    Skia.Matrix44.setRotateAboutDegrees(rotation, axisX, axisY, axisZ, deg)
+  | Radians(rad) =>
+    Skia.Matrix44.setRotateAboutRadians(rotation, axisX, axisY, axisZ, rad)
+  };
+
+  let postTranslate = Skia.Matrix44.makeEmpty();
+  Skia.Matrix44.setTranslate(postTranslate, x, y, 0.);
+
+  let out = Skia.Matrix44.makeEmpty();
+  Skia.Matrix44.setConcat(out, rotation, preTranslate);
+  Skia.Matrix44.setConcat(out, postTranslate, out);
+  let mat = Skia.Matrix.make();
+  Skia.Matrix44.toMatrix(out, mat);
+  mat;
 };
 
 let _toMat4 = (originX: float, originY: float, t) => {

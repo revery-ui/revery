@@ -1,6 +1,5 @@
 /* Mouse Input */
 open Revery_Core;
-open Revery_Math;
 
 open NodeEvents;
 
