@@ -255,6 +255,17 @@ let init = app => {
   Timber.App.enable();
   Timber.App.setLevel(Timber.Level.perf);
 
+  let initialExample = ref("Animation");
+  Arg.parse(
+    [
+      ("--trace", Unit(() => Timber.App.setLevel(Timber.Level.trace)), ""),
+      ("--example", String(name => initialExample := name), ""),
+    ],
+    _ => (),
+    "There is only --trace and --example",
+  );
+  let initialExample = initialExample^;
+
   let maximized = Environment.webGL;
 
   let windowWidth = 800;
@@ -295,7 +306,7 @@ let init = app => {
     Window.onRestored(window, () => Console.log("Restored!"));
 
   let _renderFunction =
-    UI.start(window, <ExampleHost window initialExample="Animation" />);
+    UI.start(window, <ExampleHost window initialExample />);
   ();
 };
 
