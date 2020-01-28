@@ -44,13 +44,11 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Window.onMouseMove(
       window,
       m => {
-        let pixelRatio = Window.getDevicePixelRatio(window);
         let scaleAndZoomFactor = Window.getScaleAndZoom(window);
-        let canvasScalingFactor = pixelRatio *. scaleAndZoomFactor;
         let evt =
           Revery_Core.Events.InternalMouseMove({
-            mouseX: m.mouseX /. canvasScalingFactor,
-            mouseY: m.mouseY /. canvasScalingFactor,
+            mouseX: m.mouseX /. scaleAndZoomFactor,
+            mouseY: m.mouseY /. scaleAndZoomFactor,
           });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
