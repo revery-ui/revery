@@ -64,7 +64,13 @@ let render =
     switch (renderContainer.canvas^) {
     | None => ()
     | Some(canvas) =>
-      let skiaRoot = Skia.Matrix.makeScale(canvasScalingFactor, canvasScalingFactor, 0., 0.);
+      let skiaRoot =
+        Skia.Matrix.makeScale(
+          canvasScalingFactor,
+          canvasScalingFactor,
+          0.,
+          0.,
+        );
       CanvasContext.setRootTransform(skiaRoot, canvas);
       let drawContext =
         NodeDrawContext.create(~canvas, ~zIndex=0, ~opacity=1.0, ());

@@ -64,22 +64,14 @@ let%component make =
       let sliderDimensions: BoundingBox2d.t = slider#getBoundingBox();
       let thumbDimensions: BoundingBox2d.t = thumb#getBoundingBox();
 
-      let (sliderX0, sliderY0, sliderX1, sliderY1) = BoundingBox2d.getBounds(sliderDimensions);
-      let (thumbX0, thumbY0, thumbX1, thumbY1) = BoundingBox2d.getBounds(thumbDimensions);
+      let (sliderX0, sliderY0, sliderX1, sliderY1) =
+        BoundingBox2d.getBounds(sliderDimensions);
+      let (thumbX0, thumbY0, thumbX1, thumbY1) =
+        BoundingBox2d.getBounds(thumbDimensions);
 
-      let sliderWidth =
-        vertical
-          ? sliderY1
-            -. sliderY0
-          : sliderX1
-            -. sliderX0;
+      let sliderWidth = vertical ? sliderY1 -. sliderY0 : sliderX1 -. sliderX0;
 
-      let thumbWidth =
-        vertical
-          ? thumbY1
-            -. thumbY0
-          : thumbX1
-            -. thumbX0;
+      let thumbWidth = vertical ? thumbY1 -. thumbY0 : thumbX1 -. thumbX0;
 
       Some(sliderWidth -. thumbWidth);
     | _ => None
@@ -116,11 +108,9 @@ let%component make =
           | (Some(slider), Some(w)) =>
             let sliderDimensions: BoundingBox2d.t = slider#getBoundingBox();
 
-            let (x0, y0, _x1, _y1) = BoundingBox2d.getBounds(sliderDimensions);
-            let startPosition =
-              vertical
-                ? y0
-                : x0;
+            let (x0, y0, _x1, _y1) =
+              BoundingBox2d.getBounds(sliderDimensions);
+            let startPosition = vertical ? y0 : x0;
             let endPosition = startPosition +. w;
 
             Mouse.setCapture(
@@ -156,10 +146,7 @@ let%component make =
 
       let (x0, y0, _, _) = BoundingBox2d.getBounds(sliderDimensions);
 
-      let startPosition =
-        vertical
-          ? y0
-          : x0;
+      let startPosition = vertical ? y0 : x0;
       let endPosition = startPosition +. w;
 
       sliderUpdate(w, startPosition, endPosition, evt.mouseX, evt.mouseY);

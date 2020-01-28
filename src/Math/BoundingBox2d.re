@@ -18,7 +18,7 @@ let equals = (b1: t, b2: t) => {
   let (b2x0, b2y0, b2x1, b2y1) = getBounds(b2);
 
   b1x0 == b2x0 && b1y0 == b2y0 && b1x1 == b2x1 && b1y1 == b2y1;
-}
+};
 
 let toString = (v: t) => {
   let (x0, y0, x1, y1) = getBounds(v);
@@ -39,11 +39,8 @@ let isPointInside = (~x, ~y, bbox: t) => {
 
   let (x0, y0, x1, y1) = getBounds(bbox);
 
-  pX >= x0
-  && pX <= x1
-  && pY >= y0
-  && pY <= y1
-}
+  pX >= x0 && pX <= x1 && pY >= y0 && pY <= y1;
+};
 
 let intersects = (b0: t, b1: t) => {
   let (box0_minX, box0_minY, box0_maxX, box0_maxY) = getBounds(b0);

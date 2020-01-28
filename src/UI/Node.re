@@ -215,15 +215,25 @@ class node (()) = {
   };
   pri _recalculateBoundingBox = worldTransform => {
     let dimensions = _this#measurements();
-    let b = BoundingBox2d.create(0., 0., 
-      float_of_int(dimensions.width), 
-      float_of_int(dimensions.height));
+    let b =
+      BoundingBox2d.create(
+        0.,
+        0.,
+        float_of_int(dimensions.width),
+        float_of_int(dimensions.height),
+      );
     let bbox = BoundingBox2d.transform(b, worldTransform);
     bbox;
   };
   pri _recalculateBoundingBoxClipped = worldTransform => {
     let dimensions = _this#measurements();
-    let b = BoundingBox2d.create(0., 0., float_of_int(dimensions.width), float_of_int(dimensions.height));
+    let b =
+      BoundingBox2d.create(
+        0.,
+        0.,
+        float_of_int(dimensions.width),
+        float_of_int(dimensions.height),
+      );
     let bbox = BoundingBox2d.transform(b, worldTransform);
     switch (_this#getParent()) {
     | Some(p) => BoundingBox2d.intersect(bbox, p#getBoundingBoxClipped())
