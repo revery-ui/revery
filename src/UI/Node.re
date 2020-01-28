@@ -131,9 +131,6 @@ class node (()) = {
   pub setStyle = style =>
     if (style != _style) {
       if (style.boxShadow.blurRadius != 0. || _hasHadNonZeroBlurRadius) {
-        print_endline(
-          "Setting style: " ++ string_of_float(style.boxShadow.blurRadius),
-        );
         _hasHadNonZeroBlurRadius = true;
       };
       _style = style;
@@ -147,7 +144,6 @@ class node (()) = {
       };
     };
   pub getStyle = () => {
-    // print_endline("Returning style: " ++ string_of_float(_style.boxShadow.blurRadius));
     _style;
   };
   pub setEvents = events => _events = events;
