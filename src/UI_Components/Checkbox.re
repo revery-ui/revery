@@ -39,7 +39,7 @@ let make =
         text=checkedContent
         style=Style.[
           color(checked ? Colors.white : Colors.black),
-          fontSize(30),
+          fontSize(30.),
           fontFamily("FontAwesome5FreeSolid.otf"),
         ]
       />

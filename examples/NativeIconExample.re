@@ -43,14 +43,14 @@ module NativeFileExamples = {
       Style.[
         color(Colors.white),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(14),
+        fontSize(14.),
       ];
 
     let titleStyle =
       Style.[
         color(Colors.white),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(20),
+        fontSize(20.),
       ];
 
     let containerStyle =
@@ -90,7 +90,7 @@ module NativeFileExamples = {
         title="Set Indeterminate"
         height=24
         width=120
-        fontSize=12
+        fontSize=12.
         onClick={() => setProgress(Indeterminate)}
       />
     </View>;

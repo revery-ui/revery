@@ -49,7 +49,7 @@ type fontInfo = (string, int);
 type fontLoaded = Event.t(unit);
 let onFontLoaded: fontLoaded = Event.create();
 
-type t = (Fontkit.fk_face, option(Skia.Typeface.t));
+type t = (Harfbuzz.hb_face, Skia.Typeface.t);
 
 let _cache: InternalCache.t(t) = InternalCache.create();
 let _loadingCache: InternalCache.t(bool) = InternalCache.create();
@@ -59,28 +59,22 @@ let _isSome = a =>
   | None => false
   };
 
-let load: (string, int) => t =
-  (fontName: string, size: int) => {
+let load: (string) => result(t, string) =
+  (fontName: string) => {
     let assetPath = Environment.getAssetPath(fontName);
-    switch (InternalCache.find_opt(_cache, fontName, size)) {
-    | Some(v) => v
-    | None =>
-      let isLoading =
-        _isSome(InternalCache.find_opt(_loadingCache, fontName, size));
-      if (!isLoading) {
-        InternalCache.add(_loadingCache, fontName, size, true);
-        let success = fk => {
-          let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
-          let font = (fk, skiaTypeface);
 
-          InternalCache.remove(_loadingCache, fontName, size);
-          InternalCache.add(_cache, fontName, size, font);
-          Event.dispatch(onFontLoaded, ());
-          Lwt.return();
-        };
-        let _ = Lwt.bind(Fontkit.load(assetPath, size), success);
-        ();
-      };
-      (Fontkit.dummyFont(size), None);
-    };
+    // TODO: Cache
+    let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
+    let harfbuzzFace = Harfbuzz.hb_new_face(assetPath);
+
+    switch ((skiaTypeface, harfbuzzFace)) {
+    | (Some(skia), Ok(hb)) => 
+      Event.dispatch(onFontLoaded, ());
+      Ok((hb, skia))
+    | (_, Error(msg)) => 
+      Error("Error loading typeface: " ++ msg);
+    | (None, _) => 
+      Error("Error loading typeface.");
+    }
+
   };

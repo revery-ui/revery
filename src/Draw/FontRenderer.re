@@ -60,6 +60,12 @@ type normalizedMetrics = {
   descent: float,
 };
 
+let emptyMetrics: float => normalizedMetrics = (fontSize) => {
+  height: fontSize,
+  ascent: 0.,
+  descent: 0.,
+}
+
 let _getNormalizedMetrics = font => {
   let metrics = Fontkit.fk_get_metrics(font);
 

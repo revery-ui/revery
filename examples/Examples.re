@@ -189,7 +189,7 @@ module ExampleButton = {
       Style.[
         color(textColor),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(14),
+        fontSize(14.),
         margin(16),
       ];
 

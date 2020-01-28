@@ -29,7 +29,7 @@ let innerStyle =
 
 let textStyle =
   Style.[
-    fontSize(20),
+    fontSize(20.),
     fontFamily("Roboto-Regular.ttf"),
     color(Colors.black),
   ];

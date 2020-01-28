@@ -61,7 +61,7 @@ module FontComponent = {
       | Some(v) =>
         <Text
           text="Lorem ipsum dolor sit amet"
-          style=Style.[fontFamily(v.path), fontSize(24)]
+          style=Style.[fontFamily(v.path), fontSize(24.)]
         />
       };
 
@@ -89,7 +89,7 @@ module FontComponent = {
                 text="Bold"
                 style=Style.[
                   fontFamily("Roboto-Regular.ttf"),
-                  fontSize(20),
+                  fontSize(20.),
                   width(150),
                 ]
               />
@@ -109,7 +109,7 @@ module FontComponent = {
                 text="Italic"
                 style=Style.[
                   fontFamily("Roboto-Regular.ttf"),
-                  fontSize(20),
+                  fontSize(20.),
                   width(150),
                 ]
               />
@@ -129,7 +129,7 @@ module FontComponent = {
                 text="Mono"
                 style=Style.[
                   fontFamily("Roboto-Regular.ttf"),
-                  fontSize(20),
+                  fontSize(20.),
                   width(150),
                 ]
               />

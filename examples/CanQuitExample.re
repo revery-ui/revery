@@ -35,7 +35,7 @@ module CanQuit = {
         style=Style.[
           marginTop(10),
           fontFamily("Roboto-Regular.ttf"),
-          fontSize(20),
+          fontSize(20.),
         ]
       />
     </View>;

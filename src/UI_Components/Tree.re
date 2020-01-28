@@ -53,7 +53,7 @@ let default = (~indent, {data, status, _}) => {
     | Closed => false
     };
   open Style;
-  let textStyles = [fontSize(10), color(Colors.black)];
+  let textStyles = [fontSize(10.), color(Colors.black)];
   let indentStr = String.make(indent * 2, ' ');
   let arrow = isOpen ? {||} : {||};
   <Clickable>

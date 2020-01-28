@@ -26,7 +26,7 @@ let childStyles =
 
 let defaultTextStyles =
   Style.[
-    fontSize(20),
+    fontSize(20.),
     fontFamily("Roboto-Regular.ttf"),
     color(Colors.white),
     backgroundColor(Colors.blue),
@@ -37,7 +37,7 @@ let headerStyle =
   Style.[
     marginTop(25),
     marginBottom(25),
-    fontSize(30),
+    fontSize(30.),
     fontFamily("Roboto-Regular.ttf"),
     color(Colors.white),
   ];

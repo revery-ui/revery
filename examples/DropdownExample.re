@@ -13,7 +13,7 @@ let containerStyle =
   ];
 
 let textStyle =
-  Style.[fontFamily("Roboto-Regular.ttf"), fontSize(20), marginBottom(20)];
+  Style.[fontFamily("Roboto-Regular.ttf"), fontSize(20.), marginBottom(20)];
 
 module DropdownExample = {
   let items: DropdownInt.items = [

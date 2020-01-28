@@ -18,7 +18,7 @@ module ActionButton = {
       Style.[
         color(Colors.black),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(14),
+        fontSize(14.),
         margin(16),
       ];
 

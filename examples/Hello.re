@@ -93,7 +93,7 @@ module AnimatedText = {
       Style.[
         color(Colors.white),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(24),
+        fontSize(24.),
         marginHorizontal(8),
         transform([Transform.TranslateY(translate)]),
       ];

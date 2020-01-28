@@ -21,7 +21,7 @@ let textStyle =
     color(Colors.white),
     width(100),
     fontFamily("Roboto-Regular.ttf"),
-    fontSize(16),
+    fontSize(16.),
     margin(14),
     textWrap(TextWrapping.NoWrap),
   ];
@@ -57,7 +57,7 @@ module SampleText = {
       ++ "The quick brown fox jumps over the lazy dog.";
     let maxFontSize = 40.;
     let maxWidth = 400.;
-    let textFontSize = int_of_float(fontSizeSliderVal);
+    let textFontSize = fontSizeSliderVal;
     let textWidth = int_of_float(widthSliderVal);
     let wrapping =
       if (hyphenate) {TextWrapping.WrapHyphenate} else {TextWrapping.Wrap};

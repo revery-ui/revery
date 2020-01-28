@@ -89,7 +89,7 @@ module Clock = {
           style=Style.[
             color(Colors.white),
             fontFamily("Roboto-Regular.ttf"),
-            fontSize(24),
+            fontSize(24.),
             marginVertical(20),
             width(200),
           ]

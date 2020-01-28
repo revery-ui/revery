@@ -7,7 +7,7 @@ module ZoomButton = {
     <Button
       height=50
       width=100
-      fontSize=15
+      fontSize=15.
       title={string_of_float(zoom)}
       onClick={() => onClick(zoom)}
     />;
@@ -30,7 +30,7 @@ module Zoom = {
         color(Colors.white),
         width(100),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(16),
+        fontSize(16.),
         margin(14),
       ];
 

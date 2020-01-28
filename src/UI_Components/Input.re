@@ -146,7 +146,7 @@ module Constants = {
 
 type textAttributes = {
   fontFamily: string,
-  fontSize: int,
+  fontSize: float,
   color: Color.t,
 };
 
@@ -246,7 +246,7 @@ let%component make =
 
   let textAttrs = {
     fontFamily: Selector.select(style, FontFamily, "Roboto-Regular.ttf"),
-    fontSize: Selector.select(style, FontSize, 18),
+    fontSize: Selector.select(style, FontSize, 18.),
     color: Selector.select(style, Color, Colors.black),
   };
 
@@ -264,7 +264,7 @@ let%component make =
         text,
       );
 
-    dimensions.width;
+    dimensions.width |> int_of_float;
   };
 
   let%hook (cursorOpacity, resetCursor) =
@@ -379,7 +379,7 @@ let%component make =
       <Opacity opacity=cursorOpacity>
         <ContainerComponent
           width=Constants.cursorWidth
-          height={textAttrs.fontSize}
+          height={textAttrs.fontSize |> int_of_float}
           color=cursorColor
         />
       </Opacity>

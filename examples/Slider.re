@@ -26,7 +26,7 @@ module AdjustableLogo = {
         color(Colors.white),
         width(100),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(16),
+        fontSize(16.),
         margin(14),
       ];
 

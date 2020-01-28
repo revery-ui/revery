@@ -144,10 +144,10 @@ let drawText =
       text,
       v: t,
     ) => {
-  let (_, skiaTypeface) = FontCache.load(fontFamily, 10);
-  switch (skiaTypeface) {
-  | None => ()
-  | Some(typeface) =>
+  let font = FontCache.load(fontFamily);
+  switch (font) {
+  | Error(_msg) => ()
+  | Ok((_, typeface)) =>
     let fill2 = Paint.make();
     //let fontStyle = FontStyle.make(500, 20, Upright);
     Paint.setColor(fill2, Revery_Core.Color.toSkia(color));

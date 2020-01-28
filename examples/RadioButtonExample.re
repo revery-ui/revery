@@ -17,7 +17,7 @@ module RadioExample = {
       <Text
         text="Radio Button"
         style=Style.[
-          fontSize(20),
+          fontSize(20.),
           fontFamily("Roboto-Regular.ttf"),
           marginBottom(20),
         ]
@@ -27,7 +27,7 @@ module RadioExample = {
           setRadioVal(_ => "Radio Button Value: " ++ string_of_int(txt))
         }
         defaultSelected=0
-        iconSize=20
+        iconSize=20.
         buttons=[
           {text: "Button 1", value: 1},
           {text: "Button 2", value: 2},
@@ -38,7 +38,7 @@ module RadioExample = {
       <Text
         text=radioVal
         style=Style.[
-          fontSize(20),
+          fontSize(20.),
           fontFamily("Roboto-Regular.ttf"),
           marginTop(20),
         ]

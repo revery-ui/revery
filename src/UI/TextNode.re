@@ -44,7 +44,7 @@ class textNode (text: string) = {
           ~x=0.,
           ~y=baselineY,
           ~fontFamily,
-          ~fontSize=float_of_int(fontSize),
+          ~fontSize,
           line,
           canvas,
         );
@@ -92,7 +92,7 @@ class textNode (text: string) = {
     let lineHeightPx =
       lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
 
-    {width, height: int_of_float(lineHeightPx)};
+    {width: int_of_float(width), height: int_of_float(lineHeightPx)};
   };
   pub setText = t =>
     if (!String.equal(t, text)) {
@@ -112,7 +112,7 @@ class textNode (text: string) = {
           when textWidth == Layout.Encoding.cssUndefined =>
         _this#handleTextWrapping(width, style)
       | {textOverflow: Ellipsis | UserDefined(_), _} =>
-        _this#textOverflow(width)
+        _this#textOverflow(float_of_int(width))
       | style => _this#handleTextWrapping(width, style)
       }
     );
@@ -136,9 +136,9 @@ class textNode (text: string) = {
       let rightWidth = Text.measure(~fontFamily, ~fontSize, right).width;
       max(leftWidth, rightWidth);
     };
-    let maxWidthLine = List.fold_left(pickWiderLine, 0, _lines);
+    let maxWidthLine = List.fold_left(pickWiderLine, 0., _lines);
     {
-      width: maxWidthLine,
+      width: int_of_float(maxWidthLine),
       height:
         int_of_float(float_of_int(List.length(_lines)) *. lineHeightPx),
     };
