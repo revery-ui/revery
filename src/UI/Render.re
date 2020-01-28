@@ -64,16 +64,7 @@ let render =
     switch (renderContainer.canvas^) {
     | None => ()
     | Some(canvas) =>
-      let rootMatrix = Reglm.Mat4.create();
-      Reglm.Mat4.fromScaling(
-        rootMatrix,
-        Vec3.create(
-          canvasScalingFactor,
-          canvasScalingFactor,
-          canvasScalingFactor,
-        ),
-      );
-      let skiaRoot = Revery_Math.Matrix.toSkiaMatrix(rootMatrix);
+      let skiaRoot = Skia.Matrix.makeScale(canvasScalingFactor, canvasScalingFactor, 0., 0.);
       CanvasContext.setRootTransform(skiaRoot, canvas);
       let drawContext =
         NodeDrawContext.create(~canvas, ~zIndex=0, ~opacity=1.0, ());
