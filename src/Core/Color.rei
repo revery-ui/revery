@@ -14,8 +14,6 @@ let hex: string => t;
 let multiplyAlpha: (float, t) => t;
 let mix: (~start: t, ~stop: t, ~amount: float) => t;
 
-let toVec3: t => Reglm.Vec3.t;
-let toVec4: t => Reglm.Vec4.t;
 let toRgba: t => (float, float, float, float);
 
 let equals: (t, t) => bool;

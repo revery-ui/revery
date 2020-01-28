@@ -286,9 +286,9 @@ class node (()) = {
     | None => false
     };
   };
-  pub hitTest = (p: Vec2.t) => {
+  pub hitTest = (x: float, y: float) => {
     let bboxClipped = _this#getBoundingBoxClipped();
-    BoundingBox2d.isPointInside(bboxClipped, p);
+    BoundingBox2d.isPointInside(~x, ~y, bboxClipped);
   };
   pub addChild = (child: node, position: int) => {
     _children = ListEx.insert(position, child, _children);

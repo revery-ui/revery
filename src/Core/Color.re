@@ -1,5 +1,3 @@
-open Reglm;
-
 type t = {
   r: float,
   g: float,
@@ -89,9 +87,6 @@ let mix = (~start, ~stop, ~amount) => {
   b: (stop.b -. start.b) *. amount +. start.b,
   a: (stop.a -. start.a) *. amount +. start.a,
 };
-
-let toVec3 = (color: t) => Vec3.create(color.r, color.g, color.b);
-let toVec4 = (color: t) => Vec4.create(color.r, color.g, color.b, color.a);
 
 let toRgba = (color: t) => {
   (color.r, color.g, color.b, color.a);

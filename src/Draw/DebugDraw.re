@@ -10,8 +10,6 @@ type t = {bbox: BoundingBox2d.t};
 let _isEnabled: ref(bool) = ref(false);
 let _activeRect: ref(option(t)) = ref(None);
 
-let transform = Mat4.create();
-
 let enable = () => _isEnabled := true;
 let disable = () => _isEnabled := false;
 

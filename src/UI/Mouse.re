@@ -20,11 +20,11 @@ module Cursor = {
     ret;
   };
 
-  let toVec2 = c => Vec2.create(c.x^, c.y^);
+  let get = cursor => (cursor.x^, cursor.y^);
 
-  let set = (c, v: Vec2.t) => {
-    c.x := Vec2.get_x(v);
-    c.y := Vec2.get_y(v);
+  let set = (~x, ~y, c) => {
+    c.x := x;
+    c.y := y;
   };
 };
 
@@ -269,14 +269,14 @@ let handleCapture = (event: event) => {
 
 let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
   switch (evt) {
-  | InternalMouseDown(_) => Cursor.toVec2(c)
-  | InternalMouseMove(e) => Vec2.create(e.mouseX, e.mouseY)
-  | InternalMouseUp(_) => Cursor.toVec2(c)
-  | InternalMouseWheel(_) => Cursor.toVec2(c)
-  | InternalMouseEnter(_) => Cursor.toVec2(c)
-  | InternalMouseLeave(_) => Cursor.toVec2(c)
-  | InternalMouseOver(_) => Cursor.toVec2(c)
-  | InternalMouseOut(_) => Cursor.toVec2(c)
+  | InternalMouseDown(_) => Cursor.get(c)
+  | InternalMouseMove(e) => (e.mouseX, e.mouseY)
+  | InternalMouseUp(_) => Cursor.get(c)
+  | InternalMouseWheel(_) => Cursor.get(c)
+  | InternalMouseEnter(_) => Cursor.get(c)
+  | InternalMouseLeave(_) => Cursor.get(c)
+  | InternalMouseOver(_) => Cursor.get(c)
+  | InternalMouseOut(_) => Cursor.get(c)
   };
 
 let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
@@ -441,10 +441,10 @@ let dispatch =
   );
 
   if (node#hasRendered()) {
-    let pos = getPositionFromMouseEvent(cursor, evt);
+    let (mouseX, mouseY) = getPositionFromMouseEvent(cursor, evt);
 
     if (isMouseDownEv(eventToSend)) {
-      switch (getFirstFocusable(node, pos)) {
+      switch (getFirstFocusable(node, mouseX, mouseY)) {
       | Some(node) => Focus.dispatch(node)
       | None => Focus.loseFocus()
       };
@@ -453,7 +453,7 @@ let dispatch =
     handleListeners(eventToSend);
 
     if (!handleCapture(eventToSend)) {
-      let deepestNode = getTopMostNode(node, pos);
+      let deepestNode = getTopMostNode(node, mouseX, mouseY);
 
       if (isMouseMoveEv(eventToSend)) {
         let mouseMoveEventParams = getMouseMoveEventParams(cursor, evt);
@@ -497,6 +497,6 @@ let dispatch =
       };
     };
 
-    Cursor.set(cursor, pos);
+    Cursor.set(~x=mouseX, ~y=mouseY, cursor);
   };
 };

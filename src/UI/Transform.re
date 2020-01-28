@@ -1,4 +1,4 @@
-open Reglm;
+open Revery_Math;
 
 type t =
   | RotateZ(Angle.t)
@@ -12,11 +12,7 @@ type t =
   | TranslateX(float)
   | TranslateY(float);
 
-let right = Vec3.right();
-let up = Vec3.up();
-let forward = Vec3.forward();
-
-let _rotateWithOrigin = (x: float, y: float, angle, axis) => {
+let _rotateWithOrigin = (x: float, y: float, angle, axisX, axisY, axisZ) => {
   let m = Skia.Matrix.make();
   Skia.Matrix.setIdentity(m); // TODO: Necessary?
   m;
@@ -46,10 +42,10 @@ let _rotateWithOrigin = (x: float, y: float, angle, axis) => {
 
 let _toMat4 = (originX: float, originY: float, t) => {
   switch (t) {
-  | RotateX(a) => _rotateWithOrigin(originX, originY, a, right)
-  | RotateY(a) => _rotateWithOrigin(originX, originY, a, up)
-  | RotateZ(a) => _rotateWithOrigin(originX, originY, a, forward)
-  | Rotate(a) => _rotateWithOrigin(originX, originY, a, forward)
+  | RotateX(a) => _rotateWithOrigin(originX, originY, a, 1.0, 0.0, 0.0)
+  | RotateY(a) => _rotateWithOrigin(originX, originY, a, 0.0, 1.0, 0.0)
+  | RotateZ(a) => _rotateWithOrigin(originX, originY, a, 0.0, 0.0, 1.0)
+  | Rotate(a) => _rotateWithOrigin(originX, originY, a, 0.0, 0.0, 1.0)
   | Scale(a) => Skia.Matrix.makeScale(a, a, a, 1.0)
   | ScaleX(a) => Skia.Matrix.makeScale(a, 1.0, 1.0, 1.0)
   | ScaleY(a) => Skia.Matrix.makeScale(1.0, a, 1.0, 1.0)

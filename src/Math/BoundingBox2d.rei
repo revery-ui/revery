@@ -1,5 +1,3 @@
-open Reglm;
-
 type t;
 
 let create: (float, float, float, float) => t;
@@ -12,7 +10,7 @@ let intersects: (t, t) => bool;
 
 let intersect: (t, t) => t;
 
-let isPointInside: (t, Vec2.t) => bool;
+let isPointInside: (~x: float, ~y: float, t) => bool;
 
 let transform: (t, Skia.Matrix.t) => t;
 

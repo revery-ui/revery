@@ -1,4 +1,4 @@
-open Reglm;
+open Revery_Math;
 
 type t =
   | RotateZ(Angle.t)

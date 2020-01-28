@@ -1,8 +1,6 @@
 /* BoundingBox2d */
 /* Implementation of an Axis-Aligned Bounding Box */
 
-open Reglm;
-
 type t = Skia.Rect.t;
 
 let create = Skia.Rect.makeLtrb;
@@ -35,9 +33,9 @@ let toString = (v: t) => {
   ++ string_of_float(y1);
 };
 
-let isPointInside = (bbox: t, p: Vec2.t) => {
-  let pX = Vec2.get_x(p);
-  let pY = Vec2.get_y(p);
+let isPointInside = (~x, ~y, bbox: t) => {
+  let pX = x;
+  let pY = y;
 
   let (x0, y0, x1, y1) = getBounds(bbox);
 
@@ -75,40 +73,6 @@ let intersect = (b0: t, b1: t) =>
   } else {
     create(0., 0., 0., 0.);
   };
-
-let _getMin = (fn, v1: Vec3.t, v2: Vec3.t, v3: Vec3.t, v4: Vec3.t) => {
-  let x1 = fn(v1);
-  let x2 = fn(v2);
-  let x3 = fn(v3);
-  let x4 = fn(v4);
-
-  if (x1 <= x2 && x1 <= x3 && x1 <= x4) {
-    x1;
-  } else if (x2 <= x3 && x2 <= x4) {
-    x2;
-  } else if (x3 <= x4) {
-    x3;
-  } else {
-    x4;
-  };
-};
-
-let _getMax = (fn, v1: Vec3.t, v2: Vec3.t, v3: Vec3.t, v4: Vec3.t) => {
-  let x1 = fn(v1);
-  let x2 = fn(v2);
-  let x3 = fn(v3);
-  let x4 = fn(v4);
-
-  if (x1 >= x2 && x1 >= x3 && x1 >= x4) {
-    x1;
-  } else if (x2 >= x3 && x2 >= x4) {
-    x2;
-  } else if (x3 >= x4) {
-    x3;
-  } else {
-    x4;
-  };
-};
 
 /* TODO: For a more efficient implementation, we should consider something like:
       http://dev.theomader.com/transform-bounding-boxes/
