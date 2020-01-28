@@ -38,7 +38,8 @@ class textNode (text: string) = {
 
     List.iteri(
       (lineIndex, line) => {
-        let baselineY = (descentPx *. -1.0) +. lineHeightPx *. (float_of_int(lineIndex + 1));
+        let baselineY =
+          descentPx *. (-1.0) +. lineHeightPx *. float_of_int(lineIndex + 1);
 
         CanvasContext.drawText(
           ~color=colorWithAppliedOpacity,

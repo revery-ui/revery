@@ -147,7 +147,7 @@ let drawText =
   let font = FontCache.load(fontFamily);
   switch (font) {
   | Error(_msg) => ()
-  | Ok({ skiaFace, _}) =>
+  | Ok({skiaFace, _}) =>
     let fill2 = Paint.make();
     //let fontStyle = FontStyle.make(500, 20, Upright);
     Paint.setColor(fill2, Revery_Core.Color.toSkia(color));

@@ -7,9 +7,9 @@
 let _getFontMetrics = (~fontFamily, ~fontSize, ()) => {
   switch (FontCache.load(fontFamily)) {
   // TODO: Actually get metrics
-  | Ok(font) => FontRenderer.getNormalizedMetrics(font, fontSize);
-  | Error(_) => FontRenderer.emptyMetrics(0.);
-  }
+  | Ok(font) => FontRenderer.getNormalizedMetrics(font, fontSize)
+  | Error(_) => FontRenderer.emptyMetrics(0.)
+  };
 };
 
 let getLineHeight = (~fontFamily, ~fontSize, ()) => {
@@ -21,30 +21,20 @@ let getAscent = (~fontFamily, ~fontSize, ()) => {
   let metrics = _getFontMetrics(~fontFamily, ~fontSize, ());
   metrics.ascent;
 };
+
 type dimensions = {
   width: float,
   height: float,
 };
 
-/*let measure = (~fontFamily, ~fontSize, text) => {
-    let (font, _) = FontCache.load(fontFamily, fontSize);
-
-    let dimensions = FontRenderer.measure(font, text);
-    let ret: dimensions = {
-      width: int_of_float(float_of_int(dimensions.width) +. 0.5),
-      height: int_of_float(float_of_int(dimensions.height) +. 0.5),
-    };
-    ret;
-  };*/
-
 let measureCharWidth = (~fontFamily, ~fontSize, char) => {
   switch (FontCache.load(fontFamily)) {
-  | Ok(font) => 
+  | Ok(font) =>
     let text = String.make(1, char);
     let dimensions = FontRenderer.measure(font, fontSize, text);
-    dimensions.width
+    dimensions.width;
   | Error(_) => 0.
-  }
+  };
 };
 
 let indexNearestOffset = (~measure, text, offset) => {
@@ -75,11 +65,8 @@ let getDescent = (~fontFamily, ~fontSize, ()) => {
 let measure = (~fontFamily, ~fontSize, text) => {
   switch (FontCache.load(fontFamily)) {
   // TODO: Properly implement
-  | Ok(font) => 
-    FontRenderer.measure(font, fontSize, text)
-  
-  | Error(_) => { width: 0., height: 0. };
-  }
-  /*let (font, _) = FontCache.load(fontFamily, fontSize);
-  FontRenderer.measure(font, text);*/
+  | Ok(font) => FontRenderer.measure(font, fontSize, text)
+
+  | Error(_) => {width: 0., height: 0.}
+  };
 };
