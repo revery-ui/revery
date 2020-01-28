@@ -18,162 +18,144 @@ type example = {
   source: string,
 };
 
-type state = {
-  examples: list(example),
-  selectedExample: string,
-};
+let examples = [
+  {name: "Animation", render: _w => Hello.render(), source: "Hello.re"},
+  {
+    name: "Spring",
+    render: _w => SpringExample.render(),
+    source: "SpringExample.re",
+  },
+  {
+    name: "CanQuit",
+    render: _ => CanQuitExample.render(),
+    source: "CanQuit.re",
+  },
+  {
+    name: "Button",
+    render: _ => DefaultButton.render(),
+    source: "DefaultButton.re",
+  },
+  {
+    name: "Checkbox",
+    render: _ => CheckboxExample.render(),
+    source: "CheckboxExample.re",
+  },
+  {name: "Slider", render: _ => SliderExample.render(), source: "Slider.re"},
+  {name: "Border", render: _ => Border.render(), source: "Border.re"},
+  {
+    name: "ScrollView",
+    render: _ => ScrollViewExample.render(),
+    source: "ScrollView.re",
+  },
+  {
+    name: "Calculator",
+    render: w => Calculator.render(w),
+    source: "Calculator.re",
+  },
+  {name: "Flexbox", render: _ => Flexbox.render(), source: "Flexbox.re"},
+  {
+    name: "Box Shadow",
+    render: _ => Boxshadow.render(),
+    source: "Boxshadow.re",
+  },
+  {name: "Focus", render: _ => FocusExample.render(), source: "Focus.re"},
+  {name: "Fonts", render: _ => FontsExample.render(), source: "Fonts.re"},
+  {
+    name: "Stopwatch",
+    render: _ => Stopwatch.render(),
+    source: "Stopwatch.re",
+  },
+  {
+    name: "Native: File(s)/Folders(s)",
+    render: _ => NativeFileExample.render(),
+    source: "NativeFileExample.re",
+  },
+  {
+    name: "Native: Notifications",
+    render: _ => NativeNotificationExample.render(),
+    source: "NativeNotificationExample.re",
+  },
+  {
+    name: "Native: Icon Features",
+    render: w => NativeIconExample.render(w),
+    source: "NativeIconExample.re",
+  },
+  {
+    name: "Input",
+    render: _ => InputExample.render(),
+    source: "InputExample.re",
+  },
+  {
+    name: "Radio Button",
+    render: _ => RadioButtonExample.render(),
+    source: "RadioButtonExample.re",
+  },
+  {
+    name: "Game Of Life",
+    render: _ => GameOfLife.render(),
+    source: "GameOfLife.re",
+  },
+  {
+    name: "Screen Capture",
+    render: w => ScreenCapture.render(w),
+    source: "ScreenCapture.re",
+  },
+  {
+    name: "Tree View",
+    render: w => TreeView.render(w),
+    source: "TreeView.re",
+  },
+  {
+    name: "Analog Clock",
+    render: _ => AnalogClock.render(),
+    source: "AnalogClock.re",
+  },
+  {
+    name: "TodoMVC",
+    render: _ => TodoExample.render(),
+    source: "TodoExample.re",
+  },
+  {
+    name: "Dropdown",
+    render: _ => DropdownExample.render(),
+    source: "DropdownExample.re",
+  },
+  {
+    name: "Text",
+    render: _w => TextExample.render(),
+    source: "TextExample.re",
+  },
+  {
+    name: "Hover Example",
+    render: _ => HoverExample.render(),
+    source: "HoverExample.re",
+  },
+  {
+    name: "OpenGL Example",
+    render: _ => OpenGLExample.render(),
+    source: "OpenGLExample.re",
+  },
+  {
+    name: "Zoom Example",
+    render: _ => ZoomExample.render(),
+    source: "ZoomExample.re",
+  },
+  {
+    name: "Nested Clickables",
+    render: _ => NestedClickable.render(),
+    source: "NestedClickable.re",
+  },
+  {
+    name: "Skia Example",
+    render: _ => SkiaExample.render(),
+    source: "SkiaExample.re",
+  },
+];
 
-let state: state = {
-  examples: [
-    {name: "Animation", render: _w => Hello.render(), source: "Hello.re"},
-    {
-      name: "Spring",
-      render: _w => SpringExample.render(),
-      source: "SpringExample.re",
-    },
-    {
-      name: "CanQuit",
-      render: _ => CanQuitExample.render(),
-      source: "CanQuit.re",
-    },
-    {
-      name: "Button",
-      render: _ => DefaultButton.render(),
-      source: "DefaultButton.re",
-    },
-    {
-      name: "Checkbox",
-      render: _ => CheckboxExample.render(),
-      source: "CheckboxExample.re",
-    },
-    {
-      name: "Slider",
-      render: _ => SliderExample.render(),
-      source: "Slider.re",
-    },
-    {name: "Border", render: _ => Border.render(), source: "Border.re"},
-    {
-      name: "ScrollView",
-      render: _ => ScrollViewExample.render(),
-      source: "ScrollView.re",
-    },
-    {
-      name: "Calculator",
-      render: w => Calculator.render(w),
-      source: "Calculator.re",
-    },
-    {name: "Flexbox", render: _ => Flexbox.render(), source: "Flexbox.re"},
-    {
-      name: "Box Shadow",
-      render: _ => Boxshadow.render(),
-      source: "Boxshadow.re",
-    },
-    {name: "Focus", render: _ => FocusExample.render(), source: "Focus.re"},
-    {name: "Fonts", render: _ => FontsExample.render(), source: "Fonts.re"},
-    {
-      name: "Stopwatch",
-      render: _ => Stopwatch.render(),
-      source: "Stopwatch.re",
-    },
-    {
-      name: "Native: File(s)/Folders(s)",
-      render: _ => NativeFileExample.render(),
-      source: "NativeFileExample.re",
-    },
-    {
-      name: "Native: Notifications",
-      render: _ => NativeNotificationExample.render(),
-      source: "NativeNotificationExample.re",
-    },
-    {
-      name: "Native: Icon Features",
-      render: w => NativeIconExample.render(w),
-      source: "NativeIconExample.re",
-    },
-    {
-      name: "Input",
-      render: _ => InputExample.render(),
-      source: "InputExample.re",
-    },
-    {
-      name: "Radio Button",
-      render: _ => RadioButtonExample.render(),
-      source: "RadioButtonExample.re",
-    },
-    {
-      name: "Game Of Life",
-      render: _ => GameOfLife.render(),
-      source: "GameOfLife.re",
-    },
-    {
-      name: "Screen Capture",
-      render: w => ScreenCapture.render(w),
-      source: "ScreenCapture.re",
-    },
-    {
-      name: "Tree View",
-      render: w => TreeView.render(w),
-      source: "TreeView.re",
-    },
-    {
-      name: "Analog Clock",
-      render: _ => AnalogClock.render(),
-      source: "AnalogClock.re",
-    },
-    {
-      name: "TodoMVC",
-      render: _ => TodoExample.render(),
-      source: "TodoExample.re",
-    },
-    {
-      name: "Dropdown",
-      render: _ => DropdownExample.render(),
-      source: "DropdownExample.re",
-    },
-    {
-      name: "Text",
-      render: _w => TextExample.render(),
-      source: "TextExample.re",
-    },
-    {
-      name: "Hover Example",
-      render: _ => HoverExample.render(),
-      source: "HoverExample.re",
-    },
-    {
-      name: "OpenGL Example",
-      render: _ => OpenGLExample.render(),
-      source: "OpenGLExample.re",
-    },
-    {
-      name: "Zoom Example",
-      render: _ => ZoomExample.render(),
-      source: "ZoomExample.re",
-    },
-    {
-      name: "Nested Clickables",
-      render: _ => NestedClickable.render(),
-      source: "NestedClickable.re",
-    },
-    {
-      name: "Skia Example",
-      render: _ => SkiaExample.render(),
-      source: "SkiaExample.re",
-    },
-  ],
-  selectedExample: "Animation",
-};
-
-let getExampleByName = (state: state, example: string) =>
-  List.filter(x => String.equal(x.name, example), state.examples) |> List.hd;
-
-let getSourceForSample = (state: state, example: string) =>
-  getExampleByName(state, example) |> (s => s.source);
+let getExampleByName = name =>
+  List.find(example => example.name == name, examples);
 
 let noop = () => ();
-
-let getRenderFunctionSelector: (state, Window.t) => React.element(React.node) =
-  (s: state) => getExampleByName(s, s.selectedExample) |> (a => a.render);
 
 module ExampleButton = {
   let make = (~isActive, ~name, ~onClick, ()) => {
@@ -206,39 +188,27 @@ module ExampleButton = {
   };
 };
 
-type action =
-  | SelectExample(string);
-
-let reducer = (action: action, state: state) =>
-  switch (action) {
-  | SelectExample(name) => {...state, selectedExample: name}
-  };
-
 module ExampleHost = {
-  let%component make = (~win, ()) => {
-    let%hook (state, dispatch) = Hooks.reducer(~initialState=state, reducer);
+  let%component make = (~window, ~initialExample, ()) => {
+    let%hook (selectedExample, setSelectedExample) =
+      Hooks.state(getExampleByName(initialExample));
 
-    let renderButton = (x: example) => {
-      let isActive = String.equal(x.name, state.selectedExample);
-      <ExampleButton
-        isActive
-        name={x.name}
-        onClick={_ => {
-          Window.setTitle(win, "Revery Example - " ++ x.name);
+    let renderButton = example => {
+      let isActive = example === selectedExample;
+      let onClick = _ => {
+        Window.setTitle(window, "Revery Example - " ++ example.name);
 
-          let sourceFile = getSourceForSample(state, x.name);
-          prerr_endline("SOURCE FILE: " ++ sourceFile);
-          notifyExampleSwitched(sourceFile);
-          dispatch(SelectExample(x.name));
-          ();
-        }}
-      />;
+        prerr_endline("SOURCE FILE: " ++ example.source);
+        notifyExampleSwitched(example.source);
+        setSelectedExample(_ => example);
+      };
+
+      <ExampleButton isActive name={example.name} onClick />;
     };
 
-    let buttons = List.map(renderButton, state.examples);
+    let buttons = List.map(renderButton, examples);
 
-    let exampleRender = getRenderFunctionSelector(state);
-    let example = exampleRender(win);
+    let exampleView = selectedExample.render(window);
 
     <View
       onMouseWheel={_evt => ()}
@@ -273,7 +243,7 @@ module ExampleHost = {
           bottom(0),
           backgroundColor(activeBackgroundColor),
         ]>
-        example
+        exampleView
       </View>
     </View>;
   };
@@ -293,7 +263,7 @@ let init = app => {
   Console.log("Hello from example app");
   Console.log([1, 2, 3]);
 
-  let win =
+  let window =
     App.createWindow(
       ~createOptions=
         WindowCreateOptions.create(
@@ -308,19 +278,25 @@ let init = app => {
     );
 
   if (Environment.webGL) {
-    Window.maximize(win);
+    Window.maximize(window);
   } else {
-    Window.center(win);
+    Window.center(window);
   };
 
   let _unsubscribe =
-    Window.onFocusGained(win, () => Console.log("Focus gained"));
-  let _unsubscribe = Window.onFocusLost(win, () => Console.log("Focus lost"));
-  let _unsubscribe = Window.onMaximized(win, () => Console.log("Maximized!"));
-  let _unsubscribe = Window.onMinimized(win, () => Console.log("Minimized!"));
-  let _unsubscribe = Window.onRestored(win, () => Console.log("Restored!"));
+    Window.onFocusGained(window, () => Console.log("Focus gained"));
+  let _unsubscribe =
+    Window.onFocusLost(window, () => Console.log("Focus lost"));
+  let _unsubscribe =
+    Window.onMaximized(window, () => Console.log("Maximized!"));
+  let _unsubscribe =
+    Window.onMinimized(window, () => Console.log("Minimized!"));
+  let _unsubscribe =
+    Window.onRestored(window, () => Console.log("Restored!"));
 
-  UI.start(win, <ExampleHost win />) |> ignore;
+  let _renderFunction =
+    UI.start(window, <ExampleHost window initialExample="Animation" />);
+  ();
 };
 
 let onIdle = () => print_endline("Example: idle callback triggered");
