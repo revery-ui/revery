@@ -147,16 +147,20 @@ let drawText =
   let font = FontCache.load(fontFamily);
   switch (font) {
   | Error(_msg) => ()
-  | Ok({skiaFace, _}) =>
+  | Ok({skiaFace, _} as font) =>
+    let glyphString =
+      text |> FontCache.shape(font) |> FontCache.ShapeResult.getGlyphString;
+
     let fill2 = Paint.make();
     //let fontStyle = FontStyle.make(500, 20, Upright);
     Paint.setColor(fill2, Revery_Core.Color.toSkia(color));
     Paint.setTypeface(fill2, skiaFace);
+    Paint.setTextEncoding(fill2, GlyphId);
     //Paint.setSubpixelText(fill2, true);
     Paint.setLcdRenderText(fill2, true);
     Paint.setAntiAlias(fill2, true);
     Paint.setTextSize(fill2, fontSize);
-    Canvas.drawText(v.canvas, text, x, y, fill2);
+    Canvas.drawText(v.canvas, glyphString, x, y, fill2);
   };
 };
 

@@ -32,7 +32,7 @@ module ShapeResult = {
     glyphString: string,
   };
 
-  let ofShapeResult = shapes => {
+  let ofHarfbuzz = shapes => {
     let len = Array.length(shapes);
     let bytes = Bytes.create(len * 2);
 
@@ -53,6 +53,8 @@ module ShapeResult = {
     let glyphString = Bytes.to_string(bytes);
     {shapes, glyphString};
   };
+
+  let getGlyphString = v => v.glyphString;
 };
 
 type t = {
@@ -108,5 +110,17 @@ let getMetrics: (t, float) => FontMetrics.t =
       let ret = FontMetrics.ofSkia(size, metrics);
       Hashtbl.add(metricsCache, size, ret);
       ret;
+    };
+  };
+
+let shape: (t, string) => ShapeResult.t =
+  ({hbFace, shapeCache, _}, str) => {
+    switch (StringHash.find_opt(shapeCache, str)) {
+    | Some(v) => v
+    | None =>
+      let shaping = Harfbuzz.hb_shape(hbFace, str);
+      let result = ShapeResult.ofHarfbuzz(shaping);
+      StringHash.add(shapeCache, str, result);
+      result;
     };
   };
