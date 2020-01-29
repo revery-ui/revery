@@ -223,7 +223,7 @@ module Deprecated = {
       ~y,
       ~color,
       ~fontFamily,
-      ~fontSize=float_of_int(fontSize),
+      ~fontSize=fontSize,
       text,
       v,
     );
