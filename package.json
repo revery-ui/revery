@@ -29,9 +29,6 @@
     "build": [
       "dune build -p Revery -j4"
     ],
-    "buildEnv": {
-      "CC": "x86_64-w64-mingw32-gcc"
-    },
     "install": [
       "esy-installer Revery.install",
       "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': ':'}\""
@@ -65,7 +62,6 @@
     "@opam/cmdliner": "1.0.2",
     "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b6",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
-    "esy-skia": "revery-ui/esy-skia#91b10c9",
     "timber": "glennsl/timber#ae065bb"
   },
   "devDependencies": {
