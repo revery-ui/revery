@@ -14,7 +14,7 @@ let selectionHighlight = Color.hex("#90f7ff");
 
 type example = {
   name: string,
-  render: Window.t => React.element(React.node),
+  render: Window.t => element,
   source: string,
 };
 
