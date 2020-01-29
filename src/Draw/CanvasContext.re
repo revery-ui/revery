@@ -168,21 +168,6 @@ let clipPath =
 let _drawRect = drawRect;
 
 module Deprecated = {
-  let drawRect =
-      (
-        ~x: float,
-        ~y: float,
-        ~width: float,
-        ~height: float,
-        ~color: Revery_Core.Color.t,
-        v: t,
-      ) => {
-    let rect = Skia.Rect.makeLtrb(x, y, x +. width, y +. height);
-    let fill = Paint.make();
-    Paint.setColor(fill, Revery_Core.Color.toSkia(color));
-    _drawRect(v, rect, fill);
-  };
-
   let drawString =
       (
         ~x: float,
