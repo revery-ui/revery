@@ -198,6 +198,7 @@ module Deprecated = {
       let textPaint = Skia.Paint.make();
       Skia.Paint.setColor(textPaint, Revery_Core.Color.toSkia(color));
       Skia.Paint.setTypeface(textPaint, FontCache.getSkiaTypeface(font));
+      Skia.Paint.setTextEncoding(textPaint, GlyphId);
       Skia.Paint.setLcdRenderText(textPaint, true);
       Skia.Paint.setAntiAlias(textPaint, true);
       Skia.Paint.setTextSize(textPaint, fontSize);
