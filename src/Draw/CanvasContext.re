@@ -218,14 +218,6 @@ module Deprecated = {
         ~text,
         v: t,
       ) => {
-    drawText(
-      ~x,
-      ~y,
-      ~color,
-      ~fontFamily,
-      ~fontSize=fontSize,
-      text,
-      v,
-    );
+    drawText(~x, ~y, ~color, ~fontFamily, ~fontSize, text, v);
   };
 };
