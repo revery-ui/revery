@@ -7,8 +7,8 @@
 let _getFontMetrics = (~fontFamily, ~fontSize, ()) => {
   switch (FontCache.load(fontFamily)) {
   // TODO: Actually get metrics
-  | Ok(font) => FontRenderer.getNormalizedMetrics(font, fontSize)
-  | Error(_) => FontRenderer.emptyMetrics(0.)
+  | Ok(font) => FontCache.getMetrics(font, fontSize)
+  | Error(_) => Revery_Font.FontMetrics.empty(0.)
   };
 };
 
