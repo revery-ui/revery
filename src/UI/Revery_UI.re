@@ -32,5 +32,4 @@ module Offset = Offset;
 
 type element = React.element(node);
 
-let start = Ui.start;
-let getActiveWindow = Ui.getActiveWindow;
+include Ui;
