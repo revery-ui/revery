@@ -8,6 +8,7 @@
 module Weight = FontManager.FontWeight;
 module Width = FontManager.FontWidth;
 module Discovery = Discovery;
+module FontMetrics = FontMetrics;
 
 type t = FontManager.FontDescriptor.t;
 

@@ -1,4 +1,5 @@
 open Revery_Core;
+open Revery_Font;
 
 module StringHash =
   Hashtbl.Make({
@@ -9,22 +10,6 @@ module StringHash =
 
 type fontLoaded = Event.t(unit);
 let onFontLoaded: fontLoaded = Event.create();
-
-module FontMetrics = {
-  type t = {
-    height: float,
-    ascent: float,
-    descent: float,
-  };
-
-  let empty = (size: float) => {height: size, ascent: 0., descent: 0.};
-
-  let ofSkia = (size: float, metrics: Skia.FontMetrics.t) => {
-    let ascent = Skia.FontMetrics.getAscent(metrics);
-    let descent = Skia.FontMetrics.getDescent(metrics);
-    {height: size, ascent, descent};
-  };
-};
 
 module ShapeResult = {
   type t = {
@@ -108,11 +93,9 @@ let getMetrics: (t, float) => FontMetrics.t =
       Skia.Paint.setTextSize(paint, size);
 
       let metrics = Skia.FontMetrics.make();
+      let lineHeight = Skia.Paint.getFontMetrics(paint, metrics, 1.0);
 
-      // TODO: Incorporate spacing
-      let _spacing = Skia.Paint.getFontMetrics(paint, metrics, 1.0);
-
-      let ret = FontMetrics.ofSkia(size, metrics);
+      let ret = FontMetrics.ofSkia(size, lineHeight, metrics);
       Hashtbl.add(metricsCache, size, ret);
       ret;
     };
