@@ -1,7 +1,6 @@
 open Sdl2;
 
 open Revery;
-/* open Revery.Draw; */
 open Revery.UI;
 
 module Styles = {
