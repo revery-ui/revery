@@ -144,7 +144,7 @@ let examples = [
     name: "Nested Clickables",
     render: _ => NestedClickable.render(),
     source: "NestedClickable.re",
-  }
+  },
 ];
 
 let getExampleByName = name =>
