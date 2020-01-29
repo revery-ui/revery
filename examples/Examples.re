@@ -150,6 +150,21 @@ let examples = [
     render: _ => SkiaExample.render(),
     source: "SkiaExample.re",
   },
+  {
+    name: "Benchmark: drawString",
+    render: _ => BenchmarkExample.render(Text),
+    source: "BenchmarkExample.re",
+  },
+  {
+    name: "Benchmark: drawRect",
+    render: _ => BenchmarkExample.render(Rect),
+    source: "BenchmarkExample.re",
+  },
+  {
+    name: "Benchmark: drawRect&drawString",
+    render: _ => BenchmarkExample.render(TextAndRect),
+    source: "BenchmarkExample.re",
+  },
 ];
 
 let getExampleByName = name =>

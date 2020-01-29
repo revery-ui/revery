@@ -9,6 +9,10 @@ type size = {
 
 type unsubscribe = unit => unit;
 
+let onBeforeRender: (t, unit => unit) => unsubscribe;
+let onAfterRender: (t, unit => unit) => unsubscribe;
+let onBeforeSwap: (t, unit => unit) => unsubscribe;
+let onAfterSwap: (t, unit => unit) => unsubscribe;
 let onFocusGained: (t, unit => unit) => unsubscribe;
 let onFocusLost: (t, unit => unit) => unsubscribe;
 let onMaximized: (t, unit => unit) => unsubscribe;
