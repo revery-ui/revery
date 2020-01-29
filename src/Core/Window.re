@@ -458,7 +458,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onAfterRender: Event.create(),
     onBeforeSwap: Event.create(),
     onAfterSwap: Event.create(),
-    
+
     onFocusGained: Event.create(),
     onFocusLost: Event.create(),
 

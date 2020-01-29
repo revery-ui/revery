@@ -151,8 +151,18 @@ let examples = [
     source: "SkiaExample.re",
   },
   {
-    name: "Benchmark 1: Text",
-    render: _ => BenchmarkExample.render(),
+    name: "Benchmark: drawString",
+    render: _ => BenchmarkExample.render(Text),
+    source: "BenchmarkExample.re",
+  },
+  {
+    name: "Benchmark: drawRect",
+    render: _ => BenchmarkExample.render(Rect),
+    source: "BenchmarkExample.re",
+  },
+  {
+    name: "Benchmark: drawRect&drawString",
+    render: _ => BenchmarkExample.render(TextAndRect),
     source: "BenchmarkExample.re",
   },
 ];
