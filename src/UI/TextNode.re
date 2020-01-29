@@ -21,38 +21,53 @@ class textNode (text: string) = {
     let opacity = parentContext.opacity *. style.opacity;
     let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 
-    //let ascentPx = Text.getAscent(~fontFamily, ~fontSize, ());
-    let descentPx = Text.getDescent(~fontFamily, ~fontSize, ());
-    let lineHeightPx =
-      lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
+    switch (FontCache.load(fontFamily)) {
+    | Error(_) => ()
+    | Ok(font) =>
+      let paint = Skia.Paint.make();
+      Skia.Paint.setColor(paint, Color.toSkia(colorWithAppliedOpacity));
+      Skia.Paint.setTypeface(paint, FontCache.getSkiaTypeface(font));
+      Skia.Paint.setTextEncoding(paint, GlyphId);
+      Skia.Paint.setLcdRenderText(paint, true);
+      Skia.Paint.setAntiAlias(paint, true);
+      Skia.Paint.setTextSize(paint, fontSize);
 
-    /* when style.width & style.height are defined, Layout doesn't call the measure function */
-    if (!_isMeasured) {
-      _this#measure(style.width, style.height) |> ignore;
+      //let ascentPx = Text.getAscent(~fontFamily, ~fontSize, ());
+      let descentPx = Text.getDescent(~fontFamily, ~fontSize, ());
+      let lineHeightPx =
+        lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
+
+      /* when style.width & style.height are defined, Layout doesn't call the measure function */
+      if (!_isMeasured) {
+        _this#measure(style.width, style.height) |> ignore;
+      };
+
+      let {canvas, _}: NodeDrawContext.t = parentContext;
+      // TODO find a way to only manage the matrix stack in Node
+      let world = _this#getWorldTransform();
+      Revery_Draw.CanvasContext.setMatrix(canvas, world);
+
+      List.iteri(
+        (lineIndex, line) => {
+          let baselineY =
+            descentPx *. (-1.0) +. lineHeightPx *. float_of_int(lineIndex + 1);
+
+          let glyphString =
+            line
+            |> FontCache.shape(font)
+            |> FontCache.ShapeResult.getGlyphString;
+
+          CanvasContext.drawText(
+            ~paint,
+            ~x=0.,
+            ~y=baselineY,
+            ~text=glyphString,
+            canvas,
+          );
+        },
+        _lines,
+      );
     };
-
-    let {canvas, _}: NodeDrawContext.t = parentContext;
-    // TODO find a way to only manage the matrix stack in Node
-    let world = _this#getWorldTransform();
-    Revery_Draw.CanvasContext.setMatrix(canvas, world);
-
-    List.iteri(
-      (lineIndex, line) => {
-        let baselineY =
-          descentPx *. (-1.0) +. lineHeightPx *. float_of_int(lineIndex + 1);
-
-        CanvasContext.drawText(
-          ~color=colorWithAppliedOpacity,
-          ~x=0.,
-          ~y=baselineY,
-          ~fontFamily,
-          ~fontSize,
-          line,
-          canvas,
-        );
-      },
-      _lines,
-    );
   };
   pub! setStyle = style => {
     let lastStyle = _this#getStyle();

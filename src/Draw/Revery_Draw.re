@@ -1,4 +1,5 @@
 module CanvasContext = CanvasContext;
+module Skia = Skia;
 
 module DebugDraw = DebugDraw;
 module RenderPass = RenderPass;

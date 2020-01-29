@@ -135,34 +135,8 @@ let drawImage = (~x, ~y, ~width, ~height, src, v: t) => {
   };
 };
 
-let drawText =
-    (
-      ~color=Revery_Core.Colors.white,
-      ~x=0.,
-      ~y=0.,
-      ~fontFamily,
-      ~fontSize,
-      text,
-      v: t,
-    ) => {
-  let font = FontCache.load(fontFamily);
-  switch (font) {
-  | Error(_msg) => ()
-  | Ok({skiaFace, _} as font) =>
-    let glyphString =
-      text |> FontCache.shape(font) |> FontCache.ShapeResult.getGlyphString;
-
-    let fill2 = Paint.make();
-    //let fontStyle = FontStyle.make(500, 20, Upright);
-    Paint.setColor(fill2, Revery_Core.Color.toSkia(color));
-    Paint.setTypeface(fill2, skiaFace);
-    Paint.setTextEncoding(fill2, GlyphId);
-    //Paint.setSubpixelText(fill2, true);
-    Paint.setLcdRenderText(fill2, true);
-    Paint.setAntiAlias(fill2, true);
-    Paint.setTextSize(fill2, fontSize);
-    Canvas.drawText(v.canvas, glyphString, x, y, fill2);
-  };
+let drawText = (~paint, ~x=0., ~y=0., ~text, v: t) => {
+  Canvas.drawText(v.canvas, text, x, y, paint);
 };
 
 let _topMatrix = Skia.Matrix.make();
@@ -218,6 +192,20 @@ module Deprecated = {
         ~text,
         v: t,
       ) => {
-    drawText(~x, ~y, ~color, ~fontFamily, ~fontSize, text, v);
+    switch (FontCache.load(fontFamily)) {
+    | Error(_) => ()
+    | Ok(font) =>
+      let textPaint = Skia.Paint.make();
+      Skia.Paint.setColor(textPaint, Revery_Core.Color.toSkia(color));
+      Skia.Paint.setTypeface(textPaint, FontCache.getSkiaTypeface(font));
+      Skia.Paint.setLcdRenderText(textPaint, true);
+      Skia.Paint.setAntiAlias(textPaint, true);
+      Skia.Paint.setTextSize(textPaint, fontSize);
+
+      let shapedText =
+        text |> FontCache.shape(font) |> FontCache.ShapeResult.getGlyphString;
+
+      drawText(~x, ~y, ~paint=textPaint, ~text=shapedText, v);
+    };
   };
 };

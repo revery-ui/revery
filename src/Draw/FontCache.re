@@ -118,6 +118,8 @@ let getMetrics: (t, float) => FontMetrics.t =
     };
   };
 
+let getSkiaTypeface: t => Skia.Typeface.t = font => font.skiaFace;
+
 let shape: (t, string) => ShapeResult.t =
   ({hbFace, shapeCache, _}, str) => {
     switch (StringHash.find_opt(shapeCache, str)) {
