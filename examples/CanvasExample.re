@@ -1,4 +1,5 @@
 open Revery;
+open Revery.Font;
 open Revery.Draw;
 open Revery.UI;
 
@@ -32,7 +33,7 @@ module Sample = {
           let rect = Skia.Rect.makeLtrb(1.0, 1.0, 101., 201.);
           CanvasContext.drawRect(canvasContext, rect, paint);
 
-          switch (Revery_Draw.FontCache.load("Roboto-Regular.ttf")) {
+          switch (Revery_Font.load("Roboto-Regular.ttf")) {
           | Error(_) => ()
           | Ok(font) =>
             let textPaint = Skia.Paint.make();
@@ -48,7 +49,7 @@ module Sample = {
             let shapedText =
               "Hello, World"
               |> FontCache.shape(font)
-              |> FontCache.ShapeResult.getGlyphString;
+              |> ShapeResult.getGlyphString;
 
             Skia.Paint.setTextEncoding(textPaint, GlyphId);
 

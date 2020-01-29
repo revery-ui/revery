@@ -21,12 +21,15 @@ class textNode (text: string) = {
     let opacity = parentContext.opacity *. style.opacity;
     let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 
-    switch (FontCache.load(fontFamily)) {
+    switch (Revery_Font.FontCache.load(fontFamily)) {
     | Error(_) => ()
     | Ok(font) =>
       let paint = Skia.Paint.make();
       Skia.Paint.setColor(paint, Color.toSkia(colorWithAppliedOpacity));
-      Skia.Paint.setTypeface(paint, FontCache.getSkiaTypeface(font));
+      Skia.Paint.setTypeface(
+        paint,
+        Revery_Font.FontCache.getSkiaTypeface(font),
+      );
       Skia.Paint.setTextEncoding(paint, GlyphId);
       Skia.Paint.setLcdRenderText(paint, true);
       Skia.Paint.setAntiAlias(paint, true);
@@ -54,8 +57,8 @@ class textNode (text: string) = {
 
           let glyphString =
             line
-            |> FontCache.shape(font)
-            |> FontCache.ShapeResult.getGlyphString;
+            |> Revery_Font.shape(font)
+            |> Revery_Font.ShapeResult.getGlyphString;
 
           CanvasContext.drawText(
             ~paint,

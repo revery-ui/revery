@@ -1,4 +1,3 @@
-open Revery_Font;
 open FontCache;
 
 type measureResult = {
@@ -14,7 +13,7 @@ let measure = (font, size, text: string) => {
   let {skiaFace, _}: FontCache.t = font;
 
   let glyphString =
-    text |> FontCache.shape(font) |> FontCache.ShapeResult.getGlyphString;
+    text |> FontCache.shape(font) |> ShapeResult.getGlyphString;
 
   Skia.Paint.setTypeface(_cachedPaint, skiaFace);
   Skia.Paint.setTextSize(_cachedPaint, size);

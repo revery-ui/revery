@@ -7,10 +7,20 @@
 */
 module Weight = FontManager.FontWeight;
 module Width = FontManager.FontWidth;
-module Discovery = Discovery;
 module FontMetrics = FontMetrics;
+module FontCache = FontCache;
+module FontRenderer = FontRenderer;
+module ShapeResult = ShapeResult;
 
-type t = FontManager.FontDescriptor.t;
+type t = FontCache.t;
 
-let find = Discovery.find;
-let toString = Discovery.toString;
+let load = FontCache.load;
+let getMetrics = FontCache.getMetrics;
+let getSkiaTypeface = FontCache.getSkiaTypeface;
+let shape = FontCache.shape;
+
+module Discovery = {
+  type t = FontManager.FontDescriptor.t;
+  let find = Discovery.find;
+  let toString = Discovery.toString;
+};

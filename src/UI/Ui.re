@@ -126,7 +126,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
 
   let _ignore =
     Revery_Core.Event.subscribe(
-      Revery_Draw.FontCache.onFontLoaded,
+      Revery_Font.FontCache.onFontLoaded,
       () => {
         uiDirty := true;
         forceLayout := true;

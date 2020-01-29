@@ -4,6 +4,7 @@
  * Module for integrating with the Skia canvas
  */
 open Revery_Core;
+open Revery_Font;
 
 module Log = (val Log.withNamespace("Revery.CanvasContext"));
 
@@ -204,7 +205,7 @@ module Deprecated = {
       Skia.Paint.setTextSize(textPaint, fontSize);
 
       let shapedText =
-        text |> FontCache.shape(font) |> FontCache.ShapeResult.getGlyphString;
+        text |> FontCache.shape(font) |> ShapeResult.getGlyphString;
 
       drawText(~x, ~y, ~paint=textPaint, ~text=shapedText, v);
     };

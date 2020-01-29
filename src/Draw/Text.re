@@ -4,6 +4,8 @@
  * Core logic for rendering text to screen.
  */
 
+open Revery_Font;
+
 let _getFontMetrics = (~fontFamily, ~fontSize, ()) => {
   switch (FontCache.load(fontFamily)) {
   // TODO: Actually get metrics
