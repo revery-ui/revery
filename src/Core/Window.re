@@ -58,6 +58,10 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
+  onBeforeRender: Event.t(unit),
+  onAfterRender: Event.t(unit),
+  onBeforeSwap: Event.t(unit),
+  onAfterSwap: Event.t(unit),
   onFocusGained: Event.t(unit),
   onFocusLost: Event.t(unit),
   onExposed: Event.t(unit),
@@ -78,6 +82,10 @@ type t = {
   onTextInputCommit: Event.t(textInputEvent),
 };
 
+let onBeforeRender = w => Event.subscribe(w.onBeforeRender);
+let onAfterRender = w => Event.subscribe(w.onAfterRender);
+let onBeforeSwap = w => Event.subscribe(w.onBeforeSwap);
+let onAfterSwap = w => Event.subscribe(w.onAfterSwap);
 let onFocusGained = w => Event.subscribe(w.onFocusGained);
 let onFocusLost = w => Event.subscribe(w.onFocusLost);
 let onMaximized = w => Event.subscribe(w.onMaximized);
@@ -267,10 +275,6 @@ let render = (w: t) => {
   };
 
   w.isRendering = true;
-  /*  Performance.bench("glfwMakeContextCurrent", () =>
-        ()
-        //Gl.setup(w.sdlWindow)
-      );*/
 
   Sdl2.Gl.glViewport(
     0,
@@ -279,18 +283,18 @@ let render = (w: t) => {
     w.metrics.framebufferSize.height,
   );
 
-  /*Gl.glClearDepth(1.0);
-    Gl.glEnable(GL_DEPTH_TEST);
-    Gl.glDepthFunc(GL_LEQUAL);*/
-
   Sdl2.Gl.glDisable(GL_DEPTH_TEST);
 
   let color = w.backgroundColor;
   Sdl2.Gl.glClearColor(color.r, color.g, color.b, color.a);
 
+  Event.dispatch(w.onBeforeRender, ());
   w.render();
+  Event.dispatch(w.onAfterRender, ());
 
+  Event.dispatch(w.onBeforeSwap, ());
   Performance.bench("swapWindow", () => Sdl2.Gl.swapWindow(w.sdlWindow));
+  Event.dispatch(w.onAfterSwap, ());
   w.isRendering = false;
 };
 
@@ -450,6 +454,11 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     forceScaleFactor: options.forceScaleFactor,
 
+    onBeforeRender: Event.create(),
+    onAfterRender: Event.create(),
+    onBeforeSwap: Event.create(),
+    onAfterSwap: Event.create(),
+    
     onFocusGained: Event.create(),
     onFocusLost: Event.create(),
 

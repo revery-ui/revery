@@ -150,6 +150,11 @@ let examples = [
     render: _ => SkiaExample.render(),
     source: "SkiaExample.re",
   },
+  {
+    name: "Benchmark 1: Text",
+    render: _ => BenchmarkExample.render(),
+    source: "BenchmarkExample.re",
+  },
 ];
 
 let getExampleByName = name =>
