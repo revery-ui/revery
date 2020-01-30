@@ -21,7 +21,7 @@ let tick tick = (t) => print_endline("Time: " ++ string_of_float(Time.toFloatSec
 let make:
   (
     ~key: Brisk_reconciler.Key.t=?,
-    ~children: Revery_UI.React.element(Revery_UI.React.node)=?,
+    ~children: Revery_UI.element=?,
     ~onTick: tickFunction=?,
     ~tickRate: Revery_Core.Time.t=?,
     unit

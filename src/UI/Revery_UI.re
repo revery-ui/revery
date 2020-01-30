@@ -30,5 +30,6 @@ module Focus = Focus;
 module Dimensions = Dimensions;
 module Offset = Offset;
 
-let start = Ui.start;
-let getActiveWindow = Ui.getActiveWindow;
+type element = React.element(node);
+
+include Ui;

@@ -18,7 +18,7 @@ any items outside.
 */
 let make:
   (
-    ~children: Revery_UI.React.React.element(Revery_UI.React.node),
+    ~children: Revery_UI.element,
     ~color: Revery_Core.Color.t=?,
     ~width: int,
     ~height: int,
