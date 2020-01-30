@@ -58,6 +58,7 @@
     "timber": "*"
   },
   "resolutions": {
+    "reason-harfbuzz": "revery-ui/reason-harfbuzz#3a6965d",
     "@esy-ocaml/libffi": "esy-ocaml/libffi#599bc3567",
     "@opam/cmdliner": "1.0.2",
     "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b6",
