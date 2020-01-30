@@ -39,7 +39,7 @@ module Sample = {
         style=Style.[
           marginBottom(10),
           fontFamily("Roboto-Regular.ttf"),
-          fontSize(20),
+          fontSize(20.),
         ]
       />
       <Slider
@@ -60,7 +60,8 @@ module Sample = {
         checked=bounce
         style=Style.[marginBottom(10)]
       />
-      <ScrollView style=outerBox bounce scrollTop>
+      <ScrollView
+        style=outerBox bounce scrollTop onScroll={v => setScrollTop(_ => v)}>
         <Image
           src="outrun-logo.png"
           /* Exercise the case in #579 */

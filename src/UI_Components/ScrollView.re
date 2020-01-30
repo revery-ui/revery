@@ -47,6 +47,7 @@ let%component make =
                 ~scrollLeft=0,
                 ~scrollTop=0,
                 ~bounce=defaultBounce,
+                ~onScroll=?,
                 ~children=React.empty,
                 (),
               ) => {
@@ -61,7 +62,10 @@ let%component make =
       Always,
       () => {
         if (scrollTop != actualScrollTop) {
-          dispatch(ScrollUpdated(scrollTop));
+          switch (onScroll) {
+          | Some(f) => dispatch(ScrollUpdated(scrollTop))
+          | None => ()
+          };
         };
         None;
       },
@@ -124,11 +128,18 @@ let%component make =
 
       let isVerticalScrollbarVisible = maxHeight > 0;
       let isHorizontalScrollbarVisible = maxWidth > 0;
+      let updateScrollPos = v => {
+        dispatch(ScrollUpdated(v));
+        switch (onScroll) {
+        | Some(f) => f(v)
+        | None => ()
+        };
+      };
 
       let verticalScrollBar =
         isVerticalScrollbarVisible
           ? <Slider
-              onValueChanged={v => dispatch(ScrollUpdated(int_of_float(v)))}
+              onValueChanged={v => updateScrollPos(int_of_float(v))}
               minimumValue=0.
               maximumValue={float_of_int(maxHeight)}
               sliderLength={outerMeasurements.height}
@@ -180,11 +191,13 @@ let%component make =
         | Bouncing(_) => ()
         | Idle when !bounce && (isAtTop || isAtBottom) =>
           let clampedScrollTop = isAtTop ? 0 : maxHeight;
-          dispatch(ScrollUpdated(clampedScrollTop));
+          updateScrollPos(clampedScrollTop);
         | Idle when bounce && (isAtTop || isAtBottom) =>
           setBouncingState(_ => Bouncing(- delta * 2));
-          dispatch(ScrollUpdated(isAtTop ? 0 : maxHeight));
-        | Idle => dispatch(ScrollUpdated(newScrollTop))
+          updateScrollPos(isAtTop ? 0 : maxHeight);
+        | Idle =>
+          dispatch(ScrollUpdated(newScrollTop));
+          updateScrollPos(newScrollTop);
         };
       };
       (horizontalScrollbar, verticalScrollBar, scroll);
