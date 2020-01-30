@@ -1,6 +1,5 @@
 /* Mouse Input */
 open Revery_Core;
-open Revery_Math;
 
 open NodeEvents;
 
@@ -9,9 +8,9 @@ module Cursor: {
 
   let make: unit => t;
 
-  let toVec2: t => Vec2.t;
+  let get: t => (float, float);
 
-  let set: (t, Vec2.t) => unit;
+  let set: (~x: float, ~y: float, t) => unit;
 };
 
 let registerListeners:

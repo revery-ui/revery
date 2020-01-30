@@ -1,5 +1,3 @@
-open Revery_Core;
-
 module Draw = Revery_Draw;
 
 module Layout = Layout;
@@ -26,15 +24,17 @@ class imageNode (imagePath: string) = {
     let dimensions = _this#measurements();
     let world = _this#getWorldTransform();
 
-    Draw.Image.drawImage(
-      ~imagePath=src,
-      ~transform=world,
+    let {canvas, _}: NodeDrawContext.t = parentContext;
+
+    // TODO find a way to only manage the matrix stack in Node
+    Revery_Draw.CanvasContext.setMatrix(canvas, world);
+    Draw.CanvasContext.drawImage(
+      ~x=0.,
+      ~y=0.,
       ~width=float_of_int(dimensions.width),
       ~height=float_of_int(dimensions.height),
-      ~resizeMode=uiToDrawResizeMode(_resizeMode),
-      ~tint=Colors.white,
-      ~opacity=_opacity,
-      (),
+      src,
+      canvas,
     );
   };
   pub setOpacity = f => _opacity = f;

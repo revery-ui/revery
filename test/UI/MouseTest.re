@@ -294,7 +294,7 @@ describe("Mouse", ({describe, test, _}) => {
     });
     test("does trigger onFocus for node", ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
-      Mouse.Cursor.set(cursor, Revery_Math.Vec2.create(50.0, 50.0));
+      Mouse.Cursor.set(~x=50., ~y=50., cursor);
 
       let count = ref(0);
       let f = _evt => count := count^ + 1;
@@ -311,7 +311,7 @@ describe("Mouse", ({describe, test, _}) => {
       "does trigger onBlur for node after cursor is pressed outside the node",
       ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
-      Mouse.Cursor.set(cursor, Revery_Math.Vec2.create(50.0, 50.0));
+      Mouse.Cursor.set(~x=50.0, ~y=50.0, cursor);
 
       let count = ref(0);
       let f = _evt => count := count^ + 1;
@@ -320,7 +320,7 @@ describe("Mouse", ({describe, test, _}) => {
       node#setEvents(NodeEvents.make(~onBlur=f, ()));
       node#setTabIndex(Some(1));
       Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
-      Mouse.Cursor.set(cursor, Revery_Math.Vec2.create(200.0, 200.0));
+      Mouse.Cursor.set(~x=200., ~y=200., cursor);
       Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
       expect.int(count^).toBe(1);
     });

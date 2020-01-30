@@ -32,7 +32,7 @@ module Check = {
         style=Style.[
           marginBottom(10),
           fontFamily("Roboto-Regular.ttf"),
-          fontSize(20),
+          fontSize(20.),
         ]
       />
       <Checkbox
@@ -48,7 +48,7 @@ module Check = {
         style=Style.[
           marginTop(10),
           fontFamily("Roboto-Regular.ttf"),
-          fontSize(20),
+          fontSize(20.),
         ]
       />
     </View>;

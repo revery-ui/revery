@@ -44,7 +44,7 @@ let%nativeComponent make =
           ~onDimensionsChanged?,
           (),
         );
-      let node = (new openGLNode)();
+      let node = (new canvasNode)();
       node#setEvents(events);
       node#setStyle(styles);
       node#setRender(render);
@@ -70,10 +70,10 @@ let%nativeComponent make =
           ~onDimensionsChanged?,
           (),
         );
-      let oglNode: openGLNode = Obj.magic(node);
+      let canvasNode: canvasNode = Obj.magic(node);
       node#setEvents(events);
       node#setStyle(styles);
-      oglNode#setRender(render);
+      canvasNode#setRender(render);
       node;
     },
     children,

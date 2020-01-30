@@ -1,4 +1,3 @@
-open Revery_Math;
 open Revery_UI;
 
 open TestFramework;
@@ -37,7 +36,7 @@ describe("NodeTests", ({test, _}) => {
       Layout.layout(node);
       node#recalculate();
 
-      expect.bool(node#hitTest(Vec2.create(200., 250.))).toBeTrue();
+      expect.bool(node#hitTest(200., 250.)).toBeTrue();
     });
 
     test("simple hitTest returns false case", ({expect, _}) => {
@@ -47,7 +46,7 @@ describe("NodeTests", ({test, _}) => {
       Layout.layout(node);
       node#recalculate();
 
-      expect.bool(node#hitTest(Vec2.create(401., 250.))).toBeFalse();
+      expect.bool(node#hitTest(401., 250.)).toBeFalse();
     });
 
     test("left / top are taken into account", ({expect, _}) => {
@@ -56,8 +55,8 @@ describe("NodeTests", ({test, _}) => {
       Layout.layout(node);
       node#recalculate();
 
-      expect.bool(node#hitTest(Vec2.create(1., 1.))).toBeFalse();
-      expect.bool(node#hitTest(Vec2.create(6., 6.))).toBeTrue();
+      expect.bool(node#hitTest(1., 1.)).toBeFalse();
+      expect.bool(node#hitTest(6., 6.)).toBeTrue();
     });
 
     test("parent transforms are taken into account", ({expect, _}) => {
@@ -73,8 +72,8 @@ describe("NodeTests", ({test, _}) => {
       Layout.layout(parentNode);
       parentNode#recalculate();
 
-      expect.bool(childNode#hitTest(Vec2.create(0., 0.))).toBeFalse();
-      expect.bool(childNode#hitTest(Vec2.create(60., 60.))).toBeTrue();
+      expect.bool(childNode#hitTest(0., 0.)).toBeFalse();
+      expect.bool(childNode#hitTest(60., 60.)).toBeTrue();
     });
   });
 });

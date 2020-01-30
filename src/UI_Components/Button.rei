@@ -14,7 +14,7 @@ let make:
     ~title: string,
     ~onClick: unit => unit=?,
     ~color: Revery_Core.Color.t=?,
-    ~fontSize: int=?,
+    ~fontSize: float=?,
     ~width: int=?,
     ~height: int=?,
     ~disabled: bool=?,

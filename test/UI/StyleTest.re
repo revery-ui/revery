@@ -100,11 +100,11 @@ describe("Style API tests", ({test, _}) => {
 
   test(
     "Should correctly select a style from a list of styles", ({expect, _}) => {
-    let l = [fontFamily("Test-Font"), fontSize(20)];
+    let l = [fontFamily("Test-Font"), fontSize(20.)];
     let ff = Selector.select(l, FontFamily, "Failed");
-    let fs = Selector.select(l, FontSize, 10);
+    let fs = Selector.select(l, FontSize, 10.);
     expect.string(ff).toEqual("Test-Font");
-    expect.int(fs).toBe(20);
+    expect.float(fs).toBeCloseTo(20.);
   });
 
   test(

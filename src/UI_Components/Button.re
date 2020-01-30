@@ -9,7 +9,7 @@ let make =
       ~title,
       ~onClick=noop,
       ~color as c=Colors.dodgerBlue,
-      ~fontSize as size=40,
+      ~fontSize as size=40.,
       ~width as w=300,
       ~height as h=100,
       ~disabled=false,

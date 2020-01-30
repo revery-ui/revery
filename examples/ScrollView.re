@@ -34,7 +34,7 @@ module Sample = {
         style=Style.[
           marginBottom(10),
           fontFamily("Roboto-Regular.ttf"),
-          fontSize(20),
+          fontSize(20.),
         ]
       />
       <Checkbox

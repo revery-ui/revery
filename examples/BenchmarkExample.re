@@ -1,6 +1,5 @@
-open Sdl2;
-
 open Revery;
+open Revery.Draw;
 open Revery.UI;
 
 module Styles = {
@@ -22,53 +21,43 @@ module Benchmarks = {
 
   let testString = String.make(50, 'a') ++ String.make(50, 'X');
 
-  let textBenchmark = (window, transform, x, y) => {
-    Revery.Draw.Text.drawString(
-      ~backgroundColor=Colors.red,
-      ~color=Colors.white,
-      ~fontFamily="Roboto-Regular.ttf",
-      ~fontSize=20,
-      ~transform,
-      ~x,
-      ~y,
-      ~window,
-      testString,
-    );
+  let textBenchmark = (canvasContext, x, y) => {
+    switch (Revery.Font.load("Roboto-Regular.ttf")) {
+    | Error(_) => ()
+    | Ok(font) =>
+      let textPaint = Skia.Paint.make();
+      Skia.Paint.setColor(textPaint, Revery_Core.Color.toSkia(Colors.white));
+      Skia.Paint.setTypeface(textPaint, Revery.Font.getSkiaTypeface(font));
+      Skia.Paint.setTextEncoding(textPaint, GlyphId);
+      Skia.Paint.setLcdRenderText(textPaint, true);
+      Skia.Paint.setAntiAlias(textPaint, true);
+      Skia.Paint.setTextSize(textPaint, 20.);
+
+      let shapedText =
+        testString
+        |> Revery.Font.shape(font)
+        |> Revery.Font.ShapeResult.getGlyphString;
+
+      CanvasContext.drawText(
+        ~x,
+        ~y,
+        ~paint=textPaint,
+        ~text=shapedText,
+        canvasContext,
+      );
+    };
   };
 
-  let rectBenchmark = (_window, transform, x, y) => {
-    Revery.Draw.Shapes.drawRect(
-      ~transform,
-      ~color=Colors.green,
-      ~x,
-      ~y,
-      ~width=10.,
-      ~height=20.,
-      (),
-    );
+  let rectBenchmark = (canvasContext, x, y) => {
+    let paint = Skia.Paint.make();
+    Skia.Paint.setColor(paint, Revery.Color.toSkia(Colors.green));
+    let rect = Skia.Rect.makeLtrb(x, y, x +. 10., y +. 20.);
+    CanvasContext.drawRect(~paint, ~rect, canvasContext);
   };
-  let textAndRectBenchmark = (window, transform, x, y) => {
-    Revery.Draw.Shapes.drawRect(
-      ~transform,
-      ~color=Colors.green,
-      ~x,
-      ~y,
-      ~width=10.,
-      ~height=20.,
-      (),
-    );
 
-    Revery.Draw.Text.drawString(
-      ~backgroundColor=Colors.red,
-      ~color=Colors.white,
-      ~fontFamily="Roboto-Regular.ttf",
-      ~fontSize=20,
-      ~transform,
-      ~x,
-      ~y,
-      ~window,
-      testString,
-    );
+  let textAndRectBenchmark = (canvasContext, x, y) => {
+    textBenchmark(canvasContext, x, y);
+    rectBenchmark(canvasContext, x, y);
   };
 };
 
@@ -139,12 +128,9 @@ module Benchmark = {
 
     <View style=Styles.column>
       <View style=Styles.outer>
-        <OpenGL
+        <Canvas
           style=Styles.container
-          render={(transform, _pctx) => {
-            Gl.glClearColor(1.0, 0.0, 0.0, 1.0);
-            let window = getActiveWindow();
-
+          render={canvasContext => {
             let (iterations, benchmarkFunction) =
               switch (benchmark) {
               | Text => (200, Benchmarks.textBenchmark)
@@ -160,7 +146,7 @@ module Benchmark = {
               while (y^ < iterations) {
                 let yPos = float_of_int(y^);
                 let xPos = float_of_int(x^);
-                let () = benchmarkFunction(window, transform, xPos, yPos);
+                let () = benchmarkFunction(canvasContext, xPos, yPos);
                 incr(y);
               };
               y := 0;
@@ -175,7 +161,7 @@ module Benchmark = {
         <Text
           style=Style.[
             fontFamily("Roboto-Regular.ttf"),
-            fontSize(20),
+            fontSize(20.),
             color(Colors.white),
           ]
           text="Results will be shown in console"

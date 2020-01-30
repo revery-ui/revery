@@ -55,7 +55,12 @@ module Button = {
         alignItems(`Center),
       ];
     let textStyle =
-      Style.[color(Colors.black), fontFamily(family), fontSize(32)];
+      Style.[
+        color(Colors.black),
+        fontFamily(family),
+        fontSize(32.),
+        textWrap(TextWrapping.NoWrap),
+      ];
 
     <Clickable style=clickableStyle onClick>
       <View style=viewStyle> <Text style=textStyle text=contents /> </View>
@@ -78,14 +83,14 @@ module Display = {
       Style.[
         color(Colors.black),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(20),
+        fontSize(20.),
         margin(15),
       ];
     let numStyle =
       Style.[
         color(Colors.black),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(32),
+        fontSize(32.),
         margin(15),
       ];
 

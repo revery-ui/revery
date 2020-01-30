@@ -44,11 +44,11 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Window.onMouseMove(
       window,
       m => {
-        let scaleFactor = Revery_Core.Window.getScaleAndZoom(window);
+        let scaleAndZoomFactor = Window.getScaleAndZoom(window);
         let evt =
           Revery_Core.Events.InternalMouseMove({
-            mouseX: m.mouseX /. scaleFactor,
-            mouseY: m.mouseY /. scaleFactor,
+            mouseX: m.mouseX /. scaleAndZoomFactor,
+            mouseY: m.mouseY /. scaleAndZoomFactor,
           });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
@@ -126,7 +126,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
 
   let _ignore =
     Revery_Core.Event.subscribe(
-      Revery_Draw.FontCache.onFontLoaded,
+      Revery_Font.FontCache.onFontLoaded,
       () => {
         uiDirty := true;
         forceLayout := true;

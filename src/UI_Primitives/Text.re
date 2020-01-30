@@ -15,7 +15,6 @@ let%nativeComponent make =
                       ~ref=?,
                       ~style=emptyTextStyle,
                       ~text="",
-                      ~gamma=2.2,
                       ~children=React.empty,
                       (),
                       hooks,
@@ -62,7 +61,6 @@ let%nativeComponent make =
       tn#setEvents(events);
       tn#setStyle(styles);
       tn#setText(text);
-      tn#setGamma(gamma);
       node;
     },
     children,

@@ -12,7 +12,7 @@ module Make = (Type: {type t;}) => {
     Style.[
       width(100),
       color(Colors.white),
-      fontSize(16),
+      fontSize(16.),
       marginLeft(10),
       fontFamily("Roboto-Regular.ttf"),
     ];
@@ -21,7 +21,7 @@ module Make = (Type: {type t;}) => {
                 (
                   ~defaultSelected,
                   ~buttons: list(button),
-                  ~iconSize=12,
+                  ~iconSize=12.,
                   ~style=defaultStyle,
                   ~onChange=_ => (),
                   (),
@@ -50,6 +50,7 @@ module Make = (Type: {type t;}) => {
                style=Style.[
                  fontSize(iconSize),
                  fontFamily("FontAwesome5FreeSolid.otf"),
+                 textWrap(TextWrapping.NoWrap),
                ]
              />
              <Text text={button.text} style />

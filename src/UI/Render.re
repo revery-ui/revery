@@ -6,13 +6,10 @@
 
 open Revery_Core;
 open Revery_Draw;
-open Revery_Math;
 
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 module Log = (val Log.withNamespace("Revery.UI.Render"));
-
-let _projection = Mat4.create();
 
 open RenderContainer;
 
@@ -22,6 +19,7 @@ let render =
       container: RenderContainer.t,
       component: React.element('node),
     ) => {
+  let renderContainer = container;
   Log.trace("BEGIN: Render frame");
   let {rootNode, window, container, _} = container;
 
@@ -33,10 +31,14 @@ let render =
   /* Layout */
   let size = Window.getRawSize(window);
   let pixelRatio = Window.getDevicePixelRatio(window);
-  let scaleFactor = Window.getScaleAndZoom(window);
+  let scaleAndZoomFactor = Window.getScaleAndZoom(window);
+  let canvasScalingFactor = pixelRatio *. scaleAndZoomFactor;
   let adjustedHeight =
-    float_of_int(size.height) /. scaleFactor |> int_of_float;
-  let adjustedWidth = float_of_int(size.width) /. scaleFactor |> int_of_float;
+    float_of_int(size.height) /. scaleAndZoomFactor |> int_of_float;
+  let adjustedWidth =
+    float_of_int(size.width) /. scaleAndZoomFactor |> int_of_float;
+
+  RenderContainer.updateCanvas(window, renderContainer);
 
   rootNode#setStyle(
     Style.make(
@@ -58,31 +60,34 @@ let render =
   Performance.bench("draw", () => {
     /* Do a first pass for all 'opaque' geometry */
     /* This helps reduce the overhead for the more expensive alpha pass, next */
+    switch (renderContainer.canvas^) {
+    | None => ()
+    | Some(canvas) =>
+      let skiaRoot =
+        Skia.Matrix.makeScale(
+          canvasScalingFactor,
+          canvasScalingFactor,
+          0.,
+          0.,
+        );
+      CanvasContext.setRootTransform(skiaRoot, canvas);
+      let drawContext =
+        NodeDrawContext.create(~canvas, ~zIndex=0, ~opacity=1.0, ());
 
-    Mat4.ortho(
-      _projection,
-      0.0,
-      float_of_int(adjustedWidth),
-      float_of_int(adjustedHeight),
-      0.0,
-      1000.0,
-      -1000.0,
-    );
+      // let drawContext = NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
 
-    let drawContext = NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
+      RenderPass.start(
+        ~canvas,
+        ~screenHeight=adjustedHeight,
+        ~screenWidth=adjustedWidth,
+        (),
+      );
+      rootNode#draw(drawContext);
+      //DebugDraw.draw();
+      RenderPass.endAlphaPass();
 
-    RenderPass.startAlphaPass(
-      ~pixelRatio,
-      ~scaleFactor,
-      ~screenHeight=adjustedHeight,
-      ~screenWidth=adjustedWidth,
-      ~projection=_projection,
-      (),
-    );
-    Overflow.reset();
-    rootNode#draw(drawContext);
-    DebugDraw.draw();
-    RenderPass.endAlphaPass();
+      Revery_Draw.CanvasContext.flush(canvas);
+    }
   });
   Log.trace("END: Render frame");
 };

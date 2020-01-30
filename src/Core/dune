@@ -5,4 +5,4 @@
     (c_names file)
     (c_flags :standard -Wall -Wextra -Werror)
     (preprocess (pps ppx_deriving.show))
-    (libraries threads console.lib str lwt sdl2 flex fontkit Rench re Revery_Native revery-text-wrap timber))
+    (libraries threads console.lib str lwt sdl2 skia flex Rench re Revery_Native revery-text-wrap timber))

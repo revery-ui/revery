@@ -39,7 +39,8 @@ let make =
         text=checkedContent
         style=Style.[
           color(checked ? Colors.white : Colors.black),
-          fontSize(30),
+          fontSize(30.),
+          textWrap(TextWrapping.NoWrap),
           fontFamily("FontAwesome5FreeSolid.otf"),
         ]
       />

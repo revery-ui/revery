@@ -131,9 +131,9 @@ let examples = [
     source: "HoverExample.re",
   },
   {
-    name: "OpenGL Example",
-    render: _ => OpenGLExample.render(),
-    source: "OpenGLExample.re",
+    name: "Canvas Example",
+    render: _ => CanvasExample.render(),
+    source: "CanvasExample.re",
   },
   {
     name: "Zoom Example",
@@ -144,11 +144,6 @@ let examples = [
     name: "Nested Clickables",
     render: _ => NestedClickable.render(),
     source: "NestedClickable.re",
-  },
-  {
-    name: "Skia Example",
-    render: _ => SkiaExample.render(),
-    source: "SkiaExample.re",
   },
   {
     name: "Benchmark: drawString",
@@ -191,7 +186,7 @@ module ExampleButton = {
       Style.[
         color(textColor),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(14),
+        fontSize(14.),
         margin(16),
       ];
 

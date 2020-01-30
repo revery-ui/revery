@@ -78,7 +78,7 @@ type t = {
   left: int,
   right: int,
   fontFamily,
-  fontSize: int,
+  fontSize: float,
   lineHeight: float,
   pointerEvents: PointerEvents.t,
   textWrap: TextWrapping.wrapType,
@@ -137,7 +137,7 @@ let make =
       ~left=Encoding.cssUndefined,
       ~right=Encoding.cssUndefined,
       ~fontFamily="",
-      ~fontSize=Encoding.cssUndefined,
+      ~fontSize=12.,
       ~lineHeight=1.2,
       ~textWrap=TextWrapping.Wrap,
       ~marginTop=Encoding.cssUndefined,
@@ -359,7 +359,7 @@ type coreStyleProps = [
   | `PointerEvents(PointerEvents.t)
 ];
 
-type fontProps = [ | `FontFamily(string) | `FontSize(int)];
+type fontProps = [ | `FontFamily(string) | `FontSize(float)];
 
 type textProps = [
   | `LineHeight(float)

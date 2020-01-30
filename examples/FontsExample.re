@@ -8,7 +8,7 @@ module FontComponent = {
     mono: bool,
     bold: bool,
     italic: bool,
-    resolvedFont: option(Font.t),
+    resolvedFont: option(Font.Discovery.t),
   };
 
   let initialState: state = {
@@ -36,7 +36,7 @@ module FontComponent = {
 
     let resolvedFont =
       Some(
-        Font.find(
+        Font.Discovery.find(
           ~weight=state.bold ? Font.Weight.Bold : Font.Weight.Normal,
           ~mono=state.mono,
           ~italic=state.italic,
@@ -45,7 +45,7 @@ module FontComponent = {
       );
 
     switch (resolvedFont) {
-    | Some(v) => print_endline("New font: " ++ Font.toString(v))
+    | Some(v) => print_endline("New font: " ++ Font.Discovery.toString(v))
     | None => ()
     };
 
@@ -61,7 +61,7 @@ module FontComponent = {
       | Some(v) =>
         <Text
           text="Lorem ipsum dolor sit amet"
-          style=Style.[fontFamily(v.path), fontSize(24)]
+          style=Style.[fontFamily(v.path), fontSize(24.)]
         />
       };
 
@@ -89,7 +89,7 @@ module FontComponent = {
                 text="Bold"
                 style=Style.[
                   fontFamily("Roboto-Regular.ttf"),
-                  fontSize(20),
+                  fontSize(20.),
                   width(150),
                 ]
               />
@@ -109,7 +109,7 @@ module FontComponent = {
                 text="Italic"
                 style=Style.[
                   fontFamily("Roboto-Regular.ttf"),
-                  fontSize(20),
+                  fontSize(20.),
                   width(150),
                 ]
               />
@@ -129,7 +129,7 @@ module FontComponent = {
                 text="Mono"
                 style=Style.[
                   fontFamily("Roboto-Regular.ttf"),
-                  fontSize(20),
+                  fontSize(20.),
                   width(150),
                 ]
               />

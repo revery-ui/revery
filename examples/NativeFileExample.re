@@ -27,14 +27,14 @@ module NativeFileExamples = {
       Style.[
         color(Colors.white),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(14),
+        fontSize(14.),
       ];
 
     let titleStyle =
       Style.[
         color(Colors.white),
         fontFamily("Roboto-Regular.ttf"),
-        fontSize(20),
+        fontSize(20.),
       ];
 
     let renderFilePath = (path: string) =>
@@ -42,7 +42,7 @@ module NativeFileExamples = {
         style=Style.[
           color(Colors.white),
           fontFamily("Roboto-Regular.ttf"),
-          fontSize(12),
+          fontSize(12.),
         ]
         text=path
       />;

@@ -30,7 +30,7 @@ module Make = (Type: {type t;}) => {
   let textStyles =
     Style.[
       fontFamily("Roboto-Regular.ttf"),
-      fontSize(20),
+      fontSize(20.),
       color(Colors.black),
     ];
 
@@ -105,7 +105,7 @@ module Make = (Type: {type t;}) => {
           </View>
           <Text
             style=Style.[
-              fontSize(30),
+              fontSize(30.),
               color(Colors.black),
               fontFamily("FontAwesome5FreeSolid.otf"),
               paddingRight(5),

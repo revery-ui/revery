@@ -1,29 +1,14 @@
-open Reglm;
-open Sdl2.Gl;
-
 module DrawContext = {
   type t = {
-    pixelRatio: float,
-    scaleFactor: float,
+    canvas: CanvasContext.t,
     screenWidth: int,
     screenHeight: int,
-    projection: Mat4.t,
   };
 
-  let create =
-      (
-        ~pixelRatio,
-        ~scaleFactor,
-        ~screenWidth,
-        ~screenHeight,
-        ~projection,
-        (),
-      ) => {
-    pixelRatio,
-    scaleFactor,
+  let create = (~canvas, ~screenWidth, ~screenHeight, ()) => {
+    canvas,
     screenWidth,
     screenHeight,
-    projection,
   };
 };
 
@@ -38,24 +23,11 @@ let getContext = () => {
   };
 };
 
-let startAlphaPass =
-    (~pixelRatio, ~scaleFactor, ~screenWidth, ~screenHeight, ~projection, ()) => {
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+let start = (~canvas, ~screenWidth, ~screenHeight, ()) => {
   _activeContext :=
-    Some(
-      DrawContext.create(
-        ~pixelRatio,
-        ~scaleFactor,
-        ~screenWidth,
-        ~screenHeight,
-        ~projection,
-        (),
-      ),
-    );
+    Some(DrawContext.create(~canvas, ~screenWidth, ~screenHeight, ()));
 };
 
 let endAlphaPass = () => {
-  glDisable(GL_BLEND);
   _activeContext := None;
 };

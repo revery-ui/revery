@@ -1,4 +1,0 @@
-(library
-    (name Revery_Geometry)
-    (public_name Revery.Geometry)
-    (libraries lwt lwt.unix sdl2 Revery_Shaders))

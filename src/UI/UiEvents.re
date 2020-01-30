@@ -26,25 +26,25 @@ module BubbleEvent: {
   let make = event => {event, shouldPropagate: true, defaultPrevented: false};
 };
 
-let isNodeImpacted = (n, pos) => n#hitTest(pos);
+let isNodeImpacted = (n, x, y) => n#hitTest(x, y);
 
-let rec getFirstFocusable = (node: node, pos) =>
-  if (!isNodeImpacted(node, pos)) {
+let rec getFirstFocusable = (node: node, x: float, y: float) =>
+  if (!isNodeImpacted(node, x, y)) {
     None;
   } else if (node#canBeFocused()) {
     Some(node);
   } else if (List.length(node#getChildren()) !== 0) {
-    checkChildren(node#getChildren(), pos);
+    checkChildren(node#getChildren(), x, y);
   } else {
     None;
   }
-and checkChildren = (children, pos) =>
+and checkChildren = (children, mouseX, mouseY) =>
   switch (children) {
   | [] => None
   | [x, ...xs] =>
-    switch (getFirstFocusable(x, pos)) {
+    switch (getFirstFocusable(x, mouseX, mouseY)) {
     | Some(node) => Some(node)
-    | None => checkChildren(xs, pos)
+    | None => checkChildren(xs, mouseX, mouseY)
     }
   };
 
@@ -52,13 +52,13 @@ type pointerEventMode =
   | Default
   | Ignore;
 
-let getTopMostNode = (node: node, pos) => {
+let getTopMostNode = (node: node, x, y) => {
   open Style;
 
   let rec f = (node: node, pointerEventMode) => {
     let style = node#getStyle();
 
-    if (!isNodeImpacted(node, pos)) {
+    if (!isNodeImpacted(node, x, y)) {
       None;
     } else {
       let mode =

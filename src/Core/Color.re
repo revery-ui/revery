@@ -1,5 +1,3 @@
-open Reglm;
-
 type t = {
   r: float,
   g: float,
@@ -90,9 +88,6 @@ let mix = (~start, ~stop, ~amount) => {
   a: (stop.a -. start.a) *. amount +. start.a,
 };
 
-let toVec3 = (color: t) => Vec3.create(color.r, color.g, color.b);
-let toVec4 = (color: t) => Vec4.create(color.r, color.g, color.b, color.a);
-
 let toRgba = (color: t) => {
   (color.r, color.g, color.b, color.a);
 };
@@ -112,3 +107,16 @@ let toString = (color: t) =>
     color.b,
     color.a,
   );
+
+let _toInt = (v: float) => {
+  int_of_float(255. *. v);
+};
+
+let toSkia = (color: t) => {
+  let a = _toInt(color.a);
+  let r = _toInt(color.r);
+  let g = _toInt(color.g);
+  let b = _toInt(color.b);
+
+  Skia.Color.makeArgb(a, r, g, b);
+};

@@ -41,14 +41,14 @@ module Example = {
         <Button
           height=50
           width=100
-          fontSize=15
+          fontSize=15.
           title="Reset"
           onClick={() => setValue(state => {...state, first: ""})}
         />
         <Button
           height=50
           width=100
-          fontSize=15
+          fontSize=15.
           title="Set value"
           onClick={() => setValue(state => {...state, first: "New value"})}
         />

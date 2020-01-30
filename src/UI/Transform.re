@@ -1,4 +1,5 @@
-open Reglm;
+open Revery_Math;
+open Revery_Math.Angle;
 
 type t =
   | RotateZ(Angle.t)
@@ -8,56 +9,60 @@ type t =
   | Scale(float)
   | ScaleX(float)
   | ScaleY(float)
-  | ScaleZ(float)
   | TranslateX(float)
   | TranslateY(float);
 
-let right = Vec3.right();
-let up = Vec3.up();
-let forward = Vec3.forward();
+let _rotateWithOrigin = (x: float, y: float, angle, axisX, axisY, axisZ) => {
+  // TODO:
+  // This could be made significantly more efficient, with less allocations,
+  // by using the pre* and post* operations, instead of set*.
+  let preTranslate = Skia.Matrix44.makeEmpty();
+  Skia.Matrix44.setTranslate(preTranslate, (-1.) *. x, (-1.) *. y, 0.0);
 
-let _rotateWithOrigin = (x: float, y: float, angle, axis, m: Mat4.t) => {
-  let preTranslate = Mat4.create();
-  let postTranslate = Mat4.create();
-  let rotation = Mat4.create();
+  let rotation = Skia.Matrix44.makeEmpty();
+  switch (angle) {
+  | Degrees(deg) =>
+    Skia.Matrix44.setRotateAboutDegrees(rotation, axisX, axisY, axisZ, deg)
+  | Radians(rad) =>
+    Skia.Matrix44.setRotateAboutRadians(rotation, axisX, axisY, axisZ, rad)
+  };
 
-  Mat4.fromTranslation(
-    preTranslate,
-    Vec3.create((-1.) *. x, (-1.) *. y, 0.),
-  );
-  Mat4.fromRotation(rotation, angle, axis);
-  Mat4.fromTranslation(postTranslate, Vec3.create(x, y, 0.));
+  let postTranslate = Skia.Matrix44.makeEmpty();
+  Skia.Matrix44.setTranslate(postTranslate, x, y, 0.);
 
-  Mat4.multiply(m, rotation, preTranslate);
-  Mat4.multiply(m, postTranslate, m);
+  let out = Skia.Matrix44.makeEmpty();
+  Skia.Matrix44.setConcat(out, rotation, preTranslate);
+  Skia.Matrix44.setConcat(out, postTranslate, out);
+  let mat = Skia.Matrix.make();
+  Skia.Matrix44.toMatrix(out, mat);
+  mat;
 };
 
 let _toMat4 = (originX: float, originY: float, t) => {
-  let m = Mat4.create();
   switch (t) {
-  | RotateX(a) => _rotateWithOrigin(originX, originY, a, right, m)
-  | RotateY(a) => _rotateWithOrigin(originX, originY, a, up, m)
-  | RotateZ(a) => _rotateWithOrigin(originX, originY, a, forward, m)
-  | Rotate(a) => _rotateWithOrigin(originX, originY, a, forward, m)
-  | Scale(a) => Mat4.fromScaling(m, Vec3.create(a, a, a))
-  | ScaleX(a) => Mat4.fromScaling(m, Vec3.create(a, 1., 1.))
-  | ScaleY(a) => Mat4.fromScaling(m, Vec3.create(1., a, 1.))
-  | ScaleZ(a) => Mat4.fromScaling(m, Vec3.create(1., 1., a))
-  | TranslateX(a) => Mat4.fromTranslation(m, Vec3.create(a, 0., 0.))
-  | TranslateY(a) => Mat4.fromTranslation(m, Vec3.create(0., a, 0.))
+  | RotateX(a) => _rotateWithOrigin(originX, originY, a, 1.0, 0.0, 0.0)
+  | RotateY(a) => _rotateWithOrigin(originX, originY, a, 0.0, 1.0, 0.0)
+  | RotateZ(a) => _rotateWithOrigin(originX, originY, a, 0.0, 0.0, 1.0)
+  | Rotate(a) => _rotateWithOrigin(originX, originY, a, 0.0, 0.0, 1.0)
+  | Scale(a) => Skia.Matrix.makeScale(a, a, 0.0, 0.0)
+  | ScaleX(a) => Skia.Matrix.makeScale(a, 1.0, 0.0, 0.0)
+  | ScaleY(a) => Skia.Matrix.makeScale(1.0, a, 0.0, 0.0)
+  | TranslateX(a) => Skia.Matrix.makeTranslate(a, 0.)
+  | TranslateY(a) => Skia.Matrix.makeTranslate(0., a)
   };
-  m;
 };
 
 let toMat4 = (originX, originY, transforms: list(t)) => {
+  let initial = Skia.Matrix.make();
+  Skia.Matrix.setIdentity(initial);
   let r =
     List.fold_left(
       (prev, transform) => {
         let xfm = _toMat4(originX, originY, transform);
-        Mat4.multiply(prev, prev, xfm);
+        Skia.Matrix.concat(prev, prev, xfm);
         prev;
       },
-      Mat4.create(),
+      initial,
       transforms,
     );
   r;

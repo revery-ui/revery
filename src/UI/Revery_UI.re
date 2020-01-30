@@ -1,6 +1,3 @@
-module Shaders = Revery_Shaders;
-module Geometry = Revery_Geometry;
-
 module Animation = Animation;
 module Spring = Spring;
 module Easing = Easing;
@@ -16,7 +13,7 @@ class node = class Node.node;
 class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
 class imageNode = class ImageNode.imageNode;
-class openGLNode = class OpenGLNode.openGLNode;
+class canvasNode = class CanvasNode.canvasNode;
 module NodeDrawContext = NodeDrawContext;
 
 module Keyboard = Keyboard;

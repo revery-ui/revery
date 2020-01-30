@@ -1,7 +1,5 @@
 open Revery_Draw;
 
-module Shaders = Revery_Shaders;
-module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
@@ -13,48 +11,66 @@ open ViewNode;
 class textNode (text: string) = {
   as _this;
   val mutable text = text;
-  val mutable gamma = 2.2;
   val mutable _isMeasured = false;
   val mutable _lines: list(string) = [];
   inherit (class viewNode)() as _super;
   pub! draw = (parentContext: NodeDrawContext.t) => {
-    /* Draw background first */
-    _super#draw(parentContext);
-
     let style = _super#getStyle();
 
-    let {color, backgroundColor, fontFamily, fontSize, lineHeight, _} = style;
+    let {color, fontFamily, fontSize, lineHeight, _} = style;
     let opacity = parentContext.opacity *. style.opacity;
+    let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 
-    let window = Ui.getActiveWindow();
+    switch (Revery_Font.FontCache.load(fontFamily)) {
+    | Error(_) => ()
+    | Ok(font) =>
+      let paint = Skia.Paint.make();
+      Skia.Paint.setColor(paint, Color.toSkia(colorWithAppliedOpacity));
+      Skia.Paint.setTypeface(
+        paint,
+        Revery_Font.FontCache.getSkiaTypeface(font),
+      );
+      Skia.Paint.setTextEncoding(paint, GlyphId);
+      Skia.Paint.setLcdRenderText(paint, true);
+      Skia.Paint.setAntiAlias(paint, true);
+      Skia.Paint.setTextSize(paint, fontSize);
 
-    let lineHeightPx =
-      Text.getLineHeight(~window, ~fontFamily, ~fontSize, ~lineHeight, ());
+      let ascentPx = Text.getAscent(~fontFamily, ~fontSize, ());
+      let lineHeightPx =
+        lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
 
-    /* when style.width & style.height are defined, Layout doesn't call the measure function */
-    if (!_isMeasured) {
-      _this#measure(style.width, style.height) |> ignore;
+      /* when style.width & style.height are defined, Layout doesn't call the measure function */
+      if (!_isMeasured) {
+        _this#measure(style.width, style.height) |> ignore;
+      };
+
+      let {canvas, _}: NodeDrawContext.t = parentContext;
+      // TODO find a way to only manage the matrix stack in Node
+      let world = _this#getWorldTransform();
+      Revery_Draw.CanvasContext.setMatrix(canvas, world);
+
+      List.iteri(
+        (lineIndex, line) => {
+          let baselineY =
+            ascentPx *. (-1.0) +. lineHeightPx *. float_of_int(lineIndex);
+
+          let glyphString =
+            line
+            |> Revery_Font.shape(font)
+            |> Revery_Font.ShapeResult.getGlyphString;
+
+          CanvasContext.drawText(
+            ~paint,
+            ~x=0.,
+            ~y=baselineY,
+            ~text=glyphString,
+            canvas,
+          );
+        },
+        _lines,
+      );
     };
-
-    List.iteri(
-      (lineNum, line) =>
-        Text.drawString(
-          ~window,
-          ~fontFamily,
-          ~fontSize,
-          ~gamma,
-          ~color,
-          ~backgroundColor,
-          ~opacity,
-          ~transform=_this#getWorldTransform(),
-          ~x=0.,
-          ~y=lineHeightPx *. float_of_int(lineNum),
-          line,
-        ),
-      _lines,
-    );
   };
-  pub setGamma = g => gamma = g;
   pub! setStyle = style => {
     let lastStyle = _this#getStyle();
     _super#setStyle(style);
@@ -72,11 +88,8 @@ class textNode (text: string) = {
 
     let formattedText = TextOverflow.removeLineBreaks(text);
 
-    let window = Ui.getActiveWindow();
-
     let measure = str =>
-      Text.measure(~window, ~fontFamily, ~fontSize, str)
-      |> (value => value.width);
+      Text.measure(~fontFamily, ~fontSize, str) |> (value => value.width);
 
     let width = measure(formattedText);
     let isOverflowing = width >= maxWidth;
@@ -96,9 +109,9 @@ class textNode (text: string) = {
     _lines = [truncated];
 
     let lineHeightPx =
-      Text.getLineHeight(~window, ~fontFamily, ~fontSize, ~lineHeight, ());
+      lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
 
-    {width, height: int_of_float(lineHeightPx)};
+    {width: int_of_float(width), height: int_of_float(lineHeightPx)};
   };
   pub setText = t =>
     if (!String.equal(t, text)) {
@@ -118,19 +131,18 @@ class textNode (text: string) = {
           when textWidth == Layout.Encoding.cssUndefined =>
         _this#handleTextWrapping(width, style)
       | {textOverflow: Ellipsis | UserDefined(_), _} =>
-        _this#textOverflow(width)
+        _this#textOverflow(float_of_int(width))
       | style => _this#handleTextWrapping(width, style)
       }
     );
   };
   pub handleTextWrapping = (width, style) => {
     let {textWrap, fontFamily, fontSize, lineHeight, _}: Style.t = style;
-    let window = Ui.getActiveWindow();
     let lineHeightPx =
-      Text.getLineHeight(~window, ~fontFamily, ~fontSize, ~lineHeight, ());
+      lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
 
     let measureWidth = str =>
-      Text.measureCharWidth(~window, ~fontFamily, ~fontSize, str);
+      Text.measureCharWidth(~fontFamily, ~fontSize, str);
     _lines =
       TextWrapping.wrapText(
         ~text,
@@ -140,13 +152,12 @@ class textNode (text: string) = {
       );
 
     let pickWiderLine = (leftWidth, right) => {
-      let rightWidth =
-        Text.measure(~window, ~fontFamily, ~fontSize, right).width;
+      let rightWidth = Text.measure(~fontFamily, ~fontSize, right).width;
       max(leftWidth, rightWidth);
     };
-    let maxWidthLine = List.fold_left(pickWiderLine, 0, _lines);
+    let maxWidthLine = List.fold_left(pickWiderLine, 0., _lines);
     {
-      width: maxWidthLine,
+      width: int_of_float(maxWidthLine),
       height:
         int_of_float(float_of_int(List.length(_lines)) *. lineHeightPx),
     };

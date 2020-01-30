@@ -1,74 +1,30 @@
-open Sdl2.Gl;
 open Revery_Core;
 
-module Image = Sdl2.Image;
+module Log = (val Log.withNamespace("Revery.ImageRenderer"));
 
-type t = {
-  mutable hasLoaded: bool,
-  texture,
-  mutable width: int,
-  mutable height: int,
-};
-
-let initialPixels =
-  Lazy.make(() => {
-    let initialImage = Image.fromColor(255, 0, 0, 255);
-    Image.getPixels(initialImage);
-  });
-
-type cache = Hashtbl.t(string, t);
+type cache = Hashtbl.t(string, option(Skia.Image.t));
 let _cache: cache = Hashtbl.create(100);
 
 let getTexture = (imagePath: string) => {
   /* TODO: Support url paths? */
+  let imagePath = Environment.getAssetPath(imagePath);
   let cacheResult = Hashtbl.find_opt(_cache, imagePath);
 
   switch (cacheResult) {
-  | Some(r) => r
+  | Some(r) =>
+    switch (r) {
+    | Some(_) as v => v
+    | None => None
+    }
   | None =>
-    /* Create an initial texture container */
-    let fullImagePath = Environment.getAssetPath(imagePath);
+    Log.info("Loading from path: " ++ imagePath);
+    //let data = Skia.Data.makeFromFileName(imagePath);
+    let data = Skia.Data.makeFromFileName(imagePath);
+    Log.info("Got data.");
+    let img = Skia.Image.makeFromEncoded(data, None);
+    Log.info("Got image.");
 
-    let texture = glCreateTexture();
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    let initialPixels = initialPixels();
-    glTexImage2D(
-      GL_TEXTURE_2D,
-      0,
-      GL_RGBA,
-      GL_RGBA,
-      GL_UNSIGNED_BYTE,
-      initialPixels,
-    );
-
-    let imageLoadPromise = Image.load(fullImagePath);
-
-    let ret: t = {hasLoaded: false, texture, width: 1, height: 1};
-
-    let success = img => {
-      let pixels = Image.getPixels(img);
-      let {width, height, _}: Image.dimensions = Image.getDimensions(img);
-      glBindTexture(GL_TEXTURE_2D, texture);
-      glTexImage2D(
-        GL_TEXTURE_2D,
-        0,
-        GL_RGBA,
-        GL_RGBA,
-        GL_UNSIGNED_BYTE,
-        pixels,
-      );
-      ret.hasLoaded = true;
-      ret.width = width;
-      ret.height = height;
-      Lwt.return();
-    };
-
-    let _ = Lwt.bind(imageLoadPromise, success);
-    Hashtbl.replace(_cache, imagePath, ret);
-    ret;
+    Hashtbl.replace(_cache, imagePath, img);
+    img;
   };
 };

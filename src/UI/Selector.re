@@ -4,7 +4,7 @@ open Style;
 type selector('a) =
   | Color: selector(Color.t)
   | FontFamily: selector(string)
-  | FontSize: selector(int)
+  | FontSize: selector(float)
   | Width: selector(int)
   | FlexGrow: selector(int)
   | FlexWrap: selector(Layout.LayoutTypes.wrapType)

@@ -1,5 +1,3 @@
-module Shaders = Revery_Shaders;
-module Geometry = Revery_Geometry;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 module RenderPass = Revery_Draw.RenderPass;
@@ -43,8 +41,8 @@ let getOrThrow: (string, option('a)) => 'a =
     };
 
 type cachedNodeState = {
-  transform: Mat4.t,
-  worldTransform: Mat4.t,
+  transform: Skia.Matrix.t,
+  worldTransform: Skia.Matrix.t,
   bbox: BoundingBox2d.t,
   bboxClipped: BoundingBox2d.t,
   depth: int,
@@ -66,20 +64,20 @@ class node (()) = {
     NodeEvents.DimensionsChangedEventParams.create();
   val mutable _isLayoutDirty = true;
   val mutable _forcedMeasurements: option(Dimensions.t) = None;
+  val mutable _hasHadNonZeroBlurRadius = false;
   pub draw = (parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
     let dimensions = _this#measurements();
 
-    let ctx = RenderPass.getContext();
+    let {canvas, _}: NodeDrawContext.t = parentContext;
+
+    Revery_Draw.CanvasContext.setMatrix(canvas, worldTransform);
 
     Overflow.render(
-      worldTransform,
+      canvas,
       style.overflow,
       dimensions,
-      ctx.screenHeight,
-      ctx.pixelRatio,
-      ctx.scaleFactor,
       () => {
         let localContext =
           NodeDrawContext.createFromParent(parentContext, style.opacity);
@@ -129,6 +127,9 @@ class node (()) = {
   };
   pub setStyle = style =>
     if (style != _style) {
+      if (style.boxShadow.blurRadius != 0. || _hasHadNonZeroBlurRadius) {
+        _hasHadNonZeroBlurRadius = true;
+      };
       _style = style;
 
       let lastLayoutStyle = _layoutStyle;
@@ -139,7 +140,9 @@ class node (()) = {
         _this#markLayoutDirty();
       };
     };
-  pub getStyle = () => _style;
+  pub getStyle = () => {
+    _style;
+  };
   pub setEvents = events => _events = events;
   pub getEvents = () => _events;
   pub getChildren = () => _children;
@@ -165,56 +168,65 @@ class node (()) = {
   };
   pri _recalculateTransform = () => {
     let dimensions = _this#measurements();
-    let matrix = Mat4.create();
-    Mat4.fromTranslation(
-      matrix,
-      Vec3.create(
-        float_of_int(dimensions.left),
-        float_of_int(dimensions.top),
-        0.,
-      ),
-    );
+    let matrix =
+      Skia.Matrix.makeTranslate(
+        dimensions.left |> float_of_int,
+        dimensions.top |> float_of_int,
+      );
+
+    /*Mat4.create();
+      Mat4.fromTranslation(
+        matrix,
+        Vec3.create(
+          float_of_int(dimensions.left),
+          float_of_int(dimensions.top),
+          0.,
+        ),
+      );*/
     let animationTransform =
       Transform.toMat4(
         float_of_int(dimensions.width) /. 2.,
         float_of_int(dimensions.height) /. 2.,
         _this#getStyle().transform,
       );
-    Mat4.multiply(matrix, matrix, animationTransform);
+    Skia.Matrix.preConcat(matrix, animationTransform);
     matrix;
   };
   pri _recalculateWorldTransform = localTransform => {
     let xform = localTransform;
     let world =
       switch (_parent) {
-      | None => Mat4.create()
+      | None =>
+        let m = Skia.Matrix.make();
+        Skia.Matrix.setIdentity(m);
+        m;
       | Some(p) => p#getWorldTransform()
       };
-    let matrix = Mat4.create();
-    Mat4.multiply(matrix, world, xform);
+    let matrix = Skia.Matrix.make();
+    Skia.Matrix.concat(matrix, world, xform);
     matrix;
   };
   pri _recalculateBoundingBox = worldTransform => {
     let dimensions = _this#measurements();
-    let min = Vec2.create(0., 0.);
-    let max =
-      Vec2.create(
+    let b =
+      BoundingBox2d.create(
+        0.,
+        0.,
         float_of_int(dimensions.width),
         float_of_int(dimensions.height),
       );
-    let b = BoundingBox2d.create(min, max);
     let bbox = BoundingBox2d.transform(b, worldTransform);
     bbox;
   };
   pri _recalculateBoundingBoxClipped = worldTransform => {
     let dimensions = _this#measurements();
-    let min = Vec2.create(0., 0.);
-    let max =
-      Vec2.create(
+    let b =
+      BoundingBox2d.create(
+        0.,
+        0.,
         float_of_int(dimensions.width),
         float_of_int(dimensions.height),
       );
-    let b = BoundingBox2d.create(min, max);
     let bbox = BoundingBox2d.transform(b, worldTransform);
     switch (_this#getParent()) {
     | Some(p) => BoundingBox2d.intersect(bbox, p#getBoundingBoxClipped())
@@ -277,9 +289,9 @@ class node (()) = {
     | None => false
     };
   };
-  pub hitTest = (p: Vec2.t) => {
+  pub hitTest = (x: float, y: float) => {
     let bboxClipped = _this#getBoundingBoxClipped();
-    BoundingBox2d.isPointInside(bboxClipped, p);
+    BoundingBox2d.isPointInside(~x, ~y, bboxClipped);
   };
   pub addChild = (child: node, position: int) => {
     _children = ListEx.insert(position, child, _children);

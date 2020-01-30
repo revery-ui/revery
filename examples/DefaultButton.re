@@ -20,7 +20,7 @@ module DefaultButtonWithCounter = {
 
     let countStyle =
       Style.[
-        fontSize(50),
+        fontSize(50.),
         margin(24),
         color(Colors.black),
         fontFamily("Roboto-Regular.ttf"),

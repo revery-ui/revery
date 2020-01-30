@@ -1,4 +1,4 @@
-open Reglm;
+open Revery_Math;
 
 type t =
   | RotateZ(Angle.t)
@@ -8,8 +8,7 @@ type t =
   | Scale(float)
   | ScaleX(float)
   | ScaleY(float)
-  | ScaleZ(float)
   | TranslateX(float)
   | TranslateY(float);
 
-let toMat4: (float, float, list(t)) => Mat4.t;
+let toMat4: (float, float, list(t)) => Skia.Matrix.t;

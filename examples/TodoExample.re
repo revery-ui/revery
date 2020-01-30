@@ -3,13 +3,14 @@ open Revery.UI;
 open Revery.UI.Components;
 
 module Constants = {
-  let fontSize = 12;
+  let fontSize = 12.;
 };
 
 module Theme = {
   let fontFamily = Style.fontFamily("Roboto-Regular.ttf");
-  let fontSize = 16;
-  let rem = factor => int_of_float(float_of_int(fontSize) *. factor);
+  let fontSize = 16.;
+  let rem = factor => fontSize *. factor;
+  let remi = factor => rem(factor) |> int_of_float;
 
   let appBackground = Color.hex("#f4edfe");
   let textColor = Color.hex("#513B70");
@@ -47,9 +48,9 @@ module Button = {
         position(`Relative),
         justifyContent(`Center),
         alignItems(`Center),
-        paddingVertical(Theme.rem(0.15)),
-        paddingHorizontal(Theme.rem(0.5)),
-        marginHorizontal(Theme.rem(0.2)),
+        paddingVertical(Theme.remi(0.15)),
+        paddingHorizontal(Theme.remi(0.5)),
+        marginHorizontal(Theme.remi(0.2)),
         border(
           ~width=1,
           ~color=
@@ -98,8 +99,8 @@ module Checkbox = {
   module Styles = {
     let box =
       Style.[
-        width(Theme.rem(1.5)),
-        height(Theme.rem(1.5)),
+        width(Theme.remi(1.5)),
+        height(Theme.remi(1.5)),
         justifyContent(`Center),
         alignItems(`Center),
         Theme.panelBorder,
@@ -109,6 +110,7 @@ module Checkbox = {
       Style.[
         color(Theme.hoveredButtonColor),
         fontSize(Theme.fontSize),
+        textWrap(TextWrapping.NoWrap),
         fontFamily("FontAwesome5FreeSolid.otf"),
         transform(Transform.[TranslateY(2.)]),
       ];
@@ -358,7 +360,7 @@ module TodoMVC = {
         fontSize(Theme.rem(4.)),
         color(Theme.titleTextColor),
         alignSelf(`Center),
-        marginTop(Theme.rem(2.)),
+        marginTop(Theme.remi(2.)),
         textWrap(TextWrapping.NoWrap),
       ];
 
