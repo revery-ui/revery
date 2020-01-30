@@ -63,7 +63,7 @@ let%component make =
       () => {
         if (scrollTop != actualScrollTop) {
           switch (onScroll) {
-          | Some(f) => dispatch(ScrollUpdated(scrollTop))
+          | Some(_) => dispatch(ScrollUpdated(scrollTop))
           | None => ()
           };
         };
