@@ -113,7 +113,7 @@ let translate = (v: t, x: float, y: float) => {
   Skia.Canvas.translate(v.canvas, x, y);
 };
 
-let drawRect = (v: t, rect: Skia.Rect.t, paint) => {
+let drawRect = (~rect: Skia.Rect.t, ~paint: Paint.t, v: t) => {
   Canvas.drawRect(v.canvas, rect, paint);
 };
 
@@ -164,8 +164,6 @@ let clipPath =
     (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, path: Skia.Path.t) => {
   Canvas.clipPath(v.canvas, path, clipOp, antiAlias);
 };
-
-let _drawRect = drawRect;
 
 module Deprecated = {
   let drawString =

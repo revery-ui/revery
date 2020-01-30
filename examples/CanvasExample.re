@@ -31,7 +31,7 @@ module Sample = {
           );
 
           let rect = Skia.Rect.makeLtrb(1.0, 1.0, 101., 201.);
-          CanvasContext.drawRect(canvasContext, rect, paint);
+          CanvasContext.drawRect(~rect, ~paint, canvasContext);
 
           switch (Revery_Font.load("Roboto-Regular.ttf")) {
           | Error(_) => ()

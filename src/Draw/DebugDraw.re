@@ -28,6 +28,6 @@ let draw = (canvas: CanvasContext.t) =>
     | Some(v) =>
       let (x0, y0, x1, y1) = BoundingBox2d.getBounds(v.bbox);
       let rectangle = Skia.Rect.makeLtrb(x0, y0, x1, y1);
-      CanvasContext.drawRect(canvas, rectangle, paint);
+      CanvasContext.drawRect(~rect=rectangle, ~paint, canvas);
     };
   };

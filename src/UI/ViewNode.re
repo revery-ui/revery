@@ -284,6 +284,7 @@ let makeShadowImageFilter = boxShadow => {
 class viewNode (()) = {
   as _this;
   inherit (class node)() as _super;
+  val fillPaint = Skia.Paint.make();
   pub! draw = (parentContext: NodeDrawContext.t) => {
     let dimensions = _this#measurements();
     let width = float_of_int(dimensions.width);
@@ -293,11 +294,8 @@ class viewNode (()) = {
     let opacity = style.opacity *. parentContext.opacity;
 
     let {canvas, _}: NodeDrawContext.t = parentContext;
-    let _id: int = Revery_Draw.CanvasContext.save(canvas);
 
-    // TODO find a way to only manage the matrix stack in Node
     let world = _this#getWorldTransform();
-    //let skiaWorld = Revery_Math.Matrix.toSkiaMatrix(world);
     Revery_Draw.CanvasContext.setMatrix(canvas, world);
 
     let borderRadius = style.borderRadius;
@@ -335,7 +333,6 @@ class viewNode (()) = {
       Revery_Draw.CanvasContext.drawRRect(canvas, innerRRect, fill);
     };
 
-    Revery_Draw.CanvasContext.restore(canvas);
     _super#draw(parentContext);
   };
 };

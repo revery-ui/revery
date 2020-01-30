@@ -72,7 +72,6 @@ class node (()) = {
 
     let {canvas, _}: NodeDrawContext.t = parentContext;
 
-    let _id: int = Revery_Draw.CanvasContext.save(canvas);
     Revery_Draw.CanvasContext.setMatrix(canvas, worldTransform);
 
     Overflow.render(
@@ -85,8 +84,6 @@ class node (()) = {
         List.iter(c => c#draw(localContext), _this#getChildren());
       },
     );
-
-    Revery_Draw.CanvasContext.restore(canvas);
   };
   pub measurements = () => {
     switch (_forcedMeasurements) {
