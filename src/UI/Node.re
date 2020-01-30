@@ -178,7 +178,7 @@ class node (()) = {
     switch (transforms) {
     // Skip a matrix multiplication if there are no transforms
     | [] => ()
-    | transforms =>
+    | _ =>
       let animationTransform =
         Transform.toMat4(
           float_of_int(dimensions.width) /. 2.,
