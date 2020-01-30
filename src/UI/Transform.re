@@ -13,7 +13,6 @@ type t =
   | TranslateY(float);
 
 module Internal = {
-
   let rotateWithOrigin = (x: float, y: float, angle, axisX, axisY, axisZ) => {
     // TODO:
     // This could be made significantly more efficient, with less allocations,
@@ -55,21 +54,20 @@ module Internal = {
   };
 
   let identity = {
-     let mat =  Skia.Matrix.make() 
-      Skia.Matrix.setIdentity(mat);
-      mat
+    let mat = Skia.Matrix.make();
+    Skia.Matrix.setIdentity(mat);
+    mat;
   };
 };
 
 let toMat4 = (originX, originY, transforms: list(t)) => {
   switch (transforms) {
-  | [] => Internal.identity;
+  | [] => Internal.identity
   | transforms =>
-
     // We can't reuse Internal.identity because we write to this matrix
     let initial = Skia.Matrix.make();
     Skia.Matrix.setIdentity(initial);
-    
+
     List.fold_left(
       (prev, transform) => {
         let xfm = Internal.toMat4(originX, originY, transform);
@@ -80,4 +78,4 @@ let toMat4 = (originX, originY, transforms: list(t)) => {
       transforms,
     );
   };
-}
+};
