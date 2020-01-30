@@ -56,6 +56,16 @@ let%component make =
     Hooks.state(None);
   let%hook (actualScrollLeft, setScrollLeft) = Hooks.state(scrollLeft);
   let%hook (bouncingState, setBouncingState) = Hooks.state(Idle);
+  let%hook () =
+    Hooks.effect(
+      Always,
+      () => {
+        if (scrollTop != actualScrollTop) {
+          dispatch(ScrollUpdated(scrollTop));
+        };
+        None;
+      },
+    );
 
   let%hook (actualScrollTop, _bounceAnimationState, resetBouncingAnimation) =
     switch (bouncingState) {
