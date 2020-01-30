@@ -174,22 +174,19 @@ class node (()) = {
         dimensions.top |> float_of_int,
       );
 
-    /*Mat4.create();
-      Mat4.fromTranslation(
-        matrix,
-        Vec3.create(
-          float_of_int(dimensions.left),
-          float_of_int(dimensions.top),
-          0.,
-        ),
-      );*/
-    let animationTransform =
-      Transform.toMat4(
-        float_of_int(dimensions.width) /. 2.,
-        float_of_int(dimensions.height) /. 2.,
-        _this#getStyle().transform,
-      );
-    Skia.Matrix.preConcat(matrix, animationTransform);
+    let transforms = _this#getStyle().transform;
+    switch (transforms) {
+    // Skip a matrix multiplication if there are no transforms
+    | [] => ()
+    | _ =>
+      let animationTransform =
+        Transform.toMat4(
+          float_of_int(dimensions.width) /. 2.,
+          float_of_int(dimensions.height) /. 2.,
+          _this#getStyle().transform,
+        );
+      Skia.Matrix.preConcat(matrix, animationTransform);
+    };
     matrix;
   };
   pri _recalculateWorldTransform = localTransform => {
@@ -218,16 +215,7 @@ class node (()) = {
     let bbox = BoundingBox2d.transform(b, worldTransform);
     bbox;
   };
-  pri _recalculateBoundingBoxClipped = worldTransform => {
-    let dimensions = _this#measurements();
-    let b =
-      BoundingBox2d.create(
-        0.,
-        0.,
-        float_of_int(dimensions.width),
-        float_of_int(dimensions.height),
-      );
-    let bbox = BoundingBox2d.transform(b, worldTransform);
+  pri _recalculateBoundingBoxClipped = bbox => {
     switch (_this#getParent()) {
     | Some(p) => BoundingBox2d.intersect(bbox, p#getBoundingBoxClipped())
     | None => bbox
@@ -243,7 +231,7 @@ class node (()) = {
     let transform = _this#_recalculateTransform();
     let worldTransform = _this#_recalculateWorldTransform(transform);
     let bbox = _this#_recalculateBoundingBox(worldTransform);
-    let bboxClipped = _this#_recalculateBoundingBoxClipped(worldTransform);
+    let bboxClipped = _this#_recalculateBoundingBoxClipped(bbox);
     let depth = _this#_recalculateDepth();
 
     _cachedNodeState =
