@@ -16,7 +16,7 @@ let _getFontMetrics = (~fontFamily, ~fontSize, ()) => {
 
 let getLineHeight = (~fontFamily, ~fontSize, ()) => {
   let metrics = _getFontMetrics(~fontFamily, ~fontSize, ());
-  metrics.height;
+  metrics.lineHeight;
 };
 
 let getAscent = (~fontFamily, ~fontSize, ()) => {

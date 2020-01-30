@@ -35,8 +35,7 @@ class textNode (text: string) = {
       Skia.Paint.setAntiAlias(paint, true);
       Skia.Paint.setTextSize(paint, fontSize);
 
-      //let ascentPx = Text.getAscent(~fontFamily, ~fontSize, ());
-      let descentPx = Text.getDescent(~fontFamily, ~fontSize, ());
+      let ascentPx = Text.getAscent(~fontFamily, ~fontSize, ());
       let lineHeightPx =
         lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
 
@@ -53,7 +52,7 @@ class textNode (text: string) = {
       List.iteri(
         (lineIndex, line) => {
           let baselineY =
-            descentPx *. (-1.0) +. lineHeightPx *. float_of_int(lineIndex + 1);
+            ascentPx *. (-1.0) +. lineHeightPx *. float_of_int(lineIndex);
 
           let glyphString =
             line
