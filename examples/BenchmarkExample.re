@@ -21,17 +21,17 @@ module Benchmarks = {
 
   let testString = String.make(50, 'a') ++ String.make(50, 'X');
 
+  let textPaint = Skia.Paint.make();
+  Skia.Paint.setTextEncoding(textPaint, GlyphId);
+  Skia.Paint.setLcdRenderText(textPaint, true);
+  Skia.Paint.setAntiAlias(textPaint, true);
+  Skia.Paint.setTextSize(textPaint, 20.);
   let textBenchmark = (canvasContext, x, y) => {
     switch (Revery.Font.load("Roboto-Regular.ttf")) {
     | Error(_) => ()
     | Ok(font) =>
-      let textPaint = Skia.Paint.make();
       Skia.Paint.setColor(textPaint, Revery_Core.Color.toSkia(Colors.white));
       Skia.Paint.setTypeface(textPaint, Revery.Font.getSkiaTypeface(font));
-      Skia.Paint.setTextEncoding(textPaint, GlyphId);
-      Skia.Paint.setLcdRenderText(textPaint, true);
-      Skia.Paint.setAntiAlias(textPaint, true);
-      Skia.Paint.setTextSize(textPaint, 20.);
 
       let shapedText =
         testString
@@ -48,11 +48,17 @@ module Benchmarks = {
     };
   };
 
+  let rectPaint = Skia.Paint.make();
   let rectBenchmark = (canvasContext, x, y) => {
-    let paint = Skia.Paint.make();
-    Skia.Paint.setColor(paint, Revery.Color.toSkia(Colors.green));
-    let rect = Skia.Rect.makeLtrb(x, y, x +. 10., y +. 20.);
-    CanvasContext.drawRect(~paint, ~rect, canvasContext);
+    Skia.Paint.setColor(rectPaint, Revery.Color.toSkia(Colors.green));
+    CanvasContext.drawRectLtwh(
+      ~paint=rectPaint,
+      ~x,
+      ~y,
+      ~width=10.,
+      ~height=20.,
+      canvasContext,
+    );
   };
 
   let textAndRectBenchmark = (canvasContext, x, y) => {

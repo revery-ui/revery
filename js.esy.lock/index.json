@@ -1,5 +1,5 @@
 {
-  "checksum": "14abf7d4c6c207fec9310dd508e2cf05",
+  "checksum": "f013a0130da496cb0eceb0539052a8f5",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9": {
@@ -116,7 +116,7 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
         "reperf@1.4.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-skia@github:revery-ui/reason-skia#8156d2b@d41d8cd9",
+        "reason-skia@github:revery-ui/reason-skia#3cc83e0@d41d8cd9",
         "reason-sdl2@2.10.3015@d41d8cd9",
         "reason-harfbuzz@1.91.5002@d41d8cd9",
         "reason-gl-matrix@0.9.9306@d41d8cd9",
@@ -227,13 +227,13 @@
       ],
       "devDependencies": []
     },
-    "reason-skia@github:revery-ui/reason-skia#8156d2b@d41d8cd9": {
-      "id": "reason-skia@github:revery-ui/reason-skia#8156d2b@d41d8cd9",
+    "reason-skia@github:revery-ui/reason-skia#3cc83e0@d41d8cd9": {
+      "id": "reason-skia@github:revery-ui/reason-skia#3cc83e0@d41d8cd9",
       "name": "reason-skia",
-      "version": "github:revery-ui/reason-skia#8156d2b",
+      "version": "github:revery-ui/reason-skia#3cc83e0",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-skia#8156d2b" ]
+        "source": [ "github:revery-ui/reason-skia#3cc83e0" ]
       },
       "overrides": [],
       "dependencies": [
@@ -873,20 +873,20 @@
       ],
       "devDependencies": []
     },
-    "@opam/zed@opam:2.0.4@f9f7c80f": {
-      "id": "@opam/zed@opam:2.0.4@f9f7c80f",
+    "@opam/zed@opam:2.0.5@80585091": {
+      "id": "@opam/zed@opam:2.0.5@80585091",
       "name": "@opam/zed",
-      "version": "opam:2.0.4",
+      "version": "opam:2.0.5",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/c6/c65b4de9f1374e72a8f80cc9cf752d90#md5:c65b4de9f1374e72a8f80cc9cf752d90",
-          "archive:https://github.com/ocaml-community/zed/releases/download/2.0.4/zed-2.0.4.tbz#md5:c65b4de9f1374e72a8f80cc9cf752d90"
+          "archive:https://opam.ocaml.org/cache/md5/56/56414179d7cccba0e20005d958b5d39e#md5:56414179d7cccba0e20005d958b5d39e",
+          "archive:https://github.com/ocaml-community/zed/releases/download/2.0.5/zed-2.0.5.tbz#md5:56414179d7cccba0e20005d958b5d39e"
         ],
         "opam": {
           "name": "zed",
-          "version": "2.0.4",
-          "path": "js.esy.lock/opam/zed.2.0.4"
+          "version": "2.0.5",
+          "path": "js.esy.lock/opam/zed.2.0.5"
         }
       },
       "overrides": [],
@@ -1855,7 +1855,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/zed@opam:2.0.4@f9f7c80f",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/zed@opam:2.0.5@80585091",
         "@opam/react@opam:1.2.1@0e11855f",
         "@opam/lwt_react@opam:1.1.3@72987fcf",
         "@opam/lwt_log@opam:1.1.1@2d7a797f", "@opam/lwt@opam:4.5.0@677655b4",
@@ -1864,7 +1864,7 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/zed@opam:2.0.4@f9f7c80f",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/zed@opam:2.0.5@80585091",
         "@opam/react@opam:1.2.1@0e11855f",
         "@opam/lwt_react@opam:1.1.3@72987fcf",
         "@opam/lwt_log@opam:1.1.1@2d7a797f", "@opam/lwt@opam:4.5.0@677655b4",
