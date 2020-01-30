@@ -215,7 +215,7 @@ class node (()) = {
     let bbox = BoundingBox2d.transform(b, worldTransform);
     bbox;
   };
-  pri _recalculateBoundingBoxClipped = (bbox) => {
+  pri _recalculateBoundingBoxClipped = bbox => {
     switch (_this#getParent()) {
     | Some(p) => BoundingBox2d.intersect(bbox, p#getBoundingBoxClipped())
     | None => bbox
