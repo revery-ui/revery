@@ -215,16 +215,7 @@ class node (()) = {
     let bbox = BoundingBox2d.transform(b, worldTransform);
     bbox;
   };
-  pri _recalculateBoundingBoxClipped = worldTransform => {
-    let dimensions = _this#measurements();
-    let b =
-      BoundingBox2d.create(
-        0.,
-        0.,
-        float_of_int(dimensions.width),
-        float_of_int(dimensions.height),
-      );
-    let bbox = BoundingBox2d.transform(b, worldTransform);
+  pri _recalculateBoundingBoxClipped = (bbox) => {
     switch (_this#getParent()) {
     | Some(p) => BoundingBox2d.intersect(bbox, p#getBoundingBoxClipped())
     | None => bbox
@@ -240,7 +231,7 @@ class node (()) = {
     let transform = _this#_recalculateTransform();
     let worldTransform = _this#_recalculateWorldTransform(transform);
     let bbox = _this#_recalculateBoundingBox(worldTransform);
-    let bboxClipped = _this#_recalculateBoundingBoxClipped(worldTransform);
+    let bboxClipped = _this#_recalculateBoundingBoxClipped(bbox);
     let depth = _this#_recalculateDepth();
 
     _cachedNodeState =
