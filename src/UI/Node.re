@@ -174,22 +174,19 @@ class node (()) = {
         dimensions.top |> float_of_int,
       );
 
-    /*Mat4.create();
-      Mat4.fromTranslation(
-        matrix,
-        Vec3.create(
-          float_of_int(dimensions.left),
-          float_of_int(dimensions.top),
-          0.,
-        ),
-      );*/
-    let animationTransform =
-      Transform.toMat4(
-        float_of_int(dimensions.width) /. 2.,
-        float_of_int(dimensions.height) /. 2.,
-        _this#getStyle().transform,
-      );
-    Skia.Matrix.preConcat(matrix, animationTransform);
+    let transforms = _this#getStyle().transform;
+    switch (transforms) {
+    // Skip a matrix multiplication if there are no transforms
+    | [] => ()
+    | transforms =>
+      let animationTransform =
+        Transform.toMat4(
+          float_of_int(dimensions.width) /. 2.,
+          float_of_int(dimensions.height) /. 2.,
+          _this#getStyle().transform,
+        );
+      Skia.Matrix.preConcat(matrix, animationTransform);
+    };
     matrix;
   };
   pri _recalculateWorldTransform = localTransform => {
