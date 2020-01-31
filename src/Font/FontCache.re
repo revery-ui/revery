@@ -1,5 +1,7 @@
 open Revery_Core;
 
+module Log = (val Revery_Core.Log.withNamespace("Revery.FontCache"));
+
 module StringHash =
   Hashtbl.Make({
     type t = string;
@@ -36,13 +38,13 @@ let load: string => result(t, string) =
         switch (skiaTypeface, harfbuzzFace) {
         | (Some(skiaFace), Ok(hbFace)) =>
           Event.dispatch(onFontLoaded, ());
-          prerr_endline("Loaded : " ++ fontName);
+          Log.info("Loaded : " ++ fontName);
           Ok({hbFace, skiaFace, metricsCache, shapeCache});
         | (_, Error(msg)) =>
-          prerr_endline("ERROR LOADING");
+          Log.warn("Error loading typeface: " ++ msg);
           Error("Error loading typeface: " ++ msg);
         | (None, _) =>
-          prerr_endline("ERROR LOADING");
+          Log.warn("Error loading typeface (skia)");
           Error("Error loading typeface.");
         };
 
