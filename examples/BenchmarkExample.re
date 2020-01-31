@@ -53,8 +53,8 @@ module Benchmarks = {
     Skia.Paint.setColor(rectPaint, Revery.Color.toSkia(Colors.green));
     CanvasContext.drawRectLtwh(
       ~paint=rectPaint,
-      ~x,
-      ~y,
+      ~left=x,
+      ~top=y,
       ~width=10.,
       ~height=20.,
       canvasContext,
