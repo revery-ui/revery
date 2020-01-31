@@ -118,14 +118,14 @@ let drawRect = (~rect: Skia.Rect.t, ~paint: Paint.t, v: t) => {
 };
 let drawRectLtwh =
     (
-      ~x: float,
-      ~y: float,
+      ~left: float,
+      ~top: float,
       ~width: float,
       ~height: float,
       ~paint: Paint.t,
       v: t,
     ) => {
-  Canvas.drawRectLtwh(v.canvas, x, y, width, height, paint);
+  Canvas.drawRectLtwh(v.canvas, left, top, width, height, paint);
 };
 
 let drawRRect = (v: t, rRect: Skia.RRect.t, paint) => {
