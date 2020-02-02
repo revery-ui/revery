@@ -49,7 +49,7 @@
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
     "reason-font-manager": "^2.0.0",
-    "reason-harfbuzz": "*",
+    "reason-harfbuzz": "^1.91.5003",
     "rench": "^1.9.1",
     "rebez": "github:jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3015",
@@ -58,7 +58,6 @@
     "timber": "*"
   },
   "resolutions": {
-    "reason-harfbuzz": "revery-ui/reason-harfbuzz#3a6965d",
     "@esy-ocaml/libffi": "esy-ocaml/libffi#599bc3567",
     "@opam/cmdliner": "1.0.2",
     "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b6",
