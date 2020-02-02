@@ -116,6 +116,17 @@ let translate = (v: t, x: float, y: float) => {
 let drawRect = (~rect: Skia.Rect.t, ~paint: Paint.t, v: t) => {
   Canvas.drawRect(v.canvas, rect, paint);
 };
+let drawRectLtwh =
+    (
+      ~left: float,
+      ~top: float,
+      ~width: float,
+      ~height: float,
+      ~paint: Paint.t,
+      v: t,
+    ) => {
+  Canvas.drawRectLtwh(v.canvas, left, top, width, height, paint);
+};
 
 let drawRRect = (v: t, rRect: Skia.RRect.t, paint) => {
   Canvas.drawRRect(v.canvas, rRect, paint);
