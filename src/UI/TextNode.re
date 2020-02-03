@@ -33,7 +33,6 @@ class textNode (text: string) = {
       Skia.Paint.setTextEncoding(paint, GlyphId);
       Skia.Paint.setLcdRenderText(paint, true);
       Skia.Paint.setAntiAlias(paint, true);
-      Skia.Paint.setSubpixelText(paint, true);
       Skia.Paint.setTextSize(paint, fontSize);
 
       let ascentPx = Text.getAscent(~fontFamily, ~fontSize, ());
