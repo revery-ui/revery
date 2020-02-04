@@ -65,6 +65,9 @@ class node (()) = {
   val mutable _isLayoutDirty = true;
   val mutable _forcedMeasurements: option(Dimensions.t) = None;
   val mutable _hasHadNonZeroBlurRadius = false;
+  val _worldTransform = Skia.Matrix.make();
+  val _localTransform = Skia.Matrix.make();
+  val _bbox = BoundingBox2d.create(0., 0., 0., 0.);
   pub draw = (parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
@@ -168,8 +171,7 @@ class node (()) = {
   };
   pri _recalculateTransform = () => {
     let dimensions = _this#measurements();
-    let matrix =
-      Skia.Matrix.makeTranslate(
+      Skia.Matrix.setTranslate(_localTransform,
         dimensions.left |> float_of_int,
         dimensions.top |> float_of_int,
       );
@@ -185,23 +187,21 @@ class node (()) = {
           float_of_int(dimensions.height) /. 2.,
           _this#getStyle().transform,
         );
-      Skia.Matrix.preConcat(matrix, animationTransform);
+      Skia.Matrix.preConcat(_localTransform, animationTransform);
     };
-    matrix;
+    _localTransform;
   };
   pri _recalculateWorldTransform = localTransform => {
     let xform = localTransform;
     let world =
       switch (_parent) {
       | None =>
-        let m = Skia.Matrix.make();
-        Skia.Matrix.setIdentity(m);
-        m;
+        Skia.Matrix.setIdentity(_worldTransform);
+        _worldTransform;
       | Some(p) => p#getWorldTransform()
       };
-    let matrix = Skia.Matrix.make();
-    Skia.Matrix.concat(matrix, world, xform);
-    matrix;
+    Skia.Matrix.concat(_worldTransform, world, xform);
+    _worldTransform;
   };
   pri _recalculateBoundingBox = worldTransform => {
     let dimensions = _this#measurements();
@@ -212,8 +212,8 @@ class node (()) = {
         float_of_int(dimensions.width),
         float_of_int(dimensions.height),
       );
-    let bbox = BoundingBox2d.transform(b, worldTransform);
-    bbox;
+    BoundingBox2d.Mutable.transform(~out=_bbox, b, worldTransform);
+    _bbox;
   };
   pri _recalculateBoundingBoxClipped = bbox => {
     switch (_this#getParent()) {

@@ -71,12 +71,18 @@ let intersect = (b0: t, b1: t) =>
     create(0., 0., 0., 0.);
   };
 
+module Mutable = {
+  let transform = (~out: t, bbox: t, m: Skia.Matrix.t) => {
+    let () = Skia.Matrix.mapRect(m, out, bbox);
+  }
+}
+
 /* TODO: For a more efficient implementation, we should consider something like:
       http://dev.theomader.com/transform-bounding-boxes/
       Significantly less matrix multiplications in that strategy!
    */
 let transform = (bbox: t, m: Skia.Matrix.t) => {
   let out = Skia.Rect.makeEmpty();
-  Skia.Matrix.mapRect(m, out, bbox);
+  Mutable.transform(~out, bbox, m);
   out;
 };
