@@ -17,7 +17,6 @@ let measure = (font, size, text: string) => {
 
   Skia.Paint.setLcdRenderText(paint, true);
   Skia.Paint.setAntiAlias(paint, true);
-  Skia.Paint.setSubpixelText(paint, true);
   Skia.Paint.setTextEncoding(paint, GlyphId);
 
   Skia.Paint.setTypeface(paint, skiaFace);
