@@ -17,5 +17,6 @@ let transform: (t, Skia.Matrix.t) => t;
 let toString: t => string;
 
 module Mutable: {
+	let intersect: (~out: t, t, t) => unit;
 	let transform: (~out: t, t, Skia.Matrix.t) => unit;
 }

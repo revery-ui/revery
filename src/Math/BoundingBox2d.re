@@ -57,7 +57,9 @@ let intersects = (b0: t, b1: t) => {
   !noOverlap;
 };
 
-let intersect = (b0: t, b1: t) =>
+module Mutable = {
+  
+let intersect = (~out, b0: t, b1: t) =>
   if (intersects(b0, b1)) {
     let (box0_minX, box0_minY, box0_maxX, box0_maxY) = getBounds(b0);
     let (box1_minX, box1_minY, box1_maxX, box1_maxY) = getBounds(b1);
@@ -66,16 +68,21 @@ let intersect = (b0: t, b1: t) =>
     let maxX = min(box0_maxX, box1_maxX);
     let maxY = min(box0_maxY, box1_maxY);
 
-    create(minX, minY, maxX, maxY);
+    Skia.Rect.Mutable.setLtrb(~out, minX, minY, maxX, maxY);
   } else {
-    create(0., 0., 0., 0.);
+    Skia.Rect.Mutable.setLtrb(~out, 0., 0., 0., 0.,);
   };
-
-module Mutable = {
   let transform = (~out: t, bbox: t, m: Skia.Matrix.t) => {
     let () = Skia.Matrix.mapRect(m, out, bbox);
   }
 }
+
+let intersect = (b0: t, b1: t) => {
+  let out = Skia.Rect.makeLtrb(0., 0., 0., 0.);
+  Mutable.intersect(~out, b0, b1);
+  out;
+  };
+
 
 /* TODO: For a more efficient implementation, we should consider something like:
       http://dev.theomader.com/transform-bounding-boxes/
