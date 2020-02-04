@@ -1,5 +1,5 @@
 {
-  "checksum": "677c8b53d9d17e60170bd34a3cb35006",
+  "checksum": "77fd7728742cdfc5c2381615cab40b12",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9": {
@@ -60,7 +60,7 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-skia@github:revery-ui/reason-skia#8b2b511@d41d8cd9",
+        "reason-skia@github:revery-ui/reason-skia#e50c3aa@d41d8cd9",
         "reason-sdl2@2.10.3016@d41d8cd9",
         "reason-harfbuzz@1.91.5003@d41d8cd9",
         "reason-gl-matrix@0.9.9306@d41d8cd9",
@@ -156,13 +156,13 @@
       ],
       "devDependencies": []
     },
-    "reason-skia@github:revery-ui/reason-skia#8b2b511@d41d8cd9": {
-      "id": "reason-skia@github:revery-ui/reason-skia#8b2b511@d41d8cd9",
+    "reason-skia@github:revery-ui/reason-skia#e50c3aa@d41d8cd9": {
+      "id": "reason-skia@github:revery-ui/reason-skia#e50c3aa@d41d8cd9",
       "name": "reason-skia",
-      "version": "github:revery-ui/reason-skia#8b2b511",
+      "version": "github:revery-ui/reason-skia#e50c3aa",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-skia#8b2b511" ]
+        "source": [ "github:revery-ui/reason-skia#e50c3aa" ]
       },
       "overrides": [],
       "dependencies": [
