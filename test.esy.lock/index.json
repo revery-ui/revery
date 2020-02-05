@@ -1,5 +1,5 @@
 {
-  "checksum": "97de21d20e66fb40524c87194dfe8768",
+  "checksum": "4c1521a1c8dc9de9ef96f99f4988b173",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
