@@ -284,7 +284,7 @@ let makeShadowImageFilter = boxShadow => {
 class viewNode (()) = {
   as _this;
   inherit (class node)() as _super;
-  val fillPaint = Skia.Paint.make();
+  val _fillPaint = Skia.Paint.make();
   pub! draw = (parentContext: NodeDrawContext.t) => {
     let dimensions = _this#measurements();
     let width = float_of_int(dimensions.width);
@@ -311,8 +311,6 @@ class viewNode (()) = {
 
     let color = Color.multiplyAlpha(opacity, style.backgroundColor);
     if (color.a > 0.001) {
-      let fill = Skia.Paint.make();
-
       // switch (style.boxShadow) {
       // | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _} =>
       // ()
@@ -322,15 +320,15 @@ class viewNode (()) = {
               "drawing shadow..." ++ string_of_float(style.boxShadow.blurRadius),
             );*/
         let shadowImageFilter = makeShadowImageFilter(style.boxShadow);
-        Skia.Paint.setImageFilter(fill, shadowImageFilter);
+        Skia.Paint.setImageFilter(_fillPaint, shadowImageFilter);
       };
       // }
       // };
 
       let skiaColor = Color.toSkia(color);
-      Skia.Paint.setColor(fill, skiaColor);
+      Skia.Paint.setColor(_fillPaint, skiaColor);
 
-      Revery_Draw.CanvasContext.drawRRect(canvas, innerRRect, fill);
+      Revery_Draw.CanvasContext.drawRRect(canvas, innerRRect, _fillPaint);
     };
 
     _super#draw(parentContext);
