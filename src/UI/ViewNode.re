@@ -71,9 +71,13 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
     );
 
     let tbc = Color.multiplyAlpha(opacity, topBorderColor);
+    let tbcAlpha = Color.getAlpha(tbc);
     let lbc = Color.multiplyAlpha(opacity, leftBorderColor);
+    let lbcAlpha = Color.getAlpha(lbc);
     let rbc = Color.multiplyAlpha(opacity, rightBorderColor);
+    let rbcAlpha = Color.getAlpha(rbc);
     let bbc = Color.multiplyAlpha(opacity, bottomBorderColor);
+    let bbcAlpha = Color.getAlpha(bbc);
 
     let borderPaint = Skia.Paint.make();
     Skia.Paint.setAntiAlias(borderPaint, true);
@@ -97,7 +101,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
     let hasTopOrBottomBorder =
       topBorderWidth !== 0. || bottomBorderWidth !== 0.;
 
-    if (leftBorderWidth != 0. && lbc.a > 0.001) {
+    if (leftBorderWidth != 0. && lbcAlpha > 0.001) {
       let _id: int = Revery_Draw.CanvasContext.save(canvas);
 
       let clippingRectangle =
@@ -133,7 +137,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
       Revery_Draw.CanvasContext.restore(canvas);
     };
 
-    if (topBorderWidth != 0. && tbc.a > 0.001) {
+    if (topBorderWidth != 0. && tbcAlpha > 0.001) {
       let _id: int = Revery_Draw.CanvasContext.save(canvas);
 
       let clippingRectangle =
@@ -169,7 +173,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
       Revery_Draw.CanvasContext.restore(canvas);
     };
 
-    if (rightBorderWidth != 0. && rbc.a > 0.001) {
+    if (rightBorderWidth != 0. && rbcAlpha > 0.001) {
       let _id: int = Revery_Draw.CanvasContext.save(canvas);
 
       let clippingRectangle =
@@ -205,7 +209,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
       Revery_Draw.CanvasContext.restore(canvas);
     };
 
-    if (bottomBorderWidth != 0. && bbc.a > 0.001) {
+    if (bottomBorderWidth != 0. && bbcAlpha > 0.001) {
       let _id: int = Revery_Draw.CanvasContext.save(canvas);
 
       let clippingRectangle =
@@ -310,7 +314,8 @@ class viewNode (()) = {
     let innerRRect = renderBorders(~canvas, ~style, ~outerRRect, ~opacity);
 
     let color = Color.multiplyAlpha(opacity, style.backgroundColor);
-    if (color.a > 0.001) {
+    let colorAlpha = Color.getAlpha(color);
+    if (colorAlpha > 0.001) {
       let fill = Skia.Paint.make();
 
       // switch (style.boxShadow) {

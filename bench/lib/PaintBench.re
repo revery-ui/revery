@@ -11,7 +11,7 @@ module Data = {
 };
 
 let setPaintColor = () => {
-  let () = Skia.Paint.setColor(Data.paint, Revery.Color.toSkia(Data.color)); 
+  let () = Skia.Paint.setColor(Data.paint, Revery.Color.toSkia(Data.color));
   ();
 };
 

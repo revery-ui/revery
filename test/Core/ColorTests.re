@@ -74,10 +74,9 @@ describe("Color", ({describe, _}) => {
       let start = Colors.red;
       let stop = Colors.lime;
 
-      expect.equal(
-        Color.mix(~start, ~stop, ~amount=0.5),
-        Color.{r: 0.5, g: 0.5, b: 0., a: 1.},
-      );
+      let mix = Color.mix(~start, ~stop, ~amount=0.5);
+      let rgba = Color.rgba(0.5, 0.5, 0., 1.);
+      expect.bool(Color.equals(mix, rgba)).toBe(true);
     });
   });
 });
