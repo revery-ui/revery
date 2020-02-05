@@ -107,10 +107,7 @@ let toRgba = (color: t) => {
 };
 
 let equals = (a: t, b: t) => {
-  print_endline("Before qual...");
-  let ret = a == b;
-  print_endline("After qual...");
-  ret;
+  a == b;
 };
 
 let toString = (color: t) => {
