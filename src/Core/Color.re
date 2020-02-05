@@ -109,7 +109,7 @@ let toString = (color: t) =>
   );
 
 let _toInt = (v: float) => {
-  int_of_float(255. *. v);
+  int_of_float(255. *. v) |> Int32.of_int;
 };
 
 let toSkia = (color: t) => {

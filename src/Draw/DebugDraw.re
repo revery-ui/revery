@@ -19,7 +19,7 @@ let setActive = (bbox: BoundingBox2d.t) => {
 };
 
 let paint = Skia.Paint.make();
-Skia.Paint.setColor(paint, Skia.Color.makeArgb(50, 255, 0, 0));
+Skia.Paint.setColor(paint, Skia.Color.makeArgb(50l, 255l, 0l, 0l));
 
 let draw = (canvas: CanvasContext.t) =>
   if (_isEnabled^) {
