@@ -17,7 +17,8 @@ type t = {
 };
 
 let create = (window: Revery_Core.Window.t) => {
-  let context = Skia.Gr.Context.makeGl(None);
+  let sdlGlInterface = Skia.Gr.Gl.Interface.makeSdl2();
+  let context = Skia.Gr.Context.makeGl(Some(sdlGlInterface));
   switch (context) {
   | None =>
     Log.error("Unable to create skia context");
