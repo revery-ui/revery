@@ -15,3 +15,9 @@ let isPointInside: (~x: float, ~y: float, t) => bool;
 let transform: (t, Skia.Matrix.t) => t;
 
 let toString: t => string;
+
+module Mutable: {
+  let set: (~out: t, float, float, float, float) => unit;
+  let intersect: (~out: t, t, t) => unit;
+  let transform: (~out: t, t, Skia.Matrix.t) => unit;
+};

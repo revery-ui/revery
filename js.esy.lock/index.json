@@ -1,15 +1,18 @@
 {
-  "checksum": "9e1cfd628a84d564272b341216ac5bad",
+  "checksum": "1d3efbe911da571043b8aee72be96630",
   "root": "revery@link-dev:./package.json",
   "node": {
-    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9": {
+    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
       "id":
-        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9",
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9",
       "name": "yarn-pkg-config",
-      "version": "github:esy-ocaml/yarn-pkg-config#db3a0b6",
+      "version":
+        "github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0",
       "source": {
         "type": "install",
-        "source": [ "github:esy-ocaml/yarn-pkg-config#db3a0b6" ]
+        "source": [
+          "github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0"
+        ]
       },
       "overrides": [],
       "dependencies": [],
@@ -116,7 +119,7 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-skia@github:revery-ui/reason-skia#e514427@d41d8cd9",
+        "reason-skia@github:revery-ui/reason-skia#53b10ee@d41d8cd9",
         "reason-sdl2@2.10.3016@d41d8cd9",
         "reason-harfbuzz@1.91.5003@d41d8cd9",
         "reason-gl-matrix@0.9.9306@d41d8cd9",
@@ -227,13 +230,13 @@
       ],
       "devDependencies": []
     },
-    "reason-skia@github:revery-ui/reason-skia#e514427@d41d8cd9": {
-      "id": "reason-skia@github:revery-ui/reason-skia#e514427@d41d8cd9",
+    "reason-skia@github:revery-ui/reason-skia#53b10ee@d41d8cd9": {
+      "id": "reason-skia@github:revery-ui/reason-skia#53b10ee@d41d8cd9",
       "name": "reason-skia",
-      "version": "github:revery-ui/reason-skia#e514427",
+      "version": "github:revery-ui/reason-skia#53b10ee",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-skia#e514427" ]
+        "source": [ "github:revery-ui/reason-skia#53b10ee" ]
       },
       "overrides": [],
       "dependencies": [
@@ -2302,7 +2305,7 @@
         }
       ],
       "dependencies": [
-        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b6@d41d8cd9",
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": []
