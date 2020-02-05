@@ -13,6 +13,13 @@ class textNode (text: string) = {
   val mutable text = text;
   val mutable _isMeasured = false;
   val mutable _lines: list(string) = [];
+  val _textPaint = {
+    let paint = Skia.Paint.make();
+    Skia.Paint.setTextEncoding(paint, GlyphId);
+    Skia.Paint.setLcdRenderText(paint, true);
+    Skia.Paint.setAntiAlias(paint, true);
+    paint;
+  };
   inherit (class viewNode)() as _super;
   pub! draw = (parentContext: NodeDrawContext.t) => {
     let style = _super#getStyle();
@@ -24,16 +31,12 @@ class textNode (text: string) = {
     switch (Revery_Font.FontCache.load(fontFamily)) {
     | Error(_) => ()
     | Ok(font) =>
-      let paint = Skia.Paint.make();
-      Skia.Paint.setColor(paint, Color.toSkia(colorWithAppliedOpacity));
+      Skia.Paint.setColor(_textPaint, Color.toSkia(colorWithAppliedOpacity));
       Skia.Paint.setTypeface(
-        paint,
+        _textPaint,
         Revery_Font.FontCache.getSkiaTypeface(font),
       );
-      Skia.Paint.setTextEncoding(paint, GlyphId);
-      Skia.Paint.setLcdRenderText(paint, true);
-      Skia.Paint.setAntiAlias(paint, true);
-      Skia.Paint.setTextSize(paint, fontSize);
+      Skia.Paint.setTextSize(_textPaint, fontSize);
 
       let ascentPx = Text.getAscent(~fontFamily, ~fontSize, ());
       let lineHeightPx =
@@ -60,7 +63,7 @@ class textNode (text: string) = {
             |> Revery_Font.ShapeResult.getGlyphString;
 
           CanvasContext.drawText(
-            ~paint,
+            ~paint=_textPaint,
             ~x=0.,
             ~y=baselineY,
             ~text=glyphString,
