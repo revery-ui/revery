@@ -58,7 +58,7 @@
     "timber": "*"
   },
   "resolutions": {
-    "@esy-ocaml/libffi": "esy-ocaml/libffi#599bc3567",
+    "@esy-ocaml/libffi": "esy-ocaml/libffi#c61127d",
     "@opam/cmdliner": "1.0.2",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
     "timber": "glennsl/timber#ae065bb"
