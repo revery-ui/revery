@@ -53,7 +53,7 @@
     "rench": "^1.9.1",
     "rebez": "github:jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3016",
-    "reason-skia": "github:revery-ui/reason-skia#668629f",
+    "reason-skia": "github:revery-ui/reason-skia#03e6acb",
     "revery-text-wrap": "github:revery-ui/revery-text-wrap#005385c",
     "timber": "*"
   },

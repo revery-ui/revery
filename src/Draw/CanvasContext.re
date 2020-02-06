@@ -23,13 +23,27 @@ let createFromSurface = (surface: Skia.Surface.t) => {
 };
 
 let create = (window: Revery_Core.Window.t) => {
-  let sdlGlInterface = Skia.Gr.Gl.Interface.makeSdl2();
-  let context = Skia.Gr.Context.makeGl(Some(sdlGlInterface));
+  // Issue #759 - first, let's try to create a native context, since that is the most reliable...
+  // We'll fall back to an SDL2 context if not available (ie, in Wayland)
+  // TODO: There is still something busted with the way GL is being setup, for the SDL strategy not to work!
+  // Likely a fix or change is required here: https://github.com/revery-ui/reason-sdl2/blob/94dcd9094534c693998984fd684c642b0f658a43/src/sdl2_wrapper.cpp#L1065
+  let interface =
+    switch (Skia.Gr.Gl.Interface.makeNative()) {
+    | None =>
+      Log.info("Unable to create native interface. Falling back to SDL2...");
+      Skia.Gr.Gl.Interface.makeSdl2();
+    | Some(_) as nativeInterface =>
+      Log.info("Native interface created successfully.");
+      nativeInterface;
+    };
+  Log.info("Creating Skia context...");
+  let context = Skia.Gr.Context.makeGl(interface);
   switch (context) {
   | None =>
     Log.error("Unable to create skia context");
     None;
   | Some(glContext) =>
+    Log.info("Skia context created successfully.");
     let framebufferInfo =
       Gr.Gl.FramebufferInfo.make(
         Unsigned.UInt.of_int(0),
