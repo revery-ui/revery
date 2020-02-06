@@ -64,7 +64,7 @@
     "timber": "glennsl/timber#ae065bb"
   },
   "devDependencies": {
-    "ocaml": ">=4.6.0 <4.8.0",
+    "ocaml": "~4.8",
     "@opam/merlin": "^3.3.2",
     "@opam/dune": "^1.8.0",
     "esy-astyle": "github:zbaylin/esy-astyle#59bc21a"
