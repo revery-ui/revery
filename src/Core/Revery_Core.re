@@ -33,9 +33,3 @@ module Internal = {
 };
 
 module Tick = Tick.Default;
-
-/**
- * Polyfill for a couple 4.08 function.
- * TODO: Remove after moving oni2 to 4.08
- */
-module Float = Float;

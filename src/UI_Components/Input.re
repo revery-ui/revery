@@ -47,30 +47,6 @@ module Cursor = {
   };
 };
 
-// TODO: remove after 4.08
-module Option = {
-  let value = (~default) =>
-    fun
-    | Some(x) => x
-    | None => default;
-
-  let bind = (o, f) =>
-    switch (o) {
-    | Some(x) => f(x)
-    | None => None
-    };
-
-  let map = f =>
-    fun
-    | Some(x) => Some(f(x))
-    | None => None;
-
-  let join =
-    fun
-    | Some(x) => x
-    | None => None;
-};
-
 type state = {
   isFocused: bool, // TODO: Violates single source of truth
   value: string,
