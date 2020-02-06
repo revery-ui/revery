@@ -289,6 +289,8 @@ class viewNode (()) = {
   as _this;
   inherit (class node)() as _super;
   val _fillPaint = Skia.Paint.make();
+  val _outerRRect = Skia.RRect.make();
+  val _helperRect = Skia.Rect.makeLtrb(0., 0., 0., 0.);
   pub! draw = (parentContext: NodeDrawContext.t) => {
     let dimensions = _this#measurements();
     let width = float_of_int(dimensions.width);
@@ -303,15 +305,16 @@ class viewNode (()) = {
     Revery_Draw.CanvasContext.setMatrix(canvas, world);
 
     let borderRadius = style.borderRadius;
-    let outerRRect = Skia.RRect.make();
+    Skia.Rect.Mutable.setLtrb(~out=_helperRect, 0., 0., width, height);
     Skia.RRect.setRectXy(
-      outerRRect,
-      Skia.Rect.makeLtrb(0., 0., width, height),
+      _outerRRect,
+      _helperRect,
       borderRadius,
       borderRadius,
     );
 
-    let innerRRect = renderBorders(~canvas, ~style, ~outerRRect, ~opacity);
+    let innerRRect =
+      renderBorders(~canvas, ~style, ~outerRRect=_outerRRect, ~opacity);
 
     let color = Color.multiplyAlpha(opacity, style.backgroundColor);
     let colorAlpha = Color.getAlpha(color);
