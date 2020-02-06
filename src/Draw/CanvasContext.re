@@ -16,6 +16,12 @@ type t = {
   mutable rootTransform: option(Skia.Matrix.t),
 };
 
+let createFromSurface = (surface: Skia.Surface.t) => {
+  surface,
+  canvas: Skia.Surface.getCanvas(surface),
+  rootTransform: None,
+};
+
 let create = (window: Revery_Core.Window.t) => {
   let sdlGlInterface = Skia.Gr.Gl.Interface.makeSdl2();
   let context = Skia.Gr.Context.makeGl(Some(sdlGlInterface));
