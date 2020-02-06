@@ -61,10 +61,11 @@
     "@esy-ocaml/libffi": "esy-ocaml/libffi#c61127d",
     "@opam/cmdliner": "1.0.2",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
-    "timber": "glennsl/timber#ae065bb"
+    "timber": "glennsl/timber#ae065bb",
+    "reason-harfbuzz": "revery-ui/reason-harfbuzz#0848520"
   },
   "devDependencies": {
-    "ocaml": ">=4.6.0 <4.8.0",
+    "ocaml": "~4.8",
     "@opam/merlin": "^3.3.2",
     "@opam/dune": "^1.8.0",
     "esy-astyle": "github:zbaylin/esy-astyle#59bc21a"
