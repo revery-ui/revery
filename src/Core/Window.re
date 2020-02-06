@@ -286,7 +286,8 @@ let render = (w: t) => {
   Sdl2.Gl.glDisable(GL_DEPTH_TEST);
 
   let color = w.backgroundColor;
-  Sdl2.Gl.glClearColor(color.r, color.g, color.b, color.a);
+  let (r, g, b, a) = Color.toRgba(color);
+  Sdl2.Gl.glClearColor(r, g, b, a);
 
   Event.dispatch(w.onBeforeRender, ());
   w.render();

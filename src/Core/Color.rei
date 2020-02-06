@@ -1,11 +1,6 @@
 exception ColorHexParseException(string);
 
-type t = {
-  r: float,
-  g: float,
-  b: float,
-  a: float,
-};
+type t;
 
 let rgba: (float, float, float, float) => t;
 let rgb: (float, float, float) => t;
@@ -15,6 +10,7 @@ let multiplyAlpha: (float, t) => t;
 let mix: (~start: t, ~stop: t, ~amount: float) => t;
 
 let toRgba: t => (float, float, float, float);
+let getAlpha: t => float;
 
 let equals: (t, t) => bool;
 

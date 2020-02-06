@@ -1,5 +1,5 @@
 {
-  "checksum": "faa916c268c868b3e6381f7a87092690",
+  "checksum": "3fa35141442c57932c104059900e7456",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
@@ -63,7 +63,7 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-skia@github:revery-ui/reason-skia#53b10ee@d41d8cd9",
+        "reason-skia@github:revery-ui/reason-skia#668629f@d41d8cd9",
         "reason-sdl2@2.10.3016@d41d8cd9",
         "reason-harfbuzz@github:revery-ui/reason-harfbuzz#0848520@d41d8cd9",
         "reason-gl-matrix@0.9.9306@d41d8cd9",
@@ -159,13 +159,13 @@
       ],
       "devDependencies": []
     },
-    "reason-skia@github:revery-ui/reason-skia#53b10ee@d41d8cd9": {
-      "id": "reason-skia@github:revery-ui/reason-skia#53b10ee@d41d8cd9",
+    "reason-skia@github:revery-ui/reason-skia#668629f@d41d8cd9": {
+      "id": "reason-skia@github:revery-ui/reason-skia#668629f@d41d8cd9",
       "name": "reason-skia",
-      "version": "github:revery-ui/reason-skia#53b10ee",
+      "version": "github:revery-ui/reason-skia#668629f",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-skia#53b10ee" ]
+        "source": [ "github:revery-ui/reason-skia#668629f" ]
       },
       "overrides": [],
       "dependencies": [
@@ -1854,7 +1854,7 @@
         "@opam/conf-pkg-config@opam:1.1@67c69c0c",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9",
-        "@esy-ocaml/libffi@github:esy-ocaml/libffi#599bc3567@d41d8cd9"
+        "@esy-ocaml/libffi@github:esy-ocaml/libffi#c61127d@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/integers@opam:0.3.0@d6eefd3a",
@@ -2274,13 +2274,13 @@
       ],
       "devDependencies": []
     },
-    "@esy-ocaml/libffi@github:esy-ocaml/libffi#599bc3567@d41d8cd9": {
-      "id": "@esy-ocaml/libffi@github:esy-ocaml/libffi#599bc3567@d41d8cd9",
+    "@esy-ocaml/libffi@github:esy-ocaml/libffi#c61127d@d41d8cd9": {
+      "id": "@esy-ocaml/libffi@github:esy-ocaml/libffi#c61127d@d41d8cd9",
       "name": "@esy-ocaml/libffi",
-      "version": "github:esy-ocaml/libffi#599bc3567",
+      "version": "github:esy-ocaml/libffi#c61127d",
       "source": {
         "type": "install",
-        "source": [ "github:esy-ocaml/libffi#599bc3567" ]
+        "source": [ "github:esy-ocaml/libffi#c61127d" ]
       },
       "overrides": [],
       "dependencies": [],
