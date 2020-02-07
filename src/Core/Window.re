@@ -58,6 +58,7 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
+  titlebarStyle: WindowStyles.titlebar,
   onBeforeRender: Event.t(unit),
   onAfterRender: Event.t(unit),
   onBeforeSwap: Event.t(unit),
@@ -80,6 +81,20 @@ type t = {
   onCompositionEdit: Event.t(textEditEvent),
   onCompositionEnd: Event.t(unit),
   onTextInputCommit: Event.t(textInputEvent),
+};
+
+module Internal = {
+  let setTitlebarTransparent = (w: Sdl2.Window.t) =>
+    switch (Environment.os) {
+    | Mac => Sdl2.Window.setMacTitlebarTransparent(w)
+    | _ => ()
+    };
+
+  let resetTitlebarStyle = window =>
+    // On restore, we need to set the titlebar transparent again on Mac
+    if (window.titlebarStyle == Transparent) {
+      setTitlebarTransparent(window.sdlWindow);
+    };
 };
 
 let onBeforeRender = w => Event.subscribe(w.onBeforeRender);
@@ -123,12 +138,6 @@ let getSdlWindow = (w: t) => w.sdlWindow;
 let setTitle = (v: t, title: string) => {
   Sdl2.Window.setTitle(v.sdlWindow, title);
 };
-
-let setTitlebarTransparent = (w: Sdl2.Window.t) =>
-  switch (Environment.os) {
-  | Mac => Sdl2.Window.setMacTitlebarTransparent(w)
-  | _ => ()
-  };
 
 let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
   switch (forceScaleFactor) {
@@ -351,7 +360,9 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.WindowExposed(_) => Event.dispatch(v.onExposed, ())
   | Sdl2.Event.WindowMaximized(_) => Event.dispatch(v.onMaximized, ())
   | Sdl2.Event.WindowMinimized(_) => Event.dispatch(v.onMinimized, ())
-  | Sdl2.Event.WindowRestored(_) => Event.dispatch(v.onRestored, ())
+  | Sdl2.Event.WindowRestored(_) =>
+    Internal.resetTitlebarStyle(v);
+    Event.dispatch(v.onRestored, ());
   | Sdl2.Event.WindowFocusGained(_) => Event.dispatch(v.onFocusGained, ())
   | Sdl2.Event.WindowFocusLost(_) => Event.dispatch(v.onFocusLost, ())
   | Sdl2.Event.Quit => ()
@@ -482,6 +493,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onCompositionEdit: Event.create(),
     onCompositionEnd: Event.create(),
     onTextInputCommit: Event.create(),
+
+    titlebarStyle: options.titlebarStyle,
   };
   setScaledSize(ret, width, height);
   Sdl2.Window.center(w);
@@ -505,7 +518,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   switch (options.titlebarStyle) {
   | System => ()
-  | Transparent => setTitlebarTransparent(w)
+  | Transparent => Internal.setTitlebarTransparent(w)
   };
 
   // onivim/oni2#791
