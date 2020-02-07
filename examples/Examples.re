@@ -291,6 +291,7 @@ let init = app => {
           ~width=windowWidth,
           ~height=windowHeight,
           ~maximized,
+          ~titlebarStyle=Transparent,
           ~icon=Some("revery-icon.png"),
           (),
         ),
