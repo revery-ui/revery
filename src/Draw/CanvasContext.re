@@ -134,6 +134,10 @@ let translate = (v: t, x: float, y: float) => {
   Skia.Canvas.translate(v.canvas, x, y);
 };
 
+let clear = (~color: Skia.Color.t, v: t) => {
+  Canvas.clear(v.canvas, color);
+}
+
 let drawRect = (~rect: Skia.Rect.t, ~paint: Paint.t, v: t) => {
   Canvas.drawRect(v.canvas, rect, paint);
 };
