@@ -1,6 +1,5 @@
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
-module RenderPass = Revery_Draw.RenderPass;
 
 open Revery_Math;
 

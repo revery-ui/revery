@@ -27,3 +27,5 @@ module UI = {
 module Platform = {
   include Platform;
 };
+
+module Utility = Revery_Utility;
