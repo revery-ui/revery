@@ -43,6 +43,10 @@
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/ppx_deriving": "*",
+    "@opam/httpaf": "*",
+    "@opam/httpaf-lwt-unix": "*",
+    "@opam/websocketaf": "*",
+    "@opam/websocketaf-lwt-unix": "*",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#0a2e476",
     "flex": "^1.2.2",
     "@reason-native/rely": "*",
@@ -60,6 +64,18 @@
   "resolutions": {
     "@esy-ocaml/libffi": "esy-ocaml/libffi#c61127d",
     "@opam/cmdliner": "1.0.2",
+    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#9308e34",
+    "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#9308e34",
+    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#9308e34",
+    "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#8318e44",
+    "@opam/websocketaf-lwt-unix": {
+      "source": "anmonteiro/websocketaf:websocketaf-lwt-unix.opam#8318e44",
+      "override": {
+        "dependencies": {
+          "@opam/websocketaf-lwt": "anmonteiro/websocketaf:websocketaf-lwt.opam#8318e44"
+        }
+      }
+    },
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
     "timber": "glennsl/timber#ae065bb",
     "reason-harfbuzz": "revery-ui/reason-harfbuzz#0848520"

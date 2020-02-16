@@ -1,0 +1,11 @@
+diff --git a/_build/default/META.digestif b/_build/default/META.digestif
+--- a/_build/default/META.digestif
++++ b/_build/default/META.digestif
+@@ -55,3 +55,6 @@
+     plugin(native) = "rakia_xen.cmxs"
+   )
+ )
++
++xen_linkopts = "-l:rakia/xen/librakia_xen_stubs.a"
++freestanding_linkopts = "-l:rakia/freestanding/librakia_freestanding_stubs.a"
+--

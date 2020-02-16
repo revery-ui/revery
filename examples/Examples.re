@@ -284,6 +284,10 @@ let init = app => {
       "Welcome to Revery!",
     );
 
+  Revery.DevTools.start();
+
+  Revery_Lwt.startEventLoop();
+
   if (Environment.webGL) {
     Window.maximize(window);
   } else {

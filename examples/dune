@@ -9,6 +9,7 @@
         skia
         str
         Revery
+        Revery_Lwt
         flex
         timber
             ))

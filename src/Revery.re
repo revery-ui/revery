@@ -11,6 +11,7 @@ module Font = Revery_Font;
 module Draw = Revery_Draw;
 module Math = Revery_Math;
 module Native = Revery_Native;
+module DevTools = Revery_DevTools;
 
 module UI = {
   include Revery_UI;
