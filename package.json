@@ -40,6 +40,7 @@
     "@opam/js_of_ocaml": "^3.4.0",
     "@opam/js_of_ocaml-compiler": "^3.4.0",
     "@opam/js_of_ocaml-lwt": "^3.4.0",
+    "@opam/lru": "^0.3.0",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/ppx_deriving": "*",
