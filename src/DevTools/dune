@@ -2,4 +2,4 @@
     (name Revery_DevTools)
     (public_name Revery.DevTools)
     (preprocess (pps lwt_ppx ppx_deriving.show))
-    (libraries brisk-reconciler lwt lwt.unix websocketaf websocketaf-lwt-unix httpaf-lwt-unix flex Revery_Core rebez.lib timber))
+    (libraries brisk-reconciler lwt lwt.unix websocketaf websocketaf-lwt-unix httpaf-lwt-unix flex Revery_Core rebez.lib timber uri))

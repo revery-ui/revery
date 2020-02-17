@@ -284,7 +284,7 @@ let init = app => {
       "Welcome to Revery!",
     );
 
-  Revery.DevTools.start();
+  Revery.DevTools.start(window);
 
   Revery_Lwt.startEventLoop();
 

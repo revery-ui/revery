@@ -47,6 +47,7 @@
     "@opam/httpaf-lwt-unix": "*",
     "@opam/websocketaf": "*",
     "@opam/websocketaf-lwt-unix": "*",
+    "@opam/uri": "^3.1.0",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#0a2e476",
     "flex": "^1.2.2",
     "@reason-native/rely": "*",
