@@ -3,28 +3,21 @@ open Revery_Core;
 module Log = (val Revery_Core.Log.withNamespace("Revery.FontCache"));
 
 module StringHashable = {
-    type t = string;
-    let equal = String.equal;
-    let hash = Hashtbl.hash;
+  type t = string;
+  let equal = String.equal;
+  let hash = Hashtbl.hash;
 };
 
 module FloatHashable = {
-    type t = float;
-    let equal = Float.equal;
-    let hash = Float.hash;
+  type t = float;
+  let equal = Float.equal;
+  let hash = Float.hash;
 };
-module StringHash = 
+module StringHash =
   Hashtbl.Make({
     type t = string;
     let equal = String.equal;
     let hash = Hashtbl.hash;
-  });
-
-module FloatHash = 
-  Hashtbl.Make({
-    type t = float;
-    let equal = Float.equal;
-    let hash = Float.hash;
   });
 
 type fontLoaded = Event.t(unit);
@@ -35,33 +28,40 @@ module MetricsWeighted = {
   let weight = _ => 1;
 };
 
+module ShapeResultWeighted = {
+  type t = ShapeResult.t;
+
+  let weight = ShapeResult.size;
+};
+
 module MetricsLruHash = Lru.M.Make(FloatHashable, MetricsWeighted);
+module ShapeResultLruHash = Lru.M.Make(StringHashable, ShapeResultWeighted);
 
 type t = {
   hbFace: Harfbuzz.hb_face,
   skiaFace: Skia.Typeface.t,
   metricsCache: MetricsLruHash.t,
-  shapeCache: StringHash.t(ShapeResult.t),
+  shapeCache: ShapeResultLruHash.t,
 };
 
 type _t = t;
 module FontWeight = {
-  
   type t = result(_t, string);
   let weight = _ => 1;
-}
+};
 
-module FontCache = Lru.M.Make(
-  StringHashable,FontWeight);
+module FontCache = Lru.M.Make(StringHashable, FontWeight);
 
-let _cache = FontCache.create(1024);
+module Internal = {
+  let cache = FontCache.create(64);
+};
 
 let load: string => result(t, string) =
   (fontName: string) => {
-    switch (FontCache.find(fontName, _cache)) {
-    | Some(v) => 
-      FontCache.promote(fontName, _cache);
-      v
+    switch (FontCache.find(fontName, Internal.cache)) {
+    | Some(v) =>
+      FontCache.promote(fontName, Internal.cache);
+      v;
     | None =>
       let assetPath = Environment.getAssetPath(fontName);
 
@@ -69,7 +69,11 @@ let load: string => result(t, string) =
       let harfbuzzFace = Harfbuzz.hb_new_face(assetPath);
 
       let metricsCache = MetricsLruHash.create(256);
-      let shapeCache = StringHash.create(128);
+
+      // Allow ~4MB of cached shape strings in our LRU cache.
+      // Shaping is expensive, so we want to cache it aggressively...
+      // but we also don't want to blow up memory!
+      let shapeCache = ShapeResultLruHash.create(4 * 1024 * 1024);
 
       let ret =
         switch (skiaTypeface, harfbuzzFace) {
@@ -85,18 +89,18 @@ let load: string => result(t, string) =
           Error("Error loading typeface.");
         };
 
-      FontCache.add(fontName, ret, _cache);
-      FontCache.trim(_cache);
+      FontCache.add(fontName, ret, Internal.cache);
+      FontCache.trim(Internal.cache);
       ret;
     };
-  }; 
+  };
 
 let getMetrics: (t, float) => FontMetrics.t =
   ({skiaFace, metricsCache, _}, size) => {
     switch (MetricsLruHash.find(size, metricsCache)) {
-    | Some(v) => 
+    | Some(v) =>
       MetricsLruHash.promote(size, metricsCache);
-      v
+      v;
     | None =>
       let paint = Skia.Paint.make();
       Skia.Paint.setTypeface(paint, skiaFace);
@@ -116,12 +120,15 @@ let getSkiaTypeface: t => Skia.Typeface.t = font => font.skiaFace;
 
 let shape: (t, string) => ShapeResult.t =
   ({hbFace, shapeCache, _}, str) => {
-    switch (StringHash.find_opt(shapeCache, str)) {
-    | Some(v) => v
+    switch (ShapeResultLruHash.find(str, shapeCache)) {
+    | Some(v) =>
+      ShapeResultLruHash.promote(str, shapeCache);
+      v;
     | None =>
       let shaping = Harfbuzz.hb_shape(hbFace, str);
       let result = ShapeResult.ofHarfbuzz(shaping);
-      StringHash.add(shapeCache, str, result);
+      ShapeResultLruHash.add(str, result, shapeCache);
+      ShapeResultLruHash.trim(shapeCache);
       result;
     };
   };
