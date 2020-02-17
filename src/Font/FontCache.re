@@ -53,7 +53,7 @@ module FontWeight = {
 module FontCache = Lru.M.Make(StringHashable, FontWeight);
 
 module Internal = {
-  let cache = FontCache.create(64);
+  let cache = FontCache.create(32);
 };
 
 let load: string => result(t, string) =
@@ -68,12 +68,14 @@ let load: string => result(t, string) =
       let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
       let harfbuzzFace = Harfbuzz.hb_new_face(assetPath);
 
-      let metricsCache = MetricsLruHash.create(256);
+      let metricsCache = MetricsLruHash.create(32);
 
-      // Allow ~4MB of cached shape strings in our LRU cache.
+      // Allow ~32KB of cached shape strings in our LRU cache.
       // Shaping is expensive, so we want to cache it aggressively...
       // but we also don't want to blow up memory!
-      let shapeCache = ShapeResultLruHash.create(4 * 1024 * 1024);
+
+      // The ideal value for this is _just_ large enough that we never miss.
+      let shapeCache = ShapeResultLruHash.create(32 * 1024);
 
       let ret =
         switch (skiaTypeface, harfbuzzFace) {
