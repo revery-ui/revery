@@ -301,6 +301,11 @@ let init = app => {
   let _unsubscribe =
     Window.onRestored(window, () => Console.log("Restored!"));
 
+  let _unsubscribe =
+    Window.onSizeChanged(window, ({width, height}) =>
+      Console.log(Printf.sprintf("Size changed: %d x %d", width, height))
+    );
+
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);
   ();
