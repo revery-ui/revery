@@ -11,7 +11,7 @@ build: [
 ]
 depends: [
   "dune" {>= "1.0"}
-  "ocaml-migrate-parsetree"
+  "ocaml-migrate-parsetree" {< "1.6.0"}
   "ocamlfind"
   "ocaml" {>= "4.02.3"}
 ]

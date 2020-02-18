@@ -217,7 +217,7 @@ let%component make =
       },
       reducer,
     );
-  let%hook (textRef, setTextRef) = Hooks.ref(None);
+  let%hook textRef = Hooks.ref(None);
   let%hook (scrollOffset, _setScrollOffset) = Hooks.state(ref(0));
 
   let textAttrs = {
@@ -250,7 +250,7 @@ let%component make =
     let cursorOffset =
       measureTextWidth(String.sub(value, 0, cursorPosition));
 
-    switch (Option.bind(textRef, r => r#getParent())) {
+    switch (Option.bind(textRef^, r => r#getParent())) {
     | Some(containerNode) =>
       let container: Dimensions.t = containerNode#measurements();
 
@@ -326,7 +326,7 @@ let%component make =
   };
 
   let handleClick = (event: NodeEvents.mouseButtonEventParams) => {
-    switch (textRef) {
+    switch (textRef^) {
     | Some(node) =>
       let sceneOffsets: Offset.t = node#getSceneOffsets();
       let textOffset =
@@ -364,7 +364,7 @@ let%component make =
 
   let text = () =>
     <Text
-      ref={node => setTextRef(Some(node))}
+      ref={node => textRef := Some(node)}
       text={showPlaceholder ? placeholder : value}
       style={Styles.text(
         ~showPlaceholder,
