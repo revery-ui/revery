@@ -1,7 +1,6 @@
 open Effect;
 open Reducer;
 open Tick;
-open State;
 
 let time = (~tickRate=Time.zero, ()) => {
   let%hook (time, setTime) = reducer(~initialState=Time.now(), t => t);
