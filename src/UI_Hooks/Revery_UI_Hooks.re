@@ -9,7 +9,6 @@ include State;
 include Tick;
 
 let time = Timer.time;
-let mountIfEffect = Timer.mountIfEffect;
 let timer = Timer.timer;
 
 let animation = (~active=true, ~onComplete=() => (), animation) => {

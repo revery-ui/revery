@@ -31,7 +31,7 @@ let%component make =
                 ~children,
                 (),
               ) => {
-  let%hook (isMouseCapturedHere, _setIsMouseDown) = Hooks.ref(ref(false));
+  let%hook (isMouseCapturedHere) = Hooks.ref(false);
 
   let capture = () =>
     if (! isMouseCaptured^) {
