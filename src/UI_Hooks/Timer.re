@@ -11,13 +11,14 @@ let time = (~tickRate=Time.zero, ()) => {
 
 let timer = (~tickRate=Time.zero, ~active=true, ()) => {
   let%hook (time, setTime) = reducer(~initialState=Time.now(), t => t);
-  let%hook (startTime) = Ref.ref(time);
+  let%hook startTime = Ref.ref(time);
 
   let onTick = _dt => setTime(_t => Time.now());
 
-  let%hook () = effect(OnMountAndIf((!=), active), () =>
+  let%hook () =
+    effect(OnMountAndIf((!=), active), () =>
       if (active) {
-        startTime := (Time.(now() - (time - startTime^)));
+        startTime := Time.(now() - (time - startTime^));
         let dispose = Revery_Core.Tick.interval(onTick, tickRate);
         Some(dispose);
       } else {

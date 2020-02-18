@@ -9,7 +9,7 @@ let spring =
     | None => Spring.create(target, Time.now())
     };
 
-  let%hook (previousState) = Ref.ref(initialState);
+  let%hook previousState = Ref.ref(initialState);
 
   let isActive =
     enabled
@@ -24,7 +24,7 @@ let spring =
   previousState := state;
 
   let setImmediately = position =>
-    previousState := (Spring.setPosition(position, previousState^));
+    previousState := Spring.setPosition(position, previousState^);
 
   let v = isActive ? state.value : target;
 

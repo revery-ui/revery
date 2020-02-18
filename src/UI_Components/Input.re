@@ -217,7 +217,7 @@ let%component make =
       },
       reducer,
     );
-  let%hook (textRef) = Hooks.ref(None);
+  let%hook textRef = Hooks.ref(None);
   let%hook (scrollOffset, _setScrollOffset) = Hooks.state(ref(0));
 
   let textAttrs = {
@@ -364,7 +364,7 @@ let%component make =
 
   let text = () =>
     <Text
-      ref={node => textRef := (Some(node))}
+      ref={node => textRef := Some(node)}
       text={showPlaceholder ? placeholder : value}
       style={Styles.text(
         ~showPlaceholder,
