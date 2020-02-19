@@ -74,6 +74,8 @@ let render =
       let drawContext =
         NodeDrawContext.create(~canvas, ~zIndex=0, ~opacity=1.0, ());
 
+      let backgroundColor = Window.getBackgroundColor(window);
+      CanvasContext.clear(backgroundColor |> Color.toSkia, canvas);
       // let drawContext = NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
 
       rootNode#draw(drawContext);
