@@ -287,19 +287,6 @@ let render = (w: t) => {
 
   w.isRendering = true;
 
-  Sdl2.Gl.glViewport(
-    0,
-    0,
-    w.metrics.framebufferSize.width,
-    w.metrics.framebufferSize.height,
-  );
-
-  Sdl2.Gl.glDisable(GL_DEPTH_TEST);
-
-  let color = w.backgroundColor;
-  let (r, g, b, a) = Color.toRgba(color);
-  Sdl2.Gl.glClearColor(r, g, b, a);
-
   Event.dispatch(w.onBeforeRender, ());
   w.render();
   Event.dispatch(w.onAfterRender, ());
@@ -559,6 +546,8 @@ let setInputRect = (_w: t, x, y, width, height) => {
 };
 
 let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
+
+let getBackgroundColor = window => window.backgroundColor;
 
 let setPosition = (w: t, x: int, y: int) => {
   Sdl2.Window.setPosition(w.sdlWindow, x, y);

@@ -42,6 +42,7 @@ let getScaleAndZoom: t => float;
 let getSdlWindow: t => Sdl2.Window.t;
 let getZoom: t => float;
 let getUniqueId: t => int;
+let getBackgroundColor: t => Color.t;
 
 let isDirty: t => bool;
 
