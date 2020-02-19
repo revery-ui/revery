@@ -77,6 +77,7 @@ type t = {
   onMaximized: Event.t(unit),
   onMinimized: Event.t(unit),
   onRestored: Event.t(unit),
+  onSizeChanged: Event.t(size),
   onCompositionStart: Event.t(unit),
   onCompositionEdit: Event.t(textEditEvent),
   onCompositionEnd: Event.t(unit),
@@ -119,6 +120,7 @@ let onCompositionStart = w => Event.subscribe(w.onCompositionStart);
 let onCompositionEdit = w => Event.subscribe(w.onCompositionEdit);
 let onCompositionEnd = w => Event.subscribe(w.onCompositionEnd);
 let onTextInputCommit = w => Event.subscribe(w.onTextInputCommit);
+let onSizeChanged = w => Event.subscribe(w.onSizeChanged);
 
 let getUniqueId = (w: t) => w.uniqueId;
 
@@ -353,7 +355,9 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
 
     Event.dispatch(v.onTextInputCommit, {text: ti.text});
   | Sdl2.Event.WindowResized(_) => v.areMetricsDirty = true
-  | Sdl2.Event.WindowSizeChanged(_) => v.areMetricsDirty = true
+  | Sdl2.Event.WindowSizeChanged({width, height, _}) =>
+    v.areMetricsDirty = true;
+    Event.dispatch(v.onSizeChanged, {width, height});
   | Sdl2.Event.WindowMoved(_) => v.areMetricsDirty = true
   | Sdl2.Event.WindowEnter(_) => Event.dispatch(v.onMouseEnter, ())
   | Sdl2.Event.WindowLeave(_) => Event.dispatch(v.onMouseLeave, ())
@@ -478,6 +482,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onMaximized: Event.create(),
     onRestored: Event.create(),
     onExposed: Event.create(),
+    onSizeChanged: Event.create(),
 
     onMouseMove: Event.create(),
     onMouseWheel: Event.create(),
