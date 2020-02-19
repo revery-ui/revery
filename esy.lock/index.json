@@ -1,5 +1,5 @@
 {
-  "checksum": "26ccb499c31a4860a5f3e23b15cd9ce3",
+  "checksum": "1079e1f62dce3e36c63936af8bf8e6c9",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
@@ -72,7 +72,7 @@
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/ppx_deriving@opam:4.4@21d6c7a5",
         "@opam/lwt_ppx@opam:2.0.0@9a61dd37", "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/lru@github:bryphe/lru:lru.opam#f646450@d41d8cd9",
+        "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9",
         "@opam/js_of_ocaml-lwt@opam:3.5.2@6ea3e3c2",
         "@opam/js_of_ocaml-compiler@opam:3.5.0@9ea7292f",
         "@opam/js_of_ocaml@opam:3.5.2@c5bae178",
@@ -1437,13 +1437,13 @@
         "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
-    "@opam/lru@github:bryphe/lru:lru.opam#f646450@d41d8cd9": {
-      "id": "@opam/lru@github:bryphe/lru:lru.opam#f646450@d41d8cd9",
+    "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9": {
+      "id": "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9",
       "name": "@opam/lru",
-      "version": "github:bryphe/lru:lru.opam#f646450",
+      "version": "github:bryphe/lru:lru.opam#2708c70",
       "source": {
         "type": "install",
-        "source": [ "github:bryphe/lru:lru.opam#f646450" ]
+        "source": [ "github:bryphe/lru:lru.opam#2708c70" ]
       },
       "overrides": [],
       "dependencies": [
