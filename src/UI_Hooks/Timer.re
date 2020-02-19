@@ -12,7 +12,6 @@ let time = (~tickRate=Time.zero, ()) => {
 let timer = (~tickRate=Time.zero, ~active=true, ()) => {
   let%hook (time, setTime) = reducer(~initialState=Time.now(), t => t);
   let%hook startTime = Ref.ref(time);
-  let%hook lastDispose = Ref.ref(None);
 
   let onTick = _dt => setTime(_t => Time.now());
 
@@ -20,23 +19,9 @@ let timer = (~tickRate=Time.zero, ~active=true, ()) => {
     effect(OnMountAndIf((!=), active), () =>
       if (active) {
         startTime := Time.(now() - (time - startTime^));
-
-        switch (lastDispose^) {
-        | None => ()
-        | Some(f) => f()
-        };
-
-        let stopInterval = Revery_Core.Tick.interval(onTick, tickRate);
-        lastDispose := Some(stopInterval);
-
-        Some(stopInterval);
+        let dispose = Revery_Core.Tick.interval(onTick, tickRate);
+        Some(dispose);
       } else {
-        switch (lastDispose^) {
-        | None => ()
-        | Some(f) => f()
-        };
-        lastDispose := None;
-
         None;
       }
     );
