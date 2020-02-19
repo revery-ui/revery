@@ -1,5 +1,3 @@
-open FontCache;
-
 type measureResult = {
   width: float,
   height: float,
@@ -10,7 +8,7 @@ Skia.Paint.setTextEncoding(paint, GlyphId);
 
 let measure = (font, size, text: string) => {
   let {height, _}: FontMetrics.t = FontCache.getMetrics(font, size);
-  let {skiaFace, _}: FontCache.t = font;
+  let skiaFace = FontCache.getSkiaTypeface(font);
 
   let glyphString =
     text |> FontCache.shape(font) |> ShapeResult.getGlyphString;
