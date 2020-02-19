@@ -13,7 +13,7 @@ let timer = (~tickRate=Time.zero, ~active=true, ()) => {
   let%hook (time, setTime) = reducer(~initialState=Time.now(), t => t);
   let%hook startTime = Ref.ref(time);
 
-  // We have to manually track disposal, too, to workaround a bug with
+  // HACK: We have to manually track disposal, too, to workaround a bug with
   // multiple timer hooks. This shouldn't be necessary - the `effect` hook
   // without `OnMountAndIf` should be handling disposal completely for us!
 
@@ -26,6 +26,9 @@ let timer = (~tickRate=Time.zero, ~active=true, ()) => {
 
   // See the test case in:
   // test/UI/HooksTest.re that manifests this bug
+
+  // Ideally, we can fix the underlying bug (perhaps in the effect hook),
+  // and remove this hack while keeping all those tests green.
 
   // It's easy to hit when there are multiple springs associated with a component,
   // which each use an underlying timer.
