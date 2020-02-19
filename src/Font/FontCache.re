@@ -69,7 +69,8 @@ let load: string => result(t, string) =
       let harfbuzzFace = Harfbuzz.hb_new_face(assetPath);
 
       let metricsCache = MetricsLruHash.create(~initialSize=8, 64);
-      let shapeCache = ShapeResultLruHash.create(~initialSize=1024, 128 * 1024);
+      let shapeCache =
+        ShapeResultLruHash.create(~initialSize=1024, 128 * 1024);
 
       let ret =
         switch (skiaTypeface, harfbuzzFace) {
