@@ -50,7 +50,7 @@
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
     "reason-font-manager": "^2.0.0",
-    "reason-harfbuzz": "*",
+    "reason-harfbuzz": "^1.91.5004",
     "rench": "^1.9.1",
     "rebez": "github:jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3016",
@@ -60,10 +60,9 @@
   },
   "resolutions": {
     "@esy-ocaml/libffi": "esy-ocaml/libffi#c61127d",
-    "@opam/cmdliner": "1.0.2",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
-    "timber": "glennsl/timber#ae065bb",
-    "reason-harfbuzz": "revery-ui/reason-harfbuzz#0848520"
+    "@opam/cmdliner": "1.0.2",
+    "timber": "glennsl/timber#ae065bb"
   },
   "devDependencies": {
     "ocaml": "~4.8",
