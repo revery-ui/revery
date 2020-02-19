@@ -547,7 +547,7 @@ let setInputRect = (_w: t, x, y, width, height) => {
 
 let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
 
-let getBackgroundColor = (window) => window.backgroundColor;
+let getBackgroundColor = window => window.backgroundColor;
 
 let setPosition = (w: t, x: int, y: int) => {
   Sdl2.Window.setPosition(w.sdlWindow, x, y);
