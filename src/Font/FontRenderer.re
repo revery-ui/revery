@@ -1,5 +1,3 @@
-open FontCache;
-
 type measureResult = {
   width: float,
   height: float,
