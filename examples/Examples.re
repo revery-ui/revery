@@ -284,8 +284,6 @@ let init = app => {
       "Welcome to Revery!",
     );
 
-  Revery.DevTools.start(window);
-
   Revery_Lwt.startEventLoop();
 
   if (Environment.webGL) {
@@ -306,7 +304,11 @@ let init = app => {
     Window.onRestored(window, () => Console.log("Restored!"));
 
   let _renderFunction =
-    UI.start(window, <ExampleHost window initialExample />);
+    UI.start(
+      ~devTools=Revery_DevTools.enable(),
+      window,
+      <ExampleHost window initialExample />,
+    );
   ();
 };
 

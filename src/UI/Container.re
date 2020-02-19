@@ -6,12 +6,14 @@ type state = {
 type t = {
   node: React.reveryNode,
   state: option(state),
+  mutable onUpdate: option((React.reveryNode, option(state)) => unit),
 };
 
-let create: React.reveryNode => t = n => {node: n, state: None};
+let create: React.reveryNode => t =
+  n => {node: n, state: None, onUpdate: None};
 
 let update: (t, React.element(React.reveryNode)) => t =
-  ({node, state}, element) => {
+  ({node, state, onUpdate}, element) => {
     let newRendered =
       switch (state) {
       | None =>
@@ -42,9 +44,15 @@ let update: (t, React.element(React.reveryNode)) => t =
         React.RenderedElement.executePendingEffects(nextElement);
       };
 
+    switch (onUpdate) {
+    | Some(func) => func(node, state)
+    | None => ()
+    };
+
     let ret: t = {
       node,
       state: Some({rendered: newRendered, previousElement: element}),
+      onUpdate,
     };
     ret;
   };

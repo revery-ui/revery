@@ -18,6 +18,12 @@ type renderFunction = React.element(React.reveryNode) => unit;
   [update(<Button />);]
 */
 
-let start: (Window.t, React.element(React.reveryNode)) => renderFunction;
+let start:
+  (
+    ~devTools: option((React.reveryNode, option(Container.state))) => unit=?,
+    Window.t,
+    React.element(React.reveryNode)
+  ) =>
+  renderFunction;
 
 let getActiveWindow: unit => option(Window.t);

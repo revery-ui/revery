@@ -22,23 +22,31 @@ type renderFunction = React.element(React.reveryNode) => unit;
 
 let getActiveWindow = () => _activeWindow^;
 
-let start = (window: Window.t, element: React.element(React.reveryNode)) => {
+let start =
+    (
+      ~devTools: option(option('a) => unit)=?,
+      window: Window.t,
+      element: React.element(React.reveryNode),
+    ) => {
   let uiDirty = ref(true);
   let forceLayout = ref(true);
   let latestElement = ref(element);
 
-  let onStale = () => {
-    uiDirty := true;
-  };
+  let onStale = () => uiDirty := true;
 
   let _ignore = Revery_Core.Event.subscribe(React.onStale, onStale);
 
   let rootNode = (new ViewNode.viewNode)();
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
   let container = Container.create(rootNode);
+  switch (devTools) {
+  | Some(func) =>
+    container.onUpdate = Some((node, state) => func(Some((node, state))))
+  | None => ()
+  };
   let ui = RenderContainer.create(window, rootNode, container, mouseCursor);
 
-  let _ignore = Window.onExposed(window, () => {uiDirty := true});
+  let _ignore = Window.onExposed(window, () => uiDirty := true);
 
   let _ignore =
     Window.onMouseMove(
@@ -120,9 +128,9 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     );
 
   let _ignore =
-    Revery_Core.Event.subscribe(Mouse.onCursorChanged, cursor => {
+    Revery_Core.Event.subscribe(Mouse.onCursorChanged, cursor =>
       Revery_Core.MouseCursors.setCursor(cursor)
-    });
+    );
 
   let _ignore =
     Revery_Core.Event.subscribe(

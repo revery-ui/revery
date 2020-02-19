@@ -10,7 +10,7 @@ let socketAddrToString = sockaddr =>
     Unix.string_of_inet_addr(addr) ++ ":" ++ string_of_int(port)
   };
 
-let connectionHandler = (win: Revery_Core.Window.t) => {
+let connectionHandler = stream => {
   module Body = Httpaf.Body;
   module Headers = Httpaf.Headers;
   module Reqd = Httpaf.Reqd;
@@ -18,6 +18,8 @@ let connectionHandler = (win: Revery_Core.Window.t) => {
   module Status = Httpaf.Status;
 
   let websocketHandler = (clientAddress, wsd) => {
+    let iterator =
+      Lwt_stream.iter(_ => Log.debug("Root node updated!"), stream);
     let frame = (~opcode, ~is_fin as _, bs, ~off, ~len) => {
       switch (opcode) {
       | `Binary =>
@@ -32,7 +34,9 @@ let connectionHandler = (win: Revery_Core.Window.t) => {
           ~off=0,
           ~len=3,
         )
-      | `Connection_close => Websocketaf.Wsd.close(wsd)
+      | `Connection_close =>
+        Lwt.cancel(iterator);
+        Websocketaf.Wsd.close(wsd);
       | `Ping => Websocketaf.Wsd.send_pong(wsd)
       | `Pong
       | `Other(_) => ()
@@ -151,6 +155,7 @@ let connectionHandler = (win: Revery_Core.Window.t) => {
           responseBody,
         );
       | _ =>
+        // Triggered when we don't have a resource at this location, i.e. a 404
         let responseBody = "
           <html>
             <body>
@@ -179,7 +184,7 @@ let connectionHandler = (win: Revery_Core.Window.t) => {
   );
 };
 
-let start = win => {
+let enable = () => {
   open Lwt.Infix;
 
   let port = ref(8080);
@@ -187,10 +192,12 @@ let start = win => {
   let listenAddr =
     Unix.([@implicit_arity] ADDR_INET(inet_addr_loopback, port^));
 
+  let (stream, push) = Lwt_stream.create();
+
   Lwt.async(() =>
     Lwt_io.establish_server_with_client_socket(
       listenAddr,
-      connectionHandler(win),
+      connectionHandler(stream),
     )
     >>= (
       _server => {
@@ -199,4 +206,5 @@ let start = win => {
       }
     )
   );
+  push;
 };
