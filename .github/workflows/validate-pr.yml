@@ -23,7 +23,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: macOS-latest-4.08-${{ hashFiles('**/index.json') }}
+          key: macOS-latest-4.08-${{ hashFiles('doc.esy.lock/index.json') }}
       - name: Install doc dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
         run: esy @doc build-dependencies --release
