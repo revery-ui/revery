@@ -90,11 +90,11 @@ jobs:
       - name: Install doc dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
         run: esy @doc build-dependencies --release
-      - name: Generate docs
-        run: esy @doc build --release
       - name: Print docs path
         id: print_docs_path
         run: node .github/workflows/print_docs_path.js
+      - name: Generate docs
+        run: esy @doc build --release
       - run: |
           echo $GITHUB_ACTOR $DOC_PATH
           find . -name "*.html"
