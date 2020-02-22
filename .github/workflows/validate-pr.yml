@@ -108,11 +108,13 @@ jobs:
           DOC_PATH: ${{ steps.print_esy_doc_path.outputs.doc_path }}
       - name: Push to gh-pages branch of user fork
         run: |
+          git add -f $DOC_PATH
           git status
-          git add -u
-          git push --set-upstream origin gh-pages
+          git commit -m "Push docs from $GITHUB_REF"
+          git subtree push origin gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOC_PATH: ${{ steps.print_esy_doc_path.outputs.doc_path }}
 
   build:
     name: Build
