@@ -89,8 +89,12 @@ jobs:
       - name: Install doc dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
         run: esy @doc build-dependencies --release
-      - name: move to `gh-pages` branch
-        run: git checkout -b gh-pages
+      - name: Setup git.
+        run: |
+          git remote set-url --push origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
+          git config user.name "Github Runner"
+          git config user.email "runner@runner.github.com"
+          git checkout -b gh-pages
       - name: Generate docs
         run: esy @doc build --release
       - name: set doc_path
