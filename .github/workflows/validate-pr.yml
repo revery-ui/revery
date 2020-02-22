@@ -42,7 +42,7 @@ jobs:
         run: |
           git remote set-url --push origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_ACTOR/revery
           git status
-          git push origin HEAD:gh-pages
+          git push origin HEAD:refs/heads/gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   lint:
