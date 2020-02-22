@@ -30,9 +30,18 @@ jobs:
       - name: set doc_path
         id: print_esy_doc_path
         run: echo ::set-output name=doc_path::$(esy "@doc" echo "#{self.target_dir / 'default' / '_doc' / '_html'}")
-      - run: echo $GITHUB_ACTOR $DOC_PATH
+      - run: |
+          echo $GITHUB_ACTOR $DOC_PATH
+          ls $DOC_PATH
         env:
           DOC_PATH: ${{ steps.print_esy_doc_path.outputs.doc_path }}
+      - name: Push if it is not
+        run: |
+          git remote set-url --push origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_ACTOR/revery
+          git status
+          git push origin HEAD:gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   lint:
     name: Lint lockdir, autoformat
     runs-on: macos-latest
