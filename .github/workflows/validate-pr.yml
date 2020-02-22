@@ -3,48 +3,6 @@ name: Validate Pull Request
 on: [push, pull_request]
 
 jobs:
-  doc:
-    name: Push docs to GitHub's Pages
-    runs-on: [macos-latest]
-    steps:
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - uses: actions/checkout@v1
-      - name: Install esy
-        run: npm install -g esy
-      - name: Solve doc dependencies
-        run: esy @doc install
-      - name: Print esy cache
-        id: print_esy_cache
-        run: node .github/workflows/print_esy_cache.js
-      - name: Try to restore dependencies cache
-        id: deps-cache-macos
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: macOS-latest-4.08-${{ hashFiles('doc.esy.lock/index.json') }}
-      - name: Install doc dependencies
-        if: steps.deps-cache-macos.outputs.cache-hit != 'true'
-        run: esy @doc build-dependencies --release
-      - name: Generate docs
-        run: esy @doc build --release
-      - name: set doc_path
-        id: print_esy_doc_path
-        run: echo ::set-output name=doc_path::$(realpath $(esy "@doc" echo "#{self.target_dir / 'default' / '_doc' / '_html'}"))
-      - run: |
-          echo $GITHUB_ACTOR $DOC_PATH
-          find . -name "*.html"
-          ls $DOC_PATH
-        env:
-          DOC_PATH: ${{ steps.print_esy_doc_path.outputs.doc_path }}
-      - name: Push to gh-pages branch of user fork
-        run: |
-          git remote set-url --push origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_ACTOR/revery
-          git status
-          git push origin HEAD:refs/heads/gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   lint:
     name: Lint lockdir, autoformat
     runs-on: macos-latest
@@ -106,6 +64,56 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.issues.createComment({...context.issue, body: `I have updated your lock dirs and formatted the code. Please @${context.actor} pull the last commit before pushing any more changes.`});
+
+  doc:
+    name: Push docs to GitHub's Pages
+    runs-on: [macos-latest]
+    needs: [lint]
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: sync with lint job
+        run: |
+          git fetch --all
+          git pull --progress --force
+      - uses: actions/checkout@v1
+      - name: Install esy
+        run: npm install -g esy
+      - name: Solve doc dependencies
+        run: esy @doc install
+      - name: Print esy cache
+        id: print_esy_cache
+        run: node .github/workflows/print_esy_cache.js
+      - name: Try to restore dependencies cache
+        id: deps-cache-macos
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
+          key: macOS-latest-4.08-${{ hashFiles('doc.esy.lock/index.json') }}
+      - name: Install doc dependencies
+        if: steps.deps-cache-macos.outputs.cache-hit != 'true'
+        run: esy @doc build-dependencies --release
+      - name: Generate docs
+        run: esy @doc build --release
+      - name: set doc_path
+        id: print_esy_doc_path
+        run: echo ::set-output name=doc_path::$(realpath $(esy "@doc" echo "#{self.target_dir / 'default' / '_doc' / '_html'}"))
+      - run: |
+          echo $GITHUB_ACTOR $DOC_PATH
+          find . -name "*.html"
+          ls $DOC_PATH
+        env:
+          DOC_PATH: ${{ steps.print_esy_doc_path.outputs.doc_path }}
+      - name: Push to gh-pages branch of user fork
+        run: |
+          git checkout -b gh-pages
+          git status
+          git add *
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   build:
     name: Build
     runs-on: ${{ matrix.os }}
