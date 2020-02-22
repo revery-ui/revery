@@ -106,7 +106,7 @@ jobs:
         run: |
           git status
           git add -u
-          git push
+          git push --set-upstream origin gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
