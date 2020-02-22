@@ -107,7 +107,7 @@ jobs:
         env:
           DOC_PATH: ${{ steps.print_docs_path.outputs.docs_path }}
       - run: find . -name "*.html"
-      - run: ls $DOC_PATH
+      - run: ls ./$DOC_PATH
         env:
           DOC_PATH: ${{ steps.print_docs_path.outputs.docs_path }}
       - name: Deploy docs
