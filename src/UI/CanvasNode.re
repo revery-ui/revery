@@ -1,4 +1,3 @@
-module RenderPass = Revery_Draw.RenderPass;
 module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 module CanvasContext = Revery_Draw.CanvasContext;

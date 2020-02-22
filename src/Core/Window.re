@@ -58,6 +58,7 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
+  titlebarStyle: WindowStyles.titlebar,
   onBeforeRender: Event.t(unit),
   onAfterRender: Event.t(unit),
   onBeforeSwap: Event.t(unit),
@@ -76,10 +77,25 @@ type t = {
   onMaximized: Event.t(unit),
   onMinimized: Event.t(unit),
   onRestored: Event.t(unit),
+  onSizeChanged: Event.t(size),
   onCompositionStart: Event.t(unit),
   onCompositionEdit: Event.t(textEditEvent),
   onCompositionEnd: Event.t(unit),
   onTextInputCommit: Event.t(textInputEvent),
+};
+
+module Internal = {
+  let setTitlebarTransparent = (w: Sdl2.Window.t) =>
+    switch (Environment.os) {
+    | Mac => Sdl2.Window.setMacTitlebarTransparent(w)
+    | _ => ()
+    };
+
+  let resetTitlebarStyle = window =>
+    // On restore, we need to set the titlebar transparent again on Mac
+    if (window.titlebarStyle == Transparent) {
+      setTitlebarTransparent(window.sdlWindow);
+    };
 };
 
 let onBeforeRender = w => Event.subscribe(w.onBeforeRender);
@@ -104,6 +120,7 @@ let onCompositionStart = w => Event.subscribe(w.onCompositionStart);
 let onCompositionEdit = w => Event.subscribe(w.onCompositionEdit);
 let onCompositionEnd = w => Event.subscribe(w.onCompositionEnd);
 let onTextInputCommit = w => Event.subscribe(w.onTextInputCommit);
+let onSizeChanged = w => Event.subscribe(w.onSizeChanged);
 
 let getUniqueId = (w: t) => w.uniqueId;
 
@@ -123,12 +140,6 @@ let getSdlWindow = (w: t) => w.sdlWindow;
 let setTitle = (v: t, title: string) => {
   Sdl2.Window.setTitle(v.sdlWindow, title);
 };
-
-let setTitlebarTransparent = (w: Sdl2.Window.t) =>
-  switch (Environment.os) {
-  | Mac => Sdl2.Window.setMacTitlebarTransparent(w)
-  | _ => ()
-  };
 
 let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
   switch (forceScaleFactor) {
@@ -276,19 +287,6 @@ let render = (w: t) => {
 
   w.isRendering = true;
 
-  Sdl2.Gl.glViewport(
-    0,
-    0,
-    w.metrics.framebufferSize.width,
-    w.metrics.framebufferSize.height,
-  );
-
-  Sdl2.Gl.glDisable(GL_DEPTH_TEST);
-
-  let color = w.backgroundColor;
-  let (r, g, b, a) = Color.toRgba(color);
-  Sdl2.Gl.glClearColor(r, g, b, a);
-
   Event.dispatch(w.onBeforeRender, ());
   w.render();
   Event.dispatch(w.onAfterRender, ());
@@ -344,14 +342,18 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
 
     Event.dispatch(v.onTextInputCommit, {text: ti.text});
   | Sdl2.Event.WindowResized(_) => v.areMetricsDirty = true
-  | Sdl2.Event.WindowSizeChanged(_) => v.areMetricsDirty = true
+  | Sdl2.Event.WindowSizeChanged({width, height, _}) =>
+    v.areMetricsDirty = true;
+    Event.dispatch(v.onSizeChanged, {width, height});
   | Sdl2.Event.WindowMoved(_) => v.areMetricsDirty = true
   | Sdl2.Event.WindowEnter(_) => Event.dispatch(v.onMouseEnter, ())
   | Sdl2.Event.WindowLeave(_) => Event.dispatch(v.onMouseLeave, ())
   | Sdl2.Event.WindowExposed(_) => Event.dispatch(v.onExposed, ())
   | Sdl2.Event.WindowMaximized(_) => Event.dispatch(v.onMaximized, ())
   | Sdl2.Event.WindowMinimized(_) => Event.dispatch(v.onMinimized, ())
-  | Sdl2.Event.WindowRestored(_) => Event.dispatch(v.onRestored, ())
+  | Sdl2.Event.WindowRestored(_) =>
+    Internal.resetTitlebarStyle(v);
+    Event.dispatch(v.onRestored, ());
   | Sdl2.Event.WindowFocusGained(_) => Event.dispatch(v.onFocusGained, ())
   | Sdl2.Event.WindowFocusLost(_) => Event.dispatch(v.onFocusLost, ())
   | Sdl2.Event.Quit => ()
@@ -467,6 +469,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onMaximized: Event.create(),
     onRestored: Event.create(),
     onExposed: Event.create(),
+    onSizeChanged: Event.create(),
 
     onMouseMove: Event.create(),
     onMouseWheel: Event.create(),
@@ -482,6 +485,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onCompositionEdit: Event.create(),
     onCompositionEnd: Event.create(),
     onTextInputCommit: Event.create(),
+
+    titlebarStyle: options.titlebarStyle,
   };
   setScaledSize(ret, width, height);
   Sdl2.Window.center(w);
@@ -505,7 +510,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   switch (options.titlebarStyle) {
   | System => ()
-  | Transparent => setTitlebarTransparent(w)
+  | Transparent => Internal.setTitlebarTransparent(w)
   };
 
   // onivim/oni2#791
@@ -541,6 +546,8 @@ let setInputRect = (_w: t, x, y, width, height) => {
 };
 
 let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
+
+let getBackgroundColor = window => window.backgroundColor;
 
 let setPosition = (w: t, x: int, y: int) => {
   Sdl2.Window.setPosition(w.sdlWindow, x, y);

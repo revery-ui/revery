@@ -145,21 +145,6 @@ let examples = [
     render: _ => NestedClickable.render(),
     source: "NestedClickable.re",
   },
-  {
-    name: "Benchmark: drawString",
-    render: _ => BenchmarkExample.render(Text),
-    source: "BenchmarkExample.re",
-  },
-  {
-    name: "Benchmark: drawRect",
-    render: _ => BenchmarkExample.render(Rect),
-    source: "BenchmarkExample.re",
-  },
-  {
-    name: "Benchmark: drawRect&drawString",
-    render: _ => BenchmarkExample.render(TextAndRect),
-    source: "BenchmarkExample.re",
-  },
 ];
 
 let getExampleByName = name =>
@@ -291,6 +276,7 @@ let init = app => {
           ~width=windowWidth,
           ~height=windowHeight,
           ~maximized,
+          ~titlebarStyle=Transparent,
           ~icon=Some("revery-icon.png"),
           (),
         ),
@@ -314,6 +300,11 @@ let init = app => {
     Window.onMinimized(window, () => Console.log("Minimized!"));
   let _unsubscribe =
     Window.onRestored(window, () => Console.log("Restored!"));
+
+  let _unsubscribe =
+    Window.onSizeChanged(window, ({width, height}) =>
+      Console.log(Printf.sprintf("Size changed: %d x %d", width, height))
+    );
 
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);

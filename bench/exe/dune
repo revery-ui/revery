@@ -4,3 +4,8 @@
     (libraries ReveryBench.lib)
     (package ReveryBench)
 )
+
+(install
+    (section bin)
+    (package ReveryBench)
+    (files TestFont.ttf))

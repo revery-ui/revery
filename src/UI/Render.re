@@ -74,17 +74,12 @@ let render =
       let drawContext =
         NodeDrawContext.create(~canvas, ~zIndex=0, ~opacity=1.0, ());
 
+      let backgroundColor = Window.getBackgroundColor(window);
+      CanvasContext.clear(~color=backgroundColor |> Color.toSkia, canvas);
       // let drawContext = NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
 
-      RenderPass.start(
-        ~canvas,
-        ~screenHeight=adjustedHeight,
-        ~screenWidth=adjustedWidth,
-        (),
-      );
       rootNode#draw(drawContext);
       //DebugDraw.draw();
-      RenderPass.endAlphaPass();
 
       Revery_Draw.CanvasContext.flush(canvas);
     }

@@ -14,9 +14,12 @@ module ShapeResult = ShapeResult;
 
 type t = FontCache.t;
 
+type measureResult = FontRenderer.measureResult;
+
 let load = FontCache.load;
 let getMetrics = FontCache.getMetrics;
 let getSkiaTypeface = FontCache.getSkiaTypeface;
+let measure = FontRenderer.measure;
 let shape = FontCache.shape;
 
 module Discovery = {

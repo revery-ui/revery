@@ -3,6 +3,8 @@ type t = {
   glyphString: string,
 };
 
+let size = ({glyphString, _}) => String.length(glyphString);
+
 let ofHarfbuzz = shapes => {
   let len = Array.length(shapes);
   let bytes = Bytes.create(len * 2);

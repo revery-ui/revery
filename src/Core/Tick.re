@@ -38,6 +38,10 @@ module Make = (ClockImpl: Clock) => {
   let _scheduledTickers: ref(list(tickFunction)) = ref([]);
   let _cancelledTickers: ref(IntMap.t(bool)) = ref(IntMap.empty);
 
+  let getActiveTickers = () => {
+    _activeTickers^ |> List.map(tf => tf.id);
+  };
+
   let _filterMap = (v: list(option('a))): list('a) => {
     let rec f = v =>
       switch (v) {

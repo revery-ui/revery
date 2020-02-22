@@ -30,6 +30,7 @@ let onMouseMove: (t, mouseMoveEvent => unit) => unsubscribe;
 let onMouseDown: (t, mouseButtonEvent => unit) => unsubscribe;
 let onMouseUp: (t, mouseButtonEvent => unit) => unsubscribe;
 let onMouseWheel: (t, mouseWheelEvent => unit) => unsubscribe;
+let onSizeChanged: (t, size => unit) => unsubscribe;
 let onTextInputCommit: (t, textInputEvent => unit) => unsubscribe;
 
 let canQuit: t => bool;
@@ -41,6 +42,7 @@ let getScaleAndZoom: t => float;
 let getSdlWindow: t => Sdl2.Window.t;
 let getZoom: t => float;
 let getUniqueId: t => int;
+let getBackgroundColor: t => Color.t;
 
 let isDirty: t => bool;
 
