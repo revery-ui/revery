@@ -68,16 +68,11 @@ jobs:
   doc:
     name: Push docs to GitHub's Pages
     runs-on: [macos-latest]
-    needs: [lint]
     steps:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
       - uses: actions/checkout@v1
-      - name: sync with lint job
-        run: |
-          git fetch --all
-          git pull --progress --force
       - name: Install esy
         run: npm install -g esy
       - name: Solve doc dependencies
