@@ -30,7 +30,7 @@ jobs:
       - name: set doc_path
         id: print_esy_doc_path
         run: echo ::set-output name=doc_path::$(esy "@doc" echo "#{self.target_dir / 'default' / '_doc' / '_html'}")
-      - run: ehco $GITHUB_ACTOR $DOC_PATH
+      - run: echo $GITHUB_ACTOR $DOC_PATH
         env:
           DOC_PATH: ${{ steps.print_esy_doc_path.outputs.doc_path }}
   lint:
