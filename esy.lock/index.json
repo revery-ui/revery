@@ -577,7 +577,7 @@
         "@opam/topkg@opam:1.0.1@a42c631e",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
-        "@opam/cmdliner@opam:1.0.2@8ab0598a",
+        "@opam/cmdliner@opam:1.0.2@1c17346c",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
@@ -1497,7 +1497,7 @@
         "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/js_of_ocaml@opam:3.5.2@c5bae178",
         "@opam/fmt@opam:0.8.8@01c3a23c",
-        "@opam/cmdliner@opam:1.0.2@8ab0598a",
+        "@opam/cmdliner@opam:1.0.2@1c17346c",
         "@opam/base-threads@opam:base@36803084",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -1649,14 +1649,14 @@
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocaml-migrate-parsetree@opam:1.5.0@3e319dbc",
         "@opam/dune@opam:1.11.4@a7ccb7ae",
-        "@opam/cmdliner@opam:1.0.2@8ab0598a",
+        "@opam/cmdliner@opam:1.0.2@1c17346c",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
         "@opam/ocaml-migrate-parsetree@opam:1.5.0@3e319dbc",
         "@opam/dune@opam:1.11.4@a7ccb7ae",
-        "@opam/cmdliner@opam:1.0.2@8ab0598a"
+        "@opam/cmdliner@opam:1.0.2@1c17346c"
       ]
     },
     "@opam/js_of_ocaml@opam:3.5.2@c5bae178": {
@@ -1791,7 +1791,7 @@
         "@opam/seq@opam:base@d8d7de1d",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
-        "@opam/cmdliner@opam:1.0.2@8ab0598a",
+        "@opam/cmdliner@opam:1.0.2@1c17346c",
         "@opam/base-unix@opam:base@87d0b2eb",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -2000,8 +2000,8 @@
       "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
       "devDependencies": []
     },
-    "@opam/cmdliner@opam:1.0.2@8ab0598a": {
-      "id": "@opam/cmdliner@opam:1.0.2@8ab0598a",
+    "@opam/cmdliner@opam:1.0.2@1c17346c": {
+      "id": "@opam/cmdliner@opam:1.0.2@1c17346c",
       "name": "@opam/cmdliner",
       "version": "opam:1.0.2",
       "source": {
