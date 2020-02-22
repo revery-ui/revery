@@ -3,8 +3,23 @@ name: Validate Pull Request
 on: [push, pull_request]
 
 jobs:
+  doc:
+    name: Push docs to GitHub's Pages
+    runs-on: [macos-latest]
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - uses: actions/checkout@v1
+      - name: Install esy
+        run: npm install -g esy
+      - name: Install doc dependencies
+        run: esy @doc install
+      - name: Install doc dependencies
+        run: esy @doc build-dependencies --release
+      - run: ehco GITHUB_ACTOR
   lint:
-    name: lint lockdir
+    name: Lint lockdir, autoformat
     runs-on: macos-latest
     steps:
       - uses: actions/setup-node@v1
