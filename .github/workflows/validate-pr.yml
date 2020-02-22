@@ -34,6 +34,7 @@ jobs:
         run: echo ::set-output name=doc_path::$(esy "@doc" echo "#{self.target_dir / 'default' / '_doc' / '_html'}")
       - run: |
           echo $GITHUB_ACTOR $DOC_PATH
+          find . -name "*.html"
           ls $DOC_PATH
         env:
           DOC_PATH: ${{ steps.print_esy_doc_path.outputs.doc_path }}
