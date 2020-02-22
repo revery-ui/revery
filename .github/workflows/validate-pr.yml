@@ -59,8 +59,50 @@ jobs:
         run: git status
         if: success()
       - uses: actions/github-script@0.3.0
-        if: failure()
+        if: failure() && github.event == 'pull_request'
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.issues.createComment({...context.issue, body: `I have updated your lock dirs and formatted the code. Please @${context.actor} pull the last commit before pushing any more changes.`});
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # If we have many bug we can test on all plateform
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - uses: actions/checkout@v1
+      - name: Install esy
+        run: npm install -g esy
+      - name: Install dependencies
+        run: esy install
+      - name: Print esy cache
+        id: print_esy_cache
+        run: node .github/workflows/print_esy_cache.js
+      - name: Try to restore dependencies cache
+        if: matrix.os != 'windows-latest'
+        id: deps-cache-non-win
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
+          key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
+      - name: Try to restore dependencies cache
+        if: matrix.os == 'windows-latest'
+        id: deps-cache-win
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
+          key: ${{ matrix.os }}-${{ hashFiles('**\index.json') }}
+      - name: Build dependencies
+        if: steps.deps-cache-win.outputs.cache-hit != 'true' && steps.deps-cache-non-win.outputs.cache-hit != 'true'
+        run: esy build-dependencies --release
+      - name: Build
+        run: esy build --release
+      - name: Build test/dev dependencies
+        if: steps.deps-cache-win.outputs.cache-hit != 'true' && steps.deps-cache-non-win.outputs.cache-hit != 'true'
+        run: esy build-dependencies
