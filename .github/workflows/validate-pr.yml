@@ -28,7 +28,7 @@ jobs:
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
         run: esy @doc build-dependencies --release
       - name: Generate docs
-        run: esy @doc --release
+        run: esy @doc build --release
       - name: set doc_path
         id: print_esy_doc_path
         run: echo ::set-output name=doc_path::$(esy "@doc" echo "#{self.target_dir / 'default' / '_doc' / '_html'}")
