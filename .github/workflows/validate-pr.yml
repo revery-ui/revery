@@ -125,7 +125,7 @@ jobs:
       # If we have many bug we can test on all plateform
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/setup-node@v1
         with:
