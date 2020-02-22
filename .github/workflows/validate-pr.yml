@@ -75,6 +75,7 @@ jobs:
       - uses: actions/checkout@v1
       - name: Install esy
         run: npm install -g esy
+      - run: brew install coreutils
       - name: Solve doc dependencies
         run: esy @doc install
       - name: Print esy cache
