@@ -79,6 +79,11 @@ jobs:
       - uses: actions/checkout@v1
       - name: Install esy
         run: npm install -g esy
+      - name: Install native dependencies on ubuntu-latest
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-utils mesa-utils-extra ragel libgtk-3-dev nasm
       - name: Install dependencies
         run: esy install
       - name: Print esy cache
