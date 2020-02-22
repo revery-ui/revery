@@ -57,6 +57,9 @@ let%component make =
   let%hook (actualScrollLeft, setScrollLeft) = Hooks.state(scrollLeft);
   let%hook (bouncingState, setBouncingState) = Hooks.state(Idle);
 
+  let%hook (scrollview, setScrollview) = Hooks.state(() => Libscroll.scrollview_new());
+  //setScrollview(_ => scrollview);
+
   let%hook (actualScrollTop, _bounceAnimationState, resetBouncingAnimation) =
     switch (bouncingState) {
     | Idle =>
