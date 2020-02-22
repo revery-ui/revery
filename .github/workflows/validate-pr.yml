@@ -111,7 +111,7 @@ jobs:
           git add -f $DOC_PATH
           git status
           git commit -m "Push docs from $GITHUB_REF"
-          git subtree push origin gh-pages
+          git subtree push --prefix $DOC_PATH origin gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOC_PATH: ${{ steps.print_esy_doc_path.outputs.doc_path }}
