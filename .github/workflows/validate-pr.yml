@@ -33,14 +33,14 @@ jobs:
           key: macOS-latest-4.08-${{ hashFiles('**/index.json') }}
       - name: Build dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
-        run: esy build-dependencies --release -P package-ci-4.08
+        run: esy build-dependencies --release
       - name: Generate opam files
         run: |
-          esy build -P package-ci-4.08 dune build @check
+          esy build dune build @check
           git add *opam
       - name: format sources files
         run: |
-          esy build -P package-ci-4.08 fmt
+          esy format
           git add "*.re" "*.rei"
       - name: Check that lock directory are up-to-date.
         run: git diff --exit-code --cached
