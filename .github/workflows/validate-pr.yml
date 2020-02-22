@@ -73,11 +73,11 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
+      - uses: actions/checkout@v1
       - name: sync with lint job
         run: |
           git fetch --all
           git pull --progress --force
-      - uses: actions/checkout@v1
       - name: Install esy
         run: npm install -g esy
       - name: Solve doc dependencies
