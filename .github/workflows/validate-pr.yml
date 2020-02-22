@@ -95,6 +95,12 @@ jobs:
       - name: Print docs path
         id: print_docs_path
         run: node .github/workflows/print_docs_path.js
+      - run: |
+          echo $GITHUB_ACTOR $DOC_PATH
+          find . -name "*.html"
+          ls $DOC_PATH
+        env:
+          DOC_PATH: ${{ steps.print_docs_path.outputs.docs_path }}
       - name: Deploy docs
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
