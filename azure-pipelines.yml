@@ -43,26 +43,6 @@ jobs:
   - script: docker run --rm --mount src=`pwd`,target=/revery,type=bind centos /bin/bash -c 'cd revery && ls -a'
   - script: docker run --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined --rm --mount src=`pwd`,target=/revery,type=bind centos /bin/bash -c 'cd revery && ./scripts/docker-build.sh'
 
-- job: Hygiene_Checks
-  displayName: 'Hygiene Checks'
-  timeoutInMinutes: 0
-  pool:
-    vmImage: 'macOS 10.13'
-
-  variables:
-    STAGING_DIRECTORY: $(Build.StagingDirectory)
-    ESY__CACHE_INSTALL_PATH: /Users/runner/.esy/3__________________________________________________________________/i
-    ESY__CACHE_SOURCE_TARBALL_PATH: /Users/runner/.esy/source/i
-    # ESY__NPM_ROOT: /usr/local/lib/node_modules/esy
-
-  steps:
-  - script: brew update
-  - script: brew install libpng ragel
-  - script: node --version
-  - template: .ci/restore-build-cache.yml
-  - template: .ci/esy-check-hygiene.yml
-  - template: .ci/publish-build-cache.yml
-
 - job: MacOS
   timeoutInMinutes: 0
   pool:
