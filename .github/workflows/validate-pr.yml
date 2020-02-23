@@ -21,7 +21,7 @@ jobs:
       - name: Update lockdir ci
         run: |
           rm -rf ci.esy.lock
-          esy install
+          esy @ci install
           git add ci.esy.lock
       - name: Update lockdir test
         run: |
