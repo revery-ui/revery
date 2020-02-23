@@ -98,7 +98,7 @@ jobs:
       - name: Install esy
         run: npm install -g esy@0.6.2
       - name: Solve doc dependencies
-        run: esy @doc install
+        run: esy @ci install
       - name: Print esy cache
         id: print_esy_cache
         run: node .github/workflows/print_esy_cache.js
