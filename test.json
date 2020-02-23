@@ -9,6 +9,9 @@
           "esy-installer Revery.install",
           "esy-installer ReveryTest.install"
       ],
+      "dependencies": {
+        "@reason-native/rely": "*"
+      },
 	  "devDependencies": {
 	    "ocaml": ">=4.6.0 <4.9.0"
 	  }
