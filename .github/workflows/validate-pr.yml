@@ -95,21 +95,6 @@ jobs:
         run: node .github/workflows/print_docs_path.js
       - name: Generate docs
         run: esy @doc build --release
-      - run: ls ./_esy
-      - run: ls ./_esy/doc
-      - run: ls ./_esy/doc/store
-      - run: ls ./_esy/doc/store/b
-      - run: ls ./_esy/doc/store/b/revery-*
-      - run: ls ./_esy/doc/store/b/revery-*/default
-      - run: ls ./_esy/doc/store/b/revery-*/default/_doc
-      - run: ls ./_esy/doc/store/b/revery-*/default/_doc/_html
-      - run: echo $GITHUB_ACTOR $DOC_PATH
-        env:
-          DOC_PATH: ${{ steps.print_docs_path.outputs.docs_path }}
-      - run: find . -name "*.html"
-      - run: ls ./$DOC_PATH
-        env:
-          DOC_PATH: ${{ steps.print_docs_path.outputs.docs_path }}
       - name: Deploy docs
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
