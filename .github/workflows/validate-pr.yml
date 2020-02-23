@@ -117,6 +117,10 @@ jobs:
           BRANCH: gh-pages
           CLEAN: true
           FOLDER: ${{ steps.print_docs_path.outputs.docs_path }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: Docs
+          path: ${{ steps.print_docs_path.outputs.docs_path }}
 
   build:
     name: Build
