@@ -2,9 +2,9 @@
   "name": "ci",
   "private": true,
   "scripts": {
-    "run": "esy '@ci' x http-server #{self.target_dir / 'default' / '_doc' / '_html'}",
+    "run": "esy @ci x http-server #{self.target_dir / 'default' / '_doc' / '_html'}",
     "print": "esy '@ci' echo #{self.target_dir / 'default' / '_doc' / '_html'}",
-    "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}"
+    "format": "esy @ci #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}"
   },
   "esy": {
     "build": [
