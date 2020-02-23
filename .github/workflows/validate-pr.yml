@@ -15,13 +15,29 @@ jobs:
         run: npm install -g esy
       - name: Update lockdir
         run: |
-          git rm -rf esy.lock test.esy.lock bench.esy.lock doc.esy.lock js.esy.lock
+          rm -rf esy.lock
           esy install
-          esy install -P test || true
-          esy install -P bench || true
-          esy install -P doc || true
-          esy install -P js || true
-          git add *lock
+          git add esy.lock
+      - name: Update lockdir test
+        run: |
+          rm -rf test.esy.lock
+          esy install -P test
+          git add test.esy.lock
+      - name: Update lockdir bench
+        run: |
+          rm -rf bench.esy.lock
+          esy install -P bench
+          git add bench.esy.lock
+      - name: Update lockdir doc
+        run: |
+          rm -rf doc.esy.lock
+          esy install -P doc
+          git add doc.esy.lock
+      - name: Update lockdir js
+        run: |
+          rm -rf js.esy.lock
+          esy install -P js
+          git add js.esy.lock
       - name: Print esy cache
         id: print_esy_cache
         run: node .github/workflows/print_esy_cache.js
