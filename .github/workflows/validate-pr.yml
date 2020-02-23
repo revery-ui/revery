@@ -91,8 +91,7 @@ jobs:
           node-version: 12
       - uses: actions/checkout@v1
       - name: Install esy
-        run: npm install -g esy
-      - run: brew install coreutils
+        run: npm install -g esy@0.6.2
       - name: Solve doc dependencies
         run: esy @doc install
       - name: Print esy cache
