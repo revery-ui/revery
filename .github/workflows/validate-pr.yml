@@ -54,7 +54,7 @@ jobs:
           key: macOS-latest-${{ hashFiles('ci.esy.lock/index.json') }}
       - name: Build dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
-        run: esy build-dependencies --release
+        run: esy @ci build-dependencies --release
       - name: Generate opam files
         run: |
           esy @ci dune build @check
@@ -110,7 +110,7 @@ jobs:
           key: macOS-latest-${{ hashFiles('ci.esy.lock/index.json') }}
       - name: Install doc dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
-        run: esy @doc build-dependencies --release
+        run: esy @ci build-dependencies --release
       - name: Print docs path
         id: print_docs_path
         run: node .github/workflows/print_docs_path.js
