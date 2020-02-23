@@ -57,11 +57,11 @@ jobs:
         run: esy build-dependencies --release
       - name: Generate opam files
         run: |
-          esy build dune build @check
+          esy @ci dune build @check
           git add *opam
       - name: format sources files
         run: |
-          esy format
+          esy @ci format
           git add -u
       - name: Check that lock directory are up-to-date.
         run: git diff --exit-code --cached
@@ -115,7 +115,7 @@ jobs:
         id: print_docs_path
         run: node .github/workflows/print_docs_path.js
       - name: Generate docs
-        run: esy @doc build --release
+        run: esy @ci build --release
       - name: Deploy docs
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
