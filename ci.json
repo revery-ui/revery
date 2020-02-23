@@ -1,0 +1,23 @@
+{
+  "name": "ci",
+  "private": true,
+  "scripts": {
+    "run": "esy '@ci' x http-server #{self.target_dir / 'default' / '_doc' / '_html'}",
+    "print": "esy '@ci' echo #{self.target_dir / 'default' / '_doc' / '_html'}",
+    "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}"
+  },
+  "esy": {
+    "build": [
+      "dune build @doc -p Revery -j4"
+    ]
+  },
+  "dependencies": {
+    "@opam/dune": "^2.3.0",
+    "@opam/ocamlformat": "^0.13.0",
+    "@opam/odoc": "^1.5.0",
+    "@opam/reason": "^3.5.2",
+    "esy-astyle": "github:zbaylin/esy-astyle#59bc21a",
+    "http-server": "^0.12.1",
+    "ocaml": "^4.9.0"
+  }
+}

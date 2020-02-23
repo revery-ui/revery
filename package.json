@@ -12,7 +12,7 @@
     "build:js": "esy b dune build examples/Examples.bc.js",
     "build:js:release": "esy b dune build examples/Examples.bc.js",
     "test": "esy b dune runtest",
-    "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}",
+    "format": "esy @ci format",
     "run": "esy x Examples"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
@@ -66,7 +66,6 @@
   "devDependencies": {
     "ocaml": "~4.8",
     "@opam/merlin": "^3.3.2",
-    "@opam/dune": "^1.8.0",
-    "esy-astyle": "github:zbaylin/esy-astyle#59bc21a"
+    "@opam/dune": "^1.8.0"
   }
 }

@@ -2,7 +2,7 @@ const path = require("path");
 const cp = require("child_process");
 
 const docsPath = cp.execSync(
-  `esy @doc build --release echo "#{self.target_dir / 'default' / '_doc' / '_html'}"`
+  `esy @ci print"`
 );
 const relativeDocsPath = path.relative(process.cwd(), docsPath.toString());
 

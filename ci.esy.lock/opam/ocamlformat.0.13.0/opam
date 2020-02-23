@@ -1,0 +1,39 @@
+opam-version: "2.0"
+maintainer: "OCamlFormat Team <ocamlformat-team@fb.com>"
+authors: "Josh Berdine <jjb@fb.com>"
+homepage: "https://github.com/ocaml-ppx/ocamlformat"
+bug-reports: "https://github.com/ocaml-ppx/ocamlformat/issues"
+dev-repo: "git+https://github.com/ocaml-ppx/ocamlformat.git"
+url {
+  src:
+    "https://github.com/ocaml-ppx/ocamlformat/releases/download/0.13.0/ocamlformat-0.13.0-2.tbz"
+  checksum: [
+    "sha256=b84b694ef7c957bc05f938c98c687da77645cddab1c5ec6ae270f6113175224e"
+    "sha512=88d0c4c1746c08f3bd34a0d1e1e34dda1496d1d96f613e2523923ce7d9e9e31b0e5cc7ab7f6634d04ea6354aa777972a248b9c7bc4f817b4ad357277e4da781e"
+  ]
+}
+license: "MIT"
+build: [
+  ["ocaml" "tools/gen_version.mlt" "lib/Version.ml" version] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
+depends: [
+  "ocaml" {>= "4.06"}
+  "ocaml" {with-test & >= "4.08"}
+  "alcotest" {with-test}
+  "base" {>= "v0.11.0"}
+  "base-unix"
+  "cmdliner"
+  "dune" {>= "1.11.1"}
+  "fpath"
+  "ocaml-migrate-parsetree" {>= "1.3.1"}
+  "ocp-indent" {with-test}
+  "odoc" {>= "1.4.2"}
+  "re"
+  "stdio"
+  "uuseg" {>= "10.0.0"}
+  "uutf" {>= "1.0.1"}
+]
+synopsis: "Auto-formatter for OCaml code"
+description: "OCamlFormat is a tool to automatically format OCaml code in a uniform style."

@@ -1,4 +1,5 @@
 esy install
+esy '@ci' install
 esy '@test' install
 esy '@bench' install
 esy '@doc' install

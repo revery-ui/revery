@@ -18,6 +18,11 @@ jobs:
           rm -rf esy.lock
           esy install
           git add esy.lock
+      - name: Update lockdir ci
+        run: |
+          rm -rf ci.esy.lock
+          esy install
+          git add ci.esy.lock
       - name: Update lockdir test
         run: |
           rm -rf test.esy.lock
@@ -46,7 +51,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: macOS-latest-4.08-${{ hashFiles('**/index.json') }}
+          key: macOS-latest-${{ hashFiles('ci.esy.lock/index.json') }}
       - name: Build dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
         run: esy build-dependencies --release
@@ -102,7 +107,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: macOS-latest-4.08-${{ hashFiles('doc.esy.lock/index.json') }}
+          key: macOS-latest-${{ hashFiles('ci.esy.lock/index.json') }}
       - name: Install doc dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
         run: esy @doc build-dependencies --release
