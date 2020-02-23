@@ -1,5 +1,5 @@
 {
-  "checksum": "d7d8fe7d76c7dc5d4f9bdd6d606f9508",
+  "checksum": "3b9d6e05a0dc671e2f9f31950b8c5211",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
@@ -124,8 +124,7 @@
         "reason-harfbuzz@1.91.5004@d41d8cd9",
         "reason-gl-matrix@0.9.9306@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "http-server@0.12.1@d41d8cd9",
-        "flex@1.2.2@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
-        "@reason-native/console@0.0.3@d41d8cd9",
+        "flex@1.2.2@d41d8cd9", "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/ppx_deriving@opam:4.4.1@208c6c8f",
         "@opam/merlin-extend@opam:0.4@64c45329",
         "@opam/lwt_ppx@opam:2.0.0@9a61dd37", "@opam/lwt@opam:4.5.0@677655b4",
