@@ -1,0 +1,167 @@
+name: Validate Pull Request
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    name: Lint lockdir, autoformat
+    runs-on: macos-latest
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - uses: actions/checkout@v1
+      - name: Install esy
+        run: npm install -g esy
+      - name: Update lockdir
+        run: |
+          git rm -rf esy.lock test.esy.lock bench.esy.lock doc.esy.lock js.esy.lock
+          esy install
+          esy install -P test || true
+          esy install -P bench || true
+          esy install -P doc || true
+          esy install -P js || true
+          git add *lock
+      - name: Print esy cache
+        id: print_esy_cache
+        run: node .github/workflows/print_esy_cache.js
+      - name: Try to restore dependencies cache
+        id: deps-cache-macos
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
+          key: macOS-latest-4.08-${{ hashFiles('**/index.json') }}
+      - name: Build dependencies
+        if: steps.deps-cache-macos.outputs.cache-hit != 'true'
+        run: esy build-dependencies --release
+      - name: Generate opam files
+        run: |
+          esy build dune build @check
+          git add *opam
+      - name: format sources files
+        run: |
+          esy format
+          git add -u
+      - name: Check that lock directory are up-to-date.
+        run: git diff --exit-code --cached
+      - name: Push if it is not
+        if: failure()
+        run: |
+          git remote set-url --push origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
+          git config user.name "Github Runner"
+          git config user.email "runner@runner.github.com"
+          git commit -am "Update lockdir"
+          git status
+          git push origin HEAD:$GITHUB_REF
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Display status should be clean
+        run: git status
+        if: success()
+      - uses: actions/github-script@0.3.0
+        if: failure() && github.event == 'pull_request'
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({...context.issue, body: `I have updated your lock dirs and formatted the code. Please @${context.actor} pull the last commit before pushing any more changes.`});
+
+  doc:
+    name: Push docs to GitHub's Pages
+    runs-on: [macos-latest]
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - uses: actions/checkout@v1
+      - name: Install esy
+        run: npm install -g esy
+      - run: brew install coreutils
+      - name: Solve doc dependencies
+        run: esy @doc install
+      - name: Print esy cache
+        id: print_esy_cache
+        run: node .github/workflows/print_esy_cache.js
+      - name: Try to restore dependencies cache
+        id: deps-cache-macos
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
+          key: macOS-latest-4.08-${{ hashFiles('doc.esy.lock/index.json') }}
+      - name: Install doc dependencies
+        if: steps.deps-cache-macos.outputs.cache-hit != 'true'
+        run: esy @doc build-dependencies --release
+      - name: Print docs path
+        id: print_docs_path
+        run: node .github/workflows/print_docs_path.js
+      - name: Generate docs
+        run: esy @doc build --release
+      - run: ls ./_esy
+      - run: ls ./_esy/doc
+      - run: ls ./_esy/doc/store
+      - run: ls ./_esy/doc/store/b
+      - run: ls ./_esy/doc/store/b/revery-*
+      - run: ls ./_esy/doc/store/b/revery-*/default
+      - run: ls ./_esy/doc/store/b/revery-*/default/_doc
+      - run: ls ./_esy/doc/store/b/revery-*/default/_doc/_html
+      - run: echo $GITHUB_ACTOR $DOC_PATH
+        env:
+          DOC_PATH: ${{ steps.print_docs_path.outputs.docs_path }}
+      - run: find . -name "*.html"
+      - run: ls ./$DOC_PATH
+        env:
+          DOC_PATH: ${{ steps.print_docs_path.outputs.docs_path }}
+      - name: Deploy docs
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          CLEAN: true
+          FOLDER: ${{ steps.print_docs_path.outputs.docs_path }}
+
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # If we have many bug we can test on all plateform
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - uses: actions/checkout@v1
+      - name: Install esy
+        run: npm install -g esy
+      - name: Install native dependencies on ubuntu-latest
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-utils mesa-utils-extra ragel libgtk-3-dev nasm
+      - name: Install dependencies
+        run: esy install
+      - name: Print esy cache
+        id: print_esy_cache
+        run: node .github/workflows/print_esy_cache.js
+      - name: Try to restore dependencies cache
+        if: matrix.os != 'windows-latest'
+        id: deps-cache-non-win
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
+          key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
+      - name: Try to restore dependencies cache
+        if: matrix.os == 'windows-latest'
+        id: deps-cache-win
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
+          key: ${{ matrix.os }}-${{ hashFiles('**\index.json') }}
+      - name: Build dependencies
+        if: steps.deps-cache-win.outputs.cache-hit != 'true' && steps.deps-cache-non-win.outputs.cache-hit != 'true'
+        run: esy build-dependencies --release
+      - name: Build
+        run: esy build --release
+      - name: Build test/dev dependencies
+        if: steps.deps-cache-win.outputs.cache-hit != 'true' && steps.deps-cache-non-win.outputs.cache-hit != 'true'
+        run: esy build-dependencies

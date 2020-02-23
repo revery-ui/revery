@@ -124,9 +124,9 @@
         "reason-harfbuzz@1.91.5004@d41d8cd9",
         "reason-gl-matrix@0.9.9306@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "http-server@0.12.1@d41d8cd9",
-        "flex@1.2.2@d41d8cd9", "@reason-native/rely@3.1.0@d41d8cd9",
+        "flex@1.2.2@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
-        "@opam/ppx_deriving@opam:4.4@21d6c7a5",
+        "@opam/ppx_deriving@opam:4.4.1@208c6c8f",
         "@opam/odoc@opam:1.5.0@35218f5f",
         "@opam/lwt_ppx@opam:2.0.0@9a61dd37", "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9",
@@ -187,7 +187,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9", "@reason-native/rely@3.1.0@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/lambda-term@opam:2.0.3@9465cf1c",
@@ -318,7 +318,7 @@
       "overrides": [],
       "dependencies": [
         "refmterr@3.3.0@d41d8cd9", "ocaml@4.8.1000@d41d8cd9",
-        "@reason-native/rely@3.1.0@d41d8cd9",
+        "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/pastel@0.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
@@ -800,21 +800,21 @@
       "dependencies": [ "lodash@4.17.15@d41d8cd9" ],
       "devDependencies": []
     },
-    "@reason-native/rely@3.1.0@d41d8cd9": {
-      "id": "@reason-native/rely@3.1.0@d41d8cd9",
+    "@reason-native/rely@3.2.1@d41d8cd9": {
+      "id": "@reason-native/rely@3.2.1@d41d8cd9",
       "name": "@reason-native/rely",
-      "version": "3.1.0",
+      "version": "3.2.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native/rely/-/rely-3.1.0.tgz#sha1:4f59906dc7c18ba86c998e44d6463b6be866dfc6"
+          "archive:https://registry.npmjs.org/@reason-native/rely/-/rely-3.2.1.tgz#sha1:7945ac6a51773a97b8f8cfd97d2855ac7ac4ecb2"
         ]
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9", "ocaml@4.8.1000@d41d8cd9",
-        "@reason-native/pastel@0.1.0@d41d8cd9",
+        "ocaml@4.8.1000@d41d8cd9", "@reason-native/pastel@0.1.0@d41d8cd9",
         "@reason-native/file-context-printer@0.0.3@d41d8cd9",
+        "@reason-native/cli@0.0.1-alpha@d41d8cd9",
         "@opam/re@opam:1.9.0@d4d5e13d", "@opam/junit@opam:2.0.2@0b7bd730",
         "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
@@ -868,6 +868,24 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "@reason-native/cli@0.0.1-alpha@d41d8cd9": {
+      "id": "@reason-native/cli@0.0.1-alpha@d41d8cd9",
+      "name": "@reason-native/cli",
+      "version": "0.0.1-alpha",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/@reason-native/cli/-/cli-0.0.1-alpha.tgz#sha1:0b911053fa7cc661eac10ead50d6ea6cc1fcd94d"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@reason-native/pastel@0.1.0@d41d8cd9",
+        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:1.11.4@a7ccb7ae",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
       "devDependencies": []
@@ -955,7 +973,7 @@
         "@opam/topkg@opam:1.0.1@a42c631e",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
-        "@opam/cmdliner@opam:1.0.2@8ab0598a",
+        "@opam/cmdliner@opam:1.0.2@1c17346c",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
@@ -1409,20 +1427,20 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
-    "@opam/ppx_deriving@opam:4.4@21d6c7a5": {
-      "id": "@opam/ppx_deriving@opam:4.4@21d6c7a5",
+    "@opam/ppx_deriving@opam:4.4.1@208c6c8f": {
+      "id": "@opam/ppx_deriving@opam:4.4.1@208c6c8f",
       "name": "@opam/ppx_deriving",
-      "version": "opam:4.4",
+      "version": "opam:4.4.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/c2/c2d85af4cb65a1f163f624590fb0395a164bbfd0d05082092526b669e66bcc34#sha256:c2d85af4cb65a1f163f624590fb0395a164bbfd0d05082092526b669e66bcc34",
-          "archive:https://github.com/ocaml-ppx/ppx_deriving/archive/v4.4.tar.gz#sha256:c2d85af4cb65a1f163f624590fb0395a164bbfd0d05082092526b669e66bcc34"
+          "archive:https://opam.ocaml.org/cache/sha256/27/27bc57774724fc4f48775f2011375a5ee1439570204abbf6607761c472757e2f#sha256:27bc57774724fc4f48775f2011375a5ee1439570204abbf6607761c472757e2f",
+          "archive:https://github.com/ocaml-ppx/ppx_deriving/archive/v4.4.1.tar.gz#sha256:27bc57774724fc4f48775f2011375a5ee1439570204abbf6607761c472757e2f"
         ],
         "opam": {
           "name": "ppx_deriving",
-          "version": "4.4",
-          "path": "doc.esy.lock/opam/ppx_deriving.4.4"
+          "version": "4.4.1",
+          "path": "doc.esy.lock/opam/ppx_deriving.4.4.1"
         }
       },
       "overrides": [],
@@ -1489,7 +1507,7 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/tyxml@opam:4.3.0@c1da25f1",
         "@opam/result@opam:1.4@dc720aef", "@opam/fpath@opam:0.7.2@45477b93",
         "@opam/dune@opam:1.11.4@a7ccb7ae", "@opam/cppo@opam:1.6.6@f4f83858",
-        "@opam/cmdliner@opam:1.0.2@8ab0598a",
+        "@opam/cmdliner@opam:1.0.2@1c17346c",
         "@opam/astring@opam:0.8.3@4e5e17d5",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -1497,7 +1515,7 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/tyxml@opam:4.3.0@c1da25f1",
         "@opam/result@opam:1.4@dc720aef", "@opam/fpath@opam:0.7.2@45477b93",
         "@opam/dune@opam:1.11.4@a7ccb7ae",
-        "@opam/cmdliner@opam:1.0.2@8ab0598a",
+        "@opam/cmdliner@opam:1.0.2@1c17346c",
         "@opam/astring@opam:0.8.3@4e5e17d5"
       ]
     },
@@ -1908,7 +1926,7 @@
         "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/js_of_ocaml@opam:3.5.2@c5bae178",
         "@opam/fmt@opam:0.8.8@01c3a23c",
-        "@opam/cmdliner@opam:1.0.2@8ab0598a",
+        "@opam/cmdliner@opam:1.0.2@1c17346c",
         "@opam/base-threads@opam:base@36803084",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -2060,14 +2078,14 @@
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocaml-migrate-parsetree@opam:1.5.0@3e319dbc",
         "@opam/dune@opam:1.11.4@a7ccb7ae",
-        "@opam/cmdliner@opam:1.0.2@8ab0598a",
+        "@opam/cmdliner@opam:1.0.2@1c17346c",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
         "@opam/ocaml-migrate-parsetree@opam:1.5.0@3e319dbc",
         "@opam/dune@opam:1.11.4@a7ccb7ae",
-        "@opam/cmdliner@opam:1.0.2@8ab0598a"
+        "@opam/cmdliner@opam:1.0.2@1c17346c"
       ]
     },
     "@opam/js_of_ocaml@opam:3.5.2@c5bae178": {
@@ -2202,7 +2220,7 @@
         "@opam/seq@opam:base@d8d7de1d",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
-        "@opam/cmdliner@opam:1.0.2@8ab0598a",
+        "@opam/cmdliner@opam:1.0.2@1c17346c",
         "@opam/base-unix@opam:base@87d0b2eb",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -2411,8 +2429,8 @@
       "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
       "devDependencies": []
     },
-    "@opam/cmdliner@opam:1.0.2@8ab0598a": {
-      "id": "@opam/cmdliner@opam:1.0.2@8ab0598a",
+    "@opam/cmdliner@opam:1.0.2@1c17346c": {
+      "id": "@opam/cmdliner@opam:1.0.2@1c17346c",
       "name": "@opam/cmdliner",
       "version": "opam:1.0.2",
       "source": {
