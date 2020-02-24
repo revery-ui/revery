@@ -3,20 +3,23 @@ type measureResult = {
   height: float,
 };
 
-let paint = Skia.Paint.make();
-Skia.Paint.setTextEncoding(paint, GlyphId);
 
-let measure = (~smoothing: Smoothing.t, font, size, text: string) => {
-  let {height, _}: FontMetrics.t = FontCache.getMetrics(font, size);
-  let skiaFace = FontCache.getSkiaTypeface(font);
+let measure = {
+  let paint = Skia.Paint.make();
+  Skia.Paint.setTextEncoding(paint, GlyphId);
 
-  let glyphString =
-    text |> FontCache.shape(font) |> ShapeResult.getGlyphString;
+  (~smoothing: Smoothing.t, font, size, text: string) => {
+    let {height, _}: FontMetrics.t = FontCache.getMetrics(font, size);
+    let skiaFace = FontCache.getSkiaTypeface(font);
 
-  Smoothing.setPaint(~smoothing, paint);
+    let glyphString =
+      text |> FontCache.shape(font) |> ShapeResult.getGlyphString;
 
-  Skia.Paint.setTypeface(paint, skiaFace);
-  Skia.Paint.setTextSize(paint, size);
-  let width = Skia.Paint.measureText(paint, glyphString, None);
-  {height, width};
+    Smoothing.setPaint(~smoothing, paint);
+
+    Skia.Paint.setTypeface(paint, skiaFace);
+    Skia.Paint.setTextSize(paint, size);
+    let width = Skia.Paint.measureText(paint, glyphString, None);
+    {height, width};
+  };
 };
