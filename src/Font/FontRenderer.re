@@ -6,15 +6,15 @@ type measureResult = {
 let paint = Skia.Paint.make();
 Skia.Paint.setTextEncoding(paint, GlyphId);
 
-let measure = (font, size, text: string) => {
+let measure = (~smoothing: Smoothing.t, font, size, text: string) => {
   let {height, _}: FontMetrics.t = FontCache.getMetrics(font, size);
   let skiaFace = FontCache.getSkiaTypeface(font);
 
   let glyphString =
     text |> FontCache.shape(font) |> ShapeResult.getGlyphString;
 
-  Skia.Paint.setLcdRenderText(paint, true);
-  Skia.Paint.setAntiAlias(paint, true);
+  Smoothing.setPaint(~smoothing, paint);
+
   Skia.Paint.setTextEncoding(paint, GlyphId);
 
   Skia.Paint.setTypeface(paint, skiaFace);
