@@ -15,8 +15,6 @@ let measure = (~smoothing: Smoothing.t, font, size, text: string) => {
 
   Smoothing.setPaint(~smoothing, paint);
 
-  Skia.Paint.setTextEncoding(paint, GlyphId);
-
   Skia.Paint.setTypeface(paint, skiaFace);
   Skia.Paint.setTextSize(paint, size);
   let width = Skia.Paint.measureText(paint, glyphString, None);
