@@ -3,7 +3,6 @@ type measureResult = {
   height: float,
 };
 
-
 let measure = {
   let paint = Skia.Paint.make();
   Skia.Paint.setTextEncoding(paint, GlyphId);
