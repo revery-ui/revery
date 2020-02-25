@@ -66,7 +66,7 @@
         "reason-skia@github:revery-ui/reason-skia#69743dc@d41d8cd9",
         "reason-sdl2@2.10.3017@d41d8cd9",
         "reason-harfbuzz@1.91.5004@d41d8cd9",
-        "reason-gl-matrix@0.9.9306@d41d8cd9",
+        "reason-gl-matrix@0.9.9307@d41d8cd9",
         "reason-font-manager@2.0.1@d41d8cd9", "flex@1.2.2@d41d8cd9",
         "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
@@ -192,7 +192,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9", "reason-gl-matrix@0.9.9306@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9", "reason-gl-matrix@0.9.9307@d41d8cd9",
         "esy-sdl2@2.0.10005@d41d8cd9",
         "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9",
         "@opam/lwt_ppx@opam:2.0.0@9a61dd37", "@opam/lwt@opam:4.5.0@677655b4",
@@ -217,20 +217,20 @@
       ],
       "devDependencies": []
     },
-    "reason-gl-matrix@0.9.9306@d41d8cd9": {
-      "id": "reason-gl-matrix@0.9.9306@d41d8cd9",
+    "reason-gl-matrix@0.9.9307@d41d8cd9": {
+      "id": "reason-gl-matrix@0.9.9307@d41d8cd9",
       "name": "reason-gl-matrix",
-      "version": "0.9.9306",
+      "version": "0.9.9307",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-gl-matrix/-/reason-gl-matrix-0.9.9306.tgz#sha1:130c3db5ab9a405a85e3371ab13f99649050489e"
+          "archive:https://registry.npmjs.org/reason-gl-matrix/-/reason-gl-matrix-0.9.9307.tgz#sha1:5dd73573d7f5eecc2383d4a72ed4927520826631"
         ]
       },
       "overrides": [],
       "dependencies": [
         "@opam/js_of_ocaml-compiler@opam:3.5.0@9ea7292f",
-        "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/reason@3.5.2@d41d8cd9"
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
       "devDependencies": []
     },
