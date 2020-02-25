@@ -4,6 +4,17 @@ let rgba = (r, g, b, a) => Skia.Color.Float.makeArgb(a, r, g, b);
 
 let rgb = (r, g, b) => Skia.Color.Float.makeArgb(1.0, r, g, b);
 
+let rgba_int = (r, g, b, a) => Skia.Color.makeArgb(
+  a |> Int32.of_int, 
+  r |> Int32.of_int, 
+  g |> Int32.of_int, 
+  b |> Int32.of_int);
+
+let rgb_int = (r, g, b) => Skia.Color.makeArgb(255l, 
+  r |> Int32.of_int, 
+  g |> Int32.of_int, 
+  b |> Int32.of_int);
+
 let getAlpha = Skia.Color.Float.getA;
 
 // Matches:
