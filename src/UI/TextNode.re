@@ -4,6 +4,7 @@ module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
 open Revery_Core;
+open Revery_Font;
 
 open Style;
 open ViewNode;
@@ -13,6 +14,7 @@ class textNode (text: string) = {
   val mutable text = text;
   val mutable _isMeasured = false;
   val mutable _lines: list(string) = [];
+  val mutable _smoothing = Smoothing.default;
   val _textPaint = {
     let paint = Skia.Paint.make();
     Skia.Paint.setTextEncoding(paint, GlyphId);
@@ -31,6 +33,7 @@ class textNode (text: string) = {
     switch (Revery_Font.FontCache.load(fontFamily)) {
     | Error(_) => ()
     | Ok(font) =>
+      Revery_Font.Smoothing.setPaint(~smoothing=_smoothing, _textPaint);
       Skia.Paint.setColor(_textPaint, Color.toSkia(colorWithAppliedOpacity));
       Skia.Paint.setTypeface(
         _textPaint,
@@ -92,7 +95,8 @@ class textNode (text: string) = {
     let formattedText = TextOverflow.removeLineBreaks(text);
 
     let measure = str =>
-      Text.measure(~fontFamily, ~fontSize, str) |> (value => value.width);
+      Text.measure(~smoothing=_smoothing, ~fontFamily, ~fontSize, str)
+      |> (value => value.width);
 
     let width = measure(formattedText);
     let isOverflowing = width >= maxWidth;
@@ -122,6 +126,7 @@ class textNode (text: string) = {
       _isMeasured = false;
       _this#markLayoutDirty();
     };
+  pub setSmoothing = smoothing => _smoothing = smoothing;
   pub measure = (width, _height) => {
     _isMeasured = true;
     /**
@@ -145,7 +150,12 @@ class textNode (text: string) = {
       lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
 
     let measureWidth = str =>
-      Text.measureCharWidth(~fontFamily, ~fontSize, str);
+      Text.measureCharWidth(
+        ~smoothing=_smoothing,
+        ~fontFamily,
+        ~fontSize,
+        str,
+      );
     _lines =
       TextWrapping.wrapText(
         ~text,
@@ -155,7 +165,9 @@ class textNode (text: string) = {
       );
 
     let pickWiderLine = (leftWidth, right) => {
-      let rightWidth = Text.measure(~fontFamily, ~fontSize, right).width;
+      let rightWidth =
+        Text.measure(~smoothing=_smoothing, ~fontFamily, ~fontSize, right).
+          width;
       max(leftWidth, rightWidth);
     };
     let maxWidthLine = List.fold_left(pickWiderLine, 0., _lines);

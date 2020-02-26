@@ -232,9 +232,13 @@ let%component make =
     Option.value(cursorPosition, ~default=state.cursorPosition)
     |> min(String.length(value));
 
+  // TODO: Expose as argument
+  let smoothing = Revery_Font.Smoothing.default;
+
   let measureTextWidth = text => {
     let dimensions =
       Revery_Draw.Text.measure(
+        ~smoothing,
         ~fontFamily=textAttrs.fontFamily,
         ~fontSize=textAttrs.fontSize,
         text,
@@ -366,6 +370,7 @@ let%component make =
     <Text
       ref={node => textRef := Some(node)}
       text={showPlaceholder ? placeholder : value}
+      smoothing
       style={Styles.text(
         ~showPlaceholder,
         ~scrollOffset,
