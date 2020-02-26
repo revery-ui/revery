@@ -53,7 +53,7 @@
     "reason-harfbuzz": "^1.91.5004",
     "rench": "^1.9.1",
     "rebez": "github:jchavarri/rebez#03fa3b7",
-    "reason-sdl2": "^2.10.3016",
+    "reason-sdl2": "*",
     "reason-skia": "github:revery-ui/reason-skia#69743dc",
     "revery-text-wrap": "github:revery-ui/revery-text-wrap#005385c",
     "timber": "*",
@@ -64,7 +64,8 @@
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
     "@opam/cmdliner": "1.0.2",
     "timber": "glennsl/timber#ae065bb",
-    "libscroll": "link:../libscroll-re"
+    "libscroll": "link:../libscroll-re",
+    "reason-sdl2": "link:../../revery-bryphe/reason-sdl2"
   },
   "devDependencies": {
     "ocaml": "~4.8",

@@ -57,8 +57,18 @@ let%component make =
   let%hook (actualScrollLeft, setScrollLeft) = Hooks.state(scrollLeft);
   let%hook (bouncingState, setBouncingState) = Hooks.state(Idle);
 
-  let%hook (scrollview, setScrollview) = Hooks.state(() => Libscroll.scrollview_new());
+  //let%hook (scrollview, setScrollview) = Hooks.state(() => Libscroll.scrollview_new());
   //setScrollview(_ => scrollview);
+  let%hook (scrollViewRef) = Hooks.ref(None);
+  let%hook () = Hooks.effect(OnMount, () => {
+    let scrollView = Libscroll.scrollview_new();
+    scrollViewRef := Some(scrollView);
+
+    let dispose = () => {
+       scrollViewRef := None;
+    };   
+    Some(dispose);
+ });
 
   let%hook (actualScrollTop, _bounceAnimationState, resetBouncingAnimation) =
     switch (bouncingState) {
@@ -157,8 +167,22 @@ let%component make =
               thumbColor=scrollThumbColor
             />
           : empty;
+              
+      /*let pan = (panEvent: NodeEvents.panEventParams) => {
+        switch (scrollViewRef^) {
+        | None => ()
+        | Some(scrollview) => {
+          let timestamp = wheelEvent.timestamp;
+          let delta = wheelEvent.delta;
+          let axis = wheelEvent.axis;
+        }
+      }*/
 
       let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
+        switch (scrollViewRef^) {
+        | Some(scrollview) => Libscroll.push_pan(scrollview, Libscroll.Vertical, 10.0)
+        | None => ()
+        }
         let delta = int_of_float(wheelEvent.deltaY *. 25.);
         let newScrollTop = actualScrollTop - delta;
 

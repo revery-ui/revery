@@ -21,6 +21,12 @@ type mouseButtonEventParams = {
 type mouseWheelEventParams = {
   deltaX: float,
   deltaY: float,
+  containsX: bool,
+  containsY: bool,
+  isFling: bool,
+  isInterrupt: bool,
+  source: Sdl2.WheelType.t,
+  timestamp: int,
 };
 
 [@deriving show({with_path: false})]
@@ -83,6 +89,7 @@ type mouseMoveHandler = mouseMoveEventParams => unit;
 type mouseOverHandler = mouseMoveEventParams => unit;
 type mouseOutHandler = mouseMoveEventParams => unit;
 type mouseWheelHandler = mouseWheelEventParams => unit;
+type panHandler = panEventParams => unit;
 type mouseWindowHandler = Window.t => unit;
 type focusHandler = focusEventParams => unit;
 type keyDownHandler = keyEventParams => unit;
