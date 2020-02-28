@@ -303,6 +303,12 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
     let wheelEvent: Events.mouseWheelEvent = {
       deltaX: float_of_int(deltaX),
       deltaY: float_of_int(deltaY),
+      containsX: true,
+      containsY: true,
+      source: Libscroll.Source.Mousewheel,
+      timestamp: 0, // TODO: add timestamps to mousewheel events in sdl OR completely switch to pan
+      isFling: false,
+      isInterrupt: false,
     };
     Event.dispatch(v.onMouseWheel, wheelEvent);
   | Sdl2.Event.MouseMotion({x, y, _}) =>

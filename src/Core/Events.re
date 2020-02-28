@@ -25,6 +25,12 @@ type mouseMoveEvent = {
 type mouseWheelEvent = {
   deltaX: float,
   deltaY: float,
+  containsX: bool,
+  containsY: bool,
+  isFling: bool,
+  isInterrupt: bool,
+  source: Libscroll.Source.t,
+  timestamp: int,
 };
 
 type mouseButtonEvent = {button: MouseButton.t};

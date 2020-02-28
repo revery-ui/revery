@@ -25,7 +25,7 @@ type mouseWheelEventParams = {
   containsY: bool,
   isFling: bool,
   isInterrupt: bool,
-  source: Sdl2.WheelType.t,
+  source: Libscroll.Source.t,
   timestamp: int,
 };
 
@@ -89,7 +89,6 @@ type mouseMoveHandler = mouseMoveEventParams => unit;
 type mouseOverHandler = mouseMoveEventParams => unit;
 type mouseOutHandler = mouseMoveEventParams => unit;
 type mouseWheelHandler = mouseWheelEventParams => unit;
-type panHandler = panEventParams => unit;
 type mouseWindowHandler = Window.t => unit;
 type focusHandler = focusEventParams => unit;
 type keyDownHandler = keyEventParams => unit;

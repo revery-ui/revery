@@ -180,7 +180,9 @@ let%component make =
 
       let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
         switch (scrollViewRef^) {
-        | Some(scrollview) => Libscroll.push_pan(scrollview, Libscroll.Vertical, 10.0)
+        | Some(scrollview) => {//Libscroll.push_pan(scrollview, Libscroll.Axis.Vertical, 10.0, 0)
+            ()
+        }
         | None => ()
         }
         let delta = int_of_float(wheelEvent.deltaY *. 25.);
