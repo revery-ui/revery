@@ -66,7 +66,8 @@
     "@opam/cmdliner": "1.0.2",
     "timber": "glennsl/timber#ae065bb",
     "libscroll": "link:../libscroll-re",
-    "reason-sdl2": "revery-ui/reason-sdl2#a52eee7"
+    "reason-sdl2": "revery-ui/reason-sdl2#a52eee7",
+    "esy-sdl2": "revery-ui/esy-sdl2#13ac578"
   },
   "devDependencies": {
     "ocaml": "~4.8",

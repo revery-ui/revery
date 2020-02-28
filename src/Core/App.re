@@ -160,6 +160,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     | Sdl2.Event.MouseButtonDown({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.MouseMotion({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.MouseWheel({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.MousePan({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.KeyDown({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.KeyUp({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.TextInput({windowID, _}) => handleEvent(windowID)

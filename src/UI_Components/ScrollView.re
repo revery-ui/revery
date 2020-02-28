@@ -5,6 +5,8 @@ open Revery_UI_Primitives;
 
 module Hooks = Revery_UI_Hooks;
 
+module Log = (val Log.withNamespace("Revery.ScrollView"));
+
 type bouncingState =
   | Bouncing(int)
   | Idle;
@@ -181,6 +183,7 @@ let%component make =
       let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
         switch (scrollViewRef^) {
         | Some(scrollview) => {//Libscroll.push_pan(scrollview, Libscroll.Axis.Vertical, 10.0, 0)
+            Log.info("Scrollview existed");
             ()
         }
         | None => ()

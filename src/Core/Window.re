@@ -297,6 +297,21 @@ let render = (w: t) => {
   w.isRendering = false;
 };
 
+let convertWheelType = (intype: Sdl2.WheelType.t) => {
+    open Libscroll;
+    open Sdl2;
+    switch (intype) {
+    | WheelType.Last => Source.Previous
+    | WheelType.Undefined => Source.Undefined
+    | WheelType.Touchscreen => Source.Touchscreen
+    | WheelType.Touchpad => Source.Touchpad
+    | WheelType.Wheel => Source.Mousewheel
+    | WheelType.WheelPrecise => Source.PreciseMousewheel
+    | WheelType.OtherNonKinetic => KineticPassthrough
+    | WheelType.OtherKinetic => KineticPassthrough
+    }
+}
+
 let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   switch (sdlEvent) {
   | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
@@ -310,6 +325,19 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
       isFling: false,
       isInterrupt: false,
     };
+    Event.dispatch(v.onMouseWheel, wheelEvent);
+  | Sdl2.Event.MousePan({deltaX, deltaY, containsX, containsY, isFling, isInterrupt, source, timestamp}) =>
+    Log.info("Got pan event");
+    let wheelEvent: Events.mouseWheelEvent = {
+      deltaX: float_of_int(deltaX),
+      deltaY: float_of_int(deltaY),
+      containsX: containsX,
+      containsY: containsY,
+      isFling: isFling,
+      isInterrupt: isInterrupt,
+      source: convertWheelType(source),
+      timestamp: timestamp,
+    }
     Event.dispatch(v.onMouseWheel, wheelEvent);
   | Sdl2.Event.MouseMotion({x, y, _}) =>
     let mouseEvent: Events.mouseMoveEvent = {
