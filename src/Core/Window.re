@@ -316,10 +316,8 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   switch (sdlEvent) {
   | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
     let wheelEvent: Events.mouseWheelEvent = {
-      deltaX: float_of_int(deltaX),
-      deltaY: float_of_int(deltaY),
-      containsX: true,
-      containsY: true,
+      deltaX: Some(float_of_int(deltaX)),
+      deltaY: Some(float_of_int(deltaY)),
       source: Libscroll.Source.Mousewheel,
       timestamp: 0, // TODO: add timestamps to mousewheel events in sdl OR completely switch to pan
       isFling: false,
@@ -329,10 +327,8 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.MousePan({deltaX, deltaY, containsX, containsY, isFling, isInterrupt, source, timestamp}) =>
     Log.info("Got pan event");
     let wheelEvent: Events.mouseWheelEvent = {
-      deltaX: float_of_int(deltaX),
-      deltaY: float_of_int(deltaY),
-      containsX: containsX,
-      containsY: containsY,
+      deltaX: containsX ? Some(float_of_int(deltaX)) : None,
+      deltaY: containsY ? Some(float_of_int(deltaY)) : None,
       isFling: isFling,
       isInterrupt: isInterrupt,
       source: convertWheelType(source),

@@ -184,27 +184,34 @@ let%component make =
         switch (scrollViewRef^) {
         | Some(scrollview) => {//Libscroll.push_pan(scrollview, Libscroll.Axis.Vertical, 10.0, 0)
             Log.info("Scrollview existed");
-            ()
+          }
+        | None => Log.error("Scrollview not present on event dispatch");
         }
-        | None => ()
-        }
-        let delta = int_of_float(wheelEvent.deltaY *. 25.);
+        let delta = switch(wheelEvent.deltaY) {
+          | Some(value) => value *. 25.
+          | None => 0.0
+        };
+        //let delta = int_of_float(wheelEvent.deltaY *. 25.);
+        let delta_s = delta;
+        let delta = int_of_float(delta /. -400.0);
         let newScrollTop = actualScrollTop - delta;
 
         let isAtTop = newScrollTop < 0;
         let isAtBottom = newScrollTop > maxHeight;
 
         switch (bouncingState) {
-        | Bouncing(force) when force < 0 && wheelEvent.deltaY < 0. =>
+        | Bouncing(force) when force < 0 && delta_s < 0. =>
           setBouncingState(_ => Idle)
-        | Bouncing(force) when force > 0 && wheelEvent.deltaY > 0. =>
+        | Bouncing(force) when force > 0 && delta_s > 0. =>
           setBouncingState(_ => Idle)
         | Bouncing(_) => ()
         | Idle when !bounce && (isAtTop || isAtBottom) =>
-          let clampedScrollTop = isAtTop ? 0 : maxHeight;
-          dispatch(ScrollUpdated(clampedScrollTop));
+          dispatch(ScrollUpdated(newScrollTop));
+          //let clampedScrollTop = isAtTop ? 0 : maxHeight;
+          //dispatch(ScrollUpdated(clampedScrollTop));
+          ()
         | Idle when bounce && (isAtTop || isAtBottom) =>
-          setBouncingState(_ => Bouncing(- delta * 2));
+          //setBouncingState(_ => Bouncing(- delta * 2));
           dispatch(ScrollUpdated(isAtTop ? 0 : maxHeight));
         | Idle => dispatch(ScrollUpdated(newScrollTop))
         };

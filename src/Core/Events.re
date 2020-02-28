@@ -23,10 +23,8 @@ type mouseMoveEvent = {
 };
 
 type mouseWheelEvent = {
-  deltaX: float,
-  deltaY: float,
-  containsX: bool,
-  containsY: bool,
+  deltaX: option(float),
+  deltaY: option(float),
   isFling: bool,
   isInterrupt: bool,
   source: Libscroll.Source.t,
