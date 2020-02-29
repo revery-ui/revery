@@ -33,6 +33,22 @@ module Sample = {
           let rect = Skia.Rect.makeLtrb(1.0, 1.0, 101., 201.);
           CanvasContext.drawRect(~rect, ~paint, canvasContext);
 
+          let stroke = Skia.Paint.make();
+          Skia.Paint.setColor(
+            stroke,
+            Skia.Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l),
+          );
+          Skia.Paint.setAntiAlias(stroke, true);
+          Skia.Paint.setStyle(stroke, Stroke);
+          Skia.Paint.setStrokeWidth(stroke, 5.);
+
+          let path = Skia.Path.make();
+          Skia.Path.moveTo(path, 50., 50.);
+          Skia.Path.lineTo(path, 590., 50.);
+          Skia.Path.cubicTo(path, -490., 50., 1130., 430., 50., 430.);
+          Skia.Path.lineTo(path, 590., 430.);
+          CanvasContext.drawPath(~path, ~paint=stroke, canvasContext);
+
           switch (Revery_Font.load("Roboto-Regular.ttf")) {
           | Error(_) => ()
           | Ok(font) =>
