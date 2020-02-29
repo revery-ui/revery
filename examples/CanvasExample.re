@@ -34,7 +34,10 @@ module Sample = {
           CanvasContext.drawRect(~rect, ~paint, canvasContext);
 
           let stroke = Skia.Paint.make();
-          Skia.Paint.setColor(stroke, Skia.Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l));
+          Skia.Paint.setColor(
+            stroke,
+            Skia.Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l),
+          );
           Skia.Paint.setAntiAlias(stroke, true);
           Skia.Paint.setStyle(stroke, Stroke);
           Skia.Paint.setStrokeWidth(stroke, 5.);
