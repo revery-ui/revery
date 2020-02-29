@@ -138,9 +138,14 @@ let clear = (~color: Skia.Color.t, v: t) => {
   Canvas.clear(v.canvas, color);
 };
 
+let drawPath = (~path: Skia.Path.t, ~paint: Paint.t, canvasContext: t) => {
+  Canvas.drawPath(canvasContext.canvas, path, paint);
+}
+
 let drawRect = (~rect: Skia.Rect.t, ~paint: Paint.t, v: t) => {
   Canvas.drawRect(v.canvas, rect, paint);
 };
+
 let drawRectLtwh =
     (
       ~left: float,
