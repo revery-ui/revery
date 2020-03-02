@@ -1,5 +1,5 @@
 {
-  "checksum": "ec20787191c277c226eb6df590a38b3f",
+  "checksum": "08e1edd0e04337d8ca0615ff32ed8b37",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
@@ -46,8 +46,8 @@
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:revery-ui/reason-skia#69743dc@d41d8cd9",
-        "reason-sdl2@2.10.3017@d41d8cd9",
-        "reason-harfbuzz@1.91.5004@d41d8cd9",
+        "reason-sdl2@github:revery-ui/reason-sdl2#9d98521@d41d8cd9",
+        "reason-harfbuzz@1.91.5006@d41d8cd9",
         "reason-gl-matrix@0.9.9307@d41d8cd9",
         "reason-font-manager@2.0.2@d41d8cd9", "flex@1.2.2@d41d8cd9",
         "@reason-native/rely@3.2.1@d41d8cd9",
@@ -81,7 +81,7 @@
       "dependencies": [
         "refmterr@3.3.0@d41d8cd9", "ocaml@4.8.1000@d41d8cd9",
         "@reason-native/pastel@0.1.0@d41d8cd9",
-        "@opam/printbox@opam:0.4@8e9022ed",
+        "@opam/printbox@opam:0.5@82f5d436",
         "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
       "devDependencies": []
@@ -152,7 +152,8 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3017@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9",
+        "reason-sdl2@github:revery-ui/reason-sdl2#9d98521@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#91b10c9@d41d8cd9",
         "esy-sdl2@2.0.10005@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:1.11.4@a7ccb7ae",
@@ -162,34 +163,31 @@
       ],
       "devDependencies": []
     },
-    "reason-sdl2@2.10.3017@d41d8cd9": {
-      "id": "reason-sdl2@2.10.3017@d41d8cd9",
+    "reason-sdl2@github:revery-ui/reason-sdl2#9d98521@d41d8cd9": {
+      "id": "reason-sdl2@github:revery-ui/reason-sdl2#9d98521@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "2.10.3017",
+      "version": "github:revery-ui/reason-sdl2#9d98521",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3017.tgz#sha1:767771db271742c1193718f1de3b0953465db2fe"
-        ]
+        "source": [ "github:revery-ui/reason-sdl2#9d98521" ]
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9", "reason-gl-matrix@0.9.9307@d41d8cd9",
-        "esy-sdl2@2.0.10005@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9", "esy-sdl2@2.0.10005@d41d8cd9",
         "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9",
-        "@opam/lwt_ppx@opam:2.0.0@9a61dd37", "@opam/lwt@opam:4.5.0@677655b4",
+        "@opam/dune-configurator@opam:1.0.0@4873acd8",
         "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
       "devDependencies": []
     },
-    "reason-harfbuzz@1.91.5004@d41d8cd9": {
-      "id": "reason-harfbuzz@1.91.5004@d41d8cd9",
+    "reason-harfbuzz@1.91.5006@d41d8cd9": {
+      "id": "reason-harfbuzz@1.91.5006@d41d8cd9",
       "name": "reason-harfbuzz",
-      "version": "1.91.5004",
+      "version": "1.91.5006",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-harfbuzz/-/reason-harfbuzz-1.91.5004.tgz#sha1:72ae5fefe3de18a721c47d0969c1017a1eaff196"
+          "archive:https://registry.npmjs.org/reason-harfbuzz/-/reason-harfbuzz-1.91.5006.tgz#sha1:50c7ba979ad7897b9d4c913697b228233b9af4d6"
         ]
       },
       "overrides": [],
@@ -870,20 +868,20 @@
         "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
-    "@opam/printbox@opam:0.4@8e9022ed": {
-      "id": "@opam/printbox@opam:0.4@8e9022ed",
+    "@opam/printbox@opam:0.5@82f5d436": {
+      "id": "@opam/printbox@opam:0.5@82f5d436",
       "name": "@opam/printbox",
-      "version": "opam:0.4",
+      "version": "opam:0.5",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/c3/c32598a4923c055fba05d747d24b7d4f#md5:c32598a4923c055fba05d747d24b7d4f",
-          "archive:https://github.com/c-cube/printbox/archive/0.4.tar.gz#md5:c32598a4923c055fba05d747d24b7d4f"
+          "archive:https://opam.ocaml.org/cache/md5/2c/2cd18b6198d58c27d1bbec4d18836353#md5:2cd18b6198d58c27d1bbec4d18836353",
+          "archive:https://github.com/c-cube/printbox/archive/0.5.tar.gz#md5:2cd18b6198d58c27d1bbec4d18836353"
         ],
         "opam": {
           "name": "printbox",
-          "version": "0.4",
-          "path": "bench.esy.lock/opam/printbox.0.4"
+          "version": "0.5",
+          "path": "bench.esy.lock/opam/printbox.0.5"
         }
       },
       "overrides": [],

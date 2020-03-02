@@ -14,6 +14,7 @@ depends: [
   "ocaml" { >= "4.03" }
   "uutf" {with-test}
   "uucp" {with-test}
+  "mdx" {with-test & >= "1.4" & < "1.6" }
 ]
 depopts: [
   "tyxml"
@@ -25,9 +26,9 @@ homepage: "https://github.com/c-cube/printbox/"
 dev-repo: "git+https://github.com/c-cube/printbox.git"
 bug-reports: "https://github.com/c-cube/printbox/issues/"
 url {
-  src: "https://github.com/c-cube/printbox/archive/0.4.tar.gz"
+  src: "https://github.com/c-cube/printbox/archive/0.5.tar.gz"
   checksum: [
-    "md5=c32598a4923c055fba05d747d24b7d4f"
-    "sha512=1b6d5981c73fa9d373ba1a555be655d5658fa2bb3105b692daf21158119bdc0c10424437de17eab0c8ac77a99877be6ace9aa0e1518212811bb3342211882e26"
+    "md5=2cd18b6198d58c27d1bbec4d18836353"
+    "sha512=6aefd975403751288de02104f0bf21d455e37c057fd9237d38af42dd8e01643514acc3a9ab96d42b0c1f5064c3a330833352ac09cd6198275f1c165db2bace7f"
   ]
 }

@@ -1,4 +1,7 @@
-module Log = (val Log.withNamespace("Revery.App"));
+module AppLog = (val Log.withNamespace("Revery.App"));
+module SdlLog = (val Log.withNamespace("Revery.SDL2"));
+
+module Log = AppLog;
 
 type delegatedFunc = unit => unit;
 type idleFunc = unit => unit;
@@ -134,6 +137,16 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     onIdle,
     canIdle: ref(() => true),
   };
+
+  Sdl2.Log.setOutputFunction((_category, priority, message) => 
+    switch (priority) {
+    | Verbose
+    | Debug => SdlLog.trace(message);
+    | Info => SdlLog.info(message)
+    | Warn => SdlLog.warn(message)
+    | Error
+    | Critical => SdlLog.error(message);
+    });
 
   let _ = Sdl2.init();
   let _dispose = initFunc(appInstance);

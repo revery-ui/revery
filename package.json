@@ -59,6 +59,7 @@
     "@glennsl/timber": "1.0.0"
   },
   "resolutions": {
+    "reason-sdl2": "github:revery-ui/reason-sdl2#9d98521",
     "@esy-ocaml/libffi": "esy-ocaml/libffi#c61127d",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
     "@opam/cmdliner": "1.0.2"
