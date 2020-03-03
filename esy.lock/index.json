@@ -1,5 +1,5 @@
 {
-  "checksum": "147b756ec9b404955830b926051deefe",
+  "checksum": "d9cbe5471136c3fdaccf8264ab0f48f5",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
@@ -45,7 +45,7 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-skia@github:revery-ui/reason-skia#69743dc@d41d8cd9",
+        "reason-skia@github:revery-ui/reason-skia#fec55ce@d41d8cd9",
         "reason-sdl2@2.10.3017@d41d8cd9",
         "reason-harfbuzz@github:revery-ui/reason-harfbuzz:package.json#8aa486467d6d25d17eb1b3e91597f56f52f2cfc5@d41d8cd9",
         "reason-gl-matrix@0.9.9307@d41d8cd9",
@@ -142,17 +142,18 @@
       ],
       "devDependencies": []
     },
-    "reason-skia@github:revery-ui/reason-skia#69743dc@d41d8cd9": {
-      "id": "reason-skia@github:revery-ui/reason-skia#69743dc@d41d8cd9",
+    "reason-skia@github:revery-ui/reason-skia#fec55ce@d41d8cd9": {
+      "id": "reason-skia@github:revery-ui/reason-skia#fec55ce@d41d8cd9",
       "name": "reason-skia",
-      "version": "github:revery-ui/reason-skia#69743dc",
+      "version": "github:revery-ui/reason-skia#fec55ce",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-skia#69743dc" ]
+        "source": [ "github:revery-ui/reason-skia#fec55ce" ]
       },
       "overrides": [],
       "dependencies": [
         "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3017@d41d8cd9",
+        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#91b10c9@d41d8cd9",
         "esy-sdl2@2.0.10005@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.3.1@b10b59bf",
@@ -181,6 +182,23 @@
         "@opam/dune@opam:2.3.1@b10b59bf", "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
       "devDependencies": []
+    },
+    "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9": {
+      "id":
+        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
+      "name": "reason-native-crash-utils",
+      "version": "github:onivim/reason-native-crash-utils#ae1fd34",
+      "source": {
+        "type": "install",
+        "source": [ "github:onivim/reason-native-crash-utils#ae1fd34" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/dune-configurator@opam:2.3.1@f275cf9a",
+        "@opam/dune@opam:2.3.1@b10b59bf", "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
     },
     "reason-harfbuzz@github:revery-ui/reason-harfbuzz:package.json#8aa486467d6d25d17eb1b3e91597f56f52f2cfc5@d41d8cd9": {
       "id":
