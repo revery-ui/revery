@@ -16,6 +16,8 @@ RUN yum -y install file fuse fuse-devel wget bzip2-devel libXt-devel libSM-devel
 RUN rpm -i https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/c/colm-0.13.0.4-2.el7.x86_64.rpm
 RUN rpm -i https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/r/ragel-7.0.0.9-2.el7.x86_64.rpm
 
+RUN yum -y install /usr/lib64/libasan.so.0.0.0
+
 RUN node -v
 RUN npm -v
 
