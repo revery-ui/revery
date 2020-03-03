@@ -9,8 +9,6 @@
   "scripts": {
     "build": "esy b",
     "build:release": "esy b dune build --profile=release --root . -j4",
-    "build:js": "esy b dune build examples/Examples.bc.js",
-    "build:js:release": "esy b dune build examples/Examples.bc.js",
     "test": "esy b dune runtest",
     "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}",
     "run": "esy x Examples"
@@ -35,11 +33,8 @@
     ]
   },
   "dependencies": {
+    "@opam/dune-configurator": "*",
     "@esy-ocaml/reason": "^3.4.0",
-    "reason-gl-matrix": "^0.9.9306",
-    "@opam/js_of_ocaml": "^3.4.0",
-    "@opam/js_of_ocaml-compiler": "^3.4.0",
-    "@opam/js_of_ocaml-lwt": "^3.4.0",
     "@opam/lru": "github:bryphe/lru:lru.opam#2708c70",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
@@ -53,16 +48,18 @@
     "reason-harfbuzz": "^1.91.5004",
     "rench": "^1.9.1",
     "rebez": "github:jchavarri/rebez#03fa3b7",
-    "reason-sdl2": "^2.10.3016",
+    "reason-sdl2": "^2.10.3018",
     "reason-skia": "github:revery-ui/reason-skia#69743dc",
     "revery-text-wrap": "github:revery-ui/revery-text-wrap#005385c",
     "@glennsl/timber": "1.0.0"
   },
   "resolutions": {
-    "reason-sdl2": "github:revery-ui/reason-sdl2#9d98521",
     "@esy-ocaml/libffi": "esy-ocaml/libffi#c61127d",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
-    "@opam/cmdliner": "1.0.2"
+    "@opam/cmdliner": "1.0.2",
+    "reason-font-manager": "link:../reason-font-manager",
+    "reason-harfbuzz": "link:../reason-harfbuzz",
+    "revery-text-wrap": "link:../revery-text-wrap"
   },
   "devDependencies": {
     "ocaml": "~4.8",
