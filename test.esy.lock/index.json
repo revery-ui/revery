@@ -1,5 +1,5 @@
 {
-  "checksum": "f82306b6215c3f93c2ca939abd347144",
+  "checksum": "da179a7135e356c5a81c757777c5235d",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
@@ -47,7 +47,7 @@
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:revery-ui/reason-skia#fec55ce@d41d8cd9",
         "reason-sdl2@2.10.3016@d41d8cd9",
-        "reason-harfbuzz@github:revery-ui/reason-harfbuzz:package.json#8aa486467d6d25d17eb1b3e91597f56f52f2cfc5@d41d8cd9",
+        "reason-harfbuzz@1.91.5007@d41d8cd9",
         "reason-gl-matrix@0.9.9307@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "flex@1.2.3@d41d8cd9",
         "@reason-native/rely@3.2.1@d41d8cd9",
@@ -200,16 +200,14 @@
       ],
       "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
     },
-    "reason-harfbuzz@github:revery-ui/reason-harfbuzz:package.json#8aa486467d6d25d17eb1b3e91597f56f52f2cfc5@d41d8cd9": {
-      "id":
-        "reason-harfbuzz@github:revery-ui/reason-harfbuzz:package.json#8aa486467d6d25d17eb1b3e91597f56f52f2cfc5@d41d8cd9",
+    "reason-harfbuzz@1.91.5007@d41d8cd9": {
+      "id": "reason-harfbuzz@1.91.5007@d41d8cd9",
       "name": "reason-harfbuzz",
-      "version":
-        "github:revery-ui/reason-harfbuzz:package.json#8aa486467d6d25d17eb1b3e91597f56f52f2cfc5",
+      "version": "1.91.5007",
       "source": {
         "type": "install",
         "source": [
-          "github:revery-ui/reason-harfbuzz:package.json#8aa486467d6d25d17eb1b3e91597f56f52f2cfc5"
+          "archive:https://registry.npmjs.org/reason-harfbuzz/-/reason-harfbuzz-1.91.5007.tgz#sha1:c27b3575badab09532e343166611e1cb1df10674"
         ]
       },
       "overrides": [],
