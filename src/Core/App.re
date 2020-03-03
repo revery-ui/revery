@@ -138,15 +138,16 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     canIdle: ref(() => true),
   };
 
-  Sdl2.Log.setOutputFunction((_category, priority, message) => 
+  Sdl2.Log.setOutputFunction((_category, priority, message) =>
     switch (priority) {
     | Verbose
-    | Debug => SdlLog.trace(message);
+    | Debug => SdlLog.trace(message)
     | Info => SdlLog.info(message)
     | Warn => SdlLog.warn(message)
     | Error
-    | Critical => SdlLog.error(message);
-    });
+    | Critical => SdlLog.error(message)
+    }
+  );
 
   let _ = Sdl2.init();
   let _dispose = initFunc(appInstance);
