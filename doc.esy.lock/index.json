@@ -1,5 +1,5 @@
 {
-  "checksum": "8c179a03d5f6003720c72b0131e6adbd",
+  "checksum": "3b9def55668921375061649073f3d18c",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
@@ -74,14 +74,14 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9": {
+    "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9": {
       "id":
-        "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
+        "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
       "name": "revery-text-wrap",
-      "version": "github:revery-ui/revery-text-wrap#005385c",
+      "version": "github:revery-ui/revery-text-wrap#966383e",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/revery-text-wrap#005385c" ]
+        "source": [ "github:revery-ui/revery-text-wrap#966383e" ]
       },
       "overrides": [],
       "dependencies": [ "@opam/dune@opam:2.3.1@b10b59bf" ],
@@ -98,16 +98,15 @@
       },
       "overrides": [ "doc.json" ],
       "dependencies": [
-        "revery-text-wrap@github:revery-ui/revery-text-wrap#005385c@d41d8cd9",
+        "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:revery-ui/reason-skia#fec55ce@d41d8cd9",
-        "reason-sdl2@2.10.3017@d41d8cd9",
+        "reason-sdl2@2.10.3016@d41d8cd9",
         "reason-harfbuzz@github:revery-ui/reason-harfbuzz:package.json#8aa486467d6d25d17eb1b3e91597f56f52f2cfc5@d41d8cd9",
         "reason-gl-matrix@0.9.9307@d41d8cd9",
-        "reason-font-manager@github:revery-ui/reason-font-manager#c1cea4b@d41d8cd9",
-        "http-server@0.12.1@d41d8cd9", "flex@1.2.3@d41d8cd9",
-        "@reason-native/rely@3.2.1@d41d8cd9",
+        "reason-font-manager@2.1.1@d41d8cd9", "http-server@0.12.1@d41d8cd9",
+        "flex@1.2.3@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/ppx_deriving@opam:4.4.1@208c6c8f",
         "@opam/odoc@opam:1.5.0@35218f5f",
@@ -173,7 +172,7 @@
         "refmterr@3.3.0@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/lambda-term@opam:2.0.3@9465cf1c",
+        "@opam/lambda-term@opam:2.0@57c9208c",
         "@opam/fpath@opam:0.7.2@45477b93", "@opam/dune@opam:2.3.1@b10b59bf",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
@@ -224,7 +223,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3017@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3016@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#91b10c9@d41d8cd9",
         "esy-sdl2@2.0.10005@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
@@ -235,14 +234,14 @@
       ],
       "devDependencies": []
     },
-    "reason-sdl2@2.10.3017@d41d8cd9": {
-      "id": "reason-sdl2@2.10.3017@d41d8cd9",
+    "reason-sdl2@2.10.3016@d41d8cd9": {
+      "id": "reason-sdl2@2.10.3016@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "2.10.3017",
+      "version": "2.10.3016",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3017.tgz#sha1:767771db271742c1193718f1de3b0953465db2fe"
+          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3016.tgz#sha1:c7d00de137ab6e6d26c80da092558994b426465d"
         ]
       },
       "overrides": [],
@@ -309,14 +308,15 @@
       ],
       "devDependencies": []
     },
-    "reason-font-manager@github:revery-ui/reason-font-manager#c1cea4b@d41d8cd9": {
-      "id":
-        "reason-font-manager@github:revery-ui/reason-font-manager#c1cea4b@d41d8cd9",
+    "reason-font-manager@2.1.1@d41d8cd9": {
+      "id": "reason-font-manager@2.1.1@d41d8cd9",
       "name": "reason-font-manager",
-      "version": "github:revery-ui/reason-font-manager#c1cea4b",
+      "version": "2.1.1",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-font-manager#c1cea4b" ]
+        "source": [
+          "archive:https://registry.npmjs.org/reason-font-manager/-/reason-font-manager-2.1.1.tgz#sha1:3505aa2c32798eddd67d9af770f164b6b77c155b"
+        ]
       },
       "overrides": [],
       "dependencies": [
@@ -1985,20 +1985,20 @@
       ],
       "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
     },
-    "@opam/lambda-term@opam:2.0.3@9465cf1c": {
-      "id": "@opam/lambda-term@opam:2.0.3@9465cf1c",
+    "@opam/lambda-term@opam:2.0@57c9208c": {
+      "id": "@opam/lambda-term@opam:2.0@57c9208c",
       "name": "@opam/lambda-term",
-      "version": "opam:2.0.3",
+      "version": "opam:2.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/90/903b6cc234598d67c7c905dfb5230209#md5:903b6cc234598d67c7c905dfb5230209",
-          "archive:https://github.com/ocaml-community/lambda-term/releases/download/2.0.3/lambda-term-2.0.3.tbz#md5:903b6cc234598d67c7c905dfb5230209"
+          "archive:https://opam.ocaml.org/cache/md5/92/9284c51c2ef18ebf6c17281879f2ff13#md5:9284c51c2ef18ebf6c17281879f2ff13",
+          "archive:https://github.com/ocaml-community/lambda-term/releases/download/2.0/lambda-term-2.0.tbz#md5:9284c51c2ef18ebf6c17281879f2ff13"
         ],
         "opam": {
           "name": "lambda-term",
-          "version": "2.0.3",
-          "path": "doc.esy.lock/opam/lambda-term.2.0.3"
+          "version": "2.0",
+          "path": "doc.esy.lock/opam/lambda-term.2.0"
         }
       },
       "overrides": [],

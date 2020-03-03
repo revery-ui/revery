@@ -49,13 +49,13 @@
     "@reason-native/rely": "*",
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
-    "reason-font-manager": "revery-ui/reason-font-manager#c1cea4b",
+    "reason-font-manager": "^2.1.1",
     "reason-harfbuzz": "revery-ui/reason-harfbuzz:package.json#8aa486467d6d25d17eb1b3e91597f56f52f2cfc5",
     "rench": "^1.9.1",
     "rebez": "github:jchavarri/rebez#03fa3b7",
-    "reason-sdl2": "^2.10.3016",
+    "reason-sdl2": "2.10.3016",
     "reason-skia": "github:revery-ui/reason-skia#fec55ce",
-    "revery-text-wrap": "github:revery-ui/revery-text-wrap#005385c",
+    "revery-text-wrap": "github:revery-ui/revery-text-wrap#966383e",
     "@glennsl/timber": "1.0.0"
   },
   "resolutions": {
