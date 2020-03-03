@@ -600,8 +600,7 @@ let getZoom = (w: t) => {
 };
 
 let takeScreenshot = (_w: t, _filename: string) => {
-  ()// TODO: Migrate to Skia
-    ;
+  (); // TODO: Migrate to Skia
     /*let width = w.metrics.framebufferSize.width;
       let height = w.metrics.framebufferSize.height;
 
