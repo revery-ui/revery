@@ -92,7 +92,7 @@ module AdjustableLogo = {
             <Text style=textStyle text="Rotation X: " />
             <Slider
               onValueChanged=handleRotationX
-              value=twoPi
+              initialValue=twoPi
               maximumValue=twoPi
             />
             <Text

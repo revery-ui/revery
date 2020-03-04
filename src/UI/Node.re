@@ -259,28 +259,40 @@ class node (()) = {
     List.iter(c => c#recalculate(), _children);
 
     /* Check if dimensions are different, if so, we need to queue up a dimensions changed event */
-    let lastDimensions = _lastDimensions;
     let newDimensions = _this#measurements();
 
-    if (lastDimensions.width != newDimensions.width
-        || lastDimensions.height != newDimensions.height) {
-      let maybeOnDimensionsChanged = _this#getEvents().onDimensionsChanged;
+    let events = _this#getEvents();
+
+    if (_lastDimensions.width != newDimensions.width
+        || _lastDimensions.height != newDimensions.height) {
       let evt: NodeEvents.DimensionsChangedEventParams.t = {
         width: newDimensions.width,
         height: newDimensions.height,
       };
       _lastDimensions = evt;
-      switch (maybeOnDimensionsChanged) {
-      | Some(cb) =>
-        /*
-         * Defer dispatching the `ref` until AFTER layout has occurred.
-         * A common use-case for using the ref will be getting dimension
-         * and layout information. This won't be available until AFTER
-         * layout.
-         */
-        _this#_queueCallback(() => cb(evt))
-      | None => ()
-      };
+      
+      /*
+       * Defer dispatching the `ref` until AFTER layout has occurred.
+       * A common use-case for using the ref will be getting dimension
+       * and layout information. This won't be available until AFTER
+       * layout.
+       */
+      events.onDimensionsChanged
+      |> Option.iter(cb => _this#_queueCallback(() => cb(evt)));
+    };
+
+    if (!BoundingBox2d.equals(_lastBoundingBox, bbox)) {
+        print_endline ("UPDATING BBOX: " ++ BoundingBox2d.toString(bbox));
+      events.onBoundingBoxChanged
+      |> Option.iter(cb => {
+
+        _this#_queueCallback(() => cb(bbox))
+      });
+      
+      let (x0, y0, x1, y1) = BoundingBox2d.getBounds(bbox);
+      BoundingBox2d.Mutable.set(
+       _lastBoundingBox, x0, y0, x1, y1
+      );
     };
   };
   pub getCursorStyle = () => {

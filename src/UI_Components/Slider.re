@@ -25,7 +25,8 @@ let%component make =
                 ~onValueChanged=noopValueChanged,
                 ~minimumValue=0.,
                 ~maximumValue=1.,
-                ~value=0.,
+                ~initialValue=0.,
+                ~value=?,
                 ~vertical=false,
                 ~thumbLength=15,
                 ~sliderLength=100,
@@ -38,17 +39,23 @@ let%component make =
               ) => {
   /*let%hook (slideRef, setSlideRefOption) = Hooks.state(None);
   let%hook (thumbRef, setThumbRefOption) = Hooks.state(None);*/
-  let%hook (isActive, setActive) = Hooks.state(false);
+  let%hook (isActive) = Hooks.ref(false);
   let%hook (sliderBoundingBox, setSliderBoundingBox) = Hooks.state(defaultBoundingBox);
   let%hook (thumbBoundingBox, setThumbBoundingBox) = Hooks.state(defaultBoundingBox);
   /* Initial value is used to detect if the 'value' parameter ever changes */
-//  let%hook (initialValue, setInitialValue) = Hooks.state(value);
-  let%hook (v, setV) = Hooks.state(value);
+  //let%hook (initialValue) = Hooks.ref(value);
+  let%hook (v, setV) = Hooks.state(initialValue);
 
-  let%hook () = Hooks.effect(If((!=), value), () => {
-    setV(_ => value);
-    None 
-  });
+  let origV = v;
+  let v = switch (value) {
+  | Some(controlledValue) => 
+    print_endline ("CONTROLLED VALUE: " ++ string_of_float(controlledValue));
+    controlledValue;
+  | None => origV;
+  }
+
+  print_endline (
+    Printf.sprintf("SLIDER: Passed in value: %f v: %f", v, origV ));
   
   //let setSlideRef = r => setSlideRefOption(_ => Some(r));
 
@@ -56,11 +63,11 @@ let%component make =
 
   let availableWidth = {
       let (sliderX0, sliderY0, sliderX1, sliderY1) = BoundingBox2d.getBounds(sliderBoundingBox);
-      let (thumbX0, thumbY0, thumbX1, thumbY1) = BoundingBox2d.getBounds(thumbBoundingBox);
+      //let (thumbX0, thumbY0, thumbX1, thumbY1) = BoundingBox2d.getBounds(thumbBoundingBox);
       
 
       let sliderWidth = vertical ? sliderY1 -. sliderY0 : sliderX1 -. sliderX0;
-      let thumbWidth = vertical ? thumbY1 -. thumbY0: thumbX1 -. thumbX0;
+      let thumbWidth = float(thumbLength);
       sliderWidth -. thumbWidth;
     };
 
@@ -81,14 +88,15 @@ let%component make =
   };
 
   let sliderComplete = () => {
-    setActive(_ => false);
+    isActive := false;
+    setV(v => v);
   };
 
   let%hook () =
     Hooks.effect(
       Always,
       () => {
-        let isCaptured = isActive;
+        let isCaptured = isActive^;
 
         if (isCaptured) {
             let (x0, y0, _x1, _y1) =
@@ -124,13 +132,13 @@ let%component make =
       let (x0, y0, _, _) = BoundingBox2d.getBounds(sliderBoundingBox);
       let startPosition = vertical ? y0 : x0;
       let endPosition = startPosition +. availableWidth;
+      isActive := true;
       sliderUpdate(availableWidth, startPosition, endPosition, evt.mouseX, evt.mouseY);
-      setActive(_ => true);
     };
 
   let sliderBackgroundColor = maximumTrackColor;
 
-  let sliderOpacity = isActive ? 1.0 : 0.8;
+  let sliderOpacity = isActive^ ? 1.0 : 0.8;
 
   let sliderHeight = max(thumbThickness, trackThickness);
   let trackHeight = trackThickness;
@@ -181,7 +189,11 @@ let%component make =
     <View onMouseDown style onBoundingBoxChanged={bbox => setSliderBoundingBox(_ => bbox)}>
       <View style=beforeTrackStyle />
       <View
-        onBoundingBoxChanged={bbox => setThumbBoundingBox(_ => bbox)}
+        onBoundingBoxChanged={bbox => {
+          print_endline ("THUMB BBOX: " ++ BoundingBox2d.toString(bbox));
+  
+        setThumbBoundingBox(_ => bbox)}
+        }
         style=Style.[
           position(`Absolute),
           height(vertical ? thumbWidth : thumbHeight),
