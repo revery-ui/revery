@@ -22,6 +22,7 @@ let%nativeComponent make =
                       ~onTextInput=?,
                       ~onTextEdit=?,
                       ~onDimensionsChanged=?,
+                      ~onBoundingBoxChanged=?,
                       (),
                       hooks,
                     ) => (
@@ -46,6 +47,7 @@ let%nativeComponent make =
           ~onTextEdit?,
           ~onTextInput?,
           ~onDimensionsChanged?,
+          ~onBoundingBoxChanged?,
           (),
         );
       let node = PrimitiveNodeFactory.get().createViewNode();
@@ -73,6 +75,7 @@ let%nativeComponent make =
           ~onKeyUp?,
           ~onTextEdit?,
           ~onTextInput?,
+          ~onBoundingBoxChanged?,
           ~onDimensionsChanged?,
           (),
         );

@@ -61,6 +61,8 @@ class node (()) = {
   val mutable _queuedCallbacks: list(callback) = [];
   val mutable _lastDimensions: NodeEvents.DimensionsChangedEventParams.t =
     NodeEvents.DimensionsChangedEventParams.create();
+  val mutable _lastBoundingBox: BoundingBox2d.t = 
+    BoundingBox2d.create(0., 0., 0., 0.);
   val mutable _isLayoutDirty = true;
   val mutable _forcedMeasurements: option(Dimensions.t) = None;
   val mutable _hasHadNonZeroBlurRadius = false;
