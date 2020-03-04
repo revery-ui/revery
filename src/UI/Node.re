@@ -61,8 +61,6 @@ class node (()) = {
   val mutable _queuedCallbacks: list(callback) = [];
   val mutable _lastDimensions: NodeEvents.DimensionsChangedEventParams.t =
     NodeEvents.DimensionsChangedEventParams.create();
-  val mutable _lastBoundingBox: BoundingBox2d.t =
-    BoundingBox2d.create(0., 0., 0., 0.);
   val mutable _isLayoutDirty = true;
   val mutable _forcedMeasurements: option(Dimensions.t) = None;
   val mutable _hasHadNonZeroBlurRadius = false;
@@ -76,6 +74,7 @@ class node (()) = {
   val _bboxLocal = BoundingBox2d.create(0., 0., 0., 0.);
   val _bboxWorld = BoundingBox2d.create(0., 0., 0., 0.);
   val _bboxClipped = BoundingBox2d.create(0., 0., 0., 0.);
+  val _lastBoundingBox: BoundingBox2d.t = BoundingBox2d.create(0., 0., 0., 0.);
   pub draw = (parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();

@@ -37,18 +37,16 @@ let%component make =
                 ~thumbColor=Colors.gray,
                 (),
               ) => {
-  /*let%hook (slideRef, setSlideRefOption) = Hooks.state(None);
-    let%hook (thumbRef, setThumbRefOption) = Hooks.state(None);*/
   let%hook isActive = Hooks.ref(false);
   let%hook (sliderBoundingBox, setSliderBoundingBox) =
     Hooks.state(defaultBoundingBox);
-  let%hook (v, setV) = Hooks.state(initialValue);
+  let%hook (uncontrolledValue, setUncontrolledValue) =
+    Hooks.state(initialValue);
 
-  let origV = v;
   let v =
     switch (value) {
     | Some(controlledValue) => controlledValue
-    | None => origV
+    | None => uncontrolledValue
     };
 
   let availableWidth = {
@@ -72,13 +70,15 @@ let%component make =
 
     let normalizedValue =
       thumbPosition /. w *. (maximumValue -. minimumValue) +. minimumValue;
-    setV(_ => normalizedValue);
+    setUncontrolledValue(_ => normalizedValue);
     onValueChanged(normalizedValue);
   };
 
   let sliderComplete = () => {
     isActive := false;
-    setV(v => v);
+    // Force a re-render of the UI, since setting the ref
+    // won't be enough to do that.
+    setUncontrolledValue(v => v);
   };
 
   let%hook () =
