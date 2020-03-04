@@ -4,7 +4,7 @@
       "run": "esy '@bench' x ReveryBench"
   },
   "override": {
-      "build": ["dune build --root . -j4"],
+      "build": ["dune build -p Revery,ReveryBench -j4"],
       "install": [
           "esy-installer ReveryBench.install"
       ],
