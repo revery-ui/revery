@@ -19,6 +19,7 @@ let%nativeComponent make =
                       ~onKeyDown=?,
                       ~onKeyUp=?,
                       ~onDimensionsChanged=?,
+                      ~onBoundingBoxChanged=?,
                       ~render=?,
                       (),
                       hooks,
@@ -42,6 +43,7 @@ let%nativeComponent make =
           ~onKeyDown?,
           ~onKeyUp?,
           ~onDimensionsChanged?,
+          ~onBoundingBoxChanged?,
           (),
         );
       let node = (new canvasNode)();
@@ -68,6 +70,7 @@ let%nativeComponent make =
           ~onKeyDown?,
           ~onKeyUp?,
           ~onDimensionsChanged?,
+          ~onBoundingBoxChanged?,
           (),
         );
       let canvasNode: canvasNode = Obj.magic(node);

@@ -74,6 +74,7 @@ class node (()) = {
   val _bboxLocal = BoundingBox2d.create(0., 0., 0., 0.);
   val _bboxWorld = BoundingBox2d.create(0., 0., 0., 0.);
   val _bboxClipped = BoundingBox2d.create(0., 0., 0., 0.);
+  val _lastBoundingBox: BoundingBox2d.t = BoundingBox2d.create(0., 0., 0., 0.);
   pub draw = (parentContext: NodeDrawContext.t) => {
     let style: Style.t = _this#getStyle();
     let worldTransform = _this#getWorldTransform();
@@ -257,28 +258,38 @@ class node (()) = {
     List.iter(c => c#recalculate(), _children);
 
     /* Check if dimensions are different, if so, we need to queue up a dimensions changed event */
-    let lastDimensions = _lastDimensions;
     let newDimensions = _this#measurements();
 
-    if (lastDimensions.width != newDimensions.width
-        || lastDimensions.height != newDimensions.height) {
-      let maybeOnDimensionsChanged = _this#getEvents().onDimensionsChanged;
+    let events = _this#getEvents();
+
+    if (_lastDimensions.width != newDimensions.width
+        || _lastDimensions.height != newDimensions.height) {
       let evt: NodeEvents.DimensionsChangedEventParams.t = {
         width: newDimensions.width,
         height: newDimensions.height,
       };
       _lastDimensions = evt;
-      switch (maybeOnDimensionsChanged) {
-      | Some(cb) =>
-        /*
-         * Defer dispatching the `ref` until AFTER layout has occurred.
-         * A common use-case for using the ref will be getting dimension
-         * and layout information. This won't be available until AFTER
-         * layout.
-         */
-        _this#_queueCallback(() => cb(evt))
+
+      /*
+       * Defer dispatching the `ref` until AFTER layout has occurred.
+       * A common use-case for using the ref will be getting dimension
+       * and layout information. This won't be available until AFTER
+       * layout.
+       */
+      switch (events.onDimensionsChanged) {
       | None => ()
+      | Some(cb) => _this#_queueCallback(() => cb(evt))
       };
+    };
+
+    switch (events.onBoundingBoxChanged) {
+    | None => ()
+    | Some(cb) =>
+      if (!BoundingBox2d.equals(_lastBoundingBox, bbox)) {
+        let (x0, y0, x1, y1) = BoundingBox2d.getBounds(bbox);
+        BoundingBox2d.Mutable.set(~out=_lastBoundingBox, x0, y0, x1, y1);
+        _this#_queueCallback(() => cb(bbox));
+      }
     };
   };
   pub getCursorStyle = () => {
