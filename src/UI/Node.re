@@ -287,7 +287,7 @@ class node (()) = {
     | Some(cb) =>
       if (!BoundingBox2d.equals(_lastBoundingBox, bbox)) {
         let (x0, y0, x1, y1) = BoundingBox2d.getBounds(bbox);
-        BoundingBox2d.Mutable.set(_lastBoundingBox, x0, y0, x1, y1);
+        BoundingBox2d.Mutable.set(~out=_lastBoundingBox, x0, y0, x1, y1);
         _this#_queueCallback(() => cb(bbox));
       }
     };
