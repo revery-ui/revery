@@ -1,6 +1,6 @@
 {
   "name": "revery",
-  "version": "0.29.0",
+  "version": "0.30.0",
   "description": "App toolkit built with Reason",
   "license": "MIT",
   "bugs": {
