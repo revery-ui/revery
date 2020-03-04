@@ -11,17 +11,22 @@ It makes it possible to run pure OCaml programs in JavaScript
 environment like browsers and Node.js
 """
 
-name: "js_of_ocaml"
-
 build: [["dune" "build" "-p" name "-j" jobs]]
 
 depends: [
   "ocaml" {>= "4.02.0"}
   "dune" {>= "1.11.1"}
-  "ocaml-migrate-parsetree" {>= "1.4"}
-  "ppx_tools_versioned" {>= "5.2.3"}
-  "uchar"
-  "js_of_ocaml-compiler" {= version}
+  "ppx_expect" {with-test & >= "v0.12.0"}
+  "cmdliner"
+  "ocaml-migrate-parsetree"
+  "yojson" # It's optional, but we want users to be able to use source-map without pain.
+]
+
+depopts: [ "ocamlfind" ]
+
+conflicts: [
+  "ocamlfind"   {< "1.5.1"}
+  "js_of_ocaml" {< "3.0"}
 ]
 url {
   src:

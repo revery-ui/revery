@@ -46,6 +46,7 @@ module WindowMetrics = {
 type t = {
   mutable backgroundColor: Color.t,
   sdlWindow: Sdl2.Window.t,
+  sdlContext: Sdl2.Gl.context,
   uniqueId: int,
   forceScaleFactor: option(float),
   mutable render: unit => unit,
@@ -402,16 +403,19 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   Sdl2.Window.setWin32ProcessDPIAware(w);
 
   Log.debug("Setting window context");
-  let _ = Sdl2.Gl.setup(w);
+  let context = Sdl2.Gl.setup(w);
+  Sdl2.Gl.makeCurrent(w, context);
   Log.debug("GL setup. Checking GL version...");
-  let version = Sdl2.Gl.glGetString(Sdl2.Gl.Version);
+  let version = Sdl2.Gl.getString(Sdl2.Gl.Version);
   Log.debug("Checking GL vendor...");
-  let vendor = Sdl2.Gl.glGetString(Sdl2.Gl.Vendor);
+  let vendor = Sdl2.Gl.getString(Sdl2.Gl.Vendor);
   Log.debug("Checking GL shading language version...");
   let shadingLanguageVersion =
-    Sdl2.Gl.glGetString(Sdl2.Gl.ShadingLanguageVersion);
+    Sdl2.Gl.getString(Sdl2.Gl.ShadingLanguageVersion);
+  let renderer = Sdl2.Gl.getString(Sdl2.Gl.Renderer);
 
   Log.info("OpenGL hardware info:");
+  Log.infof(m => m("  renderer: %s", renderer));
   Log.infof(m => m("  version: %s", version));
   Log.infof(m => m("  vendor: %s", vendor));
   Log.infof(m => m("  shadingLanguageVersion: %s", shadingLanguageVersion));
@@ -441,6 +445,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   let ret: t = {
     backgroundColor: options.backgroundColor,
     sdlWindow: w,
+    sdlContext: context,
     uniqueId,
 
     render: () => (),
@@ -594,34 +599,34 @@ let getZoom = (w: t) => {
   w.metrics.zoom;
 };
 
-let takeScreenshot = (w: t, filename: string) => {
-  open Sdl2;
+let takeScreenshot = (_w: t, _filename: string) => {
+  (); // TODO: Migrate to Skia
+    /*let width = w.metrics.framebufferSize.width;
+      let height = w.metrics.framebufferSize.height;
 
-  let width = w.metrics.framebufferSize.width;
-  let height = w.metrics.framebufferSize.height;
+      let pixels =
+        Bigarray.Array2.create(
+          Bigarray.int8_unsigned,
+          Bigarray.c_layout,
+          height,
+          width * 4,
+        );
 
-  let pixels =
-    Bigarray.Array2.create(
-      Bigarray.int8_unsigned,
-      Bigarray.c_layout,
-      height,
-      width * 4,
-    );
+      /* let image = Image.create(~width, ~height, ~numChannels=4, ~channelSize=1); */
+      /* let buffer = Image.getBuffer(image); */
 
-  /* let image = Image.create(~width, ~height, ~numChannels=4, ~channelSize=1); */
-  /* let buffer = Image.getBuffer(image); */
+      /* WebGL is weird in that we can't capture with glReadPixels during
+         a render operation. Instead, we want to wait till it's over (we
+         can force this by triggering a new render) and then taking the
+         screenshot */
+      render(w);
+      Gl.glReadPixels(0, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
-  /* WebGL is weird in that we can't capture with glReadPixels during
-     a render operation. Instead, we want to wait till it's over (we
-     can force this by triggering a new render) and then taking the
-     screenshot */
-  render(w);
-  Gl.glReadPixels(0, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+      let image = Image.create(pixels);
 
-  let image = Image.create(pixels);
-
-  Image.save(image, filename);
-  Image.destroy(image);
+      Image.save(image, filename);
+      Image.destroy(image);
+      */
 };
 
 let canQuit = (w: t) => {
