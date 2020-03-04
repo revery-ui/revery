@@ -61,7 +61,7 @@ class node (()) = {
   val mutable _queuedCallbacks: list(callback) = [];
   val mutable _lastDimensions: NodeEvents.DimensionsChangedEventParams.t =
     NodeEvents.DimensionsChangedEventParams.create();
-  val mutable _lastBoundingBox: BoundingBox2d.t = 
+  val mutable _lastBoundingBox: BoundingBox2d.t =
     BoundingBox2d.create(0., 0., 0., 0.);
   val mutable _isLayoutDirty = true;
   val mutable _forcedMeasurements: option(Dimensions.t) = None;
@@ -270,7 +270,7 @@ class node (()) = {
         height: newDimensions.height,
       };
       _lastDimensions = evt;
-      
+
       /*
        * Defer dispatching the `ref` until AFTER layout has occurred.
        * A common use-case for using the ref will be getting dimension
@@ -282,17 +282,13 @@ class node (()) = {
     };
 
     if (!BoundingBox2d.equals(_lastBoundingBox, bbox)) {
-        print_endline ("UPDATING BBOX: " ++ BoundingBox2d.toString(bbox));
       events.onBoundingBoxChanged
       |> Option.iter(cb => {
-
-        _this#_queueCallback(() => cb(bbox))
+          _this#_queueCallback(() => cb(bbox))
       });
-      
+
       let (x0, y0, x1, y1) = BoundingBox2d.getBounds(bbox);
-      BoundingBox2d.Mutable.set(
-       _lastBoundingBox, x0, y0, x1, y1
-      );
+      BoundingBox2d.Mutable.set(_lastBoundingBox, x0, y0, x1, y1);
     };
   };
   pub getCursorStyle = () => {
