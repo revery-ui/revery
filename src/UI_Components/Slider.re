@@ -189,7 +189,6 @@ let%component make =
       onBoundingBoxChanged={bbox => setSliderBoundingBox(_ => bbox)}>
       <View style=beforeTrackStyle />
       <View
-        onBoundingBoxChanged={bbox => setThumbBoundingBox(_ => bbox)}
         style=Style.[
           position(`Absolute),
           height(vertical ? thumbWidth : thumbHeight),

@@ -277,18 +277,20 @@ class node (()) = {
        * and layout information. This won't be available until AFTER
        * layout.
        */
-      events.onDimensionsChanged
-      |> Option.iter(cb => _this#_queueCallback(() => cb(evt)));
+      switch (events.onDimensionsChanged) {
+      | None => ()
+      | Some(cb) => _this#_queueCallback(() => cb(evt))
+      };
     };
 
-    if (!BoundingBox2d.equals(_lastBoundingBox, bbox)) {
-      events.onBoundingBoxChanged
-      |> Option.iter(cb => {
-          _this#_queueCallback(() => cb(bbox))
-      });
-
-      let (x0, y0, x1, y1) = BoundingBox2d.getBounds(bbox);
-      BoundingBox2d.Mutable.set(_lastBoundingBox, x0, y0, x1, y1);
+    switch (events.onBoundingBoxChanged) {
+    | None => ()
+    | Some(cb) =>
+      if (!BoundingBox2d.equals(_lastBoundingBox, bbox)) {
+        let (x0, y0, x1, y1) = BoundingBox2d.getBounds(bbox);
+        BoundingBox2d.Mutable.set(_lastBoundingBox, x0, y0, x1, y1);
+        _this#_queueCallback(() => cb(bbox));
+      }
     };
   };
   pub getCursorStyle = () => {
