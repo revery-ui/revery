@@ -81,15 +81,15 @@ let getExecutingDirectory = () =>
       | _ =>
         let candidatePath = Filename.dirname(Sys.argv[0]) ++ Filename.dir_sep;
 
-        if (Filename.isAbsolute(candidatePath)) {
-          candidatePath;
+        if (Filename.is_relative(candidatePath)) {
+          Internal.addTrailingSlash(Sys.getcwd()) ++ candidatePath;
         } else {
-          addTrailingSlash(Sys.getcwd()) ++ candidatePath;
+          candidatePath;
         };
       };
 
     /* Check if there is a trailing slash. If not, we need to add one. */
-    addTrailingSlash(dir);
+    Internal.addTrailingSlash(dir);
   };
 
 let executingDirectory = getExecutingDirectory();
