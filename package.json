@@ -67,7 +67,8 @@
     "timber": "glennsl/timber#ae065bb",
     "libscroll": "link:../libscroll-re",
     "reason-sdl2": "revery-ui/reason-sdl2#a52eee7",
-    "esy-sdl2": "revery-ui/esy-sdl2#13ac578"
+    "esy-sdl2": "link:../esy-sdl2",
+    "reason-sdl2": "link:../reason-sdl2"
   },
   "devDependencies": {
     "ocaml": "~4.8",

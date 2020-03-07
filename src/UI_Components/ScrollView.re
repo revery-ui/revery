@@ -180,10 +180,41 @@ let%component make =
         }
       }*/
 
+      let scrollForFrameFlip = (timestamp: int) => {
+          // call into libscroll to sample new position
+      }
+
       let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
         switch (scrollViewRef^) {
         | Some(scrollview) => {//Libscroll.push_pan(scrollview, Libscroll.Axis.Vertical, 10.0, 0)
             Log.info("Scrollview existed");
+
+            Libscroll.set_source(scrollview, wheelEvent.source);
+
+            switch(wheelEvent.deltaX) {
+            | Some(delta) => {
+                Libscroll.push_pan(scrollview, Libscroll.Axis.Horizontal, delta, wheelEvent.timestamp);
+              }
+            | None => ()
+            };
+
+            switch(wheelEvent.deltaY) {
+            | Some(delta) => {
+                Libscroll.push_pan(scrollview, Libscroll.Axis.Vertical, delta, wheelEvent.timestamp);
+              }
+            | None => ()
+            };
+
+            switch(wheelEvent.isFling) {
+            | true => Libscroll.push_fling(scrollview, wheelEvent.timestamp);
+            | false => ()
+            };
+
+            switch(wheelEvent.isInterrupt) {
+            | true => Libscroll.push_interrupt(scrollview, wheelEvent.timestamp);
+            | false => ()
+            };
+
           }
         | None => Log.error("Scrollview not present on event dispatch");
         }
