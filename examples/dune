@@ -4,7 +4,6 @@
     (package Revery)
     (public_names Examples)
     (libraries
-        js_of_ocaml
         ExampleStubs
         skia
         str

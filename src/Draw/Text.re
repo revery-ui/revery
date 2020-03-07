@@ -29,11 +29,11 @@ type dimensions = {
   height: float,
 };
 
-let measureCharWidth = (~fontFamily, ~fontSize, char) => {
+let measureCharWidth = (~smoothing, ~fontFamily, ~fontSize, char) => {
   switch (FontCache.load(fontFamily)) {
   | Ok(font) =>
     let text = String.make(1, char);
-    let dimensions = FontRenderer.measure(font, fontSize, text);
+    let dimensions = FontRenderer.measure(~smoothing, font, fontSize, text);
     dimensions.width;
   | Error(_) => 0.
   };
@@ -64,10 +64,10 @@ let getDescent = (~fontFamily, ~fontSize, ()) => {
   metrics.descent;
 };
 
-let measure = (~fontFamily, ~fontSize, text) => {
+let measure = (~smoothing, ~fontFamily, ~fontSize, text) => {
   switch (FontCache.load(fontFamily)) {
   // TODO: Properly implement
-  | Ok(font) => FontRenderer.measure(font, fontSize, text)
+  | Ok(font) => FontRenderer.measure(~smoothing, font, fontSize, text)
 
   | Error(_) => {width: 0., height: 0.}
   };

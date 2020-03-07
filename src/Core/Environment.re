@@ -41,6 +41,21 @@ let os = {
     );
 };
 
+module Internal = {
+  let addTrailingSlash = dir => {
+    let len = String.length(dir);
+    if (len == 0) {
+      dir;
+    } else {
+      switch (dir.[len - 1]) {
+      | '/' => dir
+      | '\\' => dir
+      | _ => dir ++ Filename.dir_sep
+      };
+    };
+  };
+};
+
 let getExecutingDirectory = () =>
   if (!isNative) {
     "";
@@ -63,20 +78,18 @@ let getExecutingDirectory = () =>
         | (Some(v), None) => String.sub(Sys.executable_name, 0, v)
         | _ => Sys.executable_name
         }
-      | _ => Filename.dirname(Sys.argv[0]) ++ Filename.dir_sep
+      | _ =>
+        let candidatePath = Filename.dirname(Sys.argv[0]) ++ Filename.dir_sep;
+
+        if (Filename.is_relative(candidatePath)) {
+          Internal.addTrailingSlash(Sys.getcwd()) ++ candidatePath;
+        } else {
+          candidatePath;
+        };
       };
 
     /* Check if there is a trailing slash. If not, we need to add one. */
-
-    let len = String.length(dir);
-    let ret =
-      switch (dir.[len - 1]) {
-      | '/' => dir
-      | '\\' => dir
-      | _ => dir ++ Filename.dir_sep
-      };
-
-    ret;
+    Internal.addTrailingSlash(dir);
   };
 
 let executingDirectory = getExecutingDirectory();

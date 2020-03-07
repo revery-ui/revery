@@ -15,6 +15,7 @@ let%nativeComponent make =
                       ~ref=?,
                       ~style=emptyTextStyle,
                       ~text="",
+                      ~smoothing=Revery_Font.Smoothing.default,
                       ~children=React.empty,
                       (),
                       hooks,
@@ -38,6 +39,7 @@ let%nativeComponent make =
       let node = PrimitiveNodeFactory.get().createTextNode(text);
       node#setEvents(events);
       node#setStyle(styles);
+      node#setSmoothing(smoothing);
       Obj.magic(node);
     },
     configureInstance: (~isFirstRender as _, node) => {
@@ -61,6 +63,7 @@ let%nativeComponent make =
       tn#setEvents(events);
       tn#setStyle(styles);
       tn#setText(text);
+      tn#setSmoothing(smoothing);
       node;
     },
     children,

@@ -1,6 +1,6 @@
 {
   "name": "revery",
-  "version": "0.29.0",
+  "version": "0.30.0",
   "description": "App toolkit built with Reason",
   "license": "MIT",
   "bugs": {
@@ -9,8 +9,6 @@
   "scripts": {
     "build": "esy b",
     "build:release": "esy b dune build --profile=release --root . -j4",
-    "build:js": "esy b dune build examples/Examples.bc.js",
-    "build:js:release": "esy b dune build examples/Examples.bc.js",
     "test": "esy b dune runtest",
     "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}",
     "run": "esy x Examples"
@@ -36,28 +34,25 @@
     ]
   },
   "dependencies": {
+    "@opam/dune-configurator": "*",
     "@esy-ocaml/reason": "^3.4.0",
-    "reason-gl-matrix": "^0.9.9306",
-    "@opam/js_of_ocaml": "^3.4.0",
-    "@opam/js_of_ocaml-compiler": "^3.4.0",
-    "@opam/js_of_ocaml-lwt": "^3.4.0",
     "@opam/lru": "github:bryphe/lru:lru.opam#2708c70",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/ppx_deriving": "*",
     "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#34e5991",
-    "flex": "^1.2.2",
+    "flex": "1.2.3",
     "@reason-native/rely": "*",
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
-    "reason-font-manager": "^2.0.0",
-    "reason-harfbuzz": "^1.91.5004",
+    "reason-font-manager": "^2.1.1",
+    "reason-harfbuzz": "^1.91.5007",
     "rench": "^1.9.1",
     "rebez": "github:jchavarri/rebez#03fa3b7",
-    "reason-sdl2": "github:revery-ui/reason-sdl2",
-    "reason-skia": "github:revery-ui/reason-skia#69743dc",
-    "revery-text-wrap": "github:revery-ui/revery-text-wrap#005385c",
-    "timber": "*",
+    "reason-sdl2": "*",
+    "reason-skia": "github:revery-ui/reason-skia#cc3cfa8",
+    "revery-text-wrap": "github:revery-ui/revery-text-wrap#966383e",
+    "@glennsl/timber": "1.0.0",
     "libscroll": "*"
   },
   "resolutions": {
@@ -66,7 +61,6 @@
     "@opam/cmdliner": "1.0.2",
     "timber": "glennsl/timber#ae065bb",
     "libscroll": "link:../libscroll-re",
-    "reason-sdl2": "revery-ui/reason-sdl2#a52eee7",
     "esy-sdl2": "link:../esy-sdl2",
     "reason-sdl2": "link:../reason-sdl2"
   },

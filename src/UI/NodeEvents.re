@@ -3,6 +3,7 @@
 /* A collection of event handlers to be used by the Nodes */
 
 open Revery_Core;
+open Revery_Math;
 
 [@deriving show({with_path: false})]
 type mouseMoveEventParams = {
@@ -112,6 +113,7 @@ type t('a) = {
   onTextInput: option(textInputHandler),
   onTextEdit: option(textEditHandler),
   onDimensionsChanged: option(dimensionsChangedHandler),
+  onBoundingBoxChanged: option(BoundingBox2d.t => unit),
 };
 
 let make =
@@ -133,6 +135,7 @@ let make =
       ~onKeyDown=?,
       ~onKeyUp=?,
       ~onDimensionsChanged=?,
+      ~onBoundingBoxChanged=?,
       _unit: unit,
     ) => {
   ref,
@@ -151,4 +154,5 @@ let make =
   onKeyDown,
   onKeyUp,
   onDimensionsChanged,
+  onBoundingBoxChanged,
 };

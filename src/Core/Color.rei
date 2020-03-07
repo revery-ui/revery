@@ -4,6 +4,10 @@ type t;
 
 let rgba: (float, float, float, float) => t;
 let rgb: (float, float, float) => t;
+
+let rgba_int: (int, int, int, int) => t;
+let rgb_int: (int, int, int) => t;
+
 let hex: string => t;
 
 let multiplyAlpha: (float, t) => t;

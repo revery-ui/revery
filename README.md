@@ -9,6 +9,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/revery-ui/revery/actions"><img src="https://github.com/revery-ui/revery/workflows/Validate%20Pull%20Request/badge.svg" /></a>
   <a href="https://dev.azure.com/revery-ui/revery/_build/latest?definitionId=2?branchName=master">
     <img src="https://dev.azure.com/revery-ui/revery/_apis/build/status/revery-ui.revery?branchName=master" alt="Build Status"/>
   </a>
