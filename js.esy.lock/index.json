@@ -102,7 +102,7 @@
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:revery-ui/reason-skia#cc3cfa8@d41d8cd9",
-        "reason-sdl2@2.10.3019@d41d8cd9",
+        "reason-sdl2@2.10.3020@d41d8cd9",
         "reason-harfbuzz@1.91.8000@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "http-server@0.12.1@d41d8cd9",
         "flex@1.2.3@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
@@ -223,7 +223,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3019@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3020@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#91b10c9@d41d8cd9",
         "esy-sdl2@2.0.10006@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
@@ -234,14 +234,14 @@
       ],
       "devDependencies": []
     },
-    "reason-sdl2@2.10.3019@d41d8cd9": {
-      "id": "reason-sdl2@2.10.3019@d41d8cd9",
+    "reason-sdl2@2.10.3020@d41d8cd9": {
+      "id": "reason-sdl2@2.10.3020@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "2.10.3019",
+      "version": "2.10.3020",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3019.tgz#sha1:77af5cc162d5a7ea244a870defa9072e24845067"
+          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3020.tgz#sha1:2ed80ba0b5085f6a51cc91cf92a973d9362ce79f"
         ]
       },
       "overrides": [],
