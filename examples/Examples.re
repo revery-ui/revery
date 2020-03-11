@@ -245,10 +245,10 @@ module ExampleHost = {
 };
 
 let init = app => {
-  Revery.App.initConsole();
+  /* Revery.App.initConsole(); */
 
-  Timber.App.enable();
-  Timber.App.setLevel(Timber.Level.perf);
+  /* Timber.App.enable(); */
+  /* Timber.App.setLevel(Timber.Level.perf); */
 
   let initialExample = ref("Animation");
   Arg.parse(
@@ -305,6 +305,8 @@ let init = app => {
     Window.onSizeChanged(window, ({width, height}) =>
       Console.log(Printf.sprintf("Size changed: %d x %d", width, height))
     );
+
+  let _startEventLoop = Revery_Lwt.startEventLoop();
 
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);

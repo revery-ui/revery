@@ -90,3 +90,5 @@ let getAssetPath = p => {
 };
 
 let getWorkingDirectory = () => Sys.getcwd();
+
+let getTempDirectory = () => Filename.get_temp_dir_name();

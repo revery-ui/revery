@@ -28,7 +28,7 @@ module Logo = {
     <View>
       <Opacity opacity=transitionedOpacity>
         <Image
-          src="outrun-logo.png"
+          src="https://www.iteam.se/static/6e3a74f85e6f4ab87c1de8d5db5ede14/c5b20/_DSC6576.jpg"
           style=Style.[
             width(512),
             height(256),

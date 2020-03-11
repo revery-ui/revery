@@ -27,41 +27,53 @@
     "build": [
       "dune build -p Revery -j4"
     ],
+    "buildDev": [
+      "refmterr dune build -p Revery -j4"
+    ],
     "install": [
       "esy-installer Revery.install",
       "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': ':'}\""
     ]
   },
   "dependencies": {
+    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#34e5991",
+    "@esy-ocaml/reason": "3.6.0",
+    "@glennsl/timber": "*",
+    "@opam/bos": "0.2.0",
     "@opam/dune-configurator": "*",
-    "@esy-ocaml/reason": "^3.4.0",
     "@opam/lru": "github:bryphe/lru:lru.opam#2708c70",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/ppx_deriving": "*",
-    "@brisk/brisk-reconciler": "github:briskml/brisk-reconciler#34e5991",
-    "flex": "1.2.3",
-    "@reason-native/rely": "*",
-    "reperf": "^1.4.0",
+    "@opam/uri": "3.1.0",
     "@reason-native/console": "^0.0.3",
+    "@reason-native/rely": "*",
+    "fetch-native-lwt": "lessp/fetch:fetch-native-lwt.json",
+    "flex": "1.2.3",
     "reason-font-manager": "^2.1.1",
     "reason-harfbuzz": "^1.91.5007",
-    "rench": "^1.9.1",
-    "rebez": "github:jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3018",
     "reason-skia": "github:revery-ui/reason-skia#fec55ce",
-    "revery-text-wrap": "github:revery-ui/revery-text-wrap#966383e",
-    "@glennsl/timber": "1.0.0"
+    "rebez": "github:jchavarri/rebez#03fa3b7",
+    "rench": "^1.9.1",
+    "reperf": "^1.4.0",
+    "revery-text-wrap": "*"
   },
   "resolutions": {
+    "revery-text-wrap": "link:../revery-text-wrap/package.json",
     "@esy-ocaml/libffi": "esy-ocaml/libffi#c61127d",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
-    "@opam/cmdliner": "1.0.2"
+    "@opam/cmdliner": "1.0.2",
+    "esy-skia": "link:../esy-skia/package.json",
+    "esy-libjpeg-turbo": "link:../libjpeg-turbo/package.json",
+    "@glennsl/timber": "link:../timber"
   },
   "devDependencies": {
+    "refmterr": "*",
     "ocaml": "~4.8",
     "@opam/merlin": "^3.3.2",
     "@opam/dune": "^1.8.0",
     "esy-astyle": "github:zbaylin/esy-astyle#59bc21a"
   }
 }
+
