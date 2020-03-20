@@ -47,20 +47,20 @@ let flushPendingCallbacks: unit => unit;
  idle and will render. This is useful if you have animations active, but in general,
  you want to allow the app to idle to minimize CPU and battery usage.
 */
-let setCanIdle: ((unit => bool), t) => unit;
+let setCanIdle: (unit => bool, t) => unit;
 
 type unsubscribe = unit => unit;
 
 /** [onBeforeQuit(app, f) registers a callback [f] that is called prior to quitting] */
-let onBeforeQuit: (t, (unit => unit)) => unsubscribe;
+let onBeforeQuit: (t, unit => unit) => unsubscribe;
 
-/** [onIdle(app, f) registers a callback [f] that is called when the application is idle. 
+/** [onIdle(app, f) registers a callback [f] that is called when the application is idle.
 
   This allows you to defer work when the app is not under load - (for example,
   this is may be a good time to garbage collect). This will be called
   when multiple frames have passed without requiring a render.
 */
-let onIdle: (t, (unit => unit)) => unsubscribe;
+let onIdle: (t, unit => unit) => unsubscribe;
 
 /** [createWindow ~createOptions, app, name] creates a new window */
 let createWindow:
@@ -71,8 +71,7 @@ let createWindow:
   to an initialization function.
 */
 
-let start: (
-  t => unit) => unit;
+let start: (t => unit) => unit;
 
 /** [initConsole] (Windows-only) attaches or allocates a console,
   to show logging output. No-op on other platforms.

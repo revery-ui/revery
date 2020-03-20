@@ -5,7 +5,6 @@ module Log = AppLog;
 
 type delegatedFunc = unit => unit;
 type unsubscribe = unit => unit;
-let noop = () => ();
 
 type t = {
   mutable idleCount: int,
@@ -56,8 +55,8 @@ let quit = (~askNicely=false, ~code=0, app: t) => {
       app.isQuitting = true;
       let _: unit = Event.dispatch(app.onBeforeQuit, ());
       app.isQuitting = false;
-    } 
-    
+    };
+
     Log.info("Quitting");
     exit(code);
   };
@@ -137,7 +136,7 @@ let initConsole = () =>
     ();
   };
 
-let start = (init) => {
+let start = init => {
   let appInstance: t = {
     windows: Hashtbl.create(1),
     idleCount: 0,
@@ -145,7 +144,7 @@ let start = (init) => {
     isQuitting: false,
     onBeforeQuit: Event.create(),
     onIdle: Event.create(),
-    canIdle:() => true,
+    canIdle: () => true,
   };
 
   Sdl2.Log.setOutputFunction((_category, priority, message) =>
@@ -259,6 +258,7 @@ let start = (init) => {
       if (appInstance.idleCount === framesToIdle) {
         Log.debug("Downshifting into idle state...");
         let _: unit = Event.dispatch(appInstance.onIdle, ());
+        ();
       };
 
       let evt = Sdl2.Event.waitTimeout(250);
