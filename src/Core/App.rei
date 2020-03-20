@@ -5,10 +5,6 @@
 */
 type t;
 
-type initFunc = t => unit;
-type idleFunc = unit => unit;
-type canIdleFunc = unit => bool;
-
 /** [getWindows(app)] returns the list of all open [Window.t] instances */
 let getWindows: t => list(Window.t);
 
@@ -51,7 +47,10 @@ let flushPendingCallbacks: unit => unit;
  idle and will render. This is useful if you have animations active, but in general,
  you want to allow the app to idle to minimize CPU and battery usage.
 */
-let setCanIdle: (canIdleFunc, t) => unit;
+let setCanIdle: ((unit => bool), t) => unit;
+
+/** [setBeforeQuit(f, app) registers a callback [f] that is called prior to quitting] */
+let setBeforeQuit: ((unit => unit), t) => unit;
 
 /** [createWindow ~createOptions, app, name] creates a new window */
 let createWindow:
@@ -66,7 +65,10 @@ let createWindow:
   this is a good time to garbage collect). This will be called
   when multiple frames have passed without requiring a render.
 */
-let start: (~onIdle: idleFunc=?, initFunc) => unit;
+
+let start: (
+  ~onIdle: unit=>unit =?,
+  (t => unit)) => unit;
 
 /** [initConsole] (Windows-only) attaches or allocates a console,
   to show logging output. No-op on other platforms.
