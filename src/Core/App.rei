@@ -49,8 +49,18 @@ let flushPendingCallbacks: unit => unit;
 */
 let setCanIdle: ((unit => bool), t) => unit;
 
-/** [setBeforeQuit(f, app) registers a callback [f] that is called prior to quitting] */
-let setBeforeQuit: ((unit => unit), t) => unit;
+type unsubscribe = unit => unit;
+
+/** [onBeforeQuit(app, f) registers a callback [f] that is called prior to quitting] */
+let onBeforeQuit: (t, (unit => unit)) => unsubscribe;
+
+/** [onIdle(app, f) registers a callback [f] that is called when the application is idle. 
+
+  This allows you to defer work when the app is not under load - (for example,
+  this is may be a good time to garbage collect). This will be called
+  when multiple frames have passed without requiring a render.
+*/
+let onIdle: (t, (unit => unit)) => unsubscribe;
 
 /** [createWindow ~createOptions, app, name] creates a new window */
 let createWindow:
@@ -59,16 +69,10 @@ let createWindow:
 /** [start] is the entry point for a Revery application. This initiates
   the Revery application lifecycle, and an app instance ([t]) is passed
   to an initialization function.
-
-  An optional [idleFunc] may be provided if there is work that could be
-  done when the application is idle for performance (for example,
-  this is a good time to garbage collect). This will be called
-  when multiple frames have passed without requiring a render.
 */
 
 let start: (
-  ~onIdle: unit=>unit =?,
-  (t => unit)) => unit;
+  t => unit) => unit;
 
 /** [initConsole] (Windows-only) attaches or allocates a console,
   to show logging output. No-op on other platforms.

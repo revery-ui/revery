@@ -4,6 +4,7 @@ module SdlLog = (val Log.withNamespace("Revery.SDL2"));
 module Log = AppLog;
 
 type delegatedFunc = unit => unit;
+type unsubscribe = unit => unit;
 let noop = () => ();
 
 type t = {
@@ -11,8 +12,8 @@ type t = {
   mutable isFirstRender: bool,
   mutable isQuitting: bool,
   windows: Hashtbl.t(int, Window.t),
-  onIdle: unit => unit,
-  mutable onBeforeQuit: unit => unit,
+  onIdle: Event.t(unit),
+  onBeforeQuit: Event.t(unit),
   mutable canIdle: unit => bool,
 };
 
@@ -53,7 +54,7 @@ let quit = (~askNicely=false, ~code=0, app: t) => {
     if (!app.isQuitting) {
       Log.info("onBeforeQuit");
       app.isQuitting = true;
-      app.onBeforeQuit();
+      let _: unit = Event.dispatch(app.onBeforeQuit, ());
       app.isQuitting = false;
     } 
     
@@ -86,9 +87,8 @@ let setCanIdle = (f, app: t) => {
   app.canIdle = f;
 };
 
-let setBeforeQuit = (f, app) => {
-  app.onBeforeQuit = f;
-}
+let onBeforeQuit = app => Event.subscribe(app.onBeforeQuit);
+let onIdle = app => Event.subscribe(app.onIdle);
 
 /* Execute any pending main thread jobs */
 let _doPendingMainThreadJobs = () => {
@@ -137,14 +137,14 @@ let initConsole = () =>
     ();
   };
 
-let start = (~onIdle=noop, init) => {
+let start = (init) => {
   let appInstance: t = {
     windows: Hashtbl.create(1),
     idleCount: 0,
     isFirstRender: true,
     isQuitting: false,
-    onBeforeQuit: noop,
-    onIdle,
+    onBeforeQuit: Event.create(),
+    onIdle: Event.create(),
     canIdle:() => true,
   };
 
@@ -258,7 +258,7 @@ let start = (~onIdle=noop, init) => {
 
       if (appInstance.idleCount === framesToIdle) {
         Log.debug("Downshifting into idle state...");
-        appInstance.onIdle();
+        let _: unit = Event.dispatch(appInstance.onIdle, ());
       };
 
       let evt = Sdl2.Event.waitTimeout(250);
