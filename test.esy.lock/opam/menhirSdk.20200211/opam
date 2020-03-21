@@ -14,6 +14,9 @@ depends: [
   "ocaml" {>= "4.02.3"}
   "dune" {>= "2.0.0"}
 ]
+conflicts: [
+  "menhir" { != version  }
+]
 synopsis: "Compile-time library for auxiliary tools related to Menhir"
 url {
   src:

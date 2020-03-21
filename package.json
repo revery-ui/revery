@@ -60,8 +60,8 @@
   },
   "devDependencies": {
     "ocaml": "~4.8",
-    "@opam/merlin": "^3.3.2",
     "@opam/dune": "^1.8.0",
-    "esy-astyle": "zbaylin/esy-astyle#59bc21a"
+    "esy-astyle": "zbaylin/esy-astyle#59bc21a",
+    "@opam/ocaml-lsp-server": "github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#04733ed"
   }
 }
