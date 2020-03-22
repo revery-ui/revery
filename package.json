@@ -41,23 +41,22 @@
     "@glennsl/timber": "*",
     "@opam/bos": "0.2.0",
     "@opam/dune-configurator": "*",
-    "@opam/lru": "github:bryphe/lru:lru.opam#2708c70",
+    "@opam/lru": "bryphe/lru:lru.opam#2708c70",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/ppx_deriving": "*",
-    "@opam/uri": "3.1.0",
+    "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
     "@reason-native/rely": "*",
     "fetch-native-lwt": "lessp/fetch:fetch-native-lwt.json",
     "flex": "1.2.3",
     "reason-font-manager": "^2.1.1",
     "reason-harfbuzz": "^1.91.5007",
-    "reason-sdl2": "^2.10.3018",
-    "reason-skia": "github:revery-ui/reason-skia#fec55ce",
-    "rebez": "github:jchavarri/rebez#03fa3b7",
     "rench": "^1.9.1",
-    "reperf": "^1.4.0",
-    "revery-text-wrap": "*"
+    "rebez": "jchavarri/rebez#03fa3b7",
+    "reason-sdl2": "^2.10.3019",
+    "reason-skia": "revery-ui/reason-skia#cc3cfa8",
+    "revery-text-wrap": "revery-ui/revery-text-wrap#966383e"
   },
   "resolutions": {
     "revery-text-wrap": "link:../revery-text-wrap/package.json",
@@ -71,9 +70,8 @@
   "devDependencies": {
     "refmterr": "*",
     "ocaml": "~4.8",
-    "@opam/merlin": "^3.3.2",
     "@opam/dune": "^1.8.0",
-    "esy-astyle": "github:zbaylin/esy-astyle#59bc21a"
+    "esy-astyle": "zbaylin/esy-astyle#59bc21a",
+    "@opam/ocaml-lsp-server": "github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#04733ed"
   }
 }
-

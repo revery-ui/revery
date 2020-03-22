@@ -4,23 +4,19 @@ module SdlLog = (val Log.withNamespace("Revery.SDL2"));
 module Log = AppLog;
 
 type delegatedFunc = unit => unit;
-type idleFunc = unit => unit;
-type canIdleFunc = unit => bool;
-let noop = () => ();
+type unsubscribe = unit => unit;
 
 type t = {
   mutable idleCount: int,
   mutable isFirstRender: bool,
+  mutable isQuitting: bool,
   windows: Hashtbl.t(int, Window.t),
-  onIdle: idleFunc,
-  canIdle: ref(canIdleFunc),
+  onIdle: Event.t(unit),
+  onBeforeQuit: Event.t(unit),
+  mutable canIdle: unit => bool,
 };
 
-type initFunc = t => unit;
-
 let framesToIdle = 10;
-
-type appInitFunc = t => unit;
 
 let getWindows = (app: t) => {
   Hashtbl.to_seq_values(app.windows) |> List.of_seq;
@@ -50,9 +46,17 @@ let quit = (~askNicely=false, ~code=0, app: t) => {
     _tryToCloseAll(app);
   };
 
-  Revery_Native.uninit();
-
   if (Hashtbl.length(app.windows) == 0 || !askNicely) {
+    Revery_Native.uninit();
+
+    // Verify [quit] wasn't called recursively from a beforeQuit handler
+    if (!app.isQuitting) {
+      Log.info("onBeforeQuit");
+      app.isQuitting = true;
+      let _: unit = Event.dispatch(app.onBeforeQuit, ());
+      app.isQuitting = false;
+    };
+
     Log.info("Quitting");
     exit(code);
   };
@@ -78,9 +82,12 @@ let _anyPendingMainThreadJobs = () => {
   _anyPendingWork^;
 };
 
-let setCanIdle = (f: canIdleFunc, app: t) => {
-  app.canIdle := f;
+let setCanIdle = (f, app: t) => {
+  app.canIdle = f;
 };
+
+let onBeforeQuit = app => Event.subscribe(app.onBeforeQuit);
+let onIdle = app => Event.subscribe(app.onIdle);
 
 /* Execute any pending main thread jobs */
 let _doPendingMainThreadJobs = () => {
@@ -129,13 +136,15 @@ let initConsole = () =>
     ();
   };
 
-let start = (~onIdle=noop, initFunc: appInitFunc) => {
+let start = init => {
   let appInstance: t = {
     windows: Hashtbl.create(1),
     idleCount: 0,
     isFirstRender: true,
-    onIdle,
-    canIdle: ref(() => true),
+    isQuitting: false,
+    onBeforeQuit: Event.create(),
+    onIdle: Event.create(),
+    canIdle: () => true,
   };
 
   Sdl2.Log.setOutputFunction((_category, priority, message) =>
@@ -150,7 +159,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
   );
 
   let _ = Sdl2.init();
-  let _dispose = initFunc(appInstance);
+  let _dispose = init(appInstance);
 
   let _ = Sdl2.ScreenSaver.enable();
 
@@ -229,7 +238,7 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
     if (appInstance.isFirstRender
         || _anyWindowsDirty(appInstance)
         || _anyPendingMainThreadJobs()
-        || !appInstance.canIdle^()) {
+        || !appInstance.canIdle()) {
       if (appInstance.idleCount > 0) {
         Log.debug("Upshifting into active state.");
       };
@@ -248,7 +257,8 @@ let start = (~onIdle=noop, initFunc: appInitFunc) => {
 
       if (appInstance.idleCount === framesToIdle) {
         Log.debug("Downshifting into idle state...");
-        appInstance.onIdle();
+        let _: unit = Event.dispatch(appInstance.onIdle, ());
+        ();
       };
 
       let evt = Sdl2.Event.waitTimeout(250);

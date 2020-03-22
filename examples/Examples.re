@@ -250,6 +250,11 @@ let init = app => {
   /* Timber.App.enable(); */
   /* Timber.App.setLevel(Timber.Level.perf); */
 
+  App.onIdle(app, () => prerr_endline("Idle!"))
+  |> (ignore: Revery.App.unsubscribe => unit);
+  App.onBeforeQuit(app, () => prerr_endline("Quitting!"))
+  |> (ignore: Revery.App.unsubscribe => unit);
+
   let initialExample = ref("Animation");
   Arg.parse(
     [
@@ -313,5 +318,4 @@ let init = app => {
   ();
 };
 
-let onIdle = () => print_endline("Example: idle callback triggered");
-App.start(~onIdle, init);
+App.start(init);
