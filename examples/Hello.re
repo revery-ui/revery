@@ -27,17 +27,24 @@ module Logo = {
 
     <View>
       <Opacity opacity=transitionedOpacity>
-        <Image
-          src="https://www.iteam.se/static/6e3a74f85e6f4ab87c1de8d5db5ede14/c5b20/_DSC6576.jpg"
+        <View
           style=Style.[
-            width(512),
-            height(256),
-            transform([
-              Transform.RotateY(Angle.from_radians(rotationY)),
-              Transform.RotateX(Angle.from_radians(rotationX)),
-            ]),
-          ]
-        />
+            justifyContent(`Center),
+            alignItems(`Center),
+            padding(16),
+          ]>
+          <Image
+            src="https://www.outrunlabs.com/revery/images/revery-logo.png"
+            style=Style.[
+              width(361 / 2),
+              height(238 / 2),
+              transform([
+                Transform.RotateY(Angle.from_radians(rotationY)),
+                Transform.RotateX(Angle.from_radians(rotationX)),
+              ]),
+            ]
+          />
+        </View>
         <Row>
           <Button
             width=200

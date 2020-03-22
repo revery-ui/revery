@@ -163,21 +163,40 @@ let drawRRect = (v: t, rRect: Skia.RRect.t, paint) => {
 };
 
 let drawImage = (~x, ~y, ~width, ~height, src, v: t) => {
-  ImageRenderer.getTexture(src)
-  |> Lwt.map(image => {
-       switch (image) {
-       | None => ()
-       | Some(img) =>
-         Canvas.drawImageRect(
-           v.canvas,
-           img,
-           None,
-           Rect.makeLtrb(x, y, x +. width, y +. height),
-           None,
-         )
-       }
-     })
-  |> ignore;
+  let isRemote = src |> Uri.of_string |> Uri.scheme |> Option.is_some;
+
+  if (isRemote) {
+    LetOperators.(
+      {
+        let.map image = ImageRenderer.getTextureRemote(src);
+
+        switch (image) {
+        | None => ()
+        | Some(img) =>
+          Canvas.drawImageRect(
+            v.canvas,
+            img,
+            None,
+            Rect.makeLtrb(x, y, x +. width, y +. height),
+            None,
+          )
+        };
+      }
+    )
+    |> ignore;
+  } else {
+    switch (ImageRenderer.getTexture(src)) {
+    | None => ()
+    | Some(img) =>
+      Canvas.drawImageRect(
+        v.canvas,
+        img,
+        None,
+        Rect.makeLtrb(x, y, x +. width, y +. height),
+        None,
+      )
+    };
+  };
 };
 
 let drawText = (~paint, ~x=0., ~y=0., ~text, v: t) => {
