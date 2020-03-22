@@ -59,13 +59,9 @@
     "revery-text-wrap": "revery-ui/revery-text-wrap#966383e"
   },
   "resolutions": {
-    "revery-text-wrap": "link:../revery-text-wrap/package.json",
     "@esy-ocaml/libffi": "esy-ocaml/libffi#c61127d",
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
-    "@opam/cmdliner": "1.0.2",
-    "esy-skia": "link:../esy-skia/package.json",
-    "esy-libjpeg-turbo": "link:../libjpeg-turbo/package.json",
-    "@glennsl/timber": "link:../timber"
+    "@opam/cmdliner": "1.0.2"
   },
   "devDependencies": {
     "refmterr": "*",

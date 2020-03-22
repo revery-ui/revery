@@ -177,18 +177,7 @@ let drawImage = (~x, ~y, ~width, ~height, src, v: t) => {
          )
        }
      })
-  |> ignore/* switch (image) { */
-           /* | None => () */
-           /* | Some(img) => */
-           /*   Canvas.drawImageRect( */
-           /*     v.canvas, */
-           /*     img, */
-           /*     None, */
-           /*     Rect.makeLtrb(x, y, x +. width, y +. height), */
-           /*     None, */
-           /*   ) */
-           ;
-           /* }; */
+  |> ignore;
 };
 
 let drawText = (~paint, ~x=0., ~y=0., ~text, v: t) => {

@@ -1,54 +1,10 @@
 open Revery_Core;
+open LetOperators;
 
 module Log = (val Log.withNamespace("Revery.ImageRenderer"));
 
 type cache = Hashtbl.t(string, option(Skia.Image.t));
 let _cache: cache = Hashtbl.create(100);
-
-let (let+await?) = (promise, fn) =>
-  Lwt.map(
-    fun
-    | Ok(response) => fn(response)
-    | Error(e) => e,
-    promise,
-  );
-
-let (let+await) = (promise, fn) => Lwt.map(fn, promise);
-
-let (let.map) = (promise, fn) => Lwt.map(fn, promise);
-let (let.mapOk) = (promise, fn) =>
-  Lwt.map(
-    fun
-    | Ok(response) => fn(response)
-    | Error(e) => e,
-    promise,
-  );
-
-let (let*await?) = (promise, fn) =>
-  Lwt.bind(
-    promise,
-    fun
-    | Ok(response) => fn(response)
-    | Error(e) => e,
-  );
-
-let (let.await) = (promise, fn) => Lwt.bind;
-
-let (let.await?) = (promise, fn) =>
-  Lwt.bind(
-    promise,
-    fun
-    | Ok(response) => fn(response)
-    | Error(e) => Lwt.return(Error(e)),
-  );
-
-let (let.flatMapOk) = (promise, fn) =>
-  Lwt.bind(
-    promise,
-    fun
-    | Ok(response) => fn(response)
-    | Error(e) => Lwt.return(Error(e)),
-  );
 
 module Utils = {
   let removeNonAlphanumeric = text =>

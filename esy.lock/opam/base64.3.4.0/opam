@@ -21,7 +21,7 @@ depends: [
   "dune" {>= "2.0"}
   "bos" {with-test}
   "rresult" {with-test}
-  "alcotest" {with-test & < "1.0.0"}
+  "alcotest" {with-test}
 ]
 build: [
   ["dune" "subst"]
@@ -30,9 +30,9 @@ build: [
 ]
 url {
   src:
-    "https://github.com/mirage/ocaml-base64/releases/download/v3.3.0/base64-v3.3.0.tbz"
+    "https://github.com/mirage/ocaml-base64/releases/download/v3.4.0/base64-v3.4.0.tbz"
   checksum: [
-    "sha256=3ae91334f029ccd96690b598010f94e55811095d14a37d52f1724e5eca0f35cc"
-    "sha512=818103de0ac03b9a04f5aafc119341522bf69e57dfbd038b321f92ab8cbf7fc7084ca3012086baece12da94d4d5448eb927f70b741025a13d49e93ca6ea27d41"
+    "sha256=1c9cf655bdd771a4d20014f7f29aadfde7e3821b01772b49f8ba4d4bda2b1634"
+    "sha512=e66a67302a9eb136044bebf66a89a1d6e38a96c70622bb6cd27916fec36dcaf4b5b7e7d00c25608f0a2363f2ca4264a5fe765fe7747590958325dbce06311db9"
   ]
 }
