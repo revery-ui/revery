@@ -245,7 +245,7 @@ module ExampleHost = {
 };
 
 let init = app => {
-  /* Revery.App.initConsole(); */
+  Revery.App.initConsole();
 
   /* Timber.App.enable(); */
   /* Timber.App.setLevel(Timber.Level.perf); */

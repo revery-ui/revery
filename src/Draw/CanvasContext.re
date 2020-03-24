@@ -163,12 +163,12 @@ let drawRRect = (v: t, rRect: Skia.RRect.t, paint) => {
 };
 
 let drawImage = (~x, ~y, ~width, ~height, src, v: t) => {
-  let isRemote = src |> Uri.of_string |> Uri.scheme |> Option.is_some;
+  let isUrl = src |> Uri.of_string |> Uri.scheme |> Option.is_some;
 
-  if (isRemote) {
+  if (isUrl) {
     LetOperators.(
       {
-        let.map image = ImageRenderer.getTextureRemote(src);
+        let.map image = ImageRenderer.fromUrl(src);
 
         switch (image) {
         | None => ()
@@ -185,7 +185,7 @@ let drawImage = (~x, ~y, ~width, ~height, src, v: t) => {
     )
     |> ignore;
   } else {
-    switch (ImageRenderer.getTexture(src)) {
+    switch (ImageRenderer.fromAssetPath(src)) {
     | None => ()
     | Some(img) =>
       Canvas.drawImageRect(
