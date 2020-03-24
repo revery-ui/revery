@@ -1,0 +1,47 @@
+opam-version: "2.0"
+maintainer: "Daniel Bünzli <daniel.buenzl i@erratique.ch>"
+authors: ["Daniel Bünzli <daniel.buenzl i@erratique.ch>"]
+homepage: "http://erratique.ch/software/bos"
+doc: "http://erratique.ch/software/bos/doc"
+dev-repo: "git+http://erratique.ch/repos/bos.git"
+bug-reports: "https://github.com/dbuenzli/bos/issues"
+tags: [ "os" "system" "cli" "command" "file" "path" "log" "unix" "org:erratique" ]
+license: "ISC"
+depends: [
+  "ocaml" {>= "4.01.0"}
+  "ocamlfind" {build}
+  "ocamlbuild" {build}
+  "topkg" {build & >= "0.9.0"}
+  "base-unix"
+  "rresult" {>= "0.4.0"}
+  "astring"
+  "fpath"
+  "fmt" {>= "0.8.0"}
+  "logs"
+  "mtime" {with-test}
+]
+build: [[
+  "ocaml" "pkg/pkg.ml" "build"
+          "--dev-pkg" "%{pinned}%" ]]
+synopsis: "Basic OS interaction for OCaml"
+description: """
+Bos provides support for basic and robust interaction with the
+operating system in OCaml. It has functions to access the process
+environment, parse command line arguments, interact with the file
+system and run command line programs.
+
+Bos works equally well on POSIX and Windows operating systems.
+
+Bos depends on [Rresult][rresult], [Astring][astring], [Fmt][fmt],
+[Fpath][fpath] and [Logs][logs] and the OCaml Unix library. It is
+distributed under the ISC license.
+
+[rresult]: http://erratique.ch/software/rresult
+[astring]: http://erratique.ch/software/astring
+[fmt]: http://erratique.ch/software/fmt
+[fpath]: http://erratique.ch/software/fpath
+[logs]: http://erratique.ch/software/logs"""
+url {
+  src: "http://erratique.ch/software/bos/releases/bos-0.2.0.tbz"
+  checksum: "md5=aeae7447567db459c856ee41b5a66fd2"
+}
