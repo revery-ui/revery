@@ -1,3 +1,4 @@
+
 {
   "name": "revery",
   "version": "0.30.0",
@@ -56,7 +57,7 @@
     "reason-sdl2": "^2.10.3019",
     "reason-skia": "revery-ui/reason-skia#cc3cfa8",
     "revery-text-wrap": "revery-ui/revery-text-wrap#966383e",
-    "@glennsl/timber": ">=1.1.0"
+    "@glennsl/timber": "*"
   },
   "resolutions": {
     "@esy-ocaml/libffi": "esy-ocaml/libffi#c61127d",
@@ -64,6 +65,7 @@
     "@opam/cmdliner": "1.0.2"
   },
   "devDependencies": {
+    "refmterr": "*",
     "ocaml": "~4.8",
     "@opam/dune": "^1.8.0",
     "esy-astyle": "zbaylin/esy-astyle#59bc21a",
