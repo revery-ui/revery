@@ -24,8 +24,6 @@ module RemoteImage = {
       {
         Log.info("Fetching image: " ++ url);
 
-        Console.log("Fetching image: " ++ url);
-
         let.flatMapOk {Response.body, headers} = get(url);
 
         let data = Response.Body.toString(body);
