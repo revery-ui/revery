@@ -27,11 +27,8 @@ class imageNode (imagePath: string) = {
 
     let {canvas, _}: NodeDrawContext.t = parentContext;
 
-    if (_opacity == 1.0) {
-      Skia.Paint.setAlpha(_paint, parentContext.opacity);
-    } else {
-      Skia.Paint.setAlpha(_paint, _opacity);
-    };
+    Skia.Paint.setAlpha(_paint, _opacity *. parentContext.opacity);
+
     // TODO find a way to only manage the matrix stack in Node
     Revery_Draw.CanvasContext.setMatrix(canvas, world);
     Draw.CanvasContext.drawImage(
