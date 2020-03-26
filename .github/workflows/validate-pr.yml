@@ -1,5 +1,7 @@
 name: Validate Pull Request
+
 on: [push, pull_request]
+
 jobs:
   lint:
     name: Lint lockdir, autoformat
