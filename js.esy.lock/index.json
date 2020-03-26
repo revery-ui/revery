@@ -57,7 +57,7 @@
         ]
       },
       "overrides": [],
-      "dependencies": [ "qs@6.9.1@d41d8cd9" ],
+      "dependencies": [ "qs@6.9.3@d41d8cd9" ],
       "devDependencies": []
     },
     "secure-compare@3.0.1@d41d8cd9": {
@@ -306,14 +306,14 @@
       ],
       "devDependencies": []
     },
-    "qs@6.9.1@d41d8cd9": {
-      "id": "qs@6.9.1@d41d8cd9",
+    "qs@6.9.3@d41d8cd9": {
+      "id": "qs@6.9.3@d41d8cd9",
       "name": "qs",
-      "version": "6.9.1",
+      "version": "6.9.3",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/qs/-/qs-6.9.1.tgz#sha1:20082c65cb78223635ab1a9eaca8875a29bf8ec9"
+          "archive:https://registry.npmjs.org/qs/-/qs-6.9.3.tgz#sha1:bfadcd296c2d549f1dffa560619132c977f5008e"
         ]
       },
       "overrides": [],
@@ -332,7 +332,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "mkdirp@0.5.3@d41d8cd9", "debug@3.2.6@d41d8cd9",
+        "mkdirp@0.5.4@d41d8cd9", "debug@3.2.6@d41d8cd9",
         "async@2.6.3@d41d8cd9"
       ],
       "devDependencies": []
@@ -395,14 +395,14 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "mkdirp@0.5.3@d41d8cd9": {
-      "id": "mkdirp@0.5.3@d41d8cd9",
+    "mkdirp@0.5.4@d41d8cd9": {
+      "id": "mkdirp@0.5.4@d41d8cd9",
       "name": "mkdirp",
-      "version": "0.5.3",
+      "version": "0.5.4",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.3.tgz#sha1:5a514b7179259287952881e94410ec5465659f8c"
+          "archive:https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.4.tgz#sha1:fd01504a6797ec5c9be81ff43d204961ed64a512"
         ]
       },
       "overrides": [],
