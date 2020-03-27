@@ -13,7 +13,7 @@ module Math = Revery_Math;
 module Native = Revery_Native;
 
 module UI = {
-include Revery_UI;
+  include Revery_UI;
   include Revery_UI_Primitives;
 
   /*
