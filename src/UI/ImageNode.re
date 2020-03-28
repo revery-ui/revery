@@ -18,6 +18,7 @@ class imageNode (imagePath: string) = {
   inherit (class node)() as _super;
   val mutable _opacity = 1.0;
   val mutable _resizeMode = ImageResizeMode.Stretch;
+  val _paint = Skia.Paint.make();
   pub! draw = (parentContext: NodeDrawContext.t) => {
     /* Draw background first */
     _super#draw(parentContext);
@@ -26,6 +27,8 @@ class imageNode (imagePath: string) = {
 
     let {canvas, _}: NodeDrawContext.t = parentContext;
 
+    Skia.Paint.setAlpha(_paint, _opacity *. parentContext.opacity);
+
     // TODO find a way to only manage the matrix stack in Node
     Revery_Draw.CanvasContext.setMatrix(canvas, world);
     Draw.CanvasContext.drawImage(
@@ -33,6 +36,7 @@ class imageNode (imagePath: string) = {
       ~y=0.,
       ~width=float_of_int(dimensions.width),
       ~height=float_of_int(dimensions.height),
+      ~paint=_paint,
       src,
       canvas,
     );
