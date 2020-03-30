@@ -5,7 +5,7 @@ steps:
     displayName: "Install doc dependency"
     condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
-  - script: "esy '@doc' build"
+  - script: "esy '@doc' build --verbosity=debug"
     displayName: "Build docs"
     condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
