@@ -1,4 +1,3 @@
-
 {
   "name": "revery",
   "version": "0.30.0",
@@ -45,7 +44,7 @@
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/ppx_deriving": "*",
     "@brisk/brisk-reconciler": "briskml/brisk-reconciler#34e5991",
-    "fetch-native-lwt": "lessp/fetch:fetch-native-lwt.json#0774bc9",
+    "fetch-native-lwt": "lessp/fetch:fetch-native-lwt.json#3421381",
     "flex": "1.2.3",
     "@reason-native/rely": "*",
     "reperf": "^1.4.0",

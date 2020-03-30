@@ -26,7 +26,7 @@ module RemoteImage = {
 
         let.flatMapOk {Response.body, headers} = get(url);
 
-        let data = Response.Body.toString(body);
+        let data = Body.toString(body);
         let mediaType =
           headers
           |> List.find_opt(((k, _v)) =>
