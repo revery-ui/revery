@@ -77,7 +77,7 @@ jobs:
         run: npm install -g esy
       - run: brew install coreutils
       - name: Solve doc dependencies
-        run: esy @doc install
+        run: esy @doc install --verbosity=debug
       - name: Print esy cache
         id: print_esy_cache
         run: node .github/workflows/print_esy_cache.js
