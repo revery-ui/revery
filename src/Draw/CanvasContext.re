@@ -162,7 +162,7 @@ let drawRRect = (v: t, rRect: Skia.RRect.t, paint) => {
   Canvas.drawRRect(v.canvas, rRect, paint);
 };
 
-let drawImage = (~x, ~y, ~width, ~height, src, v: t) => {
+let drawImage = (~x, ~y, ~width, ~height, ~paint=?, src, v: t) => {
   let isUrl = src |> Uri.of_string |> Uri.scheme |> Option.is_some;
 
   if (isUrl) {
@@ -178,7 +178,7 @@ let drawImage = (~x, ~y, ~width, ~height, src, v: t) => {
             img,
             None,
             Rect.makeLtrb(x, y, x +. width, y +. height),
-            None,
+            paint,
           )
         };
       }
@@ -193,7 +193,7 @@ let drawImage = (~x, ~y, ~width, ~height, src, v: t) => {
         img,
         None,
         Rect.makeLtrb(x, y, x +. width, y +. height),
-        None,
+        paint,
       )
     };
   };
