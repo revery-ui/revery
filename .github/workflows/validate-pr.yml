@@ -35,20 +35,18 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: macOS-latest-4.08-${{ hashFiles('**/index.json') }}
+          key: macos-latest-4.08-${{ hashFiles('**/index.json') }}
       - name: Build dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
         run: esy build-dependencies --release
       - name: Generate opam files
         run: |
           esy build dune build @check
-          git add *opam
-          git diff --exit-code --cached || git commit -m "opam, "
+          git diff --exit-code --cached || (git add *opam; git commit -m "opam, ")
       - name: format sources files
         run: |
           esy format
-          git add -u
-          git diff --exit-code --cached || [[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -m "format, " || git commit --amend -m $(git log -1 --pretty=format:'%s')"format, "
+          git diff --exit-code --cached || [[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -am "format, " || git commit --amend -am $(git log -1 --pretty=format:'%s')"format, "
       - name: Push if it is not up to date
         run: |
           git status
@@ -87,7 +85,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: macOS-latest-4.08-${{ hashFiles('doc.esy.lock/index.json') }}
+          key: macos-latest-4.08-${{ hashFiles('doc.esy.lock/index.json') }}
       - name: Install doc dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
         run: esy @doc build-dependencies --release
