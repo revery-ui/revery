@@ -48,7 +48,7 @@ jobs:
         run: |
           esy format
           git status
-          git diff --exit-code --cached || [[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -am "format, " || git commit --amend -am $(git log -1 --pretty=format:'%s')"format, "
+          git diff --exit-code --cached || [[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && (git commit -am "format, " || git commit --amend -am $(git log -1 --pretty=format:'%s')"format, ")
       - name: Push if it is not up to date
         run: |
           git status
