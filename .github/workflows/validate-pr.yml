@@ -50,6 +50,7 @@ jobs:
         run: |
           esy format
           git status
+          git diff --exit-code --cached; echo $?
           git diff --exit-code --cached || [[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && (git commit -am "format, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')format, ")
           git status
           git log -2
