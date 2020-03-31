@@ -13,6 +13,11 @@ jobs:
       - uses: actions/checkout@v1
       - name: Install esy
         run: npm install -g esy
+      - name: Setup Git to push back
+        run: |
+          git remote set-url --push origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
+          git config user.name "Github Runner"
+          git config user.email "runner@runner.github.com"
       - name: Update lockdir
         run: |
           # git rm -rf esy.lock test.esy.lock bench.esy.lock doc.esy.lock js.esy.lock
@@ -38,21 +43,17 @@ jobs:
         run: |
           esy build dune build @check
           git add *opam
-      - name: format sources files 
+          git diff --exit-code --cached || git commit -m "opam, "
+      - name: format sources files
         run: |
           esy format
           git add -u
-      - name: Check that lock directory are up-to-date.
-        run: git diff --exit-code --cached
-      - name: Push if it is not
-        if: failure()
+          git diff --exit-code --cached || [[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -m "format, " || git commit --amend -m $(git log -1 --pretty=format:'%s')"format, "
+      - name: Push if it is not up to date
         run: |
-          git remote set-url --push origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
-          git config user.name "Github Runner"
-          git config user.email "runner@runner.github.com"
-          git commit -am "Update lockdir"
           git status
-          git push origin HEAD:$GITHUB_REF
+          git log -2
+          git branch  -r --contains $(git log  -1 --pretty=format:'%H') || git push origin HEAD:$GITHUB_REF
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Display status should be clean
