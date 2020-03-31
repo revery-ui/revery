@@ -1,5 +1,5 @@
 {
-  "checksum": "d1e5e0cfafa6b88ef77d2dc8316aaf15",
+  "checksum": "226512e712ed180f2e6c639b9359a33f",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
@@ -101,8 +101,8 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-skia@github:revery-ui/reason-skia#f6acf00@d41d8cd9",
-        "reason-sdl2@2.10.3020@d41d8cd9",
+        "reason-skia@github:revery-ui/reason-skia#7b1361b@d41d8cd9",
+        "reason-sdl2@2.10.3021@d41d8cd9",
         "reason-harfbuzz@1.91.8000@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "http-server@0.12.1@d41d8cd9",
         "flex@1.2.3@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
@@ -214,34 +214,34 @@
       ],
       "devDependencies": []
     },
-    "reason-skia@github:revery-ui/reason-skia#f6acf00@d41d8cd9": {
-      "id": "reason-skia@github:revery-ui/reason-skia#f6acf00@d41d8cd9",
+    "reason-skia@github:revery-ui/reason-skia#7b1361b@d41d8cd9": {
+      "id": "reason-skia@github:revery-ui/reason-skia#7b1361b@d41d8cd9",
       "name": "reason-skia",
-      "version": "github:revery-ui/reason-skia#f6acf00",
+      "version": "github:revery-ui/reason-skia#7b1361b",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-skia#f6acf00" ]
+        "source": [ "github:revery-ui/reason-skia#7b1361b" ]
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3020@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3021@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
-        "esy-skia@github:revery-ui/esy-skia#91b10c9@d41d8cd9",
+        "esy-skia@github:revery-ui/esy-skia#07c13a9@d41d8cd9",
         "esy-sdl2@2.0.10006@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.4.0@639d28a3",
         "@opam/ctypes@opam:0.15.1@b0227b2f",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
-      "devDependencies": []
+      "devDependencies": [ "@opam/dune@opam:2.4.0@639d28a3" ]
     },
-    "reason-sdl2@2.10.3020@d41d8cd9": {
-      "id": "reason-sdl2@2.10.3020@d41d8cd9",
+    "reason-sdl2@2.10.3021@d41d8cd9": {
+      "id": "reason-sdl2@2.10.3021@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "2.10.3020",
+      "version": "2.10.3021",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3020.tgz#sha1:2ed80ba0b5085f6a51cc91cf92a973d9362ce79f"
+          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3021.tgz#sha1:9ea4f7a663c49954db438fe5d914bafd7864d0e0"
         ]
       },
       "overrides": [],
@@ -496,7 +496,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "requires-port@1.0.0@d41d8cd9", "follow-redirects@1.10.0@d41d8cd9",
+        "requires-port@1.0.0@d41d8cd9", "follow-redirects@1.11.0@d41d8cd9",
         "eventemitter3@4.0.0@d41d8cd9"
       ],
       "devDependencies": []
@@ -515,14 +515,14 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "follow-redirects@1.10.0@d41d8cd9": {
-      "id": "follow-redirects@1.10.0@d41d8cd9",
+    "follow-redirects@1.11.0@d41d8cd9": {
+      "id": "follow-redirects@1.11.0@d41d8cd9",
       "name": "follow-redirects",
-      "version": "1.10.0",
+      "version": "1.11.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.10.0.tgz#sha1:01f5263aee921c6a54fb91667f08f4155ce169eb"
+          "archive:https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.11.0.tgz#sha1:afa14f08ba12a52963140fe43212658897bc0ecb"
         ]
       },
       "overrides": [],
@@ -560,13 +560,13 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-skia@github:revery-ui/esy-skia#91b10c9@d41d8cd9": {
-      "id": "esy-skia@github:revery-ui/esy-skia#91b10c9@d41d8cd9",
+    "esy-skia@github:revery-ui/esy-skia#07c13a9@d41d8cd9": {
+      "id": "esy-skia@github:revery-ui/esy-skia#07c13a9@d41d8cd9",
       "name": "esy-skia",
-      "version": "github:revery-ui/esy-skia#91b10c9",
+      "version": "github:revery-ui/esy-skia#07c13a9",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/esy-skia#91b10c9" ]
+        "source": [ "github:revery-ui/esy-skia#07c13a9" ]
       },
       "overrides": [],
       "dependencies": [
