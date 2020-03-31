@@ -44,16 +44,22 @@ jobs:
           esy build dune build @check
           git status
           git diff --exit-code --cached || (git add *opam; git commit -m "opam, ")
+          git status
+          git log -2
       - name: format sources files
         run: |
           esy format
           git status
           git diff --exit-code --cached || [[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && (git commit -am "format, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')format, ")
+          git status
+          git log -2
       - name: Push if it is not up to date
         run: |
           git status
           git log -2
           git branch  -r --contains $(git log  -1 --pretty=format:'%H') || git push origin HEAD:$GITHUB_REF
+          git status
+          git log -2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Display status should be clean
