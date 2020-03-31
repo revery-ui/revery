@@ -1,0 +1,38 @@
+opam-version: "2.0"
+maintainer: "mirageos-devel@lists.xenproject.org"
+authors: [ "Thomas Gazagnaire"
+           "Anil Madhavapeddy" "Calascibetta Romain"
+           "Peter Zotov" ]
+license: "ISC"
+homepage: "https://github.com/mirage/ocaml-base64"
+doc: "http://mirage.github.io/ocaml-base64/"
+bug-reports: "https://github.com/mirage/ocaml-base64/issues"
+dev-repo: "git+https://github.com/mirage/ocaml-base64.git"
+synopsis: "Base64 encoding for OCaml"
+description: """
+Base64 is a group of similar binary-to-text encoding schemes that represent
+binary data in an ASCII string format by translating it into a radix-64
+representation.  It is specified in RFC 4648.
+"""
+depends: [
+  "ocaml" {>="4.03.0"}
+  "base-bytes"
+  "dune-configurator"
+  "dune" {>= "2.0"}
+  "bos" {with-test}
+  "rresult" {with-test}
+  "alcotest" {with-test}
+]
+build: [
+  ["dune" "subst"]
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name] {with-test}
+]
+url {
+  src:
+    "https://github.com/mirage/ocaml-base64/releases/download/v3.4.0/base64-v3.4.0.tbz"
+  checksum: [
+    "sha256=1c9cf655bdd771a4d20014f7f29aadfde7e3821b01772b49f8ba4d4bda2b1634"
+    "sha512=e66a67302a9eb136044bebf66a89a1d6e38a96c70622bb6cd27916fec36dcaf4b5b7e7d00c25608f0a2363f2ca4264a5fe765fe7747590958325dbce06311db9"
+  ]
+}
