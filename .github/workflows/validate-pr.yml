@@ -35,17 +35,19 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: macos-latest-4.08-${{ hashFiles('**/index.json') }}
+          key: macos-latest-${{ hashFiles('**/index.json') }}
       - name: Build dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
         run: esy build-dependencies --release
       - name: Generate opam files
         run: |
           esy build dune build @check
+          git status
           git diff --exit-code --cached || (git add *opam; git commit -m "opam, ")
       - name: format sources files
         run: |
           esy format
+          git status
           git diff --exit-code --cached || [[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -am "format, " || git commit --amend -am $(git log -1 --pretty=format:'%s')"format, "
       - name: Push if it is not up to date
         run: |
