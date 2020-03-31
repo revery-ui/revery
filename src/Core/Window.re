@@ -397,7 +397,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   Log.info("Window created successfully.");
   let uniqueId = Sdl2.Window.getId(w);
   Log.debugf(m => m("- Id: %i", uniqueId));
-  let pixelFormat = Sdl2.Window.getPixelFormat(w) |> Sdl2.PixelFormat.toString;
+  let pixelFormat =
+    Sdl2.Window.getPixelFormat(w) |> Sdl2.PixelFormat.toString;
   Log.debugf(m => m("- PixelFormat: %s", pixelFormat));
 
   // We need to let Windows know that we are DPI-aware and that we are going to
