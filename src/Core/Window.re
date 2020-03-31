@@ -398,7 +398,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   let uniqueId = Sdl2.Window.getId(w);
   Log.debugf(m => m("- Id: %i", uniqueId));
   let pixelFormat = Sdl2.Window.getPixelFormat(w) |> Sdl2.PixelFormat.toString;
-  Log.infof(m => m("- PixelFormat: %s", pixelFormat));
+  Log.debugf(m => m("- PixelFormat: %s", pixelFormat));
 
   // We need to let Windows know that we are DPI-aware and that we are going to
   // properly handle scaling. This is a no-op on other platforms.
