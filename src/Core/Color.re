@@ -114,6 +114,14 @@ let mix = (~start, ~stop, ~amount) => {
   Skia.Color.Float.makeArgb(a, r, g, b);
 };
 
+let opposite = color => {
+  let a = Skia.Color.Float.getA(color);
+  let r = Skia.Color.Float.getR(color);
+  let g = Skia.Color.Float.getG(color);
+  let b = Skia.Color.Float.getB(color);
+  Skia.Color.Float.makeArgb(a, 1. -. r, 1. -. g, 1. -. b);
+};
+
 let toRgba = (color: t) => {
   let a = Skia.Color.Float.getA(color);
   let r = Skia.Color.Float.getR(color);
