@@ -38,10 +38,19 @@ let transition =
       ~duration=Time.seconds(1),
       ~delay=Time.zero,
       ~easing=Easing.linear,
-      startValue,
+      ~initialValue=?,
+      targetValue,
     ) => {
-  let%hook ((startValue, targetValue), setTargetValue) =
-    state((startValue, startValue));
+
+  let initialValue = switch(initialValue) {
+  | Some(v) => v
+  | None => targetValue
+  };
+
+  let specifiedTargetValue = targetValue;
+
+  let%hook ((startValue, targetValue), internalSetTarget) =
+    state((initialValue, targetValue));
 
   let anim =
     Animation.animate(duration)
@@ -53,10 +62,15 @@ let transition =
 
   let setTargetValue = newTarget => {
     resetTimer();
-    setTargetValue(_ => (value, newTarget));
+    internalSetTarget(_ => (value, newTarget));
   };
 
-  (value, setTargetValue);
+  let%hook () = effect(If((!=), specifiedTargetValue), () => {
+    setTargetValue(specifiedTargetValue);
+    None;
+  });
+
+  value
 };
 
 let spring = SpringHook.spring;
