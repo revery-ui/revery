@@ -18,6 +18,8 @@ jobs:
           git remote set-url --push origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
           git config user.name "Github Runner"
           git config user.email "runner@runner.github.com"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update lockdir
         run: |
           # git rm -rf esy.lock test.esy.lock bench.esy.lock doc.esy.lock js.esy.lock
@@ -52,8 +54,6 @@ jobs:
           # git branch -r --contains $(git log -1 --pretty=format:'%H') || 
           # if last commit is from the bot then push.
           [[ "$(git log -1 --pretty=format:'%an')" == "Github Runner" ]] && git push origin HEAD:$GITHUB_REF
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Display status should be clean
         if: always()
         run: |
