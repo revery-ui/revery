@@ -63,7 +63,8 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({...context.issue, body: `I have updated your lock dirs and formatted the code. Please @${context.actor} pull the last commit before pushing any more changes.`});
+            if (require("child_process").execSync("git log -1 --pretty=format:'%an'") == "Github Runner")
+              github.issues.createComment({...context.issue, body: `I have updated your lock dirs and formatted the code. Please @${context.actor} pull the last commit before pushing any more changes.`});
 
   doc:
     name: Push docs to GitHub's Pages
