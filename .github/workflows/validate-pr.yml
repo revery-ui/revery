@@ -48,6 +48,7 @@ jobs:
         run: |
           esy format || ([[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -am "format, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')format, ")
       - name: Push if it is not up to date
+        if: github.event_name != 'pull_request'
         run: |
           # if last commit is from the bot then push.
           [[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] || git push origin HEAD:$GITHUB_REF
@@ -58,7 +59,7 @@ jobs:
           git log -2
           git diff
       - uses: actions/github-script@0.3.0
-        if: github.event == 'pull_request'
+        if: github.event_name == 'pull_request'
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
