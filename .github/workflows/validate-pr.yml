@@ -26,6 +26,7 @@ jobs:
           esy install -P bench
           esy install -P doc
           esy install -P js
+          git diff --exit-code --cached || (git add *lock; git commit -m "Update lockdir, ")
           #  git add *lock
       - name: Print esy cache
         id: print_esy_cache
@@ -43,7 +44,7 @@ jobs:
         run: |
           esy build dune build @check
           git status
-          git diff --exit-code --cached || (git add *opam; git commit -m "opam, ")
+          git diff --exit-code --cached || ([[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && (git commit -am "opam, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')opam, "))
           git status
           git log -2
       - name: format sources files
