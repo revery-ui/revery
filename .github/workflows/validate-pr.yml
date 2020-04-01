@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   lint:
-    name: Lint lockdir, autoformat
+    name: Lint lockdir, generate opam files, autoformat
     runs-on: macos-latest
     steps:
       - uses: actions/setup-node@v1
@@ -43,11 +43,11 @@ jobs:
       - name: Generate opam files
         run: |
           esy build dune build @check
-          git diff --exit-code --cached || ([[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && (git commit -am "opam, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')opam, "))
+          git diff --exit-code --cached || ([[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -am "opam, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')opam, ")
       - name: format sources files
         run: |
           esy format
-          git diff --exit-code --cached || ([[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && (git commit -am "format, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')format, "))
+          git diff --exit-code --cached || ([[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -am "format, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')format, ")
       - name: Push if it is not up to date
         run: |
           git branch -r --contains $(git log -1 --pretty=format:'%H') || git push origin HEAD:$GITHUB_REF
