@@ -28,4 +28,4 @@ module Platform = {
   include Platform;
 };
 
-module Utility = Revery_Utility
+module Utility = Revery_Utility;
