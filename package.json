@@ -59,8 +59,7 @@
     "@glennsl/timber": "*"
   },
   "resolutions": {
-    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
-    "@opam/cmdliner": "1.0.2"
+    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755"
   },
   "devDependencies": {
     "refmterr": "*",
