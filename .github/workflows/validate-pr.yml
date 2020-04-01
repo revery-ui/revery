@@ -50,7 +50,7 @@ jobs:
       - name: Push if it is not up to date
         run: |
           # if last commit is from the bot then push.
-          [[ "$(git log -1 --pretty=format:'%an')" == "Github Runner" ]] && git push origin HEAD:$GITHUB_REF
+          [[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] || git push origin HEAD:$GITHUB_REF
       - name: Display status should be clean
         if: always()
         run: |
