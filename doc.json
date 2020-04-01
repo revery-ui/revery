@@ -10,8 +10,8 @@
 	  "@opam/odoc": "*",
 	  "http-server": "*"
 	},
-	  "devDependencies": {
+	"devDependencies": {
 	    "ocaml": ">=4.6.0 <4.9.0"
-	  }
+	 
   }
 }
