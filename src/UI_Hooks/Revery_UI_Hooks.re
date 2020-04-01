@@ -35,6 +35,7 @@ let animation = (~active=true, ~onComplete=() => (), animation) => {
 
 let transition =
     (
+      ~active=true,
       ~duration=Time.seconds(1),
       ~durationFunc=?,
       ~delay=Time.zero,
@@ -59,11 +60,15 @@ let transition =
     |> Animation.ease(easing)
     |> Animation.tween(startValue, targetValue);
 
-  let%hook (value, _animationState, resetTimer) = animation(anim);
+  let%hook (value, _animationState, resetTimer) = animation(~active, anim);
+
+  let value = active ? value : specifiedTargetValue;
 
   let setTargetValue = (newTarget, duration) => {
-    resetTimer();
-    internalSetTarget(_ => (value, newTarget, duration));
+    if (active) {
+      resetTimer();
+      internalSetTarget(_ => (value, newTarget, duration));
+    }
   };
 
   let%hook () =
