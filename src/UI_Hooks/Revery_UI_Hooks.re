@@ -41,11 +41,11 @@ let transition =
       ~initialValue=?,
       targetValue,
     ) => {
-
-  let initialValue = switch(initialValue) {
-  | Some(v) => v
-  | None => targetValue
-  };
+  let initialValue =
+    switch (initialValue) {
+    | Some(v) => v
+    | None => targetValue
+    };
 
   let specifiedTargetValue = targetValue;
 
@@ -65,12 +65,16 @@ let transition =
     internalSetTarget(_ => (value, newTarget));
   };
 
-  let%hook () = effect(If((!=), specifiedTargetValue), () => {
-    setTargetValue(specifiedTargetValue);
-    None;
-  });
+  let%hook () =
+    effect(
+      If((!=), specifiedTargetValue),
+      () => {
+        setTargetValue(specifiedTargetValue);
+        None;
+      },
+    );
 
-  value
+  value;
 };
 
 let spring = SpringHook.spring;

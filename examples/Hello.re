@@ -23,8 +23,7 @@ module Logo = {
     let%hook ((rotationX, rotationY), _animationState, resetRotation) =
       Hooks.animation(rotationAnimation, ~active=shouldRotate);
     let%hook (opacity, setOpacity) = Hooks.state(1.0);
-    let%hook transitionedOpacity =
-      Hooks.transition(opacity);
+    let%hook transitionedOpacity = Hooks.transition(opacity);
 
     <View>
       <Opacity opacity=transitionedOpacity>
