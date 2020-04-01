@@ -49,7 +49,9 @@ jobs:
           esy format || ([[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -am "format, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')format, ")
       - name: Push if it is not up to date
         run: |
-          git branch -r --contains $(git log -1 --pretty=format:'%H') || git push origin HEAD:$GITHUB_REF
+          # git branch -r --contains $(git log -1 --pretty=format:'%H') || 
+          # if last commit is from the bot then push.
+          [[ "$(git log -1 --pretty=format:'%an')" == "Github Runner" ]] && git push origin HEAD:$GITHUB_REF
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Display status should be clean
