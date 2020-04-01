@@ -65,10 +65,8 @@ let transition =
   let value = active ? value : specifiedTargetValue;
 
   let setTargetValue = (newTarget, duration) => {
-    if (active) {
-      resetTimer();
-      internalSetTarget(_ => (value, newTarget, duration));
-    }
+    resetTimer();
+    internalSetTarget(_ => (value, newTarget, duration));
   };
 
   let%hook () =
