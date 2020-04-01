@@ -36,41 +36,52 @@ let animation = (~active=true, ~onComplete=() => (), animation) => {
 let transition =
     (
       ~duration=Time.seconds(1),
+      ~durationFunc=?,
       ~delay=Time.zero,
       ~easing=Easing.linear,
       ~initialValue=?,
       targetValue,
     ) => {
-
-  let initialValue = switch(initialValue) {
-  | Some(v) => v
-  | None => targetValue
-  };
+  let initialValue =
+    switch (initialValue) {
+    | Some(v) => v
+    | None => targetValue
+    };
 
   let specifiedTargetValue = targetValue;
 
-  let%hook ((startValue, targetValue), internalSetTarget) =
-    state((initialValue, targetValue));
+  let%hook ((startValue, targetValue, storedDuration), internalSetTarget) =
+    state((initialValue, targetValue, duration));
 
   let anim =
-    Animation.animate(duration)
+    Animation.animate(storedDuration)
     |> Animation.delay(delay)
     |> Animation.ease(easing)
     |> Animation.tween(startValue, targetValue);
 
   let%hook (value, _animationState, resetTimer) = animation(anim);
 
-  let setTargetValue = newTarget => {
+  let setTargetValue = (newTarget, duration) => {
     resetTimer();
-    internalSetTarget(_ => (value, newTarget));
+    internalSetTarget(_ => (value, newTarget, duration));
   };
 
-  let%hook () = effect(If((!=), specifiedTargetValue), () => {
-    setTargetValue(specifiedTargetValue);
-    None;
-  });
+  let%hook () =
+    effect(
+      If((!=), specifiedTargetValue),
+      () => {
+        let duration =
+          switch (durationFunc) {
+          | Some(func) => func(value, specifiedTargetValue)
+          | None => duration
+          };
 
-  value
+        setTargetValue(specifiedTargetValue, duration);
+        None;
+      },
+    );
+
+  value;
 };
 
 let spring = SpringHook.spring;
