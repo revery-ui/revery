@@ -24,12 +24,30 @@ class imageNode (imagePath: string) = {
     _super#draw(parentContext);
     let dimensions = _this#measurements();
     let world = _this#getWorldTransform();
+    let style = _super#getStyle();
 
     let {canvas, _}: NodeDrawContext.t = parentContext;
 
     Skia.Paint.setAlpha(_paint, _opacity *. parentContext.opacity);
 
+    let _borderRadius = style.borderRadius;
+
     // TODO find a way to only manage the matrix stack in Node
+
+    let path = Skia.Path.make();
+
+    if (int_of_float(_borderRadius) !== 0) {
+      Skia.Path.addCircle(
+        path,
+        float_of_int(dimensions.width / 2),
+        float_of_int(dimensions.height / 2),
+        float_of_int(dimensions.width / 2),
+        Clockwise,
+      );
+      path |> Draw.CanvasContext.clipPath(canvas, ~antiAlias=false);
+      Draw.CanvasContext.drawPath(~path, ~paint=_paint, canvas);
+    };
+
     Revery_Draw.CanvasContext.setMatrix(canvas, world);
     Draw.CanvasContext.drawImage(
       ~x=0.,
