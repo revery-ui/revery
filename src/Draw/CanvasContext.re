@@ -204,17 +204,17 @@ let concat = (transform, context) => {
 };
 
 let clipRect =
-    (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rect: Skia.Rect.t) => {
+    (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=true, rect: Skia.Rect.t) => {
   Canvas.clipRect(v.canvas, rect, clipOp, antiAlias);
 };
 
 let clipRRect =
-    (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rRect: Skia.RRect.t) => {
+    (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=true, rRect: Skia.RRect.t) => {
   Canvas.clipRRect(v.canvas, rRect, clipOp, antiAlias);
 };
 
 let clipPath =
-    (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, path: Skia.Path.t) => {
+    (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=true, path: Skia.Path.t) => {
   Canvas.clipPath(v.canvas, path, clipOp, antiAlias);
 };
 

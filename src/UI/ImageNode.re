@@ -37,15 +37,31 @@ class imageNode (imagePath: string) = {
     let path = Skia.Path.make();
 
     if (int_of_float(_borderRadius) !== 0) {
-      Skia.Path.addCircle(
+      let rect =
+        Skia.Rect.makeLtrb(
+          0.,
+          0.,
+          float_of_int(dimensions.width),
+          float_of_int(dimensions.height),
+        );
+      /* Skia.Path.addCircle( */
+      /*   path, */
+      /*   float_of_int(dimensions.width / 2), */
+      /*   float_of_int(dimensions.height / 2), */
+      /*   float_of_int(dimensions.width / 2), */
+      /*   Clockwise, */
+      /* ); */
+
+      Skia.Path.addRoundRect(
         path,
-        float_of_int(dimensions.width / 2),
-        float_of_int(dimensions.height / 2),
-        float_of_int(dimensions.width / 2),
+        rect,
+        _borderRadius,
+        _borderRadius,
         Clockwise,
       );
-      path |> Draw.CanvasContext.clipPath(canvas, ~antiAlias=false);
+      path |> Draw.CanvasContext.clipPath(canvas, ~antiAlias=true);
       Draw.CanvasContext.drawPath(~path, ~paint=_paint, canvas);
+      Skia.Path.close(path);
     };
 
     Revery_Draw.CanvasContext.setMatrix(canvas, world);

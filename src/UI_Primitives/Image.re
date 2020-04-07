@@ -23,6 +23,10 @@ let%nativeComponent make =
                       ~onMouseMove=?,
                       ~onMouseUp=?,
                       ~onMouseWheel=?,
+                      ~onMouseEnter=?,
+                      ~onMouseLeave=?,
+                      ~onMouseOver=?,
+                      ~onMouseOut=?,
                       ~ref=?,
                       ~resizeMode=ImageResizeMode.Stretch,
                       ~opacity=1.0,
@@ -44,6 +48,10 @@ let%nativeComponent make =
           ~onMouseMove?,
           ~onMouseUp?,
           ~onMouseWheel?,
+          ~onMouseEnter?,
+          ~onMouseLeave?,
+          ~onMouseOver?,
+          ~onMouseOut?,
           (),
         );
       let node = PrimitiveNodeFactory.get().createImageNode(src);
@@ -62,6 +70,10 @@ let%nativeComponent make =
           ~onMouseMove?,
           ~onMouseUp?,
           ~onMouseWheel?,
+          ~onMouseEnter?,
+          ~onMouseLeave?,
+          ~onMouseOver?,
+          ~onMouseOut?,
           (),
         );
       let imgNode: imageNode = Obj.magic(node);
