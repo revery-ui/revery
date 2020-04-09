@@ -1,17 +1,17 @@
 {
-  "checksum": "d93c80bd745f83de67b10bc2d3ddd75d",
+  "checksum": "af249a6e7979c4bb5c1f1985ddb7043b",
   "root": "revery@link-dev:./package.json",
   "node": {
-    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
+    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
       "id":
-        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9",
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9",
       "name": "yarn-pkg-config",
       "version":
-        "github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0",
+        "github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79",
       "source": {
         "type": "install",
         "source": [
-          "github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0"
+          "github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79"
         ]
       },
       "overrides": [],
@@ -101,7 +101,7 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-skia@github:revery-ui/reason-skia#7b1361b@d41d8cd9",
+        "reason-skia@github:revery-ui/reason-skia#2352b85@d41d8cd9",
         "reason-sdl2@2.10.3021@d41d8cd9",
         "reason-harfbuzz@1.91.8000@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "http-server@0.12.1@d41d8cd9",
@@ -211,13 +211,13 @@
       ],
       "devDependencies": []
     },
-    "reason-skia@github:revery-ui/reason-skia#7b1361b@d41d8cd9": {
-      "id": "reason-skia@github:revery-ui/reason-skia#7b1361b@d41d8cd9",
+    "reason-skia@github:revery-ui/reason-skia#2352b85@d41d8cd9": {
+      "id": "reason-skia@github:revery-ui/reason-skia#2352b85@d41d8cd9",
       "name": "reason-skia",
-      "version": "github:revery-ui/reason-skia#7b1361b",
+      "version": "github:revery-ui/reason-skia#2352b85",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-skia#7b1361b" ]
+        "source": [ "github:revery-ui/reason-skia#2352b85" ]
       },
       "overrides": [],
       "dependencies": [
@@ -328,7 +328,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "mkdirp@0.5.4@d41d8cd9", "debug@3.2.6@d41d8cd9",
+        "mkdirp@0.5.5@d41d8cd9", "debug@3.2.6@d41d8cd9",
         "async@2.6.3@d41d8cd9"
       ],
       "devDependencies": []
@@ -391,14 +391,14 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "mkdirp@0.5.4@d41d8cd9": {
-      "id": "mkdirp@0.5.4@d41d8cd9",
+    "mkdirp@0.5.5@d41d8cd9": {
+      "id": "mkdirp@0.5.5@d41d8cd9",
       "name": "mkdirp",
-      "version": "0.5.4",
+      "version": "0.5.5",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.4.tgz#sha1:fd01504a6797ec5c9be81ff43d204961ed64a512"
+          "archive:https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.5.tgz#sha1:d91cefd62d1436ca0f41620e251288d420099def"
         ]
       },
       "overrides": [],
@@ -853,20 +853,20 @@
       ],
       "devDependencies": []
     },
-    "@opam/zed@opam:2.0.6@d92df64a": {
-      "id": "@opam/zed@opam:2.0.6@d92df64a",
+    "@opam/zed@opam:2.0.7@5978011f": {
+      "id": "@opam/zed@opam:2.0.7@5978011f",
       "name": "@opam/zed",
-      "version": "opam:2.0.6",
+      "version": "opam:2.0.7",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/49/49de58f753bb4dd43ef6c2bc864ea8ff#md5:49de58f753bb4dd43ef6c2bc864ea8ff",
-          "archive:https://github.com/ocaml-community/zed/releases/download/2.0.6/zed-2.0.6.tbz#md5:49de58f753bb4dd43ef6c2bc864ea8ff"
+          "archive:https://opam.ocaml.org/cache/md5/a8/a84bfb0171181e171643f494f00c0ae2#md5:a84bfb0171181e171643f494f00c0ae2",
+          "archive:https://github.com/ocaml-community/zed/releases/download/2.0.7/zed-2.0.7.tbz#md5:a84bfb0171181e171643f494f00c0ae2"
         ],
         "opam": {
           "name": "zed",
-          "version": "2.0.6",
-          "path": "doc.esy.lock/opam/zed.2.0.6"
+          "version": "2.0.7",
+          "path": "doc.esy.lock/opam/zed.2.0.7"
         }
       },
       "overrides": [],
@@ -1506,38 +1506,31 @@
         "@opam/astring@opam:0.8.3@4e5e17d5"
       ]
     },
-    "@opam/ocplib-endian@opam:1.0@aa720242": {
-      "id": "@opam/ocplib-endian@opam:1.0@aa720242",
+    "@opam/ocplib-endian@opam:1.1@84c1ca88": {
+      "id": "@opam/ocplib-endian@opam:1.1@84c1ca88",
       "name": "@opam/ocplib-endian",
-      "version": "opam:1.0",
+      "version": "opam:1.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/74/74b45ba33e189283170a748c2a3ed477#md5:74b45ba33e189283170a748c2a3ed477",
-          "archive:https://github.com/OCamlPro/ocplib-endian/archive/1.0.tar.gz#md5:74b45ba33e189283170a748c2a3ed477"
+          "archive:https://opam.ocaml.org/cache/md5/de/dedf4d69c1b87b3c6c7234f632399285#md5:dedf4d69c1b87b3c6c7234f632399285",
+          "archive:https://github.com/OCamlPro/ocplib-endian/archive/1.1.tar.gz#md5:dedf4d69c1b87b3c6c7234f632399285"
         ],
         "opam": {
           "name": "ocplib-endian",
-          "version": "1.0",
-          "path": "doc.esy.lock/opam/ocplib-endian.1.0"
+          "version": "1.1",
+          "path": "doc.esy.lock/opam/ocplib-endian.1.1"
         }
       },
-      "overrides": [
-        {
-          "opamoverride":
-            "doc.esy.lock/overrides/opam__s__ocplib_endian_opam__c__1.0_opam_override"
-        }
-      ],
+      "overrides": [],
       "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
-        "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.4.0@639d28a3",
         "@opam/cppo@opam:1.6.6@f4f83858",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
-        "@opam/cppo@opam:1.6.6@f4f83858",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.4.0@639d28a3",
         "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
@@ -1914,7 +1907,7 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
         "@opam/result@opam:1.4@dc720aef",
-        "@opam/ocplib-endian@opam:1.0@aa720242",
+        "@opam/ocplib-endian@opam:1.1@84c1ca88",
         "@opam/mmap@opam:1.1.0@b85334ff",
         "@opam/dune-configurator@opam:2.4.0@6976bb12",
         "@opam/dune@opam:2.4.0@639d28a3", "@opam/cppo@opam:1.6.6@f4f83858",
@@ -1925,7 +1918,7 @@
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
         "@opam/result@opam:1.4@dc720aef",
-        "@opam/ocplib-endian@opam:1.0@aa720242",
+        "@opam/ocplib-endian@opam:1.1@84c1ca88",
         "@opam/mmap@opam:1.1.0@b85334ff",
         "@opam/dune-configurator@opam:2.4.0@6976bb12",
         "@opam/dune@opam:2.4.0@639d28a3"
@@ -1994,7 +1987,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/zed@opam:2.0.6@d92df64a",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/zed@opam:2.0.7@5978011f",
         "@opam/react@opam:1.2.1@0e11855f",
         "@opam/lwt_react@opam:1.1.3@72987fcf",
         "@opam/lwt_log@opam:1.1.1@2d7a797f", "@opam/lwt@opam:4.5.0@677655b4",
@@ -2003,7 +1996,7 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/zed@opam:2.0.6@d92df64a",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/zed@opam:2.0.7@5978011f",
         "@opam/react@opam:1.2.1@0e11855f",
         "@opam/lwt_react@opam:1.1.3@72987fcf",
         "@opam/lwt_log@opam:1.1.1@2d7a797f", "@opam/lwt@opam:4.5.0@677655b4",
@@ -2299,7 +2292,7 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/integers@opam:0.3.0@d6eefd3a",
-        "@opam/conf-pkg-config@opam:1.1@5d0d3ed7",
+        "@opam/conf-pkg-config@opam:1.1@55d8e330",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -2335,8 +2328,8 @@
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
-    "@opam/conf-pkg-config@opam:1.1@5d0d3ed7": {
-      "id": "@opam/conf-pkg-config@opam:1.1@5d0d3ed7",
+    "@opam/conf-pkg-config@opam:1.1@55d8e330": {
+      "id": "@opam/conf-pkg-config@opam:1.1@55d8e330",
       "name": "@opam/conf-pkg-config",
       "version": "opam:1.1",
       "source": {
@@ -2355,7 +2348,7 @@
         }
       ],
       "dependencies": [
-        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9",
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": []
