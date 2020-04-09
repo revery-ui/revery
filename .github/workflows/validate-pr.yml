@@ -13,11 +13,21 @@ jobs:
       - uses: actions/checkout@v1
       - name: Install esy
         run: npm install -g esy
+      - name: Setup Git to push back
+        run: |
+          git remote set-url --push origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
+          git config user.name "Github Runner"
+          git config user.email "runner@runner.github.com"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update lockdir
         run: |
-          rm -rf esy.lock
           esy install
-          git add esy.lock
+          esy install -P test
+          esy install -P bench
+          esy install -P doc
+          esy install -P js
+          git diff --exit-code --cached || (git add *lock; git commit -m "Update lockdir, ")
       - name: Update lockdir ci
         run: |
           rm -rf ci.esy.lock
