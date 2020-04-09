@@ -77,6 +77,17 @@ module Sample = {
               canvasContext,
             );
           };
+          
+          let fill = Skia.Paint.make();
+          Skia.Paint.setColor(
+            fill,
+            Skia.Color.makeArgb(0x30l, 0xFFl, 0x00l, 0x00l)
+          );
+          let rect = Skia.Rect.makeLtrb(200., 150., 250., 300.);
+          CanvasContext.drawOval(~rect, ~paint=fill, canvasContext);
+
+          CanvasContext.drawCircle(~x=225., ~y=225., ~radius=12.5, ~paint, canvasContext);
+
         }}
       />
     </View>;
