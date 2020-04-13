@@ -19,11 +19,11 @@ module Logo = {
     );
 
   let%component make = () => {
-    let%hook (transitionedOpacity, transitionOpacityTo) =
-      Hooks.transition(1.);
     let%hook (shouldRotate, setShouldRotate) = Hooks.state(true);
     let%hook ((rotationX, rotationY), _animationState, resetRotation) =
       Hooks.animation(rotationAnimation, ~active=shouldRotate);
+    let%hook (opacity, setOpacity) = Hooks.state(1.0);
+    let%hook transitionedOpacity = Hooks.transition(opacity);
 
     <View>
       <Opacity opacity=transitionedOpacity>
@@ -57,12 +57,12 @@ module Logo = {
       <Row>
         <Button
           width=200
-          onClick={() => transitionOpacityTo(1.)}
+          onClick={() => setOpacity(_ => 1.0)}
           title="Show it"
         />
         <Button
           width=200
-          onClick={() => transitionOpacityTo(0.)}
+          onClick={() => setOpacity(_ => 0.0)}
           title="Hide it"
         />
       </Row>

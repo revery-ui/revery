@@ -158,11 +158,19 @@ let drawRectLtwh =
   Canvas.drawRectLtwh(v.canvas, left, top, width, height, paint);
 };
 
+let drawOval = (~rect: Skia.Rect.t, ~paint: Paint.t, v: t) => {
+  Canvas.drawOval(v.canvas, rect, paint);
+};
+
+let drawCircle = (~x: float, ~y: float, ~radius: float, ~paint: Paint.t, v: t) => {
+  Canvas.drawCircle(v.canvas, x, y, radius, paint);
+};
+
 let drawRRect = (v: t, rRect: Skia.RRect.t, paint) => {
   Canvas.drawRRect(v.canvas, rRect, paint);
 };
 
-let drawImage = (~x, ~y, ~width, ~height, src, v: t) => {
+let drawImage = (~x, ~y, ~width, ~height, ~paint=?, src, v: t) => {
   let image = ImageRenderer.getTexture(src);
   switch (image) {
   | None => ()
@@ -172,7 +180,7 @@ let drawImage = (~x, ~y, ~width, ~height, src, v: t) => {
       img,
       None,
       Rect.makeLtrb(x, y, x +. width, y +. height),
-      None,
+      paint,
     )
   };
 };

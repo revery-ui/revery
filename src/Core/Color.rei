@@ -12,6 +12,7 @@ let hex: string => t;
 
 let multiplyAlpha: (float, t) => t;
 let mix: (~start: t, ~stop: t, ~amount: float) => t;
+let opposite: t => t;
 
 let toRgba: t => (float, float, float, float);
 let getAlpha: t => float;
