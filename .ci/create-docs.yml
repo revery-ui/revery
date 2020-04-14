@@ -1,11 +1,11 @@
 # These steps are only run on Linux
 
 steps:
-  - script: "esy '@doc' install --verbosity=debug"
+  - script: "esy '@doc' install"
     displayName: "Install doc dependency"
     condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
-  - script: "esy '@doc' build --verbosity=debug"
+  - script: "esy '@doc' build"
     displayName: "Build docs"
     condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
