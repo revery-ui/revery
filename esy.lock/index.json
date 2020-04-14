@@ -1,5 +1,5 @@
 {
-  "checksum": "e7ea751b6bf4223a6c789651f1eb417c",
+  "checksum": "595e2e449bfcef7f105dcffffc1653a9",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -49,7 +49,7 @@
         "reason-sdl2@2.10.3021@d41d8cd9",
         "reason-harfbuzz@1.91.8000@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "flex@1.2.3@d41d8cd9",
-        "fetch-native-lwt@github:lessp/fetch:fetch-native-lwt.json#6256b9d@d41d8cd9",
+        "fetch-native-lwt@0.1.0-alpha.2@d41d8cd9",
         "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/ppx_deriving@opam:4.4.1@208c6c8f",
@@ -264,14 +264,15 @@
       ],
       "devDependencies": []
     },
-    "fetch-native-lwt@github:lessp/fetch:fetch-native-lwt.json#6256b9d@d41d8cd9": {
-      "id":
-        "fetch-native-lwt@github:lessp/fetch:fetch-native-lwt.json#6256b9d@d41d8cd9",
+    "fetch-native-lwt@0.1.0-alpha.2@d41d8cd9": {
+      "id": "fetch-native-lwt@0.1.0-alpha.2@d41d8cd9",
       "name": "fetch-native-lwt",
-      "version": "github:lessp/fetch:fetch-native-lwt.json#6256b9d",
+      "version": "0.1.0-alpha.2",
       "source": {
         "type": "install",
-        "source": [ "github:lessp/fetch:fetch-native-lwt.json#6256b9d" ]
+        "source": [
+          "archive:https://registry.npmjs.org/fetch-native-lwt/-/fetch-native-lwt-0.1.0-alpha.2.tgz#sha1:23b577871ac273ff7f6cb30a0a62fec20a0f0a41"
+        ]
       },
       "overrides": [],
       "dependencies": [
@@ -279,10 +280,7 @@
         "@reason-native-web/piaf@1.0.1002@d41d8cd9",
         "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
-      "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "fetch-core@0.1.0-alpha.5@d41d8cd9",
-        "@esy-ocaml/reason@3.6.0@d41d8cd9"
-      ]
+      "devDependencies": []
     },
     "fetch-core@0.1.0-alpha.5@d41d8cd9": {
       "id": "fetch-core@0.1.0-alpha.5@d41d8cd9",

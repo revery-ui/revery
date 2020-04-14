@@ -44,7 +44,7 @@
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/ppx_deriving": "*",
     "@brisk/brisk-reconciler": "briskml/brisk-reconciler#34e5991",
-    "fetch-native-lwt": "lessp/fetch:fetch-native-lwt.json#6256b9d",
+    "fetch-native-lwt": "0.1.0-alpha.2",
     "flex": "1.2.3",
     "@reason-native/rely": "*",
     "reperf": "^1.4.0",
@@ -60,8 +60,7 @@
   },
   "resolutions": {
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
-    "@opam/cmdliner": "1.0.2",
-    "@reason-native-web/ssl": "0.5.9007"
+    "@opam/cmdliner": "1.0.2"
   },
   "devDependencies": {
     "refmterr": "*",
