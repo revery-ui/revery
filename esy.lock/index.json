@@ -1,5 +1,5 @@
 {
-  "checksum": "def59436c59566ea9ffe5704da82885c",
+  "checksum": "e7ea751b6bf4223a6c789651f1eb417c",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -49,7 +49,7 @@
         "reason-sdl2@2.10.3021@d41d8cd9",
         "reason-harfbuzz@1.91.8000@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "flex@1.2.3@d41d8cd9",
-        "fetch-native-lwt@github:lessp/fetch:fetch-native-lwt.json#a5628ac@d41d8cd9",
+        "fetch-native-lwt@github:lessp/fetch:fetch-native-lwt.json#6256b9d@d41d8cd9",
         "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/ppx_deriving@opam:4.4.1@208c6c8f",
@@ -264,14 +264,14 @@
       ],
       "devDependencies": []
     },
-    "fetch-native-lwt@github:lessp/fetch:fetch-native-lwt.json#a5628ac@d41d8cd9": {
+    "fetch-native-lwt@github:lessp/fetch:fetch-native-lwt.json#6256b9d@d41d8cd9": {
       "id":
-        "fetch-native-lwt@github:lessp/fetch:fetch-native-lwt.json#a5628ac@d41d8cd9",
+        "fetch-native-lwt@github:lessp/fetch:fetch-native-lwt.json#6256b9d@d41d8cd9",
       "name": "fetch-native-lwt",
-      "version": "github:lessp/fetch:fetch-native-lwt.json#a5628ac",
+      "version": "github:lessp/fetch:fetch-native-lwt.json#6256b9d",
       "source": {
         "type": "install",
-        "source": [ "github:lessp/fetch:fetch-native-lwt.json#a5628ac" ]
+        "source": [ "github:lessp/fetch:fetch-native-lwt.json#6256b9d" ]
       },
       "overrides": [],
       "dependencies": [
