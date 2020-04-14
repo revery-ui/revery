@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Antonio Nuno Monteiro <anmonteiro@gmail.com>"
+authors: [ "Pieter Goetschalckx <3.14.e.ter@gmail.com>"
+           "Antonio Nuno Monteiro <anmonteiro@gmail.com>" ]
+license: "BSD-3-Clause"
+homepage: "https://github.com/anmonteiro/ocaml-h2"
+bug-reports: "https://github.com/anmonteiro/ocaml-h2/issues"
+dev-repo: "git+https://github.com/anmonteiro/ocaml-h2.git"
+doc: "https://anmonteiro.github.io/ocaml-h2/"
+depends: [
+  "ocaml" {>= "4.04"}
+  "dune"
+  "yojson" {with-test}
+  "hex" {with-test}
+  "angstrom"
+  "faraday"
+]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+synopsis:
+  "An HPACK (Header Compression for HTTP/2) implementation in OCaml"
+description: """
+hpack is an implementation of the HPACK: Header Compression for HTTP/2
+specification (RFC7541) written in OCaml. It uses Angstrom and Faraday for
+parsing and serialization, respectively.
+"""
+url {
+  src:
+    "https://github.com/anmonteiro/ocaml-h2/releases/download/0.2.0/h2-0.2.0.tbz"
+  checksum: "md5=c883927ce8a9f3f7159ef7b20988f051"
+}
