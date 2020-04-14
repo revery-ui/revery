@@ -34,10 +34,10 @@ module Logo = {
             padding(16),
           ]>
           <Image
-            src="https://www.outrunlabs.com/revery/images/revery-logo.png"
+            src="https://www.outrunlabs.com/images/outrun-logo.png"
             style=Style.[
-              width(361 / 2),
-              height(238 / 2),
+              width(512),
+              height(256),
               transform([
                 Transform.RotateY(Angle.from_radians(rotationY)),
                 Transform.RotateX(Angle.from_radians(rotationX)),

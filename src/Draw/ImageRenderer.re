@@ -24,7 +24,7 @@ module RemoteImage = {
       {
         Log.info("Fetching image: " ++ url);
 
-        let.flatMapOk {Response.body, headers} = get(url);
+        let.flatMapOk {Response.body, headers, _} = get(url);
 
         let data = Body.toString(body);
         let mediaType =
