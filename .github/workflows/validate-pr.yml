@@ -27,7 +27,7 @@ jobs:
           esy install -P bench
           esy install -P doc
           esy install -P js
-          git diff --exit-code --cached || (git add *lock; git commit -m "Update lockdir, ")
+          (git diff --exit-code --cached || git diff --exit-code) || (git add *lock; git commit -m "Update lockdir, ")
       - name: Print esy cache
         id: print_esy_cache
         run: node .github/workflows/print_esy_cache.js
@@ -43,7 +43,7 @@ jobs:
       - name: Generate opam files
         run: |
           esy build dune build @check
-          git diff --exit-code --cached || ([[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -am "opam, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')opam, ")
+          (git diff --exit-code --cached || git diff --exit-code) || ([[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -am "opam, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')opam, ")
       - name: format sources files
         run: |
           esy format || ([[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -am "format, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')format, ")
