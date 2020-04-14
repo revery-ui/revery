@@ -59,7 +59,9 @@
     "@glennsl/timber": "*"
   },
   "resolutions": {
-    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755"
+    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
+    "@opam/cmdliner": "1.0.2",
+    "@reason-native-web/ssl": "0.5.9002"
   },
   "devDependencies": {
     "refmterr": "*",
