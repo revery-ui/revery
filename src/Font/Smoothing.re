@@ -1,5 +1,3 @@
-open Revery_Core;
-
 type t =
   | None
   | Antialiased
