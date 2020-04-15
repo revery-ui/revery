@@ -1,18 +1,13 @@
-open Revery_Core;
-
 type t =
   | None
   | Antialiased
   | SubpixelAntialiased;
 
-let default =
-  switch (Environment.os) {
-  | Windows => SubpixelAntialiased
-  // On OSX, default to non-subpixel for Retina displays.
-  // On Linux, subpixel does not reliably set subpixel rendering,
-  // so default to false and make it opt-in
-  | _ => Antialiased
-  };
+// Default to subpixel-antialiased, as it has the most reliable
+// scaling characteristics - see Onivim 2 bugs:
+// - https://github.com/onivim/oni2/issues/1475
+// - https://github.com/onivim/oni2/issues/1592
+let default = SubpixelAntialiased;
 
 let setPaint = (~smoothing: t, paint: Skia.Paint.t) => {
   switch (smoothing) {
