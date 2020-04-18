@@ -18,14 +18,15 @@ module Keycode: {
   // https://wiki.libsdl.org/SDLKeycodeLookup
   let unknown: int;
   let backspace: int;
+
   let return: int;
   let escape: int;
+
   let space: int;
-  
 
   let left_paren: int;
   let right_paren: int;
-  
+
   let multiply: int;
   let plus: int;
   let minus: int;
@@ -45,15 +46,15 @@ module Keycode: {
   let digit7: int;
   let digit8: int;
   let digit9: int;
-  
+
   let pad_multiply: int;
   let pad_plus: int;
   let pad_minus: int;
   let pad_period: int;
   let pad_slash: int;
-  
+
   let pad_equals: int;
-  
+
   let p_digit0: int;
   let p_digit1: int;
   let p_digit2: int;
