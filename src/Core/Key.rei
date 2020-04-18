@@ -27,7 +27,7 @@ module Keycode: {
   let left_paren: int;
   let right_paren: int;
 
-  let multiply: int;
+  let asterisk: int;
   let plus: int;
   let minus: int;
   let period: int;
@@ -51,7 +51,7 @@ module Keycode: {
   let pad_plus: int;
   let pad_minus: int;
   let pad_period: int;
-  let pad_slash: int;
+  let pad_divide: int;
 
   let pad_equals: int;
 
