@@ -35,9 +35,9 @@ build: [
   ]
 ]
 url {
-  src: "https://github.com/ocaml/dune/releases/download/2.5.0/dune-2.5.0.tbz"
+  src: "https://github.com/ocaml/dune/releases/download/2.5.1/dune-2.5.1.tbz"
   checksum: [
-    "sha256=9cc1661b9b173dd183867edcf8ee28a9ce79079a7d00316b719bdcba1d78d7da"
-    "sha512=fa29986243b73caa6ca01acbc55cfba5e454e069e737f53c32bee5abc7e3c4679fecdec232d34af63954287bebf0fb1cabe4a95c56147f457d82d1a72dd44223"
+    "sha256=8f77d3a87f208e0d7cccaa1c48c4bb1bb87d62d07c3f25e9b8ba298e028ce52b"
+    "sha512=f209f12ced10c1abf8782bdb0143f4cec77795f7174d2cc75130afb1e01550b01f2f77b9e3ec4888efdad83d2f9878d179b39126f824f4e522f3ef4da34bf27e"
   ]
 }

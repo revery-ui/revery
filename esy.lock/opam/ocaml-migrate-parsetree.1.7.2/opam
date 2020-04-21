@@ -29,9 +29,9 @@ rewriters independent of a compiler version.
 """
 url {
   src:
-    "https://github.com/ocaml-ppx/ocaml-migrate-parsetree/releases/download/v1.6.0/ocaml-migrate-parsetree-v1.6.0.tbz"
+    "https://github.com/ocaml-ppx/ocaml-migrate-parsetree/releases/download/v1.7.2/ocaml-migrate-parsetree-v1.7.2.tbz"
   checksum: [
-    "sha256=9b018e7d25114ce17fc0b82b7cd7c927b84ebb6b043aa987fa7731c2484de33f"
-    "sha512=e03a5fe44ecf43683c764a7285a65bfa80639c09badf422661723bc3483d6d799c47c1ead34c2caa289a37e1b4b46d809c8cc56537d5c76e6004849d2d8a305f"
+    "sha256=6ae6753c3e632a63f76b031afc3eab74b209babdfdba4030060a934ce0660bd6"
+    "sha512=68bfbbadbb6715cf0be5a02136cb3508c5f8d3debba69f9cdf9c0668ebc09fe47eac10abcdc3eb0e5e19f33a223e193da039a3e203bec1404bd177635f1a93d7"
   ]
 }
