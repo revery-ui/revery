@@ -43,7 +43,7 @@
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/ppx_deriving": "*",
-    "@brisk/brisk-reconciler": "briskml/brisk-reconciler#34e5991",
+    "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d",
     "fetch-native-lwt": "^0.1.0-alpha.2",
     "flex": "1.2.3",
     "@reason-native/rely": "*",
