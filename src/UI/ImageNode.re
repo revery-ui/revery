@@ -52,13 +52,7 @@ class imageNode (imagePath: string) = {
       /*   Clockwise, */
       /* ); */
 
-      Skia.Path.addRoundRect(
-        path,
-        rect,
-        _borderRadius,
-        _borderRadius,
-        Clockwise,
-      );
+      Skia.Path.addRoundRect(path, rect, _borderRadius, _borderRadius, ());
       path |> Draw.CanvasContext.clipPath(canvas, ~antiAlias=true);
       Draw.CanvasContext.drawPath(~path, ~paint=_paint, canvas);
       Skia.Path.close(path);
