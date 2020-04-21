@@ -20,11 +20,9 @@ type mouseButtonEventParams = {
 
 [@deriving show({with_path: false})]
 type mouseWheelEventParams = {
-  deltaX: option(float),
-  deltaY: option(float),
-  isFling: bool,
-  isInterrupt: bool,
   source: Libscroll.Source.t,
+  axis: Libscroll.Axis.t,
+  action: Events.MousePanAction.t,
   timestamp: int,
 };
 

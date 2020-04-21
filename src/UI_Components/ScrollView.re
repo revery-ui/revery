@@ -59,9 +59,37 @@ let%component make =
   let%hook (actualScrollLeft, setScrollLeft) = Hooks.state(scrollLeft);
   let%hook (bouncingState, setBouncingState) = Hooks.state(Idle);
 
+  //Time.timer;
+  //let%hook (time, _) = Revery_Core.Timer.timer(~active=true, ());
+
   //let%hook (scrollview, setScrollview) = Hooks.state(() => Libscroll.scrollview_new());
   //setScrollview(_ => scrollview);
   let%hook (scrollViewRef) = Hooks.ref(None);
+
+  let scrollviewActive = () => {
+    let r = switch (scrollViewRef^) {
+    | None => {
+        Log.info("Scrollview was none");
+        false
+      }
+    | Some(scrollview) => {
+        Log.info("Scrollview was some");
+        let v = Libscroll.animating(scrollview)
+        if (v) {
+          Log.info("animating is true");
+        } else {
+          Log.info("animating is false");
+        }
+
+        v
+      }
+    }
+
+    r
+  }
+
+  let%hook (_dt, _reset) = Hooks.timer(~active=scrollviewActive(), ());
+
   let%hook () = Hooks.effect(OnMount, () => {
     let scrollView = Libscroll.scrollview_new();
     scrollViewRef := Some(scrollView);
@@ -70,7 +98,7 @@ let%component make =
        scrollViewRef := None;
     };   
     Some(dispose);
- });
+  });
 
   let%hook (actualScrollTop, _bounceAnimationState, resetBouncingAnimation) =
     switch (bouncingState) {
@@ -95,6 +123,19 @@ let%component make =
     TranslateX((-1.) *. float_of_int(actualScrollLeft)),
     TranslateY((-1.) *. float_of_int(actualScrollTop)),
   ];
+
+  let (scrollX, scrollY) = switch (scrollViewRef^) {
+      | None => {
+          Log.info("Can't sample, sv null");
+          (0.0, 0.0)
+      }
+      | Some(scrollview) => {
+          Log.info("Scrollview was some, sampling...");
+          Libscroll.sample(scrollview, Sdl2.Timekeeping.getTicks())
+      }
+  }
+  dispatch(ScrollUpdated(int_of_float(scrollY)));
+
 
   let (horizontalScrollBar, verticalScrollBar, scroll) =
     switch (outerRef) {
@@ -179,9 +220,16 @@ let%component make =
           let axis = wheelEvent.axis;
         }
       }*/
+      Log.info("renders the scrollview");
 
-      let scrollForFrameFlip = (timestamp: int) => {
-          // call into libscroll to sample new position
+      let pageflip = (~initialState=?, ~restThreshold=0.0) => {
+
+        let isActive = switch (scrollViewRef^) {
+        | Some(scrollview) => Libscroll.animating(scrollview)
+        | None => false
+        };
+
+        //let%hook (time, _) = Timer.timer(~active=isActive
       }
 
       let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
@@ -191,46 +239,30 @@ let%component make =
 
             Libscroll.set_source(scrollview, wheelEvent.source);
 
-            switch(wheelEvent.deltaX) {
-            | Some(delta) => {
-                Libscroll.push_pan(scrollview, Libscroll.Axis.Horizontal, delta, wheelEvent.timestamp);
-              }
-            | None => ()
-            };
-
-            switch(wheelEvent.deltaY) {
-            | Some(delta) => {
-                Libscroll.push_pan(scrollview, Libscroll.Axis.Vertical, delta, wheelEvent.timestamp);
-              }
-            | None => ()
-            };
-
-            switch(wheelEvent.isFling) {
-            | true => Libscroll.push_fling(scrollview, wheelEvent.timestamp);
-            | false => ()
-            };
-
-            switch(wheelEvent.isInterrupt) {
-            | true => Libscroll.push_interrupt(scrollview, wheelEvent.timestamp);
-            | false => ()
-            };
+            switch (wheelEvent.action) {
+            | Events.MousePanAction.Fling => Libscroll.push_fling(scrollview, wheelEvent.axis, wheelEvent.timestamp)
+            | Events.MousePanAction.Interrupt => Libscroll.push_interrupt(scrollview, wheelEvent.axis, wheelEvent.timestamp)
+            | Events.MousePanAction.Pan(delta) => Libscroll.push_pan(scrollview, wheelEvent.axis, delta, wheelEvent.timestamp)
+            }
 
           }
         | None => Log.error("Scrollview not present on event dispatch");
         }
-        let delta = switch(wheelEvent.deltaY) {
+        /*let delta = switch(wheelEvent.deltaY) {
           | Some(value) => value *. 25.
           | None => 0.0
-        };
+        };*/
+        /*let delta = 0.0; // just to test
         //let delta = int_of_float(wheelEvent.deltaY *. 25.);
         let delta_s = delta;
         let delta = int_of_float(delta /. -400.0);
         let newScrollTop = actualScrollTop - delta;
 
         let isAtTop = newScrollTop < 0;
-        let isAtBottom = newScrollTop > maxHeight;
+        let isAtBottom = newScrollTop > maxHeight;*/
 
-        switch (bouncingState) {
+
+        /*switch (bouncingState) {
         | Bouncing(force) when force < 0 && delta_s < 0. =>
           setBouncingState(_ => Idle)
         | Bouncing(force) when force > 0 && delta_s > 0. =>
@@ -245,7 +277,7 @@ let%component make =
           //setBouncingState(_ => Bouncing(- delta * 2));
           dispatch(ScrollUpdated(isAtTop ? 0 : maxHeight));
         | Idle => dispatch(ScrollUpdated(newScrollTop))
-        };
+        };*/
       };
       (horizontalScrollbar, verticalScrollBar, scroll);
     | _ => (empty, empty, (_ => ()))

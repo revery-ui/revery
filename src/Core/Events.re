@@ -22,12 +22,23 @@ type mouseMoveEvent = {
   mouseY: float,
 };
 
+module MousePanAction = {
+  type t =
+    | Interrupt
+    | Fling
+    | Pan(float);
+
+  let pp : Format.formatter => t => unit = (_: Format.formatter) => (_: t) => ()
+}
+
 type mouseWheelEvent = {
-  deltaX: option(float),
-  deltaY: option(float),
-  isFling: bool,
-  isInterrupt: bool,
+  //deltaX: option(float),
+  //deltaY: option(float),
+  //isFling: bool,
+  //isInterrupt: bool,
   source: Libscroll.Source.t,
+  axis: Libscroll.Axis.t,
+  action: MousePanAction.t,
   timestamp: int,
 };
 
