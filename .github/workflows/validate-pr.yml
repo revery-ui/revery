@@ -10,7 +10,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Install esy
         run: npm install -g esy
       - name: Setup Git to push back
