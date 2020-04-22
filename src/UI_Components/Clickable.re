@@ -19,6 +19,8 @@ let%component make =
                 ~style=[],
                 ~onClick=() => (),
                 ~onRightClick=() => (),
+                ~onDoubleClick=() => (),
+                ~doubleClickDelay=0.5,
                 ~onAnyClick=_event => (),
                 ~componentRef=?,
                 ~onBlur=?,
@@ -33,11 +35,32 @@ let%component make =
               ) => {
   let%hook isMouseCapturedHere = Hooks.ref(false);
 
+  let%hook lastCaptureTime = Hooks.ref(None);
+  let%hook currentCaptureTime = Hooks.ref(0.);
+
+  let isDoubleClick = () =>
+    switch(lastCaptureTime^) {
+    | None => false
+    | Some(lastTime) => {
+        let deltaTime = currentCaptureTime^ -. lastTime;
+        deltaTime <= doubleClickDelay
+      }
+    };
+  let resetCaptureTime = () => {
+    lastCaptureTime := None;
+    currentCaptureTime := 0.;
+  }
+  let recordCaptureTime = () => {
+    lastCaptureTime := Some(currentCaptureTime^);
+    currentCaptureTime := Time.toFloatSeconds(Time.now());
+  }
+
   let capture = () =>
     if (! isMouseCaptured^) {
       Log.trace("Capture");
       isMouseCapturedHere := true;
       isMouseCaptured := true;
+      recordCaptureTime();
     };
   let releaseCapture = () =>
     if (isMouseCapturedHere^) {
@@ -53,7 +76,14 @@ let%component make =
       releaseCapture();
 
       switch (mouseEvt.button) {
-      | MouseButton.BUTTON_LEFT => onClick()
+      | MouseButton.BUTTON_LEFT => {
+        if(isDoubleClick()) {
+          resetCaptureTime();
+          onDoubleClick()
+        } else {
+          onClick()
+        }
+      }
       | MouseButton.BUTTON_RIGHT => onRightClick()
       | _ => ()
       };
