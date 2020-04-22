@@ -36,7 +36,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: macos-latest-${{ hashFiles('**/index.json') }}
+          key: macos-latest-${{ hashFiles('**/index.json') }}invalid
       - name: Build dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
         run: esy build-dependencies --release
@@ -87,7 +87,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: macos-latest-4.08-${{ hashFiles('doc.esy.lock/index.json') }}
+          key: macos-latest-4.08-${{ hashFiles('doc.esy.lock/index.json') }}invalid
       - name: Install doc dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
         run: esy @doc build-dependencies --release
@@ -150,14 +150,14 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
+          key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}invalid
       - name: Try to restore dependencies cache
         if: matrix.os == 'windows-latest'
         id: deps-cache-win
         uses: actions/cache@v1
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: ${{ matrix.os }}-${{ hashFiles('**\index.json') }}
+          key: ${{ matrix.os }}-${{ hashFiles('**\index.json') }}invalid
       - name: Build dependencies
         if: steps.deps-cache-win.outputs.cache-hit != 'true' && steps.deps-cache-non-win.outputs.cache-hit != 'true'
         run: esy build-dependencies --release
