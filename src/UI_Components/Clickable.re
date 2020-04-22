@@ -14,13 +14,15 @@ module Log = (val Log.withNamespace("Revery.Components.Clickable"));
 
 let isMouseCaptured = ref(false);
 
+let initialMouseDownTimes = (Time.zero, Time.ofFloatSeconds(-1.));
+let doubleClickSpeed: Time.t = Time.ms(500);
+
 let%component make =
               (
                 ~style=[],
                 ~onClick=() => (),
                 ~onRightClick=() => (),
                 ~onDoubleClick=() => (),
-                ~doubleClickDelay=0.5,
                 ~onAnyClick=_event => (),
                 ~componentRef=?,
                 ~onBlur=?,
@@ -35,32 +37,18 @@ let%component make =
               ) => {
   let%hook isMouseCapturedHere = Hooks.ref(false);
 
-  let%hook lastCaptureTime = Hooks.ref(None);
-  let%hook currentCaptureTime = Hooks.ref(0.);
+  let%hook mouseDownTimes = Hooks.ref(initialMouseDownTimes);
 
   let isDoubleClick = () =>
-    switch(lastCaptureTime^) {
-    | None => false
-    | Some(lastTime) => {
-        let deltaTime = currentCaptureTime^ -. lastTime;
-        deltaTime <= doubleClickDelay
-      }
-    };
-  let resetCaptureTime = () => {
-    lastCaptureTime := None;
-    currentCaptureTime := 0.;
-  }
-  let recordCaptureTime = () => {
-    lastCaptureTime := Some(currentCaptureTime^);
-    currentCaptureTime := Time.toFloatSeconds(Time.now());
-  }
+    Time.(fst(mouseDownTimes^) - snd(mouseDownTimes^)) <= doubleClickSpeed;
+  let resetMouseDownTimes = () =>
+    mouseDownTimes := initialMouseDownTimes
 
   let capture = () =>
     if (! isMouseCaptured^) {
       Log.trace("Capture");
       isMouseCapturedHere := true;
       isMouseCaptured := true;
-      recordCaptureTime();
     };
   let releaseCapture = () =>
     if (isMouseCapturedHere^) {
@@ -69,7 +57,10 @@ let%component make =
       isMouseCaptured := false;
     };
 
-  let onMouseDown = _event => capture();
+  let onMouseDown = _event => {
+    capture();
+    mouseDownTimes := (Time.now(), fst(mouseDownTimes^));
+  };
   let onMouseLeave = _event => releaseCapture();
   let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) =>
     if (isMouseCapturedHere^) {
@@ -78,7 +69,7 @@ let%component make =
       switch (mouseEvt.button) {
       | MouseButton.BUTTON_LEFT => {
         if(isDoubleClick()) {
-          resetCaptureTime();
+          resetMouseDownTimes();
           onDoubleClick()
         } else {
           onClick()

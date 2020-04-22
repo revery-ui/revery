@@ -22,7 +22,6 @@ let make:
     ~onClick: unit => unit=?,
     ~onRightClick: unit => unit=?,
     ~onDoubleClick: unit => unit=?,
-    ~doubleClickDelay: float=?,
     ~onAnyClick: NodeEvents.mouseButtonEventParams => unit=?,
     ~componentRef: Revery_UI.node => unit=?,
     ~onBlur: Revery_UI.NodeEvents.focusHandler=?,
