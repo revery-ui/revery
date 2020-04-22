@@ -287,7 +287,12 @@ let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
   | InternalMouseMove(evt) =>
     MouseMove({mouseX: evt.mouseX, mouseY: evt.mouseY})
   | InternalMouseWheel(evt) =>
-    MouseWheel({deltaX: evt.deltaX, deltaY: evt.deltaY})
+    MouseWheel({
+        source: evt.source,
+        axis: evt.axis,
+        action: evt.action,
+        timestamp: evt.timestamp
+    })
   | InternalMouseEnter(evt) =>
     MouseEnter({mouseX: evt.mouseX, mouseY: evt.mouseY})
   | InternalMouseLeave(evt) =>

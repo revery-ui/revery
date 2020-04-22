@@ -298,13 +298,58 @@ let render = (w: t) => {
   w.isRendering = false;
 };
 
+let convertWheelType = (intype: Sdl2.WheelType.t) => {
+    open Libscroll;
+    open Sdl2;
+    switch (intype) {
+    | WheelType.Last => Source.Previous
+    | WheelType.Undefined => Source.Undefined
+    | WheelType.Touchscreen => Source.Touchscreen
+    | WheelType.Touchpad => Source.Touchpad
+    | WheelType.Wheel => Source.Mousewheel
+    | WheelType.WheelPrecise => Source.PreciseMousewheel
+    | WheelType.OtherNonKinetic => KineticPassthrough
+    | WheelType.OtherKinetic => KineticPassthrough
+    }
+}
+
+let mapAxis = (sdlAxis: Sdl2.Axis.t) => switch (sdlAxis) {
+  | Sdl2.Axis.Vertical => Libscroll.Axis.Vertical
+  | Sdl2.Axis.Horizontal => Libscroll.Axis.Horizontal
+}
+
+let mapPanAction = (sdlAction: Sdl2.Event.PanElements.t) => switch (sdlAction) {
+  | Sdl2.Event.PanElements.Fling => Events.MousePanAction.Fling
+  | Sdl2.Event.PanElements.Interrupt => Events.MousePanAction.Interrupt
+  | Sdl2.Event.PanElements.Pan(amount) => Events.MousePanAction.Pan(amount)
+}
+
 let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   switch (sdlEvent) {
   | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
-    let wheelEvent: Events.mouseWheelEvent = {
-      deltaX: float_of_int(deltaX),
-      deltaY: float_of_int(deltaY),
+    let xEvent: Events.mouseWheelEvent = {
+      source: Libscroll.Source.Mousewheel,
+      timestamp: 0, // TODO: add timestamps to mosuewheel events in sdl OR completely switch to pan
+      action: Events.MousePanAction.Pan(float_of_int(deltaX)),
+      axis: Libscroll.Axis.Horizontal,
     };
+    Event.dispatch(v.onMouseWheel, xEvent);
+
+    let yEvent: Events.mouseWheelEvent = {
+      source: Libscroll.Source.Mousewheel,
+      timestamp: 0, // TODO: add timestamps to mosuewheel events in sdl OR completely switch to pan
+      action: Events.MousePanAction.Pan(float_of_int(deltaY)),
+      axis: Libscroll.Axis.Vertical,
+    };
+    Event.dispatch(v.onMouseWheel, yEvent);
+  | Sdl2.Event.Pan({timestamp, source, axis, action}) =>
+    Log.info("Got a pan event");
+    let wheelEvent: Events.mouseWheelEvent = {
+      source: convertWheelType(source),
+      timestamp: timestamp,
+      action: mapPanAction(action),
+      axis: mapAxis(axis),
+    }
     Event.dispatch(v.onMouseWheel, wheelEvent);
   | Sdl2.Event.MouseMotion({x, y, _}) =>
     let mouseEvent: Events.mouseMoveEvent = {

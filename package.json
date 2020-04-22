@@ -27,6 +27,7 @@
     "build": [
       "dune build -p Revery -j4"
     ],
+    "buildsInSource": "_build",
     "install": [
       "esy-installer Revery.install",
       "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': ':'}\""
@@ -47,15 +48,20 @@
     "reason-font-manager": "^2.1.1",
     "reason-harfbuzz": "^1.91.5007",
     "rench": "^1.9.1",
+    "reason-sdl2": "*",
+    "libscroll": "*",
     "rebez": "jchavarri/rebez#03fa3b7",
-    "reason-sdl2": "^2.10.3021",
     "reason-skia": "revery-ui/reason-skia#2352b85",
     "revery-text-wrap": "revery-ui/revery-text-wrap#966383e",
     "@glennsl/timber": "1.0.0"
   },
   "resolutions": {
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
-    "@opam/cmdliner": "1.0.2"
+    "@opam/cmdliner": "1.0.2",
+    "timber": "glennsl/timber#ae065bb",
+    "libscroll": "link:../libscroll-re",
+    "esy-sdl2": "link:../esy-sdl2",
+    "reason-sdl2": "link:../reason-sdl2"
   },
   "devDependencies": {
     "ocaml": "~4.8",
