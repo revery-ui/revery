@@ -71,13 +71,12 @@ let%component make =
   let scrollviewActive = () => {
     let r = switch (scrollViewRef^) {
     | None => {
-        Log.info("Scrollview was none");
+        Log.error("Scrollview was none");
         false
       }
     | Some(scrollview) => {
         let v = Libscroll.animating(scrollview)
         if (v) {
-          //Log.info("animating is true");
           setKickAnimating(_ => kickAnimating + 1);
         } else {
           setKickAnimating(_ => kickAnimating);
@@ -115,10 +114,6 @@ let%component make =
         setBouncingState(_ => Idle)
       )
     };
-  let setBouncingState = state => {
-    resetBouncingAnimation();
-    setBouncingState(state);
-  };
 
   let scrollBarThickness = 10;
 
@@ -129,12 +124,12 @@ let%component make =
 
   let (scrollX, scrollY) = switch (scrollViewRef^) {
       | None => {
-          Log.info("Can't sample, sv null");
+          Log.error("Can't sample, sv null");
+
           (0.0, 0.0)
       }
       | Some(scrollview) => {
           let (x, y) = Libscroll.sample(scrollview, Sdl2.Timekeeping.getTicks());
-          Log.infof(m => m("Sample gives %f, %f", x, y));
 
           (x, y)
       }
@@ -216,20 +211,9 @@ let%component make =
             />
           : empty;
 
-      let pageflip = (~initialState=?, ~restThreshold=0.0) => {
-
-        let isActive = switch (scrollViewRef^) {
-        | Some(scrollview) => Libscroll.animating(scrollview)
-        | None => false
-        };
-
-        //let%hook (time, _) = Timer.timer(~active=isActive
-      }
-
       let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
         switch (scrollViewRef^) {
         | Some(scrollview) => {
-            //Log.info("Scrollview existed");
             Libscroll.set_geometry(scrollview, float_of_int(maxHeight), 0.0, 0.0, 0.0);
 
             Libscroll.set_source(scrollview, wheelEvent.source);
@@ -239,7 +223,6 @@ let%component make =
             | Events.MousePanAction.Interrupt => Libscroll.push_interrupt(scrollview, wheelEvent.axis, wheelEvent.timestamp)
             | Events.MousePanAction.Pan(delta) => Libscroll.push_pan(scrollview, wheelEvent.axis, delta, wheelEvent.timestamp)
             }
-            Log.infof(m => m("newScrollTop is %d, maxHeight is %d", scrollTop, maxHeight));
 
             setKickAnimating(_ => kickAnimating + 1);
             resetAnimationTimer();
@@ -247,37 +230,6 @@ let%component make =
           }
         | None => Log.error("Scrollview not present on event dispatch");
         }
-
-        /*let delta = switch(wheelEvent.deltaY) {
-          | Some(value) => value *. 25.
-          | None => 0.0
-        };*/
-        /*let delta = 0.0; // just to test
-        //let delta = int_of_float(wheelEvent.deltaY *. 25.);
-        let delta_s = delta;
-        let delta = int_of_float(delta /. -400.0);
-        let newScrollTop = actualScrollTop - delta;
-
-        let isAtTop = newScrollTop < 0;
-        let isAtBottom = newScrollTop > maxHeight;*/
-
-
-        /*switch (bouncingState) {
-        | Bouncing(force) when force < 0 && delta_s < 0. =>
-          setBouncingState(_ => Idle)
-        | Bouncing(force) when force > 0 && delta_s > 0. =>
-          setBouncingState(_ => Idle)
-        | Bouncing(_) => ()
-        | Idle when !bounce && (isAtTop || isAtBottom) =>
-          dispatch(ScrollUpdated(newScrollTop));
-          //let clampedScrollTop = isAtTop ? 0 : maxHeight;
-          //dispatch(ScrollUpdated(clampedScrollTop));
-          ()
-        | Idle when bounce && (isAtTop || isAtBottom) =>
-          //setBouncingState(_ => Bouncing(- delta * 2));
-          dispatch(ScrollUpdated(isAtTop ? 0 : maxHeight));
-        | Idle => dispatch(ScrollUpdated(newScrollTop))
-        };*/
       };
       (horizontalScrollbar, verticalScrollBar, scroll);
     | _ => (empty, empty, (_ => ()))
