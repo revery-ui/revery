@@ -343,7 +343,6 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
     };
     Event.dispatch(v.onMouseWheel, yEvent);
   | Sdl2.Event.Pan({timestamp, source, axis, action}) =>
-    Log.info("Got a pan event");
     let wheelEvent: Events.mouseWheelEvent = {
       source: convertWheelType(source),
       timestamp: timestamp,

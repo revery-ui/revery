@@ -66,6 +66,8 @@ let%component make =
   //setScrollview(_ => scrollview);
   let%hook (scrollViewRef) = Hooks.ref(None);
 
+  let%hook (kickAnimating, setKickAnimating) = Hooks.state(0);
+
   let scrollviewActive = () => {
     let r = switch (scrollViewRef^) {
     | None => {
@@ -73,12 +75,12 @@ let%component make =
         false
       }
     | Some(scrollview) => {
-        Log.info("Scrollview was some");
         let v = Libscroll.animating(scrollview)
         if (v) {
-          Log.info("animating is true");
+          //Log.info("animating is true");
+          setKickAnimating(_ => kickAnimating + 1);
         } else {
-          Log.info("animating is false");
+          setKickAnimating(_ => kickAnimating);
         }
 
         v
@@ -88,7 +90,8 @@ let%component make =
     r
   }
 
-  let%hook (_dt, _reset) = Hooks.timer(~active=scrollviewActive(), ());
+  let%hook (animationTimerTime, resetAnimationTimer) = Hooks.timer(~active=scrollviewActive(), ());
+
 
   let%hook () = Hooks.effect(OnMount, () => {
     let scrollView = Libscroll.scrollview_new();
@@ -130,8 +133,10 @@ let%component make =
           (0.0, 0.0)
       }
       | Some(scrollview) => {
-          Log.info("Scrollview was some, sampling...");
-          Libscroll.sample(scrollview, Sdl2.Timekeeping.getTicks())
+          let (x, y) = Libscroll.sample(scrollview, Sdl2.Timekeeping.getTicks());
+          Log.infof(m => m("Sample gives %f, %f", x, y));
+
+          (x, y)
       }
   }
   dispatch(ScrollUpdated(int_of_float(scrollY)));
@@ -210,17 +215,6 @@ let%component make =
               thumbColor=scrollThumbColor
             />
           : empty;
-              
-      /*let pan = (panEvent: NodeEvents.panEventParams) => {
-        switch (scrollViewRef^) {
-        | None => ()
-        | Some(scrollview) => {
-          let timestamp = wheelEvent.timestamp;
-          let delta = wheelEvent.delta;
-          let axis = wheelEvent.axis;
-        }
-      }*/
-      Log.info("renders the scrollview");
 
       let pageflip = (~initialState=?, ~restThreshold=0.0) => {
 
@@ -234,8 +228,9 @@ let%component make =
 
       let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
         switch (scrollViewRef^) {
-        | Some(scrollview) => {//Libscroll.push_pan(scrollview, Libscroll.Axis.Vertical, 10.0, 0)
-            Log.info("Scrollview existed");
+        | Some(scrollview) => {
+            //Log.info("Scrollview existed");
+            Libscroll.set_geometry(scrollview, float_of_int(maxHeight), 0.0, 0.0, 0.0);
 
             Libscroll.set_source(scrollview, wheelEvent.source);
 
@@ -244,10 +239,15 @@ let%component make =
             | Events.MousePanAction.Interrupt => Libscroll.push_interrupt(scrollview, wheelEvent.axis, wheelEvent.timestamp)
             | Events.MousePanAction.Pan(delta) => Libscroll.push_pan(scrollview, wheelEvent.axis, delta, wheelEvent.timestamp)
             }
+            Log.infof(m => m("newScrollTop is %d, maxHeight is %d", scrollTop, maxHeight));
+
+            setKickAnimating(_ => kickAnimating + 1);
+            resetAnimationTimer();
 
           }
         | None => Log.error("Scrollview not present on event dispatch");
         }
+
         /*let delta = switch(wheelEvent.deltaY) {
           | Some(value) => value *. 25.
           | None => 0.0
