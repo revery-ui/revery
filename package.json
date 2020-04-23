@@ -55,7 +55,7 @@
   },
   "resolutions": {
     "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755",
-    "@opam/cmdliner": "1.0.2"
+    "reason-sdl2": "link:../reason-sdl2"
   },
   "devDependencies": {
     "ocaml": "~4.8",
