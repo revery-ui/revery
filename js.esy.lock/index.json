@@ -1,5 +1,5 @@
 {
-  "checksum": "fa297963347363b04a3d86b739362e81",
+  "checksum": "e9430c79bd67af215de214982a47f3fe",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -116,7 +116,7 @@
         "@opam/js_of_ocaml@opam:3.5.2@c5bae178",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
         "@glennsl/timber@1.0.0@d41d8cd9", "@esy-ocaml/reason@3.5.2@d41d8cd9",
-        "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#34e5991@d41d8cd9"
+        "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#10cab2d@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9",
@@ -1278,20 +1278,20 @@
         "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
-    "@opam/ppxlib@opam:0.8.1@e7b0b240": {
-      "id": "@opam/ppxlib@opam:0.8.1@e7b0b240",
+    "@opam/ppxlib@opam:0.13.0@65a9c7cc": {
+      "id": "@opam/ppxlib@opam:0.13.0@65a9c7cc",
       "name": "@opam/ppxlib",
-      "version": "opam:0.8.1",
+      "version": "opam:0.13.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/a5/a5cb79ee83bba80304b65bc47f2985382bef89668b1b46f9ffb3734c2f2f7521#sha256:a5cb79ee83bba80304b65bc47f2985382bef89668b1b46f9ffb3734c2f2f7521",
-          "archive:https://github.com/ocaml-ppx/ppxlib/releases/download/0.8.1/ppxlib-0.8.1.tbz#sha256:a5cb79ee83bba80304b65bc47f2985382bef89668b1b46f9ffb3734c2f2f7521"
+          "archive:https://opam.ocaml.org/cache/sha256/81/81e1f3d308500e0e7f6108d5b0dda2b879640a5c21ef3dc4a9bd90381cee39d9#sha256:81e1f3d308500e0e7f6108d5b0dda2b879640a5c21ef3dc4a9bd90381cee39d9",
+          "archive:https://github.com/ocaml-ppx/ppxlib/releases/download/0.13.0/ppxlib-0.13.0.tbz#sha256:81e1f3d308500e0e7f6108d5b0dda2b879640a5c21ef3dc4a9bd90381cee39d9"
         ],
         "opam": {
           "name": "ppxlib",
-          "version": "0.8.1",
-          "path": "js.esy.lock/opam/ppxlib.0.8.1"
+          "version": "0.13.0",
+          "path": "js.esy.lock/opam/ppxlib.0.13.0"
         }
       },
       "overrides": [],
@@ -2819,18 +2819,18 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#34e5991@d41d8cd9": {
+    "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#10cab2d@d41d8cd9": {
       "id":
-        "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#34e5991@d41d8cd9",
+        "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#10cab2d@d41d8cd9",
       "name": "@brisk/brisk-reconciler",
-      "version": "github:briskml/brisk-reconciler#34e5991",
+      "version": "github:briskml/brisk-reconciler#10cab2d",
       "source": {
         "type": "install",
-        "source": [ "github:briskml/brisk-reconciler#34e5991" ]
+        "source": [ "github:briskml/brisk-reconciler#10cab2d" ]
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/ppxlib@opam:0.8.1@e7b0b240",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/ppxlib@opam:0.13.0@65a9c7cc",
         "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
       "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
