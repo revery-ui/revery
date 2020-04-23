@@ -58,13 +58,19 @@ jobs:
           git status
           git log -2
           git diff
-      - uses: actions/github-script@0.3.0
+      - uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             if (require("child_process").execSync("git log -1 --pretty=format:'%an'") == "Github Runner")
-              github.issues.createComment({...context.issue, body: `I have updated your lock dirs and formatted the code. Please @${context.actor} pull the last commit before pushing any more changes.`});
+              github.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: "I have updated your lock dirs and formatted the code.\n" +
+                  "Please @" + context.actor + " pull the last commit before pushing any more changes."
+              });
 
   doc:
     name: Push docs to GitHub's Pages
