@@ -12,6 +12,11 @@ open Revery_UI_Primitives;
 module Hooks = Revery_UI_Hooks;
 module Log = (val Log.withNamespace("Revery.Components.Clickable"));
 
+module Constants = {
+  let initialMouseDownTimes = (Time.ms(1000), Time.zero);
+  let doubleClickSpeed = Time.ms(500);
+};
+
 let isMouseCaptured = ref(false);
 
 let%component make =
@@ -19,6 +24,7 @@ let%component make =
                 ~style=[],
                 ~onClick=() => (),
                 ~onRightClick=() => (),
+                ~onDoubleClick=() => (),
                 ~onAnyClick=_event => (),
                 ~componentRef=?,
                 ~onBlur=?,
@@ -33,6 +39,14 @@ let%component make =
               ) => {
   let%hook isMouseCapturedHere = Hooks.ref(false);
 
+  let%hook mouseDownTimes = Hooks.ref(Constants.initialMouseDownTimes);
+
+  let isDoubleClick = () =>
+    Time.(fst(mouseDownTimes^) - snd(mouseDownTimes^))
+    <= Constants.doubleClickSpeed;
+  let resetMouseDownTimes = () =>
+    mouseDownTimes := Constants.initialMouseDownTimes;
+
   let capture = () =>
     if (! isMouseCaptured^) {
       Log.trace("Capture");
@@ -46,14 +60,23 @@ let%component make =
       isMouseCaptured := false;
     };
 
-  let onMouseDown = _event => capture();
+  let onMouseDown = _event => {
+    capture();
+    mouseDownTimes := (Time.now(), fst(mouseDownTimes^));
+  };
   let onMouseLeave = _event => releaseCapture();
   let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) =>
     if (isMouseCapturedHere^) {
       releaseCapture();
 
       switch (mouseEvt.button) {
-      | MouseButton.BUTTON_LEFT => onClick()
+      | MouseButton.BUTTON_LEFT =>
+        if (isDoubleClick()) {
+          resetMouseDownTimes();
+          onDoubleClick();
+        } else {
+          onClick();
+        }
       | MouseButton.BUTTON_RIGHT => onRightClick()
       | _ => ()
       };
