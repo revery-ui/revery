@@ -26,29 +26,12 @@ let reducer = (action, _state) => {
   };
 };
 
-let bounceAnimation = (~origin, ~force) =>
-  Animation.(
-    {
-      let bounceAway =
-        animate(Time.ms(100))
-        |> ease(Easing.cubicBezier(0.23, 1., 0.32, 1.))
-        |> tween(float(origin), float(origin + force));
-
-      let bounceBack =
-        Animation.animate(Time.ms(800))
-        |> ease(Easing.cubicBezier(0.23, 1., 0.32, 1.))
-        |> tween(float(origin + force), float(origin));
-
-      bounceAway |> andThen(~next=bounceBack) |> map(int_of_float);
-    }
-  );
-
 let%component make =
               (
                 ~style,
                 ~scrollLeft=0,
                 ~scrollTop=0,
-                ~bounce=defaultBounce,
+                ~bounce=defaultBounce, // TODO: pass bounce hint to libscroll
                 ~children=React.empty,
                 (),
               ) => {
@@ -59,11 +42,6 @@ let%component make =
   let%hook (actualScrollLeft, setScrollLeft) = Hooks.state(scrollLeft);
   let%hook (bouncingState, setBouncingState) = Hooks.state(Idle);
 
-  //Time.timer;
-  //let%hook (time, _) = Revery_Core.Timer.timer(~active=true, ());
-
-  //let%hook (scrollview, setScrollview) = Hooks.state(() => Libscroll.scrollview_new());
-  //setScrollview(_ => scrollview);
   let%hook (scrollViewRef) = Hooks.ref(None);
 
   let%hook (kickAnimating, setKickAnimating) = Hooks.state(0);
@@ -101,19 +79,6 @@ let%component make =
     };   
     Some(dispose);
   });
-
-  let%hook (actualScrollTop, _bounceAnimationState, resetBouncingAnimation) =
-    switch (bouncingState) {
-    | Idle =>
-      // TODO: Why isn't Animation.const always sufficient to stop the timer?
-      Hooks.animation(~active=false, Animation.const(actualScrollTop))
-
-    | Bouncing(force) =>
-      Hooks.animation(
-        bounceAnimation(~origin=actualScrollTop, ~force), ~onComplete=() =>
-        setBouncingState(_ => Idle)
-      )
-    };
 
   let scrollBarThickness = 10;
 

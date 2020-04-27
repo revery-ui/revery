@@ -32,10 +32,6 @@ module MousePanAction = {
 }
 
 type mouseWheelEvent = {
-  //deltaX: option(float),
-  //deltaY: option(float),
-  //isFling: bool,
-  //isInterrupt: bool,
   source: Libscroll.Source.t,
   axis: Libscroll.Axis.t,
   action: MousePanAction.t,
