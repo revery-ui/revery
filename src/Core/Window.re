@@ -329,7 +329,7 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
     let xEvent: Events.mouseWheelEvent = {
       source: Libscroll.Source.Mousewheel,
-      timestamp: 0, // TODO: add timestamps to mosuewheel events in sdl OR completely switch to pan
+      timestamp: Sdl2.Timekeeping.getTicks(), // TODO: try to migrate completely to pan events for more precise timestamps
       action: Events.MousePanAction.Pan(float_of_int(deltaX)),
       axis: Libscroll.Axis.Horizontal,
     };
@@ -337,7 +337,7 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
 
     let yEvent: Events.mouseWheelEvent = {
       source: Libscroll.Source.Mousewheel,
-      timestamp: 0, // TODO: add timestamps to mosuewheel events in sdl OR completely switch to pan
+      timestamp: Sdl2.Timekeeping.getTicks(), // TODO: try to migrate completely to pan events for more precise timestamps
       action: Events.MousePanAction.Pan(float_of_int(deltaY)),
       axis: Libscroll.Axis.Vertical,
     };
