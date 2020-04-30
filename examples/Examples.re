@@ -311,6 +311,11 @@ let init = app => {
       Console.log(Printf.sprintf("Size changed: %d x %d", width, height))
     );
 
+  let _unsubscribe =
+    Window.onMoved(window, ((x, y)) =>
+      Console.log(Printf.sprintf("Moved: %d x %d", x, y))
+    );
+
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);
   ();

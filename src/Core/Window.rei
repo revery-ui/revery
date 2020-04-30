@@ -31,6 +31,7 @@ let onMouseDown: (t, mouseButtonEvent => unit) => unsubscribe;
 let onMouseUp: (t, mouseButtonEvent => unit) => unsubscribe;
 let onMouseWheel: (t, mouseWheelEvent => unit) => unsubscribe;
 let onSizeChanged: (t, size => unit) => unsubscribe;
+let onMoved: (t, ((int, int)) => unit) => unsubscribe;
 let onTextInputCommit: (t, textInputEvent => unit) => unsubscribe;
 
 let canQuit: t => bool;
@@ -38,6 +39,7 @@ let canQuit: t => bool;
 let getDevicePixelRatio: t => float;
 let getFramebufferSize: t => size;
 let getRawSize: t => size;
+let getPosition: t => (int, int);
 let getScaleAndZoom: t => float;
 let getSdlWindow: t => Sdl2.Window.t;
 let getZoom: t => float;

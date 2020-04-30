@@ -79,6 +79,7 @@ type t = {
   onMinimized: Event.t(unit),
   onRestored: Event.t(unit),
   onSizeChanged: Event.t(size),
+  onMoved: Event.t((int, int)),
   onCompositionStart: Event.t(unit),
   onCompositionEdit: Event.t(textEditEvent),
   onCompositionEnd: Event.t(unit),
@@ -122,6 +123,7 @@ let onCompositionEdit = w => Event.subscribe(w.onCompositionEdit);
 let onCompositionEnd = w => Event.subscribe(w.onCompositionEnd);
 let onTextInputCommit = w => Event.subscribe(w.onTextInputCommit);
 let onSizeChanged = w => Event.subscribe(w.onSizeChanged);
+let onMoved = w => Event.subscribe(w.onMoved);
 
 let getUniqueId = (w: t) => w.uniqueId;
 
@@ -306,25 +308,31 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
       deltaY: float_of_int(deltaY),
     };
     Event.dispatch(v.onMouseWheel, wheelEvent);
+
   | Sdl2.Event.MouseMotion({x, y, _}) =>
     let mouseEvent: Events.mouseMoveEvent = {
       mouseX: float_of_int(x),
       mouseY: float_of_int(y),
     };
     Event.dispatch(v.onMouseMove, mouseEvent);
+
   | Sdl2.Event.MouseButtonUp(event) =>
     Event.dispatch(v.onMouseUp, {button: MouseButton.convert(event.button)})
+
   | Sdl2.Event.MouseButtonDown(event) =>
     Event.dispatch(
       v.onMouseDown,
       {button: MouseButton.convert(event.button)},
     )
+
   | Sdl2.Event.KeyDown({keycode, keymod, scancode, repeat, _}) =>
     let keyEvent: Key.KeyEvent.t = {keycode, scancode, keymod, repeat};
     Event.dispatch(v.onKeyDown, keyEvent);
+
   | Sdl2.Event.KeyUp({keycode, keymod, scancode, repeat, _}) =>
     let keyEvent: Key.KeyEvent.t = {keycode, scancode, keymod, repeat};
     Event.dispatch(v.onKeyUp, keyEvent);
+
   | Sdl2.Event.TextEditing(te) =>
     if (!v.isComposingText) {
       Event.dispatch(v.onCompositionStart, ());
@@ -340,21 +348,28 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
       Event.dispatch(v.onCompositionEnd, ());
       v.isComposingText = false;
     };
-
     Event.dispatch(v.onTextInputCommit, {text: ti.text});
+
   | Sdl2.Event.WindowResized(_) => v.areMetricsDirty = true
+
   | Sdl2.Event.WindowSizeChanged({width, height, _}) =>
     v.areMetricsDirty = true;
     Event.dispatch(v.onSizeChanged, {width, height});
-  | Sdl2.Event.WindowMoved(_) => v.areMetricsDirty = true
+
+  | Sdl2.Event.WindowMoved({x, y, _}) =>
+    v.areMetricsDirty = true;
+    Event.dispatch(v.onMoved, (x, y));
+
   | Sdl2.Event.WindowEnter(_) => Event.dispatch(v.onMouseEnter, ())
   | Sdl2.Event.WindowLeave(_) => Event.dispatch(v.onMouseLeave, ())
   | Sdl2.Event.WindowExposed(_) => Event.dispatch(v.onExposed, ())
   | Sdl2.Event.WindowMaximized(_) => Event.dispatch(v.onMaximized, ())
   | Sdl2.Event.WindowMinimized(_) => Event.dispatch(v.onMinimized, ())
+
   | Sdl2.Event.WindowRestored(_) =>
     Internal.resetTitlebarStyle(v);
     Event.dispatch(v.onRestored, ());
+
   | Sdl2.Event.WindowFocusGained(_) => Event.dispatch(v.onFocusGained, ())
   | Sdl2.Event.WindowFocusLost(_) => Event.dispatch(v.onFocusLost, ())
   | Sdl2.Event.Quit => ()
@@ -445,7 +460,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   let metrics =
     _getMetricsFromGlfwWindow(~forceScaleFactor=options.forceScaleFactor, w);
   Log.debug("Metrics: " ++ WindowMetrics.toString(metrics));
-  let ret: t = {
+  let window = {
     backgroundColor: options.backgroundColor,
     sdlWindow: w,
     sdlContext: context,
@@ -478,6 +493,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onRestored: Event.create(),
     onExposed: Event.create(),
     onSizeChanged: Event.create(),
+    onMoved: Event.create(),
 
     onMouseMove: Event.create(),
     onMouseWheel: Event.create(),
@@ -496,9 +512,9 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     titlebarStyle: options.titlebarStyle,
   };
-  setScaledSize(ret, width, height);
+  setScaledSize(window, width, height);
   Sdl2.Window.center(w);
-  setVsync(ret, options.vsync);
+  setVsync(window, options.vsync);
 
   if (options.maximized) {
     Sdl2.Window.maximize(w);
@@ -526,9 +542,9 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   // TODO: Make configurable
   Sdl2.Window.setMinimumSize(w, 200, 100);
 
-  _updateMetrics(ret);
+  _updateMetrics(window);
 
-  ret;
+  window;
 };
 
 let startTextInput = (_w: t) => {
@@ -578,8 +594,11 @@ let getRawSize = (w: t) => {
   let width = w.metrics.size.width;
   let height = w.metrics.size.height;
 
-  let ret: size = {width, height};
-  ret;
+  {width, height};
+};
+
+let getPosition = window => {
+  Sdl2.Window.getPosition(window.sdlWindow);
 };
 
 let getFramebufferSize = (w: t) => {
