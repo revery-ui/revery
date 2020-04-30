@@ -49,7 +49,7 @@
     "rench": "^1.9.1",
     "rebez": "jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3022",
-    "reason-skia": "revery-ui/reason-skia#2352b85",
+    "reason-skia": "revery-ui/reason-skia#6b459c7",
     "revery-text-wrap": "revery-ui/revery-text-wrap#966383e",
     "@glennsl/timber": "1.0.0"
   },
