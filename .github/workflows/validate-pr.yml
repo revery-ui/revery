@@ -179,7 +179,7 @@ jobs:
         run: esy build --release
       - name: Build test/dev dependencies
         if: steps.deps-cache-win.outputs.cache-hit != 'true' && steps.deps-cache-non-win.outputs.cache-hit != 'true'
-        run:
+        run: |
           esy build-dependencies
           # We might have used restore-keys
           esy cleanup .
