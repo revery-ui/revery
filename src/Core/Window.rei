@@ -31,6 +31,7 @@ let onMouseDown: (t, mouseButtonEvent => unit) => unsubscribe;
 let onMouseUp: (t, mouseButtonEvent => unit) => unsubscribe;
 let onMouseWheel: (t, mouseWheelEvent => unit) => unsubscribe;
 let onSizeChanged: (t, size => unit) => unsubscribe;
+let onMoved: (t, ((int, int)) => unit) => unsubscribe;
 let onTextInputCommit: (t, textInputEvent => unit) => unsubscribe;
 
 let canQuit: t => bool;
