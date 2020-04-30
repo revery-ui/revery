@@ -578,8 +578,11 @@ let getRawSize = (w: t) => {
   let width = w.metrics.size.width;
   let height = w.metrics.size.height;
 
-  let ret: size = {width, height};
-  ret;
+  {width, height};
+};
+
+let getPosition = window => {
+  Sdl2.Window.getPosition(window.sdlWindow);
 };
 
 let getFramebufferSize = (w: t) => {
