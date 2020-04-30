@@ -16,12 +16,11 @@ open RenderContainer;
 let render =
     (
       ~forceLayout=false,
-      container: RenderContainer.t,
+      renderContainer: RenderContainer.t,
       component: React.element('node),
     ) => {
-  let renderContainer = container;
   Log.trace("BEGIN: Render frame");
-  let {rootNode, window, container, _} = container;
+  let {rootNode, window, container, _} = renderContainer;
 
   /* Perform reconciliation */
   Performance.bench("reconcile", () =>

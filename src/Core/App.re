@@ -136,6 +136,20 @@ let initConsole = () =>
     ();
   };
 
+let handleKeymapChanged = () => {
+  AppLog.info("Keymap changed");
+
+  if (Sys.win32) {
+    // Workaround for https://github.com/onivim/oni2/issues/1657
+    // When changing the keyboard layout, on Windows 10, the
+    // modifier keys like the Windows/GUI key 'stick'...
+    // ...this resets the state of the modifiers.
+    Sdl2.Keymod.setState(
+      Sdl2.Keymod.none,
+    );
+  };
+};
+
 let start = init => {
   let appInstance: t = {
     windows: Hashtbl.create(1),
@@ -187,6 +201,7 @@ let start = init => {
     | Sdl2.Event.KeyUp({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.TextInput({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.TextEditing({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.KeymapChanged => handleKeymapChanged()
     | Sdl2.Event.WindowResized({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.WindowSizeChanged({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.WindowExposed({windowID, _}) => handleEvent(windowID)
