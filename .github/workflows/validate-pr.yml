@@ -33,7 +33,7 @@ jobs:
         run: node .github/workflows/print_esy_cache.js
       - name: Try to restore dependencies cache
         id: deps-cache-macos
-        uses: actions/cache@v1
+        uses: actions/cache@v1.1.2
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: macos-latest-${{ hashFiles('**/index.json') }}
@@ -92,7 +92,7 @@ jobs:
         run: node .github/workflows/print_esy_cache.js
       - name: Try to restore dependencies cache
         id: deps-cache-macos
-        uses: actions/cache@v1
+        uses: actions/cache@v1.1.2
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: macos-latest-${{ hashFiles('**/index.json') }}
@@ -157,7 +157,7 @@ jobs:
       - name: Try to restore dependencies cache
         if: matrix.os != 'windows-latest'
         id: deps-cache-non-win
-        uses: actions/cache@v1
+        uses: actions/cache@v1.1.2
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
@@ -166,7 +166,7 @@ jobs:
       - name: Try to restore dependencies cache
         if: matrix.os == 'windows-latest'
         id: deps-cache-win
-        uses: actions/cache@v1
+        uses: actions/cache@v1.1.2
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: ${{ matrix.os }}-${{ hashFiles('**\index.json') }}
