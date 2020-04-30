@@ -1,5 +1,5 @@
 {
-  "checksum": "67b6948cd6fe72010ec4f0dae0398403",
+  "checksum": "14caac56dee4a8a09e696f098a0b0d89",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -46,7 +46,7 @@
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:revery-ui/reason-skia#6b459c7@d41d8cd9",
-        "reason-sdl2@2.10.3023@d41d8cd9",
+        "reason-sdl2@2.10.3025@d41d8cd9",
         "reason-harfbuzz@1.91.8001@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "flex@1.2.3@d41d8cd9",
         "@reason-native/rely@3.2.1@d41d8cd9",
@@ -150,7 +150,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3023@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3025@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
         "esy-sdl2@2.0.10006@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
@@ -160,20 +160,19 @@
       ],
       "devDependencies": [ "@opam/dune@opam:2.5.1@a0c1e658" ]
     },
-    "reason-sdl2@2.10.3023@d41d8cd9": {
-      "id": "reason-sdl2@2.10.3023@d41d8cd9",
+    "reason-sdl2@2.10.3025@d41d8cd9": {
+      "id": "reason-sdl2@2.10.3025@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "2.10.3023",
+      "version": "2.10.3025",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3023.tgz#sha1:ee3fea956160c9139ed588acf76c02bd80c4c962"
+          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3025.tgz#sha1:e3eaa4750a038fc69615b3d6c498e4a88505cd64"
         ]
       },
       "overrides": [],
       "dependencies": [
         "refmterr@3.3.0@d41d8cd9", "esy-sdl2@2.0.10006@d41d8cd9",
-        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
         "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
@@ -331,9 +330,7 @@
         ]
       },
       "overrides": [],
-      "dependencies": [
-        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9"
-      ],
+      "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
       "devDependencies": []
     },
     "esy-freetype2@2.9.1007@d41d8cd9": {
@@ -347,19 +344,18 @@
         ]
       },
       "overrides": [],
-      "dependencies": [
-        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9"
-      ],
+      "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
       "devDependencies": []
     },
-    "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9": {
-      "id":
-        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9",
+    "esy-cmake@0.3.5@d41d8cd9": {
+      "id": "esy-cmake@0.3.5@d41d8cd9",
       "name": "esy-cmake",
-      "version": "github:prometheansacrifice/esy-cmake#2a47392def755",
+      "version": "0.3.5",
       "source": {
         "type": "install",
-        "source": [ "github:prometheansacrifice/esy-cmake#2a47392def755" ]
+        "source": [
+          "archive:https://registry.npmjs.org/esy-cmake/-/esy-cmake-0.3.5.tgz#sha1:2df0bdfe9317fbcded5f463fca1f346464494c7a"
+        ]
       },
       "overrides": [],
       "dependencies": [],
@@ -374,12 +370,8 @@
         "source": [ "github:zbaylin/esy-astyle#59bc21a" ]
       },
       "overrides": [],
-      "dependencies": [
-        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9"
-      ],
-      "devDependencies": [
-        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9"
-      ]
+      "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
+      "devDependencies": [ "esy-cmake@0.3.5@d41d8cd9" ]
     },
     "@revery/esy-cmake@0.3.5001@d41d8cd9": {
       "id": "@revery/esy-cmake@0.3.5001@d41d8cd9",

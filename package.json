@@ -48,13 +48,10 @@
     "reason-harfbuzz": "^1.91.5007",
     "rench": "^1.9.1",
     "rebez": "jchavarri/rebez#03fa3b7",
-    "reason-sdl2": "^2.10.3023",
+    "reason-sdl2": "^2.10.3025",
     "reason-skia": "revery-ui/reason-skia#6b459c7",
     "revery-text-wrap": "revery-ui/revery-text-wrap#966383e",
     "@glennsl/timber": "1.0.0"
-  },
-  "resolutions": {
-    "esy-cmake": "prometheansacrifice/esy-cmake#2a47392def755"
   },
   "devDependencies": {
     "ocaml": "~4.8",
