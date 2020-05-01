@@ -53,6 +53,9 @@
     "revery-text-wrap": "revery-ui/revery-text-wrap#966383e",
     "@glennsl/timber": "1.0.0"
   },
+  "resolutions": {
+    "reason-sdl2": "revery-ui/reason-sdl2#9056e61"
+  },
   "devDependencies": {
     "ocaml": "~4.8",
     "@opam/dune": "^1.8.0",

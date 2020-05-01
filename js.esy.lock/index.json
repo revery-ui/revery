@@ -1,5 +1,5 @@
 {
-  "checksum": "d441b9e6cd82378c92d0c4e40007f0f4",
+  "checksum": "1447c5f6b4aff3d62ec874cc63d4f5f0",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -88,7 +88,7 @@
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:revery-ui/reason-skia#6b459c7@d41d8cd9",
-        "reason-sdl2@2.10.3025@d41d8cd9",
+        "reason-sdl2@github:revery-ui/reason-sdl2#9056e61@d41d8cd9",
         "reason-harfbuzz@1.91.8001@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "http-server@0.12.3@d41d8cd9",
         "flex@1.2.3@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
@@ -210,7 +210,8 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3025@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9",
+        "reason-sdl2@github:revery-ui/reason-sdl2#9056e61@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
         "esy-sdl2@2.0.10006@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
@@ -220,15 +221,13 @@
       ],
       "devDependencies": [ "@opam/dune@opam:2.5.1@a0c1e658" ]
     },
-    "reason-sdl2@2.10.3025@d41d8cd9": {
-      "id": "reason-sdl2@2.10.3025@d41d8cd9",
+    "reason-sdl2@github:revery-ui/reason-sdl2#9056e61@d41d8cd9": {
+      "id": "reason-sdl2@github:revery-ui/reason-sdl2#9056e61@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "2.10.3025",
+      "version": "github:revery-ui/reason-sdl2#9056e61",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3025.tgz#sha1:e3eaa4750a038fc69615b3d6c498e4a88505cd64"
-        ]
+        "source": [ "github:revery-ui/reason-sdl2#9056e61" ]
       },
       "overrides": [],
       "dependencies": [
@@ -2173,20 +2172,20 @@
         "@opam/dune@opam:2.5.1@a0c1e658"
       ]
     },
-    "@opam/integers@opam:0.3.0@d6eefd3a": {
-      "id": "@opam/integers@opam:0.3.0@d6eefd3a",
+    "@opam/integers@opam:0.4.0@f7acfaeb": {
+      "id": "@opam/integers@opam:0.4.0@f7acfaeb",
       "name": "@opam/integers",
-      "version": "opam:0.3.0",
+      "version": "opam:0.4.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/28/28715567848f07aa688a09496041731b#md5:28715567848f07aa688a09496041731b",
-          "archive:https://github.com/ocamllabs/ocaml-integers/archive/0.3.0.tar.gz#md5:28715567848f07aa688a09496041731b"
+          "archive:https://opam.ocaml.org/cache/md5/c1/c1492352e6525048790508c57aad93c3#md5:c1492352e6525048790508c57aad93c3",
+          "archive:https://github.com/ocamllabs/ocaml-integers/archive/0.4.0.tar.gz#md5:c1492352e6525048790508c57aad93c3"
         ],
         "opam": {
           "name": "integers",
-          "version": "0.3.0",
-          "path": "js.esy.lock/opam/integers.0.3.0"
+          "version": "0.4.0",
+          "path": "js.esy.lock/opam/integers.0.4.0"
         }
       },
       "overrides": [],
@@ -2412,13 +2411,13 @@
       ],
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
-        "@opam/integers@opam:0.3.0@d6eefd3a",
+        "@opam/integers@opam:0.4.0@f7acfaeb",
         "@opam/conf-pkg-config@opam:1.1@55d8e330",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/integers@opam:0.3.0@d6eefd3a",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/integers@opam:0.4.0@f7acfaeb",
         "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },

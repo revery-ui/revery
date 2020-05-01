@@ -400,7 +400,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   Log.infof(m =>
     m("Creating window %s width: %u height: %u", name, width, height)
   );
-  let sdlWindow = Sdl2.Window.create(width, height, name);
+  let sdlWindow = Sdl2.Window.create(name, `Centered, `Centered, width, height);
   Log.info("Window created successfully.");
   let uniqueId = Sdl2.Window.getId(sdlWindow);
   Log.debugf(m => m("- Id: %i", uniqueId));

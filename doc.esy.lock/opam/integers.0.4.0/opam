@@ -22,6 +22,6 @@ depends: [
 doc: "http://ocamllabs.github.io/ocaml-integers/api.docdir/"
 synopsis: "Various signed and unsigned integer types for OCaml"
 url {
-  src: "https://github.com/ocamllabs/ocaml-integers/archive/0.3.0.tar.gz"
-  checksum: "md5=28715567848f07aa688a09496041731b"
+  src: "https://github.com/ocamllabs/ocaml-integers/archive/0.4.0.tar.gz"
+  checksum: "md5=c1492352e6525048790508c57aad93c3"
 }
