@@ -283,6 +283,7 @@ let init = app => {
           ~maximized,
           ~titlebarStyle=Transparent,
           ~icon=Some("revery-icon.png"),
+          ~position=`Positioned((100, 100)),
           (),
         ),
       app,
@@ -291,8 +292,6 @@ let init = app => {
 
   if (Environment.webGL) {
     Window.maximize(window);
-  } else {
-    Window.center(window);
   };
 
   let _unsubscribe =
