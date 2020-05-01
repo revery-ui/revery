@@ -393,36 +393,28 @@ let setVsync =
 let create = (name: string, options: WindowCreateOptions.t) => {
   Log.debug("Starting window creation...");
 
-  let width =
-    switch (options.width) {
-    | 0 => 800
-    | v => v
-    };
+  let width = options.width == 0 ? 800 : options.width;
 
-  let height =
-    switch (options.height) {
-    | 0 => 480
-    | v => v
-    };
+  let height = options.height == 0 ? 480 : options.height;
 
   Log.infof(m =>
     m("Creating window %s width: %u height: %u", name, width, height)
   );
-  let w = Sdl2.Window.create(width, height, name);
+  let sdlWindow = Sdl2.Window.create(width, height, name);
   Log.info("Window created successfully.");
-  let uniqueId = Sdl2.Window.getId(w);
+  let uniqueId = Sdl2.Window.getId(sdlWindow);
   Log.debugf(m => m("- Id: %i", uniqueId));
   let pixelFormat =
-    Sdl2.Window.getPixelFormat(w) |> Sdl2.PixelFormat.toString;
+    Sdl2.Window.getPixelFormat(sdlWindow) |> Sdl2.PixelFormat.toString;
   Log.debugf(m => m("- PixelFormat: %s", pixelFormat));
 
   // We need to let Windows know that we are DPI-aware and that we are going to
   // properly handle scaling. This is a no-op on other platforms.
-  Sdl2.Window.setWin32ProcessDPIAware(w);
+  Sdl2.Window.setWin32ProcessDPIAware(sdlWindow);
 
   Log.debug("Setting window context");
-  let context = Sdl2.Gl.setup(w);
-  Sdl2.Gl.makeCurrent(w, context);
+  let context = Sdl2.Gl.setup(sdlWindow);
+  Sdl2.Gl.makeCurrent(sdlWindow, context);
   Log.debug("GL setup. Checking GL version...");
   let version = Sdl2.Gl.getString(Sdl2.Gl.Version);
   Log.debug("Checking GL vendor...");
@@ -449,7 +441,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     switch (Sdl2.Surface.createFromImagePath(relativeImagePath)) {
     | Ok(v) =>
       Log.debug("Icon loaded successfully.");
-      Sdl2.Window.setIcon(w, v);
+      Sdl2.Window.setIcon(sdlWindow, v);
       Log.debug("Icon set successfully.");
 
     | Error(msg) => Log.error("Error loading icon: " ++ msg)
@@ -458,11 +450,15 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   Log.debug("Getting window metrics");
   let metrics =
-    _getMetricsFromGlfwWindow(~forceScaleFactor=options.forceScaleFactor, w);
+    _getMetricsFromGlfwWindow(
+      ~forceScaleFactor=options.forceScaleFactor,
+      sdlWindow,
+    );
   Log.debug("Metrics: " ++ WindowMetrics.toString(metrics));
+
   let window = {
     backgroundColor: options.backgroundColor,
-    sdlWindow: w,
+    sdlWindow,
     sdlContext: context,
     uniqueId,
 
@@ -517,30 +513,30 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   setVsync(window, options.vsync);
 
   if (options.maximized) {
-    Sdl2.Window.maximize(w);
+    Sdl2.Window.maximize(sdlWindow);
   };
 
   if (!options.decorated) {
-    Sdl2.Window.setBordered(w, false);
+    Sdl2.Window.setBordered(sdlWindow, false);
   };
 
   if (!options.resizable) {
-    Sdl2.Window.setResizable(w, false);
+    Sdl2.Window.setResizable(sdlWindow, false);
   };
 
   if (options.visible) {
-    Sdl2.Window.show(w);
+    Sdl2.Window.show(sdlWindow);
   };
 
   switch (options.titlebarStyle) {
   | System => ()
-  | Transparent => Internal.setTitlebarTransparent(w)
+  | Transparent => Internal.setTitlebarTransparent(sdlWindow)
   };
 
   // onivim/oni2#791
   // Set a minimum size for the window
   // TODO: Make configurable
-  Sdl2.Window.setMinimumSize(w, 200, 100);
+  Sdl2.Window.setMinimumSize(sdlWindow, 200, 100);
 
   _updateMetrics(window);
 
