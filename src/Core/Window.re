@@ -509,8 +509,14 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     titlebarStyle: options.titlebarStyle,
   };
   setScaledSize(window, width, height);
-  Sdl2.Window.center(w);
   setVsync(window, options.vsync);
+
+  switch (options.position) {
+  | `Centered => Sdl2.Window.center(sdlWindow)
+  | `Positioned(x, y) =>
+    Console.log("Set position");
+    Sdl2.Window.setPosition(sdlWindow, x, y);
+  };
 
   if (options.maximized) {
     Sdl2.Window.maximize(sdlWindow);
