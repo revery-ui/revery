@@ -367,13 +367,19 @@ let%component make =
     </View>;
   };
 
+  let text =
+    if (showPlaceholder) {
+      placeholder;
+    } else if (isPassword) {
+      String.map(_ => '*', value);
+    } else {
+      value;
+    };
+
   let text = () =>
     <Text
       ref={node => textRef := Some(node)}
-      text={
-        showPlaceholder
-          ? placeholder : isPassword ? String.map(_ => '*', value) : value
-      }
+      text
       smoothing
       style={Styles.text(
         ~showPlaceholder,
