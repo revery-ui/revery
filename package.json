@@ -54,7 +54,7 @@
     "@glennsl/timber": "1.0.0"
   },
   "resolutions": {
-    "reason-sdl2": "revery-ui/reason-sdl2#9056e61"
+    "reason-sdl2": "revery-ui/reason-sdl2#d7da293"
   },
   "devDependencies": {
     "ocaml": "~4.8",

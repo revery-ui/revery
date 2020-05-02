@@ -1,5 +1,5 @@
 {
-  "checksum": "91c9afa32feef12522a2009dbaacbc5f",
+  "checksum": "8c0a81229495448a5da28ec642b1efeb",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -88,7 +88,7 @@
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:revery-ui/reason-skia#6b459c7@d41d8cd9",
-        "reason-sdl2@github:revery-ui/reason-sdl2#9056e61@d41d8cd9",
+        "reason-sdl2@github:revery-ui/reason-sdl2#d7da293@d41d8cd9",
         "reason-harfbuzz@1.91.8001@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "http-server@0.12.3@d41d8cd9",
         "flex@1.2.3@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
@@ -208,7 +208,7 @@
       "overrides": [],
       "dependencies": [
         "refmterr@3.3.0@d41d8cd9",
-        "reason-sdl2@github:revery-ui/reason-sdl2#9056e61@d41d8cd9",
+        "reason-sdl2@github:revery-ui/reason-sdl2#d7da293@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
         "esy-sdl2@2.0.10006@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
@@ -218,13 +218,13 @@
       ],
       "devDependencies": [ "@opam/dune@opam:2.5.1@a0c1e658" ]
     },
-    "reason-sdl2@github:revery-ui/reason-sdl2#9056e61@d41d8cd9": {
-      "id": "reason-sdl2@github:revery-ui/reason-sdl2#9056e61@d41d8cd9",
+    "reason-sdl2@github:revery-ui/reason-sdl2#d7da293@d41d8cd9": {
+      "id": "reason-sdl2@github:revery-ui/reason-sdl2#d7da293@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "github:revery-ui/reason-sdl2#9056e61",
+      "version": "github:revery-ui/reason-sdl2#d7da293",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-sdl2#9056e61" ]
+        "source": [ "github:revery-ui/reason-sdl2#d7da293" ]
       },
       "overrides": [],
       "dependencies": [
