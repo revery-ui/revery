@@ -393,15 +393,42 @@ let setVsync =
 let create = (name: string, options: WindowCreateOptions.t) => {
   Log.debug("Starting window creation...");
 
-  let width = options.width == 0 ? 800 : options.width;
+  // Calculate the total bounds of all displays
+  let screenBounds =
+    Sdl2.Display.getDisplays()
+    |> List.fold_left(
+         (acc: Sdl2.Rect.t, display) => {
+           let bounds = Sdl2.Display.getBounds(display);
+           Sdl2.Rect.{
+             x: min(acc.x, bounds.x),
+             y: min(acc.y, bounds.y),
+             width: max(acc.width, bounds.x + bounds.width),
+             height: max(acc.height, bounds.y + bounds.height),
+           };
+         },
+         Sdl2.Rect.{x: 0, y: 0, width: 0, height: 0},
+       );
 
+  let width = options.width == 0 ? 800 : options.width;
   let height = options.height == 0 ? 480 : options.height;
+
+  let x =
+    switch (options.x) {
+    | `Centered => `Absolute((screenBounds.width - width) / 2)
+    | `Absolute(x) => `Absolute(x)
+    };
+  let y =
+    switch (options.y) {
+    | `Centered => `Absolute((screenBounds.height - height) / 2)
+    | `Absolute(y) => `Absolute(y)
+    };
 
   Log.infof(m =>
     m("Creating window %s width: %u height: %u", name, width, height)
   );
-  let sdlWindow = Sdl2.Window.create(name, `Centered, `Centered, width, height);
+  let sdlWindow = Sdl2.Window.create(name, x, y, width, height);
   Log.info("Window created successfully.");
+
   let uniqueId = Sdl2.Window.getId(sdlWindow);
   Log.debugf(m => m("- Id: %i", uniqueId));
   let pixelFormat =
@@ -510,13 +537,6 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   };
   setScaledSize(window, width, height);
   setVsync(window, options.vsync);
-
-  switch (options.position) {
-  | `Centered => Sdl2.Window.center(sdlWindow)
-  | `Positioned(x, y) =>
-    Console.log("Set position");
-    Sdl2.Window.setPosition(sdlWindow, x, y);
-  };
 
   if (options.maximized) {
     Sdl2.Window.maximize(sdlWindow);

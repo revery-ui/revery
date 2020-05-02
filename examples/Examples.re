@@ -283,7 +283,6 @@ let init = app => {
           ~maximized,
           ~titlebarStyle=Transparent,
           ~icon=Some("revery-icon.png"),
-          ~position=`Positioned((100, 100)),
           (),
         ),
       app,

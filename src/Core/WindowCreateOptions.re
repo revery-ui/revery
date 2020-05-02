@@ -22,11 +22,17 @@ type t = {
     */
   titlebarStyle: WindowStyles.titlebar,
   /**
-    [position] is the initial position of the [Window], either [`Centered] or
-    [`Positioned(x, y)], where [x] and [y] is repsectively the horizontal and
-    vertical pixel coordinates of the top left corner of the [Window]
+    [x] is the initial horizontal position of the [Window], either [`Centered]
+    or [`Absolute(x)], where [x] is the horizontal pixel coordinate of the left
+    edge of the [Window]
     */
-  position: [ | `Centered | `Positioned(int, int)],
+  x: [ | `Centered | `Absolute(int)],
+  /**
+    [y] is the initial horizontal position of the [Window], either [`Centered]
+    or [`Absolute(x)], where [y] is the vertical pixel coordinate of the top
+    edge of the [Window]
+    */
+  y: [ | `Centered | `Absolute(int)],
   /**
     [width] is the initial horizontal size of the [Window]
     */
@@ -63,7 +69,8 @@ let create =
       ~maximized=false,
       ~decorated=true,
       ~titlebarStyle=WindowStyles.System,
-      ~position=`Centered,
+      ~x=`Centered,
+      ~y=`Centered,
       ~width=800,
       ~height=600,
       ~backgroundColor=Colors.cornflowerBlue,
@@ -77,7 +84,8 @@ let create =
   maximized,
   decorated,
   titlebarStyle,
-  position,
+  x,
+  y,
   width,
   height,
   backgroundColor,
