@@ -37,12 +37,12 @@ module Example = {
     first: string,
     second: string,
     third: string,
-    typePassword: bool,
+    isPassword: bool,
   };
 
   let%component make = () => {
-    let%hook ({first, typePassword, _}, setValue) =
-      Hooks.state({first: "", second: "", third: "", typePassword: false});
+    let%hook ({first, isPassword, _}, setValue) =
+      Hooks.state({first: "", second: "", third: "", isPassword: false});
 
     <View style=containerStyle>
       <View
@@ -86,19 +86,17 @@ module Example = {
               setValue(state => {...state, first: value})
             }
             value=first
-            typePassword
+            isPassword
           />
           <View style=controlsStyle>
             <Text style=textStyle text="Obscure Input" />
             <Checkbox
               checkedColor=Colors.green
               onChange={() =>
-                setValue(state =>
-                  {...state, typePassword: !state.typePassword}
-                )
+                setValue(state => {...state, isPassword: !state.isPassword})
               }
               style=Style.[border(~width=2, ~color=Colors.green)]
-              checked=typePassword
+              checked=isPassword
             />
           </View>
         </View>

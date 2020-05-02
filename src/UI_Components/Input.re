@@ -106,10 +106,6 @@ let addCharacter = (word, char, index) => {
   (startStr ++ char ++ endStr, String.length(startStr) + 1);
 };
 
-let renderAsPassword = value => {
-  StringLabels.map(value, ~f=_ => '*');
-};
-
 let reducer = (action, state) =>
   switch (action) {
   | Focus => {...state, isFocused: true}
@@ -210,7 +206,7 @@ let%component make =
                 ~onChange=(_, _) => (),
                 ~value=?,
                 ~cursorPosition=?,
-                ~typePassword=false,
+                ~isPassword=false,
                 (),
               ) => {
   let%hook (state, dispatch) =
@@ -376,7 +372,7 @@ let%component make =
       ref={node => textRef := Some(node)}
       text={
         showPlaceholder
-          ? placeholder : typePassword ? renderAsPassword(value) : value
+          ? placeholder : isPassword ? String.map(_ => '*', value) : value
       }
       smoothing
       style={Styles.text(
