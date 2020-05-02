@@ -1,23 +1,7 @@
 {
-  "checksum": "c48d4346317fc107a07cbfcc5fe75b1e",
+  "checksum": "a22addc84a3a4d5a524e106e2ffd220e",
   "root": "revery@link-dev:./package.json",
   "node": {
-    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
-      "id":
-        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9",
-      "name": "yarn-pkg-config",
-      "version":
-        "github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79",
-      "source": {
-        "type": "install",
-        "source": [
-          "github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
     "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9": {
       "id":
         "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
@@ -46,7 +30,7 @@
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:revery-ui/reason-skia#6b459c7@d41d8cd9",
-        "reason-sdl2@github:revery-ui/reason-sdl2#d7da293@d41d8cd9",
+        "reason-sdl2@2.10.3026@d41d8cd9",
         "reason-harfbuzz@1.91.8001@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "flex@1.2.3@d41d8cd9",
         "@reason-native/rely@3.2.1@d41d8cd9",
@@ -150,8 +134,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9",
-        "reason-sdl2@github:revery-ui/reason-sdl2#d7da293@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3026@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
         "esy-sdl2@2.0.10006@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
@@ -161,13 +144,15 @@
       ],
       "devDependencies": [ "@opam/dune@opam:2.5.1@a0c1e658" ]
     },
-    "reason-sdl2@github:revery-ui/reason-sdl2#d7da293@d41d8cd9": {
-      "id": "reason-sdl2@github:revery-ui/reason-sdl2#d7da293@d41d8cd9",
+    "reason-sdl2@2.10.3026@d41d8cd9": {
+      "id": "reason-sdl2@2.10.3026@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "github:revery-ui/reason-sdl2#d7da293",
+      "version": "2.10.3026",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-sdl2#d7da293" ]
+        "source": [
+          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3026.tgz#sha1:002d316516afa7655754bf159e3334c1e974e398"
+        ]
       },
       "overrides": [],
       "dependencies": [
@@ -1008,20 +993,20 @@
         "@opam/dune@opam:2.5.1@a0c1e658"
       ]
     },
-    "@opam/ppx_tools_versioned@opam:5.3.0@2c0dc023": {
-      "id": "@opam/ppx_tools_versioned@opam:5.3.0@2c0dc023",
+    "@opam/ppx_tools_versioned@opam:5.4.0@48c10ee1": {
+      "id": "@opam/ppx_tools_versioned@opam:5.4.0@48c10ee1",
       "name": "@opam/ppx_tools_versioned",
-      "version": "opam:5.3.0",
+      "version": "opam:5.4.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/c2/c285c0524fc05f27cd642591d951a48d#md5:c285c0524fc05f27cd642591d951a48d",
-          "archive:https://github.com/ocaml-ppx/ppx_tools_versioned/releases/download/5.3.0/ppx_tools_versioned-5.3.0.tbz#md5:c285c0524fc05f27cd642591d951a48d"
+          "archive:https://opam.ocaml.org/cache/md5/3e/3e809a11cae99f57c051d3d0100311f6#md5:3e809a11cae99f57c051d3d0100311f6",
+          "archive:https://github.com/ocaml-ppx/ppx_tools_versioned/archive/5.4.0.tar.gz#md5:3e809a11cae99f57c051d3d0100311f6"
         ],
         "opam": {
           "name": "ppx_tools_versioned",
-          "version": "5.3.0",
-          "path": "bench.esy.lock/opam/ppx_tools_versioned.5.3.0"
+          "version": "5.4.0",
+          "path": "bench.esy.lock/opam/ppx_tools_versioned.5.4.0"
         }
       },
       "overrides": [],
@@ -1518,14 +1503,14 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9",
-        "@opam/ppx_tools_versioned@opam:5.3.0@2c0dc023",
+        "@opam/ppx_tools_versioned@opam:5.4.0@48c10ee1",
         "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
         "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@a0c1e658",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9",
-        "@opam/ppx_tools_versioned@opam:5.3.0@2c0dc023",
+        "@opam/ppx_tools_versioned@opam:5.4.0@48c10ee1",
         "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
         "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@a0c1e658"
       ]
@@ -1938,7 +1923,7 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/integers@opam:0.4.0@f7acfaeb",
-        "@opam/conf-pkg-config@opam:1.1@55d8e330",
+        "@opam/conf-pkg-config@opam:1.2@9d4c7d7b",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -1974,29 +1959,21 @@
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
-    "@opam/conf-pkg-config@opam:1.1@55d8e330": {
-      "id": "@opam/conf-pkg-config@opam:1.1@55d8e330",
+    "@opam/conf-pkg-config@opam:1.2@9d4c7d7b": {
+      "id": "@opam/conf-pkg-config@opam:1.2@9d4c7d7b",
       "name": "@opam/conf-pkg-config",
-      "version": "opam:1.1",
+      "version": "opam:1.2",
       "source": {
         "type": "install",
         "source": [ "no-source:" ],
         "opam": {
           "name": "conf-pkg-config",
-          "version": "1.1",
-          "path": "bench.esy.lock/opam/conf-pkg-config.1.1"
+          "version": "1.2",
+          "path": "bench.esy.lock/opam/conf-pkg-config.1.2"
         }
       },
-      "overrides": [
-        {
-          "opamoverride":
-            "bench.esy.lock/overrides/opam__s__conf_pkg_config_opam__c__1.1_opam_override"
-        }
-      ],
-      "dependencies": [
-        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
+      "overrides": [],
+      "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
       "devDependencies": []
     },
     "@opam/conf-m4@opam:1@3b2b148a": {
