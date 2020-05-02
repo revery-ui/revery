@@ -12,17 +12,37 @@ let containerStyle =
     alignItems(`Center),
     justifyContent(`Center),
     flexDirection(`Column),
-    backgroundColor(Colors.white),
+  ];
+
+let controlsStyle =
+  Style.[
+    margin(10),
+    flexDirection(`Row),
+    justifyContent(`Center),
+    alignItems(`Center),
+  ];
+
+let textStyle =
+  Style.[
+    color(Colors.white),
+    width(100),
+    fontFamily("Roboto-Regular.ttf"),
+    fontSize(16.),
+    margin(14),
+    textWrap(TextWrapping.NoWrap),
   ];
 
 module Example = {
   type inputFields = {
     first: string,
     second: string,
+    third: string,
+    typePassword: bool,
   };
 
   let%component make = () => {
-    let%hook ({first, _}, setValue) = Hooks.state({first: "", second: ""});
+    let%hook ({first, typePassword, _}, setValue) =
+      Hooks.state({first: "", second: "", third: "", typePassword: false});
 
     <View style=containerStyle>
       <View
@@ -53,6 +73,36 @@ module Example = {
           onClick={() => setValue(state => {...state, first: "New value"})}
         />
       </View>
+      <Padding padding=20>
+        <View
+          style=Style.[
+            flexDirection(`Row),
+            alignItems(`Center),
+            justifyContent(`Center),
+          ]>
+          <Input
+            placeholder="Insert text here"
+            onChange={(value, _) =>
+              setValue(state => {...state, first: value})
+            }
+            value=first
+            typePassword
+          />
+          <View style=controlsStyle>
+            <Text style=textStyle text="Obscure Input" />
+            <Checkbox
+              checkedColor=Colors.green
+              onChange={() =>
+                setValue(state =>
+                  {...state, typePassword: !state.typePassword}
+                )
+              }
+              style=Style.[border(~width=2, ~color=Colors.green)]
+              checked=typePassword
+            />
+          </View>
+        </View>
+      </Padding>
       <Padding padding=20>
         <BoxShadow
           boxShadow={Style.BoxShadow.make(
