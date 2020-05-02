@@ -1,7 +1,23 @@
 {
-  "checksum": "214140695d8f76123251b99f5df519a3",
+  "checksum": "217e5c11f0d584e0ab54d7db3c6b00d0",
   "root": "revery@link-dev:./package.json",
   "node": {
+    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
+      "id":
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9",
+      "name": "yarn-pkg-config",
+      "version":
+        "github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79",
+      "source": {
+        "type": "install",
+        "source": [
+          "github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
     "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9": {
       "id":
         "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
@@ -1923,7 +1939,7 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/integers@opam:0.4.0@f7acfaeb",
-        "@opam/conf-pkg-config@opam:1.2@9d4c7d7b",
+        "@opam/conf-pkg-config@opam:1.1@55d8e330",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -1959,21 +1975,29 @@
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
-    "@opam/conf-pkg-config@opam:1.2@9d4c7d7b": {
-      "id": "@opam/conf-pkg-config@opam:1.2@9d4c7d7b",
+    "@opam/conf-pkg-config@opam:1.1@55d8e330": {
+      "id": "@opam/conf-pkg-config@opam:1.1@55d8e330",
       "name": "@opam/conf-pkg-config",
-      "version": "opam:1.2",
+      "version": "opam:1.1",
       "source": {
         "type": "install",
         "source": [ "no-source:" ],
         "opam": {
           "name": "conf-pkg-config",
-          "version": "1.2",
-          "path": "esy.lock/opam/conf-pkg-config.1.2"
+          "version": "1.1",
+          "path": "esy.lock/opam/conf-pkg-config.1.1"
         }
       },
-      "overrides": [],
-      "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
+      "overrides": [
+        {
+          "opamoverride":
+            "esy.lock/overrides/opam__s__conf_pkg_config_opam__c__1.1_opam_override"
+        }
+      ],
+      "dependencies": [
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
       "devDependencies": []
     },
     "@opam/conf-m4@opam:1@3b2b148a": {
