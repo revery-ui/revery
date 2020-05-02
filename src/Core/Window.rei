@@ -57,6 +57,7 @@ let center: t => unit;
 let hide: t => unit;
 let show: t => unit;
 let maximize: t => unit;
+let isMaximized: t => bool;
 let setBackgroundColor: (t, Color.t) => unit;
 let setPosition: (t, int, int) => unit;
 let setTitle: (t, string) => unit;
