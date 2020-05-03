@@ -206,6 +206,7 @@ let%component make =
                 ~onChange=(_, _) => (),
                 ~value=?,
                 ~cursorPosition=?,
+                ~isPassword=false,
                 (),
               ) => {
   let%hook (state, dispatch) =
@@ -366,10 +367,19 @@ let%component make =
     </View>;
   };
 
+  let text =
+    if (showPlaceholder) {
+      placeholder;
+    } else if (isPassword) {
+      String.map(_ => '*', value);
+    } else {
+      value;
+    };
+
   let text = () =>
     <Text
       ref={node => textRef := Some(node)}
-      text={showPlaceholder ? placeholder : value}
+      text
       smoothing
       style={Styles.text(
         ~showPlaceholder,
