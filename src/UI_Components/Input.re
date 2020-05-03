@@ -104,9 +104,12 @@ let removeCharacterAfter = (word, cursorPosition) => {
   (newString, cursorPosition);
 };
 
-let addCharacter = (word, char, index) => {
-  let (startStr, endStr) = getStringParts(index, word);
-  (startStr ++ char ++ endStr, String.length(startStr) + 1);
+let insertString = (currentValue, insertion, index) => {
+  let (startStr, endStr) = getStringParts(index, currentValue);
+  (
+    startStr ++ insertion ++ endStr,
+    String.length(startStr) + String.length(insertion),
+  );
 };
 
 module Constants = {
@@ -288,10 +291,18 @@ let%component make =
     dispatch(TextInput(value, cursorPosition));
   };
 
+  let paste = (currentValue, currentCursorPosition) => {
+    let (newValue, newCursorPosition) =
+      Sdl2.Clipboard.getText()
+      |> Option.value(~default="")
+      |> insertString(currentValue, _, currentCursorPosition);
+    update(newValue, newCursorPosition);
+  };
+
   let handleTextInput = (event: NodeEvents.textInputEventParams) => {
     resetCursor();
     let (value, cursorPosition) =
-      addCharacter(value, event.text, cursorPosition);
+      insertString(value, event.text, cursorPosition);
     update(value, cursorPosition);
   };
 
@@ -319,6 +330,19 @@ let%component make =
       update(value, cursorPosition);
 
     | v when Key.Keycode.escape == v => Focus.loseFocus()
+
+    | v
+        when
+          118 == v
+          && Environment.os === Mac
+          && Sdl2.Keymod.isGuiDown(event.keymod) =>
+      paste(value, cursorPosition)
+    | v
+        when
+          118 == v
+          && Environment.os !== Mac
+          && Sdl2.Keymod.isControlDown(event.keymod) =>
+      paste(value, cursorPosition)
 
     | _ => ()
     };
