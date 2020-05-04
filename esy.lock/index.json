@@ -1939,7 +1939,7 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/integers@opam:0.4.0@f7acfaeb",
-        "@opam/conf-pkg-config@opam:1.1@55d8e330",
+        "@opam/conf-pkg-config@opam:1.1@ff4322c1",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -1975,8 +1975,8 @@
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
-    "@opam/conf-pkg-config@opam:1.1@55d8e330": {
-      "id": "@opam/conf-pkg-config@opam:1.1@55d8e330",
+    "@opam/conf-pkg-config@opam:1.1@ff4322c1": {
+      "id": "@opam/conf-pkg-config@opam:1.1@ff4322c1",
       "name": "@opam/conf-pkg-config",
       "version": "opam:1.1",
       "source": {
