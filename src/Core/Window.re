@@ -637,7 +637,7 @@ let isMaximized = (w: t) => {
 
 let minimize = (w: t) => {
   Sdl2.Window.minimize(w.sdlWindow);
-}
+};
 
 let getDevicePixelRatio = (w: t) => {
   w.metrics.devicePixelRatio;
