@@ -99,6 +99,7 @@ type keyUpHandler = keyEventParams => unit;
 type textInputHandler = textInputEventParams => unit;
 type textEditHandler = textEditEventParams => unit;
 type dimensionsChangedHandler = DimensionsChangedEventParams.t => unit;
+type fileDropHandler = fileDropEventParams => unit;
 
 type t('a) = {
   ref: option(refCallback('a)),
@@ -118,6 +119,7 @@ type t('a) = {
   onTextEdit: option(textEditHandler),
   onDimensionsChanged: option(dimensionsChangedHandler),
   onBoundingBoxChanged: option(BoundingBox2d.t => unit),
+  onFileDropped: option(fileDropHandler)
 };
 
 let make =
@@ -140,6 +142,7 @@ let make =
       ~onKeyUp=?,
       ~onDimensionsChanged=?,
       ~onBoundingBoxChanged=?,
+      ~onFileDropped=?,
       _unit: unit,
     ) => {
   ref,
@@ -159,4 +162,5 @@ let make =
   onKeyUp,
   onDimensionsChanged,
   onBoundingBoxChanged,
+  onFileDropped
 };
