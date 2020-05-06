@@ -117,7 +117,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
       },
     );
 
-  let _ignore =
+  let _ignore: Window.unsubscribe =
     Window.onFileDropped(
       window,
       f => {
