@@ -368,7 +368,7 @@ class node (()) = {
     | (TextEdit(_), _)
     | (KeyDown(_), _)
     | (KeyUp(_), _) => ()
-    | (FileDropped(e), {onFileDropped: Some(cb)}) => cb(e)
+    | (FileDropped(e), {onFileDropped: Some(cb), _}) => cb(e)
     | (FileDropped(_), _) => ()
     };
   };
