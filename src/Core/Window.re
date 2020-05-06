@@ -84,6 +84,7 @@ type t = {
   onCompositionEdit: Event.t(textEditEvent),
   onCompositionEnd: Event.t(unit),
   onTextInputCommit: Event.t(textInputEvent),
+  onFileDropped: Event.t(fileDropEvent),
 };
 
 module Internal = {
@@ -124,6 +125,7 @@ let onCompositionEnd = w => Event.subscribe(w.onCompositionEnd);
 let onTextInputCommit = w => Event.subscribe(w.onTextInputCommit);
 let onSizeChanged = w => Event.subscribe(w.onSizeChanged);
 let onMoved = w => Event.subscribe(w.onMoved);
+let onFileDropped = w => Event.subscribe(w.onFileDropped);
 
 let getUniqueId = (w: t) => w.uniqueId;
 
@@ -372,6 +374,15 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
 
   | Sdl2.Event.WindowFocusGained(_) => Event.dispatch(v.onFocusGained, ())
   | Sdl2.Event.WindowFocusLost(_) => Event.dispatch(v.onFocusLost, ())
+  | Sdl2.Event.DropFile({x, y, file, _}) =>
+    Event.dispatch(
+      v.onFileDropped,
+      {
+        mouseX: float_of_int(x),
+        mouseY: float_of_int(y),
+        path: Option.value(file, ~default=""),
+      },
+    )
   | Sdl2.Event.Quit => ()
   | _ => ()
   };
@@ -532,6 +543,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onCompositionEdit: Event.create(),
     onCompositionEnd: Event.create(),
     onTextInputCommit: Event.create(),
+    onFileDropped: Event.create(),
 
     titlebarStyle: options.titlebarStyle,
   };

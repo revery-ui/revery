@@ -24,7 +24,7 @@ depexts: [
   ["pkgconfig"] {os-distribution = "mageia"}
   ["pkgconfig"] {os-distribution = "rhel"}
   ["pkgconfig"] {os-distribution = "ol"}
-  ["pkgconfig"] {os-distribution = "alpine"}
+  ["pkgconf"] {os-distribution = "alpine"}
   ["pkgconfig"] {os-distribution = "nixos"}
   ["devel/pkgconf"] {os = "openbsd"}
   ["pkg-config"] {os = "macos" & os-distribution = "homebrew"}

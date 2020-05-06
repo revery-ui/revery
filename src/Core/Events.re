@@ -38,3 +38,12 @@ type internalMouseEvents =
   | InternalMouseLeave(mouseMoveEvent)
   | InternalMouseOver(mouseMoveEvent)
   | InternalMouseOut(mouseMoveEvent);
+
+type fileDropEvent = {
+  mouseX: float,
+  mouseY: float,
+  path: string,
+};
+
+type internalFileDropEvents =
+  | InternalFileDropped(fileDropEvent);

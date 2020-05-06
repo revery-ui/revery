@@ -61,6 +61,13 @@ module DimensionsChangedEventParams = {
 };
 
 [@deriving show({with_path: false})]
+type fileDropEventParams = {
+  mouseX: float,
+  mouseY: float,
+  path: string,
+};
+
+[@deriving show({with_path: false})]
 type event =
   | MouseDown(mouseButtonEventParams)
   | MouseMove(mouseMoveEventParams)
@@ -75,6 +82,7 @@ type event =
   | MouseLeave(mouseMoveEventParams)
   | MouseOver(mouseMoveEventParams)
   | MouseOut(mouseMoveEventParams)
+  | FileDropped(fileDropEventParams)
   | Blur
   | Focus;
 

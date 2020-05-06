@@ -1,5 +1,5 @@
 {
-  "checksum": "1a70fd28be5778ae04efcc069b3473e5",
+  "checksum": "e19782dc2e732b0ea10a5dc36d24d690",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -43,7 +43,7 @@
         ]
       },
       "overrides": [],
-      "dependencies": [ "qs@6.9.3@d41d8cd9" ],
+      "dependencies": [ "qs@6.9.4@d41d8cd9" ],
       "devDependencies": []
     },
     "secure-compare@3.0.1@d41d8cd9": {
@@ -88,7 +88,7 @@
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:revery-ui/reason-skia#6b459c7@d41d8cd9",
-        "reason-sdl2@2.10.3026@d41d8cd9",
+        "reason-sdl2@github:revery-ui/reason-sdl2#737721d@d41d8cd9",
         "reason-harfbuzz@1.91.8001@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "http-server@0.12.3@d41d8cd9",
         "flex@1.2.3@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
@@ -207,7 +207,8 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3026@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9",
+        "reason-sdl2@github:revery-ui/reason-sdl2#737721d@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
         "esy-sdl2@2.0.10006@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
@@ -217,15 +218,13 @@
       ],
       "devDependencies": [ "@opam/dune@opam:2.5.1@a0c1e658" ]
     },
-    "reason-sdl2@2.10.3026@d41d8cd9": {
-      "id": "reason-sdl2@2.10.3026@d41d8cd9",
+    "reason-sdl2@github:revery-ui/reason-sdl2#737721d@d41d8cd9": {
+      "id": "reason-sdl2@github:revery-ui/reason-sdl2#737721d@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "2.10.3026",
+      "version": "github:revery-ui/reason-sdl2#737721d",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3026.tgz#sha1:002d316516afa7655754bf159e3334c1e974e398"
-        ]
+        "source": [ "github:revery-ui/reason-sdl2#737721d" ]
       },
       "overrides": [],
       "dependencies": [
@@ -287,14 +286,14 @@
       ],
       "devDependencies": []
     },
-    "qs@6.9.3@d41d8cd9": {
-      "id": "qs@6.9.3@d41d8cd9",
+    "qs@6.9.4@d41d8cd9": {
+      "id": "qs@6.9.4@d41d8cd9",
       "name": "qs",
-      "version": "6.9.3",
+      "version": "6.9.4",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/qs/-/qs-6.9.3.tgz#sha1:bfadcd296c2d549f1dffa560619132c977f5008e"
+          "archive:https://registry.npmjs.org/qs/-/qs-6.9.4.tgz#sha1:9090b290d1f91728d3c22e54843ca44aea5ab687"
         ]
       },
       "overrides": [],
@@ -2313,7 +2312,7 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/integers@opam:0.4.0@f7acfaeb",
-        "@opam/conf-pkg-config@opam:1.1@55d8e330",
+        "@opam/conf-pkg-config@opam:1.1@ff4322c1",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -2349,8 +2348,8 @@
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
-    "@opam/conf-pkg-config@opam:1.1@55d8e330": {
-      "id": "@opam/conf-pkg-config@opam:1.1@55d8e330",
+    "@opam/conf-pkg-config@opam:1.1@ff4322c1": {
+      "id": "@opam/conf-pkg-config@opam:1.1@ff4322c1",
       "name": "@opam/conf-pkg-config",
       "version": "opam:1.1",
       "source": {

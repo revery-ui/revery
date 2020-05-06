@@ -54,7 +54,8 @@
     "@glennsl/timber": "1.0.0"
   },
   "resolutions": {
-    "@opam/conf-pkg-config": "1.1"
+    "@opam/conf-pkg-config": "1.1",
+    "reason-sdl2": "revery-ui/reason-sdl2#737721d"
   },
   "devDependencies": {
     "ocaml": "~4.8",
