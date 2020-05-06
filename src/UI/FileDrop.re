@@ -11,15 +11,10 @@ let internalToExternalEvent = (evt: Events.internalFileDropEvents) =>
     FileDropped({mouseX: evt.mouseX, mouseY: evt.mouseY, path: evt.path})
   };
 
-let getPositionFromFileDropEvent = (evt: Events.internalFileDropEvents) =>
+let getPositionFromInternalEvent = (evt: Events.internalFileDropEvents) =>
   switch (evt) {
   | InternalFileDropped({mouseX, mouseY, _}) => (mouseX, mouseY)
   };
-
-let isFileDroppedEv =
-  fun
-  | FileDropped(_) => true
-  | _ => false;
 
 let dispatch = (evt: Events.internalFileDropEvents, node: Node.node) => {
   let eventToSend = internalToExternalEvent(evt);
@@ -32,7 +27,7 @@ let dispatch = (evt: Events.internalFileDropEvents, node: Node.node) => {
   );
 
   if (node#hasRendered()) {
-    let (mouseX, mouseY) = getPositionFromFileDropEvent(evt);
+    let (mouseX, mouseY) = getPositionFromInternalEvent(evt);
 
     let deepestNode = getTopMostNode(node, mouseX, mouseY);
 
