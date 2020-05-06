@@ -145,6 +145,11 @@ let examples = [
     render: _ => NestedClickable.render(),
     source: "NestedClickable.re",
   },
+  {
+    name: "File Drag & Drop",
+    render: _ => FileDragAndDrop.render(),
+    source: "FileDragAndDrop.re",
+  },
 ];
 
 let getExampleByName = name =>
