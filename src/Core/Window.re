@@ -306,15 +306,15 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   switch (sdlEvent) {
   | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
     let wheelEvent: Events.mouseWheelEvent = {
-      deltaX: float_of_int(deltaX),
-      deltaY: float_of_int(deltaY),
+      deltaX: float(deltaX),
+      deltaY: float(deltaY),
     };
     Event.dispatch(v.onMouseWheel, wheelEvent);
 
   | Sdl2.Event.MouseMotion({x, y, _}) =>
     let mouseEvent: Events.mouseMoveEvent = {
-      mouseX: float_of_int(x),
-      mouseY: float_of_int(y),
+      mouseX: float(x),
+      mouseY: float(y),
     };
     Event.dispatch(v.onMouseMove, mouseEvent);
 
