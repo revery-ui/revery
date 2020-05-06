@@ -119,7 +119,7 @@ type t('a) = {
   onTextEdit: option(textEditHandler),
   onDimensionsChanged: option(dimensionsChangedHandler),
   onBoundingBoxChanged: option(BoundingBox2d.t => unit),
-  onFileDropped: option(fileDropHandler)
+  onFileDropped: option(fileDropHandler),
 };
 
 let make =
@@ -162,5 +162,5 @@ let make =
   onKeyUp,
   onDimensionsChanged,
   onBoundingBoxChanged,
-  onFileDropped
+  onFileDropped,
 };
