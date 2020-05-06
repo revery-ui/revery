@@ -1,5 +1,5 @@
 {
-  "checksum": "ec5362a7a14e6eeec6d9f9ebf81b8eac",
+  "checksum": "c5a9acfd0e1f22a6a09cb39aa7b5e52d",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -43,7 +43,7 @@
         ]
       },
       "overrides": [],
-      "dependencies": [ "qs@6.9.3@d41d8cd9" ],
+      "dependencies": [ "qs@6.9.4@d41d8cd9" ],
       "devDependencies": []
     },
     "secure-compare@3.0.1@d41d8cd9": {
@@ -290,14 +290,14 @@
       ],
       "devDependencies": []
     },
-    "qs@6.9.3@d41d8cd9": {
-      "id": "qs@6.9.3@d41d8cd9",
+    "qs@6.9.4@d41d8cd9": {
+      "id": "qs@6.9.4@d41d8cd9",
       "name": "qs",
-      "version": "6.9.3",
+      "version": "6.9.4",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/qs/-/qs-6.9.3.tgz#sha1:bfadcd296c2d549f1dffa560619132c977f5008e"
+          "archive:https://registry.npmjs.org/qs/-/qs-6.9.4.tgz#sha1:9090b290d1f91728d3c22e54843ca44aea5ab687"
         ]
       },
       "overrides": [],
@@ -2413,7 +2413,7 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/integers@opam:0.4.0@f7acfaeb",
-        "@opam/conf-pkg-config@opam:1.1@55d8e330",
+        "@opam/conf-pkg-config@opam:1.2@5cd99130",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -2449,23 +2449,23 @@
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
-    "@opam/conf-pkg-config@opam:1.1@55d8e330": {
-      "id": "@opam/conf-pkg-config@opam:1.1@55d8e330",
+    "@opam/conf-pkg-config@opam:1.2@5cd99130": {
+      "id": "@opam/conf-pkg-config@opam:1.2@5cd99130",
       "name": "@opam/conf-pkg-config",
-      "version": "opam:1.1",
+      "version": "opam:1.2",
       "source": {
         "type": "install",
         "source": [ "no-source:" ],
         "opam": {
           "name": "conf-pkg-config",
-          "version": "1.1",
-          "path": "js.esy.lock/opam/conf-pkg-config.1.1"
+          "version": "1.2",
+          "path": "js.esy.lock/opam/conf-pkg-config.1.2"
         }
       },
       "overrides": [
         {
           "opamoverride":
-            "js.esy.lock/overrides/opam__s__conf_pkg_config_opam__c__1.1_opam_override"
+            "js.esy.lock/overrides/opam__s__conf_pkg_config_opam__c__1.2_opam_override"
         }
       ],
       "dependencies": [

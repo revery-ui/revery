@@ -20,15 +20,17 @@ depexts: [
   ["pkg-config"] {os-family = "debian"}
   ["pkg-config"] {os-distribution = "arch"}
   ["pkgconfig"] {os-distribution = "fedora"}
-  ["pkgconfig"] {os-distribution = "centos"}
+  ["pkgconfig"] {os-distribution = "centos" & os-version <= "7"}
   ["pkgconfig"] {os-distribution = "mageia"}
-  ["pkgconfig"] {os-distribution = "rhel"}
+  ["pkgconfig"] {os-distribution = "rhel" & os-version <= "7"}
   ["pkgconfig"] {os-distribution = "ol"}
-  ["pkgconfig"] {os-distribution = "alpine"}
+  ["pkgconf"] {os-distribution = "alpine"}
   ["pkgconfig"] {os-distribution = "nixos"}
   ["devel/pkgconf"] {os = "openbsd"}
   ["pkg-config"] {os = "macos" & os-distribution = "homebrew"}
   ["pkgconf"] {os = "freebsd"}
+  ["pkgconf-pkg-config"] {os-distribution = "rhel" & os-version >= "8"}
+  ["pkgconf-pkg-config"] {os-distribution = "centos" & os-version >= "8"}
   ["pkg-config"] {os-distribution = "cygwinports"}
 ]
 synopsis: "Virtual package relying on pkg-config installation"
