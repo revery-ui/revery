@@ -382,7 +382,7 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
     if (v.isDropping) {
       dropList := List.append(dropList^, [Option.value(file, ~default="")]);
     } else {
-      Log.error("Received drop file event without preceding drop begin");
+      Log.warn("Received drop file event without preceding drop begin");
     }
   | Sdl2.Event.DropComplete({x, y, _}) =>
     if (v.isDropping && List.length(dropList^) > 0) {
@@ -393,16 +393,8 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
       );
       dropList := [];
     } else {
-      Log.error("Received drop complete event without preceding drop events");
+      Log.warn("Received drop complete event without preceding drop events");
     }
-  /* Event.dispatch(
-       v.onFileDropped,
-       {
-         mouseX: float_of_int(x),
-         mouseY: float_of_int(y),
-         path: Option.value(file, ~default=""),
-       },
-     ) */
   | Sdl2.Event.Quit => ()
   | _ => ()
   };
