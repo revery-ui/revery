@@ -43,6 +43,10 @@ module WindowMetrics = {
   };
 };
 
+type dropState =
+  | Idle
+  | Dropping(list(string));
+
 type t = {
   mutable backgroundColor: Color.t,
   sdlWindow: Sdl2.Window.t,
@@ -59,7 +63,7 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
-  mutable isDropping: bool,
+  mutable dropState: dropState,
   titlebarStyle: WindowStyles.titlebar,
   onBeforeRender: Event.t(unit),
   onAfterRender: Event.t(unit),
@@ -377,24 +381,22 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
 
   | Sdl2.Event.WindowFocusGained(_) => Event.dispatch(v.onFocusGained, ())
   | Sdl2.Event.WindowFocusLost(_) => Event.dispatch(v.onFocusLost, ())
-  | Sdl2.Event.DropBegin(_) => v.isDropping = true
+  | Sdl2.Event.DropBegin(_) => v.dropState = Dropping([])
   | Sdl2.Event.DropFile({file, _}) =>
-    if (v.isDropping) {
-      dropList := List.append(dropList^, [Option.value(file, ~default="")]);
-    } else {
-      Log.warn("Received drop file event without preceding drop begin");
+    switch (v.dropState) {
+      | Dropping(list) => v.dropState = Dropping([Option.get(file), ...list])
+      | Idle => Log.warn("Received drop file event without preceding drop begin")
     }
   | Sdl2.Event.DropComplete({x, y, _}) =>
-    if (v.isDropping && dropList^ == []) {
-      v.isDropping = false;
+    switch (v.dropState) {
+    | Idle | Dropping([]) => Log.warn("Received drop complete event without preceding drop events");
+    | Dropping(list) =>
+      v.dropState = Idle;
       Event.dispatch(
         v.onFileDropped,
-        {mouseX: float(x), mouseY: float(y), paths: dropList^},
-      );
-      dropList := [];
-    } else {
-      Log.warn("Received drop complete event without preceding drop events");
-    }
+        {mouseX: float(x), mouseY: float(y), paths: List.rev(list)}
+      )
+    };
   | Sdl2.Event.Quit => ()
   | _ => ()
   };
@@ -523,7 +525,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     requestedHeight: None,
 
     isComposingText: false,
-    isDropping: false,
+    dropState: Idle,
 
     forceScaleFactor: options.forceScaleFactor,
 
