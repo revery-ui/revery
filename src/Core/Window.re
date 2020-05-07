@@ -43,10 +43,6 @@ module WindowMetrics = {
   };
 };
 
-type dropState =
-  | Idle
-  | Dropping(list(string));
-
 type t = {
   mutable backgroundColor: Color.t,
   sdlWindow: Sdl2.Window.t,
@@ -63,7 +59,7 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
-  mutable dropState,
+  mutable dropState: option(list(string)),
   titlebarStyle: WindowStyles.titlebar,
   onBeforeRender: Event.t(unit),
   onAfterRender: Event.t(unit),
@@ -379,20 +375,20 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
 
   | Sdl2.Event.WindowFocusGained(_) => Event.dispatch(v.onFocusGained, ())
   | Sdl2.Event.WindowFocusLost(_) => Event.dispatch(v.onFocusLost, ())
-  | Sdl2.Event.DropBegin(_) => v.dropState = Dropping([])
+  | Sdl2.Event.DropBegin(_) => v.dropState = Some([])
   | Sdl2.Event.DropFile({file, _}) =>
     switch (v.dropState) {
-    | Dropping(list) => v.dropState = Dropping([Option.get(file), ...list])
-    | Idle =>
+    | Some(list) => v.dropState = Some([Option.get(file), ...list])
+    | None =>
       Log.warn("Received drop file event without preceding drop begin")
     }
   | Sdl2.Event.DropComplete({x, y, _}) =>
     switch (v.dropState) {
-    | Idle
-    | Dropping([]) =>
+    | None
+    | Some([]) =>
       Log.warn("Received drop complete event without preceding drop events")
-    | Dropping(list) =>
-      v.dropState = Idle;
+    | Some(list) =>
+      v.dropState = None;
       Event.dispatch(
         v.onFileDropped,
         {mouseX: float(x), mouseY: float(y), paths: List.rev(list)},
@@ -526,7 +522,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     requestedHeight: None,
 
     isComposingText: false,
-    dropState: Idle,
+    dropState: None,
 
     forceScaleFactor: options.forceScaleFactor,
 
