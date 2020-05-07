@@ -99,7 +99,7 @@
         "refmterr@3.3.0@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/lambda-term@opam:3.0.0@50f5dee6",
+        "@opam/lambda-term@opam:3.0.1@161f34f6",
         "@opam/fpath@opam:0.7.2@45477b93", "@opam/dune@opam:2.5.1@a0c1e658",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
@@ -1636,20 +1636,20 @@
       ],
       "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
     },
-    "@opam/lambda-term@opam:3.0.0@50f5dee6": {
-      "id": "@opam/lambda-term@opam:3.0.0@50f5dee6",
+    "@opam/lambda-term@opam:3.0.1@161f34f6": {
+      "id": "@opam/lambda-term@opam:3.0.1@161f34f6",
       "name": "@opam/lambda-term",
-      "version": "opam:3.0.0",
+      "version": "opam:3.0.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/3e/3ee0d8b6cb31f20a07fcbf34990f8a4b#md5:3ee0d8b6cb31f20a07fcbf34990f8a4b",
-          "archive:https://github.com/ocaml-community/lambda-term/archive/3.0.0.tar.gz#md5:3ee0d8b6cb31f20a07fcbf34990f8a4b"
+          "archive:https://opam.ocaml.org/cache/md5/a5/a5537057f8830783e9b17a7d40f4e644#md5:a5537057f8830783e9b17a7d40f4e644",
+          "archive:https://github.com/ocaml-community/lambda-term/archive/3.0.1.tar.gz#md5:a5537057f8830783e9b17a7d40f4e644"
         ],
         "opam": {
           "name": "lambda-term",
-          "version": "3.0.0",
-          "path": "esy.lock/opam/lambda-term.3.0.0"
+          "version": "3.0.1",
+          "path": "esy.lock/opam/lambda-term.3.0.1"
         }
       },
       "overrides": [],

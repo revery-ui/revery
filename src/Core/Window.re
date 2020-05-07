@@ -59,6 +59,7 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
+  mutable isDropping: bool,
   titlebarStyle: WindowStyles.titlebar,
   onBeforeRender: Event.t(unit),
   onAfterRender: Event.t(unit),
@@ -126,6 +127,8 @@ let onTextInputCommit = w => Event.subscribe(w.onTextInputCommit);
 let onSizeChanged = w => Event.subscribe(w.onSizeChanged);
 let onMoved = w => Event.subscribe(w.onMoved);
 let onFileDropped = w => Event.subscribe(w.onFileDropped);
+
+let dropList : ref(list(string)) = ref([]);
 
 let getUniqueId = (w: t) => w.uniqueId;
 
@@ -374,15 +377,37 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
 
   | Sdl2.Event.WindowFocusGained(_) => Event.dispatch(v.onFocusGained, ())
   | Sdl2.Event.WindowFocusLost(_) => Event.dispatch(v.onFocusLost, ())
-  | Sdl2.Event.DropFile({x, y, file, _}) =>
-    Event.dispatch(
+  | Sdl2.Event.DropBegin(_) =>
+  v.isDropping = true;
+  | Sdl2.Event.DropFile({file, _}) =>
+    if (v.isDropping) {
+      dropList := List.append(dropList^, [Option.value(file, ~default="")])
+    } else {
+      Log.error("Received drop file event without preceding drop begin")
+    }
+  | Sdl2.Event.DropComplete({x, y, _}) =>
+    if (v.isDropping && List.length(dropList^) > 0) {
+      v.isDropping = false;
+      Event.dispatch(
+        v.onFileDropped,
+        {
+          mouseX: float(x),
+          mouseY: float(y),
+          paths: dropList^
+        }
+      )
+      dropList := [];
+    } else {
+      Log.error("Received drop complete event without preceding drop events")
+    }
+    /* Event.dispatch(
       v.onFileDropped,
       {
         mouseX: float_of_int(x),
         mouseY: float_of_int(y),
         path: Option.value(file, ~default=""),
       },
-    )
+    ) */
   | Sdl2.Event.Quit => ()
   | _ => ()
   };
@@ -511,6 +536,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     requestedHeight: None,
 
     isComposingText: false,
+    isDropping: false,
 
     forceScaleFactor: options.forceScaleFactor,
 
