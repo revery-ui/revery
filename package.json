@@ -48,14 +48,13 @@
     "reason-harfbuzz": "^1.91.5007",
     "rench": "^1.9.1",
     "rebez": "jchavarri/rebez#03fa3b7",
-    "reason-sdl2": "^2.10.3026",
+    "reason-sdl2": "^2.10.3027",
     "reason-skia": "revery-ui/reason-skia#6b459c7",
     "revery-text-wrap": "revery-ui/revery-text-wrap#966383e",
     "@glennsl/timber": "1.0.0"
   },
   "resolutions": {
-    "@opam/conf-pkg-config": "1.1",
-    "reason-sdl2": "revery-ui/reason-sdl2#737721d"
+    "@opam/conf-pkg-config": "1.1"
   },
   "devDependencies": {
     "ocaml": "~4.8",

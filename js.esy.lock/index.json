@@ -1,5 +1,5 @@
 {
-  "checksum": "886fb678c913f83c3ae9280217bcfe81",
+  "checksum": "c3082622ed539168a4e8aab7fe4255b6",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -88,7 +88,7 @@
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:revery-ui/reason-skia#6b459c7@d41d8cd9",
-        "reason-sdl2@github:revery-ui/reason-sdl2#737721d@d41d8cd9",
+        "reason-sdl2@2.10.3027@d41d8cd9",
         "reason-harfbuzz@1.91.8001@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "http-server@0.12.3@d41d8cd9",
         "flex@1.2.3@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
@@ -159,7 +159,7 @@
         "refmterr@3.3.0@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/lambda-term@opam:3.0.0@50f5dee6",
+        "@opam/lambda-term@opam:3.0.1@161f34f6",
         "@opam/fpath@opam:0.7.2@45477b93", "@opam/dune@opam:2.5.1@a0c1e658",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
@@ -210,8 +210,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9",
-        "reason-sdl2@github:revery-ui/reason-sdl2#737721d@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3027@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
         "esy-sdl2@2.0.10006@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
@@ -221,13 +220,15 @@
       ],
       "devDependencies": [ "@opam/dune@opam:2.5.1@a0c1e658" ]
     },
-    "reason-sdl2@github:revery-ui/reason-sdl2#737721d@d41d8cd9": {
-      "id": "reason-sdl2@github:revery-ui/reason-sdl2#737721d@d41d8cd9",
+    "reason-sdl2@2.10.3027@d41d8cd9": {
+      "id": "reason-sdl2@2.10.3027@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "github:revery-ui/reason-sdl2#737721d",
+      "version": "2.10.3027",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-sdl2#737721d" ]
+        "source": [
+          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3027.tgz#sha1:0ac84d96dcee568897aab75a12dcdc9a7e36f2e3"
+        ]
       },
       "overrides": [],
       "dependencies": [
@@ -1982,20 +1983,20 @@
       ],
       "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
     },
-    "@opam/lambda-term@opam:3.0.0@50f5dee6": {
-      "id": "@opam/lambda-term@opam:3.0.0@50f5dee6",
+    "@opam/lambda-term@opam:3.0.1@161f34f6": {
+      "id": "@opam/lambda-term@opam:3.0.1@161f34f6",
       "name": "@opam/lambda-term",
-      "version": "opam:3.0.0",
+      "version": "opam:3.0.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/3e/3ee0d8b6cb31f20a07fcbf34990f8a4b#md5:3ee0d8b6cb31f20a07fcbf34990f8a4b",
-          "archive:https://github.com/ocaml-community/lambda-term/archive/3.0.0.tar.gz#md5:3ee0d8b6cb31f20a07fcbf34990f8a4b"
+          "archive:https://opam.ocaml.org/cache/md5/a5/a5537057f8830783e9b17a7d40f4e644#md5:a5537057f8830783e9b17a7d40f4e644",
+          "archive:https://github.com/ocaml-community/lambda-term/archive/3.0.1.tar.gz#md5:a5537057f8830783e9b17a7d40f4e644"
         ],
         "opam": {
           "name": "lambda-term",
-          "version": "3.0.0",
-          "path": "js.esy.lock/opam/lambda-term.3.0.0"
+          "version": "3.0.1",
+          "path": "js.esy.lock/opam/lambda-term.3.0.1"
         }
       },
       "overrides": [],
