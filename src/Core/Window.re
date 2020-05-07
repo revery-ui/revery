@@ -63,7 +63,7 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
-  mutable dropState: dropState,
+  mutable dropState,
   titlebarStyle: WindowStyles.titlebar,
   onBeforeRender: Event.t(unit),
   onAfterRender: Event.t(unit),
@@ -384,19 +384,22 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.DropBegin(_) => v.dropState = Dropping([])
   | Sdl2.Event.DropFile({file, _}) =>
     switch (v.dropState) {
-      | Dropping(list) => v.dropState = Dropping([Option.get(file), ...list])
-      | Idle => Log.warn("Received drop file event without preceding drop begin")
+    | Dropping(list) => v.dropState = Dropping([Option.get(file), ...list])
+    | Idle =>
+      Log.warn("Received drop file event without preceding drop begin")
     }
   | Sdl2.Event.DropComplete({x, y, _}) =>
     switch (v.dropState) {
-    | Idle | Dropping([]) => Log.warn("Received drop complete event without preceding drop events");
+    | Idle
+    | Dropping([]) =>
+      Log.warn("Received drop complete event without preceding drop events")
     | Dropping(list) =>
       v.dropState = Idle;
       Event.dispatch(
         v.onFileDropped,
-        {mouseX: float(x), mouseY: float(y), paths: List.rev(list)}
-      )
-    };
+        {mouseX: float(x), mouseY: float(y), paths: List.rev(list)},
+      );
+    }
   | Sdl2.Event.Quit => ()
   | _ => ()
   };
