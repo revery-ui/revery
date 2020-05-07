@@ -132,8 +132,6 @@ let onSizeChanged = w => Event.subscribe(w.onSizeChanged);
 let onMoved = w => Event.subscribe(w.onMoved);
 let onFileDropped = w => Event.subscribe(w.onFileDropped);
 
-let dropList: ref(list(string)) = ref([]);
-
 let getUniqueId = (w: t) => w.uniqueId;
 
 let isDirty = (w: t) =>
