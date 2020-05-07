@@ -385,7 +385,7 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
       Log.warn("Received drop file event without preceding drop begin");
     }
   | Sdl2.Event.DropComplete({x, y, _}) =>
-    if (v.isDropping && List.length(dropList^) > 0) {
+    if (v.isDropping && dropList^ == []) {
       v.isDropping = false;
       Event.dispatch(
         v.onFileDropped,
