@@ -378,7 +378,7 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.DropBegin(_) => v.dropState = Some([])
   | Sdl2.Event.DropFile({file, _}) =>
     switch (v.dropState) {
-    | Some(list) => v.dropState = Some([Option.get(file), ...list])
+    | Some(list) => v.dropState = Some([file, ...list])
     | None =>
       Log.warn("Received drop file event without preceding drop begin")
     }
