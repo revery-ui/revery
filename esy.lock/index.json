@@ -1,5 +1,5 @@
 {
-  "checksum": "612c52caa3bb7655b415dee4d505bb7a",
+  "checksum": "16f5d71462b976e1bd44ac6e4eccd8db",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -1939,7 +1939,7 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/integers@opam:0.4.0@f7acfaeb",
-        "@opam/conf-pkg-config@opam:1.1@ff4322c1",
+        "@opam/conf-pkg-config@opam:1.2@5cd99130",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -1975,23 +1975,23 @@
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
-    "@opam/conf-pkg-config@opam:1.1@ff4322c1": {
-      "id": "@opam/conf-pkg-config@opam:1.1@ff4322c1",
+    "@opam/conf-pkg-config@opam:1.2@5cd99130": {
+      "id": "@opam/conf-pkg-config@opam:1.2@5cd99130",
       "name": "@opam/conf-pkg-config",
-      "version": "opam:1.1",
+      "version": "opam:1.2",
       "source": {
         "type": "install",
         "source": [ "no-source:" ],
         "opam": {
           "name": "conf-pkg-config",
-          "version": "1.1",
-          "path": "esy.lock/opam/conf-pkg-config.1.1"
+          "version": "1.2",
+          "path": "esy.lock/opam/conf-pkg-config.1.2"
         }
       },
       "overrides": [
         {
           "opamoverride":
-            "esy.lock/overrides/opam__s__conf_pkg_config_opam__c__1.1_opam_override"
+            "esy.lock/overrides/opam__s__conf_pkg_config_opam__c__1.2_opam_override"
         }
       ],
       "dependencies": [
