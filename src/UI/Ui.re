@@ -126,7 +126,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
           Revery_Core.Events.InternalFileDropped({
             mouseX: f.mouseX,
             mouseY: f.mouseY,
-            path: f.path,
+            paths: f.paths,
           });
         FileDrop.dispatch(evt, rootNode);
       },

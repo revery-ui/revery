@@ -30,12 +30,15 @@ module Styles = {
     ];
 };
 
+let filesToText = files =>
+  List.map(file => <Text text=file style=Styles.text />, files);
+
 let%component dnd = () => {
-  let%hook (text, setText) = Hooks.state("Nothing dropped yet!");
+  let%hook (files: list(string), setFiles) = Hooks.state([]);
 
   <View style=Styles.outer>
-    <Text style=Styles.text text />
-    <View style=Styles.droppable onFileDropped={e => setText(_ => e.path)}>
+    {React.listToElement(filesToText(files))}
+    <View style=Styles.droppable onFileDropped={e => setFiles(_ => e.paths)}>
       <Text style=Styles.text text="Drop here!" />
     </View>
   </View>;

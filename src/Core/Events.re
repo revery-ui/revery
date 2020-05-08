@@ -42,7 +42,7 @@ type internalMouseEvents =
 type fileDropEvent = {
   mouseX: float,
   mouseY: float,
-  path: string,
+  paths: list(string),
 };
 
 type internalFileDropEvents =

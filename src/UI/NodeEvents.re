@@ -64,7 +64,7 @@ module DimensionsChangedEventParams = {
 type fileDropEventParams = {
   mouseX: float,
   mouseY: float,
-  path: string,
+  paths: list(string),
 };
 
 [@deriving show({with_path: false})]

@@ -220,7 +220,9 @@ let start = init => {
       | None => ()
       | Some(win) => _tryToClose(appInstance, win)
       };
+    | Sdl2.Event.DropBegin({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.DropFile({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.DropComplete({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.Quit =>
       // Sometimes, on Mac, we could get a 'quit' without a
       // corresponding WindowClosed event - this can happen
