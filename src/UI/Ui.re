@@ -27,9 +27,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
   let forceLayout = ref(true);
   let latestElement = ref(element);
 
-  let onStale = () => {
-    uiDirty := true;
-  };
+  let onStale = () => uiDirty := true;
 
   let _ignore = Revery_Core.Event.subscribe(React.onStale, onStale);
 
@@ -38,7 +36,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
   let container = Container.create(rootNode);
   let ui = RenderContainer.create(window, rootNode, container, mouseCursor);
 
-  let _ignore = Window.onExposed(window, () => {uiDirty := true});
+  let _ignore = Window.onExposed(window, () => uiDirty := true);
 
   let _ignore =
     Window.onMouseMove(
@@ -119,10 +117,25 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
       },
     );
 
+  let _ignore: Window.unsubscribe =
+    Window.onFileDropped(
+      window,
+      f => {
+        Log.trace("File dropped");
+        let evt =
+          Revery_Core.Events.InternalFileDropped({
+            mouseX: f.mouseX,
+            mouseY: f.mouseY,
+            paths: f.paths,
+          });
+        FileDrop.dispatch(evt, rootNode);
+      },
+    );
+
   let _ignore =
-    Revery_Core.Event.subscribe(Mouse.onCursorChanged, cursor => {
+    Revery_Core.Event.subscribe(Mouse.onCursorChanged, cursor =>
       Revery_Core.MouseCursors.setCursor(cursor)
-    });
+    );
 
   let _ignore =
     Revery_Core.Event.subscribe(

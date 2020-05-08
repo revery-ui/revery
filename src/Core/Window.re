@@ -59,6 +59,7 @@ type t = {
   mutable requestedHeight: option(int),
   // True if composition (IME) is active
   mutable isComposingText: bool,
+  mutable dropState: option(list(string)),
   titlebarStyle: WindowStyles.titlebar,
   onBeforeRender: Event.t(unit),
   onAfterRender: Event.t(unit),
@@ -84,6 +85,7 @@ type t = {
   onCompositionEdit: Event.t(textEditEvent),
   onCompositionEnd: Event.t(unit),
   onTextInputCommit: Event.t(textInputEvent),
+  onFileDropped: Event.t(fileDropEvent),
 };
 
 module Internal = {
@@ -124,6 +126,7 @@ let onCompositionEnd = w => Event.subscribe(w.onCompositionEnd);
 let onTextInputCommit = w => Event.subscribe(w.onTextInputCommit);
 let onSizeChanged = w => Event.subscribe(w.onSizeChanged);
 let onMoved = w => Event.subscribe(w.onMoved);
+let onFileDropped = w => Event.subscribe(w.onFileDropped);
 
 let getUniqueId = (w: t) => w.uniqueId;
 
@@ -304,15 +307,15 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   switch (sdlEvent) {
   | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
     let wheelEvent: Events.mouseWheelEvent = {
-      deltaX: float_of_int(deltaX),
-      deltaY: float_of_int(deltaY),
+      deltaX: float(deltaX),
+      deltaY: float(deltaY),
     };
     Event.dispatch(v.onMouseWheel, wheelEvent);
 
   | Sdl2.Event.MouseMotion({x, y, _}) =>
     let mouseEvent: Events.mouseMoveEvent = {
-      mouseX: float_of_int(x),
-      mouseY: float_of_int(y),
+      mouseX: float(x),
+      mouseY: float(y),
     };
     Event.dispatch(v.onMouseMove, mouseEvent);
 
@@ -372,6 +375,25 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
 
   | Sdl2.Event.WindowFocusGained(_) => Event.dispatch(v.onFocusGained, ())
   | Sdl2.Event.WindowFocusLost(_) => Event.dispatch(v.onFocusLost, ())
+  | Sdl2.Event.DropBegin(_) => v.dropState = Some([])
+  | Sdl2.Event.DropFile({file, _}) =>
+    switch (v.dropState) {
+    | Some(list) => v.dropState = Some([file, ...list])
+    | None =>
+      Log.warn("Received drop file event without preceding drop begin")
+    }
+  | Sdl2.Event.DropComplete({x, y, _}) =>
+    switch (v.dropState) {
+    | None
+    | Some([]) =>
+      Log.warn("Received drop complete event without preceding drop events")
+    | Some(list) =>
+      v.dropState = None;
+      Event.dispatch(
+        v.onFileDropped,
+        {mouseX: float(x), mouseY: float(y), paths: List.rev(list)},
+      );
+    }
   | Sdl2.Event.Quit => ()
   | _ => ()
   };
@@ -500,6 +522,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     requestedHeight: None,
 
     isComposingText: false,
+    dropState: None,
 
     forceScaleFactor: options.forceScaleFactor,
 
@@ -532,6 +555,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onCompositionEdit: Event.create(),
     onCompositionEnd: Event.create(),
     onTextInputCommit: Event.create(),
+    onFileDropped: Event.create(),
 
     titlebarStyle: options.titlebarStyle,
   };
