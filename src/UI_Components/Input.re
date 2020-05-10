@@ -313,6 +313,10 @@ let%component make =
     onKeyDown(event);
 
     let code = event.keycode;
+    let mac = Environment.os === Mac;
+    let super = Sdl2.Keymod.isGuiDown(event.keymod);
+    let ctrl = Sdl2.Keymod.isControlDown(event.keymod);
+
     if (code == Keycode.left) {
       let cursorPosition = getSafeStringBounds(value, cursorPosition, -1);
       update(value, cursorPosition);
@@ -330,10 +334,7 @@ let%component make =
     } else if (code == Keycode.escape) {
       Focus.loseFocus();
     } else if (code == Keycode.v) {
-      if (Environment.os === Mac
-          && Sdl2.Keymod.isGuiDown(event.keymod)
-          || Environment.os !== Mac
-          && Sdl2.Keymod.isControlDown(event.keymod)) {
+      if (mac && super || !mac && ctrl) {
         paste(value, cursorPosition);
       };
     };
