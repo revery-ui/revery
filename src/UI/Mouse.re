@@ -173,6 +173,7 @@ let noop0 = () => ();
 let noop1 = _ => ();
 
 let releaseCapture = () => {
+  ignore(Sdl2.Mouse.capture(false): int);
   capturedEventStateInstance := None;
 };
 
@@ -189,8 +190,7 @@ let setCapture =
       ~onMouseLeaveWindow=noop0,
       (),
     ) => {
-  // If there was a previous capture - release
-  releaseCapture();
+  ignore(Sdl2.Mouse.capture(true): int);
 
   capturedEventStateInstance :=
     Some({
