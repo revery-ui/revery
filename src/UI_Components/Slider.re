@@ -41,9 +41,9 @@ let%component make =
   let%hook (sliderBoundingBox, setSliderBoundingBox) =
     Hooks.state(defaultBoundingBox);
   let%hook (uncontrolledValue, setUncontrolledValue) =
-    Hooks.state(initialValue);
+    Hooks.reducer((value, _) => value, ~initialState=initialValue);
 
-  let v =
+  let value =
     switch (value) {
     | Some(controlledValue) => controlledValue
     | None => uncontrolledValue
@@ -58,7 +58,7 @@ let%component make =
     sliderWidth -. thumbWidth;
   };
 
-  let sliderUpdate = (w, startPosition, endPosition, mouseX, mouseY) => {
+  let sliderUpdate = (width, startPosition, endPosition, mouseX, mouseY) => {
     let mousePosition = vertical ? mouseY : mouseX;
     let thumbPosition =
       clamp(
@@ -69,65 +69,45 @@ let%component make =
       -. startPosition;
 
     let normalizedValue =
-      thumbPosition /. w *. (maximumValue -. minimumValue) +. minimumValue;
-    setUncontrolledValue(_ => normalizedValue);
+      thumbPosition /. width *. (maximumValue -. minimumValue) +. minimumValue;
+    setUncontrolledValue(normalizedValue);
     onValueChanged(normalizedValue);
   };
 
   let sliderComplete = () => {
     isActive := false;
-    // Force a re-render of the UI, since setting the ref
-    // won't be enough to do that.
-    setUncontrolledValue(v => v);
+    Mouse.releaseCapture();
   };
 
   let%hook () =
-    Hooks.effect(
-      Always,
-      () => {
-        let isCaptured = isActive^;
-
-        if (isCaptured) {
-          let (x0, y0, _x1, _y1) =
-            BoundingBox2d.getBounds(sliderBoundingBox);
-          let startPosition = vertical ? y0 : x0;
-          let endPosition = startPosition +. availableWidth;
-
-          Mouse.setCapture(
-            ~onMouseMove=
-              evt =>
-                sliderUpdate(
-                  availableWidth,
-                  startPosition,
-                  endPosition,
-                  evt.mouseX,
-                  evt.mouseY,
-                ),
-            ~onMouseUp=_evt => sliderComplete(),
-            (),
-          );
-        };
-
-        Some(
-          () =>
-            if (isCaptured) {
-              Mouse.releaseCapture();
-            },
-        );
-      },
-    );
+    Hooks.effect(OnMount, () => {
+      Some(
+        () =>
+          if (isActive^) {
+            sliderComplete();
+          },
+      )
+    });
 
   let onMouseDown = (evt: NodeEvents.mouseButtonEventParams) => {
     let (x0, y0, _, _) = BoundingBox2d.getBounds(sliderBoundingBox);
     let startPosition = vertical ? y0 : x0;
     let endPosition = startPosition +. availableWidth;
     isActive := true;
-    sliderUpdate(
-      availableWidth,
-      startPosition,
-      endPosition,
-      evt.mouseX,
-      evt.mouseY,
+
+    Mouse.setCapture(
+      ~captureContext=evt.captureContext,
+      ~onMouseMove=
+        evt =>
+          sliderUpdate(
+            availableWidth,
+            startPosition,
+            endPosition,
+            evt.mouseX,
+            evt.mouseY,
+          ),
+      ~onMouseUp=_evt => sliderComplete(),
+      (),
     );
   };
 
@@ -142,7 +122,9 @@ let%component make =
 
   let thumbPosition =
     int_of_float(
-      (v -. minimumValue) /. (maximumValue -. minimumValue) *. availableWidth,
+      (value -. minimumValue)
+      /. (maximumValue -. minimumValue)
+      *. availableWidth,
     )
     - thumbLength
     / 2;

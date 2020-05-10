@@ -156,6 +156,7 @@ let handleListeners = (event: event) => {
 };
 
 type capturedEventState = {
+  unsubscribe: unit => unit,
   onMouseDown: mouseButtonHandler,
   onMouseMove: mouseMoveHandler,
   onMouseUp: mouseButtonHandler,
@@ -174,11 +175,16 @@ let noop1 = _ => ();
 
 let releaseCapture = () => {
   ignore(Sdl2.Mouse.capture(false): int);
+  switch (capturedEventStateInstance^) {
+  | Some({unsubscribe, _}) => unsubscribe()
+  | None => ()
+  };
   capturedEventStateInstance := None;
 };
 
 let setCapture =
     (
+      ~captureContext as window,
       ~onMouseDown=noop1,
       ~onMouseMove=noop1,
       ~onMouseUp=noop1,
@@ -191,9 +197,11 @@ let setCapture =
       (),
     ) => {
   ignore(Sdl2.Mouse.capture(true): int);
+  let unsubscribe = Window.onFocusLost(window, () => releaseCapture());
 
   capturedEventStateInstance :=
     Some({
+      unsubscribe,
       onMouseDown,
       onMouseMove,
       onMouseUp,
@@ -213,7 +221,6 @@ let notifyEnterWindow = win => {
 let notifyLeaveWindow = win => {
   callHandlers(listenerEventStateInstance.onMouseLeaveWindow^, win);
 
-  // If we're leaving the window, and we're capturing - stop the capture.
   switch (capturedEventStateInstance^) {
   | None => ()
   | Some(ce) => ce.onMouseLeaveWindow()
@@ -278,12 +285,23 @@ let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =
   | InternalMouseOut(_) => Cursor.get(c)
   };
 
-let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
+let internalToExternalEvent =
+    (window, c: Cursor.t, evt: Events.internalMouseEvents) =>
   switch (evt) {
   | InternalMouseDown(evt) =>
-    MouseDown({mouseX: c.x^, mouseY: c.y^, button: evt.button})
+    MouseDown({
+      mouseX: c.x^,
+      mouseY: c.y^,
+      button: evt.button,
+      captureContext: window,
+    })
   | InternalMouseUp(evt) =>
-    MouseUp({mouseX: c.x^, mouseY: c.y^, button: evt.button})
+    MouseUp({
+      mouseX: c.x^,
+      mouseY: c.y^,
+      button: evt.button,
+      captureContext: window,
+    })
   | InternalMouseMove(evt) =>
     MouseMove({mouseX: evt.mouseX, mouseY: evt.mouseY})
   | InternalMouseWheel(evt) =>
@@ -429,8 +447,13 @@ let rec handleMouseEnterDiff = (deepestNode, evtParams, ~newNodes=[], ()) => {
 };
 
 let dispatch =
-    (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node) => {
-  let eventToSend = internalToExternalEvent(cursor, evt);
+    (
+      window,
+      cursor: Cursor.t,
+      evt: Events.internalMouseEvents,
+      node: Node.node,
+    ) => {
+  let eventToSend = internalToExternalEvent(window, cursor, evt);
   Log.tracef(m =>
     m(
       "Dispatching event from node %i: %s",

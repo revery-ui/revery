@@ -5,13 +5,12 @@ open Revery.UI.Components;
 
 module AdjustableLogo = {
   let%component make = () => {
-    let%hook (rotationX, setRotationX) = Hooks.state(0.);
-    let%hook (rotationY, setRotationY) = Hooks.state(0.);
-    let%hook (rotationZ, setRotationZ) = Hooks.state(0.);
-
-    let handleRotationX = x => setRotationX(_ => x);
-    let handleRotationY = y => setRotationY(_ => y);
-    let handleRotationZ = z => setRotationZ(_ => z);
+    let%hook (rotationX, setRotationX) =
+      Hooks.reducer(~initialState=0., (value, _) => value);
+    let%hook (rotationY, setRotationY) =
+      Hooks.reducer(~initialState=0., (value, _) => value);
+    let%hook (rotationZ, setRotationZ) =
+      Hooks.reducer(~initialState=0., (value, _) => value);
 
     let containerStyle =
       Style.[
@@ -82,7 +81,7 @@ module AdjustableLogo = {
           <Text style=textStyle text="Rotation Y: " />
           <Slider
             vertical=true
-            onValueChanged=handleRotationY
+            onValueChanged=setRotationY
             maximumValue=twoPi
           />
           <Text style=textStyle text={"Value: " ++ toDegString(rotationY)} />
@@ -91,7 +90,7 @@ module AdjustableLogo = {
           <View style=sliderContainerStyle>
             <Text style=textStyle text="Rotation X: " />
             <Slider
-              onValueChanged=handleRotationX
+              onValueChanged=setRotationX
               initialValue=twoPi
               maximumValue=twoPi
             />
@@ -102,7 +101,7 @@ module AdjustableLogo = {
           </View>
           <View style=sliderContainerStyle>
             <Text style=textStyle text="Rotation Z: " />
-            <Slider onValueChanged=handleRotationZ maximumValue=twoPi />
+            <Slider onValueChanged=setRotationZ maximumValue=twoPi />
             <Text
               style=textStyle
               text={"Value: " ++ toDegString(rotationZ)}

@@ -48,7 +48,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
             mouseX: m.mouseX /. scaleAndZoomFactor,
             mouseY: m.mouseY /. scaleAndZoomFactor,
           });
-        Mouse.dispatch(mouseCursor, evt, rootNode);
+        Mouse.dispatch(window, mouseCursor, evt, rootNode);
       },
     );
 
@@ -57,7 +57,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
       window,
       m => {
         let evt = Revery_Core.Events.InternalMouseWheel(m);
-        Mouse.dispatch(mouseCursor, evt, rootNode);
+        Mouse.dispatch(window, mouseCursor, evt, rootNode);
       },
     );
 
@@ -84,7 +84,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
       window,
       m => {
         let evt = Revery_Core.Events.InternalMouseDown({button: m.button});
-        Mouse.dispatch(mouseCursor, evt, rootNode);
+        Mouse.dispatch(window, mouseCursor, evt, rootNode);
       },
     );
 
@@ -113,7 +113,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
       window,
       m => {
         let evt = Revery_Core.Events.InternalMouseUp({button: m.button});
-        Mouse.dispatch(mouseCursor, evt, rootNode);
+        Mouse.dispatch(window, mouseCursor, evt, rootNode);
       },
     );
 

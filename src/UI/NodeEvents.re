@@ -16,6 +16,7 @@ type mouseButtonEventParams = {
   mouseX: float,
   mouseY: float,
   button: MouseButton.t,
+  captureContext: [@opaque] Window.t,
 };
 
 [@deriving show({with_path: false})]
