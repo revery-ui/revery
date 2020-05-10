@@ -307,44 +307,35 @@ let%component make =
   };
 
   let handleKeyDown = (event: NodeEvents.keyEventParams) => {
+    open Key;
+
     resetCursor();
     onKeyDown(event);
 
-    switch (event.keycode) {
-    | v when Key.Keycode.left == v =>
+    let code = event.keycode;
+    if (code == Keycode.left) {
       let cursorPosition = getSafeStringBounds(value, cursorPosition, -1);
       update(value, cursorPosition);
-
-    | v when Key.Keycode.right == v =>
+    } else if (code == Keycode.right) {
       let cursorPosition = getSafeStringBounds(value, cursorPosition, 1);
       update(value, cursorPosition);
-
-    | v when Key.Keycode.delete == v =>
+    } else if (code == Keycode.delete) {
       let (value, cursorPosition) =
         removeCharacterAfter(value, cursorPosition);
       update(value, cursorPosition);
-
-    | v when Key.Keycode.backspace == v =>
+    } else if (code == Keycode.backspace) {
       let (value, cursorPosition) =
         removeCharacterBefore(value, cursorPosition);
       update(value, cursorPosition);
-
-    | v when Key.Keycode.escape == v => Focus.loseFocus()
-
-    | v
-        when
-          118 == v
-          && Environment.os === Mac
-          && Sdl2.Keymod.isGuiDown(event.keymod) =>
-      paste(value, cursorPosition)
-    | v
-        when
-          118 == v
-          && Environment.os !== Mac
-          && Sdl2.Keymod.isControlDown(event.keymod) =>
-      paste(value, cursorPosition)
-
-    | _ => ()
+    } else if (code == Keycode.escape) {
+      Focus.loseFocus();
+    } else if (code == Keycode.v) {
+      if (Environment.os === Mac
+          && Sdl2.Keymod.isGuiDown(event.keymod)
+          || Environment.os !== Mac
+          && Sdl2.Keymod.isControlDown(event.keymod)) {
+        paste(value, cursorPosition);
+      };
     };
   };
 
