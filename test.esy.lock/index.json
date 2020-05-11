@@ -1,5 +1,5 @@
 {
-  "checksum": "e100cc91790630b20e81e83bc7cff099",
+  "checksum": "6c27194fa8996b2325bf2021086dda75",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -46,7 +46,7 @@
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:revery-ui/reason-skia#6b459c7@d41d8cd9",
-        "reason-sdl2@2.10.3028@d41d8cd9",
+        "reason-sdl2@2.10.3030@d41d8cd9",
         "reason-harfbuzz@1.91.8001@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "flex@1.2.3@d41d8cd9",
         "@reason-native/rely@3.2.1@d41d8cd9",
@@ -150,7 +150,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3028@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3030@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
         "esy-sdl2@2.0.10006@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
@@ -160,14 +160,14 @@
       ],
       "devDependencies": [ "@opam/dune@opam:2.5.1@a0c1e658" ]
     },
-    "reason-sdl2@2.10.3028@d41d8cd9": {
-      "id": "reason-sdl2@2.10.3028@d41d8cd9",
+    "reason-sdl2@2.10.3030@d41d8cd9": {
+      "id": "reason-sdl2@2.10.3030@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "2.10.3028",
+      "version": "2.10.3030",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3028.tgz#sha1:a8dcdcc977f95ca42a2140f06a535edf2d7098b3"
+          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3030.tgz#sha1:a268fca497228667d89bfcc85929b9ec255c478d"
         ]
       },
       "overrides": [],
@@ -712,12 +712,12 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
-        "@opam/base@opam:v0.13.1@7d937ed0",
+        "@opam/base@opam:v0.13.2@c3150775",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
-        "@opam/base@opam:v0.13.1@7d937ed0"
+        "@opam/base@opam:v0.13.2@c3150775"
       ]
     },
     "@opam/sexplib0@opam:v0.13.0@3f54c2be": {
@@ -944,7 +944,7 @@
         "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
         "@opam/ocaml-compiler-libs@opam:v0.12.1@5c34eb0d",
-        "@opam/dune@opam:2.5.1@a0c1e658", "@opam/base@opam:v0.13.1@7d937ed0",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@opam/base@opam:v0.13.2@c3150775",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
@@ -952,7 +952,7 @@
         "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
         "@opam/ocaml-compiler-libs@opam:v0.12.1@5c34eb0d",
-        "@opam/dune@opam:2.5.1@a0c1e658", "@opam/base@opam:v0.13.1@7d937ed0"
+        "@opam/dune@opam:2.5.1@a0c1e658", "@opam/base@opam:v0.13.2@c3150775"
       ]
     },
     "@opam/ppxfind@opam:1.4@1e01d2a5": {
@@ -2153,20 +2153,20 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9"
       ]
     },
-    "@opam/base@opam:v0.13.1@7d937ed0": {
-      "id": "@opam/base@opam:v0.13.1@7d937ed0",
+    "@opam/base@opam:v0.13.2@c3150775": {
+      "id": "@opam/base@opam:v0.13.2@c3150775",
       "name": "@opam/base",
-      "version": "opam:v0.13.1",
+      "version": "opam:v0.13.2",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/29/296457416f9a8b75e6edfc3b1140e384#md5:296457416f9a8b75e6edfc3b1140e384",
-          "archive:https://github.com/janestreet/base/archive/v0.13.1.tar.gz#md5:296457416f9a8b75e6edfc3b1140e384"
+          "archive:https://opam.ocaml.org/cache/md5/f4/f43ce18d98fd0879e77ff671e077e607#md5:f43ce18d98fd0879e77ff671e077e607",
+          "archive:https://github.com/janestreet/base/archive/v0.13.2.tar.gz#md5:f43ce18d98fd0879e77ff671e077e607"
         ],
         "opam": {
           "name": "base",
-          "version": "v0.13.1",
-          "path": "test.esy.lock/opam/base.v0.13.1"
+          "version": "v0.13.2",
+          "path": "test.esy.lock/opam/base.v0.13.2"
         }
       },
       "overrides": [],
