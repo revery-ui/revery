@@ -11,9 +11,13 @@ int revery_openItemAtURL_cocoa(const char *url_string) {
     } else {
         NSString *nsEncodedString = [nsString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
         nsURL = [NSURL URLWithString:nsEncodedString];
+        [nsEncodedString release];
     }
 
-    return (int)[[NSWorkspace sharedWorkspace] openURL:nsURL];
+    int success = (int)[[NSWorkspace sharedWorkspace] openURL:nsURL];
+    [nsString release];
+    [nsURL release];
+    return success;
 }
 
 #endif
