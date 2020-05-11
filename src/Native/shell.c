@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include <caml/alloc.h>
 #include <caml/callback.h>
 #include <caml/memory.h>
@@ -25,6 +27,7 @@ CAMLprim value revery_openItemAtURL(value vURL) {
 #else
     fprintf(stderr, "WARNING: %s is not implemented on this platform.", __func__);
     success = 0;
+    UNUSED(url_string);
 #endif
     CAMLreturn(Val_bool(success));
 }
