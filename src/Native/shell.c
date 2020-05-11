@@ -24,8 +24,10 @@ CAMLprim value revery_openItemAtURL(value vURL) {
     int success = 0;
 #ifdef __APPLE__
     success = revery_openItemAtURL_cocoa(url_string);
+#elif __linux__
+    success = revery_openItemAtURL_gtk(url_string);
 #else
-    fprintf(stderr, "WARNING: %s is not implemented on this platform.", __func__);
+    fprintf(stderr, "WARNING: %s is not implemented on this platform.\n", __func__);
     success = 0;
     UNUSED(url_string);
 #endif
