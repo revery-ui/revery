@@ -2,10 +2,11 @@ open Events;
 
 type unsubscribe = unit => unit;
 
-type size = {
-  width: int,
-  height: int,
-};
+type size =
+  Sdl2.Size.t = {
+    width: int,
+    height: int,
+  };
 module Log = (val Log.withNamespace("Revery.Core.Window"));
 
 module WindowMetrics = {
@@ -635,6 +636,8 @@ let show = w => {
 let hide = w => {
   Sdl2.Window.hide(w.sdlWindow);
 };
+
+let getSize = window => Sdl2.Window.getSize(window.sdlWindow);
 
 let getRawSize = (w: t) => {
   let width = w.metrics.size.width;
