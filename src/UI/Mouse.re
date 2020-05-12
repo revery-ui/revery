@@ -10,20 +10,18 @@ module Log = (val Log.withNamespace("Revery.UI.Mouse"));
 module Cursor = {
   /* State needed to track on the cursor */
   type t = {
-    x: ref(float),
-    y: ref(float),
+    mutable x: float,
+    mutable y: float,
   };
 
-  let make = () => {
-    let ret: t = {x: ref(0.), y: ref(0.)};
-    ret;
-  };
+  let make = () =>
+   {x: 0., y: 0.};
 
-  let get = cursor => (cursor.x^, cursor.y^);
+  let get = cursor => (cursor.x, cursor.y);
 
   let set = (~x, ~y, c) => {
-    c.x := x;
-    c.y := y;
+    c.x = x;
+    c.y = y;
   };
 };
 

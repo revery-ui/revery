@@ -9,7 +9,6 @@ module Cursor: {
   let make: unit => t;
 
   let get: t => (float, float);
-
   let set: (~x: float, ~y: float, t) => unit;
 };
 
