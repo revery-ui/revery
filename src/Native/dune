@@ -9,7 +9,7 @@
         dialog dialog_cocoa dialog_win32 dialog_gtk
         notification notification_cocoa
         icon icon_cocoa icon_win32
-        shell shell_cocoa shell_gtk
+        shell shell_cocoa shell_gtk shell_win32
         utilities
         ReveryAppDelegate
         ReveryProgressBar)

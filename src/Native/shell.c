@@ -26,6 +26,8 @@ CAMLprim value revery_openItemAtURL(value vURL) {
     success = revery_openItemAtURL_cocoa(url_string);
 #elif __linux__
     success = revery_openItemAtURL_gtk(url_string);
+#elif WIN32
+    success = revery_openItemAtURL_win32(url_string);
 #else
     fprintf(stderr, "WARNING: %s is not implemented on this platform.\n", __func__);
     success = 0;
