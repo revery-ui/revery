@@ -20,4 +20,5 @@ void revery_setIconProgressIndeterminate_cocoa(void *dt);
 void revery_hideIconProgress_cocoa(void* ip);
 
 /* Open functions */
-int revery_openItemAtURL_cocoa(const char *url_string);
+int revery_openURL_cocoa(const char *url_string);
+int revery_openFile_cocoa(const char *path_string);

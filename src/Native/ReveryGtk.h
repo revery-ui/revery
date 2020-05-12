@@ -4,4 +4,5 @@ char** revery_open_files_gtk(const char* startDir, char* fileTypes[],
                              int canChooseFiles, int canChooseDirectories,
                              int showHidden, const char* buttonText,
                              const char* title);
-int revery_openItemAtURL_gtk(const char *url_string);
+int revery_openURL_gtk(const char *url_string);
+int revery_openFile_gtk(const char *path_string);

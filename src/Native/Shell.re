@@ -1,1 +1,2 @@
-external openItem: string => bool = "revery_openItemAtURL";
+external openURL: string => bool = "revery_openURL";
+external openFile: string => bool = "revery_openFile";

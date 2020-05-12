@@ -21,12 +21,12 @@ module Example = {
 
     <View style=containerStyle>
       <Input
-        placeholder="URL/File to open"
+        placeholder="URL to open"
         onChange={(value, _) => setURL(_ => value)}
         value=url
       />
       <Button
-        onClick={_ => Native.Shell.openItem(url) |> ignore}
+        onClick={_ => Native.Shell.openURL(url) |> ignore}
         title="Open!"
       />
     </View>;
