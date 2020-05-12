@@ -2,7 +2,7 @@
 #include <gtk/gtk.h>
 
 int revery_openURL_gtk(const char *url_string) {
-    return (int)gtk_show_uri_on_window(
+    return (int)gtk_show_uri(
                NULL, // We don't have a parent window (and we don't need one)
                url_string,
                gtk_get_current_event_time(),
