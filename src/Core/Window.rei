@@ -39,6 +39,7 @@ let canQuit: t => bool;
 
 let getDevicePixelRatio: t => float;
 let getFramebufferSize: t => size;
+let getSize: t => size;
 let getRawSize: t => size;
 let getPosition: t => (int, int);
 let getScaleAndZoom: t => float;
