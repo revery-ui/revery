@@ -151,7 +151,7 @@ let examples = [
     source: "FileDragAndDrop.re",
   },
   {
-    name: "Shell: Open URL/File",
+    name: "Shell: Open URL",
     render: _ => URLFileOpen.render(),
     source: "URLFileOpen.re",
   },
