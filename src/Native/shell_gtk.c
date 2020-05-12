@@ -1,13 +1,18 @@
 #ifdef __linux__
 #include <gtk/gtk.h>
 
+/*  gtk_show_uri is technically deprecated, but it has the most support
+ and we aren't attaching to a window or screen */
 int revery_openURL_gtk(const char *url_string) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     return (int)gtk_show_uri(
-               NULL, // We don't have a parent window (and we don't need one)
+               NULL, // We don't have a parent screen (and we don't need one)
                url_string,
                gtk_get_current_event_time(),
                NULL
            );
+#pragma GCC diagnostic pop
 }
 
 int revery_openFile_gtk(const char *path_string) {
