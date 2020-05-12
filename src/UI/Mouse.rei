@@ -12,23 +12,6 @@ module Cursor: {
   let set: (~x: float, ~y: float, t) => unit;
 };
 
-let registerListeners:
-  (
-    ~onMouseDown: mouseButtonHandler=?,
-    ~onMouseMove: mouseMoveHandler=?,
-    ~onMouseUp: mouseButtonHandler=?,
-    ~onMouseWheel: mouseWheelHandler=?,
-    ~onMouseEnter: mouseMoveHandler=?,
-    ~onMouseLeave: mouseMoveHandler=?,
-    ~onMouseOver: mouseMoveHandler=?,
-    ~onMouseOut: mouseMoveHandler=?,
-    ~onMouseEnterWindow: mouseWindowHandler=?,
-    ~onMouseLeaveWindow: mouseWindowHandler=?,
-    unit,
-    unit
-  ) =>
-  unit;
-
 let setCapture:
   (
     ~captureContext: Window.t,
