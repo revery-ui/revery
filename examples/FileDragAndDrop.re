@@ -31,7 +31,15 @@ module Styles = {
 };
 
 let filesToText = files =>
-  List.map(file => <Text text=file style=Styles.text />, files);
+  List.map(
+    file =>
+      <Text
+        onMouseUp={_ => Native.Shell.openFile(file) |> ignore}
+        text=file
+        style=Styles.text
+      />,
+    files,
+  );
 
 let%component dnd = () => {
   let%hook (files: list(string), setFiles) = Hooks.state([]);

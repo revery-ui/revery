@@ -150,6 +150,11 @@ let examples = [
     render: _ => FileDragAndDrop.render(),
     source: "FileDragAndDrop.re",
   },
+  {
+    name: "Shell: Open URL",
+    render: _ => URLFileOpen.render(),
+    source: "URLFileOpen.re",
+  },
 ];
 
 let getExampleByName = name =>
