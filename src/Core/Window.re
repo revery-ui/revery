@@ -29,12 +29,14 @@ module WindowMetrics: {
       /* [scaleFactor] is the ratio between [unscaledSize] and [scaledSize] */
       scaleFactor: float,
       zoom: float,
+      isDirty: bool,
     };
 
   let fromSdlWindow:
     (~forceScaleFactor: float=?, ~zoom: float=?, Sdl2.Window.t) => t;
 
   let setZoom: (float, t) => t;
+  let markDirty: t => t;
 } = {
   [@deriving show({with_path: false})]
   type t = {
@@ -44,6 +46,7 @@ module WindowMetrics: {
     devicePixelRatio: float,
     scaleFactor: float,
     zoom: float,
+    isDirty: bool,
   };
 
   module Internal = {
@@ -128,10 +131,12 @@ module WindowMetrics: {
       scaleFactor,
       devicePixelRatio,
       zoom,
+      isDirty: false,
     };
   };
 
-  let setZoom = (zoom, metrics) => {...metrics, zoom};
+  let setZoom = (zoom, metrics) => {...metrics, zoom, isDirty: true};
+  let markDirty = metrics => {...metrics, isDirty: true};
 };
 
 type t = {
@@ -144,7 +149,6 @@ type t = {
   mutable shouldRender: unit => bool,
   mutable canQuit: unit => bool,
   mutable metrics: WindowMetrics.t,
-  mutable areMetricsDirty: bool,
   mutable isRendering: bool,
   mutable requestedUnscaledSize: option(size),
   // True if composition (IME) is active
@@ -198,7 +202,6 @@ module Internal = {
         ~zoom=w.metrics.zoom,
         w.sdlWindow,
       );
-    w.areMetricsDirty = false;
     Log.trace(
       "updateMetrics - new metrics: " ++ WindowMetrics.show(w.metrics),
     );
@@ -223,7 +226,7 @@ module Internal = {
         Log.trace("setRawSize - calling Sdl2.Window.setSize");
         Sdl2.Window.setSize(win.sdlWindow, adjWidth, adjHeight);
         win.requestedUnscaledSize = None;
-        win.areMetricsDirty = true;
+        win.metrics = WindowMetrics.markDirty(win.metrics);
         Log.tracef(m => {
           let Sdl2.Size.{width, height} = Sdl2.Window.getSize(win.sdlWindow);
           m(
@@ -272,7 +275,7 @@ let onFileDropped = w => Event.subscribe(w.onFileDropped);
 let getUniqueId = (w: t) => w.uniqueId;
 
 let isDirty = (w: t) =>
-  if (w.shouldRender() || w.areMetricsDirty) {
+  if (w.shouldRender() || w.metrics.isDirty) {
     true;
   } else {
     w.requestedUnscaledSize != None;
@@ -296,29 +299,27 @@ let setSize = (~width: int, ~height: int, win: t) => {
   Internal.setRawSize(win, adjWidth, adjHeight);
 };
 
-let setZoom = (w: t, zoom: float) => {
-  w.metrics = WindowMetrics.setZoom(max(zoom, 0.1), w.metrics);
-  w.areMetricsDirty = true;
+let setZoom = (window, zoom) => {
+  window.metrics = WindowMetrics.setZoom(max(zoom, 0.1), window.metrics);
 };
 
-let render = (w: t) => {
-  Internal.resizeIfNecessary(w);
+let render = window => {
+  Internal.resizeIfNecessary(window);
 
-  if (w.areMetricsDirty) {
-    Internal.updateMetrics(w);
-    w.areMetricsDirty = false;
+  if (window.metrics.isDirty) {
+    Internal.updateMetrics(window);
   };
 
-  w.isRendering = true;
+  window.isRendering = true;
 
-  Event.dispatch(w.onBeforeRender, ());
-  w.render();
-  Event.dispatch(w.onAfterRender, ());
+  Event.dispatch(window.onBeforeRender, ());
+  window.render();
+  Event.dispatch(window.onAfterRender, ());
 
-  Event.dispatch(w.onBeforeSwap, ());
-  Performance.bench("swapWindow", () => Sdl2.Gl.swapWindow(w.sdlWindow));
-  Event.dispatch(w.onAfterSwap, ());
-  w.isRendering = false;
+  Event.dispatch(window.onBeforeSwap, ());
+  Performance.bench("swapWindow", () => Sdl2.Gl.swapWindow(window.sdlWindow));
+  Event.dispatch(window.onAfterSwap, ());
+  window.isRendering = false;
 };
 
 let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
@@ -371,14 +372,15 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
     };
     Event.dispatch(v.onTextInputCommit, {text: ti.text});
 
-  | Sdl2.Event.WindowResized(_) => v.areMetricsDirty = true
+  | Sdl2.Event.WindowResized(_) =>
+    v.metrics = WindowMetrics.markDirty(v.metrics)
 
   | Sdl2.Event.WindowSizeChanged({width, height, _}) =>
-    v.areMetricsDirty = true;
+    v.metrics = WindowMetrics.markDirty(v.metrics);
     Event.dispatch(v.onSizeChanged, {width, height});
 
   | Sdl2.Event.WindowMoved({x, y, _}) =>
-    v.areMetricsDirty = true;
+    v.metrics = WindowMetrics.markDirty(v.metrics);
     Event.dispatch(v.onMoved, (x, y));
 
   | Sdl2.Event.WindowEnter(_) => Event.dispatch(v.onMouseEnter, ())
@@ -534,7 +536,6 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     canQuit: () => true,
 
     metrics,
-    areMetricsDirty: false,
     isRendering: false,
     requestedUnscaledSize: None,
 
@@ -642,7 +643,7 @@ let getBackgroundColor = window => window.backgroundColor;
 
 let setPosition = (w: t, x: int, y: int) => {
   Sdl2.Window.setPosition(w.sdlWindow, x, y);
-  w.areMetricsDirty = true;
+  w.metrics = WindowMetrics.markDirty(w.metrics);
 };
 
 let center = (w: t) => {
