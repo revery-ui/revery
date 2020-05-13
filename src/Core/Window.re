@@ -297,12 +297,6 @@ let setSize = (~width: int, ~height: int, win: t) => {
   Internal.setRawSize(win, adjWidth, adjHeight);
 };
 
-let setUnscaledSize = (~width: int, ~height: int, win: t) => {
-  Log.tracef(m => m("setUnscaledSize - calling with: %ux%u", width, height));
-
-  Internal.setRawSize(win, width, height);
-};
-
 let setZoom = (w: t, zoom: float) => {
   w.metrics = {...w.metrics, zoom: max(zoom, 0.1)};
   w.areMetricsDirty = true;
@@ -665,8 +659,6 @@ let hide = w => {
 };
 
 let getSize = ({metrics, _}) => metrics.scaledSize;
-
-let getUnscaledSize = ({metrics, _}) => metrics.unscaledSize;
 
 let getPosition = window => {
   Sdl2.Window.getPosition(window.sdlWindow);
