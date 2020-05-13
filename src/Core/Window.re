@@ -2,6 +2,7 @@ open Events;
 
 type unsubscribe = unit => unit;
 
+[@deriving show({with_path: false})]
 type size =
   Sdl2.Size.t = {
     width: int,
@@ -10,6 +11,10 @@ type size =
 module Log = (val Log.withNamespace("Revery.Core.Window"));
 
 module WindowMetrics: {
+  // This disables all unused value warnings for this module. Unfortunately necessary due to `deriving show`.
+  [@warning "-32"];
+
+  [@deriving show]
   type t =
     pri {
       /* [scaledSize] is the size of the window, in scaled screen coordinates, based on the display settings of the platform */
@@ -30,9 +35,8 @@ module WindowMetrics: {
     (~forceScaleFactor: float=?, ~zoom: float=?, Sdl2.Window.t) => t;
 
   let setZoom: (float, t) => t;
-
-  let toString: t => string;
 } = {
+  [@deriving show({with_path: false})]
   type t = {
     scaledSize: size,
     unscaledSize: size,
@@ -128,21 +132,6 @@ module WindowMetrics: {
   };
 
   let setZoom = (zoom, metrics) => {...metrics, zoom};
-
-  let toString = (v: t) => {
-    Printf.sprintf(
-      "DevicePixelRatio: %f ScaleFactor: %f Zoom: %f Unscaled Window Dimensions: %dx%dpx Scaled Window Dimensions: %dx%dpx Framebuffer: %dx%dpx",
-      v.devicePixelRatio,
-      v.scaleFactor,
-      v.zoom,
-      v.unscaledSize.width,
-      v.unscaledSize.height,
-      v.scaledSize.width,
-      v.scaledSize.height,
-      v.framebufferSize.width,
-      v.framebufferSize.height,
-    );
-  };
 };
 
 type t = {
@@ -211,7 +200,7 @@ module Internal = {
       );
     w.areMetricsDirty = false;
     Log.trace(
-      "updateMetrics - new metrics: " ++ WindowMetrics.toString(w.metrics),
+      "updateMetrics - new metrics: " ++ WindowMetrics.show(w.metrics),
     );
   };
 
@@ -532,7 +521,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
       ~forceScaleFactor=?options.forceScaleFactor,
       sdlWindow,
     );
-  Log.debug("Metrics: " ++ WindowMetrics.toString(metrics));
+  Log.debug("Metrics: " ++ WindowMetrics.show(metrics));
 
   let window = {
     backgroundColor: options.backgroundColor,
