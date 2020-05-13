@@ -8,6 +8,14 @@ type size =
     width: int,
     height: int,
   };
+
+let scaleSize = (~scale: float, size) => {
+  let width = int_of_float(float_of_int(size.width) /. scale);
+  let height = int_of_float(float_of_int(size.height) /. scale);
+
+  {width, height};
+};
+
 module Log = (val Log.withNamespace("Revery.Core.Window"));
 
 module WindowMetrics: {
@@ -110,16 +118,10 @@ module WindowMetrics: {
     let devicePixelRatio =
       float_of_int(framebufferSize.width) /. float_of_int(unscaledSize.width);
 
-    let scaledWidth =
-      int_of_float(float_of_int(unscaledSize.width) /. scaleFactor);
-    let scaledHeight =
-      int_of_float(float_of_int(unscaledSize.height) /. scaleFactor);
+    let scaledSize = unscaledSize |> scaleSize(~scale=scaleFactor);
 
     {
-      scaledSize: {
-        width: scaledWidth,
-        height: scaledHeight,
-      },
+      scaledSize,
       unscaledSize: {
         width: unscaledSize.width,
         height: unscaledSize.height,
@@ -377,7 +379,12 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
 
   | Sdl2.Event.WindowSizeChanged({width, height, _}) =>
     v.metrics = WindowMetrics.markDirty(v.metrics);
-    Event.dispatch(v.onSizeChanged, {width, height});
+
+    // Scale the window size changed event, so that is in the same 'scaled-screen-space' as
+    // other size functions, like [getSize], [setSize], and [create].
+    let unscaledSize = {width, height};
+    let scaledSize = scaleSize(~scale=v.metrics.scaleFactor, unscaledSize);
+    Event.dispatch(v.onSizeChanged, scaledSize);
 
   | Sdl2.Event.WindowMoved({x, y, _}) =>
     v.metrics = WindowMetrics.markDirty(v.metrics);
