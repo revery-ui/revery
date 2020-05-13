@@ -28,14 +28,16 @@ let render =
   );
 
   /* Layout */
-  let size = Window.getUnscaledSize(window);
+  let size = Window.getSize(window);
+
   let pixelRatio = Window.getDevicePixelRatio(window);
   let scaleAndZoomFactor = Window.getScaleAndZoom(window);
   let canvasScalingFactor = pixelRatio *. scaleAndZoomFactor;
+
+  let zoomFactor = Window.getZoom(window);
   let adjustedHeight =
-    float_of_int(size.height) /. scaleAndZoomFactor |> int_of_float;
-  let adjustedWidth =
-    float_of_int(size.width) /. scaleAndZoomFactor |> int_of_float;
+    float_of_int(size.height) /. zoomFactor |> int_of_float;
+  let adjustedWidth = float_of_int(size.width) /. zoomFactor |> int_of_float;
 
   RenderContainer.updateCanvas(window, renderContainer);
 

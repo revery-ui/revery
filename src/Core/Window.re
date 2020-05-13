@@ -11,14 +11,16 @@ module Log = (val Log.withNamespace("Revery.Core.Window"));
 
 module WindowMetrics = {
   type t = {
-    /* Note we separate the _Window_ width / height
-     * and the _framebuffer_ width/height
-     * Some more info here: http://www.glfw.org/docs/latest/window_guide.html
-     */
+    /* [scaledSize] is the size of the window, in scaled screen coordinates, based on the display settings of the platform */
     scaledSize: size,
+    /* [unscaledSize] is the size of the window, in screen coordinates, without display scaling applied */
     unscaledSize: size,
+    /* [framebufferSize] is the actual size in pixels of the framebuffer - the render surface. On high DPI displays, this may be
+       some multiple of the screen sizes described by [scaledSize] and [unscaledSize]. */
     framebufferSize: size,
+    /* [devicePixelRatio] is the ratio of pixels to screen coordinates (ie, [framebufferSize / unscaledSize]) */
     devicePixelRatio: float,
+    /* [scaleFactor] is the ratio between [unscaledSize] and [scaledSize] */
     scaleFactor: float,
     zoom: float,
   };
@@ -68,8 +70,7 @@ type t = {
   mutable metrics: WindowMetrics.t,
   mutable areMetricsDirty: bool,
   mutable isRendering: bool,
-  mutable requestedWidth: option(int),
-  mutable requestedHeight: option(int),
+  mutable requestedUnscaledSize: option(size),
   // True if composition (IME) is active
   mutable isComposingText: bool,
   mutable dropState: option(list(string)),
@@ -217,13 +218,12 @@ module Internal = {
        */
       if (win.isRendering) {
         Log.trace("setRawSize - queuing for next render");
-        win.requestedWidth = Some(adjWidth);
-        win.requestedHeight = Some(adjHeight);
+        win.requestedUnscaledSize =
+          Some({width: adjWidth, height: adjHeight});
       } else {
         Log.trace("setRawSize - calling Sdl2.Window.setSize");
         Sdl2.Window.setSize(win.sdlWindow, adjWidth, adjHeight);
-        win.requestedWidth = None;
-        win.requestedHeight = None;
+        win.requestedUnscaledSize = None;
         win.areMetricsDirty = true;
         Log.tracef(m => {
           let Sdl2.Size.{width, height} = Sdl2.Window.getSize(win.sdlWindow);
@@ -238,9 +238,9 @@ module Internal = {
   };
 
   let resizeIfNecessary = (w: t) =>
-    switch (w.requestedWidth, w.requestedHeight) {
-    | (Some(width), Some(height)) => setRawSize(w, width, height)
-    | _ => ()
+    switch (w.requestedUnscaledSize) {
+    | Some({width, height}) => setRawSize(w, width, height)
+    | None => ()
     };
 };
 
@@ -276,11 +276,7 @@ let isDirty = (w: t) =>
   if (w.shouldRender() || w.areMetricsDirty) {
     true;
   } else {
-    switch (w.requestedWidth, w.requestedHeight) {
-    | (Some(_), _) => true
-    | (_, Some(_)) => true
-    | _ => false
-    };
+    w.requestedUnscaledSize != None;
   };
 
 let getSdlWindow = (w: t) => w.sdlWindow;
@@ -547,8 +543,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     metrics,
     areMetricsDirty: false,
     isRendering: false,
-    requestedWidth: None,
-    requestedHeight: None,
+    requestedUnscaledSize: None,
 
     isComposingText: false,
     dropState: None,

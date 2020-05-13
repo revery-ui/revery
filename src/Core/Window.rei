@@ -43,10 +43,7 @@ let getDevicePixelRatio: t => float;
   [getSize(window)] returns a [size] describing the window dimensions, accounting for display scaling.
 */
 let getSize: t => size;
-/**
-  [getUnscaledSize(window)] is like [getSize], but ignores display scaling.
-*/
-let getUnscaledSize: t => size;
+
 let getFramebufferSize: t => size;
 
 /**
@@ -57,11 +54,6 @@ let getFramebufferSize: t => size;
   the behavior you want. To directly set the size, without considering display scaling, use [setUnscaledSize]
 */
 let setSize: (~width: int, ~height: int, t) => unit;
-
-/**
-  [setUnscaledSize(~width, ~height, window)] sets the window size, without accounting for display scaling.
-*/
-let setUnscaledSize: (~width: int, ~height: int, t) => unit;
 
 let getPosition: t => (int, int);
 let getScaleAndZoom: t => float;
