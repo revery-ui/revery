@@ -34,11 +34,11 @@ type t = {
     */
   y: [ | `Centered | `Absolute(int)],
   /**
-    [width] is the initial horizontal size of the [Window]
+    [width] is the initial horizontal size of the [Window], with display scaling applied.
     */
   width: int,
   /**
-    [height] is the initial vertical size of the [Window]
+    [height] is the initial vertical size of the [Window], with display scaling applied.
   */
   height: int,
   /**

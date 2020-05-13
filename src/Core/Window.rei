@@ -38,9 +38,23 @@ let onFileDropped: (t, fileDropEvent => unit) => unsubscribe;
 let canQuit: t => bool;
 
 let getDevicePixelRatio: t => float;
-let getFramebufferSize: t => size;
+
+/**
+  [getSize(window)] returns a [size] describing the window dimensions, accounting for display scaling.
+*/
 let getSize: t => size;
-let getRawSize: t => size;
+
+let getFramebufferSize: t => size;
+
+/**
+  [setSize(~width, ~height, window)] sets the window size, taking display scaling into account.
+
+  For example, for a Windows display with 200% scaling, [setSize(~width=400, ~height=300, window)],
+  will actually set the window to a height of 800 pixels wide by 600 pixels high. This is usually
+  the behavior you want. To directly set the size, without considering display scaling, use [setUnscaledSize]
+*/
+let setSize: (~width: int, ~height: int, t) => unit;
+
 let getPosition: t => (int, int);
 let getScaleAndZoom: t => float;
 let getSdlWindow: t => Sdl2.Window.t;
@@ -71,6 +85,11 @@ let setVsync: (t, Vsync.t) => unit;
 let render: t => unit;
 let handleEvent: (Sdl2.Event.t, t) => unit;
 
+/**
+  [create(name, options)] creates a new Revery application window.
+
+  See [WindowCreateOptions] for a list of available options.
+*/
 let create: (string, WindowCreateOptions.t) => t;
 
 let takeScreenshot: (t, string) => unit;
