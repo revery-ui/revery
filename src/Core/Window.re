@@ -9,38 +9,125 @@ type size =
   };
 module Log = (val Log.withNamespace("Revery.Core.Window"));
 
-module WindowMetrics = {
+module WindowMetrics: {
+  type t =
+    pri {
+      /* [scaledSize] is the size of the window, in scaled screen coordinates, based on the display settings of the platform */
+      scaledSize: size,
+      /* [unscaledSize] is the size of the window, in screen coordinates, without display scaling applied */
+      unscaledSize: size,
+      /* [framebufferSize] is the actual size in pixels of the framebuffer - the render surface. On high DPI displays, this may be
+         some multiple of the screen sizes described by [scaledSize] and [unscaledSize]. */
+      framebufferSize: size,
+      /* [devicePixelRatio] is the ratio of pixels to screen coordinates (ie, [framebufferSize / unscaledSize]) */
+      devicePixelRatio: float,
+      /* [scaleFactor] is the ratio between [unscaledSize] and [scaledSize] */
+      scaleFactor: float,
+      zoom: float,
+    };
+
+  let fromSdlWindow:
+    (~forceScaleFactor: float=?, ~zoom: float=?, Sdl2.Window.t) => t;
+
+  let setZoom: (float, t) => t;
+
+  let toString: t => string;
+} = {
   type t = {
-    /* [scaledSize] is the size of the window, in scaled screen coordinates, based on the display settings of the platform */
     scaledSize: size,
-    /* [unscaledSize] is the size of the window, in screen coordinates, without display scaling applied */
     unscaledSize: size,
-    /* [framebufferSize] is the actual size in pixels of the framebuffer - the render surface. On high DPI displays, this may be
-       some multiple of the screen sizes described by [scaledSize] and [unscaledSize]. */
     framebufferSize: size,
-    /* [devicePixelRatio] is the ratio of pixels to screen coordinates (ie, [framebufferSize / unscaledSize]) */
     devicePixelRatio: float,
-    /* [scaleFactor] is the ratio between [unscaledSize] and [scaledSize] */
     scaleFactor: float,
     zoom: float,
   };
 
-  let create =
-      (
-        ~unscaledSize,
-        ~scaledSize,
-        ~framebufferSize,
-        ~devicePixelRatio,
-        ~scaleFactor,
-        (),
-      ) => {
-    framebufferSize,
-    scaledSize,
-    unscaledSize,
-    devicePixelRatio,
-    scaleFactor,
-    zoom: 1.0,
+  module Internal = {
+    let getScaleFactor = (~forceScaleFactor=?, sdlWindow) => {
+      switch (forceScaleFactor) {
+      // If a scale factor is forced... prefer that!
+      | Some(v) => v
+      // Otherwise, the way we figure out the scale factor depends on the platform
+      | None =>
+        switch (Environment.os) {
+        // Mac is easy... there isn't any scaling factor.  The window is automatically
+        // proportioned for us. The scaling is handled by the ratio of size / framebufferSize.
+        | Mac => 1.0
+        // On Windows, we need to try a Win32 API to get the scale factor
+        | Windows =>
+          let scale = Sdl2.Window.getWin32ScaleFactor(sdlWindow);
+          Log.tracef(m =>
+            m("_getScaleFactor - from getWin32ScaleFactor: %f", scale)
+          );
+          scale;
+
+        // On Linux, there's a few other things to try:
+        // - First, we'll look for a [GDK_SCALE] environment variable, and prefer that.
+        // - Otherwise, we'll try and infer it from the DPI.
+        | Linux =>
+          switch (Rench.Environment.getEnvironmentVariable("GDK_SCALE")) {
+          | Some(v) =>
+            // TODO
+            Log.trace(
+              "_getScaleFactor - Linux - got GDK_SCALE variable: " ++ v,
+            );
+            switch (Float.of_string_opt(v)) {
+            | Some(v) => v
+            | None => 1.0
+            };
+          | None =>
+            let display = Sdl2.Window.getDisplay(sdlWindow);
+            let dpi = Sdl2.Display.getDPI(display);
+            let avgDpi = (dpi.hdpi +. dpi.vdpi +. dpi.ddpi) /. 3.0;
+            let scaleFactor = max(1.0, floor(avgDpi /. 96.0));
+            Log.tracef(m =>
+              m(
+                "_getScaleFactor - Linux - inferring from DPI: %f",
+                scaleFactor,
+              )
+            );
+            scaleFactor;
+          }
+        | _ => 1.0
+        }
+      };
+    };
   };
+
+  let fromSdlWindow = (~forceScaleFactor=?, ~zoom=1.0, sdlWindow) => {
+    let unscaledSize = Sdl2.Window.getSize(sdlWindow);
+    let framebufferSize = Sdl2.Gl.getDrawableSize(sdlWindow);
+
+    let scaleFactor = Internal.getScaleFactor(~forceScaleFactor?, sdlWindow);
+
+    let devicePixelRatio =
+      float_of_int(framebufferSize.width) /. float_of_int(unscaledSize.width);
+
+    let scaledWidth =
+      int_of_float(float_of_int(unscaledSize.width) /. scaleFactor);
+    let scaledHeight =
+      int_of_float(float_of_int(unscaledSize.height) /. scaleFactor);
+
+    {
+      scaledSize: {
+        width: scaledWidth,
+        height: scaledHeight,
+      },
+      unscaledSize: {
+        width: unscaledSize.width,
+        height: unscaledSize.height,
+      },
+      framebufferSize: {
+        width: framebufferSize.width,
+        height: framebufferSize.height,
+      },
+      scaleFactor,
+      devicePixelRatio,
+      zoom,
+    };
+  };
+
+  let setZoom = (zoom, metrics) => {...metrics, zoom};
 
   let toString = (v: t) => {
     Printf.sprintf(
@@ -115,90 +202,13 @@ module Internal = {
       setTitlebarTransparent(window.sdlWindow);
     };
 
-  let getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
-    switch (forceScaleFactor) {
-    // If a scale factor is forced... prefer that!
-    | Some(v) => v
-    // Otherwise, the way we figure out the scale factor depends on the platform
-    | None =>
-      switch (Environment.os) {
-      // Mac is easy... there isn't any scaling factor.  The window is automatically
-      // proportioned for us. The scaling is handled by the ratio of size / framebufferSize.
-      | Mac => 1.0
-      // On Windows, we need to try a Win32 API to get the scale factor
-      | Windows =>
-        let scale = Sdl2.Window.getWin32ScaleFactor(sdlWindow);
-        Log.tracef(m =>
-          m("_getScaleFactor - from getWin32ScaleFactor: %f", scale)
-        );
-        scale;
-
-      // On Linux, there's a few other things to try:
-      // - First, we'll look for a [GDK_SCALE] environment variable, and prefer that.
-      // - Otherwise, we'll try and infer it from the DPI.
-      | Linux =>
-        switch (Rench.Environment.getEnvironmentVariable("GDK_SCALE")) {
-        | Some(v) =>
-          // TODO
-          Log.trace(
-            "_getScaleFactor - Linux - got GDK_SCALE variable: " ++ v,
-          );
-          switch (Float.of_string_opt(v)) {
-          | Some(v) => v
-          | None => 1.0
-          };
-        | None =>
-          let display = Sdl2.Window.getDisplay(sdlWindow);
-          let dpi = Sdl2.Display.getDPI(display);
-          let avgDpi = (dpi.hdpi +. dpi.vdpi +. dpi.ddpi) /. 3.0;
-          let scaleFactor = max(1.0, floor(avgDpi /. 96.0));
-          Log.tracef(m =>
-            m("_getScaleFactor - Linux - inferring from DPI: %f", scaleFactor)
-          );
-          scaleFactor;
-        }
-      | _ => 1.0
-      }
-    };
-  };
-
-  let getMetricsFromSdlWindow = (~forceScaleFactor=None, sdlWindow) => {
-    let unscaledSize = Sdl2.Window.getSize(sdlWindow);
-    let framebufferSize = Sdl2.Gl.getDrawableSize(sdlWindow);
-
-    let scaleFactor = getScaleFactor(~forceScaleFactor, sdlWindow);
-
-    let devicePixelRatio =
-      float_of_int(framebufferSize.width) /. float_of_int(unscaledSize.width);
-
-    let scaledWidth =
-      int_of_float(float_of_int(unscaledSize.width) /. scaleFactor);
-    let scaledHeight =
-      int_of_float(float_of_int(unscaledSize.height) /. scaleFactor);
-
-    WindowMetrics.create(
-      ~scaledSize={width: scaledWidth, height: scaledHeight},
-      ~unscaledSize={width: unscaledSize.width, height: unscaledSize.height},
-      ~framebufferSize={
-        width: framebufferSize.width,
-        height: framebufferSize.height,
-      },
-      ~scaleFactor,
-      ~devicePixelRatio,
-      (),
-    );
-  };
-
   let updateMetrics = (w: t) => {
-    let previousZoom = w.metrics.zoom;
-    w.metrics = {
-      ...
-        getMetricsFromSdlWindow(
-          ~forceScaleFactor=w.forceScaleFactor,
-          w.sdlWindow,
-        ),
-      zoom: previousZoom,
-    };
+    w.metrics =
+      WindowMetrics.fromSdlWindow(
+        ~forceScaleFactor=?w.forceScaleFactor,
+        ~zoom=w.metrics.zoom,
+        w.sdlWindow,
+      );
     w.areMetricsDirty = false;
     Log.trace(
       "updateMetrics - new metrics: " ++ WindowMetrics.toString(w.metrics),
@@ -298,7 +308,7 @@ let setSize = (~width: int, ~height: int, win: t) => {
 };
 
 let setZoom = (w: t, zoom: float) => {
-  w.metrics = {...w.metrics, zoom: max(zoom, 0.1)};
+  w.metrics = WindowMetrics.setZoom(max(zoom, 0.1), w.metrics);
   w.areMetricsDirty = true;
 };
 
@@ -518,8 +528,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   Log.debug("Getting window metrics");
   let metrics =
-    Internal.getMetricsFromSdlWindow(
-      ~forceScaleFactor=options.forceScaleFactor,
+    WindowMetrics.fromSdlWindow(
+      ~forceScaleFactor=?options.forceScaleFactor,
       sdlWindow,
     );
   Log.debug("Metrics: " ++ WindowMetrics.toString(metrics));
