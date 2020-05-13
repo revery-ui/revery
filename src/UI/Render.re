@@ -28,7 +28,7 @@ let render =
   );
 
   /* Layout */
-  let size = Window.getRawSize(window);
+  let size = Window.getUnscaledSize(window);
   let pixelRatio = Window.getDevicePixelRatio(window);
   let scaleAndZoomFactor = Window.getScaleAndZoom(window);
   let canvasScalingFactor = pixelRatio *. scaleAndZoomFactor;
