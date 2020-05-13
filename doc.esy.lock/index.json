@@ -1,5 +1,5 @@
 {
-  "checksum": "be65377194a880832cb2fcf90e7ea8b7",
+  "checksum": "cc8d02e101a8068869b032b1cc56f80d",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -88,7 +88,7 @@
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:revery-ui/reason-skia#6b459c7@d41d8cd9",
-        "reason-sdl2@2.10.3030@d41d8cd9",
+        "reason-sdl2@2.10.3031@d41d8cd9",
         "reason-harfbuzz@1.91.8001@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "http-server@0.12.3@d41d8cd9",
         "flex@1.2.3@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
@@ -207,7 +207,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3030@d41d8cd9",
+        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3031@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
         "esy-sdl2@2.0.10006@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
@@ -217,14 +217,14 @@
       ],
       "devDependencies": [ "@opam/dune@opam:2.5.1@a0c1e658" ]
     },
-    "reason-sdl2@2.10.3030@d41d8cd9": {
-      "id": "reason-sdl2@2.10.3030@d41d8cd9",
+    "reason-sdl2@2.10.3031@d41d8cd9": {
+      "id": "reason-sdl2@2.10.3031@d41d8cd9",
       "name": "reason-sdl2",
-      "version": "2.10.3030",
+      "version": "2.10.3031",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3030.tgz#sha1:a268fca497228667d89bfcc85929b9ec255c478d"
+          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3031.tgz#sha1:18f5212f834f0182b7cb43b126da12b920d3758b"
         ]
       },
       "overrides": [],
@@ -449,7 +449,7 @@
       "overrides": [],
       "dependencies": [
         "requires-port@1.0.0@d41d8cd9", "follow-redirects@1.11.0@d41d8cd9",
-        "eventemitter3@4.0.3@d41d8cd9"
+        "eventemitter3@4.0.4@d41d8cd9"
       ],
       "devDependencies": []
     },
@@ -498,14 +498,14 @@
       ],
       "devDependencies": []
     },
-    "eventemitter3@4.0.3@d41d8cd9": {
-      "id": "eventemitter3@4.0.3@d41d8cd9",
+    "eventemitter3@4.0.4@d41d8cd9": {
+      "id": "eventemitter3@4.0.4@d41d8cd9",
       "name": "eventemitter3",
-      "version": "4.0.3",
+      "version": "4.0.4",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/eventemitter3/-/eventemitter3-4.0.3.tgz#sha1:850b43083fdb36a246f03168f189e9054f90bdb4"
+          "archive:https://registry.npmjs.org/eventemitter3/-/eventemitter3-4.0.4.tgz#sha1:b5463ace635a083d018bdc7c917b4c5f10a85384"
         ]
       },
       "overrides": [],
@@ -2313,7 +2313,7 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/integers@opam:0.4.0@f7acfaeb",
-        "@opam/conf-pkg-config@opam:1.2@5cd99130",
+        "@opam/conf-pkg-config@opam:1.2@d86c8f53",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -2349,8 +2349,8 @@
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
-    "@opam/conf-pkg-config@opam:1.2@5cd99130": {
-      "id": "@opam/conf-pkg-config@opam:1.2@5cd99130",
+    "@opam/conf-pkg-config@opam:1.2@d86c8f53": {
+      "id": "@opam/conf-pkg-config@opam:1.2@d86c8f53",
       "name": "@opam/conf-pkg-config",
       "version": "opam:1.2",
       "source": {

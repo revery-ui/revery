@@ -18,7 +18,7 @@ post-messages: [
 ]
 depexts: [
   ["pkg-config"] {os-family = "debian"}
-  ["pkg-config"] {os-distribution = "arch"}
+  ["pkgconf"] {os-distribution = "arch"}
   ["pkgconfig"] {os-distribution = "fedora"}
   ["pkgconfig"] {os-distribution = "centos" & os-version <= "7"}
   ["pkgconfig"] {os-distribution = "mageia"}
