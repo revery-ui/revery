@@ -41,7 +41,6 @@
     "@opam/ppx_deriving": "*",
     "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d",
     "flex": "1.2.3",
-    "@reason-native/rely": "*",
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
     "reason-font-manager": "^2.1.1",
