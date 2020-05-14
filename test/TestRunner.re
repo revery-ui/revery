@@ -2,7 +2,7 @@
 // (for a GUI app), we need to manually allocate a console.
 if (Sys.win32) {
   let _: int = Sdl2.Platform.win32AttachConsole();
-  // Unfortunately, the colors aren't showing up correctly with the 
+  // Unfortunately, the colors aren't showing up correctly with the
   // attached console - so I'll disable them for now.
   Pastel.setMode(Pastel.Disabled);
 };
