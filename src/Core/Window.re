@@ -683,6 +683,10 @@ let isMaximized = (w: t) => {
   Sdl2.Window.isMaximized(w.sdlWindow);
 };
 
+let isFullscreen = (w: t) => {
+  Sdl2.Window.isFullscreen(w.sdlWindow);
+};
+
 let minimize = (w: t) => {
   Sdl2.Window.minimize(w.sdlWindow);
 };
