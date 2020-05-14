@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "esy b",
-    "build:release": "esy b dune build --profile=release --root . -j4",
+    "build:release": "esy b dune build -p Revery -j4",
     "test": "esy b dune runtest",
     "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}",
     "run": "esy x Examples"
