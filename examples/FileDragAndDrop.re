@@ -48,7 +48,7 @@ module Styles = {
 let filesToText = files =>
   List.map(
     file =>
-      <TextButton
+      <ClickableText
         onClick={_ => Native.Shell.openFile(file) |> ignore}
         text=file
         activeStyle=Styles.activeStyle
