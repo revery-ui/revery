@@ -8,6 +8,9 @@
       "install": [
           "esy-installer ReveryBench.install"
       ],
+    "dependencies": {
+      "reperf": "^1.4.0"
+    },
     "devDependencies": {
       "ocaml": ">=4.6.0 <4.9.0"
     }
