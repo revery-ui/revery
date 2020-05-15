@@ -22,6 +22,7 @@ module DropdownString =
   });
 module ExpandContainer = ExpandContainer;
 module Input = Input;
+module Link = Link;
 module Positioned = Positioned;
 module Row = Row;
 module ScrollView = ScrollView;
@@ -36,5 +37,6 @@ module RadioButtonsString =
   RadioButtons.Make({
     type t = string;
   });
+module TextButton = TextButton;
 module Ticker = Ticker;
 module Tree = Tree;
