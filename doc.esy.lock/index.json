@@ -1,5 +1,5 @@
 {
-  "checksum": "cc8d02e101a8068869b032b1cc56f80d",
+  "checksum": "2ebf26395b5ab5a790879b4817f64bc0",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -91,8 +91,7 @@
         "reason-sdl2@2.10.3031@d41d8cd9",
         "reason-harfbuzz@1.91.8001@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "http-server@0.12.3@d41d8cd9",
-        "flex@1.2.3@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
-        "@reason-native/console@0.0.3@d41d8cd9",
+        "flex@1.2.3@d41d8cd9", "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/ppx_deriving@opam:4.4.1@208c6c8f",
         "@opam/odoc@opam:1.5.0@35218f5f",
         "@opam/lwt_ppx@opam:2.0.1@ab0debb8", "@opam/lwt@opam:4.5.0@677655b4",
@@ -1261,20 +1260,20 @@
         "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
-    "@opam/ppxlib@opam:0.13.0@65a9c7cc": {
-      "id": "@opam/ppxlib@opam:0.13.0@65a9c7cc",
+    "@opam/ppxlib@opam:0.11.0@5a4fe5c6": {
+      "id": "@opam/ppxlib@opam:0.11.0@5a4fe5c6",
       "name": "@opam/ppxlib",
-      "version": "opam:0.13.0",
+      "version": "opam:0.11.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/81/81e1f3d308500e0e7f6108d5b0dda2b879640a5c21ef3dc4a9bd90381cee39d9#sha256:81e1f3d308500e0e7f6108d5b0dda2b879640a5c21ef3dc4a9bd90381cee39d9",
-          "archive:https://github.com/ocaml-ppx/ppxlib/releases/download/0.13.0/ppxlib-0.13.0.tbz#sha256:81e1f3d308500e0e7f6108d5b0dda2b879640a5c21ef3dc4a9bd90381cee39d9"
+          "archive:https://opam.ocaml.org/cache/sha256/a1/a103631a2294919c080783d2114ae8ca0bcd2542ca5c04b9febcabd9cc5411fb#sha256:a103631a2294919c080783d2114ae8ca0bcd2542ca5c04b9febcabd9cc5411fb",
+          "archive:https://github.com/ocaml-ppx/ppxlib/archive/0.11.0.tar.gz#sha256:a103631a2294919c080783d2114ae8ca0bcd2542ca5c04b9febcabd9cc5411fb"
         ],
         "opam": {
           "name": "ppxlib",
-          "version": "0.13.0",
-          "path": "doc.esy.lock/opam/ppxlib.0.13.0"
+          "version": "0.11.0",
+          "path": "doc.esy.lock/opam/ppxlib.0.11.0"
         }
       },
       "overrides": [],
@@ -2773,7 +2772,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/ppxlib@opam:0.13.0@65a9c7cc",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/ppxlib@opam:0.11.0@5a4fe5c6",
         "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
       "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
