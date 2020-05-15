@@ -3,6 +3,31 @@ open Revery.Math;
 open Revery.UI;
 open Revery.UI.Components;
 
+module RepoLink = {
+  let make = () => {
+    let activeStyle =
+      Style.[
+        color(Colors.blue),
+        fontFamily("Roboto-Regular.ttf"),
+        fontSize(14.),
+      ];
+
+    let inactiveStyle =
+      Style.[
+        color(Colors.lightBlue),
+        fontFamily("Roboto-Regular.ttf"),
+        fontSize(14.),
+      ];
+
+    <Link
+      text="View on GitHub"
+      href="https://github.com/revery-ui/revery"
+      activeStyle
+      inactiveStyle
+    />;
+  };
+};
+
 module Logo = {
   let rotationAnimation =
     Animation.(
@@ -38,14 +63,17 @@ module Logo = {
             ]),
           ]
         />
+        <View style=Style.[alignItems(`Center)]> <RepoLink /> </View>
         <Row>
           <Button
             width=200
+            height=80
             onClick={() => setShouldRotate((!))}
             title={shouldRotate ? "Pause" : "Resume"}
           />
           <Button
             width=200
+            height=80
             onClick={() => {
               setShouldRotate(_ => true);
               resetRotation();
@@ -57,11 +85,13 @@ module Logo = {
       <Row>
         <Button
           width=200
+          height=80
           onClick={() => setOpacity(_ => 1.0)}
           title="Show it"
         />
         <Button
           width=200
+          height=80
           onClick={() => setOpacity(_ => 0.0)}
           title="Hide it"
         />
