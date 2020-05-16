@@ -1,5 +1,5 @@
 {
-  "checksum": "bef46c851dc721971d7bb096d953af47",
+  "checksum": "69a78d25f05c173aed5f63a949ca6a96",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -91,7 +91,7 @@
         "reason-sdl2@2.10.3031@d41d8cd9",
         "reason-harfbuzz@1.91.8001@d41d8cd9",
         "reason-font-manager@2.1.1@d41d8cd9", "http-server@0.12.3@d41d8cd9",
-        "flex@1.2.3@d41d8cd9", "fetch-native-lwt@0.1.0-alpha.3@d41d8cd9",
+        "flex@1.2.3@d41d8cd9", "fetch-native-lwt@0.1.0-alpha.4@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/ppx_deriving@opam:4.4.1@208c6c8f",
         "@opam/odoc@opam:1.5.0@35218f5f",
@@ -499,14 +499,14 @@
       ],
       "devDependencies": []
     },
-    "fetch-native-lwt@0.1.0-alpha.3@d41d8cd9": {
-      "id": "fetch-native-lwt@0.1.0-alpha.3@d41d8cd9",
+    "fetch-native-lwt@0.1.0-alpha.4@d41d8cd9": {
+      "id": "fetch-native-lwt@0.1.0-alpha.4@d41d8cd9",
       "name": "fetch-native-lwt",
-      "version": "0.1.0-alpha.3",
+      "version": "0.1.0-alpha.4",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/fetch-native-lwt/-/fetch-native-lwt-0.1.0-alpha.3.tgz#sha1:018b464e8f4b1adc633779e83444cd3a78c01e0a"
+          "archive:https://registry.npmjs.org/fetch-native-lwt/-/fetch-native-lwt-0.1.0-alpha.4.tgz#sha1:5cfee8bdb29ecf12e150819aaf378efa3f1b8dc3"
         ]
       },
       "overrides": [],
