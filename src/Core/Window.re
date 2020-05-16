@@ -2,45 +2,143 @@ open Events;
 
 type unsubscribe = unit => unit;
 
-type size = {
-  width: int,
-  height: int,
+[@deriving show({with_path: false})]
+type size =
+  Sdl2.Size.t = {
+    width: int,
+    height: int,
+  };
+
+let scaleSize = (~scale: float, size) => {
+  let width = int_of_float(float_of_int(size.width) /. scale);
+  let height = int_of_float(float_of_int(size.height) /. scale);
+
+  {width, height};
 };
+
 module Log = (val Log.withNamespace("Revery.Core.Window"));
 
-module WindowMetrics = {
+module WindowMetrics: {
+  // This disables all unused value warnings for this module. Unfortunately necessary due to `deriving show`.
+  [@warning "-32"];
+
+  [@deriving show]
+  type t =
+    pri {
+      /* [scaledSize] is the size of the window, in scaled screen coordinates, based on the display settings of the platform */
+      scaledSize: size,
+      /* [unscaledSize] is the size of the window, in screen coordinates, without display scaling applied */
+      unscaledSize: size,
+      /* [framebufferSize] is the actual size in pixels of the framebuffer - the render surface. On high DPI displays, this may be
+         some multiple of the screen sizes described by [scaledSize] and [unscaledSize]. */
+      framebufferSize: size,
+      /* [devicePixelRatio] is the ratio of pixels to screen coordinates (ie, [framebufferSize / unscaledSize]) */
+      devicePixelRatio: float,
+      /* [scaleFactor] is the ratio between [unscaledSize] and [scaledSize] */
+      scaleFactor: float,
+      zoom: float,
+      isDirty: bool,
+    };
+
+  let fromSdlWindow:
+    (~forceScaleFactor: float=?, ~zoom: float=?, Sdl2.Window.t) => t;
+
+  let setZoom: (float, t) => t;
+  let markDirty: t => t;
+} = {
+  [@deriving show({with_path: false})]
   type t = {
-    /* Note we separate the _Window_ width / height
-     * and the _framebuffer_ width/height
-     * Some more info here: http://www.glfw.org/docs/latest/window_guide.html
-     */
-    size,
+    scaledSize: size,
+    unscaledSize: size,
     framebufferSize: size,
     devicePixelRatio: float,
     scaleFactor: float,
     zoom: float,
+    isDirty: bool,
   };
 
-  let create = (~size, ~framebufferSize, ~devicePixelRatio, ~scaleFactor, ()) => {
-    framebufferSize,
-    size,
-    devicePixelRatio,
-    scaleFactor,
-    zoom: 1.0,
+  module Internal = {
+    let getScaleFactor = (~forceScaleFactor=?, sdlWindow) => {
+      switch (forceScaleFactor) {
+      // If a scale factor is forced... prefer that!
+      | Some(v) => v
+      // Otherwise, the way we figure out the scale factor depends on the platform
+      | None =>
+        switch (Environment.os) {
+        // Mac is easy... there isn't any scaling factor.  The window is automatically
+        // proportioned for us. The scaling is handled by the ratio of size / framebufferSize.
+        | Mac => 1.0
+        // On Windows, we need to try a Win32 API to get the scale factor
+        | Windows =>
+          let scale = Sdl2.Window.getWin32ScaleFactor(sdlWindow);
+          Log.tracef(m =>
+            m("_getScaleFactor - from getWin32ScaleFactor: %f", scale)
+          );
+          scale;
+
+        // On Linux, there's a few other things to try:
+        // - First, we'll look for a [GDK_SCALE] environment variable, and prefer that.
+        // - Otherwise, we'll try and infer it from the DPI.
+        | Linux =>
+          switch (Rench.Environment.getEnvironmentVariable("GDK_SCALE")) {
+          | Some(v) =>
+            // TODO
+            Log.trace(
+              "_getScaleFactor - Linux - got GDK_SCALE variable: " ++ v,
+            );
+            switch (Float.of_string_opt(v)) {
+            | Some(v) => v
+            | None => 1.0
+            };
+          | None =>
+            let display = Sdl2.Window.getDisplay(sdlWindow);
+            let dpi = Sdl2.Display.getDPI(display);
+            let avgDpi = (dpi.hdpi +. dpi.vdpi +. dpi.ddpi) /. 3.0;
+            let scaleFactor = max(1.0, floor(avgDpi /. 96.0));
+            Log.tracef(m =>
+              m(
+                "_getScaleFactor - Linux - inferring from DPI: %f",
+                scaleFactor,
+              )
+            );
+            scaleFactor;
+          }
+        | _ => 1.0
+        }
+      };
+    };
   };
 
-  let toString = (v: t) => {
-    Printf.sprintf(
-      "DevicePixelRatio: %f ScaleFactor: %f Zoom: %f Raw Dimensions: %dx%dpx Framebuffer: %dx%dpx",
-      v.devicePixelRatio,
-      v.scaleFactor,
-      v.zoom,
-      v.size.width,
-      v.size.height,
-      v.framebufferSize.width,
-      v.framebufferSize.height,
-    );
+  let fromSdlWindow = (~forceScaleFactor=?, ~zoom=1.0, sdlWindow) => {
+    let unscaledSize = Sdl2.Window.getSize(sdlWindow);
+    let framebufferSize = Sdl2.Gl.getDrawableSize(sdlWindow);
+
+    let scaleFactor = Internal.getScaleFactor(~forceScaleFactor?, sdlWindow);
+
+    let devicePixelRatio =
+      float_of_int(framebufferSize.width) /. float_of_int(unscaledSize.width);
+
+    let scaledSize = unscaledSize |> scaleSize(~scale=scaleFactor);
+
+    {
+      scaledSize,
+      unscaledSize: {
+        width: unscaledSize.width,
+        height: unscaledSize.height,
+      },
+      framebufferSize: {
+        width: framebufferSize.width,
+        height: framebufferSize.height,
+      },
+      scaleFactor,
+      devicePixelRatio,
+      zoom,
+      isDirty: false,
+    };
   };
+
+  let setZoom = (zoom, metrics) => {...metrics, zoom, isDirty: true};
+  let markDirty = metrics => {...metrics, isDirty: true};
 };
 
 type t = {
@@ -53,12 +151,11 @@ type t = {
   mutable shouldRender: unit => bool,
   mutable canQuit: unit => bool,
   mutable metrics: WindowMetrics.t,
-  mutable areMetricsDirty: bool,
   mutable isRendering: bool,
-  mutable requestedWidth: option(int),
-  mutable requestedHeight: option(int),
+  mutable requestedUnscaledSize: option(size),
   // True if composition (IME) is active
   mutable isComposingText: bool,
+  mutable dropState: option(list(string)),
   titlebarStyle: WindowStyles.titlebar,
   onBeforeRender: Event.t(unit),
   onAfterRender: Event.t(unit),
@@ -79,10 +176,12 @@ type t = {
   onMinimized: Event.t(unit),
   onRestored: Event.t(unit),
   onSizeChanged: Event.t(size),
+  onMoved: Event.t((int, int)),
   onCompositionStart: Event.t(unit),
   onCompositionEdit: Event.t(textEditEvent),
   onCompositionEnd: Event.t(unit),
   onTextInputCommit: Event.t(textInputEvent),
+  onFileDropped: Event.t(fileDropEvent),
 };
 
 module Internal = {
@@ -96,6 +195,56 @@ module Internal = {
     // On restore, we need to set the titlebar transparent again on Mac
     if (window.titlebarStyle == Transparent) {
       setTitlebarTransparent(window.sdlWindow);
+    };
+
+  let updateMetrics = (w: t) => {
+    w.metrics =
+      WindowMetrics.fromSdlWindow(
+        ~forceScaleFactor=?w.forceScaleFactor,
+        ~zoom=w.metrics.zoom,
+        w.sdlWindow,
+      );
+    Log.trace(
+      "updateMetrics - new metrics: " ++ WindowMetrics.show(w.metrics),
+    );
+  };
+
+  let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
+    Log.tracef(m =>
+      m("setRawSize - calling with: %ix%i", adjWidth, adjHeight)
+    );
+
+    if (adjWidth != win.metrics.unscaledSize.width
+        || adjHeight != win.metrics.unscaledSize.height) {
+      /*
+       *  Don't resize in the middle of a render -
+       *  we'll queue up the render operation for next time.
+       */
+      if (win.isRendering) {
+        Log.trace("setRawSize - queuing for next render");
+        win.requestedUnscaledSize =
+          Some({width: adjWidth, height: adjHeight});
+      } else {
+        Log.trace("setRawSize - calling Sdl2.Window.setSize");
+        Sdl2.Window.setSize(win.sdlWindow, adjWidth, adjHeight);
+        win.requestedUnscaledSize = None;
+        win.metrics = WindowMetrics.markDirty(win.metrics);
+        Log.tracef(m => {
+          let Sdl2.Size.{width, height} = Sdl2.Window.getSize(win.sdlWindow);
+          m(
+            "setRawSize: SDL size reported after resize: %ux%u",
+            width,
+            height,
+          );
+        });
+      };
+    };
+  };
+
+  let resizeIfNecessary = (w: t) =>
+    switch (w.requestedUnscaledSize) {
+    | Some({width, height}) => setRawSize(w, width, height)
+    | None => ()
     };
 };
 
@@ -122,18 +271,16 @@ let onCompositionEdit = w => Event.subscribe(w.onCompositionEdit);
 let onCompositionEnd = w => Event.subscribe(w.onCompositionEnd);
 let onTextInputCommit = w => Event.subscribe(w.onTextInputCommit);
 let onSizeChanged = w => Event.subscribe(w.onSizeChanged);
+let onMoved = w => Event.subscribe(w.onMoved);
+let onFileDropped = w => Event.subscribe(w.onFileDropped);
 
 let getUniqueId = (w: t) => w.uniqueId;
 
 let isDirty = (w: t) =>
-  if (w.shouldRender() || w.areMetricsDirty) {
+  if (w.shouldRender() || w.metrics.isDirty) {
     true;
   } else {
-    switch (w.requestedWidth, w.requestedHeight) {
-    | (Some(_), _) => true
-    | (_, Some(_)) => true
-    | _ => false
-    };
+    w.requestedUnscaledSize != None;
   };
 
 let getSdlWindow = (w: t) => w.sdlWindow;
@@ -142,121 +289,8 @@ let setTitle = (v: t, title: string) => {
   Sdl2.Window.setTitle(v.sdlWindow, title);
 };
 
-let _getScaleFactor = (~forceScaleFactor=None, sdlWindow) => {
-  switch (forceScaleFactor) {
-  // If a scale factor is forced... prefer that!
-  | Some(v) => v
-  // Otherwise, the way we figure out the scale factor depends on the platform
-  | None =>
-    switch (Environment.os) {
-    // Mac is easy... there isn't any scaling factor.  The window is automatically
-    // proportioned for us. The scaling is handled by the ratio of size / framebufferSize.
-    | Mac => 1.0
-    // On Windows, we need to try a Win32 API to get the scale factor
-    | Windows =>
-      let scale = Sdl2.Window.getWin32ScaleFactor(sdlWindow);
-      Log.tracef(m =>
-        m("_getScaleFactor - from getWin32ScaleFactor: %f", scale)
-      );
-      scale;
-
-    // On Linux, there's a few other things to try:
-    // - First, we'll look for a [GDK_SCALE] environment variable, and prefer that.
-    // - Otherwise, we'll try and infer it from the DPI.
-    | Linux =>
-      switch (Rench.Environment.getEnvironmentVariable("GDK_SCALE")) {
-      | Some(v) =>
-        // TODO
-        Log.trace("_getScaleFactor - Linux - got GDK_SCALE variable: " ++ v);
-        switch (Float.of_string_opt(v)) {
-        | Some(v) => v
-        | None => 1.0
-        };
-      | None =>
-        let display = Sdl2.Window.getDisplay(sdlWindow);
-        let dpi = Sdl2.Display.getDPI(display);
-        let avgDpi = (dpi.hdpi +. dpi.vdpi +. dpi.ddpi) /. 3.0;
-        let scaleFactor = max(1.0, floor(avgDpi /. 96.0));
-        Log.tracef(m =>
-          m("_getScaleFactor - Linux - inferring from DPI: %f", scaleFactor)
-        );
-        scaleFactor;
-      }
-    | _ => 1.0
-    }
-  };
-};
-
-let _getMetricsFromGlfwWindow = (~forceScaleFactor=None, sdlWindow) => {
-  let glfwSize = Sdl2.Window.getSize(sdlWindow);
-  let glfwFramebufferSize = Sdl2.Gl.getDrawableSize(sdlWindow);
-
-  let scaleFactor = _getScaleFactor(~forceScaleFactor, sdlWindow);
-
-  let devicePixelRatio =
-    float_of_int(glfwFramebufferSize.width) /. float_of_int(glfwSize.width);
-
-  // We keep track of the RAW / unscaled sizes internally
-  let width = glfwSize.width;
-  let height = glfwSize.height;
-
-  WindowMetrics.create(
-    ~size={width, height},
-    ~framebufferSize={
-      width: glfwFramebufferSize.width,
-      height: glfwFramebufferSize.height,
-    },
-    ~scaleFactor,
-    ~devicePixelRatio,
-    (),
-  );
-};
-
-let _updateMetrics = (w: t) => {
-  let previousZoom = w.metrics.zoom;
-  w.metrics = {
-    ...
-      _getMetricsFromGlfwWindow(
-        ~forceScaleFactor=w.forceScaleFactor,
-        w.sdlWindow,
-      ),
-    zoom: previousZoom,
-  };
-  w.areMetricsDirty = false;
-  Log.trace(
-    "_updateMetrics - new metrics: " ++ WindowMetrics.toString(w.metrics),
-  );
-};
-
-let setRawSize = (win: t, adjWidth: int, adjHeight: int) => {
-  Log.tracef(m => m("setRawSize - calling with: %ix%i", adjWidth, adjHeight));
-
-  if (adjWidth != win.metrics.size.width
-      || adjHeight != win.metrics.size.height) {
-    /*
-     *  Don't resize in the middle of a render -
-     *  we'll queue up the render operation for next time.
-     */
-    if (win.isRendering) {
-      Log.trace("setRawSize - queuing for next render");
-      win.requestedWidth = Some(adjWidth);
-      win.requestedHeight = Some(adjHeight);
-    } else {
-      Log.trace("setRawSize - calling Sdl2.Window.setSize");
-      Sdl2.Window.setSize(win.sdlWindow, adjWidth, adjHeight);
-      win.requestedWidth = None;
-      win.requestedHeight = None;
-      win.areMetricsDirty = true;
-      Log.tracef(m => {
-        let Sdl2.Size.{width, height} = Sdl2.Window.getSize(win.sdlWindow);
-        m("setRawSize: SDL size reported after resize: %ux%u", width, height);
-      });
-    };
-  };
-};
-
-let setScaledSize = (win: t, width: int, height: int) => {
-  Log.tracef(m => m("setScaledSize - calling with: %ux%u", width, height));
+let setSize = (~width: int, ~height: int, win: t) => {
+  Log.tracef(m => m("setSize - calling with: %ux%u", width, height));
   // On platforms that return a non-unit scale factor (Windows and Linux),
   // we also have to scale the window size by the scale factor
   let adjWidth =
@@ -264,67 +298,65 @@ let setScaledSize = (win: t, width: int, height: int) => {
   let adjHeight =
     int_of_float(float_of_int(height) *. win.metrics.scaleFactor);
 
-  setRawSize(win, adjWidth, adjHeight);
+  Internal.setRawSize(win, adjWidth, adjHeight);
 };
 
-let setZoom = (w: t, zoom: float) => {
-  w.metrics = {...w.metrics, zoom: max(zoom, 0.1)};
-  w.areMetricsDirty = true;
+let setZoom = (window, zoom) => {
+  window.metrics = WindowMetrics.setZoom(max(zoom, 0.1), window.metrics);
 };
 
-let _resizeIfNecessary = (w: t) =>
-  switch (w.requestedWidth, w.requestedHeight) {
-  | (Some(width), Some(height)) => setRawSize(w, width, height)
-  | _ => ()
+let render = window => {
+  Internal.resizeIfNecessary(window);
+
+  if (window.metrics.isDirty) {
+    Internal.updateMetrics(window);
   };
 
-let render = (w: t) => {
-  _resizeIfNecessary(w);
+  window.isRendering = true;
 
-  if (w.areMetricsDirty) {
-    _updateMetrics(w);
-    w.areMetricsDirty = false;
-  };
+  Event.dispatch(window.onBeforeRender, ());
+  window.render();
+  Event.dispatch(window.onAfterRender, ());
 
-  w.isRendering = true;
-
-  Event.dispatch(w.onBeforeRender, ());
-  w.render();
-  Event.dispatch(w.onAfterRender, ());
-
-  Event.dispatch(w.onBeforeSwap, ());
-  Performance.bench("swapWindow", () => Sdl2.Gl.swapWindow(w.sdlWindow));
-  Event.dispatch(w.onAfterSwap, ());
-  w.isRendering = false;
+  Event.dispatch(window.onBeforeSwap, ());
+  Performance.bench("swapWindow", () => Sdl2.Gl.swapWindow(window.sdlWindow));
+  Event.dispatch(window.onAfterSwap, ());
+  window.isRendering = false;
 };
 
 let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   switch (sdlEvent) {
   | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
     let wheelEvent: Events.mouseWheelEvent = {
-      deltaX: float_of_int(deltaX),
-      deltaY: float_of_int(deltaY),
+      deltaX: float(deltaX),
+      deltaY: float(deltaY),
     };
     Event.dispatch(v.onMouseWheel, wheelEvent);
+
   | Sdl2.Event.MouseMotion({x, y, _}) =>
     let mouseEvent: Events.mouseMoveEvent = {
-      mouseX: float_of_int(x),
-      mouseY: float_of_int(y),
+      mouseX: float(x),
+      mouseY: float(y),
     };
     Event.dispatch(v.onMouseMove, mouseEvent);
+
   | Sdl2.Event.MouseButtonUp(event) =>
     Event.dispatch(v.onMouseUp, {button: MouseButton.convert(event.button)})
+
   | Sdl2.Event.MouseButtonDown(event) =>
     Event.dispatch(
       v.onMouseDown,
       {button: MouseButton.convert(event.button)},
     )
+
   | Sdl2.Event.KeyDown({keycode, keymod, scancode, repeat, _}) =>
     let keyEvent: Key.KeyEvent.t = {keycode, scancode, keymod, repeat};
     Event.dispatch(v.onKeyDown, keyEvent);
+
   | Sdl2.Event.KeyUp({keycode, keymod, scancode, repeat, _}) =>
     let keyEvent: Key.KeyEvent.t = {keycode, scancode, keymod, repeat};
     Event.dispatch(v.onKeyUp, keyEvent);
+
   | Sdl2.Event.TextEditing(te) =>
     if (!v.isComposingText) {
       Event.dispatch(v.onCompositionStart, ());
@@ -340,23 +372,55 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
       Event.dispatch(v.onCompositionEnd, ());
       v.isComposingText = false;
     };
-
     Event.dispatch(v.onTextInputCommit, {text: ti.text});
-  | Sdl2.Event.WindowResized(_) => v.areMetricsDirty = true
+
+  | Sdl2.Event.WindowResized(_) =>
+    v.metrics = WindowMetrics.markDirty(v.metrics)
+
   | Sdl2.Event.WindowSizeChanged({width, height, _}) =>
-    v.areMetricsDirty = true;
-    Event.dispatch(v.onSizeChanged, {width, height});
-  | Sdl2.Event.WindowMoved(_) => v.areMetricsDirty = true
+    v.metrics = WindowMetrics.markDirty(v.metrics);
+
+    // Scale the window size changed event, so that is in the same 'scaled-screen-space' as
+    // other size functions, like [getSize], [setSize], and [create].
+    let unscaledSize = {width, height};
+    let scaledSize = scaleSize(~scale=v.metrics.scaleFactor, unscaledSize);
+    Event.dispatch(v.onSizeChanged, scaledSize);
+
+  | Sdl2.Event.WindowMoved({x, y, _}) =>
+    v.metrics = WindowMetrics.markDirty(v.metrics);
+    Event.dispatch(v.onMoved, (x, y));
+
   | Sdl2.Event.WindowEnter(_) => Event.dispatch(v.onMouseEnter, ())
   | Sdl2.Event.WindowLeave(_) => Event.dispatch(v.onMouseLeave, ())
   | Sdl2.Event.WindowExposed(_) => Event.dispatch(v.onExposed, ())
   | Sdl2.Event.WindowMaximized(_) => Event.dispatch(v.onMaximized, ())
   | Sdl2.Event.WindowMinimized(_) => Event.dispatch(v.onMinimized, ())
+
   | Sdl2.Event.WindowRestored(_) =>
     Internal.resetTitlebarStyle(v);
     Event.dispatch(v.onRestored, ());
+
   | Sdl2.Event.WindowFocusGained(_) => Event.dispatch(v.onFocusGained, ())
   | Sdl2.Event.WindowFocusLost(_) => Event.dispatch(v.onFocusLost, ())
+  | Sdl2.Event.DropBegin(_) => v.dropState = Some([])
+  | Sdl2.Event.DropFile({file, _}) =>
+    switch (v.dropState) {
+    | Some(list) => v.dropState = Some([file, ...list])
+    | None =>
+      Log.warn("Received drop file event without preceding drop begin")
+    }
+  | Sdl2.Event.DropComplete({x, y, _}) =>
+    switch (v.dropState) {
+    | None
+    | Some([]) =>
+      Log.warn("Received drop complete event without preceding drop events")
+    | Some(list) =>
+      v.dropState = None;
+      Event.dispatch(
+        v.onFileDropped,
+        {mouseX: float(x), mouseY: float(y), paths: List.rev(list)},
+      );
+    }
   | Sdl2.Event.Quit => ()
   | _ => ()
   };
@@ -378,36 +442,55 @@ let setVsync =
 let create = (name: string, options: WindowCreateOptions.t) => {
   Log.debug("Starting window creation...");
 
-  let width =
-    switch (options.width) {
-    | 0 => 800
-    | v => v
-    };
+  // Calculate the total bounds of all displays
+  let screenBounds =
+    Sdl2.Display.getDisplays()
+    |> List.fold_left(
+         (acc: Sdl2.Rect.t, display) => {
+           let bounds = Sdl2.Display.getBounds(display);
+           Sdl2.Rect.{
+             x: min(acc.x, bounds.x),
+             y: min(acc.y, bounds.y),
+             width: max(acc.width, bounds.x + bounds.width),
+             height: max(acc.height, bounds.y + bounds.height),
+           };
+         },
+         Sdl2.Rect.{x: 0, y: 0, width: 0, height: 0},
+       );
 
-  let height =
-    switch (options.height) {
-    | 0 => 480
-    | v => v
+  let width = options.width == 0 ? 800 : options.width;
+  let height = options.height == 0 ? 480 : options.height;
+
+  let x =
+    switch (options.x) {
+    | `Centered => `Absolute((screenBounds.width - width) / 2)
+    | `Absolute(x) => `Absolute(x)
+    };
+  let y =
+    switch (options.y) {
+    | `Centered => `Absolute((screenBounds.height - height) / 2)
+    | `Absolute(y) => `Absolute(y)
     };
 
   Log.infof(m =>
     m("Creating window %s width: %u height: %u", name, width, height)
   );
-  let w = Sdl2.Window.create(width, height, name);
+  let sdlWindow = Sdl2.Window.create(name, x, y, width, height);
   Log.info("Window created successfully.");
-  let uniqueId = Sdl2.Window.getId(w);
+
+  let uniqueId = Sdl2.Window.getId(sdlWindow);
   Log.debugf(m => m("- Id: %i", uniqueId));
   let pixelFormat =
-    Sdl2.Window.getPixelFormat(w) |> Sdl2.PixelFormat.toString;
+    Sdl2.Window.getPixelFormat(sdlWindow) |> Sdl2.PixelFormat.toString;
   Log.debugf(m => m("- PixelFormat: %s", pixelFormat));
 
   // We need to let Windows know that we are DPI-aware and that we are going to
   // properly handle scaling. This is a no-op on other platforms.
-  Sdl2.Window.setWin32ProcessDPIAware(w);
+  Sdl2.Window.setWin32ProcessDPIAware(sdlWindow);
 
   Log.debug("Setting window context");
-  let context = Sdl2.Gl.setup(w);
-  Sdl2.Gl.makeCurrent(w, context);
+  let context = Sdl2.Gl.setup(sdlWindow);
+  Sdl2.Gl.makeCurrent(sdlWindow, context);
   Log.debug("GL setup. Checking GL version...");
   let version = Sdl2.Gl.getString(Sdl2.Gl.Version);
   Log.debug("Checking GL vendor...");
@@ -434,7 +517,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     switch (Sdl2.Surface.createFromImagePath(relativeImagePath)) {
     | Ok(v) =>
       Log.debug("Icon loaded successfully.");
-      Sdl2.Window.setIcon(w, v);
+      Sdl2.Window.setIcon(sdlWindow, v);
       Log.debug("Icon set successfully.");
 
     | Error(msg) => Log.error("Error loading icon: " ++ msg)
@@ -443,11 +526,15 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   Log.debug("Getting window metrics");
   let metrics =
-    _getMetricsFromGlfwWindow(~forceScaleFactor=options.forceScaleFactor, w);
-  Log.debug("Metrics: " ++ WindowMetrics.toString(metrics));
-  let ret: t = {
+    WindowMetrics.fromSdlWindow(
+      ~forceScaleFactor=?options.forceScaleFactor,
+      sdlWindow,
+    );
+  Log.debug("Metrics: " ++ WindowMetrics.show(metrics));
+
+  let window = {
     backgroundColor: options.backgroundColor,
-    sdlWindow: w,
+    sdlWindow,
     sdlContext: context,
     uniqueId,
 
@@ -456,12 +543,11 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     canQuit: () => true,
 
     metrics,
-    areMetricsDirty: false,
     isRendering: false,
-    requestedWidth: None,
-    requestedHeight: None,
+    requestedUnscaledSize: None,
 
     isComposingText: false,
+    dropState: None,
 
     forceScaleFactor: options.forceScaleFactor,
 
@@ -478,6 +564,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onRestored: Event.create(),
     onExposed: Event.create(),
     onSizeChanged: Event.create(),
+    onMoved: Event.create(),
 
     onMouseMove: Event.create(),
     onMouseWheel: Event.create(),
@@ -493,42 +580,46 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     onCompositionEdit: Event.create(),
     onCompositionEnd: Event.create(),
     onTextInputCommit: Event.create(),
+    onFileDropped: Event.create(),
 
     titlebarStyle: options.titlebarStyle,
   };
-  setScaledSize(ret, width, height);
-  Sdl2.Window.center(w);
-  setVsync(ret, options.vsync);
+  // Call setSize to account for scaling, if necessary.
+  // On some platforms - ie, Windows, we don't know about the scale factor
+  // until after we create the window, so after creation we have to check
+  // to make sure we're at the correct size for scaling.
+  setSize(~width, ~height, window);
+  setVsync(window, options.vsync);
 
   if (options.maximized) {
-    Sdl2.Window.maximize(w);
+    Sdl2.Window.maximize(sdlWindow);
   };
 
   if (!options.decorated) {
-    Sdl2.Window.setBordered(w, false);
+    Sdl2.Window.setBordered(sdlWindow, false);
   };
 
   if (!options.resizable) {
-    Sdl2.Window.setResizable(w, false);
+    Sdl2.Window.setResizable(sdlWindow, false);
   };
 
   if (options.visible) {
-    Sdl2.Window.show(w);
+    Sdl2.Window.show(sdlWindow);
   };
 
   switch (options.titlebarStyle) {
   | System => ()
-  | Transparent => Internal.setTitlebarTransparent(w)
+  | Transparent => Internal.setTitlebarTransparent(sdlWindow)
   };
 
   // onivim/oni2#791
   // Set a minimum size for the window
   // TODO: Make configurable
-  Sdl2.Window.setMinimumSize(w, 200, 100);
+  Sdl2.Window.setMinimumSize(sdlWindow, 200, 100);
 
-  _updateMetrics(ret);
+  Internal.updateMetrics(window);
 
-  ret;
+  window;
 };
 
 let startTextInput = (_w: t) => {
@@ -559,7 +650,7 @@ let getBackgroundColor = window => window.backgroundColor;
 
 let setPosition = (w: t, x: int, y: int) => {
   Sdl2.Window.setPosition(w.sdlWindow, x, y);
-  w.areMetricsDirty = true;
+  w.metrics = WindowMetrics.markDirty(w.metrics);
 };
 
 let center = (w: t) => {
@@ -574,12 +665,10 @@ let hide = w => {
   Sdl2.Window.hide(w.sdlWindow);
 };
 
-let getRawSize = (w: t) => {
-  let width = w.metrics.size.width;
-  let height = w.metrics.size.height;
+let getSize = ({metrics, _}) => metrics.scaledSize;
 
-  let ret: size = {width, height};
-  ret;
+let getPosition = window => {
+  Sdl2.Window.getPosition(window.sdlWindow);
 };
 
 let getFramebufferSize = (w: t) => {
@@ -588,6 +677,18 @@ let getFramebufferSize = (w: t) => {
 
 let maximize = (w: t) => {
   Sdl2.Window.maximize(w.sdlWindow);
+};
+
+let isMaximized = (w: t) => {
+  Sdl2.Window.isMaximized(w.sdlWindow);
+};
+
+let isFullscreen = (w: t) => {
+  Sdl2.Window.isFullscreen(w.sdlWindow);
+};
+
+let minimize = (w: t) => {
+  Sdl2.Window.minimize(w.sdlWindow);
 };
 
 let getDevicePixelRatio = (w: t) => {

@@ -145,6 +145,16 @@ let examples = [
     render: _ => NestedClickable.render(),
     source: "NestedClickable.re",
   },
+  {
+    name: "File Drag & Drop",
+    render: _ => FileDragAndDrop.render(),
+    source: "FileDragAndDrop.re",
+  },
+  {
+    name: "Shell: Open URL",
+    render: _ => URLFileOpen.render(),
+    source: "URLFileOpen.re",
+  },
 ];
 
 let getExampleByName = name =>
@@ -291,8 +301,6 @@ let init = app => {
 
   if (Environment.webGL) {
     Window.maximize(window);
-  } else {
-    Window.center(window);
   };
 
   let _unsubscribe =
@@ -311,7 +319,10 @@ let init = app => {
       Console.log(Printf.sprintf("Size changed: %d x %d", width, height))
     );
 
-  let _startEventLoop = Revery_Lwt.startEventLoop();
+  let _unsubscribe =
+    Window.onMoved(window, ((x, y)) =>
+      Console.log(Printf.sprintf("Moved: %d x %d", x, y))
+    );
 
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);

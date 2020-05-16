@@ -7,10 +7,10 @@ jobs:
     name: Lint lockdir, generate opam files, autoformat
     runs-on: macos-latest
     steps:
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1.4.2
         with:
           node-version: 12
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Install esy
         run: npm install -g esy
       - name: Setup Git to push back
@@ -33,10 +33,12 @@ jobs:
         run: node .github/workflows/print_esy_cache.js
       - name: Try to restore dependencies cache
         id: deps-cache-macos
-        uses: actions/cache@v1
+        uses: actions/cache@v1.1.2
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: macos-latest-${{ hashFiles('**/index.json') }}
+          restore-keys: |
+            macos-latest-
       - name: Build dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
         run: esy build-dependencies --release
@@ -58,22 +60,28 @@ jobs:
           git status
           git log -2
           git diff
-      - uses: actions/github-script@0.3.0
+      - uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             if (require("child_process").execSync("git log -1 --pretty=format:'%an'") == "Github Runner")
-              github.issues.createComment({...context.issue, body: `I have updated your lock dirs and formatted the code. Please @${context.actor} pull the last commit before pushing any more changes.`});
+              github.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: "I have updated your lock dirs and formatted the code.\n" +
+                  "Please @" + context.actor + " pull the last commit before pushing any more changes."
+              });
 
   doc:
     name: Push docs to GitHub's Pages
-    runs-on: [macos-latest]
+    runs-on: macos-latest
     steps:
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1.4.2
         with:
           node-version: 12
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Install esy
         run: npm install -g esy
       - run: brew install coreutils
@@ -84,10 +92,12 @@ jobs:
         run: node .github/workflows/print_esy_cache.js
       - name: Try to restore dependencies cache
         id: deps-cache-macos
-        uses: actions/cache@v1
+        uses: actions/cache@v1.1.2
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: macos-latest-4.08-${{ hashFiles('doc.esy.lock/index.json') }}
+          key: macos-latest-${{ hashFiles('**/index.json') }}
+          restore-keys: |
+            macos-latest-
       - name: Install doc dependencies
         if: steps.deps-cache-macos.outputs.cache-hit != 'true'
         run: esy @doc build-dependencies --release
@@ -128,10 +138,10 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
     steps:
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1.4.2
         with:
           node-version: 12
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Install esy
         run: npm install -g esy
       - name: Install native dependencies on ubuntu-latest
@@ -147,17 +157,21 @@ jobs:
       - name: Try to restore dependencies cache
         if: matrix.os != 'windows-latest'
         id: deps-cache-non-win
-        uses: actions/cache@v1
+        uses: actions/cache@v1.1.2
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
+          restore-keys: |
+            ${{ matrix.os }}-
       - name: Try to restore dependencies cache
         if: matrix.os == 'windows-latest'
         id: deps-cache-win
-        uses: actions/cache@v1
+        uses: actions/cache@v1.1.2
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: ${{ matrix.os }}-${{ hashFiles('**\index.json') }}
+          restore-keys: |
+            ${{ matrix.os }}-
       - name: Build dependencies
         if: steps.deps-cache-win.outputs.cache-hit != 'true' && steps.deps-cache-non-win.outputs.cache-hit != 'true'
         run: esy build-dependencies --release
@@ -165,4 +179,7 @@ jobs:
         run: esy build --release
       - name: Build test/dev dependencies
         if: steps.deps-cache-win.outputs.cache-hit != 'true' && steps.deps-cache-non-win.outputs.cache-hit != 'true'
-        run: esy build-dependencies
+        run: |
+          esy build-dependencies
+          # We might have used restore-keys
+          esy cleanup .

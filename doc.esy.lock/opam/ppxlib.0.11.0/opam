@@ -1,0 +1,46 @@
+opam-version: "2.0"
+maintainer: "opensource@janestreet.com"
+authors: ["Jane Street Group, LLC <opensource@janestreet.com>"]
+homepage: "https://github.com/ocaml-ppx/ppxlib"
+bug-reports: "https://github.com/ocaml-ppx/ppxlib/issues"
+dev-repo: "git+https://github.com/ocaml-ppx/ppxlib.git"
+doc: "https://ocaml-ppx.github.io/ppxlib/"
+license: "MIT"
+build: [
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+]
+run-test: [
+  ["dune" "runtest" "-p" name "-j" jobs] { ocaml:version >= "4.06" & ocaml:version < "4.08" }
+]
+depends: [
+  "ocaml"                   {>= "4.04.1" & < "4.10.0"}
+  "base"                    {>= "v0.11.0"}
+  "dune"                    {>= "1.11"}
+  "ocaml-compiler-libs"     {>= "v0.11.0"}
+  "ocaml-migrate-parsetree" {>= "1.3.1"}
+  "ppx_derivers"            {>= "1.0"}
+  "stdio"                   {>= "v0.11.0"}
+  "ocamlfind"               {with-test}
+  "cinaps"                  {with-test & >= "v0.12.1"}
+]
+synopsis: "Base library and tools for ppx rewriters"
+description: """
+A comprehensive toolbox for ppx development. It features:
+- a OCaml AST / parser / pretty-printer snapshot,to create a full
+   frontend independent of the version of OCaml;
+- a library for library for ppx rewriters in general, and type-driven
+  code generators in particular;
+- a feature-full driver for OCaml AST transformers;
+- a quotation mechanism allowing  to write values representing the
+   OCaml AST in the OCaml syntax;
+- a generator of open recursion classes from type definitions.
+"""
+url {
+  src:
+    "https://github.com/ocaml-ppx/ppxlib/archive/0.11.0.tar.gz"
+  checksum: [
+    "sha256=a103631a2294919c080783d2114ae8ca0bcd2542ca5c04b9febcabd9cc5411fb"
+    "sha512=bca0e48f1bd2cc8987413825d10a49ca3510cb53dfde83b263bd7e9ce1b704ba08032bb9af0e5ab4b417ed71708cb30c50232e176fd66e88195d994bc1c26dbb"
+  ]
+}

@@ -52,6 +52,7 @@ let render = (window: t, elem) => {
 
   Layout.layout(~force=false, rootNode);
   rootNode#recalculate();
+  rootNode#flushCallbacks();
 
   let skiaRoot = Skia.Matrix.makeScale(1.0, 1.0, 0., 0.);
   CanvasContext.setRootTransform(skiaRoot, canvasContext);

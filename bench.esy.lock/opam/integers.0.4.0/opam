@@ -1,0 +1,27 @@
+opam-version: "2.0"
+maintainer: "yallop@gmail.com"
+authors: ["Jeremy Yallop"
+          "Demi Obenour"
+          "Stephane Glondu"
+          "Andreas Hauptmann"]
+homepage: "https://github.com/ocamllabs/ocaml-integers"
+bug-reports: "https://github.com/ocamllabs/ocaml-integers/issues"
+dev-repo: "git+https://github.com/ocamllabs/ocaml-integers.git"
+license: "MIT"
+
+build: [
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
+
+depends: [
+  "ocaml" {>= "4.02"}
+  "dune"
+]
+doc: "http://ocamllabs.github.io/ocaml-integers/api.docdir/"
+synopsis: "Various signed and unsigned integer types for OCaml"
+url {
+  src: "https://github.com/ocamllabs/ocaml-integers/archive/0.4.0.tar.gz"
+  checksum: "md5=c1492352e6525048790508c57aad93c3"
+}

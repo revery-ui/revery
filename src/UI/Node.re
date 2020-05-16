@@ -368,6 +368,8 @@ class node (()) = {
     | (TextEdit(_), _)
     | (KeyDown(_), _)
     | (KeyUp(_), _) => ()
+    | (FileDropped(e), {onFileDropped: Some(cb), _}) => cb(e)
+    | (FileDropped(_), _) => ()
     };
   };
   pub toLayoutNode = (~force, ()) => {
