@@ -32,7 +32,7 @@ let dispatch = (evt: Events.internalFileDropEvents, node: Node.node) => {
     let deepestNode = getTopMostNode(node, mouseX, mouseY);
 
     switch (deepestNode) {
-    | Some(node) => bubble(node, eventToSend)
+    | Some(node) => bubble(node, eventToSend, (_, _) => ())
     | None => ()
     };
   };

@@ -84,8 +84,14 @@ describe("Mouse", ({describe, test, _}) => {
       let child2HitCount = ref(0);
       let child4HitCount = ref(0);
 
-      let child2MouseDown = _evt => incr(child2HitCount);
-      let child4MouseDown = _evt => incr(child4HitCount);
+      let child2MouseDown = _evt => {
+        incr(child2HitCount);
+        [];
+      };
+      let child4MouseDown = _evt => {
+        incr(child4HitCount);
+        [];
+      };
 
       node2#setEvents(NodeEvents.make(~onMouseDown=child2MouseDown, ()));
       node4#setEvents(NodeEvents.make(~onMouseDown=child4MouseDown, ()));
@@ -166,8 +172,14 @@ describe("Mouse", ({describe, test, _}) => {
       let child2HitCount = ref(0);
       let child4HitCount = ref(0);
 
-      let child2MouseDown = _evt => incr(child2HitCount);
-      let child4MouseDown = _evt => incr(child4HitCount);
+      let child2MouseDown = _evt => {
+        incr(child2HitCount);
+        [];
+      };
+      let child4MouseDown = _evt => {
+        incr(child4HitCount);
+        [];
+      };
 
       node2#setEvents(NodeEvents.make(~onMouseDown=child2MouseDown, ()));
       node4#setEvents(NodeEvents.make(~onMouseDown=child4MouseDown, ()));
@@ -236,8 +248,14 @@ describe("Mouse", ({describe, test, _}) => {
         let child2HitCount = ref(0);
         let child3HitCount = ref(0);
 
-        let child2MouseDown = _evt => incr(child2HitCount);
-        let child3MouseDown = _evt => incr(child3HitCount);
+        let child2MouseDown = _evt => {
+          incr(child2HitCount);
+          [];
+        };
+        let child3MouseDown = _evt => {
+          incr(child3HitCount);
+          [];
+        };
 
         node2#setEvents(NodeEvents.make(~onMouseDown=child2MouseDown, ()));
         node3#setEvents(NodeEvents.make(~onMouseDown=child3MouseDown, ()));
@@ -265,7 +283,10 @@ describe("Mouse", ({describe, test, _}) => {
       let cursor = Mouse.Cursor.make();
 
       let count = ref(0);
-      let f = _evt => count := count^ + 1;
+      let f = _evt => {
+        count := count^ + 1;
+        [];
+      };
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
       node#setEvents(NodeEvents.make(~onMouseDown=f, ()));
@@ -291,7 +312,10 @@ describe("Mouse", ({describe, test, _}) => {
       let cursor = Mouse.Cursor.make();
 
       let count = ref(0);
-      let f = _evt => count := count^ + 1;
+      let f = _evt => {
+        count := count^ + 1;
+        [];
+      };
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
       node#setEvents(NodeEvents.make(~onMouseDown=f, ()));
@@ -575,21 +599,23 @@ describe("Mouse", ({describe, test, _}) => {
       let window = Window.create("", WindowCreateOptions.default);
       let cursor = Mouse.Cursor.make();
 
-      let nodeCount = ref(0);
-      let captureCount = ref(0);
-      let nodeCounter = _evt => nodeCount := nodeCount^ + 1;
-      let captureCounter = _evt => captureCount := captureCount^ + 1;
+      let moveCount = ref(0);
+      let onMouseDown = _evt => [`capture];
+      let onMouseMove = _evt => incr(moveCount);
 
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
 
-      Mouse.setCapture(
-        ~captureContext=window,
-        ~onMouseDown=captureCounter,
-        (),
+      node#setEvents(NodeEvents.make(~onMouseDown, ~onMouseMove, ()));
+
+      Mouse.dispatch(
+        window,
+        cursor,
+        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        node,
       );
 
-      node#setEvents(NodeEvents.make(~onMouseDown=nodeCounter, ()));
+      expect.int(moveCount^).toBe(0);
 
       Mouse.dispatch(
         window,
@@ -598,6 +624,8 @@ describe("Mouse", ({describe, test, _}) => {
         node,
       );
 
+      expect.int(moveCount^).toBe(1);
+
       Mouse.dispatch(
         window,
         cursor,
@@ -605,19 +633,27 @@ describe("Mouse", ({describe, test, _}) => {
         node,
       );
 
-      expect.int(nodeCount^).toBe(0);
-      expect.int(captureCount^).toBe(1);
+      expect.int(moveCount^).toBe(1);
+
+      Mouse.dispatch(
+        window,
+        cursor,
+        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        node,
+      );
+
+      expect.int(moveCount^).toBe(2);
 
       Mouse.releaseCapture();
+
       Mouse.dispatch(
         window,
         cursor,
-        InternalMouseDown({button: BUTTON_LEFT}),
+        InternalMouseMove({mouseX: 200., mouseY: 200.}),
         node,
       );
 
-      expect.int(nodeCount^).toBe(1);
-      expect.int(captureCount^).toBe(1);
+      expect.int(moveCount^).toBe(2);
     })
   );
 

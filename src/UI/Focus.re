@@ -1,9 +1,8 @@
 open Revery_Core;
 open NodeEvents;
 
-type handleEvent = event => unit;
 type active = {
-  handler: handleEvent,
+  handler: event => list(Actions.all),
   id: int,
 };
 type focused = ref(option(active));

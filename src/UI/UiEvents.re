@@ -96,26 +96,33 @@ let getTopMostNode = (node: node, x, y) => {
   f(node, Default);
 };
 
-let rec traverseHeirarchy = (node: node, bubbled) =>
-  BubbleEvent.(
-    /*
-     track if default prevent or propagation stopped per node
-     stop traversing node hierarchy if stop propagation is called
-      */
-    if (bubbled.shouldPropagate) {
-      node#handleEvent(bubbled.event);
-      let parent = node#getParent();
-      switch (parent) {
-      | Some(parent) => traverseHeirarchy(parent, bubbled)
-      | None => ()
-      };
-    }
-  );
+let rec traverseHierarchy = (node, bubbled, onAction) => {
+  open BubbleEvent;
+  /*
+   track if default prevent or propagation stopped per node
+   stop traversing node hierarchy if stop propagation is called
+    */
+  let onAction = node =>
+    fun
+    | `stopPropagation => BubbleEvent.stopPropagation(bubbled)
+    | #Actions.nonBubble as action => onAction(node, action);
 
-let bubble = (node, event: event) => {
+  if (bubbled.shouldPropagate) {
+    let actions = node#handleEvent(bubbled.event);
+    List.iter(onAction(node), actions);
+    let parent = node#getParent();
+    switch (parent) {
+    | Some(parent) => traverseHierarchy(parent, bubbled, onAction)
+    | None => ()
+    };
+  };
+};
+
+let bubble = (node, event, onAction) => {
   /* Wrap event with preventDefault and stopPropagation */
-  traverseHeirarchy(
+  traverseHierarchy(
     node,
     BubbleEvent.make(event),
+    onAction,
   );
 };

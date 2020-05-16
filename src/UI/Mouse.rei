@@ -1,8 +1,6 @@
 /* Mouse Input */
 open Revery_Core;
 
-open NodeEvents;
-
 module Cursor: {
   type t;
 
@@ -12,21 +10,7 @@ module Cursor: {
   let set: (~x: float, ~y: float, t) => unit;
 };
 
-let setCapture:
-  (
-    ~captureContext: Window.t,
-    ~onMouseDown: mouseButtonHandler=?,
-    ~onMouseMove: mouseMoveHandler=?,
-    ~onMouseUp: mouseButtonHandler=?,
-    ~onMouseWheel: mouseWheelHandler=?,
-    ~onMouseEnter: mouseMoveHandler=?,
-    ~onMouseLeave: mouseMoveHandler=?,
-    ~onMouseOver: mouseMoveHandler=?,
-    ~onMouseOut: mouseMoveHandler=?,
-    ~onMouseLeaveWindow: unit => unit=?,
-    unit
-  ) =>
-  unit;
+let setCapture: (Window.t, Node.node) => unit;
 
 let releaseCapture: unit => unit;
 
@@ -34,6 +18,3 @@ let onCursorChanged: Event.t(MouseCursors.t);
 
 let dispatch:
   (Window.t, Cursor.t, Events.internalMouseEvents, Node.node) => unit;
-
-let notifyEnterWindow: Window.t => unit;
-let notifyLeaveWindow: Window.t => unit;

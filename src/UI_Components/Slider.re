@@ -37,7 +37,7 @@ let%component make =
                 ~thumbColor=Colors.gray,
                 (),
               ) => {
-  let%hook isActive = Hooks.ref(false);
+  let%hook captureState = Hooks.ref(None);
   let%hook (sliderBoundingBox, setSliderBoundingBox) =
     Hooks.state(defaultBoundingBox);
   let%hook (uncontrolledValue, setUncontrolledValue) =
@@ -75,45 +75,35 @@ let%component make =
   };
 
   let sliderComplete = () => {
-    isActive := false;
+    captureState := None;
     Mouse.releaseCapture();
   };
 
-  let%hook () =
-    Hooks.effect(OnMount, () => {
-      Some(
-        () =>
-          if (isActive^) {
-            sliderComplete();
-          },
-      )
-    });
-
-  let onMouseDown = (evt: NodeEvents.mouseButtonEventParams) => {
+  let onMouseDown = _ => {
     let (x0, y0, _, _) = BoundingBox2d.getBounds(sliderBoundingBox);
-    let startPosition = vertical ? y0 : x0;
-    let endPosition = startPosition +. availableWidth;
-    isActive := true;
-
-    Mouse.setCapture(
-      ~captureContext=evt.captureContext,
-      ~onMouseMove=
-        evt =>
-          sliderUpdate(
-            availableWidth,
-            startPosition,
-            endPosition,
-            evt.mouseX,
-            evt.mouseY,
-          ),
-      ~onMouseUp=_evt => sliderComplete(),
-      (),
-    );
+    let origin = vertical ? y0 : x0;
+    captureState := Some(origin);
+    [`capture];
   };
+
+  let onMouseMove = (evt: NodeEvents.mouseMoveEventParams) =>
+    switch (captureState^) {
+    | Some(origin) =>
+      sliderUpdate(
+        availableWidth,
+        origin,
+        origin +. availableWidth,
+        evt.mouseX,
+        evt.mouseY,
+      )
+    | None => ()
+    };
+
+  let onMouseUp = _ => sliderComplete();
 
   let sliderBackgroundColor = maximumTrackColor;
 
-  let sliderOpacity = isActive^ ? 1.0 : 0.8;
+  let sliderOpacity = captureState^ == None ? 0.8 : 1.0;
 
   let sliderHeight = max(thumbThickness, trackThickness);
   let trackHeight = trackThickness;
@@ -167,6 +157,8 @@ let%component make =
   <Opacity opacity=sliderOpacity>
     <View
       onMouseDown
+      onMouseMove
+      onMouseUp
       style
       onBoundingBoxChanged={bbox => setSliderBoundingBox(_ => bbox)}>
       <View style=beforeTrackStyle />
