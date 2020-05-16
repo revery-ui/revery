@@ -303,6 +303,8 @@ let init = app => {
     Window.maximize(window);
   };
 
+  let _startEventLoop = Revery_Lwt.startEventLoop();
+
   let _unsubscribe =
     Window.onFocusGained(window, () => Console.log("Focus gained"));
   let _unsubscribe =

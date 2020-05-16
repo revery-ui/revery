@@ -27,6 +27,6 @@ give the user total control over the blocking behavior of their application,
 with the unbuffered interface enabling zero-copy IO. Parsers are backtracking by
 default and support unbounded lookahead."""
 url {
-  src: "https://github.com/inhabitedtype/angstrom/archive/0.13.0.tar.gz"
-  checksum: "md5=090267a7b843769d319073564fb3bb9a"
+  src: "https://github.com/inhabitedtype/angstrom/archive/0.14.1.tar.gz"
+  checksum: "md5=915bbcc1adbd0debc1b0a54531c7601a"
 }
