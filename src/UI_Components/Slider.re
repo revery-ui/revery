@@ -79,9 +79,16 @@ let%component make =
     Mouse.releaseCapture();
   };
 
-  let onMouseDown = _ => {
+  let onMouseDown = (evt: NodeEvents.mouseButtonEventParams) => {
     let (x0, y0, _, _) = BoundingBox2d.getBounds(sliderBoundingBox);
     let origin = vertical ? y0 : x0;
+    sliderUpdate(
+      availableWidth,
+      origin,
+      origin +. availableWidth,
+      evt.mouseX,
+      evt.mouseY,
+    );
     captureState := Some(origin);
     [`capture(() => captureState := None)];
   };
