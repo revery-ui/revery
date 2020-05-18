@@ -61,7 +61,7 @@ let releaseCapturedNode = node =>
   | _ => ()
   };
 
-let setCapture = (window, node) => {
+let setCapture = (~onRelease=() => (), window, node) => {
   ignore(Sdl2.Mouse.capture(true): int);
   let unsubscribe = Window.onFocusLost(window, () => releaseCapture());
 
@@ -71,6 +71,7 @@ let setCapture = (window, node) => {
       dispose: () => {
         ignore(Sdl2.Mouse.capture(false): int);
         unsubscribe();
+        onRelease();
       },
     }),
   );
@@ -131,7 +132,7 @@ let getMouseMoveEventParams =
 
 let onAction = (window, node) =>
   fun
-  | `capture => setCapture(window, node)
+  | `capture(onRelease) => setCapture(~onRelease, window, node)
   | `preventDefault => ();
 
 let sendToNode = (window, node, event) => {

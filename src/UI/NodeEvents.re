@@ -8,11 +8,11 @@ open Revery_Math;
 module Actions = {
   type global = [ | `preventDefault];
   type bubble = [ | `stopPropagation];
-  type mouseDown = [ | `capture];
+  type mouseDown = [ | `capture(unit => unit)];
   type nonBubble = [ mouseDown | global];
   type all = [ mouseDown | bubble | global];
 
-  let capture = `capture;
+  let capture = (~onRelease) => `capture(onRelease);
   let stopPropagation = `stopPropagation;
   let preventDefault = `preventDefault;
 };

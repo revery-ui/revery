@@ -83,7 +83,7 @@ let%component make =
     let (x0, y0, _, _) = BoundingBox2d.getBounds(sliderBoundingBox);
     let origin = vertical ? y0 : x0;
     captureState := Some(origin);
-    [`capture];
+    [`capture(() => captureState := None)];
   };
 
   let onMouseMove = (evt: NodeEvents.mouseMoveEventParams) =>

@@ -600,7 +600,7 @@ describe("Mouse", ({describe, test, _}) => {
       let cursor = Mouse.Cursor.make();
 
       let moveCount = ref(0);
-      let onMouseDown = _evt => [`capture];
+      let onMouseDown = _evt => [`capture(() => ())];
       let onMouseMove = _evt => incr(moveCount);
 
       let node =

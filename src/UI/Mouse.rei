@@ -10,7 +10,7 @@ module Cursor: {
   let set: (~x: float, ~y: float, t) => unit;
 };
 
-let setCapture: (Window.t, Node.node) => unit;
+let setCapture: (~onRelease: unit => unit=?, Window.t, Node.node) => unit;
 let releaseCapture: unit => unit;
 let releaseCapturedNode: Node.node => unit;
 
