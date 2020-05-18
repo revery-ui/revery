@@ -11,8 +11,8 @@ module Cursor: {
 };
 
 let setCapture: (Window.t, Node.node) => unit;
-
 let releaseCapture: unit => unit;
+let releaseCapturedNode: Node.node => unit;
 
 let onCursorChanged: Event.t(MouseCursors.t);
 

@@ -53,6 +53,14 @@ module CaptureState: {
 
 let releaseCapture = () => CaptureState.set(None);
 
+let releaseCapturedNode = node =>
+  switch (CaptureState.get()) {
+  | Some(capturedNode)
+      when capturedNode#getInternalId() == node#getInternalId() =>
+    releaseCapture()
+  | _ => ()
+  };
+
 let setCapture = (window, node) => {
   ignore(Sdl2.Mouse.capture(true): int);
   let unsubscribe = Window.onFocusLost(window, () => releaseCapture());
@@ -179,12 +187,11 @@ let rec handleMouseEnterDiff =
           loopThroughStoredNodesUnderCursor(tail);
         } else {
           List.iter(
-            newNode =>
-              sendToNode(window, newNode, MouseEnter(evtParams)),
+            newNode => sendToNode(window, newNode, MouseEnter(evtParams)),
             newNodes,
           );
           storedNodesUnderCursor := newNodes @ [node, ...tail];
-        };
+        }
       };
     };
 
@@ -225,14 +232,12 @@ let rec handleMouseEnterDiff =
        * MouseEnter/Leave events
        */
       List.iter(
-        node =>
-          sendToNode(window, node, MouseLeave(evtParams)),
+        node => sendToNode(window, node, MouseLeave(evtParams)),
         storedNodesUnderCursor^,
       );
 
       List.iter(
-        newNode =>
-          sendToNode(window, newNode, MouseEnter(evtParams)),
+        newNode => sendToNode(window, newNode, MouseEnter(evtParams)),
         [deepestNode, ...newNodes],
       );
 
@@ -290,8 +295,7 @@ let dispatch =
     };
 
     switch (CaptureState.get()) {
-    | Some(node) =>
-      sendToNode(window, node, eventToSend);
+    | Some(node) => sendToNode(window, node, eventToSend)
 
     | None =>
       let deepestNode = getTopMostNode(node, mouseX, mouseY);
