@@ -21,11 +21,14 @@ RUN yum -y install /usr/lib64/libasan.so.0.0.0
 RUN node -v
 RUN npm -v
 
-RUN npm install --global --unsafe-perm=true esy@0.6.1
-
-RUN yum -y install epel-release
-RUN yum -y remove git
-RUN rpm -U https://centos7.iuscommunity.org/ius-release.rpm
-RUN yum -y install git2u
+RUN npm install --global --unsafe-perm=true esy@0.6.2
 
 RUN yum -y install nasm
+RUN yum -y install https://centos7.iuscommunity.org/ius-release.rpm
+RUN yum -y remove git
+RUN yum -y install epel-release
+RUN yum -y install git222
+
+RUN node -v
+RUN npm -v
+RUN git --version
