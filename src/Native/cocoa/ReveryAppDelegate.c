@@ -65,7 +65,10 @@
 /* openFile
   We call into the CAML function `revery_dispatchFileOpen`
   Unfortunately because of namespacing issues with `alloc`,
-  we have to put the function in a separate file.
+  we have to put the function in a separate file. Both OCaml
+  and Objective-C have `alloc` selector/functions, which
+  causes either build errors or runtime errors, neither of
+  which are preferable :).
 */
 - (BOOL)application:(NSApplication *)sender
     openFile:(NSString *)filename {
