@@ -541,68 +541,63 @@ describe("Mouse", ({describe, test, _}) => {
     });
   });
 
-  // describe("setCapture/releaseCapture", ({test, _}) =>
-  //   test("captured events override dispatching to node", ({expect, _}) => {
-  //     let window = Window.create("", WindowCreateOptions.default);
-  //     let cursor = Mouse.Cursor.make();
+  describe("setCapture/releaseCapture", ({test, _}) =>
+    test("captured events override dispatching to node", ({expect, _}) => {
+      let cursor = Mouse.Cursor.make();
 
-  //     let moveCount = ref(0);
-  //     let onMouseDown = _evt => [`capture(() => ())];
-  //     let onMouseMove = _evt => incr(moveCount);
+      let uncapturedMoves = ref(0);
+      let capturedMoves = ref(0);
+      let onMouseMove = _evt => incr(uncapturedMoves);
 
-  //     let node =
-  //       createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
+      let node =
+        createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
 
-  //     node#setEvents(NodeEvents.make(~onMouseDown, ~onMouseMove, ()));
+      node#setEvents(NodeEvents.make(~onMouseMove, ()));
 
-  //     Mouse.dispatch(
-  //       window,
-  //       cursor,
-  //       InternalMouseMove({mouseX: 200., mouseY: 200.}),
-  //       node,
-  //     );
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        node,
+      );
 
-  //     expect.int(moveCount^).toBe(0);
+      expect.int(uncapturedMoves^).toBe(0);
+      expect.int(capturedMoves^).toBe(0);
 
-  //     Mouse.dispatch(
-  //       window,
-  //       cursor,
-  //       InternalMouseMove({mouseX: 50., mouseY: 50.}),
-  //       node,
-  //     );
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        node,
+      );
 
-  //     expect.int(moveCount^).toBe(1);
+      expect.int(uncapturedMoves^).toBe(1);
+      expect.int(capturedMoves^).toBe(0);
 
-  //     Mouse.dispatch(
-  //       window,
-  //       cursor,
-  //       InternalMouseDown({button: BUTTON_LEFT}),
-  //       node,
-  //     );
+      Mouse.setCapture(
+        ~onMouseMove=_ => incr(capturedMoves),
+        Window.create("", WindowCreateOptions.default),
+      );
 
-  //     expect.int(moveCount^).toBe(1);
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        node,
+      );
 
-  //     Mouse.dispatch(
-  //       window,
-  //       cursor,
-  //       InternalMouseMove({mouseX: 200., mouseY: 200.}),
-  //       node,
-  //     );
+      expect.int(uncapturedMoves^).toBe(1);
+      expect.int(capturedMoves^).toBe(1);
 
-  //     expect.int(moveCount^).toBe(2);
+      Mouse.releaseCapture();
 
-  //     Mouse.releaseCapture();
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        node,
+      );
 
-  //     Mouse.dispatch(
-  //       window,
-  //       cursor,
-  //       InternalMouseMove({mouseX: 200., mouseY: 200.}),
-  //       node,
-  //     );
-
-  //     expect.int(moveCount^).toBe(2);
-  //   })
-  // );
+      expect.int(uncapturedMoves^).toBe(1);
+      expect.int(capturedMoves^).toBe(1);
+    })
+  );
 
   test(
     "onCursorChangedEvent gets dispatched with proper cursor", ({expect, _}) => {
