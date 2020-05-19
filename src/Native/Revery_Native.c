@@ -38,14 +38,3 @@ CAMLprim value revery_uninitialize() {
 #endif
     return Val_unit;
 }
-
-CAMLprim value revery_log(value vStr) {
-    CAMLparam1(vStr);
-    const char *str = String_val(str);
-#ifdef __APPLE__
-    NSLog(@"%s", str);
-#else
-    UNUSED(str);
-#endif
-    CAMLreturn(Val_unit);
-}
