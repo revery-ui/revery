@@ -171,5 +171,5 @@ let mouseCapture =
     );
   };
 
-  capture;
+  (capture, state^);
 };

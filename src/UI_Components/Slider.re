@@ -37,7 +37,6 @@ let%component make =
                 ~thumbColor=Colors.gray,
                 (),
               ) => {
-  let%hook captureState = Hooks.ref(None);
   let%hook (sliderBoundingBox, setSliderBoundingBox) =
     Hooks.state(defaultBoundingBox);
   let%hook (uncontrolledValue, setUncontrolledValue) =
@@ -74,7 +73,7 @@ let%component make =
     onValueChanged(normalizedValue);
   };
 
-  let%hook captureMouse =
+  let%hook (captureMouse, captureState) =
     Hooks.mouseCapture(
       ~onMouseMove=
         (origin, evt: NodeEvents.mouseMoveEventParams) => {
@@ -106,7 +105,7 @@ let%component make =
 
   let sliderBackgroundColor = maximumTrackColor;
 
-  let sliderOpacity = captureState^ == None ? 0.8 : 1.0;
+  let sliderOpacity = captureState == None ? 0.8 : 1.0;
 
   let sliderHeight = max(thumbThickness, trackThickness);
   let trackHeight = trackThickness;
