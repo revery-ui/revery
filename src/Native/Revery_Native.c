@@ -1,5 +1,8 @@
 #include <stdio.h>
 
+#include <caml/alloc.h>
+#include <caml/callback.h>
+#include <caml/memory.h>
 #include <caml/mlvalues.h>
 #include <string.h>
 
@@ -34,4 +37,15 @@ CAMLprim value revery_uninitialize() {
     CoUninitialize();
 #endif
     return Val_unit;
+}
+
+CAMLprim value revery_log(value vStr) {
+    CAMLparam1(vStr);
+    const char *str = String_val(str);
+#ifdef __APPLE__
+    NSLog(@"%s", str);
+#else
+    UNUSED(str);
+#endif
+    CAMLreturn(Val_unit);
 }

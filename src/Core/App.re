@@ -13,6 +13,7 @@ type t = {
   windows: Hashtbl.t(int, Window.t),
   onIdle: Event.t(unit),
   onBeforeQuit: Event.t(unit),
+  onFileOpen: Event.t(string),
   mutable canIdle: unit => bool,
 };
 
@@ -88,6 +89,7 @@ let setCanIdle = (f, app: t) => {
 
 let onBeforeQuit = app => Event.subscribe(app.onBeforeQuit);
 let onIdle = app => Event.subscribe(app.onIdle);
+let onFileOpen = app => Event.subscribe(app.onFileOpen);
 
 /* Execute any pending main thread jobs */
 let _doPendingMainThreadJobs = () => {
@@ -158,6 +160,7 @@ let start = init => {
     isQuitting: false,
     onBeforeQuit: Event.create(),
     onIdle: Event.create(),
+    onFileOpen: Event.create(),
     canIdle: () => true,
   };
 
@@ -245,6 +248,9 @@ let start = init => {
       };
     };
   };
+
+  let dispatchFileOpen = Event.dispatch(appInstance.onFileOpen);
+  Callback.register("revery_dispatchFileOpen", dispatchFileOpen);
 
   Revery_Native.init();
 

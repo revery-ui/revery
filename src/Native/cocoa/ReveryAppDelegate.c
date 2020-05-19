@@ -4,6 +4,8 @@
 
 #import "utilities.h"
 
+#include "ReveryAppDelegate_func.h"
+
 #define UNUSED(x) (void)(x)
 
 // Implementation of ReveryAppDelegate
@@ -57,6 +59,19 @@
     shouldPresentNotification:(NSUserNotification *)notification {
     UNUSED(center);
     UNUSED(notification);
+    return YES;
+}
+
+/* openFile
+  We call into the CAML function `revery_dispatchFileOpen`
+  Unfortunately because of namespacing issues with `alloc`,
+  we have to put the function in a separate file.
+*/
+- (BOOL)application:(NSApplication *)sender
+    openFile:(NSString *)filename {
+    UNUSED(sender);
+
+    appDelegate_openFile([filename UTF8String]);
     return YES;
 }
 @end
