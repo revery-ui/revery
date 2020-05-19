@@ -2,7 +2,7 @@
 #ifndef ReveryAppDelegate_func_h
 #define ReveryAppDelegate_func_h
 
-void appDelegate_openFile(const char *path);
+void revery_appDelegate_openFile(const char *path);
 
 #endif
 #endif

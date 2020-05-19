@@ -71,7 +71,7 @@
     openFile:(NSString *)filename {
     UNUSED(sender);
 
-    appDelegate_openFile([filename UTF8String]);
+    revery_appDelegate_openFile([filename UTF8String]);
     return YES;
 }
 @end

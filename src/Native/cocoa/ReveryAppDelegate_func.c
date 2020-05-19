@@ -11,7 +11,7 @@
 
 #include "utilities.h"
 
-void appDelegate_openFile(const char *path) {
+void revery_appDelegate_openFile(const char *path) {
     static const value *dispatchFileOpen = NULL;
     if (dispatchFileOpen == NULL) {
         dispatchFileOpen = caml_named_value("revery_dispatchFileOpen");
