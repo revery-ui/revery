@@ -74,10 +74,22 @@ let%component make =
     onValueChanged(normalizedValue);
   };
 
-  let sliderComplete = () => {
-    captureState := None;
-    Mouse.releaseCapture();
-  };
+  let%hook captureMouse =
+    Hooks.mouseCapture(
+      ~onMouseMove=
+        (origin, evt: NodeEvents.mouseMoveEventParams) => {
+          sliderUpdate(
+            availableWidth,
+            origin,
+            origin +. availableWidth,
+            evt.mouseX,
+            evt.mouseY,
+          );
+          Some(origin);
+        },
+      ~onMouseUp=(_, _) => None,
+      (),
+    );
 
   let onMouseDown = (evt: NodeEvents.mouseButtonEventParams) => {
     let (x0, y0, _, _) = BoundingBox2d.getBounds(sliderBoundingBox);
@@ -89,24 +101,8 @@ let%component make =
       evt.mouseX,
       evt.mouseY,
     );
-    captureState := Some(origin);
-    [`capture(() => captureState := None)];
+    captureMouse(origin);
   };
-
-  let onMouseMove = (evt: NodeEvents.mouseMoveEventParams) =>
-    switch (captureState^) {
-    | Some(origin) =>
-      sliderUpdate(
-        availableWidth,
-        origin,
-        origin +. availableWidth,
-        evt.mouseX,
-        evt.mouseY,
-      )
-    | None => ()
-    };
-
-  let onMouseUp = _ => sliderComplete();
 
   let sliderBackgroundColor = maximumTrackColor;
 
@@ -164,8 +160,6 @@ let%component make =
   <Opacity opacity=sliderOpacity>
     <View
       onMouseDown
-      onMouseMove
-      onMouseUp
       style
       onBoundingBoxChanged={bbox => setSliderBoundingBox(_ => bbox)}>
       <View style=beforeTrackStyle />

@@ -10,11 +10,19 @@ module Cursor: {
   let set: (~x: float, ~y: float, t) => unit;
 };
 
-let setCapture: (~onRelease: unit => unit=?, Window.t, Node.node) => unit;
+let setCapture:
+  (
+    ~onRelease: unit => unit=?,
+    ~onMouseDown: NodeEvents.mouseDownHandler=?,
+    ~onMouseUp: NodeEvents.mouseUpHandler=?,
+    ~onMouseMove: NodeEvents.mouseMoveHandler=?,
+    ~onMouseWheel: NodeEvents.mouseWheelHandler=?,
+    Window.t
+  ) =>
+  unit;
+
 let releaseCapture: unit => unit;
-let releaseCapturedNode: Node.node => unit;
 
 let onCursorChanged: Event.t(MouseCursors.t);
 
-let dispatch:
-  (Window.t, Cursor.t, Events.internalMouseEvents, Node.node) => unit;
+let dispatch: (Cursor.t, Events.internalMouseEvents, Node.node) => unit;

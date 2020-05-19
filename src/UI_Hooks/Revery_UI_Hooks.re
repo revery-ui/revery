@@ -139,3 +139,37 @@ let transitionf =
   );
 
 let spring = SpringHook.spring;
+
+let mouseCapture =
+    (
+      ~onMouseDown=(state, _evt) => Some(state),
+      ~onMouseUp=(state, _evt) => Some(state),
+      ~onMouseMove=(state, _evt) => Some(state),
+      ~onMouseWheel=(state, _evt) => Some(state),
+      ~onRelease=_state => (),
+      (),
+    ) => {
+  let%hook state = ref(None);
+
+  let capture = initialState => {
+    state := Some(initialState);
+
+    let wrap = (f, event) =>
+      switch (f(Option.get(state^), event)) {
+      | None => Mouse.releaseCapture()
+      | state' => state := state'
+      };
+
+    Mouse.setCapture(
+      Revery_UI.getActiveWindow() |> Option.get, // May fail if called outside rendering
+      ~onMouseDown=wrap(onMouseDown),
+      ~onMouseUp=wrap(onMouseUp),
+      ~onMouseMove=wrap(onMouseMove),
+      ~onMouseWheel=wrap(onMouseWheel),
+      ~onRelease=() =>
+      onRelease(state^)
+    );
+  };
+
+  capture;
+};

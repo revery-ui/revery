@@ -2,7 +2,7 @@ open Revery_Core;
 open NodeEvents;
 
 type active = {
-  handler: event => list(Actions.all),
+  handler: event => unit,
   id: int,
 };
 type focused = ref(option(active));
@@ -16,7 +16,7 @@ let loseFocus = () => {
 
   switch (focused^) {
   | Some({handler, _}) =>
-    let _ = handler(Blur);
+    handler(Blur);
     focused := None;
   | None => ()
   };
@@ -25,7 +25,7 @@ let loseFocus = () => {
 
 let focus = (node: Node.node) => {
   Log.trace("focus()");
-  let _ = node#handleEvent(Focus);
+  node#handleEvent(Focus);
   focused := Some({handler: node#handleEvent, id: node#getInternalId()});
 };
 

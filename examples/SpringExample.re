@@ -94,7 +94,6 @@ module Example = {
 
     let onMouseDown = _ => {
       setTargetPosition(_ => 512.0);
-      [];
     };
     let onMouseUp = _ => setTargetPosition(_ => 256.0);
 

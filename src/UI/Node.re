@@ -333,27 +333,13 @@ class node (()) = {
     );
     switch (evt, _this#getEvents()) {
     | (MouseDown(c), {onMouseDown: Some(cb), _}) => cb(c)
-    | (MouseMove(c), {onMouseMove: Some(cb), _}) =>
-      cb(c);
-      [];
-    | (MouseUp(c), {onMouseUp: Some(cb), _}) =>
-      cb(c);
-      [];
-    | (MouseWheel(c), {onMouseWheel: Some(cb), _}) =>
-      cb(c);
-      [];
-    | (MouseEnter(c), {onMouseEnter: Some(cb), _}) =>
-      cb(c);
-      [];
-    | (MouseLeave(c), {onMouseLeave: Some(cb), _}) =>
-      cb(c);
-      [];
-    | (MouseOver(c), {onMouseOver: Some(cb), _}) =>
-      cb(c);
-      [];
-    | (MouseOut(c), {onMouseOut: Some(cb), _}) =>
-      cb(c);
-      [];
+    | (MouseMove(c), {onMouseMove: Some(cb), _}) => cb(c)
+    | (MouseUp(c), {onMouseUp: Some(cb), _}) => cb(c)
+    | (MouseWheel(c), {onMouseWheel: Some(cb), _}) => cb(c)
+    | (MouseEnter(c), {onMouseEnter: Some(cb), _}) => cb(c)
+    | (MouseLeave(c), {onMouseLeave: Some(cb), _}) => cb(c)
+    | (MouseOver(c), {onMouseOver: Some(cb), _}) => cb(c)
+    | (MouseOut(c), {onMouseOut: Some(cb), _}) => cb(c)
     | (MouseDown(_), _)
     | (MouseMove(_), _)
     | (MouseUp(_), _)
@@ -361,43 +347,29 @@ class node (()) = {
     | (MouseLeave(_), _)
     | (MouseOver(_), _)
     | (MouseOut(_), _)
-    | (MouseWheel(_), _) => []
+    | (MouseWheel(_), _) => ()
     | (Focus, p) =>
       _this#focus();
       switch (p) {
-      | {onFocus: Some(cb), _} =>
-        cb();
-        [];
-      | _ => []
+      | {onFocus: Some(cb), _} => cb()
+      | _ => ()
       };
     | (Blur, p) =>
       _this#blur();
       switch (p) {
-      | {onBlur: Some(cb), _} =>
-        cb();
-        [];
-      | _ => []
+      | {onBlur: Some(cb), _} => cb()
+      | _ => ()
       };
-    | (KeyDown(e), {onKeyDown: Some(cb), _}) =>
-      cb(e);
-      [];
-    | (KeyUp(e), {onKeyUp: Some(cb), _}) =>
-      cb(e);
-      [];
-    | (TextInput(e), {onTextInput: Some(cb), _}) =>
-      cb(e);
-      [];
-    | (TextEdit(e), {onTextEdit: Some(cb), _}) =>
-      cb(e);
-      [];
+    | (KeyDown(e), {onKeyDown: Some(cb), _}) => cb(e)
+    | (KeyUp(e), {onKeyUp: Some(cb), _}) => cb(e)
+    | (TextInput(e), {onTextInput: Some(cb), _}) => cb(e)
+    | (TextEdit(e), {onTextEdit: Some(cb), _}) => cb(e)
     | (TextInput(_), _)
     | (TextEdit(_), _)
     | (KeyDown(_), _)
-    | (KeyUp(_), _) => []
-    | (FileDropped(e), {onFileDropped: Some(cb), _}) =>
-      cb(e);
-      [];
-    | (FileDropped(_), _) => []
+    | (KeyUp(_), _) => ()
+    | (FileDropped(e), {onFileDropped: Some(cb), _}) => cb(e)
+    | (FileDropped(_), _) => ()
     };
   };
   pub toLayoutNode = (~force, ()) => {

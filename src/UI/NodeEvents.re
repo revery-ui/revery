@@ -99,9 +99,7 @@ type event =
   | Focus;
 
 type refCallback('a) = 'a => unit;
-type mouseDownHandler =
-  mouseButtonEventParams =>
-  list([ Actions.mouseDown | Actions.bubble | Actions.global]);
+type mouseDownHandler = mouseButtonEventParams => unit;
 type mouseUpHandler = mouseButtonEventParams => unit;
 type mouseMoveHandler = mouseMoveEventParams => unit;
 type mouseOverHandler = mouseMoveEventParams => unit;

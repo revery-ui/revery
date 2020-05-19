@@ -24,23 +24,32 @@ module Cursor = {
   };
 };
 
-module CaptureState: {
-  type t = {
-    node: Node.node,
-    dispose: unit => unit,
-  };
-
-  let set: option(t) => unit;
-  let get: unit => option(Node.node);
+module Capture: {
+  let set:
+    (
+      ~onRelease: unit => unit=?,
+      ~onMouseDown: NodeEvents.mouseDownHandler=?,
+      ~onMouseUp: NodeEvents.mouseUpHandler=?,
+      ~onMouseMove: NodeEvents.mouseMoveHandler=?,
+      ~onMouseWheel: NodeEvents.mouseWheelHandler=?,
+      Window.t
+    ) =>
+    unit;
+  let release: unit => unit;
+  let isSet: unit => bool;
+  let dispatch: NodeEvents.event => unit;
 } = {
   type t = {
-    node: Node.node,
+    onMouseDown: mouseDownHandler,
+    onMouseUp: mouseUpHandler,
+    onMouseMove: mouseMoveHandler,
+    onMouseWheel: mouseWheelHandler,
     dispose: unit => unit,
   };
 
   let currentState = ref(None);
 
-  let set = maybeState => {
+  let update = maybeState => {
     switch (currentState^) {
     | Some({dispose, _}) => dispose()
     | None => ()
@@ -48,34 +57,56 @@ module CaptureState: {
     currentState := maybeState;
   };
 
-  let get = () => Option.map(state => state.node, currentState^);
-};
+  let set =
+      (
+        ~onRelease=() => (),
+        ~onMouseDown=_evt => (),
+        ~onMouseUp=_evt => (),
+        ~onMouseMove=_evt => (),
+        ~onMouseWheel=_evt => (),
+        window,
+      ) => {
+    ignore(Sdl2.Mouse.capture(true): int);
+    let unsubscribe = Window.onFocusLost(window, () => update(None));
 
-let releaseCapture = () => CaptureState.set(None);
-
-let releaseCapturedNode = node =>
-  switch (CaptureState.get()) {
-  | Some(capturedNode)
-      when capturedNode#getInternalId() == node#getInternalId() =>
-    releaseCapture()
-  | _ => ()
+    update(
+      Some({
+        onMouseDown,
+        onMouseUp,
+        onMouseMove,
+        onMouseWheel,
+        dispose: () => {
+          unsubscribe();
+          onRelease();
+        },
+      }),
+    );
   };
 
-let setCapture = (~onRelease=() => (), window, node) => {
-  ignore(Sdl2.Mouse.capture(true): int);
-  let unsubscribe = Window.onFocusLost(window, () => releaseCapture());
+  let release = () => {
+    ignore(Sdl2.Mouse.capture(false): int);
+    update(None);
+  };
 
-  CaptureState.set(
-    Some({
-      node,
-      dispose: () => {
-        ignore(Sdl2.Mouse.capture(false): int);
-        unsubscribe();
-        onRelease();
-      },
-    }),
-  );
+  let isSet = () => currentState^ != None;
+
+  let dispatch = event =>
+    switch (currentState^) {
+    | Some(state) =>
+      switch (event) {
+      | MouseDown(params) => state.onMouseDown(params)
+      | MouseUp(params) => state.onMouseUp(params)
+      | MouseMove(params) => state.onMouseMove(params)
+      | MouseWheel(params) => state.onMouseWheel(params)
+      | _ => ()
+      }
+
+    | None => ()
+    };
 };
+
+let releaseCapture = Capture.release;
+let setCapture = Capture.set;
 
 let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
   switch (evt) {
@@ -130,31 +161,17 @@ let getMouseMoveEventParams =
   | _ => {mouseX: cursor.x, mouseY: cursor.y}
   };
 
-let onAction = (window, node) =>
-  fun
-  | `capture(onRelease) => setCapture(~onRelease, window, node)
-  | `preventDefault => ();
-
-let sendToNode = (window, node, event) => {
-  let onAction =
-    fun
-    | `stopPropagation => ()
-    | #Actions.nonBubble as action => onAction(window, node, action);
-
-  node#handleEvent(event) |> List.iter(onAction);
-};
-
-let rec sendMouseLeaveEvents = (window, listOfNodes, evtParams) => {
+let rec sendMouseLeaveEvents = (listOfNodes, evtParams) => {
   switch (listOfNodes) {
   | [] => storedNodesUnderCursor := []
   | [node, ...tail] =>
-    sendToNode(window, node, MouseLeave(evtParams));
-    sendMouseLeaveEvents(window, tail, evtParams);
+    node#handleEvent(MouseLeave(evtParams));
+    sendMouseLeaveEvents(tail, evtParams);
   };
 };
 
-let rec sendMouseEnterEvents = (window, deepestNode, evtParams) => {
-  sendToNode(window, deepestNode, MouseEnter(evtParams));
+let rec sendMouseEnterEvents = (deepestNode, evtParams) => {
+  deepestNode#handleEvent(MouseEnter(evtParams));
 
   storedNodesUnderCursor := storedNodesUnderCursor^ @ [deepestNode];
 
@@ -162,12 +179,11 @@ let rec sendMouseEnterEvents = (window, deepestNode, evtParams) => {
 
   switch (parent) {
   | None => ()
-  | Some(parent) => sendMouseEnterEvents(window, parent, evtParams)
+  | Some(parent) => sendMouseEnterEvents(parent, evtParams)
   };
 };
 
-let rec handleMouseEnterDiff =
-        (window, deepestNode, evtParams, ~newNodes=[], ()) => {
+let rec handleMouseEnterDiff = (deepestNode, evtParams, ~newNodes=[], ()) => {
   let nodeExists =
     List.exists(
       node => node#getInternalId() == deepestNode#getInternalId(),
@@ -184,11 +200,11 @@ let rec handleMouseEnterDiff =
       | [] => ()
       | [node, ...tail] =>
         if (node#getInternalId() != deepestNode#getInternalId()) {
-          sendToNode(window, node, MouseLeave(evtParams));
+          node#handleEvent(MouseLeave(evtParams));
           loopThroughStoredNodesUnderCursor(tail);
         } else {
           List.iter(
-            newNode => sendToNode(window, newNode, MouseEnter(evtParams)),
+            newNode => newNode#handleEvent(MouseEnter(evtParams)),
             newNodes,
           );
           storedNodesUnderCursor := newNodes @ [node, ...tail];
@@ -196,29 +212,21 @@ let rec handleMouseEnterDiff =
       };
     };
 
-    let handleMouseOverDiff = (window, listOfNodes) => {
+    let handleMouseOverDiff = listOfNodes => {
       switch (newNodes) {
       | [] =>
         if (deepestNode#getInternalId()
             != List.hd(listOfNodes)#getInternalId()) {
-          bubble(
-            List.hd(listOfNodes),
-            MouseOut(evtParams),
-            onAction(window),
-          );
-          bubble(deepestNode, MouseOver(evtParams), onAction(window));
+          bubble(List.hd(listOfNodes), MouseOut(evtParams));
+          bubble(deepestNode, MouseOver(evtParams));
         }
       | [node, ..._tail] =>
-        bubble(
-          List.hd(listOfNodes),
-          MouseOut(evtParams),
-          onAction(window),
-        );
-        bubble(node, MouseOver(evtParams), onAction(window));
+        bubble(List.hd(listOfNodes), MouseOut(evtParams));
+        bubble(node, MouseOver(evtParams));
       };
     };
 
-    handleMouseOverDiff(window, storedNodesUnderCursor^);
+    handleMouseOverDiff(storedNodesUnderCursor^);
     loopThroughStoredNodesUnderCursor(storedNodesUnderCursor^);
   } else {
     /*
@@ -233,33 +241,27 @@ let rec handleMouseEnterDiff =
        * MouseEnter/Leave events
        */
       List.iter(
-        node => sendToNode(window, node, MouseLeave(evtParams)),
+        node => node#handleEvent(MouseLeave(evtParams)),
         storedNodesUnderCursor^,
       );
 
       List.iter(
-        newNode => sendToNode(window, newNode, MouseEnter(evtParams)),
+        newNode => newNode#handleEvent(MouseEnter(evtParams)),
         [deepestNode, ...newNodes],
       );
 
       /*
        * MouseOver/Out Events
        */
-      bubble(
-        List.hd(storedNodesUnderCursor^),
-        MouseOut(evtParams),
-        onAction(window),
-      );
+      bubble(List.hd(storedNodesUnderCursor^), MouseOut(evtParams));
       switch (newNodes) {
-      | [] => bubble(deepestNode, MouseOver(evtParams), onAction(window))
-      | [node, ..._tail] =>
-        bubble(node, MouseOver(evtParams), onAction(window))
+      | [] => bubble(deepestNode, MouseOver(evtParams))
+      | [node, ..._tail] => bubble(node, MouseOver(evtParams))
       };
 
       storedNodesUnderCursor := newNodes @ [deepestNode];
     | Some(parent) =>
       handleMouseEnterDiff(
-        window,
         parent,
         evtParams,
         ~newNodes=newNodes @ [deepestNode],
@@ -270,12 +272,7 @@ let rec handleMouseEnterDiff =
 };
 
 let dispatch =
-    (
-      window,
-      cursor: Cursor.t,
-      evt: Events.internalMouseEvents,
-      node: Node.node,
-    ) => {
+    (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node) => {
   let eventToSend = internalToExternalEvent(cursor, evt);
   Log.tracef(m =>
     m(
@@ -295,10 +292,9 @@ let dispatch =
       };
     };
 
-    switch (CaptureState.get()) {
-    | Some(node) => sendToNode(window, node, eventToSend)
-
-    | None =>
+    if (Capture.isSet()) {
+      Capture.dispatch(eventToSend);
+    } else {
       let deepestNode = getTopMostNode(node, mouseX, mouseY);
 
       if (isMouseMoveEv(eventToSend)) {
@@ -310,15 +306,10 @@ let dispatch =
           // And recursively send mouseLeave events to storedNodes if they exist
           switch (storedNodesUnderCursor^) {
           | [] => ()
-          | [node, ..._] =>
-            bubble(node, MouseOut(mouseMoveEventParams), onAction(window))
+          | [node, ..._] => bubble(node, MouseOut(mouseMoveEventParams))
           };
 
-          sendMouseLeaveEvents(
-            window,
-            storedNodesUnderCursor^,
-            mouseMoveEventParams,
-          );
+          sendMouseLeaveEvents(storedNodesUnderCursor^, mouseMoveEventParams);
 
         | Some(deepNode) =>
           switch (storedNodesUnderCursor^) {
@@ -326,21 +317,12 @@ let dispatch =
             // If some deepNode is found and there are no storedNodes
             // Traverse the tree and call MouseEnter on each  node -  https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
             // And call bubbled MouseOver on deepNode
-            sendMouseEnterEvents(window, deepNode, mouseMoveEventParams);
-            bubble(
-              deepNode,
-              MouseOver(mouseMoveEventParams),
-              onAction(window),
-            );
+            sendMouseEnterEvents(deepNode, mouseMoveEventParams);
+            bubble(deepNode, MouseOver(mouseMoveEventParams));
           | [node, ..._] =>
             // Only handle diff if the deepestStoredNode !==  the deepestFoundNode
             if (node#getInternalId() != deepNode#getInternalId()) {
-              handleMouseEnterDiff(
-                window,
-                deepNode,
-                mouseMoveEventParams,
-                (),
-              );
+              handleMouseEnterDiff(deepNode, mouseMoveEventParams, ());
             }
           }
         };
@@ -351,7 +333,7 @@ let dispatch =
       | Some(node) =>
         let bbox = node#getBoundingBox();
         DebugDraw.setActive(bbox);
-        bubble(node, eventToSend, onAction(window));
+        bubble(node, eventToSend);
         let cursor = node#getCursorStyle();
         Event.dispatch(onCursorChanged, cursor);
       };

@@ -63,7 +63,6 @@ let%component make =
   let onMouseDown = _event => {
     capture();
     mouseDownTimes := (Time.now(), fst(mouseDownTimes^));
-    [];
   };
   let onMouseLeave = _event => releaseCapture();
   let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) =>

@@ -22,7 +22,6 @@ let insertNode = (~parent: node, ~child: node, ~position) => {
 
 let deleteNode = (~parent: node, ~child: node, ~position as _) => {
   parent#removeChild(child);
-  Mouse.releaseCapturedNode(child);
   parent;
 };
 
