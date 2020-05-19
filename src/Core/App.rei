@@ -62,6 +62,13 @@ let onBeforeQuit: (t, unit => unit) => unsubscribe;
 */
 let onIdle: (t, unit => unit) => unsubscribe;
 
+/** [onFileOpen(app, f) registers a callback [f] that is called when the host OS is trying to open a file]
+
+  Note that as of now, this function only is called on macOS, as other OS's have other
+  mechanisms for opening files (usually just through CLI args)
+*/
+let onFileOpen: (t, string => unit) => unsubscribe;
+
 /** [createWindow ~createOptions, app, name] creates a new window */
 let createWindow:
   (~createOptions: WindowCreateOptions.t=?, t, string) => Window.t;
