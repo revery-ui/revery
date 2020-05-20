@@ -7,7 +7,7 @@ let windowCallback = (node, window) =>
   Some(
     (sdlWindow, mouseX, mouseY) =>
       Sdl2.Window.(
-        if (sdlWindow == Window.getSdlWindow(window)) {
+        if (sdlWindow == Window.getSdlWindow(window) && node#hasRendered()) {
           let deepestNode =
             getTopMostNode(node, float(mouseX), float(mouseY));
           switch (deepestNode) {
