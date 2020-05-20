@@ -62,24 +62,6 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     );
 
   let _ignore =
-    Window.onMouseLeave(
-      window,
-      () => {
-        Log.trace("Mouse leaving window");
-        Mouse.notifyLeaveWindow(window);
-      },
-    );
-
-  let _ignore =
-    Window.onMouseEnter(
-      window,
-      () => {
-        Log.trace("Mouse entering window");
-        Mouse.notifyEnterWindow(window);
-      },
-    );
-
-  let _ignore =
     Window.onMouseDown(
       window,
       m => {

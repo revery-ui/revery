@@ -1,3 +1,4 @@
+open Revery_Core;
 open Revery_UI;
 open UiEvents;
 
@@ -83,8 +84,12 @@ describe("Mouse", ({describe, test, _}) => {
       let child2HitCount = ref(0);
       let child4HitCount = ref(0);
 
-      let child2MouseDown = _evt => incr(child2HitCount);
-      let child4MouseDown = _evt => incr(child4HitCount);
+      let child2MouseDown = _evt => {
+        incr(child2HitCount);
+      };
+      let child4MouseDown = _evt => {
+        incr(child4HitCount);
+      };
 
       node2#setEvents(NodeEvents.make(~onMouseDown=child2MouseDown, ()));
       node4#setEvents(NodeEvents.make(~onMouseDown=child4MouseDown, ()));
@@ -163,8 +168,12 @@ describe("Mouse", ({describe, test, _}) => {
       let child2HitCount = ref(0);
       let child4HitCount = ref(0);
 
-      let child2MouseDown = _evt => incr(child2HitCount);
-      let child4MouseDown = _evt => incr(child4HitCount);
+      let child2MouseDown = _evt => {
+        incr(child2HitCount);
+      };
+      let child4MouseDown = _evt => {
+        incr(child4HitCount);
+      };
 
       node2#setEvents(NodeEvents.make(~onMouseDown=child2MouseDown, ()));
       node4#setEvents(NodeEvents.make(~onMouseDown=child4MouseDown, ()));
@@ -231,8 +240,12 @@ describe("Mouse", ({describe, test, _}) => {
         let child2HitCount = ref(0);
         let child3HitCount = ref(0);
 
-        let child2MouseDown = _evt => incr(child2HitCount);
-        let child3MouseDown = _evt => incr(child3HitCount);
+        let child2MouseDown = _evt => {
+          incr(child2HitCount);
+        };
+        let child3MouseDown = _evt => {
+          incr(child3HitCount);
+        };
 
         node2#setEvents(NodeEvents.make(~onMouseDown=child2MouseDown, ()));
         node3#setEvents(NodeEvents.make(~onMouseDown=child3MouseDown, ()));
@@ -258,10 +271,12 @@ describe("Mouse", ({describe, test, _}) => {
       let cursor = Mouse.Cursor.make();
 
       let count = ref(0);
-      let f = _evt => count := count^ + 1;
+      let onMouseDown = _evt => {
+        count := count^ + 1;
+      };
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
-      node#setEvents(NodeEvents.make(~onMouseDown=f, ()));
+      node#setEvents(NodeEvents.make(~onMouseDown, ()));
 
       Mouse.dispatch(
         cursor,
@@ -278,10 +293,12 @@ describe("Mouse", ({describe, test, _}) => {
       let cursor = Mouse.Cursor.make();
 
       let count = ref(0);
-      let f = _evt => count := count^ + 1;
+      let onMouseDown = _evt => {
+        count := count^ + 1;
+      };
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
-      node#setEvents(NodeEvents.make(~onMouseDown=f, ()));
+      node#setEvents(NodeEvents.make(~onMouseDown, ()));
 
       Mouse.dispatch(
         cursor,
@@ -297,10 +314,10 @@ describe("Mouse", ({describe, test, _}) => {
       Mouse.Cursor.set(~x=50., ~y=50., cursor);
 
       let count = ref(0);
-      let f = _evt => count := count^ + 1;
+      let onFocus = _evt => count := count^ + 1;
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
-      node#setEvents(NodeEvents.make(~onFocus=f, ()));
+      node#setEvents(NodeEvents.make(~onFocus, ()));
       node#setTabIndex(Some(1));
 
       Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
@@ -314,10 +331,10 @@ describe("Mouse", ({describe, test, _}) => {
       Mouse.Cursor.set(~x=50.0, ~y=50.0, cursor);
 
       let count = ref(0);
-      let f = _evt => count := count^ + 1;
+      let onBlur = _evt => count := count^ + 1;
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
-      node#setEvents(NodeEvents.make(~onBlur=f, ()));
+      node#setEvents(NodeEvents.make(~onBlur, ()));
       node#setTabIndex(Some(1));
       Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
       Mouse.Cursor.set(~x=200., ~y=200., cursor);
@@ -328,10 +345,10 @@ describe("Mouse", ({describe, test, _}) => {
     test("triggers onMouseEnter event for node", ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       let count = ref(0);
-      let f = _evt => count := count^ + 1;
+      let onMouseEnter = _evt => count := count^ + 1;
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
-      node#setEvents(NodeEvents.make(~onMouseEnter=f, ()));
+      node#setEvents(NodeEvents.make(~onMouseEnter, ()));
 
       Mouse.dispatch(
         cursor,
@@ -345,10 +362,10 @@ describe("Mouse", ({describe, test, _}) => {
     test("triggers onMouseLeave event for node", ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       let count = ref(0);
-      let f = _evt => count := count^ + 1;
+      let onMouseLeave = _evt => count := count^ + 1;
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
-      node#setEvents(NodeEvents.make(~onMouseLeave=f, ()));
+      node#setEvents(NodeEvents.make(~onMouseLeave, ()));
 
       Mouse.dispatch(
         cursor,
@@ -393,10 +410,10 @@ describe("Mouse", ({describe, test, _}) => {
     test("triggers onMouseOver event for node", ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       let count = ref(0);
-      let f = _evt => count := count^ + 1;
+      let onMouseOver = _evt => count := count^ + 1;
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
-      node#setEvents(NodeEvents.make(~onMouseOver=f, ()));
+      node#setEvents(NodeEvents.make(~onMouseOver, ()));
 
       Mouse.dispatch(
         cursor,
@@ -410,10 +427,10 @@ describe("Mouse", ({describe, test, _}) => {
     test("triggers onMouseOut event for node", ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
       let count = ref(0);
-      let f = _evt => count := count^ + 1;
+      let onMouseOut = _evt => count := count^ + 1;
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
-      node#setEvents(NodeEvents.make(~onMouseOut=f, ()));
+      node#setEvents(NodeEvents.make(~onMouseOut, ()));
 
       Mouse.dispatch(
         cursor,
@@ -528,17 +545,23 @@ describe("Mouse", ({describe, test, _}) => {
     test("captured events override dispatching to node", ({expect, _}) => {
       let cursor = Mouse.Cursor.make();
 
-      let nodeCount = ref(0);
-      let captureCount = ref(0);
-      let nodeCounter = _evt => nodeCount := nodeCount^ + 1;
-      let captureCounter = _evt => captureCount := captureCount^ + 1;
+      let uncapturedMoves = ref(0);
+      let capturedMoves = ref(0);
+      let onMouseMove = _evt => incr(uncapturedMoves);
 
       let node =
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
 
-      Mouse.setCapture(~onMouseDown=captureCounter, ());
+      node#setEvents(NodeEvents.make(~onMouseMove, ()));
 
-      node#setEvents(NodeEvents.make(~onMouseDown=nodeCounter, ()));
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        node,
+      );
+
+      expect.int(uncapturedMoves^).toBe(0);
+      expect.int(capturedMoves^).toBe(0);
 
       Mouse.dispatch(
         cursor,
@@ -546,16 +569,33 @@ describe("Mouse", ({describe, test, _}) => {
         node,
       );
 
-      Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
+      expect.int(uncapturedMoves^).toBe(1);
+      expect.int(capturedMoves^).toBe(0);
 
-      expect.int(nodeCount^).toBe(0);
-      expect.int(captureCount^).toBe(1);
+      Mouse.setCapture(
+        ~onMouseMove=_ => incr(capturedMoves),
+        Window.create("", WindowCreateOptions.default),
+      );
+
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        node,
+      );
+
+      expect.int(uncapturedMoves^).toBe(1);
+      expect.int(capturedMoves^).toBe(1);
 
       Mouse.releaseCapture();
-      Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
 
-      expect.int(nodeCount^).toBe(1);
-      expect.int(captureCount^).toBe(1);
+      Mouse.dispatch(
+        cursor,
+        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        node,
+      );
+
+      expect.int(uncapturedMoves^).toBe(1);
+      expect.int(capturedMoves^).toBe(1);
     })
   );
 
