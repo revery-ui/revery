@@ -11,18 +11,29 @@
 
 #include "utilities.h"
 
-void revery_appDelegate_openFile(const char *path) {
+#import <Cocoa/Cocoa.h>
+
+CAMLprim value _revery_appDelegate_openFile(const char *path) {
+    CAMLparam0();
+    CAMLlocal1(vPath);
+
     static const value *dispatchFileOpen = NULL;
     if (dispatchFileOpen == NULL) {
         dispatchFileOpen = caml_named_value("revery_dispatchFileOpen");
     }
     // Call only if the value was gotten
     if (dispatchFileOpen != NULL) {
-        caml_c_thread_register();
-        caml_acquire_runtime_system();
-        caml_callback(*dispatchFileOpen, caml_copy_string(path));
-        caml_release_runtime_system();
+        vPath = caml_copy_string(path);
+        caml_callback(*dispatchFileOpen, vPath);
     }
+    CAMLreturn(Val_unit);
+}
+
+void revery_appDelegate_openFile(const char *path) {
+    caml_c_thread_register();
+    caml_acquire_runtime_system();
+    _revery_appDelegate_openFile(path);
+    caml_release_runtime_system();
 }
 
 #endif
