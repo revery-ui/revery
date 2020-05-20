@@ -22,7 +22,7 @@ let start: (Window.t, React.element(React.reveryNode)) => renderFunction;
 
 let getActiveWindow: unit => option(Window.t);
 
-type mouseBehvaior =
+type mouseBehavior =
   Sdl2.Window.hitTestResult =
     | Normal
     | Draggable
