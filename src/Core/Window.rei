@@ -16,6 +16,7 @@ let onAfterSwap: (t, unit => unit) => unsubscribe;
 let onFocusGained: (t, unit => unit) => unsubscribe;
 let onFocusLost: (t, unit => unit) => unsubscribe;
 let onMaximized: (t, unit => unit) => unsubscribe;
+let onFullscreen: (t, unit => unit) => unsubscribe;
 let onMinimized: (t, unit => unit) => unsubscribe;
 let onRestored: (t, unit => unit) => unsubscribe;
 let onCompositionStart: (t, unit => unit) => unsubscribe;

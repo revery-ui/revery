@@ -208,6 +208,7 @@ let start = init => {
     | Sdl2.Event.WindowFocusGained({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.WindowFocusLost({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.WindowMaximized({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.WindowFullscreen({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.WindowMinimized({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.WindowRestored({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID)
