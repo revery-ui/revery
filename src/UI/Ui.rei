@@ -21,3 +21,16 @@ type renderFunction = React.element(React.reveryNode) => unit;
 let start: (Window.t, React.element(React.reveryNode)) => renderFunction;
 
 let getActiveWindow: unit => option(Window.t);
+
+type mouseBehvaior =
+  Sdl2.Window.hitTestResult =
+    | Normal
+    | Draggable
+    | ResizeTopLeft
+    | ResizeTop
+    | ResizeTopRight
+    | ResizeRight
+    | ResizeBottomRight
+    | ResizeBottom
+    | ResizeBottomLeft
+    | ResizeLeft;

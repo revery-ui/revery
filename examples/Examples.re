@@ -155,6 +155,11 @@ let examples = [
     render: _ => URLFileOpen.render(),
     source: "URLFileOpen.re",
   },
+  {
+    name: "Window: Hit Tests/Zones",
+    render: _ => HitTests.render(),
+    source: "HitTests.re",
+  },
 ];
 
 let getExampleByName = name =>

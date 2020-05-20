@@ -20,6 +20,19 @@ let _activeWindow: ref(option(Window.t)) = ref(None);
 
 type renderFunction = React.element(React.reveryNode) => unit;
 
+type mouseBehvaior =
+  Sdl2.Window.hitTestResult =
+    | Normal
+    | Draggable
+    | ResizeTopLeft
+    | ResizeTop
+    | ResizeTopRight
+    | ResizeRight
+    | ResizeBottomRight
+    | ResizeBottom
+    | ResizeBottomLeft
+    | ResizeLeft;
+
 let getActiveWindow = () => _activeWindow^;
 
 let start = (window: Window.t, element: React.element(React.reveryNode)) => {
@@ -35,6 +48,11 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
   let container = Container.create(rootNode);
   let ui = RenderContainer.create(window, rootNode, container, mouseCursor);
+
+  Sdl2.Window.setHitTest(
+    Window.getSdlWindow(window),
+    HitTest.windowCallback(rootNode, window),
+  );
 
   let _ignore = Window.onExposed(window, () => uiDirty := true);
 
