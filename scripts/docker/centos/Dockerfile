@@ -24,7 +24,7 @@ RUN npm -v
 RUN npm install --global --unsafe-perm=true esy@0.6.2
 
 RUN yum -y install nasm
-RUN rpm -U https://repo.ius.io/ius-release-el7.rpm
+RUN yum -y install https://repo.ius.io/ius-release-el7.rpm
 RUN yum -y remove git
 RUN yum -y install epel-release
 RUN yum -y install git222
