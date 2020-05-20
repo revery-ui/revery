@@ -310,6 +310,8 @@ let init = app => {
   let _unsubscribe =
     Window.onMaximized(window, () => Console.log("Maximized!"));
   let _unsubscribe =
+    Window.onFullscreen(window, () => Console.log("Fullscreen!"));
+  let _unsubscribe =
     Window.onMinimized(window, () => Console.log("Minimized!"));
   let _unsubscribe =
     Window.onRestored(window, () => Console.log("Restored!"));

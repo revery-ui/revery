@@ -5,6 +5,18 @@
 open Revery_Core;
 open Revery_Math;
 
+module Actions = {
+  type global = [ | `preventDefault];
+  type bubble = [ | `stopPropagation];
+  type mouseDown = [ | `capture(unit => unit)];
+  type nonBubble = [ mouseDown | global];
+  type all = [ mouseDown | bubble | global];
+
+  let capture = (~onRelease) => `capture(onRelease);
+  let stopPropagation = `stopPropagation;
+  let preventDefault = `preventDefault;
+};
+
 [@deriving show({with_path: false})]
 type mouseMoveEventParams = {
   mouseX: float,
@@ -87,7 +99,8 @@ type event =
   | Focus;
 
 type refCallback('a) = 'a => unit;
-type mouseButtonHandler = mouseButtonEventParams => unit;
+type mouseDownHandler = mouseButtonEventParams => unit;
+type mouseUpHandler = mouseButtonEventParams => unit;
 type mouseMoveHandler = mouseMoveEventParams => unit;
 type mouseOverHandler = mouseMoveEventParams => unit;
 type mouseOutHandler = mouseMoveEventParams => unit;
@@ -103,9 +116,9 @@ type fileDropHandler = fileDropEventParams => unit;
 
 type t('a) = {
   ref: option(refCallback('a)),
-  onMouseDown: option(mouseButtonHandler),
+  onMouseDown: option(mouseDownHandler),
   onMouseMove: option(mouseMoveHandler),
-  onMouseUp: option(mouseButtonHandler),
+  onMouseUp: option(mouseUpHandler),
   onMouseWheel: option(mouseWheelHandler),
   onMouseEnter: option(mouseMoveHandler),
   onMouseLeave: option(mouseMoveHandler),

@@ -173,6 +173,7 @@ type t = {
   onMouseEnter: Event.t(unit),
   onMouseLeave: Event.t(unit),
   onMaximized: Event.t(unit),
+  onFullscreen: Event.t(unit),
   onMinimized: Event.t(unit),
   onRestored: Event.t(unit),
   onSizeChanged: Event.t(size),
@@ -255,6 +256,7 @@ let onAfterSwap = w => Event.subscribe(w.onAfterSwap);
 let onFocusGained = w => Event.subscribe(w.onFocusGained);
 let onFocusLost = w => Event.subscribe(w.onFocusLost);
 let onMaximized = w => Event.subscribe(w.onMaximized);
+let onFullscreen = w => Event.subscribe(w.onFullscreen);
 let onMinimized = w => Event.subscribe(w.onMinimized);
 let onRestored = w => Event.subscribe(w.onRestored);
 let onExposed = w => Event.subscribe(w.onExposed);
@@ -394,6 +396,7 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.WindowLeave(_) => Event.dispatch(v.onMouseLeave, ())
   | Sdl2.Event.WindowExposed(_) => Event.dispatch(v.onExposed, ())
   | Sdl2.Event.WindowMaximized(_) => Event.dispatch(v.onMaximized, ())
+  | Sdl2.Event.WindowFullscreen(_) => Event.dispatch(v.onFullscreen, ())
   | Sdl2.Event.WindowMinimized(_) => Event.dispatch(v.onMinimized, ())
 
   | Sdl2.Event.WindowRestored(_) =>
@@ -561,6 +564,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     onMinimized: Event.create(),
     onMaximized: Event.create(),
+    onFullscreen: Event.create(),
     onRestored: Event.create(),
     onExposed: Event.create(),
     onSizeChanged: Event.create(),
