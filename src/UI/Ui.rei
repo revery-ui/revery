@@ -22,6 +22,13 @@ let start: (Window.t, React.element(React.reveryNode)) => renderFunction;
 
 let getActiveWindow: unit => option(Window.t);
 
+/** [mouseBehavior] is an alias for SDL2's hit-test results.
+       Each option is fairly self explanatory, but please note that
+       these only work if you set `decorated` to false on window
+       creation. This is unfortunately due to the fact that enabling
+       hit tests causes the default chrome behavior on Windows to no
+       longer work.
+   */
 type mouseBehavior =
   Sdl2.Window.hitTestResult =
     | Normal
