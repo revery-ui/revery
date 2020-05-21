@@ -49,10 +49,12 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
   let container = Container.create(rootNode);
   let ui = RenderContainer.create(window, rootNode, container, mouseCursor);
 
-  Sdl2.Window.setHitTest(
-    Window.getSdlWindow(window),
-    HitTest.windowCallback(rootNode, window),
-  );
+  if (!Window.isDecorated(window)) {
+    Sdl2.Window.setHitTest(
+      Window.getSdlWindow(window),
+      HitTest.windowCallback(rootNode, window),
+    );
+  };
 
   let _ignore = Window.onExposed(window, () => uiDirty := true);
 

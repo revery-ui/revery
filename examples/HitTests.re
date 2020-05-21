@@ -30,15 +30,22 @@ module Styles = {
     ];
 };
 
-let hitTests = () =>
+let hitTests = (~window, ()) =>
   <View style=Styles.outer>
-    <View style=Styles.draggable mouseBehavior=Draggable>
-      <Text
-        text="Drag window from here!"
-        style=Styles.text
-        mouseBehavior=Draggable
-      />
-    </View>
+    {
+      Window.isDecorated(window) ?
+        <Text
+          text="Window decorations must not be enabled.\nRestart with --no-decoration"
+          style=Styles.text
+        /> :
+        <View style=Styles.draggable mouseBehavior=Draggable>
+          <Text
+            text="Drag window from here!"
+            style=Styles.text
+            mouseBehavior=Draggable
+          />
+        </View>
+    }
   </View>;
 
-let render = () => <hitTests />;
+let render = window => <hitTests window />;
