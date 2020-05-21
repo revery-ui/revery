@@ -27,8 +27,9 @@ let winControl = (~window as w, ()) =>
   <View style=Styles.outer>
     <Row>
       <Button title="Maximize!" onClick={_ => Window.maximize(w)} />
-      <Button title="Restore!" onClick={_ => Window.restore(w)} />
+      <Button title="Minimize!" onClick={_ => Window.minimize(w)} />
     </Row>
+    <Button title="Restore!" onClick={_ => Window.restore(w)} />
   </View>;
 
 let render = window => <winControl window />;
