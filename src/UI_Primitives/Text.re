@@ -17,6 +17,7 @@ let%nativeComponent make =
                       ~text="",
                       ~smoothing=Revery_Font.Smoothing.default,
                       ~children=React.empty,
+                      ~mouseBehavior=Revery_UI.Normal,
                       (),
                       hooks,
                     ) => (
@@ -64,6 +65,7 @@ let%nativeComponent make =
       tn#setStyle(styles);
       tn#setText(text);
       tn#setSmoothing(smoothing);
+      tn#setMouseBehavior(mouseBehavior);
       node;
     },
     children,

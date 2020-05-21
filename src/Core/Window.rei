@@ -65,6 +65,8 @@ let getBackgroundColor: t => Color.t;
 
 let isDirty: t => bool;
 
+let isDecorated: t => bool;
+
 let setInputRect: (t, int, int, int, int) => unit;
 let startTextInput: t => unit;
 let stopTextInput: t => unit;

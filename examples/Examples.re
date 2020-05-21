@@ -155,6 +155,11 @@ let examples = [
     render: _ => URLFileOpen.render(),
     source: "URLFileOpen.re",
   },
+  {
+    name: "Window: Hit Tests/Zones",
+    render: w => HitTests.render(w),
+    source: "HitTests.re",
+  },
 ];
 
 let getExampleByName = name =>
@@ -266,13 +271,15 @@ let init = app => {
   |> (ignore: Revery.App.unsubscribe => unit);
 
   let initialExample = ref("Animation");
+  let decorated = ref(true);
   Arg.parse(
     [
       ("--trace", Unit(() => Timber.App.setLevel(Timber.Level.trace)), ""),
+      ("--no-decoration", Unit(() => decorated := false), ""),
       ("--example", String(name => initialExample := name), ""),
     ],
     _ => (),
-    "There is only --trace and --example",
+    "There is only --trace, --example, and --no-decoration",
   );
   let initialExample = initialExample^;
 
@@ -293,6 +300,7 @@ let init = app => {
           ~maximized,
           ~titlebarStyle=Transparent,
           ~icon=Some("revery-icon.png"),
+          ~decorated=decorated^,
           (),
         ),
       app,

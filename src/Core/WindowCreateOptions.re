@@ -14,6 +14,9 @@ type t = {
   maximized: bool,
   /**
     If [decorated] is true, the window will be framed with the OS-specific adorners.
+    If false, the default chrome behavior on the OS will be disabled and (if you want
+    to maintain that functionality) you must implement it yourself through the
+    mouseBehavior attribute on Views
     */
   decorated: bool,
   /**

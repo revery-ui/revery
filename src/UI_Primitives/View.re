@@ -24,6 +24,7 @@ let%nativeComponent make =
                       ~onDimensionsChanged=?,
                       ~onBoundingBoxChanged=?,
                       ~onFileDropped=?,
+                      ~mouseBehavior=Revery_UI.Normal,
                       (),
                       hooks,
                     ) => (
@@ -85,6 +86,7 @@ let%nativeComponent make =
       node#setEvents(events);
       node#setStyle(styles);
       node#setTabIndex(tabindex);
+      node#setMouseBehavior(mouseBehavior);
       node;
     },
     children,

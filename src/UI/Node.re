@@ -64,6 +64,7 @@ class node (()) = {
   val mutable _isLayoutDirty = true;
   val mutable _forcedMeasurements: option(Dimensions.t) = None;
   val mutable _hasHadNonZeroBlurRadius = false;
+  val mutable _mouseBehavior = Sdl2.Window.Normal;
   // !! WARNING !!
   // These values are not marked as [mutable], but they are mutated
   // via the C FFI for performance.
@@ -444,6 +445,8 @@ class node (()) = {
   pub blur = () => {
     _hasFocus = false;
   };
+  pub setMouseBehavior = behavior => _mouseBehavior = behavior;
+  pub getMouseBehavior = () => _mouseBehavior;
 };
 
 let iter = (f, node: node) => {

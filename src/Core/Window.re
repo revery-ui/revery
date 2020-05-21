@@ -157,6 +157,7 @@ type t = {
   mutable isComposingText: bool,
   mutable dropState: option(list(string)),
   titlebarStyle: WindowStyles.titlebar,
+  isDecorated: bool,
   onBeforeRender: Event.t(unit),
   onAfterRender: Event.t(unit),
   onBeforeSwap: Event.t(unit),
@@ -284,6 +285,8 @@ let isDirty = (w: t) =>
   } else {
     w.requestedUnscaledSize != None;
   };
+
+let isDecorated = (w: t) => w.isDecorated;
 
 let getSdlWindow = (w: t) => w.sdlWindow;
 
@@ -553,6 +556,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     dropState: None,
 
     forceScaleFactor: options.forceScaleFactor,
+
+    isDecorated: options.decorated,
 
     onBeforeRender: Event.create(),
     onAfterRender: Event.create(),
