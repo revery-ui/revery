@@ -696,6 +696,10 @@ let isFullscreen = (w: t) => {
   Sdl2.Window.isFullscreen(w.sdlWindow);
 };
 
+let restore = (w: t) => {
+  Sdl2.Window.restore(w.sdlWindow);
+};
+
 let minimize = (w: t) => {
   Sdl2.Window.minimize(w.sdlWindow);
 };

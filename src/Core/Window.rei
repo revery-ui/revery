@@ -78,6 +78,7 @@ let show: t => unit;
 let maximize: t => unit;
 let isMaximized: t => bool;
 let isFullscreen: t => bool;
+let restore: t => unit;
 let minimize: t => unit;
 
 let setBackgroundColor: (t, Color.t) => unit;
