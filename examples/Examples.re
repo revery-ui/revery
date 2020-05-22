@@ -160,6 +160,11 @@ let examples = [
     render: w => HitTests.render(w),
     source: "HitTests.re",
   },
+  {
+    name: "Window: Control",
+    render: w => WindowControl.render(w),
+    source: "WindowControl.re",
+  },
 ];
 
 let getExampleByName = name =>
