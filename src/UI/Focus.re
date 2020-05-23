@@ -29,15 +29,15 @@ let focus = (node: Node.node) => {
   focused := Some({handler: node#handleEvent, id: node#getInternalId()});
 };
 
+let isFocused = (node: Node.node) =>
+  switch (focused^) {
+  | Some({id, _}) => node#getInternalId() === id
+  | None => false
+  };
+
 /* TODO perform checks if a node can be focused ? */
 let dispatch = (node: Node.node) =>
-  switch (focused^) {
-  | Some({id, _}) =>
-    if (node#getInternalId() === id) {
-      ();
-    } else {
-      loseFocus();
-      focus(node);
-    }
-  | None => focus(node)
+  if (!isFocused(node)) {
+    loseFocus();
+    focus(node);
   };
