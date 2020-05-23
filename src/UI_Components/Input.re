@@ -48,14 +48,11 @@ module Cursor = {
 };
 
 type state = {
-  isFocused: bool, // TODO: Violates single source of truth
   value: string,
   cursorPosition: int,
 };
 
 type action =
-  | Focus
-  | Blur
   | TextInput(string, int);
 
 let getStringParts = (index, str) => {
@@ -108,9 +105,7 @@ let addCharacter = (word, char, index) => {
 
 let reducer = (action, state) =>
   switch (action) {
-  | Focus => {...state, isFocused: true}
-  | Blur => {...state, isFocused: false}
-  | TextInput(value, cursorPosition) => {...state, value, cursorPosition}
+  | TextInput(value, cursorPosition) => {value, cursorPosition}
   };
 
 module Constants = {
@@ -212,7 +207,6 @@ let%component make =
   let%hook (state, dispatch) =
     Hooks.reducer(
       ~initialState={
-        isFocused: false,
         value: Option.value(value, ~default=""),
         cursorPosition: Option.value(cursorPosition, ~default=0),
       },
@@ -248,8 +242,16 @@ let%component make =
     dimensions.width |> int_of_float;
   };
 
+  let%hook clickableRef = Hooks.ref(None);
+  let isFocused = () => {
+    switch (clickableRef^) {
+    | Some(node) => Focus.isFocused(node)
+    | None => false
+    };
+  };
+
   let%hook (cursorOpacity, resetCursor) =
-    Cursor.use(~interval=Time.ms(500), ~isFocused=state.isFocused);
+    Cursor.use(~interval=Time.ms(500), ~isFocused=isFocused());
 
   let () = {
     let cursorOffset =
@@ -275,14 +277,12 @@ let%component make =
     resetCursor();
     onFocus();
     Sdl2.TextInput.start();
-    dispatch(Focus);
   };
 
   let handleBlur = () => {
     resetCursor();
     onBlur();
     Sdl2.TextInput.stop();
-    dispatch(Blur);
   };
 
   // TODO:This ought to be in the reducer, but since reducer calls are deferred
@@ -350,6 +350,13 @@ let%component make =
     };
   };
 
+  let handleRef = node => {
+    clickableRef := Some(node);
+    if (autofocus) {
+      Focus.focus(node);
+    };
+  };
+
   let cursor = () => {
     let (startStr, _) = getStringParts(cursorPosition, value);
     let textWidth = measureTextWidth(startStr);
@@ -392,7 +399,7 @@ let%component make =
   <Clickable
     onFocus=handleFocus
     onBlur=handleBlur
-    componentRef={autofocus ? Focus.focus : ignore}
+    componentRef=handleRef
     onAnyClick=handleClick
     onKeyDown=handleKeyDown
     onTextInput=handleTextInput>
