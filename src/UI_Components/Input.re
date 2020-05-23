@@ -219,7 +219,7 @@ let%component make =
       reducer,
     );
   let%hook textRef = Hooks.ref(None);
-  let%hook (scrollOffset, _setScrollOffset) = Hooks.state(ref(0));
+  let%hook scrollOffset = Hooks.ref(0);
 
   let textAttrs = {
     fontFamily: Selector.select(style, FontFamily, "Roboto-Regular.ttf"),
