@@ -23,7 +23,7 @@ let loseFocus = () => {
   // If there is an active window, with text input active, turn off text input
 };
 
-let focus = (node: Node.node) => {
+let focusWithoutBlur = (node: Node.node) => {
   Log.trace("focus()");
   node#handleEvent(Focus);
   focused := Some({handler: node#handleEvent, id: node#getInternalId()});
@@ -31,13 +31,13 @@ let focus = (node: Node.node) => {
 
 let isFocused = (node: Node.node) =>
   switch (focused^) {
-  | Some({id, _}) => node#getInternalId() === id
+  | Some({id, _}) => node#getInternalId() == id
   | None => false
   };
 
 /* TODO perform checks if a node can be focused ? */
-let dispatch = (node: Node.node) =>
+let focus = (node: Node.node) =>
   if (!isFocused(node)) {
     loseFocus();
-    focus(node);
+    focusWithoutBlur(node);
   };

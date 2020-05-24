@@ -287,7 +287,7 @@ let dispatch =
 
     if (isMouseDownEv(eventToSend)) {
       switch (getFirstFocusable(node, mouseX, mouseY)) {
-      | Some(node) => Focus.dispatch(node)
+      | Some(node) => Focus.focus(node)
       | None => Focus.loseFocus()
       };
     };
