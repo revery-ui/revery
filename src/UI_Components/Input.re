@@ -52,9 +52,6 @@ type state = {
   cursorPosition: int,
 };
 
-type action =
-  | TextInput(string, int);
-
 let getStringParts = (index, str) => {
   switch (index) {
   | 0 => ("", str)
