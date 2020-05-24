@@ -124,10 +124,11 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
       window,
       f => {
         Log.trace("File dropped");
+        let scaleAndZoomFactor = Window.getScaleAndZoom(window);
         let evt =
           Revery_Core.Events.InternalFileDropped({
-            mouseX: f.mouseX,
-            mouseY: f.mouseY,
+            mouseX: f.mouseX /. scaleAndZoomFactor,
+            mouseY: f.mouseY /. scaleAndZoomFactor,
             paths: f.paths,
           });
         FileDrop.dispatch(evt, rootNode);
