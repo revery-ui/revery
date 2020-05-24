@@ -8,8 +8,13 @@ let windowCallback = (node, window) =>
     (sdlWindow, mouseX, mouseY) =>
       Sdl2.Window.(
         if (sdlWindow == Window.getSdlWindow(window) && node#hasRendered()) {
+          let scaleAndZoomFactor = Window.getScaleAndZoom(window);
           let deepestNode =
-            getTopMostNode(node, float(mouseX), float(mouseY));
+            getTopMostNode(
+              node,
+              float(mouseX) /. scaleAndZoomFactor,
+              float(mouseY) /. scaleAndZoomFactor,
+            );
           switch (deepestNode) {
           | Some(node) => node#getMouseBehavior()
           | None => Normal
