@@ -103,11 +103,6 @@ let addCharacter = (word, char, index) => {
   (startStr ++ char ++ endStr, String.length(startStr) + 1);
 };
 
-let reducer = (action, state) =>
-  switch (action) {
-  | TextInput(value, cursorPosition) => {value, cursorPosition}
-  };
-
 module Constants = {
   let defaultHeight = 50;
   let defaultWidth = 200;
@@ -204,14 +199,11 @@ let%component make =
                 ~isPassword=false,
                 (),
               ) => {
-  let%hook (state, dispatch) =
-    Hooks.reducer(
-      ~initialState={
-        value: Option.value(value, ~default=""),
-        cursorPosition: Option.value(cursorPosition, ~default=0),
-      },
-      reducer,
-    );
+  let%hook (state, setState) =
+    Hooks.state({
+      value: Option.value(value, ~default=""),
+      cursorPosition: Option.value(cursorPosition, ~default=0),
+    });
   let%hook textRef = Hooks.ref(None);
   let%hook scrollOffset = Hooks.ref(0);
 
@@ -291,7 +283,7 @@ let%component make =
   // Refactor when https://github.com/briskml/brisk-reconciler/issues/54 has been fixed
   let update = (value, cursorPosition) => {
     onChange(value, cursorPosition);
-    dispatch(TextInput(value, cursorPosition));
+    setState(_ => {value, cursorPosition});
   };
 
   let handleTextInput = (event: NodeEvents.textInputEventParams) => {
