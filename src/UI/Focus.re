@@ -10,6 +10,8 @@ let focused = ref(None);
 
 module Log = (val Log.withNamespace("Revery.UI.Focus"));
 
+let getFocused = () => focused^;
+
 /* Should happen when user clicks anywhere where no focusable node exists */
 let loseFocus = () => {
   Log.trace("loseFocus()");
@@ -23,12 +25,6 @@ let loseFocus = () => {
   // If there is an active window, with text input active, turn off text input
 };
 
-let focusWithoutBlur = (node: Node.node) => {
-  Log.trace("focus()");
-  node#handleEvent(Focus);
-  focused := Some({handler: node#handleEvent, id: node#getInternalId()});
-};
-
 let isFocused = (node: Node.node) =>
   switch (focused^) {
   | Some({id, _}) => node#getInternalId() == id
@@ -39,5 +35,8 @@ let isFocused = (node: Node.node) =>
 let focus = (node: Node.node) =>
   if (!isFocused(node)) {
     loseFocus();
-    focusWithoutBlur(node);
+
+    Log.trace("focus()");
+    node#handleEvent(Focus);
+    focused := Some({handler: node#handleEvent, id: node#getInternalId()});
   };

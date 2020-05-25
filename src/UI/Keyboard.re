@@ -2,7 +2,7 @@ open Revery_Core;
 open NodeEvents;
 
 let dispatch = (event: Revery_Core.Events.internalKeyboardEvent) => {
-  let focused = Focus.focused^;
+  let focused = Focus.getFocused();
 
   switch (focused) {
   | None => ()
