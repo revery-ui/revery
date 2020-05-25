@@ -24,7 +24,7 @@ let%component make =
                 ~onRightClick=() => (),
                 ~onDoubleClick=() => (),
                 ~onAnyClick=_event => (),
-                ~componentRef=_node => (),
+                ~componentRef=?,
                 ~onBlur=?,
                 ~onFocus=?,
                 ~tabindex=0,
@@ -37,8 +37,6 @@ let%component make =
                 ~children,
                 (),
               ) => {
-  let%hook clickableRef = Hooks.ref(None);
-
   let%hook mouseDownTimes = Hooks.ref(Constants.initialMouseDownTimes);
 
   let isDoubleClick = () =>
@@ -62,27 +60,24 @@ let%component make =
     onAnyClick(mouseEvt);
   };
 
-  let onMouseUp = (_state, evt: NodeEvents.mouseButtonEventParams) =>
-    switch (clickableRef^) {
-    | None => None
-    | Some(node) =>
-      if (UiEvents.isNodeImpacted(node, evt.mouseX, evt.mouseY)) {
-        onMouseClick(evt);
-      };
-      None;
+  let onMouseUp = (isInButton, evt: NodeEvents.mouseButtonEventParams) => {
+    if (isInButton) {
+      onMouseClick(evt);
     };
-
-  let%hook (captureMouse, _captureState) =
-    Hooks.mouseCapture(~onMouseUp, ());
-
-  let onMouseDown = _event => {
-    captureMouse();
-    mouseDownTimes := (Time.now(), fst(mouseDownTimes^));
+    None;
   };
 
-  let handleRef = node => {
-    clickableRef := Some(node);
-    componentRef(node);
+  let%hook (captureMouse, captureState) =
+    Hooks.mouseCapture(
+      ~onMouseUp,
+      ~onMouseEnter=(_state, _evt) => Some(true),
+      ~onMouseLeave=(_state, _evt) => Some(false),
+      (),
+    );
+
+  let onMouseDown = _event => {
+    captureMouse(true);
+    mouseDownTimes := (Time.now(), fst(mouseDownTimes^));
   };
 
   let style = Style.[cursor(MouseCursors.pointer), ...style];
@@ -100,7 +95,7 @@ let%component make =
     ?onTextEdit
     ?onTextInput
     tabindex={Some(tabindex)}
-    ref=handleRef>
+    ref=?componentRef>
     children
   </View>;
 };

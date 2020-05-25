@@ -17,6 +17,8 @@ let setCapture:
     ~onMouseUp: NodeEvents.mouseUpHandler=?,
     ~onMouseMove: NodeEvents.mouseMoveHandler=?,
     ~onMouseWheel: NodeEvents.mouseWheelHandler=?,
+    ~onMouseEnter: NodeEvents.mouseMoveHandler=?,
+    ~onMouseLeave: NodeEvents.mouseMoveHandler=?,
     Window.t
   ) =>
   unit;
