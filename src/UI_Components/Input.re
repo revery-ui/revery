@@ -52,6 +52,14 @@ type state = {
   cursorPosition: int,
 };
 
+type action =
+  | TextInput(string, int);
+
+let reducer = (action, state) =>
+  switch (action) {
+  | TextInput(value, cursorPosition) => {value, cursorPosition}
+  };
+
 let getStringParts = (index, str) => {
   switch (index) {
   | 0 => ("", str)
@@ -196,11 +204,18 @@ let%component make =
                 ~isPassword=false,
                 (),
               ) => {
-  let%hook (state, setState) =
-    Hooks.state({
-      value: Option.value(value, ~default=""),
-      cursorPosition: Option.value(cursorPosition, ~default=0),
-    });
+  // TODO: This ought to be a state hook not reducer but
+  // a bug with stale hook setters might happen.
+  //
+  // Refactor when https://github.com/briskml/brisk-reconciler/issues/74 has been fixed
+  let%hook (state, dispatch) =
+    Hooks.reducer(
+      ~initialState={
+        value: Option.value(value, ~default=""),
+        cursorPosition: Option.value(cursorPosition, ~default=0),
+      },
+      reducer,
+    );
   let%hook textRef = Hooks.ref(None);
   let%hook scrollOffset = Hooks.ref(0);
 
@@ -280,7 +295,7 @@ let%component make =
   // Refactor when https://github.com/briskml/brisk-reconciler/issues/54 has been fixed
   let update = (value, cursorPosition) => {
     onChange(value, cursorPosition);
-    setState(_ => {value, cursorPosition});
+    dispatch(TextInput(value, cursorPosition));
   };
 
   let handleTextInput = (event: NodeEvents.textInputEventParams) => {
