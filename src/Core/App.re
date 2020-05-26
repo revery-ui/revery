@@ -48,7 +48,7 @@ let quit = (~askNicely=false, ~code=0, app: t) => {
   };
 
   if (Hashtbl.length(app.windows) == 0 || !askNicely) {
-    Revery_Native.uninit();
+    Revery_Native.uninitApp();
 
     // Verify [quit] wasn't called recursively from a beforeQuit handler
     if (!app.isQuitting) {
@@ -253,7 +253,7 @@ let start = init => {
   let dispatchFileOpen = Event.dispatch(appInstance.onFileOpen);
   Callback.register("revery_dispatchFileOpen", dispatchFileOpen);
 
-  Revery_Native.init();
+  Revery_Native.initApp();
 
   let appLoop = () => {
     _flushEvents();
