@@ -45,6 +45,10 @@ CAMLprim value revery_initializeWindow(value vWin) {
     CAMLparam1(vWin);
     void *win = (void *)vWin;
 #ifdef WIN32
+    /* This flag often gets unset when the window decoration is removed.
+       This Chromium comment is the source of this fix:
+       https://chromium.googlesource.com/chromium/src.git/+/46.0.2478.0/chrome/browser/ui/views/apps/chrome_native_app_window_views_win.cc#71
+    */
     HWND window = (HWND)win;
     int current_style = GetWindowLong(window, GWL_STYLE);
     SetWindowLong(window, GWL_STYLE, current_style | WS_CAPTION);
