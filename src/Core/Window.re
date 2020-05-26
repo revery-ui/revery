@@ -600,10 +600,6 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   setSize(~width, ~height, window);
   setVsync(window, options.vsync);
 
-  if (options.maximized) {
-    Sdl2.Window.maximize(sdlWindow);
-  };
-
   if (!options.decorated) {
     Sdl2.Window.setBordered(sdlWindow, false);
   };
@@ -621,14 +617,18 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   | Transparent => Internal.setTitlebarTransparent(sdlWindow)
   };
 
+  Revery_Native.initWindow(sdlWindow);
+
+  if (options.maximized) {
+    Sdl2.Window.maximize(sdlWindow);
+  };
+
   // onivim/oni2#791
   // Set a minimum size for the window
   // TODO: Make configurable
   Sdl2.Window.setMinimumSize(sdlWindow, 200, 100);
 
   Internal.updateMetrics(window);
-
-  Revery_Native.initWindow(sdlWindow);
 
   window;
 };
