@@ -55,7 +55,7 @@ type state = {
 type action =
   | TextInput(string, int);
 
-let reducer = (action, state) =>
+let reducer = (action, _state) =>
   switch (action) {
   | TextInput(value, cursorPosition) => {value, cursorPosition}
   };

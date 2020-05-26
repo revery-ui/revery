@@ -6,7 +6,7 @@ type active = {
   id: int,
 };
 type focused = ref(option(active));
-let focused = ref(None);
+let focused: focused = ref(None);
 
 module Log = (val Log.withNamespace("Revery.UI.Focus"));
 
