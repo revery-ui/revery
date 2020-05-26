@@ -628,6 +628,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   Internal.updateMetrics(window);
 
+  Revery_Native.initWindow(sdlWindow);
+
   window;
 };
 
