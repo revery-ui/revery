@@ -140,6 +140,14 @@ let transitionf =
 
 let spring = SpringHook.spring;
 
+/**
+ * let%hook (captureMouse, captureState) = Hooks.mouseCapture(...);
+ *
+ *   where [captureMouse] requires the initial state to be passed as its argument.
+ *
+ * Each callback is passed the current state and event data, and requires either a
+ * state value to be returned or [None] to stop the capture.
+ */
 let mouseCapture =
     (
       ~onMouseDown=(state, _evt) => Some(state),
