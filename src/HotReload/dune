@@ -1,0 +1,6 @@
+(library
+ (name Revery_HotReload)
+ (preprocess
+  (pps brisk-reconciler.ppx lwt_ppx))
+ (public_name Revery.HotReload)
+ (libraries lwt lwt.unix sdl2 flex dynlink Revery_Core Revery_Math Revery_UI))

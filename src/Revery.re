@@ -29,3 +29,4 @@ module Platform = {
 };
 
 module Utility = Revery_Utility;
+module HotReload = Revery_HotReload;

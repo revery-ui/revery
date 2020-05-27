@@ -165,6 +165,14 @@ let examples = [
     render: w => WindowControl.render(w),
     source: "WindowControl.re",
   },
+  {
+    name: "HotReload",
+    render: _ => {
+      module HotReloadExample = (val HotReload.getModule("HotreloadExample"));
+      HotReloadExample.render();
+    },
+    source: "HotreloadExample.re",
+  },
 ];
 
 let getExampleByName = name =>
@@ -343,5 +351,7 @@ let init = app => {
     UI.start(window, <ExampleHost window initialExample />);
   ();
 };
+
+HotReload.registerFile("HotreloadExample");
 
 App.start(init);

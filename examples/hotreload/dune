@@ -1,0 +1,10 @@
+(library
+ (name HotreloadExample)
+ (preprocess
+  (pps brisk-reconciler.ppx lwt_ppx))
+ (libraries skia str Revery flex timber))
+
+(install
+ (section bin)
+ (package Revery)
+ (files HotreloadExample.cmxs))

@@ -73,3 +73,5 @@ _esy/
 .DS_Store
 
 skia-c-example.png
+
+_build/
