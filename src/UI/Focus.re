@@ -6,7 +6,7 @@ type active = {
   id: int,
 };
 type focused = ref(option(active));
-let focused = ref(None);
+let focused: focused = ref(None);
 
 module Log = (val Log.withNamespace("Revery.UI.Focus"));
 
@@ -23,21 +23,24 @@ let loseFocus = () => {
   // If there is an active window, with text input active, turn off text input
 };
 
-let focus = (node: Node.node) => {
-  Log.trace("focus()");
-  node#handleEvent(Focus);
-  focused := Some({handler: node#handleEvent, id: node#getInternalId()});
-};
+let isFocused = (node: Node.node) =>
+  switch (focused^) {
+  | Some({id, _}) => node#getInternalId() == id
+  | None => false
+  };
 
 /* TODO perform checks if a node can be focused ? */
-let dispatch = (node: Node.node) =>
+let focus = (node: Node.node) =>
+  if (!isFocused(node)) {
+    loseFocus();
+
+    Log.trace("focus()");
+    node#handleEvent(Focus);
+    focused := Some({handler: node#handleEvent, id: node#getInternalId()});
+  };
+
+let dispatch = event =>
   switch (focused^) {
-  | Some({id, _}) =>
-    if (node#getInternalId() === id) {
-      ();
-    } else {
-      loseFocus();
-      focus(node);
-    }
-  | None => focus(node)
+  | Some({handler, _}) => handler(event)
+  | None => ()
   };
