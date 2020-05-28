@@ -1,6 +1,5 @@
 open Revery;
 open Revery.UI;
-open Revery.UI.Components;
 
 module Example = {
   module Styles = {
@@ -21,9 +20,13 @@ module Example = {
     ];
   };
 
+  let text = "ABC";
   let render = () =>
     <View style=Styles.outer>
-      <Text style=Styles.text text="This component was dynamically loaded!" />
+      <Text
+        style=Styles.text
+        text="This component was ynamically loaded! Cool!"
+      />
     </View>;
 };
 
