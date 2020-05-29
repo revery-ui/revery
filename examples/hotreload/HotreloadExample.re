@@ -33,11 +33,11 @@ module Example = {
     <View style=Styles.outer onMouseUp={_ => setStyle(n => !n)}>
       <Text
         style={style ? Styles.text : Styles.text2}
-        text="This component was loaded! Check this out!"
+        text="This component was loaded! is ou"
       />
     </View>;
   };
   let render = () => <hot />;
 };
 
-let () = HotReload.setFile("HotreloadExample.re", (module Example));
+let () = HotReload.register("HotreloadExample", (module Example));

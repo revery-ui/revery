@@ -13,7 +13,7 @@
     "test": "esy b dune runtest",
     "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}",
     "run": "esy x Examples",
-    "run-bytecode": "esy x Examples.bc"
+    "run-bytecode": "node ./scripts/run-bytecode.js"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {

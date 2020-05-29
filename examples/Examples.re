@@ -168,9 +168,7 @@ let examples = [
   {
     name: "HotReload",
     render: _ => {
-      module HotReloadExample = (
-        val HotReload.getFile("HotreloadExample.re")
-      );
+      module HotReloadExample = (val HotReload.getModule("HotreloadExample"));
       HotReloadExample.render();
     },
     source: "HotreloadExample.re",
@@ -354,6 +352,6 @@ let init = app => {
   ();
 };
 
-HotReload.registerFile("HotreloadExample.re");
+HotReload.watch("HotreloadExample", _ => ());
 
 App.start(init);
