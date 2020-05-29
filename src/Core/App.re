@@ -302,5 +302,17 @@ let start = init => {
     false;
   };
 
-  Sdl2.renderLoop(appLoop);
+  let idle = Luv.Idle.init() |> Result.get_ok;
+
+  ignore @@
+  Luv.Idle.start(
+    idle,
+    () => {
+      if (appLoop()) {
+        Luv.Idle.stop(idle) |> ignore;
+      }
+    }
+  );
+
+  Luv.Loop.run() |> (ignore : bool => unit);
 };

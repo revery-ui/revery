@@ -4,4 +4,4 @@
  (preprocess
   (pps ppx_deriving.show))
  (libraries threads console.lib str lwt sdl2 skia flex Rench re Revery_Native
-   revery-text-wrap timber dynlink))
+   revery-text-wrap timber dynlink luv))
