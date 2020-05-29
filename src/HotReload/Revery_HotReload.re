@@ -9,23 +9,20 @@ module type hotreload = {
   let render: unit => React.element(React.reveryNode);
 };
 
-let table: Hashtbl.t(string, (module hotreload, float)) =
-  Hashtbl.create(10);
+let table: Hashtbl.t(string, module hotreload) = Hashtbl.create(10);
 
 let getPath = filename =>
   Filename.concat(
     Revery_Core.Environment.executingDirectory,
-    Printf.sprintf("%s.cma", filename),
+    Printf.sprintf("%s.cma", filename |> Filename.remove_extension),
   );
 
-let setModule = (filename, _module) => {
-  let stats = Unix.stat(getPath(filename));
-  Hashtbl.replace(table, filename, (_module, stats.st_mtime));
-};
+let setFile = (filename, _module) =>
+  Hashtbl.replace(table, filename, _module);
 
-let getModule = filename =>
+let getFile = filename =>
   switch (Hashtbl.find_opt(table, filename)) {
-  | Some((m, _)) => m
+  | Some(m) => m
   | None => failwith("Module has not been registered")
   };
 
@@ -34,20 +31,43 @@ let registerFile = filename => {
   Dynlink.loadfile_private(path);
 };
 
-let thread =
+let start = () =>
   if (!Dynlink.is_native) {
-    Thread.create(
-      () =>
-        while (true) {
-          Hashtbl.to_seq(table)
-          |> Seq.iter(((filename, (_, time))) =>
-               if (time != Unix.stat(getPath(filename)).st_mtime) {
-                 registerFile(filename);
-               }
-             );
-          Unix.sleepf(2.0);
+    let dir = Revery_Core.Environment.getWorkingDirectory();
+    let watcher = Luv.FS_event.init() |> Result.get_ok;
+
+    Luv.FS_event.start(
+      ~recursive=true,
+      watcher,
+      dir,
+      fun
+      | Error(e) => {
+          Log.warnf(m =>
+            m("Could not watch %s: %s", dir, Luv.Error.strerror(e))
+          );
+          ignore(Luv.FS_event.stop(watcher));
+          Luv.Handle.close(watcher, ignore);
+        }
+      | [@implicit_arity] Ok(path, events) => {
+          let filename = Filename.basename(path);
+          if (List.mem(`CHANGE, events) && Hashtbl.mem(table, filename)) {
+            Log.infof(m => m("File %s was changed.", path));
+            let command =
+              switch (Sys.getenv_opt("REVERY_HOTRELOAD_COMMAND")) {
+              | Some(c) => c
+              | None => "dune build"
+              };
+            let result = Sys.command(command);
+            if (result != 0) {
+              Log.warnf(m =>
+                m("Reload command %s failed with code %d", command, result)
+              );
+            } else {
+              registerFile(filename);
+            };
+          };
         },
-      (),
-    )
-    |> ignore;
+    );
   };
+
+start();
