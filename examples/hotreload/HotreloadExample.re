@@ -5,6 +5,12 @@ module Example = {
   module Styles = {
     open Style;
     let text = [
+      color(Colors.blueViolet),
+      fontFamily("Roboto-Regular.ttf"),
+      fontSize(14.),
+    ];
+
+    let text2 = [
       color(Colors.white),
       fontFamily("Roboto-Regular.ttf"),
       fontSize(14.),
@@ -21,13 +27,17 @@ module Example = {
   };
 
   let text = "ABC";
-  let render = () =>
-    <View style=Styles.outer>
+  let%component hot = () => {
+    let%hook (style, setStyle) = Hooks.state(true);
+
+    <View style=Styles.outer onMouseUp={_ => setStyle(n => !n)}>
       <Text
-        style=Styles.text
-        text="This component was ynamically loaded! Cool!"
+        style={style ? Styles.text : Styles.text2}
+        text="This component was loaded! Wow! Check this out!"
       />
     </View>;
+  };
+  let render = () => <hot />;
 };
 
 let () = HotReload.setModule("HotreloadExample", (module Example));

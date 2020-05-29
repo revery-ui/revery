@@ -12,7 +12,8 @@
     "build:release": "esy b dune build -p Revery -j4",
     "test": "esy b dune runtest",
     "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}",
-    "run": "esy x Examples"
+    "run": "esy x Examples",
+    "run-bytecode": "esy x Examples.bc"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {

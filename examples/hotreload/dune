@@ -7,4 +7,4 @@
 (install
  (section bin)
  (package Revery)
- (files HotreloadExample.cmxs))
+ (files HotreloadExample.cmxs HotreloadExample.cma))

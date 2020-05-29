@@ -1,17 +1,14 @@
 (executables
-    (names Examples)
-    (preprocess (pps brisk-reconciler.ppx lwt_ppx))
-    (package Revery)
-    (public_names Examples)
-    (libraries
-        ExampleStubs
-        skia
-        str
-        Revery
-        flex
-        timber
-            ))
+ (names Examples)
+ (preprocess
+  (pps brisk-reconciler.ppx lwt_ppx))
+ (modes byte native)
+ (package Revery)
+ (public_names Examples)
+ (libraries ExampleStubs skia str Revery flex timber))
+
 (install
-    (section bin)
-    (package Revery)
-    (files Info.plist Roboto-Regular.ttf FontAwesome5FreeSolid.otf binary.dat outrun-logo.png outrun-icon.png revery-icon.png))
+ (section bin)
+ (package Revery)
+ (files Examples.bc Info.plist Roboto-Regular.ttf FontAwesome5FreeSolid.otf
+   binary.dat outrun-logo.png outrun-icon.png revery-icon.png))
