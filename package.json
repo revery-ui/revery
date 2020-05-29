@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "esy b",
+    "build-watch": "esy b dune build --watch",
     "build:release": "esy b dune build -p Revery -j4",
     "test": "esy b dune runtest",
     "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}",
@@ -48,7 +49,7 @@
     "rench": "^1.9.1",
     "rebez": "jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3032",
-    "reason-skia": "revery-ui/reason-skia#6b459c7",
+    "reason-skia": "revery-ui/reason-skia#a666fca",
     "revery-text-wrap": "revery-ui/revery-text-wrap#966383e",
     "@glennsl/timber": "1.0.0"
   },

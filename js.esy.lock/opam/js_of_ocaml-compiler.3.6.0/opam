@@ -14,9 +14,9 @@ environment like browsers and Node.js
 build: [["dune" "build" "-p" name "-j" jobs]]
 
 depends: [
-  "ocaml" {>= "4.02.0"}
+  "ocaml" {>= "4.02.0" & < "4.11"}
   "dune" {>= "2.5"}
-  "ppx_expect" {with-test & >= "v0.12.0"}
+  "ppx_expect" {with-test & >= "v0.12.0" & < "v0.14"}
   "cmdliner"
   "ocaml-migrate-parsetree"
   "yojson" # It's optional, but we want users to be able to use source-map without pain.
