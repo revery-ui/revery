@@ -1,5 +1,5 @@
 {
-  "checksum": "040b1ecceab146a9a0a8c9d65c7e2d6f",
+  "checksum": "d3c2b570e6efb2b060d15e31159283a3",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -52,6 +52,7 @@
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/ppx_deriving@opam:4.5@bb81afdc",
         "@opam/lwt_ppx@opam:2.0.1@ab0debb8", "@opam/lwt@opam:4.5.0@677655b4",
+        "@opam/luv@opam:0.5.2@bfb5a32a",
         "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
         "@glennsl/timber@1.0.0@d41d8cd9", "@esy-ocaml/reason@3.5.2@d41d8cd9",
@@ -1590,6 +1591,37 @@
         "@opam/mmap@opam:1.1.0@b85334ff",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
         "@opam/dune@opam:2.5.0@aef1678b"
+      ]
+    },
+    "@opam/luv@opam:0.5.2@bfb5a32a": {
+      "id": "@opam/luv@opam:0.5.2@bfb5a32a",
+      "name": "@opam/luv",
+      "version": "opam:0.5.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/a1/a196396b63bbe9ff9e8b932b58010b18#md5:a196396b63bbe9ff9e8b932b58010b18",
+          "archive:https://github.com/aantron/luv/releases/download/0.5.2/luv-0.5.2.tar.gz#md5:a196396b63bbe9ff9e8b932b58010b18"
+        ],
+        "opam": {
+          "name": "luv",
+          "version": "0.5.2",
+          "path": "esy.lock/opam/luv.0.5.2"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/ctypes@opam:0.15.1@b0227b2f",
+        "@opam/base-unix@opam:base@87d0b2eb",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/ctypes@opam:0.15.1@b0227b2f",
+        "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
     "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9": {

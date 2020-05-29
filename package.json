@@ -41,6 +41,7 @@
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/ppx_deriving": "*",
+    "@opam/luv": "~0.5.1",
     "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d",
     "flex": "1.2.3",
     "reperf": "^1.4.0",
