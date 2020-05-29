@@ -34,29 +34,3 @@ let watch = (filename, callback) => {
   Hashtbl.add(callbackTable, filename, callback);
   Dynlink.loadfile_private(path);
 };
-
-let start = () =>
-  if (!Dynlink.is_native) {
-    let dir = Revery_Core.Environment.executingDirectory;
-    let watcher = Luv.FS_event.init() |> Result.get_ok;
-
-    Luv.FS_event.start(
-      ~recursive=true,
-      watcher,
-      dir,
-      fun
-      | Error(e) => {
-          Log.warnf(m =>
-            m("Could not watch %s: %s", dir, Luv.Error.strerror(e))
-          );
-          ignore(Luv.FS_event.stop(watcher));
-          Luv.Handle.close(watcher, ignore);
-        }
-      | Ok((path, _events)) => {
-          let _filename = Filename.basename(path);
-          Log.infof(m => m("File %s was changed.", path));
-        },
-    );
-  };
-
-start();
