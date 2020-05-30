@@ -139,3 +139,57 @@ let transitionf =
   );
 
 let spring = SpringHook.spring;
+
+/**
+ * let%hook (captureMouse, captureState) = Hooks.mouseCapture(...);
+ *
+ *   where [captureMouse] requires the initial state to be passed as its argument.
+ *
+ * Each callback is passed the current state and event data, and requires either a
+ * state value to be returned or [None] to stop the capture.
+ */
+let mouseCapture =
+    (
+      ~onMouseDown=(state, _evt) => Some(state),
+      ~onMouseUp=(state, _evt) => Some(state),
+      ~onMouseMove=(state, _evt) => Some(state),
+      ~onMouseWheel=(state, _evt) => Some(state),
+      ~onRelease=_state => (),
+      (),
+    ) => {
+  let%hook state = ref(None);
+
+  let%hook () =
+    effect(OnMount, () =>
+      Some(
+        () =>
+          if (state^ != None) {
+            Mouse.releaseCapture();
+          },
+      )
+    );
+
+  let capture = initialState => {
+    state := Some(initialState);
+
+    let wrap = (f, event) => {
+      state := f(Option.get(state^), event);
+
+      if (state^ == None) {
+        Mouse.releaseCapture();
+      };
+    };
+
+    Mouse.setCapture(
+      Revery_UI.getActiveWindow() |> Option.get, // May fail if called outside rendering
+      ~onMouseDown=wrap(onMouseDown),
+      ~onMouseUp=wrap(onMouseUp),
+      ~onMouseMove=wrap(onMouseMove),
+      ~onMouseWheel=wrap(onMouseWheel),
+      ~onRelease=() =>
+      onRelease(state^)
+    );
+  };
+
+  (capture, state^);
+};

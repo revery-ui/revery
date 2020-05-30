@@ -20,6 +20,19 @@ let _activeWindow: ref(option(Window.t)) = ref(None);
 
 type renderFunction = React.element(React.reveryNode) => unit;
 
+type mouseBehavior =
+  Sdl2.Window.hitTestResult =
+    | Normal
+    | Draggable
+    | ResizeTopLeft
+    | ResizeTop
+    | ResizeTopRight
+    | ResizeRight
+    | ResizeBottomRight
+    | ResizeBottom
+    | ResizeBottomLeft
+    | ResizeLeft;
+
 let getActiveWindow = () => _activeWindow^;
 
 let start = (window: Window.t, element: React.element(React.reveryNode)) => {
@@ -35,6 +48,13 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
   let mouseCursor: Mouse.Cursor.t = Mouse.Cursor.make();
   let container = Container.create(rootNode);
   let ui = RenderContainer.create(window, rootNode, container, mouseCursor);
+
+  if (!Window.isDecorated(window)) {
+    Sdl2.Window.setHitTest(
+      Window.getSdlWindow(window),
+      HitTest.windowCallback(rootNode, window),
+    );
+  };
 
   let _ignore = Window.onExposed(window, () => uiDirty := true);
 
@@ -58,24 +78,6 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
       m => {
         let evt = Revery_Core.Events.InternalMouseWheel(m);
         Mouse.dispatch(mouseCursor, evt, rootNode);
-      },
-    );
-
-  let _ignore =
-    Window.onMouseLeave(
-      window,
-      () => {
-        Log.trace("Mouse leaving window");
-        Mouse.notifyLeaveWindow(window);
-      },
-    );
-
-  let _ignore =
-    Window.onMouseEnter(
-      window,
-      () => {
-        Log.trace("Mouse entering window");
-        Mouse.notifyEnterWindow(window);
       },
     );
 
@@ -122,10 +124,11 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
       window,
       f => {
         Log.trace("File dropped");
+        let scaleAndZoomFactor = Window.getScaleAndZoom(window);
         let evt =
           Revery_Core.Events.InternalFileDropped({
-            mouseX: f.mouseX,
-            mouseY: f.mouseY,
+            mouseX: f.mouseX /. scaleAndZoomFactor,
+            mouseY: f.mouseY /. scaleAndZoomFactor,
             paths: f.paths,
           });
         FileDrop.dispatch(evt, rootNode);

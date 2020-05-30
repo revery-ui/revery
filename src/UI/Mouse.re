@@ -10,261 +10,103 @@ module Log = (val Log.withNamespace("Revery.UI.Mouse"));
 module Cursor = {
   /* State needed to track on the cursor */
   type t = {
-    x: ref(float),
-    y: ref(float),
+    mutable x: float,
+    mutable y: float,
   };
 
-  let make = () => {
-    let ret: t = {x: ref(0.), y: ref(0.)};
-    ret;
-  };
+  let make = () => {x: 0., y: 0.};
 
-  let get = cursor => (cursor.x^, cursor.y^);
+  let get = cursor => (cursor.x, cursor.y);
 
   let set = (~x, ~y, c) => {
-    c.x := x;
-    c.y := y;
+    c.x = x;
+    c.y = y;
   };
 };
 
-/*
- * The list values are refs so that an unregister function can be written
- * easily without introducing ids for each registered listener.
- */
-type listenerEventState = {
-  onMouseDown: ref(list(ref(option(mouseButtonHandler)))),
-  onMouseMove: ref(list(ref(option(mouseMoveHandler)))),
-  onMouseUp: ref(list(ref(option(mouseButtonHandler)))),
-  onMouseWheel: ref(list(ref(option(mouseWheelHandler)))),
-  onMouseEnter: ref(list(ref(option(mouseMoveHandler)))),
-  onMouseLeave: ref(list(ref(option(mouseMoveHandler)))),
-  onMouseOver: ref(list(ref(option(mouseOverHandler)))),
-  onMouseOut: ref(list(ref(option(mouseMoveHandler)))),
-  onMouseEnterWindow: ref(list(ref(option(mouseWindowHandler)))),
-  onMouseLeaveWindow: ref(list(ref(option(mouseWindowHandler)))),
-};
+module Capture: {
+  let set:
+    (
+      ~onRelease: unit => unit=?,
+      ~onMouseDown: NodeEvents.mouseDownHandler=?,
+      ~onMouseUp: NodeEvents.mouseUpHandler=?,
+      ~onMouseMove: NodeEvents.mouseMoveHandler=?,
+      ~onMouseWheel: NodeEvents.mouseWheelHandler=?,
+      Window.t
+    ) =>
+    unit;
+  let release: unit => unit;
+  let isSet: unit => bool;
+  let dispatch: NodeEvents.event => unit;
+} = {
+  type t = {
+    onMouseDown: mouseDownHandler,
+    onMouseUp: mouseUpHandler,
+    onMouseMove: mouseMoveHandler,
+    onMouseWheel: mouseWheelHandler,
+    dispose: unit => unit,
+  };
 
-let listenerEventStateInstance: listenerEventState = {
-  onMouseDown: ref([]),
-  onMouseMove: ref([]),
-  onMouseUp: ref([]),
-  onMouseWheel: ref([]),
-  onMouseEnter: ref([]),
-  onMouseLeave: ref([]),
-  onMouseOver: ref([]),
-  onMouseOut: ref([]),
-  onMouseEnterWindow: ref([]),
-  onMouseLeaveWindow: ref([]),
-};
+  let currentState = ref(None);
 
-let addListener = (listRef, listener) => {
-  listRef := [listener, ...listRef^];
-  listRef :=
-    List.filter(
-      el =>
-        switch (el^) {
-        | Some(_) => true
-        | None => false
+  let update = maybeState => {
+    switch (currentState^) {
+    | Some({dispose, _}) => dispose()
+    | None => ()
+    };
+    currentState := maybeState;
+  };
+
+  let set =
+      (
+        ~onRelease=() => (),
+        ~onMouseDown=_evt => (),
+        ~onMouseUp=_evt => (),
+        ~onMouseMove=_evt => (),
+        ~onMouseWheel=_evt => (),
+        window,
+      ) => {
+    ignore(Sdl2.Mouse.capture(true): int);
+    let unsubscribe = Window.onFocusLost(window, () => update(None));
+
+    update(
+      Some({
+        onMouseDown,
+        onMouseUp,
+        onMouseMove,
+        onMouseWheel,
+        dispose: () => {
+          unsubscribe();
+          onRelease();
         },
-      listRef^,
+      }),
     );
-};
-
-let registerListeners =
-    (
-      ~onMouseDown=?,
-      ~onMouseMove=?,
-      ~onMouseUp=?,
-      ~onMouseWheel=?,
-      ~onMouseEnter=?,
-      ~onMouseLeave=?,
-      ~onMouseOver=?,
-      ~onMouseOut=?,
-      ~onMouseEnterWindow=?,
-      ~onMouseLeaveWindow=?,
-      (),
-    ) => {
-  let onMouseDown = ref(onMouseDown);
-  let onMouseMove = ref(onMouseMove);
-  let onMouseUp = ref(onMouseUp);
-  let onMouseWheel = ref(onMouseWheel);
-  let onMouseEnter = ref(onMouseEnter);
-  let onMouseLeave = ref(onMouseLeave);
-  let onMouseOver = ref(onMouseOver);
-  let onMouseOut = ref(onMouseOut);
-  let onMouseEnterWindow = ref(onMouseEnterWindow);
-  let onMouseLeaveWindow = ref(onMouseLeaveWindow);
-
-  let unregister = () => {
-    onMouseDown := None;
-    onMouseMove := None;
-    onMouseUp := None;
-    onMouseWheel := None;
-    onMouseEnter := None;
-    onMouseLeave := None;
-    onMouseOver := None;
-    onMouseOut := None;
-    onMouseEnterWindow := None;
-    onMouseLeaveWindow := None;
   };
 
-  addListener(listenerEventStateInstance.onMouseDown, onMouseDown);
-  addListener(listenerEventStateInstance.onMouseMove, onMouseMove);
-  addListener(listenerEventStateInstance.onMouseUp, onMouseUp);
-  addListener(listenerEventStateInstance.onMouseWheel, onMouseWheel);
-  addListener(listenerEventStateInstance.onMouseEnter, onMouseEnter);
-  addListener(listenerEventStateInstance.onMouseLeave, onMouseLeave);
-  addListener(listenerEventStateInstance.onMouseOver, onMouseOver);
-  addListener(listenerEventStateInstance.onMouseOut, onMouseOut);
-  addListener(
-    listenerEventStateInstance.onMouseEnterWindow,
-    onMouseEnterWindow,
-  );
-  addListener(
-    listenerEventStateInstance.onMouseLeaveWindow,
-    onMouseLeaveWindow,
-  );
+  let release = () => {
+    ignore(Sdl2.Mouse.capture(false): int);
+    update(None);
+  };
 
-  unregister;
-};
+  let isSet = () => currentState^ != None;
 
-let callHandlers = (handlers, evt) => {
-  List.iter(
-    handler => {
-      switch (handler^) {
-      | Some(handler) => handler(evt)
-      | None => ()
+  let dispatch = event =>
+    switch (currentState^) {
+    | Some(state) =>
+      switch (event) {
+      | MouseDown(params) => state.onMouseDown(params)
+      | MouseUp(params) => state.onMouseUp(params)
+      | MouseMove(params) => state.onMouseMove(params)
+      | MouseWheel(params) => state.onMouseWheel(params)
+      | _ => ()
       }
-    },
-    handlers,
-  );
+
+    | None => ()
+    };
 };
 
-let handleListeners = (event: event) => {
-  let state = listenerEventStateInstance;
-  switch (event) {
-  | MouseDown(evt) => callHandlers(state.onMouseDown^, evt)
-  | MouseMove(evt) => callHandlers(state.onMouseMove^, evt)
-  | MouseUp(evt) => callHandlers(state.onMouseUp^, evt)
-  | MouseWheel(evt) => callHandlers(state.onMouseWheel^, evt)
-  | MouseEnter(evt) => callHandlers(state.onMouseEnter^, evt)
-  | MouseLeave(evt) => callHandlers(state.onMouseLeave^, evt)
-  | MouseOver(evt) => callHandlers(state.onMouseOver^, evt)
-  | MouseOut(evt) => callHandlers(state.onMouseOut^, evt)
-  | _ => ()
-  };
-};
-
-type capturedEventState = {
-  onMouseDown: mouseButtonHandler,
-  onMouseMove: mouseMoveHandler,
-  onMouseUp: mouseButtonHandler,
-  onMouseWheel: mouseWheelHandler,
-  onMouseEnter: mouseMoveHandler,
-  onMouseLeave: mouseMoveHandler,
-  onMouseOver: mouseOverHandler,
-  onMouseOut: mouseMoveHandler,
-  onMouseLeaveWindow: unit => unit,
-};
-
-let capturedEventStateInstance: ref(option(capturedEventState)) = ref(None);
-
-let noop0 = () => ();
-let noop1 = _ => ();
-
-let releaseCapture = () => {
-  capturedEventStateInstance := None;
-};
-
-let setCapture =
-    (
-      ~onMouseDown=noop1,
-      ~onMouseMove=noop1,
-      ~onMouseUp=noop1,
-      ~onMouseWheel=noop1,
-      ~onMouseEnter=noop1,
-      ~onMouseLeave=noop1,
-      ~onMouseOver=noop1,
-      ~onMouseOut=noop1,
-      ~onMouseLeaveWindow=noop0,
-      (),
-    ) => {
-  // If there was a previous capture - release
-  releaseCapture();
-
-  capturedEventStateInstance :=
-    Some({
-      onMouseDown,
-      onMouseMove,
-      onMouseUp,
-      onMouseWheel,
-      onMouseEnter,
-      onMouseLeave,
-      onMouseOver,
-      onMouseOut,
-      onMouseLeaveWindow,
-    });
-};
-
-let notifyEnterWindow = win => {
-  callHandlers(listenerEventStateInstance.onMouseEnterWindow^, win);
-};
-
-let notifyLeaveWindow = win => {
-  callHandlers(listenerEventStateInstance.onMouseLeaveWindow^, win);
-
-  // If we're leaving the window, and we're capturing - stop the capture.
-  switch (capturedEventStateInstance^) {
-  | None => ()
-  | Some(ce) => ce.onMouseLeaveWindow()
-  };
-};
-
-let handleCapture = (event: event) => {
-  let ce = capturedEventStateInstance^;
-
-  switch (ce) {
-  | None => false
-  | Some({
-      onMouseDown,
-      onMouseMove,
-      onMouseUp,
-      onMouseWheel,
-      onMouseEnter,
-      onMouseLeave,
-      onMouseOver,
-      onMouseOut,
-      _,
-    }) =>
-    switch (event) {
-    | MouseDown(evt) =>
-      onMouseDown(evt);
-      true;
-    | MouseMove(evt) =>
-      onMouseMove(evt);
-      true;
-    | MouseUp(evt) =>
-      onMouseUp(evt);
-      true;
-    | MouseWheel(evt) =>
-      onMouseWheel(evt);
-      true;
-    | MouseEnter(evt) =>
-      onMouseEnter(evt);
-      true;
-    | MouseLeave(evt) =>
-      onMouseLeave(evt);
-      true;
-    | MouseOver(evt) =>
-      onMouseOver(evt);
-      true;
-    | MouseOut(evt) =>
-      onMouseOut(evt);
-      true;
-    | _ => false
-    }
-  };
-};
+let releaseCapture = Capture.release;
+let setCapture = Capture.set;
 
 let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
   switch (evt) {
@@ -281,9 +123,9 @@ let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =
 let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
   switch (evt) {
   | InternalMouseDown(evt) =>
-    MouseDown({mouseX: c.x^, mouseY: c.y^, button: evt.button})
+    MouseDown({mouseX: c.x, mouseY: c.y, button: evt.button})
   | InternalMouseUp(evt) =>
-    MouseUp({mouseX: c.x^, mouseY: c.y^, button: evt.button})
+    MouseUp({mouseX: c.x, mouseY: c.y, button: evt.button})
   | InternalMouseMove(evt) =>
     MouseMove({mouseX: evt.mouseX, mouseY: evt.mouseY})
   | InternalMouseWheel(evt) =>
@@ -316,7 +158,7 @@ let getMouseMoveEventParams =
     (cursor: Cursor.t, evt: Events.internalMouseEvents) =>
   switch (evt) {
   | InternalMouseMove(evt) => {mouseX: evt.mouseX, mouseY: evt.mouseY}
-  | _ => {mouseX: cursor.x^, mouseY: cursor.y^}
+  | _ => {mouseX: cursor.x, mouseY: cursor.y}
   };
 
 let rec sendMouseLeaveEvents = (listOfNodes, evtParams) => {
@@ -330,6 +172,7 @@ let rec sendMouseLeaveEvents = (listOfNodes, evtParams) => {
 
 let rec sendMouseEnterEvents = (deepestNode, evtParams) => {
   deepestNode#handleEvent(MouseEnter(evtParams));
+
   storedNodesUnderCursor := storedNodesUnderCursor^ @ [deepestNode];
 
   let parent = deepestNode#getParent();
@@ -444,14 +287,14 @@ let dispatch =
 
     if (isMouseDownEv(eventToSend)) {
       switch (getFirstFocusable(node, mouseX, mouseY)) {
-      | Some(node) => Focus.dispatch(node)
+      | Some(node) => Focus.focus(node)
       | None => Focus.loseFocus()
       };
     };
 
-    handleListeners(eventToSend);
-
-    if (!handleCapture(eventToSend)) {
+    if (Capture.isSet()) {
+      Capture.dispatch(eventToSend);
+    } else {
       let deepestNode = getTopMostNode(node, mouseX, mouseY);
 
       if (isMouseMoveEv(eventToSend)) {

@@ -13,6 +13,7 @@ type t = {
   windows: Hashtbl.t(int, Window.t),
   onIdle: Event.t(unit),
   onBeforeQuit: Event.t(unit),
+  onFileOpen: Event.t(string),
   mutable canIdle: unit => bool,
 };
 
@@ -47,7 +48,7 @@ let quit = (~askNicely=false, ~code=0, app: t) => {
   };
 
   if (Hashtbl.length(app.windows) == 0 || !askNicely) {
-    Revery_Native.uninit();
+    Revery_Native.uninitApp();
 
     // Verify [quit] wasn't called recursively from a beforeQuit handler
     if (!app.isQuitting) {
@@ -88,6 +89,7 @@ let setCanIdle = (f, app: t) => {
 
 let onBeforeQuit = app => Event.subscribe(app.onBeforeQuit);
 let onIdle = app => Event.subscribe(app.onIdle);
+let onFileOpen = app => Event.subscribe(app.onFileOpen);
 
 /* Execute any pending main thread jobs */
 let _doPendingMainThreadJobs = () => {
@@ -158,6 +160,7 @@ let start = init => {
     isQuitting: false,
     onBeforeQuit: Event.create(),
     onIdle: Event.create(),
+    onFileOpen: Event.create(),
     canIdle: () => true,
   };
 
@@ -208,6 +211,7 @@ let start = init => {
     | Sdl2.Event.WindowFocusGained({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.WindowFocusLost({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.WindowMaximized({windowID, _}) => handleEvent(windowID)
+    | Sdl2.Event.WindowFullscreen({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.WindowMinimized({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.WindowRestored({windowID, _}) => handleEvent(windowID)
     | Sdl2.Event.WindowMoved({windowID, _}) => handleEvent(windowID)
@@ -246,7 +250,10 @@ let start = init => {
     };
   };
 
-  Revery_Native.init();
+  let dispatchFileOpen = Event.dispatch(appInstance.onFileOpen);
+  Callback.register("revery_dispatchFileOpen", dispatchFileOpen);
+
+  Revery_Native.initApp();
 
   let appLoop = () => {
     _flushEvents();

@@ -16,6 +16,7 @@ let onAfterSwap: (t, unit => unit) => unsubscribe;
 let onFocusGained: (t, unit => unit) => unsubscribe;
 let onFocusLost: (t, unit => unit) => unsubscribe;
 let onMaximized: (t, unit => unit) => unsubscribe;
+let onFullscreen: (t, unit => unit) => unsubscribe;
 let onMinimized: (t, unit => unit) => unsubscribe;
 let onRestored: (t, unit => unit) => unsubscribe;
 let onCompositionStart: (t, unit => unit) => unsubscribe;
@@ -64,6 +65,8 @@ let getBackgroundColor: t => Color.t;
 
 let isDirty: t => bool;
 
+let isDecorated: t => bool;
+
 let setInputRect: (t, int, int, int, int) => unit;
 let startTextInput: t => unit;
 let stopTextInput: t => unit;
@@ -75,6 +78,7 @@ let show: t => unit;
 let maximize: t => unit;
 let isMaximized: t => bool;
 let isFullscreen: t => bool;
+let restore: t => unit;
 let minimize: t => unit;
 
 let setBackgroundColor: (t, Color.t) => unit;

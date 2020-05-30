@@ -157,6 +157,7 @@ type t = {
   mutable isComposingText: bool,
   mutable dropState: option(list(string)),
   titlebarStyle: WindowStyles.titlebar,
+  isDecorated: bool,
   onBeforeRender: Event.t(unit),
   onAfterRender: Event.t(unit),
   onBeforeSwap: Event.t(unit),
@@ -173,6 +174,7 @@ type t = {
   onMouseEnter: Event.t(unit),
   onMouseLeave: Event.t(unit),
   onMaximized: Event.t(unit),
+  onFullscreen: Event.t(unit),
   onMinimized: Event.t(unit),
   onRestored: Event.t(unit),
   onSizeChanged: Event.t(size),
@@ -255,6 +257,7 @@ let onAfterSwap = w => Event.subscribe(w.onAfterSwap);
 let onFocusGained = w => Event.subscribe(w.onFocusGained);
 let onFocusLost = w => Event.subscribe(w.onFocusLost);
 let onMaximized = w => Event.subscribe(w.onMaximized);
+let onFullscreen = w => Event.subscribe(w.onFullscreen);
 let onMinimized = w => Event.subscribe(w.onMinimized);
 let onRestored = w => Event.subscribe(w.onRestored);
 let onExposed = w => Event.subscribe(w.onExposed);
@@ -282,6 +285,8 @@ let isDirty = (w: t) =>
   } else {
     w.requestedUnscaledSize != None;
   };
+
+let isDecorated = (w: t) => w.isDecorated;
 
 let getSdlWindow = (w: t) => w.sdlWindow;
 
@@ -394,6 +399,7 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   | Sdl2.Event.WindowLeave(_) => Event.dispatch(v.onMouseLeave, ())
   | Sdl2.Event.WindowExposed(_) => Event.dispatch(v.onExposed, ())
   | Sdl2.Event.WindowMaximized(_) => Event.dispatch(v.onMaximized, ())
+  | Sdl2.Event.WindowFullscreen(_) => Event.dispatch(v.onFullscreen, ())
   | Sdl2.Event.WindowMinimized(_) => Event.dispatch(v.onMinimized, ())
 
   | Sdl2.Event.WindowRestored(_) =>
@@ -551,6 +557,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     forceScaleFactor: options.forceScaleFactor,
 
+    isDecorated: options.decorated,
+
     onBeforeRender: Event.create(),
     onAfterRender: Event.create(),
     onBeforeSwap: Event.create(),
@@ -561,6 +569,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
     onMinimized: Event.create(),
     onMaximized: Event.create(),
+    onFullscreen: Event.create(),
     onRestored: Event.create(),
     onExposed: Event.create(),
     onSizeChanged: Event.create(),
@@ -591,10 +600,6 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   setSize(~width, ~height, window);
   setVsync(window, options.vsync);
 
-  if (options.maximized) {
-    Sdl2.Window.maximize(sdlWindow);
-  };
-
   if (!options.decorated) {
     Sdl2.Window.setBordered(sdlWindow, false);
   };
@@ -610,6 +615,12 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   switch (options.titlebarStyle) {
   | System => ()
   | Transparent => Internal.setTitlebarTransparent(sdlWindow)
+  };
+
+  Revery_Native.initWindow(sdlWindow);
+
+  if (options.maximized) {
+    Sdl2.Window.maximize(sdlWindow);
   };
 
   // onivim/oni2#791
@@ -685,6 +696,10 @@ let isMaximized = (w: t) => {
 
 let isFullscreen = (w: t) => {
   Sdl2.Window.isFullscreen(w.sdlWindow);
+};
+
+let restore = (w: t) => {
+  Sdl2.Window.restore(w.sdlWindow);
 };
 
 let minimize = (w: t) => {
