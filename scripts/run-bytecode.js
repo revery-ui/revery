@@ -7,7 +7,7 @@ examples.stderr.pipe(process.stderr, {end: false});
 
 var counter = 0;
 examples.stderr.on('data', () => {
-  if (counter == 10) {
+  if (counter == 15) {
     var watcher = child.spawn("esy", ["b", "dune", "build", "--watch"]);
     watcher.stdout.pipe(process.stdout, {end: false});
     watcher.stderr.pipe(process.stderr, {end: false});
