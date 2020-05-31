@@ -26,9 +26,27 @@ let innerBox =
 
 module Sample = {
   let%component make = () => {
+    let%hook (scrollTop, setScrollTop) = Hooks.state(0);
     let%hook (bounce, setBounce) = Hooks.state(true);
 
+    let handleScrollTop = s => setScrollTop(_ => Float.to_int(s));
+    Console.out("scrollTop: ");
+    Console.log(scrollTop);
+
     <View style=containerStyle>
+      <Text
+        text="Scroll top"
+        style=Style.[
+          marginBottom(10),
+          fontFamily("Roboto-Regular.ttf"),
+          fontSize(20.),
+        ]
+      />
+      <Slider
+        onValueChanged=handleScrollTop
+        value={Float.of_int(scrollTop)}
+        maximumValue=450.0
+      />
       <Text
         text="Bounce"
         style=Style.[
@@ -42,7 +60,8 @@ module Sample = {
         checked=bounce
         style=Style.[marginBottom(10)]
       />
-      <ScrollView style=outerBox bounce>
+      <ScrollView
+        style=outerBox bounce scrollTop onScroll={v => setScrollTop(_ => v)}>
         <Image
           src="outrun-logo.png"
           /* Exercise the case in #579 */
