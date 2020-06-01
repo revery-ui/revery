@@ -162,7 +162,7 @@ module TreeView = {
           style=Style.[
             marginLeft(indent * 20),
             color(Colors.rebeccaPurple),
-            fontFamily("Roboto-Regular.ttf"),
+            fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
             fontSize(10.),
           ]
         />,
@@ -181,7 +181,7 @@ module TreeView = {
     let textStyles =
       Style.[
         color(Colors.black),
-        fontFamily("Roboto-Regular.ttf"),
+        fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
         fontSize(10.),
       ];
     <Padding padding=5>
@@ -203,7 +203,7 @@ module TreeView = {
 
 let titleStyles =
   Style.[
-    fontFamily("Roboto-Regular.ttf"),
+    fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
     fontSize(15.),
     color(Colors.white),
     marginVertical(10),
