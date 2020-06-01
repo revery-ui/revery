@@ -290,7 +290,7 @@ let init = app => {
       ),
     ],
     _ => (),
-    "There is only --trace, --example, and --no-decoration",
+    "There is only --trace, --example, --no-decoration, and --force-device-scale-factor",
   );
   let initialExample = initialExample^;
 
