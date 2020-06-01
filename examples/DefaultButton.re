@@ -23,7 +23,7 @@ module DefaultButtonWithCounter = {
         fontSize(50.),
         margin(24),
         color(Colors.black),
-        fontFamily("Roboto-Regular.ttf"),
+        fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
       ];
 
     let countStr = string_of_int(count);
