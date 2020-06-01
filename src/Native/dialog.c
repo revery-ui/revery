@@ -54,17 +54,19 @@ CAMLprim value revery_alertOpenFiles_native(
                vCanChooseDirectories);
     CAMLxparam3(vButtonText, vTitle, vUnit);
 
-    char *startDirectory = NULL;
-    char *buttonText = NULL;
+    const char *startDirectory;
+    const char *buttonText;
 
     // Initialize an array of filetypes
-    char **fileTypes = NULL;
+    const char **fileTypes = NULL;
     int fileTypesSize = 0;
 
     // title from OCaml -> C
-    char *title = NULL;
+    const char *title;
     if (vTitle != Val_none)
         title = String_val(Some_val(vTitle));
+    else
+        title = NULL;
 
     int allowMultiple = Bool_val(vAllowMultiple);
     int canChooseFiles = Bool_val(vCanChooseFiles);
@@ -77,21 +79,25 @@ CAMLprim value revery_alertOpenFiles_native(
         fileTypesSize = Wosize_val(camlArr);
 
         // Allocate space for an array
-        fileTypes = (char **)malloc(sizeof(*fileTypes) * fileTypesSize);
+        fileTypes = (const char **)malloc(sizeof(*fileTypes) * fileTypesSize);
 
         // Populate the array with the CAML array;
         for (int i = 0; i < fileTypesSize; i++) {
-            char *str = String_val(Field(camlArr, i));
+            const char *str = String_val(Field(camlArr, i));
             fileTypes[i] = str;
         }
     }
 
     if (vStartDirectory != Val_none) {
         startDirectory = String_val(Some_val(vStartDirectory));
+    } else {
+        startDirectory = NULL;
     }
 
     if (vButtonText != Val_none) {
         buttonText = String_val(Some_val(vButtonText));
+    } else {
+        buttonText = NULL;
     }
 
     char **fileList = NULL;
