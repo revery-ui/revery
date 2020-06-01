@@ -26,7 +26,7 @@ module SimpleButton = {
         <Text
           style=Style.[
             color(Colors.white),
-            fontFamily("Roboto-Regular.ttf"),
+            fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
             fontSize(20.),
             margin(4),
           ]
