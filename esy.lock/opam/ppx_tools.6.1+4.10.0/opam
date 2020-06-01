@@ -9,13 +9,13 @@ bug-reports: "https://github.com/ocaml-ppx/ppx_tools/issues"
 dev-repo: "git://github.com/ocaml-ppx/ppx_tools.git"
 build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
-  "ocaml" {>= "4.08.0" & < "4.10"}
+  "ocaml" {>= "4.10.0" & < "4.11"}
   "dune" {>= "1.6"}
 ]
 url {
-  src: "https://github.com/ocaml-ppx/ppx_tools/archive/6.0+4.08.0.tar.gz"
+  src: "https://github.com/ocaml-ppx/ppx_tools/archive/6.1+4.10.0.tar.gz"
   checksum: [
-    "md5=801e82103fee7ce1e4a59ab670601952"
-    "sha512=b576398a0dfad76ea9874cc18550bb44078a7e8f8dc0c169a0441f75f3881e458c42316c96d816c6e81d5ef219fac3aa539471f006b46088c9b943ed8af8b947"
+    "md5=02fe2fab316e4a8b39d899e5839d7eec"
+    "sha512=596dd6c9682eb1f36376a9fb60b9dff58ce7416bd83d5d0f5b36517b917b9466c99f621bcccc012255eefcd07d9c1663c2900eae60d89492c2e62c3173ed9311"
   ]
 }

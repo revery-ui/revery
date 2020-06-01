@@ -19,7 +19,7 @@ void revery_alert_cocoa(void *pWin, const char *szMessage) {
 }
 
 const char **revery_open_files_cocoa(
-    const char *startDir, char *fileTypes[], int fileTypesSize,
+    const char *startDir, const char *fileTypes[], int fileTypesSize,
     int allowMultiple, int canChooseFiles, int canChooseDirectories,
     int showHidden, const char *buttonText, const char *title) {
     /* Creates an empty NSArray of filetypes (NSString's)

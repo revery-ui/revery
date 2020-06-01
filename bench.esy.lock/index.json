@@ -1,5 +1,5 @@
 {
-  "checksum": "07a27e4b019c0024afa7f65f5539c0ab",
+  "checksum": "c1f836feba634c5db3589cc97825f216",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -45,23 +45,23 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-skia@github:revery-ui/reason-skia#6b459c7@d41d8cd9",
+        "reason-skia@github:revery-ui/reason-skia#5e94192b90b71122fa821e9c4e6b979b15c7df83@d41d8cd9",
         "reason-sdl2@2.10.3032@d41d8cd9",
-        "reason-font-manager@2.1.1@d41d8cd9", "flex@1.2.3@d41d8cd9",
-        "esy-harfbuzz@1.9.1008@d41d8cd9",
+        "reason-font-manager@github:revery-ui/reason-font-manager#38af5f0552fca41d0a5b572b2a51fee198aaaa4a@d41d8cd9",
+        "flex@1.2.3@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/ppx_deriving@opam:4.5@bb81afdc",
         "@opam/lwt_ppx@opam:2.0.1@ab0debb8", "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
-        "@glennsl/timber@1.2.0@d41d8cd9", "@esy-ocaml/reason@3.6.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b", "@glennsl/timber@1.2.0@d41d8cd9",
+        "@esy-ocaml/reason@3.6.0@d41d8cd9",
         "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#10cab2d@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9",
         "esy-astyle@github:zbaylin/esy-astyle#59bc21a@d41d8cd9",
-        "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#04733ed@d41d8cd9",
-        "@opam/dune@opam:2.5.0@aef1678b"
+        "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6@d41d8cd9"
       ]
     },
     "reperf@1.5.0@d41d8cd9": {
@@ -139,18 +139,22 @@
       ],
       "devDependencies": []
     },
-    "reason-skia@github:revery-ui/reason-skia#6b459c7@d41d8cd9": {
-      "id": "reason-skia@github:revery-ui/reason-skia#6b459c7@d41d8cd9",
+    "reason-skia@github:revery-ui/reason-skia#5e94192b90b71122fa821e9c4e6b979b15c7df83@d41d8cd9": {
+      "id":
+        "reason-skia@github:revery-ui/reason-skia#5e94192b90b71122fa821e9c4e6b979b15c7df83@d41d8cd9",
       "name": "reason-skia",
-      "version": "github:revery-ui/reason-skia#6b459c7",
+      "version":
+        "github:revery-ui/reason-skia#5e94192b90b71122fa821e9c4e6b979b15c7df83",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/reason-skia#6b459c7" ]
+        "source": [
+          "github:revery-ui/reason-skia#5e94192b90b71122fa821e9c4e6b979b15c7df83"
+        ]
       },
       "overrides": [],
       "dependencies": [
         "refmterr@3.3.2@d41d8cd9", "reason-sdl2@2.10.3032@d41d8cd9",
-        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
+        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
         "esy-sdl2@2.0.10007@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.0@aef1678b",
@@ -177,31 +181,36 @@
       ],
       "devDependencies": []
     },
-    "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9": {
+    "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9": {
       "id":
-        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
+        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9",
       "name": "reason-native-crash-utils",
-      "version": "github:onivim/reason-native-crash-utils#ae1fd34",
+      "version":
+        "github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6",
       "source": {
         "type": "install",
-        "source": [ "github:onivim/reason-native-crash-utils#ae1fd34" ]
+        "source": [
+          "github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6"
+        ]
       },
       "overrides": [],
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/reason@3.6.0@d41d8cd9"
+        "@opam/dune@opam:2.5.0@aef1678b"
       ],
       "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
     },
-    "reason-font-manager@2.1.1@d41d8cd9": {
-      "id": "reason-font-manager@2.1.1@d41d8cd9",
+    "reason-font-manager@github:revery-ui/reason-font-manager#38af5f0552fca41d0a5b572b2a51fee198aaaa4a@d41d8cd9": {
+      "id":
+        "reason-font-manager@github:revery-ui/reason-font-manager#38af5f0552fca41d0a5b572b2a51fee198aaaa4a@d41d8cd9",
       "name": "reason-font-manager",
-      "version": "2.1.1",
+      "version":
+        "github:revery-ui/reason-font-manager#38af5f0552fca41d0a5b572b2a51fee198aaaa4a",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/reason-font-manager/-/reason-font-manager-2.1.1.tgz#sha1:3505aa2c32798eddd67d9af770f164b6b77c155b"
+          "github:revery-ui/reason-font-manager#38af5f0552fca41d0a5b572b2a51fee198aaaa4a"
         ]
       },
       "overrides": [],
@@ -1214,14 +1223,17 @@
         "@opam/dune@opam:2.5.0@aef1678b"
       ]
     },
-    "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#04733ed@d41d8cd9": {
+    "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6@d41d8cd9": {
       "id":
-        "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#04733ed@d41d8cd9",
+        "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6@d41d8cd9",
       "name": "@opam/ocaml-lsp-server",
-      "version": "github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#04733ed",
+      "version":
+        "github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6",
       "source": {
         "type": "install",
-        "source": [ "github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#04733ed" ]
+        "source": [
+          "github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6"
+        ]
       },
       "overrides": [],
       "dependencies": [
@@ -1230,6 +1242,7 @@
         "@opam/ppx_yojson_conv_lib@opam:v0.14.0@116b53d6",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/menhir@opam:20200211@26571604",
+        "@opam/dune-build-info@opam:2.5.1@921e5578",
         "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
@@ -1238,6 +1251,7 @@
         "@opam/ppx_yojson_conv_lib@opam:v0.14.0@116b53d6",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/menhir@opam:20200211@26571604",
+        "@opam/dune-build-info@opam:2.5.1@921e5578",
         "@opam/dune@opam:2.5.0@aef1678b"
       ]
     },
@@ -1867,6 +1881,28 @@
         "@opam/dune-private-libs@opam:2.5.1@60c1661f",
         "@opam/dune@opam:2.5.0@aef1678b"
       ]
+    },
+    "@opam/dune-build-info@opam:2.5.1@921e5578": {
+      "id": "@opam/dune-build-info@opam:2.5.1@921e5578",
+      "name": "@opam/dune-build-info",
+      "version": "opam:2.5.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/sha256/8f/8f77d3a87f208e0d7cccaa1c48c4bb1bb87d62d07c3f25e9b8ba298e028ce52b#sha256:8f77d3a87f208e0d7cccaa1c48c4bb1bb87d62d07c3f25e9b8ba298e028ce52b",
+          "archive:https://github.com/ocaml/dune/releases/download/2.5.1/dune-2.5.1.tbz#sha256:8f77d3a87f208e0d7cccaa1c48c4bb1bb87d62d07c3f25e9b8ba298e028ce52b"
+        ],
+        "opam": {
+          "name": "dune-build-info",
+          "version": "2.5.1",
+          "path": "bench.esy.lock/opam/dune-build-info.2.5.1"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [ "@opam/dune@opam:2.5.0@aef1678b" ]
     },
     "@opam/dune@opam:2.5.0@aef1678b": {
       "id": "@opam/dune@opam:2.5.0@aef1678b",
