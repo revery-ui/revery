@@ -34,7 +34,7 @@ module CanQuit = {
         text={"Can quit: " ++ (canQuit ? "Yes" : "No")}
         style=Style.[
           marginTop(10),
-          fontFamily("Roboto-Regular.ttf"),
+          fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
           fontSize(20.),
         ]
       />
