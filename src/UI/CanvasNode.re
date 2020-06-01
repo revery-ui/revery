@@ -28,6 +28,7 @@ class canvasNode (()) = {
     | Some(r) =>
       let _ret: int = CanvasContext.save(canvas);
       CanvasContext.setMatrix(canvas, world);
+      CanvasContext.setRootTransform(world, canvas);
       Overflow.render(canvas, LayoutTypes.Hidden, dimensions, () => {
         // canvas save
         // canvas set transform
