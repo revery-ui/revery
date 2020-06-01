@@ -17,7 +17,7 @@ module ActionButton = {
     let textHeaderStyle =
       Style.[
         color(Colors.black),
-        fontFamily("Roboto-Regular.ttf"),
+        fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
         fontSize(14.),
         margin(16),
       ];
