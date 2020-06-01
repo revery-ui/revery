@@ -31,7 +31,7 @@ module Check = {
         text={getCheckboxText(first)}
         style=Style.[
           marginBottom(10),
-          fontFamily("Roboto-Regular.ttf"),
+          fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
           fontSize(20.),
         ]
       />
@@ -47,7 +47,7 @@ module Check = {
         }
         style=Style.[
           marginTop(10),
-          fontFamily("Roboto-Regular.ttf"),
+          fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
           fontSize(20.),
         ]
       />
