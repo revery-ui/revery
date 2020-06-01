@@ -2,4 +2,4 @@
     (name Revery_Math_Test)
     (library_flags (-linkall -g))
     (modules (:standard))
-    (libraries Revery_Math rely.lib))
+    (libraries skia Revery_Math rely.lib rely.internal))
