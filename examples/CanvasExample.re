@@ -24,6 +24,10 @@ module Sample = {
       <Canvas
         style=outerBox
         render={canvasContext => {
+          let transform = Skia.Matrix.make();
+          Skia.Matrix.setIdentity(transform);
+          CanvasContext.setMatrix(canvasContext, transform);
+
           let paint = Skia.Paint.make();
           Skia.Paint.setColor(
             paint,
