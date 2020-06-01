@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "esy b",
-    "build:release": "esy b dune build -p Revery -j4",
+    "build:release": "esy b dune build -p harfbuzz,Revery -j4",
     "test": "esy b dune runtest",
     "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}",
     "run": "esy x Examples"
@@ -25,9 +25,10 @@
       }
     },
     "build": [
-      "dune build -p Revery -j4"
+      "dune build -p harfbuzz,Revery -j4"
     ],
     "install": [
+      "esy-installer harfbuzz.install",
       "esy-installer Revery.install",
       "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': ':'}\""
     ]
@@ -40,11 +41,11 @@
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/ppx_deriving": "*",
     "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d",
+    "esy-harfbuzz": "^1.9.1008",
     "flex": "1.2.3",
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
     "reason-font-manager": "^2.1.1",
-    "reason-harfbuzz": "^1.91.5007",
     "rench": "^1.9.1",
     "rebez": "jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3032",
