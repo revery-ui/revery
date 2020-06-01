@@ -7,7 +7,7 @@ module Constants = {
 };
 
 module Theme = {
-  let fontFamily = Style.fontFamily(FontFamily.asset("Roboto-Regular.ttf"));
+  let fontFamily = Style.(fontFamily(FontFamily.asset("Roboto-Regular.ttf")));
   let fontSize = 16.;
   let rem = factor => fontSize *. factor;
   let remi = factor => rem(factor) |> int_of_float;
