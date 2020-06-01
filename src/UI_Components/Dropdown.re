@@ -29,7 +29,7 @@ module Make = (Type: {type t;}) => {
 
   let textStyles =
     Style.[
-      fontFamily("Roboto-Regular.ttf"),
+      fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
       fontSize(20.),
       color(Colors.black),
     ];
@@ -107,7 +107,7 @@ module Make = (Type: {type t;}) => {
             style=Style.[
               fontSize(30.),
               color(Colors.black),
-              fontFamily("FontAwesome5FreeSolid.otf"),
+              fontFamily(FontFamily.asset("FontAwesome5FreeSolid.otf")),
               paddingRight(5),
               alignSelf(`Center),
             ]
