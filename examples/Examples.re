@@ -344,4 +344,6 @@ let init = app => {
   ();
 };
 
+let () = Printexc.record_backtrace(true)
+
 App.start(init);
