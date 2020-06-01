@@ -14,7 +14,7 @@ module Make = (Type: {type t;}) => {
       color(Colors.white),
       fontSize(16.),
       marginLeft(10),
-      fontFamily("Roboto-Regular.ttf"),
+      fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
     ];
 
   let%component make =
@@ -49,7 +49,7 @@ module Make = (Type: {type t;}) => {
                text={icon(button.value)}
                style=Style.[
                  fontSize(iconSize),
-                 fontFamily("FontAwesome5FreeSolid.otf"),
+                 fontFamily(FontFamily.asset("FontAwesome5FreeSolid.otf")),
                  textWrap(TextWrapping.NoWrap),
                ]
              />
