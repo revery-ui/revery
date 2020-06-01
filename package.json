@@ -39,7 +39,7 @@
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/ppx_deriving": "*",
-    "@opam/omd": "^1.3.1",
+    "@opam/omd": "ocaml/omd:omd.opam#1535e3c",
     "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d",
     "flex": "1.2.3",
     "reperf": "^1.4.0",
