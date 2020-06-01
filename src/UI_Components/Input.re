@@ -116,7 +116,10 @@ module Constants = {
 };
 
 type textAttributes = {
-  fontFamily: string,
+  fontFamily: Style.fontFamily,
+  fontWeight: Revery_Font.Weight.t,
+  italicized: bool,
+  monospaced: bool,
   fontSize: float,
   color: Color.t,
 };
@@ -220,7 +223,10 @@ let%component make =
   let%hook scrollOffset = Hooks.ref(0);
 
   let textAttrs = {
-    fontFamily: Selector.select(style, FontFamily, "Roboto-Regular.ttf"),
+    fontFamily: Selector.select(style, FontFamily, Style.FontFamily.asset("Roboto-Regular.ttf")),
+    fontWeight: Selector.select(style, FontWeight, Revery_Font.Weight.Normal),
+    italicized: Selector.select(style, Italicized, false),
+    monospaced: Selector.select(style, Monospaced, false),
     fontSize: Selector.select(style, FontSize, 18.),
     color: Selector.select(style, Color, Colors.black),
   };
@@ -238,7 +244,7 @@ let%component make =
     let dimensions =
       Revery_Draw.Text.measure(
         ~smoothing,
-        ~fontFamily=textAttrs.fontFamily,
+        ~fontFamily=textAttrs.fontFamily(textAttrs.fontWeight, textAttrs.italicized, textAttrs.monospaced),
         ~fontSize=textAttrs.fontSize,
         text,
       );
