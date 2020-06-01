@@ -82,13 +82,11 @@ module Button = {
                   ~onBlur=?,
                   (),
                 ) => {
-    let%hook (isHovered, setHovered) = Hooks.state(false);
+    let%hook (isHovered, onMouseOver, onMouseOut) = Hooks.hover();
 
     <Clickable ?onClick ?onFocus ?onBlur ?tabindex>
       <View
-        style={Styles.box(~isSelected, ~isHovered)}
-        onMouseOver={_ => setHovered(_wasHovered => true)}
-        onMouseOut={_ => setHovered(_wasHovered => false)}>
+        style={Styles.box(~isSelected, ~isHovered)} onMouseOver onMouseOut>
         <Text style=Styles.text text=label />
       </View>
     </Clickable>;
