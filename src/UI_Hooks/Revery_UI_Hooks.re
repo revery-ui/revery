@@ -154,8 +154,6 @@ let mouseCapture =
       ~onMouseUp=(state, _evt) => Some(state),
       ~onMouseMove=(state, _evt) => Some(state),
       ~onMouseWheel=(state, _evt) => Some(state),
-      ~onMouseEnter=(state, _evt) => Some(state),
-      ~onMouseLeave=(state, _evt) => Some(state),
       ~onRelease=_state => (),
       (),
     ) => {
@@ -188,8 +186,6 @@ let mouseCapture =
       ~onMouseUp=wrap(onMouseUp),
       ~onMouseMove=wrap(onMouseMove),
       ~onMouseWheel=wrap(onMouseWheel),
-      ~onMouseEnter=wrap(onMouseEnter),
-      ~onMouseLeave=wrap(onMouseLeave),
       ~onRelease=() =>
       onRelease(state^)
     );

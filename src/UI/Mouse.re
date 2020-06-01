@@ -32,8 +32,6 @@ module Capture: {
       ~onMouseUp: NodeEvents.mouseUpHandler=?,
       ~onMouseMove: NodeEvents.mouseMoveHandler=?,
       ~onMouseWheel: NodeEvents.mouseWheelHandler=?,
-      ~onMouseEnter: NodeEvents.mouseMoveHandler=?,
-      ~onMouseLeave: NodeEvents.mouseMoveHandler=?,
       Window.t
     ) =>
     unit;
@@ -46,8 +44,6 @@ module Capture: {
     onMouseUp: mouseUpHandler,
     onMouseMove: mouseMoveHandler,
     onMouseWheel: mouseWheelHandler,
-    onMouseEnter: mouseMoveHandler,
-    onMouseLeave: mouseMoveHandler,
     dispose: unit => unit,
   };
 
@@ -68,8 +64,6 @@ module Capture: {
         ~onMouseUp=_evt => (),
         ~onMouseMove=_evt => (),
         ~onMouseWheel=_evt => (),
-        ~onMouseEnter=_evt => (),
-        ~onMouseLeave=_evt => (),
         window,
       ) => {
     ignore(Sdl2.Mouse.capture(true): int);
@@ -81,8 +75,6 @@ module Capture: {
         onMouseUp,
         onMouseMove,
         onMouseWheel,
-        onMouseEnter,
-        onMouseLeave,
         dispose: () => {
           unsubscribe();
           onRelease();
@@ -106,8 +98,6 @@ module Capture: {
       | MouseUp(params) => state.onMouseUp(params)
       | MouseMove(params) => state.onMouseMove(params)
       | MouseWheel(params) => state.onMouseWheel(params)
-      | MouseEnter(params) => state.onMouseEnter(params)
-      | MouseLeave(params) => state.onMouseLeave(params)
       | _ => ()
       }
 

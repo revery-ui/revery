@@ -37,6 +37,8 @@ let%component make =
                 ~children,
                 (),
               ) => {
+  let%hook (isHovered, startHover, endHover) = Hooks.hover();
+
   let%hook mouseDownTimes = Hooks.ref(Constants.initialMouseDownTimes);
 
   let isDoubleClick = () =>
@@ -45,38 +47,43 @@ let%component make =
   let resetMouseDownTimes = () =>
     mouseDownTimes := Constants.initialMouseDownTimes;
 
-  let onMouseClick = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
-    switch (mouseEvt.button) {
-    | MouseButton.BUTTON_LEFT =>
-      if (isDoubleClick()) {
-        resetMouseDownTimes();
-        onDoubleClick();
-      } else {
-        onClick();
-      }
-    | MouseButton.BUTTON_RIGHT => onRightClick()
-    | _ => ()
-    };
-    onAnyClick(mouseEvt);
-  };
-
-  let onMouseUp = (isInButton, evt: NodeEvents.mouseButtonEventParams) => {
-    if (isInButton) {
-      onMouseClick(evt);
-    };
-    None;
-  };
-
-  let%hook (captureMouse, captureState) =
+  let%hook (captureMouse, _captureState) =
     Hooks.mouseCapture(
-      ~onMouseUp,
-      ~onMouseEnter=(_state, _evt) => Some(true),
-      ~onMouseLeave=(_state, _evt) => Some(false),
+      ~onMouseUp=
+        (_state, evt) => {
+          if (isHovered) {
+            switch (evt.button) {
+            | MouseButton.BUTTON_LEFT =>
+              if (isDoubleClick()) {
+                resetMouseDownTimes();
+                onDoubleClick();
+              } else {
+                onClick();
+              }
+            | MouseButton.BUTTON_RIGHT => onRightClick()
+            | _ => ()
+            };
+
+            onAnyClick(evt);
+          };
+
+          None;
+        },
       (),
     );
 
+  let onMouseEnter = _event => {
+    startHover();
+    onMouseEnterUserCallback(_event);
+  };
+
+  let onMouseLeave = _event => {
+    endHover();
+    onMouseLeaveUserCallback(_event);
+  };
+
   let onMouseDown = _event => {
-    captureMouse(true);
+    captureMouse();
     mouseDownTimes := (Time.now(), fst(mouseDownTimes^));
   };
 
@@ -86,8 +93,8 @@ let%component make =
     style
     onMouseDown
     onMouseUp
+    onMouseEnter
     onMouseLeave
-    onMouseEnter=?onMouseEnterUserCallback
     ?onBlur
     ?onFocus
     ?onKeyDown
