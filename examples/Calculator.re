@@ -32,7 +32,7 @@ module Column = {
 module Button = {
   let make =
       (
-        ~fontFamily as family="Roboto-Regular.ttf",
+        ~fontFamily as family=Style.FontFamily.asset("Roboto-Regular.ttf"),
         ~contents: string,
         ~onClick,
         (),
@@ -82,14 +82,14 @@ module Display = {
     let displayStyle =
       Style.[
         color(Colors.black),
-        fontFamily("Roboto-Regular.ttf"),
+        fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
         fontSize(20.),
         margin(15),
       ];
     let numStyle =
       Style.[
         color(Colors.black),
-        fontFamily("Roboto-Regular.ttf"),
+        fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
         fontSize(32.),
         margin(15),
       ];
@@ -319,7 +319,7 @@ module Calculator = {
         <Button contents="±" onClick={_ => dispatch(PlusMinusKeyPressed)} />
         /* TODO: Switch to a font with a backspace character */
         <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
+          fontFamily={Style.FontFamily.asset("FontAwesome5FreeSolid.otf")}
           contents={||}
           onClick={_ => dispatch(BackspaceKeyPressed)}
         />
