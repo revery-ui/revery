@@ -29,7 +29,7 @@ module Zoom = {
       Style.[
         color(Colors.white),
         width(100),
-        fontFamily("Roboto-Regular.ttf"),
+        fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
         fontSize(16.),
         margin(14),
       ];
