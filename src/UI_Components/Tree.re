@@ -60,11 +60,11 @@ let default = (~indent, {data, status, _}) => {
     <View style=defaultNodeStyles>
       <Text
         text={indentStr ++ arrow ++ " "}
-        style=[fontFamily("FontAwesome5FreeSolid.otf"), ...textStyles]
+        style=[fontFamily(FontFamily.asset("FontAwesome5FreeSolid.otf")), ...textStyles]
       />
       <Text
         text=data
-        style=[fontFamily("Roboto-Regular.ttf"), ...textStyles]
+        style=[fontFamily(FontFamily.asset("Roboto-Regular.ttf")), ...textStyles]
       />
     </View>
   </Clickable>;
