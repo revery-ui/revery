@@ -137,7 +137,7 @@ class node (()) = {
       };
   };
   pub setStyle = style =>
-    if (style != _style) {
+    if (style !== _style) {
       if (style.boxShadow.blurRadius != 0. || _hasHadNonZeroBlurRadius) {
         _hasHadNonZeroBlurRadius = true;
       };
