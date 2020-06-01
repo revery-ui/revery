@@ -2,5 +2,5 @@
     (name ReveryBench)
     (public_name ReveryBench.lib)
     (ocamlopt_flags -linkall)
-    (libraries Revery reperf.lib)
+    (libraries skia skia.wrapped skia.wrapped.bindings Revery Revery_Core Revery_Draw Revery_Font Revery_UI reperf.lib)
 )
