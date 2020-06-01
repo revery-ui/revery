@@ -14,7 +14,7 @@ let containerStyle =
 
 let textStyle =
   Style.[
-    fontFamily("Roboto-Regular.ttf"),
+    fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
     fontSize(20.),
     marginBottom(20),
   ];
