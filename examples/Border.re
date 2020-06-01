@@ -30,7 +30,7 @@ let innerStyle =
 let textStyle =
   Style.[
     fontSize(20.),
-    fontFamily("Roboto-Regular.ttf"),
+    fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
     color(Colors.black),
   ];
 
