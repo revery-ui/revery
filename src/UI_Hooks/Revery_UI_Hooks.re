@@ -197,8 +197,8 @@ let mouseCapture =
 let hover = () => {
   let%hook (isHovered, setHovered) = state(false);
 
-  let onMouseEnter = _evt => setHovered(_ => true);
-  let onMouseLeave = _evt => setHovered(_ => false);
+  let startHover = _evt => setHovered(_ => true);
+  let endHover = _evt => setHovered(_ => false);
 
-  (isHovered, onMouseEnter, onMouseLeave);
+  (isHovered, startHover, endHover);
 };
