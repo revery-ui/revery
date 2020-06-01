@@ -33,6 +33,8 @@
     ]
   },
   "dependencies": {
+    "@opam/dune": ">=1.6.0",
+    "@opam/dune-configurator": "*",
     "@esy-ocaml/reason": "^3.6.0",
     "@opam/ctypes": "0.15.1",
     "@opam/dune-configurator": "*",
@@ -47,19 +49,18 @@
     "flex": "1.2.3",
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
-    "reason-font-manager": "^2.1.1",
+    "reason-font-manager": "revery-ui/reason-font-manager#38af5f0552fca41d0a5b572b2a51fee198aaaa4a",
     "reason-harfbuzz": "^1.91.5007",
     "reason-native-crash-utils": "onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6",
     "rench": "^1.9.1",
     "rebez": "jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3032",
     "revery-text-wrap": "revery-ui/revery-text-wrap#966383e",
-    "@glennsl/timber": "1.2.0"
+    "@glennsl/timber": "^1.2.0"
   },
   "devDependencies": {
-    "ocaml": "~4.8",
-    "@opam/dune": "^1.8.0",
+    "ocaml": "~4.10",
     "esy-astyle": "zbaylin/esy-astyle#59bc21a",
-    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#04733ed"
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6"
   }
 }
