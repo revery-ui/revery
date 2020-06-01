@@ -26,21 +26,21 @@ module Styles = {
   let text =
     Style.[
       color(Colors.white),
-      fontFamily("Roboto-Regular.ttf"),
+      fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
       fontSize(14.),
     ];
 
   let activeStyle =
     Style.[
       color(Colors.blue),
-      fontFamily("Roboto-Regular.ttf"),
+      fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
       fontSize(14.),
     ];
 
   let inactiveStyle =
     Style.[
       color(Colors.lightBlue),
-      fontFamily("Roboto-Regular.ttf"),
+      fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
       fontSize(14.),
     ];
 };
