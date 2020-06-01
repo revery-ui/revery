@@ -18,7 +18,7 @@ module RadioExample = {
         text="Radio Button"
         style=Style.[
           fontSize(20.),
-          fontFamily("Roboto-Regular.ttf"),
+          fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
           marginBottom(20),
         ]
       />
@@ -39,7 +39,7 @@ module RadioExample = {
         text=radioVal
         style=Style.[
           fontSize(20.),
-          fontFamily("Roboto-Regular.ttf"),
+          fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
           marginTop(20),
         ]
       />
