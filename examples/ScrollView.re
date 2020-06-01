@@ -33,7 +33,7 @@ module Sample = {
         text="Bounce"
         style=Style.[
           marginBottom(10),
-          fontFamily("Roboto-Regular.ttf"),
+          fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
           fontSize(20.),
         ]
       />
