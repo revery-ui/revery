@@ -190,7 +190,7 @@ module ExampleButton = {
     let textHeaderStyle =
       Style.[
         color(textColor),
-        fontFamily("Roboto-Regular.ttf"),
+        fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
         fontSize(14.),
         margin(16),
       ];
