@@ -277,11 +277,13 @@ let init = app => {
 
   let initialExample = ref("Animation");
   let decorated = ref(true);
+  let forceScaleFactor = ref(None);
   Arg.parse(
     [
       ("--trace", Unit(() => Timber.App.setLevel(Timber.Level.trace)), ""),
       ("--no-decoration", Unit(() => decorated := false), ""),
       ("--example", String(name => initialExample := name), ""),
+      ("--force-device-scale-factor", Float(scaleFactor => forceScaleFactor := Some(scaleFactor)), ""),
     ],
     _ => (),
     "There is only --trace, --example, and --no-decoration",
@@ -306,6 +308,7 @@ let init = app => {
           ~titlebarStyle=Transparent,
           ~icon=Some("revery-icon.png"),
           ~decorated=decorated^,
+          ~forceScaleFactor=forceScaleFactor^,
           (),
         ),
       app,
