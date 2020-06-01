@@ -7,7 +7,7 @@ module Constants = {
 };
 
 module Theme = {
-  let fontFamily = Style.fontFamily("Roboto-Regular.ttf");
+  let fontFamily = Style.fontFamily(FontFamily.asset("Roboto-Regular.ttf"));
   let fontSize = 16.;
   let rem = factor => fontSize *. factor;
   let remi = factor => rem(factor) |> int_of_float;
@@ -109,7 +109,7 @@ module Checkbox = {
         color(Theme.hoveredButtonColor),
         fontSize(Theme.fontSize),
         textWrap(TextWrapping.NoWrap),
-        fontFamily("FontAwesome5FreeSolid.otf"),
+        fontFamily(FontFamily.asset("FontAwesome5FreeSolid.otf")),
         transform(Transform.[TranslateY(2.)]),
       ];
   };
@@ -139,7 +139,7 @@ module AddTodo = {
       Style.[
         color(areAllCompleted ? Theme.textColor : Theme.dimmedTextColor),
         fontSize(Theme.fontSize),
-        fontFamily("FontAwesome5FreeSolid.otf"),
+        fontFamily(FontFamily.asset("FontAwesome5FreeSolid.otf")),
         transform(Transform.[TranslateY(2.)]),
         marginLeft(12),
       ];
@@ -199,7 +199,7 @@ module Todo = {
       Style.[
         color(isHovered ? Theme.dangerColor : Colors.transparentWhite),
         fontSize(Theme.fontSize),
-        fontFamily("FontAwesome5FreeSolid.otf"),
+        fontFamily(FontFamily.asset("FontAwesome5FreeSolid.otf")),
         transform(Transform.[TranslateY(2.)]),
         marginRight(6),
       ];
