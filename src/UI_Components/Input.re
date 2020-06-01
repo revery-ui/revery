@@ -223,7 +223,12 @@ let%component make =
   let%hook scrollOffset = Hooks.ref(0);
 
   let textAttrs = {
-    fontFamily: Selector.select(style, FontFamily, Style.FontFamily.asset("Roboto-Regular.ttf")),
+    fontFamily:
+      Selector.select(
+        style,
+        FontFamily,
+        Style.FontFamily.asset("Roboto-Regular.ttf"),
+      ),
     fontWeight: Selector.select(style, FontWeight, Revery_Font.Weight.Normal),
     italicized: Selector.select(style, Italicized, false),
     monospaced: Selector.select(style, Monospaced, false),
@@ -244,7 +249,12 @@ let%component make =
     let dimensions =
       Revery_Draw.Text.measure(
         ~smoothing,
-        ~fontFamily=textAttrs.fontFamily(textAttrs.fontWeight, textAttrs.italicized, textAttrs.monospaced),
+        ~fontFamily=
+          textAttrs.fontFamily(
+            textAttrs.fontWeight,
+            textAttrs.italicized,
+            textAttrs.monospaced,
+          ),
         ~fontSize=textAttrs.fontSize,
         text,
       );
