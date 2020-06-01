@@ -20,7 +20,7 @@ let textStyle =
   Style.[
     color(Colors.white),
     width(100),
-    fontFamily("Roboto-Regular.ttf"),
+    fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
     fontSize(16.),
     margin(14),
     textWrap(TextWrapping.NoWrap),
@@ -37,7 +37,7 @@ let controlsStyle =
 let overflowStyles = (style, textFontSize, textWidth) =>
   Style.[
     color(Colors.white),
-    fontFamily("Roboto-Regular.ttf"),
+    fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
     fontSize(textFontSize),
     width(textWidth),
     textOverflow(style),
@@ -84,7 +84,7 @@ module SampleText = {
           <Text
             style=Style.[
               color(Colors.white),
-              fontFamily("Roboto-Regular.ttf"),
+              fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
               fontSize(textFontSize),
               lineHeight(1.5),
               textWrap(wrapping),
