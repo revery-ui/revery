@@ -283,7 +283,11 @@ let init = app => {
       ("--trace", Unit(() => Timber.App.setLevel(Timber.Level.trace)), ""),
       ("--no-decoration", Unit(() => decorated := false), ""),
       ("--example", String(name => initialExample := name), ""),
-      ("--force-device-scale-factor", Float(scaleFactor => forceScaleFactor := Some(scaleFactor)), ""),
+      (
+        "--force-device-scale-factor",
+        Float(scaleFactor => forceScaleFactor := Some(scaleFactor)),
+        "",
+      ),
     ],
     _ => (),
     "There is only --trace, --example, and --no-decoration",
