@@ -26,11 +26,24 @@ class textNode (text: string) = {
   pub! draw = (parentContext: NodeDrawContext.t) => {
     let style = _super#getStyle();
 
-    let {color, fontFamily, fontSize, lineHeight, _} = style;
+    let {
+      color,
+      fontFamily,
+      fontSize,
+      lineHeight,
+      fontWeight,
+      italicized,
+      monospaced,
+      _,
+    } = style;
     let opacity = parentContext.opacity *. style.opacity;
     let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 
-    switch (Revery_Font.FontCache.load(fontFamily)) {
+    switch (
+      Revery_Font.FontCache.load(
+        fontFamily(fontWeight, italicized, monospaced),
+      )
+    ) {
     | Error(_) => ()
     | Ok(font) =>
       Revery_Font.Smoothing.setPaint(~smoothing=_smoothing, _textPaint);
@@ -41,9 +54,19 @@ class textNode (text: string) = {
       );
       Skia.Paint.setTextSize(_textPaint, fontSize);
 
-      let ascentPx = Text.getAscent(~fontFamily, ~fontSize, ());
+      let ascentPx =
+        Text.getAscent(
+          ~fontFamily=fontFamily(fontWeight, italicized, monospaced),
+          ~fontSize,
+          (),
+        );
       let lineHeightPx =
-        lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
+        lineHeight
+        *. Text.getLineHeight(
+             ~fontFamily=fontFamily(fontWeight, italicized, monospaced),
+             ~fontSize,
+             (),
+           );
 
       /* when style.width & style.height are defined, Layout doesn't call the measure function */
       if (!_isMeasured) {
@@ -84,18 +107,44 @@ class textNode (text: string) = {
 
     if (lastStyle.lineHeight != newStyle.lineHeight
         || lastStyle.fontSize != newStyle.fontSize
-        || !String.equal(lastStyle.fontFamily, newStyle.fontFamily)) {
+        || !
+             String.equal(
+               lastStyle.fontFamily(
+                 lastStyle.fontWeight,
+                 lastStyle.italicized,
+                 lastStyle.monospaced,
+               ),
+               newStyle.fontFamily(
+                 newStyle.fontWeight,
+                 newStyle.italicized,
+                 newStyle.monospaced,
+               ),
+             )) {
       _this#markLayoutDirty();
     };
   };
   pub textOverflow = (maxWidth): LayoutTypes.dimensions => {
-    let {fontFamily, fontSize, lineHeight, textOverflow, _}: Style.t =
+    let {
+      fontFamily,
+      fontSize,
+      lineHeight,
+      textOverflow,
+      fontWeight,
+      italicized,
+      monospaced,
+      _,
+    }: Style.t =
       _super#getStyle();
 
     let formattedText = TextOverflow.removeLineBreaks(text);
 
     let measure = str =>
-      Text.measure(~smoothing=_smoothing, ~fontFamily, ~fontSize, str)
+      Text.measure(
+        ~smoothing=_smoothing,
+        ~fontFamily=fontFamily(fontWeight, italicized, monospaced),
+        ~fontSize,
+        str,
+      )
       |> (value => value.width);
 
     let width = measure(formattedText);
@@ -116,7 +165,12 @@ class textNode (text: string) = {
     _lines = [truncated];
 
     let lineHeightPx =
-      lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
+      lineHeight
+      *. Text.getLineHeight(
+           ~fontFamily=fontFamily(fontWeight, italicized, monospaced),
+           ~fontSize,
+           (),
+         );
 
     {width: int_of_float(width), height: int_of_float(lineHeightPx)};
   };
@@ -145,14 +199,28 @@ class textNode (text: string) = {
     );
   };
   pub handleTextWrapping = (width, style) => {
-    let {textWrap, fontFamily, fontSize, lineHeight, _}: Style.t = style;
+    let {
+      textWrap,
+      fontFamily,
+      fontSize,
+      lineHeight,
+      fontWeight,
+      italicized,
+      monospaced,
+      _,
+    }: Style.t = style;
     let lineHeightPx =
-      lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
+      lineHeight
+      *. Text.getLineHeight(
+           ~fontFamily=fontFamily(fontWeight, italicized, monospaced),
+           ~fontSize,
+           (),
+         );
 
     let measureWidth = str =>
       Text.measureCharWidth(
         ~smoothing=_smoothing,
-        ~fontFamily,
+        ~fontFamily=fontFamily(fontWeight, italicized, monospaced),
         ~fontSize,
         str,
       );
@@ -166,7 +234,12 @@ class textNode (text: string) = {
 
     let pickWiderLine = (leftWidth, right) => {
       let rightWidth =
-        Text.measure(~smoothing=_smoothing, ~fontFamily, ~fontSize, right).
+        Text.measure(
+          ~smoothing=_smoothing,
+          ~fontFamily=fontFamily(fontWeight, italicized, monospaced),
+          ~fontSize,
+          right,
+        ).
           width;
       max(leftWidth, rightWidth);
     };

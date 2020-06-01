@@ -1,8 +1,23 @@
 open Layout;
 
 open Revery_Core;
+open Revery_Font;
 
-type fontFamily = string;
+type fontFamily = (Weight.t, bool, bool) => string;
+
+module FontFamily = {
+  let asset = (~variant: option(fontFamily)=?, default: string): fontFamily =>
+    switch (variant) {
+    | None => ((_, _, _) => default)
+    | Some(selector) => (
+        (weight, italicized, monospaced) =>
+          switch (weight, italicized, monospaced) {
+          | (Weight.Normal, false, false) => default
+          | _ => selector(weight, italicized, monospaced)
+          }
+      )
+    };
+};
 
 module Border = {
   type t = {
@@ -78,6 +93,9 @@ type t = {
   left: int,
   right: int,
   fontFamily,
+  fontWeight: Weight.t,
+  italicized: bool,
+  monospaced: bool,
   fontSize: float,
   lineHeight: float,
   pointerEvents: PointerEvents.t,
@@ -136,7 +154,10 @@ let make =
       ~bottom=Encoding.cssUndefined,
       ~left=Encoding.cssUndefined,
       ~right=Encoding.cssUndefined,
-      ~fontFamily="",
+      ~fontFamily=(_, _, _) => "",
+      ~fontWeight=Weight.Normal,
+      ~italicized=false,
+      ~monospaced=false,
       ~fontSize=12.,
       ~lineHeight=1.2,
       ~textWrap=TextWrapping.Wrap,
@@ -200,6 +221,9 @@ let make =
     left,
     right,
     fontFamily,
+    fontWeight,
+    italicized,
+    monospaced,
     fontSize,
     lineHeight,
     textWrap,
@@ -359,7 +383,13 @@ type coreStyleProps = [
   | `PointerEvents(PointerEvents.t)
 ];
 
-type fontProps = [ | `FontFamily(string) | `FontSize(float)];
+type fontProps = [
+  | `FontFamily(fontFamily)
+  | `FontSize(float)
+  | `FontWeight(Weight.t)
+  | `Italicized(bool)
+  | `Monospaced(bool)
+];
 
 type textProps = [
   | `LineHeight(float)
@@ -448,6 +478,9 @@ let top = f => `Top(f);
 
 let fontSize = f => `FontSize(f);
 let fontFamily = f => `FontFamily(f);
+let fontWeight = f => `FontWeight(f);
+let italicized = i => `Italicized(i);
+let monospaced = i => `Monospaced(i);
 let lineHeight = h => `LineHeight(h);
 let textWrap = w => `TextWrap(w);
 
@@ -607,6 +640,9 @@ let applyStyle = (style, styleRule) =>
   | `BoxShadow(boxShadow) => {...style, boxShadow}
   | `Transform(transform) => {...style, transform}
   | `FontFamily(fontFamily) => {...style, fontFamily}
+  | `FontWeight(fontWeight) => {...style, fontWeight}
+  | `Italicized(italicized) => {...style, italicized}
+  | `Monospaced(monospaced) => {...style, monospaced}
   | `FontSize(fontSize) => {...style, fontSize}
   | `LineHeight(lineHeight) => {...style, lineHeight}
   | `TextOverflow(textOverflow) => {...style, textOverflow}

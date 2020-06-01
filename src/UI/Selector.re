@@ -3,7 +3,10 @@ open Style;
 
 type selector('a) =
   | Color: selector(Color.t)
-  | FontFamily: selector(string)
+  | FontFamily: selector(Style.fontFamily)
+  | FontWeight: selector(Revery_Font.Weight.t)
+  | Italicized: selector(bool)
+  | Monospaced: selector(bool)
   | FontSize: selector(float)
   | Width: selector(int)
   | FlexGrow: selector(int)
@@ -60,8 +63,14 @@ let rec select:
     switch (styles, selector) {
     | ([], _) => default
     | ([`Color(c), ...rest], Color) => select(rest, selector, c)
-    | ([`FontFamily(path), ...rest], FontFamily) =>
-      select(rest, selector, path)
+    | ([`FontFamily(family), ...rest], FontFamily) =>
+      select(rest, selector, family)
+    | ([`FontWeight(weight), ...rest], FontWeight) =>
+      select(rest, selector, weight)
+    | ([`Italicized(ital), ...rest], Italicized) =>
+      select(rest, selector, ital)
+    | ([`Monospaced(mono), ...rest], Monospaced) =>
+      select(rest, selector, mono)
     | ([`FontSize(size), ...rest], FontSize) =>
       select(rest, selector, size)
     | ([`Width(size), ...rest], Width) => select(rest, selector, size)
