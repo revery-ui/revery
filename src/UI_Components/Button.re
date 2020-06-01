@@ -16,7 +16,7 @@ let make =
       ~tabindex=?,
       ~onFocus=?,
       ~onBlur=?,
-      ~fontFamily as family="Roboto-Regular.ttf",
+      ~fontFamily as family=Style.FontFamily.asset("Roboto-Regular.ttf"),
       (),
     ) =>
   <Clickable onClick={disabled ? noop : onClick} ?onFocus ?onBlur ?tabindex>
