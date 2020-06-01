@@ -1,0 +1,15 @@
+{
+  "source": "./package.json",
+  "scripts": {
+  },
+  "override": {
+      "build": ["dune build -p skia,Revery,ReveryExamples -j4"],
+      "install": [
+          "esy-installer Revery.install",
+          "esy-installer ReveryExamples.install"
+      ],
+	  "devDependencies": {
+	    "ocaml": ">=4.6.0 <4.9.0"
+	  }
+  }
+}

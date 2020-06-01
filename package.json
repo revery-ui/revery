@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "esy b",
-    "build:release": "esy b dune build -p Revery -j4",
+    "build:release": "esy b dune build -p skia,Revery -j4",
     "test": "esy b dune runtest",
     "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}",
     "run": "esy x Examples"
@@ -25,7 +25,7 @@
       }
     },
     "build": [
-      "dune build -p Revery -j4"
+      "dune build -p skia,Revery -j4"
     ],
     "install": [
       "esy-installer Revery.install",
@@ -33,22 +33,26 @@
     ]
   },
   "dependencies": {
-    "@opam/dune-configurator": "*",
     "@esy-ocaml/reason": "^3.6.0",
+    "@opam/ctypes": "0.15.1",
+    "@opam/dune-configurator": "*",
     "@opam/lru": "bryphe/lru:lru.opam#2708c70",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/ppx_deriving": "*",
     "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d",
+    "esy-freetype2": "^2.9.1007",
+    "esy-sdl2": "*",
+    "esy-skia": "revery-ui/esy-skia#d60e5fe",
     "flex": "1.2.3",
     "reperf": "^1.4.0",
     "@reason-native/console": "^0.0.3",
     "reason-font-manager": "^2.1.1",
     "reason-harfbuzz": "^1.91.5007",
+    "reason-native-crash-utils": "onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6",
     "rench": "^1.9.1",
     "rebez": "jchavarri/rebez#03fa3b7",
     "reason-sdl2": "^2.10.3032",
-    "reason-skia": "revery-ui/reason-skia#6b459c7",
     "revery-text-wrap": "revery-ui/revery-text-wrap#966383e",
     "@glennsl/timber": "1.2.0"
   },

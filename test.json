@@ -4,7 +4,7 @@
       "run": "esy '@test' x ReveryTestRunner"
   },
   "override": {
-      "build": ["dune build -p Revery,ReveryTest -j4"],
+      "build": ["dune build -p skia,Revery,ReveryTest -j4"],
       "dependencies": {
         "@reason-native/rely": "*"
       },

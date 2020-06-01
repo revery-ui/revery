@@ -11,3 +11,9 @@ steps:
     displayName: 'esy @test install'
   - script: esy @test run
     displayName: 'esy @test run'
+  - script: esy @examples install
+    displayName: 'esy @examples install'
+  - script: esy @examples x SkiaCli
+    displayName: 'esy @examples SkiaCli'
+  - script: esy @examples x SkiaCli.bc
+    displayName: 'esy @examples SkiaCli.bc'

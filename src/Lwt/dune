@@ -1,4 +1,4 @@
 (library
     (name Revery_Lwt)
     (public_name Revery.lwt)
-    (libraries Revery))
+    (libraries lwt lwt.unix Revery_Core Revery))

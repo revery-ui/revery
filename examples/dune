@@ -4,10 +4,24 @@
     (package Revery)
     (public_names Examples)
     (libraries
+        brisk-reconciler
+        console.lib
         ExampleStubs
+        reason-font-manager
         skia
+        skia.wrapped
+        skia.wrapped.bindings
         str
         Revery
+        Revery_Core;
+        Revery_Draw
+        Revery_Font
+        Revery_Math
+        Revery_Native
+        Revery_UI
+        Revery_UI_Primitives
+        Revery_UI_Components
+        Revery_UI_Hooks
         flex
         timber
             ))
