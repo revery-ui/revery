@@ -25,7 +25,7 @@ module Styles = {
   let text =
     Style.[
       color(Colors.white),
-      fontFamily("Roboto-Regular.ttf"),
+      fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
       fontSize(14.),
     ];
 };
