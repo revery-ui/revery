@@ -88,7 +88,7 @@ module Clock = {
         <Text
           style=Style.[
             color(Colors.white),
-            fontFamily("Roboto-Regular.ttf"),
+            fontFamily(FontFamily.asset("Roboto-Regular.ttf")),
             fontSize(24.),
             marginVertical(20),
             width(200),
