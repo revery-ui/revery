@@ -15,6 +15,15 @@ class textNode (text: string) = {
   val mutable _isMeasured = false;
   val mutable _lines: list(string) = [];
   val mutable _smoothing = Smoothing.default;
+  val mutable _fontFamily =
+    switch (Environment.os) {
+    | Linux => Family.system("Liberation Sans")
+    | Mac => Family.system("System Font")
+    | _ => Family.system("Arial")
+    };
+  val mutable _fontWeight = Weight.Normal;
+  val mutable _italicized = false;
+  val mutable _monospaced = false;
   val _textPaint = {
     let paint = Skia.Paint.make();
     Skia.Paint.setTextEncoding(paint, GlyphId);
@@ -127,6 +136,9 @@ class textNode (text: string) = {
       _this#markLayoutDirty();
     };
   pub setSmoothing = smoothing => _smoothing = smoothing;
+  pub setFontFamily = fontFamily => _fontFamily = fontFamily;
+  pub setFontWeight = fontWeight => _fontWeight = fontWeight;
+  pub setItalicized = italicized => _italicized = italicized;
   pub measure = (width, _height) => {
     _isMeasured = true;
     /**
