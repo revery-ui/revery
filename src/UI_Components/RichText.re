@@ -20,17 +20,18 @@ let create =
 
 let (++) = (left: t, right: t) => Node(left, right);
 
-let rec inOrder = (fn: ('acc, text) => 'acc, accumulator: 'acc, richtext: t) =>
+let rec reverseOrder =
+        (fn: ('acc, text) => 'acc, accumulator: 'acc, richtext: t) =>
   switch (richtext) {
   | Leaf(text) => fn(accumulator, text)
   | Node(left, right) =>
-    let rightAcc = inOrder(fn, accumulator, right);
-    let leftAcc = inOrder(fn, rightAcc, left);
+    let rightAcc = reverseOrder(fn, accumulator, right);
+    let leftAcc = reverseOrder(fn, rightAcc, left);
     leftAcc;
   };
 
 let toList = (richtext: t) =>
-  inOrder(
+  reverseOrder(
     (acc, text) =>
       [
         <Text
@@ -50,7 +51,7 @@ let toList = (richtext: t) =>
 // TODO: Expose as argument
 let smoothing = Revery_Font.Smoothing.default;
 let measure = (richtext: t) =>
-  inOrder(
+  reverseOrder(
     (acc: Dimensions.t, text) => {
       let dimensions =
         Revery_Draw.Text.measure(
