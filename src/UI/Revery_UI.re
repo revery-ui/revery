@@ -27,8 +27,6 @@ module Focus = Focus;
 module Dimensions = Dimensions;
 module Offset = Offset;
 
-module FontProps = FontProps;
-
 type element = React.element(node);
 
 include Ui;
