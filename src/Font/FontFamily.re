@@ -6,7 +6,21 @@ type variantSolver =
   (~fontWeight: FontWeight.t, ~italicized: bool, ~monospaced: bool, unit) =>
   string;
 
-let fromFile = (~variant: option(variantSolver)=?, default: string): t =>
+let fromFile =
+    (
+      ~variant:
+         option(
+           (
+             ~fontWeight: FontWeight.t,
+             ~italicized: bool,
+             ~monospaced: bool,
+             unit
+           ) =>
+           string,
+         )=?,
+      default: string,
+    )
+    : t =>
   switch (variant) {
   | None => ((_, _, _) => default)
   | Some(solver) => (
