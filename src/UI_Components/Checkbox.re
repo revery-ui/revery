@@ -37,11 +37,11 @@ let make =
       )>
       <Text
         text=checkedContent
+        fontSize=30.
+        fontFamily={Revery_Font.Family.fromFile("FontAwesome5FreeSolid.otf")}
         style=Style.[
           color(checked ? Colors.white : Colors.black),
-          fontSize(30.),
           textWrap(TextWrapping.NoWrap),
-          fontFamily("FontAwesome5FreeSolid.otf"),
         ]
       />
     </View>

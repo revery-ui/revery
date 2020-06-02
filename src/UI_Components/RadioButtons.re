@@ -9,13 +9,7 @@ module Make = (Type: {type t;}) => {
   };
 
   let defaultStyle =
-    Style.[
-      width(100),
-      color(Colors.white),
-      fontSize(16.),
-      marginLeft(10),
-      fontFamily("Roboto-Regular.ttf"),
-    ];
+    Style.[width(100), color(Colors.white), marginLeft(10)];
 
   let%component make =
                 (
@@ -47,13 +41,13 @@ module Make = (Type: {type t;}) => {
              ]>
              <Text
                text={icon(button.value)}
-               style=Style.[
-                 fontSize(iconSize),
-                 fontFamily("FontAwesome5FreeSolid.otf"),
-                 textWrap(TextWrapping.NoWrap),
-               ]
+               fontSize=iconSize
+               fontFamily={Revery_Font.Family.fromFile(
+                 "FontAwesome5FreeSolid.otf",
+               )}
+               style=Style.[textWrap(TextWrapping.NoWrap)]
              />
-             <Text text={button.text} style />
+             <Text text={button.text} style fontSize=16. />
            </Clickable>
          );
 
