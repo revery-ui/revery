@@ -90,3 +90,7 @@ let default =
 let resolve =
     (fontFamily: t, weight: FontWeight.t, italicized: bool, monospaced: bool) =>
   fontFamily(weight, italicized, monospaced) |> FontCache.load;
+
+let toPath =
+    (fontFamily: t, weight: FontWeight.t, italicized: bool, monospaced: bool) =>
+  fontFamily(weight, italicized, monospaced);

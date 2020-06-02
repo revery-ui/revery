@@ -31,11 +31,13 @@ class textNode (text: string) = {
   pub! draw = (parentContext: NodeDrawContext.t) => {
     let style = _super#getStyle();
 
-    let {color, fontFamily, fontSize, lineHeight, _} = style;
+    let {color, lineHeight, _} = style;
     let opacity = parentContext.opacity *. style.opacity;
     let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 
-    switch (Revery_Font.FontCache.load(fontFamily)) {
+    switch (
+      Family.resolve(_fontFamily, _fontWeight, _italicized, _monospaced)
+    ) {
     | Error(_) => ()
     | Ok(font) =>
       Revery_Font.Smoothing.setPaint(~smoothing=_smoothing, _textPaint);
@@ -44,11 +46,28 @@ class textNode (text: string) = {
         _textPaint,
         Revery_Font.FontCache.getSkiaTypeface(font),
       );
-      Skia.Paint.setTextSize(_textPaint, fontSize);
+      Skia.Paint.setTextSize(_textPaint, _fontSize);
 
-      let ascentPx = Text.getAscent(~fontFamily, ~fontSize, ());
+      let ascentPx =
+        Text.getAscent(
+          ~fontFamily=
+            Family.toPath(_fontFamily, _fontWeight, _italicized, _monospaced),
+          ~fontSize=_fontSize,
+          (),
+        );
       let lineHeightPx =
-        lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
+        lineHeight
+        *. Text.getLineHeight(
+             ~fontFamily=
+               Family.toPath(
+                 _fontFamily,
+                 _fontWeight,
+                 _italicized,
+                 _monospaced,
+               ),
+             ~fontSize=_fontSize,
+             (),
+           );
 
       /* when style.width & style.height are defined, Layout doesn't call the measure function */
       if (!_isMeasured) {
