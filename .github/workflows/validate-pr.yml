@@ -141,7 +141,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: docker build -t ${{ matrix.os }} scripts/docker/${{ matrix.os }}
-      - run: docker run --rm --volume $(pwd):/revery --volume ${{ steps.print_esy_cache.outputs.esy_cache }}:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy install --prefix-path=/esy/store"
+      - name: Create esy store
+        run: mkdir ~/.esy
+      - run: docker run --rm --volume $(pwd):/revery --volume ~/.esy:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy install --prefix-path=/esy/store"
+      - name: Print esy cache
+        id: print_esy_cache
+        run: node .github/workflows/print_esy_cache.js
       - name: Try to restore dependencies cache
         id: deps-cache
         uses: actions/cache@v1.1.2
@@ -152,7 +157,7 @@ jobs:
             ${{ matrix.os }}-
       - name: Build dependencies in release
         if: steps.deps-cache.outputs.cache-hit != 'true'
-        run: docker run --rm --volume $(pwd):/revery --volume ${{ steps.print_esy_cache.outputs.esy_cache }}:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy build-dependencies --release --prefix-path=/esy/store"
+        run: docker run --rm --volume $(pwd):/revery --volume ~/.esy:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy build-dependencies --release --prefix-path=/esy/store"
 
   build:
     name: Build
