@@ -1,5 +1,5 @@
 {
-  "checksum": "92f5f63f8ecdec64ab4be767e8b595b6",
+  "checksum": "a3172e0c5d4985cf0011a2595b406a67",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -45,7 +45,9 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-sdl2@2.10.3032@d41d8cd9", "flex@1.2.3@d41d8cd9",
+        "reason-sdl2@2.10.3032@d41d8cd9",
+        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9",
+        "flex@1.2.3@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
         "esy-sdl2@2.0.10007@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
         "esy-freetype2@2.9.1007@d41d8cd9",
@@ -158,6 +160,26 @@
         "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
       "devDependencies": []
+    },
+    "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9": {
+      "id":
+        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9",
+      "name": "reason-native-crash-utils",
+      "version":
+        "github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6",
+      "source": {
+        "type": "install",
+        "source": [
+          "github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
+        "@opam/dune@opam:2.5.0@aef1678b"
+      ],
+      "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
     },
     "ocaml@4.8.1000@d41d8cd9": {
       "id": "ocaml@4.8.1000@d41d8cd9",
