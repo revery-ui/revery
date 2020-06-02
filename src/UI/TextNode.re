@@ -106,20 +106,23 @@ class textNode (text: string) = {
     _super#setStyle(style);
     let newStyle = _this#getStyle();
 
-    if (lastStyle.lineHeight != newStyle.lineHeight
-        || lastStyle.fontSize != newStyle.fontSize
-        || !String.equal(lastStyle.fontFamily, newStyle.fontFamily)) {
+    if (lastStyle.lineHeight != newStyle.lineHeight) {
       _this#markLayoutDirty();
     };
   };
   pub textOverflow = (maxWidth): LayoutTypes.dimensions => {
-    let {fontFamily, fontSize, lineHeight, textOverflow, _}: Style.t =
-      _super#getStyle();
+    let {lineHeight, textOverflow, _}: Style.t = _super#getStyle();
 
     let formattedText = TextOverflow.removeLineBreaks(text);
 
     let measure = str =>
-      Text.measure(~smoothing=_smoothing, ~fontFamily, ~fontSize, str)
+      Text.measure(
+        ~smoothing=_smoothing,
+        ~fontFamily=
+          Family.toPath(_fontFamily, _fontWeight, _italicized, _monospaced),
+        ~fontSize=_fontSize,
+        str,
+      )
       |> (value => value.width);
 
     let width = measure(formattedText);
@@ -140,7 +143,18 @@ class textNode (text: string) = {
     _lines = [truncated];
 
     let lineHeightPx =
-      lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
+      lineHeight
+      *. Text.getLineHeight(
+           ~fontFamily=
+             Family.toPath(
+               _fontFamily,
+               _fontWeight,
+               _italicized,
+               _monospaced,
+             ),
+           ~fontSize=_fontSize,
+           (),
+         );
 
     {width: int_of_float(width), height: int_of_float(lineHeightPx)};
   };
@@ -151,11 +165,21 @@ class textNode (text: string) = {
       _this#markLayoutDirty();
     };
   pub setSmoothing = smoothing => _smoothing = smoothing;
-  pub setFontFamily = fontFamily => _fontFamily = fontFamily;
+  pub setFontFamily = fontFamily => {
+    if (_fontFamily !== fontFamily) {
+      _this#markLayoutDirty();
+    };
+    _fontFamily = fontFamily;
+  };
   pub setFontWeight = fontWeight => _fontWeight = fontWeight;
   pub setItalicized = italicized => _italicized = italicized;
   pub setMonospaced = monospaced => _monospaced = monospaced;
-  pub setFontSize = fontSize => _fontSize = fontSize;
+  pub setFontSize = fontSize => {
+    if (_fontSize != fontSize) {
+      _this#markLayoutDirty();
+    };
+    _fontSize = fontSize;
+  };
   pub measure = (width, _height) => {
     _isMeasured = true;
     /**
@@ -174,15 +198,27 @@ class textNode (text: string) = {
     );
   };
   pub handleTextWrapping = (width, style) => {
-    let {textWrap, fontFamily, fontSize, lineHeight, _}: Style.t = style;
+    let {textWrap, lineHeight, _}: Style.t = style;
     let lineHeightPx =
-      lineHeight *. Text.getLineHeight(~fontFamily, ~fontSize, ());
+      lineHeight
+      *. Text.getLineHeight(
+           ~fontFamily=
+             Family.toPath(
+               _fontFamily,
+               _fontWeight,
+               _italicized,
+               _monospaced,
+             ),
+           ~fontSize=_fontSize,
+           (),
+         );
 
     let measureWidth = str =>
       Text.measureCharWidth(
         ~smoothing=_smoothing,
-        ~fontFamily,
-        ~fontSize,
+        ~fontFamily=
+          Family.toPath(_fontFamily, _fontWeight, _italicized, _monospaced),
+        ~fontSize=_fontSize,
         str,
       );
     _lines =
@@ -195,7 +231,13 @@ class textNode (text: string) = {
 
     let pickWiderLine = (leftWidth, right) => {
       let rightWidth =
-        Text.measure(~smoothing=_smoothing, ~fontFamily, ~fontSize, right).
+        Text.measure(
+          ~smoothing=_smoothing,
+          ~fontFamily=
+            Family.toPath(_fontFamily, _fontWeight, _italicized, _monospaced),
+          ~fontSize=_fontSize,
+          right,
+        ).
           width;
       max(leftWidth, rightWidth);
     };
