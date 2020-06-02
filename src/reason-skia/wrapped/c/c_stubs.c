@@ -3,7 +3,12 @@
  * of Reason
  */
 
-#include "c_stubs.h"
+#include "gr_context.h"
+#include "sk_canvas.h"
+#include "sk_paint.h"
+#include "sk_types.h"
+
+#include <SDL2/SDL.h>
 
 #include <stdio.h>
 #include <stdlib.h>

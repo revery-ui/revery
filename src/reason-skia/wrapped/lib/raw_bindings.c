@@ -3,8 +3,7 @@
  * Use this file for any manual, raw bindings - ie,
  * ones that use [@noalloc], [@unboxed].
  */
-
-#include "c_stubs.h"
+#include "gr_context.h"
 #include "sk_canvas.h"
 #include "sk_matrix.h"
 #include "sk_paint.h"
