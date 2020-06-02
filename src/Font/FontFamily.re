@@ -60,15 +60,15 @@ let cache = FontFamilyCache.create(~initialSize=8, 64);
 
 let system = (familyName): t =>
   (weight, italicized, monospaced) => {
-    let font: FontFamilyHashable.t = {
+    let fontDescr: FontFamilyHashable.t = {
       familyName,
       weight,
       italicized,
       monospaced,
     };
-    switch (FontFamilyCache.find(font, cache)) {
+    switch (FontFamilyCache.find(fontDescr, cache)) {
     | Some(fd) =>
-      FontFamilyCache.promote(font, cache);
+      FontFamilyCache.promote(fontDescr, cache);
       fd.path;
     | None =>
       let fd =
@@ -78,7 +78,7 @@ let system = (familyName): t =>
           ~italic=italicized,
           familyName,
         );
-      FontFamilyCache.add(font, fd, cache);
+      FontFamilyCache.add(fontDescr, fd, cache);
       FontFamilyCache.trim(cache);
       fd.path;
     };
