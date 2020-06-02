@@ -8,7 +8,6 @@ let fromFile:
                 ~fontWeight: FontWeight.t,
                 ~italicized: bool,
                 ~monospaced: bool,
-                unit
               ) =>
               string
                 =?,

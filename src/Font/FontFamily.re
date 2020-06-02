@@ -10,7 +10,6 @@ let fromFile =
              ~fontWeight: FontWeight.t,
              ~italicized: bool,
              ~monospaced: bool,
-             unit
            ) =>
            string,
          )=?,
@@ -23,7 +22,7 @@ let fromFile =
       (w, i, m) =>
         switch (w, i, m) {
         | (FontWeight.Normal, false, false) => default
-        | _ => solver(~fontWeight=w, ~italicized=i, ~monospaced=m, ())
+        | _ => solver(~fontWeight=w, ~italicized=i, ~monospaced=m)
         }
     )
   };
