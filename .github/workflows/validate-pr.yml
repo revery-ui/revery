@@ -121,8 +121,21 @@ jobs:
       - run: ls ./$DOC_PATH
         env:
           DOC_PATH: ${{ steps.print_docs_path.outputs.docs_path }}
+      - name: debug
+        run: |
+          echo ${{ github.event }}
+          echo ${{ github.workflow }}
+          echo ${{ github.actor }}
+          echo ${{ github.repository }}
+          echo ${{ github.event_name }}
+          echo ${{ github.sha }}
+          echo ${{ github.ref }}
+          echo ${{ github.head_ref }}
+          echo ${{ github.base_ref }}
+          echo master
+          echo refs/heads/master
       - name: Deploy docs
-        if: ${{ github.ref }} == "refs/heads/master"
+        if: ${{ github.ref }} == 'refs/heads/master'
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
