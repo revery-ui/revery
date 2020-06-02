@@ -2,10 +2,6 @@ open FontManager;
 
 type t = (FontWeight.t, bool, bool) => string;
 
-type variantSolver =
-  (~fontWeight: FontWeight.t, ~italicized: bool, ~monospaced: bool, unit) =>
-  string;
-
 let fromFile =
     (
       ~variant:
@@ -90,3 +86,7 @@ let default =
   | Mac => system("System Font")
   | _ => system("Arial")
   };
+
+let resolve =
+    (fontFamily: t, weight: FontWeight.t, italicized: bool, monospaced: bool) =>
+  fontFamily(weight, italicized, monospaced) |> FontCache.load;

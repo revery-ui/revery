@@ -18,3 +18,5 @@ let fromFile:
 let system: string => t;
 
 let default: t;
+
+let resolve: (t, FontWeight.t, bool, bool) => result(FontCache.t, string);
