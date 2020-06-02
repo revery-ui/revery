@@ -27,5 +27,5 @@
 
 (rule
  (targets c_stubs.o)
- (deps (:c c_stubs.c) c_flags.txt)
- (action (run %{cc}  %{read-lines:c_flags.txt} -c %{c})))
+ (deps (:c c_stubs.c c_stubs.h) c_flags.txt)
+ (action (run %{cc} %{read-lines:c_flags.txt} -c %{c})))
