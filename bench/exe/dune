@@ -1,7 +1,7 @@
 (executable
     (name bench)
     (public_name ReveryBench)
-    (libraries ReveryBench.lib)
+    (libraries ReveryBench.lib Skia_Bench)
     (package ReveryBench)
 )
 
