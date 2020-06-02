@@ -30,7 +30,14 @@ module SampleRichText = {
         ~color=Colors.green,
         "world",
       );
-    let richtext = RichText.(first ++ second);
+    let third =
+      RichText.create(
+        ~fontFamily="Roboto-Regular.ttf",
+        ~fontSize=20.,
+        ~color=Colors.yellow,
+        "!",
+      );
+    let richtext = RichText.(first ++ second ++ third);
 
     let dimensions = RichText.measure(richtext);
     let widthText = "Width: " ++ string_of_int(dimensions.width);
