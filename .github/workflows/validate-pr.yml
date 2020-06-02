@@ -122,6 +122,7 @@ jobs:
         env:
           DOC_PATH: ${{ steps.print_docs_path.outputs.docs_path }}
       - name: Deploy docs
+        if: ${{ github.ref }} == "master"
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
