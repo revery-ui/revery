@@ -11,3 +11,7 @@ steps:
     displayName: 'esy @test install'
   - script: esy @test run
     displayName: 'esy @test run'
+  - script: esy @examples install
+    displayName: 'esy @examples install'
+  - script: esy @examples x HarfbuzzCli
+    displayName: 'esy @examples x HarfbuzzCli'
