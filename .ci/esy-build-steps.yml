@@ -17,3 +17,7 @@ steps:
     displayName: 'esy @examples x HarfbuzzCli'
   - script: esy @examples x FontQuery -family=Arial
     displayName: 'esy @examples x FontQuery -family=Arial'
+  - script: esy @examples x SkiaCli
+    displayName: '@esy @examples x SkiaCli'
+  - script: esy @examples x SkiaCli.bc
+    displayName: '@esy @examples x SkiaCli.bc'
