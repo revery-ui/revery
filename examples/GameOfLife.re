@@ -423,6 +423,8 @@ module GameOfLiveComponent = {
           dispatch(StartTimer(dispose));
         };
 
+    let iconFamily = Font.Family.fromFile("FontAwesome5FreeSolid.otf");
+
     <Column>
       <Row>
         {viewPortRender(state.viewPort, state.universe, toggleAlive)
@@ -430,37 +432,37 @@ module GameOfLiveComponent = {
       </Row>
       <View style=controlsStyle>
         <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
+          fontFamily=iconFamily
           title={state.isRunning ? {||} : {||}}
           onClick=startStop
         />
         <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
+          fontFamily=iconFamily
           title={||}
           onClick={_ => dispatch(MoveViewPort(North))}
         />
         <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
+          fontFamily=iconFamily
           title={||}
           onClick={_ => dispatch(MoveViewPort(South))}
         />
         <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
+          fontFamily=iconFamily
           title={||}
           onClick={_ => dispatch(MoveViewPort(East))}
         />
         <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
+          fontFamily=iconFamily
           title={||}
           onClick={_ => dispatch(MoveViewPort(West))}
         />
         <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
+          fontFamily=iconFamily
           title={||}
           onClick={_ => dispatch(ZoomViewPort(ZoomIn))}
         />
         <Button
-          fontFamily="FontAwesome5FreeSolid.otf"
+          fontFamily=iconFamily
           title={||}
           onClick={_ => dispatch(ZoomViewPort(ZoomOut))}
         />

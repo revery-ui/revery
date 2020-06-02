@@ -8,15 +8,11 @@ module RepoLink = {
     let activeStyle =
       Style.[
         color(Colors.blue),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(14.),
       ];
 
     let inactiveStyle =
       Style.[
         color(Colors.lightBlue),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(14.),
       ];
 
     <Link
@@ -122,14 +118,12 @@ module AnimatedText = {
     let textHeaderStyle =
       Style.[
         color(Colors.white),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(24.),
         marginHorizontal(8),
         transform([Transform.TranslateY(translate)]),
       ];
 
     <Opacity opacity=animatedOpacity>
-      <Text style=textHeaderStyle text />
+      <Text style=textHeaderStyle fontSize=24. text />
     </Opacity>;
   };
 };

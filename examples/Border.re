@@ -29,13 +29,11 @@ let innerStyle =
 
 let textStyle =
   Style.[
-    fontSize(20.),
-    fontFamily("Roboto-Regular.ttf"),
     color(Colors.black),
   ];
 
 let render = () =>
   <View style=defaultStyle>
     <View style=innerStyle />
-    <Text style=textStyle text="Inner Text" />
+    <Text style=textStyle fontSize=20. text="Inner Text" />
   </View>;

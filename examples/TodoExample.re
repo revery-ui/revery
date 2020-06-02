@@ -7,7 +7,6 @@ module Constants = {
 };
 
 module Theme = {
-  let fontFamily = Style.fontFamily("Roboto-Regular.ttf");
   let fontSize = 16.;
   let rem = factor => fontSize *. factor;
   let remi = factor => rem(factor) |> int_of_float;
@@ -64,12 +63,7 @@ module Button = {
       ];
 
     let text =
-      Style.[
-        Theme.fontFamily,
-        fontSize(Theme.rem(0.8)),
-        color(Theme.buttonColor),
-        textWrap(TextWrapping.NoWrap),
-      ];
+      Style.[color(Theme.buttonColor), textWrap(TextWrapping.NoWrap)];
   };
 
   let%component make =
@@ -87,7 +81,7 @@ module Button = {
     <Clickable ?onClick ?onFocus ?onBlur ?tabindex>
       <View
         style={Styles.box(~isSelected, ~isHovered)} onMouseOver onMouseOut>
-        <Text style=Styles.text text=label />
+        <Text style=Styles.text text=label fontSize={Theme.rem(0.8)} />
       </View>
     </Clickable>;
   };
@@ -107,9 +101,7 @@ module Checkbox = {
     let checkmark =
       Style.[
         color(Theme.hoveredButtonColor),
-        fontSize(Theme.fontSize),
         textWrap(TextWrapping.NoWrap),
-        fontFamily("FontAwesome5FreeSolid.otf"),
         transform(Transform.[TranslateY(2.)]),
       ];
   };
@@ -117,7 +109,12 @@ module Checkbox = {
   let make = (~isChecked, ~onToggle, ()) => {
     <Clickable onClick=onToggle>
       <View style=Styles.box>
-        <Text text={isChecked ? {||} : ""} style=Styles.checkmark />
+        <Text
+          text={isChecked ? {||} : ""}
+          fontSize=Theme.fontSize
+          fontFamily={Font.Family.fromFile("FontAwesome5FreeSolid.otf")}
+          style=Styles.checkmark
+        />
       </View>
     </Clickable>;
   };
@@ -138,18 +135,12 @@ module AddTodo = {
     let toggleAll = areAllCompleted =>
       Style.[
         color(areAllCompleted ? Theme.textColor : Theme.dimmedTextColor),
-        fontSize(Theme.fontSize),
-        fontFamily("FontAwesome5FreeSolid.otf"),
         transform(Transform.[TranslateY(2.)]),
         marginLeft(12),
       ];
 
     let input =
-      Style.[
-        fontSize(Theme.fontSize),
-        border(~width=0, ~color=Colors.transparentWhite),
-        width(4000),
-      ]; // Not ideal, should be possible to use flexGrow(1) instead
+      Style.[border(~width=0, ~color=Colors.transparentWhite), width(4000)]; // Not ideal, should be possible to use flexGrow(1) instead
   };
 
   let make = (~text, ~areAllCompleted, ~onInput, ~onSubmit, ~onToggleAll, ()) => {
@@ -160,10 +151,16 @@ module AddTodo = {
 
     <View style=Styles.container>
       <Clickable onClick=onToggleAll>
-        <Text text={||} style={Styles.toggleAll(areAllCompleted)} />
+        <Text
+          text={||}
+          fontSize=Theme.fontSize
+          fontFamily={Font.Family.fromFile("FontAwesome5FreeSolid.otf")}
+          style={Styles.toggleAll(areAllCompleted)}
+        />
       </Clickable>
       <Input
         style=Styles.input
+        fontSize=Theme.fontSize
         placeholder="Add your Todo here"
         value=text
         onChange={(value, _) => onInput(value)}
@@ -189,8 +186,6 @@ module Todo = {
     let text = isChecked =>
       Style.[
         margin(6),
-        Theme.fontFamily,
-        fontSize(Theme.fontSize),
         color(isChecked ? Theme.dimmedTextColor : Theme.textColor),
         flexGrow(1),
       ];
@@ -198,8 +193,6 @@ module Todo = {
     let removeButton = isHovered =>
       Style.[
         color(isHovered ? Theme.dangerColor : Colors.transparentWhite),
-        fontSize(Theme.fontSize),
-        fontFamily("FontAwesome5FreeSolid.otf"),
         transform(Transform.[TranslateY(2.)]),
         marginRight(6),
       ];
@@ -219,9 +212,18 @@ module Todo = {
       onMouseOver={_ => setHovered(_wasHovered => true)}
       onMouseOut={_ => setHovered(_wasHovered => false)}>
       <Checkbox isChecked={task.isDone} onToggle />
-      <Text style={Styles.text(task.isDone)} text={task.task} />
+      <Text
+        style={Styles.text(task.isDone)}
+        fontSize=Theme.fontSize
+        text={task.task}
+      />
       <Clickable onClick=onRemove>
-        <Text text={||} style={Styles.removeButton(isHovered)} />
+        <Text
+          text={||}
+          fontFamily={Font.Family.fromFile("FontAwesome5FreeSolid.otf")}
+          fontSize=Theme.fontSize
+          style={Styles.removeButton(isHovered)}
+        />
       </Clickable>
     </View>;
   };
@@ -254,17 +256,10 @@ module Footer = {
       ];
 
     let itemsLeft =
-      Style.[
-        Theme.fontFamily,
-        fontSize(Theme.rem(0.85)),
-        color(Theme.buttonColor),
-        textWrap(TextWrapping.NoWrap),
-      ];
+      Style.[color(Theme.buttonColor), textWrap(TextWrapping.NoWrap)];
 
     let clearCompleted = isHovered =>
       Style.[
-        Theme.fontFamily,
-        fontSize(Theme.rem(0.85)),
         color(isHovered ? Theme.hoveredButtonColor : Theme.buttonColor),
         textWrap(TextWrapping.NoWrap),
       ];
@@ -286,7 +281,7 @@ module Footer = {
         | n => Printf.sprintf("%i items left", n)
         };
 
-      <Text text style=Styles.itemsLeft />;
+      <Text text fontSize={Theme.rem(0.85)} style=Styles.itemsLeft />;
     };
 
     let filterButtonsView = {
@@ -318,7 +313,11 @@ module Footer = {
           <View
             onMouseOver={_ => setHovered(_wasHovered => true)}
             onMouseOut={_ => setHovered(_wasHovered => false)}>
-            <Text text style={Styles.clearCompleted(isHovered)} />
+            <Text
+              text
+              fontSize={Theme.rem(0.85)}
+              style={Styles.clearCompleted(isHovered)}
+            />
           </View>
         </Clickable>;
       };
@@ -354,8 +353,6 @@ module TodoMVC = {
 
     let title =
       Style.[
-        Theme.fontFamily,
-        fontSize(Theme.rem(4.)),
         color(Theme.titleTextColor),
         alignSelf(`Center),
         marginTop(Theme.remi(2.)),
@@ -441,7 +438,7 @@ module TodoMVC = {
       Hooks.reducer(~initialState, reducer);
 
     let header = {
-      <Text text="todoMVC" style=Styles.title />;
+      <Text text="todoMVC" fontSize={Theme.rem(4.)} style=Styles.title />;
     };
 
     let addTodoView = {

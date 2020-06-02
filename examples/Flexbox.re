@@ -26,8 +26,6 @@ let childStyles =
 
 let defaultTextStyles =
   Style.[
-    fontSize(20.),
-    fontFamily("Roboto-Regular.ttf"),
     color(Colors.white),
     backgroundColor(Colors.blue),
   ];
@@ -37,57 +35,55 @@ let headerStyle =
   Style.[
     marginTop(25),
     marginBottom(25),
-    fontSize(30.),
-    fontFamily("Roboto-Regular.ttf"),
     color(Colors.white),
   ];
 
 let horizontalStyles =
   <View>
-    <Text style=headerStyle text="Flex Direction Row" />
+    <Text style=headerStyle fontSize=30. text="Flex Direction Row" />
     <View style={parentColumnStyle(~alignment=`Auto, ())}>
       <View style=childStyles>
-        <Text style=defaultTextStyles text="Default Flex" />
+        <Text style=defaultTextStyles fontSize=20. text="Default Flex" />
       </View>
     </View>
     <View style={parentColumnStyle(~alignment=`Center, ())}>
       <View style=childStyles>
-        <Text style=defaultTextStyles text="Center" />
+        <Text style=defaultTextStyles fontSize=20. text="Center" />
       </View>
     </View>
     <View style={parentColumnStyle(~alignment=`FlexStart, ())}>
       <View style=childStyles>
-        <Text style=defaultTextStyles text="Flex Start" />
+        <Text style=defaultTextStyles fontSize=20. text="Flex Start" />
       </View>
     </View>
     <View style={parentColumnStyle(~alignment=`FlexEnd, ())}>
       <View style=childStyles>
-        <Text style=defaultTextStyles text="Flex End" />
+        <Text style=defaultTextStyles fontSize=20. text="Flex End" />
       </View>
     </View>
     <View style={parentColumnStyle(~alignment=`Stretch, ())}>
       <View style=childStyles>
-        <Text style=defaultTextStyles text="Flex Stretch" />
+        <Text style=defaultTextStyles fontSize=20. text="Flex Stretch" />
       </View>
     </View>
   </View>;
 
 let verticalStyles =
   <View>
-    <Text style=headerStyle text="Flex Direction Column" />
+    <Text style=headerStyle fontSize=30. text="Flex Direction Column" />
     <View style={parentStyles(~direction=`Column, ~justify=`FlexStart, ())}>
       <View style=childStyles>
-        <Text style=defaultTextStyles text="Align Flex Start" />
+        <Text style=defaultTextStyles fontSize=20. text="Align Flex Start" />
       </View>
     </View>
     <View style={parentStyles(~direction=`Column, ~justify=`Center, ())}>
       <View style=childStyles>
-        <Text style=defaultTextStyles text="Align Flex Center" />
+        <Text style=defaultTextStyles fontSize=20. text="Align Flex Center" />
       </View>
     </View>
     <View style={parentStyles(~direction=`Column, ~justify=`FlexEnd, ())}>
       <View style=childStyles>
-        <Text style=defaultTextStyles text="Align Flex End" />
+        <Text style=defaultTextStyles fontSize=20. text="Align Flex End" />
       </View>
     </View>
   </View>;

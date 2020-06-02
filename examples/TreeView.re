@@ -159,12 +159,8 @@ module TreeView = {
       indent =>
         <Text
           text={"There is no file present" ++ "\n"}
-          style=Style.[
-            marginLeft(indent * 20),
-            color(Colors.rebeccaPurple),
-            fontFamily("Roboto-Regular.ttf"),
-            fontSize(10.),
-          ]
+          fontSize=10.
+          style=Style.[marginLeft(indent * 20), color(Colors.rebeccaPurple)]
         />,
     );
 
@@ -178,12 +174,7 @@ module TreeView = {
   let customRenderer = (~indent, content) => {
     open Tree;
     let {data, _} = content;
-    let textStyles =
-      Style.[
-        color(Colors.black),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(10.),
-      ];
+    let textStyles = Style.[color(Colors.black)];
     <Padding padding=5>
       <View
         style=Style.[
@@ -194,20 +185,14 @@ module TreeView = {
           width(80),
           height(40),
         ]>
-        <Text text={data.name} style=textStyles />
-        <Text text={data.level} style=textStyles />
+        <Text text={data.name} fontSize=10. style=textStyles />
+        <Text text={data.level} fontSize=10. style=textStyles />
       </View>
     </Padding>;
   };
 };
 
-let titleStyles =
-  Style.[
-    fontFamily("Roboto-Regular.ttf"),
-    fontSize(15.),
-    color(Colors.white),
-    marginVertical(10),
-  ];
+let titleStyles = Style.[color(Colors.white), marginVertical(10)];
 
 let render = _w => {
   let exampleContainer =
@@ -230,11 +215,15 @@ let render = _w => {
       bottom(0),
     ]>
     <View style=exampleContainer>
-      <Text style=titleStyles text="Custom Renderer" />
+      <Text style=titleStyles fontSize=15. text="Custom Renderer" />
       <TreeView renderer=TreeView.customRenderer />
     </View>
     <View style=exampleContainer>
-      <Text style=titleStyles text="Default Renderer (with emptyRenderer)" />
+      <Text
+        style=titleStyles
+        fontSize=15.
+        text="Default Renderer (with emptyRenderer)"
+      />
       <TreeView />
     </View>
   </View>;

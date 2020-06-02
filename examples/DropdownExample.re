@@ -14,8 +14,6 @@ let containerStyle =
 
 let textStyle =
   Style.[
-    fontFamily("Roboto-Regular.ttf"),
-    fontSize(20.),
     marginBottom(20),
   ];
 
@@ -32,7 +30,7 @@ module DropdownExample = {
     let%hook (selectedItem, setSelectedItem) =
       Hooks.state(List.nth(items, 0));
     <View style=containerStyle>
-      <Text style=textStyle text={"Selected Item: " ++ selectedItem.label} />
+      <Text style=textStyle fontSize=20. text={"Selected Item: " ++ selectedItem.label} />
       <DropdownInt items onItemSelected={item => setSelectedItem(_ => item)} />
     </View>;
   };

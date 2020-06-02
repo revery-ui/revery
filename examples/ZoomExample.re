@@ -25,14 +25,7 @@ module Zoom = {
 
     let%hook (currentZoom, setCurrentZoom) = Hooks.state(zoomV);
 
-    let textStyle =
-      Style.[
-        color(Colors.white),
-        width(100),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(16.),
-        margin(14),
-      ];
+    let textStyle = Style.[color(Colors.white), width(100), margin(14)];
 
     let setZoom = zoom => {
       switch (window) {
@@ -49,6 +42,7 @@ module Zoom = {
       <Column>
         <Text
           style=textStyle
+          fontSize=16.
           text={"Zoom: " ++ string_of_float(currentZoom)}
         />
         <Row>
