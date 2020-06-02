@@ -19,7 +19,7 @@ class textNode (text: string) = {
   val mutable _fontWeight = Weight.Normal;
   val mutable _italicized = false;
   val mutable _monospaced = false;
-  val mutable _fontSize = 0.;
+  val mutable _fontSize = 14.;
   val _textPaint = {
     let paint = Skia.Paint.make();
     Skia.Paint.setTextEncoding(paint, GlyphId);
