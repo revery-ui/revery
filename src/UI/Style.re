@@ -17,6 +17,42 @@ module FontFamily = {
           }
       )
     };
+
+  module FontHashable = {
+    type t = (string, Weight.t, bool, bool);
+    let equal = (==);
+    let hash = Hashtbl.hash;
+  };
+
+  module FontDescriptorWeight = {
+    type t = FontManager.FontDescriptor.t;
+    let weight = _ => 1;
+  };
+
+  module FontCache = Lru.M.Make(FontHashable, FontDescriptorWeight);
+
+  let cache = FontCache.create(~initialSize=8, 64);
+
+  let system = (family): fontFamily =>
+    (weight, italicized, monospaced) => {
+      let font = (family, weight, italicized, monospaced);
+      switch (FontCache.find(font, cache)) {
+      | Some(fd) =>
+        FontCache.promote(font, cache);
+        fd.path;
+      | None =>
+        let fd =
+          Discovery.find(
+            ~weight,
+            ~mono=monospaced,
+            ~italic=italicized,
+            family,
+          );
+        FontCache.add(font, fd, cache);
+        FontCache.trim(cache);
+        fd.path;
+      };
+    };
 };
 
 module Border = {
