@@ -3,7 +3,7 @@ open TestFramework;
 
 describe("Paint", ({describe, _}) => {
   describe("hinting", ({test, _}) => {
-    test("get / set isAutohinted", ({expect}) => {
+    test("get / set isAutohinted", ({expect, _}) => {
       let paint = Paint.make();
 
       Paint.setAutohinted(paint, true);
@@ -12,7 +12,7 @@ describe("Paint", ({describe, _}) => {
       Paint.setAutohinted(paint, false);
       expect.equal(paint |> Paint.isAutohinted, false);
     });
-    test("get / set hinting", ({expect}) => {
+    test("get / set hinting", ({expect, _}) => {
       let paint = Paint.make();
 
       Paint.setTextEncoding(paint, Utf8);

@@ -1,9 +1,9 @@
 open Skia;
 open TestFramework;
 
-describe("Color", ({describe, test}) => {
-  describe("float", ({test}) => {
-    test("makeArgb", ({expect}) => {
+describe("Color", ({describe, test, _}) => {
+  describe("float", ({test, _}) => {
+    test("makeArgb", ({expect, _}) => {
       let color = Color.Float.makeArgb(0., 0.25099, 0.501961, 1.0);
 
       let a = Color.getA(color) |> Int32.to_int;
@@ -17,7 +17,7 @@ describe("Color", ({describe, test}) => {
       expect.int(b).toBe(0xFF);
     });
 
-    test("getA/R/G/B", ({expect}) => {
+    test("getA/R/G/B", ({expect, _}) => {
       let color = Color.Float.makeArgb(1.0, 0.501961, 0.25099, 0.);
 
       let a = Color.Float.getA(color);
@@ -31,7 +31,7 @@ describe("Color", ({describe, test}) => {
       expect.float(b).toBeCloseTo(0.0);
     });
   });
-  test("makeArgb", ({expect}) => {
+  test("makeArgb", ({expect, _}) => {
     let color = Color.makeArgb(0x1Al, 0x1Bl, 0x1Cl, 0x1Dl);
 
     let a = Color.getA(color) |> Int32.to_int;

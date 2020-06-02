@@ -2,7 +2,7 @@ open Skia;
 open TestFramework;
 
 describe("Rect", ({test, _}) => {
-  test("makeLtrb", ({expect}) => {
+  test("makeLtrb", ({expect, _}) => {
     let rect = Rect.makeLtrb(1., 2., 3., 4.);
     let left = Rect.getLeft(rect);
     let right = Rect.getRight(rect);
@@ -14,7 +14,7 @@ describe("Rect", ({test, _}) => {
     expect.float(right).toBeCloseTo(3.);
     expect.float(bottom).toBeCloseTo(4.);
   });
-  test("setLtrb", ({expect}) => {
+  test("setLtrb", ({expect, _}) => {
     let rect = Rect.makeLtrb(1., 2., 3., 4.);
     Rect.Mutable.setLtrb(~out=rect, 3.0, 9.0, 27.0, 81.0);
     let left = Rect.getLeft(rect);

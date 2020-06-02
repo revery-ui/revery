@@ -2,7 +2,7 @@ open Skia;
 open TestFramework;
 
 describe("Matrix", ({test, _}) => {
-  test("setTranslate", ({expect}) => {
+  test("setTranslate", ({expect, _}) => {
     let matrix = Matrix.make();
     let () = Matrix.setTranslate(matrix, 8.0, 16.0);
 
@@ -12,7 +12,7 @@ describe("Matrix", ({test, _}) => {
     expect.float(Vector.getX(vector)).toBeCloseTo(9.0);
     expect.float(Vector.getY(vector)).toBeCloseTo(18.0);
   });
-  test("setScale", ({expect}) => {
+  test("setScale", ({expect, _}) => {
     let matrix = Matrix.make();
     let () = Matrix.setScale(matrix, 3.0, 4.0, 0., 0.);
 

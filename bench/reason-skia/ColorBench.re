@@ -1,7 +1,5 @@
 open BenchFramework;
 
-open Skia;
-
 let options = Reperf.Options.create(~iterations=100000, ());
 
 module Data = {
