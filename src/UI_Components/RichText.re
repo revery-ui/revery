@@ -4,14 +4,14 @@ open Revery_UI_Primitives;
 
 module Hooks = Revery_UI_Hooks;
 
-type text = {
+type textInfo = {
   fontFamily: string,
   fontSize: float,
   color: Color.t,
   text: string,
 };
 type t =
-  | Leaf(text)
+  | Leaf(textInfo)
   | Node(t, t);
 
 let create =
@@ -21,9 +21,9 @@ let create =
 let (++) = (left: t, right: t) => Node(left, right);
 
 let rec reverseOrder =
-        (fn: ('acc, text) => 'acc, accumulator: 'acc, richtext: t) =>
+        (fn: ('acc, textInfo) => 'acc, accumulator: 'acc, richtext: t) =>
   switch (richtext) {
-  | Leaf(text) => fn(accumulator, text)
+  | Leaf(textInfo) => fn(accumulator, textInfo)
   | Node(left, right) =>
     let rightAcc = reverseOrder(fn, accumulator, right);
     let leftAcc = reverseOrder(fn, rightAcc, left);
@@ -32,15 +32,15 @@ let rec reverseOrder =
 
 let toList = (richtext: t) =>
   reverseOrder(
-    (acc, text) =>
+    (acc, textInfo) =>
       [
         <Text
           style=Style.[
-            fontFamily(text.fontFamily),
-            fontSize(text.fontSize),
-            color(text.color),
+            fontFamily(textInfo.fontFamily),
+            fontSize(textInfo.fontSize),
+            color(textInfo.color),
           ]
-          text={text.text}
+          text={textInfo.text}
         />,
         ...acc,
       ],
@@ -52,13 +52,13 @@ let toList = (richtext: t) =>
 let smoothing = Revery_Font.Smoothing.default;
 let measure = (richtext: t) =>
   reverseOrder(
-    (acc: Dimensions.t, text) => {
+    (acc: Dimensions.t, textInfo) => {
       let dimensions =
         Revery_Draw.Text.measure(
           ~smoothing,
-          ~fontFamily=text.fontFamily,
-          ~fontSize=text.fontSize,
-          text.text,
+          ~fontFamily=textInfo.fontFamily,
+          ~fontSize=textInfo.fontSize,
+          textInfo.text,
         );
       let width = acc.width + int_of_float(dimensions.width);
       let height = max(acc.height, int_of_float(dimensions.height));
