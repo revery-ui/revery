@@ -19,6 +19,7 @@ let%nativeComponent make =
                       ~fontWeight=Weight.Normal,
                       ~italicized=false,
                       ~monospaced=false,
+                      ~fontSize=14.,
                       ~text="",
                       ~smoothing=Smoothing.default,
                       ~children=React.empty,
@@ -75,6 +76,7 @@ let%nativeComponent make =
       tn#setFontWeight(fontWeight);
       tn#setItalicized(italicized);
       tn#setMonospaced(monospaced);
+      tn#setFontSize(fontSize);
       node;
     },
     children,

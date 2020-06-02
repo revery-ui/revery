@@ -19,6 +19,7 @@ class textNode (text: string) = {
   val mutable _fontWeight = Weight.Normal;
   val mutable _italicized = false;
   val mutable _monospaced = false;
+  val mutable _fontSize = 0.;
   val _textPaint = {
     let paint = Skia.Paint.make();
     Skia.Paint.setTextEncoding(paint, GlyphId);
@@ -135,6 +136,7 @@ class textNode (text: string) = {
   pub setFontWeight = fontWeight => _fontWeight = fontWeight;
   pub setItalicized = italicized => _italicized = italicized;
   pub setMonospaced = monospaced => _monospaced = monospaced;
+  pub setFontSize = fontSize => _fontSize = fontSize;
   pub measure = (width, _height) => {
     _isMeasured = true;
     /**
