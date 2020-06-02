@@ -15,3 +15,5 @@ steps:
     displayName: 'esy @examples install'
   - script: esy @examples x HarfbuzzCli
     displayName: 'esy @examples x HarfbuzzCli'
+  - script: esy @examples x FontQuery -family=Arial
+    displayName: 'esy @examples x FontQuery -family=Arial'
