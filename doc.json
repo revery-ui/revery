@@ -5,7 +5,7 @@
     "print": "esy '@doc' echo #{self.target_dir}/default/_doc/_html"
   },
   "override": {
-      "build": ["dune build @doc -p harfbuzz,Revery -j4"],
+      "build": ["dune build @doc -p font-manager,harfbuzz,Revery -j4"],
       "dependencies": {
 	  "@opam/odoc": "*",
 	  "http-server": "*"

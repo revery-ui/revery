@@ -1,5 +1,5 @@
 {
-  "checksum": "c1f836feba634c5db3589cc97825f216",
+  "checksum": "4001f21640c3d562f1c4346856be9d1a",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -46,9 +46,8 @@
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-skia@github:revery-ui/reason-skia#5e94192b90b71122fa821e9c4e6b979b15c7df83@d41d8cd9",
-        "reason-sdl2@2.10.3032@d41d8cd9",
-        "reason-font-manager@github:revery-ui/reason-font-manager#38af5f0552fca41d0a5b572b2a51fee198aaaa4a@d41d8cd9",
-        "flex@1.2.3@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
+        "reason-sdl2@2.10.3032@d41d8cd9", "flex@1.2.3@d41d8cd9",
+        "esy-harfbuzz@1.9.1008@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/ppx_deriving@opam:4.5@bb81afdc",
         "@opam/lwt_ppx@opam:2.0.1@ab0debb8", "@opam/lwt@opam:4.5.0@677655b4",
@@ -200,25 +199,6 @@
         "@opam/dune@opam:2.5.0@aef1678b"
       ],
       "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
-    },
-    "reason-font-manager@github:revery-ui/reason-font-manager#38af5f0552fca41d0a5b572b2a51fee198aaaa4a@d41d8cd9": {
-      "id":
-        "reason-font-manager@github:revery-ui/reason-font-manager#38af5f0552fca41d0a5b572b2a51fee198aaaa4a@d41d8cd9",
-      "name": "reason-font-manager",
-      "version":
-        "github:revery-ui/reason-font-manager#38af5f0552fca41d0a5b572b2a51fee198aaaa4a",
-      "source": {
-        "type": "install",
-        "source": [
-          "github:revery-ui/reason-font-manager#38af5f0552fca41d0a5b572b2a51fee198aaaa4a"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/reason@3.6.0@d41d8cd9"
-      ],
-      "devDependencies": []
     },
     "ocaml@4.8.1000@d41d8cd9": {
       "id": "ocaml@4.8.1000@d41d8cd9",
