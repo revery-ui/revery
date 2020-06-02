@@ -165,6 +165,11 @@ let examples = [
     render: w => WindowControl.render(w),
     source: "WindowControl.re",
   },
+  {
+    name: "Font Families",
+    render: _ => FontFamilies.render(),
+    source: "FontFamilies.re",
+  },
 ];
 
 let getExampleByName = name =>
@@ -344,6 +349,6 @@ let init = app => {
   ();
 };
 
-let () = Printexc.record_backtrace(true)
+let () = Printexc.record_backtrace(true);
 
 App.start(init);
