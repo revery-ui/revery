@@ -129,6 +129,17 @@ jobs:
           CLEAN: true
           FOLDER: ${{ steps.print_docs_path.outputs.docs_path }}
 
+  build_docker:
+    name: Build inside a docker
+    runs-on: ubuntu-latest
+    strategy:
+      # If we have many bug we can test on all plateform
+      fail-fast: false
+      matrix:
+        os: [archlinux, centos]
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker build -t ${{ matrix.os }} scripts/docker/${{ matrix.os }}
   build:
     name: Build
     runs-on: ${{ matrix.os }}
@@ -136,7 +147,7 @@ jobs:
       # If we have many bug we can test on all plateform
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [windows-2016, ubuntu-latest, macos-latest]
     steps:
       - uses: actions/setup-node@v1.4.2
         with:
