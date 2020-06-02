@@ -8,3 +8,5 @@ type variantSolver =
 
 let fromFile: (~variant: variantSolver=?, string) => t;
 let system: string => t;
+
+let default: t;

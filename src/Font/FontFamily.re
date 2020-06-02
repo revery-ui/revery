@@ -69,3 +69,10 @@ let system = (familyName): t =>
       fd.path;
     };
   };
+
+let default =
+  switch (Revery_Core.Environment.os) {
+  | Linux => system("Liberation Sans")
+  | Mac => system("System Font")
+  | _ => system("Arial")
+  };

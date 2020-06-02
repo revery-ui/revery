@@ -14,6 +14,7 @@ let%nativeComponent make =
                       ~onMouseOut=?,
                       ~ref=?,
                       ~style=emptyTextStyle,
+                      ~fontProps=FontProps.default,
                       ~text="",
                       ~smoothing=Revery_Font.Smoothing.default,
                       ~children=React.empty,
@@ -66,6 +67,10 @@ let%nativeComponent make =
       tn#setText(text);
       tn#setSmoothing(smoothing);
       tn#setMouseBehavior(mouseBehavior);
+      tn#setFontFamily(fontProps.family);
+      tn#setFontWeight(fontProps.weight);
+      tn#setItalicized(fontProps.italicized);
+      tn#setMonospaced(fontProps.monospaced);
       node;
     },
     children,
