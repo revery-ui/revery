@@ -1,6 +1,6 @@
 open FontManager;
 
-type t = (FontWeight.t, bool, bool) => string;
+type t;
 
 type variantSolver =
   (~fontWeight: FontWeight.t, ~italicized: bool, ~monospaced: bool, unit) =>
