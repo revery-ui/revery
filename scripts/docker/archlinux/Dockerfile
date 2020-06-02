@@ -1,5 +1,6 @@
 FROM archlinux:latest
 
+ENV HOME=/root
 ENV NPM_PATH=$HOME/.npm-packages
 ENV PATH=$NPM_PATH:$PATH
 RUN echo $NPM_PATH
