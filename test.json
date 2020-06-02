@@ -4,7 +4,7 @@
       "run": "esy '@test' x ReveryTestRunner"
   },
   "override": {
-      "build": ["dune build -p harfbuzz,Revery,ReveryTest -j4"],
+      "build": ["dune build -p font-manager,harfbuzz,Revery,ReveryTest -j4"],
       "dependencies": {
         "@reason-native/rely": "*"
       },
