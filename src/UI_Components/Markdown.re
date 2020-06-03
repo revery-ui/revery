@@ -13,6 +13,7 @@ type style = {
   paragraph: list(Style.textStyleProps),
   activeLink: list(Style.textStyleProps),
   inactiveLink: list(Style.textStyleProps),
+  inlineCode: list(Style.textStyleProps),
   h1: list(Style.textStyleProps),
   h2: list(Style.textStyleProps),
   h3: list(Style.textStyleProps),
@@ -42,7 +43,8 @@ module Styles = {
 
 type inlineAttrs =
   | Italicized
-  | Bolded;
+  | Bolded
+  | Monospaced;
 
 type kind = [ | `Paragraph | `Heading(int) | `Link(string)];
 
@@ -77,12 +79,15 @@ type attrs = {
 
 let isBold = attrs => List.mem(Bolded, attrs.inline);
 let isItalicized = attrs => List.mem(Italicized, attrs.inline);
+let isMonospaced = attrs => List.mem(Monospaced, attrs.inline);
 
 let generateText = (text, styles, attrs) => {
   let fontSize = fontSizeFromKind(attrs.kind, styles);
   let fontWeight = {
     isBold(attrs) ? Weight.Bold : Weight.Normal;
   };
+
+  Printf.printf("__%s__\n", text);
 
   switch (attrs.kind) {
   | `Link(href) =>
@@ -103,6 +108,7 @@ let generateText = (text, styles, attrs) => {
       fontFamily={styles.fontFamily}
       fontWeight
       italicized={isItalicized(attrs)}
+      monospaced={isMonospaced(attrs)}
     />
   };
 };
@@ -134,6 +140,7 @@ let rec _generateInline = (inline, styles, attrs) => {
       styles,
       {...attrs, kind: `Link(l.def.destination)},
     )
+  | Code(c) => generateText(c.content, styles, {...attrs, inline: [Monospaced, ...attrs.inline]})
   | Concat(c) =>
     c
     |> List.map(il => _generateInline(il, styles, attrs))
@@ -189,6 +196,7 @@ let make =
       ~h4Style=Style.emptyTextStyle,
       ~h5Style=Style.emptyTextStyle,
       ~h6Style=Style.emptyTextStyle,
+      ~inlineCodeStyle=Style.emptyTextStyle,
       (),
     ) => {
   <View style=Styles.container>
@@ -198,6 +206,7 @@ let make =
          paragraph: paragraphStyle,
          activeLink: activeLinkStyle,
          inactiveLink: inactiveLinkStyle,
+         inlineCode: inlineCodeStyle,
          h1: h1Style,
          h2: h2Style,
          h3: h3Style,

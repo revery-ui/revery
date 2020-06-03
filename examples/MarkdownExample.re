@@ -38,7 +38,7 @@ let example = () =>
   <View style=Styles.outer>
     <Text text="Font variations: " />
     <markdown markdown="
-Normal **Bold** _Italicized_
+Normal **Bold** _Italicized_ `Monospaced`
       " />
     <Text text="Links: " />
     <markdown
