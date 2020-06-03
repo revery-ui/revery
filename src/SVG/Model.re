@@ -3,11 +3,6 @@ type point = {
   y: float,
 };
 
-type size = {
-  width: float,
-  height: float,
-};
-
 type length = [
   | `zero
   | `user(float)

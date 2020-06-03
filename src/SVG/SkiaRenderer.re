@@ -14,22 +14,7 @@ module List = {
 
 open Revery_Draw;
 open Model;
-
-type font = {
-  family: string,
-  size: float,
-  xHeight: float, // '1 ex', x-height of the elementâs font
-  chWidth: float // '1 ch', width of the "0" (ZERO, U+0030) glyph in the elementâs font
-};
-
-type context = {
-  defs: list(definition),
-  font,
-  viewport,
-  container: size,
-  rootFontSize: float, // '1 rem', font size of the root element
-  canvas: CanvasContext.t,
-};
+open RenderContext;
 
 let userCoord =
   fun
@@ -119,8 +104,8 @@ let rect = (~x, ~y, ~width, ~height, ~rx, ~ry, ~paint, ~context) => {
 };
 
 let geometry = (context, shape: Geometry.t) => {
-  let scaleX = context.container.width /. context.viewport.width;
-  let scaleY = context.container.height /. context.viewport.height;
+  let scaleX = float(context.container.width) /. context.viewport.width;
+  let scaleY = float(context.container.height) /. context.viewport.height;
   let translateX = context.viewport.origin.x *. scaleX;
   let translateY = context.viewport.origin.y *. scaleY;
 
@@ -224,9 +209,9 @@ let rec element = context =>
   | Geometry(shape) => geometry(context, shape)
   | Text(_) => ();
 
-let render = (~width, ~height, document, canvas) => {
+let render = (~width, ~height, document: Model.t, canvas) => {
   let context =
-    Model.{
+    RenderContext.{
       defs: document.defs,
       font: {
         family: "",
