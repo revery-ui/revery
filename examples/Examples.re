@@ -261,6 +261,7 @@ module ExampleHost = {
 let init = app => {
   Revery.App.initConsole();
 
+  /* TODO: this prevents the Fetch/Lwt-loop from completing? */
   /* Timber.App.enable(); */
   /* Timber.App.setLevel(Timber.Level.perf); */
 
