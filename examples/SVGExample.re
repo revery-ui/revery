@@ -17,7 +17,7 @@ let outerBox =
   Style.[width(450), height(450), backgroundColor(Colors.black)];
 
 let example =
-  SVG.{
+  SVG.Model.{
     defs: [],
     elements: [
       Geometry({
@@ -97,21 +97,15 @@ let example2 =
       </g>
     </svg>
   |}
-  |> SVG.Parser.SimpleXml.of_string
-  |> Option.get
-  |> SVG.Parser.svg;
+  |> SVG.fromString
+  |> Option.get;
 
 let render = () =>
   <View style=containerStyle>
     <Canvas
       style=outerBox
       render={canvasContext => {
-        Revery.SVG.SkiaRenderer.render(
-          ~width=100.,
-          ~height=100.,
-          canvasContext,
-          example2,
-        )
+        SVG.render(~width=100., ~height=100., canvasContext, example2)
       }}
     />
   </View>;
