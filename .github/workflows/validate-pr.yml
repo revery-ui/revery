@@ -75,6 +75,7 @@ jobs:
               });
 
   doc:
+    needs: lint
     name: Push docs to GitHub's Pages
     runs-on: macos-latest
     steps:
@@ -131,6 +132,7 @@ jobs:
           FOLDER: ${{ steps.print_docs_path.outputs.docs_path }}
 
   build_docker:
+    needs: [doc, lint]
     name: Build inside a docker
     runs-on: ubuntu-latest
     strategy:
@@ -164,6 +166,7 @@ jobs:
         run: docker run --rm --volume $(pwd):/revery --volume ~/.esy:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy build-dependencies --prefix-path=/esy/store"
 
   build:
+    needs: [doc, lint]
     name: Build
     runs-on: ${{ matrix.os }}
     strategy:
