@@ -1,20 +1,23 @@
 open Revery_Core;
 open Revery_UI;
 open Revery_UI_Primitives;
+open Revery_Font;
 
 open Omd;
 
 module Log = (val Log.withNamespace("Revery.Components.Markdown"));
 
-type styles = {
+type style = {
   paragraph: list(Style.textStyleProps),
-  bold: list(Style.textStyleProps),
-  italic: list(Style.textStyleProps),
+  link: list(Style.textStyleProps),
   h1: list(Style.textStyleProps),
   h2: list(Style.textStyleProps),
   h3: list(Style.textStyleProps),
   h4: list(Style.textStyleProps),
   h5: list(Style.textStyleProps),
+  h6: list(Style.textStyleProps),
+  fontFamily: Family.t,
+  baseFontSize: float,
 };
 
 module Styles = {
@@ -23,63 +26,75 @@ module Styles = {
   let container = [justifyContent(`FlexStart), alignItems(`FlexStart)];
 };
 
-module InlineAttrs = {
-  type t =
-    | Italicized
-    | Bolded
-    | Header(int);
+type inlineAttrs =
+  | Italicized
+  | Bolded;
 
-  let attrToStyle = (attr: t, styles: styles) =>
-    switch (attr) {
-    | Italicized => styles.italic
-    | Bolded => styles.bold
-    | Header(1) => styles.h1
-    | Header(2) => styles.h2
-    | Header(3) => styles.h3
-    | Header(4) => styles.h4
-    | Header(5) => styles.h5
-    | Header(_) => styles.bold
-    };
+type kind = [ | `Paragraph | `Heading(int)];
 
-  let toStyle = (attrs, styles) =>
-    List.fold_right(
-      (attr, acc) => {
-        let style = attrToStyle(attr, styles);
-        Style.merge(style, acc);
-      },
-      attrs,
-      styles.paragraph,
-    );
+let selectStyleFromKind = (kind: kind, styles) =>
+  switch (kind) {
+  | `Paragraph => styles.paragraph
+  | `Heading(1) => styles.h1
+  | `Heading(2) => styles.h2
+  | `Heading(3) => styles.h3
+  | `Heading(4) => styles.h4
+  | `Heading(5) => styles.h5
+  | `Heading(6)
+  | `Heading(_) => styles.h6
+  };
 
-  let compare = compare;
+let fontSizeFromKind = (kind: kind, styles) =>
+  switch (kind) {
+  | `Heading(1) => styles.baseFontSize *. 2.
+  | `Heading(2) => styles.baseFontSize *. 1.5
+  | `Heading(3) => styles.baseFontSize *. 1.17
+  | `Heading(4) => styles.baseFontSize *. 1.
+  | `Heading(5) => styles.baseFontSize *. 0.83
+  | `Heading(6)
+  | `Heading(_) => styles.baseFontSize *. 0.67
+  | _ => styles.baseFontSize
+  };
+
+type attrs = {
+  inline: list(inlineAttrs),
+  kind,
 };
 
-let generateText = (text, styles, attrs) => {
-  let style = InlineAttrs.toStyle(attrs, styles);
+let isBold = attrs => List.mem(Bolded, attrs.inline);
+let isItalicized = attrs => List.mem(Italicized, attrs.inline);
 
-  <Text text style />;
+let generateText = (text, styles, attrs) => {
+  let fontSize = fontSizeFromKind(attrs.kind, styles);
+
+  <Text
+    text
+    fontSize
+    fontFamily={styles.fontFamily}
+    fontWeight={isBold(attrs) ? Weight.Bold : Weight.Normal}
+    italicized={isItalicized(attrs)}
+  />;
 };
 
 let rec _generateInline = (inline, styles, attrs) => {
-  InlineAttrs.(
-    switch (inline) {
-    | Text(t) => generateText(t, styles, attrs)
-    | Emph(e) =>
-      _generateInline(
-        e.content,
-        styles,
-        switch (e.style) {
-        | Star => [Bolded, ...attrs]
-        | Underscore => [Italicized, ...attrs]
-        },
-      )
-    | Concat(c) =>
-      c
-      |> List.map(il => _generateInline(il, styles, attrs))
-      |> React.listToElement
-    | _ => <View />
-    }
-  );
+  switch (inline) {
+  | Text(t) => generateText(t, styles, attrs)
+  | Emph(e) =>
+    _generateInline(
+      e.content,
+      styles,
+      switch (e.style) {
+      | Star => {...attrs, inline: [Bolded, ...attrs.inline]}
+      | Underscore => {...attrs, inline: [Italicized, ...attrs.inline]}
+      },
+    )
+  | Hard_break => generateText("\n", styles, attrs)
+  | Concat(c) =>
+    c
+    |> List.map(il => _generateInline(il, styles, attrs))
+    |> React.listToElement
+  | _ => <View />
+  };
 };
 
 let generateInline = (inline, styles, attrs) =>
@@ -87,8 +102,13 @@ let generateInline = (inline, styles, attrs) =>
 
 let _generateMarkdown = (element, styles) =>
   switch (element) {
-  | Paragraph(p) => generateInline(p, styles, [])
-  | Heading(h) => generateInline(h.text, styles, [Header(h.level)])
+  | Paragraph(p) => generateInline(p, styles, {inline: [], kind: `Paragraph})
+  | Heading(h) =>
+    generateInline(
+      h.text,
+      styles,
+      {inline: [Bolded], kind: `Heading(h.level)},
+    )
   | _ => <View />
   };
 
@@ -101,14 +121,16 @@ let generateMarkdown = (mdText: string, styles) => {
 let make =
     (
       ~markdown as mdText="",
+      ~fontFamily=Family.default,
+      ~baseFontSize=14.0,
       ~paragraphStyle=Style.emptyTextStyle,
-      ~boldStyle=Style.emptyTextStyle,
-      ~italicStyle=Style.emptyTextStyle,
+      ~linkStyle=Style.emptyTextStyle,
       ~h1Style=Style.emptyTextStyle,
       ~h2Style=Style.emptyTextStyle,
       ~h3Style=Style.emptyTextStyle,
       ~h4Style=Style.emptyTextStyle,
       ~h5Style=Style.emptyTextStyle,
+      ~h6Style=Style.emptyTextStyle,
       (),
     ) =>
   <View style=Styles.container>
@@ -116,13 +138,15 @@ let make =
        mdText,
        {
          paragraph: paragraphStyle,
-         bold: boldStyle,
-         italic: italicStyle,
+         link: linkStyle,
          h1: h1Style,
          h2: h2Style,
          h3: h3Style,
          h4: h4Style,
          h5: h5Style,
+         h6: h6Style,
+         fontFamily,
+         baseFontSize,
        },
      )}
   </View>;

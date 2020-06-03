@@ -11,72 +11,39 @@ module Styles = {
     bottom(0),
     left(0),
     right(0),
+    margin(6),
     justifyContent(`FlexStart),
     alignItems(`FlexStart),
   ];
 
-  let paragraph = [
-    color(Colors.white),
-    fontFamily("Asap"),
-    fontSize(14.),
-  ];
-
-  let bold = [
-    color(Colors.white),
-    fontFamily("Roboto-Bold.ttf"),
-    fontSize(14.),
-  ];
-
-  let italic = [
-    color(Colors.white),
-    fontFamily("Roboto-RegularItalic.ttf"),
-    fontSize(14.),
-  ];
-
-  let h1 = [
-    color(Colors.white),
-    fontFamily("Roboto-Bold.ttf"),
-    fontSize(36.),
-  ];
-
-  let h2 = [
-    color(Colors.white),
-    fontFamily("Roboto-Bold.ttf"),
-    fontSize(30.),
-  ];
-
-  let h3 = [
-    color(Colors.white),
-    fontFamily("Roboto-Bold.ttf"),
-    fontSize(24.),
-  ];
-
-  let h4 = [
-    color(Colors.white),
-    fontFamily("Roboto-Bold.ttf"),
-    fontSize(18.),
-  ];
+  let whiteText = [color(Colors.white)];
 };
+
+let markdown =
+  Markdown.make(
+    ~paragraphStyle=Styles.whiteText,
+    ~h1Style=Styles.whiteText,
+    ~h2Style=Styles.whiteText,
+    ~h3Style=Styles.whiteText,
+    ~h4Style=Styles.whiteText,
+    ~baseFontSize=16.0,
+  );
 
 let example = () =>
   <View style=Styles.outer>
-    <Markdown
-      paragraphStyle=Styles.paragraph
-      boldStyle=Styles.bold
-      italicStyle=Styles.italic
-      h1Style=Styles.h1
-      h2Style=Styles.h2
-      h3Style=Styles.h3
-      h4Style=Styles.h4
+    <Text text="Font variations: " />
+    <markdown markdown="
+Normal **Bold** _Italicized_
+      " />
+    <Text text="Headings: " />
+    <markdown
       markdown="
-# Markdown in Revery?!?!
-What is this magic?
-
-## Different header levels :O
-**Bolded text too!**
-
-### Weee we're getting smaller!
-__Italics have joined the chat__
+# H1
+## H2
+### H3
+#### H4
+##### H5
+###### H6
       "
     />
   </View>;
