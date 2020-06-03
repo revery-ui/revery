@@ -21,6 +21,7 @@ type style = {
   h5: list(Style.textStyleProps),
   h6: list(Style.textStyleProps),
   fontFamily: Family.t,
+  inlineCodeFontFamily: Family.t,
   baseFontSize: float,
 };
 
@@ -40,6 +41,16 @@ module Styles = {
     ];
   };
 
+  module Code = {
+    module Inline = {
+      let container = [
+        backgroundColor(Color.rgba(0., 0., 0., 0.25)),
+        borderRadius(3.),
+        border(~width=3, ~color=Color.rgba(0., 0., 0., 0.25)),
+      ];
+    };
+  };
+
   module List = {
     let marker = [marginRight(6)];
     let contents = [justifyContent(`FlexStart), alignItems(`FlexStart)];
@@ -51,7 +62,7 @@ type inlineAttrs =
   | Bolded
   | Monospaced;
 
-type kind = [ | `Paragraph | `Heading(int) | `Link(string)];
+type kind = [ | `Paragraph | `Heading(int) | `Link(string) | `InlineCode];
 
 let selectStyleFromKind = (kind: kind, styles) =>
   switch (kind) {
@@ -62,6 +73,7 @@ let selectStyleFromKind = (kind: kind, styles) =>
   | `Heading(5) => styles.h5
   | `Heading(6)
   | `Heading(_) => styles.h6
+  | `InlineCode => styles.inlineCode
   | _ => styles.paragraph
   };
 
@@ -75,6 +87,7 @@ let fontSizeFromKind = (kind: kind, styles) =>
   | `Heading(5) => styles.baseFontSize *. 0.83
   | `Heading(6)
   | `Heading(_) => styles.baseFontSize *. 0.67
+  | `InlineCode => styles.baseFontSize *. 0.75
   | _ => styles.baseFontSize
   };
 
@@ -103,14 +116,28 @@ let generateText = (text, styles, attrs) => {
       fontFamily={styles.fontFamily}
       fontWeight
       italicized={isItalicized(attrs)}
+      monospaced={isMonospaced(attrs)}
       href
     />
+  | `InlineCode =>
+    <View style=Styles.Code.Inline.container>
+      <Text
+        text
+        fontSize
+        fontFamily={styles.fontFamily}
+        fontWeight
+        style={selectStyleFromKind(attrs.kind, styles)}
+        italicized={isItalicized(attrs)}
+        monospaced={isMonospaced(attrs)}
+      />
+    </View>
   | _ =>
     <Text
       text
       fontSize
       fontFamily={styles.fontFamily}
       fontWeight
+      style={selectStyleFromKind(attrs.kind, styles)}
       italicized={isItalicized(attrs)}
       monospaced={isMonospaced(attrs)}
     />
@@ -148,7 +175,7 @@ let rec _generateInline = (inline, styles, attrs) => {
     generateText(
       c.content,
       styles,
-      {...attrs, inline: [Monospaced, ...attrs.inline]},
+      {kind: `InlineCode, inline: [Monospaced, ...attrs.inline]},
     )
   | Concat(c) =>
     c
@@ -220,6 +247,7 @@ let make =
     (
       ~markdown as mdText="",
       ~fontFamily=Family.default,
+      ~inlineCodeFontFamily=Family.default,
       ~baseFontSize=14.0,
       ~paragraphStyle=Style.emptyTextStyle,
       ~activeLinkStyle=Style.emptyTextStyle,
@@ -248,6 +276,7 @@ let make =
          h5: h5Style,
          h6: h6Style,
          fontFamily,
+         inlineCodeFontFamily,
          baseFontSize,
        },
      )}
