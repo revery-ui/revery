@@ -21,7 +21,7 @@ let make:
     ~tabindex: int=?,
     ~onFocus: Revery_UI.NodeEvents.focusHandler=?,
     ~onBlur: Revery_UI.NodeEvents.focusHandler=?,
-    ~fontFamily: string=?,
+    ~fontFamily: Revery_Font.Family.t=?,
     unit
   ) =>
   Brisk_reconciler.element(Revery_UI.React.node);

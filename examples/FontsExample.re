@@ -61,7 +61,8 @@ module FontComponent = {
       | Some(v) =>
         <Text
           text="Lorem ipsum dolor sit amet"
-          style=Style.[fontFamily(v.path), fontSize(24.)]
+          fontFamily={Font.Family.fromFile(v.path)}
+          fontSize=24.
         />
       };
 
@@ -85,14 +86,7 @@ module FontComponent = {
               />
             </Padding>
             <Center>
-              <Text
-                text="Bold"
-                style=Style.[
-                  fontFamily("Roboto-Regular.ttf"),
-                  fontSize(20.),
-                  width(150),
-                ]
-              />
+              <Text text="Bold" fontSize=20. style=Style.[width(150)] />
             </Center>
           </Row>
         </Padding>
@@ -105,14 +99,7 @@ module FontComponent = {
               />
             </Padding>
             <Center>
-              <Text
-                text="Italic"
-                style=Style.[
-                  fontFamily("Roboto-Regular.ttf"),
-                  fontSize(20.),
-                  width(150),
-                ]
-              />
+              <Text text="Italic" fontSize=20. style=Style.[width(150)] />
             </Center>
           </Row>
         </Padding>
@@ -125,14 +112,7 @@ module FontComponent = {
               />
             </Padding>
             <Center>
-              <Text
-                text="Mono"
-                style=Style.[
-                  fontFamily("Roboto-Regular.ttf"),
-                  fontSize(20.),
-                  width(150),
-                ]
-              />
+              <Text text="Mono" fontSize=20. style=Style.[width(150)] />
             </Center>
           </Row>
         </Padding>

@@ -32,11 +32,8 @@ module CanQuit = {
       />
       <Text
         text={"Can quit: " ++ (canQuit ? "Yes" : "No")}
-        style=Style.[
-          marginTop(10),
-          fontFamily("Roboto-Regular.ttf"),
-          fontSize(20.),
-        ]
+        fontSize=20.
+        style=Style.[marginTop(10)]
       />
     </View>;
   };

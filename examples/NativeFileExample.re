@@ -23,29 +23,12 @@ module NativeFileExamples = {
       setFileListOpt(_ => o);
     };
 
-    let optionStyle =
-      Style.[
-        color(Colors.white),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(14.),
-      ];
+    let optionStyle = Style.[color(Colors.white)];
 
-    let titleStyle =
-      Style.[
-        color(Colors.white),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(20.),
-      ];
+    let titleStyle = Style.[color(Colors.white)];
 
     let renderFilePath = (path: string) =>
-      <Text
-        style=Style.[
-          color(Colors.white),
-          fontFamily("Roboto-Regular.ttf"),
-          fontSize(12.),
-        ]
-        text=path
-      />;
+      <Text fontSize=12. style=Style.[color(Colors.white)] text=path />;
 
     let containerStyle =
       Style.[
@@ -59,7 +42,7 @@ module NativeFileExamples = {
       ];
 
     <View style=containerStyle>
-      <Text style=titleStyle text="Open Files and Folders" />
+      <Text style=titleStyle fontSize=20. text="Open Files and Folders" />
       <Row>
         <Text style=optionStyle text="Allow multiple?" />
         <Checkbox

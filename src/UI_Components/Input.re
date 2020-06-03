@@ -2,6 +2,7 @@ module ContainerComponent = Container;
 open Revery_UI;
 open Revery_Core;
 open Revery_UI_Primitives;
+open Revery_Font;
 
 module Hooks = Revery_UI_Hooks;
 
@@ -115,12 +116,6 @@ module Constants = {
   let cursorWidth = 2;
 };
 
-type textAttributes = {
-  fontFamily: string,
-  fontSize: float,
-  color: Color.t,
-};
-
 module Styles = {
   open Style;
 
@@ -172,15 +167,8 @@ module Styles = {
   let textContainer = [flexGrow(1), overflow(`Hidden)];
 
   let text =
-      (
-        ~showPlaceholder,
-        ~scrollOffset,
-        ~placeholderColor,
-        ~textAttrs: textAttributes,
-      ) => [
-    color(showPlaceholder ? placeholderColor : textAttrs.color),
-    Style.fontFamily(textAttrs.fontFamily),
-    Style.fontSize(textAttrs.fontSize),
+      (~showPlaceholder, ~scrollOffset, ~placeholderColor, ~color: Color.t) => [
+    Style.color(showPlaceholder ? placeholderColor : color),
     alignItems(`Center),
     justifyContent(`FlexStart),
     textWrap(TextWrapping.NoWrap),
@@ -191,6 +179,11 @@ module Styles = {
 let%component make =
               (
                 ~style=Styles.default,
+                ~fontFamily=Family.default,
+                ~fontWeight=Weight.Normal,
+                ~italicized=false,
+                ~monospaced=false,
+                ~fontSize=14.0,
                 ~placeholderColor=Styles.defaultPlaceholderColor,
                 ~cursorColor=Styles.defaultCursorColor,
                 ~autofocus=false,
@@ -219,11 +212,7 @@ let%component make =
   let%hook textRef = Hooks.ref(None);
   let%hook scrollOffset = Hooks.ref(0);
 
-  let textAttrs = {
-    fontFamily: Selector.select(style, FontFamily, "Roboto-Regular.ttf"),
-    fontSize: Selector.select(style, FontSize, 18.),
-    color: Selector.select(style, Color, Colors.black),
-  };
+  let color = Selector.select(style, Color, Colors.black);
 
   let value = Option.value(value, ~default=state.value);
   let showPlaceholder = value == "";
@@ -238,8 +227,9 @@ let%component make =
     let dimensions =
       Revery_Draw.Text.measure(
         ~smoothing,
-        ~fontFamily=textAttrs.fontFamily,
-        ~fontSize=textAttrs.fontSize,
+        ~fontFamily=
+          Family.toPath(fontFamily, fontWeight, italicized, monospaced),
+        ~fontSize,
         text,
       );
 
@@ -371,7 +361,7 @@ let%component make =
       <Opacity opacity=cursorOpacity>
         <ContainerComponent
           width=Constants.cursorWidth
-          height={textAttrs.fontSize |> int_of_float}
+          height={fontSize |> int_of_float}
           color=cursorColor
         />
       </Opacity>
@@ -396,7 +386,7 @@ let%component make =
         ~showPlaceholder,
         ~scrollOffset,
         ~placeholderColor,
-        ~textAttrs,
+        ~color,
       )}
     />;
 

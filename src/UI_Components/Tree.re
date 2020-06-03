@@ -1,5 +1,6 @@
 open Revery_UI;
 open Revery_Core;
+open Revery_Font;
 open Revery_UI_Primitives;
 
 type status =
@@ -53,18 +54,22 @@ let default = (~indent, {data, status, _}) => {
     | Closed => false
     };
   open Style;
-  let textStyles = [fontSize(10.), color(Colors.black)];
+  let textStyles = [color(Colors.black)];
   let indentStr = String.make(indent * 2, ' ');
   let arrow = isOpen ? {||} : {||};
   <Clickable>
     <View style=defaultNodeStyles>
       <Text
         text={indentStr ++ arrow ++ " "}
-        style=[fontFamily("FontAwesome5FreeSolid.otf"), ...textStyles]
+        style=textStyles
+        fontSize=10.
+        fontFamily={Family.system("FontAwesome5FreeSolid.otf")}
       />
       <Text
         text=data
-        style=[fontFamily("Roboto-Regular.ttf"), ...textStyles]
+        style=textStyles
+        fontSize=10.
+        fontFamily={Family.system("FontAwesome5FreeSolid.otf")}
       />
     </View>
   </Clickable>;
