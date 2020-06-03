@@ -155,9 +155,13 @@ jobs:
           key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
           restore-keys: |
             ${{ matrix.os }}-
-      - name: Build dependencies in release
+      - name: Build release dependencies
         if: steps.deps-cache.outputs.cache-hit != 'true'
         run: docker run --rm --volume $(pwd):/revery --volume ~/.esy:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy build-dependencies --release --prefix-path=/esy/store"
+      - name: Build project in release
+        run: docker run --rm --volume $(pwd):/revery --volume ~/.esy:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy build --release --prefix-path=/esy/store"
+      - name: Build test/dev dependencies
+        run: docker run --rm --volume $(pwd):/revery --volume ~/.esy:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy build-dependencies --prefix-path=/esy/store"
 
   build:
     name: Build
