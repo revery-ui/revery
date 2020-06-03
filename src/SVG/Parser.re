@@ -18,12 +18,41 @@ let attribute =
   | ("stroke-width", value) => Some(`strokeWidth(length(value)))
   | _ => None;
 
+let coordinates = str => {
+  let buffer = Buffer.create(10);
+  let acc = ref([]);
+
+  let accept = () =>
+    if (Buffer.length(buffer) > 0) {
+      let coord = Buffer.contents(buffer) |> float_of_string;
+      acc := [coord, ...acc^];
+      Buffer.clear(buffer);
+    };
+
+  String.iter(
+    fun
+    | ('0'..'9' | '.' | '+' | '-') as ch => Buffer.add_char(buffer, ch)
+    | '\t'
+    | ' '
+    | '\n'
+    | '\012'
+    | '\r'
+    | ',' => accept()
+    | ch => failwith("invalid character in path data: " ++ Char.escaped(ch)),
+    str,
+  );
+
+  accept();
+
+  List.rev(acc^);
+};
+
 let pathCommands = str => {
   let tokens = {
     let buffer = Buffer.create(10);
     let acc = ref([]);
 
-    let pushArg = () =>
+    let acceptArg = () =>
       if (Buffer.length(buffer) > 0) {
         let token = Buffer.contents(buffer) |> float_of_string;
         acc := [`arg(token), ...acc^];
@@ -34,13 +63,13 @@ let pathCommands = str => {
       fun
       // argument
       | ('0'..'9' | '.' | '+' | '-') as ch => Buffer.add_char(buffer, ch)
-      // white-space
+      // white-space or comma
       | '\t'
       | ' '
       | '\n'
       | '\012'
-      | '\r' => pushArg()
-      | ',' => pushArg()
+      | '\r'
+      | ',' => acceptArg()
       // commands
       | (
           'M' | 'm' | 'L' | 'l' | 'H' | 'h' | 'V' | 'v' | 'C' | 'c' | 'S' | 's' |
@@ -53,7 +82,7 @@ let pathCommands = str => {
           'Z' |
           'z'
         ) as ch => {
-          pushArg();
+          acceptArg();
           acc := [`cmd(ch), ...acc^];
         }
       | ch =>
@@ -61,7 +90,7 @@ let pathCommands = str => {
       str,
     );
 
-    pushArg();
+    acceptArg();
 
     List.rev(acc^);
   };
@@ -196,6 +225,21 @@ let attr_pathCommands = (key, ~default, attrs) =>
   |> Option.map(pathCommands)
   |> Option.value(~default);
 
+let attr_viewBox = attrs =>
+  Option.bind(List.assoc_opt("viewBox", attrs), str =>
+    switch (coordinates(str)) {
+    | [x, y, width, height] => Some({
+                                  origin: {
+                                    x,
+                                    y,
+                                  },
+                                  width,
+                                  height,
+                                })
+    | _ => None
+    }
+  );
+
 let geometry = (kind, attrs) =>
   Geometry.{kind, attributes: List.filter_map(attribute, attrs)};
 
@@ -261,16 +305,9 @@ let rec element =
 
 let svg =
   fun
-  | Element("svg", _, children) => {
+  | Element("svg", attrs, children) => {
       defs: [],
       elements: List.filter_map(element, children),
-      viewport: {
-        origin: {
-          x: 0.,
-          y: 0.,
-        },
-        width: 100.,
-        height: 100.,
-      },
+      viewport: attr_viewBox(attrs),
     }
   | _ => failwith("svg root element expected");

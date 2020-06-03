@@ -19,7 +19,7 @@ let outerBox =
 
 let example2 =
   {|
-    <svg>
+    <svg viewBox="0 0 200 200">
       <g id="grid">
         <!-- Vertical -->
         <line x1="50" y1="0" x2="50" y2="500" stroke="#888" />

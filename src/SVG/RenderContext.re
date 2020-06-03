@@ -1,10 +1,5 @@
 open Revery_Draw;
 
-type size = {
-  width: int,
-  height: int,
-};
-
 type font = {
   family: string,
   size: float,
@@ -16,7 +11,6 @@ type context = {
   defs: list(Model.definition),
   font,
   viewport: Model.viewport,
-  container: size,
   rootFontSize: float, // '1 rem', font size of the root element
   canvas: CanvasContext.t,
 };

@@ -189,11 +189,12 @@ let rec element = context =>
   | Geometry(shape) => geometry(context, shape)
   | Text(_) => ();
 
-let render = (~width, ~height, document: Model.t, canvas) => {
-  let scaleX = float(width) /. document.viewport.width;
-  let scaleY = float(height) /. document.viewport.height;
-  let translateX = document.viewport.origin.x *. scaleX;
-  let translateY = document.viewport.origin.y *. scaleY;
+let applyViewportTransform =
+    (~width, ~height, viewport: Model.viewport, canvas) => {
+  let scaleX = float(width) /. viewport.width;
+  let scaleY = float(height) /. viewport.height;
+  let translateX = viewport.origin.x *. scaleX;
+  let translateY = viewport.origin.y *. scaleY;
 
   let transform = Skia.Matrix.make();
   Skia.Matrix.setAll(
@@ -209,6 +210,24 @@ let render = (~width, ~height, document: Model.t, canvas) => {
     1.,
   );
   CanvasContext.concat(transform, canvas);
+};
+
+let render = (~width, ~height, document: Model.t, canvas) => {
+  let viewport =
+    switch (document.viewport) {
+    | Some(viewport) =>
+      applyViewportTransform(~width, ~height, viewport, canvas);
+      viewport;
+
+    | None => {
+        origin: {
+          x: 0.,
+          y: 0.,
+        },
+        width: float(width),
+        height: float(height),
+      }
+    };
 
   let context =
     RenderContext.{
@@ -219,11 +238,7 @@ let render = (~width, ~height, document: Model.t, canvas) => {
         xHeight: 10.,
         chWidth: 10.,
       },
-      viewport: document.viewport,
-      container: {
-        width,
-        height,
-      },
+      viewport,
       rootFontSize: 10.,
       canvas,
     };

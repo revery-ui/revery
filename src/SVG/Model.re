@@ -129,5 +129,5 @@ type viewport = {
 type t = {
   defs: list(definition),
   elements: list(element),
-  viewport,
+  viewport: option(viewport),
 };
