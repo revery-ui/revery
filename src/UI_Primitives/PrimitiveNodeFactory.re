@@ -4,7 +4,7 @@ type nodeFactory = {
   createNode: unit => node,
   createViewNode: unit => viewNode,
   createTextNode: string => textNode,
-  createImageNode: string => imageNode,
+  createImageNode: [ | `Url(string) | `Asset(string)] => imageNode,
 };
 
 let defaultNodeFactory: nodeFactory = {

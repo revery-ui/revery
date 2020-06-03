@@ -12,7 +12,7 @@ let uiToDrawResizeMode: ImageResizeMode.t => Revery_Draw.ImageResizeMode.t =
     | Repeat => Revery_Draw.ImageResizeMode.Repeat
     };
 
-class imageNode (imagePath: string) = {
+class imageNode (imagePath: [ | `Asset(string) | `Url(string)]) = {
   as _this;
   val mutable src = imagePath;
   inherit (class node)() as _super;

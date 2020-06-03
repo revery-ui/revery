@@ -170,13 +170,33 @@ let drawRRect = (v: t, rRect: Skia.RRect.t, paint) => {
   Canvas.drawRRect(v.canvas, rRect, paint);
 };
 
-let drawImage = (~x, ~y, ~width, ~height, ~paint=?, src, v: t) => {
-  let isUrl = src |> Uri.of_string |> Uri.scheme |> Option.is_some;
-
-  if (isUrl) {
+let drawImage =
+    (
+      ~x,
+      ~y,
+      ~width,
+      ~height,
+      ~paint=?,
+      src: [ | `Url(string) | `Asset(string)],
+      v: t,
+    ) => {
+  switch (src) {
+  | `Asset(path) =>
+    switch (ImageRenderer.fromAssetPath(path)) {
+    | None => ()
+    | Some(img) =>
+      Canvas.drawImageRect(
+        v.canvas,
+        img,
+        None,
+        Rect.makeLtrb(x, y, x +. width, y +. height),
+        paint,
+      )
+    }
+  | `Url(url) =>
     LetOperators.(
       {
-        let.map image = ImageRenderer.fromUrl(src);
+        let.map image = ImageRenderer.fromUrl(url);
 
         switch (image) {
         | None => ()
@@ -191,19 +211,7 @@ let drawImage = (~x, ~y, ~width, ~height, ~paint=?, src, v: t) => {
         };
       }
     )
-    |> ignore;
-  } else {
-    switch (ImageRenderer.fromAssetPath(src)) {
-    | None => ()
-    | Some(img) =>
-      Canvas.drawImageRect(
-        v.canvas,
-        img,
-        None,
-        Rect.makeLtrb(x, y, x +. width, y +. height),
-        paint,
-      )
-    };
+    |> ignore
   };
 };
 
