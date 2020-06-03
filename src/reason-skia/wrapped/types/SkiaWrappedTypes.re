@@ -247,6 +247,19 @@ module M = (T: TYPE) => {
   };
 
   module Path = {
+    type arcSize =
+      | Small
+      | Large;
+
+    let arcSize =
+      skiaCEnum(
+        "sk_path_arc_size_t",
+        [
+          (Small, "SMALL_SK_PATH_ARC_SIZE"),
+          (Large, "LARGE_SK_PATH_ARC_SIZE"),
+        ],
+      );
+
     type pathDirection =
       | Clockwise
       | CounterClockwise;
