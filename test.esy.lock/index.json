@@ -1,5 +1,5 @@
 {
-  "checksum": "a3172e0c5d4985cf0011a2595b406a67",
+  "checksum": "53da8221f920d10fcfbc7008d7e74979",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -45,11 +45,10 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-sdl2@2.10.3032@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9",
         "flex@1.2.3@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
-        "esy-sdl2@2.0.10007@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
+        "esy-sdl2@2.0.10008@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
         "esy-freetype2@2.9.1007@d41d8cd9",
         "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
@@ -143,24 +142,6 @@
       ],
       "devDependencies": []
     },
-    "reason-sdl2@2.10.3032@d41d8cd9": {
-      "id": "reason-sdl2@2.10.3032@d41d8cd9",
-      "name": "reason-sdl2",
-      "version": "2.10.3032",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3032.tgz#sha1:fe9afec29bbad691a437726d918a27afbf02937e"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "refmterr@3.3.2@d41d8cd9", "esy-sdl2@2.0.10007@d41d8cd9",
-        "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/reason@3.6.0@d41d8cd9"
-      ],
-      "devDependencies": []
-    },
     "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9": {
       "id":
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9",
@@ -227,14 +208,14 @@
       ],
       "devDependencies": []
     },
-    "esy-sdl2@2.0.10007@d41d8cd9": {
-      "id": "esy-sdl2@2.0.10007@d41d8cd9",
+    "esy-sdl2@2.0.10008@d41d8cd9": {
+      "id": "esy-sdl2@2.0.10008@d41d8cd9",
       "name": "esy-sdl2",
-      "version": "2.0.10007",
+      "version": "2.0.10008",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/esy-sdl2/-/esy-sdl2-2.0.10007.tgz#sha1:9e8bc6f242563068b7097017439a6b662d9edf23"
+          "archive:https://registry.npmjs.org/esy-sdl2/-/esy-sdl2-2.0.10008.tgz#sha1:e0cfc18598f54ad8ee461edae3e71483c2f0e09f"
         ]
       },
       "overrides": [],
@@ -873,20 +854,20 @@
         "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
-    "@opam/ppxlib@opam:0.13.0@65a9c7cc": {
-      "id": "@opam/ppxlib@opam:0.13.0@65a9c7cc",
+    "@opam/ppxlib@opam:0.12.0@fcf5cabc": {
+      "id": "@opam/ppxlib@opam:0.12.0@fcf5cabc",
       "name": "@opam/ppxlib",
-      "version": "opam:0.13.0",
+      "version": "opam:0.12.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/81/81e1f3d308500e0e7f6108d5b0dda2b879640a5c21ef3dc4a9bd90381cee39d9#sha256:81e1f3d308500e0e7f6108d5b0dda2b879640a5c21ef3dc4a9bd90381cee39d9",
-          "archive:https://github.com/ocaml-ppx/ppxlib/releases/download/0.13.0/ppxlib-0.13.0.tbz#sha256:81e1f3d308500e0e7f6108d5b0dda2b879640a5c21ef3dc4a9bd90381cee39d9"
+          "archive:https://opam.ocaml.org/cache/sha256/6b/6b562c9b3b9350777318729921f890850b385c469db60769aafd9371998a2c42#sha256:6b562c9b3b9350777318729921f890850b385c469db60769aafd9371998a2c42",
+          "archive:https://github.com/ocaml-ppx/ppxlib/archive/0.12.0.tar.gz#sha256:6b562c9b3b9350777318729921f890850b385c469db60769aafd9371998a2c42"
         ],
         "opam": {
           "name": "ppxlib",
-          "version": "0.13.0",
-          "path": "test.esy.lock/opam/ppxlib.0.13.0"
+          "version": "0.12.0",
+          "path": "test.esy.lock/opam/ppxlib.0.12.0"
         }
       },
       "overrides": [],
@@ -2354,7 +2335,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/ppxlib@opam:0.13.0@65a9c7cc",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/ppxlib@opam:0.12.0@fcf5cabc",
         "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
       "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
