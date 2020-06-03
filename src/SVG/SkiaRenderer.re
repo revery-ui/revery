@@ -68,24 +68,37 @@ let path = (~d, ~paint, ~context) => {
     fun
     | `M(x, y) => Skia.Path.moveTo(path, x, y)
     | `m(dx, dy) => Skia.Path.rMoveTo(path, dx, dy)
+
     | `L(x, y) => Skia.Path.lineTo(path, x, y)
     | `l(dx, dy) => Skia.Path.rLineTo(path, dx, dy)
+
     | `H(_) => failwith("TODO")
     | `h(dx) => Skia.Path.rLineTo(path, dx, 0.)
+
     | `V(_) => failwith("TODO")
     | `v(dy) => Skia.Path.rLineTo(path, 0., dy)
+
     | `C(x1, y1, x2, y2, x, y) =>
       Skia.Path.cubicTo(path, x1, y1, x2, y2, x, y)
     | `c(dx1, dy1, dx2, dy2, dx, dy) =>
       Skia.Path.rCubicTo(path, dx1, dy1, dx2, dy2, dx, dy)
+
     | `S(_) => failwith("TODO")
     | `s(_) => failwith("TODO")
+
     | `Q(_) => failwith("TODO")
     | `q(_) => failwith("TODO")
+
     | `T(_) => failwith("TODO")
     | `t(_) => failwith("TODO")
-    | `A(_) => failwith("TODO")
-    | `a(_) => failwith("TODO")
+
+    | `A(rx, ry, angle, size, sweep, x, y) => {
+        Skia.Path.arcTo(path, rx, ry, angle, size, sweep, x, y);
+      }
+    | `a(rx, ry, angle, size, sweep, dx, dy) => {
+        Skia.Path.rArcTo(path, rx, ry, angle, size, sweep, dx, dy);
+      }
+
     | `Z
     | `z => Skia.Path.close(path),
     d,

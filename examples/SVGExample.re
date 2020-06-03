@@ -19,7 +19,7 @@ let outerBox =
 
 let example2 =
   {|
-    <svg viewBox="0 0 200 200">
+    <svg viewBox="0 0 20 20">
       <g id="grid">
         <!-- Vertical -->
         <line x1="50" y1="0" x2="50" y2="500" stroke="#888" />
@@ -77,6 +77,23 @@ let example2 =
               d="M 10,90
                  C 30,90 25,10 50,10
                  C 75,10 70,90 90,90" />
+      </g>
+      <g id="arc">
+        <path fill="none" stroke="#f00"
+              d="M 6,10
+                 A 6 4 10 1 0 14,10" />
+
+        <path fill="none" stroke="#0f0"
+              d="M 6,10
+                 A 6 4 10 1 1 14,10" />
+
+        <path fill="none" stroke="#f0f"
+              d="M 6,10
+                 A 6 4 10 0 1 14,10" />
+
+        <path fill="none" stroke="#faa"
+              d="M 6,10
+                 A 6 4 10 0 0 14,10" />
       </g>
     </svg>
   |}

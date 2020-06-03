@@ -563,12 +563,10 @@ module Path = {
     path;
   };
 
-  let addCircle =
-      (path, x, y, ~radius, ~direction: pathDirection=Clockwise, ()) =>
+  let addCircle = (path, x, y, ~radius, ~direction: pathDirection=`cw, ()) =>
     SkiaWrapped.Path.addCircle(path, x, y, radius, direction);
 
-  let addRoundRect =
-      (path, rect, rx, ry, ~direction: pathDirection=Clockwise, ()) =>
+  let addRoundRect = (path, rect, rx, ry, ~direction: pathDirection=`cw, ()) =>
     SkiaWrapped.Path.addRoundRect(path, rect, rx, ry, direction);
 
   let moveTo = SkiaWrapped.Path.moveTo;

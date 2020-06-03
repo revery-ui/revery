@@ -39,7 +39,7 @@ let draw = canvas => {
 
   let roundRect = Rect.makeLtrb(300., 400., 240., 280.);
   Path.addRoundRect(path, roundRect, 25., 25., ());
-  Path.addCircle(path, 100., 300., ~radius=100., ~direction=Clockwise, ());
+  Path.addCircle(path, 100., 300., ~radius=100., ~direction=`cw, ());
   Canvas.drawPath(canvas, path, stroke);
 
   Paint.setColor(fill, Color.makeArgb(0xCCl, 0x00l, 0xFFl, 0x00l));
