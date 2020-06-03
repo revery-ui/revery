@@ -299,7 +299,7 @@ module Path: {
 module Data: {
   type t;
 
-  let makeFromFileName: string => t;
+  let makeFromFileName: string => option(t);
 
   let makeString: t => string;
 };

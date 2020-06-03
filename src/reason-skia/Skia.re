@@ -509,9 +509,12 @@ module Data = {
   };
 
   let makeFromFileName = path => {
-    let data = SkiaWrapped.Data.makeFromFileName(path);
-    Gc.finalise(SkiaWrapped.Data.delete, data);
-    data;
+    let maybeData = SkiaWrapped.Data.makeFromFileName(path);
+    switch (maybeData) {
+    | Some(data) => Gc.finalise(SkiaWrapped.Data.delete, data)
+    | None => ()
+    };
+    maybeData;
   };
 };
 
