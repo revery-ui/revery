@@ -7,10 +7,9 @@ open TestFramework;
 describe("Style API tests", ({test, _}) => {
   test("that a style record is created correctly", ({expect, _}) => {
     let styles =
-      create(~style=[height(1), width(2), fontFamily("Roboto")], ());
+      create(~style=[height(1), width(2)], ());
     expect.int(styles.height).toBe(1);
     expect.int(styles.width).toBe(2);
-    expect.string(styles.fontFamily).toEqual("Roboto");
   });
 
   test("defaults should be correctly set", ({expect, _}) => {
@@ -96,15 +95,6 @@ describe("Style API tests", ({test, _}) => {
     let found =
       List.find(style => style == `BackgroundColor(paleTurquoise), result);
     expect.equal(found, `BackgroundColor(paleTurquoise));
-  });
-
-  test(
-    "Should correctly select a style from a list of styles", ({expect, _}) => {
-    let l = [fontFamily("Test-Font"), fontSize(20.)];
-    let ff = Selector.select(l, FontFamily, "Failed");
-    let fs = Selector.select(l, FontSize, 10.);
-    expect.string(ff).toEqual("Test-Font");
-    expect.float(fs).toBeCloseTo(20.);
   });
 
   test(
