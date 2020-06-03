@@ -1,0 +1,54 @@
+opam-version: "2.0"
+synopsis: "Fast, portable, and opinionated build system"
+description: """
+
+dune is a build system that was designed to simplify the release of
+Jane Street packages. It reads metadata from "dune" files following a
+very simple s-expression syntax.
+
+dune is fast, has very low-overhead, and supports parallel builds on
+all platforms. It has no system dependencies; all you need to build
+dune or packages using dune is OCaml. You don't need make or bash
+as long as the packages themselves don't use bash explicitly.
+
+dune supports multi-package development by simply dropping multiple
+repositories into the same directory.
+
+It also supports multi-context builds, such as building against
+several opam roots/switches simultaneously. This helps maintaining
+packages across several versions of OCaml and gives cross-compilation
+for free.
+"""
+maintainer: ["Jane Street Group, LLC <opensource@janestreet.com>"]
+authors: ["Jane Street Group, LLC <opensource@janestreet.com>"]
+license: "MIT"
+homepage: "https://github.com/ocaml/dune"
+doc: "https://dune.readthedocs.io/"
+bug-reports: "https://github.com/ocaml/dune/issues"
+conflicts: [
+  "dune-configurator" {< "2.3.0"}
+  "odoc" {< "1.3.0"}
+  "dune-release" {< "1.3.0"}
+  "jbuilder" {= "transition"}
+]
+dev-repo: "git+https://github.com/ocaml/dune.git"
+build: [
+  # opam 2 sets OPAM_SWITCH_PREFIX, so we don't need a hardcoded path
+  ["ocaml" "configure.ml" "--libdir" lib] {opam-version < "2"}
+  ["ocaml" "bootstrap.ml" "-j" jobs]
+  ["./dune.exe" "build" "-p" name "--profile" "dune-bootstrap" "-j" jobs]
+]
+depends: [
+  # Please keep the lower bound in sync with .travis.yml, dune-project
+  # and min_ocaml_version in bootstrap.ml
+  ("ocaml" {>= "4.07"} | ("ocaml" {< "4.07~~"} & "ocamlfind-secondary"))
+  "base-unix"
+  "base-threads"
+]
+url {
+  src: "https://github.com/ocaml/dune/releases/download/2.5.1/dune-2.5.1.tbz"
+  checksum: [
+    "sha256=8f77d3a87f208e0d7cccaa1c48c4bb1bb87d62d07c3f25e9b8ba298e028ce52b"
+    "sha512=f209f12ced10c1abf8782bdb0143f4cec77795f7174d2cc75130afb1e01550b01f2f77b9e3ec4888efdad83d2f9878d179b39126f824f4e522f3ef4da34bf27e"
+  ]
+}
