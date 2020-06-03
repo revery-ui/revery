@@ -1,5 +1,5 @@
 {
-  "checksum": "8967067fb7212728ce30ab25963d5fc5",
+  "checksum": "be23f3205b8da05416ca2614e8b411c4",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -45,17 +45,21 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-skia@github:revery-ui/reason-skia#5e94192b90b71122fa821e9c4e6b979b15c7df83@d41d8cd9",
-        "reason-sdl2@2.10.3032@d41d8cd9", "flex@1.2.3@d41d8cd9",
-        "esy-harfbuzz@1.9.1008@d41d8cd9",
+        "reason-sdl2@2.10.3032@d41d8cd9",
+        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9",
+        "flex@1.2.3@d41d8cd9",
+        "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
+        "esy-sdl2@2.0.10007@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
+        "esy-freetype2@2.9.1007@d41d8cd9",
         "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/ppx_deriving@opam:4.5@bb81afdc",
         "@opam/lwt_ppx@opam:2.0.1@ab0debb8", "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
-        "@opam/dune@opam:2.5.1@f38f376e", "@glennsl/timber@1.2.0@d41d8cd9",
-        "@esy-ocaml/reason@3.6.0@d41d8cd9",
+        "@opam/dune@opam:2.5.1@f38f376e",
+        "@opam/ctypes@opam:0.15.1@b0227b2f",
+        "@glennsl/timber@1.2.0@d41d8cd9", "@esy-ocaml/reason@3.6.0@d41d8cd9",
         "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#10cab2d@d41d8cd9"
       ],
       "devDependencies": [
@@ -138,30 +142,6 @@
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
       "devDependencies": []
-    },
-    "reason-skia@github:revery-ui/reason-skia#5e94192b90b71122fa821e9c4e6b979b15c7df83@d41d8cd9": {
-      "id":
-        "reason-skia@github:revery-ui/reason-skia#5e94192b90b71122fa821e9c4e6b979b15c7df83@d41d8cd9",
-      "name": "reason-skia",
-      "version":
-        "github:revery-ui/reason-skia#5e94192b90b71122fa821e9c4e6b979b15c7df83",
-      "source": {
-        "type": "install",
-        "source": [
-          "github:revery-ui/reason-skia#5e94192b90b71122fa821e9c4e6b979b15c7df83"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "refmterr@3.3.2@d41d8cd9", "reason-sdl2@2.10.3032@d41d8cd9",
-        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9",
-        "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
-        "esy-sdl2@2.0.10007@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
-        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@f38f376e",
-        "@opam/ctypes@opam:0.15.1@b0227b2f",
-        "@esy-ocaml/reason@3.6.0@d41d8cd9"
-      ],
-      "devDependencies": [ "@opam/dune@opam:2.5.1@f38f376e" ]
     },
     "reason-sdl2@2.10.3032@d41d8cd9": {
       "id": "reason-sdl2@2.10.3032@d41d8cd9",

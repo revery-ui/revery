@@ -1,0 +1,4 @@
+(library
+ (name SkiaWrappedTypes)
+ (public_name skia.wrapped.types)
+ (libraries ctypes))
