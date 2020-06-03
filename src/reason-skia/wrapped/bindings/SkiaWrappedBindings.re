@@ -545,7 +545,10 @@ module M = (F: FOREIGN) => {
     let t = ptr(SkiaTypes.Data.t);
 
     let makeFromFileName =
-      foreign("sk_data_new_from_file", string @-> returning(t));
+      foreign(
+        "sk_data_new_from_file",
+        string @-> returning(ptr_opt(SkiaTypes.Data.t)),
+      );
     let delete = foreign("sk_data_unref", t @-> returning(void));
 
     let getData = foreign("sk_data_get_data", t @-> returning(ptr(void)));
