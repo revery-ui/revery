@@ -4,8 +4,6 @@ module CanvasContext = Revery_Draw.CanvasContext;
 
 open ViewNode;
 
-type renderCallback = CanvasContext.t => unit;
-
 /*
  * CanvasNode
  *
@@ -15,7 +13,7 @@ type renderCallback = CanvasContext.t => unit;
  */
 class canvasNode (()) = {
   as _this;
-  val mutable render: option(renderCallback) = None;
+  val mutable render: option((CanvasContext.t, Dimensions.t) => unit) = None;
   inherit (class viewNode)() as _super;
   pub! draw = (parentContext: NodeDrawContext.t) => {
     _super#draw(parentContext);
@@ -25,18 +23,17 @@ class canvasNode (()) = {
     let canvas = parentContext.canvas;
 
     switch (render) {
-    | Some(r) =>
-      let _ret: int = CanvasContext.save(canvas);
+    | Some(render) =>
+      let _: int = CanvasContext.save(canvas);
+
       CanvasContext.setMatrix(canvas, world);
-      Overflow.render(canvas, LayoutTypes.Hidden, dimensions, () => {
-        // canvas save
-        // canvas set transform
-        r(
-          canvas,
-          //canvas restore
-        )
-      });
+
+      Overflow.render(canvas, LayoutTypes.Hidden, dimensions, () =>
+        render(canvas, dimensions)
+      );
+
       CanvasContext.restore(canvas);
+
     | None => ()
     };
   };
