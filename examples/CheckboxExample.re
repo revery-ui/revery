@@ -29,11 +29,8 @@ module Check = {
       />
       <Text
         text={getCheckboxText(first)}
-        style=Style.[
-          marginBottom(10),
-          fontFamily("Roboto-Regular.ttf"),
-          fontSize(20.),
-        ]
+        fontSize=20.
+        style=Style.[marginBottom(10)]
       />
       <Checkbox
         checkedColor=Colors.green
@@ -45,11 +42,8 @@ module Check = {
         text={
           "Default state: " ++ getCheckboxText(initialCheckboxState.second)
         }
-        style=Style.[
-          marginTop(10),
-          fontFamily("Roboto-Regular.ttf"),
-          fontSize(20.),
-        ]
+        fontSize=20.
+        style=Style.[marginTop(10)]
       />
     </View>;
   };

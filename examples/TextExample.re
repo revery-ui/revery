@@ -20,8 +20,6 @@ let textStyle =
   Style.[
     color(Colors.white),
     width(100),
-    fontFamily("Roboto-Regular.ttf"),
-    fontSize(16.),
     margin(14),
     textWrap(TextWrapping.NoWrap),
   ];
@@ -34,11 +32,9 @@ let controlsStyle =
     alignItems(`Center),
   ];
 
-let overflowStyles = (style, textFontSize, textWidth) =>
+let overflowStyles = (style, textWidth) =>
   Style.[
     color(Colors.white),
-    fontFamily("Roboto-Regular.ttf"),
-    fontSize(textFontSize),
     width(textWidth),
     textOverflow(style),
     lineHeight(1.5),
@@ -66,17 +62,15 @@ module SampleText = {
       <View>
         <View style=Style.[height(40), marginBottom(8)]>
           <Text
-            style={overflowStyles(`Ellipsis, textFontSize, textWidth)}
+            fontSize=textFontSize
+            style={overflowStyles(`Ellipsis, textWidth)}
             text={textContent ++ " " ++ textContent}
           />
         </View>
         <View style=Style.[height(40), marginBottom(8)]>
           <Text
-            style={overflowStyles(
-              `UserDefined("£"),
-              textFontSize,
-              textWidth,
-            )}
+            fontSize=textFontSize
+            style={overflowStyles(`UserDefined("£"), textWidth)}
             text={textContent ++ " " ++ textContent}
           />
         </View>
@@ -84,21 +78,20 @@ module SampleText = {
           <Text
             style=Style.[
               color(Colors.white),
-              fontFamily("Roboto-Regular.ttf"),
-              fontSize(textFontSize),
               lineHeight(1.5),
               textWrap(wrapping),
               width(int_of_float(widthSliderVal)),
               border(~color=Colors.blueViolet, ~width=1),
               backgroundColor(Colors.black),
             ]
+            fontSize=textFontSize
             text=textContent
           />
         </View>
       </View>
       <View>
         <View style=controlsStyle>
-          <Text style=textStyle text="Font size: " />
+          <Text style=textStyle fontSize=16. text="Font size: " />
           <Slider
             onValueChanged={v => setFontSize(_ => v)}
             value=fontSizeSliderVal
@@ -106,11 +99,12 @@ module SampleText = {
           />
           <Text
             style=textStyle
+            fontSize=16.
             text={"Value: " ++ (fontSizeSliderVal |> string_of_float)}
           />
         </View>
         <View style=controlsStyle>
-          <Text style=textStyle text="Width: " />
+          <Text style=textStyle fontSize=16. text="Width: " />
           <Slider
             onValueChanged={w => setWidth(_ => w)}
             value=widthSliderVal
@@ -118,11 +112,12 @@ module SampleText = {
           />
           <Text
             style=textStyle
+            fontSize=16.
             text={"Value: " ++ (widthSliderVal |> string_of_float)}
           />
         </View>
         <View style=controlsStyle>
-          <Text style=textStyle text="Hyphenate?" />
+          <Text style=textStyle fontSize=16. text="Hyphenate?" />
           <Checkbox
             checkedColor=Colors.green
             onChange={() => setHyphenate(h => !h)}

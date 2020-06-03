@@ -1,6 +1,7 @@
 open Revery_UI;
 open Revery_Core;
 open Revery_UI_Primitives;
+open Revery_Font;
 
 let noop = () => ();
 
@@ -9,14 +10,14 @@ let make =
       ~title,
       ~onClick=noop,
       ~color as c=Colors.dodgerBlue,
-      ~fontSize as size=40.,
+      ~fontSize=40.,
       ~width as w=300,
       ~height as h=100,
       ~disabled=false,
       ~tabindex=?,
       ~onFocus=?,
       ~onBlur=?,
-      ~fontFamily as family="Roboto-Regular.ttf",
+      ~fontFamily=Family.default,
       (),
     ) =>
   <Clickable onClick={disabled ? noop : onClick} ?onFocus ?onBlur ?tabindex>
@@ -31,11 +32,9 @@ let make =
         width(w),
       ]>
       <Text
-        style=Style.[
-          fontSize(size),
-          fontFamily(family),
-          color(Colors.white),
-        ]
+        style=Style.[color(Colors.white)]
+        fontSize
+        fontFamily
         text=title
       />
     </View>

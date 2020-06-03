@@ -2,8 +2,6 @@ open Layout;
 
 open Revery_Core;
 
-type fontFamily = string;
-
 module Border = {
   type t = {
     color: Color.t,
@@ -77,8 +75,6 @@ type t = {
   bottom: int,
   left: int,
   right: int,
-  fontFamily,
-  fontSize: float,
   lineHeight: float,
   pointerEvents: PointerEvents.t,
   textWrap: TextWrapping.wrapType,
@@ -136,8 +132,6 @@ let make =
       ~bottom=Encoding.cssUndefined,
       ~left=Encoding.cssUndefined,
       ~right=Encoding.cssUndefined,
-      ~fontFamily="",
-      ~fontSize=12.,
       ~lineHeight=1.2,
       ~textWrap=TextWrapping.Wrap,
       ~marginTop=Encoding.cssUndefined,
@@ -199,8 +193,6 @@ let make =
     bottom,
     left,
     right,
-    fontFamily,
-    fontSize,
     lineHeight,
     textWrap,
     transform,
@@ -359,8 +351,6 @@ type coreStyleProps = [
   | `PointerEvents(PointerEvents.t)
 ];
 
-type fontProps = [ | `FontFamily(string) | `FontSize(float)];
-
 type textProps = [
   | `LineHeight(float)
   | `TextWrap(TextWrapping.wrapType)
@@ -372,11 +362,11 @@ type textProps = [
    these nodes are typed to only allow styles to be specified
    which are relevant to each
  */
-type textStyleProps = [ textProps | fontProps | coreStyleProps];
+type textStyleProps = [ textProps | coreStyleProps];
 type viewStyleProps = [ coreStyleProps];
 type imageStyleProps = [ coreStyleProps];
 
-type allProps = [ coreStyleProps | fontProps | textProps];
+type allProps = [ coreStyleProps | textProps];
 
 let emptyTextStyle: list(textStyleProps) = [];
 let emptyViewStyle: list(viewStyleProps) = [];
@@ -446,8 +436,6 @@ let bottom = f => `Bottom(f);
 let left = f => `Left(f);
 let top = f => `Top(f);
 
-let fontSize = f => `FontSize(f);
-let fontFamily = f => `FontFamily(f);
 let lineHeight = h => `LineHeight(h);
 let textWrap = w => `TextWrap(w);
 
@@ -606,8 +594,6 @@ let applyStyle = (style, styleRule) =>
   | `Opacity(opacity) => {...style, opacity}
   | `BoxShadow(boxShadow) => {...style, boxShadow}
   | `Transform(transform) => {...style, transform}
-  | `FontFamily(fontFamily) => {...style, fontFamily}
-  | `FontSize(fontSize) => {...style, fontSize}
   | `LineHeight(lineHeight) => {...style, lineHeight}
   | `TextOverflow(textOverflow) => {...style, textOverflow}
   | `TextWrap(textWrap) => {...style, textWrap}

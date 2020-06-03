@@ -16,11 +16,8 @@ module RadioExample = {
       ]>
       <Text
         text="Radio Button"
-        style=Style.[
-          fontSize(20.),
-          fontFamily("Roboto-Regular.ttf"),
-          marginBottom(20),
-        ]
+        fontSize=20.
+        style=Style.[marginBottom(20)]
       />
       <RadioButtonsInt
         onChange={txt =>
@@ -35,14 +32,7 @@ module RadioExample = {
           {text: "Button 4", value: 4},
         ]
       />
-      <Text
-        text=radioVal
-        style=Style.[
-          fontSize(20.),
-          fontFamily("Roboto-Regular.ttf"),
-          marginTop(20),
-        ]
-      />
+      <Text text=radioVal fontSize=20. style=Style.[marginTop(20)] />
     </View>;
   };
 };

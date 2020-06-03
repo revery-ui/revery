@@ -187,13 +187,7 @@ module ExampleButton = {
       ];
 
     let textColor = isActive ? Colors.white : Colors.grey;
-    let textHeaderStyle =
-      Style.[
-        color(textColor),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(14.),
-        margin(16),
-      ];
+    let textHeaderStyle = Style.[color(textColor), margin(16)];
 
     <Opacity opacity=buttonOpacity>
       <Clickable style=wrapperStyle onClick>
