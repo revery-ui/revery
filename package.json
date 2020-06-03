@@ -44,6 +44,7 @@
     "@opam/lru": "bryphe/lru:lru.opam#2708c70",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
+    "@opam/markup": "0.8.2",
     "@opam/ppx_deriving": "*",
     "@opam/omd": "ocaml/omd:omd.opam#1535e3c",
     "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d",

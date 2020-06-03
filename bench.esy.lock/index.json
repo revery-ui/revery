@@ -1,5 +1,5 @@
 {
-  "checksum": "371e2a35be083b27fd6babd762a05c29",
+  "checksum": "f20af0222b49c7515aa58b9d48bd1026",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -52,6 +52,7 @@
         "esy-freetype2@2.9.1007@d41d8cd9",
         "@opam/ppx_deriving@opam:4.5@bb81afdc",
         "@opam/omd@github:ocaml/omd:omd.opam#1535e3c@d41d8cd9",
+        "@opam/markup@opam:0.8.2@87975241",
         "@opam/lwt_ppx@opam:2.0.1@ab0debb8", "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
@@ -1849,6 +1850,33 @@
         "ocaml@4.10.0@d41d8cd9", "@opam/menhirSdk@opam:20200525@6baf7403",
         "@opam/menhirLib@opam:20200525@f9abf308",
         "@opam/dune@opam:2.5.0@aef1678b"
+      ]
+    },
+    "@opam/markup@opam:0.8.2@87975241": {
+      "id": "@opam/markup@opam:0.8.2@87975241",
+      "name": "@opam/markup",
+      "version": "opam:0.8.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/0f/0fe6b3a04d941ca40a5efdd082f1183d#md5:0fe6b3a04d941ca40a5efdd082f1183d",
+          "archive:https://github.com/aantron/markup.ml/archive/0.8.2.tar.gz#md5:0fe6b3a04d941ca40a5efdd082f1183d"
+        ],
+        "opam": {
+          "name": "markup",
+          "version": "0.8.2",
+          "path": "bench.esy.lock/opam/markup.0.8.2"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
+        "@opam/uchar@opam:0.0.2@c8218eea", "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
+        "@opam/uchar@opam:0.0.2@c8218eea", "@opam/dune@opam:2.5.0@aef1678b"
       ]
     },
     "@opam/magic-mime@opam:1.1.2@980f82fb": {
