@@ -41,7 +41,7 @@ let c_flags =
 
 let libFolderPath = Sys.getenv("SDL2_LIB_PATH");
 let libFilePath = libFolderPath ++ "/libSDL2.a";
-prerr_endline ("SDL2 Library Folder Path: " ++ libFolderPath);
+prerr_endline("SDL2 Library Folder Path: " ++ libFolderPath);
 
 let ccopt = s => ["-ccopt", s];
 let cclib = s => ["-cclib", s];
@@ -84,10 +84,11 @@ let flags =
     @ ccopt("-liconv")
   };
 
-let c_library_flags = switch (get_os) {
+let c_library_flags =
+  switch (get_os) {
   | Windows => ["-L" ++ libFolderPath, "-lSDL2"]
-  | _ => [libFilePath];
-}
+  | _ => [libFilePath]
+  };
 
 let cxx_flags =
   switch (get_os) {
