@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@opam/ctypes": "0.15.1",
-    "@opam/dune": ">=1.6.0",
+    "@opam/dune": "2.5.0",
     "@opam/dune-configurator": "*",
     "@esy-ocaml/reason": "^3.6.0",
     "@opam/lru": "bryphe/lru:lru.opam#2708c70",
