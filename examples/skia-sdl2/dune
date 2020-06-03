@@ -1,0 +1,11 @@
+(executables
+ (names SkiaSdl)
+ (package ReveryExamples)
+ (public_names SkiaSdl)
+ (modes native byte)
+ (libraries skia sdl2 lwt integers skia.wrapped.bindings skia.wrapped))
+
+(install
+ (section bin)
+ (package ReveryExamples)
+ (files SkiaSdl.bc))

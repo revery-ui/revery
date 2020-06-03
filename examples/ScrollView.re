@@ -29,14 +29,7 @@ module Sample = {
     let%hook (bounce, setBounce) = Hooks.state(true);
 
     <View style=containerStyle>
-      <Text
-        text="Bounce"
-        style=Style.[
-          marginBottom(10),
-          fontFamily("Roboto-Regular.ttf"),
-          fontSize(20.),
-        ]
-      />
+      <Text text="Bounce" fontSize=20. style=Style.[marginBottom(10)] />
       <Checkbox
         onChange={() => setBounce(isBounce => !isBounce)}
         checked=bounce

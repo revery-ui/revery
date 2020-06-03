@@ -1,0 +1,5 @@
+(executable
+ (name HarfbuzzCli)
+ (package ReveryExamples)
+ (public_name HarfbuzzCli)
+ (libraries bigarray harfbuzz reason-native-crash-utils.asan))

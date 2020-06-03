@@ -1,0 +1,19 @@
+(executable
+  (name FontQuery)
+  (public_name FontQuery)
+  (libraries 
+    font-manager 
+; NOTE:
+; There is a known leak on Linux that causes us to not run it generally:
+; It's caused by not calling FcFini(), but FcFini() crashes if we call it -
+; seems like a libconfig bug.
+;
+; Direct leak of 256 byte(s) in 1 object(s) allocated from:
+;    #0 0x7f7f54a09602 in malloc (/usr/lib/x86_64-linux-gnu/libasan.so.2+0x98602)
+;    #1 0x7f7f5474b0b9  (/usr/lib/x86_64-linux-gnu/libfontconfig.so.1+0x1d0b9)
+
+; Uncomment this line to run ASAN:
+;
+;     reason-native-crash-utils.asan
+  )
+  (package ReveryExamples))

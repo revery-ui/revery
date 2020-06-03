@@ -24,12 +24,8 @@ module SimpleButton = {
           margin(16),
         ]>
         <Text
-          style=Style.[
-            color(Colors.white),
-            fontFamily("Roboto-Regular.ttf"),
-            fontSize(20.),
-            margin(4),
-          ]
+          fontSize=20.
+          style=Style.[color(Colors.white), margin(4)]
           text=textContent
         />
       </View>

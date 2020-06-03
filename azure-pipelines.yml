@@ -4,6 +4,21 @@
 # https://aka.ms/yaml
 
 name: $(Build.SourceVersion)
+
+# Master build triggers
+trigger: 
+- master
+
+# PR Triggers
+pr:
+  autoCancel: true
+  branches:
+    include: 
+    - master
+  paths:
+    exclude: 
+    - README.md
+
 jobs:
 - job: Linux
   timeoutInMinutes: 0

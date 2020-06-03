@@ -1,8 +1,8 @@
 # Cross-platform set of build steps for building esy projects
 
 steps:
-  - script: npm install -g esy@0.6.2
-    displayName: 'npm install -g esy@0.6.2'
+  - script: npm install -g esy@0.6.4
+    displayName: 'npm install -g esy@0.6.4'
   - script: esy install
     displayName: 'esy install'
   - script: esy build
@@ -11,3 +11,13 @@ steps:
     displayName: 'esy @test install'
   - script: esy @test run
     displayName: 'esy @test run'
+  - script: esy @examples install
+    displayName: 'esy @examples install'
+  - script: esy @examples x HarfbuzzCli
+    displayName: 'esy @examples x HarfbuzzCli'
+  - script: esy @examples x FontQuery -family=Arial
+    displayName: 'esy @examples x FontQuery -family=Arial'
+  - script: esy @examples x SkiaCli
+    displayName: '@esy @examples x SkiaCli'
+  - script: esy @examples x SkiaCli.bc
+    displayName: '@esy @examples x SkiaCli.bc'
