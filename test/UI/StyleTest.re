@@ -6,8 +6,7 @@ open TestFramework;
 
 describe("Style API tests", ({test, _}) => {
   test("that a style record is created correctly", ({expect, _}) => {
-    let styles =
-      create(~style=[height(1), width(2)], ());
+    let styles = create(~style=[height(1), width(2)], ());
     expect.int(styles.height).toBe(1);
     expect.int(styles.width).toBe(2);
   });

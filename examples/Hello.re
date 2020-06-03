@@ -5,15 +5,9 @@ open Revery.UI.Components;
 
 module RepoLink = {
   let make = () => {
-    let activeStyle =
-      Style.[
-        color(Colors.blue),
-      ];
+    let activeStyle = Style.[color(Colors.blue)];
 
-    let inactiveStyle =
-      Style.[
-        color(Colors.lightBlue),
-      ];
+    let inactiveStyle = Style.[color(Colors.lightBlue)];
 
     <Link
       text="View on GitHub"

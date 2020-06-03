@@ -23,20 +23,11 @@ module Styles = {
     alignItems(`Center),
   ];
 
-  let text =
-    Style.[
-      color(Colors.white),
-    ];
+  let text = Style.[color(Colors.white)];
 
-  let activeStyle =
-    Style.[
-      color(Colors.blue),
-    ];
+  let activeStyle = Style.[color(Colors.blue)];
 
-  let inactiveStyle =
-    Style.[
-      color(Colors.lightBlue),
-    ];
+  let inactiveStyle = Style.[color(Colors.lightBlue)];
 };
 
 let filesToText = files =>

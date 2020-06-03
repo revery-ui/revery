@@ -12,10 +12,7 @@ let containerStyle =
     justifyContent(`Center),
   ];
 
-let textStyle =
-  Style.[
-    marginBottom(20),
-  ];
+let textStyle = Style.[marginBottom(20)];
 
 module DropdownExample = {
   let items: DropdownInt.items = [
@@ -30,7 +27,11 @@ module DropdownExample = {
     let%hook (selectedItem, setSelectedItem) =
       Hooks.state(List.nth(items, 0));
     <View style=containerStyle>
-      <Text style=textStyle fontSize=20. text={"Selected Item: " ++ selectedItem.label} />
+      <Text
+        style=textStyle
+        fontSize=20.
+        text={"Selected Item: " ++ selectedItem.label}
+      />
       <DropdownInt items onItemSelected={item => setSelectedItem(_ => item)} />
     </View>;
   };

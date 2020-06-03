@@ -30,9 +30,7 @@ module Check = {
       <Text
         text={getCheckboxText(first)}
         fontSize=20.
-        style=Style.[
-          marginBottom(10),
-        ]
+        style=Style.[marginBottom(10)]
       />
       <Checkbox
         checkedColor=Colors.green
@@ -45,9 +43,7 @@ module Check = {
           "Default state: " ++ getCheckboxText(initialCheckboxState.second)
         }
         fontSize=20.
-        style=Style.[
-          marginTop(10),
-        ]
+        style=Style.[marginTop(10)]
       />
     </View>;
   };

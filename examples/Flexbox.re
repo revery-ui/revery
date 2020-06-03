@@ -25,18 +25,11 @@ let childStyles =
   ];
 
 let defaultTextStyles =
-  Style.[
-    color(Colors.white),
-    backgroundColor(Colors.blue),
-  ];
+  Style.[color(Colors.white), backgroundColor(Colors.blue)];
 
 let parentColumnStyle = parentStyles(~direction=`Column);
 let headerStyle =
-  Style.[
-    marginTop(25),
-    marginBottom(25),
-    color(Colors.white),
-  ];
+  Style.[marginTop(25), marginBottom(25), color(Colors.white)];
 
 let horizontalStyles =
   <View>

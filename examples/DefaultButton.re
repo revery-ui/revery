@@ -18,11 +18,7 @@ module DefaultButtonWithCounter = {
         justifyContent(`Center),
       ];
 
-    let countStyle =
-      Style.[
-        margin(24),
-        color(Colors.black),
-      ];
+    let countStyle = Style.[margin(24), color(Colors.black)];
 
     let countStr = string_of_int(count);
 

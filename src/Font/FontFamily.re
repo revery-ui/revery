@@ -6,11 +6,7 @@ let fromFile =
     (
       ~variant:
          option(
-           (
-             ~fontWeight: FontWeight.t,
-             ~italicized: bool,
-             ~monospaced: bool,
-           ) =>
+           (~fontWeight: FontWeight.t, ~italicized: bool, ~monospaced: bool) =>
            string,
          )=?,
       default: string,

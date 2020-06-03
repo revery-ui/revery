@@ -27,10 +27,7 @@ let innerStyle =
     borderHorizontal(~color=Colors.black, ~width=3),
   ];
 
-let textStyle =
-  Style.[
-    color(Colors.black),
-  ];
+let textStyle = Style.[color(Colors.black)];
 
 let render = () =>
   <View style=defaultStyle>

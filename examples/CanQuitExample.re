@@ -33,9 +33,7 @@ module CanQuit = {
       <Text
         text={"Can quit: " ++ (canQuit ? "Yes" : "No")}
         fontSize=20.
-        style=Style.[
-          marginTop(10),
-        ]
+        style=Style.[marginTop(10)]
       />
     </View>;
   };

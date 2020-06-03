@@ -7,7 +7,7 @@ let fromFile:
     ~variant: (
                 ~fontWeight: FontWeight.t,
                 ~italicized: bool,
-                ~monospaced: bool,
+                ~monospaced: bool
               ) =>
               string
                 =?,
