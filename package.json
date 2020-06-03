@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@opam/ctypes": "0.15.1",
-    "@opam/dune": "2.5.0",
+    "@opam/dune": ">=1.6.0",
     "@opam/dune-configurator": "*",
     "@esy-ocaml/reason": "^3.6.0",
     "@opam/lru": "bryphe/lru:lru.opam#2708c70",
@@ -57,6 +57,9 @@
     "reason-native-crash-utils": "onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6",
     "revery-text-wrap": "revery-ui/revery-text-wrap#966383e",
     "@glennsl/timber": "^1.2.0"
+  },
+  "resolutions": {
+    "@opam/dune": "2.5.0"
   },
   "devDependencies": {
     "ocaml": "~4.10",
