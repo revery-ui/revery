@@ -72,6 +72,25 @@ This is [id] reference-style link.
 ###### H6
       "
     />
+    <Text text="Lists: " />
+    <markdown
+      markdown="
+- Unordered
+- List
+    - Multiple
+    - Levels
+
+1. Ordered
+2. List
+    1. Multiple
+    2. Levels
+
+- Unordered
+- List
+    1. Ordered
+    2. List
+      "
+    />
   </View>;
 
 let render = () => <example />;

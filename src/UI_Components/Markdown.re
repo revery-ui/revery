@@ -39,6 +39,11 @@ module Styles = {
       alignItems(`FlexStart),
     ];
   };
+
+  module List = {
+    let marker = [marginRight(6)];
+    let contents = [justifyContent(`FlexStart), alignItems(`FlexStart)];
+  };
 };
 
 type inlineAttrs =
@@ -60,6 +65,7 @@ let selectStyleFromKind = (kind: kind, styles) =>
   | _ => styles.paragraph
   };
 
+// Sourced from: http://zuga.net/articles/html-heading-elements/
 let fontSizeFromKind = (kind: kind, styles) =>
   switch (kind) {
   | `Heading(1) => styles.baseFontSize *. 2.
@@ -175,6 +181,32 @@ let rec _generateMarkdown = (element, styles) =>
       styles,
       {inline: [Bolded], kind: `Heading(h.level)},
     )
+  | List(blist) =>
+    <View>
+      {List.mapi(
+         (i, blocks) => {
+           let text =
+             switch (blist.kind) {
+             | Ordered(_, _) => string_of_int(i + 1) ++ "."
+             | Unordered(_) => "•"
+             };
+           <View style=Styles.inline>
+             <Text
+               text
+               style=Styles.List.marker
+               fontFamily={styles.fontFamily}
+             />
+             <View style=Styles.List.contents>
+               {List.map(block => _generateMarkdown(block, styles), blocks)
+                |> React.listToElement}
+             </View>
+           </View>;
+         },
+         blist.blocks,
+       )
+       |> React.listToElement}
+    </View>
+
   | _ => <View />
   };
 
