@@ -21,6 +21,7 @@ let make =
     activeStyle
     onClick
     fontSize
+    fontFamily
     fontWeight
     italicized
     monospaced
