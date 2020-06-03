@@ -55,7 +55,6 @@
     "fetch-native-lwt": "0.1.0-alpha.5",
     "flex": "1.2.3",
     "reason-native-crash-utils": "onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6",
-    "reason-sdl2": "^2.10.3032",
     "rebez": "jchavarri/rebez#03fa3b7",
     "rench": "^1.9.1",
     "reperf": "^1.4.0",

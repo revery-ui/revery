@@ -109,13 +109,15 @@ let fromUrl = (url: string) => {
 
           Log.info("Loading from path: " ++ storedImagePath);
 
-          let data = Skia.Data.makeFromFileName(storedImagePath);
+          let maybeData = Skia.Data.makeFromFileName(storedImagePath);
           Log.info("Got data.");
 
-          let skiaImage = Skia.Image.makeFromEncoded(data, None);
-          Log.info("Got image.");
+          let maybeSkiaImage =
+            Option.bind(maybeData, data =>
+              Skia.Image.makeFromEncoded(data, None)
+            );
 
-          Hashtbl.replace(urlContextCache, url, Image(skiaImage));
+          Hashtbl.replace(urlContextCache, url, Image(maybeSkiaImage));
 
           /* Until we offer options for caching, lets delete the image-file */
           switch (Bos.OS.File.delete(~must_exist=true, filePath)) {
@@ -124,7 +126,7 @@ let fromUrl = (url: string) => {
             Log.error("Error deleting temporary image" ++ error)
           };
 
-          skiaImage;
+          maybeSkiaImage;
         | Error(`Msg(error)) =>
           Hashtbl.remove(urlContextCache, url);
           Log.error("Error writing remote image to file: " ++ error);
@@ -153,16 +155,15 @@ let fromAssetPath = (imagePath: string) => {
   | None =>
     Log.info("Loading from path: " ++ imagePath);
 
-    let data = Skia.Data.makeFromFileName(imagePath);
+    let maybeData = Skia.Data.makeFromFileName(imagePath);
 
     Log.info("Got data.");
 
-    let img = Skia.Image.makeFromEncoded(data, None);
+    let maybeImage =
+      Option.bind(maybeData, data => Skia.Image.makeFromEncoded(data, None));
 
-    Log.info("Got image.");
+    Hashtbl.replace(contextCache, imagePath, maybeImage);
 
-    Hashtbl.replace(contextCache, imagePath, img);
-
-    img;
+    maybeImage;
   };
 };
