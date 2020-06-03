@@ -55,11 +55,12 @@ This is [id] reference-style link.
       "
     />
     <Text text="Blockquotes: " />
-    <markdown
-      markdown="
-> Cras dignissim leo vel mi iaculis accumsan. In hac habitasse platea dictumst. Aliquam erat volutpat. Nunc eu diam risus. Nulla elementum feugiat urna, in porttitor dui cursus vel. Integer congue lobortis nulla hendrerit viverra. Cras egestas velit dolor. Morbi accumsan risus nulla, id ultricies turpis aliquet sed. Suspendisse vulputate turpis a ex ultricies ullamcorper.
-"
-    />
+    <markdown markdown="
+> Level 1
+>> Level 2
+>>> Level 3
+>>>> Level 4
+" />
     <Text text="Headings: " />
     <markdown
       markdown="

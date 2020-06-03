@@ -29,15 +29,15 @@ module Styles = {
   let inline = [flexDirection(`Row)];
   let container = [justifyContent(`FlexStart), alignItems(`FlexStart)];
   module Blockquote = {
-    let container = [flexDirection(`Row)];
-    let bar = [
-      width(4),
-      backgroundColor(Colors.grey),
-      position(`Absolute),
-      top(0),
-      bottom(0),
+    let container = [
+      flexDirection(`Row),
+      borderLeft(~width=4, ~color=Colors.grey),
     ];
-    let contents = [marginLeft(12)];
+    let contents = [
+      paddingLeft(8),
+      justifyContent(`FlexStart),
+      alignItems(`FlexStart),
+    ];
   };
 };
 
@@ -86,8 +86,6 @@ let generateText = (text, styles, attrs) => {
   let fontWeight = {
     isBold(attrs) ? Weight.Bold : Weight.Normal;
   };
-
-  Printf.printf("__%s__\n", text);
 
   switch (attrs.kind) {
   | `Link(href) =>
@@ -140,7 +138,12 @@ let rec _generateInline = (inline, styles, attrs) => {
       styles,
       {...attrs, kind: `Link(l.def.destination)},
     )
-  | Code(c) => generateText(c.content, styles, {...attrs, inline: [Monospaced, ...attrs.inline]})
+  | Code(c) =>
+    generateText(
+      c.content,
+      styles,
+      {...attrs, inline: [Monospaced, ...attrs.inline]},
+    )
   | Concat(c) =>
     c
     |> List.map(il => _generateInline(il, styles, attrs))
@@ -161,7 +164,6 @@ let rec _generateMarkdown = (element, styles) =>
     generateInline(Text(html), styles, {inline: [], kind: `Paragraph})
   | Blockquote(blocks) =>
     <View style=Styles.Blockquote.container>
-      <View style=Styles.Blockquote.bar />
       <View style=Styles.Blockquote.contents>
         {List.map(block => _generateMarkdown(block, styles), blocks)
          |> React.listToElement}
