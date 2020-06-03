@@ -11,9 +11,6 @@
       "install": [
           "esy-installer Revery.install",
           "esy-installer ReveryTest.install"
-      ],
-	  "devDependencies": {
-	    "ocaml": ">=4.6.0 <4.9.0"
-	  }
+      ]
   }
 }

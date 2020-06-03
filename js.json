@@ -15,9 +15,6 @@
       "@opam/js_of_ocaml-lwt": "*",
       "http-server": "*",
       "@opam/merlin-extend": "0.4"
-    },
-    "devDependencies": {
-      "ocaml": ">=4.6.0 <4.9.0"
     }
   }
 }

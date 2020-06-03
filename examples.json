@@ -8,9 +8,6 @@
           "esy-installer harfbuzz.install",
           "esy-installer Revery.install",
           "esy-installer ReveryExamples.install"
-      ],
-	  "devDependencies": {
-	    "ocaml": ">=4.6.0 <4.9.0"
-	  }
+      ]
   }
 }
