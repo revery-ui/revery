@@ -18,13 +18,13 @@ let getTexture = (imagePath: string) => {
     }
   | None =>
     Log.info("Loading from path: " ++ imagePath);
-    //let data = Skia.Data.makeFromFileName(imagePath);
-    let data = Skia.Data.makeFromFileName(imagePath);
-    Log.info("Got data.");
-    let img = Skia.Image.makeFromEncoded(data, None);
-    Log.info("Got image.");
 
-    Hashtbl.replace(_cache, imagePath, img);
-    img;
+    let maybeData = imagePath |> Skia.Data.makeFromFileName;
+
+    let maybeImage =
+      Option.bind(maybeData, data => Skia.Image.makeFromEncoded(data, None));
+
+    Hashtbl.replace(_cache, imagePath, maybeImage);
+    maybeImage;
   };
 };

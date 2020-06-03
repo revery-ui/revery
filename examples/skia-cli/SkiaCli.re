@@ -108,13 +108,27 @@ let draw = canvas => {
     );
   };
 
+  // Validate loading a non-existent file returns None, but doesn't crash
+  let nonExistentData = Data.makeFromFileName("file-that-does-not-exist.png");
+  switch (nonExistentData) {
+  | Some(_) => failwith("Somehow we loaded a non-existent file...")
+  | None => print_endline("Got None for file that doesn't exist.")
+  };
+
   // Load and draw image
   let imgPath = Sys.getcwd() ++ "/assets/uv.png";
   print_endline("Loading image: " ++ imgPath);
-  let imgData = Data.makeFromFileName(imgPath);
-  let strLen = String.length(Data.makeString(imgData));
-  print_endline("Bytes loaded: " ++ string_of_int(strLen));
-  let maybeImg = Image.makeFromEncoded(imgData, None);
+  let maybeImgData = Data.makeFromFileName(imgPath);
+  let maybeImg =
+    switch (maybeImgData) {
+    | Some(imgData) =>
+      let strLen = String.length(Data.makeString(imgData));
+      print_endline("Bytes loaded: " ++ string_of_int(strLen));
+      let ret = Image.makeFromEncoded(imgData, None);
+      print_endline("Got image!");
+      ret;
+    | None => failwith("Unable to load img: " ++ imgPath)
+    };
 
   switch (maybeImg) {
   | None => failwith("Unable to load image: uv.png")
