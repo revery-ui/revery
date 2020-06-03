@@ -599,6 +599,7 @@ module Canvas = {
   let drawPaint = SkiaWrapped.Canvas.drawPaint;
   let drawRect = SkiaWrapped.Canvas.drawRect;
   let drawRectLtwh = SkiaWrapped.Canvas.drawRectLtwh;
+  let drawRoundRect = SkiaWrapped.Canvas.drawRoundRect;
   let drawRRect = SkiaWrapped.Canvas.drawRRect;
   let drawOval = SkiaWrapped.Canvas.drawOval;
   let drawPath = SkiaWrapped.Canvas.drawPath;

@@ -716,6 +716,11 @@ module M = (F: FOREIGN) => {
         @-> Paint.t
         @-> returning(void),
       );
+    let drawRoundRect =
+      foreign(
+        "sk_canvas_draw_round_rect",
+        t @-> Rect.t @-> float @-> float @-> Paint.t @-> returning(void),
+      );
     let drawOval =
       foreign(
         "sk_canvas_draw_oval",
