@@ -1,5 +1,6 @@
 open Revery;
 open Revery.UI;
+open Revery.UI.Components;
 
 let containerStyle =
   Style.[
@@ -15,45 +16,6 @@ let containerStyle =
 
 let outerBox =
   Style.[width(450), height(450), backgroundColor(Colors.black)];
-
-let example =
-  SVG.Model.{
-    defs: [],
-    elements: [
-      Geometry({
-        attributes: [`fill(`color(Colors.red |> Color.toSkia))],
-        kind: Circle({cx: `user(10.), cy: `user(10.), r: `user(30.)}),
-      }),
-      Geometry({
-        attributes: [`stroke(`color(Colors.green |> Color.toSkia))],
-        kind:
-          Line({
-            x1: `user(0.),
-            y1: `user(0.),
-            x2: `user(30.),
-            y2: `user(0.),
-          }),
-      }),
-      Geometry({
-        attributes: [`stroke(`color(Colors.blue |> Color.toSkia))],
-        kind:
-          Line({
-            x1: `user(0.),
-            y1: `user(0.),
-            x2: `user(0.),
-            y2: `user(30.),
-          }),
-      }),
-    ],
-    viewport: {
-      origin: {
-        x: 10.,
-        y: 50.,
-      },
-      width: 200.,
-      height: 100.,
-    },
-  };
 
 let example2 =
   {|
@@ -102,10 +64,5 @@ let example2 =
 
 let render = () =>
   <View style=containerStyle>
-    <Canvas
-      style=outerBox
-      render={canvasContext => {
-        SVG.render(~width=100., ~height=100., canvasContext, example2)
-      }}
-    />
+    <SVGString style=outerBox contents=example2 />
   </View>;

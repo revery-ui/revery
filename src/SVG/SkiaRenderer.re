@@ -224,23 +224,24 @@ let rec element = context =>
   | Geometry(shape) => geometry(context, shape)
   | Text(_) => ();
 
-let render = (~width, ~height, canvas, document: t) => {
-  let context = {
-    defs: document.defs,
-    font: {
-      family: "",
-      size: 10.,
-      xHeight: 10.,
-      chWidth: 10.,
-    },
-    viewport: document.viewport,
-    container: {
-      width,
-      height,
-    },
-    rootFontSize: 10.,
-    canvas,
-  };
+let render = (~width, ~height, document, canvas) => {
+  let context =
+    Model.{
+      defs: document.defs,
+      font: {
+        family: "",
+        size: 10.,
+        xHeight: 10.,
+        chWidth: 10.,
+      },
+      viewport: document.viewport,
+      container: {
+        width,
+        height,
+      },
+      rootFontSize: 10.,
+      canvas,
+    };
 
   element(context, Group(document.elements));
 };
