@@ -298,6 +298,30 @@ module Path: {
   let rCubicTo: (t, float, float, float, float, float, float) => unit;
   let quadTo: (t, float, float, float, float) => unit;
   let rQuadTo: (t, float, float, float, float) => unit;
+  let arcTo:
+    (
+      t,
+      float,
+      float,
+      float,
+      SkiaWrapped.Path.arcSize,
+      SkiaWrapped.Path.pathDirection,
+      float,
+      float
+    ) =>
+    unit;
+  let rArcTo:
+    (
+      t,
+      float,
+      float,
+      float,
+      SkiaWrapped.Path.arcSize,
+      SkiaWrapped.Path.pathDirection,
+      float,
+      float
+    ) =>
+    unit;
   let close: t => unit;
 };
 

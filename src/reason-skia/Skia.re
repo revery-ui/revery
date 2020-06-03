@@ -496,6 +496,8 @@ module Path = {
   let rCubicTo = SkiaWrapped.Path.rCubicTo;
   let quadTo = SkiaWrapped.Path.quadTo;
   let rQuadTo = SkiaWrapped.Path.rQuadTo;
+  let arcTo = SkiaWrapped.Path.arcTo;
+  let rArcTo = SkiaWrapped.Path.rArcTo;
   let close = SkiaWrapped.Path.close;
 };
 

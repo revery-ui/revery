@@ -503,6 +503,9 @@ module M = (F: FOREIGN) => {
     let allocate = foreign("sk_path_new", void @-> returning(t));
     let delete = foreign("sk_path_delete", t @-> returning(void));
 
+    type arcSize = SkiaTypes.Path.arcSize;
+    let arcSize = SkiaTypes.Path.arcSize;
+
     type pathDirection = SkiaTypes.Path.pathDirection;
     let pathDirection = SkiaTypes.Path.pathDirection;
 
@@ -557,6 +560,32 @@ module M = (F: FOREIGN) => {
       foreign(
         "sk_path_rquad_to",
         t @-> float @-> float @-> float @-> float @-> returning(void),
+      );
+    let arcTo =
+      foreign(
+        "sk_path_arc_to",
+        t
+        @-> float
+        @-> float
+        @-> float
+        @-> arcSize
+        @-> pathDirection
+        @-> float
+        @-> float
+        @-> returning(void),
+      );
+    let rArcTo =
+      foreign(
+        "sk_path_rarc_to",
+        t
+        @-> float
+        @-> float
+        @-> float
+        @-> arcSize
+        @-> pathDirection
+        @-> float
+        @-> float
+        @-> returning(void),
       );
     let close = foreign("sk_path_close", t @-> returning(void));
   };
