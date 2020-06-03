@@ -489,8 +489,13 @@ module Path = {
     SkiaWrapped.Path.addRoundRect(path, rect, rx, ry, direction);
 
   let moveTo = SkiaWrapped.Path.moveTo;
+  let rMoveTo = SkiaWrapped.Path.rMoveTo;
   let lineTo = SkiaWrapped.Path.lineTo;
+  let rLineTo = SkiaWrapped.Path.rLineTo;
   let cubicTo = SkiaWrapped.Path.cubicTo;
+  let rCubicTo = SkiaWrapped.Path.rCubicTo;
+  let quadTo = SkiaWrapped.Path.quadTo;
+  let rQuadTo = SkiaWrapped.Path.rQuadTo;
   let close = SkiaWrapped.Path.close;
 };
 

@@ -291,8 +291,13 @@ module Path: {
     unit;
 
   let moveTo: (t, float, float) => unit;
+  let rMoveTo: (t, float, float) => unit;
   let lineTo: (t, float, float) => unit;
+  let rLineTo: (t, float, float) => unit;
   let cubicTo: (t, float, float, float, float, float, float) => unit;
+  let rCubicTo: (t, float, float, float, float, float, float) => unit;
+  let quadTo: (t, float, float, float, float) => unit;
+  let rQuadTo: (t, float, float, float, float) => unit;
   let close: t => unit;
 };
 
