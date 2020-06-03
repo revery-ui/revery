@@ -3,13 +3,16 @@ open Revery_UI;
 open Revery_UI_Primitives;
 open Revery_Font;
 
+module LinkComponent = Link;
+
 open Omd;
 
 module Log = (val Log.withNamespace("Revery.Components.Markdown"));
 
 type style = {
   paragraph: list(Style.textStyleProps),
-  link: list(Style.textStyleProps),
+  activeLink: list(Style.textStyleProps),
+  inactiveLink: list(Style.textStyleProps),
   h1: list(Style.textStyleProps),
   h2: list(Style.textStyleProps),
   h3: list(Style.textStyleProps),
@@ -24,17 +27,27 @@ module Styles = {
   open Style;
   let inline = [flexDirection(`Row)];
   let container = [justifyContent(`FlexStart), alignItems(`FlexStart)];
+  module Blockquote = {
+    let container = [flexDirection(`Row)];
+    let bar = [
+      width(4),
+      backgroundColor(Colors.grey),
+      position(`Absolute),
+      top(0),
+      bottom(0),
+    ];
+    let contents = [marginLeft(12)];
+  };
 };
 
 type inlineAttrs =
   | Italicized
   | Bolded;
 
-type kind = [ | `Paragraph | `Heading(int)];
+type kind = [ | `Paragraph | `Heading(int) | `Link(string)];
 
 let selectStyleFromKind = (kind: kind, styles) =>
   switch (kind) {
-  | `Paragraph => styles.paragraph
   | `Heading(1) => styles.h1
   | `Heading(2) => styles.h2
   | `Heading(3) => styles.h3
@@ -42,6 +55,7 @@ let selectStyleFromKind = (kind: kind, styles) =>
   | `Heading(5) => styles.h5
   | `Heading(6)
   | `Heading(_) => styles.h6
+  | _ => styles.paragraph
   };
 
 let fontSizeFromKind = (kind: kind, styles) =>
@@ -66,18 +80,36 @@ let isItalicized = attrs => List.mem(Italicized, attrs.inline);
 
 let generateText = (text, styles, attrs) => {
   let fontSize = fontSizeFromKind(attrs.kind, styles);
+  let fontWeight = {
+    isBold(attrs) ? Weight.Bold : Weight.Normal;
+  };
 
-  <Text
-    text
-    fontSize
-    fontFamily={styles.fontFamily}
-    fontWeight={isBold(attrs) ? Weight.Bold : Weight.Normal}
-    italicized={isItalicized(attrs)}
-  />;
+  switch (attrs.kind) {
+  | `Link(href) =>
+    <LinkComponent
+      text
+      activeStyle={styles.activeLink}
+      inactiveStyle={styles.inactiveLink}
+      fontSize
+      fontFamily={styles.fontFamily}
+      fontWeight
+      italicized={isItalicized(attrs)}
+      href
+    />
+  | _ =>
+    <Text
+      text
+      fontSize
+      fontFamily={styles.fontFamily}
+      fontWeight
+      italicized={isItalicized(attrs)}
+    />
+  };
 };
 
 let rec _generateInline = (inline, styles, attrs) => {
   switch (inline) {
+  | Html(t)
   | Text(t) => generateText(t, styles, attrs)
   | Emph(e) =>
     _generateInline(
@@ -88,7 +120,14 @@ let rec _generateInline = (inline, styles, attrs) => {
       | Underscore => {...attrs, inline: [Italicized, ...attrs.inline]}
       },
     )
-  | Hard_break => generateText("\n", styles, attrs)
+  | Soft_break => generateText("\n", styles, attrs)
+  | Hard_break => generateText("\n\n", styles, attrs)
+  | Link(l) =>
+    _generateInline(
+      l.def.label,
+      styles,
+      {...attrs, kind: `Link(l.def.destination)},
+    )
   | Concat(c) =>
     c
     |> List.map(il => _generateInline(il, styles, attrs))
@@ -100,15 +139,34 @@ let rec _generateInline = (inline, styles, attrs) => {
 let generateInline = (inline, styles, attrs) =>
   <Row> {_generateInline(inline, styles, attrs)} </Row>;
 
-let _generateMarkdown = (element, styles) =>
+let rec _generateMarkdown = (element, styles) =>
   switch (element) {
   | Paragraph(p) => generateInline(p, styles, {inline: [], kind: `Paragraph})
+  // We don't support HTML rendering as of right now, so we'll just render it
+  // as text
+  | Html_block(html) =>
+    generateInline(Text(html), styles, {inline: [], kind: `Paragraph})
+  | Blockquote(blocks) =>
+    <View style=Styles.Blockquote.container>
+      <View style=Styles.Blockquote.bar />
+      <View style=Styles.Blockquote.contents>
+        {List.map(block => _generateMarkdown(block, styles), blocks)
+         |> React.listToElement}
+      </View>
+    </View>
   | Heading(h) =>
     generateInline(
       h.text,
       styles,
       {inline: [Bolded], kind: `Heading(h.level)},
     )
+  | Link_def(a) =>
+    <LinkComponent
+      href={a.destination}
+      text={a.label}
+      activeStyle={styles.activeLink}
+      inactiveStyle={styles.inactiveLink}
+    />
   | _ => <View />
   };
 
@@ -124,7 +182,8 @@ let make =
       ~fontFamily=Family.default,
       ~baseFontSize=14.0,
       ~paragraphStyle=Style.emptyTextStyle,
-      ~linkStyle=Style.emptyTextStyle,
+      ~activeLinkStyle=Style.emptyTextStyle,
+      ~inactiveLinkStyle=Style.emptyTextStyle,
       ~h1Style=Style.emptyTextStyle,
       ~h2Style=Style.emptyTextStyle,
       ~h3Style=Style.emptyTextStyle,
@@ -138,7 +197,8 @@ let make =
        mdText,
        {
          paragraph: paragraphStyle,
-         link: linkStyle,
+         activeLink: activeLinkStyle,
+         inactiveLink: inactiveLinkStyle,
          h1: h1Style,
          h2: h2Style,
          h3: h3Style,
