@@ -48,6 +48,10 @@ Normal **Bold** _Italicized_
 [I'm an inline-style link with **BOLD**](https://www.google.com)
 
 [I'm an inline-style link with __Italics__](https://www.google.com)
+
+This is [id] reference-style link.
+
+[id]: https://google.com/
       "
     />
     <Text text="Blockquotes: " />

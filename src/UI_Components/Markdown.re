@@ -122,6 +122,12 @@ let rec _generateInline = (inline, styles, attrs) => {
     )
   | Soft_break => generateText("\n", styles, attrs)
   | Hard_break => generateText("\n\n", styles, attrs)
+  | Ref(r) =>
+    _generateInline(
+      r.label,
+      styles,
+      {...attrs, kind: `Link(r.def.destination)},
+    )
   | Link(l) =>
     _generateInline(
       l.def.label,
@@ -160,13 +166,6 @@ let rec _generateMarkdown = (element, styles) =>
       styles,
       {inline: [Bolded], kind: `Heading(h.level)},
     )
-  | Link_def(a) =>
-    <LinkComponent
-      href={a.destination}
-      text={a.label}
-      activeStyle={styles.activeLink}
-      inactiveStyle={styles.inactiveLink}
-    />
   | _ => <View />
   };
 
@@ -191,7 +190,7 @@ let make =
       ~h5Style=Style.emptyTextStyle,
       ~h6Style=Style.emptyTextStyle,
       (),
-    ) =>
+    ) => {
   <View style=Styles.container>
     {generateMarkdown(
        mdText,
@@ -210,3 +209,4 @@ let make =
        },
      )}
   </View>;
+};
