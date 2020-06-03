@@ -37,6 +37,14 @@ class imageNode (imagePath: string) = {
     let path = Skia.Path.make();
 
     if (int_of_float(_borderRadius) !== 0) {
+      /* Skia.Path.addCircle( */
+      /*   path, */
+      /*   float_of_int(dimensions.width / 2), */
+      /*   float_of_int(dimensions.height / 2), */
+      /*   ~radius=_borderRadius, */
+      /*   (), */
+      /* ); */
+
       let rect =
         Skia.Rect.makeLtrb(
           0.,
@@ -44,13 +52,6 @@ class imageNode (imagePath: string) = {
           float_of_int(dimensions.width),
           float_of_int(dimensions.height),
         );
-      /* Skia.Path.addCircle( */
-      /*   path, */
-      /*   float_of_int(dimensions.width / 2), */
-      /*   float_of_int(dimensions.height / 2), */
-      /*   float_of_int(dimensions.width / 2), */
-      /*   Clockwise, */
-      /* ); */
 
       Skia.Path.addRoundRect(path, rect, _borderRadius, _borderRadius, ());
       path |> Draw.CanvasContext.clipPath(canvas, ~antiAlias=true);

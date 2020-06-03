@@ -45,6 +45,7 @@ module Logo = {
         <Image
           src="outrun-logo.png"
           style=Style.[
+            borderRadius(12.),
             width(512),
             height(256),
             transform([
