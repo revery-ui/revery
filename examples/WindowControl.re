@@ -15,12 +15,7 @@ module Styles = {
     alignItems(`Center),
   ];
 
-  let text =
-    Style.[
-      color(Colors.white),
-      fontFamily("Roboto-Regular.ttf"),
-      fontSize(14.),
-    ];
+  let text = Style.[color(Colors.white)];
 };
 
 let winControl = (~window as w, ()) =>

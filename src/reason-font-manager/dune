@@ -1,0 +1,15 @@
+(library
+ (name FontManager)
+ (public_name font-manager)
+ (library_flags
+  (:include flags.sexp))
+ (c_flags (:include c_flags.sexp))
+ (cxx_flags (:include cxx_flags.sexp))
+ (cxx_names FontManager FontManagerWindows FontManagerMac FontManagerLinux))
+
+(rule
+ (targets c_flags.sexp cxx_flags.sexp flags.sexp)
+ (deps
+  (:discover config/discover.exe))
+ (action
+  (run %{discover})))

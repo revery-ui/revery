@@ -39,19 +39,9 @@ module NativeFileExamples = {
         }
       );
 
-    let optionStyle =
-      Style.[
-        color(Colors.white),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(14.),
-      ];
+    let optionStyle = Style.[color(Colors.white)];
 
-    let titleStyle =
-      Style.[
-        color(Colors.white),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(20.),
-      ];
+    let titleStyle = Style.[color(Colors.white)];
 
     let containerStyle =
       Style.[
@@ -65,7 +55,7 @@ module NativeFileExamples = {
       ];
 
     <View style=containerStyle>
-      <Text style=titleStyle text="Icon Progress Bar" />
+      <Text style=titleStyle fontSize=20. text="Icon Progress Bar" />
       <Slider
         onValueChanged={x => setProgress(Determinate(x))}
         maximumValue=1.0

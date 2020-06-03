@@ -26,8 +26,6 @@ let textStyle =
   Style.[
     color(Colors.white),
     width(100),
-    fontFamily("Roboto-Regular.ttf"),
-    fontSize(16.),
     margin(14),
     textWrap(TextWrapping.NoWrap),
   ];
@@ -89,7 +87,7 @@ module Example = {
             isPassword
           />
           <View style=controlsStyle>
-            <Text style=textStyle text="Obscure Input" />
+            <Text fontSize=16. style=textStyle text="Obscure Input" />
             <Checkbox
               checkedColor=Colors.green
               onChange={() =>

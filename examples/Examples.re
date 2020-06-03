@@ -187,13 +187,7 @@ module ExampleButton = {
       ];
 
     let textColor = isActive ? Colors.white : Colors.grey;
-    let textHeaderStyle =
-      Style.[
-        color(textColor),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(14.),
-        margin(16),
-      ];
+    let textHeaderStyle = Style.[color(textColor), margin(16)];
 
     <Opacity opacity=buttonOpacity>
       <Clickable style=wrapperStyle onClick>
@@ -277,14 +271,20 @@ let init = app => {
 
   let initialExample = ref("Animation");
   let decorated = ref(true);
+  let forceScaleFactor = ref(None);
   Arg.parse(
     [
       ("--trace", Unit(() => Timber.App.setLevel(Timber.Level.trace)), ""),
       ("--no-decoration", Unit(() => decorated := false), ""),
       ("--example", String(name => initialExample := name), ""),
+      (
+        "--force-device-scale-factor",
+        Float(scaleFactor => forceScaleFactor := Some(scaleFactor)),
+        "",
+      ),
     ],
     _ => (),
-    "There is only --trace, --example, and --no-decoration",
+    "There is only --trace, --example, --no-decoration, and --force-device-scale-factor",
   );
   let initialExample = initialExample^;
 
@@ -306,6 +306,7 @@ let init = app => {
           ~titlebarStyle=Transparent,
           ~icon=Some("revery-icon.png"),
           ~decorated=decorated^,
+          ~forceScaleFactor=forceScaleFactor^,
           (),
         ),
       app,

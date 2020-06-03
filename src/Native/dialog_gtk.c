@@ -38,7 +38,7 @@ void revery_alert_gtk(void *pWin, const char *szMessage) {
 
 struct FileChooserOptions {
     const char *startDir;
-    char **fileTypes;
+    const char **fileTypes;
     int fileTypesSize;
     int allowMultiple;
     int canChooseFiles;
@@ -69,7 +69,7 @@ void activate_filechooser(GtkApplication *app, struct FileChooserOptions *option
         char *name = "";
         GtkFileFilter *filter = gtk_file_filter_new();
         for (int i = 0; i < options->fileTypesSize; i++) {
-            char *fileType = options->fileTypes[i];
+            const char *fileType = options->fileTypes[i];
             char *pattern = malloc(strlen(wildcard) + strlen(fileType) + 1);
             strcpy(pattern, wildcard);
             strcat(pattern, fileType);
@@ -97,7 +97,7 @@ void activate_filechooser(GtkApplication *app, struct FileChooserOptions *option
     gtk_widget_destroy(dialog);
 }
 
-const char **revery_open_files_gtk(const char *startDir, char *fileTypes[],
+const char **revery_open_files_gtk(const char *startDir, const char *fileTypes[],
                                    int fileTypesSize, int allowMultiple,
                                    int canChooseFiles, int canChooseDirectories,
                                    int showHidden, const char *buttonText,
