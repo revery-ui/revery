@@ -20,11 +20,32 @@ let outerBox =
 let example2 =
   {|
     <svg>
+      <g id="grid">
+        <!-- Vertical -->
+        <line x1="50" y1="0" x2="50" y2="500" stroke="#888" />
+        <line x1="100" y1="0" x2="100" y2="500" stroke="#888" />
+        <line x1="150" y1="0" x2="150" y2="500" stroke="#888" />
+        <line x1="200" y1="0" x2="200" y2="500" stroke="#888" />
+        <line x1="250" y1="0" x2="250" y2="500" stroke="#888" />
+        <line x1="300" y1="0" x2="300" y2="500" stroke="#888" />
+        <line x1="350" y1="0" x2="350" y2="500" stroke="#888" />
+        <line x1="400" y1="0" x2="400" y2="500" stroke="#888" />
+        <line x1="450" y1="0" x2="450" y2="500" stroke="#888" />
+
+        <!-- Horizontal -->
+        <line x1="0" y1="50" x2="500" y2="50" stroke="#555" />
+        <line x1="0" y1="100" x2="500" y2="100" stroke="#555" />
+        <line x1="0" y1="150" x2="500" y2="150" stroke="#555" />
+        <line x1="0" y1="200" x2="500" y2="200" stroke="#555" />
+        <line x1="0" y1="250" x2="500" y2="250" stroke="#555" />
+        <line x1="0" y1="300" x2="500" y2="300" stroke="#555" />
+        <line x1="0" y1="350" x2="500" y2="350" stroke="#555" />
+        <line x1="0" y1="400" x2="500" y2="400" stroke="#555" />
+        <line x1="0" y1="450" x2="500" y2="450" stroke="#555" />
+      </g>
       <g>
         <rect x="10" y="10" rx="10" ry="5" width="50" height="50" fill="#00f" stroke="#fff" />
         <x circle cx="10" cy="10" r="30" fill="#f00" />
-        <x line x1="0" y1="0" x2="30" y2="0" stroke="#0f0" />
-        <x line x1="0" y1="0" x2="0" y2="30" stroke="#0f0" />
         <x ellipse cx="100" cy="50" rx="100" ry="50" fill="#fff" />
       </g>
       <g>

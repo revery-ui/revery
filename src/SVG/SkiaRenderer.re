@@ -104,26 +104,6 @@ let rect = (~x, ~y, ~width, ~height, ~rx, ~ry, ~paint, ~context) => {
 };
 
 let geometry = (context, shape: Geometry.t) => {
-  let scaleX = float(context.container.width) /. context.viewport.width;
-  let scaleY = float(context.container.height) /. context.viewport.height;
-  let translateX = context.viewport.origin.x *. scaleX;
-  let translateY = context.viewport.origin.y *. scaleY;
-
-  let transform = Skia.Matrix.make();
-  Skia.Matrix.setAll(
-    transform,
-    scaleX,
-    0.,
-    translateX,
-    0.,
-    scaleY,
-    translateY,
-    0.,
-    0.,
-    1.,
-  );
-  CanvasContext.concat(transform, context.canvas);
-
   let fill =
     List.find_map(
       fun
@@ -210,6 +190,26 @@ let rec element = context =>
   | Text(_) => ();
 
 let render = (~width, ~height, document: Model.t, canvas) => {
+  let scaleX = float(width) /. document.viewport.width;
+  let scaleY = float(height) /. document.viewport.height;
+  let translateX = document.viewport.origin.x *. scaleX;
+  let translateY = document.viewport.origin.y *. scaleY;
+
+  let transform = Skia.Matrix.make();
+  Skia.Matrix.setAll(
+    transform,
+    scaleX,
+    0.,
+    translateX,
+    0.,
+    scaleY,
+    translateY,
+    0.,
+    0.,
+    1.,
+  );
+  CanvasContext.concat(transform, canvas);
+
   let context =
     RenderContext.{
       defs: document.defs,
