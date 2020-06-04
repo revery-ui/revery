@@ -489,8 +489,15 @@ module Path = {
     SkiaWrapped.Path.addRoundRect(path, rect, rx, ry, direction);
 
   let moveTo = SkiaWrapped.Path.moveTo;
+  let rMoveTo = SkiaWrapped.Path.rMoveTo;
   let lineTo = SkiaWrapped.Path.lineTo;
+  let rLineTo = SkiaWrapped.Path.rLineTo;
   let cubicTo = SkiaWrapped.Path.cubicTo;
+  let rCubicTo = SkiaWrapped.Path.rCubicTo;
+  let quadTo = SkiaWrapped.Path.quadTo;
+  let rQuadTo = SkiaWrapped.Path.rQuadTo;
+  let arcTo = SkiaWrapped.Path.arcTo;
+  let rArcTo = SkiaWrapped.Path.rArcTo;
   let close = SkiaWrapped.Path.close;
 };
 
@@ -594,6 +601,7 @@ module Canvas = {
   let drawPaint = SkiaWrapped.Canvas.drawPaint;
   let drawRect = SkiaWrapped.Canvas.drawRect;
   let drawRectLtwh = SkiaWrapped.Canvas.drawRectLtwh;
+  let drawRoundRect = SkiaWrapped.Canvas.drawRoundRect;
   let drawRRect = SkiaWrapped.Canvas.drawRRect;
   let drawOval = SkiaWrapped.Canvas.drawOval;
   let drawPath = SkiaWrapped.Canvas.drawPath;

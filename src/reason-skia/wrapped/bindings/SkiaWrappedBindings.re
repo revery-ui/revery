@@ -503,6 +503,9 @@ module M = (F: FOREIGN) => {
     let allocate = foreign("sk_path_new", void @-> returning(t));
     let delete = foreign("sk_path_delete", t @-> returning(void));
 
+    type arcSize = SkiaTypes.Path.arcSize;
+    let arcSize = SkiaTypes.Path.arcSize;
+
     type pathDirection = SkiaTypes.Path.pathDirection;
     let pathDirection = SkiaTypes.Path.pathDirection;
 
@@ -518,8 +521,12 @@ module M = (F: FOREIGN) => {
       );
     let moveTo =
       foreign("sk_path_move_to", t @-> float @-> float @-> returning(void));
+    let rMoveTo =
+      foreign("sk_path_rmove_to", t @-> float @-> float @-> returning(void));
     let lineTo =
       foreign("sk_path_line_to", t @-> float @-> float @-> returning(void));
+    let rLineTo =
+      foreign("sk_path_rline_to", t @-> float @-> float @-> returning(void));
     let cubicTo =
       foreign(
         "sk_path_cubic_to",
@@ -528,6 +535,54 @@ module M = (F: FOREIGN) => {
         @-> float
         @-> float
         @-> float
+        @-> float
+        @-> float
+        @-> returning(void),
+      );
+    let rCubicTo =
+      foreign(
+        "sk_path_rcubic_to",
+        t
+        @-> float
+        @-> float
+        @-> float
+        @-> float
+        @-> float
+        @-> float
+        @-> returning(void),
+      );
+    let quadTo =
+      foreign(
+        "sk_path_quad_to",
+        t @-> float @-> float @-> float @-> float @-> returning(void),
+      );
+    let rQuadTo =
+      foreign(
+        "sk_path_rquad_to",
+        t @-> float @-> float @-> float @-> float @-> returning(void),
+      );
+    let arcTo =
+      foreign(
+        "sk_path_arc_to",
+        t
+        @-> float
+        @-> float
+        @-> float
+        @-> arcSize
+        @-> pathDirection
+        @-> float
+        @-> float
+        @-> returning(void),
+      );
+    let rArcTo =
+      foreign(
+        "sk_path_rarc_to",
+        t
+        @-> float
+        @-> float
+        @-> float
+        @-> arcSize
+        @-> pathDirection
         @-> float
         @-> float
         @-> returning(void),
@@ -689,6 +744,11 @@ module M = (F: FOREIGN) => {
         @-> float
         @-> Paint.t
         @-> returning(void),
+      );
+    let drawRoundRect =
+      foreign(
+        "sk_canvas_draw_round_rect",
+        t @-> Rect.t @-> float @-> float @-> Paint.t @-> returning(void),
       );
     let drawOval =
       foreign(

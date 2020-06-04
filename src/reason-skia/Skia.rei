@@ -291,8 +291,37 @@ module Path: {
     unit;
 
   let moveTo: (t, float, float) => unit;
+  let rMoveTo: (t, float, float) => unit;
   let lineTo: (t, float, float) => unit;
+  let rLineTo: (t, float, float) => unit;
   let cubicTo: (t, float, float, float, float, float, float) => unit;
+  let rCubicTo: (t, float, float, float, float, float, float) => unit;
+  let quadTo: (t, float, float, float, float) => unit;
+  let rQuadTo: (t, float, float, float, float) => unit;
+  let arcTo:
+    (
+      t,
+      float,
+      float,
+      float,
+      SkiaWrapped.Path.arcSize,
+      SkiaWrapped.Path.pathDirection,
+      float,
+      float
+    ) =>
+    unit;
+  let rArcTo:
+    (
+      t,
+      float,
+      float,
+      float,
+      SkiaWrapped.Path.arcSize,
+      SkiaWrapped.Path.pathDirection,
+      float,
+      float
+    ) =>
+    unit;
   let close: t => unit;
 };
 
@@ -359,6 +388,7 @@ module Canvas: {
   let drawPaint: (t, Paint.t) => unit;
   let drawRect: (t, Rect.t, Paint.t) => unit;
   let drawRectLtwh: (t, float, float, float, float, Paint.t) => unit;
+  let drawRoundRect: (t, Rect.t, float, float, Paint.t) => unit;
   let drawOval: (t, Rect.t, Paint.t) => unit;
   let drawCircle: (t, float, float, float, Paint.t) => unit;
   let drawRRect: (t, RRect.t, Paint.t) => unit;
