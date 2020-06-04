@@ -68,55 +68,70 @@ let line = (~x1, ~y1, ~x2, ~y2, ~paint, ~context) => {
 
 let path = (~d, ~paint, ~context) => {
   let path = Skia.Path.make();
+
   List.iter(
-    fun
-    | `M(x, y) => Skia.Path.moveTo(path, x, y)
-    | `m(dx, dy) => Skia.Path.rMoveTo(path, dx, dy)
+    {
+      let previous = ref(None);
 
-    | `L(x, y) => Skia.Path.lineTo(path, x, y)
-    | `l(dx, dy) => Skia.Path.rLineTo(path, dx, dy)
+      command => {
+        switch (command) {
+        | `M(x, y) => Skia.Path.moveTo(path, x, y)
+        | `m(dx, dy) => Skia.Path.rMoveTo(path, dx, dy)
 
-    | `H(x) => {
-        let last = Skia.Point.make(0., 0.);
-        if (Skia.Path.getLastPoint(path, last)) {
-          Skia.Path.lineTo(path, x, Skia.Point.getY(last));
+        | `L(x, y) => Skia.Path.lineTo(path, x, y)
+        | `l(dx, dy) => Skia.Path.rLineTo(path, dx, dy)
+
+        | `H(x) =>
+          let last = Skia.Point.make(0., 0.);
+          if (Skia.Path.getLastPoint(path, last)) {
+            Skia.Path.lineTo(path, x, Skia.Point.getY(last));
+          };
+        | `h(dx) => Skia.Path.rLineTo(path, dx, 0.)
+
+        | `V(y) =>
+          let last = Skia.Point.make(0., 0.);
+          if (Skia.Path.getLastPoint(path, last)) {
+            Skia.Path.lineTo(path, Skia.Point.getX(last), y);
+          };
+        | `v(dy) => Skia.Path.rLineTo(path, 0., dy)
+
+        | `C(x1, y1, x2, y2, x, y) =>
+          Skia.Path.cubicTo(path, x1, y1, x2, y2, x, y)
+        | `c(dx1, dy1, dx2, dy2, dx, dy) =>
+          Skia.Path.rCubicTo(path, dx1, dy1, dx2, dy2, dx, dy)
+
+        | `S(x2, y2, x, y) =>
+          let (x1, y1) =
+            switch (previous^) {
+            | Some(`C(_, _, px2, py2, px, py) | `S(px2, py2, px, py)) => (
+                px -. (px2 -. px),
+                py -. (py2 -. py),
+              )
+            | _ => (x, y)
+            };
+          Skia.Path.cubicTo(path, x1, y1, x2, y2, x, y);
+        | `s(dx2, dy2, dx, dy) => failwith("TODO - path s")
+
+        | `Q(x1, y1, x, y) => Skia.Path.quadTo(path, x1, y1, x, y)
+        | `q(dx1, dy1, dx, dy) => Skia.Path.rQuadTo(path, dx1, dy1, dx, dy)
+
+        | `T(_) => failwith("TODO - path T")
+        | `t(_) => failwith("TODO - path t")
+
+        | `A(rx, ry, angle, size, sweep, x, y) =>
+          Skia.Path.arcTo(path, rx, ry, angle, size, sweep, x, y)
+        | `a(rx, ry, angle, size, sweep, dx, dy) =>
+          Skia.Path.rArcTo(path, rx, ry, angle, size, sweep, dx, dy)
+
+        | `Z
+        | `z => Skia.Path.close(path)
         };
-      }
-    | `h(dx) => Skia.Path.rLineTo(path, dx, 0.)
-
-    | `V(y) => {
-        let last = Skia.Point.make(0., 0.);
-        if (Skia.Path.getLastPoint(path, last)) {
-          Skia.Path.lineTo(path, Skia.Point.getX(last), y);
-        };
-      }
-    | `v(dy) => Skia.Path.rLineTo(path, 0., dy)
-
-    | `C(x1, y1, x2, y2, x, y) =>
-      Skia.Path.cubicTo(path, x1, y1, x2, y2, x, y)
-    | `c(dx1, dy1, dx2, dy2, dx, dy) =>
-      Skia.Path.rCubicTo(path, dx1, dy1, dx2, dy2, dx, dy)
-
-    | `S(_) => failwith("TODO - path S")
-    | `s(_) => failwith("TODO - path s")
-
-    | `Q(x1, y1, x, y) => Skia.Path.quadTo(path, x1, y1, x, y)
-    | `q(dx1, dy1, dx, dy) => Skia.Path.rQuadTo(path, dx1, dy1, dx, dy)
-
-    | `T(_) => failwith("TODO - path T")
-    | `t(_) => failwith("TODO - path t")
-
-    | `A(rx, ry, angle, size, sweep, x, y) => {
-        Skia.Path.arcTo(path, rx, ry, angle, size, sweep, x, y);
-      }
-    | `a(rx, ry, angle, size, sweep, dx, dy) => {
-        Skia.Path.rArcTo(path, rx, ry, angle, size, sweep, dx, dy);
-      }
-
-    | `Z
-    | `z => Skia.Path.close(path),
+        previous := Some(command);
+      };
+    },
     d,
   );
+  
   CanvasContext.drawPath(~path, ~paint, context.canvas);
 };
 
