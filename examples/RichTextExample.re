@@ -2,8 +2,6 @@ open Revery;
 open Revery.UI;
 open Revery.UI.Components;
 
-open Revery_Font;
-
 let containerStyle =
   Style.[
     position(`Absolute),
@@ -16,25 +14,25 @@ let containerStyle =
     flexDirection(`Column),
   ];
 
-let font = Family.system("Roboto-Regular");
-
+let font = Revery_Font.Family.system("Arial");
 module SampleRichText = {
   let make = () => {
     let richtext =
-      RichTextModel.(
-        text("Hello ", ~color=Colors.red)
+      RichText.(
+        text("Hello ", ~color=Colors.red, ~fontWeight=Revery_Font.Weight.Bold)
         ++ text("world", ~color=Colors.green)
         ++ text("!", ~color=Colors.yellow)
-        |> fontFamily(font)
-        |> fontSize(20.)
+        |> DSL.fontSize(20.)
+        |> DSL.fontFamily(font)
+        |> DSL.italicized
       );
 
-    let dimensions = RichTextModel.measure(richtext);
+    let dimensions = RichText.measure(richtext);
     let widthText = "Width: " ++ string_of_int(dimensions.width);
     let heightText = "Height: " ++ string_of_int(dimensions.height);
 
     <View style=containerStyle>
-      <RichText richtext />
+      <RichTextView richtext />
       <Text text=widthText />
       <Text text=heightText />
     </View>;

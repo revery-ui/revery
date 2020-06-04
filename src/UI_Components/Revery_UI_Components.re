@@ -40,4 +40,4 @@ module RadioButtonsString =
 module ClickableText = ClickableText;
 module Ticker = Ticker;
 module Tree = Tree;
-module RichText = RichText;
+module RichTextView = RichTextView;
