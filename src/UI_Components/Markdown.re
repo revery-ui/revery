@@ -4,13 +4,17 @@ open Revery_UI_Primitives;
 open Revery_Font;
 
 module Hooks = Revery_UI_Hooks;
-module LinkComponent = Link;
 
 open Omd;
 
 module Log = (val Log.withNamespace("Revery.Components.Markdown"));
 
 module StringSet = Set.Make(String);
+
+// Since we dont have rich text support, sometimes links get broken
+// up by style. This causes only part of them to hover/activate at
+// a time. We create our own link system to fix this, where all links
+// with a certain href are highlighted at a time.
 type state = {hoveredLinks: StringSet.t};
 
 type events =
@@ -52,6 +56,13 @@ module SyntaxHighlight = {
     italicized: bool,
   }
   and t = (~language: string, list(string)) => list(list(block));
+
+  let makeBlock = (~byteIndex, ~color, ~bold, ~italicized): block => {
+    byteIndex,
+    color,
+    bold,
+    italicized,
+  };
 
   let default: t =
     (~language as _, lines) => {
