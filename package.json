@@ -61,6 +61,7 @@
     "@glennsl/timber": "^1.2.0"
   },
   "resolutions": {
+    "rench": "revery-ui/rench#efa53a609ad98b035b0621cbcfe48e415545fa3e",
     "@opam/dune": "2.5.0"
   },
   "devDependencies": {
