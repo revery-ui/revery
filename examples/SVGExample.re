@@ -384,42 +384,6 @@ let examples = [
     |},
   ),
   (
-    "<path> - close path*",
-    {|
-      <svg viewBox="0 -1 30 11" xmlns="http://www.w3.org/2000/svg">
-
-        <!--
-        An open shape with the last point of
-        the path different to the first one
-        -->
-        <path stroke="red"
-              d="M 5,1
-                l -4,8
-                l 8,0" />
-
-        <!--
-        An open shape with the last point of
-        the path matching the first one
-        -->
-        <path stroke="red"
-              d="M 15,1
-                l -4,8
-                l 8,0
-                l -4,-8" />
-
-        <!--
-        A closed shape with the last point of
-        the path different to the first one
-        -->
-        <path stroke="red"
-              d="M 25,1
-                l -4,8
-                l 8,0
-                z" />
-      </svg>
-    |},
-  ),
-  (
     "Material - disc",
     {|
       <!-- Source: https://github.com/PKief/vscode-material-icon-theme/blob/master/icons/disc.svg?short_path=60ae136 -->
