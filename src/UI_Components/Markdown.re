@@ -3,11 +3,29 @@ open Revery_UI;
 open Revery_UI_Primitives;
 open Revery_Font;
 
+module Hooks = Revery_UI_Hooks;
 module LinkComponent = Link;
 
 open Omd;
 
 module Log = (val Log.withNamespace("Revery.Components.Markdown"));
+
+module StringSet = Set.Make(String);
+type state = {hoveredLinks: StringSet.t};
+
+type events =
+  | LinkHovered(string)
+  | LinkUnhovered(string);
+
+let update = (event, state) =>
+  switch (event) {
+  | LinkHovered(href) => {
+      hoveredLinks: StringSet.add(href, state.hoveredLinks),
+    }
+  | LinkUnhovered(href) => {
+      hoveredLinks: StringSet.remove(href, state.hoveredLinks),
+    }
+  };
 
 type style = {
   paragraph: list(Style.textStyleProps),
@@ -153,7 +171,7 @@ let isBold = attrs => List.mem(Bolded, attrs.inline);
 let isItalicized = attrs => List.mem(Italicized, attrs.inline);
 let isMonospaced = attrs => List.mem(Monospaced, attrs.inline);
 
-let generateText = (text, styles, attrs) => {
+let generateText = (text, styles, attrs, dispatch, state) => {
   let fontSize = fontSizeFromKind(attrs.kind, styles);
   let fontWeight = {
     isBold(attrs) ? Weight.Bold : Weight.Normal;
@@ -161,17 +179,23 @@ let generateText = (text, styles, attrs) => {
 
   switch (attrs.kind) {
   | `Link(href) =>
-    <LinkComponent
-      text
-      activeStyle={styles.activeLink}
-      inactiveStyle={styles.inactiveLink}
-      fontSize
-      fontFamily={styles.fontFamily}
-      fontWeight
-      italicized={isItalicized(attrs)}
-      monospaced={isMonospaced(attrs)}
-      href
-    />
+    let onMouseEnter = _ => dispatch(LinkHovered(href));
+    let onMouseLeave = _ => dispatch(LinkUnhovered(href));
+    let onMouseUp = _ => Revery_Native.Shell.openURL(href) |> ignore;
+    <View onMouseEnter onMouseLeave onMouseUp>
+      <Text
+        text
+        style={
+          StringSet.mem(href, state.hoveredLinks)
+            ? styles.activeLink : styles.inactiveLink
+        }
+        fontSize
+        fontFamily={styles.fontFamily}
+        fontWeight
+        italicized={isItalicized(attrs)}
+        monospaced={isMonospaced(attrs)}
+      />
+    </View>;
   | `InlineCode =>
     <View style=Styles.Code.inlineContainer>
       <Text
@@ -197,10 +221,10 @@ let generateText = (text, styles, attrs) => {
   };
 };
 
-let rec generateInline' = (inline, styles, attrs) => {
+let rec generateInline' = (inline, styles, attrs, dispatch, state) => {
   switch (inline) {
   | Html(t)
-  | Text(t) => generateText(t, styles, attrs)
+  | Text(t) => generateText(t, styles, attrs, dispatch, state)
   | Emph(e) =>
     generateInline'(
       e.content,
@@ -209,39 +233,47 @@ let rec generateInline' = (inline, styles, attrs) => {
       | Star => {...attrs, inline: [Bolded, ...attrs.inline]}
       | Underscore => {...attrs, inline: [Italicized, ...attrs.inline]}
       },
+      dispatch,
+      state,
     )
-  | Soft_break => generateText(" ", styles, attrs)
+  | Soft_break => generateText(" ", styles, attrs, dispatch, state)
   | Hard_break => <View style=Styles.hardBreak />
   | Ref(r) =>
     generateInline'(
       r.label,
       styles,
       {...attrs, kind: `Link(r.def.destination)},
+      dispatch,
+      state,
     )
   | Link(l) =>
     generateInline'(
       l.def.label,
       styles,
       {...attrs, kind: `Link(l.def.destination)},
+      dispatch,
+      state,
     )
   | Code(c) =>
     generateText(
       c.content,
       styles,
       {kind: `InlineCode, inline: [Monospaced, ...attrs.inline]},
+      dispatch,
+      state,
     )
   | Concat(c) =>
     <View style=Styles.inline>
       {c
-       |> List.map(il => generateInline'(il, styles, attrs))
+       |> List.map(il => generateInline'(il, styles, attrs, dispatch, state))
        |> React.listToElement}
     </View>
   | _ => <View />
   };
 };
 
-let generateInline = (inline, styles, attrs) =>
-  <Row> {generateInline'(inline, styles, attrs)} </Row>;
+let generateInline = (inline, styles, attrs, dispatch, state) =>
+  <Row> {generateInline'(inline, styles, attrs, dispatch, state)} </Row>;
 
 /* Block level elements
 
@@ -323,6 +355,8 @@ let generateList =
       blist: Omd__Ast.Block_list.t(Omd.block(Omd.inline)),
       styles,
       highlighter,
+      dispatch,
+      state,
       generateMarkdown',
     ) => {
   <View>
@@ -341,7 +375,14 @@ let generateList =
            />
            <View style=Styles.List.contents>
              {List.map(
-                block => generateMarkdown'(block, styles, highlighter),
+                block =>
+                  generateMarkdown'(
+                    block,
+                    styles,
+                    highlighter,
+                    dispatch,
+                    state,
+                  ),
                 blocks,
               )
               |> React.listToElement}
@@ -354,11 +395,13 @@ let generateList =
   </View>;
 };
 
-let generateBlockquote = (blocks, styles, highlighter, generateMarkdown') => {
+let generateBlockquote =
+    (blocks, styles, highlighter, dispatch, state, generateMarkdown') => {
   <View style=Styles.Blockquote.container>
     <View style=Styles.Blockquote.contents>
       {List.map(
-         block => generateMarkdown'(block, styles, highlighter),
+         block =>
+           generateMarkdown'(block, styles, highlighter, dispatch, state),
          blocks,
        )
        |> React.listToElement}
@@ -371,55 +414,91 @@ let thematicBreak =
     <View style=Styles.ThematicBreak.hr />
   </View>;
 
-let rec generateMarkdown' = (element, styles, highlighter) =>
+let rec generateMarkdown' = (element, styles, highlighter, dispatch, state) =>
   switch (element) {
-  | Paragraph(p) => generateInline(p, styles, {inline: [], kind: `Paragraph})
+  | Paragraph(p) =>
+    generateInline(
+      p,
+      styles,
+      {inline: [], kind: `Paragraph},
+      dispatch,
+      state,
+    )
   // We don't support HTML rendering as of right now, so we'll just render it
   // as text
   | Html_block(html) =>
-    generateInline(Text(html), styles, {inline: [], kind: `Paragraph})
+    generateInline(
+      Text(html),
+      styles,
+      {inline: [], kind: `Paragraph},
+      dispatch,
+      state,
+    )
   | Blockquote(blocks) =>
-    generateBlockquote(blocks, styles, highlighter, generateMarkdown')
+    generateBlockquote(
+      blocks,
+      styles,
+      highlighter,
+      dispatch,
+      state,
+      generateMarkdown',
+    )
   | Heading(h) =>
     generateInline(
       h.text,
       styles,
       {inline: [Bolded], kind: `Heading(h.level)},
+      dispatch,
+      state,
     )
   | Code_block(cb) => generateCodeBlock(cb, styles, highlighter)
   | List(blist) =>
-    generateList(blist, styles, highlighter, generateMarkdown')
+    generateList(
+      blist,
+      styles,
+      highlighter,
+      dispatch,
+      state,
+      generateMarkdown',
+    )
   | Thematic_break => thematicBreak
   | _ => <View />
   };
 
-let generateMarkdown = (mdText: string, styles, highlighter) => {
+let generateMarkdown = (mdText: string, styles, highlighter, dispatch, state) => {
   let md = Omd.of_string(mdText);
   Log.debugf(m => m("Parsed Markdown as: %s", Omd.to_sexp(md)));
-  List.map(elt => generateMarkdown'(elt, styles, highlighter), md)
+  List.map(
+    elt => generateMarkdown'(elt, styles, highlighter, dispatch, state),
+    md,
+  )
   |> React.listToElement;
 };
 
-let make =
-    (
-      ~markdown as mdText="",
-      ~fontFamily=Family.default,
-      ~codeFontFamily=Family.default,
-      ~baseFontSize=14.0,
-      ~paragraphStyle=Style.emptyTextStyle,
-      ~activeLinkStyle=Style.emptyTextStyle,
-      ~inactiveLinkStyle=Style.emptyTextStyle,
-      ~h1Style=Style.emptyTextStyle,
-      ~h2Style=Style.emptyTextStyle,
-      ~h3Style=Style.emptyTextStyle,
-      ~h4Style=Style.emptyTextStyle,
-      ~h5Style=Style.emptyTextStyle,
-      ~h6Style=Style.emptyTextStyle,
-      ~inlineCodeStyle=Style.emptyTextStyle,
-      ~codeBlockBackgroundColor=Color.rgba(0., 0., 0., 0.25),
-      ~syntaxHighlighter=SyntaxHighlight.default,
-      (),
-    ) => {
+let%component make =
+              (
+                ~markdown as mdText="",
+                ~fontFamily=Family.default,
+                ~codeFontFamily=Family.default,
+                ~baseFontSize=14.0,
+                ~paragraphStyle=Style.emptyTextStyle,
+                ~activeLinkStyle=Style.emptyTextStyle,
+                ~inactiveLinkStyle=Style.emptyTextStyle,
+                ~h1Style=Style.emptyTextStyle,
+                ~h2Style=Style.emptyTextStyle,
+                ~h3Style=Style.emptyTextStyle,
+                ~h4Style=Style.emptyTextStyle,
+                ~h5Style=Style.emptyTextStyle,
+                ~h6Style=Style.emptyTextStyle,
+                ~inlineCodeStyle=Style.emptyTextStyle,
+                ~codeBlockBackgroundColor=Color.rgba(0., 0., 0., 0.25),
+                ~syntaxHighlighter=SyntaxHighlight.default,
+                (),
+              ) => {
+  let%hook (state, setState) = Hooks.state({hoveredLinks: StringSet.empty});
+
+  let dispatch = event => setState(s => update(event, s));
+
   <View style=Styles.container>
     {generateMarkdown(
        mdText,
@@ -440,6 +519,8 @@ let make =
          codeBlockBackgroundColor,
        },
        syntaxHighlighter,
+       dispatch,
+       state,
      )}
   </View>;
 };
