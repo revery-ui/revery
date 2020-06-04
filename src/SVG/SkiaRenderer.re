@@ -212,8 +212,15 @@ let geometry = (context, shape: Geometry.t) => {
     let y = userCoord(y);
     let width = userCoord(width);
     let height = userCoord(height);
-    let rx = userCoord(rx);
-    let ry = userCoord(ry);
+    let (rx, ry) =
+      switch (rx, ry) {
+      | (`auto, `auto) => (0., 0.)
+      | (`auto, r)
+      | (r, `auto) =>
+        let r = userCoord(r);
+        (r, r);
+      | (rx, ry) => (userCoord(rx), userCoord(ry))
+      };
     let draw = paint =>
       rect(~x, ~y, ~width, ~height, ~rx, ~ry, ~paint, ~context);
     Option.iter(draw, fill);
