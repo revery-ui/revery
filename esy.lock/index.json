@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "checksum": "d42f42ea41262b01042684ac74fd312e",
+=======
+  "checksum": "139b07416a06201dbf9b0387f0f9a894",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -28,7 +32,11 @@
         "source": [ "github:revery-ui/revery-text-wrap#966383e" ]
       },
       "overrides": [],
-      "dependencies": [ "@opam/dune@opam:2.5.0@aef1678b" ],
+<<<<<<< HEAD
+      "dependencies": [ "@opam/dune@opam:2.5.1@a0c1e658" ],
+=======
+      "dependencies": [ "@opam/dune@opam:2.5.1@f38f376e" ],
+>>>>>>> chore: merge master
       "devDependencies": []
     },
     "revery@link-dev:./package.json": {
@@ -45,10 +53,16 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
+<<<<<<< HEAD
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9",
         "flex@1.2.3@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
-        "esy-sdl2@2.0.10008@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
+<<<<<<< HEAD
+        "esy-sdl2@2.0.10008@d41d8cd9",
+        "esy-harfbuzz@1.9.1008@d41d8cd9",
+=======
+        "esy-sdl2@2.0.10007@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
+>>>>>>> chore: merge master
         "esy-freetype2@2.9.1007@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/ppx_deriving@opam:4.5@bb81afdc",
@@ -64,6 +78,26 @@
         "ocaml@4.10.0@d41d8cd9",
         "esy-astyle@github:zbaylin/esy-astyle#59bc21a@d41d8cd9",
         "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6@d41d8cd9"
+=======
+        "reason-skia@github:revery-ui/reason-skia#5726a11@d41d8cd9",
+        "reason-sdl2@2.10.3021@d41d8cd9",
+        "reason-harfbuzz@1.91.8000@d41d8cd9",
+        "reason-font-manager@2.1.1@d41d8cd9", "flex@1.2.3@d41d8cd9",
+        "@reason-native/rely@3.2.1@d41d8cd9",
+        "@reason-native/console@0.0.3@d41d8cd9",
+        "@opam/ppx_deriving@opam:4.4.1@208c6c8f",
+        "@opam/lwt_ppx@opam:2.0.1@ab0debb8", "@opam/lwt@opam:4.5.0@677655b4",
+        "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9",
+        "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
+        "@glennsl/timber@1.0.0@d41d8cd9", "@esy-ocaml/reason@3.5.2@d41d8cd9",
+        "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#10cab2d@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "esy-astyle@github:zbaylin/esy-astyle#59bc21a@d41d8cd9",
+        "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#04733ed@d41d8cd9",
+        "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ]
     },
     "reperf@1.5.0@d41d8cd9": {
@@ -78,10 +112,25 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "refmterr@3.3.2@d41d8cd9",
+        "ocaml@4.10.0@d41d8cd9",
+        "@reason-native/pastel@0.1.0@d41d8cd9",
+        "@opam/printbox@opam:0.5@82f5d436",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
         "refmterr@3.3.2@d41d8cd9", "ocaml@4.10.0@d41d8cd9",
         "@reason-native/pastel@0.1.0@d41d8cd9",
-        "@opam/printbox@opam:0.5@82f5d436", "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/printbox@opam:0.5@82f5d436", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
+=======
+        "refmterr@3.3.0@d41d8cd9", "ocaml@4.8.1000@d41d8cd9",
+        "@reason-native/pastel@0.1.0@d41d8cd9",
+        "@opam/printbox@opam:0.5@82f5d436", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ],
       "devDependencies": []
     },
@@ -97,12 +146,31 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "refmterr@3.3.2@d41d8cd9",
+        "@reason-native/rely@3.2.1@d41d8cd9",
+        "@reason-native/console@0.0.3@d41d8cd9",
+        "@opam/lwt@opam:4.5.0@677655b4",
+        "@opam/lambda-term@opam:3.1.0@8adc2660",
+        "@opam/fpath@opam:0.7.2@45477b93",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
         "refmterr@3.3.2@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/lambda-term@opam:3.1.0@8adc2660",
-        "@opam/fpath@opam:0.7.2@45477b93", "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/fpath@opam:0.7.2@45477b93", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
+=======
+        "refmterr@3.3.0@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
+        "@reason-native/console@0.0.3@d41d8cd9",
+        "@opam/lwt@opam:4.5.0@677655b4",
+        "@opam/lambda-term@opam:2.0.3@9465cf1c",
+        "@opam/fpath@opam:0.7.2@45477b93", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ],
       "devDependencies": []
     },
@@ -118,11 +186,27 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@reason-native/pastel@0.1.0@d41d8cd9",
+        "@reason-native/console@0.0.3@d41d8cd9",
+        "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
         "ocaml@4.10.0@d41d8cd9", "@reason-native/pastel@0.1.0@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
-        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/atdgen@opam:2.2.1@d73fda11",
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@reason-native/pastel@0.1.0@d41d8cd9",
+        "@reason-native/console@0.0.3@d41d8cd9",
+        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@opam/atdgen@opam:2.2.1@d73fda11",
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ],
       "devDependencies": []
     },
@@ -136,8 +220,93 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9": {
+      "id": "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9",
+      "name": "reason-native-crash-utils",
+      "version": "github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "reason-skia@github:revery-ui/reason-skia#5726a11@d41d8cd9": {
+      "id": "reason-skia@github:revery-ui/reason-skia#5726a11@d41d8cd9",
+      "name": "reason-skia",
+      "version": "github:revery-ui/reason-skia#5726a11",
+      "source": {
+        "type": "install",
+        "source": [ "github:revery-ui/reason-skia#5726a11" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "refmterr@3.3.0@d41d8cd9", "reason-sdl2@2.10.3021@d41d8cd9",
+        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
+        "esy-skia@github:revery-ui/esy-skia#07c13a9@d41d8cd9",
+        "esy-sdl2@2.0.10006@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
+        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@opam/ctypes@opam:0.15.1@b0227b2f",
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": [ "@opam/dune@opam:2.5.1@a0c1e658" ]
+    },
+    "reason-sdl2@2.10.3021@d41d8cd9": {
+      "id": "reason-sdl2@2.10.3021@d41d8cd9",
+      "name": "reason-sdl2",
+      "version": "2.10.3021",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/reason-sdl2/-/reason-sdl2-2.10.3021.tgz#sha1:9ea4f7a663c49954db438fe5d914bafd7864d0e0"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+<<<<<<< HEAD
+        "refmterr@3.3.0@d41d8cd9", "esy-sdl2@2.0.10006@d41d8cd9",
+        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9",
+        "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9": {
+      "id":
+        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#ae1fd34@d41d8cd9",
+      "name": "reason-native-crash-utils",
+      "version": "github:onivim/reason-native-crash-utils#ae1fd34",
+      "source": {
+        "type": "install",
+        "source": [ "github:onivim/reason-native-crash-utils#ae1fd34" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
+    },
+    "reason-harfbuzz@1.91.8000@d41d8cd9": {
+      "id": "reason-harfbuzz@1.91.8000@d41d8cd9",
+      "name": "reason-harfbuzz",
+      "version": "1.91.8000",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "refmterr@3.3.2@d41d8cd9", "esy-sdl2@2.0.10007@d41d8cd9",
+        "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
       "devDependencies": []
     },
@@ -147,6 +316,7 @@
       "name": "reason-native-crash-utils",
       "version":
         "github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6",
+>>>>>>> chore: merge master
       "source": {
         "type": "install",
         "source": [
@@ -155,14 +325,42 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
         "ocaml@4.10.0@d41d8cd9",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
         "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
+        "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "reason-font-manager@2.1.1@d41d8cd9": {
+      "id": "reason-font-manager@2.1.1@d41d8cd9",
+      "name": "reason-font-manager",
+      "version": "2.1.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/reason-font-manager/-/reason-font-manager-2.1.1.tgz#sha1:3505aa2c32798eddd67d9af770f164b6b77c155b"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/reason@3.5.2@d41d8cd9"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ],
       "devDependencies": [ "ocaml@4.10.0@d41d8cd9" ]
     },
+<<<<<<< HEAD
     "ocaml@4.10.0@d41d8cd9": {
       "id": "ocaml@4.10.0@d41d8cd9",
+=======
+    "ocaml@4.8.1000@d41d8cd9": {
+      "id": "ocaml@4.8.1000@d41d8cd9",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       "name": "ocaml",
       "version": "4.10.0",
       "source": {
@@ -187,8 +385,18 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ],
       "devDependencies": []
     },
@@ -198,7 +406,15 @@
       "version": "github:revery-ui/esy-skia#d60e5fe",
       "source": {
         "type": "install",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "source": ["github:revery-ui/esy-skia#d60e5fe"]
+=======
+        "source": [ "github:revery-ui/esy-skia#07c13a9" ]
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "source": [ "github:revery-ui/esy-skia#d60e5fe" ]
+>>>>>>> chore: merge master
       },
       "overrides": [],
       "dependencies": [
@@ -233,14 +449,32 @@
       "dependencies": [],
       "devDependencies": []
     },
+<<<<<<< HEAD
     "esy-libjpeg-turbo@github:revery-ui/libjpeg-turbo#dbb3dd5@d41d8cd9": {
+<<<<<<< HEAD
+      "id": "esy-libjpeg-turbo@github:revery-ui/libjpeg-turbo#dbb3dd5@d41d8cd9",
+=======
+    "esy-libjpeg-turbo@github:revery-ui/libjpeg-turbo#61e031f@d41d8cd9": {
+      "id":
+        "esy-libjpeg-turbo@github:revery-ui/libjpeg-turbo#61e031f@d41d8cd9",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
       "id":
         "esy-libjpeg-turbo@github:revery-ui/libjpeg-turbo#dbb3dd5@d41d8cd9",
+>>>>>>> chore: merge master
       "name": "esy-libjpeg-turbo",
       "version": "github:revery-ui/libjpeg-turbo#dbb3dd5",
       "source": {
         "type": "install",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "source": ["github:revery-ui/libjpeg-turbo#dbb3dd5"]
+=======
+        "source": [ "github:revery-ui/libjpeg-turbo#61e031f" ]
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "source": [ "github:revery-ui/libjpeg-turbo#dbb3dd5" ]
+>>>>>>> chore: merge master
       },
       "overrides": [],
       "dependencies": [
@@ -278,15 +512,25 @@
       "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
       "devDependencies": []
     },
+<<<<<<< HEAD
     "esy-cmake@0.3.5@d41d8cd9": {
       "id": "esy-cmake@0.3.5@d41d8cd9",
+=======
+    "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9": {
+      "id":
+        "esy-cmake@github:prometheansacrifice/esy-cmake#2a47392def755@d41d8cd9",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       "name": "esy-cmake",
       "version": "0.3.5",
       "source": {
         "type": "install",
+<<<<<<< HEAD
         "source": [
           "archive:https://registry.npmjs.org/esy-cmake/-/esy-cmake-0.3.5.tgz#sha1:2df0bdfe9317fbcded5f463fca1f346464494c7a"
         ]
+=======
+        "source": [ "github:prometheansacrifice/esy-cmake#2a47392def755" ]
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       },
       "overrides": [],
       "dependencies": [],
@@ -330,11 +574,30 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@reason-native/pastel@0.1.0@d41d8cd9",
+        "@reason-native/file-context-printer@0.0.3@d41d8cd9",
+        "@reason-native/cli@0.0.1-alpha@d41d8cd9",
+        "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/junit@opam:2.0.2@0b7bd730",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/reason@3.6.0@d41d8cd9"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@reason-native/pastel@0.1.0@d41d8cd9",
+        "@reason-native/file-context-printer@0.0.3@d41d8cd9",
+        "@reason-native/cli@0.0.1-alpha@d41d8cd9",
+        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/junit@opam:2.0.2@0b7bd730",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/reason@3.5.2@d41d8cd9"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@reason-native/pastel@0.1.0@d41d8cd9",
         "@reason-native/file-context-printer@0.0.3@d41d8cd9",
         "@reason-native/cli@0.0.1-alpha@d41d8cd9",
         "@opam/re@opam:1.9.0@d4d5e13d", "@opam/junit@opam:2.0.2@0b7bd730",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/reason@3.6.0@d41d8cd9"
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/reason@3.6.0@d41d8cd9"
+>>>>>>> chore: merge master
       ],
       "devDependencies": []
     },
@@ -350,8 +613,18 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ],
       "devDependencies": []
     },
@@ -367,9 +640,22 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@reason-native/pastel@0.1.0@d41d8cd9",
+        "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
         "ocaml@4.10.0@d41d8cd9", "@reason-native/pastel@0.1.0@d41d8cd9",
-        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@reason-native/pastel@0.1.0@d41d8cd9",
+        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ],
       "devDependencies": []
     },
@@ -385,8 +671,18 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ],
       "devDependencies": []
     },
@@ -402,9 +698,22 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@reason-native/pastel@0.1.0@d41d8cd9",
+        "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
         "ocaml@4.10.0@d41d8cd9", "@reason-native/pastel@0.1.0@d41d8cd9",
-        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@reason-native/pastel@0.1.0@d41d8cd9",
+        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ],
       "devDependencies": []
     },
@@ -426,16 +735,38 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/react@opam:1.2.1@0e11855f",
         "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
+        "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
+        "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/charInfo_width@opam:1.1.0@9d8d61b2",
         "@opam/camomile@opam:1.0.2@51b42ad8",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/react@opam:1.2.1@0e11855f",
         "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
+        "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
+        "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/charInfo_width@opam:1.1.0@9d8d61b2",
         "@opam/camomile@opam:1.0.2@51b42ad8",
         "@opam/base-bytes@opam:base@19d0c2ff"
@@ -459,14 +790,38 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/easy-format@opam:1.3.2@0484b3c4",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/cppo@opam:1.6.6@f4f83858",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/easy-format@opam:1.3.2@0484b3c4",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@opam/cppo@opam:1.6.6@f4f83858",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/easy-format@opam:1.3.2@0484b3c4",
-        "@opam/dune@opam:2.5.0@aef1678b", "@opam/cppo@opam:1.6.6@f4f83858",
+        "@opam/dune@opam:2.5.1@f38f376e", "@opam/cppo@opam:1.6.6@f4f83858",
+>>>>>>> chore: merge master
         "@opam/biniou@opam:1.2.1@d7570399",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/easy-format@opam:1.3.2@0484b3c4",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/biniou@opam:1.2.1@d7570399"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/easy-format@opam:1.3.2@0484b3c4",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@opam/biniou@opam:1.2.1@d7570399"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/easy-format@opam:1.3.2@0484b3c4",
-        "@opam/dune@opam:2.5.0@aef1678b", "@opam/biniou@opam:1.2.1@d7570399"
+        "@opam/dune@opam:2.5.1@f38f376e", "@opam/biniou@opam:1.2.1@d7570399"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/uutf@opam:1.0.2@4440868f": {
@@ -487,14 +842,63 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/uchar@opam:0.0.2@c8218eea",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/uchar@opam:0.0.2@c8218eea",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/uchar@opam:0.0.2@c8218eea",
+>>>>>>> chore: merge master
         "@opam/topkg@opam:1.0.1@a42c631e",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/uchar@opam:0.0.2@c8218eea"
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/uchar@opam:0.0.2@c8218eea"
+>>>>>>> chore: merge master
+      ]
+    },
+    "@opam/uri@opam:3.1.0@d38ac0ae": {
+      "id": "@opam/uri@opam:3.1.0@d38ac0ae",
+      "name": "@opam/uri",
+      "version": "opam:3.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/sha256/c4/c452823fd870cf7cffe51aef3e9ca646a382dc6f87282f2b16bfe30a7515ac43#sha256:c452823fd870cf7cffe51aef3e9ca646a382dc6f87282f2b16bfe30a7515ac43",
+          "archive:https://github.com/mirage/ocaml-uri/releases/download/v3.1.0/uri-v3.1.0.tbz#sha256:c452823fd870cf7cffe51aef3e9ca646a382dc6f87282f2b16bfe30a7515ac43"
+        ],
+        "opam": {
+          "name": "uri",
+          "version": "3.1.0",
+          "path": "esy.lock/opam/uri.3.1.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/stringext@opam:1.6.0@104bc94b",
+        "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/dune@opam:2.4.0@639d28a3",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/stringext@opam:1.6.0@104bc94b",
+        "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/dune@opam:2.4.0@639d28a3"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/uchar@opam:0.0.2@c8218eea"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ]
     },
     "@opam/uchar@opam:0.0.2@c8218eea": {
@@ -515,10 +919,25 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": ["ocaml@4.10.0@d41d8cd9"]
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [ "ocaml@4.10.0@d41d8cd9" ]
+>>>>>>> chore: merge master
     },
     "@opam/tyxml@opam:4.4.0@1dca5713": {
       "id": "@opam/tyxml@opam:4.4.0@1dca5713",
@@ -538,14 +957,41 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/uutf@opam:1.0.2@4440868f",
+        "@opam/seq@opam:base@d8d7de1d",
+        "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/uutf@opam:1.0.2@4440868f",
+        "@opam/seq@opam:base@d8d7de1d",
+        "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
+        "@opam/seq@opam:base@d8d7de1d", "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
+        "@opam/seq@opam:base@d8d7de1d", "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
         "@opam/seq@opam:base@d8d7de1d", "@opam/re@opam:1.9.0@d4d5e13d",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
         "@opam/seq@opam:base@d8d7de1d", "@opam/re@opam:1.9.0@d4d5e13d",
-        "@opam/dune@opam:2.5.0@aef1678b"
+        "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/trie@opam:1.0.0@d2efc587": {
@@ -566,11 +1012,21 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/topkg@opam:1.0.1@a42c631e": {
@@ -591,12 +1047,59 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+>>>>>>> chore: merge master
         "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/ocamlbuild@opam:0.14.0@6ac75d03"
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/ocamlbuild@opam:0.14.0@6ac75d03"
+>>>>>>> chore: merge master
+      ]
+    },
+    "@opam/stringext@opam:1.6.0@104bc94b": {
+      "id": "@opam/stringext@opam:1.6.0@104bc94b",
+      "name": "@opam/stringext",
+      "version": "opam:1.6.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/sha256/db/db41f5d52e9eab17615f110b899dfeb27dd7e7f89cd35ae43827c5119db206ea#sha256:db41f5d52e9eab17615f110b899dfeb27dd7e7f89cd35ae43827c5119db206ea",
+          "archive:https://github.com/rgrinberg/stringext/releases/download/1.6.0/stringext-1.6.0.tbz#sha256:db41f5d52e9eab17615f110b899dfeb27dd7e7f89cd35ae43827c5119db206ea"
+        ],
+        "opam": {
+          "name": "stringext",
+          "version": "1.6.0",
+          "path": "esy.lock/opam/stringext.1.6.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/dune@opam:2.4.0@639d28a3",
+        "@opam/base-bytes@opam:base@19d0c2ff",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/dune@opam:2.4.0@639d28a3",
+        "@opam/base-bytes@opam:base@19d0c2ff"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlbuild@opam:0.14.0@6ac75d03"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ]
     },
     "@opam/stdlib-shims@opam:0.1.0@d957c903": {
@@ -617,11 +1120,29 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/stdio@opam:v0.14.0@a624e254": {
@@ -642,13 +1163,33 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/base@opam:v0.14.0@b8817fc1",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/base@opam:v0.14.0@b8817fc1"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@opam/base@opam:v0.13.1@7d937ed0",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@opam/base@opam:v0.13.1@7d937ed0"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ]
     },
     "@opam/sexplib0@opam:v0.14.0@ddeb6438": {
@@ -669,11 +1210,29 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/seq@opam:base@d8d7de1d": {
@@ -691,9 +1250,45 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+=======
         "ocaml@4.10.0@d41d8cd9", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+>>>>>>> chore: merge master
       ],
       "devDependencies": [ "ocaml@4.10.0@d41d8cd9" ]
+    },
+    "@opam/rresult@opam:0.6.0@4b185e72": {
+      "id": "@opam/rresult@opam:0.6.0@4b185e72",
+      "name": "@opam/rresult",
+      "version": "opam:0.6.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/ab/aba88cffa29081714468c2c7bcdf7fb1#md5:aba88cffa29081714468c2c7bcdf7fb1",
+          "archive:http://erratique.ch/software/rresult/releases/rresult-0.6.0.tbz#md5:aba88cffa29081714468c2c7bcdf7fb1"
+        ],
+        "opam": {
+          "name": "rresult",
+          "version": "0.6.0",
+          "path": "esy.lock/opam/rresult.0.6.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/topkg@opam:1.0.1@a42c631e",
+        "@opam/result@opam:1.5@6b753c82",
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+      ],
+      "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
     },
     "@opam/result@opam:1.5@6b753c82": {
       "id": "@opam/result@opam:1.5@6b753c82",
@@ -713,11 +1308,29 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/react@opam:1.2.1@0e11855f": {
@@ -738,12 +1351,29 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/topkg@opam:1.0.1@a42c631e",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
+>>>>>>> chore: merge master
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
+<<<<<<< HEAD
+<<<<<<< HEAD
+      "devDependencies": ["ocaml@4.10.0@d41d8cd9"]
+=======
+      "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
       "devDependencies": [ "ocaml@4.10.0@d41d8cd9" ]
+>>>>>>> chore: merge master
     },
     "@opam/re@opam:1.9.0@d4d5e13d": {
       "id": "@opam/re@opam:1.9.0@d4d5e13d",
@@ -763,12 +1393,33 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/seq@opam:base@d8d7de1d",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/seq@opam:base@d8d7de1d",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
+        "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
-        "@opam/dune@opam:2.5.0@aef1678b"
+        "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/ptime@opam:0.8.5@0051d642": {
@@ -789,14 +1440,32 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/topkg@opam:1.0.1@a42c631e",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
+>>>>>>> chore: merge master
         "@opam/result@opam:1.5@6b753c82",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/result@opam:1.5@6b753c82"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.5@6b753c82"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/result@opam:1.5@6b753c82"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/psq@opam:0.2.0@247756d4": {
@@ -817,12 +1486,33 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/seq@opam:base@d8d7de1d",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/seq@opam:base@d8d7de1d",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
+        "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
-        "@opam/dune@opam:2.5.0@aef1678b"
+        "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/printbox@opam:0.5@82f5d436": {
@@ -843,13 +1533,34 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/uutf@opam:1.0.2@4440868f",
+        "@opam/tyxml@opam:4.4.0@1dca5713",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
+        "@opam/tyxml@opam:4.4.0@1dca5713", "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
-        "@opam/tyxml@opam:4.4.0@1dca5713", "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/tyxml@opam:4.4.0@1dca5713", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
@@ -871,11 +1582,22 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/stdio@opam:v0.14.0@a624e254",
+        "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
+        "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
+        "@opam/ocaml-compiler-libs@opam:v0.12.1@5c34eb0d",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/base@opam:v0.14.0@b8817fc1",
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/stdio@opam:v0.14.0@a624e254",
         "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
         "@opam/ocaml-compiler-libs@opam:v0.12.1@5c34eb0d",
-        "@opam/dune@opam:2.5.0@aef1678b", "@opam/base@opam:v0.14.0@b8817fc1",
+        "@opam/dune@opam:2.5.1@f38f376e", "@opam/base@opam:v0.14.0@b8817fc1",
+>>>>>>> chore: merge master
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
@@ -883,7 +1605,27 @@
         "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
         "@opam/ocaml-compiler-libs@opam:v0.12.1@5c34eb0d",
-        "@opam/dune@opam:2.5.0@aef1678b", "@opam/base@opam:v0.14.0@b8817fc1"
+<<<<<<< HEAD
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/base@opam:v0.14.0@b8817fc1"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/stdio@opam:v0.13.0@eb59d879",
+        "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
+        "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
+        "@opam/ocaml-compiler-libs@opam:v0.12.1@5c34eb0d",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@opam/base@opam:v0.13.1@7d937ed0",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/stdio@opam:v0.13.0@eb59d879",
+        "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
+        "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
+        "@opam/ocaml-compiler-libs@opam:v0.12.1@5c34eb0d",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@opam/base@opam:v0.13.1@7d937ed0"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "@opam/dune@opam:2.5.1@f38f376e", "@opam/base@opam:v0.14.0@b8817fc1"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/ppxfind@opam:1.4@1e01d2a5": {
@@ -904,14 +1646,33 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+>>>>>>> chore: merge master
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
         "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
+        "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ]
     },
     "@opam/ppx_yojson_conv_lib@opam:v0.14.0@116b53d6": {
@@ -932,12 +1693,33 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
-        "@opam/dune@opam:2.5.0@aef1678b"
+        "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/ppx_tools_versioned@opam:5.4.0@48c10ee1": {
@@ -958,14 +1740,30 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
         "ocaml@4.10.0@d41d8cd9",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+<<<<<<< HEAD
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+=======
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+>>>>>>> chore: merge master
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
         "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
+        "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ]
     },
     "@opam/ppx_tools@opam:6.1+4.10.0@d7f16ed7": {
@@ -986,11 +1784,29 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/ppx_deriving@opam:4.5@bb81afdc": {
@@ -1011,12 +1827,23 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/result@opam:1.5@6b753c82",
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+>>>>>>> chore: merge master
         "@opam/ppxfind@opam:1.4@1e01d2a5",
         "@opam/ppx_tools@opam:6.1+4.10.0@d7f16ed7",
         "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
-        "@opam/dune@opam:2.5.0@aef1678b", "@opam/cppo@opam:1.6.6@f4f83858",
+<<<<<<< HEAD
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/cppo@opam:1.6.6@f4f83858",
+=======
+        "@opam/dune@opam:2.5.1@f38f376e", "@opam/cppo@opam:1.6.6@f4f83858",
+>>>>>>> chore: merge master
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
@@ -1025,6 +1852,22 @@
         "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
         "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+        "@opam/ppxfind@opam:1.4@c51fd7bf",
+        "@opam/ppx_tools@opam:6.0+4.08.0@5f5453f4",
+        "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
+        "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@opam/cppo@opam:1.6.6@f4f83858",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+        "@opam/ppx_tools@opam:6.0+4.08.0@5f5453f4",
+        "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
+        "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
+        "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ]
     },
     "@opam/ppx_derivers@opam:1.2.1@ecf0aa45": {
@@ -1045,11 +1888,29 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/ocplib-endian@opam:1.1@84c1ca88": {
@@ -1070,16 +1931,70 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/cppo@opam:1.6.6@f4f83858",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
         "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@opam/base-bytes@opam:base@19d0c2ff"
+      ]
+    },
+    "@opam/ocamlfind-secondary@opam:1.8.1@1afa38b2": {
+      "id": "@opam/ocamlfind-secondary@opam:1.8.1@1afa38b2",
+      "name": "@opam/ocamlfind-secondary",
+      "version": "opam:1.8.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/18/18ca650982c15536616dea0e422cbd8c#md5:18ca650982c15536616dea0e422cbd8c",
+          "archive:http://download2.camlcity.org/download/findlib-1.8.1.tar.gz#md5:18ca650982c15536616dea0e422cbd8c",
+          "archive:http://download.camlcity.org/download/findlib-1.8.1.tar.gz#md5:18ca650982c15536616dea0e422cbd8c"
+        ],
+        "opam": {
+          "name": "ocamlfind-secondary",
+          "version": "1.8.1",
+          "path": "esy.lock/opam/ocamlfind-secondary.1.8.1"
+        }
+      },
+      "overrides": [
+        {
+          "opamoverride":
+            "esy.lock/overrides/opam__s__ocamlfind_secondary_opam__c__1.8.1_opam_override"
+        }
+      ],
+      "dependencies": [
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/ocaml-secondary-compiler@opam:4.08.1-1@ba28931b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/ocaml-secondary-compiler@opam:4.08.1-1@ba28931b"
+      ]
+    },
+>>>>>>> chore: merge master
     "@opam/ocamlfind@opam:1.8.1@ff07b0f9": {
       "id": "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
       "name": "@opam/ocamlfind",
@@ -1104,10 +2019,25 @@
         }
       ],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/conf-m4@opam:1@3b2b148a",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": ["ocaml@4.10.0@d41d8cd9"]
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/conf-m4@opam:1@3b2b148a",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/conf-m4@opam:1@3b2b148a",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [ "ocaml@4.10.0@d41d8cd9" ]
+>>>>>>> chore: merge master
     },
     "@opam/ocamlbuild@opam:0.14.0@6ac75d03": {
       "id": "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
@@ -1129,10 +2059,46 @@
         {
           "opamoverride":
             "esy.lock/overrides/opam__s__ocamlbuild_opam__c__0.14.0_opam_override"
+<<<<<<< HEAD
+        }
+      ],
+      "dependencies": [
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+=======
         }
       ],
       "dependencies": [
         "ocaml@4.10.0@d41d8cd9", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [ "ocaml@4.10.0@d41d8cd9" ]
+    },
+    "@opam/ocaml-secondary-compiler@opam:4.08.1-1@ba28931b": {
+      "id": "@opam/ocaml-secondary-compiler@opam:4.08.1-1@ba28931b",
+      "name": "@opam/ocaml-secondary-compiler",
+      "version": "opam:4.08.1-1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/72/723b6bfe8cf5abcbccc6911143f71055#md5:723b6bfe8cf5abcbccc6911143f71055",
+          "archive:https://github.com/ocaml/ocaml/archive/4.08.1.tar.gz#md5:723b6bfe8cf5abcbccc6911143f71055"
+        ],
+        "opam": {
+          "name": "ocaml-secondary-compiler",
+          "version": "4.08.1-1",
+          "path": "esy.lock/opam/ocaml-secondary-compiler.4.08.1-1"
+        }
+      },
+      "overrides": [
+        {
+          "opamoverride":
+            "esy.lock/overrides/opam__s__ocaml_secondary_compiler_opam__c__4.08.1_1_opam_override"
+        }
+      ],
+      "dependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+>>>>>>> chore: merge master
       ],
       "devDependencies": [ "ocaml@4.10.0@d41d8cd9" ]
     },
@@ -1150,50 +2116,132 @@
           "name": "ocaml-migrate-parsetree",
           "version": "1.7.3",
           "path": "esy.lock/opam/ocaml-migrate-parsetree.1.7.3"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
+    },
+    "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e": {
+      "id": "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
+      "name": "@opam/ocaml-migrate-parsetree",
+      "version": "opam:1.7.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/sha256/6a/6ae6753c3e632a63f76b031afc3eab74b209babdfdba4030060a934ce0660bd6#sha256:6ae6753c3e632a63f76b031afc3eab74b209babdfdba4030060a934ce0660bd6",
+          "archive:https://github.com/ocaml-ppx/ocaml-migrate-parsetree/releases/download/v1.7.2/ocaml-migrate-parsetree-v1.7.2.tbz#sha256:6ae6753c3e632a63f76b031afc3eab74b209babdfdba4030060a934ce0660bd6"
+        ],
+        "opam": {
+          "name": "ocaml-migrate-parsetree",
+          "version": "1.7.2",
+          "path": "esy.lock/opam/ocaml-migrate-parsetree.1.7.2"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
         }
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/result@opam:1.5@6b753c82",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+        "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/result@opam:1.5@6b753c82",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
         "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+>>>>>>> chore: merge master
         "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
-        "@opam/dune@opam:2.5.0@aef1678b"
+        "@opam/dune@opam:2.5.1@a0c1e658"
       ]
     },
+<<<<<<< HEAD
     "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6@d41d8cd9": {
+<<<<<<< HEAD
+      "id": "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6@d41d8cd9",
+=======
+    "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#04733ed@d41d8cd9": {
+      "id":
+        "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#04733ed@d41d8cd9",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
       "id":
         "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6@d41d8cd9",
+>>>>>>> chore: merge master
       "name": "@opam/ocaml-lsp-server",
       "version":
         "github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6",
       "source": {
         "type": "install",
+<<<<<<< HEAD
         "source": [
           "github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6"
         ]
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/yojson@opam:1.7.0@7056d985",
+=======
+        "source": [ "github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#04733ed" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
+>>>>>>> chore: merge master
         "@opam/stdlib-shims@opam:0.1.0@d957c903",
         "@opam/ppx_yojson_conv_lib@opam:v0.14.0@116b53d6",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/menhir@opam:20200211@26571604",
+<<<<<<< HEAD
         "@opam/dune-build-info@opam:2.5.1@921e5578",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+<<<<<<< HEAD
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/yojson@opam:1.7.0@7056d985",
+=======
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
+>>>>>>> chore: merge master
         "@opam/stdlib-shims@opam:0.1.0@d957c903",
         "@opam/ppx_yojson_conv_lib@opam:v0.14.0@116b53d6",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/menhir@opam:20200211@26571604",
+<<<<<<< HEAD
         "@opam/dune-build-info@opam:2.5.1@921e5578",
         "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ]
     },
     "@opam/ocaml-compiler-libs@opam:v0.12.1@5c34eb0d": {
@@ -1214,11 +2262,29 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/mmap@opam:1.1.0@b85334ff": {
@@ -1239,11 +2305,22 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/mew_vi@opam:0.5.0@cf66c299": {
@@ -1264,13 +2341,34 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/react@opam:1.2.1@0e11855f",
+        "@opam/mew@opam:0.1.0@a74f69d6",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/react@opam:1.2.1@0e11855f",
+        "@opam/mew@opam:0.1.0@a74f69d6",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
-        "@opam/mew@opam:0.1.0@a74f69d6", "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/mew@opam:0.1.0@a74f69d6", "@opam/dune@opam:2.5.1@f38f376e",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
-        "@opam/mew@opam:0.1.0@a74f69d6", "@opam/dune@opam:2.5.0@aef1678b"
+        "@opam/mew@opam:0.1.0@a74f69d6", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/mew@opam:0.1.0@a74f69d6": {
@@ -1291,13 +2389,27 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/trie@opam:1.0.0@d2efc587",
+        "@opam/result@opam:1.5@6b753c82",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/trie@opam:1.0.0@d2efc587",
+        "@opam/result@opam:1.5@6b753c82",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/trie@opam:1.0.0@d2efc587",
-        "@opam/result@opam:1.5@6b753c82", "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/result@opam:1.5@6b753c82", "@opam/dune@opam:2.5.1@f38f376e",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/trie@opam:1.0.0@d2efc587",
-        "@opam/result@opam:1.5@6b753c82", "@opam/dune@opam:2.5.0@aef1678b"
+        "@opam/result@opam:1.5@6b753c82", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/merlin-extend@opam:0.5@675b1611": {
@@ -1318,11 +2430,30 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/cppo@opam:1.6.6@f4f83858",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/cppo@opam:1.6.6@f4f83858", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@opam/cppo@opam:1.6.6@f4f83858", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/menhirSdk@opam:20200211@b2a79ec0": {
@@ -1343,11 +2474,29 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/menhirLib@opam:20200211@93d0f001": {
@@ -1368,11 +2517,29 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/menhir@opam:20200211@26571604": {
@@ -1398,15 +2565,35 @@
         }
       ],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/menhirSdk@opam:20200211@b2a79ec0",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/menhirSdk@opam:20200211@b2a79ec0",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+        "@opam/menhirLib@opam:20200211@93d0f001",
+        "@opam/fix@opam:20200131@0ecd2f01", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/menhirSdk@opam:20200211@b2a79ec0",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/menhirSdk@opam:20200211@b2a79ec0",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/menhirSdk@opam:20200211@b2a79ec0",
         "@opam/menhirLib@opam:20200211@93d0f001",
-        "@opam/fix@opam:20200131@0ecd2f01", "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/fix@opam:20200131@0ecd2f01", "@opam/dune@opam:2.5.1@f38f376e",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/menhirSdk@opam:20200211@b2a79ec0",
+>>>>>>> chore: merge master
         "@opam/menhirLib@opam:20200211@93d0f001",
-        "@opam/dune@opam:2.5.0@aef1678b"
+        "@opam/dune@opam:2.5.1@a0c1e658"
       ]
     },
     "@opam/lwt_react@opam:1.1.3@72987fcf": {
@@ -1427,13 +2614,37 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/react@opam:1.2.1@0e11855f",
+        "@opam/lwt@opam:4.5.0@677655b4",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/react@opam:1.2.1@0e11855f",
+        "@opam/lwt@opam:4.5.0@677655b4",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
+        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
+        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
-        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@f38f376e",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
-        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.0@aef1678b"
+        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/lwt_ppx@opam:2.0.1@ab0debb8": {
@@ -1454,17 +2665,41 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
         "ocaml@4.10.0@d41d8cd9",
         "@opam/ppx_tools_versioned@opam:5.4.0@48c10ee1",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
-        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+        "@opam/lwt@opam:4.5.0@677655b4",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9",
         "@opam/ppx_tools_versioned@opam:5.4.0@48c10ee1",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
-        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.0@aef1678b"
+<<<<<<< HEAD
+        "@opam/lwt@opam:4.5.0@677655b4",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/ppx_tools_versioned@opam:5.3.0@2c0dc023",
+        "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
+        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/ppx_tools_versioned@opam:5.3.0@2c0dc023",
+        "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
+        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/lwt_log@opam:1.1.1@2d7a797f": {
@@ -1485,11 +2720,19 @@
       },
       "overrides": [],
       "dependencies": [
-        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@a0c1e658",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.0@aef1678b"
+        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@a0c1e658"
+=======
+        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/lwt@opam:4.5.0@677655b4": {
@@ -1510,23 +2753,54 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/seq@opam:base@d8d7de1d",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
+>>>>>>> chore: merge master
         "@opam/result@opam:1.5@6b753c82",
         "@opam/ocplib-endian@opam:1.1@84c1ca88",
         "@opam/mmap@opam:1.1.0@b85334ff",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
-        "@opam/dune@opam:2.5.0@aef1678b", "@opam/cppo@opam:1.6.6@f4f83858",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/cppo@opam:1.6.6@f4f83858",
+=======
+        "@opam/dune@opam:2.5.1@a0c1e658", "@opam/cppo@opam:1.6.6@f4f83858",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "@opam/dune@opam:2.5.1@f38f376e", "@opam/cppo@opam:1.6.6@f4f83858",
+>>>>>>> chore: merge master
         "@opam/base-unix@opam:base@87d0b2eb",
         "@opam/base-threads@opam:base@36803084",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/seq@opam:base@d8d7de1d",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
+>>>>>>> chore: merge master
         "@opam/result@opam:1.5@6b753c82",
         "@opam/ocplib-endian@opam:1.1@84c1ca88",
         "@opam/mmap@opam:1.1.0@b85334ff",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
+<<<<<<< HEAD
         "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ]
     },
     "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9": {
@@ -1539,11 +2813,30 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/psq@opam:0.2.0@247756d4",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/psq@opam:0.2.0@247756d4"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/psq@opam:0.2.0@247756d4",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/psq@opam:0.2.0@247756d4"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/psq@opam:0.2.0@247756d4",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/psq@opam:0.2.0@247756d4"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/logs@opam:0.7.0@1d03143e": {
@@ -1564,14 +2857,31 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/topkg@opam:1.0.1@a42c631e",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
+>>>>>>> chore: merge master
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
         "@opam/lwt@opam:4.5.0@677655b4", "@opam/fmt@opam:0.8.8@01c3a23c",
         "@opam/base-threads@opam:base@36803084",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
+<<<<<<< HEAD
+<<<<<<< HEAD
+      "devDependencies": ["ocaml@4.10.0@d41d8cd9"]
+=======
+      "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
       "devDependencies": [ "ocaml@4.10.0@d41d8cd9" ]
+>>>>>>> chore: merge master
     },
     "@opam/lambda-term@opam:3.1.0@8adc2660": {
       "id": "@opam/lambda-term@opam:3.1.0@8adc2660",
@@ -1591,22 +2901,48 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/zed@opam:3.1.0@86c55416",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/zed@opam:2.0.7@5978011f",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/zed@opam:3.1.0@86c55416",
+>>>>>>> chore: merge master
         "@opam/react@opam:1.2.1@0e11855f",
         "@opam/mew_vi@opam:0.5.0@cf66c299",
         "@opam/lwt_react@opam:1.1.3@72987fcf",
         "@opam/lwt_log@opam:1.1.1@2d7a797f", "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+        "@opam/dune@opam:2.5.1@a0c1e658",
+=======
+        "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/camomile@opam:1.0.2@51b42ad8",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/zed@opam:3.1.0@86c55416",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/zed@opam:2.0.7@5978011f",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/zed@opam:3.1.0@86c55416",
+>>>>>>> chore: merge master
         "@opam/react@opam:1.2.1@0e11855f",
         "@opam/mew_vi@opam:0.5.0@cf66c299",
         "@opam/lwt_react@opam:1.1.3@72987fcf",
         "@opam/lwt_log@opam:1.1.1@2d7a797f", "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+        "@opam/dune@opam:2.5.1@a0c1e658",
+=======
+        "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/camomile@opam:1.0.2@51b42ad8"
       ]
     },
@@ -1629,15 +2965,28 @@
       "overrides": [],
       "dependencies": [
         "@opam/tyxml@opam:4.4.0@1dca5713", "@opam/ptime@opam:0.8.5@0051d642",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+<<<<<<< HEAD
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "@opam/tyxml@opam:4.4.0@1dca5713", "@opam/ptime@opam:0.8.5@0051d642",
-        "@opam/dune@opam:2.5.0@aef1678b"
+        "@opam/dune@opam:2.5.1@a0c1e658"
+=======
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "@opam/tyxml@opam:4.4.0@1dca5713", "@opam/ptime@opam:0.8.5@0051d642",
+        "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
+<<<<<<< HEAD
     "@opam/integers@opam:0.4.0@f7acfaeb": {
       "id": "@opam/integers@opam:0.4.0@f7acfaeb",
+=======
+    "@opam/integers@opam:0.3.0@d6eefd3a": {
+      "id": "@opam/integers@opam:0.3.0@d6eefd3a",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       "name": "@opam/integers",
       "version": "opam:0.4.0",
       "source": {
@@ -1654,11 +3003,53 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+      ]
+    },
+    "@opam/hpack@opam:0.2.0@9f3eae78": {
+      "id": "@opam/hpack@opam:0.2.0@9f3eae78",
+      "name": "@opam/hpack",
+      "version": "opam:0.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/c8/c883927ce8a9f3f7159ef7b20988f051#md5:c883927ce8a9f3f7159ef7b20988f051",
+          "archive:https://github.com/anmonteiro/ocaml-h2/releases/download/0.2.0/h2-0.2.0.tbz#md5:c883927ce8a9f3f7159ef7b20988f051"
+        ],
+        "opam": {
+          "name": "hpack",
+          "version": "0.2.0",
+          "path": "esy.lock/opam/hpack.0.2.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/faraday@opam:0.7.1@19546ee5",
+        "@opam/dune@opam:2.4.0@639d28a3",
+        "@opam/angstrom@opam:0.13.0@cf460a5e",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/fpath@opam:0.7.2@45477b93": {
@@ -1679,7 +3070,16 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/topkg@opam:1.0.1@a42c631e",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
+>>>>>>> chore: merge master
         "@opam/result@opam:1.5@6b753c82",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
@@ -1687,7 +3087,16 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/result@opam:1.5@6b753c82",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+>>>>>>> chore: merge master
         "@opam/astring@opam:0.8.3@4e5e17d5"
       ]
     },
@@ -1709,7 +3118,16 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/topkg@opam:1.0.1@a42c631e",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
+>>>>>>> chore: merge master
         "@opam/stdlib-shims@opam:0.1.0@d957c903",
         "@opam/seq@opam:base@d8d7de1d",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
@@ -1718,7 +3136,16 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/stdlib-shims@opam:0.1.0@d957c903",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/stdlib-shims@opam:0.1.0@d957c903",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/stdlib-shims@opam:0.1.0@d957c903",
+>>>>>>> chore: merge master
         "@opam/seq@opam:base@d8d7de1d"
       ]
     },
@@ -1740,11 +3167,116 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+      ]
+    },
+    "@opam/faraday-lwt-unix@opam:0.7.1@4854f547": {
+      "id": "@opam/faraday-lwt-unix@opam:0.7.1@4854f547",
+      "name": "@opam/faraday-lwt-unix",
+      "version": "opam:0.7.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/09/09396dbb4a08323194e092b6bff4aaf6#md5:09396dbb4a08323194e092b6bff4aaf6",
+          "archive:https://github.com/inhabitedtype/faraday/archive/0.7.1.tar.gz#md5:09396dbb4a08323194e092b6bff4aaf6"
+        ],
+        "opam": {
+          "name": "faraday-lwt-unix",
+          "version": "0.7.1",
+          "path": "esy.lock/opam/faraday-lwt-unix.0.7.1"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/lwt@opam:4.5.0@677655b4",
+        "@opam/faraday-lwt@opam:0.7.1@e28c97d1",
+        "@opam/dune@opam:2.4.0@639d28a3",
+        "@opam/base-unix@opam:base@87d0b2eb",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/lwt@opam:4.5.0@677655b4",
+        "@opam/faraday-lwt@opam:0.7.1@e28c97d1",
+        "@opam/dune@opam:2.4.0@639d28a3",
+        "@opam/base-unix@opam:base@87d0b2eb"
+      ]
+    },
+    "@opam/faraday-lwt@opam:0.7.1@e28c97d1": {
+      "id": "@opam/faraday-lwt@opam:0.7.1@e28c97d1",
+      "name": "@opam/faraday-lwt",
+      "version": "opam:0.7.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/09/09396dbb4a08323194e092b6bff4aaf6#md5:09396dbb4a08323194e092b6bff4aaf6",
+          "archive:https://github.com/inhabitedtype/faraday/archive/0.7.1.tar.gz#md5:09396dbb4a08323194e092b6bff4aaf6"
+        ],
+        "opam": {
+          "name": "faraday-lwt",
+          "version": "0.7.1",
+          "path": "esy.lock/opam/faraday-lwt.0.7.1"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/lwt@opam:4.5.0@677655b4",
+        "@opam/faraday@opam:0.7.1@19546ee5",
+        "@opam/dune@opam:2.4.0@639d28a3",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/lwt@opam:4.5.0@677655b4",
+        "@opam/faraday@opam:0.7.1@19546ee5",
+        "@opam/dune@opam:2.4.0@639d28a3"
+      ]
+    },
+    "@opam/faraday@opam:0.7.1@19546ee5": {
+      "id": "@opam/faraday@opam:0.7.1@19546ee5",
+      "name": "@opam/faraday",
+      "version": "opam:0.7.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/09/09396dbb4a08323194e092b6bff4aaf6#md5:09396dbb4a08323194e092b6bff4aaf6",
+          "archive:https://github.com/inhabitedtype/faraday/archive/0.7.1.tar.gz#md5:09396dbb4a08323194e092b6bff4aaf6"
+        ],
+        "opam": {
+          "name": "faraday",
+          "version": "0.7.1",
+          "path": "esy.lock/opam/faraday.0.7.1"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/dune@opam:2.4.0@639d28a3",
+        "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/easy-format@opam:1.3.2@0484b3c4": {
@@ -1765,11 +3297,29 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/dune-private-libs@opam:2.5.1@60c1661f": {
@@ -1790,11 +3340,29 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/dune-configurator@opam:2.5.1@aeb9d8d5": {
@@ -1816,7 +3384,13 @@
       "overrides": [],
       "dependencies": [
         "@opam/dune-private-libs@opam:2.5.1@60c1661f",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+=======
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+>>>>>>> chore: merge master
       ],
       "devDependencies": [
         "@opam/dune-private-libs@opam:2.5.1@60c1661f",
@@ -1841,34 +3415,71 @@
       },
       "overrides": [],
       "dependencies": [
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+<<<<<<< HEAD
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
-      "devDependencies": [ "@opam/dune@opam:2.5.0@aef1678b" ]
+      "devDependencies": ["@opam/dune@opam:2.5.0@aef1678b"]
     },
     "@opam/dune@opam:2.5.0@aef1678b": {
       "id": "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "@opam/dune-private-libs@opam:2.5.1@60c1661f",
+        "@opam/dune@opam:2.5.1@a0c1e658"
+      ]
+=======
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [ "@opam/dune@opam:2.5.1@f38f376e" ]
+>>>>>>> chore: merge master
+    },
+    "@opam/dune@opam:2.5.1@a0c1e658": {
+      "id": "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       "name": "@opam/dune",
-      "version": "opam:2.5.0",
+      "version": "opam:2.5.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/9c/9cc1661b9b173dd183867edcf8ee28a9ce79079a7d00316b719bdcba1d78d7da#sha256:9cc1661b9b173dd183867edcf8ee28a9ce79079a7d00316b719bdcba1d78d7da",
-          "archive:https://github.com/ocaml/dune/releases/download/2.5.0/dune-2.5.0.tbz#sha256:9cc1661b9b173dd183867edcf8ee28a9ce79079a7d00316b719bdcba1d78d7da"
+          "archive:https://opam.ocaml.org/cache/sha256/8f/8f77d3a87f208e0d7cccaa1c48c4bb1bb87d62d07c3f25e9b8ba298e028ce52b#sha256:8f77d3a87f208e0d7cccaa1c48c4bb1bb87d62d07c3f25e9b8ba298e028ce52b",
+          "archive:https://github.com/ocaml/dune/releases/download/2.5.1/dune-2.5.1.tbz#sha256:8f77d3a87f208e0d7cccaa1c48c4bb1bb87d62d07c3f25e9b8ba298e028ce52b"
         ],
         "opam": {
           "name": "dune",
-          "version": "2.5.0",
-          "path": "esy.lock/opam/dune.2.5.0"
+          "version": "2.5.1",
+          "path": "esy.lock/opam/dune.2.5.1"
         }
       },
+<<<<<<< HEAD
       "overrides": [],
+=======
+      "overrides": [
+        {
+          "opamoverride":
+            "esy.lock/overrides/opam__s__dune_opam__c__2.5.1_opam_override"
+        }
+      ],
+>>>>>>> chore: merge master
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/base-unix@opam:base@87d0b2eb",
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/base-unix@opam:base@87d0b2eb",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/base-unix@opam:base@87d0b2eb",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
         "@opam/base-threads@opam:base@36803084",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/base-unix@opam:base@87d0b2eb",
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/base-unix@opam:base@87d0b2eb",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/base-unix@opam:base@87d0b2eb",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
         "@opam/base-threads@opam:base@36803084"
       ]
     },
@@ -1895,14 +3506,34 @@
         }
       ],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+>>>>>>> chore: merge master
         "@opam/integers@opam:0.4.0@f7acfaeb",
         "@opam/conf-pkg-config@opam:1.2@d86c8f53",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/integers@opam:0.3.0@d6eefd3a",
+        "@opam/conf-pkg-config@opam:1.1@55d8e330",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/integers@opam:0.4.0@f7acfaeb",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/integers@opam:0.3.0@d6eefd3a",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/integers@opam:0.4.0@f7acfaeb",
+>>>>>>> chore: merge master
         "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
@@ -1924,12 +3555,30 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/base-unix@opam:base@87d0b2eb",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
@@ -1948,8 +3597,17 @@
       },
       "overrides": [
         {
+<<<<<<< HEAD
+<<<<<<< HEAD
+          "opamoverride": "esy.lock/overrides/opam__s__conf_pkg_config_opam__c__1.2_opam_override"
+=======
+          "opamoverride":
+            "esy.lock/overrides/opam__s__conf_pkg_config_opam__c__1.1_opam_override"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
           "opamoverride":
             "esy.lock/overrides/opam__s__conf_pkg_config_opam__c__1.2_opam_override"
+>>>>>>> chore: merge master
         }
       ],
       "dependencies": [
@@ -1993,14 +3651,36 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/result@opam:1.5@6b753c82",
         "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+        "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+        "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/camomile@opam:1.0.2@51b42ad8",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/result@opam:1.5@6b753c82",
         "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+        "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+        "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/camomile@opam:1.0.2@51b42ad8"
       ]
     },
@@ -2022,11 +3702,59 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b",
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/dune@opam:2.5.0@aef1678b"
+      ]
+    },
+    "@opam/bos@opam:0.2.0@df49e63f": {
+      "id": "@opam/bos@opam:0.2.0@df49e63f",
+      "name": "@opam/bos",
+      "version": "opam:0.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/ae/aeae7447567db459c856ee41b5a66fd2#md5:aeae7447567db459c856ee41b5a66fd2",
+          "archive:http://erratique.ch/software/bos/releases/bos-0.2.0.tbz#md5:aeae7447567db459c856ee41b5a66fd2"
+        ],
+        "opam": {
+          "name": "bos",
+          "version": "0.2.0",
+          "path": "esy.lock/opam/bos.0.2.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/topkg@opam:1.0.1@a42c631e",
+        "@opam/rresult@opam:0.6.0@4b185e72",
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
+        "@opam/logs@opam:0.7.0@1d03143e",
+        "@opam/fpath@opam:0.7.2@45477b93",
+        "@opam/fmt@opam:0.8.8@01c3a23c",
+        "@opam/base-unix@opam:base@87d0b2eb",
+        "@opam/astring@opam:0.8.3@4e5e17d5",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
+=======
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/biniou@opam:1.2.1@d7570399": {
@@ -2047,12 +3775,57 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/easy-format@opam:1.3.2@0484b3c4",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/easy-format@opam:1.3.2@0484b3c4",
+        "@opam/dune@opam:2.5.0@aef1678b"
+      ]
+    },
+    "@opam/bigstringaf@opam:0.6.1@35f5e6d1": {
+      "id": "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
+      "name": "@opam/bigstringaf",
+      "version": "opam:0.6.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/dc/dccf639273b1eec0e0f142f21319268d#md5:dccf639273b1eec0e0f142f21319268d",
+          "archive:https://github.com/inhabitedtype/bigstringaf/archive/0.6.1.tar.gz#md5:dccf639273b1eec0e0f142f21319268d"
+        ],
+        "opam": {
+          "name": "bigstringaf",
+          "version": "0.6.1",
+          "path": "esy.lock/opam/bigstringaf.0.6.1"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/dune@opam:2.4.0@639d28a3",
+        "@opam/bigarray-compat@opam:1.0.0@1faefa97",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/easy-format@opam:1.3.2@0484b3c4",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/easy-format@opam:1.3.2@0484b3c4",
+        "@opam/dune@opam:2.5.1@a0c1e658"
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/easy-format@opam:1.3.2@0484b3c4",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/easy-format@opam:1.3.2@0484b3c4",
-        "@opam/dune@opam:2.5.0@aef1678b"
+        "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/base-unix@opam:base@87d0b2eb": {
@@ -2104,11 +3877,29 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9"
+>>>>>>> chore: merge master
       ]
     },
     "@opam/base@opam:v0.14.0@b8817fc1": {
@@ -2129,14 +3920,33 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/sexplib0@opam:v0.14.0@ddeb6438",
+        "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/sexplib0@opam:v0.14.0@ddeb6438",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+>>>>>>> chore: merge master
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/sexplib0@opam:v0.14.0@ddeb6438",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
         "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/sexplib0@opam:v0.13.0@3f54c2be",
+        "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/sexplib0@opam:v0.13.0@3f54c2be",
+        "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
+        "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ]
     },
     "@opam/atdgen-runtime@opam:2.2.1@6a3a6395": {
@@ -2157,14 +3967,38 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
-        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/biniou@opam:1.2.1@d7570399",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/dune@opam:2.5.0@aef1678b",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.1@a0c1e658",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
-        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.5.1@f38f376e",
+>>>>>>> chore: merge master
         "@opam/biniou@opam:1.2.1@d7570399"
       ]
     },
@@ -2186,14 +4020,39 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/biniou@opam:1.2.1@d7570399",
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
-        "@opam/dune@opam:2.5.0@aef1678b", "@opam/biniou@opam:1.2.1@d7570399",
+        "@opam/dune@opam:2.5.1@f38f376e", "@opam/biniou@opam:1.2.1@d7570399",
+>>>>>>> chore: merge master
         "@opam/atdgen-runtime@opam:2.2.1@6a3a6395",
         "@opam/atd@opam:2.2.1@071ab6bd", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/biniou@opam:1.2.1@d7570399",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@opam/biniou@opam:1.2.1@d7570399",
+        "@opam/atdgen-runtime@opam:2.2.1@6a3a6395",
+        "@opam/atd@opam:2.2.1@071ab6bd", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@opam/biniou@opam:1.2.1@d7570399",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
-        "@opam/dune@opam:2.5.0@aef1678b", "@opam/biniou@opam:1.2.1@d7570399",
+        "@opam/dune@opam:2.5.1@f38f376e", "@opam/biniou@opam:1.2.1@d7570399",
+>>>>>>> chore: merge master
         "@opam/atdgen-runtime@opam:2.2.1@6a3a6395",
         "@opam/atd@opam:2.2.1@071ab6bd"
       ]
@@ -2216,16 +4075,38 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/menhir@opam:20200211@26571604",
+        "@opam/easy-format@opam:1.3.2@0484b3c4",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/re@opam:1.9.0@d4d5e13d",
         "@opam/menhir@opam:20200211@26571604",
         "@opam/easy-format@opam:1.3.2@0484b3c4",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+>>>>>>> chore: merge master
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/re@opam:1.9.0@d4d5e13d",
         "@opam/menhir@opam:20200211@26571604",
         "@opam/easy-format@opam:1.3.2@0484b3c4",
         "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/menhir@opam:20200211@26571604",
+        "@opam/easy-format@opam:1.3.2@0484b3c4",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/menhir@opam:20200211@26571604",
+        "@opam/easy-format@opam:1.3.2@0484b3c4",
+        "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
       ]
     },
     "@opam/astring@opam:0.8.3@4e5e17d5": {
@@ -2246,14 +4127,29 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/topkg@opam:1.0.1@a42c631e",
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
+>>>>>>> chore: merge master
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/base-bytes@opam:base@19d0c2ff"
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/base-bytes@opam:base@19d0c2ff"
+>>>>>>> chore: merge master
       ]
     },
     "@glennsl/timber@1.2.0@d41d8cd9": {
@@ -2264,13 +4160,42 @@
         "type": "install",
         "source": [
           "archive:https://registry.npmjs.org/@glennsl/timber/-/timber-1.2.0.tgz#sha1:fd888b470eeef09d00482d1888eaa360e599daf4"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/base-bytes@opam:base@19d0c2ff"
+      ]
+    },
+    "@glennsl/timber@1.0.0@d41d8cd9": {
+      "id": "@glennsl/timber@1.0.0@d41d8cd9",
+      "name": "@glennsl/timber",
+      "version": "1.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/@glennsl/timber/-/timber-1.0.0.tgz#sha1:4fc919f19b7849d9877d842008b5960e5a502123"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
         ]
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/logs@opam:0.7.0@1d03143e",
+        "@opam/fmt@opam:0.8.8@01c3a23c",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/reason@3.6.0@d41d8cd9"
+=======
+        "refmterr@3.3.0@d41d8cd9", "ocaml@4.8.1000@d41d8cd9",
+        "@opam/re@opam:1.9.0@d4d5e13d", "@opam/logs@opam:0.7.0@1d03143e",
+        "@opam/fmt@opam:0.8.8@01c3a23c", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/re@opam:1.9.0@d4d5e13d",
         "@opam/logs@opam:0.7.0@1d03143e", "@opam/fmt@opam:0.8.8@01c3a23c",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/reason@3.6.0@d41d8cd9"
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/reason@3.6.0@d41d8cd9"
+>>>>>>> chore: merge master
       ],
       "devDependencies": []
     },
@@ -2288,24 +4213,43 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "@esy-ocaml/reason@3.6.0@d41d8cd9": {
-      "id": "@esy-ocaml/reason@3.6.0@d41d8cd9",
+    "@esy-ocaml/reason@3.5.2@d41d8cd9": {
+      "id": "@esy-ocaml/reason@3.5.2@d41d8cd9",
       "name": "@esy-ocaml/reason",
-      "version": "3.6.0",
+      "version": "3.5.2",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@esy-ocaml/reason/-/reason-3.6.0.tgz#sha1:ae98f3335e9e03ff0e01376830a14cd1246b5278"
+          "archive:https://registry.npmjs.org/@esy-ocaml/reason/-/reason-3.5.2.tgz#sha1:ac48b63fd66fbbc1d77ab6a2b7e3a1ba21a8f40b"
         ]
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/result@opam:1.5@6b753c82",
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+>>>>>>> chore: merge master
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
         "@opam/merlin-extend@opam:0.5@675b1611",
         "@opam/menhir@opam:20200211@26571604",
-        "@opam/fix@opam:20200131@0ecd2f01", "@opam/dune@opam:2.5.0@aef1678b"
+<<<<<<< HEAD
+        "@opam/fix@opam:20200131@0ecd2f01",
+        "@opam/dune@opam:2.5.0@aef1678b"
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
+        "@opam/merlin-extend@opam:0.5@a5dd7d4b",
+        "@opam/menhir@opam:20200211@26571604",
+        "@opam/dune@opam:2.5.1@a0c1e658"
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
+        "@opam/fix@opam:20200131@0ecd2f01", "@opam/dune@opam:2.5.1@f38f376e"
+>>>>>>> chore: merge master
       ],
       "devDependencies": []
     },
@@ -2334,10 +4278,26 @@
       },
       "overrides": [],
       "dependencies": [
+<<<<<<< HEAD
+<<<<<<< HEAD
+        "ocaml@4.10.0@d41d8cd9",
+        "@opam/ppxlib@opam:0.13.0@65a9c7cc",
+        "@opam/dune@opam:2.5.0@aef1678b",
+        "@esy-ocaml/reason@3.6.0@d41d8cd9"
+      ],
+      "devDependencies": ["ocaml@4.10.0@d41d8cd9"]
+=======
+        "ocaml@4.8.1000@d41d8cd9", "@opam/ppxlib@opam:0.13.0@65a9c7cc",
+        "@opam/dune@opam:2.5.1@a0c1e658", "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
+>>>>>>> Chore: Update API to reflect Reason Skia-changes
+=======
         "ocaml@4.10.0@d41d8cd9", "@opam/ppxlib@opam:0.13.0@65a9c7cc",
-        "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/reason@3.6.0@d41d8cd9"
+        "@opam/dune@opam:2.5.1@f38f376e", "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
       "devDependencies": [ "ocaml@4.10.0@d41d8cd9" ]
+>>>>>>> chore: merge master
     }
   }
 }
