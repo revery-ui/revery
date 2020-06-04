@@ -8,16 +8,22 @@ let length_percentage_auto = str => `user(float_of_string(str)); // TODO
 
 let paint =
   fun
-  | "" => `none
-  | "none" => `none
-  | "currentColor" => `currentColor
-  | value when value.[0] == '#' => `color(Color.hex(value) |> Color.toSkia)
-  | value => `color(Colors.fromStringExn(value) |> Color.toSkia); // TODO
+  | "none" => Some(`none)
+  | "currentColor" => Some(`currentColor)
+  | value when value.[0] == '#' =>
+    switch (`color(Color.hex(value) |> Color.toSkia)) {
+    | value => Some(value)
+    | exception _ => None
+    }
+  // TODO: functions
+  | value =>
+    Colors.fromString(value)
+    |> Option.map(color => `color(Color.toSkia(color)));
 
 let attribute =
   fun
-  | ("fill", value) => Some(`fill(paint(value)))
-  | ("stroke", value) => Some(`stroke(paint(value)))
+  | ("fill", value) => paint(value) |> Option.map(v => `fill(v))
+  | ("stroke", value) => paint(value) |> Option.map(v => `stroke(v))
   | ("stroke-width", value) => Some(`strokeWidth(length(value)))
   | _ => None;
 

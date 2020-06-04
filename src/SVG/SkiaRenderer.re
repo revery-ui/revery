@@ -12,6 +12,7 @@ module List = {
       };
 };
 
+open Revery_Core;
 open Revery_Draw;
 open Model;
 open RenderContext;
@@ -33,15 +34,17 @@ let userCoord =
 
 let paint =
   fun
-  | `none => Skia.Paint.make()
+  | `none => None
   | `currentColor => failwith("TODO - currentColor")
   | `color(color) => {
       let paint = Skia.Paint.make();
       Skia.Paint.setColor(paint, color);
-      paint;
+      Some(paint);
     }
   | `funciri(_) => failwith("TODO - funciri")
   | `inherit_ => failwith("TODO - inherit");
+
+let blackPaint = paint(`color(Colors.black |> Color.toSkia)) |> Option.get;
 
 let circle = (~cx, ~cy, ~r, ~paint, ~context) => {
   CanvasContext.drawCircle(~x=cx, ~y=cy, ~radius=r, ~paint, context.canvas);
@@ -137,23 +140,26 @@ let geometry = (context, shape: Geometry.t) => {
       | `fill(spec) => Some(paint(spec))
       | _ => None,
       shape.attributes,
-    );
+    )
+    |> Option.value(~default=Some(blackPaint));
 
   let stroke = {
     let make = spec => {
-      let paint = paint(spec);
+      switch (paint(spec)) {
+      | Some(paint) =>
+        Skia.Paint.setStyle(paint, Stroke);
 
-      Skia.Paint.setStyle(paint, Stroke);
+        List.iter(
+          fun
+          | `strokeWidth(width) =>
+            Skia.Paint.setStrokeWidth(paint, userCoord(width))
+          | _ => (),
+          shape.attributes,
+        );
 
-      List.iter(
-        fun
-        | `strokeWidth(width) =>
-          Skia.Paint.setStrokeWidth(paint, userCoord(width))
-        | _ => (),
-        shape.attributes,
-      );
-
-      Some(paint);
+        Some(paint);
+      | None => None
+      };
     };
 
     List.find_map(
