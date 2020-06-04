@@ -692,6 +692,8 @@ module M = (F: FOREIGN) => {
         @-> returning(void),
       );
     let close = foreign("sk_path_close", t @-> returning(void));
+    let getLastPoint =
+      foreign("sk_path_get_last_point", t @-> Point.t @-> returning(bool));
   };
 
   module ColorSpace = {

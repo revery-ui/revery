@@ -580,6 +580,8 @@ module Path = {
   let arcTo = SkiaWrapped.Path.arcTo;
   let rArcTo = SkiaWrapped.Path.rArcTo;
   let close = SkiaWrapped.Path.close;
+
+  let getLastPoint = SkiaWrapped.Path.getLastPoint;
 };
 
 module ColorSpace = {
