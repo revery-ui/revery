@@ -148,6 +148,7 @@ let geometry = (context, shape: Geometry.t) => {
       switch (paint(spec)) {
       | Some(paint) =>
         Skia.Paint.setStyle(paint, Stroke);
+        Skia.Paint.setStrokeWidth(paint, 1.);
 
         List.iter(
           fun
