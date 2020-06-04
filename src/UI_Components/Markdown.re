@@ -111,12 +111,6 @@ module Styles = {
       marginTop(4),
       marginBottom(4),
     ];
-
-    let labelContainer = [
-      flexDirection(`Row),
-      alignItems(`FlexEnd),
-      justifyContent(`FlexEnd),
-    ];
   };
 
   module List = {
