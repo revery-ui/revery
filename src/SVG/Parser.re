@@ -2,9 +2,14 @@ open Revery_Core;
 open SimpleXml;
 open Model;
 
-let length = str => `user(float_of_string(str)); // TODO
-let length_percentage = str => `user(float_of_string(str)); // TODO
-let length_percentage_auto = str => `user(float_of_string(str)); // TODO
+let parseFloat = str =>
+  try(float_of_string(str)) {
+  | _ => failwith("invalid float: " ++ str)
+  };
+
+let length = str => `user(parseFloat(str)); // TODO
+let length_percentage = str => `user(parseFloat(str)); // TODO
+let length_percentage_auto = str => `user(parseFloat(str)); // TODO
 
 let paint =
   fun
@@ -33,14 +38,18 @@ let coordinates = str => {
 
   let accept = () =>
     if (Buffer.length(buffer) > 0) {
-      let coord = Buffer.contents(buffer) |> float_of_string;
+      let coord = Buffer.contents(buffer) |> parseFloat;
       acc := [coord, ...acc^];
       Buffer.clear(buffer);
     };
 
   String.iter(
     fun
-    | ('0'..'9' | '.' | '+' | '-') as ch => Buffer.add_char(buffer, ch)
+    | ('+' | '-') as ch => {
+        accept();
+        Buffer.add_char(buffer, ch);
+      }
+    | ('0'..'9' | '.') as ch => Buffer.add_char(buffer, ch)
     | '\t'
     | ' '
     | '\n'
@@ -59,49 +68,136 @@ let coordinates = str => {
 let pathCommands = str => {
   let tokens = {
     let buffer = Buffer.create(10);
-    let acc = ref([]);
 
-    let acceptArg = () =>
-      if (Buffer.length(buffer) > 0) {
-        let token = Buffer.contents(buffer) |> float_of_string;
-        acc := [`arg(token), ...acc^];
-        Buffer.clear(buffer);
-      };
+    let arg = str => `arg(parseFloat(str));
+    let cmd = str => `cmd(str.[0]);
 
-    String.iter(
-      fun
-      // argument
-      | ('0'..'9' | '.' | '+' | '-') as ch => Buffer.add_char(buffer, ch)
+    let push = i => Buffer.add_char(buffer, str.[i]);
+
+    let accept = (f, acc) => {
+      let str = Buffer.contents(buffer);
+      Buffer.clear(buffer);
+      str != "" ? [f(str), ...acc] : acc;
+    };
+
+    let eof = acc => accept(arg, acc) |> List.rev;
+
+    // Lexer states
+    let rec initial = (acc, i) =>
+      switch (str.[i]) {
+      | 'M'
+      | 'm'
+      | 'L'
+      | 'l'
+      | 'H'
+      | 'h'
+      | 'V'
+      | 'v'
+      | 'C'
+      | 'c'
+      | 'S'
+      | 's'
+      | 'Q'
+      | 'q'
+      | 'T'
+      | 't'
+      | 'A'
+      | 'a'
+      | 'Z'
+      | 'z' =>
+        let acc = accept(arg, acc);
+        push(i);
+        let acc = accept(cmd, acc);
+        initial(acc, i + 1);
+
+      | '+'
+      | '-' =>
+        let acc = accept(arg, acc);
+        push(i);
+        number_preDot(acc, i + 1);
+
+      | '.' =>
+        let acc = accept(arg, acc);
+        number_postDot(acc, i + 1);
+
+      | '0'..'9' =>
+        push(i);
+        number_preDot(acc, i + 1);
+
       // white-space or comma
       | '\t'
       | ' '
       | '\n'
       | '\012'
       | '\r'
-      | ',' => acceptArg()
-      // commands
-      | (
-          'M' | 'm' | 'L' | 'l' | 'H' | 'h' | 'V' | 'v' | 'C' | 'c' | 'S' | 's' |
-          'Q' |
-          'q' |
-          'T' |
-          't' |
-          'A' |
-          'a' |
-          'Z' |
-          'z'
-        ) as ch => {
-          acceptArg();
-          acc := [`cmd(ch), ...acc^];
-        }
+      | ',' =>
+        let acc = accept(arg, acc);
+        initial(acc, i + 1);
+
       | ch =>
-        failwith("invalid character in path data: " ++ Char.escaped(ch)),
-      str,
-    );
+        failwith("invalid character in path data: " ++ Char.escaped(ch))
 
-    acceptArg();
+      | exception (Invalid_argument(_)) => eof(acc)
+      }
 
-    List.rev(acc^);
+    and number_preDot = (acc, i) =>
+      switch (str.[i]) {
+      | '.' =>
+        push(i);
+        number_postDot(acc, i + 1);
+
+      | '0'..'9' =>
+        push(i);
+        number_preDot(acc, i + 1);
+
+      | 'e' =>
+        push(i);
+        exponent_initial(acc, i + 1);
+
+      | _ => initial(acc, i)
+
+      | exception (Invalid_argument(_)) => eof(acc)
+      }
+
+    and number_postDot = (acc, i) =>
+      switch (str.[i]) {
+      | '0'..'9' =>
+        push(i);
+        number_postDot(acc, i + 1);
+
+      | 'e' =>
+        push(i);
+        exponent_initial(acc, i + 1);
+
+      | _ => initial(acc, i)
+
+      | exception (Invalid_argument(_)) => eof(acc)
+      }
+
+    and exponent_initial = (acc, i) =>
+      switch (str.[i]) {
+      | '+'
+      | '-' =>
+        push(i);
+        exponent(acc, i + 1);
+
+      | _ => exponent(acc, i)
+
+      | exception (Invalid_argument(_)) => eof(acc)
+      }
+
+    and exponent = (acc, i) =>
+      switch (str.[i]) {
+      | '0'..'9' =>
+        push(i);
+        exponent(acc, i + 1);
+
+      | _ => initial(acc, i)
+
+      | exception (Invalid_argument(_)) => eof(acc)
+      };
+
+    initial([], 0);
   };
 
   let rec parse = acc =>
@@ -327,7 +423,7 @@ let rect = attrs =>
 
 let rec element =
   fun
-  | Element("defs", _, _) => failwith("TODO - defs")
+  //| Element("defs", _, _) =>
   | Element("g", _, children) =>
     Some(Group(List.filter_map(element, children)))
   | Element("circle", attrs, _children) => Some(Geometry(circle(attrs)))
