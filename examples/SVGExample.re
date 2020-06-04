@@ -431,7 +431,7 @@ let examples = [
   (
     "Material - flash",
     {|
-      <!-- Source: https://github.com/PKief/vscode-material-icon-theme/blob/master/icons/disc.svg?short_path=60ae136https://github.com/PKief/vscode-material-icon-theme/blob/master/icons/flash.svg?short_path=987e419 -->
+      <!-- Source: https://github.com/PKief/vscode-material-icon-theme/blob/master/icons/flash.svg?short_path=987e419 -->
 
       <svg version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <defs>
