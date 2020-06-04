@@ -55,6 +55,16 @@ module Styles = {
     let marker = [marginRight(6)];
     let contents = [justifyContent(`FlexStart), alignItems(`FlexStart)];
   };
+
+  module ThematicBreak = {
+    let hr = [
+      flexGrow(1),
+      height(2),
+      marginTop(2),
+      marginBottom(2),
+      backgroundColor(Color.rgba(0., 0., 0., 0.25)),
+    ];
+  };
 };
 
 type inlineAttrs =
@@ -233,7 +243,10 @@ let rec _generateMarkdown = (element, styles) =>
        )
        |> React.listToElement}
     </View>
-
+  | Thematic_break =>
+    <View style=Style.[flexDirection(`Row)]>
+      <View style=Styles.ThematicBreak.hr />
+    </View>
   | _ => <View />
   };
 

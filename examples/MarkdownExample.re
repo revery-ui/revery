@@ -93,6 +93,14 @@ This is [id] reference-style link.
     2. List
       "
     />
+    <Text text="Thematic breaks: " />
+    <markdown markdown="
+Section A
+
+---
+
+Section B
+      " />
   </View>;
 
 let render = () => <example />;
