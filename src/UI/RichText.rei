@@ -36,7 +36,7 @@ let map: (textInfo => t, t) => t;
 
 let measure: t => Dimensions.t;
 
-module type DSLType = {
+module DSL = {
   let fontWeight: (Weight.t, t) => t;
   let thin: t => t;
   let ultralight: t => t;
@@ -59,5 +59,24 @@ module type DSLType = {
   let fontSize: (float, t) => t;
   let color: (Color.t, t) => t;
 };
-module DSL: DSLType;
-include DSLType;
+let fontWeight: (Weight.t, t) => t;
+let thin: t => t;
+let ultralight: t => t;
+let light: t => t;
+let normal: t => t;
+let medium: t => t;
+let semibold: t => t;
+let bold: t => t;
+let ultrabold: t => t;
+let heavy: t => t;
+
+let smoothing: (Smoothing.t, t) => t;
+let noSmoothing: t => t;
+let antialiased: t => t;
+let subpixelAntialiased: t => t;
+
+let fontFamily: (Family.t, t) => t;
+let italicized: (~italicized: bool=?, t) => t;
+let monospaced: (~monospaced: bool=?, t) => t;
+let fontSize: (float, t) => t;
+let color: (Color.t, t) => t;
