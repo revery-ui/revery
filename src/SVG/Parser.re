@@ -200,116 +200,168 @@ let pathCommands = str => {
     initial([], 0);
   };
 
-  let rec parse = acc =>
-    fun
-    | [] => List.rev(acc)
-    | [`cmd('M'), `arg(x), `arg(y), ...rest] =>
-      parse([`M((x, y)), ...acc], rest)
-    | [`cmd('m'), `arg(dx), `arg(dy), ...rest] =>
-      parse([`m((dx, dy)), ...acc], rest)
-    | [`cmd('L'), `arg(x), `arg(y), ...rest] =>
-      parse([`L((x, y)), ...acc], rest)
-    | [`cmd('l'), `arg(dx), `arg(dy), ...rest] =>
-      parse([`l((dx, dy)), ...acc], rest)
-    | [`cmd('H'), `arg(x), ...rest] => parse([`H(x), ...acc], rest)
-    | [`cmd('h'), `arg(dx), ...rest] => parse([`h(dx), ...acc], rest)
-    | [`cmd('V'), `arg(y), ...rest] => parse([`V(y), ...acc], rest)
-    | [`cmd('v'), `arg(dy), ...rest] => parse([`v(dy), ...acc], rest)
-    | [
-        `cmd('C'),
-        `arg(x1),
-        `arg(y1),
-        `arg(x2),
-        `arg(y2),
-        `arg(x),
-        `arg(y),
-        ...rest,
-      ] =>
-      parse([`C((x1, y1, x2, y2, x, y)), ...acc], rest)
-    | [
-        `cmd('c'),
-        `arg(dx1),
-        `arg(dy1),
-        `arg(dx2),
-        `arg(dy2),
-        `arg(dx),
-        `arg(dy),
-        ...rest,
-      ] =>
-      parse([`c((dx1, dy1, dx2, dy2, dx, dy)), ...acc], rest)
-    | [`cmd('S'), `arg(x2), `arg(y2), `arg(x), `arg(y), ...rest] =>
-      parse([`S((x2, y2, x, y)), ...acc], rest)
-    | [`cmd('s'), `arg(dx2), `arg(dy2), `arg(dx), `arg(dy), ...rest] =>
-      parse([`s((dx2, dy2, dx, dy)), ...acc], rest)
-    | [`cmd('Q'), `arg(x1), `arg(y1), `arg(x), `arg(y), ...rest] =>
-      parse([`Q((x1, y1, x, y)), ...acc], rest)
-    | [`cmd('q'), `arg(dx1), `arg(dy1), `arg(dx), `arg(dy), ...rest] =>
-      parse([`q((dx1, dy1, dx, dy)), ...acc], rest)
-    | [`cmd('T'), `arg(x), `arg(y), ...rest] =>
-      parse([`T((x, y)), ...acc], rest)
-    | [`cmd('t'), `arg(dx), `arg(dy), ...rest] =>
-      parse([`t((dx, dy)), ...acc], rest)
-    | [
-        `cmd('A'),
-        `arg(rx),
-        `arg(ry),
-        `arg(angle),
-        `arg(largeArc),
-        `arg(sweep),
-        `arg(x),
-        `arg(y),
-        ...rest,
-      ] =>
-      parse(
-        [
-          `A((
-            rx,
-            ry,
-            angle,
-            largeArc == 0. ? `large : `small,
-            sweep == 0. ? `ccw : `cw,
-            x,
-            y,
-          )),
-          ...acc,
-        ],
-        rest,
-      )
-    | [
-        `cmd('a'),
-        `arg(rx),
-        `arg(ry),
-        `arg(angle),
-        `arg(size),
-        `arg(sweep),
-        `arg(dx),
-        `arg(dy),
-        ...rest,
-      ] =>
-      parse(
-        [
-          `A((
-            rx,
-            ry,
-            angle,
-            size == 0. ? `large : `small,
-            sweep == 0. ? `ccw : `cw,
-            dx,
-            dy,
-          )),
-          ...acc,
-        ],
-        rest,
-      )
-    | [`cmd('Z'), ...rest] => parse([`Z, ...acc], rest)
-    | [`cmd('z'), ...rest] => parse([`z, ...acc], rest)
-    | [`arg(_arg), ..._rest] => failwith("TODO - chained path commands")
-    | [`cmd(ch), ...rest] => {
-        Console.log(rest);
-        failwith("invalid command: " ++ Char.escaped(ch));
-      };
+  let parse = tokens => {
+    let rec start = acc =>
+      fun
+      | [] => List.rev(acc)
+      | [`cmd('M'), ...rest] => cmd_M(acc, rest)
+      | [`cmd('m'), ...rest] => cmd_m(acc, rest)
 
-  parse([], tokens);
+      | [`cmd('L'), ...rest] => cmd_L(acc, rest)
+      | [`cmd('l'), ...rest] => cmd_l(acc, rest)
+      | [`cmd('H'), ...rest] => cmd_H(acc, rest)
+      | [`cmd('h'), ...rest] => cmd_h(acc, rest)
+      | [`cmd('V'), ...rest] => cmd_V(acc, rest)
+      | [`cmd('v'), ...rest] => cmd_v(acc, rest)
+
+      | [`cmd('C'), ...rest] => cmd_C(acc, rest)
+      | [`cmd('c'), ...rest] => cmd_c(acc, rest)
+      | [`cmd('S'), ...rest] => cmd_S(acc, rest)
+      | [`cmd('s'), ...rest] => cmd_s(acc, rest)
+
+      | [`cmd('Q'), ...rest] => cmd_Q(acc, rest)
+      | [`cmd('q'), ...rest] => cmd_q(acc, rest)
+      | [`cmd('T'), ...rest] => cmd_T(acc, rest)
+      | [`cmd('t'), ...rest] => cmd_t(acc, rest)
+
+      | [`cmd('A'), ...rest] => cmd_A(acc, rest)
+      | [`cmd('a'), ...rest] => cmd_a(acc, rest)
+
+      | [`cmd('Z'), ...rest] => start([`Z, ...acc], rest)
+      | [`cmd('z'), ...rest] => start([`z, ...acc], rest)
+
+      | [`arg(_arg), ..._rest] =>
+        // TODO: Handle gracefully
+        failwith("expected path command, got argument")
+      | [`cmd(ch), ..._rest] =>
+        // TODO: Handle gracefully
+        failwith("invalid path command: " ++ Char.escaped(ch))
+
+    and cmd_M = acc =>
+      fun
+      | [`arg(x), `arg(y), ...rest] => cmd_M([`M((x, y)), ...acc], rest)
+      | rest => start(acc, rest)
+    and cmd_m = acc =>
+      fun
+      | [`arg(dx), `arg(dy), ...rest] =>
+        cmd_m([`m((dx, dy)), ...acc], rest)
+      | rest => start(acc, rest)
+
+    and cmd_L = acc =>
+      fun
+      | [`arg(x), `arg(y), ...rest] => cmd_L([`L((x, y)), ...acc], rest)
+      | rest => start(acc, rest)
+    and cmd_l = acc =>
+      fun
+      | [`arg(dx), `arg(dy), ...rest] =>
+        cmd_l([`l((dx, dy)), ...acc], rest)
+      | rest => start(acc, rest)
+    and cmd_H = acc =>
+      fun
+      | [`arg(x), ...rest] => cmd_H([`H(x), ...acc], rest)
+      | rest => start(acc, rest)
+    and cmd_h = acc =>
+      fun
+      | [`arg(dx), ...rest] => cmd_h([`h(dx), ...acc], rest)
+      | rest => start(acc, rest)
+    and cmd_V = acc =>
+      fun
+      | [`arg(y), ...rest] => cmd_V([`V(y), ...acc], rest)
+      | rest => start(acc, rest)
+    and cmd_v = acc =>
+      fun
+      | [`arg(dy), ...rest] => cmd_v([`v(dy), ...acc], rest)
+      | rest => start(acc, rest)
+
+    and cmd_C = acc =>
+      fun
+      | [`arg(x1), `arg(y1), `arg(x2), `arg(y2), `arg(x), `arg(y), ...rest] =>
+        cmd_C([`C((x1, y1, x2, y2, x, y)), ...acc], rest)
+      | rest => start(acc, rest)
+    and cmd_c = acc =>
+      fun
+      | [
+          `arg(dx1),
+          `arg(dy1),
+          `arg(dx2),
+          `arg(dy2),
+          `arg(dx),
+          `arg(dy),
+          ...rest,
+        ] =>
+        cmd_c([`c((dx1, dy1, dx2, dy2, dx, dy)), ...acc], rest)
+      | rest => start(acc, rest)
+    and cmd_S = acc =>
+      fun
+      | [`arg(x2), `arg(y2), `arg(x), `arg(y), ...rest] =>
+        cmd_S([`S((x2, y2, x, y)), ...acc], rest)
+      | rest => start(acc, rest)
+    and cmd_s = acc =>
+      fun
+      | [`arg(dx2), `arg(dy2), `arg(dx), `arg(dy), ...rest] =>
+        cmd_s([`s((dx2, dy2, dx, dy)), ...acc], rest)
+      | rest => start(acc, rest)
+
+    and cmd_Q = acc =>
+      fun
+      | [`arg(x1), `arg(y1), `arg(x), `arg(y), ...rest] =>
+        cmd_Q([`Q((x1, y1, x, y)), ...acc], rest)
+      | rest => start(acc, rest)
+    and cmd_q = acc =>
+      fun
+      | [`arg(dx1), `arg(dy1), `arg(dx), `arg(dy), ...rest] =>
+        cmd_q([`q((dx1, dy1, dx, dy)), ...acc], rest)
+      | rest => start(acc, rest)
+
+    and cmd_T = acc =>
+      fun
+      | [`arg(x), `arg(y), ...rest] => cmd_T([`T((x, y)), ...acc], rest)
+      | rest => start(acc, rest)
+    and cmd_t = acc =>
+      fun
+      | [`arg(dx), `arg(dy), ...rest] =>
+        cmd_t([`t((dx, dy)), ...acc], rest)
+      | rest => start(acc, rest)
+
+    and cmd_A = acc =>
+      fun
+      | [
+          `arg(rx),
+          `arg(ry),
+          `arg(angle),
+          `arg(size),
+          `arg(sweep),
+          `arg(x),
+          `arg(y),
+          ...rest,
+        ] => {
+          let size = size == 0. ? `large : `small;
+          let sweep = sweep == 0. ? `ccw : `cw;
+          cmd_A([`A((rx, ry, angle, size, sweep, x, y)), ...acc], rest);
+        }
+      | rest => start(acc, rest)
+    and cmd_a = acc =>
+      fun
+      | [
+          `arg(rx),
+          `arg(ry),
+          `arg(angle),
+          `arg(size),
+          `arg(sweep),
+          `arg(x),
+          `arg(y),
+          ...rest,
+        ] => {
+          let size = size == 0. ? `large : `small;
+          let sweep = sweep == 0. ? `ccw : `cw;
+          cmd_a([`a((rx, ry, angle, size, sweep, x, y)), ...acc], rest);
+        }
+      | rest => start(acc, rest);
+
+    start([], tokens);
+  };
+
+  parse(tokens);
 };
 
 let attr_length = (key, ~default, attrs) =>
