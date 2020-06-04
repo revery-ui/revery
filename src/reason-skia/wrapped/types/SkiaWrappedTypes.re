@@ -166,31 +166,21 @@ module M = (T: TYPE) => {
   };
 
   module Shader = {
-    
     type tileMode =
-    | Clamp
-    | Repeat
-    | Mirror;
+      | Clamp
+      | Repeat
+      | Mirror;
 
     let tileMode =
       skiaCEnum(
         "sk_shader_tilemode_t",
         [
-          (
-            Clamp,
-            "CLAMP_SK_SHADER_TILEMODE"
-          ),
-          (
-            Repeat,
-            "REPEAT_SK_SHADER_TILEMODE"
-          ),
-          (
-            Mirror,
-            "MIRROR_SK_SHADER_TILEMODE"
-          )
-        ]
+          (Clamp, "CLAMP_SK_SHADER_TILEMODE"),
+          (Repeat, "REPEAT_SK_SHADER_TILEMODE"),
+          (Mirror, "MIRROR_SK_SHADER_TILEMODE"),
+        ],
       );
-    
+
     type t;
     let t: typ(structure(t)) = structure("sk_shader_t");
     let t = typedef(t, "sk_shader_t");
