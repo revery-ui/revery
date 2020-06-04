@@ -38,6 +38,7 @@ let paint =
   | `currentColor => failwith("TODO - currentColor")
   | `color(color) => {
       let paint = Skia.Paint.make();
+      Skia.Paint.setAntiAlias(paint, true);
       Skia.Paint.setColor(paint, color);
       Some(paint);
     }
