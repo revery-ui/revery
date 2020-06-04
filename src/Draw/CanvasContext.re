@@ -229,6 +229,10 @@ let setMatrix = (v: t, mat: Skia.Matrix.t) => {
   };
 };
 
+let concat = (transform, context) => {
+  Canvas.concat(context.canvas, transform);
+};
+
 let clipRect =
     (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rect: Skia.Rect.t) => {
   Canvas.clipRect(v.canvas, rect, clipOp, antiAlias);

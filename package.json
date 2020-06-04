@@ -60,6 +60,9 @@
     "reperf": "^1.4.0",
     "revery-text-wrap": "revery-ui/revery-text-wrap#966383e"
   },
+  "resolutions": {
+    "@opam/dune": "2.5.0"
+  },
   "devDependencies": {
     "ocaml": "~4.10",
     "esy-astyle": "zbaylin/esy-astyle#59bc21a",
