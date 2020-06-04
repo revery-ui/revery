@@ -1,3 +1,4 @@
+open Revery_Core;
 open SimpleXml;
 open Model;
 
@@ -7,9 +8,11 @@ let length_percentage_auto = str => `user(float_of_string(str)); // TODO
 
 let paint =
   fun
+  | "" => `none
   | "none" => `none
   | "currentColor" => `currentColor
-  | value => `color(Revery_Core.Color.(hex(value) |> toSkia)); // TODO
+  | value when value.[0] == '#' => `color(Color.hex(value) |> Color.toSkia)
+  | value => `color(Colors.fromStringExn(value) |> Color.toSkia); // TODO
 
 let attribute =
   fun

@@ -96,10 +96,10 @@ let example2 =
                  A 6 4 10 0 0 14,10" />
       </g>
       <g id="polygon">
-        <polygon points="0,100 50,25 50,75 100,0" fill="#fff"/>
+        <polygon points="0,100 50,25 50,75 100,0" fill="lime"/>
 
         <polygon points="100,100 150,25 150,75 200,0"
-                  fill="none" stroke="#fff" />
+                  fill="none" stroke="white" />
       </g>
     </svg>
   |}
