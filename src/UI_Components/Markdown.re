@@ -21,14 +21,42 @@ type style = {
   h5: list(Style.textStyleProps),
   h6: list(Style.textStyleProps),
   fontFamily: Family.t,
-  inlineCodeFontFamily: Family.t,
+  codeFontFamily: Family.t,
   baseFontSize: float,
+  codeBlockBackgroundColor: Color.t,
+};
+
+module SyntaxHighlight = {
+  type block = {
+    byteIndex: int,
+    color: Color.t,
+    bold: bool,
+    italicized: bool,
+  }
+  and t = (~language: string, list(string)) => list(list(block));
+
+  let default: t =
+    (~language as _, lines) => {
+      let block = {
+        byteIndex: 0,
+        color: Colors.white,
+        bold: false,
+        italicized: false,
+      };
+      List.init(List.length(lines), _ => [block]);
+    };
 };
 
 module Styles = {
   open Style;
-  let inline = [flexDirection(`Row)];
+  let inline = [
+    flexDirection(`Row),
+    flexWrap(`Wrap),
+    alignItems(`FlexStart),
+  ];
   let container = [justifyContent(`FlexStart), alignItems(`FlexStart)];
+  let hardBreak = [height(6)];
+
   module Blockquote = {
     let container = [
       flexDirection(`Row),
@@ -38,22 +66,40 @@ module Styles = {
       paddingLeft(8),
       justifyContent(`FlexStart),
       alignItems(`FlexStart),
+      flexGrow(1),
     ];
   };
 
   module Code = {
-    module Inline = {
-      let container = [
-        backgroundColor(Color.rgba(0., 0., 0., 0.25)),
-        borderRadius(3.),
-        border(~width=3, ~color=Color.rgba(0., 0., 0., 0.25)),
-      ];
-    };
+    let inlineContainer = [
+      backgroundColor(Color.rgba(0., 0., 0., 0.25)),
+      borderRadius(3.),
+      border(~width=3, ~color=Color.rgba(0., 0., 0., 0.25)),
+    ];
+
+    let blockContainer = bgColor => [
+      backgroundColor(bgColor),
+      border(~width=3, ~color=bgColor),
+      borderRadius(3.),
+      padding(2),
+      marginTop(4),
+      marginBottom(4),
+    ];
+
+    let labelContainer = [
+      flexDirection(`Row),
+      alignItems(`FlexEnd),
+      justifyContent(`FlexEnd),
+    ];
   };
 
   module List = {
     let marker = [marginRight(6)];
-    let contents = [justifyContent(`FlexStart), alignItems(`FlexStart)];
+    let contents = [
+      justifyContent(`FlexStart),
+      alignItems(`FlexStart),
+      flexGrow(1),
+    ];
   };
 
   module ThematicBreak = {
@@ -130,7 +176,7 @@ let generateText = (text, styles, attrs) => {
       href
     />
   | `InlineCode =>
-    <View style=Styles.Code.Inline.container>
+    <View style=Styles.Code.inlineContainer>
       <Text
         text
         fontSize
@@ -154,12 +200,76 @@ let generateText = (text, styles, attrs) => {
   };
 };
 
-let rec _generateInline = (inline, styles, attrs) => {
+let generateCodeBlock =
+    (codeBlock: Code_block.t, styles, highlighter: SyntaxHighlight.t) => {
+  let label =
+    switch (codeBlock.label) {
+    | Some("")
+    | None => None
+    | Some(_) as label => label
+    };
+  Log.debugf(m =>
+    m("Code block has label : %s", Option.value(label, ~default="(none)"))
+  );
+
+  let fontSize = fontSizeFromKind(`InlineCode, styles);
+
+  <View style={Styles.Code.blockContainer(styles.codeBlockBackgroundColor)}>
+    {switch (label, codeBlock.code) {
+     | (None, Some(code)) =>
+       <Text
+         text=code
+         fontFamily={styles.codeFontFamily}
+         monospaced=true
+         fontSize
+         style={styles.paragraph}
+       />
+     | (Some(label), Some(code)) =>
+       let lines = String.split_on_char('\n', code);
+       let highlights: list(list(SyntaxHighlight.block)) =
+         highlighter(~language=label, lines);
+       List.map2(
+         (line, highlight) => {
+           <View style=Styles.inline>
+             {List.mapi(
+                (i, block: SyntaxHighlight.block) => {
+                  let endIndex =
+                    switch (List.nth_opt(highlight, i + 1)) {
+                    | Some((blk: SyntaxHighlight.block)) => blk.byteIndex
+                    | None => String.length(line)
+                    };
+                  let length = endIndex - block.byteIndex;
+                  let text = String.sub(line, block.byteIndex, length);
+                  <Text
+                    text
+                    style=Style.[color(block.color)]
+                    fontFamily={styles.fontFamily}
+                    fontWeight={block.bold ? Weight.Bold : Weight.Normal}
+                    monospaced=true
+                    fontSize
+                  />;
+                },
+                highlight,
+              )
+              |> React.listToElement}
+           </View>
+         },
+         lines,
+         highlights,
+       )
+       |> React.listToElement;
+
+     | (_, _) => <View />
+     }}
+  </View>;
+};
+
+let rec generateInline' = (inline, styles, attrs) => {
   switch (inline) {
   | Html(t)
   | Text(t) => generateText(t, styles, attrs)
   | Emph(e) =>
-    _generateInline(
+    generateInline'(
       e.content,
       styles,
       switch (e.style) {
@@ -167,16 +277,16 @@ let rec _generateInline = (inline, styles, attrs) => {
       | Underscore => {...attrs, inline: [Italicized, ...attrs.inline]}
       },
     )
-  | Soft_break => generateText("\n", styles, attrs)
-  | Hard_break => generateText("\n\n", styles, attrs)
+  | Soft_break => generateText(" ", styles, attrs)
+  | Hard_break => <View style=Styles.hardBreak />
   | Ref(r) =>
-    _generateInline(
+    generateInline'(
       r.label,
       styles,
       {...attrs, kind: `Link(r.def.destination)},
     )
   | Link(l) =>
-    _generateInline(
+    generateInline'(
       l.def.label,
       styles,
       {...attrs, kind: `Link(l.def.destination)},
@@ -188,17 +298,19 @@ let rec _generateInline = (inline, styles, attrs) => {
       {kind: `InlineCode, inline: [Monospaced, ...attrs.inline]},
     )
   | Concat(c) =>
-    c
-    |> List.map(il => _generateInline(il, styles, attrs))
-    |> React.listToElement
+    <View style=Styles.inline>
+      {c
+       |> List.map(il => generateInline'(il, styles, attrs))
+       |> React.listToElement}
+    </View>
   | _ => <View />
   };
 };
 
 let generateInline = (inline, styles, attrs) =>
-  <Row> {_generateInline(inline, styles, attrs)} </Row>;
+  <Row> {generateInline'(inline, styles, attrs)} </Row>;
 
-let rec _generateMarkdown = (element, styles) =>
+let rec generateMarkdown' = (element, styles, highlighter) =>
   switch (element) {
   | Paragraph(p) => generateInline(p, styles, {inline: [], kind: `Paragraph})
   // We don't support HTML rendering as of right now, so we'll just render it
@@ -208,7 +320,10 @@ let rec _generateMarkdown = (element, styles) =>
   | Blockquote(blocks) =>
     <View style=Styles.Blockquote.container>
       <View style=Styles.Blockquote.contents>
-        {List.map(block => _generateMarkdown(block, styles), blocks)
+        {List.map(
+           block => generateMarkdown'(block, styles, highlighter),
+           blocks,
+         )
          |> React.listToElement}
       </View>
     </View>
@@ -218,6 +333,7 @@ let rec _generateMarkdown = (element, styles) =>
       styles,
       {inline: [Bolded], kind: `Heading(h.level)},
     )
+  | Code_block(cb) => generateCodeBlock(cb, styles, highlighter)
   | List(blist) =>
     <View>
       {List.mapi(
@@ -234,7 +350,10 @@ let rec _generateMarkdown = (element, styles) =>
                fontFamily={styles.fontFamily}
              />
              <View style=Styles.List.contents>
-               {List.map(block => _generateMarkdown(block, styles), blocks)
+               {List.map(
+                  block => generateMarkdown'(block, styles, highlighter),
+                  blocks,
+                )
                 |> React.listToElement}
              </View>
            </View>;
@@ -250,17 +369,18 @@ let rec _generateMarkdown = (element, styles) =>
   | _ => <View />
   };
 
-let generateMarkdown = (mdText: string, styles) => {
+let generateMarkdown = (mdText: string, styles, highlighter) => {
   let md = Omd.of_string(mdText);
   Log.debugf(m => m("Parsed Markdown as: %s", Omd.to_sexp(md)));
-  List.map(elt => _generateMarkdown(elt, styles), md) |> React.listToElement;
+  List.map(elt => generateMarkdown'(elt, styles, highlighter), md)
+  |> React.listToElement;
 };
 
 let make =
     (
       ~markdown as mdText="",
       ~fontFamily=Family.default,
-      ~inlineCodeFontFamily=Family.default,
+      ~codeFontFamily=Family.default,
       ~baseFontSize=14.0,
       ~paragraphStyle=Style.emptyTextStyle,
       ~activeLinkStyle=Style.emptyTextStyle,
@@ -272,6 +392,8 @@ let make =
       ~h5Style=Style.emptyTextStyle,
       ~h6Style=Style.emptyTextStyle,
       ~inlineCodeStyle=Style.emptyTextStyle,
+      ~codeBlockBackgroundColor=Color.rgba(0., 0., 0., 0.25),
+      ~syntaxHighlighter=SyntaxHighlight.default,
       (),
     ) => {
   <View style=Styles.container>
@@ -289,9 +411,11 @@ let make =
          h5: h5Style,
          h6: h6Style,
          fontFamily,
-         inlineCodeFontFamily,
+         codeFontFamily,
          baseFontSize,
+         codeBlockBackgroundColor,
        },
+       syntaxHighlighter,
      )}
   </View>;
 };

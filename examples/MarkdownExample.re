@@ -36,71 +36,49 @@ let markdown =
 
 let example = () =>
   <View style=Styles.outer>
-    <Text text="Font variations: " />
     <markdown
       markdown="
-Normal **Bold** _Italicized_ `public static void main(abc)`
-      "
+
+# reason-sdl2
+
+#### Based on [reason-glfw](https://github.com/revery-ui/reason-glfw). Reason / OCaml bindings for SDL2
+
+## Building
+
+`esy` is used for building, so if you don't have `esy`, install it:
+
+```
+npm install -g esy
+```
+
+```OCaml
+let x = 4 in
+let y = x - 10 in
+let z = y * x;;
+```
+
+Then just run `esy` in the root of the project to install and build.
+
+## Running
+
+Run `esy @example install` initially to install, then `esy @example run` to build and run the example.
+
+## License
+
+This project is licensed under the MIT License - see [LICENSE](LICENSE) for more details.
+
+## Design
+
+TBD
+
+## Acknowledgements
+
+- The test texture is provided by [LearnOpenGL](https://learnopengl.com) - an excellent resource for OpenGL!
+- This is built on several great libraries, like [SDL2](https://libsdl.org), [glad](https://github.com/Dav1dde/glad), [stb_image](https://github.com/nothings/stb/blob/master/stb_image.h)
+- The test image is from @Arahnoid's [UVChecker-map](https://github.com/Arahnoid/UVChecker-map) repo.
+
+    "
     />
-    <Text text="Links: " />
-    <markdown
-      markdown="
-[I'm an inline-style link](https://www.google.com)
-
-[I'm an inline-style link with **BOLD**](https://www.google.com)
-
-[I'm an inline-style link with __Italics__](https://www.google.com)
-
-This is [id] reference-style link.
-
-[id]: https://google.com/
-      "
-    />
-    <Text text="Blockquotes: " />
-    <markdown markdown="
-> Level 1
->> Level 2
->>> Level 3
->>>> Level 4
-" />
-    <Text text="Headings: " />
-    <markdown
-      markdown="
-# H1
-## H2
-### H3
-#### H4
-##### H5
-###### H6
-      "
-    />
-    <Text text="Lists: " />
-    <markdown
-      markdown="
-- Unordered
-- List
-    - Multiple
-    - Levels
-
-1. Ordered
-2. List
-    1. Multiple
-    2. Levels
-
-- Unordered
-- List
-    1. Ordered
-    2. List
-      "
-    />
-    <Text text="Thematic breaks: " />
-    <markdown markdown="
-Section A
-
----
-
-Section B
-      " />
   </View>;
 
 let render = () => <example />;
