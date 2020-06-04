@@ -103,6 +103,7 @@ let path = (~d, ~paint, ~context) => {
         | `S(x2, y2, x, y) =>
           let (x1, y1) =
             switch (previous^) {
+            // TODO: Implement for c, s
             | Some(`C(_, _, px2, py2, px, py) | `S(px2, py2, px, py)) => (
                 px -. (px2 -. px),
                 py -. (py2 -. py),
@@ -113,6 +114,7 @@ let path = (~d, ~paint, ~context) => {
         | `s(dx2, dy2, dx, dy) =>
           let (dx1, dy1) =
             switch (previous^) {
+            // TODO: Implement for C, S
             | Some(
                 `c(_, _, pdx2, pdy2, pdx, pdy) | `s(pdx2, pdy2, pdx, pdy),
               ) => (
@@ -126,7 +128,17 @@ let path = (~d, ~paint, ~context) => {
         | `Q(x1, y1, x, y) => Skia.Path.quadTo(path, x1, y1, x, y)
         | `q(dx1, dy1, dx, dy) => Skia.Path.rQuadTo(path, dx1, dy1, dx, dy)
 
-        | `T(_) => failwith("TODO - path T")
+        | `T(x, y) =>
+          let (x1, y1) =
+            switch (previous^) {
+            // TODO: Implement for q, T, t
+            | Some(`Q(px1, py1, px, py)) => (
+                px -. (px1 -. px),
+                py -. (py1 -. py),
+              )
+            | _ => (x, y)
+            };
+          Skia.Path.quadTo(path, x1, y1, x, y);
         | `t(_) => failwith("TODO - path t")
 
         | `A(rx, ry, angle, size, sweep, x, y) =>
