@@ -86,8 +86,8 @@ let path = (~d, ~paint, ~context) => {
     | `S(_) => failwith("TODO - path S")
     | `s(_) => failwith("TODO - path s")
 
-    | `Q(_) => failwith("TODO - path Q")
-    | `q(_) => failwith("TODO - path q")
+    | `Q(x1, y1, x, y) => Skia.Path.quadTo(path, x1, y1, x, y)
+    | `q(dx1, dy1, dx, dy) => Skia.Path.rQuadTo(path, dx1, dy1, dx, dy)
 
     | `T(_) => failwith("TODO - path T")
     | `t(_) => failwith("TODO - path t")
