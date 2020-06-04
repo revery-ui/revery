@@ -118,7 +118,7 @@ let pathCommands = str => {
     | [`cmd('H'), `arg(x), ...rest] => parse([`H(x), ...acc], rest)
     | [`cmd('h'), `arg(dx), ...rest] => parse([`h(dx), ...acc], rest)
     | [`cmd('V'), `arg(y), ...rest] => parse([`V(y), ...acc], rest)
-    | [`cmd('v'), `arg(dy), ...rest] => parse([`V(dy), ...acc], rest)
+    | [`cmd('v'), `arg(dy), ...rest] => parse([`v(dy), ...acc], rest)
     | [
         `cmd('C'),
         `arg(x1),
