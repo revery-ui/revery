@@ -240,6 +240,19 @@ let attr_viewBox = attrs =>
     }
   );
 
+let attr_points = (key, ~default, attrs) => {
+  let rec coordsToPoints = acc =>
+    fun
+    | []
+    | [_] => List.rev(acc)
+    | [x, y, ...rest] => coordsToPoints([{x, y}, ...acc], rest);
+
+  List.assoc_opt(key, attrs)
+  |> Option.map(coordinates)
+  |> Option.map(coordsToPoints([]))
+  |> Option.value(~default);
+};
+
 let geometry = (kind, attrs) =>
   Geometry.{kind, attributes: List.filter_map(attribute, attrs)};
 
@@ -278,6 +291,12 @@ let line = attrs =>
 let path = attrs =>
   geometry(Path({d: attr_pathCommands("d", ~default=[], attrs)}), attrs);
 
+let polygon = attrs =>
+  geometry(
+    Polygon({points: attr_points("points", ~default=[], attrs)}),
+    attrs,
+  );
+
 let rect = attrs =>
   geometry(
     Rect({
@@ -300,6 +319,7 @@ let rec element =
   | Element("ellipse", attrs, _children) => Some(Geometry(ellipse(attrs)))
   | Element("line", attrs, _children) => Some(Geometry(line(attrs)))
   | Element("path", attrs, _children) => Some(Geometry(path(attrs)))
+  | Element("polygon", attrs, _children) => Some(Geometry(polygon(attrs)))
   | Element("rect", attrs, _children) => Some(Geometry(rect(attrs)))
   | _ => None;
 

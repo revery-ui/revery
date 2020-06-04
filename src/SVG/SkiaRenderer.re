@@ -106,6 +106,20 @@ let path = (~d, ~paint, ~context) => {
   CanvasContext.drawPath(~path, ~paint, context.canvas);
 };
 
+let polygon = (~points, ~paint, ~context) => {
+  switch (points) {
+  | [] => ()
+  | [first, ...rest] =>
+    let path = Skia.Path.make();
+
+    Skia.Path.moveTo(path, first.x, first.y);
+    List.iter(({x, y}) => Skia.Path.lineTo(path, x, y), rest);
+    Skia.Path.close(path);
+
+    CanvasContext.drawPath(~path, ~paint, context.canvas);
+  };
+};
+
 let rect = (~x, ~y, ~width, ~height, ~rx, ~ry, ~paint, ~context) => {
   CanvasContext.drawRoundRect(
     ~rect=Skia.Rect.makeLtrb(x, y, x +. width, y +. height),
@@ -178,9 +192,13 @@ let geometry = (context, shape: Geometry.t) => {
 
   | Path({d}) =>
     let draw = paint => path(~d, ~paint, ~context);
+    Option.iter(draw, fill);
     Option.iter(draw, stroke);
 
-  | Polygon(_) => failwith("TODO")
+  | Polygon({points}) =>
+    let draw = paint => polygon(~points, ~paint, ~context);
+    Option.iter(draw, fill);
+    Option.iter(draw, stroke);
 
   | Rect({x, y, width, height, rx, ry}) =>
     let x = userCoord(x);
