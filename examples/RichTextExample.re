@@ -2,6 +2,8 @@ open Revery;
 open Revery.UI;
 open Revery.UI.Components;
 
+open Revery_Font;
+
 let containerStyle =
   Style.[
     position(`Absolute),
@@ -14,45 +16,27 @@ let containerStyle =
     flexDirection(`Column),
   ];
 
+let font = Family.system("Roboto-Regular");
+
 module SampleRichText = {
   let make = () => {
-    let first =
-      RichText.create(
-        ~fontFamily="Roboto-Regular.ttf",
-        ~fontSize=20.,
-        ~color=Colors.red,
-        "Hello ",
+    let richtext =
+      RichTextModel.(
+        text("Hello ", ~color=Colors.red)
+        ++ text("world", ~color=Colors.green)
+        ++ text("!", ~color=Colors.yellow)
+        |> fontFamily(font)
+        |> fontSize(20.)
       );
-    let second =
-      RichText.create(
-        ~fontFamily="Roboto-Regular.ttf",
-        ~fontSize=20.,
-        ~color=Colors.green,
-        "world",
-      );
-    let third =
-      RichText.create(
-        ~fontFamily="Roboto-Regular.ttf",
-        ~fontSize=20.,
-        ~color=Colors.yellow,
-        "!",
-      );
-    let richtext = RichText.(first ++ second ++ third);
 
-    let dimensions = RichText.measure(richtext);
+    let dimensions = RichTextModel.measure(richtext);
     let widthText = "Width: " ++ string_of_int(dimensions.width);
     let heightText = "Height: " ++ string_of_int(dimensions.height);
 
     <View style=containerStyle>
       <RichText richtext />
-      <Text
-        text=widthText
-        style=Style.[fontFamily("Roboto-Regular.ttf"), fontSize(15.)]
-      />
-      <Text
-        text=heightText
-        style=Style.[fontFamily("Roboto-Regular.ttf"), fontSize(15.)]
-      />
+      <Text text=widthText />
+      <Text text=heightText />
     </View>;
   };
 };
