@@ -306,6 +306,12 @@ let polygon = attrs =>
     attrs,
   );
 
+let polyline = attrs =>
+  geometry(
+    Polyline({points: attr_points("points", ~default=[], attrs)}),
+    attrs,
+  );
+
 let rect = attrs =>
   geometry(
     Rect({
@@ -329,6 +335,8 @@ let rec element =
   | Element("line", attrs, _children) => Some(Geometry(line(attrs)))
   | Element("path", attrs, _children) => Some(Geometry(path(attrs)))
   | Element("polygon", attrs, _children) => Some(Geometry(polygon(attrs)))
+  | Element("polyline", attrs, _children) =>
+    Some(Geometry(polyline(attrs)))
   | Element("rect", attrs, _children) => Some(Geometry(rect(attrs)))
   | _ => None;
 

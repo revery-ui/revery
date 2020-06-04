@@ -123,6 +123,19 @@ let polygon = (~points, ~paint, ~context) => {
   };
 };
 
+let polyline = (~points, ~paint, ~context) => {
+  switch (points) {
+  | [] => ()
+  | [first, ...rest] =>
+    let path = Skia.Path.make();
+
+    Skia.Path.moveTo(path, first.x, first.y);
+    List.iter(({x, y}) => Skia.Path.lineTo(path, x, y), rest);
+
+    CanvasContext.drawPath(~path, ~paint, context.canvas);
+  };
+};
+
 let rect = (~x, ~y, ~width, ~height, ~rx, ~ry, ~paint, ~context) => {
   CanvasContext.drawRoundRect(
     ~rect=Skia.Rect.makeLtrb(x, y, x +. width, y +. height),
@@ -204,6 +217,11 @@ let geometry = (context, shape: Geometry.t) => {
 
   | Polygon({points}) =>
     let draw = paint => polygon(~points, ~paint, ~context);
+    Option.iter(draw, fill);
+    Option.iter(draw, stroke);
+
+  | Polyline({points}) =>
+    let draw = paint => polyline(~points, ~paint, ~context);
     Option.iter(draw, fill);
     Option.iter(draw, stroke);
 

@@ -98,6 +98,7 @@ module Geometry = {
       })
     | Path({d: list(pathCommand)})
     | Polygon({points: list(point)})
+    | Polyline({points: list(point)})
     | Rect({
         x: [ length | percentage],
         y: [ length | percentage],

@@ -105,6 +105,19 @@ let examples = [
     |},
   ),
   (
+    "<polyline>",
+    {|
+      <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- Example of a polyline with the default fill -->
+        <polyline points="0,100 50,25 50,75 100,0" />
+
+        <!-- Example of the same polyline shape with stroke and no fill -->
+        <polyline points="100,100 150,25 150,75 200,0"
+                  fill="none" stroke="black" />
+      </svg>
+    |},
+  ),
+  (
     "<rect>",
     {|
       <svg viewBox="0 0 220 100" xmlns="http://www.w3.org/2000/svg">
@@ -331,7 +344,7 @@ let examples = [
 
         <!-- Highlight the curve vertex and control points -->
         <g>
-          <polyline points="10,50 25,25 40,50" stroke="rgba(0,0,0,.2)" fill="none" />
+          <polyline points="10,50 25,25 40,50" stroke="#0003" fill="none" />
           <circle cx="25" cy="25" r="1.5" />
 
           <!-- Curve vertex points -->
@@ -339,13 +352,13 @@ let examples = [
           <circle cx="40" cy="50" r="1.5"/>
 
           <g id="SmoothQuadraticDown">
-            <polyline points="40,50 55,75 70,50" stroke="rgba(0,0,0,.2)" stroke-dasharray="2" fill="none" />
+            <polyline points="40,50 55,75 70,50" stroke="#0003" stroke-dasharray="2" fill="none" />
             <circle cx="55" cy="75" r="1.5" fill="lightgrey" />
             <circle cx="70" cy="50" r="1.5" />
           </g>
 
           <g id="SmoothQuadraticUp">
-            <polyline points="70,50 85,25 100,50" stroke="rgba(0,0,0,.2)" stroke-dasharray="2" fill="none" />
+            <polyline points="70,50 85,25 100,50" stroke="#0003" stroke-dasharray="2" fill="none" />
             <circle cx="85" cy="25" r="1.5" fill="lightgrey" />
             <circle cx="100" cy="50" r="1.5" />
           </g>
