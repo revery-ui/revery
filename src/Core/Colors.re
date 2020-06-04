@@ -303,4 +303,7 @@ Hashtbl.add(lookup, "yellow", yellow);
 Hashtbl.add(lookup, "yellowGreen", yellowGreen);
 
 let fromString = Hashtbl.find_opt(lookup);
-let fromStringExn = Hashtbl.find(lookup);
+let fromStringExn = name =>
+  try (Hashtbl.find(lookup, name)) {
+  | Not_found => failwith("Unknown color: " ++ name)
+  };

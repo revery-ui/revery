@@ -27,21 +27,21 @@ let userCoord =
   | `cm(_)
   | `mm(_)
   | `pt(_)
-  | `pc(_) => failwith("TODO")
-  | `percentage(_) => failwith("TODO")
-  | `auto => failwith("TODO");
+  | `pc(_) => failwith("TODO - userCoord")
+  | `percentage(_) => failwith("TODO - userCoord percentage")
+  | `auto => failwith("TODO - userCoord auto");
 
 let paint =
   fun
   | `none => Skia.Paint.make()
-  | `currentColor => failwith("TODO")
+  | `currentColor => failwith("TODO - currentColor")
   | `color(color) => {
       let paint = Skia.Paint.make();
       Skia.Paint.setColor(paint, color);
       paint;
     }
-  | `funciri(_) => failwith("TODO")
-  | `inherit_ => failwith("TODO");
+  | `funciri(_) => failwith("TODO - funciri")
+  | `inherit_ => failwith("TODO - inherit");
 
 let circle = (~cx, ~cy, ~r, ~paint, ~context) => {
   CanvasContext.drawCircle(~x=cx, ~y=cy, ~radius=r, ~paint, context.canvas);
@@ -72,10 +72,10 @@ let path = (~d, ~paint, ~context) => {
     | `L(x, y) => Skia.Path.lineTo(path, x, y)
     | `l(dx, dy) => Skia.Path.rLineTo(path, dx, dy)
 
-    | `H(_) => failwith("TODO")
+    | `H(_) => failwith("TODO - path H")
     | `h(dx) => Skia.Path.rLineTo(path, dx, 0.)
 
-    | `V(_) => failwith("TODO")
+    | `V(_) => failwith("TODO - path V")
     | `v(dy) => Skia.Path.rLineTo(path, 0., dy)
 
     | `C(x1, y1, x2, y2, x, y) =>
@@ -83,14 +83,14 @@ let path = (~d, ~paint, ~context) => {
     | `c(dx1, dy1, dx2, dy2, dx, dy) =>
       Skia.Path.rCubicTo(path, dx1, dy1, dx2, dy2, dx, dy)
 
-    | `S(_) => failwith("TODO")
-    | `s(_) => failwith("TODO")
+    | `S(_) => failwith("TODO - path S")
+    | `s(_) => failwith("TODO - path s")
 
-    | `Q(_) => failwith("TODO")
-    | `q(_) => failwith("TODO")
+    | `Q(_) => failwith("TODO - path Q")
+    | `q(_) => failwith("TODO - path q")
 
-    | `T(_) => failwith("TODO")
-    | `t(_) => failwith("TODO")
+    | `T(_) => failwith("TODO - path T")
+    | `t(_) => failwith("TODO - path t")
 
     | `A(rx, ry, angle, size, sweep, x, y) => {
         Skia.Path.arcTo(path, rx, ry, angle, size, sweep, x, y);
@@ -218,7 +218,7 @@ let rec element = context =>
   fun
   | Group(elements) => elements |> List.iter(element(context))
   | Geometry(shape) => geometry(context, shape)
-  | Text(_) => ();
+  | Text(_) => failwith("TODO - text");
 
 let applyViewportTransform =
     (~width, ~height, viewport: Model.viewport, canvas) => {

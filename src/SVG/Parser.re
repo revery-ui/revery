@@ -201,7 +201,7 @@ let pathCommands = str => {
       )
     | [`cmd('Z'), ...rest] => parse([`Z, ...acc], rest)
     | [`cmd('z'), ...rest] => parse([`z, ...acc], rest)
-    | [`arg(_arg), ..._rest] => failwith("TODO")
+    | [`arg(_arg), ..._rest] => failwith("TODO - chained path commands")
     | [`cmd(ch), ...rest] => {
         Console.log(rest);
         failwith("invalid command: " ++ Char.escaped(ch));
@@ -315,7 +315,7 @@ let rect = attrs =>
 
 let rec element =
   fun
-  | Element("defs", _, _) => failwith("TODO")
+  | Element("defs", _, _) => failwith("TODO - defs")
   | Element("g", _, children) =>
     Some(Group(List.filter_map(element, children)))
   | Element("circle", attrs, _children) => Some(Geometry(circle(attrs)))
