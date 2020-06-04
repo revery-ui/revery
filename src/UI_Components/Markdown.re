@@ -37,18 +37,15 @@ module SyntaxHighlight = {
 
   let default: t =
     (~language as _, lines) => {
-      let block = {
-        byteIndex: 0,
-        color: Colors.white,
-        bold: false,
-        italicized: false,
-      };
-      List.init(List.length(lines), _ => [block]);
+      List.init(List.length(lines), _ =>
+        [{byteIndex: 0, color: Colors.white, bold: false, italicized: false}]
+      );
     };
 };
 
 module Styles = {
   open Style;
+
   let inline = [
     flexDirection(`Row),
     flexWrap(`Wrap),
@@ -200,70 +197,6 @@ let generateText = (text, styles, attrs) => {
   };
 };
 
-let generateCodeBlock =
-    (codeBlock: Code_block.t, styles, highlighter: SyntaxHighlight.t) => {
-  let label =
-    switch (codeBlock.label) {
-    | Some("")
-    | None => None
-    | Some(_) as label => label
-    };
-  Log.debugf(m =>
-    m("Code block has label : %s", Option.value(label, ~default="(none)"))
-  );
-
-  let fontSize = fontSizeFromKind(`InlineCode, styles);
-
-  <View style={Styles.Code.blockContainer(styles.codeBlockBackgroundColor)}>
-    {switch (label, codeBlock.code) {
-     | (None, Some(code)) =>
-       <Text
-         text=code
-         fontFamily={styles.codeFontFamily}
-         monospaced=true
-         fontSize
-         style={styles.paragraph}
-       />
-     | (Some(label), Some(code)) =>
-       let lines = String.split_on_char('\n', code);
-       let highlights: list(list(SyntaxHighlight.block)) =
-         highlighter(~language=label, lines);
-       List.map2(
-         (line, highlight) => {
-           <View style=Styles.inline>
-             {List.mapi(
-                (i, block: SyntaxHighlight.block) => {
-                  let endIndex =
-                    switch (List.nth_opt(highlight, i + 1)) {
-                    | Some((blk: SyntaxHighlight.block)) => blk.byteIndex
-                    | None => String.length(line)
-                    };
-                  let length = endIndex - block.byteIndex;
-                  let text = String.sub(line, block.byteIndex, length);
-                  <Text
-                    text
-                    style=Style.[color(block.color)]
-                    fontFamily={styles.fontFamily}
-                    fontWeight={block.bold ? Weight.Bold : Weight.Normal}
-                    monospaced=true
-                    fontSize
-                  />;
-                },
-                highlight,
-              )
-              |> React.listToElement}
-           </View>
-         },
-         lines,
-         highlights,
-       )
-       |> React.listToElement;
-
-     | (_, _) => <View />
-     }}
-  </View>;
-};
-
 let rec generateInline' = (inline, styles, attrs) => {
   switch (inline) {
   | Html(t)
@@ -310,6 +243,134 @@ let rec generateInline' = (inline, styles, attrs) => {
 let generateInline = (inline, styles, attrs) =>
   <Row> {generateInline'(inline, styles, attrs)} </Row>;
 
+/* Block level elements
+
+     These include things like code blocks, paragraphs, etc.
+   */
+
+let generateCodeBlock =
+    (codeBlock: Code_block.t, styles, highlighter: SyntaxHighlight.t) => {
+  // Not sure why this is an `option` because when there is no label, the
+  // Parser gives `Some("")`. For our purposes it's easier to make that `None`
+  let label =
+    switch (codeBlock.label) {
+    | Some("")
+    | None => None
+    | Some(_) as label => label
+    };
+
+  Log.tracef(m =>
+    m("Code block has label : %s", Option.value(label, ~default="(none)"))
+  );
+
+  let fontSize = fontSizeFromKind(`InlineCode, styles);
+
+  <View style={Styles.Code.blockContainer(styles.codeBlockBackgroundColor)}>
+    {switch (label, codeBlock.code) {
+     | (None, Some(code)) =>
+       <Text
+         text=code
+         fontFamily={styles.codeFontFamily}
+         monospaced=true
+         fontSize
+         style={styles.paragraph}
+       />
+
+     | (Some(label), Some(code)) =>
+       let lines = String.split_on_char('\n', code);
+       let highlights = highlighter(~language=label, lines);
+       List.map2(
+         (line, highlight) => {
+           <View style=Styles.inline>
+             {List.mapi(
+                (i, block: SyntaxHighlight.block) => {
+                  // We want to style this block up to the next one.
+                  // If there is a next block, stop at it's index
+                  // Otherwise, stop at the end of the string.
+                  let endIndex =
+                    switch (List.nth_opt(highlight, i + 1)) {
+                    | Some((blk: SyntaxHighlight.block)) => blk.byteIndex
+                    | None => String.length(line)
+                    };
+                  let length = endIndex - block.byteIndex;
+                  let text = String.sub(line, block.byteIndex, length);
+                  <Text
+                    text
+                    style=Style.[color(block.color)]
+                    fontFamily={styles.fontFamily}
+                    fontWeight={block.bold ? Weight.Bold : Weight.Normal}
+                    monospaced=true
+                    fontSize
+                  />;
+                },
+                highlight,
+              )
+              |> React.listToElement}
+           </View>
+         },
+         lines,
+         highlights,
+       )
+       |> React.listToElement;
+
+     | (_, _) => <View />
+     }}
+  </View>;
+};
+
+let generateList =
+    (
+      blist: Omd__Ast.Block_list.t(Omd.block(Omd.inline)),
+      styles,
+      highlighter,
+      generateMarkdown',
+    ) => {
+  <View>
+    {List.mapi(
+       (i, blocks) => {
+         let text =
+           switch (blist.kind) {
+           | Ordered(_, _) => string_of_int(i + 1) ++ "."
+           | Unordered(_) => "•"
+           };
+         <View style=Styles.inline>
+           <Text
+             text
+             style=Styles.List.marker
+             fontFamily={styles.fontFamily}
+           />
+           <View style=Styles.List.contents>
+             {List.map(
+                block => generateMarkdown'(block, styles, highlighter),
+                blocks,
+              )
+              |> React.listToElement}
+           </View>
+         </View>;
+       },
+       blist.blocks,
+     )
+     |> React.listToElement}
+  </View>;
+};
+
+let generateBlockquote = (blocks, styles, highlighter, generateMarkdown') => {
+  <View style=Styles.Blockquote.container>
+    <View style=Styles.Blockquote.contents>
+      {List.map(
+         block => generateMarkdown'(block, styles, highlighter),
+         blocks,
+       )
+       |> React.listToElement}
+    </View>
+  </View>;
+};
+
+let thematicBreak =
+  <View style=Style.[flexDirection(`Row)]>
+    <View style=Styles.ThematicBreak.hr />
+  </View>;
+
 let rec generateMarkdown' = (element, styles, highlighter) =>
   switch (element) {
   | Paragraph(p) => generateInline(p, styles, {inline: [], kind: `Paragraph})
@@ -318,15 +379,7 @@ let rec generateMarkdown' = (element, styles, highlighter) =>
   | Html_block(html) =>
     generateInline(Text(html), styles, {inline: [], kind: `Paragraph})
   | Blockquote(blocks) =>
-    <View style=Styles.Blockquote.container>
-      <View style=Styles.Blockquote.contents>
-        {List.map(
-           block => generateMarkdown'(block, styles, highlighter),
-           blocks,
-         )
-         |> React.listToElement}
-      </View>
-    </View>
+    generateBlockquote(blocks, styles, highlighter, generateMarkdown')
   | Heading(h) =>
     generateInline(
       h.text,
@@ -335,37 +388,8 @@ let rec generateMarkdown' = (element, styles, highlighter) =>
     )
   | Code_block(cb) => generateCodeBlock(cb, styles, highlighter)
   | List(blist) =>
-    <View>
-      {List.mapi(
-         (i, blocks) => {
-           let text =
-             switch (blist.kind) {
-             | Ordered(_, _) => string_of_int(i + 1) ++ "."
-             | Unordered(_) => "•"
-             };
-           <View style=Styles.inline>
-             <Text
-               text
-               style=Styles.List.marker
-               fontFamily={styles.fontFamily}
-             />
-             <View style=Styles.List.contents>
-               {List.map(
-                  block => generateMarkdown'(block, styles, highlighter),
-                  blocks,
-                )
-                |> React.listToElement}
-             </View>
-           </View>;
-         },
-         blist.blocks,
-       )
-       |> React.listToElement}
-    </View>
-  | Thematic_break =>
-    <View style=Style.[flexDirection(`Row)]>
-      <View style=Styles.ThematicBreak.hr />
-    </View>
+    generateList(blist, styles, highlighter, generateMarkdown')
+  | Thematic_break => thematicBreak
   | _ => <View />
   };
 
