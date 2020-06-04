@@ -110,7 +110,18 @@ let path = (~d, ~paint, ~context) => {
             | _ => (x, y)
             };
           Skia.Path.cubicTo(path, x1, y1, x2, y2, x, y);
-        | `s(dx2, dy2, dx, dy) => failwith("TODO - path s")
+        | `s(dx2, dy2, dx, dy) =>
+          let (dx1, dy1) =
+            switch (previous^) {
+            | Some(
+                `c(_, _, pdx2, pdy2, pdx, pdy) | `s(pdx2, pdy2, pdx, pdy),
+              ) => (
+                pdx -. pdx2,
+                pdy -. pdy2,
+              )
+            | _ => (0., 0.)
+            };
+          Skia.Path.rCubicTo(path, dx1, dy1, dx2, dy2, dx, dy);
 
         | `Q(x1, y1, x, y) => Skia.Path.quadTo(path, x1, y1, x, y)
         | `q(dx1, dy1, dx, dy) => Skia.Path.rQuadTo(path, dx1, dy1, dx, dy)
