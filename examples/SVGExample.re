@@ -94,6 +94,8 @@ let examples = [
   (
     "<polygon>",
     {|
+      <!-- Source: https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polygon -->
+
       <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
         <!-- Example of a polygon with the default fill -->
         <polygon points="0,100 50,25 50,75 100,0" />
@@ -107,6 +109,8 @@ let examples = [
   (
     "<polyline>",
     {|
+      <!-- Source: https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polyline -->
+
       <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
         <!-- Example of a polyline with the default fill -->
         <polyline points="0,100 50,25 50,75 100,0" />
@@ -120,6 +124,8 @@ let examples = [
   (
     "<rect>",
     {|
+      <!-- Source: https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect -->
+
       <svg viewBox="0 0 220 100" xmlns="http://www.w3.org/2000/svg">
         <!-- Simple rectangle -->
         <rect width="100" height="100" />
@@ -132,6 +138,8 @@ let examples = [
   (
     "<path> - heart",
     {|
+      <!-- Source: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d -->
+
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <path fill="none" stroke="red"
           d="M 10,30
@@ -145,6 +153,8 @@ let examples = [
   (
     "<path> - moveTo",
     {|
+      <!-- Source: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d#Path_commands -->
+
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <path fill="none" stroke="red"
           d="M 10,10 h 10
@@ -164,6 +174,8 @@ let examples = [
   (
     "<path> - lineTo",
     {|
+      <!-- Source: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d#Path_commands -->
+
       <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
         <!-- LineTo commands with absolute coordinates -->
         <path fill="none" stroke="red"
@@ -204,6 +216,8 @@ let examples = [
   (
     "<path> - cubic bezier",
     {|
+      <!-- Source: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d#Path_commands -->
+
       <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 
         <!-- Cubic Bézier curve with absolute coordinates -->
@@ -290,6 +304,8 @@ let examples = [
   (
     "<path> - quadratic bezier",
     {|
+      <!-- Source: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d#Path_commands -->
+
       <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 
         <!-- Quadratic Bézier curve with implicit repetition -->
@@ -373,6 +389,8 @@ let examples = [
   (
     "<path> - elliptic arc",
     {|
+      <!-- Source: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d#Path_commands -->
+
       <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
 
         <!-- The influence of the arc flags with which the arc is drawn -->
@@ -397,6 +415,8 @@ let examples = [
   (
     "<path> - close path",
     {|
+      <!-- Source: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d#Path_commands -->
+
       <svg viewBox="0 -1 30 11" xmlns="http://www.w3.org/2000/svg">
 
         <!--
