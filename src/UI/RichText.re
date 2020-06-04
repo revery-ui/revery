@@ -8,43 +8,11 @@ type textInfo = {
   monospaced: bool,
   fontSize: float,
   text: string,
-  smoothing: Smoothing.t,
   color: Color.t,
 };
 type t =
   | Leaf(textInfo)
   | Node(t, t);
-
-module Defaults = {
-  let fontFamily = Family.default;
-  let fontWeight = Weight.Normal;
-  let italicized = false;
-  let monospaced = false;
-  let fontSize = 14.;
-  let smoothing = Smoothing.default;
-  let color = Colors.black;
-};
-let text =
-    (
-      ~fontFamily=Defaults.fontFamily,
-      ~fontWeight=Defaults.fontWeight,
-      ~italicized=Defaults.italicized,
-      ~monospaced=Defaults.monospaced,
-      ~fontSize=Defaults.fontSize,
-      ~smoothing=Defaults.smoothing,
-      ~color=Defaults.color,
-      text: string,
-    ) =>
-  Leaf({
-    fontFamily,
-    fontWeight,
-    italicized,
-    monospaced,
-    fontSize,
-    text,
-    smoothing,
-    color,
-  });
 
 let (++) = (left: t, right: t) => Node(left, right);
 
@@ -67,12 +35,12 @@ let rec map = (updateLeaf: textInfo => t, richtext: t) =>
     Node(newLeft, newRight);
   };
 
-let measure = (richtext: t) =>
+let measure = (~smoothing=Smoothing.default, richtext: t) =>
   foldRight(
     (acc: Dimensions.t, textInfo) => {
       let dimensions =
         Revery_Draw.Text.measure(
-          ~smoothing=textInfo.smoothing,
+          ~smoothing,
           ~fontFamily=
             Family.toPath(
               textInfo.fontFamily,
@@ -93,6 +61,34 @@ let measure = (richtext: t) =>
   );
 
 module DSL = {
+  module Defaults = {
+    let fontFamily = Family.default;
+    let fontWeight = Weight.Normal;
+    let italicized = false;
+    let monospaced = false;
+    let fontSize = 14.;
+    let color = Colors.black;
+  };
+  let text =
+      (
+        ~fontFamily=Defaults.fontFamily,
+        ~fontWeight=Defaults.fontWeight,
+        ~italicized=Defaults.italicized,
+        ~monospaced=Defaults.monospaced,
+        ~fontSize=Defaults.fontSize,
+        ~color=Defaults.color,
+        text: string,
+      ) =>
+    Leaf({
+      fontFamily,
+      fontWeight,
+      italicized,
+      monospaced,
+      fontSize,
+      text,
+      color,
+    });
+
   let fontWeight = (fontWeight: Weight.t, richtext: t) =>
     richtext |> map(textInfo => Leaf({...textInfo, fontWeight}));
   let thin = (richtext: t) =>
@@ -119,26 +115,12 @@ module DSL = {
   let heavy = (richtext: t) =>
     richtext |> map(textInfo => Leaf({...textInfo, fontWeight: Weight.Heavy}));
 
-  let smoothing = (smoothing: Smoothing.t, richtext: t) =>
-    richtext |> map(textInfo => Leaf({...textInfo, smoothing}));
-  let noSmoothing = (richtext: t) =>
-    richtext
-    |> map(textInfo => Leaf({...textInfo, smoothing: Smoothing.None}));
-  let antialiased = (richtext: t) =>
-    richtext
-    |> map(textInfo => Leaf({...textInfo, smoothing: Smoothing.Antialiased}));
-  let subpixelAntialiased = (richtext: t) =>
-    richtext
-    |> map(textInfo =>
-         Leaf({...textInfo, smoothing: Smoothing.SubpixelAntialiased})
-       );
-
   let fontFamily = (fontFamily: Family.t, richtext: t) =>
     richtext |> map(textInfo => Leaf({...textInfo, fontFamily}));
-  let italicized = (~italicized=true, richtext: t) =>
-    richtext |> map(textInfo => Leaf({...textInfo, italicized}));
-  let monospaced = (~monospaced=true, richtext: t) =>
-    richtext |> map(textInfo => Leaf({...textInfo, monospaced}));
+  let italicized = (richtext: t) =>
+    richtext |> map(textInfo => Leaf({...textInfo, italicized: true}));
+  let monospaced = (richtext: t) =>
+    richtext |> map(textInfo => Leaf({...textInfo, monospaced: true}));
   let fontSize = (fontSize: float, richtext: t) =>
     richtext |> map(textInfo => Leaf({...textInfo, fontSize}));
   let color = (color: Color.t, richtext: t) =>

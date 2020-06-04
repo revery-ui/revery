@@ -1,6 +1,7 @@
 open Revery;
 open Revery.UI;
 open Revery.UI.Components;
+open Revery.Font;
 
 let containerStyle =
   Style.[
@@ -14,12 +15,12 @@ let containerStyle =
     flexDirection(`Column),
   ];
 
-let font = Revery_Font.Family.system("Arial");
+let font = Family.system("Arial");
 module SampleRichText = {
   let make = () => {
     let richtext =
       RichText.(
-        text("Hello ", ~color=Colors.red, ~fontWeight=Revery_Font.Weight.Bold)
+        text("Hello ", ~color=Colors.red, ~fontWeight=Weight.Bold)
         ++ text("world", ~color=Colors.green)
         ++ text("!", ~color=Colors.yellow)
         |> fontSize(20.)

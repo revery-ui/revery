@@ -1,8 +1,9 @@
-open Revery_Core;
 open Revery_UI;
 open Revery_UI_Primitives;
+open Revery_Font;
 
-let make = (~style=[], ~richtext: RichText.t, ()) => {
+let make =
+    (~style=[], ~smoothing=Smoothing.default, ~richtext: RichText.t, ()) => {
   let text =
     RichText.foldRight(
       (acc, textInfo) =>
@@ -15,7 +16,7 @@ let make = (~style=[], ~richtext: RichText.t, ()) => {
             monospaced={textInfo.monospaced}
             fontSize={textInfo.fontSize}
             text={textInfo.text}
-            smoothing={textInfo.smoothing}
+            smoothing
           />,
           ...acc,
         ],

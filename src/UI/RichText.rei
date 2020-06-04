@@ -8,25 +8,11 @@ type textInfo = {
   monospaced: bool,
   fontSize: float,
   text: string,
-  smoothing: Smoothing.t,
   color: Color.t,
 };
 type t =
   | Leaf(textInfo)
   | Node(t, t);
-
-let text:
-  (
-    ~fontFamily: Family.t=?,
-    ~fontWeight: Weight.t=?,
-    ~italicized: bool=?,
-    ~monospaced: bool=?,
-    ~fontSize: float=?,
-    ~smoothing: Smoothing.t=?,
-    ~color: Color.t=?,
-    string
-  ) =>
-  t;
 
 let (++): (t, t) => t;
 
@@ -34,9 +20,20 @@ let foldRight: (('acc, textInfo) => 'acc, 'acc, t) => 'acc;
 
 let map: (textInfo => t, t) => t;
 
-let measure: t => Dimensions.t;
+let measure: (~smoothing: Smoothing.t=?, t) => Dimensions.t;
 
-module DSL = {
+module DSL: {
+  let text:
+    (
+      ~fontFamily: Family.t=?,
+      ~fontWeight: Weight.t=?,
+      ~italicized: bool=?,
+      ~monospaced: bool=?,
+      ~fontSize: float=?,
+      ~color: Color.t=?,
+      string
+    ) =>
+    t;
   let fontWeight: (Weight.t, t) => t;
   let thin: t => t;
   let ultralight: t => t;
@@ -48,17 +45,23 @@ module DSL = {
   let ultrabold: t => t;
   let heavy: t => t;
 
-  let smoothing: (Smoothing.t, t) => t;
-  let noSmoothing: t => t;
-  let antialiased: t => t;
-  let subpixelAntialiased: t => t;
-
   let fontFamily: (Family.t, t) => t;
-  let italicized: (~italicized: bool=?, t) => t;
-  let monospaced: (~monospaced: bool=?, t) => t;
+  let italicized: t => t;
+  let monospaced: t => t;
   let fontSize: (float, t) => t;
   let color: (Color.t, t) => t;
 };
+let text:
+  (
+    ~fontFamily: Family.t=?,
+    ~fontWeight: Weight.t=?,
+    ~italicized: bool=?,
+    ~monospaced: bool=?,
+    ~fontSize: float=?,
+    ~color: Color.t=?,
+    string
+  ) =>
+  t;
 let fontWeight: (Weight.t, t) => t;
 let thin: t => t;
 let ultralight: t => t;
@@ -70,13 +73,8 @@ let bold: t => t;
 let ultrabold: t => t;
 let heavy: t => t;
 
-let smoothing: (Smoothing.t, t) => t;
-let noSmoothing: t => t;
-let antialiased: t => t;
-let subpixelAntialiased: t => t;
-
 let fontFamily: (Family.t, t) => t;
-let italicized: (~italicized: bool=?, t) => t;
-let monospaced: (~monospaced: bool=?, t) => t;
+let italicized: t => t;
+let monospaced: t => t;
 let fontSize: (float, t) => t;
 let color: (Color.t, t) => t;
