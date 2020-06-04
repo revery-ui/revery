@@ -36,7 +36,7 @@ let map: (textInfo => t, t) => t;
 
 let measure: t => Dimensions.t;
 
-module DSL: {
+module type DSLType = {
   let fontWeight: (Weight.t, t) => t;
   let thin: t => t;
   let ultralight: t => t;
@@ -59,3 +59,5 @@ module DSL: {
   let fontSize: (float, t) => t;
   let color: (Color.t, t) => t;
 };
+module DSL: DSLType;
+include DSLType;

@@ -22,9 +22,9 @@ module SampleRichText = {
         text("Hello ", ~color=Colors.red, ~fontWeight=Revery_Font.Weight.Bold)
         ++ text("world", ~color=Colors.green)
         ++ text("!", ~color=Colors.yellow)
-        |> DSL.fontSize(20.)
-        |> DSL.fontFamily(font)
-        |> DSL.italicized
+        |> fontSize(20.)
+        |> fontFamily(font)
+        |> italicized
       );
 
     let dimensions = RichText.measure(richtext);
