@@ -76,10 +76,20 @@ let path = (~d, ~paint, ~context) => {
     | `L(x, y) => Skia.Path.lineTo(path, x, y)
     | `l(dx, dy) => Skia.Path.rLineTo(path, dx, dy)
 
-    | `H(_) => failwith("TODO - path H")
+    | `H(x) => {
+        let last = Skia.Point.make(0., 0.);
+        if (Skia.Path.getLastPoint(path, last)) {
+          Skia.Path.lineTo(path, x, Skia.Point.getY(last));
+        };
+      }
     | `h(dx) => Skia.Path.rLineTo(path, dx, 0.)
 
-    | `V(_) => failwith("TODO - path V")
+    | `V(y) => {
+        let last = Skia.Point.make(0., 0.);
+        if (Skia.Path.getLastPoint(path, last)) {
+          Skia.Path.lineTo(path, Skia.Point.getX(last), y);
+        };
+      }
     | `v(dy) => Skia.Path.rLineTo(path, 0., dy)
 
     | `C(x1, y1, x2, y2, x, y) =>

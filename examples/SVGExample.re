@@ -194,26 +194,6 @@ let examples = [
     |},
   ),
   (
-    "<path> - lineTo*",
-    {|
-      <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
-        <!-- LineTo commands with absolute coordinates -->
-        <path fill="none" stroke="red"
-              d="M 10,10
-                L 90,90
-                L 90,10
-                L 50,10" />
-
-        <!-- LineTo commands with relative coordinates -->
-        <path fill="none" stroke="red"
-              d="M 110,10
-                l 80,80
-                v -80
-                h -40" />
-      </svg>
-    |},
-  ),
-  (
     "<path> - cubic bezier",
     {|
       <!-- Source: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d#Path_commands -->
