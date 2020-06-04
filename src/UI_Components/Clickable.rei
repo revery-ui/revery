@@ -31,6 +31,8 @@ let make:
     ~onKeyUp: Revery_UI.NodeEvents.keyUpHandler=?,
     ~onTextEdit: Revery_UI.NodeEvents.textEditHandler=?,
     ~onTextInput: Revery_UI.NodeEvents.textInputHandler=?,
+    ~onMouseEnter: NodeEvents.mouseMoveEventParams => unit=?,
+    ~onMouseLeave: NodeEvents.mouseMoveEventParams => unit=?,
     ~children: Brisk_reconciler.element(Revery_UI.React.node),
     unit
   ) =>
