@@ -142,7 +142,7 @@ let path = (~d, ~paint, ~context) => {
     },
     d,
   );
-  
+
   CanvasContext.drawPath(~path, ~paint, context.canvas);
 };
 
