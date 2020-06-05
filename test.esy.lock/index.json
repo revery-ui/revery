@@ -1,5 +1,5 @@
 {
-  "checksum": "dcde30da5a584b8705c67b4b3d1e3cf2",
+  "checksum": "0d9ea27380e030dbd45f65bbb66d1fbe",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -45,7 +45,7 @@
         "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9",
+        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f00@d41d8cd9",
         "flex@1.2.3@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
         "esy-sdl2@2.0.10008@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
@@ -53,6 +53,7 @@
         "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/console@0.0.3@d41d8cd9",
         "@opam/ppx_deriving@opam:4.5@bb81afdc",
+        "@opam/omd@github:ocaml/omd:omd.opam#1535e3c@d41d8cd9",
         "@opam/lwt_ppx@opam:2.0.1@ab0debb8", "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
@@ -142,17 +143,14 @@
       ],
       "devDependencies": []
     },
-    "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9": {
+    "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f00@d41d8cd9": {
       "id":
-        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6@d41d8cd9",
+        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f00@d41d8cd9",
       "name": "reason-native-crash-utils",
-      "version":
-        "github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6",
+      "version": "github:onivim/reason-native-crash-utils#38c8f00",
       "source": {
         "type": "install",
-        "source": [
-          "github:onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6"
-        ]
+        "source": [ "github:onivim/reason-native-crash-utils#38c8f00" ]
       },
       "overrides": [],
       "dependencies": [
@@ -1051,6 +1049,27 @@
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.0@aef1678b"
+      ]
+    },
+    "@opam/omd@github:ocaml/omd:omd.opam#1535e3c@d41d8cd9": {
+      "id": "@opam/omd@github:ocaml/omd:omd.opam#1535e3c@d41d8cd9",
+      "name": "@opam/omd",
+      "version": "github:ocaml/omd:omd.opam#1535e3c",
+      "source": {
+        "type": "install",
+        "source": [ "github:ocaml/omd:omd.opam#1535e3c" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "@opam/uchar@opam:0.0.2@c8218eea", "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/base-bytes@opam:base@19d0c2ff",
+        "@opam/base-bigarray@opam:base@b03491b0",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "@opam/uchar@opam:0.0.2@c8218eea",
+        "@opam/base-bytes@opam:base@19d0c2ff",
+        "@opam/base-bigarray@opam:base@b03491b0"
       ]
     },
     "@opam/ocplib-endian@opam:1.1@84c1ca88": {
@@ -2111,6 +2130,23 @@
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9"
       ]
+    },
+    "@opam/base-bigarray@opam:base@b03491b0": {
+      "id": "@opam/base-bigarray@opam:base@b03491b0",
+      "name": "@opam/base-bigarray",
+      "version": "opam:base",
+      "source": {
+        "type": "install",
+        "source": [ "no-source:" ],
+        "opam": {
+          "name": "base-bigarray",
+          "version": "base",
+          "path": "test.esy.lock/opam/base-bigarray.base"
+        }
+      },
+      "overrides": [],
+      "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
+      "devDependencies": []
     },
     "@opam/base@opam:v0.14.0@b8817fc1": {
       "id": "@opam/base@opam:v0.14.0@b8817fc1",

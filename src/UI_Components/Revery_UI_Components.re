@@ -41,3 +41,4 @@ module ClickableText = ClickableText;
 module Ticker = Ticker;
 module Tree = Tree;
 module RichTextView = RichTextView;
+module Markdown = Markdown;
