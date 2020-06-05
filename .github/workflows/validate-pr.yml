@@ -33,7 +33,7 @@ jobs:
         run: node .github/workflows/print_esy_cache.js
       - name: Try to restore dependencies cache
         id: deps-cache-macos
-        uses: actions/cache@v1.1.2
+        uses: actions/cache@v2.0.0
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: macos-latest-${{ hashFiles('**/index.json') }}
@@ -93,7 +93,7 @@ jobs:
         run: node .github/workflows/print_esy_cache.js
       - name: Try to restore dependencies cache
         id: deps-cache-macos
-        uses: actions/cache@v1.1.2
+        uses: actions/cache@v2.0.0
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: macos-latest-${{ hashFiles('**/index.json') }}
@@ -151,7 +151,7 @@ jobs:
         run: node .github/workflows/print_esy_cache.js
       - name: Try to restore dependencies cache
         id: deps-cache
-        uses: actions/cache@v1.1.2
+        uses: actions/cache@v2.0.0
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
@@ -192,30 +192,20 @@ jobs:
         id: print_esy_cache
         run: node .github/workflows/print_esy_cache.js
       - name: Try to restore dependencies cache
-        if: matrix.os != 'windows-latest'
-        id: deps-cache-non-win
-        uses: actions/cache@v1.1.2
+        id: deps-cache
+        uses: actions/cache@v2.0.0
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
           restore-keys: |
             ${{ matrix.os }}-
-      - name: Try to restore dependencies cache
-        if: matrix.os == 'windows-latest'
-        id: deps-cache-win
-        uses: actions/cache@v1.1.2
-        with:
-          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: ${{ matrix.os }}-${{ hashFiles('**\index.json') }}
-          restore-keys: |
-            ${{ matrix.os }}-
       - name: Build dependencies
-        if: steps.deps-cache-win.outputs.cache-hit != 'true' && steps.deps-cache-non-win.outputs.cache-hit != 'true'
+        if: steps.deps-cache.outputs.cache-hit != 'true'
         run: esy build-dependencies --release
       - name: Build
         run: esy build --release
       - name: Build test/dev dependencies
-        if: steps.deps-cache-win.outputs.cache-hit != 'true' && steps.deps-cache-non-win.outputs.cache-hit != 'true'
+        if: steps.deps-cache.outputs.cache-hit != 'true'
         run: |
           esy build-dependencies
           # We might have used restore-keys
