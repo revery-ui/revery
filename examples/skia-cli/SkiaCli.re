@@ -195,6 +195,25 @@ let draw = canvas => {
   let fill = Paint.make();
   Paint.setColor(fill, Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l));
   Canvas.drawCircle(canvas, 320., 240., 30., fill);
+
+  // Creating empty shader
+  let maybeEmptyShader = Skia.Shader.makeEmpty();
+  switch (maybeEmptyShader) {
+  | Some(_) => prerr_endline ("Created empty shader...")
+  | None => failwith ("Unable to create empty shader.")
+  };
+
+  let red = Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l);
+  let blue = Color.makeArgb(0xFFl, 0x00l, 0x00l, 0xFFl);
+
+  // Creating a 2-stop linear gradient
+  let maybeLinearGradient2 = Skia.Shader.makeLinearGradient2(
+    ~startPoint=Skia.Point.make(0.0, 0.0),
+    ~stopPoint=Skia.Point.make(1.0, 1.0),
+    ~startColor=red,
+    ~stopColor=blue,
+    ~tileMode=
+  )
 };
 
 let surface = makeSurface(640l, 480l);

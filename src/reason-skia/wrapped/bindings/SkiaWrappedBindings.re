@@ -44,6 +44,26 @@ module M = (F: FOREIGN) => {
     let t = SkiaTypes.Hinting.t;
   };
 
+  module Shader = {
+    type t = ptr(structure(SkiaTypes.Shader.t));
+    let t = ptr(SkiaTypes.Shader.t);
+
+    type tileMode =SkiaTypes.Shader.tileMode;
+    let tileMode = SkiaTypes.Shader.tileMode;
+
+    let empty = 
+      foreign(
+        "sk_shader_new_empty",
+        void @-> returning(ptr_opt(SkiaTypes.Shader.t)),
+      );
+
+    let unref =
+      foreign(
+        "sk_shader_unref",
+        ptr(SkiaTypes.Shader.t) @-> returning(void),
+      );
+  }
+
   module Typeface = {
     type t = ptr(structure(SkiaTypes.Typeface.t));
     let t = ptr(SkiaTypes.Typeface.t);

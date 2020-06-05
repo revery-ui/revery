@@ -166,7 +166,6 @@ module M = (T: TYPE) => {
   };
 
   module Shader = {
-    
     type tileMode =
     | Clamp
     | Repeat
@@ -308,7 +307,7 @@ module M = (T: TYPE) => {
     let t: typ(structure(t)) = structure("sk_path_t");
     let t = typedef(t, "sk_path_t");
   };
-
+  
   module ColorSpace = {
     type t;
     let t: typ(structure(t)) = structure("sk_colorspace_t");

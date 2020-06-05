@@ -30,3 +30,32 @@ gr_glinterface_t *reason_skia_make_sdl2_interface() {
             gr_glinterface_assemble_gl_interface(0, reason_skia_sdl2_get);
     return interface;
 }
+
+sk_shader_t* reason_skia_stub_linear_gradient2(
+    sk_point_t startPosition,
+    sk_point_t stopPosition,
+    sk_color_t startColor,
+    sk_color_t stopColor,
+    sk_shader_tilemode_t tileMode) {
+
+    sk_point_t pts[2];
+    pts[0] = startPosition;
+    pts[1] = stopPosition;
+
+    sk_color_t colors[2];
+    colors[0] = startColor;
+    colors[1] = stopColor;
+
+    float stops[2];
+    stops[0] = 0.0f;
+    stops[1] = 1.0f;
+
+    return sk_shader_new_linear_gradient(
+        pts,
+        colors,
+        stops,
+        2,
+        tileMode,
+        NULL
+    );
+}

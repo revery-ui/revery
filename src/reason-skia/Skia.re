@@ -182,6 +182,33 @@ module Vector = {
   let getY = SkiaWrapped.Vector.getY;
 };
 
+module Shader = {
+  type t= SkiaWrapped.Shader.t;
+
+  type tileMode = SkiaWrapped.Shader.tileMode;
+  
+  let makeEmpty = () => {
+    let maybeEmpty = SkiaWrapped.Shader.empty();
+    switch (maybeEmpty) {
+    | Some(empty) => Gc.finalise(SkiaWrapped.Shader.unref, empty);
+    | None => ();
+    }
+    maybeEmpty
+  };
+
+  let makeLinearGradient2 = (
+    ~startPoint,
+    ~stopPoint,
+    ~startColor,
+    ~stopColor,
+    ~tileMode
+  ) => {
+    prerr_endline("Making a linear gradient");
+    None;
+  }
+};
+
+
 module Matrix = {
   type t = SkiaWrapped.Matrix.t;
 
