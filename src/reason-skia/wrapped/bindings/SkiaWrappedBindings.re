@@ -59,6 +59,8 @@ module M = (F: FOREIGN) => {
         "sk_typeface_create_from_file",
         string @-> int @-> returning(ptr_opt(SkiaTypes.Typeface.t)),
       );
+
+    let delete = foreign("sk_typeface_unref", t @-> returning(void));
   };
 
   module FontManager = {

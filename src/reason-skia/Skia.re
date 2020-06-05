@@ -422,7 +422,16 @@ module FontManager = {
   type t = SkiaWrapped.FontManager.t;
 
   let makeDefault = SkiaWrapped.FontManager.makeDefault;
-  let matchFamilyStyle = SkiaWrapped.FontManager.matchFamilyStyle;
+  let matchFamilyStyle = (mgr, family, style) => {
+    let typeface =
+      SkiaWrapped.FontManager.matchFamilyStyle(mgr, family, style);
+    switch (typeface) {
+    | Some(tf) =>
+      Gc.finalise(SkiaWrapped.Typeface.delete, tf);
+      Some(tf);
+    | None => None
+    };
+  };
 };
 
 module RRect = {
