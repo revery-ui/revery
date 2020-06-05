@@ -165,6 +165,11 @@ let examples = [
     render: w => WindowControl.render(w),
     source: "WindowControl.re",
   },
+  {
+    name: "Markdown",
+    render: _ => MarkdownExample.render(),
+    source: "MarkdownExample.re",
+  },
 ];
 
 let getExampleByName = name =>

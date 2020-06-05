@@ -36,7 +36,6 @@
     ]
   },
   "dependencies": {
-    "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d",
     "@esy-ocaml/reason": "^3.6.0",
     "@opam/bos": "0.2.0",
     "@opam/ctypes": "0.15.1",
@@ -46,6 +45,8 @@
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/ppx_deriving": "*",
+    "@opam/omd": "ocaml/omd:omd.opam#1535e3c",
+    "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d",
     "esy-freetype2": "^2.9.1007",
     "esy-harfbuzz": "^1.9.1008",
     "esy-sdl2": "^2.0.10008",
