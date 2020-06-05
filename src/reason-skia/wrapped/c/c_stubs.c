@@ -51,11 +51,11 @@ sk_shader_t* reason_skia_stub_linear_gradient2(
     stops[1] = 1.0f;
 
     return sk_shader_new_linear_gradient(
-        pts,
-        colors,
-        stops,
-        2,
-        tileMode,
-        NULL
-    );
+               pts,
+               colors,
+               stops,
+               2,
+               tileMode,
+               NULL
+           );
 }

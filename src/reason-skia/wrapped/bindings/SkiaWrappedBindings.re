@@ -128,15 +128,14 @@ module M = (F: FOREIGN) => {
     };
   };
 
-  
   module Shader = {
     type t = ptr(structure(SkiaTypes.Shader.t));
     let t = ptr(SkiaTypes.Shader.t);
 
-    type tileMode =SkiaTypes.Shader.tileMode;
+    type tileMode = SkiaTypes.Shader.tileMode;
     let tileMode = SkiaTypes.Shader.tileMode;
 
-    let empty = 
+    let empty =
       foreign(
         "sk_shader_new_empty",
         void @-> returning(ptr_opt(SkiaTypes.Shader.t)),
@@ -145,9 +144,12 @@ module M = (F: FOREIGN) => {
     let makeLinearGradient2 =
       foreign(
         "reason_skia_stub_linear_gradient2",
-         Point.t @-> Point.t @->
-         Color.t @-> Color.t @->
-         tileMode @-> returning(ptr_opt(SkiaTypes.Shader.t))
+        Point.t
+        @-> Point.t
+        @-> Color.t
+        @-> Color.t
+        @-> tileMode
+        @-> returning(ptr_opt(SkiaTypes.Shader.t)),
       );
 
     let unref =
@@ -237,10 +239,7 @@ module M = (F: FOREIGN) => {
       );
 
     let setShader =
-      foreign(
-        "sk_paint_set_shader",
-        t @-> Shader.t @-> returning(void)
-      );
+      foreign("sk_paint_set_shader", t @-> Shader.t @-> returning(void));
   };
 
   module Vector = {

@@ -119,21 +119,22 @@ module Vector: {
   let getY: t => float;
 };
 
-
 module Shader: {
   type t;
 
   type tileMode = SkiaWrapped.Shader.tileMode;
-  
+
   let makeEmpty: unit => option(t);
 
-  let makeLinearGradient2: (
-    ~startPoint: Point.t,
-    ~stopPoint: Point.t,
-    ~startColor: Color.t,
-    ~stopColor: Color.t,
-    ~tileMode: tileMode,
-  ) => option(t);
+  let makeLinearGradient2:
+    (
+      ~startPoint: Point.t,
+      ~stopPoint: Point.t,
+      ~startColor: Color.t,
+      ~stopColor: Color.t,
+      ~tileMode: tileMode
+    ) =>
+    option(t);
 };
 
 module Paint: {

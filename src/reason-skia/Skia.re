@@ -185,41 +185,36 @@ module Vector = {
 };
 
 module Shader = {
-  type t= SkiaWrapped.Shader.t;
+  type t = SkiaWrapped.Shader.t;
 
   type tileMode = SkiaWrapped.Shader.tileMode;
-  
+
   let makeEmpty = () => {
     let maybeEmpty = SkiaWrapped.Shader.empty();
     switch (maybeEmpty) {
-    | Some(empty) => Gc.finalise(SkiaWrapped.Shader.unref, empty);
-    | None => ();
-    }
-    maybeEmpty
+    | Some(empty) => Gc.finalise(SkiaWrapped.Shader.unref, empty)
+    | None => ()
+    };
+    maybeEmpty;
   };
 
-  let makeLinearGradient2 = (
-    ~startPoint,
-    ~stopPoint,
-    ~startColor,
-    ~stopColor,
-    ~tileMode
-  ) => {
-    let maybeGradient = SkiaWrapped.Shader.makeLinearGradient2(
-      startPoint,
-      stopPoint,
-          Unsigned.UInt32.of_int32(startColor),
-          Unsigned.UInt32.of_int32(stopColor),
-      tileMode
-    );
+  let makeLinearGradient2 =
+      (~startPoint, ~stopPoint, ~startColor, ~stopColor, ~tileMode) => {
+    let maybeGradient =
+      SkiaWrapped.Shader.makeLinearGradient2(
+        startPoint,
+        stopPoint,
+        Unsigned.UInt32.of_int32(startColor),
+        Unsigned.UInt32.of_int32(stopColor),
+        tileMode,
+      );
     switch (maybeGradient) {
-    | Some(gradient) => Gc.finalise(SkiaWrapped.Shader.unref, gradient);
-    | None => ();
-    }
-    maybeGradient
-  }
+    | Some(gradient) => Gc.finalise(SkiaWrapped.Shader.unref, gradient)
+    | None => ()
+    };
+    maybeGradient;
+  };
 };
-
 
 module Matrix = {
   type t = SkiaWrapped.Matrix.t;
