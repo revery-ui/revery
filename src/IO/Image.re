@@ -50,41 +50,46 @@ let urlContextCache: urlCache = Hashtbl.create(100);
 let fromUrl = url => {
   let cacheResult = Hashtbl.find_opt(urlContextCache, url);
 
-  switch (cacheResult) {
-  | Some(result) =>
-    switch (result) {
-    | Image(maybeImage) => Lwt.return(Ok(maybeImage))
-    | Pending => Lwt.return(Ok(None))
-    }
-  | None =>
-    Hashtbl.replace(urlContextCache, url, Pending);
-    open Fetch;
+  let.flatMap result =
+    switch (cacheResult) {
+    | Some(result) =>
+      switch (result) {
+      | Image(maybeImage) => Lwt.return(Ok(maybeImage))
+      | Pending => Lwt.return(Ok(None))
+      }
+    | None =>
+      Hashtbl.replace(urlContextCache, url, Pending);
+      open Fetch;
 
-    let.flatMapOk {Response.body, headers, _} = get(url);
+      let.flatMapOk {Response.body, headers, _} = get(url);
 
-    let data = Body.toString(body);
-    let mediaType =
-      headers
-      |> List.find_opt(((k, _v)) =>
-           String.lowercase_ascii(k) == "content-type"
-         )
-      |> Option.map(((_k, v)) => v)
-      |> Option.value(~default="");
+      let data = Body.toString(body);
+      let mediaType =
+        headers
+        |> List.find_opt(((k, _v)) =>
+             String.lowercase_ascii(k) == "content-type"
+           )
+        |> Option.map(((_k, v)) => v)
+        |> Option.value(~default="");
 
-    let fileExtension = Internal.mediaTypeToFileExtension(mediaType);
-    let fileName = Internal.createFilePath(url, ~fileExtension);
+      let fileExtension = Internal.mediaTypeToFileExtension(mediaType);
+      let fileName = Internal.createFilePath(url, ~fileExtension);
 
-    let.flatMapOk _writeOk = File.write(~path=fileName, data);
-    let maybeData = Skia.Data.makeFromFileName(fileName);
-    let.flatMapOk _deleted = File.delete(fileName);
+      let.flatMapOk _writeOk = File.write(~path=fileName, data);
+      let maybeData = Skia.Data.makeFromFileName(fileName);
+      let.flatMapOk _deleted = File.delete(fileName);
 
-    let maybeSkiaImage =
-      Option.bind(maybeData, data => Skia.Image.makeFromEncoded(data, None));
+      let maybeSkiaImage =
+        Option.bind(maybeData, data =>
+          Skia.Image.makeFromEncoded(data, None)
+        );
 
-    Hashtbl.replace(urlContextCache, url, Image(maybeSkiaImage));
+      Hashtbl.replace(urlContextCache, url, Image(maybeSkiaImage));
 
-    Lwt.return(Ok(maybeSkiaImage));
-  };
+      Lwt.return(Ok(maybeSkiaImage));
+    };
+
+  Lwt.return(Result.value(result, ~default=None));
 };
 
 type cache = Hashtbl.t(string, option(Skia.Image.t));

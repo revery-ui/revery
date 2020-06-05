@@ -73,13 +73,13 @@ let%nativeComponent make =
       ignore(
         switch (src) {
         | `Url(url) =>
-          let.flatMapOk image = Revery_IO.Image.fromUrl(url);
+          let.flatMap image = Revery_IO.Image.fromUrl(url);
           imgNode#setData(image);
-          Lwt.return(Ok());
+          Lwt.return();
         | `File(path) =>
           let maybeSkiaImage = Revery_IO.Image.fromAssetPath(path);
           imgNode#setData(maybeSkiaImage);
-          Lwt.return(Ok());
+          Lwt.return();
         },
       );
 

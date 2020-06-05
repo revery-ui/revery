@@ -1,13 +1,12 @@
 /**
  * fromUrl
  *
- * Given a network file-path this returns a promise,
- * holding either a Ok(option(Skia.Image.t)) or an Error(string).
+ * Given a network file-path this returns a promise, holding an option(Skia.Image.t)
  *
  * Examples:
- * let result = Image.fromUrl("https://example.com/hello.png");
+ * let maybeImage: Lwt.t(option(Skia.Image.t)) = Image.fromUrl("https://example.com/hello.png");
  */
-let fromUrl: string => Lwt.t(result(option(Skia.Image.t), string));
+let fromUrl: string => Lwt.t(option(Skia.Image.t));
 
 /**
  * fromAssetPath
@@ -15,6 +14,6 @@ let fromUrl: string => Lwt.t(result(option(Skia.Image.t), string));
  * Given a path, reads an image-file from disk, returning an option-type.
  *
  * Examples:
- * let result = Image.fromAssetPath("example.png");
+ * let maybeImage: Lwt.t(option(Skia.Image.t)) = Image.fromAssetPath("example.png");
  */
 let fromAssetPath: string => option(Skia.Image.t);

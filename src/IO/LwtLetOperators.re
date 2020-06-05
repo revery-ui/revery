@@ -7,6 +7,8 @@ let (let.mapOk) = (promise, fn) =>
     promise,
   );
 
+let (let.flatMap) = (promise, fn) => Lwt.bind(promise, fn);
+
 let (let.flatMapOk) = (promise, fn) =>
   Lwt.bind(
     promise,
