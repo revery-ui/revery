@@ -190,17 +190,14 @@ module Shader = {
   type tileMode = SkiaWrapped.Shader.tileMode;
 
   let makeEmpty = () => {
-    let maybeEmpty = SkiaWrapped.Shader.empty();
-    switch (maybeEmpty) {
-    | Some(empty) => Gc.finalise(SkiaWrapped.Shader.unref, empty)
-    | None => ()
-    };
-    maybeEmpty;
+    let empty = SkiaWrapped.Shader.empty();
+    Gc.finalise(SkiaWrapped.Shader.unref, empty);
+    empty;
   };
 
   let makeLinearGradient2 =
       (~startPoint, ~stopPoint, ~startColor, ~stopColor, ~tileMode) => {
-    let maybeGradient =
+    let gradient =
       SkiaWrapped.Shader.makeLinearGradient2(
         startPoint,
         stopPoint,
@@ -208,11 +205,8 @@ module Shader = {
         Unsigned.UInt32.of_int32(stopColor),
         tileMode,
       );
-    switch (maybeGradient) {
-    | Some(gradient) => Gc.finalise(SkiaWrapped.Shader.unref, gradient)
-    | None => ()
-    };
-    maybeGradient;
+    Gc.finalise(SkiaWrapped.Shader.unref, gradient);
+    gradient;
   };
 
   type colorStop = {
@@ -221,8 +215,6 @@ module Shader = {
   };
 
   let makeLinearGradient = (~startPoint, ~stopPoint, ~colorStops, ~tileMode) => {
-    open Ctypes;
-
     let (colors, positions) =
       List.fold_left(
         (acc, curr) => {
@@ -237,16 +229,23 @@ module Shader = {
         colorStops,
       );
 
-    let colorsArray = CArray.of_list(uint32_t, colors |> List.rev);
-    let positionsArray = CArray.of_list(float, positions |> List.rev);
+    Ctypes.(
+      {
+        let colorsArray = CArray.of_list(uint32_t, colors |> List.rev);
+        let positionsArray = CArray.of_list(float, positions |> List.rev);
 
-    SkiaWrapped.Shader.makeLinearGradient(
-      startPoint,
-      stopPoint,
-      CArray.start(colorsArray),
-      CArray.start(positionsArray),
-      CArray.length(colorsArray),
-      tileMode,
+        let gradient =
+          SkiaWrapped.Shader.makeLinearGradient(
+            startPoint,
+            stopPoint,
+            CArray.start(colorsArray),
+            CArray.start(positionsArray),
+            CArray.length(colorsArray),
+            tileMode,
+          );
+        Gc.finalise(SkiaWrapped.Shader.unref, gradient);
+        gradient;
+      }
     );
   };
 };

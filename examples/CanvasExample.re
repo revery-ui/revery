@@ -92,7 +92,7 @@ module Sample = {
           let red = Skia.Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l);
           let blue = Skia.Color.makeArgb(0xFFl, 0x00l, 0x00l, 0xFFl);
           let paint = Skia.Paint.make();
-          let maybeLinearGradient =
+          let linearGradient =
             Skia.Shader.makeLinearGradient2(
               ~startPoint=Skia.Point.make(200.0, 200.0),
               ~stopPoint=Skia.Point.make(220.0, 220.0),
@@ -100,22 +100,18 @@ module Sample = {
               ~stopColor=blue,
               ~tileMode=`clamp,
             );
-          switch (maybeLinearGradient) {
-          | Some(linearGradient) =>
-            Skia.Paint.setShader(paint, linearGradient);
-            Skia.Paint.setColor(
-              paint,
-              Skia.Color.makeArgb(0xFFl, 0x00l, 0xFFl, 0x00l),
-            );
-            CanvasContext.drawCircle(
-              ~x=225.,
-              ~y=225.,
-              ~radius=100.,
-              ~paint,
-              canvasContext,
-            );
-          | None => ()
-          };
+          Skia.Paint.setShader(paint, linearGradient);
+          Skia.Paint.setColor(
+            paint,
+            Skia.Color.makeArgb(0xFFl, 0x00l, 0xFFl, 0x00l),
+          );
+          CanvasContext.drawCircle(
+            ~x=225.,
+            ~y=225.,
+            ~radius=100.,
+            ~paint,
+            canvasContext,
+          );
         }}
       />
     </View>;

@@ -124,7 +124,7 @@ module Shader: {
 
   type tileMode = SkiaWrapped.Shader.tileMode;
 
-  let makeEmpty: unit => option(t);
+  let makeEmpty: unit => t;
 
   type colorStop = {
     color: Color.t,
@@ -139,7 +139,7 @@ module Shader: {
       ~stopColor: Color.t,
       ~tileMode: tileMode
     ) =>
-    option(t);
+    t;
 
   let makeLinearGradient:
     (
@@ -148,7 +148,7 @@ module Shader: {
       ~colorStops: list(colorStop),
       ~tileMode: tileMode
     ) =>
-    option(t);
+    t;
 };
 
 module Paint: {

@@ -138,7 +138,7 @@ module M = (F: FOREIGN) => {
     let empty =
       foreign(
         "sk_shader_new_empty",
-        void @-> returning(ptr_opt(SkiaTypes.Shader.t)),
+        void @-> returning(ptr(SkiaTypes.Shader.t)),
       );
 
     let makeLinearGradient2 =
@@ -149,7 +149,7 @@ module M = (F: FOREIGN) => {
         @-> Color.t
         @-> Color.t
         @-> tileMode
-        @-> returning(ptr_opt(SkiaTypes.Shader.t)),
+        @-> returning(ptr(SkiaTypes.Shader.t)),
       );
 
     let makeLinearGradient =
@@ -161,7 +161,7 @@ module M = (F: FOREIGN) => {
         @-> ptr(float)
         @-> int
         @-> tileMode
-        @-> returning(ptr_opt(SkiaTypes.Shader.t)),
+        @-> returning(ptr(SkiaTypes.Shader.t)),
       );
 
     let unref =

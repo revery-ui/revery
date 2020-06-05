@@ -197,17 +197,14 @@ let draw = canvas => {
   Canvas.drawCircle(canvas, 320., 240., 30., fill);
 
   // Creating empty shader
-  let maybeEmptyShader = Skia.Shader.makeEmpty();
-  switch (maybeEmptyShader) {
-  | Some(_) => prerr_endline("Created empty shader...")
-  | None => failwith("Unable to create empty shader.")
-  };
+  let _emptyShader = Skia.Shader.makeEmpty();
 
   let red = Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l);
+  let green = Color.makeArgb(0xFFl, 0x00l, 0xFFl, 0x00l);
   let blue = Color.makeArgb(0xFFl, 0x00l, 0x00l, 0xFFl);
 
   // Creating a 2-stop linear gradient
-  let maybeLinearGradient2 =
+  let linearGradient2 =
     Skia.Shader.makeLinearGradient2(
       ~startPoint=Skia.Point.make(0.0, 0.0),
       ~stopPoint=Skia.Point.make(100.0, 100.0),
@@ -217,14 +214,26 @@ let draw = canvas => {
     );
   let fill = Paint.make();
   Paint.setColor(fill, Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l));
-  switch (maybeLinearGradient2) {
-  | Some(shader) =>
-    prerr_endline("Created 2-stop linear gradient..");
-    Paint.setShader(fill, shader);
-  | None => failwith("Unable to create 2-stop linear gradient.")
-  };
+  Paint.setShader(fill, linearGradient2);
 
   Canvas.drawRectLtwh(canvas, 0., 0., 100., 100., fill);
+
+  // Creating a 3-stop linear gradient
+  let linearGradient3 =
+    Skia.Shader.makeLinearGradient(
+      ~startPoint=Skia.Point.make(0.0, 0.0),
+      ~stopPoint=Skia.Point.make(100.0, 0.0),
+      ~colorStops=
+        Skia.Shader.[
+          {color: red, position: 0.0},
+          {color: blue, position: 0.25},
+          {color: green, position: 1.0},
+        ],
+      ~tileMode=`repeat,
+    );
+  let fill = Paint.make();
+  Paint.setShader(fill, linearGradient3);
+  Canvas.drawRectLtwh(canvas, 100., 100., 100., 100., fill);
 };
 
 let surface = makeSurface(640l, 480l);
