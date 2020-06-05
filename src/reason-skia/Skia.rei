@@ -128,7 +128,7 @@ module Shader: {
 
   type colorStop = {
     color: Color.t,
-    position: float
+    position: float,
   };
 
   let makeLinearGradient2:
@@ -146,8 +146,9 @@ module Shader: {
       ~startPoint: Point.t,
       ~stopPoint: Point.t,
       ~colorStops: list(colorStop),
-      ~tileMode: tileMode,
-    ) => option(t);
+      ~tileMode: tileMode
+    ) =>
+    option(t);
 };
 
 module Paint: {
