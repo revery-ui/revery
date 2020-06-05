@@ -16,12 +16,12 @@ let delete = (~path as filePath) => {
   };
 };
 
-let write = (~path as filePath, ~deleteOnSuccess=false, data) => {
-  switch (Fpath.of_string(filePath)) {
+let write = (~path, data) => {
+  switch (Fpath.of_string(path)) {
   | Ok(fpath) =>
     switch (Bos.OS.File.write(fpath, data)) {
     | Ok(_success) =>
-      Log.debug("Successfully wrote data to file: " ++ filePath);
+      Log.debug("Successfully wrote data to file: " ++ path);
 
       Lwt.return(Ok());
     | Error(`Msg(error)) =>

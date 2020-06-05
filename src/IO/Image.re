@@ -80,11 +80,7 @@ let fromUrl = url => {
 
     let fileName = Fpath.to_string(image.fileName);
     let.flatMapOk result =
-      File.write(
-        ~path=Fpath.to_string(image.fileName),
-        ~deleteOnSuccess=true,
-        image.data,
-      );
+      File.write(~path=Fpath.to_string(image.fileName), image.data);
     let maybeData = Skia.Data.makeFromFileName(fileName);
     let.flatMapOk _result =
       File.delete(~path=Fpath.to_string(image.fileName));
