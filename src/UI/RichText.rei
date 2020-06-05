@@ -51,30 +51,3 @@ module DSL: {
   let fontSize: (float, t) => t;
   let color: (Color.t, t) => t;
 };
-let text:
-  (
-    ~fontFamily: Family.t=?,
-    ~fontWeight: Weight.t=?,
-    ~italicized: bool=?,
-    ~monospaced: bool=?,
-    ~fontSize: float=?,
-    ~color: Color.t=?,
-    string
-  ) =>
-  t;
-let fontWeight: (Weight.t, t) => t;
-let thin: t => t;
-let ultralight: t => t;
-let light: t => t;
-let normal: t => t;
-let medium: t => t;
-let semibold: t => t;
-let bold: t => t;
-let ultrabold: t => t;
-let heavy: t => t;
-
-let fontFamily: (Family.t, t) => t;
-let italicized: t => t;
-let monospaced: t => t;
-let fontSize: (float, t) => t;
-let color: (Color.t, t) => t;
