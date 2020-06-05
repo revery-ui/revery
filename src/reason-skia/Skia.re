@@ -214,6 +214,39 @@ module Shader = {
     };
     maybeGradient;
   };
+
+  type colorStop = {
+    color: Color.t,
+    position: float
+  };
+
+  let makeLinearGradient = 
+    (
+    ~startPoint,
+    ~stopPoint,
+    ~colorStops,
+    ~tileMode
+    ) => {
+      open Ctypes;
+
+      let (colors, positions) = List.fold_left((acc, curr) => {
+          let (accColors, accPositions) = acc;
+          let { color, position }: colorStop = curr;
+          ([Unsigned.UInt32.of_int32(color), ...accColors], [position, ...accPositions]);
+      }, ([], []), colorStops)
+
+      let colorsArray = CArray.of_list(uint32_t, colors |> List.rev);
+      let positionsArray = CArray.of_list(float, positions |> List.rev);
+
+      SkiaWrapped.Shader.makeLinearGradient(
+        startPoint,
+        stopPoint,
+        CArray.start(colorsArray),
+        CArray.start(positionsArray),
+        CArray.length(colorsArray),
+        tileMode
+      );
+    };
 };
 
 module Matrix = {

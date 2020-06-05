@@ -59,3 +59,25 @@ sk_shader_t* reason_skia_stub_linear_gradient2(
                NULL
            );
 }
+
+sk_shader_t* reason_skia_stub_linear_gradient(
+    sk_point_t* startPosition,
+    sk_point_t* stopPosition,
+    sk_color_t* colors,
+    float* positions,
+    int count,
+    sk_shader_tilemode_t tileMode) {
+
+    sk_point_t pts[2];
+    pts[0] = *startPosition;
+    pts[1] = *stopPosition;
+
+    return sk_shader_new_linear_gradient(
+               pts,
+               colors,
+               positions,
+               count,
+               tileMode,
+               NULL
+           );
+}

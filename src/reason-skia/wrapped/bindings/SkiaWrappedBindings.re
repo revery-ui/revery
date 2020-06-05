@@ -152,6 +152,18 @@ module M = (F: FOREIGN) => {
         @-> returning(ptr_opt(SkiaTypes.Shader.t)),
       );
 
+    let makeLinearGradient =
+      foreign(
+        "reason_skia_stub_linear_gradient",
+        Point.t
+        @-> Point.t
+        @-> ptr(Color.t)
+        @-> ptr(float)
+        @-> int
+        @-> tileMode
+        @-> returning(ptr_opt(SkiaTypes.Shader.t)),
+      );
+
     let unref =
       foreign(
         "sk_shader_unref",
