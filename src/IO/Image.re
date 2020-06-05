@@ -2,11 +2,6 @@ open Revery_Core;
 open LwtLetOperators;
 module Log = (val Log.withNamespace("Revery.IO.Image"));
 
-type t = {
-  data: string,
-  fileName: Fpath.t,
-};
-
 module Utility = {
   let mediaTypeToFileExtension =
     fun
@@ -36,7 +31,7 @@ module Utility = {
 
     let filePath = Fpath.add_ext(fileExtension, fileNameCleaned);
 
-    filePath;
+    Fpath.to_string(filePath);
   };
 };
 
@@ -72,18 +67,11 @@ let fromUrl = url => {
       |> Option.value(~default="");
 
     let fileExtension = Utility.mediaTypeToFileExtension(mediaType);
+    let fileName = Utility.createFilePath(url, ~fileExtension);
 
-    let image = {
-      data,
-      fileName: Utility.createFilePath(url, ~fileExtension),
-    };
-
-    let fileName = Fpath.to_string(image.fileName);
-    let.flatMapOk result =
-      File.write(~path=Fpath.to_string(image.fileName), image.data);
+    let.flatMapOk result = File.write(~path=fileName, data);
     let maybeData = Skia.Data.makeFromFileName(fileName);
-    let.flatMapOk _result =
-      File.delete(~path=Fpath.to_string(image.fileName));
+    let.flatMapOk _result = File.delete(~path=fileName);
 
     let maybeSkiaImage =
       Option.bind(maybeData, data => Skia.Image.makeFromEncoded(data, None));
