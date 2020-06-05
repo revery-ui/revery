@@ -43,7 +43,7 @@ module Logo = {
     <View>
       <Opacity opacity=transitionedOpacity>
         <Image
-          src={`Url("https://www.outrunlabs.com/images/outrun-logo.png")}
+          src={`File("outrun-logo.png")}
           style=Style.[
             width(512),
             height(256),

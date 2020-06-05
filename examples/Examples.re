@@ -266,9 +266,8 @@ module ExampleHost = {
 let init = app => {
   Revery.App.initConsole();
 
-  /* TODO: this prevents the Fetch/Lwt-loop from completing? */
-  /* Timber.App.enable(); */
-  /* Timber.App.setLevel(Timber.Level.perf); */
+  Timber.App.enable();
+  Timber.App.setLevel(Timber.Level.perf);
 
   App.onIdle(app, () => prerr_endline("Idle!"))
   |> (ignore: Revery.App.unsubscribe => unit);
@@ -323,7 +322,8 @@ let init = app => {
     Window.maximize(window);
   };
 
-  let _startEventLoop = Revery_Lwt.startEventLoop();
+  /* NOTE: If you want to use network-calls or other IO, uncomment this line */
+  // let _startEventLoop = Revery_Lwt.startEventLoop();
 
   let _unsubscribe =
     Window.onFocusGained(window, () => Console.log("Focus gained"));
