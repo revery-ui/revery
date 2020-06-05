@@ -54,7 +54,7 @@
     "@reason-native/console": "^0.0.3",
     "rench": "^1.9.1",
     "rebez": "jchavarri/rebez#03fa3b7",
-    "reason-native-crash-utils": "onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6",
+    "reason-native-crash-utils": "onivim/reason-native-crash-utils#38c8f00",
     "revery-text-wrap": "revery-ui/revery-text-wrap#966383e",
     "@glennsl/timber": "^1.2.0"
   },
