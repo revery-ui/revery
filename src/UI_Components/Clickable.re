@@ -34,6 +34,8 @@ let%component make =
                 ~onKeyUp=?,
                 ~onTextEdit=?,
                 ~onTextInput=?,
+                ~onMouseEnter as onMouseEnterUserCallback=?,
+                ~onMouseLeave as onMouseLeaveUserCallback=_evt => (),
                 ~children,
                 (),
               ) => {
@@ -64,7 +66,10 @@ let%component make =
     capture();
     mouseDownTimes := (Time.now(), fst(mouseDownTimes^));
   };
-  let onMouseLeave = _event => releaseCapture();
+  let onMouseLeave = _event => {
+    releaseCapture();
+    onMouseLeaveUserCallback(_event);
+  };
   let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) =>
     if (isMouseCapturedHere^) {
       releaseCapture();
@@ -92,6 +97,7 @@ let%component make =
     onMouseDown
     onMouseUp
     onMouseLeave
+    onMouseEnter=?onMouseEnterUserCallback
     ?onBlur
     ?onFocus
     ?onKeyDown
