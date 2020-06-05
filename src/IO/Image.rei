@@ -14,6 +14,6 @@ let fromUrl: string => Lwt.t(option(Skia.Image.t));
  * Given a path, reads an image-file from disk, returning an option-type.
  *
  * Examples:
- * let maybeImage: Lwt.t(option(Skia.Image.t)) = Image.fromAssetPath("example.png");
+ * let maybeImage: option(Skia.Image.t) = Image.fromAssetPath("example.png");
  */
 let fromAssetPath: string => option(Skia.Image.t);
