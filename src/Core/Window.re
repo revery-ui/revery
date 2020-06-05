@@ -76,13 +76,19 @@ module WindowMetrics: {
           );
           scale;
 
-        // On Linux, there's a few other things to try:
+        // On Linux it can be pretty tricky depending on the display server and other factors.
         // - First, we'll look for a [GDK_SCALE] environment variable, and prefer that.
-        // - Otherwise, we'll try and infer it from the DPI.
+        // - Otherwise we default to 1.0 until we have a reliable method to obtain the value.
+        //   See the following links for more details:
+        //     https://github.com/revery-ui/revery/issues/878
+        //     https://github.com/glfw/glfw/issues/1019
+        //     https://github.com/mosra/magnum/commit/ae31c3cd82ba53454b8ab49d3f9d8ca385560d4b
+        //     https://github.com/glfw/glfw/blob/250b94cd03e6f947ba516869c7f3b277f8d0cacc/src/x11_init.c#L938
+        //     https://wiki.archlinux.org/index.php/HiDPI
         | Linux =>
           switch (Rench.Environment.getEnvironmentVariable("GDK_SCALE")) {
+          | None => 1.0
           | Some(v) =>
-            // TODO
             Log.trace(
               "_getScaleFactor - Linux - got GDK_SCALE variable: " ++ v,
             );
@@ -90,18 +96,6 @@ module WindowMetrics: {
             | Some(v) => v
             | None => 1.0
             };
-          | None =>
-            let display = Sdl2.Window.getDisplay(sdlWindow);
-            let dpi = Sdl2.Display.getDPI(display);
-            let avgDpi = (dpi.hdpi +. dpi.vdpi +. dpi.ddpi) /. 3.0;
-            let scaleFactor = max(1.0, floor(avgDpi /. 96.0));
-            Log.tracef(m =>
-              m(
-                "_getScaleFactor - Linux - inferring from DPI: %f",
-                scaleFactor,
-              )
-            );
-            scaleFactor;
           }
         | _ => 1.0
         }
