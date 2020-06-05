@@ -292,11 +292,13 @@ let%component make =
   };
 
   let paste = (currentValue, currentCursorPosition) => {
-    let (newValue, newCursorPosition) =
-      Sdl2.Clipboard.getText()
-      |> Option.value(~default="")
-      |> insertString(currentValue, _, currentCursorPosition);
-    update(newValue, newCursorPosition);
+    switch (Sdl2.Clipboard.getText()) {
+    | None => ()
+    | Some(data) =>
+      let (newValue, newCursorPosition) =
+        insertString(currentValue, data, currentCursorPosition);
+      update(newValue, newCursorPosition);
+    };
   };
 
   let handleTextInput = (event: NodeEvents.textInputEventParams) => {
