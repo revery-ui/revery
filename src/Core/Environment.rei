@@ -42,7 +42,7 @@ let getAssetPath: string => string;
   Unix:
   returns the value of the TMPDIR environment variable or "/tmp" if not set.
   Windows:
-  returns the value of the TMPDIR environment variable or "." not set.
+  returns the value of the TMPDIR environment variable or "." if not set.
 */
 let getTempDirectory: unit => string;
 
