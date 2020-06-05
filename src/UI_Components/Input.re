@@ -104,9 +104,12 @@ let removeCharacterAfter = (word, cursorPosition) => {
   (newString, cursorPosition);
 };
 
-let addCharacter = (word, char, index) => {
-  let (startStr, endStr) = getStringParts(index, word);
-  (startStr ++ char ++ endStr, String.length(startStr) + 1);
+let insertString = (currentValue, insertion, index) => {
+  let (startStr, endStr) = getStringParts(index, currentValue);
+  (
+    startStr ++ insertion ++ endStr,
+    String.length(startStr) + String.length(insertion),
+  );
 };
 
 module Constants = {
@@ -288,39 +291,54 @@ let%component make =
     dispatch(TextInput(value, cursorPosition));
   };
 
+  let paste = (currentValue, currentCursorPosition) => {
+    switch (Sdl2.Clipboard.getText()) {
+    | None => ()
+    | Some(data) =>
+      let (newValue, newCursorPosition) =
+        insertString(currentValue, data, currentCursorPosition);
+      update(newValue, newCursorPosition);
+    };
+  };
+
   let handleTextInput = (event: NodeEvents.textInputEventParams) => {
     resetCursor();
     let (value, cursorPosition) =
-      addCharacter(value, event.text, cursorPosition);
+      insertString(value, event.text, cursorPosition);
     update(value, cursorPosition);
   };
 
   let handleKeyDown = (event: NodeEvents.keyEventParams) => {
+    open Key;
+
     resetCursor();
     onKeyDown(event);
 
-    switch (event.keycode) {
-    | v when Key.Keycode.left == v =>
+    let code = event.keycode;
+    let mac = Environment.os === Mac;
+    let super = Sdl2.Keymod.isGuiDown(event.keymod);
+    let ctrl = Sdl2.Keymod.isControlDown(event.keymod);
+
+    if (code == Keycode.left) {
       let cursorPosition = getSafeStringBounds(value, cursorPosition, -1);
       update(value, cursorPosition);
-
-    | v when Key.Keycode.right == v =>
+    } else if (code == Keycode.right) {
       let cursorPosition = getSafeStringBounds(value, cursorPosition, 1);
       update(value, cursorPosition);
-
-    | v when Key.Keycode.delete == v =>
+    } else if (code == Keycode.delete) {
       let (value, cursorPosition) =
         removeCharacterAfter(value, cursorPosition);
       update(value, cursorPosition);
-
-    | v when Key.Keycode.backspace == v =>
+    } else if (code == Keycode.backspace) {
       let (value, cursorPosition) =
         removeCharacterBefore(value, cursorPosition);
       update(value, cursorPosition);
-
-    | v when Key.Keycode.escape == v => Focus.loseFocus()
-
-    | _ => ()
+    } else if (code == Keycode.escape) {
+      Focus.loseFocus();
+    } else if (code == Keycode.v) {
+      if (mac && super || !mac && ctrl) {
+        paste(value, cursorPosition);
+      };
     };
   };
 
