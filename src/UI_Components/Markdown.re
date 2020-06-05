@@ -285,9 +285,8 @@ let rec generateInline' = (inline, styles, attrs, dispatch, state) => {
     </View>
   | _ => <View />
   };
-};
-
-let generateInline = (inline, styles, attrs, dispatch, state) =>
+}
+and generateInline = (inline, styles, attrs, dispatch, state) =>
   <Row> {generateInline'(inline, styles, attrs, dispatch, state)} </Row>;
 
 /* Block level elements
@@ -295,7 +294,102 @@ let generateInline = (inline, styles, attrs, dispatch, state) =>
      These include things like code blocks, paragraphs, etc.
    */
 
-let generateCodeBlock =
+let thematicBreak =
+  <View style=Style.[flexDirection(`Row)]>
+    <View style=Styles.ThematicBreak.hr />
+  </View>;
+
+let rec generateMarkdown' = (element, styles, highlighter, dispatch, state) =>
+  switch (element) {
+  | Paragraph(p) =>
+    generateInline(
+      p,
+      styles,
+      {inline: [], kind: `Paragraph},
+      dispatch,
+      state,
+    )
+  // We don't support HTML rendering as of right now, so we'll just render it
+  // as text
+  | Html_block(html) =>
+    generateInline(
+      Text(html),
+      styles,
+      {inline: [], kind: `Paragraph},
+      dispatch,
+      state,
+    )
+  | Blockquote(blocks) =>
+    generateBlockquote(blocks, styles, highlighter, dispatch, state)
+  | Heading(h) =>
+    generateInline(
+      h.text,
+      styles,
+      {inline: [Bolded], kind: `Heading(h.level)},
+      dispatch,
+      state,
+    )
+  | Code_block(cb) => generateCodeBlock(cb, styles, highlighter)
+  | List(blist) => generateList(blist, styles, highlighter, dispatch, state)
+  | Thematic_break => thematicBreak
+  | _ => <View />
+  }
+and generateList =
+    (
+      blist: Omd__Ast.Block_list.t(Omd.block(Omd.inline)),
+      styles,
+      highlighter,
+      dispatch,
+      state,
+    ) => {
+  <View>
+    {List.mapi(
+       (i, blocks) => {
+         let text =
+           switch (blist.kind) {
+           | Ordered(_, _) => string_of_int(i + 1) ++ "."
+           | Unordered(_) => "•"
+           };
+         <View style=Styles.inline>
+           <Text
+             text
+             style=Styles.List.marker
+             fontFamily={styles.fontFamily}
+           />
+           <View style=Styles.List.contents>
+             {List.map(
+                block =>
+                  generateMarkdown'(
+                    block,
+                    styles,
+                    highlighter,
+                    dispatch,
+                    state,
+                  ),
+                blocks,
+              )
+              |> React.listToElement}
+           </View>
+         </View>;
+       },
+       blist.blocks,
+     )
+     |> React.listToElement}
+  </View>;
+}
+and generateBlockquote = (blocks, styles, highlighter, dispatch, state) => {
+  <View style=Styles.Blockquote.container>
+    <View style=Styles.Blockquote.contents>
+      {List.map(
+         block =>
+           generateMarkdown'(block, styles, highlighter, dispatch, state),
+         blocks,
+       )
+       |> React.listToElement}
+    </View>
+  </View>;
+}
+and generateCodeBlock =
     (codeBlock: Code_block.t, styles, highlighter: SyntaxHighlight.t) => {
   // Not sure why this is an `option` because when there is no label, the
   // Parser gives `Some("")`. For our purposes it's easier to make that `None`
@@ -370,121 +464,6 @@ let generateCodeBlock =
      }}
   </View>;
 };
-
-let generateList =
-    (
-      blist: Omd__Ast.Block_list.t(Omd.block(Omd.inline)),
-      styles,
-      highlighter,
-      dispatch,
-      state,
-      generateMarkdown',
-    ) => {
-  <View>
-    {List.mapi(
-       (i, blocks) => {
-         let text =
-           switch (blist.kind) {
-           | Ordered(_, _) => string_of_int(i + 1) ++ "."
-           | Unordered(_) => "•"
-           };
-         <View style=Styles.inline>
-           <Text
-             text
-             style=Styles.List.marker
-             fontFamily={styles.fontFamily}
-           />
-           <View style=Styles.List.contents>
-             {List.map(
-                block =>
-                  generateMarkdown'(
-                    block,
-                    styles,
-                    highlighter,
-                    dispatch,
-                    state,
-                  ),
-                blocks,
-              )
-              |> React.listToElement}
-           </View>
-         </View>;
-       },
-       blist.blocks,
-     )
-     |> React.listToElement}
-  </View>;
-};
-
-let generateBlockquote =
-    (blocks, styles, highlighter, dispatch, state, generateMarkdown') => {
-  <View style=Styles.Blockquote.container>
-    <View style=Styles.Blockquote.contents>
-      {List.map(
-         block =>
-           generateMarkdown'(block, styles, highlighter, dispatch, state),
-         blocks,
-       )
-       |> React.listToElement}
-    </View>
-  </View>;
-};
-
-let thematicBreak =
-  <View style=Style.[flexDirection(`Row)]>
-    <View style=Styles.ThematicBreak.hr />
-  </View>;
-
-let rec generateMarkdown' = (element, styles, highlighter, dispatch, state) =>
-  switch (element) {
-  | Paragraph(p) =>
-    generateInline(
-      p,
-      styles,
-      {inline: [], kind: `Paragraph},
-      dispatch,
-      state,
-    )
-  // We don't support HTML rendering as of right now, so we'll just render it
-  // as text
-  | Html_block(html) =>
-    generateInline(
-      Text(html),
-      styles,
-      {inline: [], kind: `Paragraph},
-      dispatch,
-      state,
-    )
-  | Blockquote(blocks) =>
-    generateBlockquote(
-      blocks,
-      styles,
-      highlighter,
-      dispatch,
-      state,
-      generateMarkdown',
-    )
-  | Heading(h) =>
-    generateInline(
-      h.text,
-      styles,
-      {inline: [Bolded], kind: `Heading(h.level)},
-      dispatch,
-      state,
-    )
-  | Code_block(cb) => generateCodeBlock(cb, styles, highlighter)
-  | List(blist) =>
-    generateList(
-      blist,
-      styles,
-      highlighter,
-      dispatch,
-      state,
-      generateMarkdown',
-    )
-  | Thematic_break => thematicBreak
-  | _ => <View />
-  };
 
 let generateMarkdown = (mdText: string, styles, highlighter, dispatch, state) => {
   let md = Omd.of_string(mdText);
