@@ -126,3 +126,4 @@ module DSL = {
   let color = (color: Color.t, richtext: t) =>
     richtext |> map(textInfo => Leaf({...textInfo, color}));
 };
+include DSL;

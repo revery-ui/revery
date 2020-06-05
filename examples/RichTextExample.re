@@ -19,13 +19,11 @@ module SampleRichText = {
   let make = () => {
     let richtext =
       RichText.(
-        DSL.(
-          text("Hello ", ~color=Colors.red, ~fontWeight=Weight.Bold)
-          ++ text("world", ~color=Colors.green)
-          ++ text("!", ~color=Colors.yellow)
-          |> fontSize(20.)
-          |> italicized
-        )
+        text("Hello ", ~color=Colors.red, ~fontWeight=Weight.Bold)
+        ++ text("world", ~color=Colors.green)
+        ++ text("!", ~color=Colors.yellow)
+        |> fontSize(20.)
+        |> italicized
       );
 
     let dimensions = RichText.measure(richtext);
