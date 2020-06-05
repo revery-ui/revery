@@ -15,7 +15,6 @@ let containerStyle =
     flexDirection(`Column),
   ];
 
-let font = Family.system("Arial");
 module SampleRichText = {
   let make = () => {
     let richtext =
@@ -24,7 +23,6 @@ module SampleRichText = {
         ++ text("world", ~color=Colors.green)
         ++ text("!", ~color=Colors.yellow)
         |> fontSize(20.)
-        |> fontFamily(font)
         |> italicized
       );
 
