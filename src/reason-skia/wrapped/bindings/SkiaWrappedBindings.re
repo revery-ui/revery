@@ -78,6 +78,8 @@ module M = (F: FOREIGN) => {
         @-> FontStyle.t
         @-> returning(ptr_opt(SkiaTypes.Typeface.t)),
       );
+
+    let delete = foreign("sk_fontmgr_unref", t @-> returning(void));
   };
 
   module FontMetrics = {

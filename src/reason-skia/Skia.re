@@ -421,7 +421,11 @@ module Typeface = {
 module FontManager = {
   type t = SkiaWrapped.FontManager.t;
 
-  let makeDefault = SkiaWrapped.FontManager.makeDefault;
+  let makeDefault = () => {
+    let mgr = SkiaWrapped.FontManager.makeDefault();
+    Gc.finalise(SkiaWrapped.FontManager.delete, mgr);
+    mgr;
+  };
   let matchFamilyStyle = (mgr, family, style) => {
     let typeface =
       SkiaWrapped.FontManager.matchFamilyStyle(mgr, family, style);
