@@ -37,7 +37,7 @@ let markdown =
 let example = () =>
   <View style=Styles.outer>
     <markdown
-      markdown="
+      markdown={markdown|
 
 # reason-sdl2
 
@@ -77,7 +77,7 @@ TBD
 - This is built on several great libraries, like [SDL2](https://libsdl.org), [glad](https://github.com/Dav1dde/glad), [stb_image](https://github.com/nothings/stb/blob/master/stb_image.h)
 - The test image is from @Arahnoid's [UVChecker-map](https://github.com/Arahnoid/UVChecker-map) repo.
 
-    "
+    |markdown}
     />
   </View>;
 
