@@ -61,6 +61,20 @@ module M = (F: FOREIGN) => {
       );
   };
 
+  module FontManager = {
+    type t = ptr(structure(SkiaTypes.FontManager.t));
+    let t = ptr(SkiaTypes.FontManager.t);
+
+    let makeDefault =
+      foreign("sk_fontmgr_create_default", void @-> returning(t));
+
+    let matchFamilyStyle =
+      foreign(
+        "sk_fontmgr_match_family_style",
+        t @-> string @-> FontStyle.t @-> returning(Typeface.t),
+      );
+  };
+
   module FontMetrics = {
     type t = ptr(structure(SkiaTypes.FontMetrics.t));
     let t = ptr(SkiaTypes.FontMetrics.t);

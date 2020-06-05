@@ -36,6 +36,13 @@ module Typeface: {
   let makeFromFile: (string, int) => option(t);
 };
 
+module FontManager: {
+  type t;
+
+  let makeDefault: unit => t;
+  let matchFamilyStyle: (t, string, FontStyle.t) => Typeface.t;
+};
+
 module FontMetrics: {
   type t = SkiaWrapped.FontMetrics.t;
 

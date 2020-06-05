@@ -418,6 +418,13 @@ module Typeface = {
   let makeFromFile = SkiaWrapped.Typeface.makeFromFile;
 };
 
+module FontManager = {
+  type t = SkiaWrapped.FontManager.t;
+
+  let makeDefault = SkiaWrapped.FontManager.makeDefault;
+  let matchFamilyStyle = SkiaWrapped.FontManager.matchFamilyStyle;
+};
+
 module RRect = {
   type t = SkiaWrapped.RRect.t;
   type rRectType = SkiaWrapped.RRect.rRectType;

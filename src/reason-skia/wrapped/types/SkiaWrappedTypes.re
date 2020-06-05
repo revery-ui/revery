@@ -81,6 +81,13 @@ module M = (T: TYPE) => {
     let t = typedef(t, "sk_typeface_t");
   };
 
+  module FontManager = {
+    type t;
+
+    let t: typ(structure(t)) = structure("sk_fontmgr_t");
+    let t = typedef(t, "sk_fontmgr_t");
+  };
+
   module FontMetrics = {
     type t;
     let t: typ(structure(t)) = structure("sk_fontmetrics_t");
