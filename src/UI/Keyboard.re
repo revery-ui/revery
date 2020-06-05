@@ -18,7 +18,7 @@ let internalToExternalEvent =
       shiftKey: Key.Keymod.isShiftDown(e.keymod),
     })
   | InternalKeyDownEvent(e) =>
-    KeyUp({
+    KeyDown({
       keycode: e.keycode,
       scancode: e.scancode,
       repeat: e.repeat,
