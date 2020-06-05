@@ -36,17 +36,17 @@ module Sample = {
         style=Style.[marginBottom(10)]
       />
       <ScrollView style=outerBox bounce>
-        <Image.Asset
-          src="outrun-logo.png"
+        <Image
+          src={`File("outrun-logo.png")}
           /* Exercise the case in #579 */
           style=Style.[overflow(`Hidden), width(512), height(256)]
         />
-        <Image.Asset
-          src="outrun-logo.png"
+        <Image
+          src={`File("outrun-logo.png")}
           style=Style.[width(512), height(256)]
         />
-        <Image.Asset
-          src="outrun-logo.png"
+        <Image
+          src={`File("outrun-logo.png")}
           style=Style.[width(512), height(256)]
         />
       </ScrollView>

@@ -177,11 +177,11 @@ let drawImage =
       ~width,
       ~height,
       ~paint=?,
-      src: [ | `Url(string) | `Asset(string)],
+      src: [ | `Url(string) | `File(string)],
       v: t,
     ) => {
   switch (src) {
-  | `Asset(path) =>
+  | `File(path) =>
     switch (ImageRenderer.fromAssetPath(path)) {
     | None => ()
     | Some(img) =>
@@ -194,7 +194,7 @@ let drawImage =
       )
     }
   | `Url(url) =>
-    LetOperators.(
+    LwtLetOperators.(
       {
         let.map image = ImageRenderer.fromUrl(url);
 

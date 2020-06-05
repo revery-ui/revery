@@ -1,5 +1,5 @@
 open Revery_Core;
-open LetOperators;
+open LwtLetOperators;
 
 module Log = (val Log.withNamespace("Revery.ImageRenderer"));
 

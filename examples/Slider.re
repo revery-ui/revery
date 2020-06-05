@@ -56,8 +56,8 @@ module AdjustableLogo = {
 
     <View style=containerStyle>
       <View>
-        <Image.Asset
-          src="outrun-logo.png"
+        <Image
+          src={`File("outrun-logo.png")}
           style=Style.[
             width(512),
             height(256),

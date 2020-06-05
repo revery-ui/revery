@@ -7,8 +7,8 @@ module SpringyLogo = {
     let intWidth = int_of_float(width);
 
     <View onMouseDown onMouseUp>
-      <Image.Asset
-        src="outrun-logo.png"
+      <Image
+        src={`File("outrun-logo.png")}
         style=Style.[
           width(intWidth),
           height(128),
