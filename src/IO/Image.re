@@ -1,8 +1,9 @@
 open Revery_Core;
 open LwtLetOperators;
+
 module Log = (val Log.withNamespace("Revery.IO.Image"));
 
-module Utility = {
+module Internal = {
   let mediaTypeToFileExtension =
     fun
     | "image/apng" => ".apng"
@@ -35,6 +36,9 @@ module Utility = {
   };
 };
 
+// NOTE: The reason for these different states is to hold up any
+// additional requests until we've actually got a response
+// from the first one
 type urlCacheItem =
   | Image(option(Skia.Image.t))
   | Pending;
@@ -42,6 +46,7 @@ type urlCacheItem =
 type urlCache = Hashtbl.t(string, urlCacheItem);
 let urlContextCache: urlCache = Hashtbl.create(100);
 
+// NOTE: These could be moved elsewhere
 let fromUrl = url => {
   let cacheResult = Hashtbl.find_opt(urlContextCache, url);
 
@@ -66,12 +71,12 @@ let fromUrl = url => {
       |> Option.map(((_k, v)) => v)
       |> Option.value(~default="");
 
-    let fileExtension = Utility.mediaTypeToFileExtension(mediaType);
-    let fileName = Utility.createFilePath(url, ~fileExtension);
+    let fileExtension = Internal.mediaTypeToFileExtension(mediaType);
+    let fileName = Internal.createFilePath(url, ~fileExtension);
 
-    let.flatMapOk result = File.write(~path=fileName, data);
+    let.flatMapOk _writeOk = File.write(~path=fileName, data);
     let maybeData = Skia.Data.makeFromFileName(fileName);
-    let.flatMapOk _result = File.delete(~path=fileName);
+    let.flatMapOk _deleted = File.delete(fileName);
 
     let maybeSkiaImage =
       Option.bind(maybeData, data => Skia.Image.makeFromEncoded(data, None));
@@ -91,11 +96,7 @@ let fromAssetPath = (imagePath: string) => {
   let cacheResult = Hashtbl.find_opt(contextCache, imagePath);
 
   switch (cacheResult) {
-  | Some(r) =>
-    switch (r) {
-    | Some(cachedImage) => Some(cachedImage)
-    | None => None
-    }
+  | Some(maybeCachedImage) => maybeCachedImage
   | None =>
     Log.info("Loading from path: " ++ imagePath);
 
