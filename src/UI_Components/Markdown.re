@@ -336,7 +336,7 @@ let rec generateMarkdown' = (element, styles, highlighter, dispatch, state) =>
   }
 and generateList =
     (
-      blist: Omd__Ast.Block_list.t(Omd.block(Omd.inline)),
+      blist: Block_list.t(block(inline)),
       styles,
       highlighter,
       dispatch,
