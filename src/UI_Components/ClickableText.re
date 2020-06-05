@@ -23,9 +23,8 @@ let%component make =
   let%hook (isHovered, onMouseEnter, onMouseLeave) = Hooks.hover();
 
   let outerStyle = Style.[cursor(MouseCursors.pointer)];
-  let onMouseUp = _ => onClick();
 
-  <View style=outerStyle onMouseUp onMouseEnter onMouseLeave>
+  <Clickable style=outerStyle onClick onMouseEnter onMouseLeave>
     <Text
       text
       fontFamily
@@ -35,5 +34,5 @@ let%component make =
       monospaced
       style={isHovered ? activeStyle : inactiveStyle}
     />
-  </View>;
+  </Clickable>;
 };

@@ -78,7 +78,6 @@ let system = (familyName): t =>
 let default =
   switch (Revery_Core.Environment.os) {
   | Linux => system("Liberation Sans")
-  | Mac => system("System Font")
   | _ => system("Arial")
   };
 
