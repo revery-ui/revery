@@ -49,15 +49,15 @@ type style = {
 };
 
 module SyntaxHighlight = {
-  type block = {
+  type highlight = {
     byteIndex: int,
     color: Color.t,
     bold: bool,
     italicized: bool,
   }
-  and t = (~language: string, list(string)) => list(list(block));
+  and t = (~language: string, list(string)) => list(list(highlight));
 
-  let makeBlock = (~byteIndex, ~color, ~bold, ~italicized): block => {
+  let makeHighlight = (~byteIndex, ~color, ~bold, ~italicized): highlight => {
     byteIndex,
     color,
     bold,
@@ -427,13 +427,13 @@ and generateCodeBlock =
          (line, highlight) => {
            <View style=Styles.inline>
              {List.mapi(
-                (i, block: SyntaxHighlight.block) => {
+                (i, block: SyntaxHighlight.highlight) => {
                   // We want to style this block up to the next one.
                   // If there is a next block, stop at it's index
                   // Otherwise, stop at the end of the string.
                   let endIndex =
                     switch (List.nth_opt(highlight, i + 1)) {
-                    | Some((blk: SyntaxHighlight.block)) => blk.byteIndex
+                    | Some((blk: SyntaxHighlight.highlight)) => blk.byteIndex
                     | None => String.length(line)
                     };
                   let length = endIndex - block.byteIndex;

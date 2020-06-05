@@ -1,15 +1,15 @@
 module SyntaxHighlight: {
-  type block;
-  type t = (~language: string, list(string)) => list(list(block));
+  type highlight;
+  type t = (~language: string, list(string)) => list(list(highlight));
 
-  let makeBlock:
+  let makeHighlight:
     (
       ~byteIndex: int,
       ~color: Revery_Core.Color.t,
       ~bold: bool,
       ~italicized: bool
     ) =>
-    block;
+    highlight;
 };
 
 let make:
