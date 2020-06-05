@@ -71,7 +71,10 @@ module M = (F: FOREIGN) => {
     let matchFamilyStyle =
       foreign(
         "sk_fontmgr_match_family_style",
-        t @-> string @-> FontStyle.t @-> returning(Typeface.t),
+        t
+        @-> string
+        @-> FontStyle.t
+        @-> returning(ptr_opt(SkiaTypes.Typeface.t)),
       );
   };
 

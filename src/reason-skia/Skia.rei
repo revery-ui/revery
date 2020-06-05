@@ -40,7 +40,7 @@ module FontManager: {
   type t;
 
   let makeDefault: unit => t;
-  let matchFamilyStyle: (t, string, FontStyle.t) => Typeface.t;
+  let matchFamilyStyle: (t, string, FontStyle.t) => option(Typeface.t);
 };
 
 module FontMetrics: {
