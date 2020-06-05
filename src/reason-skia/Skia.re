@@ -162,6 +162,8 @@ module Paint = {
   let setImageFilter = SkiaWrapped.Paint.setImageFilter;
   let setTextEncoding = SkiaWrapped.Paint.setTextEncoding;
   let getTextEncoding = SkiaWrapped.Paint.getTextEncoding;
+
+  let setShader = SkiaWrapped.Paint.setShader;
 };
 
 module Point = {
@@ -203,8 +205,18 @@ module Shader = {
     ~stopColor,
     ~tileMode
   ) => {
-    prerr_endline("Making a linear gradient");
-    None;
+    let maybeGradient = SkiaWrapped.Shader.makeLinearGradient2(
+      startPoint,
+      stopPoint,
+          Unsigned.UInt32.of_int32(startColor),
+          Unsigned.UInt32.of_int32(stopColor),
+      tileMode
+    );
+    switch (maybeGradient) {
+    | Some(gradient) => Gc.finalise(SkiaWrapped.Shader.unref, gradient);
+    | None => ();
+    }
+    maybeGradient
   }
 };
 

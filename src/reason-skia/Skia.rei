@@ -101,36 +101,6 @@ module Rect: {
   let toString: t => string;
 };
 
-module Paint: {
-  type t;
-  type style = SkiaWrapped.Paint.style;
-
-  let make: unit => t;
-
-  let setColor: (t, Color.t) => unit;
-  let setAntiAlias: (t, bool) => unit;
-
-  let setAutohinted: (t, bool) => unit;
-  let isAutohinted: t => bool;
-
-  let setHinting: (t, Hinting.t) => unit;
-  let getHinting: t => Hinting.t;
-
-  let setStyle: (t, style) => unit;
-  let setStrokeWidth: (t, float) => unit;
-  let setImageFilter: (t, ImageFilter.t) => unit;
-  let setTypeface: (t, Typeface.t) => unit;
-  let setLcdRenderText: (t, bool) => unit;
-  let setSubpixelText: (t, bool) => unit;
-  let setTextSize: (t, float) => unit;
-  let setAlpha: (t, float) => unit;
-  let getFontMetrics: (t, FontMetrics.t, float) => float;
-  let measureText: (t, string, option(Rect.t)) => float;
-
-  let setTextEncoding: (t, TextEncoding.t) => unit;
-  let getTextEncoding: t => TextEncoding.t;
-};
-
 module Point: {
   type t;
 
@@ -164,6 +134,38 @@ module Shader: {
     ~stopColor: Color.t,
     ~tileMode: tileMode,
   ) => option(t);
+};
+
+module Paint: {
+  type t;
+  type style = SkiaWrapped.Paint.style;
+
+  let make: unit => t;
+
+  let setColor: (t, Color.t) => unit;
+  let setAntiAlias: (t, bool) => unit;
+
+  let setAutohinted: (t, bool) => unit;
+  let isAutohinted: t => bool;
+
+  let setHinting: (t, Hinting.t) => unit;
+  let getHinting: t => Hinting.t;
+
+  let setStyle: (t, style) => unit;
+  let setStrokeWidth: (t, float) => unit;
+  let setImageFilter: (t, ImageFilter.t) => unit;
+  let setTypeface: (t, Typeface.t) => unit;
+  let setLcdRenderText: (t, bool) => unit;
+  let setSubpixelText: (t, bool) => unit;
+  let setTextSize: (t, float) => unit;
+  let setAlpha: (t, float) => unit;
+  let getFontMetrics: (t, FontMetrics.t, float) => float;
+  let measureText: (t, string, option(Rect.t)) => float;
+
+  let setTextEncoding: (t, TextEncoding.t) => unit;
+  let getTextEncoding: t => TextEncoding.t;
+
+  let setShader: (t, Shader.t) => unit;
 };
 
 module IRect: {

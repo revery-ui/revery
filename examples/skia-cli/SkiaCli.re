@@ -209,11 +209,21 @@ let draw = canvas => {
   // Creating a 2-stop linear gradient
   let maybeLinearGradient2 = Skia.Shader.makeLinearGradient2(
     ~startPoint=Skia.Point.make(0.0, 0.0),
-    ~stopPoint=Skia.Point.make(1.0, 1.0),
+    ~stopPoint=Skia.Point.make(100.0, 100.0),
     ~startColor=red,
     ~stopColor=blue,
-    ~tileMode=
-  )
+    ~tileMode=`repeat
+  );
+  let fill = Paint.make();
+  Paint.setColor(fill, Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l));
+  switch (maybeLinearGradient2) {
+  | Some(shader) => prerr_endline ("Created 2-stop linear gradient..")
+    Paint.setShader(fill, shader);
+  | None => failwith ("Unable to create 2-stop linear gradient.")
+  };
+  
+  Canvas.drawRectLtwh(canvas, 0., 0., 100., 100., fill);
+
 };
 
 let surface = makeSurface(640l, 480l);
