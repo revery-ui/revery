@@ -170,49 +170,14 @@ let drawRRect = (v: t, rRect: Skia.RRect.t, paint) => {
   Canvas.drawRRect(v.canvas, rRect, paint);
 };
 
-let drawImage =
-    (
-      ~x,
-      ~y,
-      ~width,
-      ~height,
-      ~paint=?,
-      src: [ | `Url(string) | `File(string)],
-      v: t,
-    ) => {
-  switch (src) {
-  | `File(path) =>
-    switch (ImageRenderer.fromAssetPath(path)) {
-    | None => ()
-    | Some(img) =>
-      Canvas.drawImageRect(
-        v.canvas,
-        img,
-        None,
-        Rect.makeLtrb(x, y, x +. width, y +. height),
-        paint,
-      )
-    }
-  | `Url(url) =>
-    LwtLetOperators.(
-      {
-        let.map image = ImageRenderer.fromUrl(url);
-
-        switch (image) {
-        | None => ()
-        | Some(img) =>
-          Canvas.drawImageRect(
-            v.canvas,
-            img,
-            None,
-            Rect.makeLtrb(x, y, x +. width, y +. height),
-            paint,
-          )
-        };
-      }
-    )
-    |> ignore
-  };
+let drawImage = (~x, ~y, ~width, ~height, ~paint=?, data: Skia.Image.t, v: t) => {
+  Canvas.drawImageRect(
+    v.canvas,
+    data,
+    None,
+    Rect.makeLtrb(x, y, x +. width, y +. height),
+    paint,
+  );
 };
 
 let drawText = (~paint, ~x=0., ~y=0., ~text, v: t) => {

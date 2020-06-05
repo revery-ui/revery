@@ -1,5 +1,6 @@
 open Revery_UI;
 open React;
+open Revery_IO.LwtLetOperators;
 
 let getStyles: (option(int), option(int), Style.t) => Style.t =
   (w, h, style) => {
@@ -46,7 +47,7 @@ let%nativeComponent make =
           ~onMouseWheel?,
           (),
         );
-      let node = PrimitiveNodeFactory.get().createImageNode(src);
+      let node = PrimitiveNodeFactory.get().createImageNode(None);
       node#setOpacity(opacity);
       node#setEvents(events);
       node#setStyle(styles);
@@ -64,10 +65,24 @@ let%nativeComponent make =
           ~onMouseWheel?,
           (),
         );
+
       let imgNode: imageNode = Obj.magic(node);
       imgNode#setResizeMode(resizeMode);
       imgNode#setOpacity(opacity);
-      imgNode#setSrc(src);
+
+      ignore(
+        switch (src) {
+        | `Url(url) =>
+          let.flatMapOk image = Revery_IO.Image.fromUrl(url);
+          imgNode#setData(image);
+          Lwt.return(Ok());
+        | `File(path) =>
+          let maybeSkiaImage = Revery_IO.Image.fromAssetPath(path);
+          imgNode#setData(maybeSkiaImage);
+          Lwt.return(Ok());
+        },
+      );
+
       node#setEvents(events);
       node#setStyle(styles);
       node;
