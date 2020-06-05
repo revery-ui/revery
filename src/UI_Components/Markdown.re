@@ -114,7 +114,10 @@ module Styles = {
   };
 
   module List = {
-    let marker = [marginRight(6)];
+    let marker = [
+      marginRight(6),
+      textWrap(TextWrapping.WrapIgnoreWhitespace),
+    ];
     let contents = [
       justifyContent(`FlexStart),
       alignItems(`FlexStart),
@@ -190,10 +193,11 @@ let generateText = (text, styles, attrs, dispatch, state) => {
     <View onMouseEnter onMouseLeave onMouseUp>
       <Text
         text
-        style={
-          StringSet.mem(href, state.hoveredLinks)
-            ? styles.activeLink : styles.inactiveLink
-        }
+        style=Style.[
+          textWrap(TextWrapping.WrapIgnoreWhitespace),
+          ...{StringSet.mem(href, state.hoveredLinks)
+                ? styles.activeLink : styles.inactiveLink},
+        ]
         fontSize
         fontFamily={styles.fontFamily}
         fontWeight
@@ -208,7 +212,10 @@ let generateText = (text, styles, attrs, dispatch, state) => {
         fontSize
         fontFamily={styles.fontFamily}
         fontWeight
-        style={selectStyleFromKind(attrs.kind, styles)}
+        style=Style.[
+          textWrap(TextWrapping.WrapIgnoreWhitespace),
+          ...{selectStyleFromKind(attrs.kind, styles)},
+        ]
         italicized={isItalicized(attrs)}
         monospaced={isMonospaced(attrs)}
       />
@@ -219,7 +226,10 @@ let generateText = (text, styles, attrs, dispatch, state) => {
       fontSize
       fontFamily={styles.fontFamily}
       fontWeight
-      style={selectStyleFromKind(attrs.kind, styles)}
+      style=Style.[
+        textWrap(TextWrapping.WrapIgnoreWhitespace),
+        ...selectStyleFromKind(attrs.kind, styles),
+      ]
       italicized={isItalicized(attrs)}
       monospaced={isMonospaced(attrs)}
     />
@@ -310,7 +320,10 @@ let generateCodeBlock =
          fontFamily={styles.codeFontFamily}
          monospaced=true
          fontSize
-         style={styles.paragraph}
+         style=Style.[
+           textWrap(TextWrapping.WrapIgnoreWhitespace),
+           ...{styles.paragraph},
+         ]
        />
 
      | (Some(label), Some(code)) =>
@@ -333,7 +346,10 @@ let generateCodeBlock =
                   let text = String.sub(line, block.byteIndex, length);
                   <Text
                     text
-                    style=Style.[color(block.color)]
+                    style=Style.[
+                      textWrap(TextWrapping.WrapIgnoreWhitespace),
+                      color(block.color),
+                    ]
                     fontFamily={styles.fontFamily}
                     fontWeight={block.bold ? Weight.Bold : Weight.Normal}
                     monospaced=true
