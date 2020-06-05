@@ -166,11 +166,7 @@ module M = (T: TYPE) => {
   };
 
   module Shader = {
-    type tileMode = [
-      | `clamp
-      | `repeat
-      | `mirror
-    ];
+    type tileMode = [ | `clamp | `repeat | `mirror];
 
     let tileMode: T.typ(tileMode) =
       skiaCEnum(
