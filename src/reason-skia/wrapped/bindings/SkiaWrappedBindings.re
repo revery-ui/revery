@@ -109,6 +109,68 @@ module M = (F: FOREIGN) => {
     };
   };
 
+  module Point = {
+    type t = ptr(structure(SkiaTypes.Point.t));
+    let t = ptr(SkiaTypes.Point.t);
+
+    let make = (x, y) => {
+      let point = allocate_n(SkiaTypes.Point.t, ~count=1);
+      setf(!@point, SkiaTypes.Point.x, x);
+      setf(!@point, SkiaTypes.Point.y, y);
+      point;
+    };
+
+    let getX = point => {
+      getf(!@point, SkiaTypes.Point.x);
+    };
+    let getY = point => {
+      getf(!@point, SkiaTypes.Point.y);
+    };
+  };
+
+  module Shader = {
+    type t = ptr(structure(SkiaTypes.Shader.t));
+    let t = ptr(SkiaTypes.Shader.t);
+
+    type tileMode = SkiaTypes.Shader.tileMode;
+    let tileMode = SkiaTypes.Shader.tileMode;
+
+    let empty =
+      foreign(
+        "sk_shader_new_empty",
+        void @-> returning(ptr(SkiaTypes.Shader.t)),
+      );
+
+    let makeLinearGradient2 =
+      foreign(
+        "reason_skia_stub_linear_gradient2",
+        Point.t
+        @-> Point.t
+        @-> Color.t
+        @-> Color.t
+        @-> tileMode
+        @-> returning(ptr(SkiaTypes.Shader.t)),
+      );
+
+    let makeLinearGradient =
+      foreign(
+        "reason_skia_stub_linear_gradient",
+        Point.t
+        @-> Point.t
+        @-> ptr(Color.t)
+        @-> ptr(float)
+        @-> int
+        @-> tileMode
+        @-> returning(ptr(SkiaTypes.Shader.t)),
+      );
+
+    let unref =
+      foreign(
+        "sk_shader_unref",
+        ptr(SkiaTypes.Shader.t) @-> returning(void),
+      );
+  };
+
   module Paint = {
     type t = ptr(structure(SkiaTypes.Paint.t));
     let t = ptr(SkiaTypes.Paint.t);
@@ -187,25 +249,9 @@ module M = (F: FOREIGN) => {
         "sk_paint_set_text_encoding",
         t @-> TextEncoding.t @-> returning(void),
       );
-  };
 
-  module Point = {
-    type t = ptr(structure(SkiaTypes.Point.t));
-    let t = ptr(SkiaTypes.Point.t);
-
-    let make = (x, y) => {
-      let point = allocate_n(SkiaTypes.Point.t, ~count=1);
-      setf(!@point, SkiaTypes.Point.x, x);
-      setf(!@point, SkiaTypes.Point.y, y);
-      point;
-    };
-
-    let getX = point => {
-      getf(!@point, SkiaTypes.Point.x);
-    };
-    let getY = point => {
-      getf(!@point, SkiaTypes.Point.y);
-    };
+    let setShader =
+      foreign("sk_paint_set_shader", t @-> Shader.t @-> returning(void));
   };
 
   module Vector = {

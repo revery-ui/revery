@@ -165,6 +165,24 @@ module M = (T: TYPE) => {
     let t = typedef(t, "sk_point_t");
   };
 
+  module Shader = {
+    type tileMode = [ | `clamp | `repeat | `mirror];
+
+    let tileMode: T.typ(tileMode) =
+      skiaCEnum(
+        "sk_shader_tilemode_t",
+        [
+          (`clamp, "CLAMP_SK_SHADER_TILEMODE"),
+          (`repeat, "REPEAT_SK_SHADER_TILEMODE"),
+          (`mirror, "MIRROR_SK_SHADER_TILEMODE"),
+        ],
+      );
+
+    type t;
+    let t: typ(structure(t)) = structure("sk_shader_t");
+    let t = typedef(t, "sk_shader_t");
+  };
+
   module Vector = Point;
 
   module Matrix = {

@@ -85,15 +85,30 @@ module Sample = {
           let fill = Skia.Paint.make();
           Skia.Paint.setColor(
             fill,
-            Skia.Color.makeArgb(0x30l, 0xFFl, 0x00l, 0x00l),
+            Skia.Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l),
           );
           let rect = Skia.Rect.makeLtrb(200., 150., 250., 300.);
           CanvasContext.drawOval(~rect, ~paint=fill, canvasContext);
-
+          let red = Skia.Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l);
+          let blue = Skia.Color.makeArgb(0xFFl, 0x00l, 0x00l, 0xFFl);
+          let paint = Skia.Paint.make();
+          let linearGradient =
+            Skia.Shader.makeLinearGradient2(
+              ~startPoint=Skia.Point.make(200.0, 200.0),
+              ~stopPoint=Skia.Point.make(220.0, 220.0),
+              ~startColor=red,
+              ~stopColor=blue,
+              ~tileMode=`clamp,
+            );
+          Skia.Paint.setShader(paint, linearGradient);
+          Skia.Paint.setColor(
+            paint,
+            Skia.Color.makeArgb(0xFFl, 0x00l, 0xFFl, 0x00l),
+          );
           CanvasContext.drawCircle(
             ~x=225.,
             ~y=225.,
-            ~radius=12.5,
+            ~radius=100.,
             ~paint,
             canvasContext,
           );
