@@ -149,7 +149,7 @@ module Capture: {
 let bubble = (node, event) =>
   if (Capture.isSet() && Capture.isCaptureEvent(event)) {
     Capture.dispatch(event);
-  } else {
+  } else if(!Capture.isSet()) {
     bubble(node, event);
   };
 
