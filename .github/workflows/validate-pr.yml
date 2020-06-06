@@ -27,6 +27,7 @@ jobs:
           esy install -P bench
           esy install -P doc
           esy install -P js
+          esy install -P examples
           git diff --exit-code || (git add *lock; git commit -m "Update lockdir, ")
       - name: Print esy cache
         id: print_esy_cache
