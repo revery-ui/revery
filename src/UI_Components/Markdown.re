@@ -53,21 +53,21 @@ module SyntaxHighlight = {
     byteIndex: int,
     color: Color.t,
     bold: bool,
-    italicized: bool,
+    italic: bool,
   }
   and t = (~language: string, list(string)) => list(list(highlight));
 
-  let makeHighlight = (~byteIndex, ~color, ~bold, ~italicized): highlight => {
+  let makeHighlight = (~byteIndex, ~color, ~bold, ~italic): highlight => {
     byteIndex,
     color,
     bold,
-    italicized,
+    italic,
   };
 
   let default: t =
     (~language as _, lines) => {
       List.init(List.length(lines), _ =>
-        [{byteIndex: 0, color: Colors.white, bold: false, italicized: false}]
+        [{byteIndex: 0, color: Colors.white, bold: false, italic: false}]
       );
     };
 };
@@ -201,7 +201,7 @@ let generateText = (text, styles, attrs, dispatch, state) => {
         fontSize
         fontFamily={styles.fontFamily}
         fontWeight
-        italicized={isItalicized(attrs)}
+        italic={isItalicized(attrs)}
         monospaced={isMonospaced(attrs)}
       />
     </View>;
@@ -216,7 +216,7 @@ let generateText = (text, styles, attrs, dispatch, state) => {
           textWrap(TextWrapping.WrapIgnoreWhitespace),
           ...{selectStyleFromKind(attrs.kind, styles)},
         ]
-        italicized={isItalicized(attrs)}
+        italic={isItalicized(attrs)}
         monospaced={isMonospaced(attrs)}
       />
     </View>
@@ -230,7 +230,7 @@ let generateText = (text, styles, attrs, dispatch, state) => {
         textWrap(TextWrapping.WrapIgnoreWhitespace),
         ...selectStyleFromKind(attrs.kind, styles),
       ]
-      italicized={isItalicized(attrs)}
+      italic={isItalicized(attrs)}
       monospaced={isMonospaced(attrs)}
     />
   };

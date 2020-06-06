@@ -4,7 +4,7 @@ open Revery_Font;
 type textInfo = {
   fontFamily: Family.t,
   fontWeight: Weight.t,
-  italicized: bool,
+  italic: bool,
   monospaced: bool,
   fontSize: float,
   text: string,
@@ -27,7 +27,7 @@ module DSL: {
     (
       ~fontFamily: Family.t=?,
       ~fontWeight: Weight.t=?,
-      ~italicized: bool=?,
+      ~italic: bool=?,
       ~monospaced: bool=?,
       ~fontSize: float=?,
       ~color: Color.t=?,
@@ -46,7 +46,7 @@ module DSL: {
   let heavy: t => t;
 
   let fontFamily: (Family.t, t) => t;
-  let italicized: t => t;
+  let italic: t => t;
   let monospaced: t => t;
   let fontSize: (float, t) => t;
   let color: (Color.t, t) => t;
@@ -55,7 +55,7 @@ let text:
   (
     ~fontFamily: Family.t=?,
     ~fontWeight: Weight.t=?,
-    ~italicized: bool=?,
+    ~italic: bool=?,
     ~monospaced: bool=?,
     ~fontSize: float=?,
     ~color: Color.t=?,
@@ -74,7 +74,7 @@ let ultrabold: t => t;
 let heavy: t => t;
 
 let fontFamily: (Family.t, t) => t;
-let italicized: t => t;
+let italic: t => t;
 let monospaced: t => t;
 let fontSize: (float, t) => t;
 let color: (Color.t, t) => t;

@@ -10,7 +10,7 @@ let make =
       ~fontSize=14.,
       ~fontFamily=Family.default,
       ~fontWeight=Weight.Normal,
-      ~italicized=false,
+      ~italic=false,
       ~monospaced=false,
       (),
     ) => {
@@ -23,7 +23,7 @@ let make =
     fontSize
     fontFamily
     fontWeight
-    italicized
+    italic
     monospaced
   />;
 };

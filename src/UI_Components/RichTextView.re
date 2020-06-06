@@ -6,16 +6,19 @@ let make =
     (~style=[], ~smoothing=Smoothing.default, ~richtext: RichText.t, ()) => {
   let text =
     RichText.foldRight(
-      (acc, textInfo) =>
+      (
+        acc,
+        {italic, monospaced, fontFamily, fontSize, fontWeight, text, color},
+      ) =>
         [
           <Text
-            style=Style.[color(textInfo.color)]
-            fontFamily={textInfo.fontFamily}
-            fontWeight={textInfo.fontWeight}
-            italicized={textInfo.italicized}
-            monospaced={textInfo.monospaced}
-            fontSize={textInfo.fontSize}
-            text={textInfo.text}
+            style=[Style.color(color)]
+            fontFamily
+            fontWeight
+            italic
+            monospaced
+            fontSize
+            text
             smoothing
           />,
           ...acc,

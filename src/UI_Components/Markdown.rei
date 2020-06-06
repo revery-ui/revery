@@ -7,7 +7,7 @@ module SyntaxHighlight: {
       ~byteIndex: int,
       ~color: Revery_Core.Color.t,
       ~bold: bool,
-      ~italicized: bool
+      ~italic: bool
     ) =>
     highlight;
 };

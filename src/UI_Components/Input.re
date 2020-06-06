@@ -228,10 +228,12 @@ let%component make =
 
   let measureTextWidth = text => {
     let dimensions =
-      Revery_Draw.Text.measure(
+      Revery_Draw.Text.dimensions(
         ~smoothing,
-        ~fontFamily=
-          Family.toPath(~italic, ~mono=monospaced, fontWeight, fontFamily),
+        ~italic,
+        ~mono=monospaced,
+        ~fontWeight,
+        ~fontFamily,
         ~fontSize,
         text,
       );

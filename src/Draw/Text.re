@@ -6,22 +6,30 @@
 
 open Revery_Font;
 
-let _getFontMetrics = (~fontFamily, ~fontSize, ()) => {
-  switch (FontCache.load(fontFamily)) {
-  // TODO: Actually get metrics
-  | Ok(font) => FontCache.getMetrics(font, fontSize)
-  | Error(_) => Revery_Font.FontMetrics.empty(0.)
-  };
+// INTERNAL
+open {
+       let fontMetrics = (size, path) => {
+         switch (FontCache.load(path)) {
+         // TODO: Actually get metrics
+         | Ok(font) => FontCache.getMetrics(font, size)
+         | Error(_) => FontMetrics.empty(0.)
+         };
+       };
+     };
+
+let lineHeight = (~italic=?, ~mono=?, family, size, weight) => {
+  let path = Family.toPath(~italic?, ~mono?, weight, family);
+  fontMetrics(size, path).lineHeight;
 };
 
-let getLineHeight = (~fontFamily, ~fontSize, ()) => {
-  let metrics = _getFontMetrics(~fontFamily, ~fontSize, ());
-  metrics.lineHeight;
+let ascent = (~italic=?, ~mono=?, family, size, weight) => {
+  let path = Family.toPath(~italic?, ~mono?, weight, family);
+  fontMetrics(size, path).ascent;
 };
 
-let getAscent = (~fontFamily, ~fontSize, ()) => {
-  let metrics = _getFontMetrics(~fontFamily, ~fontSize, ());
-  metrics.ascent;
+let descent = (~italic=?, ~mono=?, family, size, weight) => {
+  let path = Family.toPath(~italic?, ~mono?, weight, family);
+  fontMetrics(size, path).descent;
 };
 
 type dimensions = {
@@ -29,12 +37,23 @@ type dimensions = {
   height: float,
 };
 
-let measureCharWidth = (~smoothing, ~fontFamily, ~fontSize, char) => {
-  switch (FontCache.load(fontFamily)) {
+let charWidth =
+    (
+      ~smoothing=Smoothing.default,
+      ~italic=?,
+      ~mono=?,
+      ~fontFamily,
+      ~fontSize,
+      ~fontWeight,
+      char,
+    ) => {
+  let path = Family.toPath(~italic?, ~mono?, fontWeight, fontFamily);
+
+  switch (FontCache.load(path)) {
   | Ok(font) =>
     let text = String.make(1, char);
-    let dimensions = FontRenderer.measure(~smoothing, font, fontSize, text);
-    dimensions.width;
+    FontRenderer.measure(~smoothing, font, fontSize, text).width;
+
   | Error(_) => 0.
   };
 };
@@ -59,13 +78,19 @@ let indexNearestOffset = (~measure, text, offset) => {
   loop(~last=0, 1);
 };
 
-let getDescent = (~fontFamily, ~fontSize, ()) => {
-  let metrics = _getFontMetrics(~fontFamily, ~fontSize, ());
-  metrics.descent;
-};
+let dimensions =
+    (
+      ~smoothing=Smoothing.default,
+      ~italic=?,
+      ~mono=?,
+      ~fontFamily,
+      ~fontSize,
+      ~fontWeight,
+      text,
+    ) => {
+  let path = Family.toPath(~italic?, ~mono?, fontWeight, fontFamily);
 
-let measure = (~smoothing, ~fontFamily, ~fontSize, text) => {
-  switch (FontCache.load(fontFamily)) {
+  switch (FontCache.load(path)) {
   // TODO: Properly implement
   | Ok(font) => FontRenderer.measure(~smoothing, font, fontSize, text)
 
