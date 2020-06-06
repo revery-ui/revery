@@ -148,19 +148,6 @@ let draw = canvas => {
     );
   };
 
-  let fontManager = FontManager.makeDefault();
-  let style = FontStyle.make(500, 5, Upright);
-  let maybeTypeface =
-    FontManager.matchFamilyStyle(fontManager, "Arial", style);
-  switch (maybeTypeface) {
-  | None => failwith("Unable to load font: Arial")
-  | Some(typeFace) =>
-    print_endline(__LOC__ ++ ": we will set.");
-    Paint.setTypeface(fill3, typeFace);
-    print_endline(__LOC__ ++ ": setTypeface is OK.");
-    Canvas.drawText(canvas, "Arial (System)", 30., 450., fill3);
-  };
-
   // Draw text w/ ligature
   let filePath = Sys.getcwd() ++ "/examples/skia-cli/FiraCode-Regular.ttf";
   print_endline("Loading font: " ++ filePath);
