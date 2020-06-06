@@ -149,7 +149,7 @@ module Capture: {
 let bubble = (node, event) =>
   if (Capture.isSet() && Capture.isCaptureEvent(event)) {
     Capture.dispatch(event);
-  } else if(!Capture.isSet()) {
+  } else if (!Capture.isSet()) {
     bubble(node, event);
   };
 
@@ -330,6 +330,10 @@ let dispatch =
       NodeEvents.show_event(eventToSend),
     )
   );
+
+  if (Capture.isSet() && Capture.isCaptureEvent(eventToSend)) {
+    Capture.dispatch(eventToSend);
+  };
 
   if (node#hasRendered()) {
     let (mouseX, mouseY) = getPositionFromMouseEvent(cursor, evt);
