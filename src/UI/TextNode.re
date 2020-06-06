@@ -36,7 +36,12 @@ class textNode (text: string) = {
     let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 
     switch (
-      Family.resolve(_fontFamily, _fontWeight, _italicized, _monospaced)
+      Family.resolve(
+        ~italic=_italicized,
+        ~mono=_monospaced,
+        _fontWeight,
+        _fontFamily,
+      )
     ) {
     | Error(_) => ()
     | Ok(font) =>
@@ -51,7 +56,12 @@ class textNode (text: string) = {
       let ascentPx =
         Text.getAscent(
           ~fontFamily=
-            Family.toPath(_fontFamily, _fontWeight, _italicized, _monospaced),
+            Family.toPath(
+              ~italic=_italicized,
+              ~mono=_monospaced,
+              _fontWeight,
+              _fontFamily,
+            ),
           ~fontSize=_fontSize,
           (),
         );
@@ -60,10 +70,10 @@ class textNode (text: string) = {
         *. Text.getLineHeight(
              ~fontFamily=
                Family.toPath(
-                 _fontFamily,
+                 ~italic=_italicized,
+                 ~mono=_monospaced,
                  _fontWeight,
-                 _italicized,
-                 _monospaced,
+                 _fontFamily,
                ),
              ~fontSize=_fontSize,
              (),
@@ -119,7 +129,12 @@ class textNode (text: string) = {
       Text.measure(
         ~smoothing=_smoothing,
         ~fontFamily=
-          Family.toPath(_fontFamily, _fontWeight, _italicized, _monospaced),
+          Family.toPath(
+            ~italic=_italicized,
+            ~mono=_monospaced,
+            _fontWeight,
+            _fontFamily,
+          ),
         ~fontSize=_fontSize,
         str,
       )
@@ -147,10 +162,10 @@ class textNode (text: string) = {
       *. Text.getLineHeight(
            ~fontFamily=
              Family.toPath(
-               _fontFamily,
+               ~italic=_italicized,
+               ~mono=_monospaced,
                _fontWeight,
-               _italicized,
-               _monospaced,
+               _fontFamily,
              ),
            ~fontSize=_fontSize,
            (),
@@ -204,10 +219,10 @@ class textNode (text: string) = {
       *. Text.getLineHeight(
            ~fontFamily=
              Family.toPath(
-               _fontFamily,
+               ~italic=_italicized,
+               ~mono=_monospaced,
                _fontWeight,
-               _italicized,
-               _monospaced,
+               _fontFamily,
              ),
            ~fontSize=_fontSize,
            (),
@@ -217,7 +232,12 @@ class textNode (text: string) = {
       Text.measureCharWidth(
         ~smoothing=_smoothing,
         ~fontFamily=
-          Family.toPath(_fontFamily, _fontWeight, _italicized, _monospaced),
+          Family.toPath(
+            ~italic=_italicized,
+            ~mono=_monospaced,
+            _fontWeight,
+            _fontFamily,
+          ),
         ~fontSize=_fontSize,
         str,
       );
@@ -234,7 +254,12 @@ class textNode (text: string) = {
         Text.measure(
           ~smoothing=_smoothing,
           ~fontFamily=
-            Family.toPath(_fontFamily, _fontWeight, _italicized, _monospaced),
+            Family.toPath(
+              ~italic=_italicized,
+              ~mono=_monospaced,
+              _fontWeight,
+              _fontFamily,
+            ),
           ~fontSize=_fontSize,
           right,
         ).

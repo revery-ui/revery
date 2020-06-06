@@ -2,22 +2,15 @@ open FontManager;
 
 type t;
 
-let fromFile:
-  (
-    ~variant: (
-                ~fontWeight: FontWeight.t,
-                ~italicized: bool,
-                ~monospaced: bool
-              ) =>
-              string
-                =?,
-    string
-  ) =>
-  t;
-let system: string => t;
-
 let default: t;
 
-let resolve: (t, FontWeight.t, bool, bool) => result(FontCache.t, string);
+let fromFiles:
+  ((~weight: FontWeight.t, ~italic: bool, ~mono: bool) => string) => t;
+let fromFile: string => t;
+let system: string => t;
 
-let toPath: (t, FontWeight.t, bool, bool) => string;
+let resolve:
+  (~italic: bool=?, ~mono: bool=?, FontWeight.t, t) =>
+  result(FontCache.t, string);
+
+let toPath: (~italic: bool=?, ~mono: bool=?, FontWeight.t, t) => string;

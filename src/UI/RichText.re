@@ -43,10 +43,10 @@ let measure = (~smoothing=Smoothing.default, richtext: t) =>
           ~smoothing,
           ~fontFamily=
             Family.toPath(
-              textInfo.fontFamily,
+              ~italic=textInfo.italicized,
+              ~mono=textInfo.monospaced,
               textInfo.fontWeight,
-              textInfo.italicized,
-              textInfo.monospaced,
+              textInfo.fontFamily,
             ),
           ~fontSize=textInfo.fontSize,
           textInfo.text,

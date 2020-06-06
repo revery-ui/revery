@@ -184,7 +184,7 @@ let%component make =
                 ~style=Styles.default,
                 ~fontFamily=Family.default,
                 ~fontWeight=Weight.Normal,
-                ~italicized=false,
+                ~italic=false,
                 ~monospaced=false,
                 ~fontSize=14.0,
                 ~placeholderColor=Styles.defaultPlaceholderColor,
@@ -231,7 +231,7 @@ let%component make =
       Revery_Draw.Text.measure(
         ~smoothing,
         ~fontFamily=
-          Family.toPath(fontFamily, fontWeight, italicized, monospaced),
+          Family.toPath(~italic, ~mono=monospaced, fontWeight, fontFamily),
         ~fontSize,
         text,
       );
