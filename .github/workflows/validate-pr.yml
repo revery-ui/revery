@@ -147,6 +147,8 @@ jobs:
       - name: Print esy cache
         id: print_esy_cache
         run: node .github/workflows/print_esy_cache.js
+      - name: Take ownership of docker store
+        run: sudo chown -R $(id -un):$(id -gn) ${{ steps.print_esy_cache.outputs.esy_cache }}
       - name: Try to restore dependencies cache
         id: deps-cache
         uses: actions/cache@v2.0.0
