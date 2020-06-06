@@ -38,7 +38,6 @@ module Capture: {
   let release: unit => unit;
   let isSet: unit => bool;
   let dispatch: NodeEvents.event => unit;
-  let isCaptureEvent: NodeEvents.event => bool;
   let setCallbacks:
     (
       ~onMouseDown: NodeEvents.mouseDownHandler=?,
@@ -114,15 +113,6 @@ module Capture: {
     | None => ()
     };
 
-  let isCaptureEvent = event =>
-    switch (event) {
-    | MouseDown(_)
-    | MouseUp(_)
-    | MouseMove(_)
-    | MouseWheel(_) => true
-    | _ => false
-    };
-
   let setCallbacks =
       (
         ~onMouseDown=_evt => (),
@@ -147,9 +137,9 @@ module Capture: {
 };
 
 let bubble = (node, event) =>
-  if (Capture.isSet() && Capture.isCaptureEvent(event)) {
+  if (Capture.isSet()) {
     Capture.dispatch(event);
-  } else if (!Capture.isSet()) {
+  } else {
     bubble(node, event);
   };
 
@@ -341,7 +331,7 @@ let dispatch =
       };
     };
 
-    if (Capture.isSet() && Capture.isCaptureEvent(eventToSend)) {
+    if (Capture.isSet()) {
       Capture.dispatch(eventToSend);
     };
 
