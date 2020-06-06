@@ -162,6 +162,8 @@ module Paint = {
   let setImageFilter = SkiaWrapped.Paint.setImageFilter;
   let setTextEncoding = SkiaWrapped.Paint.setTextEncoding;
   let getTextEncoding = SkiaWrapped.Paint.getTextEncoding;
+
+  let setShader = SkiaWrapped.Paint.setShader;
 };
 
 module Point = {
@@ -180,6 +182,72 @@ module Vector = {
 
   let getX = SkiaWrapped.Vector.getX;
   let getY = SkiaWrapped.Vector.getY;
+};
+
+module Shader = {
+  type t = SkiaWrapped.Shader.t;
+
+  type tileMode = SkiaWrapped.Shader.tileMode;
+
+  let makeEmpty = () => {
+    let empty = SkiaWrapped.Shader.empty();
+    Gc.finalise(SkiaWrapped.Shader.unref, empty);
+    empty;
+  };
+
+  let makeLinearGradient2 =
+      (~startPoint, ~stopPoint, ~startColor, ~stopColor, ~tileMode) => {
+    let gradient =
+      SkiaWrapped.Shader.makeLinearGradient2(
+        startPoint,
+        stopPoint,
+        Unsigned.UInt32.of_int32(startColor),
+        Unsigned.UInt32.of_int32(stopColor),
+        tileMode,
+      );
+    Gc.finalise(SkiaWrapped.Shader.unref, gradient);
+    gradient;
+  };
+
+  type colorStop = {
+    color: Color.t,
+    position: float,
+  };
+
+  let makeLinearGradient = (~startPoint, ~stopPoint, ~colorStops, ~tileMode) => {
+    let (colors, positions) =
+      List.fold_left(
+        (acc, curr) => {
+          let (accColors, accPositions) = acc;
+          let {color, position}: colorStop = curr;
+          (
+            [Unsigned.UInt32.of_int32(color), ...accColors],
+            [position, ...accPositions],
+          );
+        },
+        ([], []),
+        colorStops,
+      );
+
+    Ctypes.(
+      {
+        let colorsArray = CArray.of_list(uint32_t, colors |> List.rev);
+        let positionsArray = CArray.of_list(float, positions |> List.rev);
+
+        let gradient =
+          SkiaWrapped.Shader.makeLinearGradient(
+            startPoint,
+            stopPoint,
+            CArray.start(colorsArray),
+            CArray.start(positionsArray),
+            CArray.length(colorsArray),
+            tileMode,
+          );
+        Gc.finalise(SkiaWrapped.Shader.unref, gradient);
+        gradient;
+      }
+    );
+  };
 };
 
 module Matrix = {
@@ -416,6 +484,26 @@ module Typeface = {
 
   let makeFromName = SkiaWrapped.Typeface.makeFromName;
   let makeFromFile = SkiaWrapped.Typeface.makeFromFile;
+};
+
+module FontManager = {
+  type t = SkiaWrapped.FontManager.t;
+
+  let makeDefault = () => {
+    let mgr = SkiaWrapped.FontManager.makeDefault();
+    Gc.finalise(SkiaWrapped.FontManager.delete, mgr);
+    mgr;
+  };
+  let matchFamilyStyle = (mgr, family, style) => {
+    let typeface =
+      SkiaWrapped.FontManager.matchFamilyStyle(mgr, family, style);
+    switch (typeface) {
+    | Some(tf) =>
+      Gc.finalise(SkiaWrapped.Typeface.delete, tf);
+      Some(tf);
+    | None => None
+    };
+  };
 };
 
 module RRect = {

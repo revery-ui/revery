@@ -151,6 +151,11 @@ let examples = [
     source: "FileDragAndDrop.re",
   },
   {
+    name: "Rich Text Example",
+    render: _ => RichTextExample.render(),
+    source: "RichTextExample.re",
+  },
+  {
     name: "Shell: Open URL",
     render: _ => URLFileOpen.render(),
     source: "URLFileOpen.re",

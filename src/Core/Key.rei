@@ -66,7 +66,32 @@ module Keycode: {
   let p_digit8: int;
   let p_digit9: int;
 
+  let a: int;
+  let b: int;
   let c: int;
+  let d: int;
+  let e: int;
+  let f: int;
+  let g: int;
+  let h: int;
+  let i: int;
+  let j: int;
+  let k: int;
+  let l: int;
+  let m: int;
+  let n: int;
+  let o: int;
+  let p: int;
+  let q: int;
+  let r: int;
+  let s: int;
+  let t: int;
+  let u: int;
+  let v: int;
+  let w: int;
+  let x: int;
+  let y: int;
+  let z: int;
 
   let delete: int;
 

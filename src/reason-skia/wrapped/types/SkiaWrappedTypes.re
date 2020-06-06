@@ -81,6 +81,13 @@ module M = (T: TYPE) => {
     let t = typedef(t, "sk_typeface_t");
   };
 
+  module FontManager = {
+    type t;
+
+    let t: typ(structure(t)) = structure("sk_fontmgr_t");
+    let t = typedef(t, "sk_fontmgr_t");
+  };
+
   module FontMetrics = {
     type t;
     let t: typ(structure(t)) = structure("sk_fontmetrics_t");
@@ -163,6 +170,24 @@ module M = (T: TYPE) => {
     let y = field(t, "y", float);
     seal(t);
     let t = typedef(t, "sk_point_t");
+  };
+
+  module Shader = {
+    type tileMode = [ | `clamp | `repeat | `mirror];
+
+    let tileMode: T.typ(tileMode) =
+      skiaCEnum(
+        "sk_shader_tilemode_t",
+        [
+          (`clamp, "CLAMP_SK_SHADER_TILEMODE"),
+          (`repeat, "REPEAT_SK_SHADER_TILEMODE"),
+          (`mirror, "MIRROR_SK_SHADER_TILEMODE"),
+        ],
+      );
+
+    type t;
+    let t: typ(structure(t)) = structure("sk_shader_t");
+    let t = typedef(t, "sk_shader_t");
   };
 
   module Vector = Point;

@@ -36,6 +36,13 @@ module Typeface: {
   let makeFromFile: (string, int) => option(t);
 };
 
+module FontManager: {
+  type t;
+
+  let makeDefault: unit => t;
+  let matchFamilyStyle: (t, string, FontStyle.t) => option(Typeface.t);
+};
+
 module FontMetrics: {
   type t = SkiaWrapped.FontMetrics.t;
 
@@ -101,6 +108,56 @@ module Rect: {
   let toString: t => string;
 };
 
+module Point: {
+  type t;
+
+  let make: (float, float) => t;
+
+  let getX: t => float;
+  let getY: t => float;
+};
+
+module Vector: {
+  type t = Point.t;
+
+  let make: (float, float) => t;
+
+  let getX: t => float;
+  let getY: t => float;
+};
+
+module Shader: {
+  type t;
+
+  type tileMode = SkiaWrapped.Shader.tileMode;
+
+  let makeEmpty: unit => t;
+
+  type colorStop = {
+    color: Color.t,
+    position: float,
+  };
+
+  let makeLinearGradient2:
+    (
+      ~startPoint: Point.t,
+      ~stopPoint: Point.t,
+      ~startColor: Color.t,
+      ~stopColor: Color.t,
+      ~tileMode: tileMode
+    ) =>
+    t;
+
+  let makeLinearGradient:
+    (
+      ~startPoint: Point.t,
+      ~stopPoint: Point.t,
+      ~colorStops: list(colorStop),
+      ~tileMode: tileMode
+    ) =>
+    t;
+};
+
 module Paint: {
   type t;
   type style = SkiaWrapped.Paint.style;
@@ -129,24 +186,8 @@ module Paint: {
 
   let setTextEncoding: (t, TextEncoding.t) => unit;
   let getTextEncoding: t => TextEncoding.t;
-};
 
-module Point: {
-  type t;
-
-  let make: (float, float) => t;
-
-  let getX: t => float;
-  let getY: t => float;
-};
-
-module Vector: {
-  type t = Point.t;
-
-  let make: (float, float) => t;
-
-  let getX: t => float;
-  let getY: t => float;
+  let setShader: (t, Shader.t) => unit;
 };
 
 module IRect: {
