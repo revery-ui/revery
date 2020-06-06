@@ -486,6 +486,26 @@ module Typeface = {
   let makeFromFile = SkiaWrapped.Typeface.makeFromFile;
 };
 
+module FontManager = {
+  type t = SkiaWrapped.FontManager.t;
+
+  let makeDefault = () => {
+    let mgr = SkiaWrapped.FontManager.makeDefault();
+    Gc.finalise(SkiaWrapped.FontManager.delete, mgr);
+    mgr;
+  };
+  let matchFamilyStyle = (mgr, family, style) => {
+    let typeface =
+      SkiaWrapped.FontManager.matchFamilyStyle(mgr, family, style);
+    switch (typeface) {
+    | Some(tf) =>
+      Gc.finalise(SkiaWrapped.Typeface.delete, tf);
+      Some(tf);
+    | None => None
+    };
+  };
+};
+
 module RRect = {
   type t = SkiaWrapped.RRect.t;
   type rRectType = SkiaWrapped.RRect.rRectType;

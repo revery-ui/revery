@@ -59,6 +59,27 @@ module M = (F: FOREIGN) => {
         "sk_typeface_create_from_file",
         string @-> int @-> returning(ptr_opt(SkiaTypes.Typeface.t)),
       );
+
+    let delete = foreign("sk_typeface_unref", t @-> returning(void));
+  };
+
+  module FontManager = {
+    type t = ptr(structure(SkiaTypes.FontManager.t));
+    let t = ptr(SkiaTypes.FontManager.t);
+
+    let makeDefault =
+      foreign("sk_fontmgr_create_default", void @-> returning(t));
+
+    let matchFamilyStyle =
+      foreign(
+        "sk_fontmgr_match_family_style",
+        t
+        @-> string
+        @-> FontStyle.t
+        @-> returning(ptr_opt(SkiaTypes.Typeface.t)),
+      );
+
+    let delete = foreign("sk_fontmgr_unref", t @-> returning(void));
   };
 
   module FontMetrics = {

@@ -21,3 +21,7 @@ steps:
     displayName: '@esy @examples x SkiaCli'
   - script: esy @examples x SkiaCli.bc
     displayName: '@esy @examples x SkiaCli.bc'
+  - script: esy @examples x SkiaFontManagerCli
+    displayName: 'esy @examples x SkiaFontManagerCli'
+  - script: esy @examples x SkiaFontManagerCli.bc
+    displayName: 'esy @examples x SkiaFontManagerCli.bc'
