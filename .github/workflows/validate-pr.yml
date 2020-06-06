@@ -143,7 +143,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: docker build -t ${{ matrix.os }} scripts/docker/${{ matrix.os }}
-      - run: docker run --rm --volume $(pwd):/revery --volume ~:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy install --prefix-path=/esy/store/.esy"
+      - name: Install dependencies
+        run: docker run --rm --volume $(pwd):/revery --volume ~:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy install --prefix-path=/esy/store/.esy"
       - name: Print esy cache
         id: print_esy_cache
         run: node .github/workflows/print_esy_cache.js
@@ -163,6 +164,7 @@ jobs:
       - name: Build project in release
         run: docker run --rm --volume $(pwd):/revery --volume ~:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy build --release --prefix-path=/esy/store/.esy"
       - name: Build test/dev dependencies
+        if: steps.deps-cache.outputs.cache-hit != 'true'
         run: docker run --rm --volume $(pwd):/revery --volume ~:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy build-dependencies --prefix-path=/esy/store/.esy"
       - name: Clean global store
         if: steps.deps-cache.outputs.cache-hit != 'true'
@@ -202,10 +204,10 @@ jobs:
           key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
           restore-keys: |
             ${{ matrix.os }}-
-      - name: Build dependencies
+      - name: Build release dependencies
         if: steps.deps-cache.outputs.cache-hit != 'true'
         run: esy build-dependencies --release
-      - name: Build
+      - name: Build project in release
         run: esy build --release
       - name: Build test/dev dependencies
         if: steps.deps-cache.outputs.cache-hit != 'true'
