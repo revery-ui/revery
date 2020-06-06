@@ -331,10 +331,6 @@ let dispatch =
     )
   );
 
-  if (Capture.isSet() && Capture.isCaptureEvent(eventToSend)) {
-    Capture.dispatch(eventToSend);
-  };
-
   if (node#hasRendered()) {
     let (mouseX, mouseY) = getPositionFromMouseEvent(cursor, evt);
 
@@ -343,6 +339,10 @@ let dispatch =
       | Some(node) => Focus.focus(node)
       | None => Focus.loseFocus()
       };
+    };
+
+    if (Capture.isSet() && Capture.isCaptureEvent(eventToSend)) {
+      Capture.dispatch(eventToSend);
     };
 
     let deepestNode = getTopMostNode(node, mouseX, mouseY);
@@ -381,9 +381,11 @@ let dispatch =
     switch (deepestNode) {
     | None => ()
     | Some(node) =>
-      let bbox = node#getBoundingBox();
-      DebugDraw.setActive(bbox);
-      bubble(node, eventToSend);
+      if (!Capture.isSet()) {
+        let bbox = node#getBoundingBox();
+        DebugDraw.setActive(bbox);
+        bubble(node, eventToSend);
+      };
       let cursor = node#getCursorStyle();
       Event.dispatch(onCursorChanged, cursor);
     };
