@@ -1,9 +1,3 @@
-/*
- * Text.re
- *
- * Core logic for rendering text to screen.
- */
-
 open Revery_Font;
 
 // INTERNAL
@@ -32,11 +26,6 @@ let descent = (~italic=?, ~mono=?, family, size, weight) => {
   fontMetrics(size, path).descent;
 };
 
-type dimensions = {
-  width: float,
-  height: float,
-};
-
 let charWidth =
     (
       ~smoothing=Smoothing.default,
@@ -58,25 +47,11 @@ let charWidth =
   };
 };
 
-let indexNearestOffset = (~measure, text, offset) => {
-  let length = String.length(text);
-
-  let rec loop = (~last, i) =>
-    if (i > length) {
-      i - 1;
-    } else {
-      let width = measure(String.sub(text, 0, i));
-
-      if (width > offset) {
-        let isCurrentNearest = width - offset < offset - last;
-        isCurrentNearest ? i : i - 1;
-      } else {
-        loop(~last=width, i + 1);
-      };
-    };
-
-  loop(~last=0, 1);
-};
+type dimensions =
+  FontRenderer.measureResult = {
+    width: float,
+    height: float,
+  };
 
 let dimensions =
     (
@@ -96,4 +71,24 @@ let dimensions =
 
   | Error(_) => {width: 0., height: 0.}
   };
+};
+
+let indexNearestOffset = (~measure, text, offset) => {
+  let length = String.length(text);
+
+  let rec loop = (~last, i) =>
+    if (i > length) {
+      i - 1;
+    } else {
+      let width = measure(String.sub(text, 0, i));
+
+      if (width > offset) {
+        let isCurrentNearest = width - offset < offset - last;
+        isCurrentNearest ? i : i - 1;
+      } else {
+        loop(~last=width, i + 1);
+      };
+    };
+
+  loop(~last=0, 1);
 };
