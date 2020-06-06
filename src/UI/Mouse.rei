@@ -20,6 +20,15 @@ let setCapture:
     Window.t
   ) =>
   unit;
+let setCallbacks:
+  (
+    ~onMouseDown: NodeEvents.mouseDownHandler=?,
+    ~onMouseUp: NodeEvents.mouseUpHandler=?,
+    ~onMouseMove: NodeEvents.mouseMoveHandler=?,
+    ~onMouseWheel: NodeEvents.mouseWheelHandler=?,
+    unit
+  ) =>
+  unit;
 
 let releaseCapture: unit => unit;
 

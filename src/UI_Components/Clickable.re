@@ -32,7 +32,7 @@ let%component make =
                 ~onKeyUp=?,
                 ~onTextEdit=?,
                 ~onTextInput=?,
-                ~onMouseEnter as onMouseEnterUserCallback=?,
+                ~onMouseEnter as onMouseEnterUserCallback=_evt => (),
                 ~onMouseLeave as onMouseLeaveUserCallback=_evt => (),
                 ~children,
                 (),
@@ -76,12 +76,10 @@ let%component make =
     startHover();
     onMouseEnterUserCallback(_event);
   };
-
   let onMouseLeave = _event => {
     endHover();
     onMouseLeaveUserCallback(_event);
   };
-
   let onMouseDown = _event => {
     captureMouse();
     mouseDownTimes := (Time.now(), fst(mouseDownTimes^));

@@ -169,16 +169,16 @@ let mouseCapture =
       )
     );
 
+  let wrap = (f, event) => {
+    state := f(Option.get(state^), event);
+
+    if (state^ == None) {
+      Mouse.releaseCapture();
+    };
+  };
+
   let capture = initialState => {
     state := Some(initialState);
-
-    let wrap = (f, event) => {
-      state := f(Option.get(state^), event);
-
-      if (state^ == None) {
-        Mouse.releaseCapture();
-      };
-    };
 
     Mouse.setCapture(
       Revery_UI.getActiveWindow() |> Option.get, // May fail if called outside rendering
@@ -189,6 +189,18 @@ let mouseCapture =
       ~onRelease=() =>
       onRelease(state^)
     );
+  };
+
+  switch (state^) {
+  | Some(_) =>
+    Mouse.setCallbacks(
+      ~onMouseDown=wrap(onMouseDown),
+      ~onMouseUp=wrap(onMouseUp),
+      ~onMouseMove=wrap(onMouseMove),
+      ~onMouseWheel=wrap(onMouseWheel),
+      (),
+    )
+  | None => ()
   };
 
   (capture, state^);
