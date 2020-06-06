@@ -90,7 +90,6 @@ let%component make =
   <View
     style
     onMouseDown
-    onMouseUp
     onMouseEnter
     onMouseLeave
     ?onBlur
