@@ -184,7 +184,7 @@ let%component make =
                 ~style=Styles.default,
                 ~fontFamily=Family.default,
                 ~fontWeight=Weight.Normal,
-                ~italicized=false,
+                ~italic=false,
                 ~monospaced=false,
                 ~fontSize=14.0,
                 ~placeholderColor=Styles.defaultPlaceholderColor,
@@ -228,10 +228,12 @@ let%component make =
 
   let measureTextWidth = text => {
     let dimensions =
-      Revery_Draw.Text.measure(
+      Revery_Draw.Text.dimensions(
         ~smoothing,
-        ~fontFamily=
-          Family.toPath(fontFamily, fontWeight, italicized, monospaced),
+        ~italic,
+        ~mono=monospaced,
+        ~fontWeight,
+        ~fontFamily,
         ~fontSize,
         text,
       );

@@ -2,5 +2,15 @@
     (name Revery_Draw)
     (public_name Revery.Draw)
     (preprocess (pps lwt_ppx))
-    (libraries skia brisk-reconciler lwt lwt.unix sdl2 flex rebez.lib Revery_Core Revery_Font
-               Revery_Math))
+    (libraries 
+        skia
+        brisk-reconciler
+        lwt 
+        lwt.unix
+        sdl2
+        flex
+        rebez.lib
+        Revery_Core
+        Revery_Font
+        Revery_Math
+))

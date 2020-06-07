@@ -17,7 +17,7 @@ let%nativeComponent make =
                       ~style=emptyTextStyle,
                       ~fontFamily=Family.default,
                       ~fontWeight=Weight.Normal,
-                      ~italicized=false,
+                      ~italic=false,
                       ~monospaced=false,
                       ~fontSize=14.,
                       ~text="",
@@ -74,7 +74,7 @@ let%nativeComponent make =
       tn#setMouseBehavior(mouseBehavior);
       tn#setFontFamily(fontFamily);
       tn#setFontWeight(fontWeight);
-      tn#setItalicized(italicized);
+      tn#setItalicized(italic);
       tn#setMonospaced(monospaced);
       tn#setFontSize(fontSize);
       node;

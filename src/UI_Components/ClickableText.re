@@ -15,7 +15,7 @@ let%component make =
                 ~fontSize=14.,
                 ~fontFamily=Family.default,
                 ~fontWeight=Weight.Normal,
-                ~italicized=false,
+                ~italic=false,
                 ~monospaced=false,
                 ~onClick=noop,
                 (),
@@ -30,7 +30,7 @@ let%component make =
       fontFamily
       fontSize
       fontWeight
-      italicized
+      italic
       monospaced
       style={isHovered ? activeStyle : inactiveStyle}
     />

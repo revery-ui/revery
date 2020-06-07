@@ -23,7 +23,7 @@ module SampleRichText = {
         ++ text("world", ~color=Colors.green)
         ++ text("!", ~color=Colors.yellow)
         |> fontSize(20.)
-        |> italicized
+        |> italic
       );
 
     let dimensions = RichText.measure(richtext);

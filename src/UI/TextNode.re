@@ -36,7 +36,12 @@ class textNode (text: string) = {
     let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 
     switch (
-      Family.resolve(_fontFamily, _fontWeight, _italicized, _monospaced)
+      Family.resolve(
+        ~italic=_italicized,
+        ~mono=_monospaced,
+        _fontWeight,
+        _fontFamily,
+      )
     ) {
     | Error(_) => ()
     | Ok(font) =>
@@ -49,24 +54,21 @@ class textNode (text: string) = {
       Skia.Paint.setTextSize(_textPaint, _fontSize);
 
       let ascentPx =
-        Text.getAscent(
-          ~fontFamily=
-            Family.toPath(_fontFamily, _fontWeight, _italicized, _monospaced),
-          ~fontSize=_fontSize,
-          (),
+        Text.ascent(
+          ~italic=_italicized,
+          ~mono=_monospaced,
+          _fontFamily,
+          _fontSize,
+          _fontWeight,
         );
       let lineHeightPx =
         lineHeight
-        *. Text.getLineHeight(
-             ~fontFamily=
-               Family.toPath(
-                 _fontFamily,
-                 _fontWeight,
-                 _italicized,
-                 _monospaced,
-               ),
-             ~fontSize=_fontSize,
-             (),
+        *. Text.lineHeight(
+             ~italic=_italicized,
+             ~mono=_monospaced,
+             _fontFamily,
+             _fontSize,
+             _fontWeight,
            );
 
       /* when style.width & style.height are defined, Layout doesn't call the measure function */
@@ -116,11 +118,13 @@ class textNode (text: string) = {
     let formattedText = TextOverflow.removeLineBreaks(text);
 
     let measure = str =>
-      Text.measure(
+      Text.dimensions(
         ~smoothing=_smoothing,
-        ~fontFamily=
-          Family.toPath(_fontFamily, _fontWeight, _italicized, _monospaced),
+        ~italic=_italicized,
+        ~mono=_monospaced,
+        ~fontFamily=_fontFamily,
         ~fontSize=_fontSize,
+        ~fontWeight=_fontWeight,
         str,
       )
       |> (value => value.width);
@@ -144,16 +148,12 @@ class textNode (text: string) = {
 
     let lineHeightPx =
       lineHeight
-      *. Text.getLineHeight(
-           ~fontFamily=
-             Family.toPath(
-               _fontFamily,
-               _fontWeight,
-               _italicized,
-               _monospaced,
-             ),
-           ~fontSize=_fontSize,
-           (),
+      *. Text.lineHeight(
+           ~italic=_italicized,
+           ~mono=_monospaced,
+           _fontFamily,
+           _fontSize,
+           _fontWeight,
          );
 
     {width: int_of_float(width), height: int_of_float(lineHeightPx)};
@@ -201,24 +201,22 @@ class textNode (text: string) = {
     let {textWrap, lineHeight, _}: Style.t = style;
     let lineHeightPx =
       lineHeight
-      *. Text.getLineHeight(
-           ~fontFamily=
-             Family.toPath(
-               _fontFamily,
-               _fontWeight,
-               _italicized,
-               _monospaced,
-             ),
-           ~fontSize=_fontSize,
-           (),
+      *. Text.lineHeight(
+           ~italic=_italicized,
+           ~mono=_monospaced,
+           _fontFamily,
+           _fontSize,
+           _fontWeight,
          );
 
     let measureWidth = str =>
-      Text.measureCharWidth(
+      Text.charWidth(
         ~smoothing=_smoothing,
-        ~fontFamily=
-          Family.toPath(_fontFamily, _fontWeight, _italicized, _monospaced),
+        ~italic=_italicized,
+        ~mono=_monospaced,
+        ~fontFamily=_fontFamily,
         ~fontSize=_fontSize,
+        ~fontWeight=_fontWeight,
         str,
       );
     _lines =
@@ -231,11 +229,13 @@ class textNode (text: string) = {
 
     let pickWiderLine = (leftWidth, right) => {
       let rightWidth =
-        Text.measure(
+        Text.dimensions(
           ~smoothing=_smoothing,
-          ~fontFamily=
-            Family.toPath(_fontFamily, _fontWeight, _italicized, _monospaced),
+          ~italic=_italicized,
+          ~mono=_monospaced,
+          ~fontFamily=_fontFamily,
           ~fontSize=_fontSize,
+          ~fontWeight=_fontWeight,
           right,
         ).
           width;

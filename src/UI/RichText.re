@@ -4,7 +4,7 @@ open Revery_Font;
 type textInfo = {
   fontFamily: Family.t,
   fontWeight: Weight.t,
-  italicized: bool,
+  italic: bool,
   monospaced: bool,
   fontSize: float,
   text: string,
@@ -37,19 +37,19 @@ let rec map = (updateLeaf: textInfo => t, richtext: t) =>
 
 let measure = (~smoothing=Smoothing.default, richtext: t) =>
   foldRight(
-    (acc: Dimensions.t, textInfo) => {
+    (
+      acc: Dimensions.t,
+      {italic, monospaced, fontFamily, fontSize, fontWeight, text, _},
+    ) => {
       let dimensions =
-        Revery_Draw.Text.measure(
+        Revery_Draw.Text.dimensions(
           ~smoothing,
-          ~fontFamily=
-            Family.toPath(
-              textInfo.fontFamily,
-              textInfo.fontWeight,
-              textInfo.italicized,
-              textInfo.monospaced,
-            ),
-          ~fontSize=textInfo.fontSize,
-          textInfo.text,
+          ~italic,
+          ~mono=monospaced,
+          ~fontFamily,
+          ~fontSize,
+          ~fontWeight,
+          text,
         );
       let width = acc.width + int_of_float(dimensions.width);
       let height = max(acc.height, int_of_float(dimensions.height));
@@ -61,33 +61,17 @@ let measure = (~smoothing=Smoothing.default, richtext: t) =>
   );
 
 module DSL = {
-  module Defaults = {
-    let fontFamily = Family.default;
-    let fontWeight = Weight.Normal;
-    let italicized = false;
-    let monospaced = false;
-    let fontSize = 14.;
-    let color = Colors.black;
-  };
   let text =
       (
-        ~fontFamily=Defaults.fontFamily,
-        ~fontWeight=Defaults.fontWeight,
-        ~italicized=Defaults.italicized,
-        ~monospaced=Defaults.monospaced,
-        ~fontSize=Defaults.fontSize,
-        ~color=Defaults.color,
+        ~fontFamily=Family.default,
+        ~fontWeight=Weight.Normal,
+        ~italic=false,
+        ~monospaced=false,
+        ~fontSize=14.,
+        ~color=Colors.black,
         text: string,
       ) =>
-    Leaf({
-      fontFamily,
-      fontWeight,
-      italicized,
-      monospaced,
-      fontSize,
-      text,
-      color,
-    });
+    Leaf({fontFamily, fontWeight, italic, monospaced, fontSize, text, color});
 
   let fontWeight = (fontWeight: Weight.t, richtext: t) =>
     richtext |> map(textInfo => Leaf({...textInfo, fontWeight}));
@@ -117,8 +101,8 @@ module DSL = {
 
   let fontFamily = (fontFamily: Family.t, richtext: t) =>
     richtext |> map(textInfo => Leaf({...textInfo, fontFamily}));
-  let italicized = (richtext: t) =>
-    richtext |> map(textInfo => Leaf({...textInfo, italicized: true}));
+  let italic = (richtext: t) =>
+    richtext |> map(textInfo => Leaf({...textInfo, italic: true}));
   let monospaced = (richtext: t) =>
     richtext |> map(textInfo => Leaf({...textInfo, monospaced: true}));
   let fontSize = (fontSize: float, richtext: t) =>
