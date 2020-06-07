@@ -612,7 +612,7 @@ module Data = {
     maybeData;
   };
 
-  let ofStream = SkiaWrapped.Data.ofStream;
+  let makeFromStream = SkiaWrapped.Data.makeFromStream;
 };
 
 module Typeface = {
@@ -621,7 +621,7 @@ module Typeface = {
   let makeFromName = SkiaWrapped.Typeface.makeFromName;
   let makeFromFile = SkiaWrapped.Typeface.makeFromFile;
 
-  let openStream = typeface => {
+  let toStream = typeface => {
     let stream = SkiaWrapped.Typeface.openStream(typeface, None);
     Gc.finalise(SkiaWrapped.Stream.delete, stream);
     stream;

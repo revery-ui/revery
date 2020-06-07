@@ -43,7 +43,7 @@ module Data: {
 
   let makeString: t => string;
 
-  let ofStream: (Stream.t, int) => t;
+  let makeFromStream: (Stream.t, int) => t;
 };
 
 module Typeface: {
@@ -51,7 +51,7 @@ module Typeface: {
 
   let makeFromName: (string, FontStyle.t) => option(t);
   let makeFromFile: (string, int) => option(t);
-  let openStream: t => Stream.t;
+  let toStream: t => Stream.t;
 };
 
 module FontManager: {

@@ -48,7 +48,7 @@ module M = (F: FOREIGN) => {
     let getData = foreign("sk_data_get_data", t @-> returning(ptr(void)));
     let getSize = foreign("sk_data_get_size", t @-> returning(size_t));
 
-    let ofStream =
+    let makeFromStream =
       foreign("sk_data_new_from_stream", Stream.t @-> int @-> returning(t));
   };
 
