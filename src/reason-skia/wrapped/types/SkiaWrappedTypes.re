@@ -75,6 +75,18 @@ module M = (T: TYPE) => {
       );
   };
 
+  module Data = {
+    type t;
+    let t: typ(structure(t)) = structure("sk_data_t");
+    let t = typedef(t, "sk_data_t");
+  };
+
+  module Stream = {
+    type t;
+    let t: typ(structure(t)) = structure("sk_stream_t");
+    let t = typedef(t, "sk_stream_t");
+  };
+
   module Typeface = {
     type t;
     let t: typ(structure(t)) = structure("sk_typeface_t");
@@ -354,12 +366,6 @@ module M = (T: TYPE) => {
         (Unpremul, "UNPREMUL_SK_ALPHATYPE"),
       ],
     );
-
-  module Data = {
-    type t;
-    let t: typ(structure(t)) = structure("sk_data_t");
-    let t = typedef(t, "sk_data_t");
-  };
 
   module ImageInfo = {
     type t;

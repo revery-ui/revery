@@ -479,13 +479,6 @@ module FontStyle = {
   let make = SkiaWrapped.FontStyle.make;
 };
 
-module Typeface = {
-  type t = SkiaWrapped.Typeface.t;
-
-  let makeFromName = SkiaWrapped.Typeface.makeFromName;
-  let makeFromFile = SkiaWrapped.Typeface.makeFromFile;
-};
-
 module FontManager = {
   type t = SkiaWrapped.FontManager.t;
 
@@ -593,6 +586,13 @@ module ColorSpace = {
   type t = SkiaWrapped.ColorSpace.t;
 };
 
+module Stream = {
+  type t = SkiaWrapped.Stream.t;
+
+  let hasLength = SkiaWrapped.Stream.hasLength;
+  let getLength = SkiaWrapped.Stream.getLength;
+};
+
 module Data = {
   type t = SkiaWrapped.Data.t;
 
@@ -610,6 +610,21 @@ module Data = {
     | None => ()
     };
     maybeData;
+  };
+
+  let makeFromStream = SkiaWrapped.Data.makeFromStream;
+};
+
+module Typeface = {
+  type t = SkiaWrapped.Typeface.t;
+
+  let makeFromName = SkiaWrapped.Typeface.makeFromName;
+  let makeFromFile = SkiaWrapped.Typeface.makeFromFile;
+
+  let toStream = typeface => {
+    let stream = SkiaWrapped.Typeface.openStream(typeface, None);
+    Gc.finalise(SkiaWrapped.Stream.delete, stream);
+    stream;
   };
 };
 

@@ -9,6 +9,9 @@
 #include "sk_matrix.h"
 #include "sk_paint.h"
 #include "sk_types.h"
+#include "sk_typeface.h"
+#include "sk_data.h"
+#include "sk_stream.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -241,3 +244,4 @@ CAMLprim value reason_skia_matrix_set_translate_byte(value vMatrix,
     return reason_skia_matrix_set_translate(vMatrix, Double_val(vTranslateX),
                                             Double_val(vTranslateY));
 }
+
