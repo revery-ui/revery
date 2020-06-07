@@ -1,18 +1,18 @@
 open Revery;
 open Lib_view;
 /*
-open ExampleHost;
-let a:
-  (~key: Brisk_reconciler.Key.t=?, ~window: Revery.Window.t, ~initialExample: string, unit) =>
-  Brisk_reconciler.element(Revery_UI.viewNode) = ExampleHost.make;
-*/
-let _ignore = (ExampleHost.ExampleHost.make);
+ open ExampleHost;
+ let a:
+   (~key: Brisk_reconciler.Key.t=?, ~window: Revery.Window.t, ~initialExample: string, unit) =>
+   Brisk_reconciler.element(Revery_UI.viewNode) = ExampleHost.make;
+ */
+let _ignore = ExampleHost.ExampleHost.make;
 
 module ExampleHost = {
   let%component make = (~window, ~initialExample, (), hooks) => {
     (Revery_UI.Hook_p.view^(~window, ~initialExample, ()), hooks);
-  }
-}
+  };
+};
 
 let init = app => {
   Revery.App.initConsole();
@@ -96,7 +96,8 @@ let init = app => {
       Console.log(Printf.sprintf("Moved: %d x %d", x, y))
     );
 
-  let _renderFunction = UI.start(window, <ExampleHost window initialExample />);
+  let _renderFunction =
+    UI.start(window, <ExampleHost window initialExample />);
   ();
 };
 
@@ -143,4 +144,4 @@ let onIdle = () => {
   load();
   print_endline("Example: idle callback triggered");
 };
-App.start(/*~onIdle, */init);
+App.start(/*~onIdle, */ init);

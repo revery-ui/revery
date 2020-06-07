@@ -180,10 +180,14 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     uiDirty := true;
   };
 
-  let _ignore = Revery_Core.Event.subscribe(hotReload, () => {
-    forceLayout := true;
-    render(Hook_p.view^(~window, ~initialExample="Animation", ()));
-  });
+  let _ignore =
+    Revery_Core.Event.subscribe(
+      hotReload,
+      () => {
+        forceLayout := true;
+        render(Hook_p.view^(~window, ~initialExample="Animation", ()));
+      },
+    );
 
   render;
 };
