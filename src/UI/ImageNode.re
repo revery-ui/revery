@@ -12,9 +12,9 @@ let uiToDrawResizeMode: ImageResizeMode.t => Revery_Draw.ImageResizeMode.t =
     | Repeat => Revery_Draw.ImageResizeMode.Repeat
     };
 
-class imageNode (imagePath: string) = {
+class imageNode (data: option(Skia.Image.t)) = {
   as _this;
-  val mutable src = imagePath;
+  val mutable data = data;
   inherit (class node)() as _super;
   val mutable _opacity = 1.0;
   val mutable _resizeMode = ImageResizeMode.Stretch;
@@ -31,21 +31,26 @@ class imageNode (imagePath: string) = {
 
     // TODO find a way to only manage the matrix stack in Node
     Revery_Draw.CanvasContext.setMatrix(canvas, world);
-    Draw.CanvasContext.drawImage(
-      ~x=0.,
-      ~y=0.,
-      ~width=float_of_int(dimensions.width),
-      ~height=float_of_int(dimensions.height),
-      ~paint=_paint,
-      src,
-      canvas,
-    );
+
+    switch (data) {
+    | Some(data) =>
+      Draw.CanvasContext.drawImage(
+        ~x=0.,
+        ~y=0.,
+        ~width=float_of_int(dimensions.width),
+        ~height=float_of_int(dimensions.height),
+        ~paint=_paint,
+        data,
+        canvas,
+      )
+    | None => ()
+    };
   };
   pub setOpacity = f => _opacity = f;
   pub setResizeMode = (mode: ImageResizeMode.t) => {
     _resizeMode = mode;
   };
-  pub setSrc = newSrc => {
-    src = newSrc;
+  pub setData = newData => {
+    data = newData;
   };
 };

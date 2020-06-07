@@ -8,7 +8,7 @@ module SpringyLogo = {
 
     <View onMouseDown onMouseUp>
       <Image
-        src="outrun-logo.png"
+        src={`File("outrun-logo.png")}
         style=Style.[
           width(intWidth),
           height(128),

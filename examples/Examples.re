@@ -327,6 +327,9 @@ let init = app => {
     Window.maximize(window);
   };
 
+  /* NOTE: If you want to use network-calls or other IO, uncomment this line */
+  // let _startEventLoop = Revery_Lwt.startEventLoop();
+
   let _unsubscribe =
     Window.onFocusGained(window, () => Console.log("Focus gained"));
   let _unsubscribe =

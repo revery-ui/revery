@@ -37,6 +37,15 @@ absolute, it is assumed to be relative to the current binary.
 */
 let getAssetPath: string => string;
 
+/**
+  [getTempDirectory]
+  Unix:
+  returns the value of the TMPDIR environment variable or "/tmp" if not set.
+  Windows:
+  returns the value of the TMPDIR environment variable or "." if not set.
+*/
+let getTempDirectory: unit => string;
+
 type os =
   | Windows
   | Mac

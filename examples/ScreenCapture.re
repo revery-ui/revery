@@ -52,7 +52,7 @@ module CaptureArea = {
       <ActionButton name="Take a screenshot!" onClick=capture />
       {switch (file) {
        | None => <View />
-       | Some(src) => <Image style=imageStyle src />
+       | Some(src) => <Image style=imageStyle src={`File(src)} />
        }}
     </View>;
   };
