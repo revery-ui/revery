@@ -29,11 +29,29 @@ module FontStyle: {
 module Hinting: {type t = SkiaWrapped.Hinting.t;};
 module TextEncoding: {type t = SkiaWrapped.TextEncoding.t;};
 
+module Stream: {
+  type t;
+
+  let hasLength: t => bool;
+  let getLength: t => int;
+};
+
+module Data: {
+  type t;
+
+  let makeFromFileName: string => option(t);
+
+  let makeString: t => string;
+
+  let ofStream: (Stream.t, int) => t;
+};
+
 module Typeface: {
   type t;
 
   let makeFromName: (string, FontStyle.t) => option(t);
   let makeFromFile: (string, int) => option(t);
+  let openStream: t => Stream.t;
 };
 
 module FontManager: {
@@ -364,14 +382,6 @@ module Path: {
     ) =>
     unit;
   let close: t => unit;
-};
-
-module Data: {
-  type t;
-
-  let makeFromFileName: string => option(t);
-
-  let makeString: t => string;
 };
 
 module ImageInfo: {

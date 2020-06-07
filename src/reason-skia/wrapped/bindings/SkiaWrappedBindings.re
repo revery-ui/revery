@@ -23,6 +23,35 @@ module M = (F: FOREIGN) => {
     let t = uint32_t;
   };
 
+  module Stream = {
+    type t = ptr(structure(SkiaTypes.Stream.t));
+    let t = ptr(SkiaTypes.Stream.t);
+
+    let hasLength = foreign("sk_stream_has_length", t @-> returning(bool));
+
+    let getLength = foreign("sk_stream_get_length", t @-> returning(int));
+
+    let delete = foreign("sk_stream_destroy", t @-> returning(void));
+  };
+
+  module Data = {
+    type t = ptr(structure(SkiaTypes.Data.t));
+    let t = ptr(SkiaTypes.Data.t);
+
+    let makeFromFileName =
+      foreign(
+        "sk_data_new_from_file",
+        string @-> returning(ptr_opt(SkiaTypes.Data.t)),
+      );
+    let delete = foreign("sk_data_unref", t @-> returning(void));
+
+    let getData = foreign("sk_data_get_data", t @-> returning(ptr(void)));
+    let getSize = foreign("sk_data_get_size", t @-> returning(size_t));
+
+    let ofStream =
+      foreign("sk_data_new_from_stream", Stream.t @-> int @-> returning(t));
+  };
+
   module FontStyle = {
     type t = ptr(structure(SkiaTypes.FontStyle.t));
     let t = ptr(SkiaTypes.FontStyle.t);
@@ -59,7 +88,11 @@ module M = (F: FOREIGN) => {
         "sk_typeface_create_from_file",
         string @-> int @-> returning(ptr_opt(SkiaTypes.Typeface.t)),
       );
-
+    let openStream =
+      foreign(
+        "sk_typeface_open_stream",
+        t @-> ptr_opt(int) @-> returning(Stream.t),
+      );
     let delete = foreign("sk_typeface_unref", t @-> returning(void));
   };
 
@@ -660,21 +693,6 @@ module M = (F: FOREIGN) => {
   module ColorSpace = {
     type t = ptr(structure(SkiaTypes.ColorSpace.t));
     let t = ptr(SkiaTypes.ColorSpace.t);
-  };
-
-  module Data = {
-    type t = ptr(structure(SkiaTypes.Data.t));
-    let t = ptr(SkiaTypes.Data.t);
-
-    let makeFromFileName =
-      foreign(
-        "sk_data_new_from_file",
-        string @-> returning(ptr_opt(SkiaTypes.Data.t)),
-      );
-    let delete = foreign("sk_data_unref", t @-> returning(void));
-
-    let getData = foreign("sk_data_get_data", t @-> returning(ptr(void)));
-    let getSize = foreign("sk_data_get_size", t @-> returning(size_t));
   };
 
   module ImageInfo = {

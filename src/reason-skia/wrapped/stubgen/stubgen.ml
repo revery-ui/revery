@@ -13,6 +13,7 @@ let prologue = "
 #include \"sk_rrect.h\"
 #include \"sk_matrix.h\"
 #include \"sk_typeface.h\"
+#include \"sk_stream.h\"
 "
 
 let () =
