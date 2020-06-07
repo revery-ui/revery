@@ -1,3 +1,4 @@
 (executable
+ (modes byte exe)
  (name discover)
  (libraries dune-configurator))

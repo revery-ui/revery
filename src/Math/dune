@@ -1,4 +1,4 @@
 (library
-    (name Revery_Math)
-    (public_name Revery.Math)
-    (libraries skia))
+ (name Revery_Math)
+ (public_name Revery.Math)
+ (libraries skia))
