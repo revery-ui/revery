@@ -31,10 +31,10 @@ let draw = canvas => {
   | Some(typeface) =>
     Paint.setTypeface(fill, typeface);
     Canvas.drawText(canvas, "Arial (System)", 10., 20., fill);
-    let stream = Typeface.openStream(typeface);
+    let stream = Typeface.toStream(typeface);
     let length = Stream.getLength(stream);
     Printf.printf("Stream length: %d\n", length);
-    let data = Data.ofStream(stream, length);
+    let data = Data.makeFromStream(stream, length);
     let oc = open_out("Arial.ttf");
     print_endline("Writing Arial Normal to Arial.ttf...");
     Printf.fprintf(oc, "%s", Data.makeString(data));
