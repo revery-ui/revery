@@ -36,10 +36,11 @@
     ]
   },
   "dependencies": {
+    "@esy-ocaml/reason": "^3.6.0",
+    "@opam/bos": "0.2.0",
     "@opam/ctypes": "0.15.1",
     "@opam/dune": ">=1.6.0",
     "@opam/dune-configurator": "*",
-    "@esy-ocaml/reason": "^3.6.0",
     "@opam/lru": "bryphe/lru:lru.opam#2708c70",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
@@ -50,9 +51,9 @@
     "esy-harfbuzz": "^1.9.1008",
     "esy-sdl2": "^2.0.10008",
     "esy-skia": "revery-ui/esy-skia#d60e5fe",
+    "fetch-native-lwt": "0.1.0-alpha.5",
     "flex": "1.2.3",
     "reperf": "^1.4.0",
-    "@reason-native/console": "^0.0.3",
     "rench": "^1.9.1",
     "rebez": "jchavarri/rebez#03fa3b7",
     "reason-native-crash-utils": "onivim/reason-native-crash-utils#38c8f00",
@@ -68,3 +69,4 @@
     "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6"
   }
 }
+
