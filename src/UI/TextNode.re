@@ -100,7 +100,7 @@ class textNode (text: string) = {
             canvas,
           );
           if (_underlined) {
-            let {underlinePos, underlineThickness, _}: FontMetrics.t =
+            let {underlinePosition, underlineThickness, _}: FontMetrics.t =
               FontCache.getMetrics(font, _fontSize);
 
             let width =
@@ -115,9 +115,9 @@ class textNode (text: string) = {
             let rect =
               Skia.Rect.makeLtrb(
                 0.,
-                baselineY +. underlinePos -. underlineThickness /. 2.,
+                baselineY +. underlinePosition -. underlineThickness /. 2.,
                 width,
-                baselineY +. underlinePos +. underlineThickness /. 2.,
+                baselineY +. underlinePosition +. underlineThickness /. 2.,
               );
             CanvasContext.drawRect(~rect, ~paint=_textPaint, canvas);
           };
