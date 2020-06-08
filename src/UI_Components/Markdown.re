@@ -202,6 +202,7 @@ let generateText = (text, styles, attrs, dispatch, state) => {
         fontFamily={styles.fontFamily}
         fontWeight
         italic={isItalicized(attrs)}
+        underlined=true
         monospaced={isMonospaced(attrs)}
       />
     </View>;
