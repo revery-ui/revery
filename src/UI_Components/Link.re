@@ -12,6 +12,7 @@ let make =
       ~fontWeight=Weight.Normal,
       ~italic=false,
       ~monospaced=false,
+      ~underlined=true,
       (),
     ) => {
   let onClick = _ => Shell.openURL(href) |> ignore;
@@ -25,5 +26,6 @@ let make =
     fontWeight
     italic
     monospaced
+    underlined
   />;
 };

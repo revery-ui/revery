@@ -20,6 +20,7 @@ class textNode (text: string) = {
   val mutable _italicized = false;
   val mutable _monospaced = false;
   val mutable _fontSize = 14.;
+  val mutable _underlined = false;
   val _textPaint = {
     let paint = Skia.Paint.make();
     Skia.Paint.setTextEncoding(paint, GlyphId);
@@ -98,6 +99,28 @@ class textNode (text: string) = {
             ~text=glyphString,
             canvas,
           );
+          if (_underlined) {
+            let {underlinePosition, underlineThickness, _}: FontMetrics.t =
+              FontCache.getMetrics(font, _fontSize);
+
+            let width =
+              FontRenderer.measure(
+                ~smoothing=_smoothing,
+                font,
+                _fontSize,
+                line,
+              ).
+                width;
+
+            let rect =
+              Skia.Rect.makeLtrb(
+                0.,
+                baselineY +. underlinePosition -. underlineThickness /. 2.,
+                width,
+                baselineY +. underlinePosition +. underlineThickness /. 2.,
+              );
+            CanvasContext.drawRect(~rect, ~paint=_textPaint, canvas);
+          };
         },
         _lines,
       );
@@ -180,7 +203,13 @@ class textNode (text: string) = {
     };
     _fontSize = fontSize;
   };
-  pub measure = (width, _height) => {
+  pub setUnderlined = underlined => {
+    if (_underlined != underlined) {
+      _this#markLayoutDirty();
+    };
+    _underlined = underlined;
+  };
+  pub measure = (width, _height): LayoutTypes.dimensions => {
     _isMeasured = true;
     /**
          If the width value is set to cssUndefined i.e. the user did not
