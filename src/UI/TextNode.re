@@ -20,6 +20,8 @@ class textNode (text: string) = {
   val mutable _italicized = false;
   val mutable _monospaced = false;
   val mutable _fontSize = 14.;
+  val mutable _textWidth = 0;
+  val mutable _underlined = false;
   val _textPaint = {
     let paint = Skia.Paint.make();
     Skia.Paint.setTextEncoding(paint, GlyphId);
@@ -98,6 +100,19 @@ class textNode (text: string) = {
             ~text=glyphString,
             canvas,
           );
+          if (_underlined) {
+            let {underlinePos, underlineThickness, _}: FontMetrics.t =
+              FontCache.getMetrics(font, _fontSize);
+
+            let rect =
+              Skia.Rect.makeLtrb(
+                0.,
+                baselineY +. underlinePos -. underlineThickness /. 2.,
+                float(_textWidth),
+                baselineY +. underlinePos +. underlineThickness /. 2.,
+              );
+            CanvasContext.drawRect(~rect, ~paint=_textPaint, canvas);
+          };
         },
         _lines,
       );
@@ -180,13 +195,19 @@ class textNode (text: string) = {
     };
     _fontSize = fontSize;
   };
-  pub measure = (width, _height) => {
+  pub setUnderlined = underlined => {
+    if (_underlined != underlined) {
+      _this#markLayoutDirty();
+    };
+    _underlined = underlined;
+  };
+  pub measure = (width, _height): LayoutTypes.dimensions => {
     _isMeasured = true;
     /**
          If the width value is set to cssUndefined i.e. the user did not
          set a width then do not attempt to use textOverflow
        */
-    (
+    let dims =
       switch (_super#getStyle()) {
       | {width: textWidth, _} as style
           when textWidth == Layout.Encoding.cssUndefined =>
@@ -194,8 +215,9 @@ class textNode (text: string) = {
       | {textOverflow: Ellipsis | UserDefined(_), _} =>
         _this#textOverflow(float_of_int(width))
       | style => _this#handleTextWrapping(width, style)
-      }
-    );
+      };
+    _textWidth = dims.width;
+    dims;
   };
   pub handleTextWrapping = (width, style) => {
     let {textWrap, lineHeight, _}: Style.t = style;

@@ -17,6 +17,7 @@ let%component make =
                 ~fontWeight=Weight.Normal,
                 ~italic=false,
                 ~monospaced=false,
+                ~underlined=false,
                 ~onClick=noop,
                 (),
               ) => {
@@ -33,6 +34,7 @@ let%component make =
       italic
       monospaced
       style={isHovered ? activeStyle : inactiveStyle}
+      underlined
     />
   </Clickable>;
 };
