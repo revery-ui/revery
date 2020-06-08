@@ -53,6 +53,48 @@ let draw = canvas => {
     Paint.setTypeface(fill, typeface);
     Canvas.drawText(canvas, "Times New Roman (System)", 10., 40., fill);
   };
+
+  let maybeTypeface =
+    FontManager.matchFamilyStyle(fontManager, "Consolas", style);
+  switch (maybeTypeface) {
+  | None =>
+    print_endline(
+      "Normal Consolas not found. Ensure your system has it available.",
+    )
+  | Some(typeface) =>
+    Paint.setTypeface(fill, typeface);
+    let metrics = FontMetrics.make();
+    let _ret: float = Paint.getFontMetrics(fill, metrics, 1.0);
+    print_endline("__Consolas__");
+    print_endline(
+      "-- Average character width: "
+      ++ string_of_float(FontMetrics.getAvgCharacterWidth(metrics)),
+    );
+    print_endline(
+      "-- Maximum character width: "
+      ++ string_of_float(FontMetrics.getMaxCharacterWidth(metrics)),
+    );
+  };
+
+  let filePath = Sys.getcwd() ++ "/examples/skia-cli/FiraCode-Regular.ttf";
+  print_endline("Loading font: " ++ filePath);
+  let maybeTypeface = Typeface.makeFromFile(filePath, 0);
+  switch (maybeTypeface) {
+  | None => failwith("Unable to load font: " ++ filePath)
+  | Some(typeface) =>
+    Paint.setTypeface(fill, typeface);
+    let metrics = FontMetrics.make();
+    let _ret: float = Paint.getFontMetrics(fill, metrics, 1.0);
+    print_endline("__Fira Code__");
+    print_endline(
+      "-- Average character width: "
+      ++ string_of_float(FontMetrics.getAvgCharacterWidth(metrics)),
+    );
+    print_endline(
+      "-- Maximum character width: "
+      ++ string_of_float(FontMetrics.getMaxCharacterWidth(metrics)),
+    );
+  };
 };
 
 let surface = makeSurface(640l, 480l);

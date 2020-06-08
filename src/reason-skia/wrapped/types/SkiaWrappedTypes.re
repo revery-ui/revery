@@ -119,6 +119,8 @@ module M = (T: TYPE) => {
     let underlinePosition = field(t, "fUnderlinePosition", float);
     let strikeoutThickness = field(t, "fStrikeoutThickness", float);
     let strikeoutPosition = field(t, "fStrikeoutPosition", float);
+    let maxCharacterWidth = field(t, "fMaxCharWidth", float);
+    let avgCharacterWidth = field(t, "fAvgCharWidth", float);
     seal(t);
     let t = typedef(t, "sk_fontmetrics_t");
   };
