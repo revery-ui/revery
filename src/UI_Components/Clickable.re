@@ -24,7 +24,7 @@ let%component make =
                 ~style=[],
                 ~onClick=() => (),
                 ~onRightClick=() => (),
-                ~onDoubleClick=() => (),
+                ~onDoubleClick=?,
                 ~onAnyClick=_event => (),
                 ~componentRef=?,
                 ~onBlur=?,
@@ -48,6 +48,17 @@ let%component make =
     <= Constants.doubleClickSpeed;
   let resetMouseDownTimes = () =>
     mouseDownTimes := Constants.initialMouseDownTimes;
+
+  let isUsingDoubleClick = () =>
+    switch (onDoubleClick) {
+    | Some(_) => true
+    | None => false
+    };
+  let onDoubleClick = () =>
+    switch (onDoubleClick) {
+    | Some(fn) => fn()
+    | None => ()
+    };
 
   let capture = () =>
     if (! isMouseCaptured^) {
@@ -76,7 +87,7 @@ let%component make =
 
       switch (mouseEvt.button) {
       | MouseButton.BUTTON_LEFT =>
-        if (isDoubleClick()) {
+        if (isUsingDoubleClick() && isDoubleClick()) {
           resetMouseDownTimes();
           onDoubleClick();
         } else {
