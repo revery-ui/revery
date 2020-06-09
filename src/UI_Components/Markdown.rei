@@ -31,7 +31,7 @@ let make:
     ~h5Style: list(Revery_UI.Style.textStyleProps)=?,
     ~h6Style: list(Revery_UI.Style.textStyleProps)=?,
     ~inlineCodeStyle: list(Revery_UI.Style.textStyleProps)=?,
-    ~codeBlockBackgroundColor: Revery_Core.Color.t=?,
+    ~codeBlockStyle: list(Revery_UI.Style.viewStyleProps)=?,
     ~syntaxHighlighter: SyntaxHighlight.t=?,
     unit
   ) =>
