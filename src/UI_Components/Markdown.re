@@ -211,7 +211,7 @@ let generateText = (text, styles, attrs, dispatch, state) => {
       <Text
         text
         fontSize
-        fontFamily={styles.fontFamily}
+        fontFamily={styles.codeFontFamily}
         fontWeight
         style=Style.[
           textWrap(TextWrapping.WrapIgnoreWhitespace),
@@ -445,7 +445,7 @@ and generateCodeBlock =
                       textWrap(TextWrapping.WrapIgnoreWhitespace),
                       color(block.color),
                     ]
-                    fontFamily={styles.fontFamily}
+                    fontFamily={styles.codeFontFamily}
                     fontWeight={block.bold ? Weight.Bold : Weight.Normal}
                     monospaced=true
                     fontSize
