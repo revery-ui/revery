@@ -1,11 +1,17 @@
 (library
+ (foreign_stubs
+  (language cxx)
+  (names FontManager FontManagerWindows FontManagerMac FontManagerLinux)
+  (flags
+   (:include cxx_flags.sexp)))
+ (foreign_stubs
+  (language c)
+  (flags
+   (:include c_flags.sexp)))
  (name FontManager)
  (public_name font-manager)
  (library_flags
-  (:include flags.sexp))
- (c_flags (:include c_flags.sexp))
- (cxx_flags (:include cxx_flags.sexp))
- (cxx_names FontManager FontManagerWindows FontManagerMac FontManagerLinux))
+  (:include flags.sexp)))
 
 (rule
  (targets c_flags.sexp cxx_flags.sexp flags.sexp)

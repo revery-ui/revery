@@ -1,4 +1,5 @@
 (executables
+ (modes byte exe)
  (names Examples)
  (preprocess
   (pps brisk-reconciler.ppx lwt_ppx))

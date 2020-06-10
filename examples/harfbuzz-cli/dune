@@ -1,4 +1,5 @@
 (executable
+ (modes byte exe)
  (name HarfbuzzCli)
  (package ReveryExamples)
  (public_name HarfbuzzCli)
