@@ -24,7 +24,7 @@ let%component make =
                 ~style=[],
                 ~onClick=() => (),
                 ~onRightClick=() => (),
-                ~onDoubleClick=() => (),
+                ~onDoubleClick=?,
                 ~onAnyClick=_event => (),
                 ~componentRef=?,
                 ~onBlur=?,
@@ -76,9 +76,9 @@ let%component make =
 
       switch (mouseEvt.button) {
       | MouseButton.BUTTON_LEFT =>
-        if (isDoubleClick()) {
+        if (onDoubleClick != None && isDoubleClick()) {
           resetMouseDownTimes();
-          onDoubleClick();
+          Option.get(onDoubleClick, ());
         } else {
           onClick();
         }
