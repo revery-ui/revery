@@ -49,17 +49,6 @@ let%component make =
   let resetMouseDownTimes = () =>
     mouseDownTimes := Constants.initialMouseDownTimes;
 
-  let isUsingDoubleClick = () =>
-    switch (onDoubleClick) {
-    | Some(_) => true
-    | None => false
-    };
-  let onDoubleClick = () =>
-    switch (onDoubleClick) {
-    | Some(fn) => fn()
-    | None => ()
-    };
-
   let capture = () =>
     if (! isMouseCaptured^) {
       Log.trace("Capture");
@@ -87,9 +76,9 @@ let%component make =
 
       switch (mouseEvt.button) {
       | MouseButton.BUTTON_LEFT =>
-        if (isUsingDoubleClick() && isDoubleClick()) {
+        if (onDoubleClick != None && isDoubleClick()) {
           resetMouseDownTimes();
-          onDoubleClick();
+          Option.get(onDoubleClick, ());
         } else {
           onClick();
         }
