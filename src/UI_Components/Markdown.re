@@ -45,7 +45,7 @@ type style = {
   fontFamily: Family.t,
   codeFontFamily: Family.t,
   baseFontSize: float,
-  codeBlockBackgroundColor: Color.t,
+  codeBlock: list(Style.viewStyleProps),
 };
 
 module SyntaxHighlight = {
@@ -103,9 +103,9 @@ module Styles = {
       border(~width=3, ~color=Color.rgba(0., 0., 0., 0.25)),
     ];
 
-    let blockContainer = bgColor => [
-      backgroundColor(bgColor),
-      border(~width=3, ~color=bgColor),
+    let defaultBlock = [
+      backgroundColor(Color.rgba(0., 0., 0., 0.25)),
+      border(~width=3, ~color=Color.rgba(0., 0., 0., 0.25)),
       borderRadius(3.),
       padding(2),
       marginTop(4),
@@ -407,7 +407,7 @@ and generateCodeBlock =
 
   let fontSize = fontSizeFromKind(`InlineCode, styles);
 
-  <View style={Styles.Code.blockContainer(styles.codeBlockBackgroundColor)}>
+  <View style={styles.codeBlock}>
     {switch (label, codeBlock.code) {
      | (None, Some(code)) =>
        <Text
@@ -492,7 +492,7 @@ let%component make =
                 ~h5Style=Style.emptyTextStyle,
                 ~h6Style=Style.emptyTextStyle,
                 ~inlineCodeStyle=Style.emptyTextStyle,
-                ~codeBlockBackgroundColor=Color.rgba(0., 0., 0., 0.25),
+                ~codeBlockStyle=Styles.Code.defaultBlock,
                 ~syntaxHighlighter=SyntaxHighlight.default,
                 (),
               ) => {
@@ -517,7 +517,7 @@ let%component make =
          fontFamily,
          codeFontFamily,
          baseFontSize,
-         codeBlockBackgroundColor,
+         codeBlock: codeBlockStyle,
        },
        syntaxHighlighter,
        dispatch,
