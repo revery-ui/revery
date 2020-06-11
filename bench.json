@@ -5,6 +5,9 @@
   },
   "override": {
       "build": ["dune build -p font-manager,harfbuzz,skia,Revery,ReveryBench -j4"],
+      "dependencies": {
+          "reperf": "^1.4.0"
+      },
       "install": [
           "esy-installer ReveryBench.install"
       ]

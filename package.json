@@ -53,7 +53,7 @@
     "esy-skia": "revery-ui/esy-skia#d60e5fe",
     "fetch-native-lwt": "0.1.0-alpha.5",
     "flex": "1.2.3",
-    "reperf": "^1.4.0",
+    "@reason-native/console": "^0.0.3",
     "rench": "^1.9.1",
     "rebez": "jchavarri/rebez#03fa3b7",
     "reason-native-crash-utils": "onivim/reason-native-crash-utils#38c8f00",
@@ -61,12 +61,19 @@
     "@glennsl/timber": "^1.2.0"
   },
   "resolutions": {
+    "esy-harfbuzz": "Et7f3/esy-harfbuzz#e83450d95669347a77b076421f609be90bba2fb2",
+    "esy-freetype2": "Et7f3/esy-freetype2#ca9e70cb197ec7ee2761f34fa200770027be7f38",
+    "esy-astyle": "Et7f3/esy-astyle#77776670c31b6da7447a4fb7af58499111573a2c",
+    "reperf": "Et7f3/reperf#d17ecb109040d9cafc71f02a1ffc1ee6465f7d0f",
+    "rench": "revery-ui/rench#efa53a609ad98b035b0621cbcfe48e415545fa3e",
     "@opam/dune": "2.5.0"
   },
   "devDependencies": {
+    "@reason-native/rely": "^3.2.1",
     "ocaml": "~4.10",
     "esy-astyle": "zbaylin/esy-astyle#59bc21a",
-    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6"
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6",
+    "reperf": "^1.4.0"
   }
 }
 
