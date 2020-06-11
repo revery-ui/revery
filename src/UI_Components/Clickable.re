@@ -23,9 +23,13 @@ let%component make =
               (
                 ~style=[],
                 ~onClick=() => (),
+                ~onDown=() => (),
                 ~onRightClick=() => (),
+                ~onRightDown=() => (),
                 ~onDoubleClick=?,
+                ~onDoubleDown=?,
                 ~onAnyClick=_event => (),
+                ~onAnyDown=_event => (),
                 ~componentRef=?,
                 ~onBlur=?,
                 ~onFocus=?,
@@ -62,9 +66,24 @@ let%component make =
       isMouseCaptured := false;
     };
 
-  let onMouseDown = _event => {
+  let onMouseDown = (mouseEvt: NodeEvents.mouseButtonEventParams) => {
     capture();
     mouseDownTimes := (Time.now(), fst(mouseDownTimes^));
+
+    if (isMouseCapturedHere^) {
+      switch (mouseEvt.button) {
+      | MouseButton.BUTTON_LEFT =>
+        if (onDoubleDown != None && isDoubleClick()) {
+          Option.get(onDoubleDown, ());
+        } else {
+          onDown();
+        }
+      | MouseButton.BUTTON_RIGHT => onRightDown()
+      | _ => ()
+      };
+
+      onAnyDown(mouseEvt);
+    };
   };
   let onMouseLeave = _event => {
     releaseCapture();
