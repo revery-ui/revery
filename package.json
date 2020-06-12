@@ -61,7 +61,9 @@
     "@glennsl/timber": "^1.2.0"
   },
   "resolutions": {
-    "@opam/dune": "2.5.0"
+    "@opam/dune": "2.5.0",
+    "@opam/dune-configurator": "2.5.1",
+    "@opam/dune-private-libs": "2.5.1"
   },
   "devDependencies": {
     "ocaml": "~4.10",
