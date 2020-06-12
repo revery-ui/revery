@@ -487,22 +487,34 @@ module SVGExample = {
     let example = [width(350), height(350)];
   };
 
+  let loadSVG = data =>
+    switch (SVG.fromString(data)) {
+    | Some(svg) => Ok(svg)
+    | None => Error("Parse error: empty string")
+    | exception (Failure(msg)) => Error("Parse error: " ++ msg)
+    };
+
   let%component make = () => {
-    let%hook (currentExample, setExample) =
-      Hooks.state(List.hd(examples) |> snd);
+    let%hook (currentExample, setExample) = {
+      let initialState =
+        switch (examples) {
+        | [(_, data), ..._] => loadSVG(data)
+        | [] => Error("No examples!")
+        };
+      Hooks.state(initialState);
+    };
 
     let buttons =
       List.map(
         ((text, value)) => RadioButtonsString.{text, value},
         examples,
       );
-    let onChange = data => setExample(_ => data);
+    let onChange = data => setExample(_ => loadSVG(data));
 
     let example =
-      switch (currentExample |> SVG.fromString) {
-      | Some(svg) => <SVGString style=Styles.example contents=svg />
-      | None => <Text text="Parse error: empty string" />
-      | exception (Failure(msg)) => <Text text={"Parse error: " ++ msg} />
+      switch (currentExample) {
+      | Ok(svg) => <SVGString style=Styles.example contents=svg />
+      | Error(message) => <Text text=message />
       };
 
     <View style=Styles.container>
