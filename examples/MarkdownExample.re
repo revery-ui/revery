@@ -38,45 +38,41 @@ let example = () =>
   <View style=Styles.outer>
     <markdown
       markdown={markdown|
+An h2 header
+------------
 
-# reason-sdl2
+Here's a numbered list:
 
-#### Based on [reason-glfw](https://github.com/revery-ui/reason-glfw). Reason / OCaml bindings for SDL2
+ 1. first item
+ 2. second item
+ 3. third item
 
-## Building
+Note again how the actual text starts at 4 columns in (4 characters
+from the left side). Here's a code sample:
 
-`esy` is used for building, so if you don't have `esy`, install it:
+    # Let me re-iterate ...
+    for i in 1 .. 10 { do-something(i) }
 
-```
-npm install -g esy
-```
+As you probably guessed, indented 4 spaces. By the way, instead of
+indenting the block, you can use delimited blocks, if you like:
 
-```OCaml
-let x = 4 in
-let y = x - 10 in
-let z = y * x;;
-```
+~~~
+define foobar() {
+    print "Welcome to flavor country!";
+}
+~~~
 
-Then just run `esy` in the root of the project to install and build.
+(which makes copying & pasting easier). You can optionally mark the
+delimited block for Pandoc to syntax highlight it:
 
-## Running
-
-Run `esy @example install` initially to install, then `esy @example run` to build and run the example.
-
-## License
-
-This project is licensed under the MIT License - see [LICENSE](LICENSE) for more details.
-
-## Design
-
-TBD
-
-## Acknowledgements
-
-- The test texture is provided by [LearnOpenGL](https://learnopengl.com) - an excellent resource for OpenGL!
-- This is built on several great libraries, like [SDL2](https://libsdl.org), [glad](https://github.com/Dav1dde/glad), [stb_image](https://github.com/nothings/stb/blob/master/stb_image.h)
-- The test image is from @Arahnoid's [UVChecker-map](https://github.com/Arahnoid/UVChecker-map) repo.
-
+~~~python
+import time
+# Quick, count to ten!
+for i in range(10):
+    # (but not *too* quick)
+    time.sleep(0.5)
+    print(i)
+~~~
     |markdown}
     />
   </View>;

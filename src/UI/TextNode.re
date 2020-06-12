@@ -179,7 +179,10 @@ class textNode (text: string) = {
            _fontWeight,
          );
 
-    {width: int_of_float(width), height: int_of_float(lineHeightPx)};
+    {
+      width: int_of_float(Float.ceil(width)),
+      height: int_of_float(Float.ceil(lineHeightPx)),
+    };
   };
   pub setText = t =>
     if (!String.equal(t, text)) {
@@ -188,21 +191,36 @@ class textNode (text: string) = {
       _this#markLayoutDirty();
     };
   pub setSmoothing = smoothing => _smoothing = smoothing;
-  pub setFontFamily = fontFamily => {
+  pub setFontFamily = fontFamily =>
     if (_fontFamily !== fontFamily) {
+      _fontFamily = fontFamily;
+      _isMeasured = false;
       _this#markLayoutDirty();
     };
-    _fontFamily = fontFamily;
-  };
-  pub setFontWeight = fontWeight => _fontWeight = fontWeight;
-  pub setItalicized = italicized => _italicized = italicized;
-  pub setMonospaced = monospaced => _monospaced = monospaced;
-  pub setFontSize = fontSize => {
+  pub setFontWeight = fontWeight =>
+    if (_fontWeight != fontWeight) {
+      _fontWeight = fontWeight;
+      _isMeasured = false;
+      _this#markLayoutDirty();
+    };
+  pub setItalicized = italicized =>
+    if (_italicized != italicized) {
+      _italicized = italicized;
+      _isMeasured = false;
+      _this#markLayoutDirty();
+    };
+  pub setMonospaced = monospaced =>
+    if (_monospaced != monospaced) {
+      _monospaced = monospaced;
+      _isMeasured = false;
+      _this#markLayoutDirty();
+    };
+  pub setFontSize = fontSize =>
     if (_fontSize != fontSize) {
+      _fontSize = fontSize;
+      _isMeasured = false;
       _this#markLayoutDirty();
     };
-    _fontSize = fontSize;
-  };
   pub setUnderlined = underlined => {
     if (_underlined != underlined) {
       _this#markLayoutDirty();
@@ -272,9 +290,11 @@ class textNode (text: string) = {
     };
     let maxWidthLine = List.fold_left(pickWiderLine, 0., _lines);
     {
-      width: int_of_float(maxWidthLine),
+      width: int_of_float(Float.ceil(maxWidthLine)),
       height:
-        int_of_float(float_of_int(List.length(_lines)) *. lineHeightPx),
+        int_of_float(
+          Float.ceil(float_of_int(List.length(_lines)) *. lineHeightPx),
+        ),
     };
   };
   pub! getMeasureFunction = () => {
