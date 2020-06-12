@@ -9,6 +9,10 @@ open Revery_Font;
 open Style;
 open ViewNode;
 
+open {
+       let int_of_float_ceil = f => int_of_float(f +. 1.);
+     };
+
 class textNode (text: string) = {
   as _this;
   val mutable text = text;
@@ -180,8 +184,8 @@ class textNode (text: string) = {
          );
 
     {
-      width: int_of_float(Float.ceil(width)),
-      height: int_of_float(Float.ceil(lineHeightPx)),
+      width: int_of_float_ceil(width),
+      height: int_of_float_ceil(lineHeightPx),
     };
   };
   pub setText = t =>
@@ -290,10 +294,10 @@ class textNode (text: string) = {
     };
     let maxWidthLine = List.fold_left(pickWiderLine, 0., _lines);
     {
-      width: int_of_float(Float.ceil(maxWidthLine)),
+      width: int_of_float_ceil(maxWidthLine),
       height:
-        int_of_float(
-          Float.ceil(float_of_int(List.length(_lines)) *. lineHeightPx),
+        int_of_float_ceil(
+          float_of_int(List.length(_lines)) *. lineHeightPx,
         ),
     };
   };
