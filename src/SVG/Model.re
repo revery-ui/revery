@@ -20,8 +20,6 @@ type percentage = [ | `percentage(float)];
 type simplePaint = [ | `none | `currentColor | `color(Skia.Color.t)];
 type paint = [ simplePaint | `inherit_ | `funciri(string, simplePaint)];
 
-module Style = {};
-
 module Attribute = {
   type presentation = [
     | `fill(paint)
