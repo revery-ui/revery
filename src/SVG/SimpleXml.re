@@ -6,7 +6,7 @@ type t =
 let trim =
   Markup.filter(
     fun
-    | `Text(strs) => strs  |> String.concat("") |> String.trim != ""
+    | `Text(strs) => strs |> String.concat("") |> String.trim != ""
     | _ => true,
   );
 
