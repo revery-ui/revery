@@ -23,7 +23,7 @@ module Sample = {
     <View style=containerStyle>
       <Canvas
         style=outerBox
-        render={canvasContext => {
+        render={(canvasContext, _dimensions) => {
           let transform = Skia.Matrix.make();
           Skia.Matrix.setIdentity(transform);
           CanvasContext.concat(transform, canvasContext);

@@ -29,3 +29,5 @@ module Platform = {
 };
 
 module Utility = Revery_Utility;
+
+module SVG = Revery_SVG;

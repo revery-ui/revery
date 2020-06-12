@@ -136,6 +136,11 @@ let examples = [
     source: "CanvasExample.re",
   },
   {
+    name: "SVG Example",
+    render: _ => SVGExample.render(),
+    source: "SVGExample.re",
+  },
+  {
     name: "Zoom Example",
     render: _ => ZoomExample.render(),
     source: "ZoomExample.re",

@@ -158,6 +158,11 @@ let drawRectLtwh =
   Canvas.drawRectLtwh(v.canvas, left, top, width, height, paint);
 };
 
+let drawRoundRect =
+    (~rect: Skia.Rect.t, ~rx: float, ~ry: float, ~paint: Paint.t, v: t) => {
+  Canvas.drawRoundRect(v.canvas, rect, rx, ry, paint);
+};
+
 let drawOval = (~rect: Skia.Rect.t, ~paint: Paint.t, v: t) => {
   Canvas.drawOval(v.canvas, rect, paint);
 };

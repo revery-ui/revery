@@ -286,30 +286,23 @@ module M = (T: TYPE) => {
   };
 
   module Path = {
-    type arcSize =
-      | Small
-      | Large;
+    type arcSize = [ | `small | `large];
 
-    let arcSize =
+    let arcSize: T.typ(arcSize) =
       skiaCEnum(
         "sk_path_arc_size_t",
         [
-          (Small, "SMALL_SK_PATH_ARC_SIZE"),
-          (Large, "LARGE_SK_PATH_ARC_SIZE"),
+          (`small, "SMALL_SK_PATH_ARC_SIZE"),
+          (`large, "LARGE_SK_PATH_ARC_SIZE"),
         ],
       );
 
-    type pathDirection =
-      | Clockwise
-      | CounterClockwise;
+    type pathDirection = [ | `cw | `ccw];
 
-    let pathDirection =
+    let pathDirection: T.typ(pathDirection) =
       skiaCEnum(
         "sk_path_direction_t",
-        [
-          (Clockwise, "CW_SK_PATH_DIRECTION"),
-          (CounterClockwise, "CCW_SK_PATH_DIRECTION"),
-        ],
+        [(`cw, "CW_SK_PATH_DIRECTION"), (`ccw, "CCW_SK_PATH_DIRECTION")],
       );
 
     type t;

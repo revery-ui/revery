@@ -384,6 +384,8 @@ module Path: {
     ) =>
     unit;
   let close: t => unit;
+
+  let getLastPoint: (t, Point.t) => bool;
 };
 
 module ImageInfo: {
