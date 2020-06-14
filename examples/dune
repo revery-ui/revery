@@ -1,10 +1,18 @@
-(executables
- (names Examples)
+(library
+ (name Examples)
+ (modules :standard \ ExamplesHost)
  (preprocess
   (pps brisk-reconciler.ppx lwt_ppx))
- (package Revery)
- (public_names Examples)
  (libraries ExampleStubs skia str Revery Revery_Lwt flex timber))
+
+(executable
+ (name ExamplesHost)
+ (modes byte)
+ (modules ExamplesHost)
+ (public_name Examples)
+ (package Revery)
+ (libraries ExampleStubs Revery dynlink)
+ (flags -linkall))
 
 (install
  (section bin)

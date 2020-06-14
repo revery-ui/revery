@@ -31,3 +31,17 @@ module Platform = {
 module Utility = Revery_Utility;
 
 module SVG = Revery_SVG;
+
+let hook_p:
+  ref(
+    (
+      ~key: Brisk_reconciler.Key.t=?,
+      ~window: Window.t,
+      ~initialExample: string,
+      unit
+    ) =>
+    Brisk_reconciler.element(Revery_UI.viewNode),
+  ) =
+  ref((~key as _=?, ~window as _, ~initialExample as _, ()) =>
+    failwith("Uncaught ReferenceError: hook_p is not defined")
+  );

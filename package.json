@@ -13,6 +13,7 @@
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
+    "buildsInSource": "_build",
     "buildEnv": {
       "PKG_CONFIG_PATH": "/usr/lib64/pkgconfig:$PKG_CONFIG_PATH"
     },
@@ -23,7 +24,10 @@
       }
     },
     "build": [
-      "dune build -p font-manager,harfbuzz,skia,Revery -j4"
+      "dune build -p font-manager,harfbuzz,skia,Revery -j4",
+      "dune build examples/Examples.cma",
+      "ocamlobjinfo _build/default/examples/Examples.cma",
+      "dune exec examples/ExamplesHost.exe"
     ],
     "install": [
       "esy-installer font-manager.install",
