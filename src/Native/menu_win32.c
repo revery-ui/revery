@@ -21,6 +21,15 @@ int menu_compare(value v1, value v2) {
     return Val_int(Menu_val(v1).menu_handle - Menu_val(v2).menu_handle);
 }
 
+struct s_sub_menu {
+    void * menu_handle;
+};
+
+#define SubMenu_val(v) (*((struct s_menu *)Data_custom_val(v)))
+
+int sub_menu_compare(value v1, value v2) {
+    return Val_int(SubMenu_val(v1).menu_handle - SubMenu_val(v2).menu_handle);
+}
 /*
 ** Encapsulation of opaque menu handles (of type s_menu)
 ** as OCaml custom blocks.
@@ -29,6 +38,26 @@ static struct custom_operations menu_ops = {
     "com.outrunlabs.www.revery.menu",
     custom_finalize_default,
     menu_compare,
+    custom_hash_default,
+    /*
+    ** ASK: is it useful to define custom_hash_default
+    */
+    custom_serialize_default,
+    custom_deserialize_default,
+    custom_compare_ext_default,
+
+#if OCAML_VERSION < 40800
+    /*
+    ** ASK: is it useful to define custom_fixed_length_default
+    */
+    custom_fixed_length_default,
+#endif
+};
+
+static struct custom_operations sub_menu_ops = {
+    "com.outrunlabs.www.revery.menu",
+    custom_finalize_default,
+    sub_menu_compare,
     custom_hash_default,
     /*
     ** ASK: is it useful to define custom_hash_default
@@ -79,6 +108,17 @@ value revery_assign_menu_win32(void *pWindow, value vMenu) {
     ** function to accomplish this task.
     */
     return SetMenu(pWindow, Menu_val(vMenu).menu_handle);
+}
+
+value revery_create_sub_menu_win32(void) {
+    value ret = alloc_custom(&sub_menu_ops, sizeof(struct s_sub_menu), 0, 1);
+
+    /*
+    ** On windows: Menu === SubMenu
+    */
+    SubMenu_val(ret).menu_handle = CreateMenu();
+
+    return ret;
 }
 
 value revery_create_menu_win32(void) {

@@ -3,6 +3,7 @@ open Brisk_reconciler;
 [@noalloc] external menuSupported: unit => bool = "revery_menuSupported";
 
 type menu;
+type subMenu;
 
 module UIDGenerator = {
   let v = ref(1);
@@ -42,6 +43,22 @@ module MenuItem = {
         };
         obj;
       },
+      children: Brisk_reconciler.empty,
+      insertNode: (~parent, ~child as _, ~position as _) => parent,
+      deleteNode: (~parent, ~child as _, ~position as _) => parent,
+      moveNode: (~parent, ~child as _, ~from as _, ~to_ as _) => parent,
+    },
+    hooks,
+  );
+};
+
+external createSubMenu: unit => subMenu = "revery_create_sub_menu";
+
+module SubMenu = {
+  let%nativeComponent make = ((), hooks) => (
+    {
+      make: createSubMenu,
+      configureInstance: (~isFirstRender as _, obj) => obj,
       children: Brisk_reconciler.empty,
       insertNode: (~parent, ~child as _, ~position as _) => parent,
       deleteNode: (~parent, ~child as _, ~position as _) => parent,

@@ -23,6 +23,23 @@ CAMLprim value revery_menuSupported() {
 #endif
 }
 
+value revery_create_sub_menu() {
+    CAMLparam0();
+    value ret = 0;
+
+#ifdef WIN32
+    ret = revery_create_sub_menu_win32();
+#elif __APPLE__
+    fprintf(stderr, "WARNING - Not implemented: %s_cocoa", __func__);
+#elif __linux__
+    fprintf(stderr, "WARNING - Not implemented: %s_gtk", __func__);
+#else
+    fprintf(stderr, "WARNING - Not implemented: %s", __func__);
+#endif
+
+    CAMLreturn(ret);
+}
+
 value revery_create_menu() {
     CAMLparam0();
     value ret = 0;

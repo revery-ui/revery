@@ -1,6 +1,7 @@
 let menuSupported: unit => bool;
 
 type menu;
+type subMenu;
 
 type callback('a) = 'a => unit;
 
@@ -16,6 +17,14 @@ module MenuItem: {
       unit
     ) =>
     Brisk_reconciler.element(menuItem);
+};
+
+let createSubMenu: unit => subMenu;
+
+module SubMenu: {
+  let make:
+    (~key: Brisk_reconciler.Key.t=?, unit) =>
+    Brisk_reconciler.element(subMenu);
 };
 
 let createMenu: unit => menu;

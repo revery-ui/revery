@@ -3,6 +3,13 @@ function revery_menuSupported() {
     return false;
 }
 
+// Provides: revery_create_sub_menu
+function revery_create_sub_menu() {
+    // no-op
+    window.console.error("WARNING - Not implemented: revery_create_sub_menu");
+    return;
+}
+
 // Provides: revery_create_menu
 function revery_create_menu() {
     // no-op
