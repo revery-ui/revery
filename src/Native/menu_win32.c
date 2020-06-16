@@ -121,6 +121,24 @@ value revery_create_sub_menu_win32(void) {
     return ret;
 }
 
+value revery_menu_insert_node_sub_menu_win32(value vMenu, int position, value vSubMenu, const char *pMessage) {
+    bool ret = InsertMenu(Menu_val(vMenu).menu_handle, position, MF_BYPOSITION | MF_POPUP, (UINT_PTR)SubMenu_val(vSubMenu).menu_handle, pMessage);
+
+    return ret;
+}
+
+value revery_menu_delete_node_sub_menu_win32(value vMenu, value vSubMenu) {
+    bool ret = RemoveMenu(Menu_val(vMenu).menu_handle, (UINT_PTR)SubMenu_val(vSubMenu).menu_handle, MF_BYCOMMAND);
+
+    return ret;
+}
+
+value revery_menu_item_configure_instance_sub_menu_win32(value vMenu, value vSubMenu, const char *pMessage) {
+    bool ret = ModifyMenuA(Menu_val(vMenu).menu_handle, (UINT_PTR)SubMenu_val(vSubMenu).menu_handle, MF_BYCOMMAND | MF_POPUP, (UINT_PTR)SubMenu_val(vSubMenu).menu_handle, pMessage);
+
+    return ret;
+}
+
 value revery_create_menu_win32(void) {
     value ret = alloc_custom(&menu_ops, sizeof(struct s_menu), 0, 1);
 

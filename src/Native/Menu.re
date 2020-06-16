@@ -22,7 +22,11 @@ module MenuItem = {
   external configureInstanceLabel: (menu, int, string) => bool =
     "revery_menu_item_configure_instance_label";
 
+  external configureInstanceSubMenu: (menu, subMenu, string) => bool =
+    "revery_menu_item_configure_instance_sub_menu";
+
   type menuItem =
+    | SubMenu(string, subMenu, ref(option(menu)))
     | Label(string, int, ref(option(menu)));
 
   let%nativeComponent make = (~label, ~callback as _=noopCallback, (), hooks) => (
@@ -34,6 +38,10 @@ module MenuItem = {
           | Label(_, uid, {contents: Some(parent)}) =>
             let _: bool = configureInstanceLabel(parent, uid, label);
             ();
+          | SubMenu(_, subMenu, {contents: Some(parent)}) =>
+            let _: bool = configureInstanceSubMenu(parent, subMenu, label);
+            ();
+          | SubMenu(_, _, {contents: None})
           | Label(_, _, {contents: None}) =>
             Printf.fprintf(
               stderr,
@@ -54,10 +62,16 @@ module MenuItem = {
 
 external createSubMenu: unit => subMenu = "revery_create_sub_menu";
 
+external insertSubMenu: (menu, int, subMenu, string) => bool =
+  "revery_menu_insert_node_sub_menu";
+
+external deleteSubMenu: (menu, subMenu) => bool =
+  "revery_menu_delete_node_sub_menu";
+
 module SubMenu = {
-  let%nativeComponent make = ((), hooks) => (
+  let%nativeComponent make = (~label, (), hooks) => (
     {
-      make: createSubMenu,
+      make: () => MenuItem.SubMenu(label, createSubMenu(), ref(None)),
       configureInstance: (~isFirstRender as _, obj) => obj,
       children: Brisk_reconciler.empty,
       insertNode: (~parent, ~child as _, ~position as _) => parent,
@@ -94,6 +108,9 @@ let%nativeComponent make =
         | Label(child, uid, parent') =>
           parent' := Some(parent);
           insertNode(parent, position, uid, child);
+        | SubMenu(child, subMenu, parent') =>
+          parent' := Some(parent);
+          insertSubMenu(parent, position, subMenu, child);
         };
       parent;
     },
@@ -104,6 +121,9 @@ let%nativeComponent make =
           parent' := None;
           // it is not a typo here we want uid on windows
           deleteNode(parent, uid);
+        | SubMenu(_, subMenu, parent') =>
+          parent' := None;
+          deleteSubMenu(parent, subMenu);
         };
       parent;
     },

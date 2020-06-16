@@ -10,6 +10,27 @@ function revery_create_sub_menu() {
     return;
 }
 
+// Provides: revery_menu_insert_node_sub_menu
+function revery_menu_insert_node_sub_menu(vMenu, vPosition, vSubMenu, vMessage) {
+    // no-op
+    window.console.error("WARNING - Not implemented: revery_menu_insert_node_sub_menu");
+    return;
+}
+
+// Provides: revery_menu_delete_node_sub_menu
+function revery_menu_delete_node_sub_menu(vMenu, vSubMenu) {
+    // no-op
+    window.console.error("WARNING - Not implemented: revery_menu_delete_node_sub_menu");
+    return;
+}
+
+// Provdies: revery_menu_item_configure_instance_sub_menu
+function revery_menu_item_configure_instance_sub_menu(vMenu, vSubMenu, vMessage) {
+    // no-op
+    window.console.error("WARNING - Not implemented: revery_menu_item_configure_instance_sub_menu");
+    return;
+}
+
 // Provides: revery_create_menu
 function revery_create_menu() {
     // no-op

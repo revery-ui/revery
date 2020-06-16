@@ -7,6 +7,7 @@ type callback('a) = 'a => unit;
 
 module MenuItem: {
   type menuItem =
+    | SubMenu(string, subMenu, ref(option(menu)))
     | Label(string, int, ref(option(menu)));
 
   let make:
@@ -21,10 +22,14 @@ module MenuItem: {
 
 let createSubMenu: unit => subMenu;
 
+let insertSubMenu: (menu, int, subMenu, string) => bool;
+
+let deleteSubMenu: (menu, subMenu) => bool;
+
 module SubMenu: {
   let make:
-    (~key: Brisk_reconciler.Key.t=?, unit) =>
-    Brisk_reconciler.element(subMenu);
+    (~key: Brisk_reconciler.Key.t=?, ~label: string, unit) =>
+    Brisk_reconciler.element(MenuItem.menuItem);
 };
 
 let createMenu: unit => menu;

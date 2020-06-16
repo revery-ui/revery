@@ -40,6 +40,93 @@ value revery_create_sub_menu() {
     CAMLreturn(ret);
 }
 
+value revery_menu_insert_node_sub_menu(value vMenu, value vPosition, value vSubMenu, value vMessage) {
+    CAMLparam4(vMenu, vPosition, vSubMenu, vMessage);
+    const char * pMessage = String_val(vMessage);
+    /*
+    ** void *pMenu = (void *)vMenu;
+    ** it is a custom type
+    */
+    int position = Int_val(vPosition);
+    value ret = 0;
+
+#ifdef WIN32
+    ret = revery_menu_insert_node_sub_menu_win32(vMenu, position, vSubMenu, pMessage);
+#elif __APPLE__
+    fprintf(stderr, "WARNING - Not implemented: %s_cocoa", __func__);
+    (void)vMenu;
+    (void)position;
+    (void)vSubMenu;
+    (void)pMessage;
+#elif __linux__
+    fprintf(stderr, "WARNING - Not implemented: %s_gtk", __func__);
+    (void)vMenu;
+    (void)position;
+    (void)vSubMenu;
+    (void)pMessage;
+#else
+    fprintf(stderr, "WARNING - Not implemented: %s", __func__);
+    (void)vMenu;
+    (void)position;
+    (void)vSubMenu;
+    (void)pMessage;
+#endif
+
+    CAMLreturn(ret);
+}
+
+value revery_menu_delete_node_sub_menu(value vMenu, value vSubMenu) {
+    CAMLparam2(vMenu, vSubMenu);
+    /*
+    ** void *pMenu = (void *)vMenu;
+    ** it is a custom type
+    */
+    value ret = 0;
+
+#ifdef WIN32
+    ret = revery_menu_delete_node_sub_menu_win32(vMenu, vSubMenu);
+#elif __APPLE__
+    fprintf(stderr, "WARNING - Not implemented: %s_cocoa", __func__);
+    (void)vMenu;
+    (void)vSubMenu;
+#elif __linux__
+    fprintf(stderr, "WARNING - Not implemented: %s_gtk", __func__);
+    (void)vMenu;
+    (void)vSubMenu;
+#else
+    fprintf(stderr, "WARNING - Not implemented: %s", __func__);
+    (void)vMenu;
+    (void)vSubMenu;
+#endif
+
+    CAMLreturn(ret);
+}
+
+value revery_menu_item_configure_instance_sub_menu(value vMenu, value vSubMenu, value vMessage) {
+    CAMLparam3(vMenu, vSubMenu, vMessage);
+    const char * pMessage = String_val(vMessage);
+    /*
+    ** void *pMenu = (void *)vMenu;
+    ** it is a custom type
+    */
+    value ret = 0;
+
+#ifdef WIN32
+    ret = revery_menu_item_configure_instance_sub_menu_win32(vMenu, vSubMenu, pMessage);
+#elif __APPLE__
+    fprintf(stderr, "WARNING - Not implemented: %s_cocoa", __func__);
+    (void)pMessage;
+#elif __linux__
+    fprintf(stderr, "WARNING - Not implemented: %s_gtk", __func__);
+    (void)pMessage;
+#else
+    fprintf(stderr, "WARNING - Not implemented: %s", __func__);
+    (void)pMessage;
+#endif
+
+    CAMLreturn(Bool_val(ret));
+}
+
 value revery_create_menu() {
     CAMLparam0();
     value ret = 0;
