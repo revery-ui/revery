@@ -44,6 +44,7 @@ type style = {
   h6: list(Style.textStyleProps),
   fontFamily: Family.t,
   codeFontFamily: Family.t,
+  codeBlockFontSize: float,
   baseFontSize: float,
   codeBlock: list(Style.viewStyleProps),
 };
@@ -405,8 +406,6 @@ and generateCodeBlock =
     m("Code block has label : %s", Option.value(label, ~default="(none)"))
   );
 
-  let fontSize = fontSizeFromKind(`InlineCode, styles);
-
   <View style={styles.codeBlock}>
     {switch (label, codeBlock.code) {
      | (None, Some(code)) =>
@@ -414,7 +413,7 @@ and generateCodeBlock =
          text=code
          fontFamily={styles.codeFontFamily}
          monospaced=true
-         fontSize
+         fontSize={styles.codeBlockFontSize}
          style=Style.[
            textWrap(TextWrapping.WrapIgnoreWhitespace),
            ...{styles.paragraph},
@@ -448,7 +447,7 @@ and generateCodeBlock =
                     fontFamily={styles.codeFontFamily}
                     fontWeight={block.bold ? Weight.Bold : Weight.Normal}
                     monospaced=true
-                    fontSize
+                    fontSize={styles.codeBlockFontSize}
                   />;
                 },
                 highlight,
@@ -482,6 +481,7 @@ let%component make =
                 ~fontFamily=Family.default,
                 ~codeFontFamily=Family.default,
                 ~baseFontSize=14.0,
+                ~codeBlockFontSize=baseFontSize,
                 ~paragraphStyle=Style.emptyTextStyle,
                 ~activeLinkStyle=Style.emptyTextStyle,
                 ~inactiveLinkStyle=Style.emptyTextStyle,
@@ -517,6 +517,7 @@ let%component make =
          fontFamily,
          codeFontFamily,
          baseFontSize,
+         codeBlockFontSize,
          codeBlock: codeBlockStyle,
        },
        syntaxHighlighter,
