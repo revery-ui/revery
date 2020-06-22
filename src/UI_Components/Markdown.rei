@@ -21,6 +21,7 @@ let make:
     ~fontFamily: Revery_Font.Family.t=?,
     ~codeFontFamily: Revery_Font.Family.t=?,
     ~baseFontSize: float=?,
+    ~codeBlockFontSize: float=?,
     ~paragraphStyle: list(Revery_UI.Style.textStyleProps)=?,
     ~activeLinkStyle: list(Revery_UI.Style.textStyleProps)=?,
     ~inactiveLinkStyle: list(Revery_UI.Style.textStyleProps)=?,
