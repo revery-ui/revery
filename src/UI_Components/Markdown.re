@@ -408,8 +408,8 @@ and generateCodeBlock =
   );
 
   <View style={styles.codeBlock}>
-    {switch (label, codeBlock.code) {
-     | (label, Some(code)) =>
+    {switch (codeBlock.code) {
+     | Some(code) =>
        let lines = String.split_on_char('\n', code);
        let highlights = highlighter(~language=label, lines);
        List.map2(
@@ -449,7 +449,7 @@ and generateCodeBlock =
        )
        |> React.listToElement;
 
-     | (_, _) => <View />
+     | _ => <View />
      }}
   </View>;
 };
