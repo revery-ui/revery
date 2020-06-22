@@ -56,7 +56,8 @@ module SyntaxHighlight = {
     bold: bool,
     italic: bool,
   }
-  and t = (~language: string, list(string)) => list(list(highlight));
+  and t =
+    (~language: option(string), list(string)) => list(list(highlight));
 
   let makeHighlight = (~byteIndex, ~color, ~bold, ~italic): highlight => {
     byteIndex,
@@ -407,20 +408,8 @@ and generateCodeBlock =
   );
 
   <View style={styles.codeBlock}>
-    {switch (label, codeBlock.code) {
-     | (None, Some(code)) =>
-       <Text
-         text=code
-         fontFamily={styles.codeFontFamily}
-         monospaced=true
-         fontSize={styles.codeBlockFontSize}
-         style=Style.[
-           textWrap(TextWrapping.WrapIgnoreWhitespace),
-           ...{styles.paragraph},
-         ]
-       />
-
-     | (Some(label), Some(code)) =>
+    {switch (codeBlock.code) {
+     | Some(code) =>
        let lines = String.split_on_char('\n', code);
        let highlights = highlighter(~language=label, lines);
        List.map2(
@@ -460,7 +449,7 @@ and generateCodeBlock =
        )
        |> React.listToElement;
 
-     | (_, _) => <View />
+     | None => <View />
      }}
   </View>;
 };
