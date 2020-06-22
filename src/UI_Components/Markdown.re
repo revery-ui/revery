@@ -56,7 +56,8 @@ module SyntaxHighlight = {
     bold: bool,
     italic: bool,
   }
-  and t = (~language: option(string), list(string)) => list(list(highlight));
+  and t =
+    (~language: option(string), list(string)) => list(list(highlight));
 
   let makeHighlight = (~byteIndex, ~color, ~bold, ~italic): highlight => {
     byteIndex,
