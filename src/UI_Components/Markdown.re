@@ -449,7 +449,7 @@ and generateCodeBlock =
        )
        |> React.listToElement;
 
-     | _ => <View />
+     | None => <View />
      }}
   </View>;
 };
