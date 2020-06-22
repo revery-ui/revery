@@ -1,6 +1,7 @@
 module SyntaxHighlight: {
   type highlight;
-  type t = (~language: option(string), list(string)) => list(list(highlight));
+  type t =
+    (~language: option(string), list(string)) => list(list(highlight));
 
   let default: t;
 
