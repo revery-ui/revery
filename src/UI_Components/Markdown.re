@@ -55,7 +55,7 @@ module SyntaxHighlight = {
     bold: bool,
     italic: bool,
   }
-  and t = (~language: string, list(string)) => list(list(highlight));
+  and t = (~language: option(string), list(string)) => list(list(highlight));
 
   let makeHighlight = (~byteIndex, ~color, ~bold, ~italic): highlight => {
     byteIndex,
@@ -409,6 +409,7 @@ and generateCodeBlock =
 
   <View style={styles.codeBlock}>
     {switch (label, codeBlock.code) {
+<<<<<<< Updated upstream
      | (None, Some(code)) =>
        <Text
          text=code
@@ -422,6 +423,9 @@ and generateCodeBlock =
        />
 
      | (Some(label), Some(code)) =>
+=======
+     | (label, Some(code)) =>
+>>>>>>> Stashed changes
        let lines = String.split_on_char('\n', code);
        let highlights = highlighter(~language=label, lines);
        List.map2(
