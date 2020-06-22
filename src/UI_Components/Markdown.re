@@ -409,23 +409,7 @@ and generateCodeBlock =
 
   <View style={styles.codeBlock}>
     {switch (label, codeBlock.code) {
-<<<<<<< Updated upstream
-     | (None, Some(code)) =>
-       <Text
-         text=code
-         fontFamily={styles.codeFontFamily}
-         monospaced=true
-         fontSize
-         style=Style.[
-           textWrap(TextWrapping.WrapIgnoreWhitespace),
-           ...{styles.paragraph},
-         ]
-       />
-
-     | (Some(label), Some(code)) =>
-=======
      | (label, Some(code)) =>
->>>>>>> Stashed changes
        let lines = String.split_on_char('\n', code);
        let highlights = highlighter(~language=label, lines);
        List.map2(
