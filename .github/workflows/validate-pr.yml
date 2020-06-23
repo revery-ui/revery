@@ -27,7 +27,7 @@ jobs:
           esy install -P bench
           esy install -P doc
           esy install -P js
-          git diff --exit-code --cached || (git add *lock; git commit -m "Update lockdir, ")
+          git diff --exit-code || (git add *lock; git commit -m "Update lockdir, ")
       - name: Print esy cache
         id: print_esy_cache
         run: node .github/workflows/print_esy_cache.js
@@ -45,7 +45,7 @@ jobs:
       - name: Generate opam files
         run: |
           esy build dune build @check
-          git diff --exit-code --cached || ([[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -am "opam, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')opam, ")
+          git diff --exit-code || ([[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -am "opam, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')opam, ")
       - name: format sources files
         run: |
           esy format || ([[ "$(git log -1 --pretty=format:'%an')" != "Github Runner" ]] && git commit -am "format, " || git commit --amend -am "$(git log -1 --pretty=format:'%s')format, ")
@@ -122,12 +122,46 @@ jobs:
         env:
           DOC_PATH: ${{ steps.print_docs_path.outputs.docs_path }}
       - name: Deploy docs
+        if: github.ref == 'refs/heads/master'
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
           CLEAN: true
           FOLDER: ${{ steps.print_docs_path.outputs.docs_path }}
+
+  build_docker:
+    name: Build inside a docker
+    runs-on: ubuntu-latest
+    strategy:
+      # If we have many bug we can test on all plateform
+      fail-fast: false
+      matrix:
+        os: [archlinux, centos]
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker build -t ${{ matrix.os }} scripts/docker/${{ matrix.os }}
+      - name: Create esy store
+        run: mkdir ~/.esy
+      - run: docker run --rm --volume $(pwd):/revery --volume ~/.esy:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy install --prefix-path=/esy/store"
+      - name: Print esy cache
+        id: print_esy_cache
+        run: node .github/workflows/print_esy_cache.js
+      - name: Try to restore dependencies cache
+        id: deps-cache
+        uses: actions/cache@v1.1.2
+        with:
+          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
+          key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
+          restore-keys: |
+            ${{ matrix.os }}-
+      - name: Build release dependencies
+        if: steps.deps-cache.outputs.cache-hit != 'true'
+        run: docker run --rm --volume $(pwd):/revery --volume ~/.esy:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy build-dependencies --release --prefix-path=/esy/store"
+      - name: Build project in release
+        run: docker run --rm --volume $(pwd):/revery --volume ~/.esy:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy build --release --prefix-path=/esy/store"
+      - name: Build test/dev dependencies
+        run: docker run --rm --volume $(pwd):/revery --volume ~/.esy:/esy/store ${{ matrix.os }} bash -c "cd /revery && esy build-dependencies --prefix-path=/esy/store"
 
   build:
     name: Build
@@ -136,7 +170,7 @@ jobs:
       # If we have many bug we can test on all plateform
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [windows-2016, ubuntu-latest, macos-latest]
     steps:
       - uses: actions/setup-node@v1.4.2
         with:

@@ -2,4 +2,15 @@
     (name Revery_Font)
     (public_name Revery.Font)
     (preprocess (pps lwt_ppx))
-    (libraries harfbuzz reason-font-manager lru lwt lwt.unix sdl2 flex rebez.lib Revery_Core Revery_Math))
+    (libraries 
+        harfbuzz
+        font-manager
+        lru
+        lwt
+        lwt.unix
+        sdl2
+        flex
+        rebez.lib
+        Revery_Core
+        Revery_Math
+))

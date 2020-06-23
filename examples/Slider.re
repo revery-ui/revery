@@ -20,14 +20,7 @@ module AdjustableLogo = {
         flexDirection(`Column),
       ];
 
-    let textStyle =
-      Style.[
-        color(Colors.white),
-        width(100),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(16.),
-        margin(14),
-      ];
+    let textStyle = Style.[color(Colors.white), width(100), margin(14)];
 
     let controlsStyle =
       Style.[
@@ -64,7 +57,7 @@ module AdjustableLogo = {
     <View style=containerStyle>
       <View>
         <Image
-          src="outrun-logo.png"
+          src={`File("outrun-logo.png")}
           style=Style.[
             width(512),
             height(256),
@@ -78,17 +71,21 @@ module AdjustableLogo = {
       </View>
       <View style=controlsStyle>
         <View style=verticalSliderContainerStyle>
-          <Text style=textStyle text="Rotation Y: " />
+          <Text style=textStyle fontSize=16. text="Rotation Y: " />
           <Slider
             vertical=true
             onValueChanged=setRotationY
             maximumValue=twoPi
           />
-          <Text style=textStyle text={"Value: " ++ toDegString(rotationY)} />
+          <Text
+            style=textStyle
+            fontSize=16.
+            text={"Value: " ++ toDegString(rotationY)}
+          />
         </View>
         <View style=containerStyle>
           <View style=sliderContainerStyle>
-            <Text style=textStyle text="Rotation X: " />
+            <Text style=textStyle fontSize=16. text="Rotation X: " />
             <Slider
               onValueChanged=setRotationX
               initialValue=twoPi
@@ -96,14 +93,16 @@ module AdjustableLogo = {
             />
             <Text
               style=textStyle
+              fontSize=16.
               text={"Value: " ++ toDegString(rotationX)}
             />
           </View>
           <View style=sliderContainerStyle>
-            <Text style=textStyle text="Rotation Z: " />
+            <Text style=textStyle fontSize=16. text="Rotation Z: " />
             <Slider onValueChanged=setRotationZ maximumValue=twoPi />
             <Text
               style=textStyle
+              fontSize=16.
               text={"Value: " ++ toDegString(rotationZ)}
             />
           </View>

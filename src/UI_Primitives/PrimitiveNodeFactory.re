@@ -4,14 +4,14 @@ type nodeFactory = {
   createNode: unit => node,
   createViewNode: unit => viewNode,
   createTextNode: string => textNode,
-  createImageNode: string => imageNode,
+  createImageNode: option(Skia.Image.t) => imageNode,
 };
 
 let defaultNodeFactory: nodeFactory = {
   createNode: () => (new node)(),
   createViewNode: () => (new viewNode)(),
   createTextNode: text => (new textNode)(text),
-  createImageNode: text => (new imageNode)(text),
+  createImageNode: data => (new imageNode)(data),
 };
 
 let _nodeFactory = ref(defaultNodeFactory);

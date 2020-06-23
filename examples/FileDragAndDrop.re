@@ -23,26 +23,11 @@ module Styles = {
     alignItems(`Center),
   ];
 
-  let text =
-    Style.[
-      color(Colors.white),
-      fontFamily("Roboto-Regular.ttf"),
-      fontSize(14.),
-    ];
+  let text = Style.[color(Colors.white)];
 
-  let activeStyle =
-    Style.[
-      color(Colors.blue),
-      fontFamily("Roboto-Regular.ttf"),
-      fontSize(14.),
-    ];
+  let activeStyle = Style.[color(Colors.blue)];
 
-  let inactiveStyle =
-    Style.[
-      color(Colors.lightBlue),
-      fontFamily("Roboto-Regular.ttf"),
-      fontSize(14.),
-    ];
+  let inactiveStyle = Style.[color(Colors.lightBlue)];
 };
 
 let filesToText = files =>

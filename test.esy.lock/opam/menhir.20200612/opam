@@ -1,0 +1,27 @@
+opam-version: "2.0"
+maintainer: "francois.pottier@inria.fr"
+authors: [
+  "François Pottier <francois.pottier@inria.fr>"
+  "Yann Régis-Gianas <yrg@pps.univ-paris-diderot.fr>"
+]
+homepage: "http://gitlab.inria.fr/fpottier/menhir"
+dev-repo: "git+https://gitlab.inria.fr/fpottier/menhir.git"
+bug-reports: "menhir@inria.fr"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml" {>= "4.02.3"}
+  "dune" { >= "2.2.0"}
+  "menhirLib" {= version}
+  "menhirSdk" {= version}
+]
+synopsis: "An LR(1) parser generator"
+url {
+  src:
+    "https://gitlab.inria.fr/fpottier/menhir/repository/20200612/archive.tar.gz"
+  checksum: [
+    "md5=eb1c13439a00195ee01e4a2e83b3e991"
+    "sha512=c94ddc2b2d8b9f5d05d8493a3ccd4a32e4512c3bd19ac8948905eb64bb6f2fd9e236344d2baf3d2ebae379d08d5169c99aa5e721c65926127e22ea283eba6167"
+  ]
+}

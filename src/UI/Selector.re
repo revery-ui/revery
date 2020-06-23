@@ -3,8 +3,6 @@ open Style;
 
 type selector('a) =
   | Color: selector(Color.t)
-  | FontFamily: selector(string)
-  | FontSize: selector(float)
   | Width: selector(int)
   | FlexGrow: selector(int)
   | FlexWrap: selector(Layout.LayoutTypes.wrapType)
@@ -60,10 +58,6 @@ let rec select:
     switch (styles, selector) {
     | ([], _) => default
     | ([`Color(c), ...rest], Color) => select(rest, selector, c)
-    | ([`FontFamily(path), ...rest], FontFamily) =>
-      select(rest, selector, path)
-    | ([`FontSize(size), ...rest], FontSize) =>
-      select(rest, selector, size)
     | ([`Width(size), ...rest], Width) => select(rest, selector, size)
     | ([`FlexGrow(grow), ...rest], FlexGrow) =>
       select(rest, selector, grow)

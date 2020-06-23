@@ -5,19 +5,9 @@ open Revery.UI.Components;
 
 module RepoLink = {
   let make = () => {
-    let activeStyle =
-      Style.[
-        color(Colors.blue),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(14.),
-      ];
+    let activeStyle = Style.[color(Colors.blue)];
 
-    let inactiveStyle =
-      Style.[
-        color(Colors.lightBlue),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(14.),
-      ];
+    let inactiveStyle = Style.[color(Colors.lightBlue)];
 
     <Link
       text="View on GitHub"
@@ -53,7 +43,7 @@ module Logo = {
     <View>
       <Opacity opacity=transitionedOpacity>
         <Image
-          src="outrun-logo.png"
+          src={`File("outrun-logo.png")}
           style=Style.[
             width(512),
             height(256),
@@ -122,14 +112,12 @@ module AnimatedText = {
     let textHeaderStyle =
       Style.[
         color(Colors.white),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(24.),
         marginHorizontal(8),
         transform([Transform.TranslateY(translate)]),
       ];
 
     <Opacity opacity=animatedOpacity>
-      <Text style=textHeaderStyle text />
+      <Text style=textHeaderStyle fontSize=24. text />
     </Opacity>;
   };
 };

@@ -4,16 +4,13 @@
       "run": "esy '@test' x ReveryTestRunner"
   },
   "override": {
-      "build": ["dune build -p Revery,ReveryTest -j4"],
+      "build": ["dune build -p font-manager,harfbuzz,skia,Revery,ReveryTest -j4"],
       "dependencies": {
         "@reason-native/rely": "*"
       },
       "install": [
           "esy-installer Revery.install",
           "esy-installer ReveryTest.install"
-      ],
-	  "devDependencies": {
-	    "ocaml": ">=4.6.0 <4.9.0"
-	  }
+      ]
   }
 }

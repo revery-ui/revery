@@ -136,6 +136,11 @@ let examples = [
     source: "CanvasExample.re",
   },
   {
+    name: "SVG Example",
+    render: _ => SVGExample.render(),
+    source: "SVGExample.re",
+  },
+  {
     name: "Zoom Example",
     render: _ => ZoomExample.render(),
     source: "ZoomExample.re",
@@ -149,6 +154,11 @@ let examples = [
     name: "File Drag & Drop",
     render: _ => FileDragAndDrop.render(),
     source: "FileDragAndDrop.re",
+  },
+  {
+    name: "Rich Text Example",
+    render: _ => RichTextExample.render(),
+    source: "RichTextExample.re",
   },
   {
     name: "Shell: Open URL",
@@ -173,6 +183,11 @@ let examples = [
     },
     source: "HotreloadExample.re",
   },
+  {
+    name: "Markdown",
+    render: _ => MarkdownExample.render(),
+    source: "MarkdownExample.re",
+  },
 ];
 
 let getExampleByName = name =>
@@ -195,13 +210,7 @@ module ExampleButton = {
       ];
 
     let textColor = isActive ? Colors.white : Colors.grey;
-    let textHeaderStyle =
-      Style.[
-        color(textColor),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(14.),
-        margin(16),
-      ];
+    let textHeaderStyle = Style.[color(textColor), margin(16)];
 
     <Opacity opacity=buttonOpacity>
       <Clickable style=wrapperStyle onClick>
@@ -285,14 +294,20 @@ let init = app => {
 
   let initialExample = ref("Animation");
   let decorated = ref(true);
+  let forceScaleFactor = ref(None);
   Arg.parse(
     [
       ("--trace", Unit(() => Timber.App.setLevel(Timber.Level.trace)), ""),
       ("--no-decoration", Unit(() => decorated := false), ""),
       ("--example", String(name => initialExample := name), ""),
+      (
+        "--force-device-scale-factor",
+        Float(scaleFactor => forceScaleFactor := Some(scaleFactor)),
+        "",
+      ),
     ],
     _ => (),
-    "There is only --trace, --example, and --no-decoration",
+    "There is only --trace, --example, --no-decoration, and --force-device-scale-factor",
   );
   let initialExample = initialExample^;
 
@@ -314,6 +329,7 @@ let init = app => {
           ~titlebarStyle=Transparent,
           ~icon=Some("revery-icon.png"),
           ~decorated=decorated^,
+          ~forceScaleFactor=forceScaleFactor^,
           (),
         ),
       app,
@@ -323,6 +339,9 @@ let init = app => {
   if (Environment.webGL) {
     Window.maximize(window);
   };
+
+  /* NOTE: If you want to use network-calls or other IO, uncomment this line */
+  // let _startEventLoop = Revery_Lwt.startEventLoop();
 
   let _unsubscribe =
     Window.onFocusGained(window, () => Console.log("Focus gained"));

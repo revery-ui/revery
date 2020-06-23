@@ -36,22 +36,25 @@ let watch = (filename, callback) => {
 
   let stats = Unix.stat(path);
 
-  let () = Thread.create(
-    () => {
-      let mtime = ref(stats.st_mtime);
+  let () =
+    Thread.create(
+      () => {
+        let mtime = ref(stats.st_mtime);
 
-      while (true) {
-        if (Sys.file_exists(path)) {
-          print_endline("File exists!")
-          let stats = Unix.stat(path);
-          if (stats.st_mtime > mtime^) {
-            mtime := stats.st_mtime;
-            Dynlink.loadfile_private(path);
-          }
-        }
-        Unix.sleep(2);
-      }
-    },
-    ()
-  ) |> ignore;
+        while (true) {
+          if (Sys.file_exists(path)) {
+            print_endline("File exists!");
+            let stats = Unix.stat(path);
+            if (stats.st_mtime > mtime^) {
+              mtime := stats.st_mtime;
+              Dynlink.loadfile_private(path);
+            };
+          };
+          Unix.sleep(2);
+        };
+      },
+      (),
+    )
+    |> ignore;
+  ();
 };

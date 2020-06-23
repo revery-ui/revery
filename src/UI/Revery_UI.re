@@ -8,6 +8,7 @@ module LayoutTypes = Layout.LayoutTypes;
 module Style = Style;
 module Transform = Transform;
 module Selector = Selector;
+module RichText = RichText;
 
 class node = class Node.node;
 class viewNode = class ViewNode.viewNode;

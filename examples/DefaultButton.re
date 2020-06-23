@@ -18,19 +18,13 @@ module DefaultButtonWithCounter = {
         justifyContent(`Center),
       ];
 
-    let countStyle =
-      Style.[
-        fontSize(50.),
-        margin(24),
-        color(Colors.black),
-        fontFamily("Roboto-Regular.ttf"),
-      ];
+    let countStyle = Style.[margin(24), color(Colors.black)];
 
     let countStr = string_of_int(count);
 
     <View style=containerStyle>
       <View style=countContainer>
-        <Text style=countStyle text=countStr />
+        <Text fontSize=50. style=countStyle text=countStr />
       </View>
       <Button title="click me!" onClick=increment />
       <Button disabled=true title="(disabled)" onClick=increment />

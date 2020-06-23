@@ -1,4 +1,5 @@
 open Revery_UI;
+open Revery_Font;
 open Style;
 open React;
 
@@ -14,8 +15,14 @@ let%nativeComponent make =
                       ~onMouseOut=?,
                       ~ref=?,
                       ~style=emptyTextStyle,
+                      ~fontFamily=Family.default,
+                      ~fontWeight=Weight.Normal,
+                      ~italic=false,
+                      ~monospaced=false,
+                      ~fontSize=14.,
+                      ~underlined=false,
                       ~text="",
-                      ~smoothing=Revery_Font.Smoothing.default,
+                      ~smoothing=Smoothing.default,
                       ~children=React.empty,
                       ~mouseBehavior=Revery_UI.Normal,
                       (),
@@ -66,6 +73,12 @@ let%nativeComponent make =
       tn#setText(text);
       tn#setSmoothing(smoothing);
       tn#setMouseBehavior(mouseBehavior);
+      tn#setFontFamily(fontFamily);
+      tn#setFontWeight(fontWeight);
+      tn#setItalicized(italic);
+      tn#setMonospaced(monospaced);
+      tn#setFontSize(fontSize);
+      tn#setUnderlined(underlined);
       node;
     },
     children,

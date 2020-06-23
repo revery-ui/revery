@@ -14,13 +14,7 @@ module ActionButton = {
         backgroundColor(selectionHighlight),
         border(~width=4, ~color=activeBackgroundColor),
       ];
-    let textHeaderStyle =
-      Style.[
-        color(Colors.black),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(14.),
-        margin(16),
-      ];
+    let textHeaderStyle = Style.[color(Colors.black), margin(16)];
 
     <Clickable style=wrapperStyle onClick>
       <Text style=textHeaderStyle text=name />
@@ -58,7 +52,7 @@ module CaptureArea = {
       <ActionButton name="Take a screenshot!" onClick=capture />
       {switch (file) {
        | None => <View />
-       | Some(src) => <Image style=imageStyle src />
+       | Some(src) => <Image style=imageStyle src={`File(src)} />
        }}
     </View>;
   };

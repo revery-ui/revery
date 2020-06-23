@@ -27,12 +27,7 @@ module Make = (Type: {type t;}) => {
     | SelectItem(item) => {...state, selected: item, _open: false}
     };
 
-  let textStyles =
-    Style.[
-      fontFamily("Roboto-Regular.ttf"),
-      fontSize(20.),
-      color(Colors.black),
-    ];
+  let textStyles = Style.[color(Colors.black)];
 
   let noop = _item => ();
 
@@ -71,7 +66,7 @@ module Make = (Type: {type t;}) => {
                   dispatch(SelectItem(item));
                   onItemSelected(item);
                 }}>
-                <Text style=textStyles text={item.label} />
+                <Text style=textStyles fontSize=20. text={item.label} />
               </Clickable>,
             state.items,
           )
@@ -101,16 +96,18 @@ module Make = (Type: {type t;}) => {
               justifyContent(`Center),
               overflow(`Hidden),
             ]>
-            <Text style=textStyles text={state.selected.label} />
+            <Text style=textStyles fontSize=20. text={state.selected.label} />
           </View>
           <Text
             style=Style.[
-              fontSize(30.),
               color(Colors.black),
-              fontFamily("FontAwesome5FreeSolid.otf"),
               paddingRight(5),
               alignSelf(`Center),
             ]
+            fontSize=30.
+            fontFamily={Revery_Font.Family.fromFile(
+              "FontAwesome5FreeSolid.otf",
+            )}
             text={||}
           />
         </View>

@@ -24,7 +24,7 @@ let%component make =
                 ~style=[],
                 ~onClick=() => (),
                 ~onRightClick=() => (),
-                ~onDoubleClick=() => (),
+                ~onDoubleClick=?,
                 ~onAnyClick=_event => (),
                 ~componentRef=?,
                 ~onBlur=?,
@@ -34,6 +34,8 @@ let%component make =
                 ~onKeyUp=?,
                 ~onTextEdit=?,
                 ~onTextInput=?,
+                ~onMouseEnter as onMouseEnterUserCallback=?,
+                ~onMouseLeave as onMouseLeaveUserCallback=_evt => (),
                 ~children,
                 (),
               ) => {
@@ -64,16 +66,19 @@ let%component make =
     capture();
     mouseDownTimes := (Time.now(), fst(mouseDownTimes^));
   };
-  let onMouseLeave = _event => releaseCapture();
+  let onMouseLeave = _event => {
+    releaseCapture();
+    onMouseLeaveUserCallback(_event);
+  };
   let onMouseUp = (mouseEvt: NodeEvents.mouseButtonEventParams) =>
     if (isMouseCapturedHere^) {
       releaseCapture();
 
       switch (mouseEvt.button) {
       | MouseButton.BUTTON_LEFT =>
-        if (isDoubleClick()) {
+        if (onDoubleClick != None && isDoubleClick()) {
           resetMouseDownTimes();
-          onDoubleClick();
+          Option.get(onDoubleClick, ());
         } else {
           onClick();
         }
@@ -92,6 +97,7 @@ let%component make =
     onMouseDown
     onMouseUp
     onMouseLeave
+    onMouseEnter=?onMouseEnterUserCallback
     ?onBlur
     ?onFocus
     ?onKeyDown

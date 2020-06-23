@@ -8,7 +8,7 @@ module SpringyLogo = {
 
     <View onMouseDown onMouseUp>
       <Image
-        src="outrun-logo.png"
+        src={`File("outrun-logo.png")}
         style=Style.[
           width(intWidth),
           height(128),
@@ -30,14 +30,7 @@ module SliderControl = {
         alignItems(`Center),
       ];
 
-    let textStyle =
-      Style.[
-        color(Colors.white),
-        width(100),
-        fontFamily("Roboto-Regular.ttf"),
-        fontSize(16.),
-        margin(14),
-      ];
+    let textStyle = Style.[color(Colors.white), width(100), margin(14)];
   };
 
   let float_rounded_string = v => v |> int_of_float |> string_of_int;
@@ -45,7 +38,7 @@ module SliderControl = {
   let make =
       (~text, ~minimumValue, ~maximumValue, ~value, ~onValueChanged, ()) => {
     <View style=Styles.sliderContainerStyle>
-      <Text style=Styles.textStyle text />
+      <Text style=Styles.textStyle fontSize=16. text />
       <Slider
         onValueChanged={v => onValueChanged(v)}
         value
@@ -54,6 +47,7 @@ module SliderControl = {
       />
       <Text
         style=Styles.textStyle
+        fontSize=16.
         text={"Value: " ++ float_rounded_string(value)}
       />
     </View>;

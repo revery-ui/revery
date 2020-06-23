@@ -4,17 +4,9 @@ open Revery.UI;
 module Example = {
   module Styles = {
     open Style;
-    let text = [
-      color(Colors.blueViolet),
-      fontFamily("Roboto-Regular.ttf"),
-      fontSize(14.),
-    ];
+    let text = [color(Colors.blueViolet)];
 
-    let text2 = [
-      color(Colors.white),
-      fontFamily("Roboto-Regular.ttf"),
-      fontSize(14.),
-    ];
+    let text2 = [color(Colors.white)];
     let outer = [
       position(`Absolute),
       top(0),

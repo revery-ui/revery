@@ -1,41 +1,75 @@
-/*
- * Text.re
- *
- * Core logic for rendering text to screen.
- */
-
 open Revery_Font;
 
-let _getFontMetrics = (~fontFamily, ~fontSize, ()) => {
-  switch (FontCache.load(fontFamily)) {
-  // TODO: Actually get metrics
-  | Ok(font) => FontCache.getMetrics(font, fontSize)
-  | Error(_) => Revery_Font.FontMetrics.empty(0.)
+// INTERNAL
+open {
+       let fontMetrics = (size, path) => {
+         switch (FontCache.load(path)) {
+         // TODO: Actually get metrics
+         | Ok(font) => FontCache.getMetrics(font, size)
+         | Error(_) => FontMetrics.empty(0.)
+         };
+       };
+     };
+
+let lineHeight = (~italic=?, ~mono=?, family, size, weight) => {
+  let path = Family.toPath(~italic?, ~mono?, weight, family);
+  fontMetrics(size, path).lineHeight;
+};
+
+let ascent = (~italic=?, ~mono=?, family, size, weight) => {
+  let path = Family.toPath(~italic?, ~mono?, weight, family);
+  fontMetrics(size, path).ascent;
+};
+
+let descent = (~italic=?, ~mono=?, family, size, weight) => {
+  let path = Family.toPath(~italic?, ~mono?, weight, family);
+  fontMetrics(size, path).descent;
+};
+
+let charWidth =
+    (
+      ~smoothing=Smoothing.default,
+      ~italic=?,
+      ~mono=?,
+      ~fontFamily,
+      ~fontSize,
+      ~fontWeight,
+      char,
+    ) => {
+  let path = Family.toPath(~italic?, ~mono?, fontWeight, fontFamily);
+
+  switch (FontCache.load(path)) {
+  | Ok(font) =>
+    let text = String.make(1, char);
+    FontRenderer.measure(~smoothing, font, fontSize, text).width;
+
+  | Error(_) => 0.
   };
 };
 
-let getLineHeight = (~fontFamily, ~fontSize, ()) => {
-  let metrics = _getFontMetrics(~fontFamily, ~fontSize, ());
-  metrics.lineHeight;
-};
+type dimensions =
+  FontRenderer.measureResult = {
+    width: float,
+    height: float,
+  };
 
-let getAscent = (~fontFamily, ~fontSize, ()) => {
-  let metrics = _getFontMetrics(~fontFamily, ~fontSize, ());
-  metrics.ascent;
-};
+let dimensions =
+    (
+      ~smoothing=Smoothing.default,
+      ~italic=?,
+      ~mono=?,
+      ~fontFamily,
+      ~fontSize,
+      ~fontWeight,
+      text,
+    ) => {
+  let path = Family.toPath(~italic?, ~mono?, fontWeight, fontFamily);
 
-type dimensions = {
-  width: float,
-  height: float,
-};
+  switch (FontCache.load(path)) {
+  // TODO: Properly implement
+  | Ok(font) => FontRenderer.measure(~smoothing, font, fontSize, text)
 
-let measureCharWidth = (~smoothing, ~fontFamily, ~fontSize, char) => {
-  switch (FontCache.load(fontFamily)) {
-  | Ok(font) =>
-    let text = String.make(1, char);
-    let dimensions = FontRenderer.measure(~smoothing, font, fontSize, text);
-    dimensions.width;
-  | Error(_) => 0.
+  | Error(_) => {width: 0., height: 0.}
   };
 };
 
@@ -57,18 +91,4 @@ let indexNearestOffset = (~measure, text, offset) => {
     };
 
   loop(~last=0, 1);
-};
-
-let getDescent = (~fontFamily, ~fontSize, ()) => {
-  let metrics = _getFontMetrics(~fontFamily, ~fontSize, ());
-  metrics.descent;
-};
-
-let measure = (~smoothing, ~fontFamily, ~fontSize, text) => {
-  switch (FontCache.load(fontFamily)) {
-  // TODO: Properly implement
-  | Ok(font) => FontRenderer.measure(~smoothing, font, fontSize, text)
-
-  | Error(_) => {width: 0., height: 0.}
-  };
 };

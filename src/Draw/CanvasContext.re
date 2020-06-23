@@ -158,6 +158,11 @@ let drawRectLtwh =
   Canvas.drawRectLtwh(v.canvas, left, top, width, height, paint);
 };
 
+let drawRoundRect =
+    (~rect: Skia.Rect.t, ~rx: float, ~ry: float, ~paint: Paint.t, v: t) => {
+  Canvas.drawRoundRect(v.canvas, rect, rx, ry, paint);
+};
+
 let drawOval = (~rect: Skia.Rect.t, ~paint: Paint.t, v: t) => {
   Canvas.drawOval(v.canvas, rect, paint);
 };
@@ -170,19 +175,14 @@ let drawRRect = (v: t, rRect: Skia.RRect.t, paint) => {
   Canvas.drawRRect(v.canvas, rRect, paint);
 };
 
-let drawImage = (~x, ~y, ~width, ~height, ~paint=?, src, v: t) => {
-  let image = ImageRenderer.getTexture(src);
-  switch (image) {
-  | None => ()
-  | Some(img) =>
-    Canvas.drawImageRect(
-      v.canvas,
-      img,
-      None,
-      Rect.makeLtrb(x, y, x +. width, y +. height),
-      paint,
-    )
-  };
+let drawImage = (~x, ~y, ~width, ~height, ~paint=?, data: Skia.Image.t, v: t) => {
+  Canvas.drawImageRect(
+    v.canvas,
+    data,
+    None,
+    Rect.makeLtrb(x, y, x +. width, y +. height),
+    paint,
+  );
 };
 
 let drawText = (~paint, ~x=0., ~y=0., ~text, v: t) => {
@@ -197,6 +197,10 @@ let setMatrix = (v: t, mat: Skia.Matrix.t) => {
     Skia.Matrix.concat(_topMatrix, rootMatrix, mat);
     Canvas.setMatrix(v.canvas, _topMatrix);
   };
+};
+
+let concat = (transform, context) => {
+  Canvas.concat(context.canvas, transform);
 };
 
 let clipRect =

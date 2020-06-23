@@ -1,8 +1,26 @@
 (library
     (name Revery)
-    (preprocess (pps brisk-reconciler.ppx lwt_ppx))
     (public_name Revery)
-    (libraries console.lib lwt lwt.unix sdl2 Revery_Core Revery_Font Revery_Draw Revery_Math Revery_UI Revery_UI_Components Revery_Native Revery_UI_Primitives Revery_UI_Hooks Revery_Utility Revery_HotReload))
+    (preprocess (pps brisk-reconciler.ppx lwt_ppx))
+    (libraries
+        console.lib
+        lwt
+        lwt.unix
+        sdl2
+        Revery_Core
+        Revery_Font
+        Revery_Draw
+        Revery_Math
+        Revery_UI
+        Revery_UI_Components
+        Revery_Native
+        Revery_UI_Primitives
+        Revery_UI_Hooks
+        Revery_Utility
+        Revery_SVG
+        Revery_HotReload
+))
+
 (documentation
    (package Revery)
    (mld_files index))

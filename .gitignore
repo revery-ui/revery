@@ -75,3 +75,5 @@ _esy/
 skia-c-example.png
 
 _build/
+skia-font-manager-output.png
+Arial.ttf

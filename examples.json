@@ -1,0 +1,14 @@
+{
+  "source": "./package.json",
+  "scripts": {
+  },
+  "override": {
+      "build": ["dune build -p font-manager,harfbuzz,skia,Revery,ReveryExamples -j4"],
+      "install": [
+          "esy-installer harfbuzz.install",
+          "esy-installer skia.install",
+          "esy-installer Revery.install",
+          "esy-installer ReveryExamples.install"
+      ]
+  }
+}

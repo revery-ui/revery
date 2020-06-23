@@ -86,13 +86,8 @@ module Clock = {
           borderBottom(~color=Colors.gray, ~width=2),
         ]>
         <Text
-          style=Style.[
-            color(Colors.white),
-            fontFamily("Roboto-Regular.ttf"),
-            fontSize(24.),
-            marginVertical(20),
-            width(200),
-          ]
+          style=Style.[color(Colors.white), marginVertical(20), width(200)]
+          fontSize=24.
           text={Time.toString(state.elapsedTime)}
         />
         <Opacity opacity=marcherOpacity>
