@@ -1,5 +1,5 @@
 {
-  "checksum": "317429722342fb014938873f6147f5c5",
+  "checksum": "8f551087a7851bc19ba2a8c639120107",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -97,7 +97,7 @@
         "@opam/omd@github:ocaml/omd:omd.opam#1535e3c@d41d8cd9",
         "@opam/odoc@opam:1.5.1@dae60787", "@opam/markup@opam:0.8.2@87975241",
         "@opam/lwt_ppx@opam:2.0.1@ab0debb8", "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/luv@opam:0.5.3@657e19b3",
+        "@opam/luv@github:aantron/luv:luv.opam#dfab9df@d41d8cd9",
         "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
         "@opam/dune@opam:2.5.0@aef1678b",
@@ -2397,21 +2397,13 @@
         "@opam/dune@opam:2.5.0@aef1678b"
       ]
     },
-    "@opam/luv@opam:0.5.3@657e19b3": {
-      "id": "@opam/luv@opam:0.5.3@657e19b3",
+    "@opam/luv@github:aantron/luv:luv.opam#dfab9df@d41d8cd9": {
+      "id": "@opam/luv@github:aantron/luv:luv.opam#dfab9df@d41d8cd9",
       "name": "@opam/luv",
-      "version": "opam:0.5.3",
+      "version": "github:aantron/luv:luv.opam#dfab9df",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/md5/35/352dc50b19479500e3b1ba3b89ae5056#md5:352dc50b19479500e3b1ba3b89ae5056",
-          "archive:https://github.com/aantron/luv/releases/download/0.5.3/luv-0.5.3.tar.gz#md5:352dc50b19479500e3b1ba3b89ae5056"
-        ],
-        "opam": {
-          "name": "luv",
-          "version": "0.5.3",
-          "path": "doc.esy.lock/opam/luv.0.5.3"
-        }
+        "source": [ "github:aantron/luv:luv.opam#dfab9df" ]
       },
       "overrides": [],
       "dependencies": [
