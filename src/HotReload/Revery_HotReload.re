@@ -43,7 +43,6 @@ let watch = (filename, callback) => {
 
         while (true) {
           if (Sys.file_exists(path)) {
-            print_endline("File exists!");
             let stats = Unix.stat(path);
             if (stats.st_mtime > mtime^) {
               mtime := stats.st_mtime;

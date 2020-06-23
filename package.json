@@ -7,12 +7,15 @@
     "url": "https://github.com/bryphe/revery/issues"
   },
   "scripts": {
+    "build-watch": "esy b dune build --watch",
     "test": "esy b dune runtest",
     "format": "esy #{os == 'windows' ? 'b' : ''} bash .ci/format.sh #{os}",
-    "run": "esy x Examples"
+    "run": "esy x Examples",
+    "run-bytecode": "esy x Examples.bc"
   },
   "homepage": "https://github.com/bryphe/revery#readme",
   "esy": {
+    "buildsInSource": "_build",
     "buildEnv": {
       "PKG_CONFIG_PATH": "/usr/lib64/pkgconfig:$PKG_CONFIG_PATH"
     },
