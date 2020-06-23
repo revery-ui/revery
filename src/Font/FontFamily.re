@@ -41,7 +41,7 @@ let system = (familyName): t =>
       FontFamilyCache.promote(fontDescr, cache);
       fd.path;
     | None =>
-      let fd = Discovery.find(~weight, ~mono, ~italic, familyName);
+      let fd = Discovery.findExn(~weight, ~mono, ~italic, familyName);
       FontFamilyCache.add(fontDescr, fd, cache);
       FontFamilyCache.trim(cache);
       fd.path;
