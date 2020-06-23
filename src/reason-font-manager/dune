@@ -7,7 +7,8 @@
   (:include c_flags.sexp))
  (cxx_flags
   (:include cxx_flags.sexp))
- (cxx_names FontManager FontManagerWindows FontManagerMac FontManagerLinux))
+ (cxx_names FontManager FontManagerDummy FontManagerWindows FontManagerMac
+   FontManagerLinux))
 
 (rule
  (targets config.h c_flags.sexp cxx_flags.sexp flags.sexp)

@@ -44,6 +44,7 @@ let windows_direct_write = {
   cxx_flags: ["-fno-exceptions", "-fno-rtti", "-lstdc++"],
   test: check_headers(["#include <dwrite.h>", "#include <dwrite_1.h>"]),
 };
+let dummy = {...feature, cxx_flags: ["-fPIC"]};
 
 let generate_configs = conf => {
   let has_core_text = apple_core_text.test(conf);
@@ -55,7 +56,7 @@ let generate_configs = conf => {
     | (true, _, _) => ("USE_APPLE_CORE_TEXT", apple_core_text)
     | (_, true, _) => ("USE_LINUX_FONTCONFIG", linux_fontconfig)
     | (_, _, true) => ("USE_WINDOWS_DIRECT_WRITE", windows_direct_write)
-    | _ => failwith("missing a font manager")
+    | _ => ("USE_DUMMY", dummy)
     };
 
   Configurator.C_define.gen_header_file(
