@@ -2,9 +2,33 @@ module FontDescriptor = FontDescriptor;
 module FontWeight = FontWeight;
 module FontWidth = FontWidth;
 
-external _findFont: (string, int, int, bool, bool) => FontDescriptor.raw =
+external findFont': (string, int, int, bool, bool) => FontDescriptor.raw =
   "fm_findFont";
 
+let findFontOpt =
+    (
+      ~weight=FontWeight.Normal,
+      ~width=FontWidth.Undefined,
+      ~family: string,
+      ~italic: bool,
+      ~mono: bool,
+      (),
+    ) => {
+  switch (
+    findFont'(
+      family,
+      FontWeight.toInt(weight),
+      FontWidth.toInt(width),
+      italic,
+      mono,
+    )
+  ) {
+  | exception Not_found => None
+  | raw => Some(FontDescriptor.ofRaw(raw))
+  };
+};
+
+exception Font_not_found;
 let findFont =
     (
       ~weight=FontWeight.Normal,
@@ -14,12 +38,8 @@ let findFont =
       ~mono: bool,
       (),
     ) => {
-  _findFont(
-    family,
-    FontWeight.toInt(weight),
-    FontWidth.toInt(width),
-    italic,
-    mono,
-  )
-  |> FontDescriptor.ofRaw;
+  switch (findFontOpt(~weight, ~width, ~family, ~italic, ~mono, ())) {
+  | None => raise(Font_not_found)
+  | Some(fontDescriptor) => fontDescriptor
+  };
 };
