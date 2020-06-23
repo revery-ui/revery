@@ -33,6 +33,9 @@ let show = (v: t) => {
   ++ " - Path: "
   ++ v.path
   ++ "\n"
+  ++ " - PostscriptName: "
+  ++ v.postscriptName
+  ++ "\n"
   ++ " - Family: "
   ++ v.family
   ++ "\n"
@@ -41,6 +44,9 @@ let show = (v: t) => {
   ++ "\n"
   ++ " - Width: "
   ++ FontWidth.show(v.width)
+  ++ "\n"
+  ++ " - Italic: "
+  ++ string_of_bool(v.italic)
   ++ "\n"
   ++ " - Monospace: "
   ++ string_of_bool(v.monospace)
