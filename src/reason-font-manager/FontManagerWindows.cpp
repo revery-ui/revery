@@ -1,4 +1,6 @@
-#ifdef WIN32
+#include "config.h"
+#ifdef USE_WINDOWS_DIRECT_WRITE
+
 #define WINVER 0x0600
 #include "FontDescriptor.h"
 #include <dwrite.h>
