@@ -301,6 +301,9 @@ module Scancode = {
 
 module Keycode = {
   type t = int;
+  // as some keycodes are bigger than 2^30 but still less than 2^31
+  // so by using the negative numbers we can fit them in a normal int
+  let int = Int32.to_int;
 
   external getName: t => string = "resdl_SDL_GetKeyName";
 
@@ -313,87 +316,87 @@ module Keycode = {
 
   // Incrementally add these as needed from:
   // https://wiki.libsdl.org/SDLKeycodeLookup
-  let unknown = 0;
-  let backspace = 8;
-  let return = 13;
+  let unknown = int(0l);
+  let backspace = int(8l);
+  let return = int(13l);
 
-  let escape = 27;
+  let escape = int(27l);
 
-  let space = 32;
+  let space = int(32l);
 
-  let left_paren = 40;
-  let right_paren = 41;
+  let left_paren = int(40l);
+  let right_paren = int(41l);
 
-  let asterisk = 42;
-  let plus = 43;
-  let minus = 45;
-  let period = 46;
-  let slash = 47;
-  let caret = 94;
+  let asterisk = int(42l);
+  let plus = int(43l);
+  let minus = int(45l);
+  let period = int(46l);
+  let slash = int(47l);
+  let caret = int(94l);
 
-  let equals = 61;
+  let equals = int(61l);
 
-  let digit0 = 48;
-  let digit1 = 49;
-  let digit2 = 50;
-  let digit3 = 51;
-  let digit4 = 52;
-  let digit5 = 53;
-  let digit6 = 54;
-  let digit7 = 55;
-  let digit8 = 56;
-  let digit9 = 57;
+  let digit0 = int(48l);
+  let digit1 = int(49l);
+  let digit2 = int(50l);
+  let digit3 = int(51l);
+  let digit4 = int(52l);
+  let digit5 = int(53l);
+  let digit6 = int(54l);
+  let digit7 = int(55l);
+  let digit8 = int(56l);
+  let digit9 = int(57l);
 
-  let pad_divide = 1073741908;
-  let pad_multiply = 1073741909;
-  let pad_minus = 1073741910;
-  let pad_plus = 1073741911;
-  let pad_period = 1073741923;
+  let pad_divide = int(1073741908l);
+  let pad_multiply = int(1073741909l);
+  let pad_minus = int(1073741910l);
+  let pad_plus = int(1073741911l);
+  let pad_period = int(1073741923l);
 
-  let pad_equals = 1073741927;
+  let pad_equals = int(1073741927l);
 
-  let p_digit1 = 1073741913;
-  let p_digit2 = 1073741914;
-  let p_digit3 = 1073741915;
-  let p_digit4 = 1073741916;
-  let p_digit5 = 1073741917;
-  let p_digit6 = 1073741918;
-  let p_digit7 = 1073741919;
-  let p_digit8 = 1073741920;
-  let p_digit9 = 1073741921;
-  let p_digit0 = 1073741922;
+  let p_digit1 = int(1073741913l);
+  let p_digit2 = int(1073741914l);
+  let p_digit3 = int(1073741915l);
+  let p_digit4 = int(1073741916l);
+  let p_digit5 = int(1073741917l);
+  let p_digit6 = int(1073741918l);
+  let p_digit7 = int(1073741919l);
+  let p_digit8 = int(1073741920l);
+  let p_digit9 = int(1073741921l);
+  let p_digit0 = int(1073741922l);
 
-  let a = 97;
-  let b = 98;
-  let c = 99;
-  let d = 100;
-  let e = 101;
-  let f = 102;
-  let g = 103;
-  let h = 104;
-  let i = 105;
-  let j = 106;
-  let k = 107;
-  let l = 108;
-  let m = 109;
-  let n = 110;
-  let o = 111;
-  let p = 112;
-  let q = 113;
-  let r = 114;
-  let s = 115;
-  let t = 116;
-  let u = 117;
-  let v = 118;
-  let w = 119;
-  let x = 120;
-  let y = 121;
-  let z = 122;
+  let a = int(97l);
+  let b = int(98l);
+  let c = int(99l);
+  let d = int(100l);
+  let e = int(101l);
+  let f = int(102l);
+  let g = int(103l);
+  let h = int(104l);
+  let i = int(105l);
+  let j = int(106l);
+  let k = int(107l);
+  let l = int(108l);
+  let m = int(109l);
+  let n = int(110l);
+  let o = int(111l);
+  let p = int(112l);
+  let q = int(113l);
+  let r = int(114l);
+  let s = int(115l);
+  let t = int(116l);
+  let u = int(117l);
+  let v = int(118l);
+  let w = int(119l);
+  let x = int(120l);
+  let y = int(121l);
+  let z = int(122l);
 
-  let delete = 127;
+  let delete = int(127l);
 
-  let right = 1073741903;
-  let left = 1073741904;
+  let right = int(1073741903l);
+  let left = int(1073741904l);
 };
 
 module WheelType = {
