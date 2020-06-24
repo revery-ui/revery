@@ -12,8 +12,8 @@ let findFont:
     ~mono: bool,
     unit
   ) =>
-  FontDescriptor.t;
-let findFontOpt:
+  option(FontDescriptor.t);
+let findFontExn:
   (
     ~weight: FontWeight.t=?,
     ~width: FontWidth.t=?,
@@ -22,4 +22,4 @@ let findFontOpt:
     ~mono: bool,
     unit
   ) =>
-  option(FontDescriptor.t);
+  FontDescriptor.t;

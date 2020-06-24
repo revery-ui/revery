@@ -12,6 +12,6 @@ let find =
       ~italic=false,
       family,
     ) =>
-  FontManager.findFont(~weight, ~width, ~mono, ~italic, ~family, ());
+  FontManager.findFontExn(~weight, ~width, ~mono, ~italic, ~family, ());
 
 let toString = FontManager.FontDescriptor.show;

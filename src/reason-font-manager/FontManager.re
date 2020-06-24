@@ -5,7 +5,7 @@ module FontWidth = FontWidth;
 external findFont': (string, int, int, bool, bool) => FontDescriptor.raw =
   "fm_findFont";
 
-let findFontOpt =
+let findFont =
     (
       ~weight=FontWeight.Normal,
       ~width=FontWidth.Undefined,
@@ -29,7 +29,7 @@ let findFontOpt =
 };
 
 exception Font_not_found;
-let findFont =
+let findFontExn =
     (
       ~weight=FontWeight.Normal,
       ~width=FontWidth.Undefined,
@@ -38,7 +38,7 @@ let findFont =
       ~mono: bool,
       (),
     ) => {
-  switch (findFontOpt(~weight, ~width, ~family, ~italic, ~mono, ())) {
+  switch (findFont(~weight, ~width, ~family, ~italic, ~mono, ())) {
   | None => raise(Font_not_found)
   | Some(fontDescriptor) => fontDescriptor
   };
