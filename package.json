@@ -49,7 +49,7 @@
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/markup": "0.8.2",
     "@opam/ppx_deriving": "*",
-    "@opam/luv": "~0.5.1",
+    "@opam/luv": "aantron/luv:luv.opam#dfab9df",
     "@opam/omd": "ocaml/omd:omd.opam#1535e3c",
     "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d",
     "esy-freetype2": "^2.9.1007",

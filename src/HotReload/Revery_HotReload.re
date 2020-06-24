@@ -47,6 +47,7 @@ let watch = (filename, callback) => {
             if (stats.st_mtime > mtime^) {
               mtime := stats.st_mtime;
               Dynlink.loadfile_private(path);
+              callback(getModule(filename));
             };
           };
           Unix.sleep(2);

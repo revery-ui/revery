@@ -12,6 +12,8 @@ let activeBackgroundColor = Color.hex("#2E3440");
 let inactiveBackgroundColor = Color.hex("#272d39");
 let selectionHighlight = Color.hex("#90f7ff");
 
+let hotReloadExample : ref(option(module HotReload.hotreload))= ref(None);
+
 type example = {
   name: string,
   render: Window.t => element,
@@ -177,9 +179,11 @@ let examples = [
   },
   {
     name: "HotReload",
-    render: _ => {
-      module HotReloadExample = (val HotReload.getModule("HotreloadExample"));
-      HotReloadExample.render();
+    render: _ => switch (hotReloadExample^) {
+    | None => React.empty
+    | Some(example) =>
+      module HotreloadExample = (val example);
+      HotreloadExample.render();
     },
     source: "HotreloadExample.re",
   },
@@ -366,11 +370,15 @@ let init = app => {
       Console.log(Printf.sprintf("Moved: %d x %d", x, y))
     );
 
-  let _renderFunction =
+  let update =
     UI.start(window, <ExampleHost window initialExample />);
+
+  HotReload.watch("HotreloadExample", ((module HotReloadExample)) => {
+    hotReloadExample := Some(module HotReloadExample);
+    update(<ExampleHost window initialExample />);
+  });
   ();
 };
 
-HotReload.watch("HotreloadExample", _ => ());
 
 App.start(init);

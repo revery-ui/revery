@@ -25,7 +25,7 @@ module Example = {
     <View style=Styles.outer onMouseUp={_ => setStyle(n => !n)}>
       <Text
         style={style ? Styles.text : Styles.text2}
-        text="This compoent was dynamially loaded! Check it out!"
+        text="This compoent was dynamially loaded! Check it out! BLAH BLAH BLAH!!!"
       />
     </View>;
   };
