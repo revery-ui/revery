@@ -4,7 +4,7 @@
       "run": "esy x Examples"
   },
   "override": {
-      "build": ["dune build -p font-manager,harfbuzz,skia,Revery,ReveryExamples -j4"],
+      "build": ["dune build -p font-manager,harfbuzz,skia,sdl2,Revery,ReveryExamples -j4"],
       "install": [
           "esy-installer harfbuzz.install",
           "esy-installer skia.install",
