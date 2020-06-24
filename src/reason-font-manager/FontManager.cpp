@@ -31,12 +31,12 @@ CAMLprim value fm_findFont(value family, value weight, value width, value italic
 
   delete query;
 
+  caml_acquire_runtime_system();
+
   if (font == NULL) {
     caml_raise_not_found();
-    return Val_unit;
+    CAMLreturn(Val_unit);
   }
-
-  caml_acquire_runtime_system();
 
   ret = caml_alloc(7, 0);
 
