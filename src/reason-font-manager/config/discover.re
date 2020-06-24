@@ -44,7 +44,7 @@ let windows_direct_write = {
   cxx_flags: ["-fno-exceptions", "-fno-rtti", "-lstdc++"],
   test: check_headers(["#include <dwrite.h>", "#include <dwrite_1.h>"]),
 };
-let dummy = {...feature, cxx_flags: ["-fPIC"]};
+let dummy = {...feature, flags: cclib("-lstdc++"), cxx_flags: ["-fPIC"]};
 
 let generate_configs = conf => {
   let has_core_text = apple_core_text.test(conf);
