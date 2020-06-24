@@ -15,9 +15,10 @@
 #include "stb_image.h"
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_config.h>
 #include <SDL2/SDL_syswm.h>
 
-#ifdef __APPLE__
+#ifdef SDL_VIDEO_DRIVER_COCOA
 #import <Cocoa/Cocoa.h>
 #endif
 
@@ -208,24 +209,35 @@ CAMLprim value resdl_SDL_GetNativeWindow(value vWin) {
 
   void *pNativeWindow = NULL;
   switch (wmInfo.subsystem) {
-#ifdef WIN32
+#ifdef SDL_VIDEO_DRIVER_WINDOWS
   case SDL_SYSWM_WINDOWS:
     pNativeWindow = (void *)wmInfo.info.win.window;
     break;
-#elif __APPLE__
+#endif
+#ifdef SDL_VIDEO_DRIVER_UIKIT
+  case SDL_SYSWM_UIKIT:
+    pNativeWindow = (void *)wmInfo.info.uikit.window;
+    break;
+#endif
+#ifdef SDL_VIDEO_DRIVER_COCOA
   case SDL_SYSWM_COCOA:
     pNativeWindow = (void *)wmInfo.info.cocoa.window;
     break;
-#else
+#endif
+#ifdef SDL_VIDEO_DRIVER_ANDROID
+  case SDL_SYSWM_ANDROID:
+    pNativeWindow = (void *)wmInfo.info.android.window;
+    break;
+#endif
+#ifdef SDL_VIDEO_DRIVER_X11
   case SDL_SYSWM_X11:
     pNativeWindow = (void *)wmInfo.info.x11.window;
     break;
-    // TODO: Do we need a compilation flag to enable wayland support?
-    /*
-    case SDL_SYSWM_WAYLAND:
-      pNativeWindow = (void *)wmInfo.info.wl.surface;
-      break;
-    */
+#endif
+#ifdef SDL_VIDEO_DRIVER_WAYLAND
+  case SDL_SYSWM_WAYLAND:
+    pNativeWindow = (void *)wmInfo.info.wl.surface;
+    break;
 #endif
   default:
     break;
@@ -309,7 +321,7 @@ CAMLprim value resdl_SDL_WinAllocConsole() {
 CAMLprim value resdl_SDL_SetMacTitlebarTransparent(value vWin) {
   CAMLparam1(vWin);
 
-#ifdef __APPLE__
+#ifdef SDL_VIDEO_DRIVER_COCOA
   SDL_Window *win = (SDL_Window *)vWin;
   SDL_SysWMinfo wmInfo;
   SDL_VERSION(&wmInfo.version);
@@ -328,7 +340,7 @@ CAMLprim value resdl_SDL_SetMacBackgroundColor(value vWin, value r, value g,
                                                value b, value a) {
   CAMLparam5(vWin, r, g, b, a);
 
-#ifdef __APPLE__
+#ifdef SDL_VIDEO_DRIVER_COCOA
   SDL_Window *win = (SDL_Window *)vWin;
   SDL_SysWMinfo wmInfo;
   SDL_VERSION(&wmInfo.version);
@@ -1287,19 +1299,16 @@ CAMLprim value resdl_SDL_CreateWindow(value vName, value vX, value vY,
   // Attributes pulled from:
   // https://github.com/google/skia/blob/master/example/SkiaSDLExample.cpp
   static const int kStencilBits = 8; // Skia needs 8 stencil bits
+#ifdef SDL_VIDEO_OPENGL
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-#ifdef WIN32
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-#elif __APPLE__
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 #else
-  // There's no guarantee that Linux 3.0 is available on Linux.
-  // ie, on my CentOS 6 box, with latest Intel drivers - only 2.1 is supported.
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+#endif
+
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
+#ifdef SDL_VIDEO_DRIVER_X11
   // Disable compositing suppression - https://github.com/onivim/oni2/issues/2003
   SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
 #endif
@@ -1379,7 +1388,7 @@ CAMLprim value resdl_SDL_IsWindowFullscreen(value vWin) {
   // SDL's fullscreen window flags don't work on macOS
   SDL_Window *win = (SDL_Window *)vWin;
   bool isFullscreen;
-#ifdef __APPLE__
+#ifdef SDL_VIDEO_DRIVER_COCOA
   SDL_SysWMinfo wmInfo;
   SDL_VERSION(&wmInfo.version);
   SDL_GetWindowWMInfo(win, &wmInfo);
