@@ -1299,6 +1299,9 @@ CAMLprim value resdl_SDL_CreateWindow(value vName, value vX, value vY,
   // ie, on my CentOS 6 box, with latest Intel drivers - only 2.1 is supported.
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+
+  // Disable compositing suppression - https://github.com/onivim/oni2/issues/2003
+  SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
 #endif
   SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
   SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
