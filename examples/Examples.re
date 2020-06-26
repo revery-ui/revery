@@ -185,6 +185,18 @@ let examples = [
 let getExampleByName = name =>
   List.find(example => example.name == name, examples);
 
+type state = {currentExample: example};
+
+type events =
+  | ExampleSwitched(example);
+
+let initialState = {currentExample: getExampleByName("Animation")};
+
+let update = (action, state) =>
+  switch (action) {
+  | ExampleSwitched(example) => {currentExample: example}
+  };
+
 let noop = () => ();
 
 module ExampleButton = {
@@ -213,18 +225,15 @@ module ExampleButton = {
 };
 
 module ExampleHost = {
-  let%component make = (~window, ~initialExample, ()) => {
-    let%hook (selectedExample, setSelectedExample) =
-      Hooks.state(getExampleByName(initialExample));
-
+  let make = (~window, ~state, ~dispatch, ()) => {
     let renderButton = example => {
-      let isActive = example === selectedExample;
+      let isActive = example === state.currentExample;
       let onClick = _ => {
         Window.setTitle(window, "Revery Example - " ++ example.name);
 
         prerr_endline("SOURCE FILE: " ++ example.source);
         notifyExampleSwitched(example.source);
-        setSelectedExample(_ => example);
+        dispatch(ExampleSwitched(example));
       };
 
       <ExampleButton isActive name={example.name} onClick />;
@@ -232,7 +241,7 @@ module ExampleHost = {
 
     let buttons = List.map(renderButton, examples);
 
-    let exampleView = selectedExample.render(window);
+    let exampleView = state.currentExample.render(window);
 
     <View
       onMouseWheel={_evt => ()}
@@ -284,14 +293,21 @@ let init = app => {
   App.onBeforeQuit(app, () => prerr_endline("Quitting!"))
   |> (ignore: Revery.App.unsubscribe => unit);
 
-  let initialExample = ref("Animation");
+  let currentState = ref(initialState);
+
   let decorated = ref(true);
   let forceScaleFactor = ref(None);
   Arg.parse(
     [
       ("--trace", Unit(() => Timber.App.setLevel(Timber.Level.trace)), ""),
       ("--no-decoration", Unit(() => decorated := false), ""),
-      ("--example", String(name => initialExample := name), ""),
+      (
+        "--example",
+        String(
+          name => currentState := {currentExample: getExampleByName(name)},
+        ),
+        "",
+      ),
       (
         "--force-device-scale-factor",
         Float(scaleFactor => forceScaleFactor := Some(scaleFactor)),
@@ -301,7 +317,6 @@ let init = app => {
     _ => (),
     "There is only --trace, --example, --no-decoration, and --force-device-scale-factor",
   );
-  let initialExample = initialExample^;
 
   let maximized = Environment.webGL;
 
@@ -358,8 +373,21 @@ let init = app => {
       Console.log(Printf.sprintf("Moved: %d x %d", x, y))
     );
 
-  let _renderFunction =
-    UI.start(window, <ExampleHost window initialExample />);
+  let isDirty = ref(false);
+
+  let dispatch = action => {
+    currentState := update(action, currentState^);
+    isDirty := true;
+  };
+
+  let update =
+    UI.start(window, <ExampleHost window state=currentState^ dispatch />);
+
+  let tick = _ =>
+    if (isDirty^) {
+      update(<ExampleHost window state=currentState^ dispatch />);
+    };
+  let _cancel: unit => unit = Tick.interval(tick, Time.zero);
   ();
 };
 
