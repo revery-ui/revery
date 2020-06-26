@@ -18,6 +18,16 @@ type example = {
   source: string,
 };
 
+type state = {
+  currentExample: example,
+  windowWidth: int,
+  windowHeight: int,
+};
+
+type events =
+  | ExampleSwitched(example)
+  | WindowResized(int, int);
+
 let examples = [
   {name: "Animation", render: _w => Hello.render(), source: "Hello.re"},
   {
@@ -185,16 +195,20 @@ let examples = [
 let getExampleByName = name =>
   List.find(example => example.name == name, examples);
 
-type state = {currentExample: example};
+let initialState = {
+  currentExample: getExampleByName("Animation"),
+  windowWidth: 800,
+  windowHeight: 480,
+};
 
-type events =
-  | ExampleSwitched(example);
-
-let initialState = {currentExample: getExampleByName("Animation")};
-
-let update = (action, state) =>
-  switch (action) {
-  | ExampleSwitched(example) => {currentExample: example}
+let update = (event, state) =>
+  switch (event) {
+  | ExampleSwitched(example) => {...state, currentExample: example}
+  | WindowResized(width, height) => {
+      ...state,
+      windowWidth: width,
+      windowHeight: height,
+    }
   };
 
 let noop = () => ();
@@ -227,7 +241,7 @@ module ExampleButton = {
 module ExampleHost = {
   let make = (~window, ~state, ~dispatch, ()) => {
     let renderButton = example => {
-      let isActive = example === state.currentExample;
+      let isActive = example.name == state.currentExample.name;
       let onClick = _ => {
         Window.setTitle(window, "Revery Example - " ++ example.name);
 
@@ -293,7 +307,13 @@ let init = app => {
   App.onBeforeQuit(app, () => prerr_endline("Quitting!"))
   |> (ignore: Revery.App.unsubscribe => unit);
 
-  let currentState = ref(initialState);
+  let serialize = s => s;
+  let deserialize = s => s;
+
+  let (state', onUpdate) =
+    Revery.HotReload.persistState(~serialize, ~deserialize, initialState);
+
+  let currentState = ref(state');
 
   let decorated = ref(true);
   let forceScaleFactor = ref(None);
@@ -304,7 +324,9 @@ let init = app => {
       (
         "--example",
         String(
-          name => currentState := {currentExample: getExampleByName(name)},
+          name =>
+            currentState :=
+              {...currentState^, currentExample: getExampleByName(name)},
         ),
         "",
       ),
@@ -320,9 +342,6 @@ let init = app => {
 
   let maximized = Environment.webGL;
 
-  let windowWidth = 800;
-  let windowHeight = 480;
-
   Console.log("Hello from example app");
   Console.log([1, 2, 3]);
 
@@ -330,8 +349,8 @@ let init = app => {
     App.createWindow(
       ~createOptions=
         WindowCreateOptions.create(
-          ~width=windowWidth,
-          ~height=windowHeight,
+          ~width=currentState^.windowWidth,
+          ~height=currentState^.windowHeight,
           ~maximized,
           ~titlebarStyle=Transparent,
           ~icon=Some("revery-icon.png"),
@@ -342,6 +361,14 @@ let init = app => {
       app,
       "Welcome to Revery!",
     );
+
+  let isDirty = ref(false);
+
+  let dispatch = action => {
+    currentState := update(action, currentState^);
+    isDirty := true;
+    onUpdate(currentState^);
+  };
 
   if (Environment.webGL) {
     Window.maximize(window);
@@ -364,21 +391,18 @@ let init = app => {
     Window.onRestored(window, () => Console.log("Restored!"));
 
   let _unsubscribe =
-    Window.onSizeChanged(window, ({width, height}) =>
-      Console.log(Printf.sprintf("Size changed: %d x %d", width, height))
+    Window.onSizeChanged(
+      window,
+      ({width, height}) => {
+        dispatch(WindowResized(width, height));
+        Console.log(Printf.sprintf("Size changed: %d x %d", width, height));
+      },
     );
 
   let _unsubscribe =
     Window.onMoved(window, ((x, y)) =>
       Console.log(Printf.sprintf("Moved: %d x %d", x, y))
     );
-
-  let isDirty = ref(false);
-
-  let dispatch = action => {
-    currentState := update(action, currentState^);
-    isDirty := true;
-  };
 
   let update =
     UI.start(window, <ExampleHost window state=currentState^ dispatch />);
