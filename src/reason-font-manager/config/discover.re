@@ -12,9 +12,14 @@ let root = Sys.getenv("cur__root");
 let ccopt = s => ["-ccopt", s];
 let cclib = s => ["-cclib", s];
 
-let check_headers = (headers, conf) => {
+let check_headers = (~lang=?, headers, conf) => {
   let code = String.concat("\n", headers);
-  Configurator.c_test(conf, code ++ "\nint main() { return 0; }");
+  let c_flags =
+    switch (lang) {
+    | None => []
+    | Some(lang) => ["-x", lang]
+    };
+  Configurator.c_test(~c_flags, conf, code ++ "\nint main() { return 0; }");
 };
 
 let feature = {test: _ => true, flags: [], c_flags: [], cxx_flags: []};
@@ -27,10 +32,13 @@ let apple_core_text = {
     @ cclib("-lstdc++"),
   cxx_flags: ["-x", "objective-c++", "-lstdc++"],
   test:
-    check_headers([
-      "#include <Foundation/Foundation.h>",
-      "#include <CoreText/CoreText.h>",
-    ]),
+    check_headers(
+      ~lang="objective-c++",
+      [
+        "#include <Foundation/Foundation.h>",
+        "#include <CoreText/CoreText.h>",
+      ],
+    ),
 };
 let linux_fontconfig = {
   ...feature,
@@ -42,7 +50,11 @@ let windows_direct_write = {
   ...feature,
   flags: [] @ cclib("-ldwrite") @ cclib("-lstdc++"),
   cxx_flags: ["-fno-exceptions", "-fno-rtti", "-lstdc++"],
-  test: check_headers(["#include <dwrite.h>", "#include <dwrite_1.h>"]),
+  test:
+    check_headers(
+      ~lang="c++",
+      ["#include <dwrite.h>", "#include <dwrite_1.h>"],
+    ),
 };
 let dummy = {...feature, flags: cclib("-lstdc++"), cxx_flags: ["-fPIC"]};
 
