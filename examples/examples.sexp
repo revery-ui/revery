@@ -1,0 +1,1 @@
+(executables (names Examples) (modes byte) (preprocess (pps brisk-reconciler.ppx lwt_ppx)) (package ReveryExamples) (public_names Examples) (libraries ExampleStubs skia str Revery Revery_Lwt flex timber))

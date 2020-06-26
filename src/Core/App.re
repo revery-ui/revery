@@ -255,6 +255,10 @@ let start = init => {
 
   Revery_Native.initApp();
 
+  AppLog.infof(m =>
+    m("Running in %s mode", Dynlink.is_native ? "NATIVE" : "BYTECODE")
+  );
+
   let appLoop = () => {
     _flushEvents();
 
