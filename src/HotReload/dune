@@ -1,0 +1,6 @@
+(library
+ (name Revery_HotReload)
+ (public_name Revery.HotReload)
+ (preprocess (pps ppx_deriving.show))
+ (libraries threads console.lib str lwt sdl2 skia
+  flex Rench re Revery_Core Revery_UI timber))

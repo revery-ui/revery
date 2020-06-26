@@ -31,3 +31,5 @@ module Platform = {
 module Utility = Revery_Utility;
 
 module SVG = Revery_SVG;
+
+module HotReload = Revery_HotReload;

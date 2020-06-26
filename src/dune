@@ -18,6 +18,7 @@
         Revery_UI_Hooks
         Revery_Utility
         Revery_SVG
+        Revery_HotReload
 ))
 
 (documentation
