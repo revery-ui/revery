@@ -1,5 +1,5 @@
 {
-  "checksum": "e24ab8fc51602f8cb8117449a7f1ce1e",
+  "checksum": "2ffdde5090c28bad7a5c4659f9729ab2",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -90,7 +90,7 @@
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f00@d41d8cd9",
         "http-server@0.12.3@d41d8cd9", "flex@1.2.3@d41d8cd9",
         "fetch-native-lwt@0.1.0-alpha.5@d41d8cd9",
-        "esy-skia@github:Et7f3/esy-skia#3f0369727eecabd88715d65e8b87d3bddeb10c5b@d41d8cd9",
+        "esy-skia@github:Et7f3/esy-skia#f41cb2498dc9d85b6e90c14a3c5d0c4af9b4c60e@d41d8cd9",
         "esy-sdl2@2.0.10008@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
         "esy-freetype2@2.9.1007@d41d8cd9",
         "@opam/ppx_deriving@opam:4.5@bb81afdc",
@@ -480,16 +480,16 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-skia@github:Et7f3/esy-skia#3f0369727eecabd88715d65e8b87d3bddeb10c5b@d41d8cd9": {
+    "esy-skia@github:Et7f3/esy-skia#f41cb2498dc9d85b6e90c14a3c5d0c4af9b4c60e@d41d8cd9": {
       "id":
-        "esy-skia@github:Et7f3/esy-skia#3f0369727eecabd88715d65e8b87d3bddeb10c5b@d41d8cd9",
+        "esy-skia@github:Et7f3/esy-skia#f41cb2498dc9d85b6e90c14a3c5d0c4af9b4c60e@d41d8cd9",
       "name": "esy-skia",
       "version":
-        "github:Et7f3/esy-skia#3f0369727eecabd88715d65e8b87d3bddeb10c5b",
+        "github:Et7f3/esy-skia#f41cb2498dc9d85b6e90c14a3c5d0c4af9b4c60e",
       "source": {
         "type": "install",
         "source": [
-          "github:Et7f3/esy-skia#3f0369727eecabd88715d65e8b87d3bddeb10c5b"
+          "github:Et7f3/esy-skia#f41cb2498dc9d85b6e90c14a3c5d0c4af9b4c60e"
         ]
       },
       "overrides": [],
