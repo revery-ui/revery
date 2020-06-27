@@ -16,4 +16,4 @@ RUN mv /usr/bin/gcc /usr/bin/gcc-orig
 RUN echo -en '#!/usr/bin/sh\n/usr/bin/gcc-orig -fcommon "$@"' > /usr/bin/gcc
 RUN chmod u+x /usr/bin/gcc
 
-RUN npm install --verbose --global --unsafe-perm=true esy@0.6.4
+RUN npm install --verbose --global --unsafe-perm=true esy@0.6.6
