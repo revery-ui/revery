@@ -123,7 +123,15 @@ let run = () => {
       Skia.Color.makeArgb(0xFFl, 0xFFl, 0xFFl, 0xFFl),
     );
 
-    Skia.Canvas.drawText(canvas, "Hello, world!", GlyphId, 50., 50., Font.makeDefault(), paint);
+    Skia.Canvas.drawText(
+      canvas,
+      "Hello, world!",
+      GlyphId,
+      50.,
+      50.,
+      Font.makeDefault(),
+      paint,
+    );
 
     Skia.Canvas.flush(canvas);
     Sdl2.Gl.swapWindow(window);
