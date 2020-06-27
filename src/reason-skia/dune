@@ -9,5 +9,5 @@
   (library_flags (:include flags.sexp))
   (c_library_flags (:include c_library_flags.sexp))
   (libraries
-    SkiaWrapped
+    SkiaWrapped integers
 ))
