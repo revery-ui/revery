@@ -51,7 +51,7 @@
     "esy-freetype2": "^2.9.1007",
     "esy-harfbuzz": "^1.9.1008",
     "esy-sdl2": "^2.0.10008",
-    "esy-skia": "Et7f3/esy-skia#3f0369727eecabd88715d65e8b87d3bddeb10c5b",
+    "esy-skia": "Et7f3/esy-skia#f41cb2498dc9d85b6e90c14a3c5d0c4af9b4c60e",
     "fetch-native-lwt": "0.1.0-alpha.5",
     "flex": "1.2.3",
     "reperf": "^1.4.0",
