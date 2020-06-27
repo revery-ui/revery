@@ -1,4 +1,5 @@
-#ifdef __APPLE__
+#include "config.h"
+#ifdef USE_APPLE_CORE_TEXT
 
 #include <Foundation/Foundation.h>
 #include <CoreText/CoreText.h>

@@ -15,7 +15,7 @@ let spec = [
 
 Arg.parse(spec, _ => (), "Simple CLI utility to test findFont");
 
-FontManager.findFont(
+FontManager.findFontExn(
   ~family=fontFamily^,
   ~weight=
     isBold^ ? FontManager.FontWeight.Bold : FontManager.FontWeight.Normal,

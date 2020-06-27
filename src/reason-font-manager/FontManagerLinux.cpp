@@ -1,4 +1,5 @@
-#ifdef __linux__
+#include "config.h"
+#ifdef USE_LINUX_FONTCONFIG
 
 #include <fontconfig/fontconfig.h>
 #include "FontDescriptor.h"
