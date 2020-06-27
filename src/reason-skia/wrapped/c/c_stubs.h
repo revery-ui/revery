@@ -1,8 +1,8 @@
-#include "gr_context.h"
-#include "sk_canvas.h"
-#include "sk_paint.h"
-#include "sk_shader.h"
-#include "sk_types.h"
+#include "include/c/gr_context.h"
+#include "include/c/sk_canvas.h"
+#include "include/c/sk_paint.h"
+#include "include/c/sk_shader.h"
+#include "include/c/sk_types.h"
 
 #include <SDL2/SDL.h>
 

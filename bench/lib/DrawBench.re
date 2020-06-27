@@ -14,11 +14,13 @@ module Data = {
   let testString = String.make(50, 'a') ++ String.make(50, 'X');
   let paint = {
     let textPaint = Skia.Paint.make();
-    Skia.Paint.setTextEncoding(textPaint, GlyphId);
-    Skia.Paint.setLcdRenderText(textPaint, true);
     Skia.Paint.setAntiAlias(textPaint, true);
-    Skia.Paint.setTextSize(textPaint, 20.);
     textPaint;
+  };
+  let font = {
+    let textFont = Skia.Font.makeDefault();
+    Skia.Font.setTextSize(textFont, 20.);
+    textFont;
   };
 
   let rectPaint = Skia.Paint.make();
@@ -29,7 +31,7 @@ let drawText = canvasContext => {
   | Error(_) => failwith("Unable to load font!")
   | Ok(font) =>
     Skia.Paint.setColor(Data.paint, Revery_Core.Color.toSkia(Colors.white));
-    Skia.Paint.setTypeface(Data.paint, Revery.Font.getSkiaTypeface(font));
+    Skia.Font.setTypeface(Data.font, Revery.Font.getSkiaTypeface(font));
 
     let shapedText =
       Data.testString
@@ -41,6 +43,7 @@ let drawText = canvasContext => {
       ~y=1.,
       ~paint=Data.paint,
       ~text=shapedText,
+      ~font=Data.font,
       canvasContext,
     );
   };

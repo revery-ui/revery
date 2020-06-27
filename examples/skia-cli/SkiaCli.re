@@ -61,7 +61,8 @@ let draw = canvas => {
 
   let fill3 = Paint.make();
   Paint.setColor(fill3, Color.makeArgb(0xFFl, 0xFFl, 0xFFl, 0xFFl));
-  Paint.setTextSize(fill3, 30.);
+  // TODO: add some setter
+  // split creation of font
 
   let nonExistentTypeface = Typeface.makeFromFile("non-existent-font.ttf", 0);
   assert(nonExistentTypeface == None);
@@ -74,11 +75,11 @@ let draw = canvas => {
   | None => failwith("Unable to load font: " ++ filePath)
   | Some(typeFace) =>
     print_endline(__LOC__ ++ ": we will set.");
-    Paint.setTypeface(fill3, typeFace);
-    print_endline(__LOC__ ++ ": setTypeface is OK.");
-    Canvas.drawText(canvas, "Hello, world!", 30., 30., fill3);
+    let font = Font.makeWithValues(typeFace, 30., 1., 0.);
+    print_endline(__LOC__ ++ ": makeWithValues is OK.");
+    Canvas.drawText(canvas, "Hello, world!", GlyphId, 30., 30., font, fill3);
     let metrics = FontMetrics.make();
-    let _ret: float = Paint.getFontMetrics(fill3, metrics, 1.0);
+    let _ret: float = Font.getFontMetrics(font, metrics);
 
     print_endline(
       "-- Top: " ++ string_of_float(FontMetrics.getTop(metrics)),
@@ -99,10 +100,12 @@ let draw = canvas => {
     print_endline(__LOC__ ++ ": We return.");
 
     // Measure
-    let measurement = Paint.measureText(fill3, "Hello, world!", None);
+    let measurement =
+      Font.measureText(font, "Hello, world!", GlyphId, None, Some(fill3));
     print_endline("Measured text: " ++ string_of_float(measurement));
-    Paint.setTextSize(fill3, 50.);
-    let largeMeasurement = Paint.measureText(fill3, "Hello, world!", None);
+    Font.setTextSize(font, 50.);
+    let largeMeasurement =
+      Font.measureText(font, "Hello, world!", GlyphId, None, Some(fill3));
     print_endline(
       "Large measured text: " ++ string_of_float(largeMeasurement),
     );
@@ -155,12 +158,10 @@ let draw = canvas => {
   switch (maybeTypeface) {
   | None => failwith("Unable to load font: " ++ filePath)
   | Some(typeFace) =>
+    let font = Font.makeWithValues(typeFace, 30., 1., 0.);
     let fill = Paint.make();
     Paint.setColor(fill, Color.makeArgb(0xFFl, 0xFFl, 0xFFl, 0xFFl));
-    Paint.setTextSize(fill, 30.);
-    Paint.setTypeface(fill, typeFace);
-    Paint.setSubpixelText(fill, true);
-    Paint.setTextEncoding(fill, GlyphId);
+    Font.setSubpixelText(font, true);
 
     let glyphsToString = glyphs => {
       let len = List.length(glyphs);
@@ -185,7 +186,7 @@ let draw = canvas => {
 
     // For FiraCode, this is a==>b
     let str = glyphsToString([136, 1624, 1624, 1495, 148]);
-    Canvas.drawText(canvas, str, 50., 100., fill);
+    Canvas.drawText(canvas, str, GlyphId, 50., 100., font, fill);
   };
 
   let fill = Paint.make();

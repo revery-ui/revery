@@ -5,20 +5,20 @@ type measureResult = {
 
 let measure = {
   let paint = Skia.Paint.make();
-  Skia.Paint.setTextEncoding(paint, GlyphId);
 
   (~smoothing: Smoothing.t, font, size, text: string) => {
     let {height, _}: FontMetrics.t = FontCache.getMetrics(font, size);
     let skiaFace = FontCache.getSkiaTypeface(font);
+    //  TODO: put outside
+    let font' = Skia.Font.makeWithValues(skiaFace, size, 1., 0.);
 
     let glyphString =
       text |> FontCache.shape(font) |> ShapeResult.getGlyphString;
 
-    Smoothing.setPaint(~smoothing, paint);
+    Smoothing.setPaint(~smoothing, paint, font');
 
-    Skia.Paint.setTypeface(paint, skiaFace);
-    Skia.Paint.setTextSize(paint, size);
-    let width = Skia.Paint.measureText(paint, glyphString, None);
+    let width =
+      Skia.Font.measureText(font', glyphString, GlyphId, None, Some(paint));
     {height, width};
   };
 };

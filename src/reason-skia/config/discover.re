@@ -70,7 +70,7 @@ let () = {
       []
       @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
       @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-      @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+      @ ["-I" ++ Filename.dirname(getenv("SKIA_INCLUDE_PATH"))]
 
     | Linux =>
       []
@@ -78,7 +78,7 @@ let () = {
       @ ["-lskia"]
       @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
       @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-      @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+      @ ["-I" ++ Filename.dirname(getenv("SKIA_INCLUDE_PATH"))]
       @ ["-L" ++ getenv("SKIA_LIB_PATH")]
       @ ["-L" ++ getenv("SDL2_LIB_PATH")]
       @ ["-L" ++ getenv("JPEG_LIB_PATH")]
@@ -90,7 +90,7 @@ let () = {
       @ ["-std=c++1y"]
       @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
       @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-      @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+      @ ["-I" ++ Filename.dirname(getenv("SKIA_INCLUDE_PATH"))]
 
     | _ => failwith("cflags: unknown platform")
     };
