@@ -363,17 +363,17 @@ let init = app => {
   ();
 };
 
-Revery.Font.Discovery.callback_font_not_found :=
-  (
-    (~weight, ~width, ~italic, ~mono, family) => {
-      path: Environment.getAssetPath("Roboto-Bold.ttf"),
-      postscriptName: "Roboto-Bold",
-      family: "Roboto",
-      weight: Normal,
-      width: Normal,
-      italic: false,
-      monospace: false,
-    }
-  );
+Revery.Font.Discovery.setFallbackResolver(
+  (~weight as _, ~width as _, ~mono as _, ~italic as _, _) =>
+  {
+    path: Environment.getAssetPath("Roboto-Bold.ttf"),
+    postscriptName: "Roboto-Bold",
+    family: "Roboto",
+    weight: Normal,
+    width: Normal,
+    italic: false,
+    monospace: false,
+  }
+);
 
 App.start(init);

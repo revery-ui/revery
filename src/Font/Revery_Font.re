@@ -27,7 +27,7 @@ let shape = FontCache.shape;
 module Discovery = {
   type t = FontManager.FontDescriptor.t;
 
-  let callback_font_not_found = Discovery.callback_font_not_found;
+  let setFallbackResolver = Discovery.setFallbackResolver;
 
   /** raises Font_not_found if couldn't find any font */
   let find = Discovery.find;
