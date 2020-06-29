@@ -35,13 +35,11 @@ module FontComponent = {
       };
 
     let resolvedFont =
-      Some(
-        Font.Discovery.find(
-          ~weight=state.bold ? Font.Weight.Bold : Font.Weight.Normal,
-          ~mono=state.mono,
-          ~italic=state.italic,
-          state.family,
-        ),
+      Font.Discovery.find(
+        ~weight=state.bold ? Font.Weight.Bold : Font.Weight.Normal,
+        ~mono=state.mono,
+        ~italic=state.italic,
+        state.family,
       );
 
     switch (resolvedFont) {
