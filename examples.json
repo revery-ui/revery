@@ -1,7 +1,8 @@
 {
   "source": "./package.json",
   "scripts": {
-      "run": "esy x Examples"
+      "run": "esy @examples x Examples",
+      "run-harfbuzz": "esy @examples x bash -c run-harfbuzz.sh"
   },
   "override": {
       "build": ["dune build -p font-manager,harfbuzz,skia,Revery,ReveryExamples -j4"],

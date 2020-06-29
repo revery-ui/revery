@@ -3,3 +3,8 @@
  (package ReveryExamples)
  (public_name HarfbuzzCli)
  (libraries bigarray harfbuzz reason-native-crash-utils.asan))
+
+(install
+ (section bin)
+ (package ReveryExamples)
+ (files run-harfbuzz.sh HarfbuzzCli.exe))
