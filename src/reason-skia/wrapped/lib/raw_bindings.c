@@ -5,13 +5,13 @@
  */
 
 #include "c_stubs.h"
-#include "sk_canvas.h"
-#include "sk_matrix.h"
-#include "sk_paint.h"
-#include "sk_types.h"
-#include "sk_typeface.h"
-#include "sk_data.h"
-#include "sk_stream.h"
+#include "include/c/sk_canvas.h"
+#include "include/c/sk_matrix.h"
+#include "include/c/sk_paint.h"
+#include "include/c/sk_types.h"
+#include "include/c/sk_typeface.h"
+#include "include/c/sk_data.h"
+#include "include/c/sk_stream.h"
 
 #include <stdio.h>
 #include <stdlib.h>

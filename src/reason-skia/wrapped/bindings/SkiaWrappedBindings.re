@@ -79,7 +79,7 @@ module M = (F: FOREIGN) => {
 
     let makeFromName =
       foreign(
-        "sk_typeface_create_from_name_with_font_style",
+        "sk_typeface_create_from_name",
         string @-> FontStyle.t @-> returning(ptr_opt(SkiaTypes.Typeface.t)),
       );
 
@@ -134,6 +134,61 @@ module M = (F: FOREIGN) => {
       getf(!@metrics, SkiaTypes.FontMetrics.maxCharacterWidth);
     let getAvgCharacterWidth = metrics =>
       getf(!@metrics, SkiaTypes.FontMetrics.avgCharacterWidth);
+  };
+
+  module Font = {
+    type t = ptr(structure(SkiaTypes.Font.t));
+    let t = ptr(SkiaTypes.Font.t);
+
+    let makeDefault = foreign("sk_font_new", void @-> returning(t));
+    let makeWidthValues =
+      foreign(
+        "sk_font_new_with_values",
+        ptr(SkiaTypes.Typeface.t)
+        @-> float
+        @-> float
+        @-> float
+        @-> returning(t),
+      );
+    let getFontMetrics =
+      foreign(
+        "sk_font_get_metrics",
+        t @-> FontMetrics.t @-> returning(float),
+      );
+    let measureText =
+      foreign(
+        "sk_font_measure_text",
+        t
+        @-> string
+        @-> int
+        @-> TextEncoding.t
+        @-> ptr_opt(SkiaTypes.Rect.t)
+        @-> ptr_opt(SkiaTypes.Paint.t)
+        @-> returning(float),
+      );
+
+    let setSubpixelText =
+      foreign("sk_font_set_subpixel", t @-> bool @-> returning(void));
+
+    let setTypeface =
+      foreign("sk_font_set_typeface", t @-> Typeface.t @-> returning(void));
+    let setTextSize =
+      foreign("sk_font_set_size", t @-> float @-> returning(void));
+
+    let isAutohinted =
+      foreign("sk_font_is_force_auto_hinting", t @-> returning(bool));
+    let setAutohinted =
+      foreign(
+        "sk_font_set_force_auto_hinting",
+        t @-> bool @-> returning(void),
+      );
+
+    let getHinting =
+      foreign("sk_font_get_hinting", t @-> returning(Hinting.t));
+    let setHinting =
+      foreign("sk_font_set_hinting", t @-> Hinting.t @-> returning(void));
+
+    let delete = foreign("sk_font_delete", t @-> returning(void));
   };
 
   module ImageFilter = {
@@ -247,65 +302,10 @@ module M = (F: FOREIGN) => {
     let setStrokeWidth =
       foreign("sk_paint_set_stroke_width", t @-> float @-> returning(void));
 
-    let setTypeface =
-      foreign("sk_paint_set_typeface", t @-> Typeface.t @-> returning(void));
-
-    let setLcdRenderText =
-      foreign(
-        "sk_paint_set_lcd_render_text",
-        t @-> bool @-> returning(void),
-      );
-
-    let setSubpixelText =
-      foreign("sk_paint_set_subpixel_text", t @-> bool @-> returning(void));
-
-    let setTextSize =
-      foreign("sk_paint_set_textsize", t @-> float @-> returning(void));
-
-    let getFontMetrics =
-      foreign(
-        "sk_paint_get_fontmetrics",
-        t @-> ptr(SkiaTypes.FontMetrics.t) @-> float @-> returning(float),
-      );
-
-    let isAutohinted =
-      foreign("sk_paint_is_autohinted", t @-> returning(bool));
-
-    let setAutohinted =
-      foreign("sk_paint_set_autohinted", t @-> bool @-> returning(void));
-
-    let isAutohinted =
-      foreign("sk_paint_is_autohinted", t @-> returning(bool));
-
-    let getHinting =
-      foreign("sk_paint_get_hinting", t @-> returning(Hinting.t));
-
-    let setHinting =
-      foreign("sk_paint_set_hinting", t @-> Hinting.t @-> returning(void));
-
-    let measureText =
-      foreign(
-        "sk_paint_measure_text",
-        t
-        @-> string
-        @-> int
-        @-> ptr_opt(SkiaTypes.Rect.t)
-        @-> returning(float),
-      );
-
     let setImageFilter =
       foreign(
         "sk_paint_set_imagefilter",
         t @-> ImageFilter.t @-> returning(void),
-      );
-
-    let getTextEncoding =
-      foreign("sk_paint_get_text_encoding", t @-> returning(TextEncoding.t));
-
-    let setTextEncoding =
-      foreign(
-        "sk_paint_set_text_encoding",
-        t @-> TextEncoding.t @-> returning(void),
       );
 
     let setShader =
@@ -406,25 +406,49 @@ module M = (F: FOREIGN) => {
           perspective1,
           perspective2,
         ) => {
-      let mat = getf(!@matrix, SkiaTypes.Matrix.mat);
-      CArray.set(mat, 0, scaleX);
-      CArray.set(mat, 1, skewX);
-      CArray.set(mat, 2, translateX);
-      CArray.set(mat, 3, skewY);
-      CArray.set(mat, 4, scaleY);
-      CArray.set(mat, 5, translateY);
-      CArray.set(mat, 6, perspective0);
-      CArray.set(mat, 7, perspective1);
-      CArray.set(mat, 8, perspective2);
+      let mat = !@matrix;
+      setf(mat, SkiaTypes.Matrix.scaleX, scaleX);
+      setf(mat, SkiaTypes.Matrix.skewX, skewX);
+      setf(mat, SkiaTypes.Matrix.transX, translateX);
+      setf(mat, SkiaTypes.Matrix.skewY, skewY);
+      setf(mat, SkiaTypes.Matrix.scaleY, scaleY);
+      setf(mat, SkiaTypes.Matrix.transY, translateY);
+      setf(mat, SkiaTypes.Matrix.persp0, perspective0);
+      setf(mat, SkiaTypes.Matrix.persp1, perspective1);
+      setf(mat, SkiaTypes.Matrix.persp2, perspective2);
     };
+    //TODO: prevent out of bound with variant ?
+
     let get = (matrix, index) => {
-      let mat = getf(!@matrix, SkiaTypes.Matrix.mat);
-      CArray.get(mat, index);
+      let mat = !@matrix;
+      switch (index) {
+      | 0 => getf(mat, SkiaTypes.Matrix.scaleX)
+      | 1 => getf(mat, SkiaTypes.Matrix.skewX)
+      | 2 => getf(mat, SkiaTypes.Matrix.transX)
+      | 3 => getf(mat, SkiaTypes.Matrix.skewY)
+      | 4 => getf(mat, SkiaTypes.Matrix.scaleY)
+      | 5 => getf(mat, SkiaTypes.Matrix.transY)
+      | 6 => getf(mat, SkiaTypes.Matrix.persp0)
+      | 7 => getf(mat, SkiaTypes.Matrix.persp1)
+      | 8 => getf(mat, SkiaTypes.Matrix.persp2)
+      | _ => assert(false)
+      };
     };
 
     let set = (matrix, index, value) => {
-      let mat = getf(!@matrix, SkiaTypes.Matrix.mat);
-      CArray.set(mat, index, value);
+      let mat = !@matrix;
+      switch (index) {
+      | 0 => setf(mat, SkiaTypes.Matrix.scaleX, value)
+      | 1 => setf(mat, SkiaTypes.Matrix.skewX, value)
+      | 2 => setf(mat, SkiaTypes.Matrix.transX, value)
+      | 3 => setf(mat, SkiaTypes.Matrix.skewY, value)
+      | 4 => setf(mat, SkiaTypes.Matrix.scaleY, value)
+      | 5 => setf(mat, SkiaTypes.Matrix.transY, value)
+      | 6 => setf(mat, SkiaTypes.Matrix.persp0, value)
+      | 7 => setf(mat, SkiaTypes.Matrix.persp1, value)
+      | 8 => setf(mat, SkiaTypes.Matrix.persp2, value)
+      | _ => assert(false)
+      };
     };
 
     let invert =
@@ -864,12 +888,14 @@ module M = (F: FOREIGN) => {
 
     let drawText =
       foreign(
-        "sk_canvas_draw_text",
+        "sk_canvas_draw_simple_text",
         t
         @-> string
-        @-> int
+        @-> size_t
+        @-> TextEncoding.t
         @-> float
         @-> float
+        @-> Font.t
         @-> Paint.t
         @-> returning(void),
       );

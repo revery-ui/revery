@@ -2,7 +2,7 @@
     (name Revery_Font)
     (public_name Revery.Font)
     (preprocess (pps lwt_ppx))
-    (libraries 
+    (libraries
         harfbuzz
         font-manager
         lru
@@ -13,4 +13,5 @@
         rebez.lib
         Revery_Core
         Revery_Math
+        skia
 ))

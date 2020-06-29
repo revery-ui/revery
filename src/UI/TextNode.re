@@ -27,8 +27,8 @@ class textNode (text: string) = {
   val mutable _underlined = false;
   val _textPaint = {
     let paint = Skia.Paint.make();
-    Skia.Paint.setTextEncoding(paint, GlyphId);
-    Skia.Paint.setLcdRenderText(paint, true);
+    // ASK: What we should do
+    // Skia.Paint.setLcdRenderText(paint, true);
     Skia.Paint.setAntiAlias(paint, true);
     paint;
   };
@@ -49,14 +49,17 @@ class textNode (text: string) = {
       )
     ) {
     | Error(_) => ()
-    | Ok(font) =>
-      Revery_Font.Smoothing.setPaint(~smoothing=_smoothing, _textPaint);
+    | Ok(fontCache) =>
+      let font =
+        Skia.Font.makeWithValues(
+          Revery_Font.FontCache.getSkiaTypeface(fontCache),
+          _fontSize,
+          1.,
+          0.,
+        );
+      // TODO: scale, skew
+      Revery_Font.Smoothing.setPaint(~smoothing=_smoothing, _textPaint, font);
       Skia.Paint.setColor(_textPaint, Color.toSkia(colorWithAppliedOpacity));
-      Skia.Paint.setTypeface(
-        _textPaint,
-        Revery_Font.FontCache.getSkiaTypeface(font),
-      );
-      Skia.Paint.setTextSize(_textPaint, _fontSize);
 
       let ascentPx =
         Text.ascent(
@@ -93,7 +96,7 @@ class textNode (text: string) = {
 
           let glyphString =
             line
-            |> Revery_Font.shape(font)
+            |> Revery_Font.shape(fontCache)
             |> Revery_Font.ShapeResult.getGlyphString;
 
           CanvasContext.drawText(
@@ -101,16 +104,17 @@ class textNode (text: string) = {
             ~x=0.,
             ~y=baselineY,
             ~text=glyphString,
+            ~font,
             canvas,
           );
           if (_underlined) {
             let {underlinePosition, underlineThickness, _}: FontMetrics.t =
-              FontCache.getMetrics(font, _fontSize);
+              FontCache.getMetrics(fontCache, _fontSize);
 
             let width =
               FontRenderer.measure(
                 ~smoothing=_smoothing,
-                font,
+                fontCache,
                 _fontSize,
                 line,
               ).

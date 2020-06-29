@@ -25,12 +25,12 @@ module M = (T: TYPE) => {
 
     let t =
       skiaCEnum(
-        "sk_paint_hinting_t",
+        "sk_font_hinting_t",
         [
-          (NoHinting, "NO_HINTING_SK_PAINT_HINTING"),
-          (SlightHinting, "SLIGHT_HINTING_SK_PAINT_HINTING"),
-          (NormalHinting, "NORMAL_HINTING_SK_PAINT_HINTING"),
-          (FullHinting, "FULL_HINTING_SK_PAINT_HINTING"),
+          (NoHinting, "NONE_SK_FONT_HINTING"),
+          (SlightHinting, "SLIGHT_SK_FONT_HINTING"),
+          (NormalHinting, "NORMAL_SK_FONT_HINTING"),
+          (FullHinting, "FULL_SK_FONT_HINTING"),
         ],
       );
   };
@@ -85,12 +85,25 @@ module M = (T: TYPE) => {
     type t;
     let t: typ(structure(t)) = structure("sk_stream_t");
     let t = typedef(t, "sk_stream_t");
+
+    module Asset = {
+      type t;
+      let t: typ(structure(t)) = structure("sk_stream_asset_t");
+      let t = typedef(t, "sk_stream_asset_t");
+    };
   };
 
   module Typeface = {
     type t;
     let t: typ(structure(t)) = structure("sk_typeface_t");
     let t = typedef(t, "sk_typeface_t");
+  };
+
+  module Font = {
+    type t;
+
+    let t: typ(structure(t)) = structure("sk_font_t");
+    let t = typedef(t, "sk_font_t");
   };
 
   module FontManager = {
@@ -209,7 +222,15 @@ module M = (T: TYPE) => {
   module Matrix = {
     type t;
     let t: typ(structure(t)) = structure("sk_matrix_t");
-    let mat = field(t, "mat", array(9, float));
+    let scaleX = field(t, "scaleX", float);
+    let skewX = field(t, "skewX", float);
+    let transX = field(t, "transX", float);
+    let skewY = field(t, "skewY", float);
+    let scaleY = field(t, "scaleY", float);
+    let transY = field(t, "transY", float);
+    let persp0 = field(t, "persp0", float);
+    let persp1 = field(t, "persp1", float);
+    let persp2 = field(t, "persp2", float);
     seal(t);
     let t = typedef(t, "sk_matrix_t");
   };

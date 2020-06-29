@@ -4,24 +4,22 @@ open TestFramework;
 describe("Paint", ({describe, _}) => {
   describe("hinting", ({test, _}) => {
     test("get / set isAutohinted", ({expect, _}) => {
-      let paint = Paint.make();
+      let font = Font.makeDefault();
 
-      Paint.setAutohinted(paint, true);
-      expect.equal(paint |> Paint.isAutohinted, true);
+      Font.setAutohinted(font, true);
+      expect.equal(font |> Font.isAutohinted, true);
 
-      Paint.setAutohinted(paint, false);
-      expect.equal(paint |> Paint.isAutohinted, false);
+      Font.setAutohinted(font, false);
+      expect.equal(font |> Font.isAutohinted, false);
     });
     test("get / set hinting", ({expect, _}) => {
-      let paint = Paint.make();
+      let font = Font.makeDefault();
 
-      Paint.setTextEncoding(paint, Utf8);
+      Font.setHinting(font, FullHinting);
+      expect.equal(font |> Font.getHinting, FullHinting);
 
-      Paint.setHinting(paint, FullHinting);
-      expect.equal(paint |> Paint.getHinting, FullHinting);
-
-      Paint.setHinting(paint, NoHinting);
-      expect.equal(paint |> Paint.getHinting, NoHinting);
+      Font.setHinting(font, NoHinting);
+      expect.equal(font |> Font.getHinting, NoHinting);
     });
   })
 });

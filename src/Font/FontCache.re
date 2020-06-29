@@ -99,12 +99,10 @@ let getMetrics: (t, float) => FontMetrics.t =
       MetricsLruHash.promote(size, metricsCache);
       v;
     | None =>
-      let paint = Skia.Paint.make();
-      Skia.Paint.setTypeface(paint, skiaFace);
-      Skia.Paint.setTextSize(paint, size);
+      let font = Skia.Font.makeWithValues(skiaFace, size, 1., 0.);
 
       let metrics = Skia.FontMetrics.make();
-      let lineHeight = Skia.Paint.getFontMetrics(paint, metrics, 1.0);
+      let lineHeight = Skia.Font.getFontMetrics(font, metrics);
 
       let ret = FontMetrics.ofSkia(size, lineHeight, metrics);
       MetricsLruHash.add(size, ret, metricsCache);

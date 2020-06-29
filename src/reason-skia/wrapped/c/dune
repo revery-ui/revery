@@ -23,7 +23,7 @@
 (rule
  (targets dllskia_wrapped_c_stubs.so)
  (deps   c_stubs.o)
- (action (run %{cc} %{read-lines:c_library_flags.txt} -shared -o %{targets} %{deps})))
+ (action (run %{cc} -shared -o %{targets} %{deps} %{read-lines:c_library_flags.txt} )))
 
 (rule
  (targets c_stubs.o)

@@ -132,10 +132,6 @@ module Paint = {
     paint;
   };
 
-  let measureText = (paint, text, rectOpt) => {
-    SkiaWrapped.Paint.measureText(paint, text, String.length(text), rectOpt);
-  };
-
   [@noalloc]
   external _setColor: (CI.fatptr(_), [@unboxed] int32) => unit =
     "reason_skia_paint_set_color_byte" "reason_skia_paint_set_color";
@@ -147,23 +143,10 @@ module Paint = {
   let setColor = (paint, color) => _setColor(CI.cptr(paint), color);
   let setAlpha = (paint, alpha) => _setAlphaf(CI.cptr(paint), alpha);
 
-  let setHinting = SkiaWrapped.Paint.setHinting;
-  let getHinting = SkiaWrapped.Paint.getHinting;
-
-  let isAutohinted = SkiaWrapped.Paint.isAutohinted;
-  let setAutohinted = SkiaWrapped.Paint.setAutohinted;
-
   let setAntiAlias = SkiaWrapped.Paint.setAntiAlias;
   let setStyle = SkiaWrapped.Paint.setStyle;
   let setStrokeWidth = SkiaWrapped.Paint.setStrokeWidth;
-  let setLcdRenderText = SkiaWrapped.Paint.setLcdRenderText;
-  let setSubpixelText = SkiaWrapped.Paint.setSubpixelText;
-  let setTextSize = SkiaWrapped.Paint.setTextSize;
-  let setTypeface = SkiaWrapped.Paint.setTypeface;
-  let getFontMetrics = SkiaWrapped.Paint.getFontMetrics;
   let setImageFilter = SkiaWrapped.Paint.setImageFilter;
-  let setTextEncoding = SkiaWrapped.Paint.setTextEncoding;
-  let getTextEncoding = SkiaWrapped.Paint.getTextEncoding;
 
   let setShader = SkiaWrapped.Paint.setShader;
 };
@@ -474,6 +457,44 @@ module Rect = {
   };
 };
 
+module Font = {
+  type t = SkiaWrapped.Font.t;
+
+  let makeDefault = () => {
+    let fnt = SkiaWrapped.Font.makeDefault();
+    Gc.finalise(SkiaWrapped.Font.delete, fnt);
+    fnt;
+  };
+
+  let makeWithValues = (typeface, size, scaleX, skewX) => {
+    let fnt = SkiaWrapped.Font.makeWidthValues(typeface, size, scaleX, skewX);
+    Gc.finalise(SkiaWrapped.Font.delete, fnt);
+    fnt;
+  };
+
+  let measureText = (font, text, encoding, rectOpt, paint) =>
+    SkiaWrapped.Font.measureText(
+      font,
+      text,
+      String.length(text),
+      encoding,
+      rectOpt,
+      paint,
+    );
+
+  let getFontMetrics = SkiaWrapped.Font.getFontMetrics;
+  let setTypeface = SkiaWrapped.Font.setTypeface;
+  let setTextSize = SkiaWrapped.Font.setTextSize;
+
+  let setSubpixelText = SkiaWrapped.Font.setSubpixelText;
+
+  let isAutohinted = SkiaWrapped.Font.isAutohinted;
+  let setAutohinted = SkiaWrapped.Font.setAutohinted;
+
+  let getHinting = SkiaWrapped.Font.getHinting;
+  let setHinting = SkiaWrapped.Font.setHinting;
+};
+
 module FontStyle = {
   type t = SkiaWrapped.FontStyle.t;
   type slant = SkiaWrapped.FontStyle.slant;
@@ -712,13 +733,14 @@ module Canvas = {
   let drawPath = SkiaWrapped.Canvas.drawPath;
   let drawCircle = SkiaWrapped.Canvas.drawCircle;
 
-  let drawText = (canvas, text, x, y, paint) => {
+  let drawText = (canvas, text, x, y, font, paint) => {
     SkiaWrapped.Canvas.drawText(
       canvas,
       text,
-      String.length(text),
+      Unsigned.Size_t.of_int(String.length(text)),
       x,
       y,
+      font,
       paint,
     );
   };
