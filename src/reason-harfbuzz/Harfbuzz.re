@@ -7,7 +7,7 @@ module Internal = {
   type face;
   external hb_face_from_path: string => result(face, string) =
     "rehb_face_from_path";
-  external hb_face_from_bytes: (string, int) => result(face, string) =
+  external hb_face_from_data: (string, int) => result(face, string) =
     "rehb_face_from_bytes";
   external hb_destroy_face: face => unit = "rehb_destroy_face";
   external hb_shape: (face, string) => array(hb_shape) = "rehb_shape";
@@ -36,7 +36,7 @@ let hb_face_from_skia = sk_typeface => {
   let data = Skia.Data.makeFromStream(stream, length);
   let bytes = Skia.Data.makeString(data);
 
-  switch (Internal.hb_face_from_bytes(bytes, String.length(bytes))) {
+  switch (Internal.hb_face_from_data(bytes, String.length(bytes))) {
   | Error(_) as e => e
   | Ok(face) =>
     let ret = {face: face};
