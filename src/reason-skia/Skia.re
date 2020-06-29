@@ -614,8 +614,6 @@ module Data = {
     maybeData;
   };
 
-  let getData = SkiaWrapped.Data.getData;
-
   let makeFromStream = SkiaWrapped.Data.makeFromStream;
 };
 

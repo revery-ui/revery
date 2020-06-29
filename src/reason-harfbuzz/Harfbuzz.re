@@ -37,7 +37,7 @@ let hb_face_from_skia = sk_typeface => {
   let bytes = Skia.Data.makeString(data);
 
   switch (Internal.hb_face_from_bytes(bytes, String.length(bytes))) {
-  | Error(msg) as e => e
+  | Error(_) as e => e
   | Ok(face) =>
     let ret = {face: face};
 

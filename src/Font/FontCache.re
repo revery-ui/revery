@@ -66,7 +66,7 @@ let load: string => result(t, string) =
       let assetPath = Environment.getAssetPath(fontName);
 
       let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
-      let harfbuzzFace = Harfbuzz.hb_new_face(assetPath);
+      let harfbuzzFace = Harfbuzz.hb_face_from_path(assetPath);
 
       let metricsCache = MetricsLruHash.create(~initialSize=8, 64);
       let shapeCache =
