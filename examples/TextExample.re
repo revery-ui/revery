@@ -96,7 +96,7 @@ module SampleText = {
           <Text style=textStyle fontSize=16. text="Font size: " />
           <Slider
             onValueChanged={v => setFontSize(v)}
-            initialValue=fontSizeSliderVal
+            value=fontSizeSliderVal
             maximumValue=maxFontSize
           />
           <Text
@@ -109,7 +109,7 @@ module SampleText = {
           <Text style=textStyle fontSize=16. text="Width: " />
           <Slider
             onValueChanged={w => setWidth(w)}
-            initialValue=widthSliderVal
+            value=widthSliderVal
             maximumValue=maxWidth
           />
           <Text

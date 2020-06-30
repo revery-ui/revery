@@ -65,9 +65,13 @@ module Example = {
       ];
   };
   let%component make = () => {
-    let%hook (stiffness, setStiffness) = Hooks.state(160.);
-    let%hook (damping, setDamping) = Hooks.state(10.);
-    let%hook (targetPosition, setTargetPosition) = Hooks.state(256.0);
+    let%hook (stiffness, setStiffness) =
+      Hooks.reducer(~initialState=160., (value, _) => value);
+    let%hook (damping, setDamping) =
+      Hooks.reducer(~initialState=10., (value, _) => value);
+    print_endline(string_of_float(damping));
+    let%hook (targetPosition, setTargetPosition) =
+      Hooks.reducer(~initialState=256.0, (value, _) => value);
     let%hook (logoWidth, setImmediately) =
       Hooks.spring(
         ~target=targetPosition,
@@ -82,14 +86,14 @@ module Example = {
         Spring.Options.create(~damping, ~stiffness, ()),
       );
     let setImmediately = value => {
-      setTargetPosition(_ => value);
+      setTargetPosition(value);
       setImmediately(value);
     };
 
     let onMouseDown = _ => {
-      setTargetPosition(_ => 512.0);
+      setTargetPosition(512.0);
     };
-    let onMouseUp = _ => setTargetPosition(_ => 256.0);
+    let onMouseUp = _ => setTargetPosition(256.0);
 
     <Center>
       <Center> <SpringyLogo width=logoWidth onMouseDown onMouseUp /> </Center>
@@ -99,14 +103,14 @@ module Example = {
           minimumValue=1.
           maximumValue=100.
           value=damping
-          onValueChanged={v => setDamping(_ => v)}
+          onValueChanged={v => setDamping(v)}
         />
         <SliderControl
           text="Stiffness: "
           minimumValue=1.
           maximumValue=500.
           value=stiffness
-          onValueChanged={v => setStiffness(_ => v)}
+          onValueChanged={v => setStiffness(v)}
         />
         <SliderControl
           text="Width: "
