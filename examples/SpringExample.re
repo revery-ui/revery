@@ -69,7 +69,6 @@ module Example = {
       Hooks.reducer(~initialState=160., (value, _) => value);
     let%hook (damping, setDamping) =
       Hooks.reducer(~initialState=10., (value, _) => value);
-    print_endline(string_of_float(damping));
     let%hook (targetPosition, setTargetPosition) =
       Hooks.reducer(~initialState=256.0, (value, _) => value);
     let%hook (logoWidth, setImmediately) =
