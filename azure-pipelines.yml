@@ -23,7 +23,7 @@ jobs:
 - job: Linux
   timeoutInMinutes: 0
   pool:
-    vmImage: 'Ubuntu 16.04'
+    vmImage: 'ubuntu-18.04'
 
   variables:
     STAGING_DIRECTORY: $(Build.StagingDirectory)
@@ -35,7 +35,7 @@ jobs:
   - script: sudo apt-get update
   - script: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-utils mesa-utils-extra ragel libgtk-3-dev nasm
   - template: .ci/use-node.yml
-  - template: .ci/restore-build-cache.yml
+#  - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
   - template: .ci/esy-bench.yml
   - template: .ci/create-docs.yml
@@ -45,7 +45,7 @@ jobs:
   displayName: 'Linux - CentOS - Docker Image'
   timeoutInMinutes: 0
   pool:
-    vmImage: 'Ubuntu 16.04'
+    vmImage: 'ubuntu-18.04'
 
   variables:
     STAGING_DIRECTORY: $(Build.StagingDirectory)
