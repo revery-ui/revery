@@ -1,4 +1,6 @@
 set -e
 
 CWD=$(dirname $0)
-LSAN_OPTIONS=suppressions=lsan.supp $CWD/HarfbuzzCli.exe
+if [[ $1 == 'windows' ]]; then executable="HarfbuzzCli.exe"; else executable="HarfbuzzCli"; fi
+
+LSAN_OPTIONS=suppressions=lsan.supp $CWD/$executable

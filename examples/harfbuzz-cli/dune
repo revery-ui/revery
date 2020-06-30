@@ -7,4 +7,4 @@
 (install
  (section bin)
  (package ReveryExamples)
- (files run-harfbuzz.sh HarfbuzzCli.exe))
+ (files run-harfbuzz.sh))
