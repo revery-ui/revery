@@ -612,3 +612,60 @@ function resdl_SDL_WaitTimeoutEvent() {
 function resdl_SDL_GL_SwapWindow() {
     // no op
 }
+
+// Provides: resdl_SDL_GetNumVideoDisplays
+function resdl_SDL_GetNumVideoDisplays() {
+    return 1;
+}
+
+// Provides: resdl_SDL_GL_GetString
+function resdl_SDL_GL_GetString(value) {
+    if (value) {
+        return value.toString();
+    } else {
+        return ""
+    }
+}
+
+// Provides: resdl_SDL_GetWindowPixelFormat
+function resdl_SDL_GetWindowPixelFormat(_win) {
+    return "SDL_PIXELFORMAT_ARGB8888";
+}
+
+// Provides: resdl_SDL_GetPixelFormatName
+function resdl_SDL_GetPixelFormatName(value) {
+    return "resdl_SDL_GetPixelFormatName: Not implemented";
+}
+
+
+// Provides: resdl_SDL_GetLinkedVersion
+function resdl_SDL_GetLinkedVersion() {
+    return 1;
+}
+
+// Provides: resdl_SDL_GetScancodeFromName
+function resdl_SDL_GetScancodeFromName() {
+    return "scancodeFromName";
+}
+
+// Provides: resdl_SDL_GetKeyFromName
+function resdl_SDL_GetKeyFromName() {
+    return "keyFromname";
+}
+
+// Provides: resdl_SDL_GetCompiledVersion
+function resdl_SDL_GetCompiledVersion() {
+    return "resdl_SDL_GetCompiledVersion: Not implemented";
+}
+
+// Provides: resdl_SDL_GetDisplayBounds
+function resdl_SDL_GetDisplayBounds(display) {
+    console.log("resdl_SDL_GetDisplayBounds, display:", display);
+
+    return {
+        x: 0,
+        y: 0,
+        height: joo_global_object.window.availHeight,
+        width: joo_global_object.window.availWidth
+    }
+}
