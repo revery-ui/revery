@@ -8,6 +8,12 @@ module StringHashable = {
   let hash = Hashtbl.hash;
 };
 
+module StringAndFeaturesHashable = {
+  type t = (string, list(Feature.t));
+  let equal = (==);
+  let hash = Hashtbl.hash;
+};
+
 module FloatHashable = {
   type t = float;
   let equal = Float.equal;
@@ -35,7 +41,8 @@ module ShapeResultWeighted = {
 };
 
 module MetricsLruHash = Lru.M.Make(FloatHashable, MetricsWeighted);
-module ShapeResultLruHash = Lru.M.Make(StringHashable, ShapeResultWeighted);
+module ShapeResultLruHash =
+  Lru.M.Make(StringAndFeaturesHashable, ShapeResultWeighted);
 
 type t = {
   hbFace: Harfbuzz.hb_face,
@@ -115,16 +122,16 @@ let getMetrics: (t, float) => FontMetrics.t =
 
 let getSkiaTypeface: t => Skia.Typeface.t = font => font.skiaFace;
 
-let shape: (t, string) => ShapeResult.t =
-  ({hbFace, shapeCache, _}, str) => {
-    switch (ShapeResultLruHash.find(str, shapeCache)) {
+let shape: (~features: list(Feature.t)=?, t, string) => ShapeResult.t =
+  (~features=[], {hbFace, shapeCache, _}, str) => {
+    switch (ShapeResultLruHash.find((str, features), shapeCache)) {
     | Some(v) =>
-      ShapeResultLruHash.promote(str, shapeCache);
+      ShapeResultLruHash.promote((str, features), shapeCache);
       v;
     | None =>
       let shaping = Harfbuzz.hb_shape(hbFace, str);
       let result = ShapeResult.ofHarfbuzz(shaping);
-      ShapeResultLruHash.add(str, result, shapeCache);
+      ShapeResultLruHash.add((str, features), result, shapeCache);
       ShapeResultLruHash.trim(shapeCache);
       result;
     };

@@ -13,7 +13,7 @@ module FontRenderer = FontRenderer;
 module ShapeResult = ShapeResult;
 module Smoothing = Smoothing;
 module Family = FontFamily;
-module Features = Features;
+module Feature = Feature;
 
 type t = FontCache.t;
 

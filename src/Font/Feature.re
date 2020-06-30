@@ -1,4 +1,7 @@
-type t =
+type t = Harfbuzz.feature;
+type position = [ | `Start | `End | `Position(int)];
+
+type feature =
   | AccessAllAlternates
   | AboveBaseForms
   | AboveBaseMarkPositioning
@@ -239,7 +242,7 @@ type t =
   | VerticalAlternatesForRotation
   | SlashedZero;
 
-let getCode = feature =>
+let getTag = feature =>
   switch (feature) {
   | AccessAllAlternates => "aalt"
   | AboveBaseForms => "abvf"
@@ -481,3 +484,6 @@ let getCode = feature =>
   | VerticalAlternatesForRotation => "vrtr"
   | SlashedZero => "zero"
   };
+
+let make = (~feature, ~value, ~start, ~end') =>
+  Harfbuzz.{tag: getTag(feature), value, start, end'};
