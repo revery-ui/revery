@@ -9,7 +9,6 @@
 #include <hb-ot.h>
 #include <hb.h>
 
-#include "ctypes_cstubs_internals.h"
 
 /* #define TEST_FONT "E:/FiraCode-Regular.ttf" */
 /* #define TEST_FONT "E:/Hasklig-Medium.otf" */
