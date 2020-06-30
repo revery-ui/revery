@@ -90,7 +90,6 @@ CAMLprim value rehb_face_from_path(value vString) {
   if (!hb_font) {
     ret = Val_error("Unable to load font");
   } else {
-
     ret = Val_success((value)hb_font);
   }
   CAMLreturn(ret);
@@ -100,11 +99,11 @@ CAMLprim value rehb_face_from_bytes(value vPtr, value vLength) {
   CAMLparam2(vPtr, vLength);
   CAMLlocal1(ret);
 
-  char *data = (char *)vPtr;
+  const char *data = String_val(vPtr);
   int length = Int_val(vLength);
 
   hb_font_t *hb_font;
-  hb_font = get_font_ot(data, length, 12 /*iSize*/ * 64);
+  hb_font = get_font_ot((char *)data, length, 12 /*iSize*/ * 64);
 
   if (!hb_font) {
     ret = Val_error("Unable to load font");
