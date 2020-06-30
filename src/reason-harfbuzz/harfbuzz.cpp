@@ -73,7 +73,7 @@ CAMLprim value rehb_face_from_path(value vString) {
   FILE *file = fopen(szFont, "rb");
 
   if (!file) {
-    return NULL;
+    CAMLreturn(Val_error("File does not exist"));
   }
 
   fseek(file, 0, SEEK_END);
