@@ -187,6 +187,7 @@ let%component make =
                 ~italic=false,
                 ~monospaced=false,
                 ~fontSize=14.0,
+                ~underlined=false,
                 ~placeholderColor=Styles.defaultPlaceholderColor,
                 ~cursorColor=Styles.defaultCursorColor,
                 ~autofocus=false,
@@ -401,6 +402,12 @@ let%component make =
     <Text
       ref={node => textRef := Some(node)}
       text
+      fontFamily
+      fontWeight
+      italic
+      monospaced
+      fontSize
+      underlined
       smoothing
       style={Styles.text(
         ~showPlaceholder,
