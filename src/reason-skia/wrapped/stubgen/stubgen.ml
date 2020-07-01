@@ -14,6 +14,7 @@ let prologue = "
 #include \"sk_matrix.h\"
 #include \"sk_typeface.h\"
 #include \"sk_stream.h\"
+#include \"sk_string.h\"
 "
 
 let () =

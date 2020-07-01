@@ -49,6 +49,7 @@ module Data: {
 module Typeface: {
   type t;
 
+  let getFamilyName: t => string;
   let makeFromName: (string, FontStyle.t) => option(t);
   let makeFromFile: (string, int) => option(t);
   let toStream: t => Stream.t;

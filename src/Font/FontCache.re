@@ -58,7 +58,10 @@ module Internal = {
 
 let load: option(Skia.Typeface.t) => result(t, string) =
   (skiaTypeface: option(Skia.Typeface.t)) => {
-    let fontName = "";
+    let fontName =
+      skiaTypeface
+      |> Option.map(tf => Skia.Typeface.getFamilyName(tf))
+      |> Option.value(~default="");
     switch (FontCache.find(fontName, Internal.cache)) {
     | Some(v) =>
       FontCache.promote(fontName, Internal.cache);

@@ -620,6 +620,11 @@ module Data = {
 module Typeface = {
   type t = SkiaWrapped.Typeface.t;
 
+  let getFamilyName = tf => {
+    let skStr = SkiaWrapped.Typeface.getFamilyName(tf);
+    skStr |> SkiaWrapped.String.toString;
+  };
+
   let makeFromName = SkiaWrapped.Typeface.makeFromName;
   let makeFromFile = SkiaWrapped.Typeface.makeFromFile;
 

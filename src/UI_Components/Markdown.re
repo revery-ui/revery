@@ -201,11 +201,12 @@ let generateText = (text, styles, attrs, dispatch, state) => {
                 ? styles.activeLink : styles.inactiveLink},
         ]
         fontSize
-        fontFamily={styles.fontFamily}
+        fontFamily={
+          isMonospaced(attrs) ? styles.codeFontFamily : styles.fontFamily
+        }
         fontWeight
         italic={isItalicized(attrs)}
         underlined=true
-        monospaced={isMonospaced(attrs)}
       />
     </View>;
   | `InlineCode =>
@@ -220,21 +221,21 @@ let generateText = (text, styles, attrs, dispatch, state) => {
           ...{selectStyleFromKind(attrs.kind, styles)},
         ]
         italic={isItalicized(attrs)}
-        monospaced={isMonospaced(attrs)}
       />
     </View>
   | _ =>
     <Text
       text
       fontSize
-      fontFamily={styles.fontFamily}
+      fontFamily={
+        isMonospaced(attrs) ? styles.codeFontFamily : styles.fontFamily
+      }
       fontWeight
       style=Style.[
         textWrap(TextWrapping.WrapIgnoreWhitespace),
         ...selectStyleFromKind(attrs.kind, styles),
       ]
       italic={isItalicized(attrs)}
-      monospaced={isMonospaced(attrs)}
     />
   };
 };
@@ -435,7 +436,6 @@ and generateCodeBlock =
                     ]
                     fontFamily={styles.codeFontFamily}
                     fontWeight={block.bold ? Weight.Bold : Weight.Normal}
-                    monospaced=true
                     fontSize={styles.codeBlockFontSize}
                   />;
                 },

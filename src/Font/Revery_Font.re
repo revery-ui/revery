@@ -5,8 +5,8 @@
     - Discovering fonts
     - Loading fonts
 */
-module Weight = FontManager.FontWeight;
-module Width = FontManager.FontWidth;
+module Weight = FontWeight;
+module Width = FontWidth;
 module FontMetrics = FontMetrics;
 module FontCache = FontCache;
 module FontRenderer = FontRenderer;

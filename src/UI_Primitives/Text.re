@@ -18,7 +18,6 @@ let%nativeComponent make =
                       ~fontFamily=Family.default,
                       ~fontWeight=Weight.Normal,
                       ~italic=false,
-                      ~monospaced=false,
                       ~fontSize=14.,
                       ~underlined=false,
                       ~text="",
@@ -76,7 +75,6 @@ let%nativeComponent make =
       tn#setFontFamily(fontFamily);
       tn#setFontWeight(fontWeight);
       tn#setItalicized(italic);
-      tn#setMonospaced(monospaced);
       tn#setFontSize(fontSize);
       tn#setUnderlined(underlined);
       node;

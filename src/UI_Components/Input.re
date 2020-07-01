@@ -185,7 +185,6 @@ let%component make =
                 ~fontFamily=Family.default,
                 ~fontWeight=Weight.Normal,
                 ~italic=false,
-                ~monospaced=false,
                 ~fontSize=14.0,
                 ~underlined=false,
                 ~placeholderColor=Styles.defaultPlaceholderColor,
@@ -232,7 +231,6 @@ let%component make =
       Revery_Draw.Text.dimensions(
         ~smoothing,
         ~italic,
-        ~mono=monospaced,
         ~fontWeight,
         ~fontFamily,
         ~fontSize,
@@ -405,7 +403,6 @@ let%component make =
       fontFamily
       fontWeight
       italic
-      monospaced
       fontSize
       underlined
       smoothing

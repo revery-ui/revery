@@ -11,7 +11,6 @@ let make =
       ~fontFamily=Family.default,
       ~fontWeight=Weight.Normal,
       ~italic=false,
-      ~monospaced=false,
       ~underlined=true,
       (),
     ) => {
@@ -25,7 +24,6 @@ let make =
     fontFamily
     fontWeight
     italic
-    monospaced
     underlined
   />;
 };

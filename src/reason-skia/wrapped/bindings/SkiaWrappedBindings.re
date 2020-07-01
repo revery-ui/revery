@@ -52,6 +52,13 @@ module M = (F: FOREIGN) => {
       foreign("sk_data_new_from_stream", Stream.t @-> int @-> returning(t));
   };
 
+  module String = {
+    type t = ptr(structure(SkiaTypes.String.t));
+    let t = ptr(SkiaTypes.String.t);
+
+    let toString = foreign("sk_string_get_c_str", t @-> returning(string));
+  };
+
   module FontStyle = {
     type t = ptr(structure(SkiaTypes.FontStyle.t));
     let t = ptr(SkiaTypes.FontStyle.t);
@@ -76,6 +83,9 @@ module M = (F: FOREIGN) => {
   module Typeface = {
     type t = ptr(structure(SkiaTypes.Typeface.t));
     let t = ptr(SkiaTypes.Typeface.t);
+
+    let getFamilyName =
+      foreign("sk_typeface_get_family_name", t @-> returning(String.t));
 
     let makeFromName =
       foreign(
