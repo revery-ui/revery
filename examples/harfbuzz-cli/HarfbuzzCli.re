@@ -1,4 +1,5 @@
 open Harfbuzz;
+open Skia;
 
 Printexc.record_backtrace(true);
 
@@ -13,12 +14,15 @@ let getExecutingDirectory = () =>
   isNative ? Filename.dirname(Sys.argv[0]) ++ Filename.dir_sep : "";
 
 let run = () => {
-  let fontPath = getExecutingDirectory() ++ "Roboto-Regular.ttf";
-  let result = Harfbuzz.hb_new_face(fontPath);
+  let fontManager = FontManager.makeDefault();
+  let style = FontStyle.make(400, 5, Upright);
+  let maybeTypeface =
+    FontManager.matchFamilyStyle(fontManager, "Arial", style);
+  let result = maybeTypeface |> Option.map(face => hb_face_from_skia(face));
 
   switch (result) {
-  | Error(msg) => failwith(msg)
-  | Ok(font) =>
+  | Some(Error(msg)) => failwith(msg)
+  | Some(Ok(font)) =>
     let show = ({glyphId, cluster}: hb_shape) =>
       Printf.sprintf("GlyphID: %d Cluster: %d", glyphId, cluster);
 
@@ -30,6 +34,7 @@ let run = () => {
     renderString("abc");
     renderString("!=ajga");
     renderString("a==>b");
+  | None => failwith("Font Arial not found!")
   };
 };
 

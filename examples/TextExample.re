@@ -44,8 +44,10 @@ let overflowStyles = (style, textWidth) =>
 
 module SampleText = {
   let%component make = () => {
-    let%hook (fontSizeSliderVal, setFontSize) = Hooks.state(20.);
-    let%hook (widthSliderVal, setWidth) = Hooks.state(200.);
+    let%hook (fontSizeSliderVal, setFontSize) =
+      Hooks.reducer(~initialState=20., (value, _) => value);
+    let%hook (widthSliderVal, setWidth) =
+      Hooks.reducer(~initialState=200., (value, _) => value);
     let%hook (hyphenate, setHyphenate) = Hooks.state(false);
 
     let textContent =
@@ -93,7 +95,7 @@ module SampleText = {
         <View style=controlsStyle>
           <Text style=textStyle fontSize=16. text="Font size: " />
           <Slider
-            onValueChanged={v => setFontSize(_ => v)}
+            onValueChanged={v => setFontSize(v)}
             value=fontSizeSliderVal
             maximumValue=maxFontSize
           />
@@ -106,7 +108,7 @@ module SampleText = {
         <View style=controlsStyle>
           <Text style=textStyle fontSize=16. text="Width: " />
           <Slider
-            onValueChanged={w => setWidth(_ => w)}
+            onValueChanged={w => setWidth(w)}
             value=widthSliderVal
             maximumValue=maxWidth
           />
