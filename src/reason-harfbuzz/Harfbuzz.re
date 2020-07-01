@@ -9,7 +9,7 @@ module Internal = {
     tag: string,
     value: int,
     start: int,
-    end': int,
+    stop: int,
   };
   external hb_face_from_path: string => result(face, string) =
     "rehb_face_from_path";
@@ -25,7 +25,7 @@ type feature = {
   tag: string,
   value: int,
   start: position,
-  end': position,
+  stop: position,
 };
 
 type hb_face = {face: Internal.face};
@@ -58,7 +58,7 @@ let hb_shape = (~features=[], {face}, str) => {
            tag: feat.tag,
            value: feat.value,
            start: positionToInt(feat.start),
-           end': positionToInt(feat.end'),
+           stop: positionToInt(feat.stop),
          }: feature => Internal.feature,
        )
     |> Array.of_list;

@@ -10,7 +10,7 @@ type feature = {
   tag: string,
   value: int,
   start: position,
-  end': position,
+  stop: position,
 };
 
 let hb_face_from_path: string => result(hb_face, string);

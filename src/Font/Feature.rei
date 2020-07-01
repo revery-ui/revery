@@ -5,4 +5,4 @@ type tag;
 
 let customTag: string => tag;
 
-let make: (~tag: tag, ~value: int, ~start: position, ~end': position) => t;
+let make: (~tag: tag, ~value: int, ~start: position, ~stop: position) => t;
