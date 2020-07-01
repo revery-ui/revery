@@ -115,13 +115,14 @@ CAMLprim value rehb_shape(value vFace, value vString) {
   hb_buffer_add_utf8(hb_buffer, String_val(vString), -1, 0, -1);
   hb_buffer_guess_segment_properties(hb_buffer);
 
-  unsigned int len = hb_buffer_get_length(hb_buffer);
-  hb_glyph_info_t *info = hb_buffer_get_glyph_infos(hb_buffer, NULL);
-
-  ret = caml_alloc(len, 0);
-
   hb_shape(hb_font, hb_buffer, NULL, 0);
-  for (int i = 0; i < len; i++) {
+   
+  unsigned int glyph_count;
+  hb_glyph_info_t *info = hb_buffer_get_glyph_infos(hb_buffer, &glyph_count);
+
+  ret = caml_alloc(glyph_count, 0);
+
+  for (int i = 0; i < glyph_count; i++) {
     Store_field(ret, i, createShapeTuple(info[i].codepoint, info[i].cluster));
   }
   hb_buffer_destroy(hb_buffer);
