@@ -25,12 +25,7 @@ let measure = FontRenderer.measure;
 let shape = FontCache.shape;
 
 module Discovery = {
-  type t = FontManager.FontDescriptor.t;
+  type t = option(Skia.Typeface.t);
 
-  let setFallbackResolver = Discovery.setFallbackResolver;
-
-  /** raises Font_not_found if couldn't find any font */
   let find = Discovery.find;
-  let findExn = Discovery.findExn;
-  let toString = Discovery.toString;
 };
