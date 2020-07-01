@@ -9,6 +9,7 @@
 #include <hb-ot.h>
 #include <hb.h>
 
+
 /* #define TEST_FONT "E:/FiraCode-Regular.ttf" */
 /* #define TEST_FONT "E:/Hasklig-Medium.otf" */
 /* #define TEST_FONT "E:/Cassandra.ttf" */
@@ -36,21 +37,7 @@ CAMLprim value Val_error(const char *szMsg) {
 
 /* Use native open type implementation to load font
   https://github.com/harfbuzz/harfbuzz/issues/255 */
-hb_font_t *get_font_ot(const char *filename, int size) {
-  FILE *file = fopen(filename, "rb");
-
-  if (!file) {
-    return NULL;
-  }
-
-  fseek(file, 0, SEEK_END);
-  unsigned int length = ftell(file);
-  fseek(file, 0, SEEK_SET);
-
-  char *data = (char *)malloc(length);
-  fread(data, length, 1, file);
-  fclose(file);
-
+hb_font_t *get_font_ot(char *data, int length, int size) {
   hb_blob_t *blob =
       hb_blob_create(data, length, HB_MEMORY_MODE_WRITABLE, (void *)data, free);
   hb_face_t *face = hb_face_create(blob, 0);
@@ -76,14 +63,46 @@ CAMLprim value rehb_destroy_face(value vFont) {
   CAMLreturn(Val_unit);
 }
 
-CAMLprim value rehb_new_face(value vString) {
+CAMLprim value rehb_face_from_path(value vString) {
   CAMLparam1(vString);
   CAMLlocal1(ret);
 
   const char *szFont = String_val(vString);
+  
+  FILE *file = fopen(szFont, "rb");
+
+  if (!file) {
+    CAMLreturn(Val_error("File does not exist"));
+  }
+
+  fseek(file, 0, SEEK_END);
+  unsigned int length = ftell(file);
+  fseek(file, 0, SEEK_SET);
+
+  char *data = (char *)malloc(length);
+  fread(data, length, 1, file);
+  fclose(file);
 
   hb_font_t *hb_font;
-  hb_font = get_font_ot(szFont, 12 /*iSize*/ * 64);
+  hb_font = get_font_ot(data, length, 12 /*iSize*/ * 64);
+
+  if (!hb_font) {
+    ret = Val_error("Unable to load font");
+  } else {
+    ret = Val_success((value)hb_font);
+  }
+  CAMLreturn(ret);
+}
+
+CAMLprim value rehb_face_from_bytes(value vPtr, value vLength) {
+  CAMLparam2(vPtr, vLength);
+  CAMLlocal1(ret);
+
+  char *data = Bp_val(vPtr);
+  int length = Int_val(vLength);
+
+  hb_font_t *hb_font;
+  hb_font = get_font_ot(data, length, 12 /*iSize*/ * 64);
 
   if (!hb_font) {
     ret = Val_error("Unable to load font");

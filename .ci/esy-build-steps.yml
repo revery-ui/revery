@@ -13,8 +13,8 @@ steps:
     displayName: 'esy @test run'
   - script: esy @examples install
     displayName: 'esy @examples install'
-  - script: esy @examples x HarfbuzzCli
-    displayName: 'esy @examples x HarfbuzzCli'
+  - script: esy @examples run-harfbuzz
+    displayName: 'esy @examples run-harfbuzz'
   - script: esy @examples x FontQuery -family=Arial
     displayName: 'esy @examples x FontQuery -family=Arial'
   - script: esy @examples x SkiaCli
