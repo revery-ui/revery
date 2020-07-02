@@ -28,19 +28,12 @@ describe("Family", ({test, _}) => {
   test("defaultMono", ({expect, _}) => {
     let (maybeSkia, _) = getInfoFromSkia(Family.defaultMono);
 
-    let paint = Paint.make();
-    let isMono =
-      switch (maybeSkia) {
-      | Some(tf) =>
-        Paint.setTypeface(paint, tf);
-        let metrics = FontMetrics.make();
-        let _: float = Paint.getFontMetrics(paint, metrics, 1.0);
-        let avg = FontMetrics.getAvgCharacterWidth(metrics);
-        let max = FontMetrics.getMaxCharacterWidth(metrics);
-        max -. avg |> Float.abs < 0.2;
-      | None => false
-      };
+    expect.option(maybeSkia).toBeSome();
+  });
 
-    expect.bool(isMono).toBe(true);
+  test("defaultSerif", ({expect, _}) => {
+    let (maybeSkia, _) = getInfoFromSkia(Family.defaultSerif);
+
+    expect.option(maybeSkia).toBeSome();
   });
 });
