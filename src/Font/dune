@@ -14,3 +14,10 @@
         Revery_Core
         Revery_Math
 ))
+
+(copy_files files/*)
+
+(install
+ (section bin)
+ (package Revery)
+ (files Inconsolata.otf))

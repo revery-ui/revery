@@ -83,14 +83,15 @@ let fromFile = (fileName, ~italic as _, _) => {
 let default =
   switch (Revery_Core.Environment.os) {
   | Linux => system("Liberation Sans")
-  | _ => system("System Font")
+  | Mac => system("System Font")
+  | _ => system("Arial")
   };
 
 let defaultMono =
   switch (Revery_Core.Environment.os) {
   | Mac => system("Menlo")
   | Windows => system("Consolas")
-  | _ => system("Mono")
+  | _ => fromFile("Inconsolata.otf")
   };
 
 let resolve = (~italic=false, weight, solver) =>
