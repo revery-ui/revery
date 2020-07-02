@@ -96,6 +96,7 @@ let defaultMono =
 let defaultSerif =
   switch (Revery_Core.Environment.os) {
   | Mac => system("Palatino")
+  | Linux => system("Liberation Serif")
   | _ => system("Times")
   };
 
