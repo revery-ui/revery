@@ -32,6 +32,7 @@ let system = (familyName): t =>
       FontFamilyCache.promote(fontDescr, cache);
       fd;
     | None =>
+      print_endline(familyName);
       let fd = Discovery.find(~weight, ~italic, familyName);
       FontFamilyCache.add(fontDescr, fd, cache);
       FontFamilyCache.trim(cache);
@@ -52,7 +53,8 @@ let fromFiles =
     FontFamilyCache.promote(fontDescr, cache);
     tf;
   | None =>
-    let tf = Skia.Typeface.makeFromFile(familyName, 0);
+    let assetPath = Revery_Core.Environment.getAssetPath(familyName);
+    let tf = Skia.Typeface.makeFromFile(assetPath, 0);
     FontFamilyCache.add(fontDescr, tf, cache);
     FontFamilyCache.trim(cache);
     tf;
@@ -70,7 +72,8 @@ let fromFile = (fileName, ~italic as _, _) => {
     FontFamilyCache.promote(fontDescr, cache);
     tf;
   | None =>
-    let tf = Skia.Typeface.makeFromFile(fileName, 0);
+    let assetPath = Revery_Core.Environment.getAssetPath(fileName);
+    let tf = Skia.Typeface.makeFromFile(assetPath, 0);
     FontFamilyCache.add(fontDescr, tf, cache);
     FontFamilyCache.trim(cache);
     tf;
@@ -80,7 +83,14 @@ let fromFile = (fileName, ~italic as _, _) => {
 let default =
   switch (Revery_Core.Environment.os) {
   | Linux => system("Liberation Sans")
-  | _ => system("Arial")
+  | _ => system("System Font")
+  };
+
+let defaultMono =
+  switch (Revery_Core.Environment.os) {
+  | Mac => system("Menlo")
+  | Windows => system("Consolas")
+  | _ => system("Mono")
   };
 
 let resolve = (~italic=false, weight, solver) =>

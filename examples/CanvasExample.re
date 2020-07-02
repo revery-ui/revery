@@ -53,7 +53,10 @@ module Sample = {
           Skia.Path.lineTo(path, 590., 430.);
           CanvasContext.drawPath(~path, ~paint=stroke, canvasContext);
 
-          switch (Revery_Font.load("Roboto-Regular.ttf")) {
+          let maybeSkia =
+            Revery_Font.Family.fromFile("Roboto-Regular.ttf")
+            |> Revery_Font.Family.toMaybeSkia(Revery_Font.Weight.Normal);
+          switch (Revery_Font.load(maybeSkia)) {
           | Error(_) => ()
           | Ok(font) =>
             let textPaint = Skia.Paint.make();

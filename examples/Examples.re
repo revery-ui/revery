@@ -59,7 +59,7 @@ let examples = [
     source: "Boxshadow.re",
   },
   {name: "Focus", render: _ => FocusExample.render(), source: "Focus.re"},
-  {name: "Fonts", render: _ => FontsExample.render(), source: "Fonts.re"},
+  //{name: "Fonts", render: _ => FontsExample.render(), source: "Fonts.re"},
   {
     name: "Stopwatch",
     render: _ => Stopwatch.render(),
@@ -362,18 +362,5 @@ let init = app => {
     UI.start(window, <ExampleHost window initialExample />);
   ();
 };
-
-Revery.Font.Discovery.setFallbackResolver(
-  (~weight as _, ~width as _, ~mono as _, ~italic as _, _) =>
-  {
-    path: Environment.getAssetPath("Roboto-Bold.ttf"),
-    postscriptName: "Roboto-Bold",
-    family: "Roboto",
-    weight: Normal,
-    width: Normal,
-    italic: false,
-    monospace: false,
-  }
-);
 
 App.start(init);

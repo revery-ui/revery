@@ -8,6 +8,12 @@ module StringHashable = {
   let hash = Hashtbl.hash;
 };
 
+module SkiaTypefaceHashable = {
+  type t = option(Skia.Typeface.t);
+  let equal = (===);
+  let hash = Hashtbl.hash;
+};
+
 module FloatHashable = {
   type t = float;
   let equal = Float.equal;
@@ -50,7 +56,7 @@ module FontWeight = {
   let weight = _ => 1;
 };
 
-module FontCache = Lru.M.Make(StringHashable, FontWeight);
+module FontCache = Lru.M.Make(SkiaTypefaceHashable, FontWeight);
 
 module Internal = {
   let cache = FontCache.create(~initialSize=8, 64);
@@ -58,13 +64,9 @@ module Internal = {
 
 let load: option(Skia.Typeface.t) => result(t, string) =
   (skiaTypeface: option(Skia.Typeface.t)) => {
-    let fontName =
-      skiaTypeface
-      |> Option.map(tf => Skia.Typeface.getFamilyName(tf))
-      |> Option.value(~default="");
-    switch (FontCache.find(fontName, Internal.cache)) {
+    switch (FontCache.find(skiaTypeface, Internal.cache)) {
     | Some(v) =>
-      FontCache.promote(fontName, Internal.cache);
+      FontCache.promote(skiaTypeface, Internal.cache);
       v;
     | None =>
       let harfbuzzFace =
@@ -77,7 +79,7 @@ let load: option(Skia.Typeface.t) => result(t, string) =
         switch (skiaTypeface, harfbuzzFace) {
         | (Some(skiaFace), Some(Ok(hbFace))) =>
           Event.dispatch(onFontLoaded, ());
-          Log.info("Loaded : " ++ fontName);
+          Log.info("Loaded : " ++ Skia.Typeface.getFamilyName(skiaFace));
           Ok({hbFace, skiaFace, metricsCache, shapeCache});
         | (_, Some(Error(msg))) =>
           Log.warn("Error loading typeface: " ++ msg);
@@ -90,7 +92,7 @@ let load: option(Skia.Typeface.t) => result(t, string) =
           Error("Error loading typeface");
         };
 
-      FontCache.add(fontName, ret, Internal.cache);
+      FontCache.add(skiaTypeface, ret, Internal.cache);
       FontCache.trim(Internal.cache);
       ret;
     };
