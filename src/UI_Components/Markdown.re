@@ -468,7 +468,7 @@ let%component make =
               (
                 ~markdown as mdText="",
                 ~fontFamily=Family.default,
-                ~codeFontFamily=Family.default,
+                ~codeFontFamily=Family.defaultMono,
                 ~baseFontSize=14.0,
                 ~codeBlockFontSize=baseFontSize,
                 ~paragraphStyle=Style.emptyTextStyle,
