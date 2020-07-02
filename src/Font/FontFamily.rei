@@ -11,5 +11,5 @@ let system: string => t;
 let resolve:
   (~italic: bool=?, FontWeight.t, t) => result(FontCache.t, string);
 
-let toMaybeSkia:
+let toSkia:
   (~italic: bool=?, FontWeight.t, t) => option(Skia.Typeface.t);

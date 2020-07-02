@@ -27,7 +27,7 @@ module Data = {
 let drawText = canvasContext => {
   let maybeSkia =
     Revery.Font.Family.fromFile("TestFont.ttf")
-    |> Revery.Font.Family.toMaybeSkia(Normal);
+    |> Revery.Font.Family.toSkia(Normal);
   switch (Revery.Font.load(maybeSkia)) {
   | Error(_) => failwith("Unable to load font!")
   | Ok(font) =>

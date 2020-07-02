@@ -55,7 +55,7 @@ module Sample = {
 
           let maybeSkia =
             Revery_Font.Family.fromFile("Roboto-Regular.ttf")
-            |> Revery_Font.Family.toMaybeSkia(Revery_Font.Weight.Normal);
+            |> Revery_Font.Family.toSkia(Revery_Font.Weight.Normal);
           switch (Revery_Font.load(maybeSkia)) {
           | Error(_) => ()
           | Ok(font) =>

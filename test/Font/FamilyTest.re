@@ -3,7 +3,7 @@ open TestFramework;
 open Skia;
 
 let getInfoFromSkia = family => {
-  let maybeSkia = family |> Family.toMaybeSkia(Normal);
+  let maybeSkia = family |> Family.toSkia(Normal);
 
   let maybeName = maybeSkia |> Option.map(tf => Typeface.getFamilyName(tf));
 

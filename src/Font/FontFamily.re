@@ -103,4 +103,4 @@ let defaultSerif =
 let resolve = (~italic=false, weight, solver) =>
   solver(~italic, weight) |> FontCache.load;
 
-let toMaybeSkia = (~italic=false, weight, solver) => solver(~italic, weight);
+let toSkia = (~italic=false, weight, solver) => solver(~italic, weight);

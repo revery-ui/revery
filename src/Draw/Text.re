@@ -12,17 +12,17 @@ open {
      };
 
 let lineHeight = (~italic=?, family, size, weight) => {
-  let maybeSkia = Family.toMaybeSkia(~italic?, weight, family);
+  let maybeSkia = Family.toSkia(~italic?, weight, family);
   fontMetrics(size, maybeSkia).lineHeight;
 };
 
 let ascent = (~italic=?, family, size, weight) => {
-  let maybeSkia = Family.toMaybeSkia(~italic?, weight, family);
+  let maybeSkia = Family.toSkia(~italic?, weight, family);
   fontMetrics(size, maybeSkia).ascent;
 };
 
 let descent = (~italic=?, family, size, weight) => {
-  let maybeSkia = Family.toMaybeSkia(~italic?, weight, family);
+  let maybeSkia = Family.toSkia(~italic?, weight, family);
   fontMetrics(size, maybeSkia).descent;
 };
 
@@ -35,7 +35,7 @@ let charWidth =
       ~fontWeight,
       char,
     ) => {
-  let maybeSkia = Family.toMaybeSkia(~italic?, fontWeight, fontFamily);
+  let maybeSkia = Family.toSkia(~italic?, fontWeight, fontFamily);
 
   switch (FontCache.load(maybeSkia)) {
   | Ok(font) =>
@@ -61,7 +61,7 @@ let dimensions =
       ~fontWeight,
       text,
     ) => {
-  let maybeSkia = Family.toMaybeSkia(~italic?, fontWeight, fontFamily);
+  let maybeSkia = Family.toSkia(~italic?, fontWeight, fontFamily);
 
   switch (FontCache.load(maybeSkia)) {
   // TODO: Properly implement
