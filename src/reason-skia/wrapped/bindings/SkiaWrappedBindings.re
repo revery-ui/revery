@@ -68,6 +68,12 @@ module M = (F: FOREIGN) => {
 
     let make =
       foreign("sk_fontstyle_new", int @-> int @-> slant @-> returning(t));
+
+    let getSlant = foreign("sk_fontstyle_get_slant", t @-> returning(slant));
+
+    let getWeight = foreign("sk_fontstyle_get_weight", t @-> returning(int));
+
+    let getWidth = foreign("sk_fontstyle_get_width", t @-> returning(int));
   };
 
   module TextEncoding = {
@@ -92,6 +98,9 @@ module M = (F: FOREIGN) => {
         "sk_typeface_create_from_name_with_font_style",
         string @-> FontStyle.t @-> returning(ptr_opt(SkiaTypes.Typeface.t)),
       );
+
+    let getFontStyle =
+      foreign("sk_typeface_get_fontstyle", t @-> returning(FontStyle.t));
 
     let makeFromFile =
       foreign(

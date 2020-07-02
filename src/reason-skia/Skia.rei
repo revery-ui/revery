@@ -24,6 +24,10 @@ module FontStyle: {
   type slant = SkiaWrapped.FontStyle.slant;
 
   let make: (int, int, slant) => t;
+
+  let getSlant: t => slant;
+  let getWeight: t => int;
+  let getWidth: t => int;
 };
 
 module Hinting: {type t = SkiaWrapped.Hinting.t;};
@@ -53,6 +57,8 @@ module Typeface: {
   let makeFromName: (string, FontStyle.t) => option(t);
   let makeFromFile: (string, int) => option(t);
   let toStream: t => Stream.t;
+  let getFontStyle: t => FontStyle.t;
+  let equal: (t, t) => bool;
 };
 
 module FontManager: {
