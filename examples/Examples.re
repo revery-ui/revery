@@ -59,7 +59,7 @@ let examples = [
     source: "Boxshadow.re",
   },
   {name: "Focus", render: _ => FocusExample.render(), source: "Focus.re"},
-  //{name: "Fonts", render: _ => FontsExample.render(), source: "Fonts.re"},
+  {name: "Fonts", render: _ => FontsExample.render(), source: "Fonts.re"},
   {
     name: "Stopwatch",
     render: _ => Stopwatch.render(),
