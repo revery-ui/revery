@@ -94,6 +94,12 @@ let defaultMono =
   | _ => fromFile("Inconsolata.otf")
   };
 
+let defaultSerif =
+  switch (Revery_Core.Environment.os) {
+  | Mac => system("Palatino")
+  | _ => system("Times")
+  };
+
 let resolve = (~italic=false, weight, solver) =>
   solver(~italic, weight) |> FontCache.load;
 
