@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <cstring>
 
 #include <caml/alloc.h>
 #include <caml/bigarray.h>
@@ -98,8 +99,11 @@ CAMLprim value rehb_face_from_bytes(value vPtr, value vLength) {
   CAMLparam2(vPtr, vLength);
   CAMLlocal1(ret);
 
-  char *data = Bp_val(vPtr);
+  char *caml_data = Bp_val(vPtr);
   int length = Int_val(vLength);
+
+  char *data = (char *)malloc(length * sizeof(char));
+  std::memcpy(data, caml_data, length);
 
   hb_font_t *hb_font;
   hb_font = get_font_ot(data, length, 12 /*iSize*/ * 64);
@@ -107,7 +111,6 @@ CAMLprim value rehb_face_from_bytes(value vPtr, value vLength) {
   if (!hb_font) {
     ret = Val_error("Unable to load font");
   } else {
-
     ret = Val_success((value)hb_font);
   }
   CAMLreturn(ret);
