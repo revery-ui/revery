@@ -97,7 +97,7 @@ let defaultSerif =
   switch (Revery_Core.Environment.os) {
   | Mac => system("Palatino")
   | Linux => system("Liberation Serif")
-  | _ => system("Times")
+  | _ => system("Times New Roman")
   };
 
 let resolve = (~italic=false, weight, solver) =>
