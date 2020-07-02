@@ -32,7 +32,6 @@ let system = (familyName): t =>
       FontFamilyCache.promote(fontDescr, cache);
       fd;
     | None =>
-      print_endline(familyName);
       let fd = Discovery.find(~weight, ~italic, familyName);
       FontFamilyCache.add(fontDescr, fd, cache);
       FontFamilyCache.trim(cache);
