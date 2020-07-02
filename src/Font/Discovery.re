@@ -9,8 +9,8 @@ let fontManager = FontManager.makeDefault();
 
 let find =
     (
-      ~weight=FontWeight.Bold,
-      ~width=FontWidth.Undefined,
+      ~weight=FontWeight.Normal,
+      ~width=FontWidth.Normal,
       ~italic=false,
       family,
     ) => {
