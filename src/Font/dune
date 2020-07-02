@@ -4,7 +4,6 @@
     (preprocess (pps lwt_ppx))
     (libraries 
         harfbuzz
-        font-manager
         lru
         lwt
         lwt.unix
