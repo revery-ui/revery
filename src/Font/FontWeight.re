@@ -12,7 +12,6 @@ type t =
 
 let toInt = (v: t) => {
   switch (v) {
-  // NOTE: Must be in sync with FontDescriptor.h!
   | Undefined => 0
   | Thin => 100
   | UltraLight => 200
@@ -42,7 +41,6 @@ let ofInt = (v: int) => {
 };
 
 let show = (v: t) => {
-  // NOTE: Must be in sync with FontDescriptor.h!
   switch (v) {
   | Undefined => "Undefined"
   | Thin => "Thin"

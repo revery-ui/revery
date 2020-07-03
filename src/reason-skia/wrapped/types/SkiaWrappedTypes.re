@@ -87,6 +87,12 @@ module M = (T: TYPE) => {
     let t = typedef(t, "sk_stream_t");
   };
 
+  module String = {
+    type t;
+    let t: typ(structure(t)) = structure("sk_string_t");
+    let t = typedef(t, "sk_string_t");
+  };
+
   module Typeface = {
     type t;
     let t: typ(structure(t)) = structure("sk_typeface_t");

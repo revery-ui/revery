@@ -12,7 +12,6 @@ type t =
 
 let toInt = (v: t) => {
   switch (v) {
-  // NOTE: Must be in sync with FontDescriptor.h!
   | Undefined => 0
   | UltraCondensed => 1
   | ExtraCondensed => 2
@@ -43,7 +42,6 @@ let ofInt = (v: int) => {
 
 let show = (v: t) => {
   switch (v) {
-  // NOTE: Must be in sync with FontDescriptor.h!
   | Undefined => "Undefined"
   | UltraCondensed => "UltraCondensed"
   | ExtraCondensed => "ExtraCondensed"

@@ -1,17 +1,13 @@
 open Revery_Font;
 
-let lineHeight:
-  (~italic: bool=?, ~mono: bool=?, Family.t, float, Weight.t) => float;
-let ascent:
-  (~italic: bool=?, ~mono: bool=?, Family.t, float, Weight.t) => float;
-let descent:
-  (~italic: bool=?, ~mono: bool=?, Family.t, float, Weight.t) => float;
+let lineHeight: (~italic: bool=?, Family.t, float, Weight.t) => float;
+let ascent: (~italic: bool=?, Family.t, float, Weight.t) => float;
+let descent: (~italic: bool=?, Family.t, float, Weight.t) => float;
 
 let charWidth:
   (
     ~smoothing: Smoothing.t=?,
     ~italic: bool=?,
-    ~mono: bool=?,
     ~fontFamily: Family.t,
     ~fontSize: float,
     ~fontWeight: Weight.t,
@@ -28,7 +24,6 @@ let dimensions:
   (
     ~smoothing: Smoothing.t=?,
     ~italic: bool=?,
-    ~mono: bool=?,
     ~fontFamily: Family.t,
     ~fontSize: float,
     ~fontWeight: Weight.t,

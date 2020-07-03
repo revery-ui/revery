@@ -52,6 +52,13 @@ module M = (F: FOREIGN) => {
       foreign("sk_data_new_from_stream", Stream.t @-> int @-> returning(t));
   };
 
+  module String = {
+    type t = ptr(structure(SkiaTypes.String.t));
+    let t = ptr(SkiaTypes.String.t);
+
+    let toString = foreign("sk_string_get_c_str", t @-> returning(string));
+  };
+
   module FontStyle = {
     type t = ptr(structure(SkiaTypes.FontStyle.t));
     let t = ptr(SkiaTypes.FontStyle.t);
@@ -61,6 +68,12 @@ module M = (F: FOREIGN) => {
 
     let make =
       foreign("sk_fontstyle_new", int @-> int @-> slant @-> returning(t));
+
+    let getSlant = foreign("sk_fontstyle_get_slant", t @-> returning(slant));
+
+    let getWeight = foreign("sk_fontstyle_get_weight", t @-> returning(int));
+
+    let getWidth = foreign("sk_fontstyle_get_width", t @-> returning(int));
   };
 
   module TextEncoding = {
@@ -77,11 +90,17 @@ module M = (F: FOREIGN) => {
     type t = ptr(structure(SkiaTypes.Typeface.t));
     let t = ptr(SkiaTypes.Typeface.t);
 
+    let getFamilyName =
+      foreign("sk_typeface_get_family_name", t @-> returning(String.t));
+
     let makeFromName =
       foreign(
         "sk_typeface_create_from_name_with_font_style",
         string @-> FontStyle.t @-> returning(ptr_opt(SkiaTypes.Typeface.t)),
       );
+
+    let getFontStyle =
+      foreign("sk_typeface_get_fontstyle", t @-> returning(FontStyle.t));
 
     let makeFromFile =
       foreign(

@@ -2,8 +2,8 @@ open Revery_Font;
 
 // INTERNAL
 open {
-       let fontMetrics = (size, path) => {
-         switch (FontCache.load(path)) {
+       let fontMetrics = (size, skiaFace) => {
+         switch (FontCache.load(skiaFace)) {
          // TODO: Actually get metrics
          | Ok(font) => FontCache.getMetrics(font, size)
          | Error(_) => FontMetrics.empty(0.)
@@ -11,34 +11,33 @@ open {
        };
      };
 
-let lineHeight = (~italic=?, ~mono=?, family, size, weight) => {
-  let path = Family.toPath(~italic?, ~mono?, weight, family);
-  fontMetrics(size, path).lineHeight;
+let lineHeight = (~italic=?, family, size, weight) => {
+  let maybeSkia = Family.toSkia(~italic?, weight, family);
+  fontMetrics(size, maybeSkia).lineHeight;
 };
 
-let ascent = (~italic=?, ~mono=?, family, size, weight) => {
-  let path = Family.toPath(~italic?, ~mono?, weight, family);
-  fontMetrics(size, path).ascent;
+let ascent = (~italic=?, family, size, weight) => {
+  let maybeSkia = Family.toSkia(~italic?, weight, family);
+  fontMetrics(size, maybeSkia).ascent;
 };
 
-let descent = (~italic=?, ~mono=?, family, size, weight) => {
-  let path = Family.toPath(~italic?, ~mono?, weight, family);
-  fontMetrics(size, path).descent;
+let descent = (~italic=?, family, size, weight) => {
+  let maybeSkia = Family.toSkia(~italic?, weight, family);
+  fontMetrics(size, maybeSkia).descent;
 };
 
 let charWidth =
     (
       ~smoothing=Smoothing.default,
       ~italic=?,
-      ~mono=?,
       ~fontFamily,
       ~fontSize,
       ~fontWeight,
       char,
     ) => {
-  let path = Family.toPath(~italic?, ~mono?, fontWeight, fontFamily);
+  let maybeSkia = Family.toSkia(~italic?, fontWeight, fontFamily);
 
-  switch (FontCache.load(path)) {
+  switch (FontCache.load(maybeSkia)) {
   | Ok(font) =>
     let text = String.make(1, char);
     FontRenderer.measure(~smoothing, font, fontSize, text).width;
@@ -57,15 +56,14 @@ let dimensions =
     (
       ~smoothing=Smoothing.default,
       ~italic=?,
-      ~mono=?,
       ~fontFamily,
       ~fontSize,
       ~fontWeight,
       text,
     ) => {
-  let path = Family.toPath(~italic?, ~mono?, fontWeight, fontFamily);
+  let maybeSkia = Family.toSkia(~italic?, fontWeight, fontFamily);
 
-  switch (FontCache.load(path)) {
+  switch (FontCache.load(maybeSkia)) {
   // TODO: Properly implement
   | Ok(font) => FontRenderer.measure(~smoothing, font, fontSize, text)
 

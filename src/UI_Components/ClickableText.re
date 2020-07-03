@@ -16,7 +16,6 @@ let%component make =
                 ~fontFamily=Family.default,
                 ~fontWeight=Weight.Normal,
                 ~italic=false,
-                ~monospaced=false,
                 ~underlined=false,
                 ~onClick=noop,
                 (),
@@ -32,7 +31,6 @@ let%component make =
       fontSize
       fontWeight
       italic
-      monospaced
       style={isHovered ? activeStyle : inactiveStyle}
       underlined
     />
