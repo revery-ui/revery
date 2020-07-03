@@ -21,17 +21,21 @@ CAMLprim value revery_getUserLocale() {
     CAMLparam0();
     CAMLlocal1(camlRet);
     char *ret;
+    int shouldFree;
 #ifdef __APPLE__
     ret = revery_getUserLocale_cocoa();
-    camlRet = caml_copy_string(ret);
+    shouldFree = 0;
 #elif WIN32
     ret = revery_getUserLocale_win32();
-    camlRet = caml_copy_string(ret);
+    shouldFree = 1;
 #else
     setlocale(LC_CTYPE, "");
     ret = setlocale(LC_CTYPE, NULL);
-    camlRet = caml_copy_string(ret);
-    free(ret);
+    shouldFree = 0;
 #endif
+    camlRet = caml_copy_string(ret);
+    if (shouldFree) {
+        free(ret);
+    }
     CAMLreturn(camlRet);
 }
