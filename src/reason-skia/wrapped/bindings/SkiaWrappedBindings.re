@@ -131,6 +131,18 @@ module M = (F: FOREIGN) => {
         @-> returning(ptr_opt(SkiaTypes.Typeface.t)),
       );
 
+    let matchFamilyStyleCharacter =
+      foreign(
+        "sk_fontmgr_match_family_style_character",
+        t
+        @-> string
+        @-> FontStyle.t
+        @-> ptr(string)
+        @-> int
+        @-> int32_t
+        @-> returning(ptr_opt(SkiaTypes.Typeface.t)),
+      );
+
     let delete = foreign("sk_fontmgr_unref", t @-> returning(void));
   };
 
