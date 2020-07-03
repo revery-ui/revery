@@ -255,9 +255,7 @@ let start = init => {
 
   Revery_Native.initApp();
 
-  AppLog.infof(m =>
-    m("Operating in locale : %s", Revery_Native.Locale.getUser())
-  );
+  AppLog.infof(m => m("Operating in locale : %s", Environment.userLocale));
 
   let appLoop = () => {
     _flushEvents();
