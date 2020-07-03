@@ -19,6 +19,7 @@
 
 CAMLprim value revery_getUserLocale() {
     CAMLparam0();
+    CAMLlocal1(camlRet);
     char *ret;
 #ifdef __APPLE__
     ret = revery_getUserLocale_cocoa();
@@ -28,5 +29,6 @@ CAMLprim value revery_getUserLocale() {
     setlocale(LC_CTYPE, "");
     ret = setlocale(LC_CTYPE, NULL);
 #endif
-    CAMLreturn(caml_copy_string(ret));
+    camlRet = caml_copy_string(ret);
+    CAMLreturn(camlRet);
 }
