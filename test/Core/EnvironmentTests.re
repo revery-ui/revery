@@ -12,9 +12,7 @@ describe("Environment", ({test, _}) => {
         toBeTrue()
     })
   );
-  test("userLocale", _ =>
-    test("locale is not empty", ({expect, _}) => {
-      expect.notSame(Environment.userLocale, "")
-    })
-  );
+  test("userLocale", ({expect, _}) => {
+    expect.equal(~equals=(!=), Environment.userLocale, "")
+  });
 });
