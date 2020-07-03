@@ -12,7 +12,7 @@ void revery_scheduleNotificationFromNow_cocoa(const char *title,
         const char *body,
         long onClickFunc, int mute,
         int seconds);
-void* revery_getIconHandle_cocoa();
+void *revery_getIconHandle_cocoa();
 
 /* Icon progress bar functions */
 void revery_setIconProgress_cocoa(void* dt, double progress);
@@ -22,3 +22,6 @@ void revery_hideIconProgress_cocoa(void* ip);
 /* Open functions */
 int revery_openURL_cocoa(const char *url_string);
 int revery_openFile_cocoa(const char *path_string);
+
+/* Locale functions */
+char *revery_getUserLocale_cocoa();
