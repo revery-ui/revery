@@ -14,6 +14,7 @@
 #include "ReveryCocoa.h"
 #else
 #include "ReveryGtk.h"
+#include <locale.h>
 #endif
 
 CAMLprim value revery_getUserLocale() {
@@ -21,6 +22,8 @@ CAMLprim value revery_getUserLocale() {
     char *ret;
 #ifdef __APPLE__
     ret = revery_getUserLocale_cocoa();
+#else
+    ret = setlocale(LC_CTYPE, NULL);
 #endif
     CAMLreturn(caml_copy_string(ret));
 }
