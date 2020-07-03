@@ -5,23 +5,14 @@ open Revery.UI.Components;
 module FontComponent = {
   type state = {
     family: string,
-    mono: bool,
     bold: bool,
     italic: bool,
-    resolvedFont: option(Font.Discovery.t),
   };
 
-  let initialState: state = {
-    family: "Arial",
-    mono: false,
-    bold: false,
-    italic: false,
-    resolvedFont: None,
-  };
+  let initialState: state = {family: "Arial", bold: false, italic: false};
 
   type actions =
     | SetBold(bool)
-    | SetMono(bool)
     | SetItalic(bool)
     | SetFamily(string);
 
@@ -29,40 +20,24 @@ module FontComponent = {
     let state =
       switch (action) {
       | SetBold(v) => {...state, bold: v}
-      | SetMono(v) => {...state, mono: v}
       | SetItalic(v) => {...state, italic: v}
       | SetFamily(v) => {...state, family: v}
       };
 
-    let resolvedFont =
-      Font.Discovery.find(
-        ~weight=state.bold ? Font.Weight.Bold : Font.Weight.Normal,
-        ~mono=state.mono,
-        ~italic=state.italic,
-        state.family,
-      );
-
-    switch (resolvedFont) {
-    | Some(v) => print_endline("New font: " ++ Font.Discovery.toString(v))
-    | None => ()
-    };
-
-    {...state, resolvedFont};
+    state;
   };
 
   let%component make = () => {
     let%hook (state, dispatch) = Hooks.reducer(~initialState, reducer);
 
     let fontExample =
-      switch (state.resolvedFont) {
-      | None => React.empty
-      | Some(v) =>
-        <Text
-          text="Lorem ipsum dolor sit amet"
-          fontFamily={Font.Family.fromFile(v.path)}
-          fontSize=24.
-        />
-      };
+      <Text
+        text="Lorem ipsum dolor sit amet"
+        fontFamily={Font.Family.system(state.family)}
+        fontWeight={state.bold ? Font.Weight.Bold : Font.Weight.Normal}
+        italic={state.italic}
+        fontSize=24.
+      />;
 
     <Container width=500 height=500>
       <Center>
@@ -98,19 +73,6 @@ module FontComponent = {
             </Padding>
             <Center>
               <Text text="Italic" fontSize=20. style=Style.[width(150)] />
-            </Center>
-          </Row>
-        </Padding>
-        <Padding padding=10>
-          <Row>
-            <Padding padding=16>
-              <Checkbox
-                checked={state.mono}
-                onChange={() => dispatch(SetMono(!state.mono))}
-              />
-            </Padding>
-            <Center>
-              <Text text="Mono" fontSize=20. style=Style.[width(150)] />
             </Center>
           </Row>
         </Padding>

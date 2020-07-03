@@ -478,6 +478,10 @@ module FontStyle = {
   type t = SkiaWrapped.FontStyle.t;
   type slant = SkiaWrapped.FontStyle.slant;
 
+  let getSlant = SkiaWrapped.FontStyle.getSlant;
+  let getWidth = SkiaWrapped.FontStyle.getWidth;
+  let getWeight = SkiaWrapped.FontStyle.getWeight;
+
   let make = SkiaWrapped.FontStyle.make;
 };
 
@@ -620,6 +624,11 @@ module Data = {
 module Typeface = {
   type t = SkiaWrapped.Typeface.t;
 
+  let getFamilyName = tf => {
+    let skStr = SkiaWrapped.Typeface.getFamilyName(tf);
+    skStr |> SkiaWrapped.String.toString;
+  };
+
   let makeFromName = SkiaWrapped.Typeface.makeFromName;
   let makeFromFile = SkiaWrapped.Typeface.makeFromFile;
 
@@ -627,6 +636,18 @@ module Typeface = {
     let stream = SkiaWrapped.Typeface.openStream(typeface, None);
     Gc.finalise(SkiaWrapped.Stream.delete, stream);
     stream;
+  };
+
+  let getFontStyle = SkiaWrapped.Typeface.getFontStyle;
+
+  let equal = (tfA, tfB) => {
+    let styleA = getFontStyle(tfA);
+    let styleB = getFontStyle(tfB);
+
+    String.equal(getFamilyName(tfA), getFamilyName(tfB))
+    && FontStyle.getWidth(styleA) == FontStyle.getWidth(styleB)
+    && FontStyle.getSlant(styleA) == FontStyle.getSlant(styleB)
+    && FontStyle.getWeight(styleA) == FontStyle.getWeight(styleB);
   };
 };
 

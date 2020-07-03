@@ -5,7 +5,6 @@ type textInfo = {
   fontFamily: Family.t,
   fontWeight: Weight.t,
   italic: bool,
-  monospaced: bool,
   fontSize: float,
   text: string,
   color: Color.t,
@@ -28,7 +27,6 @@ module DSL: {
       ~fontFamily: Family.t=?,
       ~fontWeight: Weight.t=?,
       ~italic: bool=?,
-      ~monospaced: bool=?,
       ~fontSize: float=?,
       ~color: Color.t=?,
       string
@@ -47,7 +45,6 @@ module DSL: {
 
   let fontFamily: (Family.t, t) => t;
   let italic: t => t;
-  let monospaced: t => t;
   let fontSize: (float, t) => t;
   let color: (Color.t, t) => t;
 };
@@ -56,7 +53,6 @@ let text:
     ~fontFamily: Family.t=?,
     ~fontWeight: Weight.t=?,
     ~italic: bool=?,
-    ~monospaced: bool=?,
     ~fontSize: float=?,
     ~color: Color.t=?,
     string
@@ -75,6 +71,5 @@ let heavy: t => t;
 
 let fontFamily: (Family.t, t) => t;
 let italic: t => t;
-let monospaced: t => t;
 let fontSize: (float, t) => t;
 let color: (Color.t, t) => t;

@@ -10,5 +10,6 @@ if (Sys.win32) {
 Revery_Core_Test.TestFramework.cli();
 Revery_Math_Test.TestFramework.cli();
 Revery_UI_Test.TestFramework.cli();
+Revery_Font_Test.TestFramework.cli();
 
 Skia_Test.TestFramework.cli();

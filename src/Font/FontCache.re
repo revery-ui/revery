@@ -8,6 +8,12 @@ module StringHashable = {
   let hash = Hashtbl.hash;
 };
 
+module SkiaTypefaceHashable = {
+  type t = option(Skia.Typeface.t);
+  let equal = (===);
+  let hash = Hashtbl.hash;
+};
+
 module FloatHashable = {
   type t = float;
   let equal = Float.equal;
@@ -50,43 +56,43 @@ module FontWeight = {
   let weight = _ => 1;
 };
 
-module FontCache = Lru.M.Make(StringHashable, FontWeight);
+module FontCache = Lru.M.Make(SkiaTypefaceHashable, FontWeight);
 
 module Internal = {
   let cache = FontCache.create(~initialSize=8, 64);
 };
 
-let load: string => result(t, string) =
-  (fontName: string) => {
-    switch (FontCache.find(fontName, Internal.cache)) {
+let load: option(Skia.Typeface.t) => result(t, string) =
+  (skiaTypeface: option(Skia.Typeface.t)) => {
+    switch (FontCache.find(skiaTypeface, Internal.cache)) {
     | Some(v) =>
-      FontCache.promote(fontName, Internal.cache);
+      FontCache.promote(skiaTypeface, Internal.cache);
       v;
     | None =>
-      let assetPath = Environment.getAssetPath(fontName);
-
-      let skiaTypeface = Skia.Typeface.makeFromFile(assetPath, 0);
-      let harfbuzzFace = Harfbuzz.hb_face_from_path(assetPath);
-
+      let harfbuzzFace =
+        skiaTypeface |> Option.map(tf => Harfbuzz.hb_face_from_skia(tf));
       let metricsCache = MetricsLruHash.create(~initialSize=8, 64);
       let shapeCache =
         ShapeResultLruHash.create(~initialSize=1024, 128 * 1024);
 
       let ret =
         switch (skiaTypeface, harfbuzzFace) {
-        | (Some(skiaFace), Ok(hbFace)) =>
+        | (Some(skiaFace), Some(Ok(hbFace))) =>
           Event.dispatch(onFontLoaded, ());
-          Log.info("Loaded : " ++ fontName);
+          Log.info("Loaded : " ++ Skia.Typeface.getFamilyName(skiaFace));
           Ok({hbFace, skiaFace, metricsCache, shapeCache});
-        | (_, Error(msg)) =>
+        | (_, Some(Error(msg))) =>
           Log.warn("Error loading typeface: " ++ msg);
           Error("Error loading typeface: " ++ msg);
         | (None, _) =>
           Log.warn("Error loading typeface (skia)");
           Error("Error loading typeface.");
+        | (_, None) =>
+          Log.warn("Error loading typeface (harfbuzz)");
+          Error("Error loading typeface");
         };
 
-      FontCache.add(fontName, ret, Internal.cache);
+      FontCache.add(skiaTypeface, ret, Internal.cache);
       FontCache.trim(Internal.cache);
       ret;
     };
