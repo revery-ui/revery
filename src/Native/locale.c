@@ -22,7 +22,10 @@ CAMLprim value revery_getUserLocale() {
     char *ret;
 #ifdef __APPLE__
     ret = revery_getUserLocale_cocoa();
+#elif WIN32
+    ret = revery_getUserLocale_win32();
 #else
+    setlocale(LC_CTYPE, "");
     ret = setlocale(LC_CTYPE, NULL);
 #endif
     CAMLreturn(caml_copy_string(ret));
