@@ -1,26 +1,40 @@
+module Configurator = Configurator.V1;
+
 type os =
-  | Windows
-  | Mac
   | Linux
-  | Unknown;
+  | Mac
+  | Windows;
 
-let uname = () => {
-  let ic = Unix.open_process_in("uname");
-  let uname = input_line(ic);
-  let () = close_in(ic);
-  uname;
-};
-
-let get_os =
-  switch (Sys.os_type) {
-  | "Win32" => Windows
-  | _ =>
-    switch (uname()) {
-    | "Darwin" => Mac
-    | "Linux" => Linux
-    | _ => Unknown
-    }
+let detect_system_header = {|
+  #if __APPLE__
+    #define PLATFORM_NAME "mac"
+  #elif __linux__
+    #define PLATFORM_NAME "linux"
+  #elif WIN32
+    #define PLATFORM_NAME "windows"
+  #endif
+|};
+let get_os = t => {
+  let header = {
+    let file = Filename.temp_file("discover", "os.h");
+    let fd = open_out(file);
+    output_string(fd, detect_system_header);
+    close_out(fd);
+    file;
   };
+  let platform =
+    Configurator.C_define.import(
+      t,
+      ~includes=[header],
+      [("PLATFORM_NAME", String)],
+    );
+  switch (platform) {
+  | [(_, String("linux"))] => Linux
+  | [(_, String("mac"))] => Mac
+  | [(_, String("windows"))] => Windows
+  | _ => failwith("Unknown operating system")
+  };
+};
 
 let root = Sys.getenv("cur__root");
 let c_flags = [
@@ -32,11 +46,11 @@ let c_flags = [
   Filename.concat(root, "src"),
 ];
 
-let c_flags =
-  switch (get_os) {
+let c_flags = os =>
+  switch (os) {
+  | Mac => c_flags
   | Windows => c_flags @ ["-mwindows"]
   | Linux => c_flags @ ["-fPIC"]
-  | _ => c_flags
   };
 
 let libFolderPath = Sys.getenv("SDL2_LIB_PATH");
@@ -46,8 +60,8 @@ prerr_endline("SDL2 Library Folder Path: " ++ libFolderPath);
 let ccopt = s => ["-ccopt", s];
 let cclib = s => ["-cclib", s];
 
-let flags =
-  switch (get_os) {
+let flags = os =>
+  switch (os) {
   | Windows =>
     []
     // On Windows, we ship the DLL side-by-side
@@ -67,7 +81,7 @@ let flags =
     @ cclib("-lXcursor")
     @ cclib("-lpthread")
     @ cclib("-lXi")
-  | _ =>
+  | Mac =>
     []
     @ ccopt(libFilePath)
     @ ccopt("-framework AppKit")
@@ -84,24 +98,25 @@ let flags =
     @ ccopt("-liconv")
   };
 
-let c_library_flags =
-  switch (get_os) {
+let c_library_flags = os =>
+  switch (os) {
+  | Mac
+  | Linux => [libFilePath]
   | Windows => ["-L" ++ libFolderPath, "-lSDL2"]
-  | _ => [libFilePath]
   };
 
-let cxx_flags =
-  switch (get_os) {
-  | Linux => c_flags @ ["-std=c++11"]
+let cxx_flags = os =>
+  switch (os) {
+  | Mac => c_flags(os) @ ["-x", "objective-c++"]
+  | Linux => c_flags(os) @ ["-std=c++11"]
   | Windows =>
-    c_flags @ ["-fno-exceptions", "-fno-rtti", "-lstdc++", "-mwindows"]
-  | Mac => c_flags @ ["-x", "objective-c++"]
-  | _ => c_flags
+    c_flags(os) @ ["-fno-exceptions", "-fno-rtti", "-lstdc++", "-mwindows"]
   };
 
-{
-  Configurator.V1.Flags.write_sexp("c_library_flags.sexp", c_library_flags);
-  Configurator.V1.Flags.write_sexp("c_flags.sexp", c_flags);
-  Configurator.V1.Flags.write_sexp("cxx_flags.sexp", cxx_flags);
-  Configurator.V1.Flags.write_sexp("flags.sexp", flags);
-};
+Configurator.main(~name="reason-sdl2", conf => {
+  let os = get_os(conf);
+  Configurator.Flags.write_sexp("c_library_flags.sexp", c_library_flags(os));
+  Configurator.Flags.write_sexp("c_flags.sexp", c_flags(os));
+  Configurator.Flags.write_sexp("cxx_flags.sexp", cxx_flags(os));
+  Configurator.Flags.write_sexp("flags.sexp", flags(os));
+});
