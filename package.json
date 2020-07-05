@@ -22,7 +22,7 @@
         "scope": "global"
       }
     },
-    "build": "dune build -p font-manager,harfbuzz,skia,sdl2,Revery",
+    "build": "dune build -p harfbuzz,skia,sdl2,Revery",
     "install": [
       "esy-installer font-manager.install",
       "esy-installer harfbuzz.install",
