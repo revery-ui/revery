@@ -1,0 +1,21 @@
+opam-version: "2.0"
+synopsis: "Tools for authors of ppx rewriters and other syntactic tools"
+maintainer: "Kate <kit.ty.kate@disroot.org>"
+authors: "Alain Frisch <alain.frisch@lexifi.com>"
+license: "MIT"
+tags: [ "syntax" ]
+homepage: "https://github.com/ocaml-ppx/ppx_tools"
+bug-reports: "https://github.com/ocaml-ppx/ppx_tools/issues"
+dev-repo: "git://github.com/ocaml-ppx/ppx_tools.git"
+build: ["dune" "build" "-p" name "-j" jobs]
+depends: [
+  "ocaml" {>= "4.08.0" & < "4.12.0"}
+  "dune" {>= "1.6"}
+]
+url {
+  src: "https://github.com/ocaml-ppx/ppx_tools/archive/6.2.tar.gz"
+  checksum: [
+    "md5=68b05e0794c475c384b9285d1156d1f3"
+    "sha512=fc3943c69901ef46843355c3482d5a1481d05ee94fb0a344ec04101059a02cbaa76fed5742cfae82730edf378f2e140d859a5cf590653f85359255d451f07dc8"
+  ]
+}
