@@ -1,5 +1,5 @@
 {
-  "checksum": "eafc8620ea43a4cfdc7b2f0dea4141e4",
+  "checksum": "9e52474c6d49be1a81e8eea0d328c44b",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -90,7 +90,7 @@
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f00@d41d8cd9",
         "http-server@0.12.3@d41d8cd9", "flex@1.2.3@d41d8cd9",
         "fetch-native-lwt@0.1.0-alpha.5@d41d8cd9",
-        "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
+        "esy-skia@github:revery-ui/esy-skia#a3785f9@d41d8cd9",
         "esy-sdl2@2.0.10008@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
         "esy-freetype2@2.9.1007@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
         "@opam/uucp@opam:13.0.0@e9b515e0",
@@ -479,13 +479,13 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9": {
-      "id": "esy-skia@github:revery-ui/esy-skia#d60e5fe@d41d8cd9",
+    "esy-skia@github:revery-ui/esy-skia#a3785f9@d41d8cd9": {
+      "id": "esy-skia@github:revery-ui/esy-skia#a3785f9@d41d8cd9",
       "name": "esy-skia",
-      "version": "github:revery-ui/esy-skia#d60e5fe",
+      "version": "github:revery-ui/esy-skia#a3785f9",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/esy-skia#d60e5fe" ]
+        "source": [ "github:revery-ui/esy-skia#a3785f9" ]
       },
       "overrides": [],
       "dependencies": [
