@@ -140,7 +140,7 @@ let shaper = (hbFace, skiaFace, str) => {
 
         Log.debugf(m =>
           m(
-            "Unresolved glyph: character : U+%04x font: %s",
+            "Unresolved glyph: character : U+%04X font: %s",
             Uchar.to_int(uchar),
             familyName,
           )
