@@ -128,15 +128,46 @@ let getMetrics: (t, float) => FontMetrics.t =
 
 let getSkiaTypeface: t => Skia.Typeface.t = font => font.skiaFace;
 
+let unresolvedGlyphID = 0;
+
+let shaper = (hbFace, skiaFace, str) => {
+  let fallback = (Harfbuzz.{glyphId, cluster}) =>
+    if (glyphId == unresolvedGlyphID) {
+      let uchar = Zed_utf8.unsafe_extract(str, cluster);
+      let familyName = skiaFace |> Skia.Typeface.getFamilyName;
+      let style = skiaFace |> Skia.Typeface.getFontStyle;
+
+      Log.debugf(m => m("Unresolved glyph: character : U+%04x font: %s", Uchar.to_int(uchar), familyName));
+
+      let newTypeface =
+        Skia.FontManager.matchFamilyStyleCharacter(
+          FontManager.fontManager,
+          familyName,
+          style,
+          [Environment.userLocale],
+          uchar,
+        );
+      let result = load(newTypeface);
+      switch (result) {
+      | Ok({hbFace, _}) => (hbFace, glyphId, cluster)
+      | _ => (hbFace, glyphId, cluster)
+      };
+    } else {
+      (hbFace, glyphId, cluster);
+    };
+
+  let shaping = Harfbuzz.hb_shape(hbFace, str) |> Array.map(fallback);
+  ShapeResult.ofHarfbuzz(shaping);
+};
+
 let shape: (t, string) => ShapeResult.t =
-  ({hbFace, shapeCache, _}, str) => {
+  ({hbFace, skiaFace, shapeCache, _}, str) => {
     switch (ShapeResultLruHash.find(str, shapeCache)) {
     | Some(v) =>
       ShapeResultLruHash.promote(str, shapeCache);
       v;
     | None =>
-      let shaping = Harfbuzz.hb_shape(hbFace, str);
-      let result = ShapeResult.ofHarfbuzz(shaping);
+      let result = shaper(hbFace, skiaFace, str);
       ShapeResultLruHash.add(str, result, shapeCache);
       ShapeResultLruHash.trim(shapeCache);
       result;

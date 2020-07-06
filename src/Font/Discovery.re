@@ -2,10 +2,9 @@
     Discovery.re
 
 */
+open FontManager;
 open Skia;
 exception Font_not_found;
-
-let fontManager = FontManager.makeDefault();
 
 let find =
     (

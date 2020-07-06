@@ -1,5 +1,5 @@
 type t = {
-  shapes: array(Harfbuzz.hb_shape),
+  shapes: array((Harfbuzz.hb_face, int, int)),
   glyphString: string,
 };
 
@@ -13,7 +13,7 @@ let ofHarfbuzz = shapes => {
 
   while (i^ < len) {
     let idx = i^;
-    let {glyphId, _}: Harfbuzz.hb_shape = shapes[idx];
+    let (_, glyphId, _) = shapes[idx];
 
     let lowBit = glyphId land 255;
     let highBit = (glyphId land 255 lsl 8) lsr 8;
