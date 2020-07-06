@@ -503,6 +503,30 @@ module FontManager = {
     | None => None
     };
   };
+
+  let matchFamilyStyleCharacter = (mgr, family, style, locales, character) => {
+    open Ctypes;
+    let cLocales = CArray.of_list(string, locales);
+
+    let character32 = character |> Uchar.to_int |> Int32.of_int;
+
+    let maybeTypeface =
+      SkiaWrapped.FontManager.matchFamilyStyleCharacter(
+        mgr,
+        family,
+        style,
+        cLocales |> CArray.start,
+        CArray.length(cLocales),
+        character32,
+      );
+
+    switch (maybeTypeface) {
+    | Some(tf) as ret =>
+      Gc.finalise(SkiaWrapped.Typeface.delete, tf);
+      ret;
+    | None => None
+    };
+  };
 };
 
 module RRect = {

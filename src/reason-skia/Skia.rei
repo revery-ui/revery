@@ -67,6 +67,8 @@ module FontManager: {
 
   let makeDefault: unit => t;
   let matchFamilyStyle: (t, string, FontStyle.t) => option(Typeface.t);
+  let matchFamilyStyleCharacter:
+    (t, string, FontStyle.t, list(string), Uchar.t) => option(Typeface.t);
 };
 
 module FontMetrics: {
