@@ -9,11 +9,12 @@
 
 #define UNUSED(x) (void)(x)
 
-#ifdef WIN32
+#include "config.h"
+#ifdef USE_WIN32
 #include "ReveryWin32.h"
-#elif __APPLE__
+#elif USE_COCOA
 #include "ReveryCocoa.h"
-#else
+#elif USE_GTK
 #include "ReveryGtk.h"
 #endif
 
@@ -28,7 +29,7 @@ CAMLprim value revery_dispatchNotification(value vNotificationT) {
     body = String_val(Field(vNotificationT, 1));
     value onClickCaml = Field(vNotificationT, 2);
     mute = Int_val(Field(vNotificationT, 3));
-#ifdef __APPLE__
+#ifdef USE_COCOA
     revery_dispatchNotification_cocoa(title, body, onClickCaml, mute);
     UNUSED(title);
     UNUSED(body);
@@ -57,7 +58,7 @@ CAMLprim value revery_scheduleNotificationFromNow(value vSeconds, value vNotific
     onClickCaml = Field(vNotificationT, 2);
     mute = Int_val(Field(vNotificationT, 3));
     seconds = Int_val(vSeconds);
-#ifdef __APPLE__
+#ifdef USE_COCOA
     revery_scheduleNotificationFromNow_cocoa(title, body, onClickCaml, mute, seconds);
     UNUSED(title);
     UNUSED(body);

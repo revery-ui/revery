@@ -1,4 +1,5 @@
-#ifdef __linux__
+#include "config.h"
+#ifdef USE_GTK
 #include <gtk/gtk.h>
 
 /*  gtk_show_uri is technically deprecated, but it has the most support

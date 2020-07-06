@@ -1,4 +1,5 @@
-#ifdef __APPLE__
+#include "config.h"
+#ifdef USE_COCOA
 #import <Cocoa/Cocoa.h>
 #import "ReveryProgressBar.h"
 
