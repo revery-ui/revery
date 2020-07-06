@@ -10,8 +10,15 @@ module StringHashable = {
 
 module SkiaTypefaceHashable = {
   type t = option(Skia.Typeface.t);
-  let equal = (===);
-  let hash = Hashtbl.hash;
+  let equal =
+    Option.equal((tf1, tf2) =>
+      Skia.Typeface.getUniqueID(tf1) == Skia.Typeface.getUniqueID(tf2)
+    );
+  let hash = maybeTypeface =>
+    switch (maybeTypeface) {
+    | Some(tf) => Skia.Typeface.getUniqueID(tf) |> Int32.to_int
+    | None => 0
+    };
 };
 
 module FloatHashable = {
