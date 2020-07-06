@@ -96,8 +96,8 @@ let draw = canvas => {
     );
   };
 
-  let emoji = "😃";
-  let char = Zed_utf8.unsafe_extract(emoji, 0);
+  let emoji = "😃👋";
+  let char = Zed_utf8.unsafe_extract(emoji, String.length(emoji) / 2);
   let maybeTypeface =
     FontManager.matchFamilyStyleCharacter(
       fontManager,
@@ -106,6 +106,7 @@ let draw = canvas => {
       ["en_US"],
       char,
     );
+  print_int(Uchar.to_int(char));
   switch (maybeTypeface) {
   | Some(tf) =>
     print_endline("Found font for emoji: " ++ Typeface.getFamilyName(tf))

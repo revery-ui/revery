@@ -131,32 +131,57 @@ let getSkiaTypeface: t => Skia.Typeface.t = font => font.skiaFace;
 let unresolvedGlyphID = 0;
 
 let shaper = (hbFace, skiaFace, str) => {
-  let fallback = (Harfbuzz.{glyphId, cluster}) =>
-    if (glyphId == unresolvedGlyphID) {
-      let uchar = Zed_utf8.unsafe_extract(str, cluster);
-      let familyName = skiaFace |> Skia.Typeface.getFamilyName;
-      let style = skiaFace |> Skia.Typeface.getFontStyle;
+  let fallback = (acc, Harfbuzz.{glyphId, cluster}) => {
+    let shapeNode: ShapeResult.shapeNode =
+      if (glyphId == unresolvedGlyphID) {
+        let uchar = Zed_utf8.unsafe_extract(str, cluster);
+        let familyName = skiaFace |> Skia.Typeface.getFamilyName;
+        let style = skiaFace |> Skia.Typeface.getFontStyle;
 
-      Log.debugf(m => m("Unresolved glyph: character : U+%04x font: %s", Uchar.to_int(uchar), familyName));
-
-      let newTypeface =
-        Skia.FontManager.matchFamilyStyleCharacter(
-          FontManager.fontManager,
-          familyName,
-          style,
-          [Environment.userLocale],
-          uchar,
+        Log.debugf(m =>
+          m(
+            "Unresolved glyph: character : U+%04x font: %s",
+            Uchar.to_int(uchar),
+            familyName,
+          )
         );
-      let result = load(newTypeface);
-      switch (result) {
-      | Ok({hbFace, _}) => (hbFace, glyphId, cluster)
-      | _ => (hbFace, glyphId, cluster)
-      };
-    } else {
-      (hbFace, glyphId, cluster);
-    };
 
-  let shaping = Harfbuzz.hb_shape(hbFace, str) |> Array.map(fallback);
+        let newTypeface =
+          Skia.FontManager.matchFamilyStyleCharacter(
+            FontManager.fontManager,
+            familyName,
+            style,
+            [Environment.userLocale],
+            uchar,
+          );
+        let result = load(newTypeface);
+        switch (result) {
+        | Ok({hbFace, skiaFace, _}) =>
+          let arr = Harfbuzz.hb_shape(hbFace, Zed_utf8.singleton(uchar));
+          let Harfbuzz.{glyphId, _} = arr[0];
+          ShapeResult.{hbFace, skiaFace, glyphId, cluster};
+        | _ => ShapeResult.{hbFace, skiaFace, glyphId, cluster}
+        };
+      } else {
+        ShapeResult.{hbFace, skiaFace, glyphId, cluster};
+      };
+
+    switch ((acc: list(list(ShapeResult.shapeNode)))) {
+    | [] => [[shapeNode]]
+    | [[sNode, ..._] as nodes, ...rest] =>
+      if (sNode.skiaFace === shapeNode.skiaFace) {
+        [[shapeNode, ...nodes], ...rest];
+      } else {
+        [[shapeNode], nodes, ...rest];
+      }
+    | [[], ..._] => failwith("Improper construction!")
+    };
+  };
+
+  let shaping =
+    Harfbuzz.hb_shape(hbFace, str)
+    |> Array.fold_left(fallback, [])
+    |> List.rev;
   ShapeResult.ofHarfbuzz(shaping);
 };
 
