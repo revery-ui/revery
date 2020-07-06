@@ -102,6 +102,9 @@ module M = (F: FOREIGN) => {
     let getFontStyle =
       foreign("sk_typeface_get_fontstyle", t @-> returning(FontStyle.t));
 
+    let getUniqueID =
+      foreign("sk_typeface_get_unique_id", t @-> returning(int32_t));
+
     let makeFromFile =
       foreign(
         "sk_typeface_create_from_file",

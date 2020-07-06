@@ -674,6 +674,7 @@ module Typeface = {
   };
 
   let getFontStyle = SkiaWrapped.Typeface.getFontStyle;
+  let getUniqueID = SkiaWrapped.Typeface.getUniqueID;
 
   let equal = (tfA, tfB) => {
     let styleA = getFontStyle(tfA);

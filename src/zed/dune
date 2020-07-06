@@ -1,0 +1,7 @@
+(library
+ (name Revery_Zed)
+ (public_name Revery.Zed)
+ (wrapped false)
+ (flags
+  (:standard -safe-string))
+ (libraries bytes react uucp uutf result charInfo_width))

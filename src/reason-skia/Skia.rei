@@ -58,6 +58,7 @@ module Typeface: {
   let makeFromFile: (string, int) => option(t);
   let toStream: t => Stream.t;
   let getFontStyle: t => FontStyle.t;
+  let getUniqueID: t => int32;
   let equal: (t, t) => bool;
 };
 
