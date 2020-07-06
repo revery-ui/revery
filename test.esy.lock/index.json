@@ -1,5 +1,5 @@
 {
-  "checksum": "232004e432c1f555bc0d7d91d7094eb6",
+  "checksum": "5ca2c2c5c46a9b59fe75a632b0f777db",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -51,6 +51,7 @@
         "esy-sdl2@2.0.10008@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
         "esy-freetype2@2.9.1007@d41d8cd9",
         "@reason-native/rely@3.2.1@d41d8cd9",
+        "@opam/uutf@opam:1.0.2@4440868f", "@opam/uucp@opam:13.0.0@e9b515e0",
         "@opam/ppx_deriving@opam:4.5@bb81afdc",
         "@opam/omd@github:ocaml/omd:omd.opam#1535e3c@d41d8cd9",
         "@opam/markup@opam:0.8.2@87975241",
@@ -58,8 +59,10 @@
         "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
         "@opam/dune@opam:2.5.0@aef1678b",
-        "@opam/ctypes@opam:0.15.1@b0227b2f", "@opam/bos@opam:0.2.0@df49e63f",
-        "@glennsl/timber@1.2.0@d41d8cd9", "@esy-ocaml/reason@3.6.0@d41d8cd9",
+        "@opam/ctypes@opam:0.15.1@b0227b2f",
+        "@opam/charInfo_width@opam:1.1.0@b400bb29",
+        "@opam/bos@opam:0.2.0@df49e63f", "@glennsl/timber@1.2.0@d41d8cd9",
+        "@esy-ocaml/reason@3.6.0@d41d8cd9",
         "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#10cab2d@d41d8cd9"
       ],
       "devDependencies": [
@@ -819,6 +822,32 @@
         "ocaml@4.10.0@d41d8cd9", "@opam/uchar@opam:0.0.2@c8218eea"
       ]
     },
+    "@opam/uucp@opam:13.0.0@e9b515e0": {
+      "id": "@opam/uucp@opam:13.0.0@e9b515e0",
+      "name": "@opam/uucp",
+      "version": "opam:13.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/07/07e706249ddb2d02f0fa298804d3c739#md5:07e706249ddb2d02f0fa298804d3c739",
+          "archive:https://erratique.ch/software/uucp/releases/uucp-13.0.0.tbz#md5:07e706249ddb2d02f0fa298804d3c739"
+        ],
+        "opam": {
+          "name": "uucp",
+          "version": "13.0.0",
+          "path": "test.esy.lock/opam/uucp.13.0.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.10.0@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
+        "@opam/topkg@opam:1.0.1@a42c631e",
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [ "ocaml@4.10.0@d41d8cd9" ]
+    },
     "@opam/uri@opam:3.1.0@826aaae7": {
       "id": "@opam/uri@opam:3.1.0@826aaae7",
       "name": "@opam/uri",
@@ -1248,7 +1277,8 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
-        "@opam/tyxml@opam:4.4.0@1dca5713", "@opam/dune@opam:2.5.0@aef1678b",
+        "@opam/uucp@opam:13.0.0@e9b515e0", "@opam/tyxml@opam:4.4.0@1dca5713",
+        "@opam/dune@opam:2.5.0@aef1678b",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],

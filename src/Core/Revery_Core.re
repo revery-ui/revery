@@ -33,3 +33,4 @@ module Internal = {
 };
 
 module Tick = Tick.Default;
+module Zed_utf8 = Zed_utf8;
