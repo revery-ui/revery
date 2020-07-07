@@ -27,7 +27,7 @@ let os = {
   webGL
     ? Browser
     : (
-      switch (Revery_Native.Environemnt.get_os()) {
+      switch (Revery_Native.Environment.get_os()) {
       | `Android => Android
       | `Linux => Linux
       | `Mac => Mac

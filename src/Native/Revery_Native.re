@@ -1,5 +1,5 @@
 module Dialog = Dialog;
-module Environemnt = Environment;
+module Environment = Environment;
 module Icon = Icon;
 module Notification = Notification;
 module Shell = Shell;
