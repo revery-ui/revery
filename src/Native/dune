@@ -8,6 +8,7 @@
         Revery_Native
         dialog dialog_cocoa dialog_win32 dialog_gtk
         notification notification_cocoa
+        environment
         icon icon_cocoa icon_win32
         shell shell_cocoa shell_gtk shell_win32
         locale locale_cocoa locale_win32
