@@ -15,6 +15,9 @@
 #include "ReveryCocoa.h"
 #elif USE_GTK
 #include "ReveryGtk.h"
+#endif
+
+#ifdef __linux__
 #include <locale.h>
 #endif
 

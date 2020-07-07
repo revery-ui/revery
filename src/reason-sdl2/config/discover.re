@@ -1,6 +1,7 @@
 module Configurator = Configurator.V1;
 
 type os =
+  | Android
   | Linux
   | Mac
   | Windows;
@@ -9,7 +10,11 @@ let detect_system_header = {|
   #if __APPLE__
     #define PLATFORM_NAME "mac"
   #elif __linux__
-    #define PLATFORM_NAME "linux"
+    #if __ANDROID__
+      #define PLATFORM_NAME "android"
+    #else
+      #define PLATFORM_NAME "linux"
+    #endif
   #elif WIN32
     #define PLATFORM_NAME "windows"
   #endif
@@ -29,6 +34,7 @@ let get_os = t => {
       [("PLATFORM_NAME", String)],
     );
   switch (platform) {
+  | [(_, String("android"))] => Android
   | [(_, String("linux"))] => Linux
   | [(_, String("mac"))] => Mac
   | [(_, String("windows"))] => Windows
@@ -48,9 +54,10 @@ let c_flags = [
 
 let c_flags = os =>
   switch (os) {
+  | Android
   | Mac => c_flags
-  | Windows => c_flags @ ["-mwindows"]
   | Linux => c_flags @ ["-fPIC"]
+  | Windows => c_flags @ ["-mwindows"]
   };
 
 let libFolderPath = Sys.getenv("SDL2_LIB_PATH");
@@ -62,13 +69,12 @@ let cclib = s => ["-cclib", s];
 
 let flags = os =>
   switch (os) {
-  | Windows =>
+  | Android =>
     []
-    // On Windows, we ship the DLL side-by-side
-    @ ccopt("-L" ++ libFolderPath)
-    @ cclib("-lSDL2")
-    @ cclib("-lgdi32")
-    @ cclib("-subsystem windows")
+    @ ccopt(libFilePath)
+    @ cclib("-lEGL")
+    @ cclib("-lGLESv1_CM")
+    @ cclib("-lGLESv2")
   | Linux =>
     []
     @ cclib("-lGL")
@@ -96,10 +102,18 @@ let flags = os =>
     @ ccopt("-framework Metal")
     @ ccopt("-framework Carbon")
     @ ccopt("-liconv")
+  | Windows =>
+    []
+    // On Windows, we ship the DLL side-by-side
+    @ ccopt("-L" ++ libFolderPath)
+    @ cclib("-lSDL2")
+    @ cclib("-lgdi32")
+    @ cclib("-subsystem windows")
   };
 
 let c_library_flags = os =>
   switch (os) {
+  | Android
   | Mac
   | Linux => [libFilePath]
   | Windows => ["-L" ++ libFolderPath, "-lSDL2"]
@@ -107,8 +121,9 @@ let c_library_flags = os =>
 
 let cxx_flags = os =>
   switch (os) {
-  | Mac => c_flags(os) @ ["-x", "objective-c++"]
+  | Android
   | Linux => c_flags(os) @ ["-std=c++11"]
+  | Mac => c_flags(os) @ ["-x", "objective-c++"]
   | Windows =>
     c_flags(os) @ ["-fno-exceptions", "-fno-rtti", "-lstdc++", "-mwindows"]
   };

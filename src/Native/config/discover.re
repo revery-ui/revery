@@ -3,6 +3,7 @@ open C_define;
 open Flags;
 
 type os =
+  | Android
   | Linux
   | Mac
   | Windows;
@@ -11,7 +12,11 @@ let detect_system_header = {|
   #if __APPLE__
     #define PLATFORM_NAME "mac"
   #elif __linux__
-    #define PLATFORM_NAME "linux"
+    #if __ANDROID__
+      #define PLATFORM_NAME "android"
+    #else
+      #define PLATFORM_NAME "linux"
+    #endif
   #elif WIN32
     #define PLATFORM_NAME "windows"
   #endif
@@ -28,6 +33,7 @@ let get_os = t => {
   let platform =
     C_define.import(t, ~includes=[header], [("PLATFORM_NAME", String)]);
   switch (platform) {
+  | [(_, String("android"))] => Android
   | [(_, String("linux"))] => Linux
   | [(_, String("mac"))] => Mac
   | [(_, String("windows"))] => Windows
@@ -44,9 +50,20 @@ let gen_config_header = (conf, features) => {
   let includes = value =>
     List.exists((==)(value), features)
       ? Value.Int(1) : Value.Switch(false);
+  let os = {
+    let os = get_os(conf);
+    switch (os) {
+    | Android => "android"
+    | Linux => "linux"
+    | Mac => "mac"
+    | Windows => "windows"
+    };
+  };
+
   gen_header_file(
     conf,
     [
+      ("PLATFORM_NAME", Value.String(os)),
       ("USE_GTK", includes(GTK)),
       ("USE_COCOA", includes(COCOA)),
       ("USE_WIN32", includes(WIN32)),
@@ -99,8 +116,9 @@ main(~name="discover", t => {
   let os = get_os(t);
   let conf =
     switch (os) {
-    | Mac => get_mac_config()
+    | Android
     | Linux => get_linux_config(t)
+    | Mac => get_mac_config()
     | Windows => get_win32_config()
     };
   gen_config_header(~fname="config.h", t, conf.features);
