@@ -9,20 +9,17 @@
 
 #include <string.h>
 
-#ifdef WIN32
+#include "config.h"
+#ifdef USE_WIN32
 #include "ReveryWin32.h"
-#elif __APPLE__
+#elif USE_COCOA
 #include "ReveryCocoa.h"
-#else
+#elif USE_GTK
 #include "ReveryGtk.h"
 #endif
 
 CAMLprim value revery_alertSupported() {
-#ifdef WIN32
-    return Val_true;
-#elif __APPLE__
-    return Val_true;
-#elif __linux__
+#if defined(USE_WIN32) || defined(USE_COCOA) || defined(USE_GTK)
     return Val_true;
 #else
     return Val_false;
@@ -34,11 +31,11 @@ CAMLprim value revery_alert(value vWindow, value vMessage) {
     const char *szMessage = String_val(vMessage);
     void *pWin = (void *)vWindow;
 
-#ifdef WIN32
+#ifdef USE_WIN32
     revery_alert_win32(pWin, szMessage);
-#elif __APPLE__
+#elif USE_COCOA
     revery_alert_cocoa(pWin, szMessage);
-#elif __linux__
+#elif USE_GTK
     revery_alert_gtk(pWin, szMessage);
 #else
     printf("WARNING - Not implemented: alert");
@@ -102,11 +99,11 @@ CAMLprim value revery_alertOpenFiles_native(
 
     char **fileList = NULL;
 
-#ifdef __APPLE__
+#ifdef USE_COCOA
     fileList = revery_open_files_cocoa(
                    startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
                    canChooseDirectories, showHidden, buttonText, title);
-#elif __linux__
+#elif USE_GTK
     fileList = revery_open_files_gtk(
                    startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
                    canChooseDirectories, showHidden, buttonText, title);

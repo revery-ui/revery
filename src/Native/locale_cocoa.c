@@ -1,4 +1,5 @@
-#ifdef __APPLE__
+#include "config.h"
+#ifdef USE_COCOA
 #include <stdio.h>
 
 #import <Cocoa/Cocoa.h>
