@@ -140,7 +140,7 @@ let getSkiaTypeface: t => Skia.Typeface.t = font => font.skiaFace;
 let unresolvedGlyphID = 0;
 
 let shaper = (hbFace, skiaFace, fallbackCache, str) => {
-  let fallback = (acc, Harfbuzz.{glyphId, cluster}) => {
+  let fallback = (len, (list, last, i), Harfbuzz.{glyphId, cluster}) => {
     let shapeNode =
       if (glyphId == unresolvedGlyphID) {
         let uchar = Zed_utf8.unsafe_extract(str, cluster);
@@ -173,74 +173,110 @@ let shaper = (hbFace, skiaFace, fallbackCache, str) => {
         Ok(ShapeResult.{hbFace, skiaFace, glyphId, cluster});
       };
 
-    switch (acc, shapeNode) {
-    | ([], Ok(node)) => [`Shaped(node)]
-    | ([], Error((hbFace, skiaFace, cluster, uchar))) => [
-        `Hole((hbFace, skiaFace, cluster, [uchar])),
-      ]
-    | ([_, ..._], Ok(node)) => [`Shaped(node), ...acc]
-    | ([`Shaped(_), ..._], Error((hbFace, skiaFace, cluster, uchar))) => [
-        `Hole((hbFace, skiaFace, cluster, [uchar])),
-        ...acc,
-      ]
-    | (
-        [`Hole(hbFace, skFace, startIndex, holeList), ...rest],
-        Error((_, skiaFace, _, uchar)),
-      )
-        when skFace === skiaFace => [
-        `Hole((hbFace, skFace, startIndex, [uchar, ...holeList])),
-        ...rest,
-      ]
-    | ([`Hole(_), ..._], Error((hbFace, skiaFace, cluster, uchar))) => [
-        `Hole((hbFace, skiaFace, cluster, [uchar])),
-        ...acc,
-      ]
+    let shapeFallback = (startIndex, endIndex, skiaFace, hbFace) => {
+      let substr = String.sub(str, startIndex, endIndex - startIndex + 1);
+      Harfbuzz.hb_shape(hbFace, substr)
+      |> Array.fold_left(
+           (acc, Harfbuzz.{glyphId, cluster}) =>
+             [ShapeResult.{hbFace, skiaFace, glyphId, cluster}, ...acc],
+           [],
+         );
     };
+
+    /* This is a pretty complicated switch block but it is required in order
+       to make this construction as efficient as possible. Each case is
+       described in a comment above itself. */
+    let (newList, newLast) =
+      switch (last, shapeNode) {
+      // There is no hole before this, and we don't have a hole now.
+      | (None, Ok(shape)) => ([[shape], ...list], None)
+      // The hole before this has ended, so we need to coalesce it
+      // into a shape
+      | (
+          Some((hbFace, skiaFace, cluster)),
+          Ok(ShapeResult.{cluster: endIndex} as shape),
+        ) => (
+          [
+            [shape],
+            shapeFallback(cluster, endIndex, skiaFace, hbFace),
+            ...list,
+          ],
+          None,
+        )
+      // There is no hole before this, but we ran into a hole at the end
+      // of the string
+      | (None, Error((hbFace, skiaFace, cluster, _))) when i == len - 1 => (
+          [
+            shapeFallback(cluster, String.length(str) - 1, skiaFace, hbFace),
+            ...list,
+          ],
+          None,
+        )
+      // There is no hole before this, but one is starting.
+      | (None, Error((hbFace, skiaFace, cluster, _))) => (
+          list,
+          Some((hbFace, skiaFace, cluster)),
+        )
+      // There is a hole before this which this hole is part of, and we
+      // are at the end of a string, so we need to coalesce
+      | (Some((hbFace, skiaFace, cluster)), Error((_, skiaFace', _, _)))
+          when skiaFace === skiaFace' && i == len - 1 => (
+          [
+            shapeFallback(cluster, String.length(str) - 1, skiaFace, hbFace),
+            ...list,
+          ],
+          None,
+        )
+      // There is a hole before this which we are a part of, but we don't
+      // know if it's at the end. One of the future calls is responsible
+      // for coalescing.
+      | (Some((hbFace, skiaFace, cluster)), Error((_, skiaFace', _, _)))
+          when skiaFace === skiaFace' => (
+          list,
+          last,
+        )
+      // There is a hole before this which this hole is NOT a part of,
+      // and we are at the end of the string, so we have to coalesce
+      // both holes.
+      | (
+          Some((hbFace, skiaFace, cluster)),
+          Error((hbFace', skiaFace', endIndex, _)),
+        )
+          when i == len - 1 => (
+          [
+            shapeFallback(
+              endIndex,
+              String.length(str) - 1,
+              skiaFace',
+              hbFace',
+            ),
+            shapeFallback(cluster, endIndex, skiaFace, hbFace),
+            ...list,
+          ],
+          None,
+        )
+      // There is a hole before this which this hole is NOT a part of,
+      // so we coalesce that hole, and we start a new one for future
+      // calls to resolve.
+      | (
+          Some((hbFace, skiaFace, cluster)),
+          Error((hbFace', skiaFace', cluster', _)),
+        ) => (
+          [shapeFallback(cluster, cluster', skiaFace, hbFace), ...list],
+          Some((hbFace', skiaFace', cluster')),
+        )
+      };
+
+    (newList, newLast, i + 1);
   };
 
   let shaping =
-    Harfbuzz.hb_shape(hbFace, str) |> Array.fold_left(fallback, []);
-
-  let secondPass = (i, node) =>
-    switch (node) {
-    | `Shaped(shape) => [shape]
-    | `Hole(hbFace, skiaFace, startIndex, holeList) =>
-      let endIndex =
-        switch (List.nth_opt(shaping, i - 1)) {
-        | Some(`Shaped(ShapeResult.{cluster: i, _}))
-        | Some(`Hole(_, _, i, _)) => i
-        | exception _
-        | None => String.length(str) - 1
-        };
-      let str = String.sub(str, startIndex, endIndex - startIndex + 1);
-
-      switch (FallbackLruHash.find(str, fallbackCache)) {
-      | Some(l) =>
-        FallbackLruHash.promote(str, fallbackCache);
-        l;
-      | None =>
-        Log.debugf(m =>
-          m(
-            "Hole resolved: string : %s font: %s",
-            str,
-            Skia.Typeface.getFamilyName(skiaFace),
-          )
-        );
-
-        let l =
-          Harfbuzz.hb_shape(hbFace, str)
-          |> Array.fold_left(
-               (acc, Harfbuzz.{glyphId, cluster}) =>
-                 [ShapeResult.{hbFace, skiaFace, glyphId, cluster}, ...acc],
-               [],
-             );
-        FallbackLruHash.add(str, l, fallbackCache);
-        FallbackLruHash.trim(fallbackCache);
-        l;
-      };
-    };
-
-  let shaping = shaping |> List.mapi(secondPass) |> List.rev;
+    Harfbuzz.hb_shape(hbFace, str)
+    |> (
+      arr =>
+        Array.fold_left(fallback(Array.length(arr)), ([], None, 0), arr)
+    )
+    |> (((l, _, _)) => List.rev(l));
   ShapeResult.ofHarfbuzz(shaping);
 };
 
