@@ -47,14 +47,21 @@ module ShapeResultWeighted = {
   let weight = ShapeResult.size;
 };
 
+module FallbackWeighted = {
+  type t = list(ShapeResult.shapeNode);
+  let weight = _ => 1;
+};
+
 module MetricsLruHash = Lru.M.Make(FloatHashable, MetricsWeighted);
 module ShapeResultLruHash = Lru.M.Make(StringHashable, ShapeResultWeighted);
+module FallbackLruHash = Lru.M.Make(StringHashable, FallbackWeighted);
 
 type t = {
   hbFace: Harfbuzz.hb_face,
   skiaFace: Skia.Typeface.t,
   metricsCache: MetricsLruHash.t,
   shapeCache: ShapeResultLruHash.t,
+  fallbackCache: FallbackLruHash.t,
 };
 
 type _t = t;
@@ -81,13 +88,15 @@ let load: option(Skia.Typeface.t) => result(t, string) =
       let metricsCache = MetricsLruHash.create(~initialSize=8, 64);
       let shapeCache =
         ShapeResultLruHash.create(~initialSize=1024, 128 * 1024);
+      let fallbackCache =
+        FallbackLruHash.create(~initialSize=1024, 128 * 1024);
 
       let ret =
         switch (skiaTypeface, harfbuzzFace) {
         | (Some(skiaFace), Some(Ok(hbFace))) =>
           Event.dispatch(onFontLoaded, ());
           Log.info("Loaded : " ++ Skia.Typeface.getFamilyName(skiaFace));
-          Ok({hbFace, skiaFace, metricsCache, shapeCache});
+          Ok({hbFace, skiaFace, metricsCache, shapeCache, fallbackCache});
         | (_, Some(Error(msg))) =>
           Log.warn("Error loading typeface: " ++ msg);
           Error("Error loading typeface: " ++ msg);
@@ -130,7 +139,7 @@ let getSkiaTypeface: t => Skia.Typeface.t = font => font.skiaFace;
 
 let unresolvedGlyphID = 0;
 
-let shaper = (hbFace, skiaFace, str) => {
+let shaper = (hbFace, skiaFace, fallbackCache, str) => {
   let fallback = (acc, Harfbuzz.{glyphId, cluster}) => {
     let shapeNode =
       if (glyphId == unresolvedGlyphID) {
@@ -205,20 +214,30 @@ let shaper = (hbFace, skiaFace, str) => {
         };
       let str = String.sub(str, startIndex, endIndex - startIndex + 1);
 
-      Log.debugf(m =>
-        m(
-          "Hole resolved: string : %s font: %s",
-          str,
-          Skia.Typeface.getFamilyName(skiaFace),
-        )
-      );
+      switch (FallbackLruHash.find(str, fallbackCache)) {
+      | Some(l) =>
+        FallbackLruHash.promote(str, fallbackCache);
+        l;
+      | None =>
+        Log.debugf(m =>
+          m(
+            "Hole resolved: string : %s font: %s",
+            str,
+            Skia.Typeface.getFamilyName(skiaFace),
+          )
+        );
 
-      Harfbuzz.hb_shape(hbFace, str)
-      |> Array.fold_left(
-           (acc, Harfbuzz.{glyphId, cluster}) =>
-             [ShapeResult.{hbFace, skiaFace, glyphId, cluster}, ...acc],
-           [],
-         );
+        let l =
+          Harfbuzz.hb_shape(hbFace, str)
+          |> Array.fold_left(
+               (acc, Harfbuzz.{glyphId, cluster}) =>
+                 [ShapeResult.{hbFace, skiaFace, glyphId, cluster}, ...acc],
+               [],
+             );
+        FallbackLruHash.add(str, l, fallbackCache);
+        FallbackLruHash.trim(fallbackCache);
+        l;
+      };
     };
 
   let shaping = shaping |> List.mapi(secondPass) |> List.rev;
@@ -226,13 +245,13 @@ let shaper = (hbFace, skiaFace, str) => {
 };
 
 let shape: (t, string) => ShapeResult.t =
-  ({hbFace, skiaFace, shapeCache, _}, str) => {
+  ({hbFace, skiaFace, shapeCache, fallbackCache, _}, str) => {
     switch (ShapeResultLruHash.find(str, shapeCache)) {
     | Some(v) =>
       ShapeResultLruHash.promote(str, shapeCache);
       v;
     | None =>
-      let result = shaper(hbFace, skiaFace, str);
+      let result = shaper(hbFace, skiaFace, fallbackCache, str);
       ShapeResultLruHash.add(str, result, shapeCache);
       ShapeResultLruHash.trim(shapeCache);
       result;
