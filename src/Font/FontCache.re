@@ -175,12 +175,22 @@ let shaper = (hbFace, skiaFace, fallbackCache, str) => {
 
     let shapeFallback = (startIndex, endIndex, skiaFace, hbFace) => {
       let substr = String.sub(str, startIndex, endIndex - startIndex + 1);
-      Harfbuzz.hb_shape(hbFace, substr)
-      |> Array.fold_left(
-           (acc, Harfbuzz.{glyphId, cluster}) =>
-             [ShapeResult.{hbFace, skiaFace, glyphId, cluster}, ...acc],
-           [],
-         );
+      switch (FallbackLruHash.find(substr, fallbackCache)) {
+      | Some(v) =>
+        FallbackLruHash.promote(substr, fallbackCache);
+        v;
+      | None =>
+        let v =
+          Harfbuzz.hb_shape(hbFace, substr)
+          |> Array.fold_left(
+               (acc, Harfbuzz.{glyphId, cluster}) =>
+                 [ShapeResult.{hbFace, skiaFace, glyphId, cluster}, ...acc],
+               [],
+             );
+        FallbackLruHash.add(substr, v, fallbackCache);
+        FallbackLruHash.trim(fallbackCache);
+        v;
+      };
     };
 
     /* This is a pretty complicated switch block but it is required in order
