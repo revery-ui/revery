@@ -21,6 +21,12 @@ module SkiaTypefaceHashable = {
     };
 };
 
+module UcharHashable = {
+  type t = Uchar.t;
+  let equal = Uchar.equal;
+  let hash = Hashtbl.hash;
+};
+
 module FloatHashable = {
   type t = float;
   let equal = Float.equal;
@@ -52,9 +58,16 @@ module FallbackWeighted = {
   let weight = _ => 1;
 };
 
+module SkiaTypefaceWeighted = {
+  type t = option(Skia.Typeface.t);
+  let weight = _ => 1;
+};
+
 module MetricsLruHash = Lru.M.Make(FloatHashable, MetricsWeighted);
 module ShapeResultLruHash = Lru.M.Make(StringHashable, ShapeResultWeighted);
 module FallbackLruHash = Lru.M.Make(StringHashable, FallbackWeighted);
+module FallbackCharacterLruHash =
+  Lru.M.Make(UcharHashable, SkiaTypefaceWeighted);
 
 type t = {
   hbFace: Harfbuzz.hb_face,
@@ -62,6 +75,7 @@ type t = {
   metricsCache: MetricsLruHash.t,
   shapeCache: ShapeResultLruHash.t,
   fallbackCache: FallbackLruHash.t,
+  fallbackCharacterCache: FallbackCharacterLruHash.t,
 };
 
 type _t = t;
@@ -90,13 +104,22 @@ let load: option(Skia.Typeface.t) => result(t, string) =
         ShapeResultLruHash.create(~initialSize=1024, 128 * 1024);
       let fallbackCache =
         FallbackLruHash.create(~initialSize=1024, 128 * 1024);
+      let fallbackCharacterCache =
+        FallbackCharacterLruHash.create(~initialSize=1024, 128 * 1024);
 
       let ret =
         switch (skiaTypeface, harfbuzzFace) {
         | (Some(skiaFace), Some(Ok(hbFace))) =>
           Event.dispatch(onFontLoaded, ());
           Log.info("Loaded : " ++ Skia.Typeface.getFamilyName(skiaFace));
-          Ok({hbFace, skiaFace, metricsCache, shapeCache, fallbackCache});
+          Ok({
+            hbFace,
+            skiaFace,
+            metricsCache,
+            shapeCache,
+            fallbackCache,
+            fallbackCharacterCache,
+          });
         | (_, Some(Error(msg))) =>
           Log.warn("Error loading typeface: " ++ msg);
           Error("Error loading typeface: " ++ msg);
@@ -139,30 +162,40 @@ let getSkiaTypeface: t => Skia.Typeface.t = font => font.skiaFace;
 
 let unresolvedGlyphID = 0;
 
-let shaper = (hbFace, skiaFace, fallbackCache, str) => {
+let matchCharacter = (fallbackCharacterCache, uchar, skiaFace) =>
+  switch (FallbackCharacterLruHash.find(uchar, fallbackCharacterCache)) {
+  | Some(maybeTf) =>
+    FallbackCharacterLruHash.promote(uchar, fallbackCharacterCache);
+    maybeTf;
+  | None =>
+    let familyName = skiaFace |> Skia.Typeface.getFamilyName;
+    let maybeTf =
+      Skia.FontManager.matchFamilyStyleCharacter(
+        FontManager.fontManager,
+        familyName,
+        skiaFace |> Skia.Typeface.getFontStyle,
+        [Environment.userLocale],
+        uchar,
+      );
+    Log.debugf(m =>
+      m(
+        "Unresolved glyph: character : U+%04X font: %s",
+        Uchar.to_int(uchar),
+        familyName,
+      )
+    );
+    FallbackCharacterLruHash.add(uchar, maybeTf, fallbackCharacterCache);
+    FallbackCharacterLruHash.trim(fallbackCharacterCache);
+    maybeTf;
+  };
+
+let shaper = (hbFace, skiaFace, fallbackCache, fallbackCharacterCache, str) => {
   let fallback = (len, (list, last, i), Harfbuzz.{glyphId, cluster}) => {
     let shapeNode =
       if (glyphId == unresolvedGlyphID) {
         let uchar = Zed_utf8.unsafe_extract(str, cluster);
-        let familyName = skiaFace |> Skia.Typeface.getFamilyName;
-        let style = skiaFace |> Skia.Typeface.getFontStyle;
-
-        Log.debugf(m =>
-          m(
-            "Unresolved glyph: character : U+%04X font: %s",
-            Uchar.to_int(uchar),
-            familyName,
-          )
-        );
-
         let newTypeface =
-          Skia.FontManager.matchFamilyStyleCharacter(
-            FontManager.fontManager,
-            familyName,
-            style,
-            [Environment.userLocale],
-            uchar,
-          );
+          matchCharacter(fallbackCharacterCache, uchar, skiaFace);
         let result = load(newTypeface);
         switch (result) {
         | Ok({hbFace, skiaFace, _}) =>
@@ -291,13 +324,17 @@ let shaper = (hbFace, skiaFace, fallbackCache, str) => {
 };
 
 let shape: (t, string) => ShapeResult.t =
-  ({hbFace, skiaFace, shapeCache, fallbackCache, _}, str) => {
+  (
+    {hbFace, skiaFace, shapeCache, fallbackCache, fallbackCharacterCache, _},
+    str,
+  ) => {
     switch (ShapeResultLruHash.find(str, shapeCache)) {
     | Some(v) =>
       ShapeResultLruHash.promote(str, shapeCache);
       v;
     | None =>
-      let result = shaper(hbFace, skiaFace, fallbackCache, str);
+      let result =
+        shaper(hbFace, skiaFace, fallbackCache, fallbackCharacterCache, str);
       ShapeResultLruHash.add(str, result, shapeCache);
       ShapeResultLruHash.trim(shapeCache);
       result;
