@@ -13,6 +13,6 @@
 #include "config.h"
 
 CAMLprim value revery_getOperatingSystem() {
-  CAMLparam0();
-  CAMLreturn(caml_copy_string(PLATFORM_NAME));
+    CAMLparam0();
+    CAMLreturn(caml_copy_string(PLATFORM_NAME));
 }
