@@ -132,7 +132,7 @@ let unresolvedGlyphID = 0;
 
 let shaper = (hbFace, skiaFace, str) => {
   let fallback = (acc, Harfbuzz.{glyphId, cluster}) => {
-    let shapeNode: ShapeResult.shapeNode =
+    let shapeNode =
       if (glyphId == unresolvedGlyphID) {
         let uchar = Zed_utf8.unsafe_extract(str, cluster);
         let familyName = skiaFace |> Skia.Typeface.getFamilyName;
@@ -157,31 +157,71 @@ let shaper = (hbFace, skiaFace, str) => {
         let result = load(newTypeface);
         switch (result) {
         | Ok({hbFace, skiaFace, _}) =>
-          let arr = Harfbuzz.hb_shape(hbFace, Zed_utf8.singleton(uchar));
-          let Harfbuzz.{glyphId, _} = arr[0];
-          ShapeResult.{hbFace, skiaFace, glyphId, cluster};
-        | _ => ShapeResult.{hbFace, skiaFace, glyphId, cluster}
+          Error((hbFace, skiaFace, cluster, uchar))
+        | Error(_) => Ok(ShapeResult.{hbFace, skiaFace, glyphId, cluster})
         };
       } else {
-        ShapeResult.{hbFace, skiaFace, glyphId, cluster};
+        Ok(ShapeResult.{hbFace, skiaFace, glyphId, cluster});
       };
 
-    switch ((acc: list(list(ShapeResult.shapeNode)))) {
-    | [] => [[shapeNode]]
-    | [[sNode, ..._] as nodes, ...rest] =>
-      if (sNode.skiaFace === shapeNode.skiaFace) {
-        [[shapeNode, ...nodes], ...rest];
-      } else {
-        [[shapeNode], nodes, ...rest];
-      }
-    | [[], ..._] => failwith("Improper construction!")
+    switch (acc, shapeNode) {
+    | ([], Ok(node)) => [`Shaped(node)]
+    | ([], Error((hbFace, skiaFace, cluster, uchar))) => [
+        `Hole((hbFace, skiaFace, cluster, [uchar])),
+      ]
+    | ([_, ..._], Ok(node)) => [`Shaped(node), ...acc]
+    | ([`Shaped(_), ..._], Error((hbFace, skiaFace, cluster, uchar))) => [
+        `Hole((hbFace, skiaFace, cluster, [uchar])),
+        ...acc,
+      ]
+    | (
+        [`Hole(hbFace, skFace, startIndex, holeList), ...rest],
+        Error((_, skiaFace, _, uchar)),
+      )
+        when skFace === skiaFace => [
+        `Hole((hbFace, skFace, startIndex, [uchar, ...holeList])),
+        ...rest,
+      ]
+    | ([`Hole(_), ..._], Error((hbFace, skiaFace, cluster, uchar))) => [
+        `Hole((hbFace, skiaFace, cluster, [uchar])),
+        ...acc,
+      ]
     };
   };
 
   let shaping =
-    Harfbuzz.hb_shape(hbFace, str)
-    |> Array.fold_left(fallback, [])
-    |> List.rev;
+    Harfbuzz.hb_shape(hbFace, str) |> Array.fold_left(fallback, []);
+
+  let secondPass = (i, node) =>
+    switch (node) {
+    | `Shaped(shape) => [shape]
+    | `Hole(hbFace, skiaFace, startIndex, holeList) =>
+      let endIndex =
+        switch (List.nth_opt(shaping, i - 1)) {
+        | Some(`Shaped(ShapeResult.{cluster: i, _}))
+        | Some(`Hole(_, _, i, _)) => i
+        | exception _
+        | None => String.length(str) - 1
+        };
+      let str = String.sub(str, startIndex, endIndex - startIndex + 1);
+
+      Log.debugf(m =>
+        m(
+          "Hole resolved: string : %s font: %s",
+          str,
+          Skia.Typeface.getFamilyName(skiaFace),
+        )
+      );
+
+      Harfbuzz.hb_shape(hbFace, str)
+      |> Array.fold_left(
+           (acc, Harfbuzz.{glyphId, cluster}) =>
+             [ShapeResult.{hbFace, skiaFace, glyphId, cluster}, ...acc],
+           [],
+         );
+    };
+
+  let shaping = shaping |> List.mapi(secondPass) |> List.rev;
   ShapeResult.ofHarfbuzz(shaping);
 };
 
