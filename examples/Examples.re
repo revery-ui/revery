@@ -130,11 +130,11 @@ let examples = [
     render: _ => HoverExample.render(),
     source: "HoverExample.re",
   },
-  /*  {
+  {
         name: "Canvas Example",
         render: _ => CanvasExample.render(),
         source: "CanvasExample.re",
-      }, */
+      },
   {
     name: "SVG Example",
     render: _ => SVGExample.render(),
@@ -363,4 +363,5 @@ let init = app => {
   ();
 };
 
+Printexc.record_backtrace(true);
 App.start(init);
