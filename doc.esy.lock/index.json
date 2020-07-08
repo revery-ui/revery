@@ -334,14 +334,14 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "lodash@4.17.15@d41d8cd9": {
-      "id": "lodash@4.17.15@d41d8cd9",
+    "lodash@4.17.18@d41d8cd9": {
+      "id": "lodash@4.17.18@d41d8cd9",
       "name": "lodash",
-      "version": "4.17.15",
+      "version": "4.17.18",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/lodash/-/lodash-4.17.15.tgz#sha1:b447f6670a0455bbfeedd11392eff330ea097548"
+          "archive:https://registry.npmjs.org/lodash/-/lodash-4.17.18.tgz#sha1:5c5f072c5c02f386378dd3f6325b529376210427"
         ]
       },
       "overrides": [],
@@ -705,7 +705,7 @@
         ]
       },
       "overrides": [],
-      "dependencies": [ "lodash@4.17.15@d41d8cd9" ],
+      "dependencies": [ "lodash@4.17.18@d41d8cd9" ],
       "devDependencies": []
     },
     "@revery/esy-cmake@0.3.5001@d41d8cd9": {
