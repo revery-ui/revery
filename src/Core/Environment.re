@@ -17,6 +17,7 @@ external yield: unit => unit = "caml_thread_yield";
 
 type os =
   | Android
+  | IOS
   | Linux
   | Mac
   | Windows
@@ -29,6 +30,7 @@ let os = {
     : (
       switch (Revery_Native.Environment.get_os()) {
       | `Android => Android
+      | `IOS => IOS
       | `Linux => Linux
       | `Mac => Mac
       | `Windows => Windows

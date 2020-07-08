@@ -48,6 +48,7 @@ let getTempDirectory: unit => string;
 
 type os =
   | Android
+  | IOS
   | Linux
   | Mac
   | Windows

@@ -65,8 +65,9 @@ module WindowMetrics: {
       // Otherwise, the way we figure out the scale factor depends on the platform
       | None =>
         switch (Environment.os) {
-        // Mac is easy... there isn't any scaling factor.  The window is automatically
+        // Mac and iOS is easy... there isn't any scaling factor.  The window is automatically
         // proportioned for us. The scaling is handled by the ratio of size / framebufferSize.
+        | IOS
         | Mac => 1.0
         // On Windows, we need to try a Win32 API to get the scale factor
         | Windows =>
