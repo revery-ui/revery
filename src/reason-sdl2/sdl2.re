@@ -238,6 +238,8 @@ module Gl = {
     | Renderer
     | Version
     | ShadingLanguageVersion;
+  type glInt =
+    | FramebufferBinding;
 
   external setup: Window.t => context = "resdl_SDL_GL_Setup";
   external makeCurrent: (Window.t, context) => unit =
@@ -248,6 +250,8 @@ module Gl = {
   external setSwapInterval: int => unit = "resdl_SDL_GL_SetSwapInterval";
 
   external getString: glString => string = "resdl_SDL_GL_GetString";
+  external getFramebufferBinding: unit => int =
+    "resdl_SDL_GL_GetFramebufferBinding";
 };
 
 external delay: int => unit = "resdl_SDL_Delay";

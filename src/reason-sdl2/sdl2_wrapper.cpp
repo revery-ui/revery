@@ -601,6 +601,28 @@ CAMLprim value resdl_SDL_GL_GetString(value vStr) {
   CAMLreturn(ret);
 }
 
+typedef void (*glGetIntegervFunc)(GLenum, GLint*);
+CAMLprim value resdl_SDL_GL_GetFramebufferBinding(value vInt) {
+  CAMLparam1(vInt);
+  
+  GLenum name = GL_FRAMEBUFFER_BINDING;
+  switch (Int_val(vInt)) {
+  case 0:
+    name = GL_FRAMEBUFFER_BINDING;
+    break;
+  default:
+    break;
+  }
+  
+  GLint ret = -1;
+  glGetIntegervFunc glGetIntegerv =
+      (glGetIntegervFunc)(SDL_GL_GetProcAddress("glGetIntegerv"));
+  if (glGetIntegerv) {
+    glGetIntegerv(name, &ret);
+  }
+  CAMLreturn(Val_int(ret));
+}
+
 CAMLprim value resdl_SDL_GL_MakeCurrent(value vWindow, value vContext) {
   CAMLparam2(vWindow, vContext);
   SDL_Window *win = (SDL_Window *)vWindow;
