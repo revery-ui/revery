@@ -15,6 +15,7 @@
 #include "stb_image.h"
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_main.h>
 #include <SDL2/SDL_config.h>
 #include <SDL2/SDL_syswm.h>
 
@@ -1537,6 +1538,33 @@ CAMLprim value resdl_SDL_Init() {
   }
 
   CAMLreturn(Val_int(ret));
+}
+
+#if SDL_VIDEO_DRIVER_UIKIT
+value resdl_uikit_main_callback;
+#endif
+
+CAMLprim value resdl_SDL_main(value ml_argc, value ml_argv, value closure) {
+  CAMLparam3(ml_argc, ml_argv, closure);
+  CAMLlocal1(tmp);
+
+  #if SDL_VIDEO_DRIVER_UIKIT
+    int argc = Int_val(ml_argc);
+    char **argv = (char**)calloc(sizeof(char*), argc + 1);
+    for (int i = 0; i < argc; i++) {
+      argv[i] = (char*)String_val(Field(ml_argv, i));
+    }
+
+    resdl_uikit_main_callback = closure;
+    SDL_UIKitRunApp(argc, argv, [](int argc, char *argv[]){
+      caml_callback(resdl_uikit_main_callback, Val_unit);
+      return 0;
+    });
+  #else
+    caml_callback(closure, Val_unit);
+  #endif
+
+  CAMLreturn(Val_unit);
 }
 
 CAMLprim value resdl_SDL_GetScancodeName(value vScancode) {

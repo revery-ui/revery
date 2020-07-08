@@ -252,6 +252,8 @@ module Gl = {
 
 external delay: int => unit = "resdl_SDL_Delay";
 external init: unit => int = "resdl_SDL_Init";
+external main: (int, array(string), unit => unit) => unit = "resdl_SDL_main";
+let main = cb => main(Array.length(Sys.argv), Sys.argv, cb);
 
 module TextInput = {
   [@noalloc] external start: unit => unit = "resdl_SDL_StartTextInput";
@@ -799,6 +801,8 @@ module Version = {
 };
 
 type renderFunction = unit => bool;
+external _javaScriptRenderLoop: renderFunction => unit =
+  "resdl__javascript__renderloop";
 external _javaScriptRenderLoop: renderFunction => unit =
   "resdl__javascript__renderloop";
 

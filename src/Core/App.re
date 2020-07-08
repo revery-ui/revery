@@ -302,3 +302,4 @@ let start = init => {
 
   Sdl2.renderLoop(appLoop);
 };
+let start = init => Sdl2.main(() => start(init));
