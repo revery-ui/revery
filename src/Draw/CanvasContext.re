@@ -4,7 +4,6 @@
  * Module for integrating with the Skia canvas
  */
 open Revery_Core;
-open Revery_Font;
 
 module Log = (val Log.withNamespace("Revery.CanvasContext"));
 
