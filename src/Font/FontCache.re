@@ -169,7 +169,7 @@ let matchCharacter = (fallbackCharacterCache, uchar, skiaFace) =>
     let familyName = skiaFace |> Skia.Typeface.getFamilyName;
     let maybeTypeface =
       Skia.FontManager.matchFamilyStyleCharacter(
-        FontManager.fontManager,
+        FontManager.instance,
         familyName,
         skiaFace |> Skia.Typeface.getFontStyle,
         [Environment.userLocale],

@@ -19,5 +19,5 @@ let find =
       FontWidth.toInt(width),
       italic ? Italic : Upright,
     );
-  FontManager.matchFamilyStyle(fontManager, family, style);
+  FontManager.matchFamilyStyle(instance, family, style);
 };
