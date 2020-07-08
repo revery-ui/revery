@@ -24,7 +24,7 @@ module SkiaTypefaceHashable = {
 module UcharHashable = {
   type t = Uchar.t;
   let equal = Uchar.equal;
-  let hash = Hashtbl.hash;
+  let hash = Uchar.to_int;
 };
 
 module FloatHashable = {
