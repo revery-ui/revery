@@ -52,7 +52,7 @@ CAMLprim value revery_openFile(value vPath) {
 #else
     fprintf(stderr, "WARNING: %s is not implemented on this platform.\n", __func__);
     success = 0;
-    UNUSED(url_string);
+    UNUSED(path_string);
 #endif
     CAMLreturn(Val_bool(success));
 }

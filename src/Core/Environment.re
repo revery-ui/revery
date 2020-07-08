@@ -16,9 +16,10 @@ let sleep = (t: Time.t) =>
 external yield: unit => unit = "caml_thread_yield";
 
 type os =
-  | Windows
-  | Mac
+  | Android
   | Linux
+  | Mac
+  | Windows
   | Browser
   | Unknown;
 
@@ -26,17 +27,12 @@ let os = {
   webGL
     ? Browser
     : (
-      switch (Sys.os_type) {
-      | "Win32" => Windows
-      | _ =>
-        let ic = Unix.open_process_in("uname");
-        let uname = input_line(ic);
-        let _ = close_in(ic);
-        switch (uname) {
-        | "Darwin" => Mac
-        | "Linux" => Linux
-        | _ => Unknown
-        };
+      switch (Revery_Native.Environment.get_os()) {
+      | `Android => Android
+      | `Linux => Linux
+      | `Mac => Mac
+      | `Windows => Windows
+      | _ => Unknown
       }
     );
 };

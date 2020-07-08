@@ -7,6 +7,8 @@
 
 #include "caml_values.h"
 
+#define UNUSED(x) (void)(x)
+
 #include <string.h>
 
 #include "config.h"
@@ -39,6 +41,8 @@ CAMLprim value revery_alert(value vWindow, value vMessage) {
     revery_alert_gtk(pWin, szMessage);
 #else
     printf("WARNING - Not implemented: alert");
+    UNUSED(szMessage);
+    UNUSED(pWin);
 #endif
     return Val_unit;
 }
