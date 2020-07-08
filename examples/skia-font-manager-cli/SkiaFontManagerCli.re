@@ -96,8 +96,8 @@ let draw = canvas => {
     );
   };
 
-  let emoji = "😃👋";
-  let char = Zed_utf8.unsafe_extract(emoji, String.length(emoji) / 2);
+  let emoji = "😃";
+  let char = Zed_utf8.get(emoji, 0);
   let maybeTypeface =
     FontManager.matchFamilyStyleCharacter(
       fontManager,
@@ -106,11 +106,34 @@ let draw = canvas => {
       ["en_US"],
       char,
     );
-  print_int(Uchar.to_int(char));
   switch (maybeTypeface) {
-  | Some(tf) =>
-    print_endline("Found font for emoji: " ++ Typeface.getFamilyName(tf))
+  | Some(typeface) =>
+    print_endline(
+      "Found font for emoji: " ++ Typeface.getFamilyName(typeface),
+    );
+    Paint.setTypeface(fill, typeface);
+    Canvas.drawText(canvas, emoji, 10., 60., fill);
   | None => print_endline("No emoji font found")
+  };
+
+  let japanese = "鬼";
+  let char = Zed_utf8.get(japanese, 0);
+  let maybeTypeface =
+    FontManager.matchFamilyStyleCharacter(
+      fontManager,
+      "Arial",
+      style,
+      ["en_US"],
+      char,
+    );
+  switch (maybeTypeface) {
+  | Some(typeface) =>
+    print_endline(
+      "Found font for Japanese: " ++ Typeface.getFamilyName(typeface),
+    );
+    Paint.setTypeface(fill, typeface);
+    Canvas.drawText(canvas, japanese, 10., 80., fill);
+  | None => print_endline("No Japanese font found")
   };
 };
 
