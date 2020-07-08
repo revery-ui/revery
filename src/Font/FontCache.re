@@ -190,50 +190,34 @@ let matchCharacter = (fallbackCharacterCache, uchar, skiaFace) =>
   };
 
 module Hole = {
-  type range = {
-    startCluster: int,
-    maybeEndCluster: option(int),
-  }
-  and t =
+  type t =
     | Empty
-    | Range(range);
+    | StartsAt(int);
 
   let empty = Empty;
 
   let extend = (~cluster, hole) =>
     switch (hole) {
-    | Empty => Range({startCluster: cluster, maybeEndCluster: None})
-    | Range({startCluster, _}) =>
-      Range({startCluster, maybeEndCluster: Some(cluster)})
+    | Empty => StartsAt(cluster)
+    | StartsAt(_) => hole
     };
 
-  let endAt = (~cluster, hole) => 
-    switch (hole) {
-      | Empty => Empty
-      | Range({startCluster, _}) => Range({startCluster, maybeEndCluster: Some(cluster)})
-    }
-
-  let resolve = (~font, ~string as str, ~generateShapes, hole) => {
+  let resolve = (~font, ~string as str, ~generateShapes, ~endAt, hole) => {
     switch (hole) {
     | Empty => []
-    | Range({startCluster, maybeEndCluster}) =>
-      Log.debugf(m => m("Resolving hole: startCluster : %d, str: %s", startCluster, str));
+    | StartsAt(startCluster) =>
+      Log.debugf(m =>
+        m("Resolving hole: startCluster : %d, str: %s", startCluster, str)
+      );
       let uchar = Zed_utf8.unsafe_extract(str, startCluster);
       let maybeFallbackFont =
         matchCharacter(font.fallbackCharacterCache, uchar, font.skiaFace)
         |> load;
 
-      let endCluster =
-        switch (maybeEndCluster) {
-        | Some(index) => index
-        | None => String.length(str)
-        };
-
       switch (maybeFallbackFont) {
       | Error(_) => []
       | Ok(fallbackFont) =>
-        let substring =
-          String.sub(str, startCluster, endCluster - startCluster);
+        let substring = String.sub(str, startCluster, endAt - startCluster);
         generateShapes(fallbackFont, substring) |> List.rev;
       };
     };
@@ -248,16 +232,26 @@ let rec generateShapes: (t, string) => list(ShapeResult.shapeNode) =
     let rec loop =
             (~font: t, ~shapes: list(Harfbuzz.hb_shape), ~hole: Hole.t) => {
       switch (shapes) {
-      | [] => 
-        let newHole = Hole.endAt(~cluster=String.length(str), hole);
-        Hole.resolve(~string=str, ~font, ~generateShapes, newHole)
+      | [] =>
+        Hole.resolve(
+          ~string=str,
+          ~font,
+          ~generateShapes,
+          ~endAt=String.length(str),
+          hole,
+        )
       | [{glyphId, cluster}, ...tail] =>
         if (glyphId == 0) {
           let newHole = Hole.extend(~cluster, hole);
           loop(~font, ~shapes=tail, ~hole=newHole);
         } else {
-          let newHole = Hole.endAt(~cluster=cluster, hole);
-          Hole.resolve(~string=str, ~font, ~generateShapes, newHole)
+          Hole.resolve(
+            ~string=str,
+            ~font,
+            ~generateShapes,
+            ~endAt=cluster,
+            hole,
+          )
           @ [
             ShapeResult.{hbFace, skiaFace, glyphId, cluster},
             ...loop(~font, ~shapes=tail, ~hole=Hole.empty),
@@ -271,10 +265,7 @@ let rec generateShapes: (t, string) => list(ShapeResult.shapeNode) =
   }
 
 and shape: (t, string) => ShapeResult.t =
-  (
-    {shapeCache, _} as font,
-    str,
-  ) => {
+  ({shapeCache, _} as font, str) => {
     switch (ShapeResultLruHash.find(str, shapeCache)) {
     | Some(v) =>
       ShapeResultLruHash.promote(str, shapeCache);
