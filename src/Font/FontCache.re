@@ -223,10 +223,7 @@ module Hole = {
 };
 
 let rec generateShapes: (t, string) => list(ShapeResult.shapeNode) =
-  (
-    {hbFace, skiaFace, shapeCache, fallbackCache, fallbackCharacterCache, _} as font,
-    str,
-  ) => {
+  ({hbFace, skiaFace, _} as font, str) => {
     let rec loop =
             (~font: t, ~shapes: list(Harfbuzz.hb_shape), ~hole: Hole.t) => {
       switch (shapes) {
@@ -239,7 +236,7 @@ let rec generateShapes: (t, string) => list(ShapeResult.shapeNode) =
           hole,
         )
       | [{glyphId, cluster}, ...tail] =>
-        if (glyphId == 0) {
+        if (glyphId == unresolvedGlyphID) {
           let newHole = Hole.extend(~cluster, hole);
           loop(~font, ~shapes=tail, ~hole=newHole);
         } else {
