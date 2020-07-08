@@ -4,13 +4,19 @@ open Flags;
 
 type os =
   | Android
+  | IOS
   | Linux
   | Mac
   | Windows;
 
 let detect_system_header = {|
   #if __APPLE__
-    #define PLATFORM_NAME "mac"
+    #include <TargetConditionals.h>
+    #if TARGET_OS_IPHONE
+      #define PLATFORM_NAME "ios"
+    #else
+      #define PLATFORM_NAME "mac"
+    #endif
   #elif __linux__
     #if __ANDROID__
       #define PLATFORM_NAME "android"
@@ -34,6 +40,7 @@ let get_os = t => {
     C_define.import(t, ~includes=[header], [("PLATFORM_NAME", String)]);
   switch (platform) {
   | [(_, String("android"))] => Android
+  | [(_, String("ios"))] => IOS
   | [(_, String("linux"))] => Linux
   | [(_, String("mac"))] => Mac
   | [(_, String("windows"))] => Windows
@@ -42,8 +49,9 @@ let get_os = t => {
 };
 
 type feature =
-  | GTK
   | COCOA
+  | GTK
+  | UIKIT
   | WIN32;
 
 let gen_config_header = (conf, features) => {
@@ -54,6 +62,7 @@ let gen_config_header = (conf, features) => {
     let os = get_os(conf);
     switch (os) {
     | Android => "android"
+    | IOS => "ios"
     | Linux => "linux"
     | Mac => "mac"
     | Windows => "windows"
@@ -64,8 +73,9 @@ let gen_config_header = (conf, features) => {
     conf,
     [
       ("PLATFORM_NAME", Value.String(os)),
-      ("USE_GTK", includes(GTK)),
       ("USE_COCOA", includes(COCOA)),
+      ("USE_GTK", includes(GTK)),
+      ("USE_UIKIT", includes(UIKIT)),
       ("USE_WIN32", includes(WIN32)),
     ],
   );
@@ -78,6 +88,12 @@ type config = {
   flags: list(string),
 };
 
+let get_ios_config = () => {
+  features: [UIKIT],
+  cflags: ["-I", ".", "-x", "objective-c"],
+  libs: [],
+  flags: [],
+};
 let get_mac_config = () => {
   features: [COCOA],
   cflags: ["-I", ".", "-x", "objective-c"],
@@ -118,6 +134,7 @@ main(~name="discover", t => {
     switch (os) {
     | Android
     | Linux => get_linux_config(t)
+    | IOS => get_ios_config()
     | Mac => get_mac_config()
     | Windows => get_win32_config()
     };
