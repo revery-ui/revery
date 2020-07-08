@@ -131,10 +131,10 @@ let examples = [
     source: "HoverExample.re",
   },
   {
-        name: "Canvas Example",
-        render: _ => CanvasExample.render(),
-        source: "CanvasExample.re",
-      },
+    name: "Canvas Example",
+    render: _ => CanvasExample.render(),
+    source: "CanvasExample.re",
+  },
   {
     name: "SVG Example",
     render: _ => SVGExample.render(),
