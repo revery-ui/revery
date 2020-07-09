@@ -2,13 +2,19 @@ module Configurator = Configurator.V1;
 
 type os =
   | Android
+  | IOS
   | Linux
   | Mac
   | Windows;
 
 let detect_system_header = {|
   #if __APPLE__
-    #define PLATFORM_NAME "mac"
+    #include <TargetConditionals.h>
+    #if TARGET_OS_IPHONE
+      #define PLATFORM_NAME "ios"
+    #else
+      #define PLATFORM_NAME "mac"
+    #endif
   #elif __linux__
     #if __ANDROID__
       #define PLATFORM_NAME "android"
@@ -35,6 +41,7 @@ let get_os = t => {
     );
   switch (platform) {
   | [(_, String("android"))] => Android
+  | [(_, String("ios"))] => IOS
   | [(_, String("linux"))] => Linux
   | [(_, String("mac"))] => Mac
   | [(_, String("windows"))] => Windows
@@ -55,6 +62,7 @@ let c_flags = [
 let c_flags = os =>
   switch (os) {
   | Android
+  | IOS
   | Mac => c_flags
   | Linux => c_flags @ ["-fPIC"]
   | Windows => c_flags @ ["-mwindows"]
@@ -75,6 +83,18 @@ let flags = os =>
     @ cclib("-lEGL")
     @ cclib("-lGLESv1_CM")
     @ cclib("-lGLESv2")
+  | IOS =>
+    []
+    @ ccopt(libFilePath)
+    @ ccopt("-framework Foundation")
+    @ ccopt("-framework OpenGLES")
+    @ ccopt("-framework UIKit")
+    @ ccopt("-framework IOKit")
+    @ ccopt("-framework CoreVideo")
+    @ ccopt("-framework CoreAudio")
+    @ ccopt("-framework AudioToolbox")
+    @ ccopt("-framework Metal")
+    @ ccopt("-liconv")
   | Linux =>
     []
     @ cclib("-lGL")
@@ -114,6 +134,7 @@ let flags = os =>
 let c_library_flags = os =>
   switch (os) {
   | Android
+  | IOS
   | Mac
   | Linux => [libFilePath]
   | Windows => ["-L" ++ libFolderPath, "-lSDL2"]
@@ -123,6 +144,7 @@ let cxx_flags = os =>
   switch (os) {
   | Android
   | Linux => c_flags(os) @ ["-std=c++11"]
+  | IOS
   | Mac => c_flags(os) @ ["-x", "objective-c++"]
   | Windows =>
     c_flags(os) @ ["-fno-exceptions", "-fno-rtti", "-lstdc++", "-mwindows"]

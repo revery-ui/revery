@@ -15,6 +15,7 @@
 #include "stb_image.h"
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_main.h>
 #include <SDL2/SDL_config.h>
 #include <SDL2/SDL_syswm.h>
 
@@ -598,6 +599,28 @@ CAMLprim value resdl_SDL_GL_GetString(value vStr) {
   }
 
   CAMLreturn(ret);
+}
+
+typedef void (*glGetIntegervFunc)(GLenum, GLint*);
+CAMLprim value resdl_SDL_GL_GetFramebufferBinding(value vInt) {
+  CAMLparam1(vInt);
+  
+  GLenum name = GL_FRAMEBUFFER_BINDING;
+  switch (Int_val(vInt)) {
+  case 0:
+    name = GL_FRAMEBUFFER_BINDING;
+    break;
+  default:
+    break;
+  }
+  
+  GLint ret = -1;
+  glGetIntegervFunc glGetIntegerv =
+      (glGetIntegervFunc)(SDL_GL_GetProcAddress("glGetIntegerv"));
+  if (glGetIntegerv) {
+    glGetIntegerv(name, &ret);
+  }
+  CAMLreturn(Val_int(ret));
 }
 
 CAMLprim value resdl_SDL_GL_MakeCurrent(value vWindow, value vContext) {
@@ -1537,6 +1560,34 @@ CAMLprim value resdl_SDL_Init() {
   }
 
   CAMLreturn(Val_int(ret));
+}
+
+#if SDL_VIDEO_DRIVER_UIKIT
+value resdl_uikit_main_callback;
+int resdl_uikit_SDL_main (int argc, char *argv[]) {
+  caml_callback(resdl_uikit_main_callback, Val_unit);
+  return 0;
+}
+#endif
+
+CAMLprim value resdl_SDL_main(value ml_argc, value ml_argv, value closure) {
+  CAMLparam3(ml_argc, ml_argv, closure);
+  CAMLlocal1(tmp);
+
+  #if SDL_VIDEO_DRIVER_UIKIT
+    int argc = Int_val(ml_argc);
+    char **argv = (char**)calloc(sizeof(char*), argc + 1);
+    for (int i = 0; i < argc; i++) {
+      argv[i] = (char*)String_val(Field(ml_argv, i));
+    }
+
+    resdl_uikit_main_callback = closure;
+    SDL_UIKitRunApp(argc, argv, resdl_uikit_SDL_main);
+  #else
+    caml_callback(closure, Val_unit);
+  #endif
+
+  CAMLreturn(Val_unit);
 }
 
 CAMLprim value resdl_SDL_GetScancodeName(value vScancode) {

@@ -44,9 +44,11 @@ let create = (window: Revery_Core.Window.t) => {
     None;
   | Some(glContext) =>
     Log.debug("Skia context created successfully.");
+    let framebufferId = Sdl2.Gl.getFramebufferBinding();
+    Log.debug(Printf.sprintf("Framebuffer binding %d.", framebufferId));
     let framebufferInfo =
       Gr.Gl.FramebufferInfo.make(
-        Unsigned.UInt.of_int(0),
+        Unsigned.UInt.of_int(framebufferId),
         Unsigned.UInt.of_int(0x8058),
       );
 
