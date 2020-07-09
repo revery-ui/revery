@@ -17,7 +17,7 @@ module M = (T: TYPE) => {
     );
 
   module FilterQuality = {
-    type t = [ | `none | `low | `medium | `high ];
+    type t = [ | `none | `low | `medium | `high];
 
     let t: T.typ(t) =
       skiaCEnum(
@@ -29,8 +29,7 @@ module M = (T: TYPE) => {
           (`high, "HIGH_SK_FILTER_QUALITY"),
         ],
       );
-      
-  }
+  };
   module Hinting = {
     type t =
       | NoHinting

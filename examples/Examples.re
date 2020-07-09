@@ -183,8 +183,8 @@ let examples = [
   {
     name: "ImageQuality",
     render: _ => ImageQualityExample.render(),
-    source: "ImageQualityExample.re"
-  }
+    source: "ImageQualityExample.re",
+  },
 ];
 
 let getExampleByName = name =>

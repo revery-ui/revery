@@ -29,7 +29,7 @@ let%nativeComponent make =
                       ~opacity=1.0,
                       ~width=?,
                       ~height=?,
-                      ~quality= `none,
+                      ~quality=`high,
                       ~src: [ | `File(string) | `Url(string)],
                       ~style=Style.emptyImageStyle,
                       ~children=React.empty,
