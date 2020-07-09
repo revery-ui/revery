@@ -1,6 +1,4 @@
-open Revery;
 open Revery.UI;
-open Revery.UI.Components;
 
 module ImageSample = {
   let make = (~quality, ()) => {
