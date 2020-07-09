@@ -1564,6 +1564,10 @@ CAMLprim value resdl_SDL_Init() {
 
 #if SDL_VIDEO_DRIVER_UIKIT
 value resdl_uikit_main_callback;
+int resdl_uikit_SDL_main (int argc, char *argv[]) {
+  caml_callback(resdl_uikit_main_callback, Val_unit);
+  return 0;
+}
 #endif
 
 CAMLprim value resdl_SDL_main(value ml_argc, value ml_argv, value closure) {
@@ -1578,10 +1582,7 @@ CAMLprim value resdl_SDL_main(value ml_argc, value ml_argv, value closure) {
     }
 
     resdl_uikit_main_callback = closure;
-    SDL_UIKitRunApp(argc, argv, [](int argc, char *argv[]){
-      caml_callback(resdl_uikit_main_callback, Val_unit);
-      return 0;
-    });
+    SDL_UIKitRunApp(argc, argv, resdl_uikit_SDL_main);
   #else
     caml_callback(closure, Val_unit);
   #endif
