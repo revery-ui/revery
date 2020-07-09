@@ -29,6 +29,7 @@ let%nativeComponent make =
                       ~opacity=1.0,
                       ~width=?,
                       ~height=?,
+                      ~quality=`high,
                       ~src: [ | `File(string) | `Url(string)],
                       ~style=Style.emptyImageStyle,
                       ~children=React.empty,
@@ -52,6 +53,7 @@ let%nativeComponent make =
       node#setEvents(events);
       node#setStyle(styles);
       node#setResizeMode(resizeMode);
+      node#setQuality(quality);
       Obj.magic(node);
     },
     configureInstance: (~isFirstRender as _, node) => {
@@ -69,6 +71,7 @@ let%nativeComponent make =
       let imgNode: imageNode = Obj.magic(node);
       imgNode#setResizeMode(resizeMode);
       imgNode#setOpacity(opacity);
+      imgNode#setQuality(quality);
 
       ignore(
         switch (src) {
