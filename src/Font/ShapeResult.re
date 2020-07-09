@@ -24,7 +24,7 @@ let ofHarfbuzz = nodes => {
   let rec loop = (~nodes, ~strList, ~maybeTypeface) =>
     switch (nodes, maybeTypeface) {
     | ([], Some(typeface)) => [(typeface, String.concat("", strList))]
-    | ([], None) => failwith("Invalid")
+    | ([], None) => []
     | ([{skiaFace, glyphId, _}, ...rest], Some(skFace)) =>
       let (lowBit, highBit) = bitsFromGlyph(glyphId);
       if (skFace === skiaFace) {
