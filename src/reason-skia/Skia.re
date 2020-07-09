@@ -71,6 +71,10 @@ module FontMetrics = {
   let getMaxCharacterWidth = SkiaWrapped.FontMetrics.getMaxCharacterWidth;
 };
 
+module FilterQuality = {
+  type t = SkiaWrapped.FilterQuality.t;
+};
+
 module Hinting = {
   type t = SkiaWrapped.Hinting.t;
 };
@@ -146,6 +150,9 @@ module Paint = {
 
   let setColor = (paint, color) => _setColor(CI.cptr(paint), color);
   let setAlpha = (paint, alpha) => _setAlphaf(CI.cptr(paint), alpha);
+
+  let getFilterQuality = SkiaWrapped.Paint.getFilterQuality;
+  let setFilterQuality = SkiaWrapped.Paint.setFilterQuality;
 
   let setHinting = SkiaWrapped.Paint.setHinting;
   let getHinting = SkiaWrapped.Paint.getHinting;

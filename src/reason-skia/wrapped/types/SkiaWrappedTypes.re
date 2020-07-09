@@ -16,6 +16,21 @@ module M = (T: TYPE) => {
       invalid_arg(Printf.sprintf("Unsupported %s enum: %Ld", name, i))
     );
 
+  module FilterQuality = {
+    type t = [ | `none | `low | `medium | `high ];
+
+    let t: T.typ(t) =
+      skiaCEnum(
+        "sk_filter_quality_t",
+        [
+          (`none, "NONE_SK_FILTER_QUALITY"),
+          (`low, "LOW_SK_FILTER_QUALITY"),
+          (`medium, "MEDIUM_SK_FILTER_QUALITY"),
+          (`high, "HIGH_SK_FILTER_QUALITY"),
+        ],
+      );
+      
+  }
   module Hinting = {
     type t =
       | NoHinting

@@ -80,6 +80,11 @@ module M = (F: FOREIGN) => {
     type t = SkiaTypes.TextEncoding.t;
     let t = SkiaTypes.TextEncoding.t;
   };
+  
+  module FilterQuality = {
+    type t = SkiaTypes.FilterQuality.t;
+    let t = SkiaTypes.FilterQuality.t;
+  };
 
   module Hinting = {
     type t = SkiaTypes.Hinting.t;
@@ -316,6 +321,12 @@ module M = (F: FOREIGN) => {
 
     let setHinting =
       foreign("sk_paint_set_hinting", t @-> Hinting.t @-> returning(void));
+
+    let setFilterQuality =
+      foreign("sk_paint_set_filter_quality", t @-> FilterQuality.t @-> returning(void));
+
+    let getFilterQuality =
+      foreign("sk_paint_get_filter_quality", t @-> returning(FilterQuality.t));
 
     let measureText =
       foreign(
