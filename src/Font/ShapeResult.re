@@ -21,32 +21,34 @@ let bitsFromGlyph = glyphId => {
 };
 
 let ofHarfbuzz = nodes => {
-  let rec loop = (~nodes, ~str, ~maybeTypeface) =>
+  let rec loop = (~nodes, ~strList, ~maybeTypeface) =>
     switch (nodes, maybeTypeface) {
-    | ([], Some(typeface)) => [(typeface, str)]
+    | ([], Some(typeface)) => [(typeface, String.concat("", strList))]
     | ([], None) => failwith("Invalid")
     | ([{skiaFace, glyphId, _}, ...rest], Some(skFace)) =>
+      let (lowBit, highBit) = bitsFromGlyph(glyphId);
       if (skFace === skiaFace) {
-        let (lowBit, highBit) = bitsFromGlyph(glyphId);
-        let str = lowBit ++ highBit ++ str;
-        loop(~nodes=rest, ~str, ~maybeTypeface=Some(skFace));
+        let strList = [lowBit, highBit, ...strList];
+        loop(~nodes=rest, ~strList, ~maybeTypeface=Some(skFace));
       } else {
-        let (lowBit, highBit) = bitsFromGlyph(glyphId);
-        let newStr = lowBit ++ highBit;
+        let newStrList = [lowBit, highBit];
         [
-          (skFace, str),
-          ...loop(~nodes=rest, ~str=newStr, ~maybeTypeface=Some(skiaFace)),
+          (skFace, String.concat("", strList)),
+          ...loop(
+               ~nodes=rest,
+               ~strList=newStrList,
+               ~maybeTypeface=Some(skiaFace),
+             ),
         ];
-      }
+      };
     | ([{skiaFace, glyphId, _}, ...rest], None) =>
-      let lowBit = glyphId land 255 |> Char.chr |> String.make(1);
-      let highBit =
-        (glyphId land 255 lsl 8) lsr 8 |> Char.chr |> String.make(1);
-      let newStr = lowBit ++ highBit;
-      loop(~nodes=rest, ~str=newStr, ~maybeTypeface=Some(skiaFace));
+      let (lowBit, highBit) = bitsFromGlyph(glyphId);
+      let newStrList = [lowBit, highBit];
+      loop(~nodes=rest, ~strList=newStrList, ~maybeTypeface=Some(skiaFace));
     };
 
-  let glyphStrings = loop(~nodes, ~str="", ~maybeTypeface=None) |> List.rev;
+  let glyphStrings =
+    loop(~nodes, ~strList=[], ~maybeTypeface=None) |> List.rev;
 
   {shapes: nodes, glyphStrings};
 };
