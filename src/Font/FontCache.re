@@ -192,8 +192,6 @@ module Hole = {
     | Empty
     | StartsAt(int);
 
-  let empty = Empty;
-
   let extend = (~cluster, hole) =>
     switch (hole) {
     | Empty => StartsAt(cluster)
@@ -254,13 +252,13 @@ let rec generateShapes: (t, string) => list(ShapeResult.shapeNode) =
           )
           @ [
             ShapeResult.{hbFace, skiaFace, glyphId, cluster},
-            ...loop(~font, ~shapes, ~index=index + 1, ~hole=Hole.empty),
+            ...loop(~font, ~shapes, ~index=index + 1, ~hole=Hole.Empty),
           ];
         };
       };
 
     let shapes = Harfbuzz.hb_shape(hbFace, str);
-    loop(~font, ~shapes, ~index=0, ~hole=Hole.empty) |> List.rev;
+    loop(~font, ~shapes, ~index=0, ~hole=Hole.Empty) |> List.rev;
   }
 
 and shape: (t, string) => ShapeResult.t =
