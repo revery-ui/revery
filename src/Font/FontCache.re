@@ -205,7 +205,10 @@ module Hole = {
       Log.debugf(m =>
         m("Resolving hole: startCluster : %d, str: %s", startCluster, str)
       );
-      let uchar = Zed_utf8.get(str, startCluster);
+      let uchar =
+        try(Zed_utf8.get(str, startCluster)) {
+        | _ => '\000' |> Uchar.of_char
+        };
       let maybeFallbackFont =
         matchCharacter(font.fallbackCharacterCache, uchar, font.skiaFace)
         |> load;
