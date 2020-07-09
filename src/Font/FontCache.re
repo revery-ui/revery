@@ -225,20 +225,25 @@ module Hole = {
 let rec generateShapes: (t, string) => list(ShapeResult.shapeNode) =
   ({hbFace, skiaFace, _} as font, str) => {
     let rec loop =
-            (~font: t, ~shapes: list(Harfbuzz.hb_shape), ~hole: Hole.t) => {
-      switch (shapes) {
-      | [] =>
+            (
+              ~font: t,
+              ~shapes: array(Harfbuzz.hb_shape),
+              ~index: int,
+              ~hole: Hole.t,
+            ) =>
+      if (index == Array.length(shapes)) {
         Hole.resolve(
           ~string=str,
           ~font,
           ~generateShapes,
           ~endAt=String.length(str),
           hole,
-        )
-      | [{glyphId, cluster}, ...tail] =>
+        );
+      } else {
+        let Harfbuzz.{glyphId, cluster} = shapes[index];
         if (glyphId == unresolvedGlyphID) {
           let newHole = Hole.extend(~cluster, hole);
-          loop(~font, ~shapes=tail, ~hole=newHole);
+          loop(~font, ~shapes, ~index=index + 1, ~hole=newHole);
         } else {
           Hole.resolve(
             ~string=str,
@@ -249,14 +254,13 @@ let rec generateShapes: (t, string) => list(ShapeResult.shapeNode) =
           )
           @ [
             ShapeResult.{hbFace, skiaFace, glyphId, cluster},
-            ...loop(~font, ~shapes=tail, ~hole=Hole.empty),
+            ...loop(~font, ~shapes, ~index=index + 1, ~hole=Hole.empty),
           ];
-        }
+        };
       };
-    };
 
-    let shapes = Harfbuzz.hb_shape(hbFace, str) |> Array.to_list;
-    loop(~font, ~shapes, ~hole=Hole.empty) |> List.rev;
+    let shapes = Harfbuzz.hb_shape(hbFace, str);
+    loop(~font, ~shapes, ~index=0, ~hole=Hole.empty) |> List.rev;
   }
 
 and shape: (t, string) => ShapeResult.t =
