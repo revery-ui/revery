@@ -180,6 +180,11 @@ let examples = [
     render: _ => MarkdownExample.render(),
     source: "MarkdownExample.re",
   },
+  {
+    name: "ImageQuality",
+    render: _ => ImageQualityExample.render(),
+    source: "ImageQualityExample.re"
+  }
 ];
 
 let getExampleByName = name =>

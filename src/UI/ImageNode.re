@@ -29,6 +29,17 @@ class imageNode (data: option(Skia.Image.t)) = {
 
     Skia.Paint.setAlpha(_paint, _opacity *. parentContext.opacity);
 
+//    let quality = Skia.Paint.getFilterQuality(_paint);
+//
+//    let str = switch (quality) {
+//    | `none => "none"
+//    | `low => "low"
+//    | `medium => "medium"
+//    | `high => "high"
+//    };
+
+//    Skia.Paint.setFilterQuality(_paint, `high);
+
     // TODO find a way to only manage the matrix stack in Node
     Revery_Draw.CanvasContext.setMatrix(canvas, world);
 
@@ -49,6 +60,9 @@ class imageNode (data: option(Skia.Image.t)) = {
   pub setOpacity = f => _opacity = f;
   pub setResizeMode = (mode: ImageResizeMode.t) => {
     _resizeMode = mode;
+  };
+  pub setQuality = (quality) => {
+    Skia.Paint.setFilterQuality(_paint, quality);
   };
   pub setData = newData => {
     data = newData;
