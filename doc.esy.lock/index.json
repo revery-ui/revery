@@ -1,5 +1,5 @@
 {
-  "checksum": "9e52474c6d49be1a81e8eea0d328c44b",
+  "checksum": "cee0ad88e57ae27f6a56964c80036613",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -60,19 +60,6 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9": {
-      "id":
-        "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
-      "name": "revery-text-wrap",
-      "version": "github:revery-ui/revery-text-wrap#966383e",
-      "source": {
-        "type": "install",
-        "source": [ "github:revery-ui/revery-text-wrap#966383e" ]
-      },
-      "overrides": [],
-      "dependencies": [ "@opam/dune@opam:2.5.0@aef1678b" ],
-      "devDependencies": []
-    },
     "revery@link-dev:./package.json": {
       "id": "revery@link-dev:./package.json",
       "name": "revery",
@@ -84,7 +71,6 @@
       },
       "overrides": [ "doc.json" ],
       "dependencies": [
-        "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f00@d41d8cd9",
@@ -334,14 +320,14 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "lodash@4.17.15@d41d8cd9": {
-      "id": "lodash@4.17.15@d41d8cd9",
+    "lodash@4.17.19@d41d8cd9": {
+      "id": "lodash@4.17.19@d41d8cd9",
       "name": "lodash",
-      "version": "4.17.15",
+      "version": "4.17.19",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/lodash/-/lodash-4.17.15.tgz#sha1:b447f6670a0455bbfeedd11392eff330ea097548"
+          "archive:https://registry.npmjs.org/lodash/-/lodash-4.17.19.tgz#sha1:e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
         ]
       },
       "overrides": [],
@@ -705,7 +691,7 @@
         ]
       },
       "overrides": [],
-      "dependencies": [ "lodash@4.17.15@d41d8cd9" ],
+      "dependencies": [ "lodash@4.17.19@d41d8cd9" ],
       "devDependencies": []
     },
     "@revery/esy-cmake@0.3.5001@d41d8cd9": {
@@ -1626,8 +1612,8 @@
         "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
-    "@opam/ppxlib@opam:0.13.0@65a9c7cc": {
-      "id": "@opam/ppxlib@opam:0.13.0@65a9c7cc",
+    "@opam/ppxlib@opam:0.13.0@e0dac6a1": {
+      "id": "@opam/ppxlib@opam:0.13.0@e0dac6a1",
       "name": "@opam/ppxlib",
       "version": "opam:0.13.0",
       "source": {
@@ -3557,7 +3543,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/ppxlib@opam:0.13.0@65a9c7cc",
+        "ocaml@4.10.0@d41d8cd9", "@opam/ppxlib@opam:0.13.0@e0dac6a1",
         "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
       "devDependencies": [ "ocaml@4.10.0@d41d8cd9" ]

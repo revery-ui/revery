@@ -1,3 +1,5 @@
+open Revery_TextWrap;
+
 type wrapType =
   | NoWrap
   | Wrap

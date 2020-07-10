@@ -3,4 +3,4 @@
     (public_name Revery.Utility)
     (c_flags :standard -Wall -Wextra -Werror)
     (preprocess (pps ppx_deriving.show))
-    (libraries threads console.lib str lwt sdl2 skia flex Rench re Revery_Core Revery_UI revery-text-wrap timber))
+    (libraries threads console.lib str lwt sdl2 skia flex Rench re Revery_Core Revery_UI Revery_TextWrap timber))
