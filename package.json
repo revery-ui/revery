@@ -59,7 +59,6 @@
     "rench": "^1.9.1",
     "rebez": "jchavarri/rebez#03fa3b7",
     "reason-native-crash-utils": "onivim/reason-native-crash-utils#38c8f00",
-    "revery-text-wrap": "revery-ui/revery-text-wrap#966383e",
     "@glennsl/timber": "^1.2.0"
   },
   "resolutions": {

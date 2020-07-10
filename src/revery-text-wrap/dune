@@ -1,0 +1,4 @@
+(library
+ (name Revery_TextWrap)
+ (public_name Revery.TextWrap)
+ (libraries Revery_Zed))

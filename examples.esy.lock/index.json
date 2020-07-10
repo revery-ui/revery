@@ -1,5 +1,5 @@
 {
-  "checksum": "37f26ae0437388f9cd9a1aef2b06cbf8",
+  "checksum": "b4024b57677ea27a19ca8a7e36b12d3e",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -18,19 +18,6 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9": {
-      "id":
-        "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
-      "name": "revery-text-wrap",
-      "version": "github:revery-ui/revery-text-wrap#966383e",
-      "source": {
-        "type": "install",
-        "source": [ "github:revery-ui/revery-text-wrap#966383e" ]
-      },
-      "overrides": [],
-      "dependencies": [ "@opam/dune@opam:2.5.0@aef1678b" ],
-      "devDependencies": []
-    },
     "revery@link-dev:./package.json": {
       "id": "revery@link-dev:./package.json",
       "name": "revery",
@@ -42,7 +29,6 @@
       },
       "overrides": [ "examples.json" ],
       "dependencies": [
-        "revery-text-wrap@github:revery-ui/revery-text-wrap#966383e@d41d8cd9",
         "reperf@1.5.0@d41d8cd9", "rench@1.9.1@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f00@d41d8cd9",
@@ -1286,20 +1272,20 @@
         "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
-    "@opam/ppxlib@opam:0.13.0@65a9c7cc": {
-      "id": "@opam/ppxlib@opam:0.13.0@65a9c7cc",
+    "@opam/ppxlib@opam:0.14.0@c02ad40d": {
+      "id": "@opam/ppxlib@opam:0.14.0@c02ad40d",
       "name": "@opam/ppxlib",
-      "version": "opam:0.13.0",
+      "version": "opam:0.14.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/81/81e1f3d308500e0e7f6108d5b0dda2b879640a5c21ef3dc4a9bd90381cee39d9#sha256:81e1f3d308500e0e7f6108d5b0dda2b879640a5c21ef3dc4a9bd90381cee39d9",
-          "archive:https://github.com/ocaml-ppx/ppxlib/releases/download/0.13.0/ppxlib-0.13.0.tbz#sha256:81e1f3d308500e0e7f6108d5b0dda2b879640a5c21ef3dc4a9bd90381cee39d9"
+          "archive:https://opam.ocaml.org/cache/sha256/a1/a1a398f7c8f670d7de80468ff4639862b126f4dcac3de416e0c5c4d5860f3854#sha256:a1a398f7c8f670d7de80468ff4639862b126f4dcac3de416e0c5c4d5860f3854",
+          "archive:https://github.com/ocaml-ppx/ppxlib/releases/download/0.14.0/ppxlib-0.14.0.tbz#sha256:a1a398f7c8f670d7de80468ff4639862b126f4dcac3de416e0c5c4d5860f3854"
         ],
         "opam": {
           "name": "ppxlib",
-          "version": "0.13.0",
-          "path": "examples.esy.lock/opam/ppxlib.0.13.0"
+          "version": "0.14.0",
+          "path": "examples.esy.lock/opam/ppxlib.0.14.0"
         }
       },
       "overrides": [],
@@ -3160,7 +3146,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/ppxlib@opam:0.13.0@65a9c7cc",
+        "ocaml@4.10.0@d41d8cd9", "@opam/ppxlib@opam:0.14.0@c02ad40d",
         "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
       "devDependencies": [ "ocaml@4.10.0@d41d8cd9" ]
