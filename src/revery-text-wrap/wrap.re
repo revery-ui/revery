@@ -22,6 +22,15 @@ let last_uchar_of_string = str =>
     Zed_utf8.extract(str, offset);
   };
 
+let log10_of_2 = log10(2.);
+
+[@inline always]
+let uchar_num_bytes = uchar => {
+  let code = Uchar.to_int(uchar);
+  let num_bits = log10(float(code)) /. log10_of_2;
+  num_bits /. 8. |> int_of_float;
+};
+
 let wrap_queue =
     (
       ~max_width,
@@ -38,6 +47,36 @@ let wrap_queue =
   |> Queue.iter(line => {
        /* Create a buffer for the wrapped portion of the line */
        let buffer = Buffer.create(String.length(line));
+       let current_offset = ref(0);
+       let last_added = ref(None);
+
+       let buffer_add_uchar = uchar => {
+         let num_bytes = uchar_num_bytes(uchar);
+         Buffer.add_utf_8_uchar(buffer, uchar);
+         current_offset := current_offset^ + num_bytes;
+         last_added := Some(`Uchar(uchar));
+       };
+
+       let buffer_add_string = str => {
+         let num_bytes = String.length(str);
+         Buffer.add_string(buffer, str);
+         current_offset := current_offset^ + num_bytes;
+         last_added := Some(`String(str));
+       };
+
+       let buffer_reset = () => {
+         Buffer.reset(buffer);
+         current_offset := 0;
+         last_added := None;
+       };
+
+       let buffer_last_uchar = () =>
+         switch (last_added^) {
+         | Some(`Uchar(uchar)) => uchar
+         | Some(`String(str)) => last_uchar_of_string(str)
+         | None => Uchar.of_int(0)
+         };
+
        /* Store the width of this portion */
        let width = ref(0.0);
        /* Tokenize the line by whitespace and for each token: */
@@ -63,7 +102,7 @@ let wrap_queue =
                 print_endline("Clear");
               };
               Queue.add(Buffer.contents(buffer), output_lines);
-              Buffer.reset(buffer);
+              buffer_reset();
               width := 0.0;
             };
 
@@ -91,7 +130,7 @@ let wrap_queue =
                 print_endline("Decision: append (" ++ __LOC__ ++ ")");
               };
               width := width^ +. token_width;
-              Buffer.add_string(buffer, token);
+              buffer_add_string(token);
               /* If it would exceed the limit and the user wants hyphenation: */
             } else if (hyphenate && width^ +. token_width > max_width) {
               if (debug) {
@@ -114,7 +153,7 @@ let wrap_queue =
                       print_endline("--Decision: append (" ++ __LOC__ ++ ")");
                     };
                     /* Append it to the buffer */
-                    Buffer.add_utf_8_uchar(buffer, uchar);
+                    buffer_add_uchar(uchar);
                     width := width^ +. char_width;
                     /* If it will overflow... */
                   } else {
@@ -130,8 +169,7 @@ let wrap_queue =
                         };
                         /* We need to swap the last char of the buffer with a -, because the
                            hyphen will be the last character that fits into this width. */
-                        let buffer_str = Buffer.contents(buffer);
-                        let last_uchar = last_uchar_of_string(buffer_str);
+                        let last_uchar = buffer_last_uchar();
                         /* If we've only put one character of the string before hyphenating, we
                            should just swap with a space, so that we don't have a lonely hyphen
                            on the previous line */
@@ -144,11 +182,11 @@ let wrap_queue =
                         /* Flush the buffer with the hyphen and reset the buffer to just the last
                            character that was in the buffer (where the hyphen now is) */
                         Queue.add(
-                          Zed_utf8.rchop(buffer_str) ++ hyphen,
+                          Zed_utf8.rchop(Buffer.contents(buffer)) ++ hyphen,
                           output_lines,
                         );
-                        Buffer.reset(buffer);
-                        Buffer.add_utf_8_uchar(buffer, last_uchar);
+                        buffer_reset();
+                        buffer_add_uchar(last_uchar);
                         width := width_of_token(Zed_utf8.singleton(uchar));
                         /* Otherwise, this is the start of the token */
                       } else {
@@ -157,13 +195,13 @@ let wrap_queue =
                         };
                         /* So just flush & reset the buffer */
                         Queue.add(Buffer.contents(buffer), output_lines);
-                        Buffer.reset(buffer);
+                        buffer_reset();
                         width := 0.0;
                       };
                     };
                     /* Then push the next character from this token onto the buffer */
                     width := width^ +. char_width;
-                    Buffer.add_utf_8_uchar(buffer, uchar);
+                    buffer_add_uchar(uchar);
                   };
                   loop(~str, ~offset=nextOffset, ~iteration=i + 1);
                 };
@@ -177,11 +215,11 @@ let wrap_queue =
               /* Finalize the current line and reset the buffer (if we need to) */
               if (width^ > 0.0) {
                 Queue.add(Buffer.contents(buffer), output_lines);
-                Buffer.reset(buffer);
+                buffer_reset();
               };
               /* Then push the new token onto the buffer */
               width := token_width;
-              Buffer.add_string(buffer, token);
+              buffer_add_string(token);
             };
           });
        /* Finalize any remaining text in the buffer */
