@@ -80,8 +80,7 @@ let wrap_queue =
        /* Store the width of this portion */
        let width = ref(0.0);
        /* Tokenize the line by whitespace and for each token: */
-       let x = split_tokens(line);
-       x
+       split_tokens(line)
        |> Queue.iter(token => {
             /* Calculate the width of the token */
             let token_width = width_of_token(token);
