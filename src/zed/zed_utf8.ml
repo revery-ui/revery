@@ -486,7 +486,6 @@ let rev_concat sep l =
         Bytes.unsafe_to_string res
 
 let rec explode_rec str ofs acc =
-  let () = print_endline (string_of_int ofs) in
   if ofs = 0 then
     acc
   else
