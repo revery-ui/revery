@@ -1,4 +1,5 @@
-#ifdef __APPLE__
+#include "config.h"
+#ifdef USE_COCOA
 #import "cocoa/ReveryAppDelegate.h"
 #import <Cocoa/Cocoa.h>
 

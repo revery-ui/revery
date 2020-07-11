@@ -1,4 +1,5 @@
-#ifdef __APPLE__
+#include "config.h"
+#ifdef USE_COCOA
 #include "ReveryAppDelegate_func.h"
 
 #include <caml/callback.h>

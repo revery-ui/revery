@@ -30,6 +30,7 @@ module FontStyle: {
   let getWidth: t => int;
 };
 
+module FilterQuality: {type t = SkiaWrapped.FilterQuality.t;};
 module Hinting: {type t = SkiaWrapped.Hinting.t;};
 module TextEncoding: {type t = SkiaWrapped.TextEncoding.t;};
 
@@ -202,6 +203,9 @@ module Paint: {
 
   let setHinting: (t, Hinting.t) => unit;
   let getHinting: t => Hinting.t;
+
+  let setFilterQuality: (t, FilterQuality.t) => unit;
+  let getFilterQuality: t => FilterQuality.t;
 
   let setStyle: (t, style) => unit;
   let setStrokeWidth: (t, float) => unit;

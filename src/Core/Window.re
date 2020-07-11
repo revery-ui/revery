@@ -65,8 +65,9 @@ module WindowMetrics: {
       // Otherwise, the way we figure out the scale factor depends on the platform
       | None =>
         switch (Environment.os) {
-        // Mac is easy... there isn't any scaling factor.  The window is automatically
+        // Mac and iOS is easy... there isn't any scaling factor.  The window is automatically
         // proportioned for us. The scaling is handled by the ratio of size / framebufferSize.
+        | IOS
         | Mac => 1.0
         // On Windows, we need to try a Win32 API to get the scale factor
         | Windows =>
@@ -97,6 +98,21 @@ module WindowMetrics: {
             | None => 1.0
             };
           }
+        // On Android we can mostly trust the getDPI and the base DPI is 160
+        // ddpi indicates the scale factor choosen by the manufacturer
+        // hdpi is the real horizontal dpi, vdpi is the real vertical dpi, they can be different
+        // also any non integer scaleFactor is valid as it's choosen by the manufecturer
+        | Android =>
+          let display = Sdl2.Window.getDisplay(sdlWindow);
+          let dpi = Sdl2.Display.getDPI(display);
+          let scaleFactor = dpi.ddpi /. 160.0;
+          Log.tracef(m =>
+            m(
+              "_getScaleFactor - Android - inferring from DPI: %f",
+              scaleFactor,
+            )
+          );
+          scaleFactor;
         | _ => 1.0
         }
       };

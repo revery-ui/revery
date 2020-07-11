@@ -244,14 +244,15 @@ class textNode (text: string) = {
          );
 
     let measureWidth = str =>
-      Text.charWidth(
+      Text.dimensions(
         ~smoothing=_smoothing,
         ~italic=_italicized,
         ~fontFamily=_fontFamily,
         ~fontSize=_fontSize,
         ~fontWeight=_fontWeight,
         str,
-      );
+      )
+      |> (value => value.width);
     _lines =
       TextWrapping.wrapText(
         ~text,

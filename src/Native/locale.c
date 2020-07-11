@@ -8,12 +8,16 @@
 
 #include "caml_values.h"
 
-#ifdef WIN32
+#include "config.h"
+#ifdef USE_WIN32
 #include "ReveryWin32.h"
-#elif __APPLE__
+#elif USE_COCOA
 #include "ReveryCocoa.h"
-#else
+#elif USE_GTK
 #include "ReveryGtk.h"
+#endif
+
+#if defined(__linux__) || defined(__APPLE__)
 #include <locale.h>
 #endif
 
@@ -22,10 +26,10 @@ CAMLprim value revery_getUserLocale() {
     CAMLlocal1(camlRet);
     char *ret;
     int shouldFree;
-#ifdef __APPLE__
+#ifdef USE_COCOA
     ret = revery_getUserLocale_cocoa();
     shouldFree = 0;
-#elif WIN32
+#elif USE_WIN32
     ret = revery_getUserLocale_win32();
     shouldFree = 1;
 #else

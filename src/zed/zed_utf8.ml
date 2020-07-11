@@ -226,7 +226,7 @@ let unsafe_extract_prev str ofs =
                           let ch4 = String.unsafe_get str (ofs - 4) in
                           match ch4 with
                             | '\xf0' .. '\xf7' ->
-                                (Uchar.of_int (((Char.code ch4 land 0x07) lsl 18) lor ((Char.code ch3 land 0x3f) lsl 12) lor ((Char.code ch2 land 0x3f) lsl 6) lor (Char.code ch1 land 0x3f)), ofs + 4)
+                                (Uchar.of_int (((Char.code ch4 land 0x07) lsl 18) lor ((Char.code ch3 land 0x3f) lsl 12) lor ((Char.code ch2 land 0x3f) lsl 6) lor (Char.code ch1 land 0x3f)), ofs - 4)
                             | _ ->
                                 fail str (ofs - 4) "invalid start of UTF-8 sequence"
                         else

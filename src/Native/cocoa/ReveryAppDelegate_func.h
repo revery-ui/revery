@@ -1,4 +1,5 @@
-#ifdef __APPLE__
+#include "config.h"
+#ifdef USE_COCOA
 #ifndef ReveryAppDelegate_func_h
 #define ReveryAppDelegate_func_h
 

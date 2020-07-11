@@ -11,7 +11,7 @@ let charWidth:
     ~fontFamily: Family.t,
     ~fontSize: float,
     ~fontWeight: Weight.t,
-    char
+    Uchar.t
   ) =>
   float;
 

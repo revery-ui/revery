@@ -23,3 +23,7 @@ steps:
     displayName: 'esy @examples x SkiaFontManagerCli'
   - script: esy @examples x SkiaFontManagerCli.bc
     displayName: 'esy @examples x SkiaFontManagerCli.bc'
+  - script: esy @examples x ReveryTextWrapCli
+    displayName: 'esy @examples x ReveryTextWrapCli'
+  - script: esy @examples x ReveryTextWrapCli.bc
+    displayName: 'esy @examples x ReveryTextWrapCli.bc'

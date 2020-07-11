@@ -50,6 +50,9 @@ class imageNode (data: option(Skia.Image.t)) = {
   pub setResizeMode = (mode: ImageResizeMode.t) => {
     _resizeMode = mode;
   };
+  pub setQuality = quality => {
+    Skia.Paint.setFilterQuality(_paint, quality);
+  };
   pub setData = newData => {
     data = newData;
   };

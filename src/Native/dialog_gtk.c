@@ -1,4 +1,5 @@
-#ifdef __linux__
+#include "config.h"
+#ifdef USE_GTK
 #include <gtk/gtk.h>
 #include <string.h>
 
