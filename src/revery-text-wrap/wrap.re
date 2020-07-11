@@ -41,7 +41,8 @@ let wrap_queue =
        let width = ref(0.0);
        /* Tokenize the line by whitespace and for each token: */
        let x = split_tokens(line);
-       x |> Queue.iter(token => {
+       x
+       |> Queue.iter(token => {
             /* Calculate the width of the token */
             let token_width = width_of_token(token);
 
@@ -97,9 +98,11 @@ let wrap_queue =
               };
 
               /* For each character in the token, do processing to determine where to break */
-              Zed_utf8.rev_explode(token) |> List.rev
+              Zed_utf8.rev_explode(token)
+              |> List.rev
               |> List.iteri((i, uchar) => {
-                   let char_width = width_of_token(Zed_utf8.singleton(uchar));
+                   let char_width =
+                     width_of_token(Zed_utf8.singleton(uchar));
 
                    /* If it won't overflow this line OR if there's no way to fit it into a line without overflowing */
                    if (width^
@@ -107,7 +110,9 @@ let wrap_queue =
                        || width^ == 0.0
                        && char_width >= max_width) {
                      if (debug) {
-                       print_endline("--Decision: append (" ++ __LOC__ ++ ")");
+                       print_endline(
+                         "--Decision: append (" ++ __LOC__ ++ ")",
+                       );
                      };
                      /* Append it to the buffer */
                      Buffer.add_utf_8_uchar(buffer, uchar);

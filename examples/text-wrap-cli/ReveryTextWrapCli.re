@@ -24,7 +24,13 @@ let () = {
     ++ "Also let's try some CJK!"
     ++ "日本語の場合はランダムに生成された文章以外に、 著作権が切れた小説などが利用されることもある。";
   print_endline("==================");
-  wrap(~width_of_token, ~debug=true, ~max_width=5.0, ~hyphenate=true, wrapInput)
+  wrap(
+    ~width_of_token,
+    ~debug=true,
+    ~max_width=5.0,
+    ~hyphenate=true,
+    wrapInput,
+  )
   |> List.iter(print_endline);
   print_endline("==================");
   wrap(~width_of_token, ~max_width=10.0, ~hyphenate=true, wrapInput)

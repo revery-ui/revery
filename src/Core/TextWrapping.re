@@ -18,11 +18,6 @@ let wrapText = (~text, ~measureWidth as width_of_token, ~maxWidth, ~mode) => {
       ~ignore_preceding_whitespace=false,
     )
   | WrapHyphenate =>
-    Wrap.wrap(
-      text,
-      ~max_width=maxWidth,
-      ~width_of_token,
-      ~hyphenate=true,
-    )
+    Wrap.wrap(text, ~max_width=maxWidth, ~width_of_token, ~hyphenate=true)
   };
 };
