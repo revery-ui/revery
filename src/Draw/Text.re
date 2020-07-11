@@ -33,13 +33,13 @@ let charWidth =
       ~fontFamily,
       ~fontSize,
       ~fontWeight,
-      char,
+      uchar,
     ) => {
   let maybeSkia = Family.toSkia(~italic?, fontWeight, fontFamily);
 
   switch (FontCache.load(maybeSkia)) {
   | Ok(font) =>
-    let text = String.make(1, char);
+    let text = Zed_utf8.singleton(uchar);
     FontRenderer.measure(~smoothing, font, fontSize, text).width;
 
   | Error(_) => 0.
