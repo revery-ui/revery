@@ -12,6 +12,7 @@ let rec list_of_queue = q =>
     [first, ...list_of_queue(q)];
   };
 
+[@inline always]
 let last_uchar_of_string = str =>
   switch (str) {
   | "" => Uchar.of_int(0)
@@ -97,76 +98,77 @@ let wrap_queue =
                 print_endline("Decision: hyphenate");
               };
 
-              /* For each character in the token, do processing to determine where to break */
-              Zed_utf8.rev_explode(token)
-              |> List.rev
-              |> List.iteri((i, uchar) => {
-                   let char_width =
-                     width_of_token(Zed_utf8.singleton(uchar));
+              let rec loop = (~str, ~offset, ~iteration as i) =>
+                if (offset != String.length(str)) {
+                  let (uchar, nextOffset) =
+                    Zed_utf8.extract_next(str, offset);
 
-                   /* If it won't overflow this line OR if there's no way to fit it into a line without overflowing */
-                   if (width^
-                       +. char_width <= max_width
-                       || width^ == 0.0
-                       && char_width >= max_width) {
-                     if (debug) {
-                       print_endline(
-                         "--Decision: append (" ++ __LOC__ ++ ")",
-                       );
-                     };
-                     /* Append it to the buffer */
-                     Buffer.add_utf_8_uchar(buffer, uchar);
-                     width := width^ +. char_width;
-                     /* If it will overflow... */
-                   } else {
-                     if (debug) {
-                       print_endline("--Decision: break");
-                     };
-                     /* Finalize the current line and reset the buffer (if we need to) */
-                     if (width^ > 0.0) {
-                       /* If we're part-way through the string already */
-                       if (i > 0) {
-                         if (debug) {
-                           print_endline("--Clear+hyphenate");
-                         };
-                         /* We need to swap the last char of the buffer with a -, because the
-                            hyphen will be the last character that fits into this width. */
-                         let buffer_str = Buffer.contents(buffer);
-                         let last_uchar = last_uchar_of_string(buffer_str);
-                         /* If we've only put one character of the string before hyphenating, we
-                            should just swap with a space, so that we don't have a lonely hyphen
-                            on the previous line */
-                         let hyphen =
-                           if (i == 1) {
-                             " ";
-                           } else {
-                             "-";
-                           };
-                         /* Flush the buffer with the hyphen and reset the buffer to just the last
-                            character that was in the buffer (where the hyphen now is) */
-                         Queue.add(
-                           Zed_utf8.rchop(buffer_str) ++ hyphen,
-                           output_lines,
-                         );
-                         Buffer.reset(buffer);
-                         Buffer.add_utf_8_uchar(buffer, last_uchar);
-                         width := width_of_token(Zed_utf8.singleton(uchar));
-                         /* Otherwise, this is the start of the token */
-                       } else {
-                         if (debug) {
-                           print_endline("--Clear");
-                         };
-                         /* So just flush & reset the buffer */
-                         Queue.add(Buffer.contents(buffer), output_lines);
-                         Buffer.reset(buffer);
-                         width := 0.0;
-                       };
-                     };
-                     /* Then push the next character from this token onto the buffer */
-                     width := width^ +. char_width;
-                     Buffer.add_utf_8_uchar(buffer, uchar);
-                   };
-                 });
+                  let char_width = width_of_token(Zed_utf8.singleton(uchar));
+
+                  /* If it won't overflow this line OR if there's no way to fit it into a line without overflowing */
+                  if (width^
+                      +. char_width <= max_width
+                      || width^ == 0.0
+                      && char_width >= max_width) {
+                    if (debug) {
+                      print_endline("--Decision: append (" ++ __LOC__ ++ ")");
+                    };
+                    /* Append it to the buffer */
+                    Buffer.add_utf_8_uchar(buffer, uchar);
+                    width := width^ +. char_width;
+                    /* If it will overflow... */
+                  } else {
+                    if (debug) {
+                      print_endline("--Decision: break");
+                    };
+                    /* Finalize the current line and reset the buffer (if we need to) */
+                    if (width^ > 0.0) {
+                      /* If we're part-way through the string already */
+                      if (i > 0) {
+                        if (debug) {
+                          print_endline("--Clear+hyphenate");
+                        };
+                        /* We need to swap the last char of the buffer with a -, because the
+                           hyphen will be the last character that fits into this width. */
+                        let buffer_str = Buffer.contents(buffer);
+                        let last_uchar = last_uchar_of_string(buffer_str);
+                        /* If we've only put one character of the string before hyphenating, we
+                           should just swap with a space, so that we don't have a lonely hyphen
+                           on the previous line */
+                        let hyphen =
+                          if (i == 1) {
+                            " ";
+                          } else {
+                            "-";
+                          };
+                        /* Flush the buffer with the hyphen and reset the buffer to just the last
+                           character that was in the buffer (where the hyphen now is) */
+                        Queue.add(
+                          Zed_utf8.rchop(buffer_str) ++ hyphen,
+                          output_lines,
+                        );
+                        Buffer.reset(buffer);
+                        Buffer.add_utf_8_uchar(buffer, last_uchar);
+                        width := width_of_token(Zed_utf8.singleton(uchar));
+                        /* Otherwise, this is the start of the token */
+                      } else {
+                        if (debug) {
+                          print_endline("--Clear");
+                        };
+                        /* So just flush & reset the buffer */
+                        Queue.add(Buffer.contents(buffer), output_lines);
+                        Buffer.reset(buffer);
+                        width := 0.0;
+                      };
+                    };
+                    /* Then push the next character from this token onto the buffer */
+                    width := width^ +. char_width;
+                    Buffer.add_utf_8_uchar(buffer, uchar);
+                  };
+                  loop(~str, ~offset=nextOffset, ~iteration=i + 1);
+                };
+
+              loop(~str=token, ~offset=0, ~iteration=0);
               /* If it would exceed the limit and the user doesn't want hyphenation: */
             } else {
               if (debug) {
