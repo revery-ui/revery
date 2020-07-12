@@ -9,8 +9,6 @@
 
 (** UTF-8 enoded strings *)
 
-open CamomileLibrary
-
 type t = string
     (** Type of UTF-8 encoded strings. *)
 
