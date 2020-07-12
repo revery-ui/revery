@@ -1,5 +1,4 @@
 open Tokenize;
-module Tokenize = Tokenize;
 
 let rec list_of_queue = q =>
   if (Queue.is_empty(q)) {
