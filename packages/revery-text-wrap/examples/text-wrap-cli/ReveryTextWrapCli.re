@@ -8,9 +8,6 @@ let width_of_token = str => {
 Printexc.record_backtrace(true);
 
 let () = {
-  print_endline("0:");
-  Tokenize.split_tokens("0") |> Queue.iter(print_endline);
-  print_endline("------------------");
   wrap(~width_of_token, ~max_width=100.0, ~debug=true, "0")
   |> List.iter(print_endline);
   let wrapInput =
