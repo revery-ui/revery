@@ -1,5 +1,5 @@
 {
-  "checksum": "bdfef4a73f39425f9b8f3b8185612cf9",
+  "checksum": "67ddc0a03152a9e3b1e29c2a6db8107f",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -34,8 +34,8 @@
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f00@d41d8cd9",
         "flex@1.2.3@d41d8cd9", "fetch-native-lwt@0.1.0-alpha.5@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#a3785f9@d41d8cd9",
-        "esy-sdl2@2.0.10008@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
-        "esy-freetype2@2.9.1007@d41d8cd9",
+        "esy-sdl2@2.0.10008@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
+        "@revery/esy-harfbuzz@2.6.8000@d41d8cd9",
         "@reason-native/rely@3.2.1@d41d8cd9",
         "@opam/uutf@opam:1.0.2@4440868f", "@opam/uucp@opam:13.0.0@e9b515e0",
         "@opam/ppx_deriving@opam:4.5@bb81afdc",
@@ -289,20 +289,6 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-harfbuzz@1.9.1008@d41d8cd9": {
-      "id": "esy-harfbuzz@1.9.1008@d41d8cd9",
-      "name": "esy-harfbuzz",
-      "version": "1.9.1008",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/esy-harfbuzz/-/esy-harfbuzz-1.9.1008.tgz#sha1:b83d1e80752d6f334f6c3e37b5b857d7d13adb67"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
-      "devDependencies": []
-    },
     "esy-freetype2@2.9.1007@d41d8cd9": {
       "id": "esy-freetype2@2.9.1007@d41d8cd9",
       "name": "esy-freetype2",
@@ -356,6 +342,20 @@
       "overrides": [],
       "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
       "devDependencies": [ "esy-cmake@0.3.5@d41d8cd9" ]
+    },
+    "@revery/esy-harfbuzz@2.6.8000@d41d8cd9": {
+      "id": "@revery/esy-harfbuzz@2.6.8000@d41d8cd9",
+      "name": "@revery/esy-harfbuzz",
+      "version": "2.6.8000",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/@revery/esy-harfbuzz/-/esy-harfbuzz-2.6.8000.tgz#sha1:2a78f826c54b1244accec6c8d07c3968efe6ced2"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
+      "devDependencies": []
     },
     "@revery/esy-cmake@0.3.5001@d41d8cd9": {
       "id": "@revery/esy-cmake@0.3.5001@d41d8cd9",
@@ -496,8 +496,8 @@
       "dependencies": [
         "ocaml@4.10.0@d41d8cd9",
         "@reason-native-web/lwt_ssl@1.1.3005@d41d8cd9",
-        "@reason-native-web/h2-lwt-unix@0.6.1001@d41d8cd9",
-        "@reason-native-web/h1-lwt-unix@1.2.1001@d41d8cd9",
+        "@reason-native-web/h2-lwt-unix@0.6.1002@d41d8cd9",
+        "@reason-native-web/h1-lwt-unix@1.2.2001@d41d8cd9",
         "@reason-native-web/gluten-lwt-unix@0.2.1@d41d8cd9",
         "@opam/uri@opam:3.1.0@826aaae7",
         "@opam/ocaml-syntax-shims@opam:1.0.0@a9aa3bfa",
@@ -526,20 +526,20 @@
       ],
       "devDependencies": []
     },
-    "@reason-native-web/h2-lwt-unix@0.6.1001@d41d8cd9": {
-      "id": "@reason-native-web/h2-lwt-unix@0.6.1001@d41d8cd9",
+    "@reason-native-web/h2-lwt-unix@0.6.1002@d41d8cd9": {
+      "id": "@reason-native-web/h2-lwt-unix@0.6.1002@d41d8cd9",
       "name": "@reason-native-web/h2-lwt-unix",
-      "version": "0.6.1001",
+      "version": "0.6.1002",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native-web/h2-lwt-unix/-/h2-lwt-unix-0.6.1001.tgz#sha1:9f89181b5d2d244c9ee1d8a1e88fd258c4ab6d56"
+          "archive:https://registry.npmjs.org/@reason-native-web/h2-lwt-unix/-/h2-lwt-unix-0.6.1002.tgz#sha1:9bf1998a7a62ddfc712d22cf04a045cfc2017d8e"
         ]
       },
       "overrides": [],
       "dependencies": [
         "ocaml@4.10.0@d41d8cd9",
-        "@reason-native-web/h2-lwt@0.6.1001@d41d8cd9",
+        "@reason-native-web/h2-lwt@0.6.1002@d41d8cd9",
         "@reason-native-web/gluten-lwt-unix@0.2.1@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/faraday-lwt-unix@opam:0.7.1@4854f547",
@@ -547,37 +547,37 @@
       ],
       "devDependencies": []
     },
-    "@reason-native-web/h2-lwt@0.6.1001@d41d8cd9": {
-      "id": "@reason-native-web/h2-lwt@0.6.1001@d41d8cd9",
+    "@reason-native-web/h2-lwt@0.6.1002@d41d8cd9": {
+      "id": "@reason-native-web/h2-lwt@0.6.1002@d41d8cd9",
       "name": "@reason-native-web/h2-lwt",
-      "version": "0.6.1001",
+      "version": "0.6.1002",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native-web/h2-lwt/-/h2-lwt-0.6.1001.tgz#sha1:d65c9da48b345c9d7d366cc61e0beaaa0129c457"
+          "archive:https://registry.npmjs.org/@reason-native-web/h2-lwt/-/h2-lwt-0.6.1002.tgz#sha1:ab32c96ef1d5eabe0685b30c2edfc296cb63d5a8"
         ]
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@reason-native-web/h2@0.6.1001@d41d8cd9",
+        "ocaml@4.10.0@d41d8cd9", "@reason-native-web/h2@0.6.1002@d41d8cd9",
         "@reason-native-web/gluten-lwt@0.2.1@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.0@aef1678b"
       ],
       "devDependencies": []
     },
-    "@reason-native-web/h2@0.6.1001@d41d8cd9": {
-      "id": "@reason-native-web/h2@0.6.1001@d41d8cd9",
+    "@reason-native-web/h2@0.6.1002@d41d8cd9": {
+      "id": "@reason-native-web/h2@0.6.1002@d41d8cd9",
       "name": "@reason-native-web/h2",
-      "version": "0.6.1001",
+      "version": "0.6.1002",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native-web/h2/-/h2-0.6.1001.tgz#sha1:93b1fc6cd204f3e4b6909ff400527a4136ff27e3"
+          "archive:https://registry.npmjs.org/@reason-native-web/h2/-/h2-0.6.1002.tgz#sha1:6918f1df7d74b3880c78c5a94b9e644de8fa7ecc"
         ]
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@reason-native-web/h1@1.2.1001@d41d8cd9",
+        "ocaml@4.10.0@d41d8cd9", "@reason-native-web/h1@1.2.2001@d41d8cd9",
         "@opam/psq@opam:0.2.0@247756d4", "@opam/hpack@opam:0.2.0@9f3eae78",
         "@opam/faraday@opam:0.7.1@19546ee5",
         "@opam/dune@opam:2.5.0@aef1678b",
@@ -587,20 +587,20 @@
       ],
       "devDependencies": []
     },
-    "@reason-native-web/h1-lwt-unix@1.2.1001@d41d8cd9": {
-      "id": "@reason-native-web/h1-lwt-unix@1.2.1001@d41d8cd9",
+    "@reason-native-web/h1-lwt-unix@1.2.2001@d41d8cd9": {
+      "id": "@reason-native-web/h1-lwt-unix@1.2.2001@d41d8cd9",
       "name": "@reason-native-web/h1-lwt-unix",
-      "version": "1.2.1001",
+      "version": "1.2.2001",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native-web/h1-lwt-unix/-/h1-lwt-unix-1.2.1001.tgz#sha1:ef6c7ab43bc717db58dc8af913f2b68b34de2c5f"
+          "archive:https://registry.npmjs.org/@reason-native-web/h1-lwt-unix/-/h1-lwt-unix-1.2.2001.tgz#sha1:29866964b38f357664ebf48af7ee2d4b32db0d4f"
         ]
       },
       "overrides": [],
       "dependencies": [
         "ocaml@4.10.0@d41d8cd9",
-        "@reason-native-web/h1-lwt@1.2.1001@d41d8cd9",
+        "@reason-native-web/h1-lwt@1.2.2001@d41d8cd9",
         "@reason-native-web/gluten-lwt-unix@0.2.1@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/faraday-lwt-unix@opam:0.7.1@4854f547",
@@ -608,32 +608,32 @@
       ],
       "devDependencies": []
     },
-    "@reason-native-web/h1-lwt@1.2.1001@d41d8cd9": {
-      "id": "@reason-native-web/h1-lwt@1.2.1001@d41d8cd9",
+    "@reason-native-web/h1-lwt@1.2.2001@d41d8cd9": {
+      "id": "@reason-native-web/h1-lwt@1.2.2001@d41d8cd9",
       "name": "@reason-native-web/h1-lwt",
-      "version": "1.2.1001",
+      "version": "1.2.2001",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native-web/h1-lwt/-/h1-lwt-1.2.1001.tgz#sha1:e2fef4defebe735128c47484abcc12f55df6d43c"
+          "archive:https://registry.npmjs.org/@reason-native-web/h1-lwt/-/h1-lwt-1.2.2001.tgz#sha1:fae16630d9e002e5ba12cd67c88258a26171bca6"
         ]
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@reason-native-web/h1@1.2.1001@d41d8cd9",
+        "ocaml@4.10.0@d41d8cd9", "@reason-native-web/h1@1.2.2001@d41d8cd9",
         "@reason-native-web/gluten-lwt@0.2.1@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.0@aef1678b"
       ],
       "devDependencies": []
     },
-    "@reason-native-web/h1@1.2.1001@d41d8cd9": {
-      "id": "@reason-native-web/h1@1.2.1001@d41d8cd9",
+    "@reason-native-web/h1@1.2.2001@d41d8cd9": {
+      "id": "@reason-native-web/h1@1.2.2001@d41d8cd9",
       "name": "@reason-native-web/h1",
-      "version": "1.2.1001",
+      "version": "1.2.2001",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native-web/h1/-/h1-1.2.1001.tgz#sha1:16f1cfeb43009f45e64e91a8aba9c62e80fb27fe"
+          "archive:https://registry.npmjs.org/@reason-native-web/h1/-/h1-1.2.2001.tgz#sha1:48ff58f10bbcc2931742b951dcbd6c821e2da0f5"
         ]
       },
       "overrides": [],
@@ -696,7 +696,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@reason-native-web/h1@1.2.1001@d41d8cd9",
+        "ocaml@4.10.0@d41d8cd9", "@reason-native-web/h1@1.2.2001@d41d8cd9",
         "@opam/dune@opam:2.5.0@aef1678b",
         "@opam/bigstringaf@opam:0.6.1@35f5e6d1"
       ],
