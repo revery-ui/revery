@@ -1,5 +1,7 @@
 open Tokenize;
 
+module Log = (val Timber.Log.withNamespace("Revery.TextWrap"));
+
 let rec list_of_queue = q =>
   if (Queue.is_empty(q)) {
     [];
@@ -36,7 +38,6 @@ let wrap_queue =
       ~width_of_token,
       ~hyphenate=false,
       ~ignore_preceding_whitespace=true,
-      ~debug=false,
       text,
     ) => {
   /* Create a buffer for the outputted lines */
@@ -84,21 +85,19 @@ let wrap_queue =
             /* Calculate the width of the token */
             let token_width = width_of_token(token);
 
-            if (debug) {
-              Printf.printf(
+            Log.tracef(m =>
+              m(
                 "Token: %s, Width: %f, Token_width: %f, Max_width: %f\n",
                 token,
                 width^,
                 token_width,
                 max_width,
-              );
-            };
+              )
+            );
 
             /* If the buffer is already too long, push the buffer and reset it */
             if (width^ >= max_width) {
-              if (debug) {
-                print_endline("Clear");
-              };
+              Log.trace("Clear");
               Queue.add(Buffer.contents(buffer), output_lines);
               buffer_reset();
               width := 0.0;
@@ -108,32 +107,25 @@ let wrap_queue =
             if (ignore_preceding_whitespace
                 && is_whitespace(token)
                 && width^ == 0.0) {
-              if (debug) {
-                print_endline("Decision: ignore");
-              };
-              ();
-              /* If it's gonna be too long with the whitespace, don't add it & just prepare to wrap,
-                 so that we don't get the whitespace at the start of the next line. */
+              Log.trace(
+                "Decision: ignore",
+                /* If it's gonna be too long with the whitespace, don't add it & just prepare to wrap,
+                   so that we don't get the whitespace at the start of the next line. */
+              );
             } else if (ignore_preceding_whitespace
                        && is_whitespace(token)
                        && width^
                        +. token_width > max_width) {
-              if (debug) {
-                print_endline("Decision: append-whitespace");
-              };
+              Log.trace("Decision: append-whitespace");
               width := width^ +. token_width;
               /* If we can add the token without exceeding the limit, add it to the current line */
             } else if (width^ +. token_width <= max_width) {
-              if (debug) {
-                print_endline("Decision: append (" ++ __LOC__ ++ ")");
-              };
+              Log.tracef(m => m("Decision: append (%s)", __LOC__));
               width := width^ +. token_width;
               buffer_add_string(token);
               /* If it would exceed the limit and the user wants hyphenation: */
             } else if (hyphenate && width^ +. token_width > max_width) {
-              if (debug) {
-                print_endline("Decision: hyphenate");
-              };
+              Log.trace("Decision: hyphenate");
 
               let rec loop = (~str, ~offset, ~iteration as i) =>
                 if (offset != String.length(str)) {
@@ -147,24 +139,18 @@ let wrap_queue =
                       +. char_width <= max_width
                       || width^ == 0.0
                       && char_width >= max_width) {
-                    if (debug) {
-                      print_endline("--Decision: append (" ++ __LOC__ ++ ")");
-                    };
+                    Log.tracef(m => m("--Decision: append (%s)", __LOC__));
                     /* Append it to the buffer */
                     buffer_add_uchar(uchar);
                     width := width^ +. char_width;
                     /* If it will overflow... */
                   } else {
-                    if (debug) {
-                      print_endline("--Decision: break");
-                    };
+                    Log.trace("--Decision: break");
                     /* Finalize the current line and reset the buffer (if we need to) */
                     if (width^ > 0.0) {
                       /* If we're part-way through the string already */
                       if (i > 0) {
-                        if (debug) {
-                          print_endline("--Clear+hyphenate");
-                        };
+                        Log.trace("--Clear+hyphenate");
                         /* We need to swap the last char of the buffer with a -, because the
                            hyphen will be the last character that fits into this width. */
                         let last_uchar = buffer_last_uchar();
@@ -188,9 +174,7 @@ let wrap_queue =
                         width := width_of_token(Zed_utf8.singleton(uchar));
                         /* Otherwise, this is the start of the token */
                       } else {
-                        if (debug) {
-                          print_endline("--Clear");
-                        };
+                        Log.trace("--Clear");
                         /* So just flush & reset the buffer */
                         Queue.add(Buffer.contents(buffer), output_lines);
                         buffer_reset();
@@ -207,9 +191,7 @@ let wrap_queue =
               loop(~str=token, ~offset=0, ~iteration=0);
               /* If it would exceed the limit and the user doesn't want hyphenation: */
             } else {
-              if (debug) {
-                print_endline("Decision: wrap");
-              };
+              Log.trace("Decision: wrap");
               /* Finalize the current line and reset the buffer (if we need to) */
               if (width^ > 0.0) {
                 Queue.add(Buffer.contents(buffer), output_lines);
@@ -234,7 +216,6 @@ let wrap =
       ~width_of_token,
       ~hyphenate=false,
       ~ignore_preceding_whitespace=true,
-      ~debug=false,
       text,
     ) =>
   list_of_queue(
@@ -243,7 +224,6 @@ let wrap =
       ~width_of_token,
       ~hyphenate,
       ~ignore_preceding_whitespace,
-      ~debug,
       text,
     ),
   );

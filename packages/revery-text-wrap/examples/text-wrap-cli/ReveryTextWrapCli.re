@@ -5,11 +5,13 @@ let width_of_token = str => {
   String.length(str) |> float;
 };
 
+Timber.App.enable();
+Timber.App.setLevel(Timber.Level.trace);
+
 Printexc.record_backtrace(true);
 
 let () = {
-  wrap(~width_of_token, ~max_width=100.0, ~debug=true, "0")
-  |> List.iter(print_endline);
+  wrap(~width_of_token, ~max_width=100.0, "0") |> List.iter(print_endline);
   let wrapInput =
     "Here's another example of text where wrapping might be more difficult. "
     ++ "This string is very, very long and consists of words of varying lengths. "
