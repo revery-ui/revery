@@ -1,1 +1,1 @@
-(dirs src test examples bench)
+(dirs src packages test examples bench)
