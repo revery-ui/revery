@@ -2,12 +2,6 @@ open Revery_Core;
 
 module Log = (val Revery_Core.Log.withNamespace("Revery.FontCache"));
 
-module StringHashable = {
-  type t = string;
-  let equal = String.equal;
-  let hash = Hashtbl.hash;
-};
-
 module StringFeaturesHashable = {
   type t = (string, list(Feature.t));
   let equal = ((str1, features1), (str2, features2)) =>
