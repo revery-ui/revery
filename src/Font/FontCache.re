@@ -201,9 +201,17 @@ module Hole = {
     };
 
   let resolve =
-      (~font, ~features, ~string as str, ~generateShapes, ~endAt, hole) => {
+      (
+        ~font,
+        ~features,
+        ~string as str,
+        ~generateShapes,
+        ~endAt,
+        ~accumulator,
+        hole,
+      ) => {
     switch (hole) {
-    | Empty => []
+    | Empty => accumulator
     | StartsAt(startCluster) =>
       Log.debugf(m =>
         m("Resolving hole: startCluster : %d, str: %s", startCluster, str)
@@ -220,20 +228,27 @@ module Hole = {
       | Error(_) => []
       | Ok(fallbackFont) =>
         let substring = String.sub(str, startCluster, endAt - startCluster);
-        generateShapes(~features, fallbackFont, substring) |> List.rev;
+        generateShapes(~features, ~accumulator, fallbackFont, substring);
       };
     };
   };
 };
 
 let rec generateShapes:
-  (~features: list(Feature.t), t, string) => list(ShapeResult.shapeNode) =
-  (~features, {hbFace, skiaFace, _} as font, str) => {
+  (
+    ~features: list(Feature.t),
+    ~accumulator: list(ShapeResult.shapeNode),
+    t,
+    string
+  ) =>
+  list(ShapeResult.shapeNode) =
+  (~features, ~accumulator, {hbFace, skiaFace, _} as font, str) => {
     let rec loop =
             (
               ~font: t,
               ~shapes: array(Harfbuzz.hb_shape),
               ~index: int,
+              ~accumulator: list(ShapeResult.shapeNode),
               ~hole: Hole.t,
             ) =>
       if (index == Array.length(shapes)) {
@@ -243,31 +258,40 @@ let rec generateShapes:
           ~font,
           ~generateShapes,
           ~endAt=String.length(str),
+          ~accumulator,
           hole,
         );
       } else {
         let Harfbuzz.{glyphId, cluster} = shapes[index];
         if (glyphId == unresolvedGlyphID) {
           let newHole = Hole.extend(~cluster, hole);
-          loop(~font, ~shapes, ~index=index + 1, ~hole=newHole);
+          loop(~font, ~accumulator, ~shapes, ~index=index + 1, ~hole=newHole);
         } else {
-          Hole.resolve(
-            ~string=str,
+          let acc =
+            Hole.resolve(
+              ~string=str,
+              ~font,
+              ~features,
+              ~generateShapes,
+              ~endAt=cluster,
+              ~accumulator=[
+                ShapeResult.{hbFace, skiaFace, glyphId, cluster},
+                ...accumulator,
+              ],
+              hole,
+            );
+          loop(
             ~font,
-            ~features,
-            ~generateShapes,
-            ~endAt=cluster,
-            hole,
-          )
-          @ [
-            ShapeResult.{hbFace, skiaFace, glyphId, cluster},
-            ...loop(~font, ~shapes, ~index=index + 1, ~hole=Hole.Empty),
-          ];
+            ~shapes,
+            ~index=index + 1,
+            ~accumulator=acc,
+            ~hole=Hole.Empty,
+          );
         };
       };
 
     let shapes = Harfbuzz.hb_shape(~features, hbFace, str);
-    loop(~font, ~shapes, ~index=0, ~hole=Hole.Empty) |> List.rev;
+    loop(~font, ~shapes, ~index=0, ~accumulator, ~hole=Hole.Empty);
   }
 
 and shape: (~features: list(Feature.t)=?, t, string) => ShapeResult.t =
@@ -278,7 +302,8 @@ and shape: (~features: list(Feature.t)=?, t, string) => ShapeResult.t =
       v;
     | None =>
       let result =
-        generateShapes(~features, font, str) |> ShapeResult.ofHarfbuzz;
+        generateShapes(~features, ~accumulator=[], font, str)
+        |> ShapeResult.ofHarfbuzz;
       ShapeResultCache.add((str, features), result, shapeCache);
       ShapeResultCache.trim(shapeCache);
       result;
