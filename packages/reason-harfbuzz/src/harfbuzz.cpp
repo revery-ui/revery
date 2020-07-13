@@ -126,9 +126,20 @@ static value createShapeTuple(unsigned int codepoint, unsigned int cluster) {
   CAMLreturn(ret);
 }
 
-CAMLprim value rehb_shape(value vFace, value vString) {
-  CAMLparam2(vFace, vString);
-  CAMLlocal1(ret);
+CAMLprim value rehb_shape(value vFace, value vString, value vFeatures) {
+  CAMLparam3(vFace, vString, vFeatures);
+  CAMLlocal2(ret, feat);
+
+  int featuresLen = Wosize_val(vFeatures);
+  hb_feature_t *features = (hb_feature_t *)malloc(featuresLen * sizeof(hb_feature_t));
+  for (int i = 0; i < featuresLen; i++) {
+    feat = Field(vFeatures, i);
+    const char *tag = String_val(Field(feat, 0));
+    features[i].tag = HB_TAG(tag[0], tag[1], tag[2], tag[3]);
+    features[i].value = Int_val(Field(feat, 1));
+    features[i].start = Int_val(Field(feat, 2));
+    features[i].end = Int_val(Field(feat, 3));
+  }
 
   hb_font_t *hb_font = (hb_font_t *)vFace;
 
@@ -137,7 +148,7 @@ CAMLprim value rehb_shape(value vFace, value vString) {
   hb_buffer_add_utf8(hb_buffer, String_val(vString), -1, 0, -1);
   hb_buffer_guess_segment_properties(hb_buffer);
 
-  hb_shape(hb_font, hb_buffer, NULL, 0);
+  hb_shape(hb_font, hb_buffer, features, featuresLen);
    
   unsigned int glyph_count;
   hb_glyph_info_t *info = hb_buffer_get_glyph_infos(hb_buffer, &glyph_count);
@@ -147,6 +158,7 @@ CAMLprim value rehb_shape(value vFace, value vString) {
   for (int i = 0; i < glyph_count; i++) {
     Store_field(ret, i, createShapeTuple(info[i].codepoint, info[i].cluster));
   }
+  free(features);
   hb_buffer_destroy(hb_buffer);
   CAMLreturn(ret);
 }

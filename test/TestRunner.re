@@ -13,3 +13,5 @@ Revery_UI_Test.TestFramework.cli();
 Revery_Font_Test.TestFramework.cli();
 
 Skia_Test.TestFramework.cli();
+
+Harfbuzz_Test.TestFramework.cli();
