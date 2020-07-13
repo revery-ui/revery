@@ -148,7 +148,7 @@ CAMLprim value rehb_shape(value vFace, value vString, value vFeatures) {
   hb_buffer_add_utf8(hb_buffer, String_val(vString), -1, 0, -1);
   hb_buffer_guess_segment_properties(hb_buffer);
 
-  hb_shape(hb_font, hb_buffer, NULL, 0);
+  hb_shape(hb_font, hb_buffer, features, featuresLen);
    
   unsigned int glyph_count;
   hb_glyph_info_t *info = hb_buffer_get_glyph_infos(hb_buffer, &glyph_count);
