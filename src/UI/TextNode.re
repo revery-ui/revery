@@ -24,6 +24,7 @@ class textNode (text: string) = {
   val mutable _italicized = false;
   val mutable _fontSize = 14.;
   val mutable _underlined = false;
+  val mutable _features: list(Feature.t) = [];
   val _textPaint = {
     let paint = Skia.Paint.make();
     Skia.Paint.setTextEncoding(paint, GlyphId);
@@ -78,7 +79,7 @@ class textNode (text: string) = {
 
           let glyphString =
             line
-            |> Revery_Font.shape(font)
+            |> Revery_Font.shape(~features=_features, font)
             |> Revery_Font.ShapeResult.getGlyphString;
 
           CanvasContext.drawText(
@@ -95,6 +96,7 @@ class textNode (text: string) = {
             let width =
               FontRenderer.measure(
                 ~smoothing=_smoothing,
+                ~features=_features,
                 font,
                 _fontSize,
                 line,
@@ -207,6 +209,12 @@ class textNode (text: string) = {
       _this#markLayoutDirty();
     };
     _underlined = underlined;
+  };
+  pub setFeatures = features => {
+    if (_features != features) {
+      _this#markLayoutDirty();
+    };
+    _features = features;
   };
   pub measure = (width, _height): LayoutTypes.dimensions => {
     _isMeasured = true;
