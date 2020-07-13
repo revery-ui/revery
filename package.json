@@ -22,11 +22,11 @@
         "scope": "global"
       }
     },
-    "build": "dune build -p harfbuzz,skia,sdl2,Revery",
+    "build": "dune build -p reason-harfbuzz,reason-skia,reason-sdl2,Revery",
     "install": [
-      "esy-installer harfbuzz.install",
-      "esy-installer skia.install",
-      "esy-installer sdl2.install",
+      "esy-installer reason-harfbuzz.install",
+      "esy-installer reason-skia.install",
+      "esy-installer reason-sdl2.install",
       "esy-installer Revery.install",
       "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': ':'}\"",
       "bash -c \"cp #{esy-skia.bin}/skia.dll \\'$cur__bin\\' #{os == 'windows' ? '' : '2>/dev/null || true'}\"",
