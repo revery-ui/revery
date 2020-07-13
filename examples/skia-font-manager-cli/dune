@@ -3,7 +3,7 @@
  (package ReveryExamples)
  (public_names SkiaFontManagerCli)
  (modes native byte)
- (libraries skia skia.wrapped.bindings skia.wrapped Revery.zed))
+ (libraries reason-skia reason-skia.wrapped.bindings reason-skia.wrapped Revery.zed))
 
 (install
  (section bin)
