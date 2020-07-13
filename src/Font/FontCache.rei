@@ -1,6 +1,6 @@
 type t;
 
-let load: string => result(t, string);
+let load: option(Skia.Typeface.t) => result(t, string);
 
 let getMetrics: (t, float) => FontMetrics.t;
 

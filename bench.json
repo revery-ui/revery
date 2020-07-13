@@ -4,7 +4,7 @@
       "run": "esy '@bench' x ReveryBench"
   },
   "override": {
-      "build": ["dune build -p font-manager,harfbuzz,skia,Revery,ReveryBench -j4"],
+      "build": ["dune build -p harfbuzz,skia,sdl2,Revery,ReveryBench -j4"],
       "install": [
           "esy-installer ReveryBench.install"
       ]

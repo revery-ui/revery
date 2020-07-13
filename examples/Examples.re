@@ -180,6 +180,11 @@ let examples = [
     render: _ => MarkdownExample.render(),
     source: "MarkdownExample.re",
   },
+  {
+    name: "ImageQuality",
+    render: _ => ImageQualityExample.render(),
+    source: "ImageQualityExample.re",
+  },
 ];
 
 let getExampleByName = name =>
@@ -362,18 +367,5 @@ let init = app => {
     UI.start(window, <ExampleHost window initialExample />);
   ();
 };
-
-Revery.Font.Discovery.setFallbackResolver(
-  (~weight as _, ~width as _, ~mono as _, ~italic as _, _) =>
-  {
-    path: Environment.getAssetPath("Roboto-Bold.ttf"),
-    postscriptName: "Roboto-Bold",
-    family: "Roboto",
-    weight: Normal,
-    width: Normal,
-    italic: false,
-    monospace: false,
-  }
-);
 
 App.start(init);

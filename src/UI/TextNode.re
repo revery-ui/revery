@@ -22,7 +22,6 @@ class textNode (text: string) = {
   val mutable _fontFamily = Family.default;
   val mutable _fontWeight = Weight.Normal;
   val mutable _italicized = false;
-  val mutable _monospaced = false;
   val mutable _fontSize = 14.;
   val mutable _underlined = false;
   val _textPaint = {
@@ -40,14 +39,7 @@ class textNode (text: string) = {
     let opacity = parentContext.opacity *. style.opacity;
     let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 
-    switch (
-      Family.resolve(
-        ~italic=_italicized,
-        ~mono=_monospaced,
-        _fontWeight,
-        _fontFamily,
-      )
-    ) {
+    switch (Family.resolve(~italic=_italicized, _fontWeight, _fontFamily)) {
     | Error(_) => ()
     | Ok(font) =>
       Revery_Font.Smoothing.setPaint(~smoothing=_smoothing, _textPaint);
@@ -59,18 +51,11 @@ class textNode (text: string) = {
       Skia.Paint.setTextSize(_textPaint, _fontSize);
 
       let ascentPx =
-        Text.ascent(
-          ~italic=_italicized,
-          ~mono=_monospaced,
-          _fontFamily,
-          _fontSize,
-          _fontWeight,
-        );
+        Text.ascent(~italic=_italicized, _fontFamily, _fontSize, _fontWeight);
       let lineHeightPx =
         lineHeight
         *. Text.lineHeight(
              ~italic=_italicized,
-             ~mono=_monospaced,
              _fontFamily,
              _fontSize,
              _fontWeight,
@@ -148,7 +133,6 @@ class textNode (text: string) = {
       Text.dimensions(
         ~smoothing=_smoothing,
         ~italic=_italicized,
-        ~mono=_monospaced,
         ~fontFamily=_fontFamily,
         ~fontSize=_fontSize,
         ~fontWeight=_fontWeight,
@@ -177,7 +161,6 @@ class textNode (text: string) = {
       lineHeight
       *. Text.lineHeight(
            ~italic=_italicized,
-           ~mono=_monospaced,
            _fontFamily,
            _fontSize,
            _fontWeight,
@@ -210,12 +193,6 @@ class textNode (text: string) = {
   pub setItalicized = italicized =>
     if (_italicized != italicized) {
       _italicized = italicized;
-      _isMeasured = false;
-      _this#markLayoutDirty();
-    };
-  pub setMonospaced = monospaced =>
-    if (_monospaced != monospaced) {
-      _monospaced = monospaced;
       _isMeasured = false;
       _this#markLayoutDirty();
     };
@@ -254,22 +231,21 @@ class textNode (text: string) = {
       lineHeight
       *. Text.lineHeight(
            ~italic=_italicized,
-           ~mono=_monospaced,
            _fontFamily,
            _fontSize,
            _fontWeight,
          );
 
     let measureWidth = str =>
-      Text.charWidth(
+      Text.dimensions(
         ~smoothing=_smoothing,
         ~italic=_italicized,
-        ~mono=_monospaced,
         ~fontFamily=_fontFamily,
         ~fontSize=_fontSize,
         ~fontWeight=_fontWeight,
         str,
-      );
+      )
+      |> (value => value.width);
     _lines =
       TextWrapping.wrapText(
         ~text,
@@ -283,7 +259,6 @@ class textNode (text: string) = {
         Text.dimensions(
           ~smoothing=_smoothing,
           ~italic=_italicized,
-          ~mono=_monospaced,
           ~fontFamily=_fontFamily,
           ~fontSize=_fontSize,
           ~fontWeight=_fontWeight,

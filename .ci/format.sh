@@ -19,7 +19,7 @@ fi
 
 if [[ $native_output ]]
 then
-    printf "\nFormatted the following native stubs:\n%s" "$native_output"
+    printf "\nFormatted the following native stubs:\n%s\n" "$native_output"
 fi
 
 if [[ $caml_output != 0 ]] || [[ $native_output != "" ]]

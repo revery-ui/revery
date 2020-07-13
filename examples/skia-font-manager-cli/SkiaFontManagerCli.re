@@ -95,6 +95,22 @@ let draw = canvas => {
       ++ string_of_float(FontMetrics.getMaxCharacterWidth(metrics)),
     );
   };
+
+  let emoji = "😃";
+  let char = Zed_utf8.unsafe_extract(emoji, 0);
+  let maybeTypeface =
+    FontManager.matchFamilyStyleCharacter(
+      fontManager,
+      "Arial",
+      style,
+      ["en_US"],
+      char,
+    );
+  switch (maybeTypeface) {
+  | Some(tf) =>
+    print_endline("Found font for emoji: " ++ Typeface.getFamilyName(tf))
+  | None => print_endline("No emoji font found")
+  };
 };
 
 let surface = makeSurface(640l, 480l);

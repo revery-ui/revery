@@ -4,3 +4,4 @@ void revery_setIconProgress_win32(void *win, void *ih, float progress);
 void revery_setIconProgressIndeterminate_win32(void *win, void *ih);
 void revery_hideIconProgress_win32(void *win, void *ih);
 int revery_openURL_win32(const char *url_string);
+char *revery_getUserLocale_win32();

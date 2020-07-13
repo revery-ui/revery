@@ -1,4 +1,5 @@
-#ifdef __APPLE__
+#include "config.h"
+#ifdef USE_COCOA
 #import <Cocoa/Cocoa.h>
 
 int revery_openURL_cocoa(const char *url_string) {

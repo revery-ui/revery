@@ -47,10 +47,19 @@ let getAssetPath: string => string;
 let getTempDirectory: unit => string;
 
 type os =
-  | Windows
-  | Mac
+  | Android
+  | IOS
   | Linux
+  | Mac
+  | Windows
   | Browser
   | Unknown;
 
 let os: os;
+
+/**
+[getUserLocale] returns the current user locale. Note that on some platforms
+(including macOS) the locale can change during runtime
+*/
+let getUserLocale: unit => string;
+let userLocale: string;

@@ -1,4 +1,5 @@
-#ifdef WIN32
+#include "config.h"
+#ifdef USE_WIN32
 
 #include <stdio.h>
 

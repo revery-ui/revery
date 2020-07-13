@@ -4,7 +4,6 @@
     (preprocess (pps lwt_ppx))
     (libraries 
         harfbuzz
-        font-manager
         lru
         lwt
         lwt.unix
@@ -14,3 +13,10 @@
         Revery_Core
         Revery_Math
 ))
+
+(copy_files files/*)
+
+(install
+ (section bin)
+ (package Revery)
+ (files Inconsolata.otf))

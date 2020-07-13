@@ -255,6 +255,8 @@ let start = init => {
 
   Revery_Native.initApp();
 
+  AppLog.infof(m => m("Operating in locale : %s", Environment.userLocale));
+
   let appLoop = () => {
     _flushEvents();
 
@@ -300,3 +302,4 @@ let start = init => {
 
   Sdl2.renderLoop(appLoop);
 };
+let start = init => Sdl2.main(() => start(init));

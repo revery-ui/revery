@@ -28,7 +28,9 @@ let run = () => {
 
     let renderString = str => {
       let shapes = Harfbuzz.hb_shape(font, str);
+      print_endline("-- " ++ str ++ " --");
       Array.iter(s => {print_endline("- SHAPE: " ++ show(s))}, shapes);
+      print_endline("----");
     };
 
     renderString("abc");

@@ -5,7 +5,6 @@ type textInfo = {
   fontFamily: Family.t,
   fontWeight: Weight.t,
   italic: bool,
-  monospaced: bool,
   fontSize: float,
   text: string,
   color: Color.t,
@@ -37,15 +36,11 @@ let rec map = (updateLeaf: textInfo => t, richtext: t) =>
 
 let measure = (~smoothing=Smoothing.default, richtext: t) =>
   foldRight(
-    (
-      acc: Dimensions.t,
-      {italic, monospaced, fontFamily, fontSize, fontWeight, text, _},
-    ) => {
+    (acc: Dimensions.t, {italic, fontFamily, fontSize, fontWeight, text, _}) => {
       let dimensions =
         Revery_Draw.Text.dimensions(
           ~smoothing,
           ~italic,
-          ~mono=monospaced,
           ~fontFamily,
           ~fontSize,
           ~fontWeight,
@@ -66,12 +61,11 @@ module DSL = {
         ~fontFamily=Family.default,
         ~fontWeight=Weight.Normal,
         ~italic=false,
-        ~monospaced=false,
         ~fontSize=14.,
         ~color=Colors.black,
         text: string,
       ) =>
-    Leaf({fontFamily, fontWeight, italic, monospaced, fontSize, text, color});
+    Leaf({fontFamily, fontWeight, italic, fontSize, text, color});
 
   let fontWeight = (fontWeight: Weight.t, richtext: t) =>
     richtext |> map(textInfo => Leaf({...textInfo, fontWeight}));
@@ -103,8 +97,6 @@ module DSL = {
     richtext |> map(textInfo => Leaf({...textInfo, fontFamily}));
   let italic = (richtext: t) =>
     richtext |> map(textInfo => Leaf({...textInfo, italic: true}));
-  let monospaced = (richtext: t) =>
-    richtext |> map(textInfo => Leaf({...textInfo, monospaced: true}));
   let fontSize = (fontSize: float, richtext: t) =>
     richtext |> map(textInfo => Leaf({...textInfo, fontSize}));
   let color = (color: Color.t, richtext: t) =>

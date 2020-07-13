@@ -5,8 +5,8 @@
     - Discovering fonts
     - Loading fonts
 */
-module Weight = FontManager.FontWeight;
-module Width = FontManager.FontWidth;
+module Weight = FontWeight;
+module Width = FontWidth;
 module FontMetrics = FontMetrics;
 module FontCache = FontCache;
 module FontRenderer = FontRenderer;
@@ -27,12 +27,7 @@ let measure = FontRenderer.measure;
 let shape = FontCache.shape;
 
 module Discovery = {
-  type t = FontManager.FontDescriptor.t;
+  type t = option(Skia.Typeface.t);
 
-  let setFallbackResolver = Discovery.setFallbackResolver;
-
-  /** raises Font_not_found if couldn't find any font */
   let find = Discovery.find;
-  let findExn = Discovery.findExn;
-  let toString = Discovery.toString;
 };
