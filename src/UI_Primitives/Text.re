@@ -20,6 +20,7 @@ let%nativeComponent make =
                       ~italic=false,
                       ~fontSize=14.,
                       ~underlined=false,
+                      ~features=[],
                       ~text="",
                       ~smoothing=Smoothing.default,
                       ~children=React.empty,
@@ -76,6 +77,7 @@ let%nativeComponent make =
       tn#setFontWeight(fontWeight);
       tn#setItalicized(italic);
       tn#setFontSize(fontSize);
+      tn#setFeatures(features);
       tn#setUnderlined(underlined);
       node;
     },
