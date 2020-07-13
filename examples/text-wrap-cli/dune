@@ -3,7 +3,7 @@
  (package ReveryExamples)
  (public_names ReveryTextWrapCli)
  (modes native byte)
- (libraries Revery.TextWrap Revery.Zed))
+ (libraries Revery.text-wrap Revery.zed))
 
 (install
  (section bin)
