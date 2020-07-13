@@ -7,12 +7,12 @@ let measure = {
   let paint = Skia.Paint.make();
   Skia.Paint.setTextEncoding(paint, GlyphId);
 
-  (~smoothing: Smoothing.t, font, size, text: string) => {
+  (~smoothing: Smoothing.t, ~features=[], font, size, text: string) => {
     let {height, _}: FontMetrics.t = FontCache.getMetrics(font, size);
     let skiaFace = FontCache.getSkiaTypeface(font);
 
     let glyphString =
-      text |> FontCache.shape(font) |> ShapeResult.getGlyphString;
+      text |> FontCache.shape(~features, font) |> ShapeResult.getGlyphString;
 
     Smoothing.setPaint(~smoothing, paint);
 
