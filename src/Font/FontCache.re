@@ -2,9 +2,10 @@ open Revery_Core;
 
 module Log = (val Revery_Core.Log.withNamespace("Revery.FontCache"));
 
-module StringHashable = {
-  type t = string;
-  let equal = String.equal;
+module StringFeaturesHashable = {
+  type t = (string, list(Feature.t));
+  let equal = ((str1, features1), (str2, features2)) =>
+    String.equal(str1, str2) && features1 == features2;
   let hash = Hashtbl.hash;
 };
 
@@ -64,8 +65,9 @@ module SkiaTypefaceWeighted = {
 };
 
 module MetricsCache = Lru.M.Make(FloatHashable, MetricsWeighted);
-module ShapeResultCache = Lru.M.Make(StringHashable, ShapeResultWeighted);
-module FallbackCache = Lru.M.Make(StringHashable, FallbackWeighted);
+module ShapeResultCache =
+  Lru.M.Make(StringFeaturesHashable, ShapeResultWeighted);
+module FallbackCache = Lru.M.Make(StringFeaturesHashable, FallbackWeighted);
 module FallbackCharacterCache =
   Lru.M.Make(UcharHashable, SkiaTypefaceWeighted);
 
@@ -198,7 +200,8 @@ module Hole = {
     | StartsAt(_) => hole
     };
 
-  let resolve = (~font, ~string as str, ~generateShapes, ~endAt, hole) => {
+  let resolve =
+      (~font, ~features, ~string as str, ~generateShapes, ~endAt, hole) => {
     switch (hole) {
     | Empty => []
     | StartsAt(startCluster) =>
@@ -217,14 +220,15 @@ module Hole = {
       | Error(_) => []
       | Ok(fallbackFont) =>
         let substring = String.sub(str, startCluster, endAt - startCluster);
-        generateShapes(fallbackFont, substring) |> List.rev;
+        generateShapes(~features, fallbackFont, substring) |> List.rev;
       };
     };
   };
 };
 
-let rec generateShapes: (t, string) => list(ShapeResult.shapeNode) =
-  ({hbFace, skiaFace, _} as font, str) => {
+let rec generateShapes:
+  (~features: list(Feature.t), t, string) => list(ShapeResult.shapeNode) =
+  (~features, {hbFace, skiaFace, _} as font, str) => {
     let rec loop =
             (
               ~font: t,
@@ -235,6 +239,7 @@ let rec generateShapes: (t, string) => list(ShapeResult.shapeNode) =
       if (index == Array.length(shapes)) {
         Hole.resolve(
           ~string=str,
+          ~features,
           ~font,
           ~generateShapes,
           ~endAt=String.length(str),
@@ -249,6 +254,7 @@ let rec generateShapes: (t, string) => list(ShapeResult.shapeNode) =
           Hole.resolve(
             ~string=str,
             ~font,
+            ~features,
             ~generateShapes,
             ~endAt=cluster,
             hole,
@@ -260,19 +266,20 @@ let rec generateShapes: (t, string) => list(ShapeResult.shapeNode) =
         };
       };
 
-    let shapes = Harfbuzz.hb_shape(hbFace, str);
+    let shapes = Harfbuzz.hb_shape(~features, hbFace, str);
     loop(~font, ~shapes, ~index=0, ~hole=Hole.Empty) |> List.rev;
   }
 
-and shape: (t, string) => ShapeResult.t =
-  ({shapeCache, _} as font, str) => {
-    switch (ShapeResultCache.find(str, shapeCache)) {
+and shape: (~features: list(Feature.t)=?, t, string) => ShapeResult.t =
+  (~features=[], {shapeCache, hbFace, _} as font, str) => {
+    switch (ShapeResultCache.find((str, features), shapeCache)) {
     | Some(v) =>
-      ShapeResultCache.promote(str, shapeCache);
+      ShapeResultCache.promote((str, features), shapeCache);
       v;
     | None =>
-      let result = generateShapes(font, str) |> ShapeResult.ofHarfbuzz;
-      ShapeResultCache.add(str, result, shapeCache);
+      let result =
+        generateShapes(~features, font, str) |> ShapeResult.ofHarfbuzz;
+      ShapeResultCache.add((str, features), result, shapeCache);
       ShapeResultCache.trim(shapeCache);
       result;
     };

@@ -1,16 +1,16 @@
 (executable
  (name stubgen)
- (package skia)
+ (package reason-skia)
  (modules stubgen)
  (public_name stubgen.exe)
- (libraries skia.wrapped.bindings ctypes))
+ (libraries reason-skia.wrapped.bindings ctypes))
 
 (executable
  (name types_stubgen)
- (package skia)
+ (package reason-skia)
  (modules types_stubgen)
  (public_name types_stubgen.exe)
- (libraries skia.wrapped.types ctypes.stubs ctypes))
+ (libraries reason-skia.wrapped.types ctypes.stubs ctypes))
 
 (rule
  (targets ml_types_stubgen.c)

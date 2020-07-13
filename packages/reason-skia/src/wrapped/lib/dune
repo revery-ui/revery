@@ -11,11 +11,11 @@
 (library
   (name SkiaWrapped)
   (flags (-w -40 -w +26))
-  (public_name skia.wrapped)
+  (public_name reason-skia.wrapped)
   (libraries
-    skia.wrapped.types
-    skia.wrapped.bindings
-    skia.wrapped.c
+    reason-skia.wrapped.types
+    reason-skia.wrapped.bindings
+    reason-skia.wrapped.c
     ctypes
     integers
   )

@@ -6,10 +6,10 @@
 (library
  (name SkiaWrappedBindings)
  (flags -w -9)
- (public_name skia.wrapped.bindings)
+ (public_name reason-skia.wrapped.bindings)
  (libraries
-    skia.wrapped.types
-    skia.wrapped.c
+    reason-skia.wrapped.types
+    reason-skia.wrapped.c
     ctypes.stubs
     ctypes
     integers

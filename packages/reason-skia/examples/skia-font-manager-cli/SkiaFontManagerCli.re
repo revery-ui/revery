@@ -76,7 +76,9 @@ let draw = canvas => {
     );
   };
 
-  let filePath = Sys.getcwd() ++ "/examples/skia-cli/FiraCode-Regular.ttf";
+  let filePath =
+    Sys.getcwd()
+    ++ "/packages/reason-skia/examples/skia-cli/FiraCode-Regular.ttf";
   print_endline("Loading font: " ++ filePath);
   let maybeTypeface = Typeface.makeFromFile(filePath, 0);
   switch (maybeTypeface) {
