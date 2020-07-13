@@ -190,14 +190,12 @@ let matchCharacter = (fallbackCharacterCache, uchar, skiaFace) =>
   };
 
 module Hole = {
-  type t =
-    | Empty
-    | StartsAt(int);
+  type t = option(int);
 
   let extend = (~cluster, hole) =>
     switch (hole) {
-    | Empty => StartsAt(cluster)
-    | StartsAt(_) => hole
+    | None => Some(cluster)
+    | Some(_) => hole
     };
 
   let resolve =
@@ -208,11 +206,11 @@ module Hole = {
         ~generateShapes,
         ~endAt,
         ~accumulator,
-        hole,
+        maybeHole,
       ) => {
-    switch (hole) {
-    | Empty => accumulator
-    | StartsAt(startCluster) =>
+    switch (maybeHole) {
+    | None => accumulator
+    | Some(startCluster) =>
       Log.debugf(m =>
         m("Resolving hole: startCluster : %d, str: %s", startCluster, str)
       );
@@ -249,7 +247,7 @@ let rec generateShapes:
               ~shapes: array(Harfbuzz.hb_shape),
               ~index: int,
               ~accumulator: list(ShapeResult.shapeNode),
-              ~hole: Hole.t,
+              ~maybeHole: Hole.t,
             ) =>
       if (index == Array.length(shapes)) {
         Hole.resolve(
@@ -259,13 +257,19 @@ let rec generateShapes:
           ~generateShapes,
           ~endAt=String.length(str),
           ~accumulator,
-          hole,
+          maybeHole,
         );
       } else {
         let Harfbuzz.{glyphId, cluster} = shapes[index];
         if (glyphId == unresolvedGlyphID) {
-          let newHole = Hole.extend(~cluster, hole);
-          loop(~font, ~accumulator, ~shapes, ~index=index + 1, ~hole=newHole);
+          let newMaybeHole = Hole.extend(~cluster, maybeHole);
+          loop(
+            ~font,
+            ~accumulator,
+            ~shapes,
+            ~index=index + 1,
+            ~maybeHole=newMaybeHole,
+          );
         } else {
           let acc =
             Hole.resolve(
@@ -278,20 +282,20 @@ let rec generateShapes:
                 ShapeResult.{hbFace, skiaFace, glyphId, cluster},
                 ...accumulator,
               ],
-              hole,
+              maybeHole,
             );
           loop(
             ~font,
             ~shapes,
             ~index=index + 1,
             ~accumulator=acc,
-            ~hole=Hole.Empty,
+            ~maybeHole=None,
           );
         };
       };
 
     let shapes = Harfbuzz.hb_shape(~features, hbFace, str);
-    loop(~font, ~shapes, ~index=0, ~accumulator, ~hole=Hole.Empty);
+    loop(~font, ~shapes, ~index=0, ~accumulator, ~maybeHole=None);
   }
 
 and shape: (~features: list(Feature.t)=?, t, string) => ShapeResult.t =
