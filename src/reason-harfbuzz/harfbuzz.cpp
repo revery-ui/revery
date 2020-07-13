@@ -155,6 +155,7 @@ CAMLprim value rehb_shape(value vFace, value vString, value vFeatures) {
   for (int i = 0; i < glyph_count; i++) {
     Store_field(ret, i, createShapeTuple(info[i].codepoint, info[i].cluster));
   }
+  free(features);
   hb_buffer_destroy(hb_buffer);
   CAMLreturn(ret);
 }
