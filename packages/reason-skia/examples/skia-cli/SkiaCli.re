@@ -67,7 +67,9 @@ let draw = canvas => {
   assert(nonExistentTypeface == None);
 
   // Draw text
-  let filePath = Sys.getcwd() ++ "/examples/skia-cli/Orbitron Medium.ttf";
+  let filePath =
+    Sys.getcwd()
+    ++ "/packages/reason-skia/examples/skia-cli/Orbitron Medium.ttf";
   print_endline("Loading font: " ++ filePath);
   let maybeTypeface = Typeface.makeFromFile(filePath, 0);
   switch (maybeTypeface) {
@@ -149,7 +151,9 @@ let draw = canvas => {
   };
 
   // Draw text w/ ligature
-  let filePath = Sys.getcwd() ++ "/examples/skia-cli/FiraCode-Regular.ttf";
+  let filePath =
+    Sys.getcwd()
+    ++ "/packages/reason-skia/examples/skia-cli/FiraCode-Regular.ttf";
   print_endline("Loading font: " ++ filePath);
   let maybeTypeface = Typeface.makeFromFile(filePath, 0);
   switch (maybeTypeface) {
