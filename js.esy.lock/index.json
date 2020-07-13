@@ -1,5 +1,5 @@
 {
-  "checksum": "8172aec753513286e2ded1e6c010c152",
+  "checksum": "9e31cf507f21dd49b6d2abfb4d9611c7",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -77,9 +77,9 @@
         "http-server@0.12.3@d41d8cd9", "flex@1.2.3@d41d8cd9",
         "fetch-native-lwt@0.1.0-alpha.5@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#a3785f9@d41d8cd9",
-        "esy-sdl2@2.0.10008@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
-        "@revery/esy-harfbuzz@2.6.8000@d41d8cd9",
-        "@opam/uutf@opam:1.0.2@4440868f", "@opam/uucp@opam:13.0.0@e9b515e0",
+        "esy-sdl2@2.0.10008@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
+        "esy-freetype2@2.9.1007@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
+        "@opam/uucp@opam:13.0.0@e9b515e0",
         "@opam/ppx_deriving@opam:4.5@bb81afdc",
         "@opam/omd@github:ocaml/omd:omd.opam#1535e3c@d41d8cd9",
         "@opam/merlin-extend@opam:0.4@b8e822d0",
@@ -543,6 +543,20 @@
       "dependencies": [],
       "devDependencies": []
     },
+    "esy-harfbuzz@1.9.1008@d41d8cd9": {
+      "id": "esy-harfbuzz@1.9.1008@d41d8cd9",
+      "name": "esy-harfbuzz",
+      "version": "1.9.1008",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/esy-harfbuzz/-/esy-harfbuzz-1.9.1008.tgz#sha1:b83d1e80752d6f334f6c3e37b5b857d7d13adb67"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
+      "devDependencies": []
+    },
     "esy-freetype2@2.9.1007@d41d8cd9": {
       "id": "esy-freetype2@2.9.1007@d41d8cd9",
       "name": "esy-freetype2",
@@ -682,20 +696,6 @@
       },
       "overrides": [],
       "dependencies": [ "lodash@4.17.19@d41d8cd9" ],
-      "devDependencies": []
-    },
-    "@revery/esy-harfbuzz@2.6.8000@d41d8cd9": {
-      "id": "@revery/esy-harfbuzz@2.6.8000@d41d8cd9",
-      "name": "@revery/esy-harfbuzz",
-      "version": "2.6.8000",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/@revery/esy-harfbuzz/-/esy-harfbuzz-2.6.8000.tgz#sha1:2a78f826c54b1244accec6c8d07c3968efe6ced2"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
       "devDependencies": []
     },
     "@revery/esy-cmake@0.3.5001@d41d8cd9": {
@@ -880,7 +880,7 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.10.0@d41d8cd9",
-        "@reason-native-web/h2-lwt@0.6.1000@d41d8cd9",
+        "@reason-native-web/h2-lwt@0.6.1001@d41d8cd9",
         "@reason-native-web/gluten-lwt-unix@0.2.1@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/faraday-lwt-unix@opam:0.7.1@4854f547",
@@ -888,22 +888,21 @@
       ],
       "devDependencies": []
     },
-    "@reason-native-web/h2-lwt@0.6.1000@d41d8cd9": {
-      "id": "@reason-native-web/h2-lwt@0.6.1000@d41d8cd9",
+    "@reason-native-web/h2-lwt@0.6.1001@d41d8cd9": {
+      "id": "@reason-native-web/h2-lwt@0.6.1001@d41d8cd9",
       "name": "@reason-native-web/h2-lwt",
-      "version": "0.6.1000",
+      "version": "0.6.1001",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native-web/h2-lwt/-/h2-lwt-0.6.1000.tgz#sha1:b4fc5d8688a900a652ce364c842f1bdaa66320f7"
+          "archive:https://registry.npmjs.org/@reason-native-web/h2-lwt/-/h2-lwt-0.6.1001.tgz#sha1:d65c9da48b345c9d7d366cc61e0beaaa0129c457"
         ]
       },
       "overrides": [],
       "dependencies": [
         "ocaml@4.10.0@d41d8cd9", "@reason-native-web/h2@0.6.1002@d41d8cd9",
-        "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/gluten-lwt@opam:0.2.1@4dbee72c",
-        "@opam/dune@opam:2.5.0@aef1678b"
+        "@reason-native-web/gluten-lwt@0.2.1@d41d8cd9",
+        "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.0@aef1678b"
       ],
       "devDependencies": []
     },
@@ -2675,62 +2674,6 @@
         "ocaml@4.10.0@d41d8cd9", "@opam/faraday@opam:0.7.1@19546ee5",
         "@opam/dune@opam:2.5.0@aef1678b",
         "@opam/angstrom@opam:0.14.1@07e286b0"
-      ]
-    },
-    "@opam/gluten-lwt@opam:0.2.1@4dbee72c": {
-      "id": "@opam/gluten-lwt@opam:0.2.1@4dbee72c",
-      "name": "@opam/gluten-lwt",
-      "version": "opam:0.2.1",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/86/86308b0695eb2b56ea0653cdf6cdd1a7338743e1e722b1a3aa10fd7cd9ad80de#sha256:86308b0695eb2b56ea0653cdf6cdd1a7338743e1e722b1a3aa10fd7cd9ad80de",
-          "archive:https://github.com/anmonteiro/gluten/releases/download/0.2.1/gluten-0.2.1.tbz#sha256:86308b0695eb2b56ea0653cdf6cdd1a7338743e1e722b1a3aa10fd7cd9ad80de"
-        ],
-        "opam": {
-          "name": "gluten-lwt",
-          "version": "0.2.1",
-          "path": "js.esy.lock/opam/gluten-lwt.0.2.1"
-        }
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/gluten@opam:0.2.1@fca26440", "@opam/dune@opam:2.5.0@aef1678b",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/lwt@opam:4.5.0@677655b4",
-        "@opam/gluten@opam:0.2.1@fca26440", "@opam/dune@opam:2.5.0@aef1678b"
-      ]
-    },
-    "@opam/gluten@opam:0.2.1@fca26440": {
-      "id": "@opam/gluten@opam:0.2.1@fca26440",
-      "name": "@opam/gluten",
-      "version": "opam:0.2.1",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/86/86308b0695eb2b56ea0653cdf6cdd1a7338743e1e722b1a3aa10fd7cd9ad80de#sha256:86308b0695eb2b56ea0653cdf6cdd1a7338743e1e722b1a3aa10fd7cd9ad80de",
-          "archive:https://github.com/anmonteiro/gluten/releases/download/0.2.1/gluten-0.2.1.tbz#sha256:86308b0695eb2b56ea0653cdf6cdd1a7338743e1e722b1a3aa10fd7cd9ad80de"
-        ],
-        "opam": {
-          "name": "gluten",
-          "version": "0.2.1",
-          "path": "js.esy.lock/opam/gluten.0.2.1"
-        }
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/faraday@opam:0.7.1@19546ee5",
-        "@opam/dune@opam:2.5.0@aef1678b",
-        "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/faraday@opam:0.7.1@19546ee5",
-        "@opam/dune@opam:2.5.0@aef1678b",
-        "@opam/bigstringaf@opam:0.6.1@35f5e6d1"
       ]
     },
     "@opam/fpath@opam:0.7.2@45477b93": {

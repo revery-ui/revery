@@ -1,5 +1,5 @@
 {
-  "checksum": "d484b4df95ad5a15010cfb9736fbf0b1",
+  "checksum": "b4024b57677ea27a19ca8a7e36b12d3e",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -34,9 +34,9 @@
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f00@d41d8cd9",
         "flex@1.2.3@d41d8cd9", "fetch-native-lwt@0.1.0-alpha.5@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#a3785f9@d41d8cd9",
-        "esy-sdl2@2.0.10008@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
-        "@revery/esy-harfbuzz@2.6.8000@d41d8cd9",
-        "@opam/uutf@opam:1.0.2@4440868f", "@opam/uucp@opam:13.0.0@e9b515e0",
+        "esy-sdl2@2.0.10008@d41d8cd9", "esy-harfbuzz@1.9.1008@d41d8cd9",
+        "esy-freetype2@2.9.1007@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
+        "@opam/uucp@opam:13.0.0@e9b515e0",
         "@opam/ppx_deriving@opam:4.5@bb81afdc",
         "@opam/omd@github:ocaml/omd:omd.opam#1535e3c@d41d8cd9",
         "@opam/markup@opam:0.8.2@87975241",
@@ -192,7 +192,7 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.10.0@d41d8cd9", "fetch-core@0.1.0-alpha.5@d41d8cd9",
-        "@reason-native-web/piaf@1.4.0@d41d8cd9",
+        "@reason-native-web/piaf@1.3.1000@d41d8cd9",
         "@opam/dune@opam:2.5.0@aef1678b", "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
       "devDependencies": []
@@ -288,6 +288,20 @@
       "dependencies": [],
       "devDependencies": []
     },
+    "esy-harfbuzz@1.9.1008@d41d8cd9": {
+      "id": "esy-harfbuzz@1.9.1008@d41d8cd9",
+      "name": "esy-harfbuzz",
+      "version": "1.9.1008",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/esy-harfbuzz/-/esy-harfbuzz-1.9.1008.tgz#sha1:b83d1e80752d6f334f6c3e37b5b857d7d13adb67"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
+      "devDependencies": []
+    },
     "esy-freetype2@2.9.1007@d41d8cd9": {
       "id": "esy-freetype2@2.9.1007@d41d8cd9",
       "name": "esy-freetype2",
@@ -341,20 +355,6 @@
       "overrides": [],
       "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
       "devDependencies": [ "esy-cmake@0.3.5@d41d8cd9" ]
-    },
-    "@revery/esy-harfbuzz@2.6.8000@d41d8cd9": {
-      "id": "@revery/esy-harfbuzz@2.6.8000@d41d8cd9",
-      "name": "@revery/esy-harfbuzz",
-      "version": "2.6.8000",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/@revery/esy-harfbuzz/-/esy-harfbuzz-2.6.8000.tgz#sha1:2a78f826c54b1244accec6c8d07c3968efe6ced2"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
-      "devDependencies": []
     },
     "@revery/esy-cmake@0.3.5001@d41d8cd9": {
       "id": "@revery/esy-cmake@0.3.5001@d41d8cd9",
@@ -481,14 +481,14 @@
       ],
       "devDependencies": []
     },
-    "@reason-native-web/piaf@1.4.0@d41d8cd9": {
-      "id": "@reason-native-web/piaf@1.4.0@d41d8cd9",
+    "@reason-native-web/piaf@1.3.1000@d41d8cd9": {
+      "id": "@reason-native-web/piaf@1.3.1000@d41d8cd9",
       "name": "@reason-native-web/piaf",
-      "version": "1.4.0",
+      "version": "1.3.1000",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native-web/piaf/-/piaf-1.4.0.tgz#sha1:da2d1a07b553989e032f51986873c4bdff936ed5"
+          "archive:https://registry.npmjs.org/@reason-native-web/piaf/-/piaf-1.3.1000.tgz#sha1:e21820a3e0fe7ac1e2f0d41462c01bfc64d5ac0e"
         ]
       },
       "overrides": [],
