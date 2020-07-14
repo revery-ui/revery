@@ -1,9 +1,6 @@
 open Harfbuzz;
 open TestFramework;
 
-let font =
-  hb_face_from_path("./examples/Roboto-Regular.ttf") |> Result.get_ok;
-
 describe("Features", ({test, _}) => {
   test("default (ff)", ({expect, _}) => {
     let expectedResult = [|
