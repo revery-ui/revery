@@ -92,6 +92,11 @@ module Internal = {
   let cache = FontCache.create(~initialSize=8, 64);
 };
 
+module Constants = {
+  let unresolvedGlyphID = 0;
+  let emptyUchar = Uchar.of_int(0);
+};
+
 let load: option(Skia.Typeface.t) => result(t, string) =
   (skiaTypeface: option(Skia.Typeface.t)) => {
     switch (FontCache.find(skiaTypeface, Internal.cache)) {
@@ -160,8 +165,6 @@ let getMetrics: (t, float) => FontMetrics.t =
 
 let getSkiaTypeface: t => Skia.Typeface.t = font => font.skiaFace;
 
-let unresolvedGlyphID = 0;
-
 let matchCharacter = (fallbackCharacterCache, uchar, skiaFace) =>
   switch (FallbackCharacterCache.find(uchar, fallbackCharacterCache)) {
   | Some(maybeTypeface) =>
@@ -227,7 +230,7 @@ module Hole = {
       );
       let uchar =
         try(Zed_utf8.get(str, startCluster)) {
-        | _ => '\000' |> Uchar.of_char
+        | _ => Constants.emptyUchar
         };
       let maybeFallbackFont =
         matchCharacter(font.fallbackCharacterCache, uchar, font.skiaFace)
@@ -244,7 +247,7 @@ module Hole = {
           ShapeResult.{
             hbFace: font.hbFace,
             skiaFace: font.skiaFace,
-            glyphId: 0,
+            glyphId: Constants.unresolvedGlyphID,
             cluster: startCluster,
           },
           ...accumulator,
@@ -293,7 +296,7 @@ let rec generateShapes:
         let Harfbuzz.{glyphId, cluster} = shapes[index];
         // If we have an unknown glyph (part of a hole), extend
         // the current hole to encapsulate it.
-        if (glyphId == unresolvedGlyphID) {
+        if (glyphId == Constants.unresolvedGlyphID) {
           let newMaybeHole = Hole.extend(~cluster, maybeHole);
           loop(
             ~font,
