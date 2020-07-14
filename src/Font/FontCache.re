@@ -338,9 +338,9 @@ let rec generateShapes:
 and shape: (~features: list(Feature.t)=?, t, string) => ShapeResult.t =
   (~features=[], {shapeCache, _} as font, str) => {
     switch (ShapeResultCache.find((str, features), shapeCache)) {
-    | Some(v) =>
+    | Some(result) =>
       ShapeResultCache.promote((str, features), shapeCache);
-      v;
+      result;
     | None =>
       let result =
         generateShapes(~features, ~accumulator=[], font, str)
