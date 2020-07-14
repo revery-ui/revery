@@ -5,3 +5,6 @@ include Rely.Make({
       projectDir: "",
     });
 });
+
+let font =
+  Harfbuzz.hb_face_from_path("./examples/Roboto-Regular.ttf") |> Result.get_ok;
