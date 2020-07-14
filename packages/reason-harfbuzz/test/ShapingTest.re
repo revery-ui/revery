@@ -21,4 +21,12 @@ describe("Shaping", ({test, _}) => {
 
     expect.equal(expectedResult, shapes);
   });
+
+  test("substring UTF-8", ({expect, _}) => {
+    let expectedResult = [|{glyphId: 1007, cluster: 1}|];
+    let shapes =
+      hb_shape(font, "aҙc", ~start=`Position(1), ~stop=`Position(3));
+
+    expect.equal(expectedResult, shapes);
+  });
 });
