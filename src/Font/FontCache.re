@@ -243,21 +243,21 @@ let generateShapes:
 
     and loopShapes =
         (
-          ~stop,
+          ~stopCluster,
           ~acc,
           ~holeStart=?,
           ~index,
           {hbFace, skiaFace, _} as font,
           shapes,
         ) => {
-      let resolvePossibleHole = () =>
+      let resolvePossibleHole = (~stop) =>
         switch (holeStart) {
         | Some(start) => resolveHole(~acc, ~start, ~stop)
         | None => acc
         };
 
       if (index == Array.length(shapes)) {
-        resolvePossibleHole();
+        resolvePossibleHole(~stop=stopCluster);
       } else {
         let Harfbuzz.{glyphId, cluster} = shapes[index];
 
@@ -267,16 +267,23 @@ let generateShapes:
         // and an unresolved glyph only represents a single code point.
         if (glyphId == Constants.unresolvedGlyphID) {
           let holeStart = Option.value(holeStart, ~default=cluster);
-          loopShapes(~stop, ~acc, ~holeStart, ~index=index + 1, font, shapes);
+          loopShapes(
+            ~stopCluster,
+            ~acc,
+            ~holeStart,
+            ~index=index + 1,
+            font,
+            shapes,
+          );
         } else {
           // Otherwise resolve any hole the preceded this one and add the
           // current glyph to the list.
-          let acc = resolvePossibleHole();
+          let acc = resolvePossibleHole(~stop=cluster);
           let acc = [
             ShapeResult.{hbFace, skiaFace, glyphId, cluster},
             ...acc,
           ];
-          loopShapes(~stop, ~acc, ~index=index + 1, font, shapes);
+          loopShapes(~stopCluster, ~acc, ~index=index + 1, font, shapes);
         };
       };
     }
@@ -285,7 +292,7 @@ let generateShapes:
       // TODO: Use bounded Harfbuzz API to avoid string allocations
       String.sub(str, start, stop - start)
       |> Harfbuzz.hb_shape(~features, font.hbFace)
-      |> loopShapes(~stop, ~acc, ~index=0, font);
+      |> loopShapes(~stopCluster=stop, ~acc, ~index=0, font);
     };
 
     loop(~start=0, ~stop=String.length(str), ~acc=[], font);
