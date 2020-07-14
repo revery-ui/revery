@@ -5,15 +5,37 @@ type hb_shape = {
 
 module Internal = {
   type face;
+  type feature = {
+    tag: string,
+    value: int,
+    start: int,
+    stop: int,
+  };
   external hb_face_from_path: string => result(face, string) =
     "rehb_face_from_path";
   external hb_face_from_data: (string, int) => result(face, string) =
     "rehb_face_from_bytes";
   external hb_destroy_face: face => unit = "rehb_destroy_face";
-  external hb_shape: (face, string) => array(hb_shape) = "rehb_shape";
+  external hb_shape: (face, string, array(feature)) => array(hb_shape) =
+    "rehb_shape";
+};
+
+type position = [ | `Start | `End | `Position(int)];
+type feature = {
+  tag: string,
+  value: int,
+  start: position,
+  stop: position,
 };
 
 type hb_face = {face: Internal.face};
+
+let positionToInt = position =>
+  switch (position) {
+  | `Position(n) => n
+  | `Start => 0
+  | `End => (-1)
+  };
 
 let hb_face_from_path = str => {
   switch (Internal.hb_face_from_path(str)) {
@@ -28,6 +50,20 @@ let hb_face_from_path = str => {
   };
 };
 
+let hb_shape = (~features=[], {face}, str) => {
+  let arr =
+    features
+    |> List.map(
+         feat => {
+           tag: feat.tag,
+           value: feat.value,
+           start: positionToInt(feat.start),
+           stop: positionToInt(feat.stop),
+         }: feature => Internal.feature,
+       )
+    |> Array.of_list;
+  Internal.hb_shape(face, str, arr);
+};
 let hb_new_face = str => hb_face_from_path(str);
 
 let hb_face_from_skia = sk_typeface => {
@@ -47,5 +83,3 @@ let hb_face_from_skia = sk_typeface => {
     Ok(ret);
   };
 };
-
-let hb_shape = ({face}, str) => Internal.hb_shape(face, str);

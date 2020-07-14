@@ -2,9 +2,10 @@ open Revery_Core;
 
 module Log = (val Revery_Core.Log.withNamespace("Revery.FontCache"));
 
-module StringHashable = {
-  type t = string;
-  let equal = String.equal;
+module StringFeaturesHashable = {
+  type t = (string, list(Feature.t));
+  let equal = ((str1, features1), (str2, features2)) =>
+    String.equal(str1, str2) && features1 == features2;
   let hash = Hashtbl.hash;
 };
 
@@ -48,7 +49,8 @@ module ShapeResultWeighted = {
 };
 
 module MetricsLruHash = Lru.M.Make(FloatHashable, MetricsWeighted);
-module ShapeResultLruHash = Lru.M.Make(StringHashable, ShapeResultWeighted);
+module ShapeResultLruHash =
+  Lru.M.Make(StringFeaturesHashable, ShapeResultWeighted);
 
 type t = {
   hbFace: Harfbuzz.hb_face,
@@ -128,16 +130,16 @@ let getMetrics: (t, float) => FontMetrics.t =
 
 let getSkiaTypeface: t => Skia.Typeface.t = font => font.skiaFace;
 
-let shape: (t, string) => ShapeResult.t =
-  ({hbFace, shapeCache, _}, str) => {
-    switch (ShapeResultLruHash.find(str, shapeCache)) {
+let shape: (~features: list(Feature.t)=?, t, string) => ShapeResult.t =
+  (~features=[], {hbFace, shapeCache, _}, str) => {
+    switch (ShapeResultLruHash.find((str, features), shapeCache)) {
     | Some(v) =>
-      ShapeResultLruHash.promote(str, shapeCache);
+      ShapeResultLruHash.promote((str, features), shapeCache);
       v;
     | None =>
-      let shaping = Harfbuzz.hb_shape(hbFace, str);
+      let shaping = Harfbuzz.hb_shape(~features, hbFace, str);
       let result = ShapeResult.ofHarfbuzz(shaping);
-      ShapeResultLruHash.add(str, result, shapeCache);
+      ShapeResultLruHash.add((str, features), result, shapeCache);
       ShapeResultLruHash.trim(shapeCache);
       result;
     };

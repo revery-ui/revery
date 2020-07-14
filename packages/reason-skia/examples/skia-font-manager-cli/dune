@@ -1,0 +1,11 @@
+(executables
+ (names SkiaFontManagerCli)
+ (package ReveryExamples)
+ (public_names SkiaFontManagerCli)
+ (modes native byte)
+ (libraries reason-skia reason-skia.wrapped.bindings reason-skia.wrapped Revery.zed))
+
+(install
+ (section bin)
+ (package ReveryExamples)
+ (files SkiaFontManagerCli.bc))

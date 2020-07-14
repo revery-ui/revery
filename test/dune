@@ -8,4 +8,5 @@
         Revery_UI_Test
         Revery_Font_Test
         Skia_Test
+        Harfbuzz_Test
             ))
