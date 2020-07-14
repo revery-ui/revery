@@ -25,7 +25,7 @@ module SkiaTypefaceHashable = {
 module UcharHashable = {
   type t = Uchar.t;
   let equal = Uchar.equal;
-  let hash = Uchar.to_int;
+  let hash = Uchar.hash;
 };
 
 module FloatHashable = {
@@ -80,9 +80,9 @@ type t = {
   fallbackCharacterCache: FallbackCharacterCache.t,
 };
 
-type _t = t;
 module FontWeight = {
-  type t = result(_t, string);
+  type font = t;
+  type t = result(font, string);
   let weight = _ => 1;
 };
 
