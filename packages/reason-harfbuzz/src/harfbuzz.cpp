@@ -126,12 +126,12 @@ static value createShapeTuple(unsigned int codepoint, unsigned int cluster) {
   CAMLreturn(ret);
 }
 
-CAMLprim value rehb_shape(value vFace, value vString, value vFeatures, value vStart, value vEnd) {
-  CAMLparam5(vFace, vString, vFeatures, vStart, vEnd);
+CAMLprim value rehb_shape(value vFace, value vString, value vFeatures, value vStart, value vLen) {
+  CAMLparam5(vFace, vString, vFeatures, vStart, vLen);
   CAMLlocal2(ret, feat);
 
   int start = Int_val(vStart);
-  int end = Int_val(vEnd);
+  int len = Int_val(vLen);
  
   int featuresLen = Wosize_val(vFeatures);
   hb_feature_t *features = (hb_feature_t *)malloc(featuresLen * sizeof(hb_feature_t));
@@ -149,7 +149,7 @@ CAMLprim value rehb_shape(value vFace, value vString, value vFeatures, value vSt
 
   hb_buffer_t *hb_buffer;
   hb_buffer = hb_buffer_create();
-  hb_buffer_add_utf8(hb_buffer, String_val(vString), -1, start, end);
+  hb_buffer_add_utf8(hb_buffer, String_val(vString), -1, start, len);
   hb_buffer_guess_segment_properties(hb_buffer);
 
   hb_shape(hb_font, hb_buffer, features, featuresLen);

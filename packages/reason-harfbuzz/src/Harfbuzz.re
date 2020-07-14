@@ -64,9 +64,14 @@ let hb_shape = (~features=[], ~start=`Start, ~stop=`End, {face}, str) => {
        )
     |> Array.of_list;
   let startPosition = positionToInt(start);
-  let stopPosition = positionToInt(stop);
+  let length =
+    switch (stop) {
+    | `Position(n) => n - startPosition
+    | `Start => 0
+    | `End => (-1)
+    };
 
-  Internal.hb_shape(face, str, arr, startPosition, stopPosition);
+  Internal.hb_shape(face, str, arr, startPosition, length);
 };
 let hb_new_face = str => hb_face_from_path(str);
 
