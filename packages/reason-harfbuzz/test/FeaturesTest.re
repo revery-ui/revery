@@ -9,14 +9,14 @@ describe("Features", ({test, _}) => {
     |];
     let shapes = hb_shape(font, "ff");
 
-    expect.equal(shapes, expectedResult);
+    expect.equal(expectedResult, shapes);
   });
 
   test("default (fi)", ({expect, _}) => {
     let expectedResult = [|{glyphId: 444, cluster: 0}|];
     let shapes = hb_shape(font, "fi");
 
-    expect.equal(shapes, expectedResult);
+    expect.equal(expectedResult, shapes);
   });
 
   test("discretionary ligatures enabled (ff)", ({expect, _}) => {

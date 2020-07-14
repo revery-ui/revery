@@ -11,7 +11,7 @@ describe("Shaping", ({test, _}) => {
 
     let shapes = hb_shape(font, "abc");
 
-    expect.equal(shapes, expectedResult);
+    expect.equal(expectedResult, shapes);
   });
 
   test("substring", ({expect, _}) => {
