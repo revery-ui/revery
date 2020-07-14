@@ -207,6 +207,11 @@ let generateShapes:
       |> load;
     };
 
+    /* A hole is a space in a string where the current font
+       can't render the text. For instance, most standard fonts
+       don't include emojis, and Latin fonts often don't include
+       CJK characters. This module contains functions that
+       relate to the creation and resolution of these "holes" */
     let rec resolveHole = (~acc, ~start, ~stop) =>
       if (start > stop) {
         acc;
@@ -236,7 +241,7 @@ let generateShapes:
         };
       }
 
-    and loop_shapes =
+    and loopShapes =
         (
           ~stop,
           ~acc,
@@ -257,17 +262,12 @@ let generateShapes:
         let Harfbuzz.{glyphId, cluster} = shapes[index];
 
         // If we have an unknown glyph (part of a hole), extend
-        // the current hole to encapsulate it.
+        // the current hole to encapsulate it. We cannot resolve unresolved
+        // glyphs individually since a character can span several code points,
+        // and an unresolved glyph only represents a single code point.
         if (glyphId == Constants.unresolvedGlyphID) {
           let holeStart = Option.value(holeStart, ~default=cluster);
-          loop_shapes(
-            ~stop,
-            ~acc,
-            ~holeStart,
-            ~index=index + 1,
-            font,
-            shapes,
-          );
+          loopShapes(~stop, ~acc, ~holeStart, ~index=index + 1, font, shapes);
         } else {
           // Otherwise resolve any hole the preceded this one and add the
           // current glyph to the list.
@@ -276,7 +276,7 @@ let generateShapes:
             ShapeResult.{hbFace, skiaFace, glyphId, cluster},
             ...acc,
           ];
-          loop_shapes(~stop, ~acc, ~index=index + 1, font, shapes);
+          loopShapes(~stop, ~acc, ~index=index + 1, font, shapes);
         };
       };
     }
@@ -285,7 +285,7 @@ let generateShapes:
       // TODO: Use bounded Harfbuzz API to avoid string allocations
       String.sub(str, start, stop - start)
       |> Harfbuzz.hb_shape(~features, font.hbFace)
-      |> loop_shapes(~stop, ~acc, ~index=0, font);
+      |> loopShapes(~stop, ~acc, ~index=0, font);
     };
 
     loop(~start=0, ~stop=String.length(str), ~acc=[], font);
