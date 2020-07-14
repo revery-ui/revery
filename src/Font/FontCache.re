@@ -190,14 +190,25 @@ let matchCharacter = (fallbackCharacterCache, uchar, skiaFace) =>
   };
 
 module Hole = {
+  /* A hole is a space in a string where the current font
+     can't render the text. For instance, most standard fonts
+     don't include emojis, and Latin fonts often don't include
+     CJK characters. This module contains functions that
+     relate to the creation and resolution of these "holes" */
+
+  // Here the int is where the hole starts.
+  // The end is sent to the `resolve` function
   type t = option(int);
 
+  // If we have a hole, don't change the start. However,
+  // if we don't have a hole, we need to start it here.
   let extend = (~cluster, hole) =>
     switch (hole) {
     | None => Some(cluster)
     | Some(_) => hole
     };
 
+  // The main function to resolve the holes.
   let resolve =
       (
         ~font,
@@ -223,8 +234,25 @@ module Hole = {
         |> load;
 
       switch (maybeFallbackFont) {
-      | Error(_) => []
+      | Error(_) =>
+        // Just because we can't find a font for this character doesn't mean
+        // the rest of the hole can't be resolved. Here we insert the "unknown"
+        // glyph and try to resolve the rest of the string.
+        let substring =
+          String.sub(str, startCluster + 1, endAt - startCluster);
+        let accumulator = [
+          ShapeResult.{
+            hbFace: font.hbFace,
+            skiaFace: font.skiaFace,
+            glyphId: 0,
+            cluster: startCluster,
+          },
+          ...accumulator,
+        ];
+        generateShapes(~features, ~accumulator, font, substring);
       | Ok(fallbackFont) =>
+        // We found a fallback font! Now we just have to shape it the same way
+        // we shape the super-string.
         let substring = String.sub(str, startCluster, endAt - startCluster);
         generateShapes(~features, ~accumulator, fallbackFont, substring);
       };
@@ -249,6 +277,8 @@ let rec generateShapes:
               ~accumulator: list(ShapeResult.shapeNode),
               ~maybeHole: Hole.t,
             ) =>
+      // If we made it to the end of the array,
+      // resolve any possible holes left.
       if (index == Array.length(shapes)) {
         Hole.resolve(
           ~string=str,
@@ -261,6 +291,8 @@ let rec generateShapes:
         );
       } else {
         let Harfbuzz.{glyphId, cluster} = shapes[index];
+        // If we have an unknown glyph (part of a hole), extend
+        // the current hole to encapsulate it.
         if (glyphId == unresolvedGlyphID) {
           let newMaybeHole = Hole.extend(~cluster, maybeHole);
           loop(
@@ -271,6 +303,8 @@ let rec generateShapes:
             ~maybeHole=newMaybeHole,
           );
         } else {
+          // Otherwise resolve any hole the preceded this one and add the
+          // current glyph to the list.
           let acc =
             Hole.resolve(
               ~string=str,
