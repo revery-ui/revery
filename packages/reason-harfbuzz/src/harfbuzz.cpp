@@ -20,168 +20,168 @@ extern "C" {
 
 // hb_font_t*
 
-CAMLprim value Val_success(value v) {
-  CAMLparam1(v);
-  CAMLlocal1(some);
-  some = caml_alloc(1, 0);
-  Store_field(some, 0, v);
-  CAMLreturn(some);
-}
+    CAMLprim value Val_success(value v) {
+        CAMLparam1(v);
+        CAMLlocal1(some);
+        some = caml_alloc(1, 0);
+        Store_field(some, 0, v);
+        CAMLreturn(some);
+    }
 
-CAMLprim value Val_error(const char *szMsg) {
-  CAMLparam0();
-  CAMLlocal1(error);
-  error = caml_alloc(1, 1);
-  Store_field(error, 0, caml_copy_string(szMsg));
-  CAMLreturn(error);
-}
+    CAMLprim value Val_error(const char *szMsg) {
+        CAMLparam0();
+        CAMLlocal1(error);
+        error = caml_alloc(1, 1);
+        Store_field(error, 0, caml_copy_string(szMsg));
+        CAMLreturn(error);
+    }
 
-/* Use native open type implementation to load font
-  https://github.com/harfbuzz/harfbuzz/issues/255 */
-hb_font_t *get_font_ot(char *data, int length, int size) {
-  hb_blob_t *blob =
-      hb_blob_create(data, length, HB_MEMORY_MODE_WRITABLE, (void *)data, free);
-  hb_face_t *face = hb_face_create(blob, 0);
+    /* Use native open type implementation to load font
+      https://github.com/harfbuzz/harfbuzz/issues/255 */
+    hb_font_t *get_font_ot(char *data, int length, int size) {
+        hb_blob_t *blob =
+            hb_blob_create(data, length, HB_MEMORY_MODE_WRITABLE, (void *)data, free);
+        hb_face_t *face = hb_face_create(blob, 0);
 
-  hb_blob_destroy(blob); // face will keep a reference to blob
+        hb_blob_destroy(blob); // face will keep a reference to blob
 
-  hb_font_t *font = hb_font_create(face); 
-  hb_face_destroy(face); // font will keep a reference to face
+        hb_font_t *font = hb_font_create(face);
+        hb_face_destroy(face); // font will keep a reference to face
 
-  hb_ot_font_set_funcs(font);
-  hb_font_set_scale(font, size, size);
+        hb_ot_font_set_funcs(font);
+        hb_font_set_scale(font, size, size);
 
-  return font;
-}
-CAMLprim value rehb_destroy_face(value vFont) {
-  CAMLparam1(vFont);
+        return font;
+    }
+    CAMLprim value rehb_destroy_face(value vFont) {
+        CAMLparam1(vFont);
 
-  hb_font_t *pFont = (hb_font_t*)vFont;
-  if (pFont) {
-    hb_font_destroy(pFont);
-  }
-  
-  CAMLreturn(Val_unit);
-}
+        hb_font_t *pFont = (hb_font_t*)vFont;
+        if (pFont) {
+            hb_font_destroy(pFont);
+        }
 
-CAMLprim value rehb_face_from_path(value vString) {
-  CAMLparam1(vString);
-  CAMLlocal1(ret);
+        CAMLreturn(Val_unit);
+    }
 
-  const char *szFont = String_val(vString);
-  
-  FILE *file = fopen(szFont, "rb");
+    CAMLprim value rehb_face_from_path(value vString) {
+        CAMLparam1(vString);
+        CAMLlocal1(ret);
 
-  if (!file) {
-    CAMLreturn(Val_error("File does not exist"));
-  }
+        const char *szFont = String_val(vString);
 
-  fseek(file, 0, SEEK_END);
-  unsigned int length = ftell(file);
-  fseek(file, 0, SEEK_SET);
+        FILE *file = fopen(szFont, "rb");
 
-  char *data = (char *)malloc(length);
-  fread(data, length, 1, file);
-  fclose(file);
+        if (!file) {
+            CAMLreturn(Val_error("File does not exist"));
+        }
 
-  hb_font_t *hb_font;
-  hb_font = get_font_ot(data, length, 12 /*iSize*/ * 64);
+        fseek(file, 0, SEEK_END);
+        unsigned int length = ftell(file);
+        fseek(file, 0, SEEK_SET);
 
-  if (!hb_font) {
-    ret = Val_error("Unable to load font");
-  } else {
-    ret = Val_success((value)hb_font);
-  }
-  CAMLreturn(ret);
-}
+        char *data = (char *)malloc(length);
+        fread(data, length, 1, file);
+        fclose(file);
 
-CAMLprim value rehb_face_from_bytes(value vPtr, value vLength) {
-  CAMLparam2(vPtr, vLength);
-  CAMLlocal1(ret);
+        hb_font_t *hb_font;
+        hb_font = get_font_ot(data, length, 12 /*iSize*/ * 64);
 
-  char *caml_data = Bp_val(vPtr);
-  int length = Int_val(vLength);
+        if (!hb_font) {
+            ret = Val_error("Unable to load font");
+        } else {
+            ret = Val_success((value)hb_font);
+        }
+        CAMLreturn(ret);
+    }
 
-  char *data = (char *)malloc(length * sizeof(char));
-  std::memcpy(data, caml_data, length);
+    CAMLprim value rehb_face_from_bytes(value vPtr, value vLength) {
+        CAMLparam2(vPtr, vLength);
+        CAMLlocal1(ret);
 
-  hb_font_t *hb_font;
-  hb_font = get_font_ot(data, length, 12 /*iSize*/ * 64);
+        char *caml_data = Bp_val(vPtr);
+        int length = Int_val(vLength);
 
-  if (!hb_font) {
-    ret = Val_error("Unable to load font");
-  } else {
-    ret = Val_success((value)hb_font);
-  }
-  CAMLreturn(ret);
-}
+        char *data = (char *)malloc(length * sizeof(char));
+        std::memcpy(data, caml_data, length);
 
-static value createShapeTuple(unsigned int codepoint, unsigned int cluster) {
-  CAMLparam0();
+        hb_font_t *hb_font;
+        hb_font = get_font_ot(data, length, 12 /*iSize*/ * 64);
 
-  CAMLlocal1(ret);
-  ret = caml_alloc(2, 0);
-  Store_field(ret, 0, Val_int(codepoint));
-  Store_field(ret, 1, Val_int(cluster));
-  CAMLreturn(ret);
-}
+        if (!hb_font) {
+            ret = Val_error("Unable to load font");
+        } else {
+            ret = Val_success((value)hb_font);
+        }
+        CAMLreturn(ret);
+    }
 
-CAMLprim value rehb_shape(value vFace, value vString, value vFeatures, value vStart, value vLen) {
-  CAMLparam5(vFace, vString, vFeatures, vStart, vLen);
-  CAMLlocal2(ret, feat);
+    static value createShapeTuple(unsigned int codepoint, unsigned int cluster) {
+        CAMLparam0();
 
-  int start = Int_val(vStart);
-  int len = Int_val(vLen);
- 
-  int featuresLen = Wosize_val(vFeatures);
-  hb_feature_t *features = (hb_feature_t *)malloc(featuresLen * sizeof(hb_feature_t));
-  for (int i = 0; i < featuresLen; i++) {
-    feat = Field(vFeatures, i);
-    const char *tag = String_val(Field(feat, 0));
-    features[i].tag = HB_TAG(tag[0], tag[1], tag[2], tag[3]);
-    features[i].value = Int_val(Field(feat, 1));
-    features[i].start = Int_val(Field(feat, 2));
-    features[i].end = Int_val(Field(feat, 3));
-  }
+        CAMLlocal1(ret);
+        ret = caml_alloc(2, 0);
+        Store_field(ret, 0, Val_int(codepoint));
+        Store_field(ret, 1, Val_int(cluster));
+        CAMLreturn(ret);
+    }
 
-  hb_font_t *hb_font = (hb_font_t *)vFace;
+    CAMLprim value rehb_shape(value vFace, value vString, value vFeatures, value vStart, value vLen) {
+        CAMLparam5(vFace, vString, vFeatures, vStart, vLen);
+        CAMLlocal2(ret, feat);
+
+        int start = Int_val(vStart);
+        int len = Int_val(vLen);
+
+        int featuresLen = Wosize_val(vFeatures);
+        hb_feature_t *features = (hb_feature_t *)malloc(featuresLen * sizeof(hb_feature_t));
+        for (int i = 0; i < featuresLen; i++) {
+            feat = Field(vFeatures, i);
+            const char *tag = String_val(Field(feat, 0));
+            features[i].tag = HB_TAG(tag[0], tag[1], tag[2], tag[3]);
+            features[i].value = Int_val(Field(feat, 1));
+            features[i].start = Int_val(Field(feat, 2));
+            features[i].end = Int_val(Field(feat, 3));
+        }
+
+        hb_font_t *hb_font = (hb_font_t *)vFace;
 
 
-  hb_buffer_t *hb_buffer;
-  hb_buffer = hb_buffer_create();
-  hb_buffer_add_utf8(hb_buffer, String_val(vString), -1, start, len);
-  hb_buffer_guess_segment_properties(hb_buffer);
+        hb_buffer_t *hb_buffer;
+        hb_buffer = hb_buffer_create();
+        hb_buffer_add_utf8(hb_buffer, String_val(vString), -1, start, len);
+        hb_buffer_guess_segment_properties(hb_buffer);
 
-  hb_shape(hb_font, hb_buffer, features, featuresLen);
-   
-  unsigned int glyph_count;
-  hb_glyph_info_t *info = hb_buffer_get_glyph_infos(hb_buffer, &glyph_count);
+        hb_shape(hb_font, hb_buffer, features, featuresLen);
 
-  ret = caml_alloc(glyph_count, 0);
+        unsigned int glyph_count;
+        hb_glyph_info_t *info = hb_buffer_get_glyph_infos(hb_buffer, &glyph_count);
 
-  for (int i = 0; i < glyph_count; i++) {
-    Store_field(ret, i, createShapeTuple(info[i].codepoint, info[i].cluster));
-  }
-  free(features);
-  hb_buffer_destroy(hb_buffer);
-  CAMLreturn(ret);
-}
+        ret = caml_alloc(glyph_count, 0);
 
-CAMLprim value rehb_version_string_compiled() {
-  CAMLparam0();
-  CAMLlocal1(ret);
+        for (int i = 0; i < glyph_count; i++) {
+            Store_field(ret, i, createShapeTuple(info[i].codepoint, info[i].cluster));
+        }
+        free(features);
+        hb_buffer_destroy(hb_buffer);
+        CAMLreturn(ret);
+    }
 
-  ret = caml_copy_string(HB_VERSION_STRING);
+    CAMLprim value rehb_version_string_compiled() {
+        CAMLparam0();
+        CAMLlocal1(ret);
 
-  CAMLreturn(ret);
-}
+        ret = caml_copy_string(HB_VERSION_STRING);
 
-CAMLprim value rehb_version_string_runtime() {
-  CAMLparam0();
-  CAMLlocal1(ret);
+        CAMLreturn(ret);
+    }
 
-  ret = caml_copy_string(hb_version_string());
+    CAMLprim value rehb_version_string_runtime() {
+        CAMLparam0();
+        CAMLlocal1(ret);
 
-  CAMLreturn(ret);
-}
+        ret = caml_copy_string(hb_version_string());
+
+        CAMLreturn(ret);
+    }
 }
