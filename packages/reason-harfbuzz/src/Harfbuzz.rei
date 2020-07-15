@@ -21,3 +21,6 @@ let hb_new_face: string => result(hb_face, string);
 
 let hb_shape:
   (~features: list(feature)=?, hb_face, string) => array(hb_shape);
+
+let hb_version_string_compiled: unit => string;
+let hb_version_string_runtime: unit => string;

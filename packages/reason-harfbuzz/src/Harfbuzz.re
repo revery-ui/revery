@@ -18,6 +18,12 @@ module Internal = {
   external hb_destroy_face: face => unit = "rehb_destroy_face";
   external hb_shape: (face, string, array(feature)) => array(hb_shape) =
     "rehb_shape";
+
+  // hb-version
+  external hb_version_string_compiled: unit => string =
+    "rehb_version_string_compiled";
+  external hb_version_string_runtime: unit => string =
+    "rehb_version_string_runtime";
 };
 
 type position = [ | `Start | `End | `Position(int)];
@@ -83,3 +89,6 @@ let hb_face_from_skia = sk_typeface => {
     Ok(ret);
   };
 };
+
+let hb_version_string_compiled = Internal.hb_version_string_compiled;
+let hb_version_string_runtime = Internal.hb_version_string_runtime;
