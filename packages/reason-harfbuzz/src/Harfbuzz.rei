@@ -28,3 +28,6 @@ let hb_shape:
     string
   ) =>
   array(hb_shape);
+
+let hb_version_string_compiled: unit => string;
+let hb_version_string_runtime: unit => string;
