@@ -289,9 +289,13 @@ let generateShapes:
     }
 
     and loop = (~acc, ~start, ~stop, font) => {
-      // TODO: Use bounded Harfbuzz API to avoid string allocations
-      String.sub(str, start, stop - start)
-      |> Harfbuzz.hb_shape(~features, font.hbFace)
+      Harfbuzz.hb_shape(
+        ~features,
+        ~start=`Position(start),
+        ~stop=`Position(stop),
+        font.hbFace,
+        str,
+      )
       |> loopShapes(~stopCluster=stop, ~acc, ~index=0, font);
     };
 
