@@ -27,6 +27,16 @@ let run = () => {
     print_endline("----");
   };
 
+  let compiledVersion = hb_version_string_compiled();
+  let runtimeVersion = hb_version_string_runtime();
+  print_endline(
+    "** Harfbuzz CLI, compiled version: "
+    ++ compiledVersion
+    ++ ", runtime version: "
+    ++ runtimeVersion
+    ++ " **\n",
+  );
+
   print_endline("__ Font Discovery: Arial __");
   let maybeTypeface =
     FontManager.matchFamilyStyle(fontManager, "Arial", style);
