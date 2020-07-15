@@ -61,10 +61,6 @@ module Sample = {
           | Ok(font) =>
             let textPaint = Skia.Paint.make();
             Skia.Paint.setColor(textPaint, Color.toSkia(Colors.white));
-            Skia.Paint.setTypeface(
-              textPaint,
-              FontCache.getSkiaTypeface(font),
-            );
             Skia.Paint.setLcdRenderText(textPaint, true);
             Skia.Paint.setAntiAlias(textPaint, true);
             Skia.Paint.setTextSize(textPaint, 20.);
@@ -72,17 +68,21 @@ module Sample = {
             let shapedText =
               "Hello, World"
               |> FontCache.shape(font)
-              |> ShapeResult.getGlyphString;
+              |> ShapeResult.getGlyphStrings;
 
             Skia.Paint.setTextEncoding(textPaint, GlyphId);
 
-            CanvasContext.drawText(
-              ~paint=textPaint,
-              ~x=10.0,
-              ~y=20.0,
-              ~text=shapedText,
-              canvasContext,
-            );
+            shapedText
+            |> List.iter(((typeface, string)) => {
+                 Skia.Paint.setTypeface(textPaint, typeface);
+                 CanvasContext.drawText(
+                   ~paint=textPaint,
+                   ~x=10.0,
+                   ~y=20.0,
+                   ~text=string,
+                   canvasContext,
+                 );
+               });
           };
 
           let fill = Skia.Paint.make();

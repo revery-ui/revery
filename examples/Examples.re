@@ -368,4 +368,5 @@ let init = app => {
   ();
 };
 
+Printexc.record_backtrace(true);
 App.start(init);

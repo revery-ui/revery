@@ -1,30 +1,58 @@
-type t = {
-  shapes: array(Harfbuzz.hb_shape),
-  glyphString: string,
+type shapeNode = {
+  hbFace: Harfbuzz.hb_face,
+  skiaFace: Skia.Typeface.t,
+  glyphId: int,
+  cluster: int,
 };
 
-let size = ({glyphString, _}) => String.length(glyphString);
+type t = {glyphStrings: list((Skia.Typeface.t, string))};
 
-let ofHarfbuzz = shapes => {
-  let len = Array.length(shapes);
-  let bytes = Bytes.create(len * 2);
+let size = ({glyphStrings, _}) =>
+  glyphStrings
+  |> List.fold_left((acc, (_, str)) => acc + String.length(str), 0);
 
-  let i = ref(0);
+let bitsFromGlyph = glyphId => {
+  let lowBit = glyphId land 255 |> Char.chr |> String.make(1);
+  let highBit = (glyphId land 255 lsl 8) lsr 8 |> Char.chr |> String.make(1);
+  (lowBit, highBit);
+};
 
-  while (i^ < len) {
-    let idx = i^;
-    let {glyphId, _}: Harfbuzz.hb_shape = shapes[idx];
+let ofHarfbuzz: list(shapeNode) => t =
+  nodes => {
+    let rec loop = (~nodes, ~strList, ~maybeTypeface) =>
+      switch (nodes, maybeTypeface) {
+      | ([], Some(typeface)) => [(typeface, String.concat("", strList))]
+      | ([], None) => []
+      | ([{skiaFace, glyphId, _}, ...rest], Some(skFace)) =>
+        let (lowBit, highBit) = bitsFromGlyph(glyphId);
+        if (skFace === skiaFace) {
+          let strList = [lowBit, highBit, ...strList];
+          loop(~nodes=rest, ~strList, ~maybeTypeface=Some(skFace));
+        } else {
+          let newStrList = [lowBit, highBit];
+          [
+            (skFace, String.concat("", strList)),
+            ...loop(
+                 ~nodes=rest,
+                 ~strList=newStrList,
+                 ~maybeTypeface=Some(skiaFace),
+               ),
+          ];
+        };
+      | ([{skiaFace, glyphId, _}, ...rest], None) =>
+        let (lowBit, highBit) = bitsFromGlyph(glyphId);
+        let newStrList = [lowBit, highBit];
+        loop(
+          ~nodes=rest,
+          ~strList=newStrList,
+          ~maybeTypeface=Some(skiaFace),
+        );
+      };
 
-    let lowBit = glyphId land 255;
-    let highBit = (glyphId land 255 lsl 8) lsr 8;
-    Bytes.set(bytes, idx * 2 + 0, Char.chr(lowBit));
-    Bytes.set(bytes, idx * 2 + 1, Char.chr(highBit));
+    let glyphStrings =
+      loop(~nodes, ~strList=[], ~maybeTypeface=None) |> List.rev;
 
-    incr(i);
+    {glyphStrings: glyphStrings};
   };
 
-  let glyphString = Bytes.to_string(bytes);
-  {shapes, glyphString};
-};
-
-let getGlyphString = v => v.glyphString;
+let getGlyphStrings = v => v.glyphStrings;

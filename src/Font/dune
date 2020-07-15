@@ -12,6 +12,7 @@
         rebez.lib
         Revery_Core
         Revery_Math
+        Revery_Zed
 ))
 
 (copy_files files/*)

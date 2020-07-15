@@ -45,10 +45,6 @@ class textNode (text: string) = {
     | Ok(font) =>
       Revery_Font.Smoothing.setPaint(~smoothing=_smoothing, _textPaint);
       Skia.Paint.setColor(_textPaint, Color.toSkia(colorWithAppliedOpacity));
-      Skia.Paint.setTypeface(
-        _textPaint,
-        Revery_Font.FontCache.getSkiaTypeface(font),
-      );
       Skia.Paint.setTextSize(_textPaint, _fontSize);
 
       let ascentPx =
@@ -77,18 +73,29 @@ class textNode (text: string) = {
           let baselineY =
             ascentPx *. (-1.0) +. lineHeightPx *. float_of_int(lineIndex);
 
-          let glyphString =
+          let glyphStrings =
             line
             |> Revery_Font.shape(~features=_features, font)
-            |> Revery_Font.ShapeResult.getGlyphString;
+            |> Revery_Font.ShapeResult.getGlyphStrings;
 
-          CanvasContext.drawText(
-            ~paint=_textPaint,
-            ~x=0.,
-            ~y=baselineY,
-            ~text=glyphString,
-            canvas,
-          );
+          let offset = ref(0.);
+
+          glyphStrings
+          |> List.iter(((skiaFace, str)) => {
+               Skia.Paint.setTypeface(_textPaint, skiaFace);
+
+               CanvasContext.drawText(
+                 ~paint=_textPaint,
+                 ~x=offset^,
+                 ~y=baselineY,
+                 ~text=str,
+                 canvas,
+               );
+
+               offset :=
+                 offset^ +. Skia.Paint.measureText(_textPaint, str, None);
+             });
+
           if (_underlined) {
             let {underlinePosition, underlineThickness, _}: FontMetrics.t =
               FontCache.getMetrics(font, _fontSize);

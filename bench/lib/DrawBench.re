@@ -12,6 +12,7 @@ let setup = () => {
 
 module Data = {
   let testString = String.make(50, 'a') ++ String.make(50, 'X');
+  let testFallbackString = "ABC鬼";
   let paint = {
     let textPaint = Skia.Paint.make();
     Skia.Paint.setTextEncoding(textPaint, GlyphId);
@@ -32,20 +33,50 @@ let drawText = canvasContext => {
   | Error(_) => failwith("Unable to load font!")
   | Ok(font) =>
     Skia.Paint.setColor(Data.paint, Revery_Core.Color.toSkia(Colors.white));
-    Skia.Paint.setTypeface(Data.paint, Revery.Font.getSkiaTypeface(font));
 
     let shapedText =
       Data.testString
       |> Revery.Font.shape(font)
-      |> Revery.Font.ShapeResult.getGlyphString;
+      |> Revery.Font.ShapeResult.getGlyphStrings;
 
-    CanvasContext.drawText(
-      ~x=1.,
-      ~y=1.,
-      ~paint=Data.paint,
-      ~text=shapedText,
-      canvasContext,
-    );
+    shapedText
+    |> List.iter(((typeface, string)) => {
+         Skia.Paint.setTypeface(Data.paint, typeface);
+         CanvasContext.drawText(
+           ~x=1.,
+           ~y=1.,
+           ~paint=Data.paint,
+           ~text=string,
+           canvasContext,
+         );
+       });
+  };
+};
+
+let drawFallbackText = canvasContext => {
+  let maybeSkia =
+    Revery.Font.Family.system("Arial") |> Revery.Font.Family.toSkia(Normal);
+  switch (Revery.Font.load(maybeSkia)) {
+  | Error(_) => failwith("Unable to load font!")
+  | Ok(font) =>
+    Skia.Paint.setColor(Data.paint, Revery_Core.Color.toSkia(Colors.white));
+
+    let shapedText =
+      Data.testFallbackString
+      |> Revery.Font.shape(font)
+      |> Revery.Font.ShapeResult.getGlyphStrings;
+
+    shapedText
+    |> List.iter(((typeface, string)) => {
+         Skia.Paint.setTypeface(Data.paint, typeface);
+         CanvasContext.drawText(
+           ~x=1.,
+           ~y=1.,
+           ~paint=Data.paint,
+           ~text=string,
+           canvasContext,
+         );
+       });
   };
 };
 
@@ -62,4 +93,25 @@ let drawRect = canvasContext => {
 };
 
 bench(~name="Draw: drawText", ~options, ~setup, ~f=drawText, ());
+bench(
+  ~name="Draw: drawText (second iteration, cached)",
+  ~options,
+  ~setup,
+  ~f=drawText,
+  (),
+);
+bench(
+  ~name="Draw: drawFallbackText",
+  ~options,
+  ~setup,
+  ~f=drawFallbackText,
+  (),
+);
+bench(
+  ~name="Draw: drawFallbackText (second iteration, cached)",
+  ~options,
+  ~setup,
+  ~f=drawFallbackText,
+  (),
+);
 bench(~name="Draw: drawRectLtwh", ~options, ~setup, ~f=drawRect, ());

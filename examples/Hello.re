@@ -127,7 +127,7 @@ let render = () =>
     <Row>
       <AnimatedText delay=Time.zero text="Welcome" />
       <AnimatedText delay={Time.ms(500)} text="to" />
-      <AnimatedText delay={Time.seconds(1)} text="Revery" />
+      <AnimatedText delay={Time.seconds(1)} text="Revery 😃" />
     </Row>
     <Logo />
   </Center>;

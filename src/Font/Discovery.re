@@ -2,10 +2,7 @@
     Discovery.re
 
 */
-open Skia;
 exception Font_not_found;
-
-let fontManager = FontManager.makeDefault();
 
 let find =
     (
@@ -15,10 +12,10 @@ let find =
       family,
     ) => {
   let style =
-    FontStyle.make(
+    Skia.FontStyle.make(
       FontWeight.toInt(weight),
       FontWidth.toInt(width),
       italic ? Italic : Upright,
     );
-  FontManager.matchFamilyStyle(fontManager, family, style);
+  Skia.FontManager.matchFamilyStyle(FontManager.instance, family, style);
 };

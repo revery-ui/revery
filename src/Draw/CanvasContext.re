@@ -4,7 +4,6 @@
  * Module for integrating with the Skia canvas
  */
 open Revery_Core;
-open Revery_Font;
 
 module Log = (val Log.withNamespace("Revery.CanvasContext"));
 
@@ -218,34 +217,4 @@ let clipRRect =
 let clipPath =
     (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, path: Skia.Path.t) => {
   Canvas.clipPath(v.canvas, path, clipOp, antiAlias);
-};
-
-module Deprecated = {
-  let drawString =
-      (
-        ~x: float,
-        ~y: float,
-        ~color: Revery_Core.Color.t,
-        ~fontFamily,
-        ~fontSize,
-        ~text,
-        v: t,
-      ) => {
-    switch (FontCache.load(fontFamily)) {
-    | Error(_) => ()
-    | Ok(font) =>
-      let textPaint = Skia.Paint.make();
-      Skia.Paint.setColor(textPaint, Revery_Core.Color.toSkia(color));
-      Skia.Paint.setTypeface(textPaint, FontCache.getSkiaTypeface(font));
-      Skia.Paint.setTextEncoding(textPaint, GlyphId);
-      Skia.Paint.setLcdRenderText(textPaint, true);
-      Skia.Paint.setAntiAlias(textPaint, true);
-      Skia.Paint.setTextSize(textPaint, fontSize);
-
-      let shapedText =
-        text |> FontCache.shape(font) |> ShapeResult.getGlyphString;
-
-      drawText(~x, ~y, ~paint=textPaint, ~text=shapedText, v);
-    };
-  };
 };
