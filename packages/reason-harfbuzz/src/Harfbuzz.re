@@ -16,7 +16,8 @@ module Internal = {
   external hb_face_from_data: (string, int) => result(face, string) =
     "rehb_face_from_bytes";
   external hb_destroy_face: face => unit = "rehb_destroy_face";
-  external hb_shape: (face, string, array(feature)) => array(hb_shape) =
+  external hb_shape:
+    (face, string, array(feature), int, int) => array(hb_shape) =
     "rehb_shape";
 };
 
@@ -50,7 +51,7 @@ let hb_face_from_path = str => {
   };
 };
 
-let hb_shape = (~features=[], {face}, str) => {
+let hb_shape = (~features=[], ~start=`Start, ~stop=`End, {face}, str) => {
   let arr =
     features
     |> List.map(
@@ -62,7 +63,15 @@ let hb_shape = (~features=[], {face}, str) => {
          }: feature => Internal.feature,
        )
     |> Array.of_list;
-  Internal.hb_shape(face, str, arr);
+  let startPosition = positionToInt(start);
+  let length =
+    switch (stop) {
+    | `Position(n) => n - startPosition
+    | `Start => 0
+    | `End => (-1)
+    };
+
+  Internal.hb_shape(face, str, arr, startPosition, length);
 };
 let hb_new_face = str => hb_face_from_path(str);
 
