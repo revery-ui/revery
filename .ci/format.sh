@@ -7,14 +7,14 @@ caml_output=$?
 
 if [[ $OS == "windows" ]]
 then
-    files=$(/usr/bin/find $(pwd) -type f \( -iname \*.c -o -iname \*.h \) -not -path "*_esy/*")
+    files=$(/usr/bin/find $(pwd) -type f \( -iname \*.c -o -iname \*.h -o -iname \*.cpp \) -not -path "*_esy/*")
     native_output=$(astyle -n -Q --style=java --s4 $(cygpath -w $files))
 elif [[ $OS == "darwin" ]]
 then
-    native_output=$(find -E . -regex '.*\.(c|h)' -type f -not -path "*_esy/*" -exec astyle -n -Q --style=java --s4 {} \;)
+    native_output=$(find -E . -regex '.*\.(c|h|cpp)' -type f -not -path "*_esy/*" -exec astyle -n -Q --style=java --s4 {} \;)
 elif [[ $OS == "linux" ]]
 then
-    native_output=$(find ./ -type f \( -iname \*.c -o -iname \*.h \) -not -path "*_esy/*" -exec astyle -n -Q --style=java --s4 {} \;)
+    native_output=$(find ./ -type f \( -iname \*.c -o -iname \*.h -o -iname \*.cpp \) -not -path "*_esy/*" -exec astyle -n -Q --style=java --s4 {} \;)
 fi
 
 if [[ $native_output ]]
