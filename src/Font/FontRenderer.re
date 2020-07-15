@@ -9,16 +9,23 @@ let measure = {
 
   (~smoothing: Smoothing.t, ~features=[], font, size, text: string) => {
     let {height, _}: FontMetrics.t = FontCache.getMetrics(font, size);
-    let skiaFace = FontCache.getSkiaTypeface(font);
 
-    let glyphString =
-      text |> FontCache.shape(~features, font) |> ShapeResult.getGlyphString;
+    let glyphStrings =
+      text |> FontCache.shape(~features, font) |> ShapeResult.getGlyphStrings;
 
     Smoothing.setPaint(~smoothing, paint);
 
-    Skia.Paint.setTypeface(paint, skiaFace);
     Skia.Paint.setTextSize(paint, size);
-    let width = Skia.Paint.measureText(paint, glyphString, None);
+
+    let width =
+      glyphStrings
+      |> List.fold_left(
+           (acc, (skiaFace, str)) => {
+             Skia.Paint.setTypeface(paint, skiaFace);
+             acc +. Skia.Paint.measureText(paint, str, None);
+           },
+           0.,
+         );
     {height, width};
   };
 };
