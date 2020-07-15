@@ -166,4 +166,22 @@ CAMLprim value rehb_shape(value vFace, value vString, value vFeatures, value vSt
   hb_buffer_destroy(hb_buffer);
   CAMLreturn(ret);
 }
+
+CAMLprim value rehb_version_string_compiled() {
+  CAMLparam0();
+  CAMLlocal1(ret);
+
+  ret = caml_copy_string(HB_VERSION_STRING);
+
+  CAMLreturn(ret);
+}
+
+CAMLprim value rehb_version_string_runtime() {
+  CAMLparam0();
+  CAMLlocal1(ret);
+
+  ret = caml_copy_string(hb_version_string());
+
+  CAMLreturn(ret);
+}
 }
