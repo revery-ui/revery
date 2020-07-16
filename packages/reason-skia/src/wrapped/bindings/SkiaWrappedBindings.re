@@ -57,6 +57,8 @@ module M = (F: FOREIGN) => {
     let t = ptr(SkiaTypes.String.t);
 
     let toString = foreign("sk_string_get_c_str", t @-> returning(string));
+
+    let delete = foreign("sk_string_destructor", t @-> returning(void));
   };
 
   module FontStyle = {
