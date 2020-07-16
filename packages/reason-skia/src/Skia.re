@@ -657,6 +657,7 @@ module Typeface = {
 
   let getFamilyName = tf => {
     let skStr = SkiaWrapped.Typeface.getFamilyName(tf);
+    Gc.finalise(SkiaWrapped.String.delete, skStr);
     skStr |> SkiaWrapped.String.toString;
   };
 
