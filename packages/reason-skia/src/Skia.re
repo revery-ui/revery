@@ -678,7 +678,12 @@ module Typeface = {
     stream;
   };
 
-  let getFontStyle = SkiaWrapped.Typeface.getFontStyle;
+  let getFontStyle = typeface => {
+    let style = SkiaWrapped.Typeface.getFontStyle(typeface);
+    Gc.finalise(SkiaWrapped.FontStyle.delete, style);
+    style;
+  };
+
   let getUniqueID = SkiaWrapped.Typeface.getUniqueID;
 
   let equal = (tfA, tfB) => {
