@@ -76,6 +76,8 @@ module M = (F: FOREIGN) => {
     let getWeight = foreign("sk_fontstyle_get_weight", t @-> returning(int));
 
     let getWidth = foreign("sk_fontstyle_get_width", t @-> returning(int));
+
+    let delete = foreign("sk_fontstyle_delete", t @-> returning(void));
   };
 
   module TextEncoding = {

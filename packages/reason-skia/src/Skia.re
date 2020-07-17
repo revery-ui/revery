@@ -489,7 +489,11 @@ module FontStyle = {
   let getWidth = SkiaWrapped.FontStyle.getWidth;
   let getWeight = SkiaWrapped.FontStyle.getWeight;
 
-  let make = SkiaWrapped.FontStyle.make;
+  let make = (weight, width, slant) => {
+    let style = SkiaWrapped.FontStyle.make(weight, width, slant);
+    Gc.finalise(SkiaWrapped.FontStyle.delete, style);
+    style;
+  };
 };
 
 module FontManager = {
