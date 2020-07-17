@@ -2,7 +2,8 @@
   "source": "./package.json",
   "scripts": {
       "run": "esy @examples x Examples",
-      "run-harfbuzz": "esy @examples x bash -c run-harfbuzz.sh #{os}"
+      "run-harfbuzz": "esy @examples x bash -c run-harfbuzz.sh #{os}",
+      "run-skia-fontmanager": "esy @examples x bash -c run-skia-fontmanager.sh #{os}"
   },
   "override": {
       "build": ["dune build -p reason-harfbuzz,reason-skia,reason-sdl2,Revery,ReveryExamples -j4"],
