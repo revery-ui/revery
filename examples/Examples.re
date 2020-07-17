@@ -185,6 +185,11 @@ let examples = [
     render: _ => ImageQualityExample.render(),
     source: "ImageQualityExample.re",
   },
+  {
+    name: "FPS Counter",
+    render: w => FPSCounter.render(w),
+    source: "FPSCounter.re",
+  },
 ];
 
 let getExampleByName = name =>
