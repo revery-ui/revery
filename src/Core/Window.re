@@ -163,6 +163,8 @@ type t = {
   mutable metrics: WindowMetrics.t,
   mutable isRendering: bool,
   mutable requestedUnscaledSize: option(size),
+  mutable tickAfterLastRender: int,
+  mutable lastRenderTime: int,
   // True if composition (IME) is active
   mutable isComposingText: bool,
   mutable dropState: option(list(string)),
@@ -337,6 +339,10 @@ let render = window => {
   Performance.bench("swapWindow", () => Sdl2.Gl.swapWindow(window.sdlWindow));
   Event.dispatch(window.onAfterSwap, ());
   window.isRendering = false;
+
+  let tick = Sdl2.Timekeeping.getTicks();
+  window.lastRenderTime = tick-window.tickAfterLastRender;
+  window.tickAfterLastRender = tick;
 };
 
 let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
@@ -562,6 +568,9 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     isRendering: false,
     requestedUnscaledSize: None,
 
+    tickAfterLastRender: Sdl2.Timekeeping.getTicks(),
+    lastRenderTime: 0,
+
     isComposingText: false,
     dropState: None,
 
@@ -774,3 +783,11 @@ let setRenderCallback = (window: t, callback) => window.render = callback;
 
 let setShouldRenderCallback = (window: t, callback) =>
   window.shouldRender = callback;
+
+let getFPS = (w: t) => {
+  1.0 /. (float_of_int(w.lastRenderTime) /. 1000.0);
+};
+
+let getLastRenderTime = (w: t) => {
+  w.lastRenderTime;
+};

@@ -103,3 +103,6 @@ let takeScreenshot: (t, string) => unit;
 let setCanQuitCallback: (t, unit => bool) => unit;
 let setRenderCallback: (t, unit => unit) => unit;
 let setShouldRenderCallback: (t, unit => bool) => unit;
+
+let getFPS: (t) => float;
+let getLastRenderTime: (t) => int;
