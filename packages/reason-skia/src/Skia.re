@@ -649,7 +649,11 @@ module Data = {
     maybeData;
   };
 
-  let makeFromStream = SkiaWrapped.Data.makeFromStream;
+  let makeFromStream = (stream, length) => {
+    let data = SkiaWrapped.Data.makeFromStream(stream, length);
+    Gc.finalise(SkiaWrapped.Data.delete, data);
+    data;
+  };
 };
 
 module Typeface = {
