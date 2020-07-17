@@ -24,8 +24,8 @@ module FPSCounter = {
       | Stop =>
         Console.log("---STOP---");
         s.dispose();
-        {dispose: noop, starting: false, running: false, fps: 0.0};
-      | FrameTick(f) => s.running ? { ...s, starting: false, fps: f } : s
+        {dispose: noop, starting: false, running: false, fps: 0.0}
+      | FrameTick(f) => s.running ? { ...s, starting: false, fps: f } : {s.dispose(); s}
   };
 
   let%component make = (~w, ()) => {
@@ -35,11 +35,13 @@ module FPSCounter = {
     );
     let%hook () = Hooks.effect(OnMount, () => Some(() => dispatch(Stop)));
 
-    let _ = state.starting && state.running
-      ? dispatch(Start(
-        Tick.interval(t => {Console.log("tick"); dispatch(FrameTick(Window.getFPS(w)))}, Time.seconds(1))
+    let _ = if (state.starting && state.running) {
+      dispatch(Start(
+        Tick.interval(t => {
+          Console.log("tick"); dispatch(FrameTick(Window.getFPS(w)))
+        }, Time.seconds(1))
       ))
-      : noop();
+    };
 
     let showFPS = () => Printf.sprintf("FPS: %.2f",state.fps);
 
