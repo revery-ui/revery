@@ -832,10 +832,10 @@ let getLastRenderTime = (w: t) => {
   FPS.getLastRenderTime(w.fpsCounter);
 };
 
-let enableFPSCounter = (w: t) => {
+let showFPSCounter = (w: t) => {
   w.showFPSCounter = true;
 };
-let disableFPSCounter = (w: t) => {
+let hideFPSCounter = (w: t) => {
   w.showFPSCounter = false;
 };
 
