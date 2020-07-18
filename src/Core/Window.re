@@ -171,11 +171,10 @@ module FPS = {
   let setLastRenderTime = (c: t, time) => {
     c.lastRenderTime = time;
   };
-  let setFPSCounter = (c: t, s) => {
+  let setFPSCounter = (w, c: t, s) => {
     c.fpsTimerDispose();
     if (s) {
       let dispose = Tick.Default.interval(t => {
-        Console.log("tick");
         c.fps = 1.0 /. (float_of_int(c.lastRenderTime) /. 1000.0);
       }, Time.seconds(1));
       c.fpsTimerDispose = dispose;
