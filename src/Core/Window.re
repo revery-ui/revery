@@ -168,9 +168,6 @@ module FPS = {
   };
   let getFPS = (c: t) => c.fps;
   let getLastRenderTime = (c: t) => c.lastRenderTime;
-  /* let setLastRenderTime = (c: t, time) => {
-       c.lastRenderTime = time;
-     }; */
   let setFPSCounter = (c: t, s) => {
     c.fpsTimerDispose();
     if (s) {

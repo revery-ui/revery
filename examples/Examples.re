@@ -292,6 +292,7 @@ let init = app => {
   let initialExample = ref("Animation");
   let decorated = ref(true);
   let forceScaleFactor = ref(None);
+  let showFPSCounter = ref(false);
   Arg.parse(
     [
       ("--trace", Unit(() => Timber.App.setLevel(Timber.Level.trace)), ""),
@@ -302,9 +303,10 @@ let init = app => {
         Float(scaleFactor => forceScaleFactor := Some(scaleFactor)),
         "",
       ),
+      ("--show-fps", Unit(() => showFPSCounter := true), ""),
     ],
     _ => (),
-    "There is only --trace, --example, --no-decoration, and --force-device-scale-factor",
+    "There is only --trace, --example, --no-decoration, --show-fps, and --force-device-scale-factor",
   );
   let initialExample = initialExample^;
 
@@ -332,7 +334,9 @@ let init = app => {
       app,
       "Welcome to Revery!",
     );
-  //Window.setFPSCounter(window,true);
+  if (showFPSCounter^) {
+    Window.setFPSCounter(window, true);
+  };
 
   if (Environment.webGL) {
     Window.maximize(window);

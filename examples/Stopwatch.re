@@ -46,7 +46,7 @@ module Clock = {
      * We'll make sure to dispatch the 'Stop' action when unmounting,
      * so we don't have a runaway timer!
      */
-    let%hook () = Hooks.effect(OnMount, () => Some(_ => dispatch(Stop)));
+    let%hook () = Hooks.effect(OnMount, () => Some(() => dispatch(Stop)));
 
     let startStop = () =>
       state.isRunning
