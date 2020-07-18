@@ -185,11 +185,6 @@ let examples = [
     render: _ => ImageQualityExample.render(),
     source: "ImageQualityExample.re",
   },
-  {
-    name: "FPS Counter",
-    render: w => FPSCounter.render(w),
-    source: "FPSCounter.re",
-  },
 ];
 
 let getExampleByName = name =>
@@ -337,6 +332,7 @@ let init = app => {
       app,
       "Welcome to Revery!",
     );
+  Window.setFPSCounter(window,true);
 
   if (Environment.webGL) {
     Window.maximize(window);

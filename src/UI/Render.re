@@ -79,8 +79,25 @@ let render =
       CanvasContext.clear(~color=backgroundColor |> Color.toSkia, canvas);
       // let drawContext = NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
 
+
       rootNode#draw(drawContext);
-      //DebugDraw.draw();
+
+      CanvasContext.setMatrix(canvas, Skia.Matrix.identity);
+      //DebugDraw.enable();
+      //DebugDraw.draw(canvas);
+
+      if (Window.shouldShowFPSCounter(window)) {
+        let (w,h) = (float_of_int(adjustedWidth), float_of_int(adjustedHeight));
+        let (x,y) = (w -. 64., 32.);
+        let paint = Skia.Paint.make();
+        Skia.Paint.setColor(paint, Skia.Color.makeArgb(255l, 50l, 200l, 50l));
+        CanvasContext.drawText(
+          ~paint,
+          ~x,~y,
+          ~text=Printf.sprintf("FPS: %.0f", Window.getFPS(window)),
+          canvas,
+        );
+      }
 
       Revery_Draw.CanvasContext.flush(canvas);
     }

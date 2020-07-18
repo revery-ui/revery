@@ -106,3 +106,5 @@ let setShouldRenderCallback: (t, unit => bool) => unit;
 
 let getFPS: (t) => float;
 let getLastRenderTime: (t) => int;
+let setFPSCounter: (t,bool) => unit;
+let shouldShowFPSCounter: (t) => bool;

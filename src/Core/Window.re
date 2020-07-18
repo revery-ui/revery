@@ -151,6 +151,41 @@ module WindowMetrics: {
   let markDirty = metrics => {...metrics, isDirty: true};
 };
 
+module FPS = {
+  let noop = () => ();
+  type t = {
+    mutable tickAfterLastRender: int,
+    mutable lastRenderTime: int,
+    mutable fps: float,
+    mutable fpsTimerDispose: unit => unit,
+  };
+
+  let default = () => {
+    tickAfterLastRender: Sdl2.Timekeeping.getTicks(),
+    lastRenderTime: 0,
+    fps: 0.0,
+    fpsTimerDispose: noop,
+  };
+  let getFPS = (c: t) => c.fps;
+  let getLastRenderTime = (c: t) => c.lastRenderTime;
+  let setLastRenderTime = (c: t, time) => {
+    c.lastRenderTime = time;
+  };
+  let setFPSCounter = (c: t, s) => {
+    c.fpsTimerDispose();
+    if (s) {
+      let dispose = Tick.Default.interval(t => {
+        Console.log("tick");
+        c.fps = 1.0 /. (float_of_int(c.lastRenderTime) /. 1000.0);
+      }, Time.seconds(1));
+      c.fpsTimerDispose = dispose;
+    } else {
+      c.fpsTimerDispose = noop;
+    }
+  };
+
+};
+
 type t = {
   mutable backgroundColor: Color.t,
   sdlWindow: Sdl2.Window.t,
@@ -163,8 +198,8 @@ type t = {
   mutable metrics: WindowMetrics.t,
   mutable isRendering: bool,
   mutable requestedUnscaledSize: option(size),
-  mutable tickAfterLastRender: int,
-  mutable lastRenderTime: int,
+  mutable fpsCounter: FPS.t,
+  mutable showFPSCounter: bool,
   // True if composition (IME) is active
   mutable isComposingText: bool,
   mutable dropState: option(list(string)),
@@ -341,8 +376,8 @@ let render = window => {
   window.isRendering = false;
 
   let tick = Sdl2.Timekeeping.getTicks();
-  window.lastRenderTime = tick-window.tickAfterLastRender;
-  window.tickAfterLastRender = tick;
+  window.fpsCounter.lastRenderTime = tick-window.fpsCounter.tickAfterLastRender;
+  window.fpsCounter.tickAfterLastRender = tick;
 };
 
 let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
@@ -568,8 +603,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     isRendering: false,
     requestedUnscaledSize: None,
 
-    tickAfterLastRender: Sdl2.Timekeeping.getTicks(),
-    lastRenderTime: 0,
+    fpsCounter: FPS.default(),
+    showFPSCounter: false,
 
     isComposingText: false,
     dropState: None,
@@ -785,9 +820,18 @@ let setShouldRenderCallback = (window: t, callback) =>
   window.shouldRender = callback;
 
 let getFPS = (w: t) => {
-  1.0 /. (float_of_int(w.lastRenderTime) /. 1000.0);
+  FPS.getFPS(w.fpsCounter);
 };
 
 let getLastRenderTime = (w: t) => {
-  w.lastRenderTime;
+  FPS.getLastRenderTime(w.fpsCounter);
+};
+
+let setFPSCounter = (w: t, s) => {
+  w.showFPSCounter = s;
+  FPS.setFPSCounter(w.fpsCounter, s);
+};
+
+let shouldShowFPSCounter = (w: t) => {
+  w.showFPSCounter;
 };
