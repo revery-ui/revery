@@ -168,21 +168,22 @@ module FPS = {
   };
   let getFPS = (c: t) => c.fps;
   let getLastRenderTime = (c: t) => c.lastRenderTime;
-  let setLastRenderTime = (c: t, time) => {
-    c.lastRenderTime = time;
-  };
+  /* let setLastRenderTime = (c: t, time) => {
+       c.lastRenderTime = time;
+     }; */
   let setFPSCounter = (c: t, s) => {
     c.fpsTimerDispose();
     if (s) {
-      let dispose = Tick.Default.interval(t => {
-        c.fps = 1.0 /. (float_of_int(c.lastRenderTime) /. 1000.0);
-      }, Time.seconds(1));
+      let dispose =
+        Tick.Default.interval(
+          _ => {c.fps = 1.0 /. (float_of_int(c.lastRenderTime) /. 1000.0)},
+          Time.seconds(1),
+        );
       c.fpsTimerDispose = dispose;
     } else {
       c.fpsTimerDispose = noop;
-    }
+    };
   };
-
 };
 
 type t = {
@@ -375,7 +376,8 @@ let render = window => {
   window.isRendering = false;
 
   let tick = Sdl2.Timekeeping.getTicks();
-  window.fpsCounter.lastRenderTime = tick-window.fpsCounter.tickAfterLastRender;
+  window.fpsCounter.lastRenderTime =
+    tick - window.fpsCounter.tickAfterLastRender;
   window.fpsCounter.tickAfterLastRender = tick;
 };
 
