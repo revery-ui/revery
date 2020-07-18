@@ -332,7 +332,7 @@ let init = app => {
       app,
       "Welcome to Revery!",
     );
-  //Window.setFPSCounter(window,true);
+  Window.setFPSCounter(window,true);
 
   if (Environment.webGL) {
     Window.maximize(window);
