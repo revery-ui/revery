@@ -489,7 +489,11 @@ module FontStyle = {
   let getWidth = SkiaWrapped.FontStyle.getWidth;
   let getWeight = SkiaWrapped.FontStyle.getWeight;
 
-  let make = SkiaWrapped.FontStyle.make;
+  let make = (weight, width, slant) => {
+    let style = SkiaWrapped.FontStyle.make(weight, width, slant);
+    Gc.finalise(SkiaWrapped.FontStyle.delete, style);
+    style;
+  };
 };
 
 module FontManager = {
@@ -649,7 +653,11 @@ module Data = {
     maybeData;
   };
 
-  let makeFromStream = SkiaWrapped.Data.makeFromStream;
+  let makeFromStream = (stream, length) => {
+    let data = SkiaWrapped.Data.makeFromStream(stream, length);
+    Gc.finalise(SkiaWrapped.Data.delete, data);
+    data;
+  };
 };
 
 module Typeface = {
@@ -670,7 +678,12 @@ module Typeface = {
     stream;
   };
 
-  let getFontStyle = SkiaWrapped.Typeface.getFontStyle;
+  let getFontStyle = typeface => {
+    let style = SkiaWrapped.Typeface.getFontStyle(typeface);
+    Gc.finalise(SkiaWrapped.FontStyle.delete, style);
+    style;
+  };
+
   let getUniqueID = SkiaWrapped.Typeface.getUniqueID;
 
   let equal = (tfA, tfB) => {
