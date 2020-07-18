@@ -152,33 +152,42 @@ module WindowMetrics: {
 };
 
 module FPS = {
-  let noop = () => ();
   type t = {
+    // tickAfterLastRender and lastRenderTime are in milliseconds
     mutable tickAfterLastRender: int,
     mutable lastRenderTime: int,
     mutable fps: float,
-    mutable fpsTimerDispose: unit => unit,
+    mutable timer: int,
+    mutable ticksSinceUpdate: int,
+    mutable fpsAccum: float,
   };
 
   let default = () => {
     tickAfterLastRender: Sdl2.Timekeeping.getTicks(),
     lastRenderTime: 0,
     fps: 0.0,
-    fpsTimerDispose: noop,
+    timer: 0,
+    ticksSinceUpdate: 0,
+    fpsAccum: 0.0,
   };
   let getFPS = (c: t) => c.fps;
   let getLastRenderTime = (c: t) => c.lastRenderTime;
-  let setFPSCounter = (c: t, s) => {
-    c.fpsTimerDispose();
-    if (s) {
-      let dispose =
-        Tick.Default.interval(
-          _ => {c.fps = 1.0 /. (float_of_int(c.lastRenderTime) /. 1000.0)},
-          Time.seconds(1),
-        );
-      c.fpsTimerDispose = dispose;
-    } else {
-      c.fpsTimerDispose = noop;
+  let update = (c: t) => {
+    let tick = Sdl2.Timekeeping.getTicks();
+    c.lastRenderTime = tick - c.tickAfterLastRender;
+    c.timer = c.timer + c.lastRenderTime;
+    c.tickAfterLastRender = tick;
+
+    c.ticksSinceUpdate = c.ticksSinceUpdate + 1;
+    c.fpsAccum = c.fpsAccum +. float_of_int(c.lastRenderTime) /. 1000.;
+
+    if (c.timer >= 1000) {
+      c.timer = 0;
+      if (c.fpsAccum != 0.0) {
+        c.fps = float_of_int(c.ticksSinceUpdate) /. c.fpsAccum;
+      };
+      c.ticksSinceUpdate = 0;
+      c.fpsAccum = 0.0;
     };
   };
 };
@@ -372,10 +381,7 @@ let render = window => {
   Event.dispatch(window.onAfterSwap, ());
   window.isRendering = false;
 
-  let tick = Sdl2.Timekeeping.getTicks();
-  window.fpsCounter.lastRenderTime =
-    tick - window.fpsCounter.tickAfterLastRender;
-  window.fpsCounter.tickAfterLastRender = tick;
+  FPS.update(window.fpsCounter);
 };
 
 let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
@@ -827,7 +833,6 @@ let getLastRenderTime = (w: t) => {
 
 let setFPSCounter = (w: t, s) => {
   w.showFPSCounter = s;
-  FPS.setFPSCounter(w.fpsCounter, s);
 };
 
 let shouldShowFPSCounter = (w: t) => {
