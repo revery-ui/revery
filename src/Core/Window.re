@@ -158,7 +158,7 @@ module FPS = {
     mutable lastRenderTime: int,
     mutable fps: float,
     mutable timer: int,
-    mutable ticksSinceUpdate: int,
+    mutable frameCount: int,
     mutable fpsAccum: float,
   };
 
@@ -167,27 +167,28 @@ module FPS = {
     lastRenderTime: 0,
     fps: 0.0,
     timer: 0,
-    ticksSinceUpdate: 0,
+    frameCount: 0,
     fpsAccum: 0.0,
   };
   let getFPS = (c: t) => c.fps;
   let getLastRenderTime = (c: t) => c.lastRenderTime;
-  let update = (c: t) => {
+  let update = (state: t) => {
     let tick = Sdl2.Timekeeping.getTicks();
-    c.lastRenderTime = tick - c.tickAfterLastRender;
-    c.timer = c.timer + c.lastRenderTime;
-    c.tickAfterLastRender = tick;
+    state.lastRenderTime = tick - state.tickAfterLastRender;
+    state.tickAfterLastRender = tick;
 
-    c.ticksSinceUpdate = c.ticksSinceUpdate + 1;
-    c.fpsAccum = c.fpsAccum +. float_of_int(c.lastRenderTime) /. 1000.;
+    state.timer = state.timer + state.lastRenderTime;
+    state.frameCount = state.frameCount + 1;
+    state.fpsAccum =
+      state.fpsAccum +. float_of_int(state.lastRenderTime) /. 1000.;
 
-    if (c.timer >= 1000) {
-      c.timer = 0;
-      if (c.fpsAccum != 0.0) {
-        c.fps = float_of_int(c.ticksSinceUpdate) /. c.fpsAccum;
+    if (state.timer >= 1000) {
+      state.timer = 0;
+      if (state.fpsAccum != 0.0) {
+        state.fps = float_of_int(state.frameCount) /. state.fpsAccum;
       };
-      c.ticksSinceUpdate = 0;
-      c.fpsAccum = 0.0;
+      state.frameCount = 0;
+      state.fpsAccum = 0.0;
     };
   };
 };
@@ -831,8 +832,11 @@ let getLastRenderTime = (w: t) => {
   FPS.getLastRenderTime(w.fpsCounter);
 };
 
-let setFPSCounter = (w: t, s) => {
-  w.showFPSCounter = s;
+let enableFPSCounter = (w: t) => {
+  w.showFPSCounter = true;
+};
+let disableFPSCounter = (w: t) => {
+  w.showFPSCounter = false;
 };
 
 let shouldShowFPSCounter = (w: t) => {

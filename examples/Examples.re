@@ -335,7 +335,7 @@ let init = app => {
       "Welcome to Revery!",
     );
   if (showFPSCounter^) {
-    Window.setFPSCounter(window, true);
+    Window.enableFPSCounter(window);
   };
 
   if (Environment.webGL) {
