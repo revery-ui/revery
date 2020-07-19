@@ -152,6 +152,7 @@ module WindowMetrics: {
 };
 
 module FPS = {
+  let timerInterval = 1000;
   type t = {
     // tickAfterLastRender and lastRenderTime are in milliseconds
     mutable tickAfterLastRender: int,
@@ -176,7 +177,7 @@ module FPS = {
 
     state.timer = state.timer + state.lastRenderTime;
     state.frameCount = state.frameCount + 1;
-    if (state.timer >= 1000) {
+    if (state.timer >= timerInterval) {
       state.fps = state.frameCount;
       state.timer = 0;
       state.frameCount = 0;
