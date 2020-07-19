@@ -1,4 +1,0 @@
-(library
-    (name Revery_Lwt)
-    (public_name Revery.lwt)
-    (libraries Revery))

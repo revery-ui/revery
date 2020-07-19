@@ -1,7 +1,0 @@
-(library
- (name Revery_Core)
- (public_name Revery.Core)
- (preprocess
-  (pps ppx_deriving.show))
- (libraries threads console.lib str lwt sdl2 skia flex Rench re Revery_Native
-   Revery_TextWrap timber Revery_Zed))

@@ -1,6 +1,0 @@
-(library
-    (name ReveryBench)
-    (public_name ReveryBench.lib)
-    (ocamlopt_flags -linkall)
-    (libraries Revery reperf.lib)
-)

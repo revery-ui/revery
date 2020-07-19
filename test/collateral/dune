@@ -1,4 +1,0 @@
-(install
-    (section bin)
-    (package ReveryTest)
-    (files test-asset.txt))

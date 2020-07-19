@@ -1,5 +1,0 @@
-(library
-    (name Revery_UI_Hooks)
-    (public_name Revery.UI_Hooks)
-    (preprocess (pps brisk-reconciler.ppx lwt_ppx))
-    (libraries lwt lwt.unix sdl2 flex Revery_Core Revery_Math Revery_UI))
