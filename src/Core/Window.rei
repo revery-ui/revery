@@ -104,7 +104,7 @@ let setCanQuitCallback: (t, unit => bool) => unit;
 let setRenderCallback: (t, unit => unit) => unit;
 let setShouldRenderCallback: (t, unit => bool) => unit;
 
-let getFPS: t => float;
+let getFPS: t => int;
 let getLastRenderTime: t => int;
 let showFPSCounter: t => unit;
 let hideFPSCounter: t => unit;

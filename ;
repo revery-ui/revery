@@ -156,33 +156,38 @@ module FPS = {
     // tickAfterLastRender and lastRenderTime are in milliseconds
     mutable tickAfterLastRender: int,
     mutable lastRenderTime: int,
-    mutable fps: int,
+    mutable fps: float,
     mutable timer: int,
     mutable frameCount: int,
+    mutable fpsAccum: float,
   };
 
   let default = () => {
     tickAfterLastRender: Sdl2.Timekeeping.getTicks(),
     lastRenderTime: 0,
-    fps: 0,
+    fps: 0.0,
     timer: 0,
     frameCount: 0,
+    fpsAccum: 0.0,
   };
   let getFPS = (c: t) => c.fps;
   let getLastRenderTime = (c: t) => c.lastRenderTime;
   let update = (state: t) => {
     let tick = Sdl2.Timekeeping.getTicks();
     state.lastRenderTime = tick - state.tickAfterLastRender;
+    state.tickAfterLastRender = tick;
 
     state.timer = state.timer + state.lastRenderTime;
     state.frameCount = state.frameCount + 1;
-    if (state.timer >= 1000) {
-      state.fps = state.frameCount;
-      state.timer = 0;
-      state.frameCount = 0;
-    };
 
-    state.tickAfterLastRender = tick;
+    if (state.timer >= 1000) {
+      state.timer = 0;
+      if (state.fpsAccum == 0.0) {
+        state.fps = float_of_int(state.frameCount);
+      };
+      state.frameCount = 0;
+      state.fpsAccum = 0.0;
+    };
   };
 };
 

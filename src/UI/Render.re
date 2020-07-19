@@ -97,7 +97,7 @@ let render =
           ~paint,
           ~x,
           ~y,
-          ~text=Printf.sprintf("FPS: %.0f", Window.getFPS(window)),
+          ~text=Printf.sprintf("FPS: %d", Window.getFPS(window)),
           canvas,
         );
       };
