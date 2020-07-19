@@ -103,3 +103,8 @@ let takeScreenshot: (t, string) => unit;
 let setCanQuitCallback: (t, unit => bool) => unit;
 let setRenderCallback: (t, unit => unit) => unit;
 let setShouldRenderCallback: (t, unit => bool) => unit;
+
+let getFPS: t => int;
+let showFPSCounter: t => unit;
+let hideFPSCounter: t => unit;
+let shouldShowFPSCounter: t => bool;

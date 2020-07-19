@@ -151,6 +151,39 @@ module WindowMetrics: {
   let markDirty = metrics => {...metrics, isDirty: true};
 };
 
+module FPS = {
+  let timerInterval = 1000;
+  type t = {
+    // tickAfterLastRender is in milliseconds
+    mutable tickAfterLastRender: int,
+    mutable fps: int,
+    mutable timer: int,
+    mutable frameCount: int,
+  };
+
+  let default = () => {
+    tickAfterLastRender: Sdl2.Timekeeping.getTicks(),
+    fps: 0,
+    timer: 0,
+    frameCount: 0,
+  };
+  let getFPS = (c: t) => c.fps;
+  let update = (state: t) => {
+    let tick = Sdl2.Timekeeping.getTicks();
+    let deltaTime = tick - state.tickAfterLastRender;
+
+    state.timer = state.timer + deltaTime;
+    state.frameCount = state.frameCount + 1;
+    if (state.timer >= timerInterval) {
+      state.fps = state.frameCount;
+      state.timer = 0;
+      state.frameCount = 0;
+    };
+
+    state.tickAfterLastRender = tick;
+  };
+};
+
 type t = {
   mutable backgroundColor: Color.t,
   sdlWindow: Sdl2.Window.t,
@@ -163,6 +196,8 @@ type t = {
   mutable metrics: WindowMetrics.t,
   mutable isRendering: bool,
   mutable requestedUnscaledSize: option(size),
+  mutable fpsCounter: FPS.t,
+  mutable showFPSCounter: bool,
   // True if composition (IME) is active
   mutable isComposingText: bool,
   mutable dropState: option(list(string)),
@@ -337,6 +372,8 @@ let render = window => {
   Performance.bench("swapWindow", () => Sdl2.Gl.swapWindow(window.sdlWindow));
   Event.dispatch(window.onAfterSwap, ());
   window.isRendering = false;
+
+  FPS.update(window.fpsCounter);
 };
 
 let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
@@ -562,6 +599,9 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     isRendering: false,
     requestedUnscaledSize: None,
 
+    fpsCounter: FPS.default(),
+    showFPSCounter: false,
+
     isComposingText: false,
     dropState: None,
 
@@ -774,3 +814,18 @@ let setRenderCallback = (window: t, callback) => window.render = callback;
 
 let setShouldRenderCallback = (window: t, callback) =>
   window.shouldRender = callback;
+
+let getFPS = (w: t) => {
+  FPS.getFPS(w.fpsCounter);
+};
+
+let showFPSCounter = (w: t) => {
+  w.showFPSCounter = true;
+};
+let hideFPSCounter = (w: t) => {
+  w.showFPSCounter = false;
+};
+
+let shouldShowFPSCounter = (w: t) => {
+  w.showFPSCounter;
+};
