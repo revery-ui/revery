@@ -1,0 +1,33 @@
+{
+  "name": "reason-sdl2",
+  "version": "2.10.3032",
+  "description": "SDL2 bindings for OCaml",
+  "license": "MIT",
+  "scripts": {
+    "format": "esy dune build @fmt --auto-promote"
+  },
+  "esy": {
+    "build": [
+      [
+        "dune",
+        "build",
+        "-p",
+        "reason-sdl2"
+      ]
+    ],
+    "install": [
+      "esy-installer reason-sdl2.install"
+    ]
+  },
+  "dependencies": {
+    "@opam/dune": ">=1.1",
+    "@opam/dune-configurator": "*",
+    "@esy-ocaml/reason": "^3.3.7",
+    "refmterr": "^3.1.0",
+    "esy-sdl2": "2.0.10008"
+  },
+  "devDependencies": {
+    "ocaml": ">=4.6.0 <4.11.0",
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6"
+  }
+}

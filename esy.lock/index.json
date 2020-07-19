@@ -1,0 +1,58 @@
+{
+  "checksum": "f90dfa0c7a1ab6d8eed30da9c3cb8644",
+  "root": "revery@no-source:@d41d8cd9",
+  "node": {
+    "revery@no-source:@d41d8cd9": {
+      "id": "revery@no-source:@d41d8cd9",
+      "name": "revery",
+      "version": "no-source:",
+      "source": { "type": "install", "source": [ "no-source:" ] },
+      "overrides": [],
+      "dependencies": [
+        "@opam/reason-skia@link-dev:./reason-skia.opam",
+        "@opam/reason-harfbuzz@link-dev:./reason-harfbuzz.opam"
+      ],
+      "devDependencies": []
+    },
+    "@opam/reason-skia@link-dev:./reason-skia.opam": {
+      "id": "@opam/reason-skia@link-dev:./reason-skia.opam",
+      "name": "@opam/reason-skia",
+      "version": "link-dev:./reason-skia.opam",
+      "source": {
+        "type": "link-dev",
+        "path": ".",
+        "manifest": "reason-skia.opam"
+      },
+      "overrides": [],
+      "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "@opam/reason-harfbuzz@link-dev:./reason-harfbuzz.opam": {
+      "id": "@opam/reason-harfbuzz@link-dev:./reason-harfbuzz.opam",
+      "name": "@opam/reason-harfbuzz",
+      "version": "link-dev:./reason-harfbuzz.opam",
+      "source": {
+        "type": "link-dev",
+        "path": ".",
+        "manifest": "reason-harfbuzz.opam"
+      },
+      "overrides": [],
+      "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "@esy-ocaml/substs@0.0.1@d41d8cd9": {
+      "id": "@esy-ocaml/substs@0.0.1@d41d8cd9",
+      "name": "@esy-ocaml/substs",
+      "version": "0.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/@esy-ocaml/substs/-/substs-0.0.1.tgz#sha1:59ebdbbaedcda123fc7ed8fb2b302b7d819e9a46"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    }
+  }
+}
