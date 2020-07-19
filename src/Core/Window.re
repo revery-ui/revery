@@ -154,9 +154,8 @@ module WindowMetrics: {
 module FPS = {
   let timerInterval = 1000;
   type t = {
-    // tickAfterLastRender and lastRenderTime are in milliseconds
+    // tickAfterLastRender is in milliseconds
     mutable tickAfterLastRender: int,
-    mutable lastRenderTime: int,
     mutable fps: int,
     mutable timer: int,
     mutable frameCount: int,
@@ -164,18 +163,16 @@ module FPS = {
 
   let default = () => {
     tickAfterLastRender: Sdl2.Timekeeping.getTicks(),
-    lastRenderTime: 0,
     fps: 0,
     timer: 0,
     frameCount: 0,
   };
   let getFPS = (c: t) => c.fps;
-  let getLastRenderTime = (c: t) => c.lastRenderTime;
   let update = (state: t) => {
     let tick = Sdl2.Timekeeping.getTicks();
-    state.lastRenderTime = tick - state.tickAfterLastRender;
+    let deltaTime = tick - state.tickAfterLastRender;
 
-    state.timer = state.timer + state.lastRenderTime;
+    state.timer = state.timer + deltaTime;
     state.frameCount = state.frameCount + 1;
     if (state.timer >= timerInterval) {
       state.fps = state.frameCount;
@@ -820,10 +817,6 @@ let setShouldRenderCallback = (window: t, callback) =>
 
 let getFPS = (w: t) => {
   FPS.getFPS(w.fpsCounter);
-};
-
-let getLastRenderTime = (w: t) => {
-  FPS.getLastRenderTime(w.fpsCounter);
 };
 
 let showFPSCounter = (w: t) => {
