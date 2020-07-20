@@ -5,13 +5,7 @@ let font =
   Revery_Font.Family.fromFile("Roboto-Regular.ttf")
   |> Revery_Font.Family.toSkia(Revery_Font.Weight.Normal)
   |> Revery_Font.load
-  |> (
-    result =>
-      switch (result) {
-      | Ok(font) => font
-      | Error(e) => failwith(e)
-      }
-  );
+  |> Result.get_ok;
 
 describe("TextOverflow", ({test, _}) => {
   test("handle overflow UTF-8", ({expect, _}) => {
