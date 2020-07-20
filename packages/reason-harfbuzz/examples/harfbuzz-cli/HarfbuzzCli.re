@@ -36,11 +36,19 @@ let run = () => {
     ++ runtimeVersion
     ++ " **\n",
   );
+  let skiaFaceToHarfbuzzFace = skiaFace => {
+    let stream = Skia.Typeface.toStream(skiaFace);
+    let length = Skia.Stream.getLength(stream);
+    let data = Skia.Data.makeFromStream(stream, length);
+    let bytes = Skia.Data.makeString(data);
+
+    Harfbuzz.hb_face_from_data(bytes);
+  };
 
   print_endline("__ Font Discovery: Arial __");
   let maybeTypeface =
     FontManager.matchFamilyStyle(fontManager, "Arial", style);
-  let result = maybeTypeface |> Option.map(face => hb_face_from_skia(face));
+  let result = maybeTypeface |> Option.map(skiaFaceToHarfbuzzFace);
   switch (result) {
   | Some(Error(msg)) => failwith(msg)
   | Some(Ok(font)) =>
