@@ -10,7 +10,7 @@ let removeLineBreaks = text => {
 };
 
 let rec handleOverflow = (~maxWidth, ~text, ~measure, ~character="…", ()) => {
-  let clippedText = String.length(text) - 1 |> Str.string_before(text);
+  let clippedText = Zed_utf8.rchop(text);
 
   let width = measure(clippedText ++ character);
   width >= maxWidth && String.length(clippedText) > 1
