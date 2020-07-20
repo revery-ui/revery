@@ -81,12 +81,7 @@ let hb_shape = (~features=[], ~start=`Start, ~stop=`End, {face}, str) => {
 };
 let hb_new_face = str => hb_face_from_path(str);
 
-let hb_face_from_skia = sk_typeface => {
-  let stream = Skia.Typeface.toStream(sk_typeface);
-  let length = Skia.Stream.getLength(stream);
-  let data = Skia.Data.makeFromStream(stream, length);
-  let bytes = Skia.Data.makeString(data);
-
+let hb_face_from_data = bytes => {
   switch (Internal.hb_face_from_data(bytes, String.length(bytes))) {
   | Error(_) as e => e
   | Ok(face) =>
