@@ -2,4 +2,4 @@
     (name Revery_Core_Test)
     (library_flags (-linkall -g))
     (modules (:standard))
-    (libraries Revery_Core rely.lib))
+    (libraries Revery_Core Revery_Font rely.lib))
