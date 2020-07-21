@@ -2,7 +2,7 @@
  (name HarfbuzzCli)
  (package ReveryExamples)
  (public_name HarfbuzzCli)
- (libraries bigarray harfbuzz skia reason-native-crash-utils.asan))
+ (libraries bigarray harfbuzz reason-native-crash-utils.asan))
 
 (install
  (section bin)
