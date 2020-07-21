@@ -1,7 +1,6 @@
 (library
  (name harfbuzz)
  (public_name reason-harfbuzz)
- (libraries skia ctypes)
  (library_flags
   (:include flags.sexp))
  (c_flags (:include c_flags.sexp))

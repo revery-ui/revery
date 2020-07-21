@@ -97,6 +97,15 @@ module Constants = {
   let emptyUchar = Uchar.of_int(0);
 };
 
+let skiaFaceToHarfbuzzFace = skiaFace => {
+  let stream = Skia.Typeface.toStream(skiaFace);
+  let length = Skia.Stream.getLength(stream);
+  let data = Skia.Data.makeFromStream(stream, length);
+  let bytes = Skia.Data.makeString(data);
+
+  Harfbuzz.hb_face_from_data(bytes);
+};
+
 let load: option(Skia.Typeface.t) => result(t, string) =
   (skiaTypeface: option(Skia.Typeface.t)) => {
     switch (FontCache.find(skiaTypeface, Internal.cache)) {
@@ -104,8 +113,7 @@ let load: option(Skia.Typeface.t) => result(t, string) =
       FontCache.promote(skiaTypeface, Internal.cache);
       v;
     | None =>
-      let harfbuzzFace =
-        skiaTypeface |> Option.map(tf => Harfbuzz.hb_face_from_skia(tf));
+      let harfbuzzFace = skiaTypeface |> Option.map(skiaFaceToHarfbuzzFace);
       let metricsCache = MetricsCache.create(~initialSize=8, 64);
       let shapeCache = ShapeResultCache.create(~initialSize=1024, 128 * 1024);
       let fallbackCache = FallbackCache.create(~initialSize=1024, 128 * 1024);
