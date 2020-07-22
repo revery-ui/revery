@@ -121,8 +121,8 @@ let make =
       ~height=Encoding.cssUndefined,
       ~flexBasis=Encoding.cssUndefined,
       ~flexDirection=LayoutTypes.Column,
-      ~flexGrow=0,
-      ~flexShrink=0,
+      ~flexGrow=Encoding.cssUndefined,
+      ~flexShrink=Encoding.cssUndefined,
       ~flexWrap=LayoutTypes.CssNoWrap,
       ~alignItems=LayoutTypes.AlignStretch,
       ~justifyContent=LayoutTypes.JustifyFlexStart,
@@ -299,6 +299,8 @@ type xy = {
 
 type coreStyleProps = [
   | `FlexGrow(int)
+  | `FlexShrink(int)
+  | `FlexBasis(int)
   | `FlexDirection(LayoutTypes.flexDirection)
   | `FlexWrap(LayoutTypes.wrapType)
   | `JustifyContent(LayoutTypes.justify)
@@ -430,6 +432,8 @@ let justify = j =>
   };
 
 let flexGrow = g => `FlexGrow(g);
+let flexShrink = g => `FlexShrink(g);
+let flexBasis = g => `FlexBasis(g);
 
 let right = f => `Right(f);
 let bottom = f => `Bottom(f);
@@ -537,6 +541,8 @@ let applyStyle = (style, styleRule) =>
   | `AlignSelf(alignSelf) => {...style, alignSelf}
   | `JustifyContent(justifyContent) => {...style, justifyContent}
   | `FlexGrow(flexGrow) => {...style, flexGrow}
+  | `FlexShrink(flexShrink) => {...style, flexShrink}
+  | `FlexBasis(flexBasis) => {...style, flexBasis}
   | `FlexDirection(flexDirection) => {...style, flexDirection}
   | `FlexWrap(flexWrap) => {...style, flexWrap}
   | `Position(position) => {...style, position}
