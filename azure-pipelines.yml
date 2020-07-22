@@ -112,7 +112,7 @@ jobs:
 
   steps:
   - template: .ci/use-node.yml
-  # - template: .ci/restore-build-cache.yml
+  - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
   - template: .ci/esy-bench.yml
   - template: .ci/publish-build-cache.yml
