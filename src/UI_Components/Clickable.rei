@@ -24,6 +24,7 @@ let make:
     ~onDoubleClick: unit => unit=?,
     ~onAnyClick: NodeEvents.mouseButtonEventParams => unit=?,
     ~componentRef: Revery_UI.node => unit=?,
+    ~onBoundingBoxChanged: Revery_Math.BoundingBox2d.t => unit=?,
     ~onBlur: Revery_UI.NodeEvents.focusHandler=?,
     ~onFocus: Revery_UI.NodeEvents.focusHandler=?,
     ~tabindex: int=?,
