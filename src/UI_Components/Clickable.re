@@ -27,6 +27,7 @@ let%component make =
                 ~onDoubleClick=?,
                 ~onAnyClick=_event => (),
                 ~componentRef=?,
+                ~onBoundingBoxChanged=?,
                 ~onBlur=?,
                 ~onFocus=?,
                 ~tabindex=0,
@@ -98,6 +99,7 @@ let%component make =
     onMouseUp
     onMouseLeave
     onMouseEnter=?onMouseEnterUserCallback
+    ?onBoundingBoxChanged
     ?onBlur
     ?onFocus
     ?onKeyDown
