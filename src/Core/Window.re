@@ -233,16 +233,24 @@ type t = {
 };
 
 module Internal = {
-  let setTitlebarTransparent = (w: Sdl2.Window.t) =>
+  let setTitlebarStyle = (w: Sdl2.Window.t, style: WindowStyles.titlebar) => {
     switch (Environment.os) {
-    | Mac => Sdl2.Window.setMacTitlebarTransparent(w)
+    | Mac =>
+      switch (style) {
+      | Transparent => Sdl2.Window.setMacTitlebarTransparent(w)
+      | Hidden => Sdl2.Window.setMacTitlebarHidden(w)
+      | _ => ()
+      }
     | _ => ()
     };
+  };
 
   let resetTitlebarStyle = window =>
     // On restore, we need to set the titlebar transparent again on Mac
-    if (window.titlebarStyle == Transparent) {
-      setTitlebarTransparent(window.sdlWindow);
+    switch (window.titlebarStyle) {
+    | Transparent => setTitlebarStyle(window.sdlWindow, Transparent)
+    | Hidden => setTitlebarStyle(window.sdlWindow, Hidden)
+    | _ => ()
     };
 
   let updateMetrics = (w: t) => {
@@ -680,7 +688,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   switch (options.titlebarStyle) {
   | System => ()
-  | Transparent => Internal.setTitlebarTransparent(sdlWindow)
+  | Transparent => Internal.setTitlebarStyle(sdlWindow, Transparent)
+  | Hidden => Internal.setTitlebarStyle(sdlWindow, Hidden)
   };
 
   Revery_Native.initWindow(sdlWindow);

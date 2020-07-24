@@ -226,6 +226,7 @@ module Window = {
   // MacOS-Only
   external setMacTitlebarTransparent: t => unit =
     "resdl_SDL_SetMacTitlebarTransparent";
+  external setMacTitlebarHidden: t => unit = "resdl_SDL_SetMacTitlebarHidden";
   external setMacBackgroundColor: (t, float, float, float, float) => unit =
     "resdl_SDL_SetMacBackgroundColor";
 };
