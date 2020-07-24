@@ -201,6 +201,7 @@ type t = {
   // True if composition (IME) is active
   mutable isComposingText: bool,
   mutable dropState: option(list(string)),
+  mutable transparency: float,
   titlebarStyle: WindowStyles.titlebar,
   isDecorated: bool,
   onBeforeRender: Event.t(unit),
@@ -608,6 +609,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     forceScaleFactor: options.forceScaleFactor,
 
     isDecorated: options.decorated,
+    transparency: options.transparency,
 
     onBeforeRender: Event.create(),
     onAfterRender: Event.create(),
@@ -678,6 +680,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   // TODO: Make configurable
   Sdl2.Window.setMinimumSize(sdlWindow, 200, 100);
 
+  Sdl2.Window.setTransparency(sdlWindow, options.transparency);
+
   Internal.updateMetrics(window);
 
   window;
@@ -704,6 +708,8 @@ let setInputRect = (_w: t, x, y, width, height) => {
     height,
   );
 };
+
+let setTransparency = (w: t, transparency) => w.transparency = transparency;
 
 let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
 
