@@ -328,7 +328,7 @@ extern "C" {
         SDL_VERSION(&wmInfo.version);
         SDL_GetWindowWMInfo(win, &wmInfo);
         NSWindow *nWindow = wmInfo.info.cocoa.window;
-        [nWindow 
+        [nWindow
          setStyleMask:[nWindow styleMask] | NSWindowStyleMaskDocModalWindow];
 #endif
 
