@@ -56,6 +56,11 @@ let getFramebufferSize: t => size;
 */
 let setSize: (~width: int, ~height: int, t) => unit;
 
+/**
+  [setMinimumSize(~width, ~height, window)] sets the minimum window size.
+*/
+let setMinimumSize: (~width: int, ~height: int, t) => unit;
+
 let getPosition: t => (int, int);
 let getScaleAndZoom: t => float;
 let getSdlWindow: t => Sdl2.Window.t;

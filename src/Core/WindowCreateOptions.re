@@ -49,6 +49,14 @@ type t = {
   */
   height: int,
   /**
+    [minimumWidth] is the minimal horizontal size of the [Window].
+    */
+  minimumWidth: int,
+  /**
+    [minimumWidth] is the minimal vertical size of the [Window].
+    */
+  minimumHeight: int,
+  /**
     [backgroundColor] specifies the initial Color of the [Window]
   */
   backgroundColor: Color.t,
@@ -81,6 +89,8 @@ let create =
       ~y=`Centered,
       ~width=800,
       ~height=600,
+      ~minimumWidth=200,
+      ~minimumHeight=100,
       ~backgroundColor=Colors.cornflowerBlue,
       ~vsync=Vsync.Synchronized,
       ~icon=None,
@@ -97,6 +107,8 @@ let create =
   y,
   width,
   height,
+  minimumWidth,
+  minimumHeight,
   backgroundColor,
   forceScaleFactor,
   vsync,

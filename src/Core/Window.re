@@ -352,6 +352,12 @@ let setSize = (~width: int, ~height: int, win: t) => {
   Internal.setRawSize(win, adjWidth, adjHeight);
 };
 
+let setMinimumSize = (~width: int, ~height: int, win: t) => {
+  Log.tracef(m => m("setMinimumSize - calling with: %ux%u", width, height));
+
+  Sdl2.Window.setMinimumSize(win.sdlWindow, width, height);
+};
+
 let setZoom = (window, zoom) => {
   window.metrics = WindowMetrics.setZoom(max(zoom, 0.1), window.metrics);
 };
@@ -650,6 +656,14 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   // until after we create the window, so after creation we have to check
   // to make sure we're at the correct size for scaling.
   setSize(~width, ~height, window);
+
+  // Set a minimum size for the window
+  setMinimumSize(
+    ~width=options.minimumWidth,
+    ~height=options.minimumHeight,
+    window,
+  );
+
   setVsync(window, options.vsync);
 
   if (!options.decorated) {
@@ -674,11 +688,6 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   if (options.maximized) {
     Sdl2.Window.maximize(sdlWindow);
   };
-
-  // onivim/oni2#791
-  // Set a minimum size for the window
-  // TODO: Make configurable
-  Sdl2.Window.setMinimumSize(sdlWindow, 200, 100);
 
   Sdl2.Window.setTransparency(sdlWindow, options.transparency);
 
@@ -711,7 +720,9 @@ let setInputRect = (_w: t, x, y, width, height) => {
 
 let setTransparency = (w: t, transparency) => w.transparency = transparency;
 
-let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
+let setBackgroundColor = (w: t, color: Color.t) => {
+  w.backgroundColor = color;
+};
 
 let getBackgroundColor = window => window.backgroundColor;
 
