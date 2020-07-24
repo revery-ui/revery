@@ -1,4 +1,14 @@
 /**
+ * read
+ *
+ * Takes a [path] and reads the file as a string.
+ *
+ * Examples:
+ * let result: Lwt.t(result(string, string)) = File.read("/path/to/example.txt");
+ */
+let read: string => Lwt.t(result(string, string));
+
+/**
  * write
  *
  * Takes a [path] and writes [data] to that file.

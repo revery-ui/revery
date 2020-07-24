@@ -30,3 +30,18 @@ let write = (~path, data) => {
   | Error(`Msg(error)) => Lwt.return(Error(error))
   };
 };
+
+let read = path => {
+  switch (Fpath.of_string(path)) {
+  | Ok(fpath) =>
+    switch (Bos.OS.File.read(fpath)) {
+    | Ok(data) =>
+      Log.debug("Successfully read file: " ++ path);
+      Lwt.return(Ok(data));
+    | Error(`Msg(error)) =>
+      Log.error("Error reading file: " ++ error);
+      Lwt.return(Error(error));
+    }
+  | Error(`Msg(error)) => Lwt.return(Error(error))
+  };
+};
