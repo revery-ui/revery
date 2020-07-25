@@ -1,0 +1,2 @@
+# Add suppression for libfontconfig, which has known leaks
+leak:*libfontconfig*
