@@ -53,7 +53,7 @@ type t = {
     */
   minimumWidth: int,
   /**
-    [minimumWidth] is the minimal vertical size of the [Window].
+    [minimumWidth] is the minimum vertical size of the [Window].
     */
   minimumHeight: int,
   /**
