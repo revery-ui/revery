@@ -21,7 +21,7 @@ type t = {
   decorated: bool,
   /**
    [titlebarStyle] sets the appearance of the titlebar. Eventually this will be platform
-   independent, but as of right now, Transparent only works on macOS.
+   independent, but as of right now, [Transparent] and [Hidden] only works on macOS.
     */
   titlebarStyle: WindowStyles.titlebar,
   /**
