@@ -239,7 +239,7 @@ module Internal = {
       switch (style) {
       | Transparent => Sdl2.Window.setMacTitlebarTransparent(w)
       | Hidden => Sdl2.Window.setMacTitlebarHidden(w)
-      | _ => ()
+      | System => ()
       }
     | Windows | Linux => ()
     };
