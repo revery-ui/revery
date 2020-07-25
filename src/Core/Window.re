@@ -250,7 +250,7 @@ module Internal = {
     switch (window.titlebarStyle) {
     | Transparent => setTitlebarStyle(window.sdlWindow, Transparent)
     | Hidden => setTitlebarStyle(window.sdlWindow, Hidden)
-    | _ => ()
+    | System => ()
     };
 
   let updateMetrics = (w: t) => {
