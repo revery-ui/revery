@@ -1,0 +1,42 @@
+opam-version: "2.0"
+synopsis: "Private libraries of Dune"
+description: """
+!!!!!!!!!!!!!!!!!!!!!!
+!!!!! DO NOT USE !!!!!
+!!!!!!!!!!!!!!!!!!!!!!
+
+This package contains code that is shared between various dune-xxx
+packages. However, it is not meant for public consumption and provides
+no stability guarantee.
+"""
+maintainer: ["Jane Street Group, LLC <opensource@janestreet.com>"]
+authors: ["Jane Street Group, LLC <opensource@janestreet.com>"]
+license: "MIT"
+homepage: "https://github.com/ocaml/dune"
+doc: "https://dune.readthedocs.io/"
+bug-reports: "https://github.com/ocaml/dune/issues"
+depends: [
+  "dune" {>= "2.5"}
+  "ocaml" {>= "4.07"}
+]
+dev-repo: "git+https://github.com/ocaml/dune.git"
+build: [
+  ["dune" "subst"] {pinned}
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "@install"
+    "@doc" {with-doc}
+  ]
+]
+url {
+  src: "https://github.com/ocaml/dune/releases/download/2.6.1/dune-2.6.1.tbz"
+  checksum: [
+    "sha256=5ef959f286448ee172f1cffc86c439a6f7b662676e6015b282db071bb88899a0"
+    "sha512=67b750716563fde1135f3d0f3892f97e912d6f95a40bcd7cd854f3ae09ba0b037e7b8829bdaee141cb6c998396f2a51a380451db117571d77895781798d625e7"
+  ]
+}

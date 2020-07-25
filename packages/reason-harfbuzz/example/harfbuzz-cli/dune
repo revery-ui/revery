@@ -1,10 +1,13 @@
 (executable
  (name HarfbuzzCli)
- (package ReveryExamples)
+ (package reason-harfbuzz-example)
  (public_name HarfbuzzCli)
  (libraries bigarray harfbuzz reason-native-crash-utils.asan))
 
 (install
  (section bin)
- (package ReveryExamples)
- (files run-harfbuzz.sh))
+ (package reason-harfbuzz-example)
+ (files 
+   run-harfbuzz.sh
+   Roboto-Regular.ttf
+))

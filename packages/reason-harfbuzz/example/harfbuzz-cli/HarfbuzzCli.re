@@ -34,7 +34,8 @@ let run = () => {
   );
 
   print_endline("__ Font Path: Roboto Regular __");
-  let result = hb_face_from_path("examples/Roboto-Regular.ttf");
+  let result =
+    hb_face_from_path(getExecutingDirectory() ++ "Roboto-Regular.ttf");
   let features = [
     Harfbuzz.{tag: "dlig", value: 1, start: `Start, stop: `End},
   ];

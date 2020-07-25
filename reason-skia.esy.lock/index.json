@@ -1,0 +1,33 @@
+{
+  "checksum": "70ccc350892cd8de8ddfb1291d4d7b51",
+  "root": "reason-skia@link-dev:./reason-skia.opam",
+  "node": {
+    "reason-skia@link-dev:./reason-skia.opam": {
+      "id": "reason-skia@link-dev:./reason-skia.opam",
+      "name": "reason-skia",
+      "version": "link-dev:./reason-skia.opam",
+      "source": {
+        "type": "link-dev",
+        "path": ".",
+        "manifest": "reason-skia.opam"
+      },
+      "overrides": [],
+      "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "@esy-ocaml/substs@0.0.1@d41d8cd9": {
+      "id": "@esy-ocaml/substs@0.0.1@d41d8cd9",
+      "name": "@esy-ocaml/substs",
+      "version": "0.0.1",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/@esy-ocaml/substs/-/substs-0.0.1.tgz#sha1:59ebdbbaedcda123fc7ed8fb2b302b7d819e9a46"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    }
+  }
+}
