@@ -21,9 +21,15 @@ type t = {
   decorated: bool,
   /**
    [titlebarStyle] sets the appearance of the titlebar. Eventually this will be platform
-   independent, but as of right now, Transparent only works on macOS.
+   independent, but as of right now, [Transparent] and [Hidden] only works on macOS.
     */
   titlebarStyle: WindowStyles.titlebar,
+  /**
+   [opacity] sets the opacity of the window.
+   A value of 1.0 means the window is fully opaque,
+   and a value of 0.0 means the window is completely transparent.
+   */
+  opacity: float,
   /**
     [x] is the initial horizontal position of the [Window], either [`Centered]
     or [`Absolute(x)], where [x] is the horizontal pixel coordinate of the left
@@ -44,6 +50,14 @@ type t = {
     [height] is the initial vertical size of the [Window], with display scaling applied.
   */
   height: int,
+  /**
+    [minimumWidth] is the minimum horizontal size of the [Window].
+    */
+  minimumWidth: int,
+  /**
+    [minimumWidth] is the minimum vertical size of the [Window].
+    */
+  minimumHeight: int,
   /**
     [backgroundColor] specifies the initial Color of the [Window]
   */
@@ -72,10 +86,13 @@ let create =
       ~maximized=false,
       ~decorated=true,
       ~titlebarStyle=WindowStyles.System,
+      ~opacity=1.0,
       ~x=`Centered,
       ~y=`Centered,
       ~width=800,
       ~height=600,
+      ~minimumWidth=200,
+      ~minimumHeight=100,
       ~backgroundColor=Colors.cornflowerBlue,
       ~vsync=Vsync.Synchronized,
       ~icon=None,
@@ -87,10 +104,13 @@ let create =
   maximized,
   decorated,
   titlebarStyle,
+  opacity,
   x,
   y,
   width,
   height,
+  minimumWidth,
+  minimumHeight,
   backgroundColor,
   forceScaleFactor,
   vsync,

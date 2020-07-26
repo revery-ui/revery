@@ -319,6 +319,22 @@ extern "C" {
         CAMLreturn(Val_int(ret));
     }
 
+    CAMLprim value resdl_SDL_SetMacTitlebarHidden(value vWin) {
+        CAMLparam1(vWin);
+
+#ifdef SDL_VIDEO_DRIVER_COCOA
+        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_SysWMinfo wmInfo;
+        SDL_VERSION(&wmInfo.version);
+        SDL_GetWindowWMInfo(win, &wmInfo);
+        NSWindow *nWindow = wmInfo.info.cocoa.window;
+        [nWindow
+         setStyleMask:[nWindow styleMask] | NSWindowStyleMaskDocModalWindow];
+#endif
+
+        CAMLreturn(Val_unit);
+    }
+
     CAMLprim value resdl_SDL_SetMacTitlebarTransparent(value vWin) {
         CAMLparam1(vWin);
 

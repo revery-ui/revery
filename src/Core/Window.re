@@ -201,6 +201,7 @@ type t = {
   // True if composition (IME) is active
   mutable isComposingText: bool,
   mutable dropState: option(list(string)),
+  mutable opacity: float,
   titlebarStyle: WindowStyles.titlebar,
   isDecorated: bool,
   onBeforeRender: Event.t(unit),
@@ -232,16 +233,30 @@ type t = {
 };
 
 module Internal = {
-  let setTitlebarTransparent = (w: Sdl2.Window.t) =>
+  let setTitlebarStyle = (w: Sdl2.Window.t, style: WindowStyles.titlebar) => {
     switch (Environment.os) {
-    | Mac => Sdl2.Window.setMacTitlebarTransparent(w)
-    | _ => ()
+    | Mac =>
+      switch (style) {
+      | Transparent => Sdl2.Window.setMacTitlebarTransparent(w)
+      | Hidden => Sdl2.Window.setMacTitlebarHidden(w)
+      | System => ()
+      }
+    | Android
+    | Browser
+    // NOTE: may work for IOS?
+    | IOS
+    | Linux
+    | Unknown
+    | Windows => ()
     };
+  };
 
   let resetTitlebarStyle = window =>
     // On restore, we need to set the titlebar transparent again on Mac
-    if (window.titlebarStyle == Transparent) {
-      setTitlebarTransparent(window.sdlWindow);
+    switch (window.titlebarStyle) {
+    | Transparent => setTitlebarStyle(window.sdlWindow, Transparent)
+    | Hidden => setTitlebarStyle(window.sdlWindow, Hidden)
+    | System => ()
     };
 
   let updateMetrics = (w: t) => {
@@ -349,6 +364,12 @@ let setSize = (~width: int, ~height: int, win: t) => {
     int_of_float(float_of_int(height) *. win.metrics.scaleFactor);
 
   Internal.setRawSize(win, adjWidth, adjHeight);
+};
+
+let setMinimumSize = (~width: int, ~height: int, win: t) => {
+  Log.tracef(m => m("setMinimumSize - calling with: %ux%u", width, height));
+
+  Sdl2.Window.setMinimumSize(win.sdlWindow, width, height);
 };
 
 let setZoom = (window, zoom) => {
@@ -608,6 +629,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     forceScaleFactor: options.forceScaleFactor,
 
     isDecorated: options.decorated,
+    opacity: options.opacity,
 
     onBeforeRender: Event.create(),
     onAfterRender: Event.create(),
@@ -648,6 +670,14 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   // until after we create the window, so after creation we have to check
   // to make sure we're at the correct size for scaling.
   setSize(~width, ~height, window);
+
+  // Set a minimum size for the window
+  setMinimumSize(
+    ~width=options.minimumWidth,
+    ~height=options.minimumHeight,
+    window,
+  );
+
   setVsync(window, options.vsync);
 
   if (!options.decorated) {
@@ -664,7 +694,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
 
   switch (options.titlebarStyle) {
   | System => ()
-  | Transparent => Internal.setTitlebarTransparent(sdlWindow)
+  | Transparent => Internal.setTitlebarStyle(sdlWindow, Transparent)
+  | Hidden => Internal.setTitlebarStyle(sdlWindow, Hidden)
   };
 
   Revery_Native.initWindow(sdlWindow);
@@ -673,10 +704,9 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     Sdl2.Window.maximize(sdlWindow);
   };
 
-  // onivim/oni2#791
-  // Set a minimum size for the window
-  // TODO: Make configurable
-  Sdl2.Window.setMinimumSize(sdlWindow, 200, 100);
+  // Sdl2 has this named as Transparency, but it actually works as opacity
+  // where a value of 1.0 means it's fully opaque
+  Sdl2.Window.setTransparency(sdlWindow, options.opacity);
 
   Internal.updateMetrics(window);
 
@@ -705,7 +735,11 @@ let setInputRect = (_w: t, x, y, width, height) => {
   );
 };
 
-let setBackgroundColor = (w: t, color: Color.t) => w.backgroundColor = color;
+let setOpacity = (w: t, opacity) => w.opacity = opacity;
+
+let setBackgroundColor = (w: t, color: Color.t) => {
+  w.backgroundColor = color;
+};
 
 let getBackgroundColor = window => window.backgroundColor;
 
