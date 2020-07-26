@@ -243,6 +243,7 @@ module Internal = {
       }
     | Android
     | Browser
+    // NOTE: might work for IOS?
     | IOS
     | Linux
     | Unknown
