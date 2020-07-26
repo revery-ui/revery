@@ -25,9 +25,11 @@ type t = {
     */
   titlebarStyle: WindowStyles.titlebar,
   /**
-   [transparency] sets the transparency of the window.
+   [opacity] sets the opacity of the window.
+   A value of 1.0 means the window is fully opaque,
+   and a value of 0.0 means the window is completely transparent.
    */
-  transparency: float,
+  opacity: float,
   /**
     [x] is the initial horizontal position of the [Window], either [`Centered]
     or [`Absolute(x)], where [x] is the horizontal pixel coordinate of the left
@@ -84,7 +86,7 @@ let create =
       ~maximized=false,
       ~decorated=true,
       ~titlebarStyle=WindowStyles.System,
-      ~transparency=1.0,
+      ~opacity=1.0,
       ~x=`Centered,
       ~y=`Centered,
       ~width=800,
@@ -102,7 +104,7 @@ let create =
   maximized,
   decorated,
   titlebarStyle,
-  transparency,
+  opacity,
   x,
   y,
   width,

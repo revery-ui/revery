@@ -201,7 +201,7 @@ type t = {
   // True if composition (IME) is active
   mutable isComposingText: bool,
   mutable dropState: option(list(string)),
-  mutable transparency: float,
+  mutable opacity: float,
   titlebarStyle: WindowStyles.titlebar,
   isDecorated: bool,
   onBeforeRender: Event.t(unit),
@@ -623,7 +623,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     forceScaleFactor: options.forceScaleFactor,
 
     isDecorated: options.decorated,
-    transparency: options.transparency,
+    opacity: options.opacity,
 
     onBeforeRender: Event.create(),
     onAfterRender: Event.create(),
@@ -698,7 +698,9 @@ let create = (name: string, options: WindowCreateOptions.t) => {
     Sdl2.Window.maximize(sdlWindow);
   };
 
-  Sdl2.Window.setTransparency(sdlWindow, options.transparency);
+  // Sdl2 has this named as Transparency, but it actually works as opacity
+  // where a value of 1.0 means it's fully opaque
+  Sdl2.Window.setTransparency(sdlWindow, options.opacity);
 
   Internal.updateMetrics(window);
 
@@ -727,7 +729,7 @@ let setInputRect = (_w: t, x, y, width, height) => {
   );
 };
 
-let setTransparency = (w: t, transparency) => w.transparency = transparency;
+let setOpacity = (w: t, opacity) => w.opacity = opacity;
 
 let setBackgroundColor = (w: t, color: Color.t) => {
   w.backgroundColor = color;

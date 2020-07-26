@@ -87,7 +87,7 @@ let raise: t => unit;
 let restore: t => unit;
 let minimize: t => unit;
 
-let setTransparency: (t, float) => unit;
+let setOpacity: (t, float) => unit;
 let setBackgroundColor: (t, Color.t) => unit;
 let setPosition: (t, int, int) => unit;
 let setTitle: (t, string) => unit;
