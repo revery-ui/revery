@@ -241,7 +241,8 @@ module Internal = {
       | Hidden => Sdl2.Window.setMacTitlebarHidden(w)
       | System => ()
       }
-    | Windows | Linux => ()
+    | Windows
+    | Linux => ()
     };
   };
 
