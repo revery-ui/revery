@@ -94,7 +94,6 @@ module Internal = {
 
 module Constants = {
   let unresolvedGlyphID = 0;
-  let emptyUchar = Uchar.of_int(0);
 };
 
 let skiaFaceToHarfbuzzFace = skiaFace => {
