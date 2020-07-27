@@ -203,12 +203,12 @@ let matchCharacter = (fallbackCharacterCache, uchar, skiaFace) =>
 let generateShapes:
   (~features: list(Feature.t), t, string) => list(ShapeResult.shapeNode) =
   (~features, font, str) => {
-    let fallbackFor = (index, str) => {
+    let fallbackFor = (~byteOffset, str) => {
       Log.debugf(m =>
-        m("Resolving fallback for: %s", Zed_utf8.sub(str, index, 1))
+        m("Resolving fallback for: %s at byte offset %d", str, byteOffset)
       );
       let uchar =
-        try(Zed_utf8.get(str, index)) {
+        try(Zed_utf8.extract(str, byteOffset)) {
         | _ => Constants.emptyUchar
         };
       matchCharacter(font.fallbackCharacterCache, uchar, font.skiaFace)
@@ -224,7 +224,7 @@ let generateShapes:
       if (start > stop) {
         acc;
       } else {
-        switch (fallbackFor(start, str)) {
+        switch (fallbackFor(~byteOffset=start, str)) {
         | Ok(font) =>
           // We found a fallback font! Now we just have to shape it the same way
           // we shape the super-string.
@@ -258,11 +258,12 @@ let generateShapes:
           {hbFace, skiaFace, _} as font,
           shapes,
         ) => {
-      let resolvePossibleHole = (~stop) =>
+      let resolvePossibleHole = (~stop) => {
         switch (holeStart) {
         | Some(start) => resolveHole(~acc, ~start, ~stop)
         | None => acc
         };
+      };
 
       if (index == Array.length(shapes)) {
         resolvePossibleHole(~stop=stopCluster);
