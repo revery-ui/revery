@@ -207,11 +207,17 @@ let generateShapes:
       Log.debugf(m =>
         m("Resolving fallback for: %s at byte offset %d", str, byteOffset)
       );
-      let uchar =
-        try(Zed_utf8.extract(str, byteOffset)) {
-        | _ => Constants.emptyUchar
+      let maybeUchar =
+        try(Some(Zed_utf8.extract(str, byteOffset))) {
+        | exn =>
+          Log.debugf(m =>
+            m("Unable to get uchar: %s", Printexc.to_string(exn))
+          );
+          None;
         };
-      matchCharacter(font.fallbackCharacterCache, uchar, font.skiaFace)
+      Option.bind(maybeUchar, uchar =>
+        matchCharacter(font.fallbackCharacterCache, uchar, font.skiaFace)
+      )
       |> load;
     };
 

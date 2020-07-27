@@ -24,6 +24,12 @@ describe("FontCache", ({test, _}) => {
     |> Skia.Typeface.getUniqueID
     |> Int32.to_int;
 
+  test("empty string has empty shapes", ({expect, _}) => {
+    let {glyphStrings}: ShapeResult.t = "" |> FontCache.shape(defaultFont);
+
+    expect.int(glyphStrings |> runCount).toBe(0);
+  });
+
   test("shape simple ASCII text", ({expect, _}) => {
     let {glyphStrings}: ShapeResult.t = "a" |> FontCache.shape(defaultFont);
 
