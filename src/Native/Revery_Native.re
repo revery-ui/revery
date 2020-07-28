@@ -5,5 +5,6 @@ module Notification = Notification;
 module Shell = Shell;
 module Locale = Locale;
 module Gtk = Gtk;
+module Tray = Tray;
 
 include Initialization;

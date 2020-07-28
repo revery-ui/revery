@@ -369,6 +369,12 @@ let init = app => {
       Console.log(Printf.sprintf("Moved: %d x %d", x, y))
     );
 
+  Native.Tray.make(
+    ~title=`Image(Environment.getAssetPath("outrun-logo.png")),
+    (),
+  )
+  |> ignore;
+
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);
   ();

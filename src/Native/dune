@@ -13,6 +13,7 @@
         icon icon_cocoa icon_win32
         shell shell_cocoa shell_gtk shell_win32
         locale locale_cocoa locale_win32
+        tray tray_cocoa
         utilities
         ReveryGtk ReveryGtk_Widget
         ReveryAppDelegate ReveryAppDelegate_func
