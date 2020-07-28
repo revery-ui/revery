@@ -27,9 +27,9 @@ CAMLprim value revery_makeTrayHandle(value title_v) {
     title = String_val(Field(title_v, 1));
 
     if (Field(title_v, 0) == hash_variant("Text")) {
-      ret = revery_makeTrayHandleText_cocoa(title);
+        ret = revery_makeTrayHandleText_cocoa(title);
     } else {
-      ret = revery_makeTrayHandleImage_cocoa(title);
+        ret = revery_makeTrayHandleImage_cocoa(title);
     };
 
     UNUSED(title);
