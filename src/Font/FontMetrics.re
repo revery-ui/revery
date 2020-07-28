@@ -5,6 +5,8 @@ type t = {
   descent: float,
   underlinePosition: float,
   underlineThickness: float,
+  avgCharWidth: float,
+  maxCharWidth: float,
 };
 
 let empty = (size: float) => {
@@ -14,6 +16,8 @@ let empty = (size: float) => {
   descent: 0.,
   underlinePosition: 0.,
   underlineThickness: 0.,
+  maxCharWidth: 0.,
+  avgCharWidth: 0.,
 };
 
 let ofSkia = (size: float, lineHeight: float, metrics: Skia.FontMetrics.t) => {
@@ -21,6 +25,8 @@ let ofSkia = (size: float, lineHeight: float, metrics: Skia.FontMetrics.t) => {
   let descent = Skia.FontMetrics.getDescent(metrics);
   let underlinePosition = Skia.FontMetrics.getUnderlinePosition(metrics);
   let underlineThickness = Skia.FontMetrics.getUnderlineThickness(metrics);
+  let maxCharWidth = Skia.FontMetrics.getMaxCharacterWidth(metrics);
+  let avgCharWidth = Skia.FontMetrics.getAvgCharacterWidth(metrics);
   {
     height: size,
     lineHeight,
@@ -28,5 +34,7 @@ let ofSkia = (size: float, lineHeight: float, metrics: Skia.FontMetrics.t) => {
     descent,
     underlinePosition,
     underlineThickness,
+    maxCharWidth,
+    avgCharWidth,
   };
 };
