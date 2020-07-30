@@ -34,7 +34,6 @@ describe("FontCache", ({test, _}) => {
     "fallback for all ASCII characters - including non-printable characters",
     ({expect, _}) => {
     for (ascii in 0 to 255) {
-      prerr_endline("Testing character: " ++ string_of_int(ascii));
       let asciiCharacter = Zed_utf8.make(1, Uchar.of_int(ascii));
       let {glyphStrings}: ShapeResult.t =
         asciiCharacter |> FontCache.shape(defaultFont);
@@ -90,7 +89,7 @@ describe("FontCache", ({test, _}) => {
 
   test("non-fallback surrounded by holes (onivim/oni2#2178)", ({expect, _}) => {
     let {glyphStrings}: ShapeResult.t =
-      "a⌋" |> FontCache.shape(defaultFont);
+      "⌋a⌋" |> FontCache.shape(defaultFont);
 
     expect.int(glyphStrings |> runCount).toBe(3);
     expect.int(glyphStrings |> run(0) |> glyphCount).toBe(1);
