@@ -89,13 +89,8 @@ describe("FontCache", ({test, _}) => {
   });
 
   test("non-fallback surrounded by holes (onivim/oni2#2178)", ({expect, _}) => {
-    let fallbackChar = "⌋";
-    let nonfallbackChar = "a";
     let {glyphStrings}: ShapeResult.t =
-      fallbackChar
-      ++ nonfallbackChar
-      ++ fallbackChar
-      |> FontCache.shape(defaultFont);
+      "a⌋" |> FontCache.shape(defaultFont);
 
     expect.int(glyphStrings |> runCount).toBe(3);
     expect.int(glyphStrings |> run(0) |> glyphCount).toBe(1);
