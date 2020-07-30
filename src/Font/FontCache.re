@@ -202,6 +202,7 @@ let matchCharacter = (fallbackCharacterCache, uchar, skiaFace) =>
 let generateShapes:
   (~features: list(Feature.t), t, string) => list(ShapeResult.shapeNode) =
   (~features, font, str) => {
+    let familyName = font.skiaFace |> Skia.Typeface.getFamilyName;
     let fallbackFor = (~byteOffset, str) => {
       Log.debugf(m =>
         m("Resolving fallback for: %s at byte offset %d", str, byteOffset)
@@ -226,14 +227,27 @@ let generateShapes:
        CJK characters. This module contains functions that
        relate to the creation and resolution of these "holes" */
     let rec resolveHole = (~acc, ~start, ~stop) =>
-      if (start > stop) {
+      if (start >= stop) {
         acc;
       } else {
         switch (fallbackFor(~byteOffset=start, str)) {
-        | Ok(font) =>
-          // We found a fallback font! Now we just have to shape it the same way
-          // we shape the super-string.
-          loop(~start, ~stop, ~acc, font)
+        | Ok(fallbackFont)
+            when
+              Skia.Typeface.getUniqueID(fallbackFont.skiaFace)
+              == Skia.Typeface.getUniqueID(font.skiaFace) =>
+          resolveHole(
+            ~acc=[
+              ShapeResult.{
+                hbFace: font.hbFace,
+                skiaFace: font.skiaFace,
+                glyphId: Constants.unresolvedGlyphID,
+                cluster: start,
+              },
+              ...acc,
+            ],
+            ~start=start + 1,
+            ~stop,
+          )
         | Error(_) =>
           // Just because we can't find a font for this character doesn't mean
           // the rest of the hole can't be resolved. Here we insert the "unknown"
@@ -251,6 +265,10 @@ let generateShapes:
             ~start=start + 1,
             ~stop,
           )
+        | Ok(font) =>
+          // We found a fallback font! Now we just have to shape it the same way
+          // we shape the super-string.
+          loop(~start, ~stop, ~acc, font)
         };
       }
 

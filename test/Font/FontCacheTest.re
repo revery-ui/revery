@@ -30,8 +30,23 @@ describe("FontCache", ({test, _}) => {
     expect.int(glyphStrings |> runCount).toBe(0);
   });
 
-  test("shape simple ASCII text", ({expect, _}) => {
-    let {glyphStrings}: ShapeResult.t = "a" |> FontCache.shape(defaultFont);
+  test(
+    "fallback for all ASCII characters - including non-printable characters",
+    ({expect, _}) => {
+    for (ascii in 0 to 255) {
+      prerr_endline("Testing character: " ++ string_of_int(ascii));
+      let asciiCharacter = Zed_utf8.make(1, Uchar.of_int(ascii));
+      let {glyphStrings}: ShapeResult.t =
+        asciiCharacter |> FontCache.shape(defaultFont);
+
+      expect.int(glyphStrings |> runCount).toBe(1);
+      expect.int(glyphStrings |> run(0) |> glyphCount).toBe(1);
+    }
+  });
+
+  test("shape simple CJK text", ({expect, _}) => {
+    let {glyphStrings}: ShapeResult.t =
+      "腐" |> FontCache.shape(defaultFont);
 
     expect.int(glyphStrings |> runCount).toBe(1);
     expect.int(glyphStrings |> run(0) |> glyphCount).toBe(1);
