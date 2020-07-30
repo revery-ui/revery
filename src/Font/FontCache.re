@@ -202,7 +202,6 @@ let matchCharacter = (fallbackCharacterCache, uchar, skiaFace) =>
 let generateShapes:
   (~features: list(Feature.t), t, string) => list(ShapeResult.shapeNode) =
   (~features, font, str) => {
-    let familyName = font.skiaFace |> Skia.Typeface.getFamilyName;
     let fallbackFor = (~byteOffset, str) => {
       Log.debugf(m =>
         m("Resolving fallback for: %s at byte offset %d", str, byteOffset)
