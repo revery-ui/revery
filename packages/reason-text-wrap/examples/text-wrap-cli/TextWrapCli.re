@@ -1,4 +1,4 @@
-open Revery_TextWrap;
+open TextWrap;
 
 /* Get the width of a character */
 let width_of_token = str => {
