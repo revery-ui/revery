@@ -1,0 +1,16 @@
+{
+  "source": "./package.json",
+  "scripts": {
+    "text-wrap-cli": "esy @examples x TextWrapCli"
+  },
+  "override": {
+      "build": ["dune build -p reason-text-wrap,reason-text-wrap-examples -j4"],
+      "install": [
+          "esy-installer reason-text-wrap.install",
+          "esy-installer reason-text-wrap-examples.install"
+      ],
+      "resolutions": {
+        "zed": "link:../zed"
+      }
+  }
+}

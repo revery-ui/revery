@@ -1,0 +1,37 @@
+{
+  "name": "reaspm-text-wrap",
+  "version": "0.1.0",
+  "description": "Text wrapping library",
+  "scripts": {
+    "format": "esy dune build @fmt --auto-promote"
+  },
+  "esy": {
+    "build": [
+      [
+        "dune",
+        "build",
+        "--root",
+        "."
+      ]
+    ],
+    "install": [
+      "esy-installer"
+    ]
+  },
+  "peerDependencies": {
+    "ocaml": "~4.6.0"
+  },
+  "dependencies": {
+    "@esy-ocaml/reason": "^3.6.0",
+    "@opam/dune": "*",
+    "zed": "*",
+    "@glennsl/timber": "^1.2.0"
+  },
+  "resolutions": {
+    "zed": "link:../zed"
+  },
+  "devDependencies": {
+    "ocaml": "~4.10.0",
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6"
+  }
+}
