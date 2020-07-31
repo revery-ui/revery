@@ -1,6 +1,0 @@
-{
-  "build": [ "true" ],
-  "dependencies": {
-    "esy-autoconf": "esy-packages/esy-autoconf#fb93edf"
-  }
-}
