@@ -1,0 +1,18 @@
+(executables
+  (names Sdl)
+  (package reason-skia-examples)
+  (public_names Sdl)
+  (modes native byte)
+  (libraries
+    reason-skia
+    reason-sdl2
+    lwt
+    integers
+    reason-skia.wrapped.bindings
+    reason-skia.wrapped
+))
+
+(install
+  (section bin)
+  (package reason-skia-examples)
+  (files Sdl.bc))

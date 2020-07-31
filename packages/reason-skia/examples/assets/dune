@@ -1,6 +1,6 @@
 (install
   (section bin)
-  (package reason-skia-example)
+  (package reason-skia-examples)
   (files
     "Orbitron Medium.ttf"
     FiraCode-Regular.ttf

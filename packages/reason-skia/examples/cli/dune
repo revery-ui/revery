@@ -1,0 +1,16 @@
+(executables
+  (names Cli)
+  (package reason-skia-examples)
+  (public_names Cli)
+  (modes native byte)
+  (libraries
+    reason-skia
+    reason-skia.wrapped.bindings
+    reason-skia.wrapped
+    reason-native-crash-utils.asan
+))
+
+(install
+  (section bin)
+  (package reason-skia-examples)
+  (files Cli.bc))

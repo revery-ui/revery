@@ -1,0 +1,22 @@
+{
+  "source": "./package.json",
+  "scripts": {
+    "cli": "esy @examples x Cli",
+    "fontmanager-cli": "esy @examples x bash -c run-fontmanager.sh #{os}",
+    "sdl": "esy @examples x Sdl"
+  },
+  "override": {
+      "build": ["dune build -p reason-skia,reason-skia-examples -j4"],
+      "install": [
+          "esy-installer reason-skia.install",
+          "esy-installer reason-skia-examples.install"
+      ],
+      "dependencies": {
+        "zed": "*"
+      },
+      "resolutions": {
+        "zed": "link:../zed/package.json",
+        "reason-sdl2": "link:../reason-sdl2"
+      }
+  }
+}

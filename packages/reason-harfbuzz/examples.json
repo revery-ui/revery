@@ -1,0 +1,16 @@
+{
+  "source": "./package.json",
+  "scripts": {
+    "cli": "esy @examples x run-harfbuzz.sh"
+  },
+  "override": {
+    "build": ["dune build -p reason-harfbuzz,reason-harfbuzz-examples -j4"],
+    "dependencies": {
+      "reason-native-crash-utils": "onivim/reason-native-crash-utils#38c8f00"
+    },
+    "install": [
+      "esy-installer reason-harfbuzz.install",
+      "esy-installer reason-harfbuzz-examples.install"
+    ]
+  }
+}
