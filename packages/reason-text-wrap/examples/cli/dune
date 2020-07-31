@@ -1,0 +1,11 @@
+(executables
+ (names Cli)
+ (package reason-text-wrap-examples)
+ (public_names Cli)
+ (modes native byte)
+ (libraries reason-text-wrap zed))
+
+(install
+ (section bin)
+ (package reason-text-wrap-examples)
+ (files Cli.bc))

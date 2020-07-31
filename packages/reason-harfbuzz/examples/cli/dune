@@ -1,0 +1,13 @@
+(executable
+ (name Cli)
+ (package reason-harfbuzz-examples)
+ (public_name Cli)
+ (libraries bigarray harfbuzz reason-native-crash-utils.asan))
+
+(install
+ (section bin)
+ (package reason-harfbuzz-examples)
+ (files 
+   run-harfbuzz.sh
+   Roboto-Regular.ttf
+))
