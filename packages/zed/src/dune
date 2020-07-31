@@ -1,6 +1,6 @@
 (library
  (name Revery_Zed)
- (public_name Revery.zed)
+ (public_name zed)
  (wrapped false)
  (flags
   (:standard -safe-string))

@@ -1,0 +1,28 @@
+{
+  "name": "zed",
+  "version": "0.1.0",
+  "esy": {
+    "build": [
+      [
+        "dune",
+        "build",
+        "-p",
+        "zed"
+      ]
+    ],
+    "install": [
+      "esy-installer zed.install"
+    ]
+  },
+  "dependencies": {
+    "ocaml": ">=4.6.0",
+    "@opam/dune": ">=1.7",
+    "@opam/react": "*",
+    "@opam/uucp": "*",
+    "@opam/uutf": "*",
+    "@opam/charInfo_width": "*"
+  },
+  "devDependencies": {
+    "ocaml": "4.10.0"
+  }
+}
