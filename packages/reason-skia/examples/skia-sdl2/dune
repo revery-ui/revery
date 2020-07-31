@@ -1,11 +1,18 @@
 (executables
- (names SkiaSdl)
- (package ReveryExamples)
- (public_names SkiaSdl)
- (modes native byte)
- (libraries reason-skia sdl2 lwt integers reason-skia.wrapped.bindings reason-skia.wrapped))
+  (names SkiaSdl)
+  (package reason-skia-example)
+  (public_names SkiaSdl)
+  (modes native byte)
+  (libraries
+    reason-skia
+    reason-sdl2
+    lwt
+    integers
+    reason-skia.wrapped.bindings
+    reason-skia.wrapped
+))
 
 (install
- (section bin)
- (package ReveryExamples)
- (files SkiaSdl.bc))
+  (section bin)
+  (package reason-skia-example)
+  (files SkiaSdl.bc))

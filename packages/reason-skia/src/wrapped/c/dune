@@ -7,7 +7,7 @@
  (name skia_wrapped_c)
  (public_name reason-skia.wrapped.c)
  (preprocess no_preprocessing)
- (libraries sdl2)
+ (libraries reason-sdl2)
  (self_build_stubs_archive (skia_wrapped_c)))
 
 (rule

@@ -1,0 +1,8 @@
+(install
+  (section bin)
+  (package reason-skia-example)
+  (files
+    "Orbitron Medium.ttf"
+    FiraCode-Regular.ttf
+    uv.png
+))

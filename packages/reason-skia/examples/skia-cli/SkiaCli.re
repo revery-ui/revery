@@ -1,5 +1,12 @@
 open Skia;
 
+let getExecutingDirectory = () =>
+  switch (Sys.backend_type) {
+  | Native
+  | Bytecode => Filename.dirname(Sys.argv[0]) ++ Filename.dir_sep
+  | _ => ""
+  };
+
 let makeSurface = (width, height) => {
   let imageInfo = ImageInfo.make(width, height, Rgba8888, Premul, None);
   Surface.makeRaster(imageInfo, 0, None);
@@ -67,9 +74,7 @@ let draw = canvas => {
   assert(nonExistentTypeface == None);
 
   // Draw text
-  let filePath =
-    Sys.getcwd()
-    ++ "/packages/reason-skia/examples/skia-cli/Orbitron Medium.ttf";
+  let filePath = getExecutingDirectory() ++ "Orbitron Medium.ttf";
   print_endline("Loading font: " ++ filePath);
   let maybeTypeface = Typeface.makeFromFile(filePath, 0);
   switch (maybeTypeface) {
@@ -118,7 +123,7 @@ let draw = canvas => {
   };
 
   // Load and draw image
-  let imgPath = Sys.getcwd() ++ "/assets/uv.png";
+  let imgPath = getExecutingDirectory() ++ "uv.png";
   print_endline("Loading image: " ++ imgPath);
   let maybeImgData = Data.makeFromFileName(imgPath);
   let maybeImg =
@@ -151,9 +156,7 @@ let draw = canvas => {
   };
 
   // Draw text w/ ligature
-  let filePath =
-    Sys.getcwd()
-    ++ "/packages/reason-skia/examples/skia-cli/FiraCode-Regular.ttf";
+  let filePath = getExecutingDirectory() ++ "FiraCode-Regular.ttf";
   print_endline("Loading font: " ++ filePath);
   let maybeTypeface = Typeface.makeFromFile(filePath, 0);
   switch (maybeTypeface) {

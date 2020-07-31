@@ -1,0 +1,45 @@
+{
+  "name": "reason-skia",
+  "version": "0.1.0",
+  "description": "Reason bindings for the Skia 2D graphics library",
+  "scripts": {
+    "format": "esy dune build @fmt --auto-promote"
+  },
+  "esy": {
+    "build": [
+      [
+        "refmterr",
+        "dune",
+        "build",
+        "-p",
+        "reason-skia"
+      ]
+    ],
+    "install": [
+      "esy-installer reason-skia.install",
+      "bash -c \"cp #{esy-skia.bin}/skia.dll \\'$cur__bin\\' #{os == 'windows' ? '' : '2>/dev/null || true'}\""
+    ]
+  },
+  "peerDependencies": {
+    "ocaml": "~4.6.0"
+  },
+  "dependencies": {
+    "@esy-ocaml/reason": "^3.6.0",
+    "@opam/ctypes": "0.15.1",
+    "@opam/dune": ">=1.7",
+    "esy-skia": "revery-ui/esy-skia#a3785f9",
+    "@opam/lwt": "*",
+    "refmterr": "*",
+    "esy-freetype2": "^2.9.1007",
+    "esy-sdl2": "^2.0.10008",
+    "reason-sdl2": "*",
+    "reason-native-crash-utils": "onivim/reason-native-crash-utils#38c8f003a0ab26d6e94932e88af9b58ce758f9a6"
+  },
+  "resolutions": {
+    "reason-sdl2": "link:../reason-sdl2"
+  },
+  "devDependencies": {
+    "ocaml": "~4.10.0",
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a"
+  }
+}
