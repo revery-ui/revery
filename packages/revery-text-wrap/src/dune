@@ -1,4 +1,0 @@
-(library
- (name Revery_TextWrap)
- (public_name Revery.text-wrap)
- (libraries Revery.zed timber))
