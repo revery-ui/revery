@@ -25,6 +25,21 @@ CAMLprim value revery_getMenuBarHandle(value vWindow) {
 #ifdef USE_COCOA
     menuBarHandle = revery_getMenuBarHandle_cocoa();
 #else
+    menuBarHandle = NULL;
 #endif
     CAMLreturn((value)menuBarHandle);
+}
+
+CAMLprim value revery_createMenuItem(value vTitle) {
+    CAMLparam1(vTitle);
+
+    const char *title = String_val(vTitle);
+
+    void *menuItem;
+#ifdef USE_COCOA
+    menuItem = revery_createMenuItem_cocoa(title);
+#else
+    menuItem = NULL;
+#endif
+    CAMLreturn((value)menuItem);
 }
