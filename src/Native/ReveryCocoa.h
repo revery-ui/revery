@@ -25,3 +25,7 @@ int revery_openFile_cocoa(const char *path_string);
 
 /* Locale functions */
 char *revery_getUserLocale_cocoa();
+
+
+/* Menu functions */
+void *revery_getMenuBarHandle_cocoa();
