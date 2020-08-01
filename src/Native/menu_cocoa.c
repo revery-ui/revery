@@ -3,7 +3,7 @@
 #import <Cocoa/Cocoa.h>
 
 void *revery_getMenuBarHandle_cocoa() {
-    return (void *)[NSApp mainMenu];
+    return (void *)[NSApp windowsMenu];
 }
 
 void *revery_createMenuItem_cocoa(const char *title) {
@@ -14,6 +14,13 @@ void *revery_createMenuItem_cocoa(const char *title) {
         [[NSMenuItem alloc] initWithTitle:nsTitle action:NULL keyEquivalent:@""];
 
     return (void *)nsMenuItem;
+}
+
+void revery_insertItemIntoMenu_cocoa(void *menu, void *menuItem) {
+    NSMenu *nsMenu = (NSMenu *)menu;
+    NSMenuItem *nsMenuItem = (NSMenuItem *)menuItem;
+
+    [nsMenu addItem:nsMenuItem];
 }
 
 #endif

@@ -4,5 +4,6 @@ module Icon = Icon;
 module Notification = Notification;
 module Shell = Shell;
 module Locale = Locale;
+module Menu = Menu;
 
 include Initialization;

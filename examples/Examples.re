@@ -368,6 +368,11 @@ let init = app => {
       Console.log(Printf.sprintf("Moved: %d x %d", x, y))
     );
 
+  let menuBar = Revery.Native.Menu.getMenuBar(Window.getSdlWindow(window));
+  let menuItem = Revery.Native.Menu.Item.create(~title="Zach's Item");
+
+  menuItem |> Revery.Native.Menu.addItem(menuBar);
+
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);
   ();

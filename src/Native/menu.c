@@ -43,3 +43,17 @@ CAMLprim value revery_createMenuItem(value vTitle) {
 #endif
     CAMLreturn((value)menuItem);
 }
+
+CAMLprim value revery_insertItemIntoMenu(value vMenu, value vMenuItem) {
+    CAMLparam2(vMenu, vMenuItem);
+
+    void *menu = (void *)vMenu;
+    void *menuItem = (void *)vMenuItem;
+#ifdef USE_COCOA
+    revery_insertItemIntoMenu_cocoa(menu, menuItem);
+#else
+    UNUSED(menu);
+    UNUSED(menuItem);
+#endif
+    CAMLreturn(Val_unit);
+}

@@ -30,3 +30,4 @@ char *revery_getUserLocale_cocoa();
 /* Menu functions */
 void *revery_getMenuBarHandle_cocoa();
 void *revery_createMenuItem_cocoa();
+void *revery_insertItemIntoMenu_cocoa(void *menu, void *menuItem);
