@@ -29,5 +29,8 @@ char *revery_getUserLocale_cocoa();
 
 /* Menu functions */
 void *revery_getMenuBarHandle_cocoa();
-void *revery_createMenuItem_cocoa();
-void *revery_insertItemIntoMenu_cocoa(void *menu, void *menuItem);
+void *revery_createMenuItem_cocoa(const char *title);
+void revery_insertItemIntoMenu_cocoa(void *menu, void *menuItem);
+void *revery_createMenu_cocoa(const char *title);
+void revery_setSubmenuForItem_cocoa(void *menuItem, void *menu);
+void revery_setOnClickForMenuItem_cocoa(void *menuItem, long camlCallback);

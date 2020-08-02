@@ -370,6 +370,17 @@ let init = app => {
 
   let menuBar = Revery.Native.Menu.getMenuBar(Window.getSdlWindow(window));
   let menuItem = Revery.Native.Menu.Item.create(~title="Zach's Item");
+  let myMenu = Revery.Native.Menu.create(~title="Zach's Menu");
+
+  let testItem1 = Revery.Native.Menu.Item.create(~title="Test item 1");
+  let testItem1Callback = () => {
+    print_endline("Printing from OCaml!");
+  };
+
+  testItem1 |> Revery.Native.Menu.addItem(myMenu);
+  testItem1Callback |> Revery.Native.Menu.Item.setOnClick(testItem1);
+
+  myMenu |> Revery.Native.Menu.Item.setSubmenu(menuItem);
 
   menuItem |> Revery.Native.Menu.addItem(menuBar);
 

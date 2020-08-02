@@ -57,3 +57,43 @@ CAMLprim value revery_insertItemIntoMenu(value vMenu, value vMenuItem) {
 #endif
     CAMLreturn(Val_unit);
 }
+
+CAMLprim value revery_createMenu(value vTitle) {
+    CAMLparam1(vTitle);
+
+    const char *title = String_val(vTitle);
+
+    void *menu;
+#ifdef USE_COCOA
+    menu = revery_createMenu_cocoa(title);
+#else
+    menu = NULL
+#endif
+    CAMLreturn((value)menu);
+}
+
+CAMLprim value revery_setSubmenuForItem(value vMenuItem, value vMenu) {
+    CAMLparam2(vMenuItem, vMenu);
+
+    void *menu = (void *)vMenu;
+    void *menuItem = (void *)vMenuItem;
+#ifdef USE_COCOA
+    revery_setSubmenuForItem_cocoa(menuItem, menu);
+#else
+    UNUSED(menu);
+    UNUSED(menuItem);
+#endif
+    CAMLreturn(Val_unit);
+}
+
+CAMLprim value revery_setOnClickForMenuItem(value vMenuItem, value vCallback) {
+    CAMLparam2(vMenuItem, vCallback);
+
+    void *menuItem = (void *)vMenuItem;
+#ifdef USE_COCOA
+    revery_setOnClickForMenuItem_cocoa(menuItem, vCallback);
+#else
+    UNUSED(menuItem);
+#endif
+    CAMLreturn(Val_unit);
+}
