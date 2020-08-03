@@ -97,3 +97,21 @@ CAMLprim value revery_setOnClickForMenuItem(value vMenuItem, value vCallback) {
 #endif
     CAMLreturn(Val_unit);
 }
+
+CAMLprim value revery_displayMenuAtPositionInWindow(value vMenu, value vWindow, value vX, value vY) {
+    CAMLparam4(vMenu, vWindow, vX, vY);
+
+    void *menu = (void *)vMenu;
+    void *window = (void *)vWindow;
+    int x = Int_val(vX);
+    int y = Int_val(vY);
+#ifdef USE_COCOA
+    revery_displayMenuAtPositionInWindow_cocoa(menu, window, x, y);
+#else
+    UNUSED(menu);
+    UNUSED(window);
+    UNUSED(x);
+    UNUSED(y);
+#endif
+    CAMLreturn(Val_unit);
+}

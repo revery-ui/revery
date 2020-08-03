@@ -3,6 +3,8 @@
 #import "ReveryMenuHandler.h"
 #import <Cocoa/Cocoa.h>
 
+#include <pthread.h>
+
 #import "utilities.h"
 
 #define UNUSED(x) (void)(x)
@@ -18,15 +20,21 @@
 }
 
 - (void)menuClickHandler:(id)sender {
-    NSNumber *nsNumber = self.menuActions[[sender identifier]];
-    long ocamlFunc = [nsNumber longValue];
-    revery_caml_call(ocamlFunc);
+    NSValue *nsValue = self.menuActions[[sender identifier]];
+    if (nsValue != NULL) {
+        long *callback = [nsValue pointerValue];
+        if (callback != NULL) {
+            revery_caml_call_no_lock(*callback);
+        }
+    }
 }
 
 -(void)registerOnClick:(NSMenuItem *)menuItem callback:(long)camlCallback {
-    NSLog(@"%s", __func__);
-    self.menuActions[[menuItem identifier]] =
-        [NSNumber numberWithLong:camlCallback];
+    long *globalCallback = malloc(sizeof(long));
+    *globalCallback = camlCallback;
+    revery_caml_register_global(globalCallback);
+    NSValue *nsValue = [NSValue valueWithPointer:globalCallback];
+    self.menuActions[[menuItem identifier]] = nsValue;
 }
 
 @end

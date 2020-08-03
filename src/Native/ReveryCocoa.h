@@ -34,3 +34,4 @@ void revery_insertItemIntoMenu_cocoa(void *menu, void *menuItem);
 void *revery_createMenu_cocoa(const char *title);
 void revery_setSubmenuForItem_cocoa(void *menuItem, void *menu);
 void revery_setOnClickForMenuItem_cocoa(void *menuItem, long camlCallback);
+void revery_displayMenuAtPositionInWindow_cocoa(void *menu, void *window, int x, int y);

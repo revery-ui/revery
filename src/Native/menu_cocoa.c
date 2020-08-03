@@ -55,4 +55,14 @@ void revery_setOnClickForMenuItem_cocoa(void *menuItem, long camlCallback) {
         [revery_menuHandler registerOnClick:nsMenuItem callback:camlCallback];
     }
 }
+
+void revery_displayMenuAtPositionInWindow_cocoa(void *menu, void *window, int x, int y) {
+    NSMenu *nsMenu = (NSMenu *)menu;
+    NSWindow *nsWindow = (NSWindow *)window;
+
+    NSPoint position = NSMakePoint((CGFloat)x, (CGFloat)y);
+    NSView *nsView = [nsWindow contentView];
+
+    [nsMenu popUpMenuPositioningItem:NULL atLocation:position inView:nsView];
+}
 #endif

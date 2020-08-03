@@ -3,34 +3,49 @@ type menuItem;
 type clickHandler = unit => unit;
 
 open {
-       external getMenuBarHandle': Sdl2.Window.nativeWindow => t =
+       external c_getMenuBarHandle: Sdl2.Window.nativeWindow => t =
          "revery_getMenuBarHandle";
 
-       external createMenuItem': string => menuItem = "revery_createMenuItem";
+       external c_createMenuItem: string => menuItem = "revery_createMenuItem";
 
-       external insertItemIntoMenu': (t, menuItem) => unit =
+       external c_insertItemIntoMenu: (t, menuItem) => unit =
          "revery_insertItemIntoMenu";
 
-       external createMenu': string => t = "revery_createMenu";
+       external c_createMenu: string => t = "revery_createMenu";
 
-       external setSubmenuForItem': (menuItem, t) => unit =
+       external c_setSubmenuForItem: (menuItem, t) => unit =
          "revery_setSubmenuForItem";
 
-       external setOnClickForMenuItem': (menuItem, clickHandler) => unit =
+       external c_setOnClickForMenuItem: (menuItem, clickHandler) => unit =
          "revery_setOnClickForMenuItem";
+
+       // Arguments: (menu, window, x, y)
+       external c_displayMenuAtPositionInWindow:
+         (t, Sdl2.Window.nativeWindow, int, int) => unit =
+         "revery_displayMenuAtPositionInWindow";
      };
 
-let create = (~title: string) => createMenu'(title);
+let create = (~title: string) => c_createMenu(title);
 
 let getMenuBar = sdlWindow =>
-  getMenuBarHandle'(sdlWindow |> Sdl2.Window.getNativeWindow);
+  c_getMenuBarHandle(sdlWindow |> Sdl2.Window.getNativeWindow);
 
-let addItem = insertItemIntoMenu';
+let addItem = c_insertItemIntoMenu;
+
+let displayAt = (~window as sdlWindow, ~x, ~y, menu) =>
+  c_displayMenuAtPositionInWindow(
+    menu,
+    sdlWindow |> Sdl2.Window.getNativeWindow,
+    x,
+    y,
+  );
 
 module Item = {
   type t = menuItem;
 
-  let create = (~title: string) => createMenuItem'(title);
-  let setSubmenu = setSubmenuForItem';
-  let setOnClick = setOnClickForMenuItem';
+  let create = (~title: string) => c_createMenuItem(title);
+  let setSubmenu = c_setSubmenuForItem;
+  let setOnClick = (clickHandler, menuItem) => {
+    c_setOnClickForMenuItem(menuItem, clickHandler);
+  };
 };

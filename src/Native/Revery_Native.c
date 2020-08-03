@@ -5,6 +5,7 @@
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
 #include <string.h>
+#include "utilities.h"
 
 #define UNUSED(x) (void)(x)
 
