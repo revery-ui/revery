@@ -21,7 +21,10 @@ module Example = {
                 let item =
                   Menu.Item.create(~title="Item #" ++ string_of_int(i));
                 let () =
-                  item |> Menu.Item.setOnClick(() => Window.minimize(window));
+                  item
+                  |> Menu.Item.setOnClick(item =>
+                       print_endline(Utilities.MacOS.nsObjectToString(item))
+                     );
                 item;
               },
             );

@@ -115,3 +115,17 @@ CAMLprim value revery_displayMenuAtPositionInWindow(value vMenu, value vWindow, 
 #endif
     CAMLreturn(Val_unit);
 }
+
+CAMLprim value revery_removeItemFromMenu(value vMenu, value vMenuItem) {
+    CAMLparam2(vMenuItem, vMenu);
+
+    void *menu = (void *)vMenu;
+    void *menuItem = (void *)vMenuItem;
+#ifdef USE_COCOA
+    revery_removeItemFromMenu_cocoa(menu, menuItem);
+#else
+    UNUSED(menu);
+    UNUSED(menuItem);
+#endif
+    CAMLreturn(Val_unit);
+}

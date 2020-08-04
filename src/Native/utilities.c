@@ -7,6 +7,12 @@
 #include "caml_values.h"
 #include <pthread.h>
 
+#include "config.h"
+
+#ifdef USE_COCOA
+#import <Cocoa/Cocoa.h>
+#endif
+
 /* Sourced from Brisk's `BriskCocoa`
     Thank you @wokalski!
 */
@@ -36,4 +42,20 @@ void revery_caml_register_global(value *f) {
 
 void revery_caml_unregister_global(value *f) {
     caml_remove_global_root(f);
+}
+
+
+CAMLprim value revery_NSObjectToString(value vObj) {
+    CAMLparam1(vObj);
+    CAMLlocal1(str);
+
+#ifdef USE_COCOA
+    NSObject *obj = (NSObject *)vObj;
+    NSString *nsString = [NSString stringWithFormat:@"%@", obj];
+    str = caml_copy_string([nsString UTF8String]);
+#else
+    str = caml_copy_string(NULL);
+#endif
+
+    CAMLreturn(str);
 }

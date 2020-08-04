@@ -1,6 +1,6 @@
 type t;
 type menuItem;
-type clickHandler = unit => unit;
+type clickHandler = menuItem => unit;
 
 open {
        external c_getMenuBarHandle: Sdl2.Window.nativeWindow => t =
@@ -23,6 +23,9 @@ open {
        external c_displayMenuAtPositionInWindow:
          (t, Sdl2.Window.nativeWindow, int, int) => unit =
          "revery_displayMenuAtPositionInWindow";
+
+       external c_removeItemFromMenu: (t, menuItem) => unit =
+         "revery_removeItemFromMenu";
      };
 
 let create = (~title: string) => c_createMenu(title);
@@ -31,6 +34,7 @@ let getMenuBar = sdlWindow =>
   c_getMenuBarHandle(sdlWindow |> Sdl2.Window.getNativeWindow);
 
 let addItem = c_insertItemIntoMenu;
+let removeItem = c_removeItemFromMenu;
 
 let displayAt = (~window as sdlWindow, ~x, ~y, menu) =>
   c_displayMenuAtPositionInWindow(

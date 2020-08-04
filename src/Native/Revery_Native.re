@@ -5,5 +5,6 @@ module Notification = Notification;
 module Shell = Shell;
 module Locale = Locale;
 module Menu = Menu;
+module Utilities = Utilities;
 
 include Initialization;
