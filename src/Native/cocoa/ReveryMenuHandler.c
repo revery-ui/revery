@@ -38,18 +38,6 @@
     self.menuActions[[menuItem identifier]] = nsValue;
 }
 
-- (void)unregisterOnClick:(NSMenuItem *)menuItem {
-    NSValue *nsValue = self.menuActions[[menuItem identifier]];
-    if (nsValue != NULL) {
-        long *callback = [nsValue pointerValue];
-        if (callback != NULL) {
-            revery_caml_unregister_global(callback);
-            free(callback);
-        }
-    }
-    self.menuActions[[menuItem identifier]] = NULL;
-}
-
 @end
 
 #endif

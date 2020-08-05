@@ -16,7 +16,7 @@ open {
        external c_setSubmenuForItem: (menuItem, t) => unit =
          "revery_setSubmenuForItem";
 
-       external c_setOnClickForMenuItem: (menuItem, clickHandler) => unit =
+       external c_setOnClickForMenuItem: (clickHandler, menuItem) => unit =
          "revery_setOnClickForMenuItem";
 
        // Arguments: (menu, window, x, y)
@@ -49,7 +49,5 @@ module Item = {
 
   let create = (~title: string) => c_createMenuItem(title);
   let setSubmenu = c_setSubmenuForItem;
-  let setOnClick = (clickHandler, menuItem) => {
-    c_setOnClickForMenuItem(menuItem, clickHandler);
-  };
+  let setOnClick = c_setOnClickForMenuItem;
 };

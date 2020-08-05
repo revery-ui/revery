@@ -86,12 +86,12 @@ CAMLprim value revery_setSubmenuForItem(value vMenuItem, value vMenu) {
     CAMLreturn(Val_unit);
 }
 
-CAMLprim value revery_setOnClickForMenuItem(value vMenuItem, value vCallback) {
-    CAMLparam2(vMenuItem, vCallback);
+CAMLprim value revery_setOnClickForMenuItem(value vCallback, value vMenuItem) {
+    CAMLparam2(vCallback, vMenuItem);
 
     void *menuItem = (void *)vMenuItem;
 #ifdef USE_COCOA
-    revery_setOnClickForMenuItem_cocoa(menuItem, vCallback);
+    revery_setOnClickForMenuItem_cocoa(vCallback, menuItem);
 #else
     UNUSED(menuItem);
 #endif

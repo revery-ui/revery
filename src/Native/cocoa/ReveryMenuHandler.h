@@ -8,8 +8,6 @@
 -(void)menuClickHandler:(id)sender;
 
 -(void)registerOnClick:(NSMenuItem *)menuItem callback:(long)camlCallback;
-
--(void)unregisterOnClick:(NSMenuItem *)menuItem;
 @end
 
 #endif

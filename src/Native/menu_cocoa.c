@@ -49,10 +49,9 @@ void revery_setSubmenuForItem_cocoa(void *menuItem, void *menu) {
     [nsMenuItem setSubmenu:nsMenu];
 }
 
-void revery_setOnClickForMenuItem_cocoa(void *menuItem, long camlCallback) {
+void revery_setOnClickForMenuItem_cocoa(long camlCallback, void *menuItem) {
     if (revery_menuHandler != NULL) {
         NSMenuItem *nsMenuItem = (NSMenuItem *)menuItem;
-        NSLog(@"%s: %@", __func__, nsMenuItem);
         [revery_menuHandler registerOnClick:nsMenuItem callback:camlCallback];
     }
 }
@@ -70,8 +69,6 @@ void revery_displayMenuAtPositionInWindow_cocoa(void *menu, void *window, int x,
 void revery_removeItemFromMenu_cocoa(void *menu, void *menuItem) {
     NSMenu *nsMenu = (NSMenu *)menu;
     NSMenuItem *nsMenuItem = (NSMenuItem *)menuItem;
-
-    [revery_menuHandler unregisterOnClick:nsMenuItem];
 
     [nsMenu removeItem:nsMenuItem];
 }

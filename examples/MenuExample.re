@@ -22,9 +22,7 @@ module Example = {
                   Menu.Item.create(~title="Item #" ++ string_of_int(i));
                 let () =
                   item
-                  |> Menu.Item.setOnClick(item =>
-                       print_endline(Utilities.MacOS.nsObjectToString(item))
-                     );
+                  |> Menu.Item.setOnClick(_ => setLastClicked(_ => Some(i)));
                 item;
               },
             );
