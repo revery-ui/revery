@@ -1,3 +1,6 @@
+%import
+"../Native/config.h";
+
 module AppLog = (val Log.withNamespace("Revery.App"));
 module SdlLog = (val Log.withNamespace("Revery.SDL2"));
 
@@ -151,6 +154,13 @@ let handleKeymapChanged = () => {
     );
   };
 };
+
+%if
+USE_GTK == 1;
+let renderFunction = Revery_Native.Platform.Gtk.renderLoop;
+[%%else];
+let renderFunction = Sdl2.renderLoop;
+[%%endif];
 
 let start = init => {
   let appInstance: t = {
