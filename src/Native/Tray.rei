@@ -1,16 +1,14 @@
 type t;
 
-type title = [ | `Text(string) | `Image(string)];
-
 /**
  * make
  *
- * Takes a [title] of either `Text(string) or `Image(string).
- * Where `Image(string) takes an absolute path to a file.
+ * Takes an optional [imagePath] which is an absolute path to a in image-file.
+ * Returns a newly created Tray.t;
  *
  * Examples:
- *   let tray = Tray.make(~title=`Text("Some Title"), ());
- *   Tray.make(~title=`Image("/absolute/path/to/image.png"), ()) |> ignore;
- *   Tray.make(~title=`Image(Environment.getAssetPath("some_asset_image.png"), ()) |> ignore;
+ *   Tray.make(~imagePath="/absolute/path/to/image.png", ()) |> ignore;
+ *   Tray.make(~imagePath=Environment.getAssetPath("some_asset_image.png", ()) |> ignore;
+ *   let tray = Tray.make();
  */
-let make: (~title: title, unit) => t;
+let make: (~imagePath: string=?, unit) => t;

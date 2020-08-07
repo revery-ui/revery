@@ -18,26 +18,27 @@
 #include "ReveryGtk.h"
 #endif
 
-CAMLprim value revery_makeTrayHandle(value title_v) {
-    CAMLparam1(title_v);
+CAMLprim value revery_makeTrayHandle(value imagePath_v) {
+    CAMLparam1(imagePath_v);
 
     void *ret;
 #ifdef USE_COCOA
-    const char *title;
-    title = String_val(Field(title_v, 1));
+    const char *imagePath = String_val(imagePath_v);
 
-    if (Field(title_v, 0) == hash_variant("Text")) {
-        ret = revery_makeTrayHandleText_cocoa(title);
+    if (imagePath_v == Val_none) {
+        ret = NULL;
     } else {
-        ret = revery_makeTrayHandleImage_cocoa(title);
-    };
+        const char *imagePath = String_val(imagePath_v);
+        imagePath = String_val(Some_val(imagePath_v));
+        ret = revery_makeTrayHandleImage_cocoa(imagePath);
+    }
 
-    UNUSED(title);
+    UNUSED(imagePath);
 #elif USE_WIN32
-    fprintf(stderr, "WARNING: %s is not implemented on this platform.", __func__);
+    /* fprintf(stderr, "WARNING: %s is not implemented on this platform.", __func__); */
     ret = NULL;
 #else
-    fprintf(stderr, "WARNING: %s is not implemented on this platform.", __func__);
+    /* fprintf(stderr, "WARNING: %s is not implemented on this platform.", __func__); */
     ret = NULL;
 #endif
     CAMLreturn((value)ret);
