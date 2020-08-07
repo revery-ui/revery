@@ -300,6 +300,10 @@ let start = init => {
     false;
   };
 
-  Sdl2.renderLoop(appLoop);
+  if (Environment.os == Linux) {
+    Revery_Native.Platform.Gtk.renderLoop(appLoop);
+  } else {
+    Sdl2.renderLoop(appLoop);
+  };
 };
 let start = init => Sdl2.main(() => start(init));

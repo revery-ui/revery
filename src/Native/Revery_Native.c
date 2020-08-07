@@ -30,6 +30,8 @@ CAMLprim value revery_initializeApp() {
     if (hr != S_OK) {
         fprintf(stderr, "WARNING: COM initialization failed.");
     }
+#elif USE_GTK
+    revery_initializeGtk();
 #endif
     return Val_unit;
 }

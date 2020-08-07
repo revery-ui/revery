@@ -13,6 +13,7 @@
         shell shell_cocoa shell_gtk shell_win32
         locale locale_cocoa locale_win32
         utilities
+        Revery_Gtk
         ReveryAppDelegate ReveryAppDelegate_func
         ReveryProgressBar)
     (c_flags :standard -Wall -Wextra -Werror (:include c_flags.sexp))
