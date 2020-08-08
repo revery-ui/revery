@@ -1,8 +1,8 @@
 %import
 "config.h";
 
-%if
-USE_GTK == 1;
+%ifdef
+USE_GTK;
 
 open {
        external c_startGtkEventLoop: (unit => bool) => unit =

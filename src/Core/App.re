@@ -1,6 +1,3 @@
-%import
-"../Native/config.h";
-
 module AppLog = (val Log.withNamespace("Revery.App"));
 module SdlLog = (val Log.withNamespace("Revery.SDL2"));
 
@@ -155,13 +152,6 @@ let handleKeymapChanged = () => {
   };
 };
 
-%if
-USE_GTK == 1;
-let renderFunction = Revery_Native.Platform.Gtk.renderLoop;
-[%%else];
-let renderFunction = Sdl2.renderLoop;
-[%%endif];
-
 let start = init => {
   let appInstance: t = {
     windows: Hashtbl.create(1),
@@ -310,10 +300,6 @@ let start = init => {
     false;
   };
 
-  if (Environment.os == Linux) {
-    Revery_Native.Platform.Gtk.renderLoop(appLoop);
-  } else {
-    Sdl2.renderLoop(appLoop);
-  };
+  Revery_Native.renderLoop(appLoop);
 };
 let start = init => Sdl2.main(() => start(init));
