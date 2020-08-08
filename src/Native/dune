@@ -1,27 +1,31 @@
 (library
-    (name Revery_Native)
-    (public_name Revery.Native)
-    (preprocess (pps lwt_ppx))
-    (library_flags (:include flags.sexp))
-    (js_of_ocaml (javascript_files dialog.js))
-    (c_names
-        Revery_Native
-        dialog dialog_cocoa dialog_win32 dialog_gtk
-        notification notification_cocoa
-        environment
-        icon icon_cocoa icon_win32
-        shell shell_cocoa shell_gtk shell_win32
-        locale locale_cocoa locale_win32
-        utilities
-        ReveryAppDelegate ReveryAppDelegate_func
-        ReveryProgressBar)
-    (c_flags :standard -Wall -Wextra -Werror (:include c_flags.sexp))
-    (c_library_flags (:include c_library_flags.sexp))
-    (libraries sdl2))
+ (name Revery_Native)
+ (public_name Revery.Native)
+ (preprocess
+  (pps lwt_ppx))
+ (library_flags
+  (:include flags.sexp))
+ (js_of_ocaml
+  (javascript_files dialog.js))
+ (c_names Revery_Native dialog dialog_cocoa dialog_win32 dialog_gtk
+   notification notification_cocoa environment icon icon_cocoa icon_win32
+   shell shell_cocoa shell_gtk shell_win32 locale locale_cocoa locale_win32
+   utilities ReveryAppDelegate ReveryAppDelegate_func ReveryProgressBar)
+ (c_flags
+  :standard
+  -Wall
+  -Wextra
+  -Werror
+  (:include c_flags.sexp))
+ (c_library_flags
+  (:include c_library_flags.sexp))
+ (libraries sdl2))
 
 (copy_files cocoa/*)
 
 (rule
-(targets config.h flags.sexp c_flags.sexp c_library_flags.sexp)
-(deps (:discover config/discover.exe))
-(action (run %{discover})))
+ (targets config.h flags.sexp c_flags.sexp c_library_flags.sexp)
+ (deps
+  (:discover config/discover.exe))
+ (action
+  (run %{discover})))

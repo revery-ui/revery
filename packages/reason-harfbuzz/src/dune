@@ -3,8 +3,10 @@
  (public_name reason-harfbuzz)
  (library_flags
   (:include flags.sexp))
- (c_flags (:include c_flags.sexp))
- (cxx_flags (:include cxx_flags.sexp))
+ (c_flags
+  (:include c_flags.sexp))
+ (cxx_flags
+  (:include cxx_flags.sexp))
  (cxx_names harfbuzz))
 
 (rule

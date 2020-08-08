@@ -1,5 +1,6 @@
 (library
-    (name Revery_Core_Test)
-    (library_flags (-linkall -g))
-    (modules (:standard))
-    (libraries Revery_Core Revery_Font rely.lib))
+ (name Revery_Core_Test)
+ (library_flags
+  (-linkall -g))
+ (modules (:standard))
+ (libraries Revery_Core Revery_Font rely.lib))

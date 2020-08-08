@@ -1,9 +1,5 @@
 (library
-    (name Skia_Bench)
-    (ocamlopt_flags -linkall)
-    (libraries
-        reason-skia
-        reason-skia.wrapped
-        reason-skia.wrapped.bindings
-        reperf.lib
-))
+ (name Skia_Bench)
+ (ocamlopt_flags -linkall)
+ (libraries reason-skia reason-skia.wrapped reason-skia.wrapped.bindings
+   reperf.lib))
