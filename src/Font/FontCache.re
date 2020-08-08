@@ -225,7 +225,7 @@ let generateShapes:
        don't include emojis, and Latin fonts often don't include
        CJK characters. This module contains functions that
        relate to the creation and resolution of these "holes" */
-    let rec resolveHole = (~acc, ~start, ~stop) => {
+    let rec resolveHole = (~acc, ~start, ~stop) =>
       if (start >= stop) {
         acc;
       } else {
@@ -279,8 +279,7 @@ let generateShapes:
           // we shape the super-string.
           loop(~start, ~stop, ~acc, fallbackFont);
         };
-      };
-    }
+      }
     and loopShapes =
         (
           ~stopCluster,
