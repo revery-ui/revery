@@ -375,6 +375,8 @@ let init = app => {
   )
   |> ignore;
 
+  Native.Tray.make() |> Native.Tray.setTitle(~text="Hello Revery!");
+
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);
   ();

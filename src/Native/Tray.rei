@@ -12,3 +12,15 @@ type t;
  *   let tray = Tray.make();
  */
 let make: (~imagePath: string=?, unit) => t;
+
+/**
+ * setTitle
+ *
+ * Takes a [title] of string and sets the tray's text to it.
+ *  *
+ * Examples:
+ *   tray |> Tray.setTitle(~text="Hello Revery!");
+ *   Tray.make() |> Tray.setTitle(~text="Hello Revery!");
+ *   Tray.setTitle(tray, ~text="Hello World!");
+ */
+let setTitle: (t, ~text: string) => unit;

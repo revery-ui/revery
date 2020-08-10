@@ -17,11 +17,15 @@ void *revery_getIconHandle_cocoa();
 /* Tray */
 void *revery_makeTrayHandleText_cocoa(const char *title_v);
 void *revery_makeTrayHandleImage_cocoa(const char *title_v);
+void revery_setTrayTitle_cocoa(const char *title_v);
 
 /* Icon progress bar functions */
 void revery_setIconProgress_cocoa(void* dt, double progress);
 void revery_setIconProgressIndeterminate_cocoa(void *dt);
 void revery_hideIconProgress_cocoa(void* ip);
+
+/* Image functions */
+void *revery_makeImageFromAbsolutePath(const char *image_path_v);
 
 /* Open functions */
 int revery_openURL_cocoa(const char *url_string);
