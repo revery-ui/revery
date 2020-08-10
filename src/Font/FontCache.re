@@ -231,9 +231,7 @@ let generateShapes:
       } else {
         switch (fallbackFor(~byteOffset=start, str)) {
         | Ok(fallbackFont)
-            when
-              Skia.Typeface.getUniqueID(fallbackFont.skiaFace)
-              == Skia.Typeface.getUniqueID(font.skiaFace) =>
+            when Skia.Typeface.equal(fallbackFont.skiaFace, font.skiaFace) =>
           resolveHole(
             ~acc=[
               ShapeResult.{
@@ -264,13 +262,24 @@ let generateShapes:
             ~start=start + 1,
             ~stop,
           )
-        | Ok(font) =>
+        | Ok(fallbackFont) =>
+          Log.debugf(m =>
+            m(
+              "Got fallback font - id: %d name: %s (from source font - id: %d %s)",
+              fallbackFont.skiaFace
+              |> Skia.Typeface.getUniqueID
+              |> Int32.to_int,
+              fallbackFont.skiaFace |> Skia.Typeface.getFamilyName,
+              font.skiaFace |> Skia.Typeface.getUniqueID |> Int32.to_int,
+              font.skiaFace |> Skia.Typeface.getFamilyName,
+            )
+          );
+
           // We found a fallback font! Now we just have to shape it the same way
           // we shape the super-string.
-          loop(~start, ~stop, ~acc, font)
+          loop(~start, ~stop, ~acc, fallbackFont);
         };
       }
-
     and loopShapes =
         (
           ~stopCluster,
