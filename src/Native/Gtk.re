@@ -14,6 +14,13 @@ module WindowTbl =
     let hash = Sdl2.Window.getId;
   });
 
+/* Unfortunately it's not really possible to have a corresponding
+   Gtk window as part of the state since the creation of the window
+   requires some initialization that doesn't occur until *after*
+   window creation. Conversely, we also don't want to create a
+   bunch of GtkWidgets for one window, so this table maps Sdl windows
+   to GtkWidgets.
+   */
 let windowToWidgetTable = WindowTbl.create(1);
 
 open {
