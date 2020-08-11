@@ -25,9 +25,15 @@ void *reason_skia_sdl2_get(void *ctx, const char name[]) {
     return SDL_GL_GetProcAddress(name);
 };
 
-gr_glinterface_t *reason_skia_make_sdl2_interface() {
+gr_glinterface_t *reason_skia_make_sdl2_gl_interface() {
     gr_glinterface_t *interface =
             gr_glinterface_assemble_gl_interface(0, reason_skia_sdl2_get);
+    return interface;
+}
+
+gr_glinterface_t *reason_skia_make_sdl2_gles_interface() {
+    gr_glinterface_t *interface =
+            gr_glinterface_assemble_gles_interface(0, reason_skia_sdl2_get);
     return interface;
 }
 

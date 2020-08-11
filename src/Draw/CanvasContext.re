@@ -30,7 +30,9 @@ let create = (window: Revery_Core.Window.t) => {
     switch (Skia.Gr.Gl.Interface.makeNative()) {
     | None =>
       Log.debug("Unable to create native interface. Falling back to SDL2...");
-      Skia.Gr.Gl.Interface.makeSdl2();
+      // On Windows - we use the OpenGL ES context, in order to support ANGLE, for improved compatibility.
+      // ANGLE provides a Direct3D implementation of the OpenGL ES API.
+      Skia.Gr.Gl.Interface.(Sys.win32 ? makeSdl2ES() : makeSdl2());
     | Some(_) as nativeInterface =>
       Log.debug("Native interface created successfully.");
       nativeInterface;
