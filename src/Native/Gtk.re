@@ -6,24 +6,24 @@ USE_GTK;
 
 type widget;
 
-module WindowTbl =
-  Hashtbl.Make({
-    type t = Sdl2.Window.t;
-    let equal = (win1, win2) =>
-      Sdl2.Window.getId(win1) == Sdl2.Window.getId(win2);
-    let hash = Sdl2.Window.getId;
-  });
-
-/* Unfortunately it's not really possible to have a corresponding
-   Gtk window as part of the state since the creation of the window
-   requires some initialization that doesn't occur until *after*
-   window creation. Conversely, we also don't want to create a
-   bunch of GtkWidgets for one window, so this table maps Sdl windows
-   to GtkWidgets.
-   */
-let windowToWidgetTable = WindowTbl.create(1);
-
 open {
+       module WindowTbl =
+         Hashtbl.Make({
+           type t = Sdl2.Window.t;
+           let equal = (win1, win2) =>
+             Sdl2.Window.getId(win1) == Sdl2.Window.getId(win2);
+           let hash = Sdl2.Window.getId;
+         });
+
+       /* Unfortunately it's not really possible to have a corresponding
+          Gtk window as part of the state since the creation of the window
+          requires some initialization that doesn't occur until *after*
+          window creation. Conversely, we also don't want to create a
+          bunch of GtkWidgets for one window, so this table maps Sdl windows
+          to GtkWidgets.
+          */
+       let windowToWidgetTable = WindowTbl.create(1);
+
        external c_gtkEventsPending: unit => bool = "revery_gtkEventsPending";
        external c_gtkMainIteration: unit => bool = "revery_gtkMainIteration";
        external c_getGtkWidgetFromXWindow: Sdl2.Window.nativeWindow => widget =
