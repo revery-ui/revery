@@ -1,0 +1,11 @@
+{
+  "build": [
+    [
+      "pkg-config",
+      "--help"
+    ]
+  ],
+  "dependencies": {
+    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79"
+  }
+}

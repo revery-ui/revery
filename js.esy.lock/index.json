@@ -1,7 +1,23 @@
 {
-  "checksum": "58fb41f22b62eae85fb7d7b0e368a6f3",
+  "checksum": "022b7d6a704d82e6fae42662a4555c12",
   "root": "revery@link-dev:./package.json",
   "node": {
+    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
+      "id":
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9",
+      "name": "yarn-pkg-config",
+      "version":
+        "github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79",
+      "source": {
+        "type": "install",
+        "source": [
+          "github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
     "url-join@2.0.5@d41d8cd9": {
       "id": "url-join@2.0.5@d41d8cd9",
       "name": "url-join",
@@ -817,7 +833,7 @@
         "@reason-native-web/esy-openssl@1.1.1006@d41d8cd9",
         "@opam/dune-configurator@opam:2.6.2@a8db4839",
         "@opam/dune@opam:2.6.2@20433b4f",
-        "@opam/conf-pkg-config@opam:1.3@79803de7",
+        "@opam/conf-pkg-config@opam:1.2@d86c8f53",
         "@opam/base-unix@opam:base@87d0b2eb"
       ],
       "devDependencies": []
@@ -1054,7 +1070,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "@opam/conf-pkg-config@opam:1.3@79803de7",
+        "@opam/conf-pkg-config@opam:1.2@d86c8f53",
         "@opam/conf-autoconf@opam:0.1@27b3f7cf"
       ],
       "devDependencies": []
@@ -3042,7 +3058,7 @@
       "dependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/integers@opam:0.4.0@f7acfaeb",
-        "@opam/conf-pkg-config@opam:1.3@79803de7",
+        "@opam/conf-pkg-config@opam:1.2@d86c8f53",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -3078,21 +3094,29 @@
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
-    "@opam/conf-pkg-config@opam:1.3@79803de7": {
-      "id": "@opam/conf-pkg-config@opam:1.3@79803de7",
+    "@opam/conf-pkg-config@opam:1.2@d86c8f53": {
+      "id": "@opam/conf-pkg-config@opam:1.2@d86c8f53",
       "name": "@opam/conf-pkg-config",
-      "version": "opam:1.3",
+      "version": "opam:1.2",
       "source": {
         "type": "install",
         "source": [ "no-source:" ],
         "opam": {
           "name": "conf-pkg-config",
-          "version": "1.3",
-          "path": "js.esy.lock/opam/conf-pkg-config.1.3"
+          "version": "1.2",
+          "path": "js.esy.lock/opam/conf-pkg-config.1.2"
         }
       },
-      "overrides": [],
-      "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
+      "overrides": [
+        {
+          "opamoverride":
+            "js.esy.lock/overrides/opam__s__conf_pkg_config_opam__c__1.2_opam_override"
+        }
+      ],
+      "dependencies": [
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
       "devDependencies": []
     },
     "@opam/conf-m4@opam:1@3b2b148a": {
