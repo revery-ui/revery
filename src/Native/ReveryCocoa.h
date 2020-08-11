@@ -15,8 +15,6 @@ void revery_scheduleNotificationFromNow_cocoa(const char *title,
 void *revery_getIconHandle_cocoa();
 
 /* Tray */
-void *revery_makeTrayHandleText_cocoa(const char *title_v);
-void *revery_makeTrayHandleImage_cocoa(const char *title_v);
 void revery_setTrayTitle_cocoa(const char *title_v);
 
 /* Icon progress bar functions */
