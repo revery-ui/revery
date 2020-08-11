@@ -45,7 +45,7 @@ module PixelFormat = {
 };
 
 module Display = {
-  type t = int;
+  type t;
 
   module Dpi = {
     type t = {
