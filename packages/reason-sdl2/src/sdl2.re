@@ -15,6 +15,9 @@ module Rect = {
     width: int,
     height: int,
   };
+
+  let toString = ({x, y, width, height}) =>
+    Printf.sprintf("x: %d y: %d width: %d height: %d", x, y, width, height);
 };
 
 module ScreenSaver = {
@@ -35,8 +38,14 @@ module Clipboard = {
   external hasText: unit => bool = "resdl_SDL_HasClipboardText";
 };
 
-module Display = {
+module PixelFormat = {
   type t;
+
+  external toString: t => string = "resdl_SDL_GetPixelFormatName";
+};
+
+module Display = {
+  type t = int;
 
   module Dpi = {
     type t = {
@@ -52,6 +61,7 @@ module Display = {
 
   module Mode = {
     type t = {
+      pixelFormat: PixelFormat.t,
       width: int,
       height: int,
       refreshRate: int,
@@ -59,7 +69,8 @@ module Display = {
 
     let show = (v: t) => {
       Printf.sprintf(
-        "width: %d height: %d refreshRate: %d",
+        "pixelFormat: %s width: %d height: %d refreshRate: %d",
+        v.pixelFormat |> PixelFormat.toString,
         v.width,
         v.height,
         v.refreshRate,
@@ -74,14 +85,9 @@ module Display = {
   external getDPI: t => Dpi.t = "resdl_SDL_GetDisplayDPI";
   external getCurrentMode: t => Mode.t = "resdl_SDL_GetCurrentDisplayMode";
   external getDesktopMode: t => Mode.t = "resdl_SDL_GetDesktopDisplayMode";
+  external getName: t => string = "resdl_SDL_GetDisplayName";
   external getBounds: t => Rect.t = "resdl_SDL_GetDisplayBounds";
   external getUsableBounds: t => Rect.t = "resdl_SDL_GetDisplayUsableBounds";
-};
-
-module PixelFormat = {
-  type t;
-
-  external toString: t => string = "resdl_SDL_GetPixelFormatName";
 };
 
 module Log = {
