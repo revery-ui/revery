@@ -810,7 +810,7 @@ module M = (F: FOREIGN) => {
             "reason_skia_make_sdl2_gl_interface",
             void @-> returning(ptr_opt(SkiaTypes.Gr.Gl.Interface.t)),
           );
-          
+
         let makeSdl2ES =
           foreign(
             "reason_skia_make_sdl2_gles_interface",

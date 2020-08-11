@@ -40,7 +40,6 @@ let create = (window: Revery_Core.Window.t) => {
   switch (context) {
   | None =>
     Log.error("Unable to create skia context");
-    failwith("no....");
     None;
   | Some(glContext) =>
     Log.debug("Skia context created successfully.");
