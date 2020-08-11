@@ -30,7 +30,7 @@ let create = (window: Revery_Core.Window.t) => {
     switch (Skia.Gr.Gl.Interface.makeNative()) {
     | None =>
       Log.debug("Unable to create native interface. Falling back to SDL2...");
-      Skia.Gr.Gl.Interface.makeSdl2();
+      Skia.Gr.Gl.Interface.(Sys.win32 ? makeSdl2ES() : makeSdl2());
     | Some(_) as nativeInterface =>
       Log.debug("Native interface created successfully.");
       nativeInterface;
@@ -40,6 +40,7 @@ let create = (window: Revery_Core.Window.t) => {
   switch (context) {
   | None =>
     Log.error("Unable to create skia context");
+    failwith("no....");
     None;
   | Some(glContext) =>
     Log.debug("Skia context created successfully.");

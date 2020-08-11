@@ -123,10 +123,24 @@ let flags = os =>
     @ ccopt("-framework Carbon")
     @ ccopt("-liconv")
   | Windows =>
+    let maybeAngleLibPath = Sys.getenv_opt("ANGLE_LIB_PATH");
+    let angleLibPath = switch (maybeAngleLibPath) {
+    | None => 
+    prerr_endline ("Unable to get libraries for esy-angle-prebuilt")
+    failwith("Unable to get libraries for esy-angle-prebuilt)")
+    | Some(path) =>
+    print_endline ("ANGLE Library Path: " ++ path);
+    path
+    };
+    let eglPath = angleLibPath ++ "/libEGL.a";
+    let glesv2Path = angleLibPath ++ "/libGLESv2.a";
     []
     // On Windows, we ship the DLL side-by-side
     @ ccopt("-L" ++ libFolderPath)
     @ cclib("-lSDL2")
+    @ ccopt(eglPath)
+    @ ccopt(glesv2Path)
+    // We use the ANGLE DLLs (to use Direct3D apis instead of OpenGL)
     @ cclib("-lgdi32")
     @ cclib("-subsystem windows")
   };

@@ -30,15 +30,17 @@
       "esy-installer Revery.install",
       "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': ':'}\"",
       "bash -c \"cp #{esy-skia.bin}/skia.dll \\'$cur__bin\\' #{os == 'windows' ? '' : '2>/dev/null || true'}\"",
-      "bash -c \"cp #{esy-sdl2.bin}/*.dll \\'$cur__bin\\' #{os == 'windows' ? '' : '2>/dev/null || true'}\""
+      "bash -c \"cp #{esy-sdl2.bin}/*.dll \\'$cur__bin\\' #{os == 'windows' ? '' : '2>/dev/null || true'}\"",
+      "bash -c \"cp #{esy-angle-prebuilt.bin}/*.dll \\'$cur__bin\\' #{os == 'windows' ? '' : '2>/dev/null || true'}\""
     ]
   },
   "dependencies": {
     "@esy-ocaml/reason": "^3.6.0",
     "@opam/bos": "0.2.0",
     "@opam/ctypes": "0.15.1",
-    "@opam/dune": ">=1.6.0",
-    "@opam/dune-configurator": "*",
+    "@opam/dune": "2.5.0",
+    "@opam/dune-configurator": "2.5.1",
+    "@opam/dune-private-libs": "2.5.1",
     "@opam/lru": "bryphe/lru:lru.opam#2708c70",
     "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "^1.1.0",
@@ -49,6 +51,7 @@
     "@opam/uutf": "*",
     "@opam/charInfo_width": "*",
     "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d",
+    "esy-angle-prebuilt": "1.0.0",
     "esy-freetype2": "^2.9.1007",
     "@revery/esy-harfbuzz": "^2.6.8000",
     "esy-sdl2": "^2.0.10008",

@@ -1338,7 +1338,11 @@ extern "C" {
         // Attributes pulled from:
         // https://github.com/google/skia/blob/master/example/SkiaSDLExample.cpp
         static const int kStencilBits = 8; // Skia needs 8 stencil bits
-#ifdef SDL_VIDEO_OPENGL
+#ifdef WIN32
+          SDL_SetHint(SDL_HINT_OPENGL_ES_DRIVER, "1");
+          SDL_GL_SetAttribute(SDL_GL_CONTEXT_EGL, 1);
+          SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+#elif SDL_VIDEO_OPENGL
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 #else
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
