@@ -160,6 +160,7 @@ USE_GTK;
 
 let flushGtkEvents = () =>
   if (Revery_Native.Gtk.eventsPending()) {
+    AppLog.info("Flushing Gtk events");
     Revery_Native.Gtk.mainIteration() |> (ignore: bool => unit);
   };
 
