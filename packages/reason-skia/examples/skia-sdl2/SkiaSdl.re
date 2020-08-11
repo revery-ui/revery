@@ -18,7 +18,8 @@ let createSkiaGraphicsContext = (_window: Sdl2.Window.t) => {
   | Some(_) => print_endline("Native interface created successfully.")
   | None => print_endline("Native interface is null")
   };
-  let interface = Skia.Gr.Gl.Interface.makeSdl2();
+
+  let interface = Skia.Gr.Gl.Interface.(Sys.win32 ? makeSdl2ES() : makeSdl2());
   print_endline("Have interface...");
   let context = Skia.Gr.Context.makeGl(interface);
 

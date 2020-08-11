@@ -426,6 +426,7 @@ module Gr: {
 
       let makeNative: unit => option(t);
       let makeSdl2: unit => option(t);
+      let makeSdl2ES: unit => option(t);
     };
 
     module FramebufferInfo: {
