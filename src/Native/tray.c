@@ -24,24 +24,21 @@ CAMLprim value revery_makeTrayHandle(value imagePath_v) {
     CAMLlocal1(result);
 
 #ifdef USE_COCOA
-    const char *imagePath;
-
     NSStatusItem *statusItem = [NSStatusBar.systemStatusBar statusItemWithLength:NSVariableStatusItemLength];
 
     if (imagePath_v != Val_none) {
         const char *imagePath = String_val(Some_val(imagePath_v));
 
-        NSStatusItem *statusItem = [NSStatusBar.systemStatusBar statusItemWithLength:NSVariableStatusItemLength];
-
         NSImage *nsImage = revery_makeImageFromAbsolutePath(imagePath);
 
         statusItem.button.image = nsImage;
+
+        UNUSED(imagePath);
     }
 
     result = caml_alloc(1, Abstract_tag);
     Store_field(result, 0, (long)statusItem);
 
-    UNUSED(imagePath);
     CAMLreturn(result);
 #elif USE_WIN32
     result = caml_alloc(sizeof(NULL), Abstract_tag);
