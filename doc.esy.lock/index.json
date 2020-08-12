@@ -1,5 +1,5 @@
 {
-  "checksum": "e599e42a47ff9e7705369fcdfe20dc06",
+  "checksum": "0e03dd673df9b002cc7dbf160b6722e4",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -79,7 +79,7 @@
         "esy-skia@github:revery-ui/esy-skia#a3785f9@d41d8cd9",
         "esy-sdl2@2.0.10008@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
         "esy-angle-prebuilt@1.0.0@d41d8cd9",
-        "@revery/esy-harfbuzz@github:revery-ui/esy-harfbuzz#c42e0c0@d41d8cd9",
+        "@revery/esy-harfbuzz@github:revery-ui/esy-harfbuzz#9e297a5@d41d8cd9",
         "@opam/uutf@opam:1.0.2@4440868f", "@opam/uucp@opam:13.0.0@e9b515e0",
         "@opam/ppx_deriving@opam:4.5@d89f2934",
         "@opam/omd@github:ocaml/omd:omd.opam#1535e3c@d41d8cd9",
@@ -695,14 +695,14 @@
       "dependencies": [ "lodash@4.17.19@d41d8cd9" ],
       "devDependencies": []
     },
-    "@revery/esy-harfbuzz@github:revery-ui/esy-harfbuzz#c42e0c0@d41d8cd9": {
+    "@revery/esy-harfbuzz@github:revery-ui/esy-harfbuzz#9e297a5@d41d8cd9": {
       "id":
-        "@revery/esy-harfbuzz@github:revery-ui/esy-harfbuzz#c42e0c0@d41d8cd9",
+        "@revery/esy-harfbuzz@github:revery-ui/esy-harfbuzz#9e297a5@d41d8cd9",
       "name": "@revery/esy-harfbuzz",
-      "version": "github:revery-ui/esy-harfbuzz#c42e0c0",
+      "version": "github:revery-ui/esy-harfbuzz#9e297a5",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/esy-harfbuzz#c42e0c0" ]
+        "source": [ "github:revery-ui/esy-harfbuzz#9e297a5" ]
       },
       "overrides": [],
       "dependencies": [],

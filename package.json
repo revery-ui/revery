@@ -65,7 +65,7 @@
   },
   "resolutions": {
     "@opam/conf-pkg-config": "1.2",
-    "@revery/esy-harfbuzz": "revery-ui/esy-harfbuzz#c42e0c0"
+    "@revery/esy-harfbuzz": "revery-ui/esy-harfbuzz#9e297a5"
   },
   "devDependencies": {
     "ocaml": "~4.10",
