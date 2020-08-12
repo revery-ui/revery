@@ -566,7 +566,8 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   Log.infof(m =>
     m("Creating window %s width: %u height: %u", name, width, height)
   );
-  let sdlWindow = Sdl2.Window.create(name, x, y, width, height);
+  let sdlWindow =
+    Sdl2.Window.create(name, x, y, width, height, options.acceleration);
   Log.info("Window created successfully.");
 
   let uniqueId = Sdl2.Window.getId(sdlWindow);

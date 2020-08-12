@@ -77,6 +77,14 @@ type t = {
        as well as the scaling of UI elements.
    */
   forceScaleFactor: option(float),
+  /*
+       [acceleration] sets the strategy for picking a renderer - one of:
+       - [`Auto] - will select either a hardware or software renderer (most platforms prefer a hardware renderer)
+       - [`ForceHardware] - forces selection of a hardware-accelerated renderer
+       - [`ForceSoftware] - forces selection of a software renderer
+       This is a proxy for the [SDL_GL_ACCELERATED_VISUAL](https://wiki.libsdl.org/SDL_GL_SetAttribute) setting.
+   */
+  acceleration: [ | `Auto | `ForceHardware | `ForceSoftware],
 };
 
 let create =
@@ -97,6 +105,7 @@ let create =
       ~vsync=Vsync.Synchronized,
       ~icon=None,
       ~forceScaleFactor=None,
+      ~acceleration=`Auto,
       (),
     ) => {
   resizable,
@@ -115,6 +124,7 @@ let create =
   forceScaleFactor,
   vsync,
   icon,
+  acceleration,
 };
 
 let default = create();

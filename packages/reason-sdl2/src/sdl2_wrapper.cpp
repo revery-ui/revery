@@ -1324,8 +1324,9 @@ extern "C" {
     }
 
     CAMLprim value resdl_SDL_CreateWindow(value vName, value vX, value vY,
-                                          value vWidth, value vHeight) {
+                                          value vWidth, value vHeight, value vAcceleration) {
         CAMLparam5(vName, vX, vY, vWidth, vHeight);
+        CAMLxparam1(vAcceleration);
 
         int x;
         if (vX == hash_variant("Centered")) {
@@ -1379,7 +1380,12 @@ extern "C" {
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
         SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, kStencilBits);
 
-        SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+        // If vAcceleration is Auto, don't set SDL_GL_ACCELERATED_VISUAL at all.
+        if (vAcceleration == hash_variant("ForceHardware")) {
+            SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+        } else if (vAcceleration == hash_variant("ForceSoftware")) {
+            SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 0);
+        }
 
         SDL_Window *win = (SDL_CreateWindow(
                                String_val(vName), x, y, width, height,
@@ -1392,6 +1398,17 @@ extern "C" {
 
         value vWindow = (value)win;
         CAMLreturn(vWindow);
+    }
+
+    CAMLprim value resdl_SDL_CreateWindow_byte(value *argv, int argn) {
+        return resdl_SDL_CreateWindow(
+                   argv[0],
+                   argv[1],
+                   argv[2],
+                   argv[3],
+                   argv[4],
+                   argv[5]
+               );
     }
 
     CAMLprim value resdl_SDL_SetWindowBordered(value vWin, value vBordered) {
