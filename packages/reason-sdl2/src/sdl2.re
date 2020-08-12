@@ -159,10 +159,11 @@ module Window = {
       [ | `Undefined | `Centered | `Absolute(int)],
       [ | `Undefined | `Centered | `Absolute(int)],
       int,
-      int
+      int,
+      [ | `Auto | `ForceHardware | `ForceSoftware]
     ) =>
     t =
-    "resdl_SDL_CreateWindow";
+    "resdl_SDL_CreateWindow_byte" "resdl_SDL_CreateWindow";
   external getId: t => int = "resdl_SDL_GetWindowId";
   external getSize: t => Size.t = "resdl_SDL_GetWindowSize";
   external getPosition: t => (int, int) = "resdl_SDL_GetWindowPosition";
