@@ -1,0 +1,23 @@
+opam-version: "2.0"
+maintainer: "Spiros Eliopoulos <spiros@inhabitedtype.com>"
+authors: [ "Spiros Eliopoulos <spiros@inhabitedtype.com>" ]
+license: "BSD-3-clause"
+homepage: "https://github.com/inhabitedtype/faraday"
+bug-reports: "https://github.com/inhabitedtype/faraday/issues"
+dev-repo: "git+https://github.com/inhabitedtype/faraday.git"
+build: [
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name] {with-test}
+]
+depends: [
+  "ocaml" {>= "4.02.0"}
+  "dune" {>= "1.0"}
+  "faraday" {>= "0.5.0"}
+  "lwt"
+]
+synopsis: "Lwt support for Faraday"
+url {
+  src: "https://github.com/inhabitedtype/faraday/archive/0.7.1.tar.gz"
+  checksum: "md5=09396dbb4a08323194e092b6bff4aaf6"
+}

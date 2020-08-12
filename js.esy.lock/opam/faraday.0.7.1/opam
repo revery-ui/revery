@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Spiros Eliopoulos <spiros@inhabitedtype.com>"
+authors: [ "Spiros Eliopoulos <spiros@inhabitedtype.com>" ]
+license: "BSD-3-clause"
+homepage: "https://github.com/inhabitedtype/faraday"
+bug-reports: "https://github.com/inhabitedtype/faraday/issues"
+dev-repo: "git+https://github.com/inhabitedtype/faraday.git"
+build: [
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name] {with-test}
+]
+depends: [
+  "ocaml" {>= "4.02.0"}
+  "dune" {>= "1.0"}
+  "alcotest" {with-test & >= "0.4.1"}
+  "bigstringaf"
+]
+synopsis: "A library for writing fast and memory-efficient serializers."
+description: """
+Faraday is a library for writing fast and memory-efficient serializers. Its
+core type and related operation gives the user fine-grained control over
+copying and allocation behavior while serializing user-defined types, and
+presents the output in a form that makes it possible to use vectorized write
+operations, such as the writev system call, or any other platform or
+application-specific output APIs."""
+url {
+  src: "https://github.com/inhabitedtype/faraday/archive/0.7.1.tar.gz"
+  checksum: "md5=09396dbb4a08323194e092b6bff4aaf6"
+}

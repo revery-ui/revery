@@ -1,0 +1,58 @@
+opam-version: "2.0"
+maintainer: "yallop@gmail.com"
+homepage: "https://github.com/ocamllabs/ocaml-ctypes"
+doc: "http://ocamllabs.github.io/ocaml-ctypes"
+dev-repo: "git+http://github.com/ocamllabs/ocaml-ctypes.git"
+bug-reports: "http://github.com/ocamllabs/ocaml-ctypes/issues"
+license: "MIT"
+build: [
+  [make "XEN=%{mirage-xen:enable}%" "libffi.config"]
+    {ctypes-foreign:installed}
+  ["touch" "libffi.config"] {!ctypes-foreign:installed}
+  [make "XEN=%{mirage-xen:enable}%" "ctypes-base" "ctypes-stubs"]
+  [make "XEN=%{mirage-xen:enable}%" "ctypes-foreign"]
+    {ctypes-foreign:installed}
+  [make "test"] {with-test}
+]
+install: [
+  [make "install" "XEN=%{mirage-xen:enable}%"]
+]
+depends: [
+   "ocaml" {>= "4.02.3"}
+   "base-bytes"
+   "integers" { >= "0.3.0" }
+   "ocamlfind" {build}
+   "conf-pkg-config" {build}
+   "lwt" {with-test & >= "3.2.0"}
+   "ctypes-foreign" {with-test}
+   "ounit" {with-test}
+   "conf-ncurses" {with-test}
+]
+depopts: [
+   "ctypes-foreign"
+   "mirage-xen"
+]
+tags: ["org:ocamllabs" "org:mirage"]
+synopsis: "Combinators for binding to C libraries without writing any C"
+description: """
+ctypes is a library for binding to C libraries using pure OCaml. The primary
+aim is to make writing C extensions as straightforward as possible.
+
+The core of ctypes is a set of combinators for describing the structure of C
+types -- numeric types, arrays, pointers, structs, unions and functions. You
+can use these combinators to describe the types of the functions that you want
+to call, then bind directly to those functions -- all without writing or
+generating any C!
+
+To install the optional `ctypes.foreign` interface (which uses `libffi` to
+provide dynamic access to foreign libraries), you will need to also install
+the `ctypes-foreign` optional dependency:
+
+    opam install ctypes ctypes-foreign
+
+This will make the `ctypes.foreign` ocamlfind subpackage available."""
+authors: "yallop@gmail.com"
+url {
+  src: "https://github.com/ocamllabs/ocaml-ctypes/archive/0.15.1.tar.gz"
+  checksum: "md5=e87b2646f7597e00b8b9a1f5f8e36ee6"
+}
