@@ -158,15 +158,16 @@ let handleKeymapChanged = () => {
 %ifdef
 USE_GTK;
 
-let flushGtkEvents = () =>
+let runGtkIteration = () =>
   if (Revery_Native.Gtk.eventsPending()) {
-    AppLog.debug("Flushing Gtk events");
-    Revery_Native.Gtk.mainIteration() |> (ignore: bool => unit);
+    AppLog.debug("Running Gtk iteration");
+    let _quit: bool = Revery_Native.Gtk.mainIteration();
+    ();
   };
 
 [%%else];
 
-let flushGtkEvents = () => ();
+let runGtkIteration = () => ();
 
 [%%endif];
 
@@ -278,7 +279,7 @@ let start = init => {
   let appLoop = () => {
     _flushEvents();
 
-    flushGtkEvents();
+    runGtkIteration();
 
     Tick.Default.pump();
 
