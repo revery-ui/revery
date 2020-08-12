@@ -1,5 +1,5 @@
 {
-  "checksum": "3bda51e5e13ef02a7b0bcfa9a1ac1d8d",
+  "checksum": "fa37743d5301b67d76a61c1fd9dc0dfa",
   "root": "revery@link-dev:./package.json",
   "node": {
     "revery@link-dev:./package.json": {
@@ -13,7 +13,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "@revery/esy-harfbuzz@github:revery-ui/esy-harfbuzz#0635694@d41d8cd9"
+        "@revery/esy-harfbuzz@github:revery-ui/esy-harfbuzz#4408418@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9",
@@ -60,14 +60,14 @@
       "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
       "devDependencies": [ "esy-cmake@0.3.5@d41d8cd9" ]
     },
-    "@revery/esy-harfbuzz@github:revery-ui/esy-harfbuzz#0635694@d41d8cd9": {
+    "@revery/esy-harfbuzz@github:revery-ui/esy-harfbuzz#4408418@d41d8cd9": {
       "id":
-        "@revery/esy-harfbuzz@github:revery-ui/esy-harfbuzz#0635694@d41d8cd9",
+        "@revery/esy-harfbuzz@github:revery-ui/esy-harfbuzz#4408418@d41d8cd9",
       "name": "@revery/esy-harfbuzz",
-      "version": "github:revery-ui/esy-harfbuzz#0635694",
+      "version": "github:revery-ui/esy-harfbuzz#4408418",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/esy-harfbuzz#0635694" ]
+        "source": [ "github:revery-ui/esy-harfbuzz#4408418" ]
       },
       "overrides": [],
       "dependencies": [],
