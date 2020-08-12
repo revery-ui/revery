@@ -24,21 +24,12 @@ open {
           */
        let windowToWidgetTable = WindowTbl.create(1);
 
-       external c_gtkEventsPending: unit => bool = "revery_gtkEventsPending";
-       external c_gtkMainIteration: unit => bool = "revery_gtkMainIteration";
        external c_getGtkWidgetFromXWindow: Sdl2.Window.nativeWindow => widget =
          "revery_getGtkWidgetFromXWindow";
-       external c_gtkWidgetShowAll: widget => unit = "revery_gtkWidgetShowAll";
-       external c_gtkWidgetGetPath: widget => string =
-         "revery_gtkWidgetGetPath";
-       external c_gtkWidgetSetOpacity: (widget, float) => unit =
-         "revery_gtkWidgetSetOpacity";
-       external c_gtkWidgetGetOpacity: widget => float =
-         "revery_gtkWidgetGetOpacity";
      };
 
-let eventsPending = c_gtkEventsPending;
-let mainIteration = c_gtkMainIteration;
+external eventsPending: unit => bool = "revery_gtkEventsPending";
+external mainIteration: unit => bool = "revery_gtkMainIteration";
 
 module Widget = {
   type t = widget;
@@ -53,10 +44,10 @@ module Widget = {
       gtkWidget;
     };
 
-  let getPath = c_gtkWidgetGetPath;
-  let showAll = c_gtkWidgetShowAll;
-  let setOpacity = c_gtkWidgetSetOpacity;
-  let getOpacity = c_gtkWidgetGetOpacity;
+  external getPath: widget => string = "revery_gtkWidgetGetPath";
+  external showAll: widget => unit = "revery_gtkWidgetShowAll";
+  external setOpacity: (widget, float) => unit = "revery_gtkWidgetSetOpacity";
+  external getOpacity: widget => float = "revery_gtkWidgetGetOpacity";
 };
 
 [%%endif];
