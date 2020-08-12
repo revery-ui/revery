@@ -64,7 +64,8 @@
     "@glennsl/timber": "^1.2.0"
   },
   "resolutions": {
-    "@opam/conf-pkg-config": "1.2"
+    "@opam/conf-pkg-config": "1.2",
+    "@revery/esy-harfbuzz": "revery-ui/esy-harfbuzz#c42e0c0"
   },
   "devDependencies": {
     "ocaml": "~4.10",
