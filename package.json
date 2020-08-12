@@ -30,7 +30,8 @@
       "esy-installer Revery.install",
       "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': ':'}\"",
       "bash -c \"cp #{esy-skia.bin}/skia.dll \\'$cur__bin\\' #{os == 'windows' ? '' : '2>/dev/null || true'}\"",
-      "bash -c \"cp #{esy-sdl2.bin}/*.dll \\'$cur__bin\\' #{os == 'windows' ? '' : '2>/dev/null || true'}\""
+      "bash -c \"cp #{esy-sdl2.bin}/*.dll \\'$cur__bin\\' #{os == 'windows' ? '' : '2>/dev/null || true'}\"",
+      "bash -c \"cp #{esy-angle-prebuilt.bin}/*.dll \\'$cur__bin\\' #{os == 'windows' ? '' : '2>/dev/null || true'}\""
     ]
   },
   "dependencies": {
@@ -50,6 +51,7 @@
     "@opam/uutf": "*",
     "@opam/charInfo_width": "*",
     "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d",
+    "esy-angle-prebuilt": "1.0.0",
     "esy-freetype2": "^2.9.1007",
     "@revery/esy-harfbuzz": "^2.6.8000",
     "esy-sdl2": "^2.0.10008",
@@ -61,6 +63,9 @@
     "rebez": "jchavarri/rebez#03fa3b7",
     "reason-native-crash-utils": "onivim/reason-native-crash-utils#38c8f00",
     "@glennsl/timber": "^1.2.0"
+  },
+  "resolutions": {
+    "@opam/conf-pkg-config": "1.2"
   },
   "devDependencies": {
     "ocaml": "~4.10",

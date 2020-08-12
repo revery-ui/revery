@@ -736,6 +736,7 @@ module Gr = {
 
       let makeNative = SkiaWrapped.Gr.Gl.Interface.makeNative;
       let makeSdl2 = SkiaWrapped.Gr.Gl.Interface.makeSdl2;
+      let makeSdl2ES = SkiaWrapped.Gr.Gl.Interface.makeSdl2ES;
     };
 
     module FramebufferInfo = {

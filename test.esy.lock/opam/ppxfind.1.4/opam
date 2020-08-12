@@ -12,7 +12,7 @@ doc: "https://jeremiedimino.github.io/ppxfind/"
 bug-reports: "https://github.com/jeremiedimino/ppxfind/issues"
 depends: [
   "dune" {>= "2.0"}
-  "ocaml-migrate-parsetree" {>= "1.6.0"}
+  "ocaml-migrate-parsetree" {>= "1.6.0" & < "2.0.0"}
   "ocamlfind"
   "ocaml" {>= "4.02.3"}
 ]

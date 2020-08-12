@@ -516,9 +516,26 @@ let setVsync =
 let create = (name: string, options: WindowCreateOptions.t) => {
   Log.debug("Starting window creation...");
 
+  let displays = Sdl2.Display.getDisplays();
+
+  Log.infof(m => m("Display count: %d", List.length(displays)));
+
+  displays
+  |> List.iteri((idx, display) => {
+       Log.infof(m =>
+         m(
+           "Display %d:%s - %s Bounds: %s",
+           idx,
+           Sdl2.Display.getName(display),
+           Sdl2.Display.getCurrentMode(display) |> Sdl2.Display.Mode.show,
+           Sdl2.Display.getBounds(display) |> Sdl2.Rect.toString,
+         )
+       )
+     });
+
   // Calculate the total bounds of all displays
   let screenBounds =
-    Sdl2.Display.getDisplays()
+    displays
     |> List.fold_left(
          (acc: Sdl2.Rect.t, display) => {
            let bounds = Sdl2.Display.getBounds(display);

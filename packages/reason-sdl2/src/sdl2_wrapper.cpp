@@ -465,10 +465,11 @@ extern "C" {
 
         SDL_GetCurrentDisplayMode(displayIndex, &current);
 
-        ret = caml_alloc(3, 0);
-        Store_field(ret, 0, current.w);
-        Store_field(ret, 1, current.h);
-        Store_field(ret, 2, current.refresh_rate);
+        ret = caml_alloc(4, 0);
+        Store_field(ret, 0, Val_int(current.format));
+        Store_field(ret, 1, current.w);
+        Store_field(ret, 2, current.h);
+        Store_field(ret, 3, current.refresh_rate);
         CAMLreturn(ret);
     };
 
@@ -481,10 +482,11 @@ extern "C" {
 
         SDL_GetDesktopDisplayMode(displayIndex, &current);
 
-        ret = caml_alloc(3, 0);
-        Store_field(ret, 0, current.w);
-        Store_field(ret, 1, current.h);
-        Store_field(ret, 2, current.refresh_rate);
+        ret = caml_alloc(4, 0);
+        Store_field(ret, 0, Val_int(current.format));
+        Store_field(ret, 1, current.w);
+        Store_field(ret, 2, current.h);
+        Store_field(ret, 3, current.refresh_rate);
         CAMLreturn(ret);
     };
 
@@ -503,6 +505,20 @@ extern "C" {
         Store_field(rect, 2, Val_int(sdlRect.w));
         Store_field(rect, 3, Val_int(sdlRect.h));
         CAMLreturn(rect);
+    };
+
+    CAMLprim value resdl_SDL_GetDisplayName(value vDisplay) {
+        CAMLparam1(vDisplay);
+        CAMLlocal1(retStr);
+
+        int displayIndex = Int_val(vDisplay);
+        const char *szDisplayName = SDL_GetDisplayName(displayIndex);
+        if (!szDisplayName) {
+            szDisplayName = "(Null)";
+        };
+
+        retStr = caml_copy_string(szDisplayName);
+        CAMLreturn(retStr);
     };
 
     CAMLprim value resdl_SDL_GetDisplayUsableBounds(value vDisplay) {
@@ -1338,7 +1354,11 @@ extern "C" {
         // Attributes pulled from:
         // https://github.com/google/skia/blob/master/example/SkiaSDLExample.cpp
         static const int kStencilBits = 8; // Skia needs 8 stencil bits
-#ifdef SDL_VIDEO_OPENGL
+#ifdef WIN32
+        SDL_SetHint(SDL_HINT_OPENGL_ES_DRIVER, "1");
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_EGL, 1);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+#elif SDL_VIDEO_OPENGL
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 #else
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);

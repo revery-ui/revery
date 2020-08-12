@@ -195,6 +195,7 @@ let start = init => {
   );
 
   let _ = Sdl2.init();
+
   let _dispose = init(appInstance);
 
   let _ = Sdl2.ScreenSaver.enable();
