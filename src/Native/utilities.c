@@ -20,3 +20,17 @@ void revery_caml_call(value f) {
     value args[] = {Val_unit};
     revery_caml_call_n(f, 1, args);
 }
+
+long revery_wrapPointer(void *data) {
+    CAMLparam0();
+    CAMLlocal1(result);
+
+    result = caml_alloc(1, Abstract_tag);
+    Store_field(data, 0, (long)data);
+
+    CAMLreturn(result);
+}
+
+void *revery_extractPointer(long data) {
+    return (void *)Field(data, 0);
+}
