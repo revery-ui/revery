@@ -19,7 +19,7 @@ depends: [
   "ppx_expect" {with-test & >= "v0.12.0"}
   "cmdliner"
   "menhir"
-  "ocaml-migrate-parsetree"
+  "ocaml-migrate-parsetree" {< "2.0.0"}
   "yojson" # It's optional, but we want users to be able to use source-map without pain.
 ]
 
