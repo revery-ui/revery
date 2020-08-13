@@ -1,5 +1,5 @@
 {
-  "checksum": "9a4893fdcd2e450dc8443c5134c6049e",
+  "checksum": "bed690b753584ff53866245d7497284c",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -77,7 +77,8 @@
         "http-server@0.12.3@d41d8cd9", "flex@1.2.3@d41d8cd9",
         "fetch-native-lwt@0.1.0-alpha.5@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#a3785f9@d41d8cd9",
-        "esy-sdl2@2.0.10008@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
+        "esy-sdl2@2.0.10008@d41d8cd9",
+        "esy-freetype2@github:esy-packages/esy-freetype2#20f5279@d41d8cd9",
         "esy-angle-prebuilt@1.0.0@d41d8cd9",
         "@revery/esy-harfbuzz@2.6.8001@d41d8cd9",
         "@opam/uutf@opam:1.0.2@4440868f", "@opam/uucp@opam:13.0.0@e9b515e0",
@@ -325,14 +326,14 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "lodash@4.17.19@d41d8cd9": {
-      "id": "lodash@4.17.19@d41d8cd9",
+    "lodash@4.17.20@d41d8cd9": {
+      "id": "lodash@4.17.20@d41d8cd9",
       "name": "lodash",
-      "version": "4.17.19",
+      "version": "4.17.20",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/lodash/-/lodash-4.17.19.tgz#sha1:e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+          "archive:https://registry.npmjs.org/lodash/-/lodash-4.17.20.tgz#sha1:b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
         ]
       },
       "overrides": [],
@@ -544,19 +545,18 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-freetype2@2.9.1007@d41d8cd9": {
-      "id": "esy-freetype2@2.9.1007@d41d8cd9",
+    "esy-freetype2@github:esy-packages/esy-freetype2#20f5279@d41d8cd9": {
+      "id":
+        "esy-freetype2@github:esy-packages/esy-freetype2#20f5279@d41d8cd9",
       "name": "esy-freetype2",
-      "version": "2.9.1007",
+      "version": "github:esy-packages/esy-freetype2#20f5279",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/esy-freetype2/-/esy-freetype2-2.9.1007.tgz#sha1:6ef0ac0142837e44cc6e845868b0fb592dd72b74"
-        ]
+        "source": [ "github:esy-packages/esy-freetype2#20f5279" ]
       },
       "overrides": [],
       "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
-      "devDependencies": []
+      "devDependencies": [ "esy-cmake@0.3.5@d41d8cd9" ]
     },
     "esy-cmake@0.3.5@d41d8cd9": {
       "id": "esy-cmake@0.3.5@d41d8cd9",
@@ -696,7 +696,7 @@
         ]
       },
       "overrides": [],
-      "dependencies": [ "lodash@4.17.19@d41d8cd9" ],
+      "dependencies": [ "lodash@4.17.20@d41d8cd9" ],
       "devDependencies": []
     },
     "@revery/esy-harfbuzz@2.6.8001@d41d8cd9": {

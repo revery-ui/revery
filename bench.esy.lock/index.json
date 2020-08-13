@@ -1,5 +1,5 @@
 {
-  "checksum": "62154ecc1104c11cf006e470fac09fef",
+  "checksum": "bde87f54ae2b1b70819f9d8a43d8981f",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -34,7 +34,8 @@
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f00@d41d8cd9",
         "flex@1.2.3@d41d8cd9", "fetch-native-lwt@0.1.0-alpha.5@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#a3785f9@d41d8cd9",
-        "esy-sdl2@2.0.10008@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
+        "esy-sdl2@2.0.10008@d41d8cd9",
+        "esy-freetype2@github:esy-packages/esy-freetype2#20f5279@d41d8cd9",
         "esy-angle-prebuilt@1.0.0@d41d8cd9",
         "@revery/esy-harfbuzz@2.6.8001@d41d8cd9",
         "@opam/uutf@opam:1.0.2@4440868f", "@opam/uucp@opam:13.0.0@e9b515e0",
@@ -289,19 +290,18 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-freetype2@2.9.1007@d41d8cd9": {
-      "id": "esy-freetype2@2.9.1007@d41d8cd9",
+    "esy-freetype2@github:esy-packages/esy-freetype2#20f5279@d41d8cd9": {
+      "id":
+        "esy-freetype2@github:esy-packages/esy-freetype2#20f5279@d41d8cd9",
       "name": "esy-freetype2",
-      "version": "2.9.1007",
+      "version": "github:esy-packages/esy-freetype2#20f5279",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/esy-freetype2/-/esy-freetype2-2.9.1007.tgz#sha1:6ef0ac0142837e44cc6e845868b0fb592dd72b74"
-        ]
+        "source": [ "github:esy-packages/esy-freetype2#20f5279" ]
       },
       "overrides": [],
       "dependencies": [ "esy-cmake@0.3.5@d41d8cd9" ],
-      "devDependencies": []
+      "devDependencies": [ "esy-cmake@0.3.5@d41d8cd9" ]
     },
     "esy-cmake@0.3.5@d41d8cd9": {
       "id": "esy-cmake@0.3.5@d41d8cd9",

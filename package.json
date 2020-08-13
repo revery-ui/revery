@@ -64,7 +64,8 @@
     "@glennsl/timber": "^1.2.0"
   },
   "resolutions": {
-    "@opam/conf-pkg-config": "1.2"
+    "@opam/conf-pkg-config": "1.2",
+    "esy-freetype2": "esy-packages/esy-freetype2#20f5279"
   },
   "devDependencies": {
     "ocaml": "~4.10",
