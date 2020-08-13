@@ -124,7 +124,7 @@ describe("Hooks", ({describe, _}) => {
       };
     };
 
-    test("Single: Timer starts and stops", ({expect, _}) => {
+    test("Callback does not go stale", ({expect, _}) => {
       let rootNode = (new viewNode)();
       let container = Container.create(rootNode);
       let count = ref(0);
