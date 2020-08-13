@@ -1,23 +1,13 @@
 # Cross-platform set of build steps for building esy projects
 
 steps:
-  - script: npm install -g esy@0.6.6
-    displayName: 'npm install -g esy@0.6.6'
+  - script: npm install -g esy@0.6.2
+    displayName: 'npm install -g esy@0.6.2'
   - script: esy install
     displayName: 'esy install'
   - script: esy build
     displayName: 'esy build'
-  - script: esy @examples install
-    displayName: 'esy @examples install'
-  - script: esy @examples run-harfbuzz
-    displayName: 'esy @examples run-harfbuzz'
-  - script: esy @examples x SkiaCli
-    displayName: '@esy @examples x SkiaCli'
-  - script: esy @examples x SkiaCli.bc
-    displayName: '@esy @examples x SkiaCli.bc'
-  - script: esy @examples run-skia-fontmanager
-    displayName: 'esy @examples run-skia-fontmanager'
-  - script: esy @examples x ReveryTextWrapCli
-    displayName: 'esy @examples x ReveryTextWrapCli'
-  - script: esy @examples x ReveryTextWrapCli.bc
-    displayName: 'esy @examples x ReveryTextWrapCli.bc'
+  - script: esy @test install
+    displayName: 'esy @test install'
+  - script: esy @test run
+    displayName: 'esy @test run'
