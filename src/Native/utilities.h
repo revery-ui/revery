@@ -1,8 +1,8 @@
 #pragma once
 
 /* This was taken from OCaml's config.h.
-  It lets us use the value type without 
-  importing the offending header file 
+  It lets us use the value type without
+  importing the offending header file
   that causes Obj-C collisions */
 #if SIZEOF_PTR == SIZEOF_LONG
 /* Standard models: ILP32 or I32LP64 */
