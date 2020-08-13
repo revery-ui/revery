@@ -51,7 +51,7 @@
     "@opam/charInfo_width": "*",
     "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d",
     "esy-angle-prebuilt": "1.0.0",
-    "esy-freetype2": "^2.9.1007",
+    "esy-freetype2": "^2.9.1008",
     "@revery/esy-harfbuzz": "^2.6.8001",
     "esy-sdl2": "^2.0.10008",
     "esy-skia": "revery-ui/esy-skia#a3785f9",
@@ -64,8 +64,7 @@
     "@glennsl/timber": "^1.2.0"
   },
   "resolutions": {
-    "@opam/conf-pkg-config": "1.2",
-    "esy-freetype2": "esy-packages/esy-freetype2#20f5279"
+    "@opam/conf-pkg-config": "1.2"
   },
   "devDependencies": {
     "ocaml": "~4.10",
