@@ -7,13 +7,19 @@ USE_GTK;
 type widget;
 
 open {
-       module WindowTbl =
-         Hashtbl.Make({
-           type t = Sdl2.Window.t;
-           let equal = (win1, win2) =>
-             Sdl2.Window.getId(win1) == Sdl2.Window.getId(win2);
-           let hash = Sdl2.Window.getId;
-         });
+       module WindowHashable = {
+         type t = Sdl2.Window.t;
+         let equal = (win1, win2) =>
+           Sdl2.Window.getId(win1) == Sdl2.Window.getId(win2);
+         let hash = Sdl2.Window.getId;
+       };
+
+       module WidgetResult = {
+         type t = widget;
+         let weight = _ => 1;
+       };
+
+       module WindowWidgetCache = Lru.M.Make(WindowHashable, WidgetResult);
 
        /* Unfortunately it's not really possible to have a corresponding
           Gtk window as part of the state since the creation of the window
@@ -22,7 +28,7 @@ open {
           bunch of GtkWidgets for one window, so this table maps Sdl windows
           to GtkWidgets.
           */
-       let windowToWidgetTable = WindowTbl.create(1);
+       let windowWidgetCache = WindowWidgetCache.create(~initialSize=8, 64);
 
        external c_createGtkWidgetFromXWindow:
          Sdl2.Window.nativeWindow => widget =
@@ -37,14 +43,17 @@ module Widget = {
   type t = widget;
 
   let ofSdlWindow = sdlWindow =>
-    if (WindowTbl.mem(windowToWidgetTable, sdlWindow)) {
-      WindowTbl.find(windowToWidgetTable, sdlWindow);
-    } else {
+    switch (WindowWidgetCache.find(sdlWindow, windowWidgetCache)) {
+    | Some(widget) =>
+      WindowWidgetCache.promote(sdlWindow, windowWidgetCache);
+      widget;
+    | None =>
       let gtkWidget =
         sdlWindow
         |> Sdl2.Window.getNativeWindow
         |> c_createGtkWidgetFromXWindow;
-      WindowTbl.replace(windowToWidgetTable, sdlWindow, gtkWidget);
+      WindowWidgetCache.add(sdlWindow, gtkWidget, windowWidgetCache);
+      WindowWidgetCache.trim(windowWidgetCache);
       Gc.finalise(c_gtkWidgetDestroy, gtkWidget);
       gtkWidget;
     };
