@@ -21,7 +21,7 @@ void revery_caml_call(value f) {
     revery_caml_call_n(f, 1, args);
 }
 
-long revery_wrapPointer(void *data) {
+CAMLprim value revery_wrapPointer(void *data) {
     CAMLparam0();
     CAMLlocal1(result);
 
