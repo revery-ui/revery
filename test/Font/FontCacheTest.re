@@ -12,7 +12,7 @@ let run = (index, runs) => List.nth(runs, index);
 let typefaceId = ((typeface, _glyphs)) =>
   typeface |> Skia.Typeface.getUniqueID |> Int32.to_int;
 
-describe("FontCache", ({test, _}) => {
+describe("FontCache", ({describe, test, _}) => {
   let defaultFont =
     Family.default
     |> Family.resolve(~italic=false, Weight.Normal)
@@ -106,4 +106,35 @@ describe("FontCache", ({test, _}) => {
       defaultFontId,
     );
   });
+
+  describe("fail to fallback", ({test, _}) => {
+
+    let fallbackFont = Family.defaultMono
+    //let fallbackFont = Family.defaultMono
+    |> Family.toSkia(~italic=false, Weight.Normal)
+    |> Option.get;
+
+    let fallback = FontCache.Fallback.constant(fallbackFont)
+
+    let font = Family.default
+//    let font = Family.fromFile("/Users/bryphe/Downloads/JetBrainsMono-2.001/ttf/JetBrainsMono-Italic.ttf")
+    |> Family.resolve(~italic=false, Weight.Normal)
+    |> Result.get_ok;
+
+    test(
+      "fallback for all ASCII characters - including non-printable characters",
+      ({expect, _}) => {
+//      for (ascii in 0 to 255) {
+      for (ascii in 0 to 10) {
+        prerr_endline ("shaping: " ++ string_of_int(ascii));
+        let asciiCharacter = Zed_utf8.make(1, Uchar.of_int(07036));
+        let {glyphStrings}: ShapeResult.t =
+          asciiCharacter |> FontCache.shape(~fallback, font);
+
+        expect.int(glyphStrings |> runCount).toBe(1);
+        // TODO: Investigate why we sometimes get 2 glyph strings here?
+        // expect.int(glyphStrings |> run(0) |> glyphCount).toBe(1);
+      }
+    });
+  })
 });
