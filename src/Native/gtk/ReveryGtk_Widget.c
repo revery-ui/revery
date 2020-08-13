@@ -11,6 +11,8 @@
 #include <gdk/gdkx.h>
 #include <X11/Xlib.h>
 
+#include "utilities.h"
+
 static void revery_gtkRealize(GtkWidget *gWidget, gpointer data) {
     gtk_widget_set_window(gWidget, (GdkWindow *)data);
 }
@@ -31,13 +33,15 @@ CAMLprim value revery_getGtkWidgetFromXWindow(value vXWindow) {
     gtk_widget_set_has_window(gWidget, TRUE);
     gtk_widget_realize(gWidget);
 
-    CAMLreturn((value)gWidget);
+    value camlWidget = revery_wrapPointer(gWidget);
+
+    CAMLreturn(camlWidget);
 }
 
 CAMLprim value revery_gtkWidgetShowAll(value vWidget) {
     CAMLparam1(vWidget);
 
-    GtkWidget *gWidget = (GtkWidget *)vWidget;
+    GtkWidget *gWidget = (GtkWidget *)revery_extractPointer(vWidget);
     gtk_widget_show_all(gWidget);
 
     CAMLreturn(Val_unit);
@@ -47,7 +51,7 @@ CAMLprim value revery_gtkWidgetGetPath(value vWidget) {
     CAMLparam1(vWidget);
     CAMLlocal1(vPathStr);
 
-    GtkWidget *gWidget = (GtkWidget *)vWidget;
+    GtkWidget *gWidget = (GtkWidget *)revery_extractPointer(vWidget);
 
     GtkWidgetPath *gWidgetPath = gtk_widget_get_path(gWidget);
     char *pathStr = gtk_widget_path_to_string(gWidgetPath);
@@ -61,7 +65,7 @@ CAMLprim value revery_gtkWidgetGetPath(value vWidget) {
 CAMLprim value revery_gtkWidgetSetOpacity(value vWidget, value vOpacity) {
     CAMLparam2(vWidget, vOpacity);
 
-    GtkWidget *gWidget = (GtkWidget *)vWidget;
+    GtkWidget *gWidget = (GtkWidget *)revery_extractPointer(vWidget);
     double opacity = Double_val(vOpacity);
 
     gtk_widget_set_opacity(gWidget, opacity);
@@ -72,7 +76,7 @@ CAMLprim value revery_gtkWidgetSetOpacity(value vWidget, value vOpacity) {
 CAMLprim value revery_gtkWidgetGetOpacity(value vWidget) {
     CAMLparam1(vWidget);
 
-    GtkWidget *gWidget = (GtkWidget *)vWidget;
+    GtkWidget *gWidget = (GtkWidget *)revery_extractPointer(vWidget);
 
     double opacity = gtk_widget_get_opacity(gWidget);
 
