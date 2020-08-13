@@ -73,6 +73,16 @@ CAMLprim value revery_gtkWidgetSetOpacity(value vWidget, value vOpacity) {
     CAMLreturn(Val_unit);
 }
 
+CAMLprim value revery_gtkWidgetDestroy(value vWidget) {
+    CAMLparam1(vWidget);
+
+    GtkWidget *gWidget = (GtkWidget *)revery_extractPointer(vWidget);
+
+    gtk_widget_destroy(gWidget);
+
+    CAMLreturn(Val_unit);
+}
+
 CAMLprim value revery_gtkWidgetGetOpacity(value vWidget) {
     CAMLparam1(vWidget);
 

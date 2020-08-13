@@ -27,6 +27,7 @@ open {
        external c_createGtkWidgetFromXWindow:
          Sdl2.Window.nativeWindow => widget =
          "revery_createGtkWidgetFromXWindow";
+       external c_gtkWidgetDestroy: widget => unit = "revery_gtkWidgetDestory";
      };
 
 external eventsPending: unit => bool = "revery_gtkEventsPending";
@@ -44,6 +45,7 @@ module Widget = {
         |> Sdl2.Window.getNativeWindow
         |> c_createGtkWidgetFromXWindow;
       WindowTbl.replace(windowToWidgetTable, sdlWindow, gtkWidget);
+      Gc.finalise(c_gtkWidgetDestroy, gtkWidget);
       gtkWidget;
     };
 
