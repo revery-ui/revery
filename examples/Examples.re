@@ -329,6 +329,7 @@ let init = app => {
           ~icon=Some("revery-icon.png"),
           ~decorated=decorated^,
           ~forceScaleFactor=forceScaleFactor^,
+          ~acceleration=`Auto,
           (),
         ),
       app,
