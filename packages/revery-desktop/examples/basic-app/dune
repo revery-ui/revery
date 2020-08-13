@@ -1,0 +1,20 @@
+(executables
+  (names BasicApp)
+  (package revery-desktop-examples)
+  (public_names BasicApp)
+  (modes native byte)
+  (preprocess (pps brisk-reconciler.ppx))
+  (libraries
+    reason-skia
+    reason-sdl2
+    lwt
+    integers
+    reason-skia.wrapped.bindings
+    reason-skia.wrapped
+    brisk-reconciler
+))
+
+(install
+  (section bin)
+  (package revery-desktop-examples)
+  (files BasicApp.bc))

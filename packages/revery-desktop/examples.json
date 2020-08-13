@@ -1,0 +1,22 @@
+{
+  "source": "./package.json",
+  "scripts": {
+    "basic-app": "esy @examples x BasicApp"
+  },
+  "override": {
+      "build": ["dune build -p revery-desktop,revery-desktop-examples -j4"],
+      "install": [
+          "esy-installer revery-desktop.install",
+          "esy-installer revery-desktop-examples.install"
+      ],
+      "dependencies": {
+          "@brisk/brisk-reconciler": "briskml/brisk-reconciler#10cab2d"
+      },
+      "resolutions": {
+        "reason-sdl2": "link:../reason-sdl2",
+        "reason-skia": "link:../reason-skia",
+        "reason-harfbuzz": "link:../reason-harfbuzz",
+        "zed": "link:../zed"
+      }
+  }
+}

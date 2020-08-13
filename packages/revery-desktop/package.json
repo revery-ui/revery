@@ -1,0 +1,36 @@
+{
+  "name": "revery-desktop",
+  "version": "0.1.0",
+  "description": "Revery for desktop platforms",
+  "scripts": {
+    "format": "esy dune build @fmt --auto-promote"
+  },
+  "esy": {
+    "build": [
+      "dune build -p revery-desktop"
+    ],
+    "install": [
+      "esy-installer revery-desktop.install"
+    ]
+  },
+  "dependencies": {
+    "ocaml": "~4.10.0",
+    "@esy-ocaml/reason": "^3.6.0",
+    "@opam/dune": "*",
+    "reason-sdl2": "*",
+    "reason-skia": "*",
+    "reason-harfbuzz": "*",
+    "zed": "*",
+    "@glennsl/timber": "^1.2.0"
+  },
+  "resolutions": {
+  },
+  "devDependencies": {
+    "reason-sdl2": "link:../reason-sdl2",
+    "reason-skia": "link:../reason-skia",
+    "reason-harfbuzz": "link:../reason-harfbuzz",
+    "zed": "link:../zed",
+    "ocaml": "~4.10.0",
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6"
+  }
+}
