@@ -29,6 +29,7 @@ let cclib = s => ["-cclib", s];
 
 let extraFlags =
   switch (get_os) {
+  | Windows => cclib("-lpthread")
   | Linux => ccopt("-L/usr/lib")
   | _ => []
   };
