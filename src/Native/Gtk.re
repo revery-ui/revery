@@ -24,8 +24,9 @@ open {
           */
        let windowToWidgetTable = WindowTbl.create(1);
 
-       external c_getGtkWidgetFromXWindow: Sdl2.Window.nativeWindow => widget =
-         "revery_getGtkWidgetFromXWindow";
+       external c_createGtkWidgetFromXWindow:
+         Sdl2.Window.nativeWindow => widget =
+         "revery_createGtkWidgetFromXWindow";
      };
 
 external eventsPending: unit => bool = "revery_gtkEventsPending";
@@ -39,7 +40,9 @@ module Widget = {
       WindowTbl.find(windowToWidgetTable, sdlWindow);
     } else {
       let gtkWidget =
-        sdlWindow |> Sdl2.Window.getNativeWindow |> c_getGtkWidgetFromXWindow;
+        sdlWindow
+        |> Sdl2.Window.getNativeWindow
+        |> c_createGtkWidgetFromXWindow;
       WindowTbl.replace(windowToWidgetTable, sdlWindow, gtkWidget);
       gtkWidget;
     };

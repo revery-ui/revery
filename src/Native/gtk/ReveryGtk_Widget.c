@@ -17,7 +17,7 @@ static void revery_gtkRealize(GtkWidget *gWidget, gpointer data) {
     gtk_widget_set_window(gWidget, (GdkWindow *)data);
 }
 
-CAMLprim value revery_getGtkWidgetFromXWindow(value vXWindow) {
+CAMLprim value revery_createGtkWidgetFromXWindow(value vXWindow) {
     CAMLparam1(vXWindow);
 
     Window xWindow = (Window)vXWindow;
