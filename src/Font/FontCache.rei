@@ -12,6 +12,9 @@ module Fallback: {
 
   // [skia(font)] uses skia's [matchFamilyStyleCharacter] API to fall-back
   let skia: t => strategy;
+
+  // [custom] provides a custom matching strategy
+  let custom: (Uchar.t => option(Skia.Typeface.t)) => strategy;
 };
 
 let load: option(Skia.Typeface.t) => result(t, string);
