@@ -265,7 +265,7 @@ let generateShapes:
             ],
             ~start=start + 1,
             ~stop,
-            ~attempts=0,
+            ~attempts=0 // Reset attempts, because we've moved to the next character
           )
         | Error(_) =>
           // Just because we can't find a font for this character doesn't mean
@@ -283,7 +283,7 @@ let generateShapes:
             ],
             ~start=start + 1,
             ~stop,
-            ~attempts=0,
+            ~attempts=0 // Reset attempts, becaused we've moved to the next character
           )
         | Ok(fallbackFont) =>
           Log.debugf(m =>
@@ -361,6 +361,9 @@ let generateShapes:
     }
 
     and loop = (~attempts, ~acc, ~start, ~stop, font) =>
+      // This [attempts] counter is used to 'circuit-break' - verify
+      // we don't end up in an infinite loop. If we've tried multiple times
+      // to fallback, give up, use the unresolved glyph ID, and move on.
       if (attempts >= 3) {
         loop(
           ~attempts=0,
