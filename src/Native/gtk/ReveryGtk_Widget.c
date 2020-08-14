@@ -92,4 +92,18 @@ CAMLprim value revery_gtkWidgetGetOpacity(value vWidget) {
 
     CAMLreturn(caml_copy_double(opacity));
 }
+
+CAMLprim value revery_gtkWidgetGetDepth(value vWidget) {
+    CAMLparam1(vWidget);
+
+    GtkWidget *gWidget = (GtkWidget *)revery_extractPointer(vWidget);
+
+    int result;
+    for (result = 0; gWidget != NULL; result++);
+
+    printf("%s: result: %d\n", __func__, result);
+
+    CAMLreturn(Val_int(result));
+}
+
 #endif

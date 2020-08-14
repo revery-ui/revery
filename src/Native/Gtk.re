@@ -7,6 +7,12 @@ USE_GTK;
 type widget;
 
 open {
+       external c_createGtkWidgetFromXWindow: Sdl2.Window.nativeWindow => widget =
+         "revery_createGtkWidgetFromXWindow";
+       external c_gtkWidgetDestroy: widget => unit = "revery_gtkWidgetDestroy";
+       external c_gtkWidgetGetDepth: widget => int =
+         "revery_gtkWidgetGetDepth";
+
        module WindowHashable = {
          type t = Sdl2.Window.t;
          let equal = (win1, win2) =>
@@ -16,7 +22,7 @@ open {
 
        module WidgetResult = {
          type t = widget;
-         let weight = _ => 1;
+         let weight = c_gtkWidgetGetDepth;
        };
 
        module WindowWidgetCache = Lru.M.Make(WindowHashable, WidgetResult);
@@ -29,11 +35,6 @@ open {
           to GtkWidgets.
           */
        let windowWidgetCache = WindowWidgetCache.create(~initialSize=8, 64);
-
-       external c_createGtkWidgetFromXWindow:
-         Sdl2.Window.nativeWindow => widget =
-         "revery_createGtkWidgetFromXWindow";
-       external c_gtkWidgetDestroy: widget => unit = "revery_gtkWidgetDestroy";
      };
 
 external eventsPending: unit => bool = "revery_gtkEventsPending";
@@ -57,6 +58,8 @@ module Widget = {
       Gc.finalise(c_gtkWidgetDestroy, gtkWidget);
       gtkWidget;
     };
+
+  let depth = c_gtkWidgetGetDepth;
 
   external getPath: widget => string = "revery_gtkWidgetGetPath";
   external showAll: widget => unit = "revery_gtkWidgetShowAll";
