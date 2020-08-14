@@ -1,6 +1,13 @@
 open Revery_Font;
 open TestFramework;
 
+let glyphId = (index, (_typeface, glyphs)) => {
+  // Each glyph is 2 bytes
+  let b0 = glyphs.[index * 2] |> Char.code;
+  let b1 = glyphs.[index * 2 + 1] |> Char.code;
+  b1 lsl 8 + b0;
+};
+
 let runCount = glyphStrings => List.length(glyphStrings);
 
 let glyphCount = ((_typeface, glyphs)) =>
@@ -112,6 +119,8 @@ describe("FontCache", ({describe, test, _}) => {
   });
 
   // Test two fonts with known glyph ids to exercise fallback and hole resolution
+  // This is useful because FiraCode supports some glyphs that JetBrains does not,
+  // and gives us known glyphIds to verify.
   describe("JetBrains-Mono -> FiraCode fallback", ({test, _}) => {
     let fallbackFont =
       firaCodeFont
@@ -157,15 +166,40 @@ describe("FontCache", ({describe, test, _}) => {
 
       expect.int(glyphStrings |> runCount).toBe(3);
       expect.int(glyphStrings |> run(0) |> glyphCount).toBe(3);
+      expect.int(glyphStrings |> run(0) |> glyphId(0)).toBe(724); //κ
+      expect.int(glyphStrings |> run(0) |> glyphId(1)).toBe(854); //ό
+      expect.int(glyphStrings |> run(0) |> glyphId(2)).toBe(733); //σ
       expect.int(glyphStrings |> run(0) |> typefaceId).toBe(firaCodeFontId);
 
       expect.int(glyphStrings |> run(1) |> glyphCount).toBe(1);
+      expect.int(glyphStrings |> run(1) |> glyphId(0)).toBe(526); //μ
       expect.int(glyphStrings |> run(1) |> typefaceId).toBe(
         jetBrainsFontId,
       );
 
       expect.int(glyphStrings |> run(2) |> glyphCount).toBe(1);
+      expect.int(glyphStrings |> run(2) |> glyphId(0)).toBe(719); //ε
       expect.int(glyphStrings |> run(2) |> typefaceId).toBe(firaCodeFontId);
+    });
+    test("alternate fall-back", ({expect, _}) => {
+      let {glyphStrings}: ShapeResult.t =
+        "aκaκaκaκaκ" |> FontCache.shape(~fallback, font);
+
+      // Validate each aκ pair - there are 5 pairs (10 characters)
+      expect.int(glyphStrings |> runCount).toBe(10);
+      for (i in 0 to 4) {
+        expect.int(glyphStrings |> run(i * 2) |> glyphCount).toBe(1);
+        expect.int(glyphStrings |> run(i * 2) |> glyphId(0)).toBe(42); //a
+        expect.int(glyphStrings |> run(i * 2) |> typefaceId).toBe(
+          jetBrainsFontId,
+        );
+
+        expect.int(glyphStrings |> run(i * 2 + 1) |> glyphCount).toBe(1);
+        expect.int(glyphStrings |> run(i * 2 + 1) |> glyphId(0)).toBe(724); //κ
+        expect.int(glyphStrings |> run(i * 2 + 1) |> typefaceId).toBe(
+          firaCodeFontId,
+        );
+      };
     });
   });
 });
