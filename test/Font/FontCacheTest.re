@@ -135,7 +135,8 @@ describe("FontCache", ({describe, test, _}) => {
       |> Skia.Typeface.getUniqueID
       |> Int32.to_int;
 
-    // Use a fallback strategy that _always_ uses jet brains mono,
+    // Use a fallback strategy that _always_ uses FiraCode,
+    // so we can test specific fallback cases + glyph resolution.
     let fallback = FontCache.Fallback.constant(fallbackFont);
 
     let font =
