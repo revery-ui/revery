@@ -172,36 +172,53 @@ let getMetrics: (t, float) => FontMetrics.t =
 
 let getSkiaTypeface: t => Skia.Typeface.t = font => font.skiaFace;
 
-let matchCharacter = (fallbackCharacterCache, uchar, skiaFace) =>
-  switch (FallbackCharacterCache.find(uchar, fallbackCharacterCache)) {
-  | Some(maybeTypeface) =>
-    FallbackCharacterCache.promote(uchar, fallbackCharacterCache);
-    maybeTypeface;
-  | None =>
-    let familyName = skiaFace |> Skia.Typeface.getFamilyName;
-    let maybeTypeface =
-      Skia.FontManager.matchFamilyStyleCharacter(
-        FontManager.instance,
-        familyName,
-        skiaFace |> Skia.Typeface.getFontStyle,
-        [Environment.userLocale],
-        uchar,
+/* [Fallback.strategy] encapsulates the logic for discovering a font, based on a character [Uchar.t] */
+module Fallback = {
+  type strategy = Uchar.t => option(Skia.Typeface.t);
+
+  let none = _uchar => None;
+
+  let constant = (typeface, _uchar) => Some(typeface);
+
+  let skia = ({skiaFace, fallbackCharacterCache, _}: t, uchar) => {
+    switch (FallbackCharacterCache.find(uchar, fallbackCharacterCache)) {
+    | Some(maybeTypeface) =>
+      FallbackCharacterCache.promote(uchar, fallbackCharacterCache);
+      maybeTypeface;
+    | None =>
+      let familyName = skiaFace |> Skia.Typeface.getFamilyName;
+      let maybeTypeface =
+        Skia.FontManager.matchFamilyStyleCharacter(
+          FontManager.instance,
+          familyName,
+          skiaFace |> Skia.Typeface.getFontStyle,
+          [Environment.userLocale],
+          uchar,
+        );
+      Log.debugf(m =>
+        m(
+          "Unresolved glyph: character : U+%04X font: %s",
+          Uchar.to_int(uchar),
+          familyName,
+        )
       );
-    Log.debugf(m =>
-      m(
-        "Unresolved glyph: character : U+%04X font: %s",
-        Uchar.to_int(uchar),
-        familyName,
-      )
-    );
-    FallbackCharacterCache.add(uchar, maybeTypeface, fallbackCharacterCache);
-    FallbackCharacterCache.trim(fallbackCharacterCache);
-    maybeTypeface;
+      FallbackCharacterCache.add(
+        uchar,
+        maybeTypeface,
+        fallbackCharacterCache,
+      );
+      FallbackCharacterCache.trim(fallbackCharacterCache);
+      maybeTypeface;
+    };
   };
 
+  let custom = (f: strategy) => f;
+};
+
 let generateShapes:
-  (~features: list(Feature.t), t, string) => list(ShapeResult.shapeNode) =
-  (~features, font, str) => {
+  (~fallback: Fallback.strategy, ~features: list(Feature.t), t, string) =>
+  list(ShapeResult.shapeNode) =
+  (~fallback, ~features, font, str) => {
     let fallbackFor = (~byteOffset, str) => {
       Log.debugf(m =>
         m("Resolving fallback for: %s at byte offset %d", str, byteOffset)
@@ -214,10 +231,24 @@ let generateShapes:
           );
           None;
         };
-      Option.bind(maybeUchar, uchar =>
-        matchCharacter(font.fallbackCharacterCache, uchar, font.skiaFace)
-      )
-      |> load;
+      Option.bind(maybeUchar, uchar
+        // Only fallback if the character is non-ASCII (UTF-8)
+        =>
+          if (Uchar.to_int(uchar) > 256) {
+            fallback(uchar);
+          } else {
+            None;
+          }
+        )
+      |> (
+        fun
+        | Some(_) as font => {
+            load(font);
+          }
+        | None => {
+            Error("No fallback font found");
+          }
+      );
     };
 
     /* A hole is a space in a string where the current font
@@ -225,7 +256,7 @@ let generateShapes:
        don't include emojis, and Latin fonts often don't include
        CJK characters. This module contains functions that
        relate to the creation and resolution of these "holes" */
-    let rec resolveHole = (~acc, ~start, ~stop) =>
+    let rec resolveHole = (~attempts, ~acc, ~start, ~stop) =>
       if (start >= stop) {
         acc;
       } else {
@@ -244,6 +275,7 @@ let generateShapes:
             ],
             ~start=start + 1,
             ~stop,
+            ~attempts=0 // Reset attempts, because we've moved to the next character
           )
         | Error(_) =>
           // Just because we can't find a font for this character doesn't mean
@@ -261,6 +293,7 @@ let generateShapes:
             ],
             ~start=start + 1,
             ~stop,
+            ~attempts=0 // Reset attempts, becaused we've moved to the next character
           )
         | Ok(fallbackFont) =>
           Log.debugf(m =>
@@ -277,11 +310,12 @@ let generateShapes:
 
           // We found a fallback font! Now we just have to shape it the same way
           // we shape the super-string.
-          loop(~start, ~stop, ~acc, fallbackFont);
+          loop(~attempts=attempts + 1, ~start, ~stop, ~acc, fallbackFont);
         };
       }
     and loopShapes =
         (
+          ~attempts,
           ~stopCluster,
           ~acc,
           ~holeStart=?,
@@ -291,7 +325,7 @@ let generateShapes:
         ) => {
       let resolvePossibleHole = (~stop) => {
         switch (holeStart) {
-        | Some(start) => resolveHole(~acc, ~start, ~stop)
+        | Some(start) => resolveHole(~attempts, ~acc, ~start, ~stop)
         | None => acc
         };
       };
@@ -308,6 +342,7 @@ let generateShapes:
         if (glyphId == Constants.unresolvedGlyphID) {
           let holeStart = Option.value(holeStart, ~default=cluster);
           loopShapes(
+            ~attempts,
             ~stopCluster,
             ~acc,
             ~holeStart,
@@ -323,34 +358,71 @@ let generateShapes:
             ShapeResult.{hbFace, skiaFace, glyphId, cluster},
             ...acc,
           ];
-          loopShapes(~stopCluster, ~acc, ~index=index + 1, font, shapes);
+          loopShapes(
+            ~attempts=0,
+            ~stopCluster,
+            ~acc,
+            ~index=index + 1,
+            font,
+            shapes,
+          );
         };
       };
     }
 
-    and loop = (~acc, ~start, ~stop, font) => {
-      Harfbuzz.hb_shape(
-        ~features,
-        ~start=`Position(start),
-        ~stop=`Position(stop),
-        font.hbFace,
-        str,
-      )
-      |> loopShapes(~stopCluster=stop, ~acc, ~index=0, font);
-    };
+    and loop = (~attempts, ~acc, ~start, ~stop, font) =>
+      // This [attempts] counter is used to 'circuit-break' - verify
+      // we don't end up in an infinite loop. If we've tried multiple times
+      // to fallback, give up, use the unresolved glyph ID, and move on.
+      if (attempts >= 3) {
+        loop(
+          ~attempts=0,
+          ~acc=[
+            ShapeResult.{
+              hbFace: font.hbFace,
+              skiaFace: font.skiaFace,
+              glyphId: Constants.unresolvedGlyphID,
+              cluster: start,
+            },
+            ...acc,
+          ],
+          ~start=start + 1,
+          ~stop,
+          font,
+        );
+      } else {
+        Harfbuzz.hb_shape(
+          ~features,
+          ~start=`Position(start),
+          ~stop=`Position(stop),
+          font.hbFace,
+          str,
+        )
+        |> loopShapes(~attempts, ~stopCluster=stop, ~acc, ~index=0, font);
+      };
 
-    loop(~start=0, ~stop=String.length(str), ~acc=[], font);
+    loop(~attempts=0, ~start=0, ~stop=String.length(str), ~acc=[], font);
   };
 
-let shape: (~features: list(Feature.t)=?, t, string) => ShapeResult.t =
-  (~features=[], {shapeCache, _} as font, str) => {
+let shape:
+  (~fallback: Fallback.strategy=?, ~features: list(Feature.t)=?, t, string) =>
+  ShapeResult.t =
+  (~fallback=?, ~features=[], {shapeCache, _} as font, str) => {
+    // Default to skia fallback strategy
+    let fallbackToUse =
+      switch (fallback) {
+      | None => Fallback.skia(font)
+      | Some(fallbackStrategy) => fallbackStrategy
+      };
+
     switch (ShapeResultCache.find((str, features), shapeCache)) {
     | Some(result) =>
       ShapeResultCache.promote((str, features), shapeCache);
       result;
     | None =>
       let result =
-        generateShapes(~features, font, str) |> ShapeResult.ofHarfbuzz;
+        generateShapes(~fallback=fallbackToUse, ~features, font, str)
+        |> ShapeResult.ofHarfbuzz;
       ShapeResultCache.add((str, features), result, shapeCache);
       ShapeResultCache.trim(shapeCache);
       result;
