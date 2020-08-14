@@ -1,5 +1,5 @@
 {
-  "checksum": "2ca920739160a1e83e60a25159780ce8",
+  "checksum": "0e96ed3895946187e4242107c3900a3b",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -34,7 +34,7 @@
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#38c8f00@d41d8cd9",
         "flex@1.2.3@d41d8cd9", "fetch-native-lwt@0.1.0-alpha.5@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#a3785f9@d41d8cd9",
-        "esy-sdl2@2.0.10008@d41d8cd9", "esy-freetype2@2.9.1007@d41d8cd9",
+        "esy-sdl2@2.0.10008@d41d8cd9", "esy-freetype2@2.9.1008@d41d8cd9",
         "esy-angle-prebuilt@1.0.0@d41d8cd9",
         "@revery/esy-harfbuzz@2.6.8001@d41d8cd9",
         "@opam/uutf@opam:1.0.2@4440868f", "@opam/uucp@opam:13.0.0@e9b515e0",
@@ -290,14 +290,14 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-freetype2@2.9.1007@d41d8cd9": {
-      "id": "esy-freetype2@2.9.1007@d41d8cd9",
+    "esy-freetype2@2.9.1008@d41d8cd9": {
+      "id": "esy-freetype2@2.9.1008@d41d8cd9",
       "name": "esy-freetype2",
-      "version": "2.9.1007",
+      "version": "2.9.1008",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/esy-freetype2/-/esy-freetype2-2.9.1007.tgz#sha1:6ef0ac0142837e44cc6e845868b0fb592dd72b74"
+          "archive:https://registry.npmjs.org/esy-freetype2/-/esy-freetype2-2.9.1008.tgz#sha1:cdc4443f6bf763fd44b3eeaf8fd0b1c1df6fdea9"
         ]
       },
       "overrides": [],
@@ -1005,8 +1005,8 @@
         "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
-    "@opam/stdlib-shims@opam:0.1.0@d957c903": {
-      "id": "@opam/stdlib-shims@opam:0.1.0@d957c903",
+    "@opam/stdlib-shims@opam:0.1.0@8c116481": {
+      "id": "@opam/stdlib-shims@opam:0.1.0@8c116481",
       "name": "@opam/stdlib-shims",
       "version": "opam:0.1.0",
       "source": {
@@ -1306,7 +1306,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/stdlib-shims@opam:0.1.0@d957c903",
+        "ocaml@4.10.0@d41d8cd9", "@opam/stdlib-shims@opam:0.1.0@8c116481",
         "@opam/sexplib0@opam:v0.14.0@ddeb6438",
         "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
@@ -1314,7 +1314,7 @@
         "@opam/dune@opam:2.6.2@20433b4f", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/stdlib-shims@opam:0.1.0@d957c903",
+        "ocaml@4.10.0@d41d8cd9", "@opam/stdlib-shims@opam:0.1.0@8c116481",
         "@opam/sexplib0@opam:v0.14.0@ddeb6438",
         "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
         "@opam/ocaml-migrate-parsetree@opam:1.7.3@dbcf3b47",
@@ -1750,7 +1750,7 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
-        "@opam/stdlib-shims@opam:0.1.0@d957c903",
+        "@opam/stdlib-shims@opam:0.1.0@8c116481",
         "@opam/ppx_yojson_conv_lib@opam:v0.14.0@116b53d6",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/menhir@opam:20200624@8629ff13",
@@ -1759,7 +1759,7 @@
       ],
       "devDependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
-        "@opam/stdlib-shims@opam:0.1.0@d957c903",
+        "@opam/stdlib-shims@opam:0.1.0@8c116481",
         "@opam/ppx_yojson_conv_lib@opam:v0.14.0@116b53d6",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/menhir@opam:20200624@8629ff13",
@@ -2356,7 +2356,7 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.10.0@d41d8cd9", "@opam/topkg@opam:1.0.2@3c5942ad",
-        "@opam/stdlib-shims@opam:0.1.0@d957c903",
+        "@opam/stdlib-shims@opam:0.1.0@8c116481",
         "@opam/seq@opam:base@d8d7de1d",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
@@ -2364,7 +2364,7 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.0@d41d8cd9", "@opam/stdlib-shims@opam:0.1.0@d957c903",
+        "ocaml@4.10.0@d41d8cd9", "@opam/stdlib-shims@opam:0.1.0@8c116481",
         "@opam/seq@opam:base@d8d7de1d"
       ]
     },

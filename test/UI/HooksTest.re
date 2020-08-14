@@ -1,3 +1,4 @@
+open Revery_Core;
 open Revery_UI;
 open Revery_UI_Primitives;
 
@@ -6,26 +7,26 @@ module Hooks = Revery_UI_Hooks;
 
 open TestFramework;
 
-let getTickerCount = () => Tick.getActiveTickers() |> List.length;
-
-module SingleTimer = {
-  let%component make = (~timerActive, ()) => {
-    let%hook (_dt, _reset) = Hooks.timer(~active=timerActive, ());
-
-    <View />;
-  };
-};
-
-module DoubleTimer = {
-  let%component make = (~timer1Active, ~timer2Active, ()) => {
-    let%hook (_dt, _reset) = Hooks.timer(~active=timer1Active, ());
-    let%hook (_dt, _reset) = Hooks.timer(~active=timer2Active, ());
-    <View />;
-  };
-};
-
 describe("Hooks", ({describe, _}) => {
   describe("Timer", ({test, _}) => {
+    module SingleTimer = {
+      let%component make = (~timerActive, ()) => {
+        let%hook (_dt, _reset) = Hooks.timer(~active=timerActive, ());
+
+        <View />;
+      };
+    };
+
+    module DoubleTimer = {
+      let%component make = (~timer1Active, ~timer2Active, ()) => {
+        let%hook (_dt, _reset) = Hooks.timer(~active=timer1Active, ());
+        let%hook (_dt, _reset) = Hooks.timer(~active=timer2Active, ());
+        <View />;
+      };
+    };
+
+    let getTickerCount = () => Tick.getActiveTickers() |> List.length;
+
     test("Single: Timer starts and stops", ({expect, _}) => {
       expect.int(getTickerCount()).toBe(0);
 
@@ -112,5 +113,31 @@ describe("Hooks", ({describe, _}) => {
       Tick.pump();
       expect.int(getTickerCount()).toBe(0);
     });
-  })
+  });
+
+  describe("Tick", ({test, _}) => {
+    module Ticker = {
+      let%component make = (~f, ()) => {
+        let%hook () = Hooks.tick(~tickRate=Time.zero, f);
+
+        <View />;
+      };
+    };
+
+    test("Callback does not go stale", ({expect, _}) => {
+      let rootNode = (new viewNode)();
+      let container = Container.create(rootNode);
+      let count = ref(0);
+
+      let container =
+        Container.update(container, <Ticker f={_ => count := 1} />);
+      Tick.pump();
+      expect.int(count^).toBe(1);
+
+      let _container =
+        Container.update(container, <Ticker f={_ => count := 2} />);
+      Tick.pump();
+      expect.int(count^).toBe(2);
+    });
+  });
 });
