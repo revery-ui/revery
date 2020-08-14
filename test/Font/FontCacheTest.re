@@ -24,6 +24,10 @@ describe("FontCache", ({describe, test, _}) => {
     |> Skia.Typeface.getUniqueID
     |> Int32.to_int;
 
+  let firaCodeFont = Family.fromFile("FiraCode-Regular.ttf");
+
+  let jetBrainsMonoFont = Family.fromFile("JetBrainsMono-Regular.ttf");
+
   test("empty string has empty shapes", ({expect, _}) => {
     let {glyphStrings}: ShapeResult.t = "" |> FontCache.shape(defaultFont);
 
@@ -107,34 +111,61 @@ describe("FontCache", ({describe, test, _}) => {
     );
   });
 
-  describe("fail to fallback", ({test, _}) => {
+  // Test two fonts with known glyph ids to exercise fallback and hole resolution
+  describe("JetBrains-Mono -> FiraCode fallback", ({test, _}) => {
+    let fallbackFont =
+      firaCodeFont
+      |> Family.toSkia(~italic=false, Weight.Normal)
+      |> Option.get;
 
-    let fallbackFont = Family.defaultMono
-    //let fallbackFont = Family.defaultMono
-    |> Family.toSkia(~italic=false, Weight.Normal)
-    |> Option.get;
+    let firaCodeFontId =
+      firaCodeFont
+      |> Family.resolve(~italic=false, Weight.Normal)
+      |> Result.get_ok
+      |> FontCache.getSkiaTypeface
+      |> Skia.Typeface.getUniqueID
+      |> Int32.to_int;
 
-    let fallback = FontCache.Fallback.constant(fallbackFont)
+    // Use a fallback strategy that _always_ uses jet brains mono,
+    let fallback = FontCache.Fallback.constant(fallbackFont);
 
-    let font = Family.default
-//    let font = Family.fromFile("/Users/bryphe/Downloads/JetBrainsMono-2.001/ttf/JetBrainsMono-Italic.ttf")
-    |> Family.resolve(~italic=false, Weight.Normal)
-    |> Result.get_ok;
+    let font =
+      jetBrainsMonoFont
+      |> Family.resolve(~italic=false, Weight.Normal)
+      |> Result.get_ok;
+
+    let jetBrainsFontId =
+      font
+      |> FontCache.getSkiaTypeface
+      |> Skia.Typeface.getUniqueID
+      |> Int32.to_int;
 
     test(
-      "fallback for all ASCII characters - including non-printable characters",
+      "onivim/oni2#2286: fallback for tab character - handle case where fallback font also does not have a glyph for tab",
       ({expect, _}) => {
-//      for (ascii in 0 to 255) {
-      for (ascii in 0 to 10) {
-        prerr_endline ("shaping: " ++ string_of_int(ascii));
-        let asciiCharacter = Zed_utf8.make(1, Uchar.of_int(07036));
+        let asciiCharacter = Zed_utf8.make(1, Uchar.of_int(9));
         let {glyphStrings}: ShapeResult.t =
           asciiCharacter |> FontCache.shape(~fallback, font);
 
         expect.int(glyphStrings |> runCount).toBe(1);
-        // TODO: Investigate why we sometimes get 2 glyph strings here?
-        // expect.int(glyphStrings |> run(0) |> glyphCount).toBe(1);
-      }
+      },
+    );
+
+    test("κόσμε", ({expect, _}) => {
+      let {glyphStrings}: ShapeResult.t =
+        "κόσμε" |> FontCache.shape(~fallback, font);
+
+      expect.int(glyphStrings |> runCount).toBe(3);
+      expect.int(glyphStrings |> run(0) |> glyphCount).toBe(3);
+      expect.int(glyphStrings |> run(0) |> typefaceId).toBe(firaCodeFontId);
+
+      expect.int(glyphStrings |> run(1) |> glyphCount).toBe(1);
+      expect.int(glyphStrings |> run(1) |> typefaceId).toBe(
+        jetBrainsFontId,
+      );
+
+      expect.int(glyphStrings |> run(2) |> glyphCount).toBe(1);
+      expect.int(glyphStrings |> run(2) |> typefaceId).toBe(firaCodeFontId);
     });
-  })
+  });
 });
