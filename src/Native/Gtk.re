@@ -33,7 +33,7 @@ open {
        external c_createGtkWidgetFromXWindow:
          Sdl2.Window.nativeWindow => widget =
          "revery_createGtkWidgetFromXWindow";
-       external c_gtkWidgetDestroy: widget => unit = "revery_gtkWidgetDestory";
+       external c_gtkWidgetDestroy: widget => unit = "revery_gtkWidgetDestroy";
      };
 
 external eventsPending: unit => bool = "revery_gtkEventsPending";
