@@ -46,6 +46,7 @@ let run = () => {
     renderString(font, "ff");
     renderString(~features, font, "ff");
     renderString(font, "κόσμε");
+    renderString(font, "\t");
   };
 };
 

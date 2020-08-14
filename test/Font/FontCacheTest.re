@@ -203,13 +203,10 @@ describe("FontCache", ({describe, test, _}) => {
       };
     });
     test("shouldn't fall-back for ascii characters", ({expect, _}) => {
-      let {glyphStrings}: ShapeResult.t =
-        "aκaκaκaκaκ" |> FontCache.shape(~fallback, font);
-
       // Use a ref as a sensor to see if fallback is requested
       let fallbackSensor = ref(0);
       let fallback =
-        FontCache.Fallback.custom(uchar => {
+        FontCache.Fallback.custom(_uchar => {
           incr(fallbackSensor);
           None;
         });
@@ -221,10 +218,7 @@ describe("FontCache", ({describe, test, _}) => {
 
         expect.int(glyphStrings |> runCount).toBe(1);
 
-        // We should never get fallback for ASCII characters
         expect.int(fallbackSensor^).toBe(0);
-        // TODO: Investigate why we sometimes get 2 glyph strings here?
-        // expect.int(glyphStrings |> run(0) |> glyphCount).toBe(1);
       };
     });
   });
