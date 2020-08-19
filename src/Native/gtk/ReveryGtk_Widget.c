@@ -98,12 +98,12 @@ CAMLprim value revery_gtkWidgetGetDepth(value vWidget) {
 
     GtkWidget *gWidget = (GtkWidget *)revery_extractPointer(vWidget);
 
-    int result;
-    for (result = 0; gWidget != NULL; result++);
+    int depth;
+    for (depth = 0; gWidget != NULL; depth++) {
+        gWidget = gtk_widget_get_parent(gWidget);
+    }
 
-    printf("%s: result: %d\n", __func__, result);
-
-    CAMLreturn(Val_int(result));
+    CAMLreturn(Val_int(depth));
 }
 
 #endif
