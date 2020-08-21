@@ -45,6 +45,7 @@
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/markup": "0.8.2",
     "@opam/ppx_deriving": "*",
+    "@opam/ppx_optcomp": "v0.14.0",
     "@opam/omd": "ocaml/omd:omd.opam#1535e3c",
     "@opam/uucp": "*",
     "@opam/uutf": "*",

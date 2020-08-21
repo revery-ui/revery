@@ -2,7 +2,7 @@ opam-version: "2.0"
 maintainer: "Antonio Nuno Monteiro <anmonteiro@gmail.com>"
 authors: [ "Pieter Goetschalckx <3.14.e.ter@gmail.com>"
            "Antonio Nuno Monteiro <anmonteiro@gmail.com>" ]
-license: "BSD-3-Clause"
+license: "MIT"
 homepage: "https://github.com/anmonteiro/ocaml-h2"
 bug-reports: "https://github.com/anmonteiro/ocaml-h2/issues"
 dev-repo: "git+https://github.com/anmonteiro/ocaml-h2.git"
@@ -27,6 +27,6 @@ parsing and serialization, respectively.
 """
 url {
   src:
-    "https://github.com/anmonteiro/ocaml-h2/releases/download/0.2.0/h2-0.2.0.tbz"
-  checksum: "md5=c883927ce8a9f3f7159ef7b20988f051"
+    "https://github.com/anmonteiro/ocaml-h2/releases/download/0.1.0/h2-0.1.0.tbz"
+  checksum: "md5=dc12db1ec40d820c4fdab029e77567d1"
 }

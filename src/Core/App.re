@@ -1,3 +1,6 @@
+%import
+"../Native/config.h";
+
 module AppLog = (val Log.withNamespace("Revery.App"));
 module SdlLog = (val Log.withNamespace("Revery.SDL2"));
 
@@ -152,6 +155,22 @@ let handleKeymapChanged = () => {
   };
 };
 
+%ifdef
+USE_GTK;
+
+let runGtkIteration = () =>
+  if (Revery_Native.Gtk.eventsPending()) {
+    AppLog.debug("Running Gtk iteration");
+    let _quit: bool = Revery_Native.Gtk.mainIteration();
+    ();
+  };
+
+[%%else];
+
+let runGtkIteration = () => ();
+
+[%%endif];
+
 let start = init => {
   let appInstance: t = {
     windows: Hashtbl.create(1),
@@ -260,6 +279,8 @@ let start = init => {
 
   let appLoop = () => {
     _flushEvents();
+
+    runGtkIteration();
 
     Tick.Default.pump();
 
