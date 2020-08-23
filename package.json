@@ -63,6 +63,7 @@
     "@glennsl/timber": "^1.2.0"
   },
   "resolutions": {
+    "ocaml": "github:esy-ocaml/ocaml#d5b1b6d11bde32df124332f21f5878d175c01a6f",
     "@opam/conf-pkg-config": "1.2"
   },
   "devDependencies": {
