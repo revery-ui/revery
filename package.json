@@ -68,7 +68,6 @@
   },
   "devDependencies": {
     "ocaml": "~4.10",
-    "esy-astyle": "zbaylin/esy-astyle#59bc21a",
-    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#9211a93a11c0a39c48d8a42daf148082d10b44f4"
+    "esy-astyle": "zbaylin/esy-astyle#59bc21a"
   }
 }
