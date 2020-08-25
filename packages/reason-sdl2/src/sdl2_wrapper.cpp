@@ -1286,11 +1286,12 @@ extern "C" {
     };
 
     CAMLprim value resdl_SDL_GL_SwapWindow(value vWin) {
+        CAMLparam1(vWin);
         SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
         caml_release_runtime_system();
         SDL_GL_SwapWindow(win);
         caml_acquire_runtime_system();
-        return Val_unit;
+        CAMLreturn(Val_unit);
     }
 
     SDL_HitTestResult hittest(SDL_Window *win, const SDL_Point *area, void *data) {
