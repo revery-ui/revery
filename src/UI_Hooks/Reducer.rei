@@ -3,7 +3,7 @@ open Revery_UI.React.Hooks;
 /**
 {2 Description:}
 
-An alternative to Hooks.state. Accepts a reducer of type (state, action) => newState, and returns the current state paired with a dispatch function.
+An alternative to Hooks.state. Accepts a reducer of type (action, state) => newState, and returns the current state paired with a dispatch function.
 
 {2 Usage:}
 
