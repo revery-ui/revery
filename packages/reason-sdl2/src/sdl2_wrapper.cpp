@@ -103,13 +103,15 @@ extern "C" {
     SDL_HitTestResult resdl_hit_test(SDL_Window *win, const SDL_Point *area,
                                      void *data) {
 
+        CAMLparam0();
+        CAMLlocal2(vWin, vRet);
         static const value *hitTestCallback = NULL;
         if (hitTestCallback == NULL) {
             hitTestCallback = caml_named_value("__sdl2_caml_hittest__");
         }
-        value vWin = resdl_wrapPointer(win);
-        value vRet = caml_callback3(*hitTestCallback, vWin, Val_int(area->x),
-                                    Val_int(area->y));
+        vWin = resdl_wrapPointer(win);
+        vRet = caml_callback3(*hitTestCallback, vWin, Val_int(area->x),
+                              Val_int(area->y));
         SDL_HitTestResult result;
         switch (Int_val(vRet)) {
         case 0:
@@ -216,6 +218,7 @@ extern "C" {
 
     CAMLprim value resdl_SDL_GetNativeWindow(value vWin) {
         CAMLparam1(vWin);
+        CAMLlocal1(vNativeWindow);
 
         SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
         SDL_SysWMinfo wmInfo;
@@ -258,7 +261,7 @@ extern "C" {
             break;
         }
 
-        value vNativeWindow = resdl_wrapPointer(pNativeWindow);
+        vNativeWindow = resdl_wrapPointer(pNativeWindow);
 
         CAMLreturn(vNativeWindow);
     };
@@ -597,6 +600,8 @@ extern "C" {
     };
 
     CAMLprim value resdl_SDL_GL_Setup(value vWin) {
+        CAMLparam1(vWin);
+        CAMLlocal1(vCtx);
         SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
         SDL_GLContext ctx = SDL_GL_CreateContext(win);
 
@@ -605,9 +610,9 @@ extern "C" {
                             SDL_GetError());
         }
 
+        vCtx = resdl_wrapPointer(ctx);
 
-
-        return resdl_wrapPointer(ctx);
+        CAMLreturn(vCtx);
     }
 
     typedef const GLubyte *(*glGetStringFunc)(GLenum);
@@ -676,6 +681,7 @@ extern "C" {
     CAMLprim value resdl_SDL_GL_MakeCurrent(value vWin, value vContext) {
         CAMLparam2(vWin, vContext);
         SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+
         SDL_GLContext ctx = (SDL_GLContext)resdl_extractPointer(vContext);
 
         SDL_GL_MakeCurrent(win, ctx);
@@ -1139,6 +1145,7 @@ extern "C" {
 
     CAMLprim value resdl_SDL_CreateSystemCursor(value vCursor) {
         CAMLparam1(vCursor);
+        CAMLlocal1(vCursorRet);
 
         SDL_Cursor *cursor = NULL;
 
@@ -1183,7 +1190,7 @@ extern "C" {
         }
 
         cursor = SDL_CreateSystemCursor(id);
-        value vCursorRet = resdl_wrapPointer(cursor);
+        vCursorRet = resdl_wrapPointer(cursor);
         CAMLreturn(vCursorRet);
     }
 
@@ -1346,6 +1353,7 @@ extern "C" {
                                           value vWidth, value vHeight, value vAcceleration) {
         CAMLparam5(vName, vX, vY, vWidth, vHeight);
         CAMLxparam1(vAcceleration);
+        CAMLlocal1(vWindow);
 
         int x;
         if (vX == hash_variant("Centered")) {
@@ -1415,7 +1423,7 @@ extern "C" {
                             SDL_GetError());
         }
 
-        value vWindow = resdl_wrapPointer(win);
+        vWindow = resdl_wrapPointer(win);
         CAMLreturn(vWindow);
     }
 
