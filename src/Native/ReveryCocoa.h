@@ -23,7 +23,7 @@ void revery_setIconProgressIndeterminate_cocoa(void *dt);
 void revery_hideIconProgress_cocoa(void* ip);
 
 /* Image functions */
-void *revery_makeImageFromAbsolutePath(const char *image_path_v);
+void *revery_makeImageFromAbsolutePath_cocoa(const char *image_path_v);
 
 /* Open functions */
 int revery_openURL_cocoa(const char *url_string);

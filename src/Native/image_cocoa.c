@@ -4,7 +4,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-void *revery_makeImageFromAbsolutePath(const char *imagePath) {
+void *revery_makeImageFromAbsolutePath_cocoa(const char *imagePath) {
     NSString *nsImagePath =
         [NSString stringWithCString:imagePath encoding:NSUTF8StringEncoding];
 

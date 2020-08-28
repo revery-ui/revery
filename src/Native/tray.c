@@ -29,7 +29,7 @@ CAMLprim value revery_makeTrayHandle(value imagePath_v) {
     if (imagePath_v != Val_none) {
         const char *imagePath = String_val(Some_val(imagePath_v));
 
-        NSImage *nsImage = revery_makeImageFromAbsolutePath(imagePath);
+        NSImage *nsImage = revery_makeImageFromAbsolutePath_cocoa(imagePath);
 
         statusItem.button.image = nsImage;
 
