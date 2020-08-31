@@ -56,17 +56,28 @@ class imageNode (data: option(Skia.Image.t)) = {
     Skia.Paint.setFilterQuality(_paint, quality);
   };
   pub! setStyle = style => {
+    // If neither the height and width are defined, then
+    // use the image size as the default height and width.
+
     let adjustedStyle =
-      Layout.Encoding.{
-        ...style,
-        width:
-          style.width == cssUndefined
-            ? _maybeWidth |> Option.value(~default=cssUndefined) : style.width,
-        height:
-          style.height == cssUndefined
-            ? _maybeHeight |> Option.value(~default=cssUndefined)
-            : style.height,
-      };
+      Layout.Encoding.(
+        {
+          let noDimensionsSet =
+            style.width == cssUndefined && style.height == cssUndefined;
+
+          Style.{
+            ...style,
+            width:
+              noDimensionsSet
+                ? _maybeWidth |> Option.value(~default=cssUndefined)
+                : style.width,
+            height:
+              noDimensionsSet
+                ? _maybeHeight |> Option.value(~default=cssUndefined)
+                : style.height,
+          };
+        }
+      );
     _super#setStyle(adjustedStyle);
   };
   pub setData = maybeImg => {
