@@ -30,7 +30,7 @@ let%nativeComponent make =
                       ~width=?,
                       ~height=?,
                       ~quality=`high,
-                      ~src: [ | `File(string) ],
+                      ~src: [ | `File(string)],
                       ~style=Style.emptyImageStyle,
                       ~children=React.empty,
                       (),
@@ -75,10 +75,10 @@ let%nativeComponent make =
 
       ignore(
         switch (src) {
-//        | `Url(url) =>
-//          let.flatMap image = Revery_IO.Image.fromUrl(url);
-//          imgNode#setData(image);
-//          Lwt.return();
+        //        | `Url(url) =>
+        //          let.flatMap image = Revery_IO.Image.fromUrl(url);
+        //          imgNode#setData(image);
+        //          Lwt.return();
         | `File(path) =>
           let maybeSkiaImage = Revery_IO.Image.fromAssetPath(path);
           imgNode#setData(maybeSkiaImage);
