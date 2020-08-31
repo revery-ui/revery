@@ -785,6 +785,9 @@ module M = (F: FOREIGN) => {
     let delete = foreign("sk_image_unref", t @-> returning(void));
 
     let encode = foreign("sk_image_encode", t @-> returning(Data.t));
+
+    let width = foreign("sk_image_get_width", t @-> returning(int));
+    let height = foreign("sk_image_get_height", t @-> returning(int));
   };
 
   type pixelGeometry = SkiaTypes.pixelGeometry;
