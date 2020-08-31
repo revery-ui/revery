@@ -18,6 +18,7 @@
 #import "ReveryAppDelegate.h"
 #elif USE_GTK
 #include "ReveryGtk.h"
+#include <gtk/gtk.h>
 #endif
 
 CAMLprim value revery_initializeApp() {
@@ -30,6 +31,8 @@ CAMLprim value revery_initializeApp() {
     if (hr != S_OK) {
         fprintf(stderr, "WARNING: COM initialization failed.");
     }
+#elif USE_GTK
+    gtk_init(0, NULL);
 #endif
     return Val_unit;
 }
