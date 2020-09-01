@@ -37,11 +37,11 @@ module Internal = {
 // NOTE: The reason for these different states is to hold up any
 // additional requests until we've actually got a response
 // from the first one
-type urlCacheItem =
-  | Image(option(Skia.Image.t))
-  | Pending;
+//type urlCacheItem =
+//  | Image(option(Skia.Image.t))
+//  | Pending;
 
-type urlCache = Hashtbl.t(string, urlCacheItem);
+//type urlCache = Hashtbl.t(string, urlCacheItem);
 //let urlContextCache: urlCache = Hashtbl.create(100);
 
 // NOTE: These could be moved elsewhere
