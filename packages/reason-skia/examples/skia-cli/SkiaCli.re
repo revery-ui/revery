@@ -135,6 +135,14 @@ let draw = canvas => {
   switch (maybeImg) {
   | None => failwith("Unable to load image: uv.png")
   | Some(img) =>
+    print_endline(
+      Printf.sprintf(
+        "%s Image dimensions: %dx%d",
+        imgPath,
+        Skia.Image.width(img),
+        Skia.Image.height(img),
+      ),
+    );
     let imgFill = Paint.make();
     Paint.setAlpha(imgFill, 0.0);
     Canvas.drawImage(canvas, img, 250., 250., Some(imgFill));

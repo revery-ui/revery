@@ -18,6 +18,8 @@ class imageNode (data: option(Skia.Image.t)) = {
   inherit (class node)() as _super;
   val mutable _opacity = 1.0;
   val mutable _resizeMode = ImageResizeMode.Stretch;
+  val mutable _maybeWidth = None;
+  val mutable _maybeHeight = None;
   val _paint = Skia.Paint.make();
   pub! draw = (parentContext: NodeDrawContext.t) => {
     /* Draw background first */
@@ -53,7 +55,35 @@ class imageNode (data: option(Skia.Image.t)) = {
   pub setQuality = quality => {
     Skia.Paint.setFilterQuality(_paint, quality);
   };
-  pub setData = newData => {
-    data = newData;
+  pub! setStyle = style => {
+    // If neither the height and width are defined, then
+    // use the image size as the default height and width.
+
+    let adjustedStyle =
+      Layout.Encoding.(
+        {
+          let noDimensionsSet =
+            style.width == cssUndefined && style.height == cssUndefined;
+
+          Style.{
+            ...style,
+            width:
+              noDimensionsSet
+                ? _maybeWidth |> Option.value(~default=cssUndefined)
+                : style.width,
+            height:
+              noDimensionsSet
+                ? _maybeHeight |> Option.value(~default=cssUndefined)
+                : style.height,
+          };
+        }
+      );
+    _super#setStyle(adjustedStyle);
+  };
+  pub setData = maybeImg => {
+    data = maybeImg;
+    _maybeWidth = maybeImg |> Option.map(Skia.Image.width);
+    _maybeHeight = maybeImg |> Option.map(Skia.Image.height);
+    _this#setStyle(_super#getStyle());
   };
 };

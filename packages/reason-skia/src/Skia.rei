@@ -413,6 +413,9 @@ module Image: {
 
   let makeFromEncoded: (Data.t, option(IRect.t)) => option(t);
   let encodeToData: t => Data.t;
+
+  let width: t => int;
+  let height: t => int;
 };
 
 type pixelGeometry = SkiaWrapped.pixelGeometry;
