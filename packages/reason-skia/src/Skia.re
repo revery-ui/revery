@@ -723,6 +723,9 @@ module Image = {
     Gc.finalise(SkiaWrapped.Data.delete, data);
     data;
   };
+
+  let width = SkiaWrapped.Image.width;
+  let height = SkiaWrapped.Image.height;
 };
 
 type pixelGeometry = SkiaWrapped.pixelGeometry;

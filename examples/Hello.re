@@ -45,8 +45,6 @@ module Logo = {
         <Image
           src={`File("outrun-logo.png")}
           style=Style.[
-            width(512),
-            height(256),
             transform([
               Transform.RotateY(Angle.from_radians(rotationY)),
               Transform.RotateX(Angle.from_radians(rotationX)),
