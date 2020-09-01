@@ -1,39 +1,37 @@
 open Revery_Core;
-open LwtLetOperators;
+//open LwtLetOperators;
 
 module Log = (val Log.withNamespace("Revery.IO.Image"));
 
 module Internal = {
-  let mediaTypeToFileExtension =
-    fun
-    | "image/apng" => ".apng"
-    | "image/bmp" => ".bmp"
-    | "image/gif" => ".gif"
-    | "image/x-icon" => ".ico"
-    | "image/jpeg" => ".jpg"
-    | "image/jpg" => ".jpg"
-    | "image/png" => ".png"
-    | "image/svg+xml" => ".svg"
-    | "image/tiff" => ".tif"
-    | "image/webp" => ".webp"
-    | _ => ".jpg";
-
-  let textToAlphaNumeric = text =>
-    Str.(global_replace(regexp("[^a-zA-Z0-9_]"), "", text));
-
-  let createFilePath = (url, ~fileExtension) => {
-    let fileNameCleaned =
-      Fpath.(
-        append(
-          v(Environment.getTempDirectory()),
-          v(textToAlphaNumeric(url)),
-        )
-      );
-
-    let filePath = Fpath.add_ext(fileExtension, fileNameCleaned);
-
-    Fpath.to_string(filePath);
-  };
+  //  let mediaTypeToFileExtension =
+  //    fun
+  //    | "image/apng" => ".apng"
+  //    | "image/bmp" => ".bmp"
+  //    | "image/gif" => ".gif"
+  //    | "image/x-icon" => ".ico"
+  //    | "image/jpeg" => ".jpg"
+  //    | "image/jpg" => ".jpg"
+  //    | "image/png" => ".png"
+  //    | "image/svg+xml" => ".svg"
+  //    | "image/tiff" => ".tif"
+  //    | "image/webp" => ".webp"
+  //    | _ => ".jpg";
+  //  let textToAlphaNumeric = text =>
+  //    Str.(global_replace(regexp("[^a-zA-Z0-9_]"), "", text));
+  //  let createFilePath = (url, ~fileExtension) => {
+  //    let fileNameCleaned =
+  //      Fpath.(
+  //        append(
+  //          v(Environment.getTempDirectory()),
+  //          v(textToAlphaNumeric(url)),
+  //        )
+  //      );
+  //
+  //    let filePath = Fpath.add_ext(fileExtension, fileNameCleaned);
+  //
+  //    Fpath.to_string(filePath);
+  //  };
 };
 
 // NOTE: The reason for these different states is to hold up any
@@ -44,7 +42,7 @@ type urlCacheItem =
   | Pending;
 
 type urlCache = Hashtbl.t(string, urlCacheItem);
-let urlContextCache: urlCache = Hashtbl.create(100);
+//let urlContextCache: urlCache = Hashtbl.create(100);
 
 // NOTE: These could be moved elsewhere
 //let fromUrl = url => {
