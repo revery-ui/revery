@@ -56,7 +56,6 @@
     "@revery/esy-harfbuzz": "^2.6.8001",
     "esy-sdl2": "^2.0.10008",
     "esy-skia": "revery-ui/esy-skia#a3785f9",
-    "fetch-native-lwt": "0.1.0-alpha.5",
     "flex": "1.2.3",
     "reperf": "^1.4.0",
     "rench": "^1.9.1",

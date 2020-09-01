@@ -423,7 +423,7 @@ and generateCodeBlock =
                   // Otherwise, stop at the end of the string.
                   let endIndex =
                     switch (List.nth_opt(highlight, i + 1)) {
-                    | Some((blk: SyntaxHighlight.highlight)) => blk.byteIndex
+                    | Some(blk: SyntaxHighlight.highlight) => blk.byteIndex
                     | None => String.length(line)
                     };
                   let length = endIndex - block.byteIndex;

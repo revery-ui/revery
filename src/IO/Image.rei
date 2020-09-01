@@ -6,7 +6,7 @@
  * Examples:
  * let maybeImage: Lwt.t(option(Skia.Image.t)) = Image.fromUrl("https://example.com/hello.png");
  */
-let fromUrl: string => Lwt.t(option(Skia.Image.t));
+// let fromUrl: string => Lwt.t(option(Skia.Image.t));
 
 /**
  * fromAssetPath
