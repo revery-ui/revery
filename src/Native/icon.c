@@ -36,8 +36,8 @@ CAMLprim value revery_getIconHandle() {
 CAMLprim value revery_setIconProgress(value vWin, value vIconHandle,
                                       value vProgress) {
     CAMLparam3(vWin, vIconHandle, vProgress);
-    void *win = (void *)revery_extractPointer(vWin);
-    void *ih = (void *)revery_extractPointer(vIconHandle);
+    void *win = (void *)revery_unwrapPointer(vWin);
+    void *ih = (void *)revery_unwrapPointer(vIconHandle);
     /* vProgress is an OCaml variant of type Revery_Native.Icon.progress
       It can be either:
         - Indeterminate -- has no type arguments
@@ -73,8 +73,8 @@ CAMLprim value revery_setIconProgress(value vWin, value vIconHandle,
 
 CAMLprim value revery_hideIconProgress(value vWin, value vIconHandle) {
     CAMLparam2(vWin, vIconHandle);
-    void *win = (void *)revery_extractPointer(vWin);
-    void *ih = (void *)revery_extractPointer(vIconHandle);
+    void *win = (void *)revery_unwrapPointer(vWin);
+    void *ih = (void *)revery_unwrapPointer(vIconHandle);
 
 #ifdef USE_COCOA
     (void)win;

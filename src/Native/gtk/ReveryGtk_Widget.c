@@ -41,7 +41,7 @@ CAMLprim value revery_createGtkWidgetFromXWindow(value vXWindow) {
 CAMLprim value revery_gtkWidgetShowAll(value vWidget) {
     CAMLparam1(vWidget);
 
-    GtkWidget *gWidget = (GtkWidget *)revery_extractPointer(vWidget);
+    GtkWidget *gWidget = (GtkWidget *)revery_unwrapPointer(vWidget);
     gtk_widget_show_all(gWidget);
 
     CAMLreturn(Val_unit);
@@ -51,7 +51,7 @@ CAMLprim value revery_gtkWidgetGetPath(value vWidget) {
     CAMLparam1(vWidget);
     CAMLlocal1(vPathStr);
 
-    GtkWidget *gWidget = (GtkWidget *)revery_extractPointer(vWidget);
+    GtkWidget *gWidget = (GtkWidget *)revery_unwrapPointer(vWidget);
 
     GtkWidgetPath *gWidgetPath = gtk_widget_get_path(gWidget);
     char *pathStr = gtk_widget_path_to_string(gWidgetPath);
@@ -65,7 +65,7 @@ CAMLprim value revery_gtkWidgetGetPath(value vWidget) {
 CAMLprim value revery_gtkWidgetSetOpacity(value vWidget, value vOpacity) {
     CAMLparam2(vWidget, vOpacity);
 
-    GtkWidget *gWidget = (GtkWidget *)revery_extractPointer(vWidget);
+    GtkWidget *gWidget = (GtkWidget *)revery_unwrapPointer(vWidget);
     double opacity = Double_val(vOpacity);
 
     gtk_widget_set_opacity(gWidget, opacity);
@@ -76,7 +76,7 @@ CAMLprim value revery_gtkWidgetSetOpacity(value vWidget, value vOpacity) {
 CAMLprim value revery_gtkWidgetDestroy(value vWidget) {
     CAMLparam1(vWidget);
 
-    GtkWidget *gWidget = (GtkWidget *)revery_extractPointer(vWidget);
+    GtkWidget *gWidget = (GtkWidget *)revery_unwrapPointer(vWidget);
 
     gtk_widget_destroy(gWidget);
 
@@ -86,7 +86,7 @@ CAMLprim value revery_gtkWidgetDestroy(value vWidget) {
 CAMLprim value revery_gtkWidgetGetOpacity(value vWidget) {
     CAMLparam1(vWidget);
 
-    GtkWidget *gWidget = (GtkWidget *)revery_extractPointer(vWidget);
+    GtkWidget *gWidget = (GtkWidget *)revery_unwrapPointer(vWidget);
 
     double opacity = gtk_widget_get_opacity(gWidget);
 
@@ -96,7 +96,7 @@ CAMLprim value revery_gtkWidgetGetOpacity(value vWidget) {
 CAMLprim value revery_gtkWidgetGetDepth(value vWidget) {
     CAMLparam1(vWidget);
 
-    GtkWidget *gWidget = (GtkWidget *)revery_extractPointer(vWidget);
+    GtkWidget *gWidget = (GtkWidget *)revery_unwrapPointer(vWidget);
 
     int depth;
     for (depth = 0; gWidget != NULL; depth++) {

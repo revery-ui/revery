@@ -32,7 +32,7 @@ CAMLprim value revery_alertSupported() {
 CAMLprim value revery_alert(value vWindow, value vMessage) {
     CAMLparam2(vWindow, vMessage);
     const char *szMessage = String_val(vMessage);
-    void *pWin = (void *)revery_extractPointer(vWindow);
+    void *pWin = (void *)revery_unwrapPointer(vWindow);
 
 #ifdef USE_WIN32
     revery_alert_win32(pWin, szMessage);

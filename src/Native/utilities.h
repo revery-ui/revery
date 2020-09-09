@@ -28,4 +28,4 @@ typedef intnat camlValue;
 void revery_caml_call_n(camlValue f, int numArgs, camlValue* args);
 void revery_caml_call(camlValue f);
 camlValue revery_wrapPointer(void *data);
-void *revery_extractPointer(camlValue data);
+void *revery_unwrapPointer(camlValue data);
