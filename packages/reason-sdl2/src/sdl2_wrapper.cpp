@@ -57,18 +57,16 @@ static value Val_error(value v) {
 }
 
 extern "C" {
-    CAMLprim value resdl_wrapPointer(void *data) {
-        CAMLparam0();
-        CAMLlocal1(result);
-
-        result = caml_alloc(1, Abstract_tag);
-        Store_field(data, 0, (value)data);
-
-        CAMLreturn(result);
+    /* Create an OCaml value encapsulating the pointer p */
+    value resdl_wrapPointer(void *p) {
+        value v = caml_alloc(1, Abstract_tag);
+        *((void **) Data_abstract_val(v)) = p;
+        return v;
     }
 
-    void *resdl_extractPointer(value data) {
-        return (void *)Field(data, 0);
+    /* Extract the pointer encapsulated in the given OCaml value */
+    void *resdl_unwrapPointer(value v) {
+        return *((void **) Data_abstract_val(v));
     }
 
     CAMLprim value resdl_SDL_EnableScreenSaver() {
@@ -220,7 +218,7 @@ extern "C" {
         CAMLparam1(vWin);
         CAMLlocal1(vNativeWindow);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SysWMinfo wmInfo;
         SDL_VERSION(&wmInfo.version);
         SDL_GetWindowWMInfo(win, &wmInfo);
@@ -342,7 +340,7 @@ extern "C" {
         CAMLparam1(vWin);
 
 #ifdef SDL_VIDEO_DRIVER_COCOA
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SysWMinfo wmInfo;
         SDL_VERSION(&wmInfo.version);
         SDL_GetWindowWMInfo(win, &wmInfo);
@@ -358,7 +356,7 @@ extern "C" {
         CAMLparam1(vWin);
 
 #ifdef SDL_VIDEO_DRIVER_COCOA
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SysWMinfo wmInfo;
         SDL_VERSION(&wmInfo.version);
         SDL_GetWindowWMInfo(win, &wmInfo);
@@ -377,7 +375,7 @@ extern "C" {
         CAMLparam5(vWin, r, g, b, a);
 
 #ifdef SDL_VIDEO_DRIVER_COCOA
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SysWMinfo wmInfo;
         SDL_VERSION(&wmInfo.version);
         SDL_GetWindowWMInfo(win, &wmInfo);
@@ -433,7 +431,7 @@ extern "C" {
         CAMLparam1(vWin);
 
 #ifdef WIN32
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         HWND hwnd = getHWNDFromSDLWindow(win);
         HMONITOR hmon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTOPRIMARY);
 
@@ -581,14 +579,14 @@ extern "C" {
 
     CAMLprim value resdl_SDL_GetWindowDisplayIndex(value vWin) {
         CAMLparam1(vWin);
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         int idx = SDL_GetWindowDisplayIndex(win);
         CAMLreturn(Val_int(idx));
     };
 
     CAMLprim value resdl_SDL_GetWindowPixelFormat(value vWin) {
         CAMLparam1(vWin);
-        SDL_Window *pWin = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *pWin = (SDL_Window *)resdl_unwrapPointer(vWin);
         Uint32 format = SDL_GetWindowPixelFormat(pWin);
         CAMLreturn(Val_int(format));
     };
@@ -602,7 +600,7 @@ extern "C" {
     CAMLprim value resdl_SDL_GL_Setup(value vWin) {
         CAMLparam1(vWin);
         CAMLlocal1(vCtx);
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_GLContext ctx = SDL_GL_CreateContext(win);
 
         if (!ctx) {
@@ -680,9 +678,9 @@ extern "C" {
 
     CAMLprim value resdl_SDL_GL_MakeCurrent(value vWin, value vContext) {
         CAMLparam2(vWin, vContext);
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
 
-        SDL_GLContext ctx = (SDL_GLContext)resdl_extractPointer(vContext);
+        SDL_GLContext ctx = (SDL_GLContext)resdl_unwrapPointer(vContext);
 
         SDL_GL_MakeCurrent(win, ctx);
         CAMLreturn(Val_unit);
@@ -1079,7 +1077,7 @@ extern "C" {
     CAMLprim value resdl_SDL_GetWindowSize(value vWindow) {
         CAMLparam1(vWindow);
         CAMLlocal1(ret);
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWindow);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWindow);
         int width, height = 0;
         SDL_GetWindowSize(win, &width, &height);
         ret = caml_alloc(2, 0);
@@ -1092,7 +1090,7 @@ extern "C" {
         CAMLparam1(vWindow);
         CAMLlocal1(position);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWindow);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWindow);
         int x, y = 0;
 
         SDL_GetWindowPosition(win, &x, &y);
@@ -1107,7 +1105,7 @@ extern "C" {
     CAMLprim value resdl_SDL_GL_GetDrawableSize(value vWindow) {
         CAMLparam1(vWindow);
         CAMLlocal1(ret);
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWindow);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWindow);
         int width, height = 0;
         SDL_GL_GetDrawableSize(win, &width, &height);
         ret = caml_alloc(2, 0);
@@ -1119,8 +1117,8 @@ extern "C" {
     CAMLprim value resdl_SDL_SetWindowIcon(value vWindow, value vIcon) {
         CAMLparam2(vWindow, vIcon);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWindow);
-        SDL_Surface *surface = (SDL_Surface *)resdl_extractPointer(vIcon);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWindow);
+        SDL_Surface *surface = (SDL_Surface *)resdl_unwrapPointer(vIcon);
         SDL_SetWindowIcon(win, surface);
 
         CAMLreturn(Val_unit);
@@ -1130,7 +1128,7 @@ extern "C" {
             value vTransparency) {
         CAMLparam2(vWindow, vTransparency);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWindow);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWindow);
         double transparency = Double_val(vTransparency);
 
         int result;
@@ -1227,7 +1225,7 @@ extern "C" {
 
     CAMLprim value resdl_SDL_SetCursor(value vCursor) {
         CAMLparam1(vCursor);
-        SDL_Cursor *cursor = (SDL_Cursor *)resdl_extractPointer(vCursor);
+        SDL_Cursor *cursor = (SDL_Cursor *)resdl_unwrapPointer(vCursor);
         SDL_SetCursor(cursor);
         CAMLreturn(Val_unit);
     }
@@ -1287,7 +1285,7 @@ extern "C" {
 
     CAMLprim value resdl_SDL_GL_SwapWindow(value vWin) {
         CAMLparam1(vWin);
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         caml_release_runtime_system();
         SDL_GL_SwapWindow(win);
         caml_acquire_runtime_system();
@@ -1301,7 +1299,7 @@ extern "C" {
     CAMLprim value resdl_SDL_SetWindowSize(value vWin, value vW, value vH) {
         CAMLparam3(vWin, vW, vH);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         int w = Int_val(vW);
         int h = Int_val(vH);
         SDL_SetWindowSize(win, w, h);
@@ -1312,7 +1310,7 @@ extern "C" {
     CAMLprim value resdl_SDL_SetWindowMinimumSize(value vWin, value vW, value vH) {
         CAMLparam3(vWin, vW, vH);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         int w = Int_val(vW);
         int h = Int_val(vH);
         SDL_SetWindowMinimumSize(win, w, h);
@@ -1323,7 +1321,7 @@ extern "C" {
     CAMLprim value resdl_SDL_SetWindowTitle(value vWin, value vTitle) {
         CAMLparam2(vWin, vTitle);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         const char *title = (const char *)String_val(vTitle);
         SDL_SetWindowTitle(win, title);
 
@@ -1333,7 +1331,7 @@ extern "C" {
     CAMLprim value resdl_SDL_SetWindowPosition(value vWin, value vX, value vY) {
         CAMLparam3(vWin, vX, vY);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         int x = Int_val(vX);
         int y = Int_val(vY);
         SDL_SetWindowPosition(win, x, y);
@@ -1344,7 +1342,7 @@ extern "C" {
     CAMLprim value resdl_SDL_WindowCenter(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SetWindowPosition(win, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
         CAMLreturn(Val_unit);
@@ -1442,7 +1440,7 @@ extern "C" {
     CAMLprim value resdl_SDL_SetWindowBordered(value vWin, value vBordered) {
         CAMLparam2(vWin, vBordered);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_bool bordered = Int_val(vBordered) == 1 ? SDL_TRUE : SDL_FALSE;
 
         SDL_SetWindowBordered(win, bordered);
@@ -1452,7 +1450,7 @@ extern "C" {
     CAMLprim value resdl_SDL_SetWindowResizable(value vWin, value vResizable) {
         CAMLparam2(vWin, vResizable);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_bool resize = Int_val(vResizable) == 1 ? SDL_TRUE : SDL_FALSE;
 
         SDL_SetWindowResizable(win, resize);
@@ -1462,7 +1460,7 @@ extern "C" {
     CAMLprim value resdl_SDL_HideWindow(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_HideWindow(win);
 
         CAMLreturn(Val_unit);
@@ -1471,7 +1469,7 @@ extern "C" {
     CAMLprim value resdl_SDL_MaximizeWindow(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_MaximizeWindow(win);
 
         CAMLreturn(Val_unit);
@@ -1480,7 +1478,7 @@ extern "C" {
     CAMLprim value resdl_SDL_IsWindowMaximized(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         Uint32 flags = SDL_GetWindowFlags(win);
         bool hasMaximizedFlag = (flags & SDL_WINDOW_MAXIMIZED) != 0;
 
@@ -1490,7 +1488,7 @@ extern "C" {
     CAMLprim value resdl_SDL_IsWindowFullscreen(value vWin) {
         CAMLparam1(vWin);
         // SDL's fullscreen window flags don't work on macOS
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         bool isFullscreen;
 #ifdef SDL_VIDEO_DRIVER_COCOA
         SDL_SysWMinfo wmInfo;
@@ -1509,7 +1507,7 @@ extern "C" {
     CAMLprim value resdl_SDL_MinimizeWindow(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_MinimizeWindow(win);
 
         CAMLreturn(Val_unit);
@@ -1518,7 +1516,7 @@ extern "C" {
     CAMLprim value resdl_SDL_RaiseWindow(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_RaiseWindow(win);
 
         CAMLreturn(Val_unit);
@@ -1527,7 +1525,7 @@ extern "C" {
     CAMLprim value resdl_SDL_RestoreWindow(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_RestoreWindow(win);
 
         CAMLreturn(Val_unit);
@@ -1536,7 +1534,7 @@ extern "C" {
     CAMLprim value resdl_SDL_ShowWindow(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_ShowWindow(win);
 
         CAMLreturn(Val_unit);
@@ -1544,7 +1542,7 @@ extern "C" {
 
     CAMLprim value resdl_SDL_GetWindowId(value vWindow) {
         CAMLparam1(vWindow);
-        SDL_Window *win = (SDL_Window *)resdl_extractPointer(vWindow);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWindow);
         int id = SDL_GetWindowID(win);
         CAMLreturn(Val_int(id));
     }
@@ -1821,7 +1819,7 @@ extern "C" {
         SDL_Window *win = NULL;
 
         if (Is_block(vWindow)) {
-            win = (SDL_Window *)resdl_extractPointer(Field(vWindow, 0));
+            win = (SDL_Window *)resdl_unwrapPointer(Field(vWindow, 0));
         }
 
         SDL_ShowSimpleMessageBox(flags, title, msg, win);
