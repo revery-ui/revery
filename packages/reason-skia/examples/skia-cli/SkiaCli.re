@@ -45,15 +45,17 @@ let draw = canvas => {
   Paint.setColor(fill, Color.makeArgb(0xCCl, 0x00l, 0xFFl, 0x00l));
   Paint.setImageFilter(
     fill,
-    ImageFilter.makeDropShadow(
-      10.,
-      10.,
-      3.,
-      3.,
-      Color.makeArgb(0xAAl, 0x00l, 0x00l, 0x00l),
-      DrawShadowAndForeground,
-      None,
-      None,
+    Some(
+      ImageFilter.makeDropShadow(
+        10.,
+        10.,
+        3.,
+        3.,
+        Color.makeArgb(0xAAl, 0x00l, 0x00l, 0x00l),
+        DrawShadowAndForeground,
+        None,
+        None,
+      ),
     ),
   );
   let rect2 = Rect.makeLtrb(120., 120., 520., 360.);
@@ -109,6 +111,9 @@ let draw = canvas => {
       "Large measured text: " ++ string_of_float(largeMeasurement),
     );
   };
+
+  // Turn off drop shadow
+  Paint.setImageFilter(fill, None);
 
   // Validate loading a non-existent file returns None, but doesn't crash
   let nonExistentData = Data.makeFromFileName("file-that-does-not-exist.png");

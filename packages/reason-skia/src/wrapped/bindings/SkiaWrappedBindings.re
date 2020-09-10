@@ -351,7 +351,7 @@ module M = (F: FOREIGN) => {
     let setImageFilter =
       foreign(
         "sk_paint_set_imagefilter",
-        t @-> ImageFilter.t @-> returning(void),
+        t @-> ptr_opt(SkiaTypes.ImageFilter.t) @-> returning(void),
       );
 
     let getTextEncoding =

@@ -209,7 +209,7 @@ module Paint: {
 
   let setStyle: (t, style) => unit;
   let setStrokeWidth: (t, float) => unit;
-  let setImageFilter: (t, ImageFilter.t) => unit;
+  let setImageFilter: (t, option(ImageFilter.t)) => unit;
   let setTypeface: (t, Typeface.t) => unit;
   let setLcdRenderText: (t, bool) => unit;
   let setSubpixelText: (t, bool) => unit;
