@@ -672,7 +672,6 @@ let merge = (~source, ~target) =>
               | (`Transform(_), `Transform(_)) => targetStyle
               | (`Opacity(_), `Opacity(_)) => targetStyle
               | (`PointerEvents(_), `PointerEvents(_)) => targetStyle
-              | (`Opacity(_), `Opacity(_)) => targetStyle
               | (`BoxShadow(_), `BoxShadow(_)) => targetStyle
               | (newRule, _) => newRule
               }
