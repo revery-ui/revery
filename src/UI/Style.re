@@ -505,6 +505,7 @@ let alignSelf = a => `AlignSelf(alignment(a));
 
 let cursor = c => `Cursor(Some(c));
 
+let opacity = o => `Opacity(o);
 let transform = t => `Transform(t);
 let boxShadow = (~xOffset, ~yOffset, ~spreadRadius, ~blurRadius, ~color) =>
   `BoxShadow(BoxShadow.{xOffset, yOffset, spreadRadius, blurRadius, color});
@@ -669,8 +670,8 @@ let merge = (~source, ~target) =>
               | (`BorderVertical(_), `BorderVertical(_)) => targetStyle
               | (`BorderRadius(_), `BorderRadius(_)) => targetStyle
               | (`Transform(_), `Transform(_)) => targetStyle
-              | (`PointerEvents(_), `PointerEvents(_)) => targetStyle
               | (`Opacity(_), `Opacity(_)) => targetStyle
+              | (`PointerEvents(_), `PointerEvents(_)) => targetStyle
               | (`BoxShadow(_), `BoxShadow(_)) => targetStyle
               | (newRule, _) => newRule
               }
