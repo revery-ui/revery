@@ -523,7 +523,17 @@ describe("Mouse", ({describe, test, _}) => {
     test(
       "test that state is updated per event when stop propagation is called",
       ({expect, _}) => {
-      let evt = BubbleEvent.make(MouseMove({mouseX: 50., mouseY: 50.}));
+      let evt =
+        BubbleEvent.make(
+          MouseMove({
+            mouseX: 50.,
+            mouseY: 50.,
+            ctrlKey: false,
+            altKey: false,
+            shiftKey: false,
+            guiKey: false,
+          }),
+        );
 
       BubbleEvent.stopPropagation(evt);
 
@@ -533,7 +543,17 @@ describe("Mouse", ({describe, test, _}) => {
     test(
       "test that state is updated per event when prevent default is called",
       ({expect, _}) => {
-      let evt = BubbleEvent.make(MouseMove({mouseX: 50., mouseY: 50.}));
+      let evt =
+        BubbleEvent.make(
+          MouseMove({
+            mouseX: 50.,
+            mouseY: 50.,
+            ctrlKey: false,
+            altKey: false,
+            shiftKey: false,
+            guiKey: false,
+          }),
+        );
 
       BubbleEvent.preventDefault(evt);
 

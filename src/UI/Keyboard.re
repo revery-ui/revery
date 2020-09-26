@@ -16,6 +16,7 @@ let internalToExternalEvent =
       ctrlKey: Key.Keymod.isControlDown(e.keymod),
       altKey: Key.Keymod.isAltDown(e.keymod),
       shiftKey: Key.Keymod.isShiftDown(e.keymod),
+      guiKey: Key.Keymod.isGuiDown(e.keymod),
     })
   | InternalKeyDownEvent(e) =>
     KeyDown({
@@ -26,6 +27,7 @@ let internalToExternalEvent =
       ctrlKey: Key.Keymod.isControlDown(e.keymod),
       altKey: Key.Keymod.isAltDown(e.keymod),
       shiftKey: Key.Keymod.isShiftDown(e.keymod),
+      guiKey: Key.Keymod.isGuiDown(e.keymod),
     })
   };
 
