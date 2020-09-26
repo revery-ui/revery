@@ -5,22 +5,19 @@ open NodeEvents;
 
 module Log = (val Log.withNamespace("Revery.UI.FileDropped"));
 
-let internalToExternalEvent = (evt: Events.internalFileDropEvents) => {
-  let keymod = Sdl2.Keymod.getState();
-
+let internalToExternalEvent = (evt: Events.internalFileDropEvents) =>
   switch (evt) {
   | InternalFileDropped(evt) =>
     FileDropped({
       mouseX: evt.mouseX,
       mouseY: evt.mouseY,
       paths: evt.paths,
-      ctrlKey: Key.Keymod.isControlDown(keymod),
-      altKey: Key.Keymod.isAltDown(keymod),
-      shiftKey: Key.Keymod.isShiftDown(keymod),
-      guiKey: Key.Keymod.isGuiDown(keymod),
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
     })
   };
-};
 
 let getPositionFromInternalEvent = (evt: Events.internalFileDropEvents) =>
   switch (evt) {

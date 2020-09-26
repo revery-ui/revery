@@ -97,12 +97,12 @@ describe("Mouse", ({describe, test, _}) => {
       let cursor = Mouse.Cursor.make();
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        InternalMouseMove({mouseX: 50., mouseY: 50., keymod: 0}),
         rootNode,
       );
       Mouse.dispatch(
         cursor,
-        InternalMouseDown({button: BUTTON_LEFT}),
+        InternalMouseDown({button: BUTTON_LEFT, keymod: 0}),
         rootNode,
       );
 
@@ -181,12 +181,12 @@ describe("Mouse", ({describe, test, _}) => {
       let cursor = Mouse.Cursor.make();
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        InternalMouseMove({mouseX: 50., mouseY: 50., keymod: 0}),
         rootNode,
       );
       Mouse.dispatch(
         cursor,
-        InternalMouseDown({button: BUTTON_LEFT}),
+        InternalMouseDown({button: BUTTON_LEFT, keymod: 0}),
         rootNode,
       );
       expect.int(child2HitCount^).toBe(1);
@@ -253,12 +253,12 @@ describe("Mouse", ({describe, test, _}) => {
         let cursor = Mouse.Cursor.make();
         Mouse.dispatch(
           cursor,
-          InternalMouseMove({mouseX: 50., mouseY: 50.}),
+          InternalMouseMove({mouseX: 50., mouseY: 50., keymod: 0}),
           rootNode,
         );
         Mouse.dispatch(
           cursor,
-          InternalMouseDown({button: BUTTON_LEFT}),
+          InternalMouseDown({button: BUTTON_LEFT, keymod: 0}),
           rootNode,
         );
 
@@ -280,10 +280,14 @@ describe("Mouse", ({describe, test, _}) => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        InternalMouseMove({mouseX: 50., mouseY: 50., keymod: 0}),
         node,
       );
-      Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
+      Mouse.dispatch(
+        cursor,
+        InternalMouseDown({button: BUTTON_LEFT, keymod: 0}),
+        node,
+      );
 
       expect.int(count^).toBe(1);
     });
@@ -302,10 +306,14 @@ describe("Mouse", ({describe, test, _}) => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 150., mouseY: 150.}),
+        InternalMouseMove({mouseX: 150., mouseY: 150., keymod: 0}),
         node,
       );
-      Mouse.dispatch(cursor, InternalMouseUp({button: BUTTON_LEFT}), node);
+      Mouse.dispatch(
+        cursor,
+        InternalMouseUp({button: BUTTON_LEFT, keymod: 0}),
+        node,
+      );
 
       expect.int(count^).toBe(0);
     });
@@ -320,7 +328,11 @@ describe("Mouse", ({describe, test, _}) => {
       node#setEvents(NodeEvents.make(~onFocus, ()));
       node#setTabIndex(Some(1));
 
-      Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
+      Mouse.dispatch(
+        cursor,
+        InternalMouseDown({button: BUTTON_LEFT, keymod: 0}),
+        node,
+      );
 
       expect.int(count^).toBe(1);
     });
@@ -336,9 +348,17 @@ describe("Mouse", ({describe, test, _}) => {
         createNodeWithStyle(Style.make(~width=100, ~height=100, ()));
       node#setEvents(NodeEvents.make(~onBlur, ()));
       node#setTabIndex(Some(1));
-      Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
+      Mouse.dispatch(
+        cursor,
+        InternalMouseDown({button: BUTTON_LEFT, keymod: 0}),
+        node,
+      );
       Mouse.Cursor.set(~x=200., ~y=200., cursor);
-      Mouse.dispatch(cursor, InternalMouseDown({button: BUTTON_LEFT}), node);
+      Mouse.dispatch(
+        cursor,
+        InternalMouseDown({button: BUTTON_LEFT, keymod: 0}),
+        node,
+      );
       expect.int(count^).toBe(1);
     });
 
@@ -352,7 +372,7 @@ describe("Mouse", ({describe, test, _}) => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        InternalMouseMove({mouseX: 50., mouseY: 50., keymod: 0}),
         node,
       );
 
@@ -369,13 +389,13 @@ describe("Mouse", ({describe, test, _}) => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        InternalMouseMove({mouseX: 50., mouseY: 50., keymod: 0}),
         node,
       );
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        InternalMouseMove({mouseX: 200., mouseY: 200., keymod: 0}),
         node,
       );
 
@@ -394,13 +414,13 @@ describe("Mouse", ({describe, test, _}) => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        InternalMouseMove({mouseX: 50., mouseY: 50., keymod: 0}),
         node,
       );
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        InternalMouseMove({mouseX: 200., mouseY: 200., keymod: 0}),
         node,
       );
 
@@ -417,7 +437,7 @@ describe("Mouse", ({describe, test, _}) => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        InternalMouseMove({mouseX: 50., mouseY: 50., keymod: 0}),
         node,
       );
 
@@ -434,13 +454,13 @@ describe("Mouse", ({describe, test, _}) => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        InternalMouseMove({mouseX: 50., mouseY: 50., keymod: 0}),
         node,
       );
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 150., mouseY: 150.}),
+        InternalMouseMove({mouseX: 150., mouseY: 150., keymod: 0}),
         node,
       );
 
@@ -459,13 +479,13 @@ describe("Mouse", ({describe, test, _}) => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        InternalMouseMove({mouseX: 50., mouseY: 50., keymod: 0}),
         node,
       );
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        InternalMouseMove({mouseX: 200., mouseY: 200., keymod: 0}),
         node,
       );
 
@@ -502,13 +522,13 @@ describe("Mouse", ({describe, test, _}) => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 25., mouseY: 25.}),
+        InternalMouseMove({mouseX: 25., mouseY: 25., keymod: 0}),
         parentNode,
       );
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 60., mouseY: 60.}),
+        InternalMouseMove({mouseX: 60., mouseY: 60., keymod: 0}),
         childNode,
       );
 
@@ -576,7 +596,7 @@ describe("Mouse", ({describe, test, _}) => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        InternalMouseMove({mouseX: 200., mouseY: 200., keymod: 0}),
         node,
       );
 
@@ -585,7 +605,7 @@ describe("Mouse", ({describe, test, _}) => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 50., mouseY: 50.}),
+        InternalMouseMove({mouseX: 50., mouseY: 50., keymod: 0}),
         node,
       );
 
@@ -599,7 +619,7 @@ describe("Mouse", ({describe, test, _}) => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        InternalMouseMove({mouseX: 200., mouseY: 200., keymod: 0}),
         node,
       );
 
@@ -610,7 +630,7 @@ describe("Mouse", ({describe, test, _}) => {
 
       Mouse.dispatch(
         cursor,
-        InternalMouseMove({mouseX: 200., mouseY: 200.}),
+        InternalMouseMove({mouseX: 200., mouseY: 200., keymod: 0}),
         node,
       );
 
@@ -638,7 +658,7 @@ describe("Mouse", ({describe, test, _}) => {
 
     Mouse.dispatch(
       Mouse.Cursor.make(),
-      InternalMouseMove({mouseX: 50., mouseY: 50.}),
+      InternalMouseMove({mouseX: 50., mouseY: 50., keymod: 0}),
       node,
     );
 

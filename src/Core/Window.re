@@ -403,6 +403,7 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
     let wheelEvent: Events.mouseWheelEvent = {
       deltaX: float(deltaX),
       deltaY: float(deltaY),
+      keymod: Sdl2.Keymod.getState(),
     };
     Event.dispatch(v.onMouseWheel, wheelEvent);
 
@@ -410,16 +411,26 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
     let mouseEvent: Events.mouseMoveEvent = {
       mouseX: float(x),
       mouseY: float(y),
+      keymod: Sdl2.Keymod.getState(),
     };
     Event.dispatch(v.onMouseMove, mouseEvent);
 
   | Sdl2.Event.MouseButtonUp(event) =>
-    Event.dispatch(v.onMouseUp, {button: MouseButton.convert(event.button)})
+    Event.dispatch(
+      v.onMouseUp,
+      {
+        button: MouseButton.convert(event.button),
+        keymod: Sdl2.Keymod.getState(),
+      },
+    )
 
   | Sdl2.Event.MouseButtonDown(event) =>
     Event.dispatch(
       v.onMouseDown,
-      {button: MouseButton.convert(event.button)},
+      {
+        button: MouseButton.convert(event.button),
+        keymod: Sdl2.Keymod.getState(),
+      },
     )
 
   | Sdl2.Event.KeyDown({keycode, keymod, scancode, repeat, _}) =>
@@ -492,7 +503,12 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
       v.dropState = None;
       Event.dispatch(
         v.onFileDropped,
-        {mouseX: float(x), mouseY: float(y), paths: List.rev(list)},
+        {
+          mouseX: float(x),
+          mouseY: float(y),
+          paths: List.rev(list),
+          keymod: Sdl2.Keymod.getState(),
+        },
       );
     }
   | Sdl2.Event.Quit => ()

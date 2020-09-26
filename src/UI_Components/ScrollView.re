@@ -13,7 +13,7 @@ let empty = React.empty;
 
 let scrollTrackColor = Color.rgba(0.0, 0.0, 0.0, 0.4);
 let scrollThumbColor = Color.rgba(0.5, 0.5, 0.5, 0.4);
-let defaultBounce = Environment.os === Mac ? true : false;
+let isMac = Environment.os === Mac;
 
 type action =
   | ScrollUpdated(int);
@@ -92,7 +92,7 @@ let%component make =
                 ~style,
                 ~scrollLeft=0,
                 ~scrollTop=0,
-                ~bounce=defaultBounce,
+                ~bounce=isMac,
                 ~children=React.empty,
                 (),
               ) => {
@@ -132,8 +132,8 @@ let%component make =
     | Some(outer) =>
       let inner = outer#firstChild();
 
-      // TODO: #287 For some reasone `inner` component doesn't get expanded by it's childrens
-      // Could be but with https://github.com/jordwalke/flex or how we use it
+      // TODO: #287 For some reason `inner` component doesn't get expanded by it's childrens
+      // Could be bug with https://github.com/jordwalke/flex or how we use it
 
       let maxChildWidth =
         List.fold_left(
@@ -215,13 +215,17 @@ let%component make =
           : empty;
 
       let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
-        let horizontalScroll = wheelEvent.shiftKey || wheelEvent.deltaX > 0.;
+        let horizontalScroll =
+          wheelEvent.shiftKey || abs_float(wheelEvent.deltaX) > 0.;
 
         if (horizontalScroll) {
           if (isHorizontalScrollBarVisible) {
+            let horizontalScrollMultiplier = isMac ? (-1.) : 1.;
             handeScroll(
               ~deltaValue=
-                wheelEvent.deltaX > 0. ? wheelEvent.deltaX : wheelEvent.deltaY,
+                abs_float(wheelEvent.deltaX) > 0.
+                  ? horizontalScrollMultiplier *. wheelEvent.deltaX
+                  : wheelEvent.deltaY,
               ~bounce,
               ~scrollPosition=actualScrollLeft,
               ~maxScrollValue=maxWidth,
