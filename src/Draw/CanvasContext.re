@@ -98,19 +98,49 @@ let create = (window: Revery_Core.Window.t) => {
 };
 
 let createLayer = (~width, ~height, context: t) => {
-  // For now - we just create a CPU surface
-  // TODO: Wire up the glContext to create a GL surface via `makeRenderTarget`
-
   let imageInfo = ImageInfo.make(width, height, Rgba8888, Premul, None);
-  let surface = Surface.makeRaster(imageInfo, 0, None);
 
-  {
-    maybeGPUContext: None,
-    surface,
-    canvas: Surface.getCanvas(surface),
-    rootTransform: None
+  let createCpuSurface = () => {
+      Log.tracef(m => m("Created CPU surface: %ld x %ld", width, height));
+      Surface.makeRaster(imageInfo, 0, None);
   };
 
+  let (gpuContext, surface) =
+    switch (context.maybeGPUContext) {
+    | None =>
+      (None, createCpuSurface());
+    | Some(gpuContext) as outContext =>
+      Log.trace("Trying to create GPU surface...");
+      let surfaceProps = SurfaceProps.make(Unsigned.UInt32.of_int(0), RgbH);
+      let maybeGpuSurface =
+        Skia.Surface.makeRenderTarget(
+          gpuContext,
+          false,
+          imageInfo,
+          0,
+          BottomLeft,
+          Some(surfaceProps),
+          false,
+        );
+
+        // The gpu surface creation can fail, so we should be
+        // prepared to fall back to a CPU surface.
+        switch (maybeGpuSurface) {
+        | Some(surface) =>
+        Log.tracef(m => m("Successfully created GPU surface: %ld x %ld", width, height));
+        (outContext, surface)
+        | None =>
+        Log.warn("Unable to create GPU surface; falling back to CPU surface");
+        (None, createCpuSurface());
+        };
+    };
+
+  {
+    maybeGPUContext: gpuContext,
+    surface,
+    canvas: Surface.getCanvas(surface),
+    rootTransform: None,
+  };
 };
 
 let resize = (window: Revery_Core.Window.t, v: option(t)) => {

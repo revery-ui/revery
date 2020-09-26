@@ -1056,9 +1056,16 @@ module M = (F: FOREIGN) => {
       );
     let delete = foreign("sk_surface_unref", t @-> returning(void));
 
-    let draw = foreign("sk_surface_draw", 
-      t @-> Canvas.t @-> float @-> float @-> ptr_opt(SkiaTypes.Paint.t)
-      @-> returning(void));
+    let draw =
+      foreign(
+        "sk_surface_draw",
+        t
+        @-> Canvas.t
+        @-> float
+        @-> float
+        @-> ptr_opt(SkiaTypes.Paint.t)
+        @-> returning(void),
+      );
 
     let getCanvas =
       foreign("sk_surface_get_canvas", t @-> returning(Canvas.t));

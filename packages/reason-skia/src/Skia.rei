@@ -521,7 +521,9 @@ module Surface: {
     option(t);
 
   // Draw surface [surface] onto a [canvas] at the specified [x,y] points.
-  let draw: (~paint: option(Paint.t)=?, ~canvas: Canvas.t, ~x: float, ~y: float, t) => unit;
+  let draw:
+    (~paint: option(Paint.t)=?, ~canvas: Canvas.t, ~x: float, ~y: float, t) =>
+    unit;
   let makeImageSnapshot: t => Image.t;
   let getCanvas: t => Canvas.t;
   let getWidth: t => int;
