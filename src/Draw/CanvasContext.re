@@ -10,12 +10,14 @@ module Log = (val Log.withNamespace("Revery.CanvasContext"));
 open Skia;
 
 type t = {
+  maybeGPUContext: option(Skia.Gr.Context.t),
   surface: Skia.Surface.t,
   canvas: Skia.Canvas.t,
   mutable rootTransform: option(Skia.Matrix.t),
 };
 
 let createFromSurface = (surface: Skia.Surface.t) => {
+  maybeGPUContext: None,
   surface,
   canvas: Skia.Surface.getCanvas(surface),
   rootTransform: None,
@@ -86,12 +88,29 @@ let create = (window: Revery_Core.Window.t) => {
       );
       let surface = v;
       Some({
+        maybeGPUContext: Some(glContext),
         surface,
         canvas: Surface.getCanvas(surface),
         rootTransform: None,
       });
     };
   };
+};
+
+let createLayer = (~width, ~height, context: t) => {
+  // For now - we just create a CPU surface
+  // TODO: Wire up the glContext to create a GL surface via `makeRenderTarget`
+
+  let imageInfo = ImageInfo.make(width, height, Rgba8888, Premul, None);
+  let surface = Surface.makeRaster(imageInfo, 0, None);
+
+  {
+    maybeGPUContext: None,
+    surface,
+    canvas: Surface.getCanvas(surface),
+    rootTransform: None
+  };
+
 };
 
 let resize = (window: Revery_Core.Window.t, v: option(t)) => {
@@ -139,6 +158,10 @@ let translate = (v: t, x: float, y: float) => {
 
 let clear = (~color: Skia.Color.t, v: t) => {
   Canvas.clear(v.canvas, color);
+};
+
+let drawLayer = (~layer: t, ~x: float, ~y: float, target: t) => {
+  Surface.draw(~canvas=target.canvas, ~x, ~y, layer.surface);
 };
 
 let drawPath = (~path: Skia.Path.t, ~paint: Paint.t, canvasContext: t) => {
