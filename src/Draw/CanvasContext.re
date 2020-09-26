@@ -101,14 +101,13 @@ let createLayer = (~width, ~height, context: t) => {
   let imageInfo = ImageInfo.make(width, height, Rgba8888, Premul, None);
 
   let createCpuSurface = () => {
-      Log.tracef(m => m("Created CPU surface: %ld x %ld", width, height));
-      Surface.makeRaster(imageInfo, 0, None);
+    Log.tracef(m => m("Created CPU surface: %ld x %ld", width, height));
+    Surface.makeRaster(imageInfo, 0, None);
   };
 
   let (gpuContext, surface) =
     switch (context.maybeGPUContext) {
-    | None =>
-      (None, createCpuSurface());
+    | None => (None, createCpuSurface())
     | Some(gpuContext) as outContext =>
       Log.trace("Trying to create GPU surface...");
       let surfaceProps = SurfaceProps.make(Unsigned.UInt32.of_int(0), RgbH);
@@ -123,16 +122,18 @@ let createLayer = (~width, ~height, context: t) => {
           false,
         );
 
-        // The gpu surface creation can fail, so we should be
-        // prepared to fall back to a CPU surface.
-        switch (maybeGpuSurface) {
-        | Some(surface) =>
-        Log.tracef(m => m("Successfully created GPU surface: %ld x %ld", width, height));
-        (outContext, surface)
-        | None =>
+      // The gpu surface creation can fail, so we should be
+      // prepared to fall back to a CPU surface.
+      switch (maybeGpuSurface) {
+      | Some(surface) =>
+        Log.tracef(m =>
+          m("Successfully created GPU surface: %ld x %ld", width, height)
+        );
+        (outContext, surface);
+      | None =>
         Log.warn("Unable to create GPU surface; falling back to CPU surface");
         (None, createCpuSurface());
-        };
+      };
     };
 
   {
