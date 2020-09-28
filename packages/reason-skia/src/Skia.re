@@ -892,6 +892,9 @@ module Surface = {
     };
   };
 
+  let draw = (~paint=None, ~canvas, ~x, ~y, surface) =>
+    SkiaWrapped.Surface.draw(surface, canvas, x, y, paint);
+
   let getCanvas = SkiaWrapped.Surface.getCanvas;
   let makeImageSnapshot = surface => {
     let imageSnapshot = SkiaWrapped.Surface.allocateImageSnapshot(surface);

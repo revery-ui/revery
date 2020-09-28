@@ -10,12 +10,14 @@ module Log = (val Log.withNamespace("Revery.CanvasContext"));
 open Skia;
 
 type t = {
+  maybeGPUContext: option(Skia.Gr.Context.t),
   surface: Skia.Surface.t,
   canvas: Skia.Canvas.t,
   mutable rootTransform: option(Skia.Matrix.t),
 };
 
 let createFromSurface = (surface: Skia.Surface.t) => {
+  maybeGPUContext: None,
   surface,
   canvas: Skia.Surface.getCanvas(surface),
   rootTransform: None,
@@ -86,11 +88,59 @@ let create = (window: Revery_Core.Window.t) => {
       );
       let surface = v;
       Some({
+        maybeGPUContext: Some(glContext),
         surface,
         canvas: Surface.getCanvas(surface),
         rootTransform: None,
       });
     };
+  };
+};
+
+let createLayer = (~width, ~height, context: t) => {
+  let imageInfo = ImageInfo.make(width, height, Rgba8888, Premul, None);
+
+  let createCpuSurface = () => {
+    Log.tracef(m => m("Created CPU surface: %ld x %ld", width, height));
+    Surface.makeRaster(imageInfo, 0, None);
+  };
+
+  let (gpuContext, surface) =
+    switch (context.maybeGPUContext) {
+    | None => (None, createCpuSurface())
+    | Some(gpuContext) as outContext =>
+      Log.trace("Trying to create GPU surface...");
+      let surfaceProps = SurfaceProps.make(Unsigned.UInt32.of_int(0), RgbH);
+      let maybeGpuSurface =
+        Skia.Surface.makeRenderTarget(
+          gpuContext,
+          false,
+          imageInfo,
+          0,
+          BottomLeft,
+          Some(surfaceProps),
+          false,
+        );
+
+      // The gpu surface creation can fail, so we should be
+      // prepared to fall back to a CPU surface.
+      switch (maybeGpuSurface) {
+      | Some(surface) =>
+        Log.tracef(m =>
+          m("Successfully created GPU surface: %ld x %ld", width, height)
+        );
+        (outContext, surface);
+      | None =>
+        Log.warn("Unable to create GPU surface; falling back to CPU surface");
+        (None, createCpuSurface());
+      };
+    };
+
+  {
+    maybeGPUContext: gpuContext,
+    surface,
+    canvas: Surface.getCanvas(surface),
+    rootTransform: None,
   };
 };
 
@@ -139,6 +189,10 @@ let translate = (v: t, x: float, y: float) => {
 
 let clear = (~color: Skia.Color.t, v: t) => {
   Canvas.clear(v.canvas, color);
+};
+
+let drawLayer = (~layer: t, ~x: float, ~y: float, target: t) => {
+  Surface.draw(~canvas=target.canvas, ~x, ~y, layer.surface);
 };
 
 let drawPath = (~path: Skia.Path.t, ~paint: Paint.t, canvasContext: t) => {
