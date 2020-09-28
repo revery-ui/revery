@@ -5,7 +5,7 @@ type nodeFactory = {
   createViewNode: unit => viewNode,
   createTextNode: string => textNode,
   createImageNode: option(Skia.Image.t) => imageNode,
-  createLayerNode: unit => layerNode,
+  createLayerNode: 'a. RenderCondition.t => layerNode,
 };
 
 let defaultNodeFactory: nodeFactory = {
@@ -13,7 +13,7 @@ let defaultNodeFactory: nodeFactory = {
   createViewNode: () => (new viewNode)(),
   createTextNode: text => (new textNode)(text),
   createImageNode: data => (new imageNode)(data),
-  createLayerNode: () => (new layerNode)();
+  createLayerNode: condition => (new layerNode)(condition),
 };
 
 let _nodeFactory = ref(defaultNodeFactory);
