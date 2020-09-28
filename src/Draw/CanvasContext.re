@@ -97,7 +97,7 @@ let create = (window: Revery_Core.Window.t) => {
   };
 };
 
-let createLayer = (~width, ~height, context: t) => {
+let createLayer = (~forceCpu=false, ~width, ~height, context: t) => {
   let imageInfo = ImageInfo.make(width, height, Rgba8888, Premul, None);
 
   let createCpuSurface = () => {
@@ -108,6 +108,7 @@ let createLayer = (~width, ~height, context: t) => {
   let (gpuContext, surface) =
     switch (context.maybeGPUContext) {
     | None => (None, createCpuSurface())
+    | Some(_) when forceCpu => (None, createCpuSurface())
     | Some(gpuContext) as outContext =>
       Log.trace("Trying to create GPU surface...");
       let surfaceProps = SurfaceProps.make(Unsigned.UInt32.of_int(0), RgbH);
