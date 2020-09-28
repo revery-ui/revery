@@ -42,7 +42,7 @@ let%nativeComponent make =
       let node = PrimitiveNodeFactory.get().createLayerNode(condition);
       node#setEvents(events);
       node#setStyle(styles);
-      node;
+      (node :> node);
     },
     configureInstance: (~isFirstRender as _, node) => {
       let styles = Style.create(~style, ());
@@ -61,10 +61,12 @@ let%nativeComponent make =
           ~onFileDropped?,
           (),
         );
+      // HACK: We should switch from using objects and set this up properly
+      let layerNode: layerNode = Obj.magic(node);
       node#setEvents(events);
       node#setStyle(styles);
       node#setMouseBehavior(mouseBehavior);
-      node#setCondition(condition);
+      layerNode#setCondition(condition);
       node;
     },
     children,

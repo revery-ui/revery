@@ -185,6 +185,11 @@ let examples = [
     render: _ => ImageQualityExample.render(),
     source: "ImageQualityExample.re",
   },
+  {
+    name: "Layer",
+    render: _ => LayerExample.render(),
+    source: "LayerExample.re",
+  },
 ];
 
 let getExampleByName = name =>
@@ -289,7 +294,7 @@ let init = app => {
   App.onBeforeQuit(app, () => prerr_endline("Quitting!"))
   |> (ignore: Revery.App.unsubscribe => unit);
 
-  let initialExample = ref("Animation");
+  let initialExample = ref("Layer");
   let decorated = ref(true);
   let forceScaleFactor = ref(None);
   let showFPSCounter = ref(false);
