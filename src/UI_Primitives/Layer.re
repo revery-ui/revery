@@ -1,7 +1,7 @@
 open Revery_UI;
 open React;
 
-let%nativeComponent make = 
+let%nativeComponent make =
                     (
                       ~condition: RenderCondition.t,
                       ~onMouseDown=?,
@@ -68,17 +68,17 @@ let%nativeComponent make =
       node;
     },
     children,
-    insertNode:{(~parent, ~child,~position) => {
-    parent#addChild(child, position);
-    parent;
-    }},
-    deleteNode:{(~parent, ~child, ~position) => {
-    parent#removeChild(child);
-    parent;
-      }},
-    moveNode:{(~parent, ~child, ~from, ~to_) => {
-      parent
-      }},
+    insertNode: (~parent, ~child, ~position) => {
+      parent#addChild(child, position);
+      parent;
+    },
+    deleteNode: (~parent, ~child, ~position) => {
+      parent#removeChild(child);
+      parent;
+    },
+    moveNode: (~parent, ~child, ~from, ~to_) => {
+      parent;
+    },
   },
   hooks,
 );
