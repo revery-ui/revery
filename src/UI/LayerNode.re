@@ -15,24 +15,36 @@ class layerNode (condition: RenderCondition.t) = {
   val mutable _lastCondition: RenderCondition.t = condition;
   val mutable _maybeCanvas: option(CanvasContext.t) = None;
   pub! draw = ({canvas, opacity, _} as parentContext: NodeDrawContext.t) => {
-    let layerCanvas = switch (_maybeCanvas) {
-    | None =>
-    let color = Colors.green |> Color.toSkia;
-    let ctx = CanvasContext.createLayer(~width=500l, ~height=300l, canvas)
-    CanvasContext.clear(~color, ctx);
-    ctx;
-    | Some(canvas) =>
-      canvas
-    };
+    let dimensions = _this#measurements();
+    let world = _this#getWorldTransform();
+
+    let layerCanvas =
+      switch (_maybeCanvas) {
+      | None =>
+        let color = Colors.green |> Color.toSkia;
+        let ctx =
+          CanvasContext.createLayer(
+            ~width=Int32.of_int(dimensions.width),
+            ~height=Int32.of_int(dimensions.height),
+            canvas,
+          );
+        CanvasContext.clear(~color, ctx);
+        let layerCanvas = ctx;
+
+        let inverseWorld = Skia.Matrix.make();
+        let _: bool = Skia.Matrix.invert(world, inverseWorld);
+        let newContext: NodeDrawContext.t = {
+          canvas: layerCanvas,
+          opacity: 1.0,
+          zIndex: 0,
+        };
+        CanvasContext.setRootTransform(inverseWorld, layerCanvas);
+        _super#draw(newContext);
+        ctx;
+      | Some(canvas) => canvas
+      };
 
     _maybeCanvas = Some(layerCanvas);
-
-    let world = _this#getWorldTransform();
-    let inverseWorld = Skia.Matrix.make();
-    let _: bool = Skia.Matrix.invert(world, inverseWorld);
-    let newContext: NodeDrawContext.t = {canvas: layerCanvas, opacity: 1.0, zIndex: 0};
-    CanvasContext.setRootTransform(inverseWorld, layerCanvas);
-    _super#draw(newContext);
 
     Revery_Draw.CanvasContext.setMatrix(canvas, world);
 

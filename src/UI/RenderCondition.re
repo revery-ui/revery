@@ -1,7 +1,7 @@
 type t =
   | Condition(('a, 'a) => bool, 'a): t;
 
-let initial = Condition((a, b) => a ==b, 1);
+let initial = Condition((a, b) => a == b, 1);
 
 let shouldRender = (previousCondition: t, currentCondition: t) => {
   switch (previousCondition, currentCondition) {

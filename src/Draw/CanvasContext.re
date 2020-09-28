@@ -144,6 +144,14 @@ let createLayer = (~width, ~height, context: t) => {
   };
 };
 
+let width = ({surface, _}) => {
+  Surface.getWidth(surface);
+};
+
+let height = ({surface, _}) => {
+  Surface.getHeight(surface);
+};
+
 let resize = (window: Revery_Core.Window.t, v: option(t)) => {
   switch (v) {
   | None => None
