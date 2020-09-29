@@ -8,7 +8,15 @@ module Log = (val Log.withNamespace("Revery.UI.FileDropped"));
 let internalToExternalEvent = (evt: Events.internalFileDropEvents) =>
   switch (evt) {
   | InternalFileDropped(evt) =>
-    FileDropped({mouseX: evt.mouseX, mouseY: evt.mouseY, paths: evt.paths})
+    FileDropped({
+      mouseX: evt.mouseX,
+      mouseY: evt.mouseY,
+      paths: evt.paths,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   };
 
 let getPositionFromInternalEvent = (evt: Events.internalFileDropEvents) =>

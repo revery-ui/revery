@@ -13,7 +13,7 @@ let empty = React.empty;
 
 let scrollTrackColor = Color.rgba(0.0, 0.0, 0.0, 0.4);
 let scrollThumbColor = Color.rgba(0.5, 0.5, 0.5, 0.4);
-let defaultBounce = Environment.os === Mac ? true : false;
+let isMac = Environment.os === Mac;
 
 type action =
   | ScrollUpdated(int);
@@ -41,37 +41,83 @@ let bounceAnimation = (~origin, ~force) =>
     }
   );
 
+let bounceAnimationHook = (scrollPosition, bouncingState, setBouncingState) => {
+  switch (bouncingState) {
+  | Idle =>
+    // TODO: Why isn't Animation.const always sufficient to stop the timer?
+    Hooks.animation(~active=false, Animation.const(scrollPosition))
+
+  | Bouncing(force) =>
+    Hooks.animation(
+      bounceAnimation(~origin=scrollPosition, ~force), ~onComplete=() =>
+      setBouncingState(_ => Idle)
+    )
+  };
+};
+
+let handeScroll =
+    (
+      ~deltaValue,
+      ~bounce,
+      ~scrollPosition,
+      ~maxScrollValue,
+      ~bouncingState,
+      ~setBouncingState,
+      ~scrollDispatch,
+    ) => {
+  let delta = int_of_float(deltaValue *. 25.);
+  let newScrollPosition = scrollPosition - delta;
+
+  let isMinScrollValue = newScrollPosition < 0;
+  let isMaxScrollValue = newScrollPosition > maxScrollValue;
+
+  switch (bouncingState) {
+  | Bouncing(force) when force < 0 && deltaValue < 0. =>
+    setBouncingState(_ => Idle)
+  | Bouncing(force) when force > 0 && deltaValue > 0. =>
+    setBouncingState(_ => Idle)
+  | Bouncing(_) => ()
+  | Idle when !bounce && (isMinScrollValue || isMaxScrollValue) =>
+    let clampedScrollValue = isMinScrollValue ? 0 : maxScrollValue;
+    scrollDispatch(ScrollUpdated(clampedScrollValue));
+  | Idle when bounce && (isMinScrollValue || isMaxScrollValue) =>
+    setBouncingState(_ => Bouncing(- delta * 2));
+    scrollDispatch(ScrollUpdated(isMinScrollValue ? 0 : maxScrollValue));
+  | Idle => scrollDispatch(ScrollUpdated(newScrollPosition))
+  };
+};
+
 let%component make =
               (
                 ~style,
                 ~scrollLeft=0,
                 ~scrollTop=0,
-                ~bounce=defaultBounce,
+                ~bounce=isMac,
                 ~children=React.empty,
                 (),
               ) => {
-  let%hook (actualScrollTop, dispatch) =
-    Hooks.reducer(~initialState=scrollTop, reducer);
   let%hook (outerRef: option(Revery_UI.node), setOuterRef) =
     Hooks.state(None);
-  let%hook (actualScrollLeft, setScrollLeft) = Hooks.state(scrollLeft);
-  let%hook (bouncingState, setBouncingState) = Hooks.state(Idle);
 
-  let%hook (actualScrollTop, _bounceAnimationState, resetBouncingAnimation) =
-    switch (bouncingState) {
-    | Idle =>
-      // TODO: Why isn't Animation.const always sufficient to stop the timer?
-      Hooks.animation(~active=false, Animation.const(actualScrollTop))
+  let%hook (actualScrollTop, scrollYdispatch) =
+    Hooks.reducer(~initialState=scrollTop, reducer);
+  let%hook (bouncingStateY, setBouncingStateY) = Hooks.state(Idle);
+  let%hook (actualScrollTop, _bounceAnimationState, resetBouncingAnimationY) =
+    bounceAnimationHook(actualScrollTop, bouncingStateY, setBouncingStateY);
 
-    | Bouncing(force) =>
-      Hooks.animation(
-        bounceAnimation(~origin=actualScrollTop, ~force), ~onComplete=() =>
-        setBouncingState(_ => Idle)
-      )
-    };
-  let setBouncingState = state => {
-    resetBouncingAnimation();
-    setBouncingState(state);
+  let setBouncingStateY = state => {
+    resetBouncingAnimationY();
+    setBouncingStateY(state);
+  };
+
+  let%hook (actualScrollLeft, scrollXdispatch) =
+    Hooks.reducer(~initialState=scrollLeft, reducer);
+  let%hook (bouncingStateX, setBouncingStateX) = Hooks.state(Idle);
+  let%hook (actualScrollLeft, _bounceAnimationState, resetBouncingAnimationX) =
+    bounceAnimationHook(actualScrollLeft, bouncingStateX, setBouncingStateX);
+  let setBouncingStateX = state => {
+    resetBouncingAnimationX();
+    setBouncingStateX(state);
   };
 
   let scrollBarThickness = 10;
@@ -85,12 +131,30 @@ let%component make =
     switch (outerRef) {
     | Some(outer) =>
       let inner = outer#firstChild();
-      let childMeasurements = inner#measurements();
+
+      // TODO: #287 For some reason `inner` component doesn't get expanded by it's childrens
+      // Could be bug with https://github.com/jordwalke/flex or how we use it
+
+      let maxChildWidth =
+        List.fold_left(
+          (maxWidth, child: node) => {
+            let width = child#measurements().width;
+
+            if (maxWidth > width) {
+              maxWidth;
+            } else {
+              width;
+            };
+          },
+          0,
+          inner#getChildren(),
+        );
+
+      let childHeight = inner#measurements().height;
       let outerMeasurements = outer#measurements();
 
-      let maxHeight =
-        max(0, childMeasurements.height - outerMeasurements.height);
-      let maxWidth = childMeasurements.width - outerMeasurements.width;
+      let maxHeight = max(0, childHeight - outerMeasurements.height);
+      let maxWidth = max(0, maxChildWidth - outerMeasurements.width);
 
       /*
        * TODO: #287
@@ -100,25 +164,23 @@ let%component make =
        */
 
       let verticalThumbHeight =
-        childMeasurements.height > 0
-          ? outerMeasurements.height
-            * outerMeasurements.height
-            / childMeasurements.height
+        childHeight > 0
+          ? outerMeasurements.height * outerMeasurements.height / childHeight
           : 1;
       let horizontalThumbHeight =
-        childMeasurements.width > 0
-          ? outerMeasurements.width
-            * outerMeasurements.width
-            / childMeasurements.width
+        maxChildWidth > 0
+          ? outerMeasurements.width * outerMeasurements.width / maxChildWidth
           : 1;
 
-      let isVerticalScrollbarVisible = maxHeight > 0;
-      let isHorizontalScrollbarVisible = maxWidth > 0;
+      let isVerticalScrollBarVisible = maxHeight > 0;
+      let isHorizontalScrollBarVisible = maxWidth > 0;
 
       let verticalScrollBar =
-        isVerticalScrollbarVisible
+        isVerticalScrollBarVisible
           ? <Slider
-              onValueChanged={v => dispatch(ScrollUpdated(int_of_float(v)))}
+              onValueChanged={v =>
+                scrollYdispatch(ScrollUpdated(int_of_float(v)))
+              }
               minimumValue=0.
               maximumValue={float_of_int(maxHeight)}
               sliderLength={outerMeasurements.height}
@@ -133,20 +195,17 @@ let%component make =
             />
           : empty;
 
-      /* TODO: #287
-       * Need to investigate why the child width is not being reported (expanded) correctly.
-       * Currently, the child width is clamped to the parent.
-       * Is this a bug in flex?
-       * Or something we need to fix in our styling?
-       */
-      let horizontalScrollbar =
-        isHorizontalScrollbarVisible
+      let horizontalScrollBar =
+        isHorizontalScrollBarVisible
           ? <Slider
-              onValueChanged={v => setScrollLeft(_ => - int_of_float(v))}
+              onValueChanged={v =>
+                scrollXdispatch(ScrollUpdated(int_of_float(v)))
+              }
               minimumValue=0.
               maximumValue={float_of_int(maxWidth)}
               sliderLength={outerMeasurements.width}
               thumbLength=horizontalThumbHeight
+              value={float_of_int(actualScrollLeft)}
               trackThickness=scrollBarThickness
               thumbThickness=scrollBarThickness
               minimumTrackColor=scrollTrackColor
@@ -156,28 +215,38 @@ let%component make =
           : empty;
 
       let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
-        let delta = int_of_float(wheelEvent.deltaY *. 25.);
-        let newScrollTop = actualScrollTop - delta;
+        let horizontalScroll =
+          wheelEvent.shiftKey || abs_float(wheelEvent.deltaX) > 0.;
 
-        let isAtTop = newScrollTop < 0;
-        let isAtBottom = newScrollTop > maxHeight;
-
-        switch (bouncingState) {
-        | Bouncing(force) when force < 0 && wheelEvent.deltaY < 0. =>
-          setBouncingState(_ => Idle)
-        | Bouncing(force) when force > 0 && wheelEvent.deltaY > 0. =>
-          setBouncingState(_ => Idle)
-        | Bouncing(_) => ()
-        | Idle when !bounce && (isAtTop || isAtBottom) =>
-          let clampedScrollTop = isAtTop ? 0 : maxHeight;
-          dispatch(ScrollUpdated(clampedScrollTop));
-        | Idle when bounce && (isAtTop || isAtBottom) =>
-          setBouncingState(_ => Bouncing(- delta * 2));
-          dispatch(ScrollUpdated(isAtTop ? 0 : maxHeight));
-        | Idle => dispatch(ScrollUpdated(newScrollTop))
+        if (horizontalScroll) {
+          if (isHorizontalScrollBarVisible) {
+            let horizontalScrollMultiplier = isMac ? (-1.) : 1.;
+            handeScroll(
+              ~deltaValue=
+                abs_float(wheelEvent.deltaX) > 0.
+                  ? horizontalScrollMultiplier *. wheelEvent.deltaX
+                  : wheelEvent.deltaY,
+              ~bounce,
+              ~scrollPosition=actualScrollLeft,
+              ~maxScrollValue=maxWidth,
+              ~bouncingState=bouncingStateX,
+              ~setBouncingState=setBouncingStateX,
+              ~scrollDispatch=scrollXdispatch,
+            );
+          };
+        } else if (isVerticalScrollBarVisible) {
+          handeScroll(
+            ~deltaValue=wheelEvent.deltaY,
+            ~bounce,
+            ~scrollPosition=actualScrollTop,
+            ~maxScrollValue=maxHeight,
+            ~bouncingState=bouncingStateY,
+            ~setBouncingState=setBouncingStateY,
+            ~scrollDispatch=scrollYdispatch,
+          );
         };
       };
-      (horizontalScrollbar, verticalScrollBar, scroll);
+      (horizontalScrollBar, verticalScrollBar, scroll);
     | _ => (empty, empty, (_ => ()))
     };
 
@@ -186,12 +255,11 @@ let%component make =
       transform(innerViewTransform),
       position(`Absolute),
       top(0),
-      /* TODO: #287 This styling will need to be adjusted to handle horizontal scrolling */
-      left(0),
+      left(horizontalScrollBar == empty ? 0 : scrollBarThickness),
       right(verticalScrollBar == empty ? 0 : scrollBarThickness),
     ];
 
-  let verticalScrollbarContainerStyle =
+  let verticalScrollBarContainerStyle =
     Style.[
       position(`Absolute),
       right(0),
@@ -200,7 +268,7 @@ let%component make =
       width(scrollBarThickness),
     ];
 
-  let horizontalScrollbarContainerStyle =
+  let horizontalScrollBarContainerStyle =
     Style.[
       position(`Absolute),
       right(0),
@@ -215,8 +283,8 @@ let%component make =
       ref={r => setOuterRef(_ => Some(r))}
       style=Style.[flexGrow(1), position(`Relative), overflow(`Scroll)]>
       <View style=innerStyle> children </View>
-      <View style=verticalScrollbarContainerStyle> verticalScrollBar </View>
-      <View style=horizontalScrollbarContainerStyle>
+      <View style=verticalScrollBarContainerStyle> verticalScrollBar </View>
+      <View style=horizontalScrollBarContainerStyle>
         horizontalScrollBar
       </View>
     </View>
