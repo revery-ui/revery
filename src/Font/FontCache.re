@@ -238,18 +238,13 @@ let generateShapes:
           );
           None;
         };
-      Option.bind(
-        maybeUchar,
-        uchar => {
-          // Only fallback if the character is non-ASCII (UTF-8)
-
-          Log.debugf(m => m("-- Got uchar: %d", Uchar.to_int(uchar)));
-          if (Uchar.to_int(uchar) > 256) {
-            fallback(uchar);
-          } else {
-            None;
-          };
-        },
+      Option.bind(maybeUchar, uchar =>
+        // Only fallback if the character is non-ASCII (UTF-8)
+        if (Uchar.to_int(uchar) > 256) {
+          fallback(uchar);
+        } else {
+          None;
+        }
       )
       |> (
         fun
