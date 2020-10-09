@@ -123,7 +123,9 @@ let load: option(Skia.Typeface.t) => result(t, string) =
         switch (skiaTypeface, harfbuzzFace) {
         | (Some(skiaFace), Some(Ok(hbFace))) =>
           Event.dispatch(onFontLoaded, ());
-          Log.info("Loaded : " ++ Skia.Typeface.getFamilyName(skiaFace));
+          Log.infof(m =>
+            m("Loaded: %s", Skia.Typeface.getFamilyName(skiaFace))
+          );
           Ok({
             hbFace,
             skiaFace,
@@ -221,25 +223,34 @@ let generateShapes:
   (~fallback, ~features, font, str) => {
     let fallbackFor = (~byteOffset, str) => {
       Log.debugf(m =>
-        m("Resolving fallback for: %s at byte offset %d", str, byteOffset)
+        m(
+          "Resolving fallback for: %s at byte offset %d - source font is: %s",
+          str,
+          byteOffset,
+          font.skiaFace |> Skia.Typeface.getFamilyName,
+        )
       );
       let maybeUchar =
         try(Some(Zed_utf8.extract(str, byteOffset))) {
         | exn =>
           Log.debugf(m =>
-            m("Unable to get uchar: %s", Printexc.to_string(exn))
+            m("Unable to get uchar from string: %s", Printexc.to_string(exn))
           );
           None;
         };
-      Option.bind(maybeUchar, uchar
-        // Only fallback if the character is non-ASCII (UTF-8)
-        =>
+      Option.bind(
+        maybeUchar,
+        uchar => {
+          // Only fallback if the character is non-ASCII (UTF-8)
+
+          Log.debugf(m => m("-- Got uchar: %d", Uchar.to_int(uchar)));
           if (Uchar.to_int(uchar) > 256) {
             fallback(uchar);
           } else {
             None;
-          }
-        )
+          };
+        },
+      )
       |> (
         fun
         | Some(_) as font => {
@@ -298,13 +309,14 @@ let generateShapes:
         | Ok(fallbackFont) =>
           Log.debugf(m =>
             m(
-              "Got fallback font - id: %d name: %s (from source font - id: %d %s)",
+              "Got fallback font - id: %d name: %s (from source font - id: %d %s) - attempt %d",
               fallbackFont.skiaFace
               |> Skia.Typeface.getUniqueID
               |> Int32.to_int,
               fallbackFont.skiaFace |> Skia.Typeface.getFamilyName,
               font.skiaFace |> Skia.Typeface.getUniqueID |> Int32.to_int,
               font.skiaFace |> Skia.Typeface.getFamilyName,
+              attempts,
             )
           );
 
@@ -359,7 +371,8 @@ let generateShapes:
             ...acc,
           ];
           loopShapes(
-            ~attempts=0,
+            // TODO: Bring back fix! Just see if we can repro
+            ~attempts,
             ~stopCluster,
             ~acc,
             ~index=index + 1,
