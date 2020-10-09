@@ -238,14 +238,15 @@ let generateShapes:
           );
           None;
         };
-      Option.bind(maybeUchar, uchar =>
+      Option.bind(maybeUchar, uchar
         // Only fallback if the character is non-ASCII (UTF-8)
-        if (Uchar.to_int(uchar) > 256) {
-          fallback(uchar);
-        } else {
-          None;
-        }
-      )
+        =>
+          if (Uchar.to_int(uchar) > 256) {
+            fallback(uchar);
+          } else {
+            None;
+          }
+        )
       |> (
         fun
         | Some(_) as font => {
