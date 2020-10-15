@@ -79,12 +79,12 @@ let create = (window: Revery_Core.Window.t) => {
       Log.error("Unable to create skia surface");
       None;
     | Some(v) =>
-      Log.info(
-        Printf.sprintf(
+      Log.infof(m =>
+        m(
           "Successfully created canvas: %dx%d",
           framebufferSize.width,
           framebufferSize.height,
-        ),
+        )
       );
       let surface = v;
       Some({
@@ -151,14 +151,14 @@ let resize = (window: Revery_Core.Window.t, v: option(t)) => {
     let framebufferSize = Window.getFramebufferSize(window);
     if (Surface.getWidth(surface) != framebufferSize.width
         || Surface.getHeight(surface) != framebufferSize.height) {
-      Log.info(
-        Printf.sprintf(
+      Log.infof(m =>
+        m(
           "Resizing canvas: %dx%d->%dx%d",
           Surface.getWidth(surface),
           Surface.getHeight(surface),
           framebufferSize.width,
           framebufferSize.height,
-        ),
+        )
       );
       create(window);
     } else {

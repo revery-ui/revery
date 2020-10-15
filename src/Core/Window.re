@@ -147,7 +147,10 @@ module WindowMetrics: {
     };
   };
 
-  let setZoom = (zoom, metrics) => {...metrics, zoom, isDirty: true};
+  let setZoom = (zoom, metrics) => {
+    Log.tracef(m => m("Setting zoom: %f", zoom));
+    {...metrics, zoom, isDirty: true};
+  };
   let markDirty = metrics => {...metrics, isDirty: true};
 };
 
@@ -398,6 +401,7 @@ let render = window => {
 };
 
 let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
+  Log.tracef(m => m("Window.handleEvent: %s", Sdl2.Event.show(sdlEvent)));
   switch (sdlEvent) {
   | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
     let wheelEvent: Events.mouseWheelEvent = {
@@ -458,7 +462,7 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
     };
     Event.dispatch(v.onTextInputCommit, {text: ti.text});
 
-  | Sdl2.Event.WindowResized(_) =>
+  | Sdl2.Event.WindowResized({width, height, _}) =>
     v.metrics = WindowMetrics.markDirty(v.metrics)
 
   | Sdl2.Event.WindowSizeChanged({width, height, _}) =>
