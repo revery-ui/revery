@@ -209,7 +209,7 @@ module Paint: {
 
   let setStyle: (t, style) => unit;
   let setStrokeWidth: (t, float) => unit;
-  let setImageFilter: (t, ImageFilter.t) => unit;
+  let setImageFilter: (t, option(ImageFilter.t)) => unit;
   let setTypeface: (t, Typeface.t) => unit;
   let setLcdRenderText: (t, bool) => unit;
   let setSubpixelText: (t, bool) => unit;
@@ -413,6 +413,9 @@ module Image: {
 
   let makeFromEncoded: (Data.t, option(IRect.t)) => option(t);
   let encodeToData: t => Data.t;
+
+  let width: t => int;
+  let height: t => int;
 };
 
 type pixelGeometry = SkiaWrapped.pixelGeometry;
@@ -517,6 +520,10 @@ module Surface: {
     ) =>
     option(t);
 
+  // Draw surface [surface] onto a [canvas] at the specified [x,y] points.
+  let draw:
+    (~paint: option(Paint.t)=?, ~canvas: Canvas.t, ~x: float, ~y: float, t) =>
+    unit;
   let makeImageSnapshot: t => Image.t;
   let getCanvas: t => Canvas.t;
   let getWidth: t => int;

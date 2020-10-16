@@ -14,7 +14,7 @@ depends: [
   "base"   {>= "v0.14" & < "v0.15"}
   "stdio"  {>= "v0.14" & < "v0.15"}
   "dune"   {>= "2.0.0"}
-  "ppxlib" {>= "0.11.0"}
+  "ppxlib" {>= "0.11.0" & < "0.18.0"}
 ]
 synopsis: "Optional compilation for OCaml"
 description: "

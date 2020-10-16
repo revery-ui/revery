@@ -67,6 +67,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
           Revery_Core.Events.InternalMouseMove({
             mouseX: m.mouseX /. scaleAndZoomFactor,
             mouseY: m.mouseY /. scaleAndZoomFactor,
+            keymod: m.keymod,
           });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
@@ -76,7 +77,12 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Window.onMouseWheel(
       window,
       m => {
-        let evt = Revery_Core.Events.InternalMouseWheel(m);
+        let evt =
+          Revery_Core.Events.InternalMouseWheel({
+            deltaX: m.deltaX,
+            deltaY: m.deltaY,
+            keymod: m.keymod,
+          });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
@@ -85,7 +91,11 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Window.onMouseDown(
       window,
       m => {
-        let evt = Revery_Core.Events.InternalMouseDown({button: m.button});
+        let evt =
+          Revery_Core.Events.InternalMouseDown({
+            button: m.button,
+            keymod: m.keymod,
+          });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
@@ -114,7 +124,11 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Window.onMouseUp(
       window,
       m => {
-        let evt = Revery_Core.Events.InternalMouseUp({button: m.button});
+        let evt =
+          Revery_Core.Events.InternalMouseUp({
+            button: m.button,
+            keymod: m.keymod,
+          });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
@@ -130,6 +144,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
             mouseX: f.mouseX /. scaleAndZoomFactor,
             mouseY: f.mouseY /. scaleAndZoomFactor,
             paths: f.paths,
+            keymod: f.keymod,
           });
         FileDrop.dispatch(evt, rootNode);
       },
