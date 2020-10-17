@@ -10,7 +10,7 @@ build: [
   ["dune" "build" "-p" name "-j" jobs]
 ]
 depends: [
-  "ocaml"             {>= "4.07.0"}
+  "ocaml"             {>= "4.07.0" & < "4.12"}
   "sexplib0"          {>= "v0.14" & < "v0.15"}
   "dune"              {>= "2.0.0"}
   "dune-configurator"
