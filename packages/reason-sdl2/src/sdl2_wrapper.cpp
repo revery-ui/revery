@@ -94,7 +94,7 @@ extern "C" {
     }
     CAMLprim value resdl_SDL_DestroyWindow(value vWin) {
         CAMLparam1(vWin);
-        SDL_Window *win = resdl_unwrapPointer(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_DestroyWindow(win);
         CAMLreturn(Val_unit);
     }
