@@ -35,9 +35,27 @@ let render =
   let canvasScalingFactor = pixelRatio *. scaleAndZoomFactor;
 
   let zoomFactor = Window.getZoom(window);
+
+  Log.tracef(m =>
+    m(
+      "-- RENDER: pixelRatio: %f scaleAndZoom: %f zoom: %f canvasScaling: %f",
+      pixelRatio,
+      scaleAndZoomFactor,
+      zoomFactor,
+      canvasScalingFactor,
+    )
+  );
+
   let adjustedHeight =
     float_of_int(size.height) /. zoomFactor |> int_of_float;
   let adjustedWidth = float_of_int(size.width) /. zoomFactor |> int_of_float;
+  Log.tracef(m =>
+    m(
+      "-- RENDER: adjustedWidth: %d adjustedHeight: %d",
+      adjustedWidth,
+      adjustedHeight,
+    )
+  );
 
   RenderContainer.updateCanvas(window, renderContainer);
 
