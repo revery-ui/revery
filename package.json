@@ -61,7 +61,7 @@
     "rench": "^1.9.1",
     "rebez": "jchavarri/rebez#03fa3b7",
     "reason-native-crash-utils": "onivim/reason-native-crash-utils#38c8f00",
-    "@glennsl/timber": "^1.2.0"
+    "@revery/timber": "^2.0.0"
   },
   "resolutions": {
     "@opam/conf-pkg-config": "1.2"

@@ -1,5 +1,5 @@
 {
-  "checksum": "4db31c7e1ab1d132efa968b7edce249d",
+  "checksum": "864e471c21b54e6d0b09c9b5f0a06fbe",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -35,7 +35,7 @@
         "flex@github:jordwalke/flex#6ff12fe@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#60e0260@d41d8cd9",
         "esy-sdl2@2.0.10008@d41d8cd9", "esy-freetype2@2.9.1008@d41d8cd9",
-        "esy-angle-prebuilt@1.0.0@d41d8cd9",
+        "esy-angle-prebuilt@1.0.0@d41d8cd9", "@revery/timber@2.0.0@d41d8cd9",
         "@revery/esy-harfbuzz@2.6.8001@d41d8cd9",
         "@reason-native/rely@3.2.1@d41d8cd9",
         "@opam/uutf@opam:1.0.2@4440868f", "@opam/uucp@opam:13.0.0@e9b515e0",
@@ -47,10 +47,9 @@
         "@opam/lru@github:bryphe/lru:lru.opam#2708c70@d41d8cd9",
         "@opam/dune-configurator@opam:2.7.1@96307faa",
         "@opam/dune@opam:2.7.1@f5f493bc",
-        "@opam/ctypes@opam:0.15.1@b0227b2f",
+        "@opam/ctypes@opam:0.15.1@9c7ab4ec",
         "@opam/charInfo_width@opam:1.1.0@4296bdfe",
-        "@opam/bos@opam:0.2.0@df49e63f", "@glennsl/timber@1.2.0@d41d8cd9",
-        "@esy-ocaml/reason@3.6.2@d41d8cd9",
+        "@opam/bos@opam:0.2.0@df49e63f", "@esy-ocaml/reason@3.6.2@d41d8cd9",
         "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#10cab2d@d41d8cd9"
       ],
       "devDependencies": [
@@ -290,6 +289,24 @@
       },
       "overrides": [],
       "dependencies": [],
+      "devDependencies": []
+    },
+    "@revery/timber@2.0.0@d41d8cd9": {
+      "id": "@revery/timber@2.0.0@d41d8cd9",
+      "name": "@revery/timber",
+      "version": "2.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/@revery/timber/-/timber-2.0.0.tgz#sha1:37050c20a9d33a901c56688152e91683d0bfa539"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.10.1002@d41d8cd9", "@opam/re@opam:1.9.0@d4d5e13d",
+        "@opam/logs@opam:0.7.0@1d03143e", "@opam/fmt@opam:0.8.9@e0843a5b",
+        "@opam/dune@opam:2.7.1@f5f493bc", "@esy-ocaml/reason@3.6.2@d41d8cd9"
+      ],
       "devDependencies": []
     },
     "@revery/esy-harfbuzz@2.6.8001@d41d8cd9": {
@@ -1980,8 +1997,8 @@
         "@opam/base-threads@opam:base@36803084"
       ]
     },
-    "@opam/ctypes@opam:0.15.1@b0227b2f": {
-      "id": "@opam/ctypes@opam:0.15.1@b0227b2f",
+    "@opam/ctypes@opam:0.15.1@9c7ab4ec": {
+      "id": "@opam/ctypes@opam:0.15.1@9c7ab4ec",
       "name": "@opam/ctypes",
       "version": "opam:0.15.1",
       "source": {
@@ -2439,24 +2456,6 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [ "ocaml@4.10.1002@d41d8cd9" ]
-    },
-    "@glennsl/timber@1.2.0@d41d8cd9": {
-      "id": "@glennsl/timber@1.2.0@d41d8cd9",
-      "name": "@glennsl/timber",
-      "version": "1.2.0",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/@glennsl/timber/-/timber-1.2.0.tgz#sha1:fd888b470eeef09d00482d1888eaa360e599daf4"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.10.1002@d41d8cd9", "@opam/re@opam:1.9.0@d4d5e13d",
-        "@opam/logs@opam:0.7.0@1d03143e", "@opam/fmt@opam:0.8.9@e0843a5b",
-        "@opam/dune@opam:2.7.1@f5f493bc", "@esy-ocaml/reason@3.6.2@d41d8cd9"
-      ],
-      "devDependencies": []
     },
     "@esy-ocaml/substs@0.0.1@d41d8cd9": {
       "id": "@esy-ocaml/substs@0.0.1@d41d8cd9",
