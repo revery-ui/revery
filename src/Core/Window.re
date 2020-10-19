@@ -462,7 +462,7 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
     };
     Event.dispatch(v.onTextInputCommit, {text: ti.text});
 
-  | Sdl2.Event.WindowResized({width, height, _}) =>
+  | Sdl2.Event.WindowResized(_) =>
     v.metrics = WindowMetrics.markDirty(v.metrics)
 
   | Sdl2.Event.WindowSizeChanged({width, height, _}) =>
