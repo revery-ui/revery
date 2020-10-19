@@ -56,3 +56,6 @@ url {
   src: "https://github.com/ocamllabs/ocaml-ctypes/archive/0.15.1.tar.gz"
   checksum: "md5=e87b2646f7597e00b8b9a1f5f8e36ee6"
 }
+conflicts: [
+  "mirage-xen" {>= "6.0.0"}
+]
