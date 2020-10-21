@@ -1,7 +1,8 @@
 {
   "source": "./package.json",
   "scripts": {
-    "basic-app": "esy @examples x BasicApp"
+    "basic-app": "esy @examples x BasicApp",
+    "briskless": "esy @examples x Briskless"
   },
   "override": {
       "build": ["dune build -p revery-desktop,revery-desktop-examples -j4"],
@@ -17,6 +18,9 @@
         "reason-skia": "link:../reason-skia",
         "reason-harfbuzz": "link:../reason-harfbuzz",
         "zed": "link:../zed"
+      },
+      "devDependencies": {
+        "ocaml": "4.10.0"
       }
   }
 }

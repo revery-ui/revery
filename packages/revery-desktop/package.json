@@ -16,7 +16,9 @@
   "dependencies": {
     "ocaml": "~4.10.0",
     "@esy-ocaml/reason": "^3.6.0",
+    "@opam/base": "*",
     "@opam/dune": "*",
+    "@opam/ppx_deriving": "*",
     "reason-sdl2": "*",
     "reason-skia": "*",
     "reason-harfbuzz": "*",
@@ -30,7 +32,7 @@
     "reason-skia": "link:../reason-skia",
     "reason-harfbuzz": "link:../reason-harfbuzz",
     "zed": "link:../zed",
-    "ocaml": "~4.10.0",
+    "ocaml": "4.10.0",
     "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6"
   }
 }

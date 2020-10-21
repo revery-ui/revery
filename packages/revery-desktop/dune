@@ -1,1 +1,5 @@
 (dirs src examples)
+
+(env
+  (dev
+    (flags (:standard -w -30))))

@@ -1,11 +1,10 @@
 (executables
-  (names BasicApp)
+  (names Briskless)
   (package revery-desktop-examples)
-  (public_names BasicApp)
+  (public_names Briskless)
   (modes native byte)
   (preprocess
     (pps
-      brisk-reconciler.ppx
       ppx_deriving.show
   ))
   (libraries
@@ -15,7 +14,6 @@
     integers
     reason-skia.wrapped.bindings
     reason-skia.wrapped
-    brisk-reconciler
     console.lib
     base
 ))
@@ -23,4 +21,4 @@
 (install
   (section bin)
   (package revery-desktop-examples)
-  (files BasicApp.bc))
+  (files Briskless.bc))
