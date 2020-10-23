@@ -286,7 +286,7 @@ module ExampleHost = {
 let init = app => {
   Revery.App.initConsole();
 
-  Timber.App.enable();
+  Timber.App.enable(Timber.Reporter.console());
   Timber.App.setLevel(Timber.Level.perf);
 
   App.onIdle(app, () => prerr_endline("Idle!"))

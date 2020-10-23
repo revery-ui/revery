@@ -22,7 +22,7 @@ depends: [
   "dune" {>= "1.7.0"}
   "dune-configurator"
   "mmap" {>= "1.1.0"} # mmap is needed as long as Lwt supports OCaml < 4.06.0.
-  "ocaml" {>= "4.02.0"}
+  "ocaml" {>= "4.02.0" & < "4.12"}
   "ocplib-endian"
   "result" # result is needed as long as Lwt supports OCaml 4.02.
   "seq" # seq is needed as long as Lwt supports OCaml < 4.07.0.

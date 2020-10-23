@@ -288,7 +288,12 @@ let makeShadowImageFilter = boxShadow => {
 class viewNode (()) = {
   as _this;
   inherit (class node)() as _super;
-  val _fillPaint = Skia.Paint.make();
+  val _fillPaint = {
+    let paint = Skia.Paint.make();
+    // Set antialias for fill paint, so that rounded edges for the inner rectangle look OK
+    Skia.Paint.setAntiAlias(paint, true);
+    paint;
+  };
   val _outerRRect = Skia.RRect.make();
   val _helperRect = Skia.Rect.makeLtrb(0., 0., 0., 0.);
   pub! draw = (parentContext: NodeDrawContext.t) => {
