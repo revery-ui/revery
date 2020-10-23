@@ -24,7 +24,7 @@ class layerNode (condition: RenderCondition.t) = {
       _maybeCanvas =
         Some(
           CanvasContext.createLayer(
-            ~forceCpu=true,
+//            ~forceCpu=true,
             ~width=Int32.of_int(adjustedWidth),
             ~height=Int32.of_int(adjustedHeight),
             canvas,
@@ -40,7 +40,7 @@ class layerNode (condition: RenderCondition.t) = {
         _maybeCanvas =
           Some(
             CanvasContext.createLayer(
-              ~forceCpu=true,
+//              ~forceCpu=true,
               ~width=Int32.of_int(adjustedWidth),
               ~height=Int32.of_int(adjustedHeight),
               canvas,
