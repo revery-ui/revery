@@ -25,7 +25,12 @@ let create = (window, rootNode, container, mouseCursor) => {
 
 let updateCanvas = (window, container: t) => {
   switch (container.canvas^) {
-  | None => container.canvas := Revery_Draw.CanvasContext.create(Revery_Draw.CanvasContext.createGpuContext(), window)
+  | None =>
+    container.canvas :=
+      Revery_Draw.CanvasContext.create(
+        Revery_Draw.CanvasContext.createGpuContext(),
+        window,
+      )
   | Some(_) as v =>
     container.canvas := Revery_Draw.CanvasContext.resize(window, v)
   };

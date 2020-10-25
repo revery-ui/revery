@@ -101,6 +101,22 @@ let create = (gpuContext, window: Revery_Core.Window.t) => {
 };
 
 let createLayer = (~forceCpu=false, ~width, ~height, context: t) => {
+  prerr_endline(Printf.sprintf("Creating layer: %ldx%ld", width, height));
+  Log.infof(m => m("Creating layer: %ldx%ld", width, height));
+  let width =
+    if (width <= 0l) {
+      1l;
+    } else {
+      width;
+    };
+
+  let height =
+    if (height <= 0l) {
+      1l;
+    } else {
+      height;
+    };
+
   let imageInfo = ImageInfo.make(width, height, Rgba8888, Premul, None);
 
   let createCpuSurface = () => {
@@ -108,44 +124,50 @@ let createLayer = (~forceCpu=false, ~width, ~height, context: t) => {
     Surface.makeRaster(imageInfo, 0, None);
   };
 
-  let (gpuContext, surface) =
+  let createGpuSurface = gpuContext => {
+    Log.trace("Trying to create GPU surface...");
+    let surfaceProps = SurfaceProps.make(Unsigned.UInt32.of_int(0), RgbH);
+    Skia.Surface.makeRenderTarget(
+      gpuContext,
+      false,
+      imageInfo,
+      0,
+      BottomLeft,
+      Some(surfaceProps),
+      false,
+    );
+  };
+
+  let (gpuContext, maybeSurface) =
     switch (context.maybeGPUContext) {
     | None => (None, createCpuSurface())
     | Some(_) when forceCpu => (None, createCpuSurface())
     | Some(gpuContext) as outContext =>
-      Log.trace("Trying to create GPU surface...");
-      let surfaceProps = SurfaceProps.make(Unsigned.UInt32.of_int(0), RgbH);
-      let maybeGpuSurface =
-        Skia.Surface.makeRenderTarget(
-          gpuContext,
-          false,
-          imageInfo,
-          0,
-          BottomLeft,
-          Some(surfaceProps),
-          false,
-        );
+      let maybeGpuSurface = createGpuSurface(gpuContext);
 
       // The gpu surface creation can fail, so we should be
       // prepared to fall back to a CPU surface.
       switch (maybeGpuSurface) {
-      | Some(surface) =>
+      | Some(_) as surf =>
         Log.tracef(m =>
           m("Successfully created GPU surface: %ld x %ld", width, height)
         );
-        (outContext, surface);
+        (outContext, surf);
       | None =>
         Log.warn("Unable to create GPU surface; falling back to CPU surface");
         (None, createCpuSurface());
       };
     };
 
-  {
-    maybeGPUContext: gpuContext,
-    surface,
-    canvas: Surface.getCanvas(surface),
-    rootTransform: None,
-  };
+  maybeSurface
+  |> Option.map(surface => {
+       {
+         maybeGPUContext: gpuContext,
+         surface,
+         canvas: Surface.getCanvas(surface),
+         rootTransform: None,
+       }
+     });
 };
 
 let width = ({surface, _}) => {
@@ -203,8 +225,15 @@ let clear = (~color: Skia.Color.t, v: t) => {
   Canvas.clear(v.canvas, color);
 };
 
-let drawLayer = (~layer: t, ~x: float, ~y: float, target: t) => {
-  Surface.draw(~canvas=target.canvas, ~x, ~y, layer.surface);
+let drawLayer =
+    (~paint: Skia.Paint.t, ~layer: t, ~x: float, ~y: float, target: t) => {
+  Surface.draw(
+    ~paint=Some(paint),
+    ~canvas=target.canvas,
+    ~x,
+    ~y,
+    layer.surface,
+  );
 };
 
 let drawPath = (~path: Skia.Path.t, ~paint: Paint.t, canvasContext: t) => {

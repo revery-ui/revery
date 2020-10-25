@@ -1,9 +1,12 @@
 open Revery_UI;
 open React;
 
+module Condition = RenderCondition;
+
 let%nativeComponent make =
                     (
-                      ~condition: RenderCondition.t,
+                      ~backgroundColor: Revery_Core.Color.t,
+                      ~condition: Condition.t,
                       ~onMouseDown=?,
                       ~onMouseMove=?,
                       ~onMouseUp=?,
@@ -40,6 +43,7 @@ let%nativeComponent make =
           (),
         );
       let node = PrimitiveNodeFactory.get().createLayerNode(condition);
+      node#setBackgroundColor(backgroundColor);
       node#setEvents(events);
       node#setStyle(styles);
       (node :> node);
@@ -66,21 +70,14 @@ let%nativeComponent make =
       node#setEvents(events);
       node#setStyle(styles);
       node#setMouseBehavior(mouseBehavior);
+      layerNode#setBackgroundColor(backgroundColor);
       layerNode#setCondition(condition);
       node;
     },
     children,
-    insertNode: (~parent, ~child, ~position) => {
-      parent#addChild(child, position);
-      parent;
-    },
-    deleteNode: (~parent, ~child, ~position) => {
-      parent#removeChild(child);
-      parent;
-    },
-    moveNode: (~parent, ~child, ~from, ~to_) => {
-      parent;
-    },
+    insertNode,
+    deleteNode,
+    moveNode,
   },
   hooks,
 );

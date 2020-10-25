@@ -284,7 +284,9 @@ let start = init => {
 
     Tick.Default.pump();
 
-    if (appInstance.isFirstRender
+    // TODO: Remove this,  but enable debug drawing
+    if (true
+        || appInstance.isFirstRender
         || _anyWindowsDirty(appInstance)
         || _anyPendingMainThreadJobs()
         || !appInstance.canIdle()) {

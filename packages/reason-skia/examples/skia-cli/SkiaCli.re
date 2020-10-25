@@ -253,7 +253,7 @@ let draw = canvas => {
   Canvas.drawRectLtwh(canvas, 100., 100., 100., 100., fill);
 };
 
-let surface = makeSurface(640l, 480l);
+let surface = makeSurface(640l, 480l) |> Option.get;
 let canvas = Surface.getCanvas(surface);
 draw(canvas);
 emitPng("skia-c-example.png", surface);

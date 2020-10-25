@@ -101,7 +101,8 @@ module Sample = {
               ~width=128l,
               ~height=128l,
               canvasContext,
-            );
+            )
+            |> Option.get;
 
           // Draw a circle onto our new layer...
           let paint = Skia.Paint.make();

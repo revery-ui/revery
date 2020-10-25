@@ -5,15 +5,17 @@ module Layout = Layout;
 module LayoutTypes = Layout.LayoutTypes;
 
 open ViewNode;
-open Style;
-open Style.Border;
-open Style.BoxShadow;
 
 class layerNode (condition: RenderCondition.t) = {
   as _this;
   inherit (class viewNode)() as _super;
-  val mutable _lastCondition: RenderCondition.t = condition;
+  val mutable _backgroundColor: Color.t = Colors.magenta;
+  val mutable _lastCondition: option(RenderCondition.t) = None;
+  val mutable _condition: option(RenderCondition.t) = Some(condition);
   val mutable _maybeCanvas: option(CanvasContext.t) = None;
+  val mutable _lastRenderTime: option(float) = None;
+  // MUTABLE
+  val _inverseWorld = Skia.Matrix.make();
   pri createOrInitializeLayer =
       (~width, ~height, ~dpi, {canvas, _}: NodeDrawContext.t) => {
     let adjustedWidth = int_of_float(float(width) *. dpi +. 0.5);
@@ -22,13 +24,10 @@ class layerNode (condition: RenderCondition.t) = {
     switch (_maybeCanvas) {
     | None =>
       _maybeCanvas =
-        Some(
-          CanvasContext.createLayer(
-//            ~forceCpu=true,
-            ~width=Int32.of_int(adjustedWidth),
-            ~height=Int32.of_int(adjustedHeight),
-            canvas,
-          ),
+        CanvasContext.createLayer(
+          ~width=Int32.of_int(adjustedWidth),
+          ~height=Int32.of_int(adjustedHeight),
+          canvas,
         );
 
       true;
@@ -38,13 +37,10 @@ class layerNode (condition: RenderCondition.t) = {
 
       if (currentWidth != adjustedWidth || currentHeight != adjustedHeight) {
         _maybeCanvas =
-          Some(
-            CanvasContext.createLayer(
-//              ~forceCpu=true,
-              ~width=Int32.of_int(adjustedWidth),
-              ~height=Int32.of_int(adjustedHeight),
-              canvas,
-            ),
+          CanvasContext.createLayer(
+            ~width=Int32.of_int(adjustedWidth),
+            ~height=Int32.of_int(adjustedHeight),
+            canvas,
           );
         true;
       } else {
@@ -52,50 +48,124 @@ class layerNode (condition: RenderCondition.t) = {
       };
     };
   };
+  pri debugDraw = (width, height, canvas) => {
+    let currentTime = Unix.gettimeofday();
+    switch (_lastRenderTime) {
+    | None => ()
+    | Some(lastTime) =>
+      let diff = currentTime -. lastTime;
+
+      let debugPaint = Skia.Paint.make();
+      if (diff < 0.25) {
+        let color =
+          Colors.red |> Color.multiplyAlpha(0.6 -. diff) |> Color.toSkia;
+        Skia.Paint.setColor(debugPaint, color);
+
+        CanvasContext.drawRectLtwh(
+          ~paint=debugPaint,
+          ~left=0.,
+          ~top=0.,
+          ~width=float(width),
+          ~height=float(height),
+          canvas,
+        );
+      } else {
+        let color = Colors.green |> Color.multiplyAlpha(0.5) |> Color.toSkia;
+        Skia.Paint.setColor(debugPaint, color);
+        CanvasContext.drawRectLtwh(
+          ~paint=debugPaint,
+          ~left=0.,
+          ~top=0.,
+          ~width=float(width),
+          ~height=float(height),
+          canvas,
+        );
+      };
+
+      let textPaint = Skia.Paint.make();
+      Skia.Paint.setColor(textPaint, Colors.white |> Color.toSkia);
+      CanvasContext.drawText(
+        ~paint=textPaint,
+        ~x=0.,
+        ~y=0.,
+        ~text="Unique ID: " ++ string_of_int(_super#getInternalId()),
+        canvas,
+      );
+    };
+  };
   pub! draw = ({canvas, opacity, _} as parentContext: NodeDrawContext.t) => {
     let dimensions = _this#measurements();
     let world = _this#getWorldTransform();
 
-    prerr_endline("Create or initialize layer...");
-    let redraw =
+    let wasRecreated =
       _this#createOrInitializeLayer(
         ~dpi=1.0,
         ~width=dimensions.width,
         ~height=dimensions.height,
         parentContext,
       );
-    Gc.compact();
-    prerr_endline("Created!");
+
+    let redraw =
+      wasRecreated
+      || RenderCondition.shouldRenderOpt(_lastCondition, _condition);
 
     switch (_maybeCanvas) {
     | None => ()
     | Some(layerCanvas) =>
+      // Draw the 'inside' of the layer - we only need to do this if
+      // the render condition `shouldRender` is true.
       if (redraw) {
+        _lastCondition = _condition;
+        _lastRenderTime = Some(Unix.gettimeofday());
+
         // We need to 'undo' the world transform, to transform the children
         // back into a coordinate space where [0, 0] is the layer space.
-        let inverseWorld = Skia.Matrix.make();
-        let _: bool = Skia.Matrix.invert(world, inverseWorld);
+        let _: bool = Skia.Matrix.invert(world, _inverseWorld);
 
         let newContext: NodeDrawContext.t = {
+          ...parentContext,
           canvas: layerCanvas,
           opacity: 1.0,
           zIndex: 0,
         };
 
         // TODO: Account for scaling here, as well!
-        CanvasContext.setRootTransform(inverseWorld, layerCanvas);
+        CanvasContext.clear(
+          ~color=_backgroundColor |> Color.toSkia,
+          layerCanvas,
+        );
+        CanvasContext.setRootTransform(_inverseWorld, layerCanvas);
+
         _super#draw(newContext);
-        //          CanvasContext.flush(layerCanvas);
+
+        CanvasContext.flush(layerCanvas);
       };
 
-      // Draw the cached layer
+      // Draw the cached layer. We always have to do this, every farme.
       Revery_Draw.CanvasContext.setMatrix(canvas, world);
+      let layerPaint = Skia.Paint.make();
+      Skia.Paint.setColor(
+        layerPaint,
+        Colors.white |> Color.multiplyAlpha(opacity) |> Color.toSkia,
+      );
       // [x] and [y] are 0. because this is accounted for in the world transform
-      CanvasContext.drawLayer(~layer=layerCanvas, ~x=0., ~y=0., canvas);
-      prerr_endline("Done!");
+      CanvasContext.drawLayer(
+        ~paint=layerPaint,
+        ~layer=layerCanvas,
+        ~x=0.,
+        ~y=0.,
+        canvas,
+      );
+
+      if (parentContext.debug) {
+        _this#debugDraw(dimensions.width, dimensions.height, canvas);
+      };
     };
   };
   pub setCondition = (condition: RenderCondition.t) => {
-    _lastCondition = condition;
+    _condition = Some(condition);
+  };
+  pub setBackgroundColor = (color: Color.t) => {
+    _backgroundColor = color;
   };
 };

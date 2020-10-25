@@ -28,6 +28,14 @@ module Platform = {
   include Platform;
 };
 
-module Utility = Revery_Utility;
+module Debug = {
+  let enable = Revery_Draw.DebugDraw.enable;
+  let disable = Revery_Draw.DebugDraw.disable;
+  let isEnabled = Revery_Draw.DebugDraw.isEnabled;
+};
+
+module Utility = {
+  include Revery_Utility;
+};
 
 module SVG = Revery_SVG;

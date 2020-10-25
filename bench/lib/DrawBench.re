@@ -6,7 +6,7 @@ open Revery.Draw;
 let options = Reperf.Options.create(~iterations=10000, ());
 
 let setup = () => {
-  let surface = SurfaceUtility.makeSurface(800l, 600l);
+  let surface = SurfaceUtility.makeSurface(800l, 600l) |> Option.get;
   CanvasContext.createFromSurface(surface);
 };
 

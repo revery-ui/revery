@@ -7,9 +7,11 @@ type t = {
   zIndex: int,
   opacity: float,
   canvas: Revery_Draw.CanvasContext.t,
+  debug: bool,
 };
 
-let create = (~canvas, ~zIndex: int, ~opacity: float, ()) => {
+let create = (~debug, ~canvas, ~zIndex: int, ~opacity: float, ()) => {
+  debug,
   canvas,
   zIndex,
   opacity,
