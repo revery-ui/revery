@@ -2,7 +2,14 @@ module Time = Revery_Core.Time;
 module Spring = Revery_UI.Spring;
 
 let spring =
-    (~enabled=true, ~target, ~initialState=?, ~restThreshold=0.1, options) => {
+    (
+      ~enabled=true,
+      ~name,
+      ~target,
+      ~initialState=?,
+      ~restThreshold=0.1,
+      options,
+    ) => {
   let initialState =
     switch (initialState) {
     | Some(state) => state
@@ -18,7 +25,7 @@ let spring =
       || Float.abs(target -. previousState^.value) > restThreshold
     );
 
-  let%hook (time, _) = Timer.timer(~active=isActive, ());
+  let%hook (time, _) = Timer.timer(~name, ~active=isActive, ());
 
   let state = Spring.tick(target, previousState^, options, time);
   previousState := state;
