@@ -90,7 +90,15 @@ let render =
       CanvasContext.setRootTransform(skiaRoot, canvas);
       let debug = DebugDraw.isEnabled();
       let drawContext =
-        NodeDrawContext.create(~debug, ~canvas, ~zIndex=0, ~opacity=1.0, ());
+        NodeDrawContext.create(
+          ~canvasScalingFactor,
+          ~dpi=pixelRatio,
+          ~debug,
+          ~canvas,
+          ~zIndex=0,
+          ~opacity=1.0,
+          (),
+        );
 
       let backgroundColor = Window.getBackgroundColor(window);
       CanvasContext.clear(~color=backgroundColor |> Color.toSkia, canvas);

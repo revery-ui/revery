@@ -58,6 +58,8 @@ let render = (window: t, elem) => {
   CanvasContext.setRootTransform(skiaRoot, canvasContext);
   let drawContext =
     NodeDrawContext.create(
+      ~canvasScalingFactor=1.0,
+      ~dpi=1.0,
       ~debug=false,
       ~canvas=canvasContext,
       ~zIndex=0,

@@ -93,13 +93,16 @@ class layerNode (condition: RenderCondition.t) = {
       );
     };
   };
-  pub! draw = ({canvas, opacity, _} as parentContext: NodeDrawContext.t) => {
+  pub! draw =
+       (
+         {canvas, opacity, dpi, canvasScalingFactor, _} as parentContext: NodeDrawContext.t,
+       ) => {
     let dimensions = _this#measurements();
     let world = _this#getWorldTransform();
 
     let wasRecreated =
       _this#createOrInitializeLayer(
-        ~dpi=1.0,
+        ~dpi,
         ~width=dimensions.width,
         ~height=dimensions.height,
         parentContext,
@@ -121,6 +124,10 @@ class layerNode (condition: RenderCondition.t) = {
         // We need to 'undo' the world transform, to transform the children
         // back into a coordinate space where [0, 0] is the layer space.
         let _: bool = Skia.Matrix.invert(world, _inverseWorld);
+
+        // But reapply the root scaling transform...
+        let skiaRoot = Skia.Matrix.makeScale(1., 1., 0., 0.);
+        Skia.Matrix.concat(_inverseWorld, _inverseWorld, skiaRoot);
 
         let newContext: NodeDrawContext.t = {
           ...parentContext,
