@@ -73,6 +73,7 @@ module Example = {
       Hooks.reducer(~initialState=256.0, (value, _) => value);
     let%hook (logoWidth, setImmediately) =
       Hooks.spring(
+        ~name="Spring",
         ~target=targetPosition,
         ~initialState=
           Spring.{

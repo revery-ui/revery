@@ -12,13 +12,14 @@ let%component make =
                 ~children=React.empty,
                 ~onTick=noop,
                 ~tickRate=Time.seconds(1),
+                ~name="<Ticker />",
                 (),
               ) => {
   let%hook () =
     Hooks.effect(
       OnMount,
       () => {
-        let dispose = Revery_Core.Tick.interval(onTick, tickRate);
+        let dispose = Revery_Core.Tick.interval(~name, onTick, tickRate);
 
         Some(dispose);
       },

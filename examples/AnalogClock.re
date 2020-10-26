@@ -56,7 +56,11 @@ module AnalogClock = {
         OnMount,
         () => {
           let clear =
-            Tick.interval(_ => dispatch(UpdateTime), Time.seconds(1));
+            Tick.interval(
+              ~name="Clock Timer",
+              _ => dispatch(UpdateTime),
+              Time.seconds(1),
+            );
           Some(clear);
         },
       );

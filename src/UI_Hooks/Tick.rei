@@ -5,6 +5,7 @@ module Time = Revery_Core.Time;
 let tick:
   (
     ~tickRate: Time.t=?,
+    ~name: string,
     Time.t => unit,
     t((ref(Time.t => unit), Effect.t(Effect.onMount)) => 'a, 'b)
   ) =>

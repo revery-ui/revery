@@ -72,7 +72,7 @@ jobs:
     # ESY__NPM_ROOT: /usr/local/lib/node_modules/esy
 
   steps:
-  - script: brew update
+  - script: brew update-reset
   - script: brew install libpng ragel
   - script: node --version
   - template: .ci/restore-build-cache.yml
@@ -91,7 +91,7 @@ jobs:
     # ESY__NPM_ROOT: /usr/local/lib/node_modules/esy
 
   steps:
-  - script: brew update
+  - script: brew update-reset
   - script: brew install libpng ragel
   - script: node --version
   - template: .ci/restore-build-cache.yml

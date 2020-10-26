@@ -419,7 +419,11 @@ module GameOfLiveComponent = {
         ? dispatch(StopTimer)
         : {
           let dispose =
-            Tick.interval(t => dispatch(TimerTick(t)), Time.zero);
+            Tick.interval(
+              ~name="GameOfLife Timer",
+              t => dispatch(TimerTick(t)),
+              Time.zero,
+            );
           dispatch(StartTimer(dispose));
         };
 
