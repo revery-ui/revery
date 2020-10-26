@@ -17,10 +17,10 @@ class layerNode (condition: RenderCondition.t) = {
   // MUTABLE
   val _inverseWorld = Skia.Matrix.make();
   pri createOrInitializeLayer =
-      (~width, ~height, ~dpi, {canvas, _}: NodeDrawContext.t) => {
-    prerr_endline("DPI: " ++ string_of_float(dpi));
-    let adjustedWidth = int_of_float(float(width) *. dpi +. 0.5);
-    let adjustedHeight = int_of_float(float(height) *. dpi +. 0.5);
+      (~width, ~height, {canvas, dpi, canvasScalingFactor, _}: NodeDrawContext.t) => {
+    prerr_endline("DPI: " ++ string_of_float(dpi) ++ " CSF: " ++ string_of_float(canvasScalingFactor));
+    let adjustedWidth = int_of_float((float(width) *. dpi *. canvasScalingFactor) +. 0.5);
+    let adjustedHeight = int_of_float((float(height) *. dpi *. canvasScalingFactor) +. 0.5);
 
     switch (_maybeCanvas) {
     | None =>
@@ -103,7 +103,6 @@ class layerNode (condition: RenderCondition.t) = {
 
     let wasRecreated =
       _this#createOrInitializeLayer(
-        ~dpi,
         ~width=dimensions.width,
         ~height=dimensions.height,
         parentContext,
@@ -127,7 +126,7 @@ class layerNode (condition: RenderCondition.t) = {
         let _: bool = Skia.Matrix.invert(world, _inverseWorld);
 
         // But reapply the root scaling transform...
-        let skiaRoot = Skia.Matrix.makeScale(2., 2., 0., 0.);
+        let skiaRoot = Skia.Matrix.makeScale(dpi *. canvasScalingFactor, dpi *. canvasScalingFactor, 0., 0.);
         Skia.Matrix.concat(_inverseWorld, skiaRoot, _inverseWorld);
 
         let newContext: NodeDrawContext.t = {
@@ -150,7 +149,7 @@ class layerNode (condition: RenderCondition.t) = {
       };
 
       // Draw the cached layer. We always have to do this, every farme.
-      let drawRoot = Skia.Matrix.makeScale(0.5, 0.5, 0., 0.);
+      let drawRoot = Skia.Matrix.makeScale(1. /. (dpi *. canvasScalingFactor), 1. /. (dpi *. canvasScalingFactor), 0., 0.);
       Skia.Matrix.concat(drawRoot, world, drawRoot);
       Revery_Draw.CanvasContext.setMatrix(canvas, drawRoot);
       let layerPaint = Skia.Paint.make();
