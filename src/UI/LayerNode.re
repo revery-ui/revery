@@ -18,7 +18,6 @@ class layerNode (condition: RenderCondition.t) = {
   val _inverseWorld = Skia.Matrix.make();
   pri createOrInitializeLayer =
       (~width, ~height, {canvas, dpi, canvasScalingFactor, _}: NodeDrawContext.t) => {
-    prerr_endline("DPI: " ++ string_of_float(dpi) ++ " CSF: " ++ string_of_float(canvasScalingFactor));
     let adjustedWidth = int_of_float((float(width) *. dpi *. canvasScalingFactor) +. 0.5);
     let adjustedHeight = int_of_float((float(height) *. dpi *. canvasScalingFactor) +. 0.5);
 
