@@ -44,17 +44,6 @@ module Make = (ClockImpl: Clock) => {
     _activeTickers^ |> List.map(tf => tf.id);
   };
 
-  let _filterMap = (v: list(option('a))): list('a) => {
-    let rec f = v =>
-      switch (v) {
-      | [Some(hd), ...tail] => [hd, ...f(tail)]
-      | [None, ...tail] => f(tail)
-      | [] => []
-      };
-
-    f(v);
-  };
-
   let toString = () =>
     _activeTickers^
     |> List.fold_left(
@@ -66,6 +55,13 @@ module Make = (ClockImpl: Clock) => {
     // Add any newly-scheduled tickers
     _activeTickers := List.concat([_scheduledTickers^, _activeTickers^]);
     _scheduledTickers := [];
+
+    Log.tracef(m =>
+      m(
+        "Tick.pump - starting with %d active tickers.",
+        List.length(_activeTickers^),
+      )
+    );
 
     // Clear any pending tickers
     let cancelled = _cancelledTickers^;
@@ -98,7 +94,15 @@ module Make = (ClockImpl: Clock) => {
         Some(tf);
       };
     };
-    _activeTickers := _activeTickers^ |> List.map(f) |> _filterMap;
+    let newTickers = _activeTickers^ |> List.filter_map(f);
+    _activeTickers := newTickers;
+
+    Log.tracef(m =>
+      m(
+        "Tick.pump - ending with %d active tickers.",
+        List.length(_activeTickers^),
+      )
+    );
   };
 
   let _clear = (~name, id: int, ()) => {
