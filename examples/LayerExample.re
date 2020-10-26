@@ -2,14 +2,16 @@ open Revery.UI;
 
 module Layers = {
   let make = () => {
-    <Layer condition=RenderCondition.initial style=Style.[flexGrow(1)]>
+    <Layer
+      condition=Layer.Condition.always
+      style=Style.[flexGrow(1)]
+      backgroundColor=Revery.Colors.red>
       <View
         style=Style.[
           flexDirection(`Column),
           flexGrow(1),
           justifyContent(`Center),
           alignItems(`Center),
-          backgroundColor(Revery.Colors.red),
         ]>
         <Text text="Hello from inside a layer!" />
       </View>

@@ -15,7 +15,7 @@ let setup = () => {
   let surface = SurfaceUtility.makeSurface(800l, 600l) |> Option.get;
   let canvas = CanvasContext.createFromSurface(surface);
 
-  NodeDrawContext.create(~canvas, ~zIndex=0, ~opacity=1.0, ());
+  NodeDrawContext.create(~debug=false, ~canvas, ~zIndex=0, ~opacity=1.0, ());
 };
 
 module Data = {

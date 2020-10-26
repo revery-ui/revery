@@ -8,8 +8,7 @@ open Revery_Math;
 type t = {bbox: BoundingBox2d.t};
 
 module Internal = {
-  // TODO: Change back to false when we can toggle
-  let isEnabled: ref(bool) = ref(true);
+  let isEnabled: ref(bool) = ref(false);
   let activeRect: ref(option(t)) = ref(None);
 
   let paint = Skia.Paint.make();

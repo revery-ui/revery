@@ -129,10 +129,35 @@ module Sample = {
           );
 
           // And then draw the layer a bunch of places!
-          CanvasContext.drawLayer(~layer, ~x=300., ~y=300., canvasContext);
-          CanvasContext.drawLayer(~layer, ~x=264., ~y=264., canvasContext);
-          CanvasContext.drawLayer(~layer, ~x=264., ~y=300., canvasContext);
-          CanvasContext.drawLayer(~layer, ~x=300., ~y=264., canvasContext);
+          let paint = Skia.Paint.make();
+          CanvasContext.drawLayer(
+            ~paint,
+            ~layer,
+            ~x=300.,
+            ~y=300.,
+            canvasContext,
+          );
+          CanvasContext.drawLayer(
+            ~paint,
+            ~layer,
+            ~x=264.,
+            ~y=264.,
+            canvasContext,
+          );
+          CanvasContext.drawLayer(
+            ~paint,
+            ~layer,
+            ~x=264.,
+            ~y=300.,
+            canvasContext,
+          );
+          CanvasContext.drawLayer(
+            ~paint,
+            ~layer,
+            ~x=300.,
+            ~y=264.,
+            canvasContext,
+          );
         }}
       />
     </View>;

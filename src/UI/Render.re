@@ -103,7 +103,7 @@ let render =
         DebugDraw.draw(canvas);
       };
 
-      if (Window.shouldShowFPSCounter(window)) {
+      if (Window.shouldShowFPSCounter(window) || debug) {
         let w = float_of_int(adjustedWidth);
         let (x, y) = (w -. 64., 32.);
         let paint = Skia.Paint.make();
