@@ -18,6 +18,7 @@ class layerNode (condition: RenderCondition.t) = {
   val _inverseWorld = Skia.Matrix.make();
   pri createOrInitializeLayer =
       (~width, ~height, ~dpi, {canvas, _}: NodeDrawContext.t) => {
+    prerr_endline("DPI: " ++ string_of_float(dpi));
     let adjustedWidth = int_of_float(float(width) *. dpi +. 0.5);
     let adjustedHeight = int_of_float(float(height) *. dpi +. 0.5);
 
@@ -126,8 +127,8 @@ class layerNode (condition: RenderCondition.t) = {
         let _: bool = Skia.Matrix.invert(world, _inverseWorld);
 
         // But reapply the root scaling transform...
-        let skiaRoot = Skia.Matrix.makeScale(1., 1., 0., 0.);
-        Skia.Matrix.concat(_inverseWorld, _inverseWorld, skiaRoot);
+        let skiaRoot = Skia.Matrix.makeScale(2., 2., 0., 0.);
+        Skia.Matrix.concat(_inverseWorld, skiaRoot, _inverseWorld);
 
         let newContext: NodeDrawContext.t = {
           ...parentContext,
@@ -149,7 +150,9 @@ class layerNode (condition: RenderCondition.t) = {
       };
 
       // Draw the cached layer. We always have to do this, every farme.
-      Revery_Draw.CanvasContext.setMatrix(canvas, world);
+      let drawRoot = Skia.Matrix.makeScale(0.5, 0.5, 0., 0.);
+      Skia.Matrix.concat(drawRoot, world, drawRoot);
+      Revery_Draw.CanvasContext.setMatrix(canvas, drawRoot);
       let layerPaint = Skia.Paint.make();
       Skia.Paint.setColor(
         layerPaint,
