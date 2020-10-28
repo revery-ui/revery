@@ -9,17 +9,24 @@ open ViewNode;
 class layerNode (condition: RenderCondition.t) = {
   as _this;
   inherit (class viewNode)() as _super;
-  val mutable _backgroundColor: Color.t = Colors.magenta;
+  val mutable _backgroundColor: Skia.Color.t = Colors.white |> Color.toSkia;
   val mutable _lastCondition: option(RenderCondition.t) = None;
   val mutable _condition: option(RenderCondition.t) = Some(condition);
   val mutable _maybeCanvas: option(CanvasContext.t) = None;
   val mutable _lastRenderTime: option(float) = None;
   // MUTABLE
-  val _inverseWorld = Skia.Matrix.make();
+  val _inverseWorld = Skia.Matrix.make(); // The inverseWorld is used to 'undo' the world transform to give the interior contents a blank slate
+  val _layerPaint = Skia.Paint.make();
   pri createOrInitializeLayer =
-      (~width, ~height, {canvas, dpi, canvasScalingFactor, _}: NodeDrawContext.t) => {
-    let adjustedWidth = int_of_float((float(width) *. dpi *. canvasScalingFactor) +. 0.5);
-    let adjustedHeight = int_of_float((float(height) *. dpi *. canvasScalingFactor) +. 0.5);
+      (
+        ~width,
+        ~height,
+        {canvas, dpi, canvasScalingFactor, _}: NodeDrawContext.t,
+      ) => {
+    let adjustedWidth =
+      int_of_float(float(width) *. dpi *. canvasScalingFactor +. 0.5);
+    let adjustedHeight =
+      int_of_float(float(height) *. dpi *. canvasScalingFactor +. 0.5);
 
     switch (_maybeCanvas) {
     | None =>
@@ -111,6 +118,7 @@ class layerNode (condition: RenderCondition.t) = {
       wasRecreated
       || RenderCondition.shouldRenderOpt(_lastCondition, _condition);
 
+    let totalScaleFactor = dpi *. canvasScalingFactor;
     switch (_maybeCanvas) {
     | None => ()
     | Some(layerCanvas) =>
@@ -125,8 +133,9 @@ class layerNode (condition: RenderCondition.t) = {
         let _: bool = Skia.Matrix.invert(world, _inverseWorld);
 
         // But reapply the root scaling transform...
-        let skiaRoot = Skia.Matrix.makeScale(dpi *. canvasScalingFactor, dpi *. canvasScalingFactor, 0., 0.);
-        Skia.Matrix.concat(_inverseWorld, skiaRoot, _inverseWorld);
+        let skiaRoot =
+          Skia.Matrix.makeScale(totalScaleFactor, totalScaleFactor, 0., 0.);
+        Skia.Matrix.postConcat(_inverseWorld, skiaRoot);
 
         let newContext: NodeDrawContext.t = {
           ...parentContext,
@@ -135,11 +144,7 @@ class layerNode (condition: RenderCondition.t) = {
           zIndex: 0,
         };
 
-        // TODO: Account for scaling here, as well!
-        CanvasContext.clear(
-          ~color=_backgroundColor |> Color.toSkia,
-          layerCanvas,
-        );
+        CanvasContext.clear(~color=_backgroundColor, layerCanvas);
         CanvasContext.setRootTransform(_inverseWorld, layerCanvas);
 
         _super#draw(newContext);
@@ -148,17 +153,23 @@ class layerNode (condition: RenderCondition.t) = {
       };
 
       // Draw the cached layer. We always have to do this, every farme.
-      let drawRoot = Skia.Matrix.makeScale(1. /. (dpi *. canvasScalingFactor), 1. /. (dpi *. canvasScalingFactor), 0., 0.);
-      Skia.Matrix.concat(drawRoot, world, drawRoot);
+      let drawRoot =
+        Skia.Matrix.makeScale(
+          1. /. totalScaleFactor,
+          1. /. totalScaleFactor,
+          0.,
+          0.,
+        );
+      Skia.Matrix.postConcat(drawRoot, world);
       Revery_Draw.CanvasContext.setMatrix(canvas, drawRoot);
-      let layerPaint = Skia.Paint.make();
+
       Skia.Paint.setColor(
-        layerPaint,
+        _layerPaint,
         Colors.white |> Color.multiplyAlpha(opacity) |> Color.toSkia,
       );
       // [x] and [y] are 0. because this is accounted for in the world transform
       CanvasContext.drawLayer(
-        ~paint=layerPaint,
+        ~paint=_layerPaint,
         ~layer=layerCanvas,
         ~x=0.,
         ~y=0.,
@@ -166,6 +177,7 @@ class layerNode (condition: RenderCondition.t) = {
       );
 
       if (parentContext.debug) {
+        Revery_Draw.CanvasContext.setMatrix(canvas, world);
         _this#debugDraw(dimensions.width, dimensions.height, canvas);
       };
     };
@@ -174,6 +186,6 @@ class layerNode (condition: RenderCondition.t) = {
     _condition = Some(condition);
   };
   pub setBackgroundColor = (color: Color.t) => {
-    _backgroundColor = color;
+    _backgroundColor = color |> Color.toSkia;
   };
 };
