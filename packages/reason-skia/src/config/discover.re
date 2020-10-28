@@ -105,7 +105,7 @@ let flags = os =>
   | Windows =>
     []
     @ cclib("-lskia")
-    @ cclib(sdl2FilePath)
+    @ cclib("-lSDL2")
     @ ccopt("-L" ++ getenv("SDL2_LIB_PATH"))
     @ ccopt("-L" ++ getenv("SKIA_LIB_PATH"))
   };
@@ -249,7 +249,7 @@ let libs = os =>
     []
     @ ["-luser32"]
     @ ["-lskia"]
-    @ [sdl2FilePath]
+    @ ["-lSDL2"]
     @ ["-lstdc++"]
     @ ["-L" ++ getenv("SDL2_LIB_PATH")]
     @ ["-L" ++ getenv("SKIA_LIB_PATH")]
