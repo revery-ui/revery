@@ -27,7 +27,13 @@ let spring =
 
   let%hook (time, _) = Timer.timer(~name, ~active=isActive, ());
 
-  let state = Spring.tick(target, previousState^, options, time);
+  let state =
+    if (enabled) {
+      Spring.tick(target, previousState^, options, time);
+    } else {
+      Spring.setPosition(target, previousState^);
+    };
+
   previousState := state;
 
   let setImmediately = position =>
