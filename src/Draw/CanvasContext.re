@@ -101,7 +101,6 @@ let create = (gpuContext, window: Revery_Core.Window.t) => {
 };
 
 let createLayer = (~forceCpu=false, ~width, ~height, context: t) => {
-  prerr_endline(Printf.sprintf("Creating layer: %ldx%ld", width, height));
   Log.infof(m => m("Creating layer: %ldx%ld", width, height));
   let width =
     if (width <= 0l) {
