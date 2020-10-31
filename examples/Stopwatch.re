@@ -57,7 +57,11 @@ module Clock = {
          */
         : {
           let dispose =
-            Tick.interval(t => dispatch(TimerTick(t)), Time.zero);
+            Tick.interval(
+              ~name="Stopwatch Interval",
+              t => dispatch(TimerTick(t)),
+              Time.zero,
+            );
 
           /* We'll also keep a handle on the dispose function so we can make sure its called on stop*/
           dispatch(Start(dispose));

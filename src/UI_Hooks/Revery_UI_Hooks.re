@@ -11,9 +11,10 @@ include Tick;
 let time = Timer.time;
 let timer = Timer.timer;
 
-let animation = (~active=true, ~onComplete=() => (), animation) => {
+let animation = (~active=true, ~onComplete=() => (), ~name, animation) => {
   let%hook (isCompleted, setCompleted) = state(false);
-  let%hook (time, resetTimer) = timer(~active=active && !isCompleted, ());
+  let%hook (time, resetTimer) =
+    timer(~name, ~active=active && !isCompleted, ());
 
   let (value, animationState) = Animation.apply(time, animation);
 
@@ -48,6 +49,7 @@ module Internal = {
         ~delay=Time.zero,
         ~easing=Easing.linear,
         ~initialValue=?,
+        ~name,
         specifiedTargetValue,
       ) => {
     let initialValue =
@@ -71,7 +73,8 @@ module Internal = {
       |> Animation.ease(easing)
       |> Animation.tween(startValue, targetValue);
 
-    let%hook (value, _animationState, resetTimer) = animation(~active, anim);
+    let%hook (value, _animationState, resetTimer) =
+      animation(~name, ~active, anim);
 
     let value = active ? value : specifiedTargetValue;
 

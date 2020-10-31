@@ -2,14 +2,14 @@ open Effect;
 open Reducer;
 open Tick;
 
-let time = (~tickRate=Time.zero, ()) => {
+let time = (~tickRate=Time.zero, ~name, ()) => {
   let%hook (time, setTime) = reducer(~initialState=Time.now(), t => t);
-  let%hook () = tick(~tickRate, _dt => setTime(_t => Time.now()));
+  let%hook () = tick(~tickRate, ~name, _dt => setTime(_t => Time.now()));
 
   time;
 };
 
-let timer = (~tickRate=Time.zero, ~active=true, ()) => {
+let timer = (~tickRate=Time.zero, ~active=true, ~name, ()) => {
   let%hook (time, setTime) = reducer(~initialState=Time.now(), t => t);
   let%hook startTime = Ref.ref(time);
 
@@ -43,7 +43,7 @@ let timer = (~tickRate=Time.zero, ~active=true, ()) => {
 
         Option.iter(dispose => dispose(), lastDispose^);
 
-        let stopInterval = Revery_Core.Tick.interval(onTick, tickRate);
+        let stopInterval = Revery_Core.Tick.interval(~name, onTick, tickRate);
         lastDispose := Some(stopInterval);
 
         Some(stopInterval);

@@ -11,7 +11,8 @@ describe("Hooks", ({describe, _}) => {
   describe("Timer", ({test, _}) => {
     module SingleTimer = {
       let%component make = (~timerActive, ()) => {
-        let%hook (_dt, _reset) = Hooks.timer(~active=timerActive, ());
+        let%hook (_dt, _reset) =
+          Hooks.timer(~name="SingleTimer", ~active=timerActive, ());
 
         <View />;
       };
@@ -19,8 +20,10 @@ describe("Hooks", ({describe, _}) => {
 
     module DoubleTimer = {
       let%component make = (~timer1Active, ~timer2Active, ()) => {
-        let%hook (_dt, _reset) = Hooks.timer(~active=timer1Active, ());
-        let%hook (_dt, _reset) = Hooks.timer(~active=timer2Active, ());
+        let%hook (_dt, _reset) =
+          Hooks.timer(~name="DoubleTimer1", ~active=timer1Active, ());
+        let%hook (_dt, _reset) =
+          Hooks.timer(~name="DoubleTimer2", ~active=timer2Active, ());
         <View />;
       };
     };
@@ -118,7 +121,7 @@ describe("Hooks", ({describe, _}) => {
   describe("Tick", ({test, _}) => {
     module Ticker = {
       let%component make = (~f, ()) => {
-        let%hook () = Hooks.tick(~tickRate=Time.zero, f);
+        let%hook () = Hooks.tick(~name="Ticker", ~tickRate=Time.zero, f);
 
         <View />;
       };

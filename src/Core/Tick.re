@@ -1,5 +1,7 @@
 module type Clock = {let time: unit => Time.t;};
 
+module Log = (val Log.withNamespace("Revery.Tick"));
+
 module DefaultClock = {
   let time = Time.now;
 };
@@ -42,17 +44,6 @@ module Make = (ClockImpl: Clock) => {
     _activeTickers^ |> List.map(tf => tf.id);
   };
 
-  let _filterMap = (v: list(option('a))): list('a) => {
-    let rec f = v =>
-      switch (v) {
-      | [Some(hd), ...tail] => [hd, ...f(tail)]
-      | [None, ...tail] => f(tail)
-      | [] => []
-      };
-
-    f(v);
-  };
-
   let toString = () =>
     _activeTickers^
     |> List.fold_left(
@@ -64,6 +55,13 @@ module Make = (ClockImpl: Clock) => {
     // Add any newly-scheduled tickers
     _activeTickers := List.concat([_scheduledTickers^, _activeTickers^]);
     _scheduledTickers := [];
+
+    Log.tracef(m =>
+      m(
+        "Tick.pump - starting with %d active tickers.",
+        List.length(_activeTickers^),
+      )
+    );
 
     // Clear any pending tickers
     let cancelled = _cancelledTickers^;
@@ -96,22 +94,34 @@ module Make = (ClockImpl: Clock) => {
         Some(tf);
       };
     };
-    _activeTickers := _activeTickers^ |> List.map(f) |> _filterMap;
+    let newTickers = _activeTickers^ |> List.filter_map(f);
+    _activeTickers := newTickers;
+
+    Log.tracef(m =>
+      m(
+        "Tick.pump - ending with %d active tickers.",
+        List.length(_activeTickers^),
+      )
+    );
   };
 
-  let _clear = (id: int, ()) => {
+  let _clear = (~name, id: int, ()) => {
+    Log.tracef(m => m("Clearing interval/timeout: %s %d", name, id));
     _cancelledTickers := IntMap.add(id, true, _cancelledTickers^);
   };
 
   exception Stop;
 
-  let interval = (f: callback, frequency: Time.t) => {
+  let interval = (~name: string, f: callback, frequency: Time.t) => {
     let id = TickId.getUniqueId();
+    Log.tracef(m => m("Interval - starting timer: %s %d", name, id));
 
-    let f = t =>
+    let f = t => {
+      Log.tracef(m => m("Interval - running timer: %s %d", name, id));
       try(f(t)) {
-      | Stop => _clear(id, ())
+      | Stop => _clear(~name, id, ())
       };
+    };
 
     let tf: tickFunction = {
       tickType: Interval,
@@ -122,13 +132,15 @@ module Make = (ClockImpl: Clock) => {
     };
 
     _scheduledTickers := [tf, ..._scheduledTickers^];
-    _clear(id);
+    _clear(~name, id);
   };
 
-  let timeout = (f, waitTime: Time.t) => {
+  let timeout = (~name, f, waitTime: Time.t) => {
     let id = TickId.getUniqueId();
+    Log.tracef(m => m("Timeout - starting timer: %s %d", name, id));
 
     let f = _t => {
+      Log.tracef(m => m("Timeout - running timer: %s %d", name, id));
       f();
     };
 
@@ -141,7 +153,7 @@ module Make = (ClockImpl: Clock) => {
     };
 
     _scheduledTickers := [tf, ..._scheduledTickers^];
-    _clear(id);
+    _clear(~name, id);
   };
 };
 

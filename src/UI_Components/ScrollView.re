@@ -45,11 +45,17 @@ let bounceAnimationHook = (scrollPosition, bouncingState, setBouncingState) => {
   switch (bouncingState) {
   | Idle =>
     // TODO: Why isn't Animation.const always sufficient to stop the timer?
-    Hooks.animation(~active=false, Animation.const(scrollPosition))
+    Hooks.animation(
+      ~name="Revery:ScrollView:Bounce Animation Hook (Idle)",
+      ~active=false,
+      Animation.const(scrollPosition),
+    )
 
   | Bouncing(force) =>
     Hooks.animation(
-      bounceAnimation(~origin=scrollPosition, ~force), ~onComplete=() =>
+      ~name="Revery:ScrollView:Bounce Animation Hook (Bouncing)",
+      bounceAnimation(~origin=scrollPosition, ~force),
+      ~onComplete=() =>
       setBouncingState(_ => Idle)
     )
   };
