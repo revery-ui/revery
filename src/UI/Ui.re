@@ -184,7 +184,10 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
       forceLayout := false;
 
       _activeWindow := Some(window);
-      Render.render(~forceLayout=fl, ui, latestElement^);
+      let forceRerender = Render.render(~forceLayout=fl, ui, latestElement^);
+      if (forceRerender) {
+        uiDirty := true
+      }
     },
   );
 
