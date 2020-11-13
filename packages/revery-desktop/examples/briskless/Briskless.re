@@ -9,16 +9,10 @@ let initialState = {width: 800, height: 600, clicked: ""};
 let currentState = ref(initialState);
 
 module Color = {
-  let blue = 
-                 Skia.Color.makeArgb(
-                   0xFFl,
-                   0x00l,
-                   0x00l,
-                   0xFFl,
-                 );
+  let blue = Skia.Color.makeArgb(0xFFl, 0x00l, 0x00l, 0xFFl);
   let red = Skia.Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l);
   let green = Skia.Color.makeArgb(0xFFl, 0x00l, 0xFFl, 0x00l);
-  }
+};
 
 module JSXComponents = {
   open Primitives;
@@ -34,12 +28,7 @@ module JSXComponents = {
 
   let sizedBox = (~width, ~height, ~children as child, ()) =>
     Widget.ConstrainedBox({
-      constraints: {
-        minWidth: width,
-        maxWidth: width,
-        minHeight: height,
-        maxHeight: height,
-      },
+      constraints: BoxConstraints.tight(~width, ~height),
       child,
     });
 
@@ -50,44 +39,70 @@ module JSXComponents = {
     Widget.Padding({left, top, bottom, right, child});
 };
 
+module State = {
+  open Primitives;
+
+  let create = initialValue => {
+    let witness = Univ.Witness.create();
+    (~children as render, ()) =>
+      Widget.Effect({
+        equal: (_, _) => false,
+        mount: (~invalidate as _) => Univ.pack(witness, ref(initialValue)),
+        render: (~invalidate, state) => {
+          let state = Univ.unpack(witness, state) |> Option.get;
+          let setState = value => {
+            state.contents = value;
+            invalidate();
+          };
+
+          render(state.contents, setState);
+        },
+        unmount: _state => (),
+      });
+  };
+};
+
 // APP
 
-let setClicked = clicked => currentState := {...currentState^, clicked};
+let setClicked = clicked => {
+  Console.log(clicked);
+  currentState := {...currentState^, clicked};
+};
 
 open JSXComponents;
 
 let button = (~label, ~color, ~width=50, ~height=20, ~children as _, ()) =>
   <sizedBox width height>
-       ...<clickable onClick={() => setClicked(label)}>
-            ...<box color>
-                 ...<text text=label />
-               </box>
-          </clickable>
-     </sizedBox>;
+    ...<clickable onClick={() => setClicked(label)}>
+         ...<box color> ...<text text=label /> </box>
+       </clickable>
+  </sizedBox>;
 
 let app = (~state, ~children as _, ()) =>
-    <row>
-      (
-        `Weight(1),
-        <clickable onClick={() => setClicked("red")}>
-          ...<box color=Color.red>
-               ...<align alignment=`topCenter>
-                ...<padding top=10>
-                    ...<button label="blue" color=Color.blue />
+  <row>
+    (
+      `Weight(1),
+      <clickable onClick={() => setClicked("red")}>
+        ...<box color=Color.red>
+             ...<padding top=10>
+                  ...<align alignment=`topCenter>
+                       ...<button label="blue" color=Color.blue />
+                     </align>
                 </padding>
-                  </align>
-             </box>
-        </clickable>,
-      )
-      (
-        `Weight(1),
-        <clickable onClick={() => setClicked("green")}>
-          ...<box color=Color.green>
-               ...<text text={state.clicked} />
-             </box>
-        </clickable>,
-      )
-    </row>;
+           </box>
+      </clickable>,
+    )
+    (
+      `Weight(1),
+      <clickable onClick={() => setClicked("green")}>
+        ...<box color=Color.green>
+             ...<align alignment=`center>
+                  ...<text text={state.clicked} />
+                </align>
+           </box>
+      </clickable>,
+    )
+  </row>;
 
 let window =
   Window.create(
@@ -100,17 +115,24 @@ let window =
       ),
   );
 
-let render = () => {
-  Window.render(<app state=currentState^ />, window);
+let renderElement = () => {
+  let spec = <app state=currentState^ />;
+  Primitives.WidgetElement.fromSpec(spec);
 };
 
-render();
+let element = ref(renderElement());
+Window.render(element.contents, window);
+
+let render = () => {
+  element := renderElement();
+  Window.render(element.contents, window);
+};
 
 Sdl2.renderLoop(() => {
   switch (Sdl2.Event.wait()) {
   | Ok(MouseButtonDown({x, y, _})) =>
     //      Printf.printf("mouse down: %n, %n\n%!", x, y);
-    Window.handleClick(x, y, <app state=currentState^ />, window);
+    Primitives.WidgetElement.handleClick(~x, ~y, element.contents);
     render();
 
   | Ok(Quit) => exit(0)

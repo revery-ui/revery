@@ -62,6 +62,8 @@ open {
        };
      };
 
+open Primitives;
+
 type t = {
   handle: Sdl2.Window.t,
   id: int,
@@ -81,7 +83,7 @@ let create = (~title, ~width, ~height, ~onResize) => {
   {handle, id: Sdl2.Window.getId(handle), onResize};
 };
 
-let render = (widget, window) => {
+let render = (element, window) => {
   //    Console.log("renderWindow");
   let glContext = Sdl2.Gl.setup(window.handle);
 
@@ -100,28 +102,32 @@ let render = (widget, window) => {
 
   let Sdl2.Size.{width, height} = Sdl2.Window.getSize(window.handle);
 
-  let layout =
-    Primitives.Widget.layout(
-      {minWidth: 0, maxWidth: width, minHeight: 0, maxHeight: height},
-      widget,
-    );
-  let layout = {Primitives.Widget.x: 0, y: 0, layout, widget};
-  let layout = Primitives.Widget.globalizeLayoutPositions(layout);
-  Console.log(Primitives.Widget.show_positionedLayout(layout));
-  Primitives.Widget.render(canvas, layout);
+  let constraints =
+    BoxConstraints.{
+      width: {
+        min: 0,
+        max: width,
+      },
+      height: {
+        min: 0,
+        max: height,
+      },
+    };
+
+  WidgetElement.performLayout(constraints, element);
+  element.position = Some({x: 0, y: 0});
+  WidgetElement.render(canvas, element);
+
+  // let layout =
+  //   Primitives.Widget.layout(
+  //     {minWidth: 0, maxWidth: width, minHeight: 0, maxHeight: height},
+  //     widget,
+  //   );
+  // let layout = {Primitives.Widget.x: 0, y: 0, layout, widget};
+  // let layout = Primitives.Widget.globalizeLayoutPositions(layout);
+  // Console.log(Primitives.Widget.show_positionedLayout(layout));
+  // Primitives.Widget.render(canvas, layout);
 
   Skia.Canvas.flush(canvas);
   Sdl2.Gl.swapWindow(window.handle);
-};
-
-let handleClick = (x, y, widget, window) => {
-  let Sdl2.Size.{width, height} = Sdl2.Window.getSize(window.handle);
-  let layout =
-    Primitives.Widget.layout(
-      {minWidth: 0, maxWidth: width, minHeight: 0, maxHeight: height},
-      widget,
-    );
-  let layout = {Primitives.Widget.x: 0, y: 0, layout, widget};
-  let layout = Primitives.Widget.globalizeLayoutPositions(layout);
-  Primitives.Widget.handleClick(~x, ~y, layout);
 };
