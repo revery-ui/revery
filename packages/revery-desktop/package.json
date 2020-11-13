@@ -26,12 +26,12 @@
     "@glennsl/timber": "^1.2.0"
   },
   "resolutions": {
-  },
-  "devDependencies": {
     "reason-sdl2": "link:../reason-sdl2",
     "reason-skia": "link:../reason-skia",
     "reason-harfbuzz": "link:../reason-harfbuzz",
-    "zed": "link:../zed",
+    "zed": "link:../zed"
+  },
+  "devDependencies": {
     "ocaml": "4.10.0",
     "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6"
   }
