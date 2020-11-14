@@ -12,6 +12,7 @@ module Color = {
   let blue = Skia.Color.makeArgb(0xFFl, 0x00l, 0x00l, 0xFFl);
   let red = Skia.Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l);
   let green = Skia.Color.makeArgb(0xFFl, 0x00l, 0xFFl, 0x00l);
+  let white = Skia.Color.makeArgb(0xFFl, 0xFFl, 0xFFl, 0xFFl);
 };
 
 module JSXComponents = {
@@ -21,7 +22,19 @@ module JSXComponents = {
 
   let box = (~color, ~children as child, ()) => Widget.Box({color, child});
 
-  let text = (~text, ~children as _, ()) => Widget.Text(text);
+  let text =
+      (
+        ~text,
+        ~fontFamily,
+        ~size,
+        ~weight=500,
+        ~italic=false,
+        ~color=Color.white,
+        ~lineHeight=1.4,
+        ~children as _,
+        (),
+      ) =>
+    Widget.Text({text, fontFamily, size, weight, italic, color, lineHeight});
 
   let clickable = (~onClick, ~children as child, ()) =>
     Widget.Clickable({onClick, child});
@@ -74,7 +87,11 @@ open JSXComponents;
 let button = (~label, ~color, ~width=50, ~height=20, ~children as _, ()) =>
   <sizedBox width height>
     ...<clickable onClick={() => setClicked(label)}>
-         ...<box color> ...<text text=label /> </box>
+         ...<box color>
+              ...<padding top=4 left=8>
+                   ...<text text=label fontFamily="Liberation Sans" size=12. />
+                 </padding>
+            </box>
        </clickable>
   </sizedBox>;
 
@@ -97,7 +114,11 @@ let app = (~state, ~children as _, ()) =>
       <clickable onClick={() => setClicked("green")}>
         ...<box color=Color.green>
              ...<align alignment=`center>
-                  ...<text text={state.clicked} />
+                  ...<text
+                       text={state.clicked}
+                       fontFamily="Liberation Sans"
+                       size=12.
+                     />
                 </align>
            </box>
       </clickable>,

@@ -10,6 +10,7 @@
   (libraries
     reason-skia
     reason-sdl2
+    reason-harfbuzz
     lwt
     integers
     reason-skia.wrapped.bindings

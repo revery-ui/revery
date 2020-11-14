@@ -7,6 +7,85 @@ type position = {
   y: int,
 };
 
+module FontManager = {
+  let instance = Skia.FontManager.makeDefault();
+};
+
+module Font = {
+  let skiaFaceToHarfbuzzFace = skiaFace => {
+    let stream = Skia.Typeface.toStream(skiaFace);
+    let length = Skia.Stream.getLength(stream);
+    let data = Skia.Data.makeFromStream(stream, length);
+    let bytes = Skia.Data.makeString(data);
+
+    Harfbuzz.hb_face_from_data(bytes);
+  };
+
+  let loadHbface = typeface => {
+    let harfbuzzFace = skiaFaceToHarfbuzzFace(typeface);
+
+    switch (harfbuzzFace) {
+    | Ok(hbFace) =>
+      Console.log("Loaded: " ++ Skia.Typeface.getFamilyName(typeface));
+      Ok(hbFace);
+    | Error(msg) => Error("Error loading typeface: " ++ msg)
+    };
+  };
+
+  let latest = ref(None);
+
+  let resolve = (~italic, weight, family) => {
+    let style = Skia.FontStyle.make(weight, 5, italic ? Italic : Upright);
+    let maybeSkiaface =
+      Skia.FontManager.matchFamilyStyle(FontManager.instance, family, style);
+
+    switch (maybeSkiaface) {
+    | Some(skiaface) =>
+      loadHbface(skiaface) |> Result.map(hbface => (skiaface, hbface))
+    | None => Error("Unable to find matching Skia typeface: " ++ family)
+    };
+  };
+  let resolve = (~italic, weight, family) => {
+    // TODO: proper cache, this is just a workaround to avoid crashing
+    switch (latest^) {
+    | Some(font) => Ok(font)
+    | None =>
+      resolve(~italic, weight, family)
+      |> Result.map(font => {
+           latest := Some(font);
+           font;
+         })
+    };
+  };
+
+  let glyphsToString = shapes => {
+    let len = Array.length(shapes);
+    let bytes = Bytes.create(len * 2);
+
+    let i = ref(0);
+
+    while (i^ < len) {
+      let idx = i^;
+      let {glyphId, _}: Harfbuzz.hb_shape = shapes[idx];
+
+      let lowBit = glyphId land 255;
+      let highBit = (glyphId land 255 lsl 8) lsr 8;
+      Bytes.set(bytes, idx * 2 + 0, Char.chr(lowBit));
+      Bytes.set(bytes, idx * 2 + 1, Char.chr(highBit));
+
+      incr(i);
+    };
+
+    Bytes.to_string(bytes);
+  };
+
+  let shape = (hbface, text) => {
+    let glyphs = Harfbuzz.hb_shape(~features=[], hbface, text);
+
+    glyphsToString(glyphs);
+  };
+};
+
 module Constraint = {
   [@deriving show({with_path: false})]
   type t = {
@@ -147,7 +226,16 @@ module Widget = {
   [@deriving show({with_path: false})]
   //  [@warning "-30"]
   type t =
-    | Text(string): t
+    | Text({
+        text: string,
+        fontFamily: string,
+        size: float,
+        weight: int,
+        italic: bool,
+        color: [@opaque] Skia.Color.t,
+        lineHeight: float,
+      })
+      : t
     | ConstrainedBox({
         constraints: BoxConstraints.t,
         child: [@opaque] t,
@@ -366,13 +454,41 @@ module WidgetElement = {
     Skia.Canvas.setMatrix(canvas, transform);
 
     switch (element.spec) {
-    | Text(text) =>
-      let paint = Skia.Paint.make();
-      Skia.Paint.setColor(
-        paint,
-        Skia.Color.makeArgb(0xFFl, 0xFFl, 0xFFl, 0xFFl),
-      );
-      Skia.Canvas.drawText(canvas, text, 0., 20., paint);
+    | Text({text, fontFamily, size, weight, italic, color, lineHeight: _}) =>
+      // TODO: cache
+      switch (Font.resolve(~italic, weight, fontFamily)) {
+      | Error(msg) => Console.error(msg)
+      | Ok((skiaface, hbface)) =>
+        // TODO: cache
+        let paint = Skia.Paint.make();
+        Skia.Paint.setColor(paint, color);
+        Skia.Paint.setTextEncoding(paint, GlyphId);
+        Skia.Paint.setLcdRenderText(paint, true);
+        Skia.Paint.setAntiAlias(paint, true);
+        Skia.Paint.setTextSize(paint, size);
+        Skia.Paint.setTypeface(paint, skiaface);
+
+        // TODO: cache
+        let metrics = Skia.FontMetrics.make();
+        let _lineHeight = Skia.Paint.getFontMetrics(paint, metrics, 1.0);
+        let ascentPx = Skia.FontMetrics.getAscent(metrics);
+        // let lineHeightPx =
+        //   lineHeight
+        //   *. Text.lineHeight(
+        //        ~italic,
+        //        fontFamily,
+        //        size,
+        //        weight,
+        //      );
+
+        // TODO: cache
+        let baselineY = ascentPx *. (-1.0) /*+. lineHeightPx *. 0.*/;
+
+        // TODO: cache
+        let text = Font.shape(hbface, text);
+
+        Skia.Canvas.drawText(canvas, text, 0., baselineY, paint);
+      }
 
     | Box({color, _}) =>
       let paint = Skia.Paint.make();
