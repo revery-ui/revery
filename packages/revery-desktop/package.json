@@ -22,6 +22,7 @@
     "reason-sdl2": "*",
     "reason-skia": "*",
     "reason-harfbuzz": "*",
+    "reason-text-wrap": "*",
     "zed": "*",
     "@glennsl/timber": "^1.2.0"
   },
@@ -29,6 +30,7 @@
     "reason-sdl2": "link:../reason-sdl2",
     "reason-skia": "link:../reason-skia",
     "reason-harfbuzz": "link:../reason-harfbuzz",
+    "reason-text-wrap": "link:../reason-text-wrap",
     "zed": "link:../zed"
   },
   "devDependencies": {

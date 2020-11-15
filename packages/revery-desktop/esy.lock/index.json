@@ -1,5 +1,5 @@
 {
-  "checksum": "1dc1f39284a167c6f22d5c8a3b80ea8d",
+  "checksum": "a974f7ef9fe839c823613f3c76abbf6f",
   "root": "revery-desktop@link-dev:./package.json",
   "node": {
     "zed@link:../zed": {
@@ -43,8 +43,8 @@
       },
       "overrides": [],
       "dependencies": [
-        "zed@link:../zed", "reason-skia@link:../reason-skia",
-        "reason-sdl2@link:../reason-sdl2",
+        "zed@link:../zed", "reason-text-wrap@link:../reason-text-wrap",
+        "reason-skia@link:../reason-skia", "reason-sdl2@link:../reason-sdl2",
         "reason-harfbuzz@link:../reason-harfbuzz", "ocaml@4.10.0@d41d8cd9",
         "@opam/ppx_deriving@opam:4.5@d89f2934",
         "@opam/dune@opam:2.7.1@f5f493bc", "@opam/base@opam:v0.14.0@8bc55fce",
@@ -72,6 +72,18 @@
         "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:2.7.1@f5f493bc",
         "@opam/atdgen@opam:2.2.1@d73fda11",
         "@esy-ocaml/reason@3.6.2@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "reason-text-wrap@link:../reason-text-wrap": {
+      "id": "reason-text-wrap@link:../reason-text-wrap",
+      "name": "reason-text-wrap",
+      "version": "link:../reason-text-wrap",
+      "source": { "type": "link", "path": "../reason-text-wrap" },
+      "overrides": [],
+      "dependencies": [
+        "zed@link:../zed", "@opam/dune@opam:2.7.1@f5f493bc",
+        "@glennsl/timber@1.2.0@d41d8cd9", "@esy-ocaml/reason@3.6.2@d41d8cd9"
       ],
       "devDependencies": []
     },

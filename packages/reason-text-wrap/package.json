@@ -1,5 +1,5 @@
 {
-  "name": "reaspm-text-wrap",
+  "name": "reason-text-wrap",
   "version": "0.1.0",
   "description": "Text wrapping library",
   "scripts": {
@@ -10,16 +10,10 @@
       [
         "dune",
         "build",
-        "--root",
-        "."
+        "-p",
+        "reason-text-wrap"
       ]
-    ],
-    "install": [
-      "esy-installer"
     ]
-  },
-  "peerDependencies": {
-    "ocaml": "~4.6.0"
   },
   "dependencies": {
     "@esy-ocaml/reason": "^3.6.0",
