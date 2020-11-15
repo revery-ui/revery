@@ -11,6 +11,7 @@
     reason-skia
     reason-sdl2
     reason-harfbuzz
+    reason-text-wrap
     lwt
     integers
     reason-skia.wrapped.bindings

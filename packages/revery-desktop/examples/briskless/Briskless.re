@@ -9,9 +9,10 @@ let initialState = {width: 800, height: 600, clicked: ""};
 let currentState = ref(initialState);
 
 module Color = {
-  let blue = Skia.Color.makeArgb(0xFFl, 0x00l, 0x00l, 0xFFl);
   let red = Skia.Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l);
   let green = Skia.Color.makeArgb(0xFFl, 0x00l, 0xFFl, 0x00l);
+  let blue = Skia.Color.makeArgb(0xFFl, 0x00l, 0x00l, 0xFFl);
+  let purple = Skia.Color.makeArgb(0xFFl, 0x80l, 0x00l, 0x80l);
   let white = Skia.Color.makeArgb(0xFFl, 0xFFl, 0xFFl, 0xFFl);
 };
 
@@ -95,6 +96,17 @@ let button = (~label, ~color, ~width=50, ~height=20, ~children as _, ()) =>
        </clickable>
   </sizedBox>;
 
+let lorem = {|Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec blandit, lorem sit amet fermentum vehicula, ex velit aliquet elit, vel ultrices augue odio et urna. Morbi at leo pellentesque, tincidunt leo faucibus, consequat lacus. Pellentesque gravida, mauris in facilisis pellentesque, felis eros lobortis libero, sed volutpat enim tellus eget ante. Cras aliquet purus in nulla viverra pulvinar. Sed tincidunt venenatis pretium. Proin sagittis nisi auctor tempor gravida. Praesent placerat, mauris non luctus dapibus, lacus dui tincidunt felis, eu convallis urna velit sit amet odio. Nullam eu faucibus ligula. Maecenas elit dolor, lobortis eget urna at, bibendum porttitor purus. Nulla sodales vitae dolor at ultrices. Sed laoreet luctus ligula in ultricies. Curabitur a tellus ut nisl tincidunt tincidunt. Sed blandit purus imperdiet turpis euismod, rutrum egestas lorem tincidunt. Sed accumsan odio ligula, sed dapibus purus lobortis eu.
+
+Vestibulum sollicitudin mollis finibus. Sed pretium vel est sit amet venenatis. Sed ac tincidunt dui. In tempor egestas tempor. Pellentesque a justo nec dolor tincidunt placerat. Nunc tristique sed quam eget tempus. Nunc consequat eu erat a consectetur. Morbi accumsan rhoncus nunc eget efficitur. Aenean viverra nisi nisi, vel ultrices lectus faucibus eu. Aliquam erat volutpat. Mauris nunc lectus, iaculis eu dui et, ullamcorper aliquet lorem. Proin viverra vitae nisi tincidunt facilisis. Pellentesque vulputate purus sed nisl placerat posuere. Phasellus purus sem, hendrerit sed turpis mollis, ultricies gravida tortor. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+
+Donec augue mauris, aliquet interdum augue in, posuere aliquet eros. Vivamus at auctor augue. In vitae iaculis neque, non facilisis ante. Aliquam condimentum lorem vel ex tristique elementum. Proin ultricies enim dapibus dui volutpat tempus. Maecenas fringilla non sapien id vestibulum. Nulla quis leo justo. Cras elementum lectus purus. Praesent at magna a est varius bibendum. Morbi fermentum erat sit amet sodales tristique.
+
+Praesent tristique eu libero eu tempor. Duis quis metus vel sapien dignissim sagittis. Curabitur id scelerisque est. Cras aliquet lorem libero, et vestibulum purus tempor eu. In eget tortor massa. Integer dignissim facilisis feugiat. Duis enim dui, interdum id velit quis, consequat ullamcorper massa. Fusce blandit posuere bibendum. Donec vestibulum, tellus posuere suscipit ornare, sapien nisl viverra eros, nec lacinia odio urna id eros. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam porta, dolor quis rhoncus vehicula, lacus tortor imperdiet dui, at ultricies ipsum arcu euismod ligula. Sed vel urna porta, facilisis metus nec, dapibus tellus. Suspendisse lobortis malesuada porttitor. Nam a dolor vel ex ullamcorper feugiat at ut ex. Duis tincidunt euismod nunc sit amet tempor. In interdum libero justo, vel sollicitudin dui fermentum at.
+
+Nullam diam nisl, vehicula eu ante sagittis, tempor egestas ipsum. Maecenas efficitur scelerisque sapien et consectetur. Curabitur suscipit leo felis, eget pellentesque enim molestie in. Nulla facilisi. Ut efficitur vehicula metus, et pellentesque elit laoreet vitae. Integer pulvinar purus tincidunt, faucibus lectus quis, interdum libero. In pretium faucibus enim nec pretium.
+|};
+
 let app = (~state, ~children as _, ()) =>
   <row>
     (
@@ -103,7 +115,10 @@ let app = (~state, ~children as _, ()) =>
         ...<box color=Color.red>
              ...<padding top=10>
                   ...<align alignment=`topCenter>
-                       ...<button label="blue" color=Color.blue />
+                       ...<button
+                            label="blue kncdsl klcmds lkcmdsl"
+                            color=Color.blue
+                          />
                      </align>
                 </padding>
            </box>
@@ -120,6 +135,14 @@ let app = (~state, ~children as _, ()) =>
                        size=12.
                      />
                 </align>
+           </box>
+      </clickable>,
+    )
+    (
+      `Weight(1),
+      <clickable onClick={() => setClicked("purple")}>
+        ...<box color=Color.purple>
+             ...<text text=lorem fontFamily="Liberation Sans" size=12. />
            </box>
       </clickable>,
     )
