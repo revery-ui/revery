@@ -18,7 +18,7 @@ Framework for fast, native code, cross-platform GUI applications.
                 {li {{:#ComponentModel} Component Model}}
                 {li
                     {ul
-                        {li {{:#BasicComponentModel} Basic Components}}
+                        {li {{:#BasicFunctionalComponent} Basic Components}}
                         {li {{:#HooksComponent} Components with Hooks}}
                     }
                 }
@@ -31,7 +31,6 @@ Framework for fast, native code, cross-platform GUI applications.
                 {li {{:../Revery/Revery_Core/Colors/index.html} Colors}}
                 {li {{:../Revery/Revery_Core/Environment/index.html} Environment}}
                 {li {{:../Revery/Revery_Core/Key/index.html} Key}}
-                {li {{:../Revery/Revery_Core/Monitor/index.html} Monitor}}
                 {li {{:../Revery/Revery_Core/MouseButton/index.html} MouseButton}}
                 {li {{:../Revery/Revery_Core/MouseCursors/index.html} MouseCursors}}
                 {li {{:../Revery/Revery_Core/Tick/index.html} Tick}}
@@ -62,20 +61,19 @@ Framework for fast, native code, cross-platform GUI applications.
   {li Hooks}
   {li
     {ul
-                {li {{:../Revery/Revery_UI_Hooks__/Animation/index.html} animation}}
+                {li {{:../Revery/Revery_UI_Hooks/index.html#val-animation} animation}}
                 {li {{:../Revery/Revery_UI_Hooks__/Effect/index.html} effect}}
                 {li {{:../Revery/Revery_UI_Hooks__/Reducer/index.html} reducer}}
                 {li {{:../Revery/Revery_UI_Hooks__/Ref/index.html} ref}}
                 {li {{:../Revery/Revery_UI_Hooks__/State/index.html} state}}
                 {li {{:../Revery/Revery_UI_Hooks__/Tick/index.html} tick}}
-                {li {{:../Revery/Revery_UI_Hooks__/Transition/index.html} transition}}
+                {li {{:../Revery/Revery_UI_Hooks/index.html#val-transition} transition}}
     }
   }
   {li Math}
   {li
     {ul
                 {li {{:../Revery/Revery_Math/BoundingBox2d/index.html} BoundingBox2d}}
-                {li {{:../Revery/Revery_Math/Rectangle/index.html} Rectangle}}
     }
   }
   {li Platform}
@@ -89,13 +87,13 @@ Framework for fast, native code, cross-platform GUI applications.
 </nav>
 %}
 
-{2:overview Overview}
+{2:Overview Overview}
 
 Revery is a framework for building cross-platform GUI applications. Revery provides a React-like, functional approach for modeling UI, as well as scaffolding for managing the application lifecycle.
 
 Revery started as the foundation of {{:https://v2.onivim.io} Onivim 2}, but was factored out into a general toolkit for {{:https://reasonml.github.io} ReasonML} user interfaces.
 
-{2:quickstart Quickstart}
+{2:Quickstart Quickstart}
 
 There are two ways to get started:
 {ul
