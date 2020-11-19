@@ -96,7 +96,7 @@ let get_ios_config = () => {
 };
 let get_mac_config = () => {
   features: [COCOA],
-  cflags: ["-I", ".", "-x", "objective-c"],
+  cflags: ["-I", ".", "-x", "objective-c", "-Wno-deprecated-declarations"],
   libs: [],
   flags: [],
 };
