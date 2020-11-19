@@ -357,6 +357,9 @@ let setTitle = (v: t, title: string) => {
   Sdl2.Window.setTitle(v.sdlWindow, title);
 };
 
+let getTitlebarHeight = (v: t) =>
+  Sdl2.Window.getMacTitlebarHeight(v.sdlWindow);
+
 let setSize = (~width: int, ~height: int, win: t) => {
   Log.tracef(m => m("setSize - calling with: %ux%u", width, height));
   // On platforms that return a non-unit scale factor (Windows and Linux),
