@@ -39,7 +39,6 @@
 */
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
     [_sdlDelegate applicationDidFinishLaunching:notification];
-    [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
 }
 
 /* didActivateNotification
