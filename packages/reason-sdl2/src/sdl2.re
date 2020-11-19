@@ -236,6 +236,7 @@ module Window = {
   external setMacTitlebarHidden: t => unit = "resdl_SDL_SetMacTitlebarHidden";
   external setMacBackgroundColor: (t, float, float, float, float) => unit =
     "resdl_SDL_SetMacBackgroundColor";
+  external getMacTitlebarHeight: t => float = "resdl_SDL_GetMacTitlebarHeight";
 };
 
 module Gl = {
