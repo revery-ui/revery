@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 
-//#include "win32_target.h"
 #include <Shlobj.h>
 #include <Shobjidl.h>
 #include <Windows.h>
@@ -25,6 +24,7 @@ const char **revery_open_files_win32(const char *startDir, int canChooseFiles,
     const char **ret = malloc(1 * sizeof(char *));
     ret[0] = NULL;
 
+    // Right now, we split - either choose a directory, _or_ a file
     if (canChooseDirectories) {
         HRESULT hr = CoInitialize(NULL);
         if (SUCCEEDED(hr)) {
@@ -32,9 +32,7 @@ const char **revery_open_files_win32(const char *startDir, int canChooseFiles,
             BROWSEINFO bInfo;
             bInfo.hwndOwner = NULL;
             bInfo.pidlRoot = NULL;
-            bInfo.pszDisplayName =
-                szDir; // Address of a buffer to receive the display name of the
-            // folder selected by the user
+            bInfo.pszDisplayName = szDir;
             bInfo.lpszTitle = title;
             bInfo.ulFlags = BIF_USENEWUI | BIF_NEWDIALOGSTYLE;
             bInfo.lpfn = NULL;
@@ -45,17 +43,17 @@ const char **revery_open_files_win32(const char *startDir, int canChooseFiles,
             if (lpItem != NULL) {
 
                 if (SHGetPathFromIDList(lpItem, szDir)) {
-                    printf("OUT: %s\n", szDir);
+                    // free the 'default' return
                     free(ret);
+
                     ret = malloc(2 * sizeof(char *));
                     ret[0] = strdup(szDir);
                     ret[1] = NULL;
                 }
             }
         }
-
     } else {
-
+        // TODO: Use the allowed files array
         char *filter = "All Files (*.*)\0*.*\0";
         OPENFILENAME ofn;
         char fileName[MAX_PATH] = "";
@@ -68,6 +66,7 @@ const char **revery_open_files_win32(const char *startDir, int canChooseFiles,
         ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
         ofn.lpstrDefExt = "";
         if (GetOpenFileName(&ofn)) {
+            // free the 'default' return
             free(ret);
             ret = malloc(2 * sizeof(char *));
             ret[0] = strdup(fileName);

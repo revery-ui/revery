@@ -109,7 +109,6 @@ CAMLprim value revery_alertOpenFiles_native(
     (void)fileTypesSize;
     (void)allowMultiple;
     (void)showHidden;
-    (void)title;
     (void)buttonText;
 #elif USE_COCOA
     fileList = revery_open_files_cocoa(
@@ -139,6 +138,7 @@ CAMLprim value revery_alertOpenFiles_native(
 
         for (int i = 0; i < len; i++) {
             Store_field(camlArr, i, caml_copy_string(fileList[i]));
+            free(fileList[i]);
         }
 
         free(fileList);
