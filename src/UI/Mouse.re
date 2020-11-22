@@ -123,21 +123,79 @@ let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =
 let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
   switch (evt) {
   | InternalMouseDown(evt) =>
-    MouseDown({mouseX: c.x, mouseY: c.y, button: evt.button})
+    MouseDown({
+      mouseX: c.x,
+      mouseY: c.y,
+      button: evt.button,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   | InternalMouseUp(evt) =>
-    MouseUp({mouseX: c.x, mouseY: c.y, button: evt.button})
+    MouseUp({
+      mouseX: c.x,
+      mouseY: c.y,
+      button: evt.button,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   | InternalMouseMove(evt) =>
-    MouseMove({mouseX: evt.mouseX, mouseY: evt.mouseY})
+    MouseMove({
+      mouseX: evt.mouseX,
+      mouseY: evt.mouseY,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   | InternalMouseWheel(evt) =>
-    MouseWheel({deltaX: evt.deltaX, deltaY: evt.deltaY})
+    MouseWheel({
+      deltaX: evt.deltaX,
+      deltaY: evt.deltaY,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   | InternalMouseEnter(evt) =>
-    MouseEnter({mouseX: evt.mouseX, mouseY: evt.mouseY})
+    MouseEnter({
+      mouseX: evt.mouseX,
+      mouseY: evt.mouseY,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   | InternalMouseLeave(evt) =>
-    MouseLeave({mouseX: evt.mouseX, mouseY: evt.mouseY})
+    MouseLeave({
+      mouseX: evt.mouseX,
+      mouseY: evt.mouseY,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   | InternalMouseOver(evt) =>
-    MouseOver({mouseX: evt.mouseX, mouseY: evt.mouseY})
+    MouseOver({
+      mouseX: evt.mouseX,
+      mouseY: evt.mouseY,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   | InternalMouseOut(evt) =>
-    MouseOut({mouseX: evt.mouseX, mouseY: evt.mouseY})
+    MouseOut({
+      mouseX: evt.mouseX,
+      mouseY: evt.mouseY,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   };
 
 let onCursorChanged: Event.t(MouseCursors.t) = Event.create();
@@ -157,8 +215,42 @@ let storedNodesUnderCursor = ref([]);
 let getMouseMoveEventParams =
     (cursor: Cursor.t, evt: Events.internalMouseEvents) =>
   switch (evt) {
-  | InternalMouseMove(evt) => {mouseX: evt.mouseX, mouseY: evt.mouseY}
-  | _ => {mouseX: cursor.x, mouseY: cursor.y}
+  | InternalMouseMove(evt) => {
+      mouseX: evt.mouseX,
+      mouseY: evt.mouseY,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    }
+  | InternalMouseDown(evt)
+  | InternalMouseUp(evt) => {
+      mouseX: cursor.x,
+      mouseY: cursor.y,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    }
+  | InternalMouseWheel(evt) => {
+      mouseX: cursor.x,
+      mouseY: cursor.y,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    }
+  | InternalMouseEnter(evt)
+  | InternalMouseLeave(evt)
+  | InternalMouseOver(evt)
+  | InternalMouseOut(evt) => {
+      mouseX: cursor.x,
+      mouseY: cursor.y,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    }
   };
 
 let rec sendMouseLeaveEvents = (listOfNodes, evtParams) => {

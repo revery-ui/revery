@@ -723,6 +723,9 @@ module Image = {
     Gc.finalise(SkiaWrapped.Data.delete, data);
     data;
   };
+
+  let width = SkiaWrapped.Image.width;
+  let height = SkiaWrapped.Image.height;
 };
 
 type pixelGeometry = SkiaWrapped.pixelGeometry;
@@ -888,6 +891,9 @@ module Surface = {
     | None => None
     };
   };
+
+  let draw = (~paint=None, ~canvas, ~x, ~y, surface) =>
+    SkiaWrapped.Surface.draw(surface, canvas, x, y, paint);
 
   let getCanvas = SkiaWrapped.Surface.getCanvas;
   let makeImageSnapshot = surface => {

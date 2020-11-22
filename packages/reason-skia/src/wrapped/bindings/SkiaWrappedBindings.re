@@ -351,7 +351,7 @@ module M = (F: FOREIGN) => {
     let setImageFilter =
       foreign(
         "sk_paint_set_imagefilter",
-        t @-> ImageFilter.t @-> returning(void),
+        t @-> ptr_opt(SkiaTypes.ImageFilter.t) @-> returning(void),
       );
 
     let getTextEncoding =
@@ -785,6 +785,9 @@ module M = (F: FOREIGN) => {
     let delete = foreign("sk_image_unref", t @-> returning(void));
 
     let encode = foreign("sk_image_encode", t @-> returning(Data.t));
+
+    let width = foreign("sk_image_get_width", t @-> returning(int));
+    let height = foreign("sk_image_get_height", t @-> returning(int));
   };
 
   type pixelGeometry = SkiaTypes.pixelGeometry;
@@ -1052,6 +1055,17 @@ module M = (F: FOREIGN) => {
         @-> returning(ptr_opt(SkiaTypes.Surface.t)),
       );
     let delete = foreign("sk_surface_unref", t @-> returning(void));
+
+    let draw =
+      foreign(
+        "sk_surface_draw",
+        t
+        @-> Canvas.t
+        @-> float
+        @-> float
+        @-> ptr_opt(SkiaTypes.Paint.t)
+        @-> returning(void),
+      );
 
     let getCanvas =
       foreign("sk_surface_get_canvas", t @-> returning(Canvas.t));

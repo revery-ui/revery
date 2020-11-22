@@ -221,5 +221,24 @@ describe("FontCache", ({describe, test, _}) => {
         expect.int(fallbackSensor^).toBe(0);
       };
     });
+    test(
+      "heart-on-fire case: hole with unresolved glyph in middle shouldn't hang",
+      ({expect, _}) => {
+      // Regression Test:
+      // From the heart-on-fire test case: https://unicode.org/Public/emoji/13.1/emoji-test.txt
+      // We don't handle it quite correctly currently, but we certainly shouldn't hang!
+
+      let str =
+        Zed_utf8.make(1, Uchar.of_int(0x2764))
+        ++ Zed_utf8.make(1, Uchar.of_int(0xFE0F))
+        ++ Zed_utf8.make(1, Uchar.of_int(0x200D))
+        ++ Zed_utf8.make(1, Uchar.of_int(0x1F525));
+
+      let {glyphStrings}: ShapeResult.t =
+        FontCache.shape(~fallback, font, str);
+
+      // ...really just making sure we didn't hang.
+      expect.equal(true, glyphStrings |> runCount > 1);
+    });
   });
 });

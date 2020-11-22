@@ -5,7 +5,7 @@ let width_of_token = str => {
   String.length(str) |> float;
 };
 
-Timber.App.enable();
+Timber.App.enable(Timber.Reporter.console());
 Timber.App.setLevel(Timber.Level.trace);
 
 Printexc.record_backtrace(true);

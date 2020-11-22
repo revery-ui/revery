@@ -18,7 +18,12 @@ describe("Ticker", ({describe, _}) => {
   describe("timeout", ({test, _}) => {
     test("calls once after tick time", ({expect, _}) => {
       let callCount = ref(0);
-      let _ignore = Tick.timeout(() => incr(callCount), Time.seconds(1));
+      let _ignore: unit => unit =
+        Tick.timeout(
+          ~name="Test timeout",
+          () => incr(callCount),
+          Time.seconds(1),
+        );
       TestTicker.incrementTime(Time.ms(1010));
       Tick.pump();
 
@@ -36,12 +41,17 @@ describe("Ticker", ({describe, _}) => {
       let outerCallCount = ref(0);
       let innerCallCount = ref(0);
 
-      let _ignore =
+      let _: unit => unit =
         Tick.timeout(
+          ~name="Outer timeout",
           () => {
             incr(outerCallCount);
-            let _ignore =
-              Tick.timeout(() => incr(innerCallCount), Time.ms(110));
+            let _: unit => unit =
+              Tick.timeout(
+                ~name="Inner timeout",
+                () => incr(innerCallCount),
+                Time.ms(110),
+              );
             ();
           },
           Time.zero,
@@ -67,7 +77,12 @@ describe("Ticker", ({describe, _}) => {
     });
     test("doesn't call if canceled", ({expect, _}) => {
       let callCount = ref(0);
-      let cancel = Tick.timeout(() => incr(callCount), Time.seconds(1));
+      let cancel =
+        Tick.timeout(
+          ~name="TestTick",
+          () => incr(callCount),
+          Time.seconds(1),
+        );
       TestTicker.incrementTime(Time.ms(500));
       Tick.pump();
 
@@ -82,8 +97,12 @@ describe("Ticker", ({describe, _}) => {
     test("calls after tick time", ({expect, _}) => {
       let callCount = ref(0);
 
-      let _ignore =
-        Tick.interval(_ => callCount := callCount^ + 1, Time.seconds(1));
+      let _: unit => unit =
+        Tick.interval(
+          ~name="TestInterval",
+          _ => callCount := callCount^ + 1,
+          Time.seconds(1),
+        );
 
       TestTicker.incrementTime(Time.ms(1010));
 
@@ -106,8 +125,12 @@ describe("Ticker", ({describe, _}) => {
     test("disposing tick subscription stops the tick", ({expect, _}) => {
       let callCount = ref(0);
 
-      let stop =
-        Tick.interval(_ => callCount := callCount^ + 1, Time.seconds(1));
+      let stop: unit => unit =
+        Tick.interval(
+          ~name="TestTick",
+          _ => callCount := callCount^ + 1,
+          Time.seconds(1),
+        );
 
       TestTicker.incrementTime(Time.ms(1010));
 

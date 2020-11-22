@@ -21,6 +21,10 @@ module Actions = {
 type mouseMoveEventParams = {
   mouseX: float,
   mouseY: float,
+  ctrlKey: bool,
+  altKey: bool,
+  shiftKey: bool,
+  guiKey: bool,
 };
 
 [@deriving show({with_path: false})]
@@ -28,12 +32,20 @@ type mouseButtonEventParams = {
   mouseX: float,
   mouseY: float,
   button: MouseButton.t,
+  ctrlKey: bool,
+  altKey: bool,
+  shiftKey: bool,
+  guiKey: bool,
 };
 
 [@deriving show({with_path: false})]
 type mouseWheelEventParams = {
   deltaX: float,
   deltaY: float,
+  ctrlKey: bool,
+  altKey: bool,
+  shiftKey: bool,
+  guiKey: bool,
 };
 
 [@deriving show({with_path: false})]
@@ -61,6 +73,7 @@ type keyEventParams = {
   ctrlKey: bool,
   altKey: bool,
   shiftKey: bool,
+  guiKey: bool,
 };
 
 module DimensionsChangedEventParams = {
@@ -77,6 +90,10 @@ type fileDropEventParams = {
   mouseX: float,
   mouseY: float,
   paths: list(string),
+  ctrlKey: bool,
+  altKey: bool,
+  shiftKey: bool,
+  guiKey: bool,
 };
 
 [@deriving show({with_path: false})]

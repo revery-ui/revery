@@ -49,7 +49,7 @@ let coordinates = str => {
         accept();
         Buffer.add_char(buffer, ch);
       }
-    | ('0'..'9' | '.') as ch => Buffer.add_char(buffer, ch)
+    | ('0' .. '9' | '.') as ch => Buffer.add_char(buffer, ch)
     | '\t'
     | ' '
     | '\n'
@@ -120,7 +120,7 @@ let pathCommands = str => {
         let acc = accept(arg, acc);
         number_postDot(acc, i + 1);
 
-      | '0'..'9' =>
+      | '0' .. '9' =>
         push(i);
         number_preDot(acc, i + 1);
 
@@ -146,7 +146,7 @@ let pathCommands = str => {
         push(i);
         number_postDot(acc, i + 1);
 
-      | '0'..'9' =>
+      | '0' .. '9' =>
         push(i);
         number_preDot(acc, i + 1);
 
@@ -161,7 +161,7 @@ let pathCommands = str => {
 
     and number_postDot = (acc, i) =>
       switch (str.[i]) {
-      | '0'..'9' =>
+      | '0' .. '9' =>
         push(i);
         number_postDot(acc, i + 1);
 
@@ -188,7 +188,7 @@ let pathCommands = str => {
 
     and exponent = (acc, i) =>
       switch (str.[i]) {
-      | '0'..'9' =>
+      | '0' .. '9' =>
         push(i);
         exponent(acc, i + 1);
 

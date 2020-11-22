@@ -15,7 +15,7 @@ let containerStyle =
   ];
 
 let outerBox =
-  Style.[width(128), height(128), backgroundColor(Colors.black)];
+  Style.[width(200), height(200), backgroundColor(Colors.black)];
 
 let innerBox =
   Style.[
@@ -50,6 +50,11 @@ module Sample = {
           style=Style.[width(512), height(256)]
         />
       </ScrollView>
+      <Text
+        text="To scroll horizontally use Mouse Wheel while holding Shift Key"
+        fontSize=20.
+        style=Style.[marginTop(10)]
+      />
     </View>;
   };
 };

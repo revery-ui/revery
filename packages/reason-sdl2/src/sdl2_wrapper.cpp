@@ -370,6 +370,25 @@ extern "C" {
         CAMLreturn(Val_unit);
     }
 
+    CAMLprim value resdl_SDL_GetMacTitlebarHeight(value vWin) {
+        CAMLparam1(vWin);
+        double titlebarHeight = 0.0;
+
+#ifdef SDL_VIDEO_DRIVER_COCOA
+        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_SysWMinfo wmInfo;
+        SDL_VERSION(&wmInfo.version);
+        SDL_GetWindowWMInfo(win, &wmInfo);
+        NSWindow *nWindow = wmInfo.info.cocoa.window;
+
+        // Sourced from: https://stackoverflow.com/a/59323932/12701512
+        CGFloat windowFrameHeight = CGRectGetHeight([nWindow contentView].frame);
+        CGFloat contentLayoutRectHeight = CGRectGetHeight([nWindow contentLayoutRect]);
+        titlebarHeight = (double)(windowFrameHeight - contentLayoutRectHeight);
+#endif
+        CAMLreturn(caml_copy_double(titlebarHeight));
+    }
+
     CAMLprim value resdl_SDL_SetMacBackgroundColor(value vWin, value r, value g,
             value b, value a) {
         CAMLparam5(vWin, r, g, b, a);

@@ -37,7 +37,11 @@ module Cursor = {
         OnMount,
         () => {
           let clear =
-            Tick.interval(time => dispatch(Tick(time)), Time.ms(16));
+            Tick.interval(
+              ~name="Revery:Input:Cursor Blink Interval",
+              time => dispatch(Tick(time)),
+              Time.ms(16),
+            );
           Some(clear);
         },
       );
