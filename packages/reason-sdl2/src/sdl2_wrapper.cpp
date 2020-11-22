@@ -375,7 +375,7 @@ extern "C" {
         double titlebarHeight = 0.0;
 
 #ifdef SDL_VIDEO_DRIVER_COCOA
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SysWMinfo wmInfo;
         SDL_VERSION(&wmInfo.version);
         SDL_GetWindowWMInfo(win, &wmInfo);
