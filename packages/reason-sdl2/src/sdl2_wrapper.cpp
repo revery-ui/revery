@@ -93,9 +93,10 @@ extern "C" {
         return Val_unit;
     }
     CAMLprim value resdl_SDL_DestroyWindow(value vWin) {
-        SDL_Window *win = (SDL_Window *)vWin;
+        CAMLparam1(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_DestroyWindow(win);
-        return Val_unit;
+        CAMLreturn(Val_unit);
     }
 
     SDL_HitTestResult resdl_hit_test(SDL_Window *win, const SDL_Point *area,
@@ -151,15 +152,17 @@ extern "C" {
     };
 
     CAMLprim value resdl_SDL_EnableHitTest(value vWin) {
-        SDL_Window *win = (SDL_Window *)vWin;
+        CAMLparam1(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SetWindowHitTest(win, resdl_hit_test, NULL);
-        return Val_unit;
+        CAMLreturn(Val_unit);
     }
 
     CAMLprim value resdl_SDL_DisableHitTest(value vWin) {
-        SDL_Window *win = (SDL_Window *)vWin;
+        CAMLparam1(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SetWindowHitTest(win, NULL, NULL);
-        return Val_unit;
+        CAMLreturn(Val_unit);
     }
 
     CAMLprim value resdl_SDL_Delay(value delay) {
