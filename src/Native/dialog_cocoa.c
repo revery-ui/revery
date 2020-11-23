@@ -87,7 +87,13 @@ const char **revery_open_files_cocoa(
         // Copy the NSArray to the C-array
         for (int i = 0; i < size; i++) {
             NSString *tmp = [[urls objectAtIndex:i] path];
-            ret[i] = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            const char *sz= [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            // According to the Objective-C docs, the returned string
+            // is only guaranteed to be valid for the lifetime of
+            // the [NSString]:
+            // https://developer.apple.com/documentation/foundation/nsstring/1408489-cstringusingencoding?language=objc
+            // So we need to make a copy here...
+            ret[i] = strdup(sz);
         }
         [urls release];
         ret[size] = NULL;
