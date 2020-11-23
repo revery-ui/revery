@@ -103,7 +103,14 @@ CAMLprim value revery_alertOpenFiles_native(
 
     char **fileList = NULL;
 
-#ifdef USE_COCOA
+#ifdef USE_WIN32
+    fileList = revery_open_files_win32(startDirectory, canChooseFiles,
+                                       canChooseDirectories, title);
+    (void)fileTypesSize;
+    (void)allowMultiple;
+    (void)showHidden;
+    (void)buttonText;
+#elif USE_COCOA
     fileList = revery_open_files_cocoa(
                    startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
                    canChooseDirectories, showHidden, buttonText, title);
@@ -131,6 +138,7 @@ CAMLprim value revery_alertOpenFiles_native(
 
         for (int i = 0; i < len; i++) {
             Store_field(camlArr, i, caml_copy_string(fileList[i]));
+            free(fileList[i]);
         }
 
         free(fileList);
