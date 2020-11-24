@@ -9,8 +9,8 @@
 
 CAMLprim value revery_NSObject_equal(value vNSObjA, value vNSObjB) {
     CAMLparam2(vNSObjA, vNSObjB);
-    NSObject *nsObjA = (NSObject *)vNSObjA;
-    NSObject *nsObjB = (NSObject *)vNSObjB;
+    NSObject *nsObjA = (NSObject *)revery_unwrapPointer(vNSObjA);
+    NSObject *nsObjB = (NSObject *)revery_unwrapPointer(vNSObjB);
 
     BOOL equal = [nsObjA isEqual:nsObjB];
 
@@ -19,7 +19,7 @@ CAMLprim value revery_NSObject_equal(value vNSObjA, value vNSObjB) {
 
 CAMLprim value revery_NSObject_hash(value vNSObj) {
     CAMLparam1(vNSObj);
-    NSObject *nsObj = (NSObject *)vNSObj;
+    NSObject *nsObj = (NSObject *)revery_unwrapPointer(vNSObj);
 
     NSUInteger hash = [nsObj hash];
 
@@ -30,8 +30,9 @@ CAMLprim value revery_NSObject_toString(value vNSObj) {
     CAMLparam1(vNSObj);
     CAMLlocal1(vDescription);
 
-    NSObject *nsObj = (NSObject *)vNSObj;
+    NSObject *nsObj = (NSObject *)revery_unwrapPointer(vNSObj);
     NSString *nsDescription = [nsObj description];
+
     vDescription = caml_copy_string([nsDescription UTF8String]);
 
     CAMLreturn(vDescription);
@@ -41,7 +42,7 @@ CAMLprim value revery_NSObject_className(value vNSObj) {
     CAMLparam1(vNSObj);
     CAMLlocal1(vClassName);
 
-    NSObject *nsObj = (NSObject *)vNSObj;
+    NSObject *nsObj = (NSObject *)revery_unwrapPointer(vNSObj);
     NSString *nsClassName = NSStringFromClass([nsObj class]);
     vClassName = caml_copy_string([nsClassName UTF8String]);
 
