@@ -7,7 +7,8 @@ let windowCallback = (node, window) =>
   Some(
     (sdlWindow, mouseX, mouseY) =>
       Sdl2.Window.(
-        if (sdlWindow == Window.getSdlWindow(window) && node#hasRendered()) {
+        if (getId(sdlWindow) == getId(Window.getSdlWindow(window))
+            && node#hasRendered()) {
           let scaleAndZoomFactor = Window.getScaleAndZoom(window);
           let deepestNode =
             getTopMostNode(
