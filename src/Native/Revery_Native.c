@@ -20,6 +20,7 @@
 #include "ReveryGtk.h"
 #include <gtk/gtk.h>
 #endif
+#include "utilities.h"
 
 CAMLprim value revery_initializeApp() {
 #ifdef USE_COCOA
@@ -47,7 +48,7 @@ CAMLprim value revery_uninitializeApp() {
 
 CAMLprim value revery_initializeWindow(value vWin) {
     CAMLparam1(vWin);
-    void *win = (void *)vWin;
+    void *win = (void *)revery_unwrapPointer(vWin);
 #ifdef USE_WIN32
     /* This flag often gets unset when the window decoration is removed.
        This Chromium comment is the source of this fix:

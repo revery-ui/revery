@@ -19,6 +19,7 @@
 #elif USE_GTK
 #include "ReveryGtk.h"
 #endif
+#include "utilities.h"
 
 CAMLprim value revery_alertSupported() {
 #if defined(USE_WIN32) || defined(USE_COCOA) || defined(USE_GTK)
@@ -31,7 +32,7 @@ CAMLprim value revery_alertSupported() {
 CAMLprim value revery_alert(value vWindow, value vMessage) {
     CAMLparam2(vWindow, vMessage);
     const char *szMessage = String_val(vMessage);
-    void *pWin = (void *)vWindow;
+    void *pWin = (void *)revery_unwrapPointer(vWindow);
 
 #ifdef USE_WIN32
     revery_alert_win32(pWin, szMessage);

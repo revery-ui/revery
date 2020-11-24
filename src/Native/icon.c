@@ -16,6 +16,7 @@
 #elif USE_GTK
 #include "ReveryGtk.h"
 #endif
+#include "utilities.h"
 
 CAMLprim value revery_getIconHandle() {
     CAMLparam0();
@@ -28,14 +29,15 @@ CAMLprim value revery_getIconHandle() {
     fprintf(stderr, "WARNING: %s is not implemented on this platform.", __func__);
     ret = NULL;
 #endif
-    CAMLreturn((value)ret);
+    value vIconHandle = revery_wrapPointer(ret);
+    CAMLreturn(vIconHandle);
 }
 
 CAMLprim value revery_setIconProgress(value vWin, value vIconHandle,
                                       value vProgress) {
     CAMLparam3(vWin, vIconHandle, vProgress);
-    void *win = (void *)vWin;
-    void *ih = (void *)vIconHandle;
+    void *win = (void *)revery_unwrapPointer(vWin);
+    void *ih = (void *)revery_unwrapPointer(vIconHandle);
     /* vProgress is an OCaml variant of type Revery_Native.Icon.progress
       It can be either:
         - Indeterminate -- has no type arguments
@@ -71,8 +73,8 @@ CAMLprim value revery_setIconProgress(value vWin, value vIconHandle,
 
 CAMLprim value revery_hideIconProgress(value vWin, value vIconHandle) {
     CAMLparam2(vWin, vIconHandle);
-    void *win = (void *)vWin;
-    void *ih = (void *)vIconHandle;
+    void *win = (void *)revery_unwrapPointer(vWin);
+    void *ih = (void *)revery_unwrapPointer(vIconHandle);
 
 #ifdef USE_COCOA
     (void)win;
