@@ -27,11 +27,6 @@ NSMenuItem *revery_createMenuItem_cocoa(const char *title) {
 
     [nsMenuItem setTarget:menuItemTarget];
 
-    NSMenu *nsMenuBar = revery_getMenuBarHandle_cocoa();
-    NSMenu *appMenu = [[nsMenuBar itemAtIndex:0] submenu];
-
-    [appMenu addItem:nsMenuItem];
-
     return nsMenuItem;
 }
 
