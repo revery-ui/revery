@@ -9,14 +9,15 @@ module Item = {
   %if
   defined(USE_COCOA);
 
-  let hash = item => item |> NSObject.wrap |> NSObject.hash;
-  let equal = item => item |> NSObject.wrap |> NSObject.equal;
-  let toString = menu => menu |> NSObject.wrap |> NSObject.toString;
+  let hash = NSObject.hash;
+  let equal = NSObject.equal;
+  let toString = NSObject.toString;
 
   [%%else];
 
   let hash = _ => 1;
   let equal = (==);
+  let toString = _ => "UNIMPLEMENTED";
 
   [%%endif];
 
@@ -56,7 +57,7 @@ external create: string => t = "revery_createMenu";
 %if
 defined(USE_COCOA);
 
-let toString = menu => menu |> NSObject.wrap |> NSObject.toString;
+let toString = NSObject.toString;
 
 [%%else];
 
