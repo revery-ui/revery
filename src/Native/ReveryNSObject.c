@@ -7,6 +7,8 @@
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
 
+#include "utilities.h"
+
 CAMLprim value revery_NSObject_equal(value vNSObjA, value vNSObjB) {
     CAMLparam2(vNSObjA, vNSObjB);
     NSObject *nsObjA = (NSObject *)revery_unwrapPointer(vNSObjA);
@@ -48,6 +50,15 @@ CAMLprim value revery_NSObject_className(value vNSObj) {
 
     [nsClassName release];
     CAMLreturn(vClassName);
+}
+
+CAMLprim value revery_NSObject_release(value vNSObj) {
+    CAMLparam1(vNSObj);
+
+    NSObject *nsObj = (NSObject *)revery_unwrapPointer(vNSObj);
+    [nsObj release];
+
+    CAMLreturn(Val_unit);
 }
 
 #endif
