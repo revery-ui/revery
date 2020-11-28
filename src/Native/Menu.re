@@ -56,14 +56,22 @@ module Item = {
 
 open {
        external c_addSubmenu: (t, t) => unit = "revery_menuAddSubmenu";
+       external c_removeSubmenu: (t, t) => unit = "revery_menuRemoveSubmenu";
+       external c_insertSubmenuAt: (t, t, int) => unit =
+         "revery_menuInsertSubmenuAt";
      };
 
 external getMenuBarHandle: unit => t = "revery_getMenuBarHandle";
 external create: string => t = "revery_menuCreate";
 external nth: (t, int) => option(Item.t) = "revery_menuNth";
 external addItem: (t, Item.t) => unit = "revery_menuAddItem";
+external insertItemAt: (t, Item.t, int) => unit = "revery_menuInsertItemAt";
 external removeItem: (t, Item.t) => unit = "revery_menuRemoveItem";
+external clear: t => unit = "revery_menuClear";
 let addSubmenu = (~parent, ~child) => c_addSubmenu(parent, child);
+let removeSubmenu = (~parent, ~child) => c_removeSubmenu(parent, child);
+let insertSubmenuAt = (~parent, ~child, ~idx) =>
+  c_insertSubmenuAt(parent, child, idx);
 
 %if
 defined(USE_COCOA);

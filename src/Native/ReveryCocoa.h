@@ -34,4 +34,8 @@ void *revery_menuNth_cocoa(void *nsMenu, int idx);
 void revery_menuAddItem_cocoa(void *nsMenu, void *nsMenuItem);
 void *revery_menuItemGetSubmenu_cocoa(void *nsMenuItem);
 void revery_menuAddSubmenu_cocoa(void *parent, void *child);
+void revery_menuRemoveSubmenu_cocoa(void *parent, void *child);
 void revery_menuRemoveItem_cocoa(void *nsMenu, void *nsMenuItem);
+void revery_menuInsertItemAt_cocoa(void *nsMenu, void *nsMenuItem, int idx);
+void revery_menuInsertSubmenuAt_cocoa(void *parent, void *child, int idx);
+void revery_menuClear_cocoa(void *nsMenu);

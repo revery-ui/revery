@@ -57,7 +57,35 @@ void revery_menuAddSubmenu_cocoa(NSMenu *parent, NSMenu *child) {
     [parent setSubmenu:child forItem:nsMenuItem];
 }
 
+void revery_menuRemoveSubmenu_cocoa(NSMenu *parent, NSMenu *child) {
+    NSMutableArray *itemsToRemove = [NSMutableArray array];
+    for (NSMenuItem *item in [parent itemArray]) {
+        if ([child isEqual:[item submenu]]) {
+            [itemsToRemove addObject:item];
+        }
+    }
+
+    for (NSMenuItem *item in itemsToRemove) {
+        [parent removeItem:item];
+    }
+}
+
 void revery_menuRemoveItem_cocoa(NSMenu *nsMenu, NSMenuItem *nsMenuItem) {
     [nsMenu removeItem:nsMenuItem];
+}
+
+void revery_menuInsertItemAt_cocoa(NSMenu *nsMenu, NSMenuItem *nsMenuItem, int idx) {
+    [nsMenu insertItem:nsMenuItem atIndex:idx];
+}
+
+void revery_menuInsertSubmenuAt_cocoa(NSMenu *parent, NSMenu *child, int idx) {
+    NSMenuItem *nsMenuItem =
+        [[NSMenuItem alloc] initWithTitle:[child title] action:NULL keyEquivalent:@""];
+    [parent insertItem:nsMenuItem atIndex:idx];
+    [parent setSubmenu:child forItem:nsMenuItem];
+}
+
+void revery_menuClear_cocoa(NSMenu *nsMenu) {
+    [nsMenu removeAllItems];
 }
 #endif

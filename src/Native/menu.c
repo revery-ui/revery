@@ -108,6 +108,18 @@ CAMLprim value revery_menuItemGetSubmenu(value vMenuItem) {
     CAMLreturn(vSubmenu);
 }
 
+CAMLprim value revery_menuRemoveItem(value vMenu, value vMenuItem) {
+    CAMLparam2(vMenu, vMenuItem);
+
+    void *menu = revery_unwrapPointer(vMenu);
+    void *menuItem = revery_unwrapPointer(vMenuItem);
+#ifdef USE_COCOA
+    revery_menuRemoveItem_cocoa(menu, menuItem);
+#endif
+
+    CAMLreturn(Val_unit);
+}
+
 CAMLprim value revery_menuAddSubmenu(value vParent, value vChild) {
     CAMLparam2(vParent, vChild);
 
@@ -120,13 +132,52 @@ CAMLprim value revery_menuAddSubmenu(value vParent, value vChild) {
     CAMLreturn(Val_unit);
 }
 
-CAMLprim value revery_menuRemoveItem(value vMenu, value vMenuItem) {
-    CAMLparam2(vMenu, vMenuItem);
+CAMLprim value revery_menuRemoveSubmenu(value vParent, value vChild) {
+    CAMLparam2(vParent, vChild);
+
+    void *parent = revery_unwrapPointer(vParent);
+    void *child = revery_unwrapPointer(vChild);
+#ifdef USE_COCOA
+    revery_menuRemoveSubmenu_cocoa(parent, child);
+#endif
+
+    CAMLreturn(Val_unit);
+}
+
+CAMLprim value revery_menuInsertItemAt(value vMenu, value vMenuItem, value vIdx) {
+    CAMLparam3(vMenu, vMenuItem, vIdx);
 
     void *menu = revery_unwrapPointer(vMenu);
     void *menuItem = revery_unwrapPointer(vMenuItem);
+    int idx = Int_val(vIdx);
+
 #ifdef USE_COCOA
-    revery_menuRemoveItem_cocoa(menu, menuItem);
+    revery_menuInsertItemAt_cocoa(menu, menuItem, idx);
+#endif
+
+    CAMLreturn(Val_unit);
+}
+
+CAMLprim value revery_menuInsertSubmenuAt(value vParent, value vChild, value vIdx) {
+    CAMLparam3(vParent, vChild, vIdx);
+
+    void *parent = revery_unwrapPointer(vParent);
+    void *child = revery_unwrapPointer(vChild);
+    int idx = Int_val(vIdx);
+
+#ifdef USE_COCOA
+    revery_menuInsertSubmenuAt_cocoa(parent, child, idx);
+#endif
+
+    CAMLreturn(Val_unit);
+}
+
+CAMLprim value revery_menuClear(value vMenu) {
+    CAMLparam1(vMenu);
+
+    void *menu = revery_unwrapPointer(vMenu);
+#ifdef USE_COCOA
+    revery_menuClear_cocoa(menu);
 #endif
 
     CAMLreturn(Val_unit);
