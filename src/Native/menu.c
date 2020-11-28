@@ -40,7 +40,7 @@ CAMLprim value revery_menuCreate(value vTitle) {
 #ifdef USE_COCOA
     ret = revery_menuCreate_cocoa(title);
 #else
-    UNUSED(ret);
+    UNUSED(title);
     ret = NULL;
 #endif
 
@@ -77,7 +77,7 @@ CAMLprim value revery_menuNth(value vMenu, value vIdx) {
 #else
     UNUSED(menu);
     UNUSED(idx);
-    menuItem = NULL
+    menuItem = NULL;
 #endif
 
     vMenuItem = revery_wrapOptionalPointer(menuItem);
@@ -188,6 +188,10 @@ CAMLprim value revery_menuInsertSubmenuAt(value vParent, value vChild, value vId
 
 #ifdef USE_COCOA
     revery_menuInsertSubmenuAt_cocoa(parent, child, idx);
+#else
+    UNUSED(parent);
+    UNUSED(child);
+    UNUSED(idx);
 #endif
 
     CAMLreturn(Val_unit);
