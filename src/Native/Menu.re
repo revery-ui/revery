@@ -4,6 +4,7 @@
 type t;
 
 module Item = {
+  type menu = t;
   type t;
 
   %if
@@ -22,7 +23,7 @@ module Item = {
   [%%endif];
 
   open {
-         external c_create: string => t = "revery_createMenuItem";
+         external c_create: string => t = "revery_menuItemCreate";
        };
 
   module CallbackTbl =
@@ -49,10 +50,20 @@ module Item = {
     CallbackTbl.replace(callbackTbl, menu, onClick);
     menu;
   };
+
+  external getSubmenu: t => option(menu) = "revery_menuItemGetSubmenu";
 };
 
+open {
+       external c_addSubmenu: (t, t) => unit = "revery_menuAddSubmenu";
+     };
+
 external getMenuBarHandle: unit => t = "revery_getMenuBarHandle";
-external create: string => t = "revery_createMenu";
+external create: string => t = "revery_menuCreate";
+external nth: (t, int) => option(Item.t) = "revery_menuNth";
+external addItem: (t, Item.t) => unit = "revery_menuAddItem";
+external removeItem: (t, Item.t) => unit = "revery_menuRemoveItem";
+let addSubmenu = (~parent, ~child) => c_addSubmenu(parent, child);
 
 %if
 defined(USE_COCOA);

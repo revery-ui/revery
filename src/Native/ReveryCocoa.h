@@ -28,5 +28,10 @@ char *revery_getUserLocale_cocoa();
 
 /* Menu functions */
 void *revery_getMenuBarHandle_cocoa();
-void *revery_createMenu_cocoa(const char *title);
-void *revery_createMenuItem_cocoa(const char *title);
+void *revery_menuCreate_cocoa(const char *title);
+void *revery_menuItemCreate_cocoa(const char *title);
+void *revery_menuNth_cocoa(void *nsMenu, int idx);
+void revery_menuAddItem_cocoa(void *nsMenu, void *nsMenuItem);
+void *revery_menuItemGetSubmenu_cocoa(void *nsMenuItem);
+void revery_menuAddSubmenu_cocoa(void *parent, void *child);
+void revery_menuRemoveItem_cocoa(void *nsMenu, void *nsMenuItem);
