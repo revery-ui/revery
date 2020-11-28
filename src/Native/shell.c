@@ -7,8 +7,6 @@
 
 #include "caml_values.h"
 
-#define UNUSED(x) (void)(x)
-
 #include "config.h"
 #ifdef USE_WIN32
 #include "ReveryWin32.h"

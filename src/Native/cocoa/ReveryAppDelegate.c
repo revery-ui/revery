@@ -7,8 +7,6 @@
 
 #include "ReveryAppDelegate_func.h"
 
-#define UNUSED(x) (void)(x)
-
 // Implementation of ReveryAppDelegate
 @implementation ReveryAppDelegate
 

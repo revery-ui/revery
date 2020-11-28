@@ -30,3 +30,5 @@ void revery_caml_call(camlValue f);
 camlValue revery_wrapPointer(void *data);
 void *revery_unwrapPointer(camlValue data);
 camlValue revery_wrapOptionalPointer(void *data);
+
+#define UNUSED(x) ((void)(x))

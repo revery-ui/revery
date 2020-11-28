@@ -40,6 +40,7 @@ CAMLprim value revery_menuCreate(value vTitle) {
 #ifdef USE_COCOA
     ret = revery_menuCreate_cocoa(title);
 #else
+    UNUSED(ret);
     ret = NULL;
 #endif
 
@@ -56,6 +57,7 @@ CAMLprim value revery_menuItemCreate(value vTitle) {
 #ifdef USE_COCOA
     ret = revery_menuItemCreate_cocoa(title);
 #else
+    UNUSED(title);
     ret = NULL;
 #endif
 
@@ -73,6 +75,8 @@ CAMLprim value revery_menuNth(value vMenu, value vIdx) {
 #ifdef USE_COCOA
     menuItem = revery_menuNth_cocoa(menu, idx);
 #else
+    UNUSED(menu);
+    UNUSED(idx);
     menuItem = NULL
 #endif
 
@@ -87,6 +91,9 @@ CAMLprim value revery_menuAddItem(value vMenu, value vMenuItem) {
     void *menuItem = revery_unwrapPointer(vMenuItem);
 #ifdef USE_COCOA
     revery_menuAddItem_cocoa(menu, menuItem);
+#else
+    UNUSED(menu);
+    UNUSED(menuItem);
 #endif
 
     CAMLreturn(Val_unit);
@@ -101,6 +108,7 @@ CAMLprim value revery_menuItemGetSubmenu(value vMenuItem) {
 #ifdef USE_COCOA
     submenu = revery_menuItemGetSubmenu_cocoa(menuItem);
 #else
+    UNUSED(menuItem);
     submenu = NULL;
 #endif
 
@@ -115,6 +123,9 @@ CAMLprim value revery_menuRemoveItem(value vMenu, value vMenuItem) {
     void *menuItem = revery_unwrapPointer(vMenuItem);
 #ifdef USE_COCOA
     revery_menuRemoveItem_cocoa(menu, menuItem);
+#else
+    UNUSED(menu);
+    UNUSED(menuItem);
 #endif
 
     CAMLreturn(Val_unit);
@@ -127,6 +138,9 @@ CAMLprim value revery_menuAddSubmenu(value vParent, value vChild) {
     void *child = revery_unwrapPointer(vChild);
 #ifdef USE_COCOA
     revery_menuAddSubmenu_cocoa(parent, child);
+#else
+    UNUSED(parent);
+    UNUSED(child);
 #endif
 
     CAMLreturn(Val_unit);
@@ -139,6 +153,9 @@ CAMLprim value revery_menuRemoveSubmenu(value vParent, value vChild) {
     void *child = revery_unwrapPointer(vChild);
 #ifdef USE_COCOA
     revery_menuRemoveSubmenu_cocoa(parent, child);
+#else
+    UNUSED(parent);
+    UNUSED(child);
 #endif
 
     CAMLreturn(Val_unit);
@@ -153,6 +170,10 @@ CAMLprim value revery_menuInsertItemAt(value vMenu, value vMenuItem, value vIdx)
 
 #ifdef USE_COCOA
     revery_menuInsertItemAt_cocoa(menu, menuItem, idx);
+#else
+    UNUSED(menu);
+    UNUSED(menuItem);
+    UNUSED(idx);
 #endif
 
     CAMLreturn(Val_unit);
@@ -178,6 +199,8 @@ CAMLprim value revery_menuClear(value vMenu) {
     void *menu = revery_unwrapPointer(vMenu);
 #ifdef USE_COCOA
     revery_menuClear_cocoa(menu);
+#else
+    UNUSED(menu);
 #endif
 
     CAMLreturn(Val_unit);

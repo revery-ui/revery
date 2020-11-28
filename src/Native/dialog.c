@@ -7,8 +7,6 @@
 
 #include "caml_values.h"
 
-#define UNUSED(x) (void)(x)
-
 #include <string.h>
 
 #include "config.h"
