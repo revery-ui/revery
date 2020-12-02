@@ -19,7 +19,6 @@ static const camlValue *callbackForMenuItem;
     if (self) {
         if (callbackForMenuItem == NULL) {
             callbackForMenuItem = caml_named_value("revery_callbackForMenuItem");
-            NSLog(@"caml_named_value result : %p", callbackForMenuItem);
         }
     }
     return self;
