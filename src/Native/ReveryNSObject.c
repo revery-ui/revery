@@ -7,6 +7,8 @@
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
 
+#include "utilities.h"
+
 CAMLprim value revery_NSObject_equal(value vNSObjA, value vNSObjB) {
     CAMLparam2(vNSObjA, vNSObjB);
     NSObject *nsObjA = (NSObject *)revery_unwrapPointer(vNSObjA);
