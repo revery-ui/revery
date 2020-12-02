@@ -23,7 +23,7 @@ NSMenuItem *revery_menuItemCreate_cocoa(const char *title) {
 
     NSString *nsTitle = [NSString stringWithUTF8String:title];
     NSMenuItem *nsMenuItem =
-        [[NSMenuItem alloc] initWithTitle:nsTitle action:@selector(onMenuItemClick:) keyEquivalent:@"S"];
+        [[NSMenuItem alloc] initWithTitle:nsTitle action:@selector(onMenuItemClick:) keyEquivalent:@"p"];
 
     [nsMenuItem setTarget:menuItemTarget];
 

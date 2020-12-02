@@ -24,6 +24,8 @@ module Item = {
 
   open {
          external c_create: string => t = "revery_menuItemCreate";
+         external c_getSubmenu: t => option(menu) =
+           "revery_menuItemGetSubmenu";
        };
 
   module CallbackTbl =
@@ -45,13 +47,28 @@ module Item = {
 
   Callback.register("revery_callbackForMenuItem", callbackForMenuItem);
 
+  %if
+  defined(USE_COCOA);
+
   let create = (~title, ~onClick) => {
     let menu = c_create(title);
     CallbackTbl.replace(callbackTbl, menu, onClick);
+    Gc.finalise(NSObject.release, menu);
     menu;
   };
 
-  external getSubmenu: t => option(menu) = "revery_menuItemGetSubmenu";
+  let getSubmenu = item => {
+    let submenu = c_getSubmenu(item);
+    Option.iter(submenu => Gc.finalise(NSObject.release, submenu), submenu);
+    submenu;
+  };
+
+  [%%else];
+
+  let create = c_create;
+  let getSubmenu = c_getSubmenu;
+
+  [%%endif];
 };
 
 open {
@@ -59,11 +76,11 @@ open {
        external c_removeSubmenu: (t, t) => unit = "revery_menuRemoveSubmenu";
        external c_insertSubmenuAt: (t, t, int) => unit =
          "revery_menuInsertSubmenuAt";
+       external c_getMenuBarHandle: unit => t = "revery_getMenuBarHandle";
+       external c_create: string => t = "revery_menuCreate";
+       external c_nth: (t, int) => option(Item.t) = "revery_menuNth";
      };
 
-external getMenuBarHandle: unit => t = "revery_getMenuBarHandle";
-external create: string => t = "revery_menuCreate";
-external nth: (t, int) => option(Item.t) = "revery_menuNth";
 external addItem: (t, Item.t) => unit = "revery_menuAddItem";
 external insertItemAt: (t, Item.t, int) => unit = "revery_menuInsertItemAt";
 external removeItem: (t, Item.t) => unit = "revery_menuRemoveItem";
@@ -78,8 +95,29 @@ defined(USE_COCOA);
 
 let toString = NSObject.toString;
 
+let getMenuBarHandle = () => {
+  let handle = c_getMenuBarHandle();
+  Gc.finalise(NSObject.release, handle);
+  handle;
+};
+
+let create = title => {
+  let menu = c_create(title);
+  Gc.finalise(NSObject.release, menu);
+  menu;
+};
+
+let nth = (menu, idx) => {
+  let item = c_nth(menu, idx);
+  Option.iter(item => Gc.finalise(NSObject.release, item), item);
+  item;
+};
+
 [%%else];
 
 let toString = _ => "UNIMPLEMENTED";
+let getMenuBarHandle = c_getMenuBarHandle;
+let create = c_create;
+let nth = c_nth;
 
 [%%endif];

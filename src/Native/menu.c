@@ -11,6 +11,7 @@
 #include "ReveryWin32.h"
 #elif USE_COCOA
 #include "ReveryCocoa.h"
+#import <Cocoa/Cocoa.h>
 #elif USE_GTK
 #include "ReveryGtk.h"
 #endif
@@ -20,14 +21,15 @@ CAMLprim value revery_getMenuBarHandle() {
     CAMLparam0();
     CAMLlocal1(vMenuBarHandle);
 
-    void *ret;
+    void *handle;
 #ifdef USE_COCOA
-    ret = revery_getMenuBarHandle_cocoa();
+    handle = revery_getMenuBarHandle_cocoa();
+    [(NSObject *)handle retain];
 #else
-    ret = NULL;
+    handle = NULL;
 #endif
 
-    vMenuBarHandle = revery_wrapPointer(ret);
+    vMenuBarHandle = revery_wrapPointer(handle);
     CAMLreturn(vMenuBarHandle);
 }
 
@@ -36,33 +38,35 @@ CAMLprim value revery_menuCreate(value vTitle) {
     CAMLlocal1(vMenu);
 
     const char *title = String_val(vTitle);
-    void *ret;
+    void *menu;
 #ifdef USE_COCOA
-    ret = revery_menuCreate_cocoa(title);
+    menu = revery_menuCreate_cocoa(title);
+    [(NSObject *)menu retain];
 #else
     UNUSED(title);
-    ret = NULL;
+    menu = NULL;
 #endif
 
-    vMenu = revery_wrapPointer(ret);
+    vMenu = revery_wrapPointer(menu);
     CAMLreturn(vMenu);
 }
 
 CAMLprim value revery_menuItemCreate(value vTitle) {
     CAMLparam1(vTitle);
-    CAMLlocal1(vMenu);
+    CAMLlocal1(vMenuItem);
 
     const char *title = String_val(vTitle);
-    void *ret;
+    void *menuItem;
 #ifdef USE_COCOA
-    ret = revery_menuItemCreate_cocoa(title);
+    menuItem = revery_menuItemCreate_cocoa(title);
+    [(NSObject *)menuItem retain];
 #else
     UNUSED(title);
-    ret = NULL;
+    menuItem = NULL;
 #endif
 
-    vMenu = revery_wrapPointer(ret);
-    CAMLreturn(vMenu);
+    vMenuItem = revery_wrapPointer(menuItem);
+    CAMLreturn(vMenuItem);
 }
 
 CAMLprim value revery_menuNth(value vMenu, value vIdx) {
@@ -74,6 +78,9 @@ CAMLprim value revery_menuNth(value vMenu, value vIdx) {
     void *menuItem;
 #ifdef USE_COCOA
     menuItem = revery_menuNth_cocoa(menu, idx);
+    if (menuItem != NULL) {
+        [(NSObject *)menuItem retain];
+    }
 #else
     UNUSED(menu);
     UNUSED(idx);
@@ -107,6 +114,9 @@ CAMLprim value revery_menuItemGetSubmenu(value vMenuItem) {
     void *submenu;
 #ifdef USE_COCOA
     submenu = revery_menuItemGetSubmenu_cocoa(menuItem);
+    if (submenu != NULL) {
+        [(NSObject *)submenu retain];
+    }
 #else
     UNUSED(menuItem);
     submenu = NULL;
