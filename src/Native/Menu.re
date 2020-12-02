@@ -65,7 +65,12 @@ module Item = {
 
   [%%else];
 
-  let create = c_create;
+  let create = (~title, ~onClick) => {
+    let menu = c_create(title);
+    CallbackTbl.replace(callbackTbl, menu, onClick);
+    menu;
+  };
+
   let getSubmenu = c_getSubmenu;
 
   [%%endif];
