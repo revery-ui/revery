@@ -96,7 +96,7 @@ let get_ios_config = () => {
 };
 let get_mac_config = () => {
   features: [COCOA],
-  cflags: ["-I", ".", "-x", "objective-c"],
+  cflags: ["-I", ".", "-x", "objective-c", "-Wno-deprecated-declarations"],
   libs: [],
   flags: [],
 };
@@ -125,7 +125,7 @@ let get_win32_config = () => {
   features: [WIN32],
   cflags: [],
   libs: [],
-  flags: [] @ cclib("-luuid") @ cclib("-lole32"),
+  flags: [] @ cclib("-luuid") @ cclib("-lole32") @ cclib("-lcomdlg32"),
 };
 
 main(~name="discover", t => {

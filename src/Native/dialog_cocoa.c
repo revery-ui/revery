@@ -23,6 +23,9 @@ const char **revery_open_files_cocoa(
     const char *startDir, const char *fileTypes[], int fileTypesSize,
     int allowMultiple, int canChooseFiles, int canChooseDirectories,
     int showHidden, const char *buttonText, const char *title) {
+
+    // Grab the key window, so we can restore focus after dialog..
+    NSWindow *keyWindow = [NSApp keyWindow];
     /* Creates an empty NSArray of filetypes (NSString's)
         If [fileTypes] is not null, copy the C-strings to NSString's to the
        NSArray
@@ -87,13 +90,21 @@ const char **revery_open_files_cocoa(
         // Copy the NSArray to the C-array
         for (int i = 0; i < size; i++) {
             NSString *tmp = [[urls objectAtIndex:i] path];
-            ret[i] = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            const char *sz= [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            // According to the Objective-C docs, the returned string
+            // is only guaranteed to be valid for the lifetime of
+            // the [NSString]:
+            // https://developer.apple.com/documentation/foundation/nsstring/1408489-cstringusingencoding?language=objc
+            // So we need to make a copy here...
+            ret[i] = strdup(sz);
         }
         [urls release];
         ret[size] = NULL;
+        [keyWindow makeKeyWindow];
         return ret;
     } else {
         // ...else return NULL
+        [keyWindow makeKeyWindow];
         return NULL;
     }
 }

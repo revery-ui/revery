@@ -19,6 +19,7 @@
 #elif USE_GTK
 #include "ReveryGtk.h"
 #endif
+#include "utilities.h"
 
 CAMLprim value revery_alertSupported() {
 #if defined(USE_WIN32) || defined(USE_COCOA) || defined(USE_GTK)
@@ -31,7 +32,7 @@ CAMLprim value revery_alertSupported() {
 CAMLprim value revery_alert(value vWindow, value vMessage) {
     CAMLparam2(vWindow, vMessage);
     const char *szMessage = String_val(vMessage);
-    void *pWin = (void *)vWindow;
+    void *pWin = (void *)revery_unwrapPointer(vWindow);
 
 #ifdef USE_WIN32
     revery_alert_win32(pWin, szMessage);
@@ -103,7 +104,14 @@ CAMLprim value revery_alertOpenFiles_native(
 
     char **fileList = NULL;
 
-#ifdef USE_COCOA
+#ifdef USE_WIN32
+    fileList = revery_open_files_win32(startDirectory, canChooseFiles,
+                                       canChooseDirectories, title);
+    (void)fileTypesSize;
+    (void)allowMultiple;
+    (void)showHidden;
+    (void)buttonText;
+#elif USE_COCOA
     fileList = revery_open_files_cocoa(
                    startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
                    canChooseDirectories, showHidden, buttonText, title);
@@ -131,6 +139,7 @@ CAMLprim value revery_alertOpenFiles_native(
 
         for (int i = 0; i < len; i++) {
             Store_field(camlArr, i, caml_copy_string(fileList[i]));
+            free(fileList[i]);
         }
 
         free(fileList);
