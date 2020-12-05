@@ -81,6 +81,11 @@ let examples = [
     source: "NativeIconExample.re",
   },
   {
+    name: "Native: OSX Menu",
+    render: _ => NativeMenuExample.render(),
+    source: "NativeMenuExample.re",
+  },
+  {
     name: "Input",
     render: _ => InputExample.render(),
     source: "InputExample.re",
@@ -289,7 +294,7 @@ let init = app => {
   App.onBeforeQuit(app, () => prerr_endline("Quitting!"))
   |> (ignore: Revery.App.unsubscribe => unit);
 
-  let initialExample = ref("Animation");
+  let initialExample = ref("Native: OSX Menu");
   let decorated = ref(true);
   let forceScaleFactor = ref(None);
   let showFPSCounter = ref(false);
