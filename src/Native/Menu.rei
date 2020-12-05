@@ -1,5 +1,17 @@
 type t;
 
+module KeyEquivalent: {
+  type t;
+
+  let ofString: string => t;
+
+  let enableAlt: t => t;
+  let disableAlt: t => t;
+
+  let enableShift: t => t;
+  let disableShift: t => t;
+};
+
 module Item: {
   type menu = t;
   type t;
@@ -8,7 +20,14 @@ module Item: {
   let equal: (t, t) => bool;
   let toString: t => string;
 
-  let create: (~title: string, ~onClick: unit => unit) => t;
+  let create:
+    (
+      ~title: string,
+      ~onClick: unit => unit,
+      ~keyEquivalent: KeyEquivalent.t=?,
+      unit
+    ) =>
+    t;
   let getSubmenu: t => option(menu);
 };
 

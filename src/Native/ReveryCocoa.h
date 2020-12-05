@@ -29,7 +29,7 @@ char *revery_getUserLocale_cocoa();
 /* Menu functions */
 void *revery_getMenuBarHandle_cocoa();
 void *revery_menuCreate_cocoa(const char *title);
-void *revery_menuItemCreate_cocoa(const char *title);
+void *revery_menuItemCreate_cocoa(const char *title, void *keyEquivalent);
 void *revery_menuNth_cocoa(void *nsMenu, int idx);
 void revery_menuAddItem_cocoa(void *nsMenu, void *nsMenuItem);
 void *revery_menuItemGetSubmenu_cocoa(void *nsMenuItem);

@@ -3,6 +3,22 @@
 
 type t;
 
+module KeyEquivalent = {
+  type t = {
+    str: string,
+    alt: bool,
+    shift: bool,
+  };
+
+  let ofString = str => {str, alt: false, shift: false};
+
+  let enableAlt = t => {...t, alt: true};
+  let disableAlt = t => {...t, alt: false};
+
+  let enableShift = t => {...t, shift: true};
+  let disableShift = t => {...t, shift: false};
+};
+
 module Item = {
   type menu = t;
   type t;
@@ -23,7 +39,8 @@ module Item = {
   [%%endif];
 
   open {
-         external c_create: string => t = "revery_menuItemCreate";
+         external c_create: (string, option(KeyEquivalent.t)) => t =
+           "revery_menuItemCreate";
          external c_getSubmenu: t => option(menu) =
            "revery_menuItemGetSubmenu";
        };
@@ -50,8 +67,8 @@ module Item = {
   %if
   defined(USE_COCOA);
 
-  let create = (~title, ~onClick) => {
-    let menu = c_create(title);
+  let create = (~title, ~onClick, ~keyEquivalent=?, ()) => {
+    let menu = c_create(title, keyEquivalent);
     CallbackTbl.replace(callbackTbl, menu, onClick);
     Gc.finalise(NSObject.release, menu);
     menu;

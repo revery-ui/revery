@@ -28,6 +28,8 @@ module View = {
         Menu.Item.create(
           ~title="Item 1.1",
           ~onClick=menuCallback("Item 1.1"),
+          ~keyEquivalent=Menu.KeyEquivalent.ofString("a"),
+          (),
         );
       Menu.addItem(menu1, item11);
 
@@ -38,6 +40,9 @@ module View = {
         Menu.Item.create(
           ~title="Item 1.2",
           ~onClick=menuCallback("Item 1.2"),
+          ~keyEquivalent=
+            Menu.KeyEquivalent.ofString("b") |> Menu.KeyEquivalent.enableShift,
+          (),
         );
       Menu.addItem(menu2, item12);
 
@@ -51,6 +56,9 @@ module View = {
         Menu.Item.create(
           ~title="Item 3.1.1",
           ~onClick=menuCallback("Item 1.3"),
+          ~keyEquivalent=
+            Menu.KeyEquivalent.ofString("c") |> Menu.KeyEquivalent.enableAlt,
+          (),
         );
 
       Menu.addItem(subMenu31, item311);

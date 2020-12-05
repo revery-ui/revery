@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "caml_values.h"
+#include "menu.h"
 
 #include "config.h"
 #ifdef USE_WIN32
@@ -51,14 +52,24 @@ CAMLprim value revery_menuCreate(value vTitle) {
     CAMLreturn(vMenu);
 }
 
-CAMLprim value revery_menuItemCreate(value vTitle) {
-    CAMLparam1(vTitle);
+void convertCamlKeyEquivalent(value vKeyEquivalent, struct KeyEquivalent *keyEquivalent) {
+    keyEquivalent->str = String_val(Field(vKeyEquivalent, 0));
+    keyEquivalent->alt = Bool_val(Field(vKeyEquivalent, 1));
+    keyEquivalent->shift = Bool_val(Field(vKeyEquivalent, 2));
+}
+
+CAMLprim value revery_menuItemCreate(value vTitle, value vKeyEquivalent) {
+    CAMLparam2(vTitle, vKeyEquivalent);
     CAMLlocal1(vMenuItem);
+    struct KeyEquivalent keyEquivalent;
+    if (vKeyEquivalent != Val_none) {
+        convertCamlKeyEquivalent(Some_val(vKeyEquivalent), &keyEquivalent);
+    }
 
     const char *title = String_val(vTitle);
     void *menuItem;
 #ifdef USE_COCOA
-    menuItem = revery_menuItemCreate_cocoa(title);
+    menuItem = revery_menuItemCreate_cocoa(title, vKeyEquivalent == Val_none ? NULL : &keyEquivalent);
     [(NSObject *)menuItem retain];
 #else
     UNUSED(title);

@@ -1,6 +1,7 @@
 #include "config.h"
 #ifdef USE_COCOA
 #include <stdio.h>
+#include "menu.h"
 
 #import <Cocoa/Cocoa.h>
 #import "ReveryMenuItemTarget.h"
@@ -16,16 +17,28 @@ NSMenu *revery_menuCreate_cocoa(const char *title) {
     return [[NSMenu alloc] initWithTitle:nsTitle];
 }
 
-NSMenuItem *revery_menuItemCreate_cocoa(const char *title) {
+NSMenuItem *revery_menuItemCreate_cocoa(const char *title, struct KeyEquivalent *keyEquivalent) {
     if (menuItemTarget == NULL) {
         menuItemTarget = [[ReveryMenuItemTarget alloc] init];
     }
 
     NSString *nsTitle = [NSString stringWithUTF8String:title];
     NSMenuItem *nsMenuItem =
-        [[NSMenuItem alloc] initWithTitle:nsTitle action:@selector(onMenuItemClick:) keyEquivalent:@"p"];
+        [[NSMenuItem alloc] initWithTitle:nsTitle action:@selector(onMenuItemClick:) keyEquivalent:@""];
 
     [nsMenuItem setTarget:menuItemTarget];
+
+    if (keyEquivalent != NULL) {
+        NSEventModifierFlags modifierFlags = NSCommandKeyMask;
+        [nsMenuItem setKeyEquivalent:[NSString stringWithUTF8String:keyEquivalent->str]];
+        if (keyEquivalent->alt) {
+            modifierFlags |= NSEventModifierFlagOption;
+        }
+        if (keyEquivalent->shift) {
+            modifierFlags |= NSEventModifierFlagShift;
+        }
+        [nsMenuItem setKeyEquivalentModifierMask:modifierFlags];
+    }
 
     return nsMenuItem;
 }
