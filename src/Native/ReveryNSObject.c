@@ -52,4 +52,13 @@ CAMLprim value revery_NSObject_className(value vNSObj) {
     CAMLreturn(vClassName);
 }
 
+CAMLprim value revery_NSObject_release(value vNSObj) {
+    CAMLparam1(vNSObj);
+
+    NSObject *nsObj = (NSObject *)revery_unwrapPointer(vNSObj);
+    [nsObj release];
+
+    CAMLreturn(Val_unit);
+}
+
 #endif

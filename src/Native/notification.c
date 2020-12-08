@@ -7,8 +7,6 @@
 
 #include "caml_values.h"
 
-#define UNUSED(x) (void)(x)
-
 #include "config.h"
 #ifdef USE_WIN32
 #include "ReveryWin32.h"
@@ -17,6 +15,8 @@
 #elif USE_GTK
 #include "ReveryGtk.h"
 #endif
+
+#include "utilities.h"
 
 CAMLprim value revery_dispatchNotification(value vNotificationT) {
     CAMLparam1(vNotificationT);
