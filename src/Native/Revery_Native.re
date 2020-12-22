@@ -6,5 +6,6 @@ module Shell = Shell;
 module Locale = Locale;
 module Gtk = Gtk;
 module Menu = Menu;
+module Input = Input;
 
 include Initialization;
