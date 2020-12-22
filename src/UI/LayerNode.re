@@ -191,8 +191,8 @@ class layerNode (condition: RenderCondition.t) = {
         Skia.Rect.makeLtrb(
           0.,
           0.,
-          float_of_int(dimensions.width),
-          float_of_int(dimensions.height),
+          float_of_int(dimensions.width) *. dpi *. canvasScalingFactor,
+          float_of_int(dimensions.height) *. dpi *. canvasScalingFactor,
         );
 
       let _save: int = Revery_Draw.CanvasContext.save(canvas);
