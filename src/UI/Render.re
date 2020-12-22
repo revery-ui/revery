@@ -134,5 +134,5 @@ let render =
   Log.trace("END: Render frame");
 
   let forceDirty = DebugDraw.isEnabled();
-  forceDirty
+  forceDirty;
 };

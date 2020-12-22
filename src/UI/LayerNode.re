@@ -102,20 +102,19 @@ class layerNode (condition: RenderCondition.t) = {
         ~paint=textPaint,
         ~x=0.,
         ~y=20.,
-        ~text=Printf.sprintf("Layer Dimensions: %dx%d",
-        CanvasContext.width(layerCanvas),
-        CanvasContext.height(layerCanvas)
-        ),
+        ~text=
+          Printf.sprintf(
+            "Layer Dimensions: %dx%d",
+            CanvasContext.width(layerCanvas),
+            CanvasContext.height(layerCanvas),
+          ),
         canvas,
       );
       CanvasContext.drawText(
         ~paint=textPaint,
         ~x=0.,
         ~y=40.,
-        ~text=Printf.sprintf("Element Dimensions: %dx%d",
-        width,
-        height,
-        ),
+        ~text=Printf.sprintf("Element Dimensions: %dx%d", width, height),
         canvas,
       );
     };
@@ -188,16 +187,16 @@ class layerNode (condition: RenderCondition.t) = {
         Colors.white |> Color.multiplyAlpha(opacity) |> Color.toSkia,
       );
 
-        let clippingRect =
-          Skia.Rect.makeLtrb(
-            0.,
-            0.,
-            float_of_int(dimensions.width),
-            float_of_int(dimensions.height),
-          );
+      let clippingRect =
+        Skia.Rect.makeLtrb(
+          0.,
+          0.,
+          float_of_int(dimensions.width),
+          float_of_int(dimensions.height),
+        );
 
-        let _save: int = Revery_Draw.CanvasContext.save(canvas);
-        let () = Revery_Draw.CanvasContext.clipRect(canvas, clippingRect);
+      let _save: int = Revery_Draw.CanvasContext.save(canvas);
+      let () = Revery_Draw.CanvasContext.clipRect(canvas, clippingRect);
       // [x] and [y] are 0. because this is accounted for in the world transform
       CanvasContext.drawLayer(
         ~paint=_layerPaint,
@@ -206,12 +205,16 @@ class layerNode (condition: RenderCondition.t) = {
         ~y=0.,
         canvas,
       );
-        let () = Revery_Draw.CanvasContext.restore(canvas);
-
+      let () = Revery_Draw.CanvasContext.restore(canvas);
 
       if (parentContext.debug) {
         Revery_Draw.CanvasContext.setMatrix(canvas, world);
-        _this#debugDraw(~layerCanvas, dimensions.width, dimensions.height, canvas);
+        _this#debugDraw(
+          ~layerCanvas,
+          dimensions.width,
+          dimensions.height,
+          canvas,
+        );
       };
     };
   };
