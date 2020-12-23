@@ -75,7 +75,20 @@ module Button = {
     button;
   };
 
-  let removeFromView = _ => ();
+  let setX = (_, _) => ();
+  let setY = (_, _) => ();
+  let getX = _ => 0;
+  let getY = _ => 0;
+
+  let setWidth = (_, _) => ();
+  let setHeight = (_, _) => ();
+  let getWidth = _ => 0;
+  let getHeight = _ => 0;
+  let getDefaultWidth = _ => 0;
+  let getDefaultHeight = _ => 0;
+
+  let remove = _ => ();
+  let displayIn = (_, _) => ();
 
   [%%endif];
 };
