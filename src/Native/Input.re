@@ -61,8 +61,10 @@ module Button = {
   let setHeight = NSView.setHeight;
   let getWidth = NSView.getWidth;
   let getHeight = NSView.getHeight;
+  let getDefaultWidth = NSView.getDefaultWidth;
+  let getDefaultHeight = NSView.getDefaultHeight;
 
-  let removeFrom = NSView.removeFrom;
+  let remove = NSView.remove;
   let displayIn = NSView.displayIn;
 
   [%%else];

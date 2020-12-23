@@ -87,7 +87,7 @@ let examples = [
   },
   {
     name: "Native: Inputs",
-    render: w => NativeInputExample.render(w),
+    render: _ => NativeInputExample.render(),
     source: "NativeInputExample.re",
   },
   {

@@ -10,14 +10,11 @@
 
 #include "utilities.h"
 
-CAMLprim value revery_NSView_removeFrom(value vNSView, value vNSWindow) {
-    CAMLparam2(vNSView, vNSWindow);
+CAMLprim value revery_NSView_remove(value vNSView) {
+    CAMLparam1(vNSView);
     NSView *nsView = (NSView *)revery_unwrapPointer(vNSView);
-    NSWindow *nsWindow = (NSWindow *)revery_unwrapPointer(vNSWindow);
 
-    if ([nsView isDescendantOf:[nsWindow contentView]]) {
-        [nsView removeFromSuperview];
-    }
+    [nsView removeFromSuperview];
 
     CAMLreturn(Val_unit);
 }
@@ -124,6 +121,28 @@ CAMLprim value revery_NSView_displayIn(value vNSView, value vNSWindow) {
     [nsView updateFrame];
 
     CAMLreturn(Val_unit);
+}
+
+CAMLprim value revery_NSView_getDefaultWidth(value vNSView) {
+    CAMLparam1(vNSView);
+    CAMLlocal1(vDefaultWidth);
+    NSView *nsView = (NSView *)revery_unwrapPointer(vNSView);
+
+    CGSize defaultSize = [nsView fittingSize];
+    vDefaultWidth = Val_int((int)defaultSize.width);
+
+    CAMLreturn(vDefaultWidth);
+}
+
+CAMLprim value revery_NSView_getDefaultHeight(value vNSView) {
+    CAMLparam1(vNSView);
+    CAMLlocal1(vDefaultHeight);
+    NSView *nsView = (NSView *)revery_unwrapPointer(vNSView);
+
+    CGSize defaultSize = [nsView fittingSize];
+    vDefaultHeight = Val_int((int)defaultSize.height);
+
+    CAMLreturn(vDefaultHeight);
 }
 
 #endif

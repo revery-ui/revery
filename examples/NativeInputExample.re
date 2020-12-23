@@ -1,42 +1,16 @@
-open Revery;
 open Revery.UI;
-open Revery.UI.Components;
-
-open Revery.Native;
 
 module View = {
-  let%component make = (~window: Window.t, ()) => {
-    let%hook button =
-      Hooks.ref(
-        Input.Button.create(~title="Zach's Button", ~onClick=() => ()),
-      );
-
-    let moveButton = () => {
-      let x = Random.int(600);
-      let y = Random.int(400);
-      Input.Button.setX(button^, x);
-      Input.Button.setY(button^, y);
-    };
-
-    let resizeButton = () => {
-      let width = Random.int(180) + 20;
-      Input.Button.setWidth(button^, width);
-    };
-
-    let%hook () =
-      Hooks.effect(
-        OnMount,
-        () => {
-          Input.Button.displayIn(button^, Window.getSdlWindow(window));
-          None;
-        },
-      );
+  let noop = () => ();
+  let%component make = () => {
+    let%hook (isColumn, setIsColumn) = Hooks.state(true);
 
     let containerStyle =
       Style.[
         position(`Absolute),
         justifyContent(`Center),
         alignItems(`Center),
+        flexDirection(isColumn ? `Column : `Row),
         bottom(0),
         top(0),
         left(0),
@@ -44,23 +18,22 @@ module View = {
       ];
 
     <View style=containerStyle>
-      <Button title="Move Button" height=40 fontSize=14. onClick=moveButton />
-      <Button
-        title="Resize Button"
-        height=40
-        fontSize=14.
-        onClick=resizeButton
+      <NativeButton
+        title="Toggle Direction"
+        onClick={() => setIsColumn(ic => !ic)}
       />
-      <Button
-        title="Delete Button From View"
-        height=40
-        fontSize=14.
-        onClick={() =>
-          Input.Button.removeFrom(button^, Window.getSdlWindow(window))
-        }
+      <NativeButton
+        title="Print to STDOUT"
+        onClick={() => print_endline("You clicked a button!")}
+      />
+      <NativeButton title="Custom Width" style=Style.[width(200)] />
+      <NativeButton title="Custom Height" style=Style.[height(50)] />
+      <NativeButton
+        title="Custom Both"
+        style=Style.[width(200), height(50)]
       />
     </View>;
   };
 };
 
-let render = w => <View window=w />;
+let render = () => <View />;

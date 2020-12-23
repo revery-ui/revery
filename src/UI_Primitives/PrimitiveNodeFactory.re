@@ -5,6 +5,7 @@ type nodeFactory = {
   createViewNode: unit => viewNode,
   createTextNode: string => textNode,
   createImageNode: option(Skia.Image.t) => imageNode,
+  createNativeButtonNode: (string, unit => unit) => nativeButtonNode,
 };
 
 let defaultNodeFactory: nodeFactory = {
@@ -12,6 +13,8 @@ let defaultNodeFactory: nodeFactory = {
   createViewNode: () => (new viewNode)(),
   createTextNode: text => (new textNode)(text),
   createImageNode: data => (new imageNode)(data),
+  createNativeButtonNode: (title, onClick) =>
+    (new nativeButtonNode)(title, onClick),
 };
 
 let _nodeFactory = ref(defaultNodeFactory);
