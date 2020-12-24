@@ -1,4 +1,4 @@
-#import "config.h"
+#include "config.h"
 #ifdef USE_COCOA
 #import <Cocoa/Cocoa.h>
 #import "ReveryNSViewCoords.h"
