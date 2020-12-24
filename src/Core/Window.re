@@ -68,7 +68,7 @@ module WindowMetrics: {
         // Mac and iOS is easy... there isn't any scaling factor.  The window is automatically
         // proportioned for us. The scaling is handled by the ratio of size / framebufferSize.
         | IOS
-        | Mac => 1.0
+        | Mac(_) => 1.0
         // On Windows, we need to try a Win32 API to get the scale factor
         | Windows =>
           let scale = Sdl2.Window.getWin32ScaleFactor(sdlWindow);
@@ -238,7 +238,7 @@ type t = {
 module Internal = {
   let setTitlebarStyle = (w: Sdl2.Window.t, style: WindowStyles.titlebar) => {
     switch (Environment.os) {
-    | Mac =>
+    | Mac(_) =>
       switch (style) {
       | Transparent => Sdl2.Window.setMacTitlebarTransparent(w)
       | Hidden => Sdl2.Window.setMacTitlebarHidden(w)

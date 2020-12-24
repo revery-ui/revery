@@ -47,13 +47,13 @@ let getAssetPath: string => string;
 let getTempDirectory: unit => string;
 
 type os =
+  | Unknown
   | Android
   | IOS
   | Linux
-  | Mac
   | Windows
   | Browser
-  | Unknown;
+  | Mac(int, int, int);
 
 let os: os;
 

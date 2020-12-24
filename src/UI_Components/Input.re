@@ -320,7 +320,11 @@ let%component make =
     onKeyDown(event);
 
     let code = event.keycode;
-    let mac = Environment.os === Mac;
+    let mac =
+      switch (Environment.os) {
+      | Mac(_) => true
+      | _ => false
+      };
     let super = Sdl2.Keymod.isGuiDown(event.keymod);
     let ctrl = Sdl2.Keymod.isControlDown(event.keymod);
 

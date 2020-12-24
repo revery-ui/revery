@@ -374,6 +374,12 @@ let init = app => {
       Console.log(Printf.sprintf("Moved: %d x %d", x, y))
     );
 
+  switch (Environment.os) {
+  | Mac(major, minor, bugfix) =>
+    Printf.printf("MacOS: %d.%d.%d\n", major, minor, bugfix)
+  | _ => ()
+  };
+
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);
   ();

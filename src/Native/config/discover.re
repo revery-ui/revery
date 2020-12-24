@@ -68,6 +68,7 @@ let gen_config_header = (conf, features) => {
     | Windows => "windows"
     };
   };
+  let is_os = os => get_os(conf) == os ? Value.Int(1) : Value.Switch(false);
 
   gen_header_file(
     conf,
@@ -77,6 +78,11 @@ let gen_config_header = (conf, features) => {
       ("USE_GTK", includes(GTK)),
       ("USE_UIKIT", includes(UIKIT)),
       ("USE_WIN32", includes(WIN32)),
+      ("IS_IOS", is_os(IOS)),
+      ("IS_MACOS", is_os(Mac)),
+      ("IS_ANDROID", is_os(Android)),
+      ("IS_LINUX", is_os(Linux)),
+      ("IS_WINDOWS", is_os(Windows)),
     ],
   );
 };
