@@ -56,6 +56,7 @@ type os =
   | Mac(int, int, int);
 
 let os: os;
+let osString: string;
 
 /**
 [getUserLocale] returns the current user locale. Note that on some platforms

@@ -29,6 +29,16 @@ let os = {
   webGL ? Browser : Revery_Native.Environment.getOS();
 };
 
+let osString = switch (os) {
+  | Mac(major, minor, bugfix) => Printf.sprintf("macOS %d.%d.%d", major, minor, bugfix)
+  | Windows => "Windows"
+  | Linux => "Linux"
+  | Android => "Android"
+  | Browser => "Browser"
+  | IOS => "iOS"
+  | Unknown => "Unknown"
+  };
+
 module Internal = {
   let addTrailingSlash = dir => {
     let len = String.length(dir);

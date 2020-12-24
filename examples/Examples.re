@@ -373,12 +373,8 @@ let init = app => {
     Window.onMoved(window, ((x, y)) =>
       Console.log(Printf.sprintf("Moved: %d x %d", x, y))
     );
-
-  switch (Environment.os) {
-  | Mac(major, minor, bugfix) =>
-    Printf.printf("MacOS: %d.%d.%d\n", major, minor, bugfix)
-  | _ => ()
-  };
+  
+  Console.log(Printf.sprintf("Operating system: %s", Environment.osString));
 
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);
