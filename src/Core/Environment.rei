@@ -58,6 +58,13 @@ type os =
 let os: os;
 let osString: string;
 
+let isMac: bool;
+let isIOS: bool;
+let isWindows: bool;
+let isAndroid: bool;
+let isLinux: bool;
+let isBrowser: bool;
+
 /**
 [getUserLocale] returns the current user locale. Note that on some platforms
 (including macOS) the locale can change during runtime

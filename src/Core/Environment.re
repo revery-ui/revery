@@ -41,6 +41,27 @@ let osString =
   | Unknown => "Unknown"
   };
 
+let isMac =
+  switch (os) {
+  | Mac(_) => true
+  | _ => false
+  };
+let isIOS = {
+  os == IOS;
+};
+let isWindows = {
+  os == Windows;
+};
+let isAndroid = {
+  os == Android;
+};
+let isLinux = {
+  os == Linux;
+};
+let isBrowser = {
+  os == Browser;
+};
+
 module Internal = {
   let addTrailingSlash = dir => {
     let len = String.length(dir);

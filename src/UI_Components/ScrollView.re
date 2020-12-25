@@ -13,11 +13,6 @@ let empty = React.empty;
 
 let scrollTrackColor = Color.rgba(0.0, 0.0, 0.0, 0.4);
 let scrollThumbColor = Color.rgba(0.5, 0.5, 0.5, 0.4);
-let isMac =
-  switch (Environment.os) {
-  | Mac(_) => true
-  | _ => false
-  };
 
 type action =
   | ScrollUpdated(int);
@@ -102,7 +97,7 @@ let%component make =
                 ~style,
                 ~scrollLeft=0,
                 ~scrollTop=0,
-                ~bounce=isMac,
+                ~bounce=Environment.isMac,
                 ~children=React.empty,
                 (),
               ) => {
@@ -230,7 +225,7 @@ let%component make =
 
         if (horizontalScroll) {
           if (isHorizontalScrollBarVisible) {
-            let horizontalScrollMultiplier = isMac ? (-1.) : 1.;
+            let horizontalScrollMultiplier = Environment.isMac ? (-1.) : 1.;
             handeScroll(
               ~deltaValue=
                 abs_float(wheelEvent.deltaX) > 0.
