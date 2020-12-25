@@ -82,20 +82,20 @@ let fromFile = (fileName, ~italic as _, _) => {
 let default =
   switch (Revery_Core.Environment.os) {
   | Linux => system("Liberation Sans")
-  | Mac => system("System Font")
+  | Mac(_) => system("System Font")
   | _ => system("Arial")
   };
 
 let defaultMono =
   switch (Revery_Core.Environment.os) {
-  | Mac => system("Menlo")
+  | Mac(_) => system("Menlo")
   | Windows => system("Consolas")
   | _ => fromFile("Inconsolata.otf")
   };
 
 let defaultSerif =
   switch (Revery_Core.Environment.os) {
-  | Mac => system("Palatino")
+  | Mac(_) => system("Palatino")
   | Linux => system("Liberation Serif")
   | _ => system("Times New Roman")
   };

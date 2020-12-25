@@ -16,27 +16,50 @@ let sleep = (t: Time.t) =>
 external yield: unit => unit = "caml_thread_yield";
 
 type os =
-  | Android
-  | IOS
-  | Linux
-  | Mac
-  | Windows
-  | Browser
-  | Unknown;
+  Revery_Native.Environment.os =
+    | Unknown
+    | Android
+    | IOS
+    | Linux
+    | Windows
+    | Browser
+    | Mac(int, int, int);
 
 let os = {
-  webGL
-    ? Browser
-    : (
-      switch (Revery_Native.Environment.get_os()) {
-      | `Android => Android
-      | `IOS => IOS
-      | `Linux => Linux
-      | `Mac => Mac
-      | `Windows => Windows
-      | _ => Unknown
-      }
-    );
+  webGL ? Browser : Revery_Native.Environment.getOS();
+};
+
+let osString =
+  switch (os) {
+  | Mac(major, minor, bugfix) =>
+    Printf.sprintf("macOS %d.%d.%d", major, minor, bugfix)
+  | Windows => "Windows"
+  | Linux => "Linux"
+  | Android => "Android"
+  | Browser => "Browser"
+  | IOS => "iOS"
+  | Unknown => "Unknown"
+  };
+
+let isMac =
+  switch (os) {
+  | Mac(_) => true
+  | _ => false
+  };
+let isIOS = {
+  os == IOS;
+};
+let isWindows = {
+  os == Windows;
+};
+let isAndroid = {
+  os == Android;
+};
+let isLinux = {
+  os == Linux;
+};
+let isBrowser = {
+  os == Browser;
 };
 
 module Internal = {
@@ -65,7 +88,7 @@ let getExecutingDirectory = () =>
        * the symlink destination - this causes problems when trying to load assets
        * relative to the binary location when symlinked.
        */
-      | Mac =>
+      | Mac(_) =>
         switch (
           String.rindex_opt(Sys.executable_name, '/'),
           String.rindex_opt(Sys.executable_name, '\\'),

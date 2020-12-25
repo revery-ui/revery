@@ -374,6 +374,8 @@ let init = app => {
       Console.log(Printf.sprintf("Moved: %d x %d", x, y))
     );
 
+  Console.log(Printf.sprintf("Operating system: %s", Environment.osString));
+
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);
   ();
