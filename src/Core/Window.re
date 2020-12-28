@@ -86,7 +86,7 @@ module WindowMetrics: {
         //     https://github.com/mosra/magnum/commit/ae31c3cd82ba53454b8ab49d3f9d8ca385560d4b
         //     https://github.com/glfw/glfw/blob/250b94cd03e6f947ba516869c7f3b277f8d0cacc/src/x11_init.c#L938
         //     https://wiki.archlinux.org/index.php/HiDPI
-        | Linux =>
+        | Linux(_) =>
           switch (Rench.Environment.getEnvironmentVariable("GDK_SCALE")) {
           | None => 1.0
           | Some(v) =>
@@ -248,7 +248,7 @@ module Internal = {
     | Browser
     // NOTE: may work for IOS?
     | IOS
-    | Linux
+    | Linux(_)
     | Unknown
     | Windows => ()
     };

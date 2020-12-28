@@ -81,7 +81,7 @@ let fromFile = (fileName, ~italic as _, _) => {
 
 let default =
   switch (Revery_Core.Environment.os) {
-  | Linux => system("Liberation Sans")
+  | Linux(_) => system("Liberation Sans")
   | Mac(_) => system("System Font")
   | _ => system("Arial")
   };
@@ -96,7 +96,7 @@ let defaultMono =
 let defaultSerif =
   switch (Revery_Core.Environment.os) {
   | Mac(_) => system("Palatino")
-  | Linux => system("Liberation Serif")
+  | Linux(_) => system("Liberation Serif")
   | _ => system("Times New Roman")
   };
 

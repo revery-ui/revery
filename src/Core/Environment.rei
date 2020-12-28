@@ -50,10 +50,10 @@ type os =
   | Unknown
   | Android
   | IOS
-  | Linux
   | Windows
   | Browser
-  | Mac(int, int, int);
+  | Mac(int, int, int)
+  | Linux(int, int, int, int);
 
 let os: os;
 let osString: string;
