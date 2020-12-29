@@ -20,10 +20,19 @@ type os =
     | Unknown
     | Android
     | IOS
-    | Linux
     | Windows
     | Browser
-    | Mac(int, int, int);
+    | Mac({
+        major: int,
+        minor: int,
+        bugfix: int,
+      })
+    | Linux({
+        kernel: int,
+        major: int,
+        minor: int,
+        patch: int,
+      });
 
 let os = {
   webGL ? Browser : Revery_Native.Environment.getOS();
@@ -31,10 +40,11 @@ let os = {
 
 let osString =
   switch (os) {
-  | Mac(major, minor, bugfix) =>
+  | Mac({major, minor, bugfix}) =>
     Printf.sprintf("macOS %d.%d.%d", major, minor, bugfix)
+  | Linux({kernel, major, minor, patch}) =>
+    Printf.sprintf("Linux %d.%d.%d-%d", kernel, major, minor, patch)
   | Windows => "Windows"
-  | Linux => "Linux"
   | Android => "Android"
   | Browser => "Browser"
   | IOS => "iOS"
@@ -46,6 +56,11 @@ let isMac =
   | Mac(_) => true
   | _ => false
   };
+let isLinux =
+  switch (os) {
+  | Linux(_) => true
+  | _ => false
+  };
 let isIOS = {
   os == IOS;
 };
@@ -54,9 +69,6 @@ let isWindows = {
 };
 let isAndroid = {
   os == Android;
-};
-let isLinux = {
-  os == Linux;
 };
 let isBrowser = {
   os == Browser;
