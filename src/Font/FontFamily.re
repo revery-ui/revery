@@ -89,7 +89,7 @@ let default =
 let defaultMono =
   switch (Revery_Core.Environment.os) {
   | Mac(_) => system("Menlo")
-  | Windows => system("Consolas")
+  | Windows(_) => system("Consolas")
   | _ => fromFile("Inconsolata.otf")
   };
 

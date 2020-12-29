@@ -50,7 +50,6 @@ type os =
   | Unknown
   | Android
   | IOS
-  | Windows
   | Browser
   | Mac({
       major: int,
@@ -62,6 +61,11 @@ type os =
       major: int,
       minor: int,
       patch: int,
+    })
+  | Windows({
+      major: int,
+      minor: int,
+      build: int,
     });
 
 let os: os;

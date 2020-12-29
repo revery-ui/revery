@@ -20,7 +20,6 @@ type os =
     | Unknown
     | Android
     | IOS
-    | Windows
     | Browser
     | Mac({
         major: int,
@@ -32,6 +31,11 @@ type os =
         major: int,
         minor: int,
         patch: int,
+      })
+    | Windows({
+        major: int,
+        minor: int,
+        build: int,
       });
 
 let os = {
@@ -44,7 +48,8 @@ let osString =
     Printf.sprintf("macOS %d.%d.%d", major, minor, bugfix)
   | Linux({kernel, major, minor, patch}) =>
     Printf.sprintf("Linux %d.%d.%d-%d", kernel, major, minor, patch)
-  | Windows => "Windows"
+  | Windows({major, minor, build}) =>
+    Printf.sprintf("Windows %d.%d Build %d", major, minor, build)
   | Android => "Android"
   | Browser => "Browser"
   | IOS => "iOS"
@@ -61,11 +66,13 @@ let isLinux =
   | Linux(_) => true
   | _ => false
   };
+let isWindows =
+  switch (os) {
+  | Windows(_) => true
+  | _ => false
+  };
 let isIOS = {
   os == IOS;
-};
-let isWindows = {
-  os == Windows;
 };
 let isAndroid = {
   os == Android;
