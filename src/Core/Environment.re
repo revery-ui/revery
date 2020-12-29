@@ -22,8 +22,17 @@ type os =
     | IOS
     | Windows
     | Browser
-    | Mac(int, int, int)
-    | Linux(int, int, int, int);
+    | Mac({
+        major: int,
+        minor: int,
+        bugfix: int,
+      })
+    | Linux({
+        kernel: int,
+        major: int,
+        minor: int,
+        patch: int,
+      });
 
 let os = {
   webGL ? Browser : Revery_Native.Environment.getOS();
@@ -31,9 +40,9 @@ let os = {
 
 let osString =
   switch (os) {
-  | Mac(major, minor, bugfix) =>
+  | Mac({major, minor, bugfix}) =>
     Printf.sprintf("macOS %d.%d.%d", major, minor, bugfix)
-  | Linux(kernel, major, minor, patch) =>
+  | Linux({kernel, major, minor, patch}) =>
     Printf.sprintf("Linux %d.%d.%d-%d", kernel, major, minor, patch)
   | Windows => "Windows"
   | Android => "Android"

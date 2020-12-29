@@ -52,8 +52,17 @@ type os =
   | IOS
   | Windows
   | Browser
-  | Mac(int, int, int)
-  | Linux(int, int, int, int);
+  | Mac({
+      major: int,
+      minor: int,
+      bugfix: int,
+    })
+  | Linux({
+      kernel: int,
+      major: int,
+      minor: int,
+      patch: int,
+    });
 
 let os: os;
 let osString: string;
