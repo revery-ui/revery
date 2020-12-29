@@ -14,7 +14,7 @@ run-test: [
   ["dune" "runtest" "-p" name "-j" jobs] { ocaml:version >= "4.10" }
 ]
 depends: [
-  "ocaml"                   {>= "4.04.1" & < "4.12"}
+  "ocaml"                   {>= "4.04.1"}
   "dune"                    {>= "1.11"}
   "ocaml-compiler-libs"     {>= "v0.11.0"}
   "ocaml-migrate-parsetree" {>= "1.5.0" & < "2.0.0"}
