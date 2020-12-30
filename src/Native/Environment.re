@@ -4,7 +4,6 @@ type os =
   | Unknown // 0
   | Android // 1
   | IOS // 2
-  | Windows // 3
   | Browser // 4
   /* Block values */
   | Mac({
@@ -17,6 +16,11 @@ type os =
       major: int,
       minor: int,
       patch: int,
-    }); // 1
+    }) // 1
+  | Windows({
+      major: int,
+      minor: int,
+      build: int,
+    }); // 2
 
 external getOS: unit => os = "revery_getOperatingSystem";

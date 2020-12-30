@@ -70,7 +70,7 @@ module WindowMetrics: {
         | IOS
         | Mac(_) => 1.0
         // On Windows, we need to try a Win32 API to get the scale factor
-        | Windows =>
+        | Windows(_) =>
           let scale = Sdl2.Window.getWin32ScaleFactor(sdlWindow);
           Log.tracef(m =>
             m("_getScaleFactor - from getWin32ScaleFactor: %f", scale)
@@ -250,7 +250,7 @@ module Internal = {
     | IOS
     | Linux(_)
     | Unknown
-    | Windows => ()
+    | Windows(_) => ()
     };
   };
 

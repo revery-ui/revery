@@ -15,6 +15,8 @@
 #import "ReveryMac.h"
 #elif IS_LINUX
 #include "ReveryLinux.h"
+#elif IS_WINDOWS
+#include "ReveryWindows.h"
 #endif
 
 CAMLprim value revery_getOperatingSystem() {
@@ -33,7 +35,12 @@ CAMLprim value revery_getOperatingSystem() {
     Store_field(vOS, 2, Val_int(minor));
     Store_field(vOS, 3, Val_int(patch));
 #elif IS_WINDOWS
-    vOS = Val_int(3);
+    int major, minor, build;
+    getOperatingSystemVersion_windows(&major, &minor, &build);
+    vOS = caml_alloc(3, 2);
+    Store_field(vOS, 0, Val_int(major));
+    Store_field(vOS, 1, Val_int(minor));
+    Store_field(vOS, 2, Val_int(build));
 #elif IS_MACOS
     int major, minor, bugfix;
     getOperatingSystemVersion_mac(&major, &minor, &bugfix);
