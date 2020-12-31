@@ -376,8 +376,6 @@ let init = app => {
 
   Console.log(Printf.sprintf("Operating system: %s", Environment.osString));
 
-  Revery_Native.Window.setUnsavedWork(window |> Window.getSdlWindow, true);
-
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);
   ();
