@@ -382,6 +382,10 @@ let setZoom = (window, zoom) => {
   window.metrics = WindowMetrics.setZoom(max(zoom, 0.1), window.metrics);
 };
 
+let setUnsavedWork = (window, truth) => {
+  Revery_Native.Window.setUnsavedWork(window.sdlWindow, truth);
+};
+
 let render = window => {
   Internal.resizeIfNecessary(window);
 
