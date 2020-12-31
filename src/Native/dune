@@ -14,6 +14,7 @@
         shell shell_cocoa shell_gtk shell_win32
         locale locale_cocoa locale_win32
         menu menu_cocoa
+        window window_cocoa
         utilities
         ReveryGtk ReveryGtk_Widget
         ReveryAppDelegate ReveryAppDelegate_func
