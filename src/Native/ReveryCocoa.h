@@ -42,3 +42,6 @@ void revery_menuClear_cocoa(void *nsMenu);
 
 /* Input functions */
 void *revery_buttonCreate_cocoa(void);
+
+/* Window functions */
+void revery_windowSetUnsavedWork_cocoa(void *memory, int truth);

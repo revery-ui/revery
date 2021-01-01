@@ -16,27 +16,69 @@ let sleep = (t: Time.t) =>
 external yield: unit => unit = "caml_thread_yield";
 
 type os =
-  | Android
-  | IOS
-  | Linux
-  | Mac
-  | Windows
-  | Browser
-  | Unknown;
+  Revery_Native.Environment.os =
+    | Unknown
+    | Android
+    | IOS
+    | Browser
+    | Mac({
+        major: int,
+        minor: int,
+        bugfix: int,
+      })
+    | Linux({
+        kernel: int,
+        major: int,
+        minor: int,
+        patch: int,
+      })
+    | Windows({
+        major: int,
+        minor: int,
+        build: int,
+      });
 
 let os = {
-  webGL
-    ? Browser
-    : (
-      switch (Revery_Native.Environment.get_os()) {
-      | `Android => Android
-      | `IOS => IOS
-      | `Linux => Linux
-      | `Mac => Mac
-      | `Windows => Windows
-      | _ => Unknown
-      }
-    );
+  webGL ? Browser : Revery_Native.Environment.getOS();
+};
+
+let osString =
+  switch (os) {
+  | Mac({major, minor, bugfix}) =>
+    Printf.sprintf("macOS %d.%d.%d", major, minor, bugfix)
+  | Linux({kernel, major, minor, patch}) =>
+    Printf.sprintf("Linux %d.%d.%d-%d", kernel, major, minor, patch)
+  | Windows({major, minor, build}) =>
+    Printf.sprintf("Windows %d.%d Build %d", major, minor, build)
+  | Android => "Android"
+  | Browser => "Browser"
+  | IOS => "iOS"
+  | Unknown => "Unknown"
+  };
+
+let isMac =
+  switch (os) {
+  | Mac(_) => true
+  | _ => false
+  };
+let isLinux =
+  switch (os) {
+  | Linux(_) => true
+  | _ => false
+  };
+let isWindows =
+  switch (os) {
+  | Windows(_) => true
+  | _ => false
+  };
+let isIOS = {
+  os == IOS;
+};
+let isAndroid = {
+  os == Android;
+};
+let isBrowser = {
+  os == Browser;
 };
 
 module Internal = {
@@ -65,7 +107,7 @@ let getExecutingDirectory = () =>
        * the symlink destination - this causes problems when trying to load assets
        * relative to the binary location when symlinked.
        */
-      | Mac =>
+      | Mac(_) =>
         switch (
           String.rindex_opt(Sys.executable_name, '/'),
           String.rindex_opt(Sys.executable_name, '\\'),

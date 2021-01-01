@@ -68,9 +68,9 @@ module WindowMetrics: {
         // Mac and iOS is easy... there isn't any scaling factor.  The window is automatically
         // proportioned for us. The scaling is handled by the ratio of size / framebufferSize.
         | IOS
-        | Mac => 1.0
+        | Mac(_) => 1.0
         // On Windows, we need to try a Win32 API to get the scale factor
-        | Windows =>
+        | Windows(_) =>
           let scale = Sdl2.Window.getWin32ScaleFactor(sdlWindow);
           Log.tracef(m =>
             m("_getScaleFactor - from getWin32ScaleFactor: %f", scale)
@@ -86,7 +86,7 @@ module WindowMetrics: {
         //     https://github.com/mosra/magnum/commit/ae31c3cd82ba53454b8ab49d3f9d8ca385560d4b
         //     https://github.com/glfw/glfw/blob/250b94cd03e6f947ba516869c7f3b277f8d0cacc/src/x11_init.c#L938
         //     https://wiki.archlinux.org/index.php/HiDPI
-        | Linux =>
+        | Linux(_) =>
           switch (Rench.Environment.getEnvironmentVariable("GDK_SCALE")) {
           | None => 1.0
           | Some(v) =>
@@ -238,7 +238,7 @@ type t = {
 module Internal = {
   let setTitlebarStyle = (w: Sdl2.Window.t, style: WindowStyles.titlebar) => {
     switch (Environment.os) {
-    | Mac =>
+    | Mac(_) =>
       switch (style) {
       | Transparent => Sdl2.Window.setMacTitlebarTransparent(w)
       | Hidden => Sdl2.Window.setMacTitlebarHidden(w)
@@ -248,9 +248,9 @@ module Internal = {
     | Browser
     // NOTE: may work for IOS?
     | IOS
-    | Linux
+    | Linux(_)
     | Unknown
-    | Windows => ()
+    | Windows(_) => ()
     };
   };
 
@@ -380,6 +380,10 @@ let setMinimumSize = (~width: int, ~height: int, win: t) => {
 
 let setZoom = (window, zoom) => {
   window.metrics = WindowMetrics.setZoom(max(zoom, 0.1), window.metrics);
+};
+
+let setUnsavedWork = (window, truth) => {
+  Revery_Native.Window.setUnsavedWork(window.sdlWindow, truth);
 };
 
 let render = window => {

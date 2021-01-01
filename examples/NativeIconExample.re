@@ -4,6 +4,8 @@ open Revery.UI.Components;
 
 open Revery.Native;
 
+module Window = Revery.Window;
+
 module NativeFileExamples = {
   let%component make = (~window as w, ()) => {
     let%hook (maybeIcon, setMaybeIcon) = Hooks.state(None);
