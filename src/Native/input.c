@@ -33,3 +33,24 @@ CAMLprim value revery_buttonCreate() {
     vButton = revery_wrapPointer(button);
     CAMLreturn(vButton);
 }
+
+CAMLprim value revery_buttonSetColor(value vButton, value vRed, value vGreen, value vBlue, value vAlpha) {
+    CAMLparam5(vButton, vRed, vGreen, vBlue, vAlpha);
+
+    void *button = revery_unwrapPointer(vButton);
+    double red = Double_val(vRed);
+    double green = Double_val(vGreen);
+    double blue = Double_val(vBlue);
+    double alpha = Double_val(vAlpha);
+#ifdef USE_COCOA
+    revery_buttonSetColor_cocoa(button, red, green, blue, alpha);
+#else
+    UNUSED(button);
+    UNUSED(red);
+    UNUSED(green);
+    UNUSED(blue);
+    UNUSED(alpha);
+#endif
+
+    CAMLreturn(Val_unit);
+}

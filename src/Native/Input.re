@@ -6,6 +6,8 @@ module Button = {
 
   open {
          external c_create: string => t = "revery_buttonCreate";
+         external c_setColor: (t, float, float, float, float) => unit =
+           "revery_buttonSetColor";
        };
 
   %if
@@ -41,6 +43,9 @@ module Button = {
   };
 
   Callback.register("revery_callbackForButton", callbackForButton);
+
+  let setColor = (~red, ~green, ~blue, ~alpha, button) =>
+    c_setColor(button, red, green, blue, alpha);
 
   %if
   defined(USE_COCOA);

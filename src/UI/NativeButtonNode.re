@@ -43,6 +43,13 @@ class nativeButtonNode (title: string, onClick: unit => unit) = {
             ? button |> Button.getDefaultHeight : style.minHeight,
       };
 
+    switch (style.color) {
+    | Some(color) =>
+      let (red, green, blue, alpha) = Revery_Core.Color.toRgba(color);
+      Button.setColor(~red, ~green, ~blue, ~alpha, button);
+    | None => ()
+    };
+
     _super#setStyle(adjustedStyle);
   };
   pub! cleanup = () => {

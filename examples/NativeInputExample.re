@@ -1,3 +1,4 @@
+open Revery;
 open Revery.UI;
 
 module View = {
@@ -21,7 +22,8 @@ module View = {
       <NativeButton
         title="Toggle Direction"
         onClick={() => setIsColumn(ic => !ic)}
-        style=Style.[flexGrow(1)]
+        style=Style.[flexGrow(1), color(Colors.teal)]
+        onMouseEnter={_ => print_endline("Mouse Entered!")}
       />
       <NativeButton
         title="Print to STDOUT"

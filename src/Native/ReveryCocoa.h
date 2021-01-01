@@ -42,6 +42,7 @@ void revery_menuClear_cocoa(void *nsMenu);
 
 /* Input functions */
 void *revery_buttonCreate_cocoa(void);
+void revery_buttonSetColor_cocoa(void *nsButton, double red, double green, double blue, double alpha);
 
 /* Window functions */
 void revery_windowSetUnsavedWork_cocoa(void *memory, int truth);

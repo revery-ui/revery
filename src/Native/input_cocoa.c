@@ -24,4 +24,14 @@ NSButton *revery_buttonCreate_cocoa(const char *title) {
     return nsButton;
 }
 
+void revery_buttonSetColor_cocoa(NSButton *nsButton, double red, double green, double blue, double alpha) {
+    NSColor *color = [NSColor colorWithCalibratedRed:red green:green blue:blue alpha:alpha];
+
+    NSMutableAttributedString *styledTitle = [[NSMutableAttributedString alloc] initWithAttributedString:[nsButton attributedTitle]];
+    NSRange titleRange = NSMakeRange(0, [styledTitle length]);
+    [styledTitle addAttribute:NSForegroundColorAttributeName value:color range:titleRange];
+
+    [nsButton setAttributedTitle:styledTitle];
+}
+
 #endif

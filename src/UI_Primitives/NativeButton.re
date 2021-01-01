@@ -3,6 +3,12 @@ open React;
 
 let%nativeComponent make =
                     (
+                      ~onMouseMove=?,
+                      ~onMouseEnter=?,
+                      ~onMouseLeave=?,
+                      ~onMouseOver=?,
+                      ~onMouseOut=?,
+                      ~ref=?,
                       ~title="",
                       ~onClick=() => (),
                       ~style=Style.emptyViewStyle,
@@ -12,9 +18,20 @@ let%nativeComponent make =
   {
     make: () => {
       let styles = Style.create(~style, ());
+      let events =
+        NodeEvents.make(
+          ~ref?,
+          ~onMouseMove?,
+          ~onMouseEnter?,
+          ~onMouseLeave?,
+          ~onMouseOver?,
+          ~onMouseOut?,
+          (),
+        );
       let node =
         PrimitiveNodeFactory.get().createNativeButtonNode(title, onClick);
       node#setStyle(styles);
+      node#setEvents(events);
       Obj.magic(node);
     },
     configureInstance: (~isFirstRender as _, node) => {

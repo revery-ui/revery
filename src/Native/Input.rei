@@ -19,6 +19,9 @@ module Button: {
   let getDefaultWidth: t => int;
   let getDefaultHeight: t => int;
 
+  let setColor:
+    (~red: float, ~green: float, ~blue: float, ~alpha: float, t) => unit;
+
   let displayIn: (t, Sdl2.Window.t) => unit;
   let remove: t => unit;
 };
