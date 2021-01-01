@@ -31,15 +31,16 @@ class nativeButtonNode (title: string, onClick: unit => unit) = {
   };
   pub! setStyle = style => {
     open Layout.Encoding;
+    // Make sure that the button is visible if no width/height are set.
     let adjustedStyle =
       Style.{
         ...style,
-        width:
-          style.width == cssUndefined
-            ? button |> Button.getDefaultWidth : style.width,
-        height:
-          style.height == cssUndefined
-            ? button |> Button.getDefaultHeight : style.height,
+        minWidth:
+          style.minWidth == cssUndefined
+            ? button |> Button.getDefaultWidth : style.minWidth,
+        minHeight:
+          style.minHeight == cssUndefined
+            ? button |> Button.getDefaultHeight : style.minHeight,
       };
 
     _super#setStyle(adjustedStyle);

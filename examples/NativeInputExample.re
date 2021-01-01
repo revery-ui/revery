@@ -21,6 +21,7 @@ module View = {
       <NativeButton
         title="Toggle Direction"
         onClick={() => setIsColumn(ic => !ic)}
+        style=Style.[flexGrow(1)]
       />
       <NativeButton
         title="Print to STDOUT"
