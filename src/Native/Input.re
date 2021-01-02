@@ -20,7 +20,7 @@ module Button = {
   [%%else];
 
   let hash = _ => 1;
-  let equal = (==);
+  let equal = (===);
   let toString = _ => "UNIMPLEMENTED";
 
   [%%endif];
