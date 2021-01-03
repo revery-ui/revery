@@ -18,13 +18,14 @@
 #endif
 #include "utilities.h"
 
-CAMLprim value revery_buttonCreate() {
-    CAMLparam0();
+CAMLprim value revery_buttonCreate(value vTitle) {
+    CAMLparam1(vTitle);
     CAMLlocal1(vButton);
 
+    const char *title = String_val(vTitle);
     void *button;
 #ifdef USE_COCOA
-    button = revery_buttonCreate_cocoa();
+    button = revery_buttonCreate_cocoa(title);
     [(NSObject *)button retain];
 #else
     button = NULL;

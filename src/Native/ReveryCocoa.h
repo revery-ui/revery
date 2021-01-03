@@ -41,7 +41,7 @@ void revery_menuInsertSubmenuAt_cocoa(void *parent, void *child, int idx);
 void revery_menuClear_cocoa(void *nsMenu);
 
 /* Input functions */
-void *revery_buttonCreate_cocoa(void);
+void *revery_buttonCreate_cocoa(const char *title);
 void revery_buttonSetColor_cocoa(void *nsButton, double red, double green, double blue, double alpha);
 
 /* Window functions */
