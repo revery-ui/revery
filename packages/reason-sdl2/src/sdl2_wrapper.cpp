@@ -148,7 +148,7 @@ extern "C" {
             break;
         }
 
-        return result;
+        CAMLreturnT(SDL_HitTestResult, result);
     };
 
     CAMLprim value resdl_SDL_EnableHitTest(value vWin) {
