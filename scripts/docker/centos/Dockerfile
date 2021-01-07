@@ -21,7 +21,7 @@ RUN yum -y install /usr/lib64/libasan.so.0.0.0
 RUN node -v
 RUN npm -v
 
-RUN npm install --global --unsafe-perm=true esy@nightly
+RUN npm install --global --unsafe-perm=true esy@next
 
 RUN yum -y install nasm
 RUN yum -y install https://repo.ius.io/ius-release-el7.rpm
