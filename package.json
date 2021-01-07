@@ -64,6 +64,7 @@
     "@revery/timber": "^2.0.0"
   },
   "resolutions": {
+    "@revery/esy-harfbuzz": "revery-ui/esy-harfbuzz#a5912ed",
     "@opam/conf-pkg-config": "1.2"
   },
   "devDependencies": {
