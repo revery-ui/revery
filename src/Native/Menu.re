@@ -65,6 +65,7 @@ module Item = {
   Callback.register("revery_callbackForMenuItem", callbackForMenuItem);
 
   external createSeparator: unit => t = "revery_menuItemCreateSeparator";
+  external setEnabled: (t, bool) => unit = "revery_menuItemSetEnabled";
 
   %if
   defined(USE_COCOA);

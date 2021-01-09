@@ -14,7 +14,9 @@ NSMenu *revery_getMenuBarHandle_cocoa() {
 
 NSMenu *revery_menuCreate_cocoa(const char *title) {
     NSString *nsTitle = [NSString stringWithUTF8String:title];
-    return [[NSMenu alloc] initWithTitle:nsTitle];
+    NSMenu *nsMenu = [[NSMenu alloc] initWithTitle:nsTitle];
+    [nsMenu setAutoenablesItems:NO];
+    return nsMenu;
 }
 
 NSMenuItem *revery_menuItemCreate_cocoa(const char *title, struct KeyEquivalent *keyEquivalent) {
@@ -104,5 +106,9 @@ void revery_menuClear_cocoa(NSMenu *nsMenu) {
 
 NSMenuItem *revery_menuItemCreateSeparator_cocoa() {
     return [NSMenuItem separatorItem];
+}
+
+void revery_menuItemSetEnabled_cocoa(NSMenuItem *nsMenuItem, int truth) {
+    [nsMenuItem setEnabled:truth];
 }
 #endif
