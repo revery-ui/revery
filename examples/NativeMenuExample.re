@@ -70,6 +70,8 @@ module View = {
           (),
         );
 
+      Menu.Item.setEnabled(item312, false);
+
       Menu.addItem(subMenu31, item311);
       Menu.addItem(subMenu31, separator);
       Menu.addItem(subMenu31, item312);
