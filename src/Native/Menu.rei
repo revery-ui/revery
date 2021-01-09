@@ -28,6 +28,8 @@ module Item: {
       unit
     ) =>
     t;
+  let createSeparator: unit => t;
+
   let getSubmenu: t => option(menu);
 };
 

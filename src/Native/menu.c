@@ -230,3 +230,18 @@ CAMLprim value revery_menuClear(value vMenu) {
 
     CAMLreturn(Val_unit);
 }
+
+CAMLprim value revery_menuItemCreateSeparator() {
+    CAMLparam0();
+    CAMLlocal1(vSeparator);
+
+    void *separator;
+#ifdef USE_COCOA
+    separator = revery_menuItemCreateSeparator_cocoa();
+#else
+    separator = NULL;
+#endif
+    vSeparator = revery_wrapPointer(separator);
+
+    CAMLreturn(vSeparator);
+}

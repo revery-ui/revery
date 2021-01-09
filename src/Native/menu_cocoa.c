@@ -101,4 +101,8 @@ void revery_menuInsertSubmenuAt_cocoa(NSMenu *parent, NSMenu *child, int idx) {
 void revery_menuClear_cocoa(NSMenu *nsMenu) {
     [nsMenu removeAllItems];
 }
+
+NSMenuItem *revery_menuItemCreateSeparator_cocoa() {
+    return [NSMenuItem separatorItem];
+}
 #endif
