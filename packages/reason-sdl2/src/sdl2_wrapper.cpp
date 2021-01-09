@@ -1331,26 +1331,6 @@ extern "C" {
         CAMLreturn(Val_unit);
     }
 
-    /* external play: string => result(unit, string) = "resdl_SDL_PlayWAV" */
-    // CAMLprim value resdl_SDL_PlayWAV(value vPath) {
-    //     CAMLparam1(vPath);
-    //     CAMLlocal1(ret);
-    //     SDL_AudioSpec wavSpec;
-    //     Uint32 wavLength;
-    //     Uint8 *wavBuffer;        
-    //     SDL_LoadWAV(String_val(vPath), &wavSpec, &wavBuffer, &wavLength);
-    //     SDL_AudioDeviceID deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
-    //     if (SDL_QueueAudio(deviceId, wavBuffer, wavLength) >= 0) {
-    //         SDL_PauseAudioDevice(deviceId, 0);
-    //         // SDL_CloseAudioDevice(deviceId); ???
-    //         ret = Val_ok(Val_unit);
-    //     } else {
-    //         ret = Val_error(caml_copy_string(SDL_GetError()));
-    //     }
-    //     SDL_FreeWAV(wavBuffer);
-    //     CAMLreturn(ret);
-    // }
-
     CAMLprim value resdl_SDL_CreateRGBSurfaceFromImage(value vPath) {
         CAMLparam1(vPath);
         CAMLlocal1(ret);
