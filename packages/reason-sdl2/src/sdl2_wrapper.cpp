@@ -15,9 +15,11 @@
 #include "stb_image.h"
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_audio.h>
 #include <SDL2/SDL_main.h>
 #include <SDL2/SDL_config.h>
 #include <SDL2/SDL_syswm.h>
+
 
 #ifdef SDL_VIDEO_DRIVER_COCOA
 #import <Cocoa/Cocoa.h>
@@ -1252,6 +1254,103 @@ extern "C" {
         CAMLreturn(Val_unit);
     }
 
+    CAMLprim value resdl_SDL_LoadWAV(value vPath) {
+        CAMLparam1(vPath);
+        CAMLlocal3(ret, vSpec, vTup3);
+        SDL_AudioSpec spec;
+        Uint8 *audioBuf;
+        Uint32 audioLen;
+        SDL_LoadWAV(String_val(vPath), &spec, &audioBuf, &audioLen);
+        if (audioBuf == NULL) {
+            ret = Val_error(caml_copy_string(SDL_GetError()));
+            CAMLreturn(ret);
+        }
+        vSpec = caml_alloc(7, 0);
+        Store_field(vSpec, 0, Val_int(spec.freq));
+        Store_field(vSpec, 1, Val_int(spec.format));
+        Store_field(vSpec, 2, Val_int(spec.channels));
+        Store_field(vSpec, 3, Val_int(spec.silence));
+        Store_field(vSpec, 4, Val_int(spec.samples));
+        Store_field(vSpec, 5, Val_int(spec.padding));
+        Store_field(vSpec, 6, Val_int(spec.size));
+        vTup3 = caml_alloc_tuple(3);
+        Store_field(vTup3, 0, vSpec);
+        Store_field(vTup3, 1, resdl_wrapPointer(audioBuf));
+        Store_field(vTup3, 2, Val_int(audioLen));
+        ret = Val_ok(vTup3);
+        CAMLreturn(ret);
+    }
+
+    CAMLprim value resdl_SDL_OpenAudioDevice(value vSpec) {
+        CAMLparam1(vSpec);
+        SDL_AudioSpec spec = {0};
+        spec.freq = Int_val(Field(vSpec, 0));
+        spec.format = Int_val(Field(vSpec, 1));
+        spec.channels = Int_val(Field(vSpec, 2));
+        spec.silence = Int_val(Field(vSpec, 3));
+        spec.samples = Int_val(Field(vSpec, 4));
+        spec.padding = Int_val(Field(vSpec, 5));
+        spec.size = Int_val(Field(vSpec, 6));
+        SDL_AudioDeviceID dev = SDL_OpenAudioDevice(NULL, 0, &spec, NULL, 0);
+        CAMLreturn(Val_int(dev));
+    }
+
+    CAMLprim value resdl_SDL_CloseAudioDevice(value vDev) {
+        CAMLparam1(vDev);
+        SDL_AudioDeviceID dev = Int_val(vDev);
+        SDL_CloseAudioDevice(dev);
+        CAMLreturn(Val_unit);
+    }
+
+    CAMLprim value resdl_SDL_PauseAudioDevice(value vDev, value vPauseOn) {
+        CAMLparam2(vDev, vPauseOn);
+        SDL_AudioDeviceID dev = Int_val(vDev);
+        int pauseOn = Bool_val(vPauseOn);
+        SDL_PauseAudioDevice(dev, pauseOn);
+        CAMLreturn(Val_unit);
+    }
+
+    CAMLprim value resdl_SDL_QueueAudio(value vDev, value vBuf, value vLen) {
+        CAMLparam3(vDev, vBuf, vLen);
+        CAMLlocal1(ret);
+        SDL_AudioDeviceID dev = Int_val(vDev);
+        const void *buf = resdl_unwrapPointer(vBuf);
+        Uint32 len = Int_val(vLen);
+        if (SDL_QueueAudio(dev, buf, len) < 0) {
+            ret = Val_error(caml_copy_string(SDL_GetError()));
+            CAMLreturn(ret);
+        }
+        ret = Val_ok(Val_unit);
+        CAMLreturn(ret);
+    }
+
+    CAMLprim value resdl_SDL_ClearQueuedAudio(value vDev) {
+        CAMLparam1(vDev);
+        SDL_AudioDeviceID dev = Int_val(vDev);
+        SDL_ClearQueuedAudio(dev);
+        CAMLreturn(Val_unit);
+    }
+
+    /* external play: string => result(unit, string) = "resdl_SDL_PlayWAV" */
+    // CAMLprim value resdl_SDL_PlayWAV(value vPath) {
+    //     CAMLparam1(vPath);
+    //     CAMLlocal1(ret);
+    //     SDL_AudioSpec wavSpec;
+    //     Uint32 wavLength;
+    //     Uint8 *wavBuffer;        
+    //     SDL_LoadWAV(String_val(vPath), &wavSpec, &wavBuffer, &wavLength);
+    //     SDL_AudioDeviceID deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
+    //     if (SDL_QueueAudio(deviceId, wavBuffer, wavLength) >= 0) {
+    //         SDL_PauseAudioDevice(deviceId, 0);
+    //         // SDL_CloseAudioDevice(deviceId); ???
+    //         ret = Val_ok(Val_unit);
+    //     } else {
+    //         ret = Val_error(caml_copy_string(SDL_GetError()));
+    //     }
+    //     SDL_FreeWAV(wavBuffer);
+    //     CAMLreturn(ret);
+    // }
+
     CAMLprim value resdl_SDL_CreateRGBSurfaceFromImage(value vPath) {
         CAMLparam1(vPath);
         CAMLlocal1(ret);
@@ -1653,7 +1752,7 @@ extern "C" {
 
         SDL_LogSetOutputFunction(&resdl_onLog, NULL);
 
-        int ret = SDL_Init(SDL_INIT_VIDEO);
+        int ret = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
         if (ret < 0) {
             SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "SDL_Init failed: %s\n",
