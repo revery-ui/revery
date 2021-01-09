@@ -111,4 +111,8 @@ NSMenuItem *revery_menuItemCreateSeparator_cocoa() {
 void revery_menuItemSetEnabled_cocoa(NSMenuItem *nsMenuItem, int truth) {
     [nsMenuItem setEnabled:truth];
 }
+
+void revery_menuItemSetVisible_cocoa(NSMenuItem *nsMenuItem, int truth) {
+    [nsMenuItem setHidden:!truth];
+}
 #endif

@@ -30,6 +30,7 @@ module Item: {
     t;
   let createSeparator: unit => t;
   let setEnabled: (t, bool) => unit;
+  let setVisible: (t, bool) => unit;
 
   let getSubmenu: t => option(menu);
 };

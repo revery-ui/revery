@@ -66,6 +66,7 @@ module Item = {
 
   external createSeparator: unit => t = "revery_menuItemCreateSeparator";
   external setEnabled: (t, bool) => unit = "revery_menuItemSetEnabled";
+  external setVisible: (t, bool) => unit = "revery_menuItemSetVisible";
 
   %if
   defined(USE_COCOA);
