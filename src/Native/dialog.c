@@ -4,6 +4,7 @@
 #include <caml/callback.h>
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
+#include <caml/threads.h>
 
 #include "caml_values.h"
 
@@ -110,9 +111,11 @@ CAMLprim value revery_alertOpenFiles_native(
     (void)showHidden;
     (void)buttonText;
 #elif USE_COCOA
+    caml_release_runtime_system();
     fileList = revery_open_files_cocoa(
                    startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
                    canChooseDirectories, showHidden, buttonText, title);
+    caml_acquire_runtime_system();
 #elif USE_GTK
     fileList = revery_open_files_gtk(
                    startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
