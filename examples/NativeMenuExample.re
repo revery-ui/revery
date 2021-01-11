@@ -61,7 +61,30 @@ module View = {
           (),
         );
 
+      let separator = Menu.Item.createSeparator();
+
+      let item312 =
+        Menu.Item.create(
+          ~title="Item 3.1.2",
+          ~onClick=menuCallback("Item 1.4"),
+          (),
+        );
+
+      Menu.Item.setEnabled(item312, false);
+
+      let item313 =
+        Menu.Item.create(
+          ~title="Item 3.1.3",
+          ~onClick=menuCallback("Item 1.5"),
+          (),
+        );
+
+      Menu.Item.setVisible(item313, false); // Shouldn't show up
+
       Menu.addItem(subMenu31, item311);
+      Menu.addItem(subMenu31, separator);
+      Menu.addItem(subMenu31, item312);
+      Menu.addItem(subMenu31, item313);
 
       let endTime = Time.now();
       let delta = Time.(endTime - startTime) |> Time.toFloatSeconds;
