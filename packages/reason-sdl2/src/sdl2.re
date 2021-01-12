@@ -33,9 +33,9 @@ module Surface = {
 };
 
 module Audio = {
-  module Buffer {
+  module Buffer = {
     type t;
-  }
+  };
   module Spec = {
     type t = {
       freq: int,
@@ -46,19 +46,21 @@ module Audio = {
       padding: int,
       size: int,
     };
-  }
-  module WAV = {
-    external load: string => result((Spec.t, Buffer.t, int), string) = "resdl_SDL_LoadWAV"
-  }
+  };
+  module Wav = {
+    external load: string => result((Spec.t, Buffer.t, int), string) =
+      "resdl_SDL_LoadWAV";
+  };
   module Device = {
     type t;
-    external open_: Spec.t => t = "resdl_SDL_OpenAudioDevice"
-    external close: t => unit = "resdl_SDL_CloseAudioDevice"
-    external pause: (t, bool) => unit = "resdl_SDL_PauseAudioDevice"
-  }
-  external queue: (Device.t, Buffer.t, int) => result(unit, string) = "resdl_SDL_QueueAudio"
-  external clearQueued: (Device.t) => unit = "resdl_SDL_ClearQueuedAudio"
-}
+    external open_: Spec.t => t = "resdl_SDL_OpenAudioDevice";
+    external close: t => unit = "resdl_SDL_CloseAudioDevice";
+    external pause: (t, bool) => unit = "resdl_SDL_PauseAudioDevice";
+  };
+  external queue: (Device.t, Buffer.t, int) => result(unit, string) =
+    "resdl_SDL_QueueAudio";
+  external clearQueued: Device.t => unit = "resdl_SDL_ClearQueuedAudio";
+};
 
 module Clipboard = {
   external getText: unit => option(string) = "resdl_SDL_GetClipboardText";
