@@ -39,6 +39,9 @@ void revery_menuRemoveItem_cocoa(void *nsMenu, void *nsMenuItem);
 void revery_menuInsertItemAt_cocoa(void *nsMenu, void *nsMenuItem, int idx);
 void revery_menuInsertSubmenuAt_cocoa(void *parent, void *child, int idx);
 void revery_menuClear_cocoa(void *nsMenu);
+void *revery_menuItemCreateSeparator_cocoa();
+void revery_menuItemSetEnabled_cocoa(void *menuItem, int truth);
+void revery_menuItemSetVisible_cocoa(void *menuItem, int truth);
 
 /* Input functions */
 void *revery_buttonCreate_cocoa(const char *title);

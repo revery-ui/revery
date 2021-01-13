@@ -230,3 +230,50 @@ CAMLprim value revery_menuClear(value vMenu) {
 
     CAMLreturn(Val_unit);
 }
+
+CAMLprim value revery_menuItemCreateSeparator() {
+    CAMLparam0();
+    CAMLlocal1(vSeparator);
+
+    void *separator;
+#ifdef USE_COCOA
+    separator = revery_menuItemCreateSeparator_cocoa();
+#else
+    separator = NULL;
+#endif
+    vSeparator = revery_wrapPointer(separator);
+
+    CAMLreturn(vSeparator);
+}
+
+CAMLprim value revery_menuItemSetEnabled(value vMenuItem, value vTruth) {
+    CAMLparam2(vMenuItem, vTruth);
+
+    void *menuItem = revery_unwrapPointer(vMenuItem);
+    int truth = Bool_val(vTruth);
+
+#ifdef USE_COCOA
+    revery_menuItemSetEnabled_cocoa(menuItem, truth);
+#else
+    UNUSED(menuItem);
+    UNUSED(truth);
+#endif
+
+    CAMLreturn(Val_unit);
+}
+
+CAMLprim value revery_menuItemSetVisible(value vMenuItem, value vTruth) {
+    CAMLparam2(vMenuItem, vTruth);
+
+    void *menuItem = revery_unwrapPointer(vMenuItem);
+    int truth = Bool_val(vTruth);
+
+#ifdef USE_COCOA
+    revery_menuItemSetVisible_cocoa(menuItem, truth);
+#else
+    UNUSED(menuItem);
+    UNUSED(truth);
+#endif
+
+    CAMLreturn(Val_unit);
+}
