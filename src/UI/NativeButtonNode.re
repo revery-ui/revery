@@ -17,10 +17,13 @@ class nativeButtonNode (title: string, onClick: unit => unit) = {
     _super#draw(parentContext);
     let dimensions = _this#measurements();
     let worldTransform = _this#getWorldTransform();
-    Button.setX(button, int(Skia.Matrix.getTranslateX(worldTransform)));
-    Button.setY(button, int(Skia.Matrix.getTranslateY(worldTransform)));
-    Button.setWidth(button, dimensions.width);
-    Button.setHeight(button, dimensions.height);
+    Button.setFrame(
+      ~x=int(Skia.Matrix.getTranslateX(worldTransform)),
+      ~y=int(Skia.Matrix.getTranslateY(worldTransform)),
+      ~width=dimensions.width,
+      ~height=dimensions.height,
+      button,
+    );
 
     switch (parentContext.canvas.maybeWindow) {
     | Some(window) =>

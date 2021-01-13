@@ -10,13 +10,12 @@
 CATEGORY_PROPERTY_GET_SET_DOUBLE(reveryX, setReveryX:);
 CATEGORY_PROPERTY_GET_SET_DOUBLE(reveryY, setReveryY:);
 
-- (void)updateFrame {
+- (void)updateFrame:(CGRect) frame {
     NSView *superview = [self superview];
     if (superview == NULL) {
         return;
     }
 
-    CGRect frame = [self frame];
     CGRect superFrame = [superview frame];
 
     frame.origin.x = [self reveryX];

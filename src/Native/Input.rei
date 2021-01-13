@@ -7,15 +7,8 @@ module Button: {
 
   let create: (~title: string, ~onClick: unit => unit) => t;
 
-  let setX: (t, int) => unit;
-  let setY: (t, int) => unit;
-  let getX: t => int;
-  let getY: t => int;
+  let setFrame: (~x: int, ~y: int, ~width: int, ~height: int, t) => unit;
 
-  let setWidth: (t, int) => unit;
-  let setHeight: (t, int) => unit;
-  let getWidth: t => int;
-  let getHeight: t => int;
   let getDefaultWidth: t => int;
   let getDefaultHeight: t => int;
 

@@ -19,16 +19,8 @@ external remove: t('a) => unit = "revery_NSView_remove";
    These modify/read the values of the NSView's frame (a CGRect) */
 
 // Position
-external setX: (t('a), int) => unit = "revery_NSView_setX";
-external setY: (t('a), int) => unit = "revery_NSView_setY";
-external getX: t('a) => int = "revery_NSView_getX";
-external getY: t('a) => int = "revery_NSView_getY";
-
-// Size
-external setWidth: (t('a), int) => unit = "revery_NSView_setWidth";
-external setHeight: (t('a), int) => unit = "revery_NSView_setHeight";
-external getWidth: t('a) => int = "revery_NSView_getWidth";
-external getHeight: t('a) => int = "revery_NSView_getHeight";
+external setFrame: (t('a), int, int, int, int) => unit =
+  "revery_NSView_setFrame";
 
 // Default size
 external getDefaultWidth: t('a) => int = "revery_NSView_getDefaultWidth";

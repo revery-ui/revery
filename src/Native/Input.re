@@ -57,15 +57,9 @@ module Button = {
     button;
   };
 
-  let setX = NSView.setX;
-  let setY = NSView.setY;
-  let getX = NSView.getX;
-  let getY = NSView.getY;
+  let setFrame = (~x, ~y, ~width, ~height, button) =>
+    NSView.setFrame(button, x, y, width, height);
 
-  let setWidth = NSView.setWidth;
-  let setHeight = NSView.setHeight;
-  let getWidth = NSView.getWidth;
-  let getHeight = NSView.getHeight;
   let getDefaultWidth = NSView.getDefaultWidth;
   let getDefaultHeight = NSView.getDefaultHeight;
 

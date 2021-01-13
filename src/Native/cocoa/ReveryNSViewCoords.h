@@ -13,7 +13,7 @@
 @property double reveryX;
 @property double reveryY;
 
-- (void)updateFrame;
+- (void)updateFrame:(CGRect) frame;
 
 @end
 
