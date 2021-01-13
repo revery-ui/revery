@@ -43,13 +43,40 @@ CAMLprim value revery_HWND_toString(value vHWND) {
     CAMLreturn(vStr);
 }
 
+CAMLprim value revery_HWND_setAll(value vHWND, value vX, value vY, value vWidth, value vHeight) {
+    CAMLparam5(vHWND, vX, vY, vWidth, vHeight);
+    HWND hwnd = (HWND)revery_unwrapPointer(vHWND);
+    // int x = Int_val(vX);
+
+    // RECT rect;
+    // GetClientRect(
+    //     hwnd,
+    //     &rect
+    // );
+
+    // int width = WIDTH(rect);
+    // int height = HEIGHT(rect);
+    // int y = rect.top;
+
+    MoveWindow(
+        hwnd,
+        Int_val(vX),
+        Int_val(vY),
+        Int_val(vWidth),
+        Int_val(vHeight),
+        TRUE
+    );
+
+    CAMLreturn(Val_unit);
+}
+
 CAMLprim value revery_HWND_setX(value vHWND, value vX) {
     CAMLparam2(vHWND, vX);
     HWND hwnd = (HWND)revery_unwrapPointer(vHWND);
     int x = Int_val(vX);
 
     RECT rect;
-    GetWindowRect(
+    GetClientRect(
         hwnd,
         &rect
     );
@@ -66,8 +93,13 @@ CAMLprim value revery_HWND_setX(value vHWND, value vX) {
         height,
         TRUE
     );
+    UNUSED(hwnd);
+    UNUSED(x);
+    UNUSED(y);
+    UNUSED(width);
+    UNUSED(height);
 
-    GetWindowRect(
+    GetClientRect(
         hwnd,
         &rect
     );
@@ -82,7 +114,7 @@ CAMLprim value revery_HWND_setY(value vHWND, value vY) {
     int y = Int_val(vY);
 
     RECT rect;
-    GetWindowRect(
+    GetClientRect(
         hwnd,
         &rect
     );
@@ -91,6 +123,11 @@ CAMLprim value revery_HWND_setY(value vHWND, value vY) {
     int height = HEIGHT(rect);
     int x = rect.left;
 
+    UNUSED(hwnd);
+    UNUSED(x);
+    UNUSED(y);
+    UNUSED(width);
+    UNUSED(height);
     MoveWindow(
         hwnd,
         x,
@@ -110,7 +147,7 @@ CAMLprim value revery_HWND_getX(value vHWND) {
     HWND hwnd = (HWND)revery_unwrapPointer(vHWND);
 
     RECT rect;
-    GetWindowRect(
+    GetClientRect(
         hwnd,
         &rect
     );
@@ -127,7 +164,7 @@ CAMLprim value revery_HWND_getY(value vHWND) {
     HWND hwnd = (HWND)revery_unwrapPointer(vHWND);
 
     RECT rect;
-    GetWindowRect(
+    GetClientRect(
         hwnd,
         &rect
     );
@@ -144,13 +181,18 @@ CAMLprim value revery_HWND_setWidth(value vHWND, value vWidth) {
     int width = Int_val(vWidth);
 
     RECT rect;
-    GetWindowRect(
+    GetClientRect(
         hwnd,
         &rect
     );
     int x = rect.left;
     int y = rect.top;
     int height = HEIGHT(rect);
+    UNUSED(hwnd);
+    UNUSED(x);
+    UNUSED(y);
+    UNUSED(width);
+    UNUSED(height);
 
     MoveWindow(
         hwnd,
@@ -171,13 +213,19 @@ CAMLprim value revery_HWND_setHeight(value vHWND, value vHeight) {
     int height = Int_val(vHeight);
 
     RECT rect;
-    GetWindowRect(
+    GetClientRect(
         hwnd,
         &rect
     );
     int x = rect.left;
     int y = rect.top;
     int width = WIDTH(rect);
+
+    UNUSED(hwnd);
+    UNUSED(x);
+    UNUSED(y);
+    UNUSED(width);
+    UNUSED(height);
 
     MoveWindow(
         hwnd,
@@ -198,7 +246,7 @@ CAMLprim value revery_HWND_getWidth(value vHWND) {
     HWND hwnd = (HWND)revery_unwrapPointer(vHWND);
 
     RECT rect;
-    GetWindowRect(
+    GetClientRect(
         hwnd,
         &rect
     );
@@ -215,7 +263,7 @@ CAMLprim value revery_HWND_getHeight(value vHWND) {
     HWND hwnd = (HWND)revery_unwrapPointer(vHWND);
 
     RECT rect;
-    GetWindowRect(
+    GetClientRect(
         hwnd,
         &rect
     );

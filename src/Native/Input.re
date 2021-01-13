@@ -90,6 +90,7 @@ module Button = {
 
   let setX = HWND.setX;
   let setY = HWND.setY;
+  let setAll = HWND.setAll;
   let getX = HWND.getX;
   let getY = HWND.getY;
 

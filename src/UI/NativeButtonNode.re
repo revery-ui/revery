@@ -17,12 +17,18 @@ class nativeButtonNode (title: string, onClick: unit => unit) = {
     _super#draw(parentContext);
     let dimensions = _this#measurements();
     let worldTransform = _this#getWorldTransform();
-    Printf.eprintf("x=%d y=%d width=%d height=%d\n", Button.getX(button), Button.getY(button), Button.getWidth(button), Button.getHeight(button));
-    Button.setX(button, int(Skia.Matrix.getTranslateX(worldTransform)));
-    Button.setY(button, int(Skia.Matrix.getTranslateY(worldTransform)));
-    Button.setWidth(button, dimensions.width);
-    Button.setHeight(button, dimensions.height);
-    Printf.printf("x=%f y=%f\n", Skia.Matrix.getTranslateX(worldTransform), Skia.Matrix.getTranslateY(worldTransform));
+    Printf.eprintf("BUTTON x=%d y=%d width=%d height=%d\n", Button.getX(button), Button.getY(button), Button.getWidth(button), Button.getHeight(button));
+    //Button.setX(button, int(Skia.Matrix.getTranslateX(worldTransform)));
+    //Button.setY(button, int(Skia.Matrix.getTranslateY(worldTransform)));
+    Button.setAll(button, 
+
+    int(Skia.Matrix.getTranslateX(worldTransform)),
+    int(Skia.Matrix.getTranslateY(worldTransform)),
+    dimensions.width,
+    dimensions.height);
+    // Button.setWidth(button, dimensions.width);
+    // Button.setHeight(button, dimensions.height);
+    Printf.printf("CALCULATED x=%f y=%f\n", Skia.Matrix.getTranslateX(worldTransform), Skia.Matrix.getTranslateY(worldTransform));
 
     switch (parentContext.canvas.maybeWindow) {
     | Some(window) =>

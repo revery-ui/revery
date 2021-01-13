@@ -7,6 +7,7 @@ module Button: {
 
   let create: (~title: string, ~onClick: unit => unit) => t;
 
+  let setAll: (t, int, int, int, int) => unit;
   let setX: (t, int) => unit;
   let setY: (t, int) => unit;
   let getX: t => int;
