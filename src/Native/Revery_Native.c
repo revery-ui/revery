@@ -55,6 +55,7 @@ CAMLprim value revery_initializeWindow(value vWin) {
     HWND window = (HWND)win;
     int current_style = GetWindowLong(window, GWL_STYLE);
     SetWindowLong(window, GWL_STYLE, current_style | WS_CAPTION);
+    inputSetMainWindow_win32(window);
 #else
     UNUSED(win);
 #endif

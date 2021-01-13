@@ -14,10 +14,11 @@
         shell shell_cocoa shell_gtk shell_win32
         locale locale_cocoa locale_win32
         menu menu_cocoa
-        input input_cocoa
+        input input_cocoa input_win32
         window window_cocoa
         utilities
         ReveryGtk ReveryGtk_Widget
+        ReveryHWND
         ReveryAppDelegate ReveryAppDelegate_func
         ReveryNSObject ReveryNSView ReveryNSViewCoords
         ReveryMenuItemTarget ReveryButtonTarget

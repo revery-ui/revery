@@ -27,6 +27,8 @@ CAMLprim value revery_buttonCreate(value vTitle) {
 #ifdef USE_COCOA
     button = revery_buttonCreate_cocoa(title);
     [(NSObject *)button retain];
+#elif USE_WIN32
+    button = revery_buttonCreate_win32(title);
 #else
     button = NULL;
 #endif

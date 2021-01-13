@@ -1,3 +1,4 @@
+#pragma once
 void revery_alert_win32(void *pWin, const char *szMessage);
 void *revery_getIconHandle_win32();
 void revery_setIconProgress_win32(void *win, void *ih, float progress);
@@ -7,3 +8,6 @@ int revery_openURL_win32(const char *url_string);
 char *revery_getUserLocale_win32();
 char **revery_open_files_win32(const char *startDir, int canChooseFiles,
                                int canChooseDirectories, const char *title);
+
+void *revery_buttonCreate_win32(const char *title);
+void inputSetMainWindow_win32(void *window);

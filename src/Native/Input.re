@@ -17,6 +17,13 @@ module Button = {
   let equal = NSObject.equal;
   let toString = NSObject.toString;
 
+  %elif
+  defined(USE_WIN32);
+  
+  let hash = Hashtbl.hash;
+  let equal = (===);
+  let toString = HWND.toString;
+
   [%%else];
 
   let hash = _ => 1;
@@ -71,6 +78,31 @@ module Button = {
 
   let remove = NSView.remove;
   let displayIn = NSView.displayIn;
+
+  %elif
+  defined(USE_WIN32);
+
+  let create = (~title, ~onClick) => {
+    let button = c_create(title);
+    CallbackTbl.replace(callbackTbl, button, onClick);
+    button;
+  };
+
+  let setX = HWND.setX;
+  let setY = HWND.setY;
+  let getX = HWND.getX;
+  let getY = HWND.getY;
+
+  let setWidth = HWND.setWidth;
+  let setHeight = HWND.setHeight;
+  let getWidth = HWND.getWidth;
+  let getHeight = HWND.getHeight;
+
+  let getDefaultHeight = _ => 12;
+  let getDefaultWidth = _ => 100;
+  
+  let remove = _ => ();
+  let displayIn = (_, _) => ();
 
   [%%else];
 
