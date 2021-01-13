@@ -28,6 +28,7 @@ CAMLprim value revery_buttonCreate(value vTitle) {
     button = revery_buttonCreate_cocoa(title);
     [(NSObject *)button retain];
 #else
+    UNUSED(title);
     button = NULL;
 #endif
 
