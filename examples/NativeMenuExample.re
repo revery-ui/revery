@@ -20,8 +20,15 @@ module View = {
       let menu1 = Menu.create("Test 1");
       Menu.addSubmenu(~parent=menuBar, ~child=menu1);
 
-      let menuCallback = (str, ()) => {
-        print_endline(Printf.sprintf("%s clicked: %d", str, currentNonce));
+      let menuCallback = (str, ~fromKeyPress, ()) => {
+        print_endline(
+          Printf.sprintf(
+            "%s clicked: %d (from key press: %b)",
+            str,
+            currentNonce,
+            fromKeyPress,
+          ),
+        );
       };
 
       let item11 =
