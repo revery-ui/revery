@@ -94,6 +94,9 @@ type config = {
   flags: list(string),
 };
 
+let ccopt = s => ["-ccopt", s];
+let cclib = s => ["-cclib", s];
+
 let get_ios_config = () => {
   features: [UIKIT],
   cflags: ["-I", ".", "-x", "objective-c"],
@@ -104,7 +107,7 @@ let get_mac_config = () => {
   features: [COCOA],
   cflags: ["-I", ".", "-x", "objective-c", "-Wno-deprecated-declarations"],
   libs: [],
-  flags: [],
+  flags: [] @ cclib("-ObjC"),
 };
 
 let get_linux_config = c => {
@@ -123,9 +126,6 @@ let get_linux_config = c => {
     }
   };
 };
-
-let ccopt = s => ["-ccopt", s];
-let cclib = s => ["-cclib", s];
 
 let get_win32_config = () => {
   features: [WIN32],

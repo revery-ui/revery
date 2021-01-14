@@ -59,7 +59,7 @@ module PointerEvents = {
 
 type t = {
   backgroundColor: Color.t,
-  color: Color.t,
+  color: option(Color.t),
   width: int,
   height: int,
   position: LayoutTypes.positionType,
@@ -116,7 +116,6 @@ let make =
     (
       ~textOverflow=TextOverflow.Overflow,
       ~backgroundColor: Color.t=Colors.transparentBlack,
-      ~color: Color.t=Colors.white,
       ~width=Encoding.cssUndefined,
       ~height=Encoding.cssUndefined,
       ~flexBasis=Encoding.cssUndefined,
@@ -172,6 +171,7 @@ let make =
                    color: Colors.black,
                  },
       ~cursor=?,
+      ~color=?,
       _unit: unit,
     ) => {
   let ret: t = {
@@ -308,7 +308,7 @@ type coreStyleProps = [
   | `AlignSelf(LayoutTypes.align)
   | `Position(LayoutTypes.positionType)
   | `BackgroundColor(Color.t)
-  | `Color(Color.t)
+  | `Color(option(Color.t))
   | `Width(int)
   | `Height(int)
   | `Top(int)
@@ -517,7 +517,7 @@ let overflow = o =>
   | `Scroll => `Overflow(LayoutTypes.Scroll)
   };
 
-let color = o => `Color(o);
+let color = o => `Color(Some(o));
 let backgroundColor = o => `BackgroundColor(o);
 
 /*

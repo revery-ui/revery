@@ -6,8 +6,6 @@ defined(USE_COCOA) || defined(USE_UIKIT);
 
 type t('a) = 'a;
 
-let wrap: 'a => t('a) = nsObj => nsObj;
-
 /* equal
    Uses the NSObject isEqual selector */
 external equal: (t('a), t('b)) => bool = "revery_NSObject_equal";

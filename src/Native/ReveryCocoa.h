@@ -43,5 +43,9 @@ void *revery_menuItemCreateSeparator_cocoa();
 void revery_menuItemSetEnabled_cocoa(void *menuItem, int truth);
 void revery_menuItemSetVisible_cocoa(void *menuItem, int truth);
 
+/* Input functions */
+void *revery_buttonCreate_cocoa(const char *title);
+void revery_buttonSetColor_cocoa(void *nsButton, double red, double green, double blue, double alpha);
+
 /* Window functions */
 void revery_windowSetUnsavedWork_cocoa(void *memory, int truth);

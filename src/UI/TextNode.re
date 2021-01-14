@@ -36,7 +36,8 @@ class textNode (text: string) = {
   pub! draw = (parentContext: NodeDrawContext.t) => {
     let style = _super#getStyle();
 
-    let {color, lineHeight, _} = style;
+    let {color: maybeColor, lineHeight, _} = style;
+    let color = Option.value(maybeColor, ~default=Colors.white);
     let opacity = parentContext.opacity *. style.opacity;
     let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 

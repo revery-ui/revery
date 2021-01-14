@@ -14,6 +14,7 @@ type t = {
   surface: Skia.Surface.t,
   canvas: Skia.Canvas.t,
   mutable rootTransform: option(Skia.Matrix.t),
+  maybeWindow: option(Window.t),
 };
 
 let createFromSurface = (surface: Skia.Surface.t) => {
@@ -21,6 +22,7 @@ let createFromSurface = (surface: Skia.Surface.t) => {
   surface,
   canvas: Skia.Surface.getCanvas(surface),
   rootTransform: None,
+  maybeWindow: None,
 };
 
 let create = (window: Revery_Core.Window.t) => {
@@ -92,6 +94,7 @@ let create = (window: Revery_Core.Window.t) => {
         surface,
         canvas: Surface.getCanvas(surface),
         rootTransform: None,
+        maybeWindow: Some(window),
       });
     };
   };
@@ -141,6 +144,7 @@ let createLayer = (~width, ~height, context: t) => {
     surface,
     canvas: Surface.getCanvas(surface),
     rootTransform: None,
+    maybeWindow: context.maybeWindow,
   };
 };
 

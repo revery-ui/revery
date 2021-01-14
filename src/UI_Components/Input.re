@@ -219,7 +219,8 @@ let%component make =
   let%hook textRef = Hooks.ref(None);
   let%hook scrollOffset = Hooks.ref(0);
 
-  let color = Selector.select(style, Color, Colors.black);
+  let color =
+    Selector.select(style, Color, Some(Colors.black)) |> Option.get;
 
   let value = Option.value(value, ~default=state.value);
   let showPlaceholder = value == "";
