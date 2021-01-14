@@ -23,7 +23,7 @@ module Item: {
   let create:
     (
       ~title: string,
-      ~onClick: unit => unit,
+      ~onClick: (~fromKeyPress: bool, unit) => unit,
       ~keyEquivalent: KeyEquivalent.t=?,
       unit
     ) =>

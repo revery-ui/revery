@@ -28,10 +28,23 @@ static const camlValue *callbackForMenuItem;
     CAMLparam0();
     CAMLlocal1(vMenuItem);
 
+    // Whether the menu item 'click' was due to a shortcut key
+    int fDueToKeyPress = 0;
+
+    switch (NSApp.currentEvent.type) {
+    case NSEventTypeKeyDown:
+    case NSEventTypeKeyUp:
+        fDueToKeyPress = 1;
+        break;
+    default:
+        fDueToKeyPress = 0;
+        break;
+    }
+
     if (callbackForMenuItem != NULL) {
         vMenuItem = revery_wrapPointer(sender);
-        camlValue args[] = {vMenuItem};
-        revery_caml_call_n(*callbackForMenuItem, 1, args);
+        camlValue args[] = {Val_int(fDueToKeyPress), vMenuItem};
+        revery_caml_call_n(*callbackForMenuItem, 2, args);
     } else {
         NSLog(@"Unable to acquire menu item callback!");
     }
