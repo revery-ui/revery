@@ -135,7 +135,7 @@ module WavFilePlaybackExamples = {
 
     let play = () => {
       switch (audioData, audioDevice) {
-      | (Some((spec, buf, len)), Some(device)) =>
+      | (Some((_spec, buf, len)), Some(device)) =>
         if (audioQueuedBytes > 0.) {
           Sdl2.Audio.Device.pause(device, false);
         } else {
