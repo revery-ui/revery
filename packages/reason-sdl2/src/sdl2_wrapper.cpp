@@ -1255,17 +1255,28 @@ extern "C" {
 
     static SDL_AudioFormat SDL_AudioFormat_val(value tag) {
         switch (Int_val(tag)) {
-            case 0: return AUDIO_S8;
-            case 1: return AUDIO_U8;
-            case 2: return AUDIO_S16LSB;
-            case 3: return AUDIO_S16MSB;
-            case 4: return AUDIO_U16LSB;
-            case 5: return AUDIO_U16MSB;
-            case 6: return AUDIO_S32LSB;
-            case 7: return AUDIO_S32MSB;
-            case 8: return AUDIO_F32LSB;
-            case 9: return AUDIO_F32MSB;
-            default: return 0;
+        case 0:
+            return AUDIO_S8;
+        case 1:
+            return AUDIO_U8;
+        case 2:
+            return AUDIO_S16LSB;
+        case 3:
+            return AUDIO_S16MSB;
+        case 4:
+            return AUDIO_U16LSB;
+        case 5:
+            return AUDIO_U16MSB;
+        case 6:
+            return AUDIO_S32LSB;
+        case 7:
+            return AUDIO_S32MSB;
+        case 8:
+            return AUDIO_F32LSB;
+        case 9:
+            return AUDIO_F32MSB;
+        default:
+            return 0;
         }
     }
 
@@ -1273,16 +1284,36 @@ extern "C" {
         CAMLparam0();
         int tag;
         switch (format) {
-            case AUDIO_S8: tag = 0; break;
-            case AUDIO_U8: tag = 1; break;
-            case AUDIO_S16LSB: tag = 2; break;
-            case AUDIO_S16MSB: tag = 3; break;
-            case AUDIO_U16LSB: tag = 4; break;
-            case AUDIO_U16MSB: tag = 5; break;
-            case AUDIO_S32LSB: tag = 6; break;
-            case AUDIO_S32MSB: tag = 7; break;
-            case AUDIO_F32LSB: tag = 8; break;
-            case AUDIO_F32MSB: tag = 9; break;
+        case AUDIO_S8:
+            tag = 0;
+            break;
+        case AUDIO_U8:
+            tag = 1;
+            break;
+        case AUDIO_S16LSB:
+            tag = 2;
+            break;
+        case AUDIO_S16MSB:
+            tag = 3;
+            break;
+        case AUDIO_U16LSB:
+            tag = 4;
+            break;
+        case AUDIO_U16MSB:
+            tag = 5;
+            break;
+        case AUDIO_S32LSB:
+            tag = 6;
+            break;
+        case AUDIO_S32MSB:
+            tag = 7;
+            break;
+        case AUDIO_F32LSB:
+            tag = 8;
+            break;
+        case AUDIO_F32MSB:
+            tag = 9;
+            break;
         }
         CAMLreturn(Val_int(tag));
     }
@@ -1323,14 +1354,14 @@ extern "C" {
 
     CAMLprim value resdl_SDL_OpenAudioDevice(
         value vDeviceNameOpt,
-        value vIsCapture, 
+        value vIsCapture,
         value vWant,
         value vAllowedChanges) {
         CAMLparam4(vDeviceNameOpt, vIsCapture, vWant, vAllowedChanges);
         CAMLlocal3(ret, vHave, vTup2);
         const char *deviceName = Is_block(vDeviceNameOpt)
-            ? String_val(Field(vDeviceNameOpt, 0))
-            : NULL;
+                                 ? String_val(Field(vDeviceNameOpt, 0))
+                                 : NULL;
         int isCapture = Bool_val(vIsCapture);
         SDL_AudioSpec want = {0};
         want.freq = Int_val(Field(vWant, 0));
@@ -1343,11 +1374,11 @@ extern "C" {
         SDL_AudioSpec have = {0};
         int allowedChanges = Int_val(vAllowedChanges);
         SDL_AudioDeviceID device = SDL_OpenAudioDevice(
-            deviceName,
-            isCapture,
-            &want,
-            &have,
-            allowedChanges);
+                                       deviceName,
+                                       isCapture,
+                                       &want,
+                                       &have,
+                                       allowedChanges);
         if (device == 0) {
             ret = Val_error(caml_copy_string(SDL_GetError()));
             CAMLreturn(ret);
