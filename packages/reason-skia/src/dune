@@ -1,13 +1,15 @@
 (rule
-    (targets c_library_flags.sexp c_flags.sexp flags.sexp)
-    (deps (:discover config/discover.exe))
-    (action (run %{discover})))
+ (targets c_library_flags.sexp c_flags.sexp flags.sexp)
+ (deps
+  (:discover config/discover.exe))
+ (action
+  (run %{discover})))
 
 (library
-  (name skia)
-  (public_name reason-skia)
-  (library_flags (:include flags.sexp))
-  (c_library_flags (:include c_library_flags.sexp))
-  (libraries
-    SkiaWrapped
-))
+ (name skia)
+ (public_name reason-skia)
+ (library_flags
+  (:include flags.sexp))
+ (c_library_flags
+  (:include c_library_flags.sexp))
+ (libraries SkiaWrapped))
