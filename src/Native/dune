@@ -1,35 +1,40 @@
 (library
-    (name Revery_Native)
-    (public_name Revery.Native)
-    (preprocess (pps lwt_ppx ppx_optcomp))
-    (preprocessor_deps config.h)
-    (library_flags (:include flags.sexp))
-    (js_of_ocaml (javascript_files dialog.js))
-    (c_names
-        Revery_Native
-        dialog dialog_cocoa dialog_win32 dialog_gtk
-        notification notification_cocoa
-        environment environment_mac environment_linux environment_windows
-        icon icon_cocoa icon_win32
-        shell shell_cocoa shell_gtk shell_win32
-        locale locale_cocoa locale_win32
-        menu menu_cocoa
-        input input_cocoa
-        window window_cocoa
-        utilities
-        ReveryGtk ReveryGtk_Widget
-        ReveryAppDelegate ReveryAppDelegate_func
-        ReveryNSObject ReveryNSView ReveryNSViewCoords
-        ReveryMenuItemTarget ReveryButtonTarget
-        ReveryProgressBar)
-    (c_flags :standard -Wall -Wextra -Werror (:include c_flags.sexp))
-    (c_library_flags (:include c_library_flags.sexp))
-    (libraries sdl2 lru))
+ (name Revery_Native)
+ (public_name Revery.Native)
+ (preprocess
+  (pps lwt_ppx ppx_optcomp))
+ (preprocessor_deps config.h)
+ (library_flags
+  (:include flags.sexp))
+ (js_of_ocaml
+  (javascript_files dialog.js))
+ (foreign_stubs
+  (language c)
+  (names Revery_Native dialog dialog_cocoa dialog_win32 dialog_gtk
+    notification notification_cocoa environment environment_mac
+    environment_linux environment_windows icon icon_cocoa icon_win32 shell
+    shell_cocoa shell_gtk shell_win32 locale locale_cocoa locale_win32 menu
+    menu_cocoa input input_cocoa window window_cocoa utilities ReveryGtk
+    ReveryGtk_Widget ReveryAppDelegate ReveryAppDelegate_func ReveryNSObject
+    ReveryNSView ReveryNSViewCoords ReveryMenuItemTarget ReveryButtonTarget
+    ReveryProgressBar)
+  (flags
+   :standard
+   -Wall
+   -Wextra
+   -Werror
+   (:include c_flags.sexp)))
+ (c_library_flags
+  (:include c_library_flags.sexp))
+ (libraries sdl2 lru))
 
 (copy_files cocoa/*)
+
 (copy_files gtk/*)
 
 (rule
-(targets config.h flags.sexp c_flags.sexp c_library_flags.sexp)
-(deps (:discover config/discover.exe))
-(action (run %{discover})))
+ (targets config.h flags.sexp c_flags.sexp c_library_flags.sexp)
+ (deps
+  (:discover config/discover.exe))
+ (action
+  (run %{discover})))

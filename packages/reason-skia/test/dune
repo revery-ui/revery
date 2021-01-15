@@ -1,11 +1,8 @@
-(library 
-    (name Skia_Test)
-    (flags (:standard (-w -39)))
-    (ocamlopt_flags -linkall -g)
-    (libraries rely.lib rely.internal
-        reason-skia
-        reason-skia.wrapped.bindings
-        reason-skia.wrapped
-        )
-
-)
+(library
+ (name Skia_Test)
+ (flags
+  (:standard
+   (-w -39)))
+ (ocamlopt_flags -linkall -g)
+ (libraries rely.lib rely.internal reason-skia reason-skia.wrapped.bindings
+   reason-skia.wrapped))

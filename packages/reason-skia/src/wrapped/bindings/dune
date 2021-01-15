@@ -1,16 +1,14 @@
 (rule
  (targets skia_generated_type_stubs.ml)
  (deps ../stubgen/ml_types_stubgen.exe)
- (action (with-stdout-to %{targets} (run %{deps}))))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run %{deps}))))
 
 (library
  (name SkiaWrappedBindings)
  (flags -w -9)
  (public_name reason-skia.wrapped.bindings)
- (libraries
-    reason-skia.wrapped.types
-    reason-skia.wrapped.c
-    ctypes.stubs
-    ctypes
-    integers
-))
+ (libraries reason-skia.wrapped.types reason-skia.wrapped.c ctypes.stubs
+   ctypes integers))

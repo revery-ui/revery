@@ -1,11 +1,17 @@
 (library
  (name harfbuzz)
  (public_name reason-harfbuzz)
+ (foreign_stubs
+  (language c)
+  (flags
+   (:include c_flags.sexp)))
+ (foreign_stubs
+  (language cxx)
+  (names harfbuzz)
+  (flags
+   (:include cxx_flags.sexp)))
  (library_flags
-  (:include flags.sexp))
- (c_flags (:include c_flags.sexp))
- (cxx_flags (:include cxx_flags.sexp))
- (cxx_names harfbuzz))
+  (:include flags.sexp)))
 
 (rule
  (targets c_flags.sexp cxx_flags.sexp flags.sexp)

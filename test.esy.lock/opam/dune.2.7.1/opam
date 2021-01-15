@@ -42,7 +42,7 @@ build: [
 depends: [
   # Please keep the lower bound in sync with .github/workflows/workflow.yml,
   # dune-project and min_ocaml_version in bootstrap.ml
-  ("ocaml" {>= "4.08"} | ("ocaml" {< "4.08~~"} & "ocamlfind-secondary"))
+  ("ocaml" {>= "4.08" & < "4.12"} | ("ocaml" {< "4.08~~"} & "ocamlfind-secondary"))
   "base-unix"
   "base-threads"
 ]

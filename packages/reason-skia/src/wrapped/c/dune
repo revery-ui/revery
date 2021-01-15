@@ -1,31 +1,39 @@
 (rule
  (targets c_flags.txt c_library_flags.txt)
- (deps    (:discover ../../config/discover.exe))
- (action  (run %{discover})))
+ (deps
+  (:discover ../../config/discover.exe))
+ (action
+  (run %{discover})))
 
 (library
  (name skia_wrapped_c)
  (public_name reason-skia.wrapped.c)
  (preprocess no_preprocessing)
  (libraries sdl2)
- (self_build_stubs_archive (skia_wrapped_c)))
+ (foreign_archives skia_wrapped_c_stubs))
 
 (rule
  (targets libskia_wrapped_c_stubs.a)
  (deps c_stubs.o)
- (action (run ar rcs %{targets} %{deps})))
+ (action
+  (run ar rcs %{targets} %{deps})))
 
 (rule
  (targets dllskia_wrapped_c_stubs.dll)
- (deps   c_stubs.o)
- (action (run %{cc} -shared -o %{targets} %{deps} %{read-lines:c_library_flags.txt})))
+ (deps c_stubs.o)
+ (action
+  (run %{cc} -shared -o %{targets} %{deps} %{read-lines:c_library_flags.txt})))
 
 (rule
  (targets dllskia_wrapped_c_stubs.so)
- (deps   c_stubs.o)
- (action (run %{cc} %{read-lines:c_library_flags.txt} -shared -o %{targets} %{deps})))
+ (deps c_stubs.o)
+ (action
+  (run %{cc} %{read-lines:c_library_flags.txt} -shared -o %{targets} %{deps})))
 
 (rule
  (targets c_stubs.o)
- (deps (:c c_stubs.c c_stubs.h) c_flags.txt)
- (action (run %{cc} %{read-lines:c_flags.txt} -c %{c})))
+ (deps
+  (:c c_stubs.c c_stubs.h)
+  c_flags.txt)
+ (action
+  (run %{cc} %{read-lines:c_flags.txt} -c %{c})))

@@ -1,9 +1,6 @@
-
 (library
-    (name Revery_SVG)
-    (public_name Revery.SVG)
-    (preprocess (pps brisk-reconciler.ppx))
-    (libraries 
-        markup
-        Revery_Draw
-))
+ (name Revery_SVG)
+ (public_name Revery.SVG)
+ (preprocess
+  (pps brisk-reconciler.ppx))
+ (libraries markup Revery_Draw))

@@ -11,5 +11,4 @@
  (package Revery)
  (files Info.plist Roboto-Regular.ttf Roboto-RegularItalic.ttf
    Roboto-Bold.ttf FontAwesome5FreeSolid.otf binary.dat outrun-logo.png
-   reason-logo.png
-   outrun-icon.png revery-icon.png))
+   reason-logo.png outrun-icon.png revery-icon.png))
