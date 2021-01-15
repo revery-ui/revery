@@ -1253,6 +1253,54 @@ extern "C" {
         CAMLreturn(Val_unit);
     }
 
+    static SDL_AudioFormat SDL_AudioFormat_val(value tag) {
+        switch (Int_val(tag)) {
+            case 0: return AUDIO_S8;
+            case 1: return AUDIO_U8;
+            case 2: return AUDIO_S16LSB;
+            case 3: return AUDIO_S16MSB;
+            case 4: return AUDIO_U16LSB;
+            case 5: return AUDIO_U16MSB;
+            case 6: return AUDIO_S32LSB;
+            case 7: return AUDIO_S32MSB;
+            case 8: return AUDIO_F32LSB;
+            case 9: return AUDIO_F32MSB;
+            default: return 0;
+        }
+    }
+
+    CAMLprim value Val_SDL_AudioFormat(SDL_AudioFormat format) {
+        CAMLparam0();
+        int tag;
+        switch (format) {
+            case AUDIO_S8: tag = 0; break;
+            case AUDIO_U8: tag = 1; break;
+            case AUDIO_S16LSB: tag = 2; break;
+            case AUDIO_S16MSB: tag = 3; break;
+            case AUDIO_U16LSB: tag = 4; break;
+            case AUDIO_U16MSB: tag = 5; break;
+            case AUDIO_S32LSB: tag = 6; break;
+            case AUDIO_S32MSB: tag = 7; break;
+            case AUDIO_F32LSB: tag = 8; break;
+            case AUDIO_F32MSB: tag = 9; break;
+        }
+        CAMLreturn(Val_int(tag));
+    }
+
+    CAMLprim value Val_SDL_AudioSpec(SDL_AudioSpec spec) {
+        CAMLparam0();
+        CAMLlocal1(ret);
+        ret = caml_alloc(7, 0);
+        Store_field(ret, 0, Val_int(spec.freq));
+        Store_field(ret, 1, Val_SDL_AudioFormat(spec.format));
+        Store_field(ret, 2, Val_int(spec.channels));
+        Store_field(ret, 3, Val_int(spec.silence));
+        Store_field(ret, 4, Val_int(spec.samples));
+        Store_field(ret, 5, Val_int(spec.padding));
+        Store_field(ret, 6, Val_int(spec.size));
+        CAMLreturn(ret);
+    }
+
     CAMLprim value resdl_SDL_LoadWAV(value vPath) {
         CAMLparam1(vPath);
         CAMLlocal3(ret, vSpec, vTup3);
@@ -1264,14 +1312,7 @@ extern "C" {
             ret = Val_error(caml_copy_string(SDL_GetError()));
             CAMLreturn(ret);
         }
-        vSpec = caml_alloc(7, 0);
-        Store_field(vSpec, 0, Val_int(spec.freq));
-        Store_field(vSpec, 1, Val_int(spec.format));
-        Store_field(vSpec, 2, Val_int(spec.channels));
-        Store_field(vSpec, 3, Val_int(spec.silence));
-        Store_field(vSpec, 4, Val_int(spec.samples));
-        Store_field(vSpec, 5, Val_int(spec.padding));
-        Store_field(vSpec, 6, Val_int(spec.size));
+        vSpec = Val_SDL_AudioSpec(spec);
         vTup3 = caml_alloc_tuple(3);
         Store_field(vTup3, 0, vSpec);
         Store_field(vTup3, 1, resdl_wrapPointer(audioBuf));
@@ -1280,42 +1321,74 @@ extern "C" {
         CAMLreturn(ret);
     }
 
-    CAMLprim value resdl_SDL_OpenAudioDevice(value vSpec) {
-        CAMLparam1(vSpec);
-        SDL_AudioSpec spec = {0};
-        spec.freq = Int_val(Field(vSpec, 0));
-        spec.format = Int_val(Field(vSpec, 1));
-        spec.channels = Int_val(Field(vSpec, 2));
-        spec.silence = Int_val(Field(vSpec, 3));
-        spec.samples = Int_val(Field(vSpec, 4));
-        spec.padding = Int_val(Field(vSpec, 5));
-        spec.size = Int_val(Field(vSpec, 6));
-        SDL_AudioDeviceID dev = SDL_OpenAudioDevice(NULL, 0, &spec, NULL, 0);
-        CAMLreturn(Val_int(dev));
+    CAMLprim value resdl_SDL_OpenAudioDevice(
+        value vDeviceNameOpt,
+        value vIsCapture, 
+        value vWant,
+        value vAllowedChanges) {
+        CAMLparam4(vDeviceNameOpt, vIsCapture, vWant, vAllowedChanges);
+        CAMLlocal3(ret, vHave, vTup2);
+        const char *deviceName = Is_block(vDeviceNameOpt)
+            ? String_val(Field(vDeviceNameOpt, 0))
+            : NULL;
+        int isCapture = Bool_val(vIsCapture);
+        SDL_AudioSpec want = {0};
+        want.freq = Int_val(Field(vWant, 0));
+        want.format = SDL_AudioFormat_val(Field(vWant, 1));
+        want.channels = Int_val(Field(vWant, 2));
+        want.silence = Int_val(Field(vWant, 3));
+        want.samples = Int_val(Field(vWant, 4));
+        want.padding = Int_val(Field(vWant, 5));
+        want.size = Int_val(Field(vWant, 6));
+        SDL_AudioSpec have = {0};
+        int allowedChanges = Int_val(vAllowedChanges);
+        SDL_AudioDeviceID device = SDL_OpenAudioDevice(
+            deviceName,
+            isCapture,
+            &want,
+            &have,
+            allowedChanges);
+        if (device == 0) {
+            ret = Val_error(caml_copy_string(SDL_GetError()));
+            CAMLreturn(ret);
+        }
+        vHave = Val_SDL_AudioSpec(have);
+        vTup2 = caml_alloc_tuple(2);
+        Store_field(vTup2, 0, Val_int(device));
+        Store_field(vTup2, 1, vHave);
+        ret = Val_ok(vTup2);
+        CAMLreturn(ret);
     }
 
-    CAMLprim value resdl_SDL_CloseAudioDevice(value vDev) {
-        CAMLparam1(vDev);
-        SDL_AudioDeviceID dev = Int_val(vDev);
-        SDL_CloseAudioDevice(dev);
+    CAMLprim value resdl_SDL_CloseAudioDevice(value vDevice) {
+        CAMLparam1(vDevice);
+        SDL_AudioDeviceID device = Int_val(vDevice);
+        SDL_CloseAudioDevice(device);
         CAMLreturn(Val_unit);
     }
 
-    CAMLprim value resdl_SDL_PauseAudioDevice(value vDev, value vPauseOn) {
-        CAMLparam2(vDev, vPauseOn);
-        SDL_AudioDeviceID dev = Int_val(vDev);
+    CAMLprim value resdl_SDL_GetAudioDeviceStatus(value vDevice) {
+        CAMLparam1(vDevice);
+        SDL_AudioDeviceID device = Int_val(vDevice);
+        SDL_AudioStatus status = SDL_GetAudioDeviceStatus(device);
+        CAMLreturn(Val_int(status));
+    }
+
+    CAMLprim value resdl_SDL_PauseAudioDevice(value vDevice, value vPauseOn) {
+        CAMLparam2(vDevice, vPauseOn);
+        SDL_AudioDeviceID device = Int_val(vDevice);
         int pauseOn = Bool_val(vPauseOn);
-        SDL_PauseAudioDevice(dev, pauseOn);
+        SDL_PauseAudioDevice(device, pauseOn);
         CAMLreturn(Val_unit);
     }
 
-    CAMLprim value resdl_SDL_QueueAudio(value vDev, value vBuf, value vLen) {
-        CAMLparam3(vDev, vBuf, vLen);
+    CAMLprim value resdl_SDL_QueueAudio(value vDevice, value vBuf, value vLen) {
+        CAMLparam3(vDevice, vBuf, vLen);
         CAMLlocal1(ret);
-        SDL_AudioDeviceID dev = Int_val(vDev);
+        SDL_AudioDeviceID device = Int_val(vDevice);
         const void *buf = resdl_unwrapPointer(vBuf);
         Uint32 len = Int_val(vLen);
-        if (SDL_QueueAudio(dev, buf, len) < 0) {
+        if (SDL_QueueAudio(device, buf, len) < 0) {
             ret = Val_error(caml_copy_string(SDL_GetError()));
             CAMLreturn(ret);
         }
@@ -1323,11 +1396,18 @@ extern "C" {
         CAMLreturn(ret);
     }
 
-    CAMLprim value resdl_SDL_ClearQueuedAudio(value vDev) {
-        CAMLparam1(vDev);
-        SDL_AudioDeviceID dev = Int_val(vDev);
-        SDL_ClearQueuedAudio(dev);
+    CAMLprim value resdl_SDL_ClearQueuedAudio(value vDevice) {
+        CAMLparam1(vDevice);
+        SDL_AudioDeviceID device = Int_val(vDevice);
+        SDL_ClearQueuedAudio(device);
         CAMLreturn(Val_unit);
+    }
+
+    CAMLprim value resdl_SDL_GetQueuedAudioSize(value vDevice) {
+        CAMLparam1(vDevice);
+        SDL_AudioDeviceID device = Int_val(vDevice);
+        Uint32 bytes = SDL_GetQueuedAudioSize(device);
+        CAMLreturn(Val_int(bytes));
     }
 
     CAMLprim value resdl_SDL_CreateRGBSurfaceFromImage(value vPath) {

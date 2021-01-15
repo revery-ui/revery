@@ -33,13 +33,26 @@ module Surface = {
 };
 
 module Audio = {
+  module Format = {
+    type t =
+      | S8
+      | U8
+      | S16LSB
+      | S16MSB
+      | U16LSB
+      | U16MSB
+      | S32LSB
+      | S32MSB
+      | F32LSB
+      | F32MSB;
+  };
   module Buffer = {
     type t;
   };
   module Spec = {
     type t = {
       freq: int,
-      format: int,
+      format: Format.t,
       channels: int,
       silence: int,
       samples: int,
@@ -47,19 +60,51 @@ module Audio = {
       size: int,
     };
   };
+  module Device = {
+    module Status = {
+      type t =
+        | Stopped
+        | Playing
+        | Paused;
+    };
+    module AllowedChanges: {
+      type t;
+      let frequency: t;
+      let format: t;
+      let channels: t;
+      let samples: t;
+      let any: t;
+      let none: t;
+      let (|||): (t, t) => t;
+    } = {
+      type t = int;
+      let frequency = 0x00000001;
+      let format = 0x00000002;
+      let channels = 0x00000004;
+      let samples = 0x00000008;
+      let (|||) = (lor);
+      let any = frequency lor format lor channels lor samples;
+      let none = 0;
+    };
+    type t;
+    external open_:
+      (option(string), bool, Spec.t, AllowedChanges.t) =>
+      result((t, Spec.t), string) =
+      "resdl_SDL_OpenAudioDevice";
+    external close: t => unit = "resdl_SDL_CloseAudioDevice";
+    external getStatus: t => Status.t = "resdl_SDL_GetAudioDeviceStatus";
+    external pause: (t, bool) => unit = "resdl_SDL_PauseAudioDevice";
+  };
+
   module Wav = {
     external load: string => result((Spec.t, Buffer.t, int), string) =
       "resdl_SDL_LoadWAV";
   };
-  module Device = {
-    type t;
-    external open_: Spec.t => t = "resdl_SDL_OpenAudioDevice";
-    external close: t => unit = "resdl_SDL_CloseAudioDevice";
-    external pause: (t, bool) => unit = "resdl_SDL_PauseAudioDevice";
-  };
+
   external queue: (Device.t, Buffer.t, int) => result(unit, string) =
     "resdl_SDL_QueueAudio";
   external clearQueued: Device.t => unit = "resdl_SDL_ClearQueuedAudio";
+  external getQueuedSize: Device.t => int = "resdl_SDL_GetQueuedAudioSize";
 };
 
 module Clipboard = {
