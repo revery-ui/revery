@@ -206,7 +206,7 @@ module WavFilePlaybackExamples = {
                onClick=play
              />
            | Playing =>
-             audioPlaybackProgress == 1.
+             audioQueuedBytes == 0.
                ? <Button
                    title="Play"
                    fontSize=12.
