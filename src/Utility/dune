@@ -1,9 +1,6 @@
 (library
  (name Revery_Utility)
  (public_name Revery.Utility)
- (foreign_stubs
-  (language c)
-  (flags :standard -Wall -Wextra -Werror))
  (preprocess
   (pps ppx_deriving.show))
  (libraries threads console.lib str lwt sdl2 skia flex Rench re Revery_Core

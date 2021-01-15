@@ -3,6 +3,6 @@
  (foreign_stubs
   (language c)
   (names example_stubs)
-  (flags :standard -Wall -Wexta -Werror))
+  (flags :standard -Wall -Wextra -Werror))
  (js_of_ocaml
   (javascript_files example_stubs.js)))

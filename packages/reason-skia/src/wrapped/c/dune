@@ -10,7 +10,7 @@
  (public_name reason-skia.wrapped.c)
  (preprocess no_preprocessing)
  (libraries sdl2)
- (foreign_archives skia_wrapped_c))
+ (foreign_archives skia_wrapped_c_stubs))
 
 (rule
  (targets libskia_wrapped_c_stubs.a)
