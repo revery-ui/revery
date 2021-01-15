@@ -14,10 +14,11 @@
         shell shell_cocoa shell_gtk shell_win32
         locale locale_cocoa locale_win32
         menu menu_cocoa
-        input input_cocoa
+        input input_cocoa input_win32
         window window_cocoa
         utilities
         ReveryGtk ReveryGtk_Widget
+        ReveryHWND
         ReveryAppDelegate ReveryAppDelegate_func
         ReveryNSObject ReveryNSView ReveryNSViewCoords
         ReveryMenuItemTarget ReveryButtonTarget
@@ -28,6 +29,7 @@
 
 (copy_files cocoa/*)
 (copy_files gtk/*)
+(copy_files win32/*)
 
 (rule
 (targets config.h flags.sexp c_flags.sexp c_library_flags.sexp)

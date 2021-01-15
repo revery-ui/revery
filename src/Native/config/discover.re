@@ -131,7 +131,12 @@ let get_win32_config = () => {
   features: [WIN32],
   cflags: [],
   libs: [],
-  flags: [] @ cclib("-luuid") @ cclib("-lole32") @ cclib("-lcomdlg32"),
+  flags:
+    []
+    @ cclib("-luuid")
+    @ cclib("-lole32")
+    @ cclib("-lcomdlg32")
+    @ cclib("-lcomctl32"),
 };
 
 main(~name="discover", t => {

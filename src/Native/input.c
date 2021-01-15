@@ -27,6 +27,8 @@ CAMLprim value revery_buttonCreate(value vTitle) {
 #ifdef USE_COCOA
     button = revery_buttonCreate_cocoa(title);
     [(NSObject *)button retain];
+#elif USE_WIN32
+    button = revery_buttonCreate_win32(title);
 #else
     UNUSED(title);
     button = NULL;
@@ -55,4 +57,27 @@ CAMLprim value revery_buttonSetColor(value vButton, value vRed, value vGreen, va
 #endif
 
     CAMLreturn(Val_unit);
+}
+
+CAMLprim value revery_buttonGetDefaultSize(value vButton) {
+    CAMLparam1(vButton);
+    CAMLlocal1(vSize);
+
+    void *button = revery_unwrapPointer(vButton);
+    int width = 0;
+    int height = 0;
+#ifdef USE_WIN32
+    revery_buttonGetDefaultSize_win32(button, &width, &height);
+#else
+    UNUSED(button);
+    UNUSED(width);
+    UNUSED(height);
+#endif
+
+    vSize = caml_alloc(2, 0);
+
+    Store_field(vSize, 0, Val_int(width));
+    Store_field(vSize, 1, Val_int(height));
+
+    CAMLreturn(vSize);
 }

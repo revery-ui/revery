@@ -11,6 +11,7 @@
 #include "ReveryWin32.h"
 #include <combaseapi.h>
 #include <windows.h>
+#include <commctrl.h>
 #elif USE_COCOA
 #include "ReveryCocoa.h"
 #import "ReveryAppDelegate.h"
@@ -53,8 +54,16 @@ CAMLprim value revery_initializeWindow(value vWin) {
        https://chromium.googlesource.com/chromium/src.git/+/46.0.2478.0/chrome/browser/ui/views/apps/chrome_native_app_window_views_win.cc#71
     */
     HWND window = (HWND)win;
-    int current_style = GetWindowLong(window, GWL_STYLE);
-    SetWindowLong(window, GWL_STYLE, current_style | WS_CAPTION);
+    int currentStyle = GetWindowLong(window, GWL_STYLE);
+    SetWindowLong(window, GWL_STYLE, currentStyle | WS_CAPTION);
+    inputSetMainWindow_win32(window);
+
+    INITCOMMONCONTROLSEX icc;
+    icc.dwSize = sizeof(icc);
+    icc.dwICC = ICC_STANDARD_CLASSES;
+    InitCommonControlsEx(&icc);
+
+    MessageBox(NULL, TEXT("Error registering window class."), TEXT("Error"), MB_ICONERROR | MB_OK);
 #else
     UNUSED(win);
 #endif

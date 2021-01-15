@@ -9,8 +9,7 @@ module Button: {
 
   let setFrame: (~x: int, ~y: int, ~width: int, ~height: int, t) => unit;
 
-  let getDefaultWidth: t => int;
-  let getDefaultHeight: t => int;
+  let getDefaultSize: t => (int, int);
 
   let setColor:
     (~red: float, ~green: float, ~blue: float, ~alpha: float, t) => unit;
