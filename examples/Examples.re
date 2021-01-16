@@ -195,6 +195,11 @@ let examples = [
     render: _ => ImageQualityExample.render(),
     source: "ImageQualityExample.re",
   },
+  {
+    name: "WavFilePlayback",
+    render: _ => WavFilePlaybackExample.render(),
+    source: "WavFilePlaybackExample.re",
+  },
 ];
 
 let getExampleByName = name =>

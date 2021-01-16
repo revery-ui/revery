@@ -1,13 +1,23 @@
 (library
-    (name sdl2)
-    (public_name reason-sdl2)
-    (library_flags (:include flags.sexp))
-    (c_library_flags (:include c_library_flags.sexp))
-    (c_flags (:include c_flags.sexp))
-    (cxx_names sdl2_wrapper stb_image)
-    (cxx_flags (:include cxx_flags.sexp)))
+ (name sdl2)
+ (public_name reason-sdl2)
+ (library_flags
+  (:include flags.sexp))
+ (c_library_flags
+  (:include c_library_flags.sexp))
+ (foreign_stubs
+  (language c)
+  (flags
+   (:include c_flags.sexp)))
+ (foreign_stubs
+  (language cxx)
+  (names sdl2_wrapper stb_image)
+  (flags
+   (:include cxx_flags.sexp))))
 
 (rule
-    (targets c_flags.sexp cxx_flags.sexp flags.sexp c_library_flags.sexp)
-    (deps (:discover config/discover.exe))
-    (action (run %{discover})))
+ (targets c_flags.sexp cxx_flags.sexp flags.sexp c_library_flags.sexp)
+ (deps
+  (:discover config/discover.exe))
+ (action
+  (run %{discover})))

@@ -15,12 +15,24 @@
 (rule
  (targets ml_types_stubgen.c)
  (deps ./types_stubgen.exe)
- (action (with-stdout-to %{targets} (run %{deps}))))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run %{deps}))))
 
-(rule (targets ctypes_path.txt)
-      (action (with-stdout-to %{targets} (run ocamlfind query ctypes))))
+(rule
+ (targets ctypes_path.txt)
+ (action
+  (with-stdout-to
+   %{targets}
+   (run ocamlfind query ctypes))))
 
 (rule
  (targets ml_types_stubgen.exe)
- (deps    (:c ./ml_types_stubgen.c) (:ctypes_path ctypes_path.txt) ../c/libskia_wrapped_c_stubs.a)
- (action (run %{cc} %{c} %{read-lines:../c/c_flags.txt} -I%{read-lines:ctypes_path.txt} -I%{ocaml_where} -o %{targets})))
+ (deps
+  (:c ./ml_types_stubgen.c)
+  (:ctypes_path ctypes_path.txt)
+  ../c/libskia_wrapped_c_stubs.a)
+ (action
+  (run %{cc} %{c} %{read-lines:../c/c_flags.txt}
+    -I%{read-lines:ctypes_path.txt} -I%{ocaml_where} -o %{targets})))

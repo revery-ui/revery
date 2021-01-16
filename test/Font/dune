@@ -1,5 +1,6 @@
 (library
-    (name Revery_Font_Test)
-    (library_flags (-linkall -g))
-    (modules (:standard))
-    (libraries Revery_Font skia rely.lib))
+ (name Revery_Font_Test)
+ (library_flags
+  (-linkall -g))
+ (modules (:standard))
+ (libraries Revery_Font skia rely.lib))

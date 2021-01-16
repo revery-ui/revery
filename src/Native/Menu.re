@@ -54,10 +54,10 @@ module Item = {
 
   let callbackTbl = CallbackTbl.create(32);
 
-  let callbackForMenuItem = item => {
+  let callbackForMenuItem = (fromKeyPress, item) => {
     let callback = CallbackTbl.find_opt(callbackTbl, item);
     switch (callback) {
-    | Some(cb) => cb()
+    | Some(cb) => cb(~fromKeyPress, ())
     | None => ()
     };
   };

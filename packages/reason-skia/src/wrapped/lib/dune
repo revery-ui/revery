@@ -1,24 +1,31 @@
 (rule
  (targets skia_generated_stubs.ml)
  (deps ../stubgen/stubgen.exe)
- (action (with-stdout-to %{targets} (run %{deps} -ml))))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run %{deps} -ml))))
 
 (rule
  (targets skia_generated_stubs.c)
- (deps (:stubgen ../stubgen/stubgen.exe))
- (action (with-stdout-to %{targets} (run %{stubgen} -c))))
+ (deps
+  (:stubgen ../stubgen/stubgen.exe))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run %{stubgen} -c))))
 
 (library
-  (name SkiaWrapped)
-  (flags (-w -40 -w +26))
-  (public_name reason-skia.wrapped)
-  (libraries
-    reason-skia.wrapped.types
-    reason-skia.wrapped.bindings
-    reason-skia.wrapped.c
-    ctypes
-    integers
-  )
-  (c_names skia_generated_stubs raw_bindings)
-  (c_flags (:include ../../c_flags.sexp))
-  (c_library_flags (:include ../../c_library_flags.sexp)))
+ (name SkiaWrapped)
+ (flags
+  (-w -40 -w +26))
+ (public_name reason-skia.wrapped)
+ (libraries reason-skia.wrapped.types reason-skia.wrapped.bindings
+   reason-skia.wrapped.c ctypes integers)
+ (foreign_stubs
+  (language c)
+  (names skia_generated_stubs raw_bindings)
+  (flags
+   (:include ../../c_flags.sexp)))
+ (c_library_flags
+  (:include ../../c_library_flags.sexp)))
