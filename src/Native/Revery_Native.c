@@ -62,8 +62,6 @@ CAMLprim value revery_initializeWindow(value vWin) {
     icc.dwSize = sizeof(icc);
     icc.dwICC = ICC_STANDARD_CLASSES;
     InitCommonControlsEx(&icc);
-
-    MessageBox(NULL, TEXT("Error registering window class."), TEXT("Error"), MB_ICONERROR | MB_OK);
 #else
     UNUSED(win);
 #endif

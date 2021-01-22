@@ -1,7 +1,7 @@
 {
   "source": "./package.json",
   "scripts": {
-      "run": "esy @examples x Examples",
+      "run": "esy @examples x Examples_patched",
       "run-harfbuzz": "esy @examples x bash -c run-harfbuzz.sh #{os}",
       "run-skia-fontmanager": "esy @examples x bash -c run-skia-fontmanager.sh #{os}"
   },

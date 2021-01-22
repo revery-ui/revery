@@ -15,8 +15,9 @@ void inputSetMainWindow_win32(HWND hwnd) {
 }
 
 HWND revery_buttonCreate_win32(const char *title) {
-    HWND button = CreateWindowEx(
-                      BS_PUSHBUTTON,
+    static HFONT buttonFont = NULL;
+
+    HWND button = CreateWindow(
                       "BUTTON",
                       title,
                       WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -30,6 +31,15 @@ HWND revery_buttonCreate_win32(const char *title) {
                       NULL
                   );
 
+    if (buttonFont == NULL) {
+        NONCLIENTMETRICS metrics;
+        metrics.cbSize = sizeof(NONCLIENTMETRICS);
+        SystemParametersInfo(SPI_GETNONCLIENTMETRICS, metrics.cbSize, &metrics, 0);
+        buttonFont = CreateFontIndirect(&metrics.lfCaptionFont);
+    }
+
+    SendMessage(button, WM_SETFONT, (LPARAM)buttonFont, 1);
+
     return button;
 }
 
@@ -40,8 +50,6 @@ void revery_buttonGetDefaultSize_win32(HWND button, int *width, int *height) {
         button,
         &size
     );
-
-    printf("%s: %ld, %ld\n", __func__, size.cx, size.cy);
 
     *width = size.cx;
     *height = size.cy;

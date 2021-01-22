@@ -3,12 +3,21 @@
  (preprocess
   (pps brisk-reconciler.ppx lwt_ppx))
  (package ReveryExamples)
- (public_names Examples)
+ (public_names Examples_unpatched)
  (libraries ExampleStubs skia str Revery Revery_Lwt flex timber))
+
+(rule
+ (targets Examples_patched.exe)
+ (deps
+  (:examples Examples.exe)
+  (:manifest Examples.exe.manifest)
+  (:patch config/patch.exe))
+ (action
+  (run %{patch} -input %{examples} -output %{targets} -manifest %{manifest})))
 
 (install
  (section bin)
  (package Revery)
- (files Info.plist Roboto-Regular.ttf Roboto-RegularItalic.ttf
-   Roboto-Bold.ttf FontAwesome5FreeSolid.otf binary.dat outrun-logo.png
-   reason-logo.png outrun-icon.png revery-icon.png))
+ (files Examples_patched.exe Info.plist Roboto-Regular.ttf
+   Roboto-RegularItalic.ttf Roboto-Bold.ttf FontAwesome5FreeSolid.otf
+   binary.dat outrun-logo.png reason-logo.png outrun-icon.png revery-icon.png))
