@@ -39,6 +39,7 @@ HWND revery_buttonCreate_win32(const char *title) {
     }
 
     SendMessage(button, WM_SETFONT, (LPARAM)buttonFont, 1);
+    ShowWindow(button, SW_HIDE);
 
     return button;
 }
