@@ -9,6 +9,19 @@
 
 #include "utilities.h"
 
+CAMLprim value revery_HWND_remove(value vHWND) {
+    CAMLparam1(vHWND);
+    HWND hwnd = (HWND)revery_unwrapPointer(vHWND);
+
+    /* Unfortunately, controls always have to have parents,
+    so, unlike on macOS, we can't "remove" the control
+    from it's parent. Rather, we can simply hide it in
+    it's current parent */
+    ShowWindow(hwnd, SW_HIDE);
+
+    CAMLreturn(Val_unit);
+}
+
 CAMLprim value revery_HWND_setFrame(value vHWND, value vX, value vY, value vWidth, value vHeight) {
     CAMLparam5(vHWND, vX, vY, vWidth, vHeight);
 
@@ -26,6 +39,16 @@ CAMLprim value revery_HWND_setFrame(value vHWND, value vX, value vY, value vWidt
         height,
         TRUE
     );
+
+    CAMLreturn(Val_unit);
+}
+
+CAMLprim value revery_HWND_displayIn(value vChild, value vParent) {
+    CAMLparam2(vChild, vParent);
+    HWND child = (HWND)revery_unwrapPointer(vChild);
+    UNUSED(vParent);
+
+    ShowWindow(child, SW_SHOW);
 
     CAMLreturn(Val_unit);
 }

@@ -91,8 +91,8 @@ module Button = {
 
   let getDefaultSize = c_getDefaultSize;
 
-  let remove = _ => ();
-  let displayIn = (_, _) => ();
+  let remove = HWND.remove;
+  let displayIn = HWND.displayIn;
 
   [%%else];
 
