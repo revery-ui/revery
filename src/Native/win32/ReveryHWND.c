@@ -1,5 +1,6 @@
 #include "config.h"
 #ifdef USE_WIN32
+#include <stdio.h>
 #include <windows.h>
 
 #include <caml/alloc.h>
@@ -8,6 +9,47 @@
 #include <caml/mlvalues.h>
 
 #include "utilities.h"
+
+static WNDPROC defaultWindowProc = NULL;
+
+void callButtonCallback(HWND button) {
+    CAMLparam0();
+    CAMLlocal1(vButton);
+    static const camlValue *callbackForButton = NULL;
+
+    if (callbackForButton == NULL) {
+        callbackForButton = caml_named_value("revery_callbackForButton");
+    }
+
+    if (callbackForButton == NULL) {
+        printf("Unable to acquire button callback!");
+    } else {
+        vButton = revery_wrapPointer(button);
+        camlValue args[] = {vButton};
+        revery_caml_call_n(*callbackForButton, 1, args);
+    }
+
+    CAMLreturn0;
+}
+
+
+LRESULT CALLBACK buttonWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
+    switch (uMsg) {
+    case WM_COMMAND:
+        if ((LOWORD(wParam) | ~0xF000) == ~0) {
+            HWND button = GetDlgItem(hwnd, LOWORD(wParam));
+            callButtonCallback(button);
+        }
+        break;
+    }
+    return CallWindowProc(defaultWindowProc, hwnd, uMsg, wParam, lParam);
+}
+
+void updateWindowProc_win32(HWND hwnd) {
+    defaultWindowProc = (WNDPROC)GetWindowLongPtr(hwnd, GWLP_WNDPROC);
+    SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)buttonWindowProc);
+}
 
 CAMLprim value revery_HWND_remove(value vHWND) {
     CAMLparam1(vHWND);

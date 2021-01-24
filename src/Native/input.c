@@ -81,3 +81,20 @@ CAMLprim value revery_buttonGetDefaultSize(value vButton) {
 
     CAMLreturn(vSize);
 }
+
+CAMLprim value revery_buttonHash(value vButton) {
+    CAMLparam1(vButton);
+    CAMLlocal1(vHash);
+
+    int hash = 0;
+    void *button = revery_unwrapPointer(vButton);
+#ifdef USE_WIN32
+    hash = revery_buttonHash_win32(button);
+#else
+    UNUSED(hash);
+    UNUSED(button);
+#endif
+
+    vHash = Val_int(hash);
+    CAMLreturn(vHash);
+}

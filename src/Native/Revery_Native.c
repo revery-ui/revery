@@ -57,6 +57,7 @@ CAMLprim value revery_initializeWindow(value vWin) {
     int currentStyle = GetWindowLong(window, GWL_STYLE);
     SetWindowLong(window, GWL_STYLE, currentStyle | WS_CAPTION);
     inputSetMainWindow_win32(window);
+    updateWindowProc_win32(window);
 
     INITCOMMONCONTROLSEX icc;
     icc.dwSize = sizeof(icc);

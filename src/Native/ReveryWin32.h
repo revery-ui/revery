@@ -14,3 +14,7 @@ char **revery_open_files_win32(const char *startDir, int canChooseFiles,
 void inputSetMainWindow_win32(void *hwnd);
 void *revery_buttonCreate_win32(const char *title);
 void revery_buttonGetDefaultSize_win32(void *button, int *width, int *height);
+int revery_buttonHash_win32(void *hwnd);
+
+/* Window functions */
+void updateWindowProc_win32(void *hwnd);

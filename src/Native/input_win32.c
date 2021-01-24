@@ -8,10 +8,16 @@
 #include <windows.h>
 #include <commctrl.h>
 
+// IDs usually start at 100, but we'll start at 200 to not interfere
+static size_t currentID = 0xF000;
 static HWND mainWindow;
 
 void inputSetMainWindow_win32(HWND hwnd) {
     mainWindow = hwnd;
+}
+
+int revery_buttonHash_win32(HWND hwnd) {
+    return GetDlgCtrlID(hwnd);
 }
 
 HWND revery_buttonCreate_win32(const char *title) {
@@ -20,13 +26,13 @@ HWND revery_buttonCreate_win32(const char *title) {
     HWND button = CreateWindow(
                       "BUTTON",
                       title,
-                      WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+                      WS_TABSTOP | WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
                       0,
                       0,
                       0,
                       0,
                       mainWindow,
-                      NULL,
+                      (HMENU)currentID++,
                       (HINSTANCE)GetWindowLongPtr(mainWindow, GWLP_HINSTANCE),
                       NULL
                   );

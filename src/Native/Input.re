@@ -10,6 +10,7 @@ module Button = {
            "revery_buttonSetColor";
          external c_getDefaultSize: t => (int, int) =
            "revery_buttonGetDefaultSize";
+         external c_hash: t => int = "revery_buttonHash";
        };
 
   %if
@@ -22,8 +23,8 @@ module Button = {
   %elif
   defined(USE_WIN32);
 
-  let hash = Hashtbl.hash;
-  let equal = (===);
+  let hash = c_hash;
+  let equal = (buttonA, buttonB) => c_hash(buttonA) == c_hash(buttonB);
   let toString = HWND.toString;
 
   [%%else];
