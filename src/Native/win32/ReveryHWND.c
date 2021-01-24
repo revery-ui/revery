@@ -12,7 +12,8 @@
 
 static WNDPROC defaultWindowProc = NULL;
 
-void callButtonCallback(HWND button) {
+// This is a separate function since we need to use the OCaml macros (allocation occurs)
+void handleButtonClick(HWND button) {
     CAMLparam0();
     CAMLlocal1(vButton);
     static const camlValue *callbackForButton = NULL;
@@ -22,7 +23,7 @@ void callButtonCallback(HWND button) {
     }
 
     if (callbackForButton == NULL) {
-        printf("Unable to acquire button callback!");
+        printf("WARNING: Unable to acquire button callback!\n");
     } else {
         vButton = revery_wrapPointer(button);
         camlValue args[] = {vButton};
@@ -32,14 +33,17 @@ void callButtonCallback(HWND button) {
     CAMLreturn0;
 }
 
-
-LRESULT CALLBACK buttonWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-
+LRESULT CALLBACK reveryWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
     case WM_COMMAND:
         if ((LOWORD(wParam) | ~0xF000) == ~0) {
+            // This gets the button with the corresponding ID from the parent
             HWND button = GetDlgItem(hwnd, LOWORD(wParam));
-            callButtonCallback(button);
+            if (button == NULL) {
+                printf("WARNING: Unable to find button in parent window\n");
+            } else {
+                handleButtonClick(button);
+            }
         }
         break;
     }
@@ -47,8 +51,10 @@ LRESULT CALLBACK buttonWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
 }
 
 void updateWindowProc_win32(HWND hwnd) {
+    // Save the SDL2 window proc so we can call it after we do our handling
     defaultWindowProc = (WNDPROC)GetWindowLongPtr(hwnd, GWLP_WNDPROC);
-    SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)buttonWindowProc);
+    // And update the window's window proc to ours
+    SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)reveryWindowProc);
 }
 
 CAMLprim value revery_HWND_remove(value vHWND) {
@@ -90,6 +96,11 @@ CAMLprim value revery_HWND_displayIn(value vChild, value vParent) {
     HWND child = (HWND)revery_unwrapPointer(vChild);
     UNUSED(vParent);
 
+    /* Again, unfortunately there are weird overdraw effects
+     if we place the child in the parent before displaying it,
+     so for now we simply just show it in the main window.
+
+    TODO: fix this when multi-window support is added */
     ShowWindow(child, SW_SHOW);
 
     CAMLreturn(Val_unit);
