@@ -8,6 +8,7 @@
 
 (rule
  (targets Examples_patched.exe)
+ (package ReveryExamples)
  (deps
   (:examples Examples.exe)
   (:manifest Examples.exe.manifest)
@@ -17,7 +18,7 @@
 
 (install
  (section bin)
- (package Revery)
+ (package ReveryExamples)
  (files Examples_patched.exe Info.plist Roboto-Regular.ttf
    Roboto-RegularItalic.ttf Roboto-Bold.ttf FontAwesome5FreeSolid.otf
    binary.dat outrun-logo.png reason-logo.png outrun-icon.png revery-icon.png))
