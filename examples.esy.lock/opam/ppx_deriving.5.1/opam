@@ -1,0 +1,41 @@
+opam-version: "2.0"
+maintainer: "whitequark <whitequark@whitequark.org>"
+authors: [ "whitequark <whitequark@whitequark.org>" ]
+license: "MIT"
+homepage: "https://github.com/ocaml-ppx/ppx_deriving"
+doc: "https://ocaml-ppx.github.io/ppx_deriving/"
+bug-reports: "https://github.com/ocaml-ppx/ppx_deriving/issues"
+dev-repo: "git+https://github.com/ocaml-ppx/ppx_deriving.git"
+tags: [ "syntax" ]
+build: [
+  ["dune" "subst"] {dev}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+  ["dune" "build" "@doc" "-p" name "-j" jobs] {with-doc}
+]
+depends: [
+  "ocaml" {>= "4.07.0" & < "4.12"}
+  "dune" {>= "1.6.3"}
+  "cppo" {build}
+  "ocamlfind"
+  "ocaml-migrate-parsetree" {< "2.0.0"}
+  "ppx_derivers"
+  "ppxlib" {>= "0.14.0" & < "0.16.0"}
+  "result"
+  "ounit" {with-test}
+]
+synopsis: "Type-driven code generation for OCaml"
+description: """
+ppx_deriving provides common infrastructure for generating
+code based on type definitions, and a set of useful plugins
+for common tasks.
+"""
+url {
+  src:
+    "https://github.com/ocaml-ppx/ppx_deriving/releases/download/v5.1/ppx_deriving-v5.1.tbz"
+  checksum: [
+    "sha256=b04f3b22b754e65af50812730695863192ae410e802e074b55ebbb8c4f73c4c4"
+    "sha512=abcccda4878a82b0d0eedcc23127da6ae5c10bface59335a226a714752a46b987bff01f48fbe432910b26bfc7b332b301d191da71a9da0db593d86335bc83cd9"
+  ]
+}
+x-commit-hash: "b29509ff51f79f0f47dd85d60ab837ded5d2c6e4"

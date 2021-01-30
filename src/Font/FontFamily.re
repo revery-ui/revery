@@ -81,22 +81,22 @@ let fromFile = (fileName, ~italic as _, _) => {
 
 let default =
   switch (Revery_Core.Environment.os) {
-  | Linux => system("Liberation Sans")
-  | Mac => system("System Font")
+  | Linux(_) => system("Liberation Sans")
+  | Mac(_) => system("System Font")
   | _ => system("Arial")
   };
 
 let defaultMono =
   switch (Revery_Core.Environment.os) {
-  | Mac => system("Menlo")
-  | Windows => system("Consolas")
+  | Mac(_) => system("Menlo")
+  | Windows(_) => system("Consolas")
   | _ => fromFile("Inconsolata.otf")
   };
 
 let defaultSerif =
   switch (Revery_Core.Environment.os) {
-  | Mac => system("Palatino")
-  | Linux => system("Liberation Serif")
+  | Mac(_) => system("Palatino")
+  | Linux(_) => system("Liberation Serif")
   | _ => system("Times New Roman")
   };
 

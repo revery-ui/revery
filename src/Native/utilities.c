@@ -33,3 +33,16 @@ value revery_wrapPointer(void *p) {
 void *revery_unwrapPointer(value v) {
     return *((void **) Data_abstract_val(v));
 }
+
+/* Create an OCaml value encapsulating the pointer p
+    None when p == NULL, Some(p) when p != NULL
+*/
+CAMLprim value revery_wrapOptionalPointer(void *p) {
+    CAMLparam0();
+    if (p != NULL) {
+        value v = revery_wrapPointer(p);
+        CAMLreturn(Val_some(v));
+    } else {
+        CAMLreturn(Val_none);
+    }
+}

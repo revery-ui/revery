@@ -2,7 +2,7 @@ open Revery_Core;
 open Style;
 
 type selector('a) =
-  | Color: selector(Color.t)
+  | Color: selector(option(Color.t))
   | Width: selector(int)
   | FlexGrow: selector(int)
   | FlexWrap: selector(Layout.LayoutTypes.wrapType)

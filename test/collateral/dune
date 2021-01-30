@@ -1,4 +1,4 @@
 (install
-    (section bin)
-    (package ReveryTest)
-    (files FiraCode-Regular.ttf JetBrainsMono-Regular.ttf test-asset.txt))
+ (section bin)
+ (package ReveryTest)
+ (files FiraCode-Regular.ttf JetBrainsMono-Regular.ttf test-asset.txt))

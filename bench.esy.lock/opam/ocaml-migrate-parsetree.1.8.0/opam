@@ -1,0 +1,38 @@
+opam-version: "2.0"
+maintainer: "frederic.bour@lakaban.net"
+authors: [
+  "Frédéric Bour <frederic.bour@lakaban.net>"
+  "Jérémie Dimino <jeremie@dimino.org>"
+]
+license: "LGPL-2.1 with OCaml linking exception"
+homepage: "https://github.com/ocaml-ppx/ocaml-migrate-parsetree"
+bug-reports: "https://github.com/ocaml-ppx/ocaml-migrate-parsetree/issues"
+dev-repo: "git+https://github.com/ocaml-ppx/ocaml-migrate-parsetree.git"
+doc: "https://ocaml-ppx.github.io/ocaml-migrate-parsetree/"
+tags: [ "syntax" "org:ocamllabs" ]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "result"
+  "ppx_derivers"
+  "dune" {>= "1.9.0"}
+  "ocaml" {>= "4.02.3"}
+]
+synopsis: "Convert OCaml parsetrees between different versions"
+description: """
+Convert OCaml parsetrees between different versions
+
+This library converts parsetrees, outcometree and ast mappers between
+different OCaml versions.  High-level functions help making PPX
+rewriters independent of a compiler version.
+"""
+x-commit-hash: "1d72648812bb235d1576f483cacdf546e25c03d8"
+url {
+  src:
+    "https://github.com/ocaml-ppx/ocaml-migrate-parsetree/releases/download/v1.8.0/ocaml-migrate-parsetree-v1.8.0.tbz"
+  checksum: [
+    "sha256=b1c2d176ff1444041f2775786ba605be796e46dfd2acb06c96f35d2bb88b8fb5"
+    "sha512=c14ffacbba9fda34243b3e8310ce49414415b530bbd982eaa6c1891517c5a9a6a35887afa7d6f15f7f94e225a7f15cc25417fd3337e685d4a7d6ee160e50e66e"
+  ]
+}

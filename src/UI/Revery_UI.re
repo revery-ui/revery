@@ -16,6 +16,7 @@ class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
 class imageNode = class ImageNode.imageNode;
 class canvasNode = class CanvasNode.canvasNode;
+class nativeButtonNode = class NativeButtonNode.nativeButtonNode;
 module NodeDrawContext = NodeDrawContext;
 
 module Keyboard = Keyboard;

@@ -1,12 +1,10 @@
 %import
 "config.h";
 
-%ifdef
-USE_COCOA;
+%if
+defined(USE_COCOA) || defined(USE_UIKIT);
 
 type t('a) = 'a;
-
-let wrap: 'a => t('a) = nsObj => nsObj;
 
 /* equal
    Uses the NSObject isEqual selector */
@@ -23,5 +21,9 @@ external toString: t('a) => string = "revery_NSObject_toString";
 /* className
    Uses the NSStringFromClass function */
 external className: t('a) => string = "revery_NSObject_className";
+
+/* release
+   Uses the NSObject release selector */
+external release: t('a) => unit = "revery_NSObject_release";
 
 [%%endif];

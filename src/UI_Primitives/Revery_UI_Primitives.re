@@ -14,4 +14,5 @@ module Layer = Layer;
 module Opacity = Opacity;
 module Padding = Padding;
 module Text = Text;
+module NativeButton = NativeButton;
 module View = View;

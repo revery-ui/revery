@@ -81,6 +81,16 @@ let examples = [
     source: "NativeIconExample.re",
   },
   {
+    name: "Native: OSX Menu",
+    render: _ => NativeMenuExample.render(),
+    source: "NativeMenuExample.re",
+  },
+  {
+    name: "Native: Inputs",
+    render: _ => NativeInputExample.render(),
+    source: "NativeInputExample.re",
+  },
+  {
     name: "Input",
     render: _ => InputExample.render(),
     source: "InputExample.re",
@@ -189,6 +199,11 @@ let examples = [
     name: "Layer",
     render: _ => LayerExample.render(),
     source: "LayerExample.re",
+  },
+  {
+    name: "WavFilePlayback",
+    render: _ => WavFilePlaybackExample.render(),
+    source: "WavFilePlaybackExample.re",
   },
 ];
 
@@ -373,6 +388,8 @@ let init = app => {
     Window.onMoved(window, ((x, y)) =>
       Console.log(Printf.sprintf("Moved: %d x %d", x, y))
     );
+
+  Console.log(Printf.sprintf("Operating system: %s", Environment.osString));
 
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);

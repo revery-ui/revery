@@ -219,7 +219,8 @@ let%component make =
   let%hook textRef = Hooks.ref(None);
   let%hook scrollOffset = Hooks.ref(0);
 
-  let color = Selector.select(style, Color, Colors.black);
+  let color =
+    Selector.select(style, Color, Some(Colors.black)) |> Option.get;
 
   let value = Option.value(value, ~default=state.value);
   let showPlaceholder = value == "";
@@ -320,7 +321,6 @@ let%component make =
     onKeyDown(event);
 
     let code = event.keycode;
-    let mac = Environment.os === Mac;
     let super = Sdl2.Keymod.isGuiDown(event.keymod);
     let ctrl = Sdl2.Keymod.isControlDown(event.keymod);
 
@@ -341,7 +341,7 @@ let%component make =
     } else if (code == Keycode.escape) {
       Focus.loseFocus();
     } else if (code == Keycode.v) {
-      if (mac && super || !mac && ctrl) {
+      if (Environment.isMac && super || !Environment.isMac && ctrl) {
         paste(value, cursorPosition);
       };
     };
