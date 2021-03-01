@@ -23,7 +23,7 @@ jobs:
 - job: Linux
   timeoutInMinutes: 0
   pool:
-    vmImage: 'ubuntu-latest'
+    vmImage: 'ubuntu-18.04'
 
   variables:
     STAGING_DIRECTORY: $(Build.StagingDirectory)
