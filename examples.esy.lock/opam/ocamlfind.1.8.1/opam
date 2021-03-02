@@ -31,11 +31,25 @@ build: [
   [make "opt"] {ocaml:native}
 ]
 install: [
+  [
+    "./configure"
+    "-bindir"
+    bin
+    "-sitelib"
+    lib
+    "-mandir"
+    man
+    "-config"
+    "%{lib}%/findlib.conf"
+    "-no-custom"
+    "-no-camlp4" {!ocaml:preinstalled & ocaml:version >= "4.02.0"}
+    "-no-topfind" {ocaml:preinstalled}
+  ]
   [make "install"]
   ["install" "-m" "0755" "ocaml-stub" "%{bin}%/ocaml"] {ocaml:preinstalled}
 ]
 depends: [
-  "ocaml" {>= "4.00.0"}
+  "ocaml" {>= "4.00.0" & < "4.13"}
   "conf-m4" {build}
 ]
 extra-files: [

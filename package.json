@@ -60,14 +60,14 @@
     "reperf": "^1.4.0",
     "rench": "^1.9.1",
     "rebez": "jchavarri/rebez#03fa3b7",
-    "reason-native-crash-utils": "onivim/reason-native-crash-utils#38c8f00",
+    "reason-native-crash-utils": "onivim/reason-native-crash-utils#788885a",
     "@revery/timber": "^2.0.0"
   },
   "resolutions": {
     "@opam/conf-pkg-config": "1.2"
   },
   "devDependencies": {
-    "ocaml": "~4.10",
+    "ocaml": "~4.11",
     "esy-astyle": "zbaylin/esy-astyle#59bc21a",
     "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#38bd51a15c98b4f6ff841e5c914a8cdacee15ea6",
     "@opam/ocamlformat": "^0.15.0"
