@@ -388,7 +388,9 @@ let init = app => {
       print_endline(Printf.sprintf("Moved: %d x %d", x, y))
     );
 
-  print_endline(Printf.sprintf("Operating system: %s", Environment.osString));
+  print_endline(
+    Printf.sprintf("Operating system: %s", Environment.osString),
+  );
 
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);
