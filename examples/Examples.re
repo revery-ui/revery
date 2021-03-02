@@ -196,6 +196,11 @@ let examples = [
     source: "ImageQualityExample.re",
   },
   {
+    name: "Layer",
+    render: _ => LayerExample.render(),
+    source: "LayerExample.re",
+  },
+  {
     name: "WavFilePlayback",
     render: _ => WavFilePlaybackExample.render(),
     source: "WavFilePlaybackExample.re",
@@ -304,7 +309,7 @@ let init = app => {
   App.onBeforeQuit(app, () => prerr_endline("Quitting!"))
   |> (ignore: Revery.App.unsubscribe => unit);
 
-  let initialExample = ref("Native: OSX Menu");
+  let initialExample = ref("Layer");
   let decorated = ref(true);
   let forceScaleFactor = ref(None);
   let showFPSCounter = ref(false);

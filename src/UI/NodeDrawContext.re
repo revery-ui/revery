@@ -5,11 +5,26 @@
  */
 type t = {
   zIndex: int,
+  dpi: float,
+  canvasScalingFactor: float,
   opacity: float,
   canvas: Revery_Draw.CanvasContext.t,
+  debug: bool,
 };
 
-let create = (~canvas, ~zIndex: int, ~opacity: float, ()) => {
+let create =
+    (
+      ~dpi,
+      ~canvasScalingFactor,
+      ~debug,
+      ~canvas,
+      ~zIndex: int,
+      ~opacity: float,
+      (),
+    ) => {
+  dpi,
+  canvasScalingFactor,
+  debug,
   canvas,
   zIndex,
   opacity,

@@ -10,6 +10,7 @@ module AllowPointer = AllowPointer;
 module IgnorePointer = IgnorePointer;
 module Image = Image;
 module Canvas = Canvas;
+module Layer = Layer;
 module Opacity = Opacity;
 module Padding = Padding;
 module Text = Text;

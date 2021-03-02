@@ -1029,7 +1029,7 @@ module M = (F: FOREIGN) => {
         ImageInfo.t
         @-> size_t
         @-> ptr_opt(SkiaTypes.SurfaceProps.t)
-        @-> returning(t),
+        @-> returning(ptr_opt(SkiaTypes.Surface.t)),
       );
     let allocateRenderTarget =
       foreign(

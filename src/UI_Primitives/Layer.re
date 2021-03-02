@@ -1,10 +1,12 @@
 open Revery_UI;
-open Revery_Font;
-open Style;
 open React;
+
+module Condition = RenderCondition;
 
 let%nativeComponent make =
                     (
+                      ~backgroundColor: Revery_Core.Color.t,
+                      ~condition: Condition.t,
                       ~onMouseDown=?,
                       ~onMouseMove=?,
                       ~onMouseUp=?,
@@ -13,27 +15,20 @@ let%nativeComponent make =
                       ~onMouseLeave=?,
                       ~onMouseOver=?,
                       ~onMouseOut=?,
-                      ~ref=?,
-                      ~style=emptyTextStyle,
-                      ~fontFamily=Family.default,
-                      ~fontWeight=Weight.Normal,
-                      ~italic=false,
-                      ~fontSize=14.,
-                      ~underlined=false,
-                      ~features=[],
-                      ~text="",
-                      ~smoothing=Smoothing.default,
+                      ~style=Style.emptyViewStyle,
                       ~children=React.empty,
+                      ~onDimensionsChanged=?,
+                      ~onBoundingBoxChanged=?,
+                      ~onFileDropped=?,
                       ~mouseBehavior=Revery_UI.Normal,
                       (),
                       hooks,
                     ) => (
   {
     make: () => {
-      let styles = create(~style, ());
+      let styles = Style.create(~style, ());
       let events =
         NodeEvents.make(
-          ~ref?,
           ~onMouseDown?,
           ~onMouseMove?,
           ~onMouseUp?,
@@ -42,19 +37,21 @@ let%nativeComponent make =
           ~onMouseLeave?,
           ~onMouseOver?,
           ~onMouseOut?,
+          ~onDimensionsChanged?,
+          ~onBoundingBoxChanged?,
+          ~onFileDropped?,
           (),
         );
-      let node = PrimitiveNodeFactory.get().createTextNode(text);
+      let node = PrimitiveNodeFactory.get().createLayerNode(condition);
+      node#setBackgroundColor(backgroundColor);
       node#setEvents(events);
       node#setStyle(styles);
-      node#setSmoothing(smoothing);
       (node :> node);
     },
     configureInstance: (~isFirstRender as _, node) => {
-      let styles = create(~style, ());
+      let styles = Style.create(~style, ());
       let events =
         NodeEvents.make(
-          ~ref?,
           ~onMouseDown?,
           ~onMouseMove?,
           ~onMouseUp?,
@@ -63,22 +60,18 @@ let%nativeComponent make =
           ~onMouseLeave?,
           ~onMouseOver?,
           ~onMouseOut?,
+          ~onBoundingBoxChanged?,
+          ~onDimensionsChanged?,
+          ~onFileDropped?,
           (),
         );
-
-      /* TODO: Proper way to downcast? */
-      let tn: textNode = Obj.magic(node);
-      tn#setEvents(events);
-      tn#setStyle(styles);
-      tn#setText(text);
-      tn#setSmoothing(smoothing);
-      tn#setMouseBehavior(mouseBehavior);
-      tn#setFontFamily(fontFamily);
-      tn#setFontWeight(fontWeight);
-      tn#setItalicized(italic);
-      tn#setFontSize(fontSize);
-      tn#setFeatures(features);
-      tn#setUnderlined(underlined);
+      // HACK: We should switch from using objects and set this up properly
+      let layerNode: layerNode = Obj.magic(node);
+      node#setEvents(events);
+      node#setStyle(styles);
+      node#setMouseBehavior(mouseBehavior);
+      layerNode#setBackgroundColor(backgroundColor);
+      layerNode#setCondition(condition);
       node;
     },
     children,

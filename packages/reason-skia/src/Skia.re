@@ -830,14 +830,18 @@ module Surface = {
     );
 
   let makeRaster = (imageInfo, rowBytes, surfaceProps) => {
-    let surface =
+    let maybeSurface =
       SkiaWrapped.Surface.allocateRaster(
         imageInfo,
         Unsigned.Size_t.of_int(rowBytes),
         surfaceProps,
       );
-    Gc.finalise(SkiaWrapped.Surface.delete, surface);
-    surface;
+    switch (maybeSurface) {
+    | Some(surface) as surf =>
+      Gc.finalise(SkiaWrapped.Surface.delete, surface);
+      surf;
+    | None => None
+    };
   };
   let makeRenderTarget =
       (

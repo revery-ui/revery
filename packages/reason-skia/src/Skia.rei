@@ -497,7 +497,7 @@ module SurfaceProps: {
 module Surface: {
   type t;
 
-  let makeRaster: (ImageInfo.t, int, option(SurfaceProps.t)) => t;
+  let makeRaster: (ImageInfo.t, int, option(SurfaceProps.t)) => option(t);
   let makeRenderTarget:
     (
       Gr.Context.t,

@@ -21,7 +21,7 @@ let create = (options: WindowCreateOptions.t) => {
       Premul,
       None,
     );
-  let surface = Skia.Surface.makeRaster(imageInfo, 0, None);
+  let surface = Skia.Surface.makeRaster(imageInfo, 0, None) |> Option.get;
   let canvasContext = CanvasContext.createFromSurface(surface);
 
   let rootNode = (new viewNode)();
@@ -58,6 +58,9 @@ let render = (window: t, elem) => {
   CanvasContext.setRootTransform(skiaRoot, canvasContext);
   let drawContext =
     NodeDrawContext.create(
+      ~canvasScalingFactor=1.0,
+      ~dpi=1.0,
+      ~debug=false,
       ~canvas=canvasContext,
       ~zIndex=0,
       ~opacity=1.0,
