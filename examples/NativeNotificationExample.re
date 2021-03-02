@@ -11,7 +11,7 @@ module Example = {
         ~title="Revery Test",
         ~body="This is a test!",
         ~mute=false,
-        ~onClick=() => Console.log("Notification clicked!"),
+        ~onClick=() => print_endline("Notification clicked!"),
         (),
       );
     <View>

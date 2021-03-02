@@ -335,8 +335,7 @@ let init = app => {
   let windowWidth = 800;
   let windowHeight = 480;
 
-  Console.log("Hello from example app");
-  Console.log([1, 2, 3]);
+  print_endline("Hello from example app");
 
   let window =
     App.createWindow(
@@ -367,29 +366,29 @@ let init = app => {
   // let _startEventLoop = Revery_Lwt.startEventLoop();
 
   let _unsubscribe =
-    Window.onFocusGained(window, () => Console.log("Focus gained"));
+    Window.onFocusGained(window, () => print_endline("Focus gained"));
   let _unsubscribe =
-    Window.onFocusLost(window, () => Console.log("Focus lost"));
+    Window.onFocusLost(window, () => print_endline("Focus lost"));
   let _unsubscribe =
-    Window.onMaximized(window, () => Console.log("Maximized!"));
+    Window.onMaximized(window, () => print_endline("Maximized!"));
   let _unsubscribe =
-    Window.onFullscreen(window, () => Console.log("Fullscreen!"));
+    Window.onFullscreen(window, () => print_endline("Fullscreen!"));
   let _unsubscribe =
-    Window.onMinimized(window, () => Console.log("Minimized!"));
+    Window.onMinimized(window, () => print_endline("Minimized!"));
   let _unsubscribe =
-    Window.onRestored(window, () => Console.log("Restored!"));
+    Window.onRestored(window, () => print_endline("Restored!"));
 
   let _unsubscribe =
     Window.onSizeChanged(window, ({width, height}) =>
-      Console.log(Printf.sprintf("Size changed: %d x %d", width, height))
+      print_endline(Printf.sprintf("Size changed: %d x %d", width, height))
     );
 
   let _unsubscribe =
     Window.onMoved(window, ((x, y)) =>
-      Console.log(Printf.sprintf("Moved: %d x %d", x, y))
+      print_endline(Printf.sprintf("Moved: %d x %d", x, y))
     );
 
-  Console.log(Printf.sprintf("Operating system: %s", Environment.osString));
+  print_endline(Printf.sprintf("Operating system: %s", Environment.osString));
 
   let _renderFunction =
     UI.start(window, <ExampleHost window initialExample />);
