@@ -119,7 +119,7 @@ module Example = {
             onChange={(value, _) =>
               setValue(state => {...state, second: value})
             }
-            onKeyDown={event => print_endline("key event")}
+            onKeyDown={_ => print_endline("key event")}
             style=Style.[
               backgroundColor(Colors.paleVioletRed),
               color(Colors.white),
