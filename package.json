@@ -58,7 +58,7 @@
     "esy-skia": "revery-ui/esy-skia#91c98f6",
     "flex": "jordwalke/flex#6ff12fe",
     "reperf": "bryphe/reperf#acf6633",
-    "rench": "revery-ui/rench#c3aab85",
+    "rench": "^1.10.0",
     "rebez": "jchavarri/rebez#03fa3b7",
     "reason-native-crash-utils": "onivim/reason-native-crash-utils#788885a",
     "@revery/timber": "^2.0.0",

@@ -1,5 +1,5 @@
 {
-  "checksum": "3ebc879cff0d4bf3c2697391eeb48723",
+  "checksum": "ac53258a5c1b47272a7d7e8d0a56e8b0",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -30,7 +30,7 @@
       "overrides": [ "test.json" ],
       "dependencies": [
         "reperf@github:bryphe/reperf#acf6633@d41d8cd9",
-        "rench@github:revery-ui/rench#c3aab85@d41d8cd9",
+        "rench@1.10.0@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "reason-native-crash-utils@github:onivim/reason-native-crash-utils#788885a@d41d8cd9",
         "flex@github:jordwalke/flex#6ff12fe@d41d8cd9",
@@ -76,20 +76,22 @@
       ],
       "devDependencies": [ "ocaml@4.11.2000@d41d8cd9" ]
     },
-    "rench@github:revery-ui/rench#c3aab85@d41d8cd9": {
-      "id": "rench@github:revery-ui/rench#c3aab85@d41d8cd9",
+    "rench@1.10.0@d41d8cd9": {
+      "id": "rench@1.10.0@d41d8cd9",
       "name": "rench",
-      "version": "github:revery-ui/rench#c3aab85",
+      "version": "1.10.0",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/rench#c3aab85" ]
+        "source": [
+          "archive:https://registry.npmjs.org/rench/-/rench-1.10.0.tgz#sha1:87bbf663b725ab0cc4484ef45ae3eb91edac9c77"
+        ]
       },
       "overrides": [],
       "dependencies": [
         "@opam/reason@opam:3.6.2@1a34f8a4",
         "@opam/fpath@opam:0.7.3@674d8125", "@opam/dune@opam:2.8.2@3d714e5f"
       ],
-      "devDependencies": [ "@opam/dune@opam:2.8.2@3d714e5f" ]
+      "devDependencies": []
     },
     "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9": {
       "id": "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
