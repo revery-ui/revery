@@ -1,5 +1,5 @@
 {
-  "checksum": "7483fd729f6110ca20d472cf29cf8471",
+  "checksum": "be31c406e63e54f0efc54095aa8b744e",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -71,10 +71,8 @@
       },
       "overrides": [ "doc.json" ],
       "dependencies": [
-        "reperf@github:bryphe/reperf#acf6633@d41d8cd9",
-        "rench@1.10.0@d41d8cd9",
+        "reperf@1.5.1@d41d8cd9", "rench@1.10.0@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#788885a@d41d8cd9",
         "http-server@0.12.3@d41d8cd9",
         "flex@github:jordwalke/flex#6ff12fe@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#91c98f6@d41d8cd9",
@@ -95,6 +93,7 @@
         "@opam/ctypes@opam:0.15.1@9c7ab4ec",
         "@opam/charInfo_width@opam:1.1.0@4296bdfe",
         "@opam/bos@opam:0.2.0@df49e63f",
+        "@onivim/reason-native-crash-utils@1.0.2@d41d8cd9",
         "@brisk/brisk-reconciler@github:briskml/brisk-reconciler#c9d5c4c@d41d8cd9"
       ],
       "devDependencies": [
@@ -118,20 +117,22 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "reperf@github:bryphe/reperf#acf6633@d41d8cd9": {
-      "id": "reperf@github:bryphe/reperf#acf6633@d41d8cd9",
+    "reperf@1.5.1@d41d8cd9": {
+      "id": "reperf@1.5.1@d41d8cd9",
       "name": "reperf",
-      "version": "github:bryphe/reperf#acf6633",
+      "version": "1.5.1",
       "source": {
         "type": "install",
-        "source": [ "github:bryphe/reperf#acf6633" ]
+        "source": [
+          "archive:https://registry.npmjs.org/reperf/-/reperf-1.5.1.tgz#sha1:b4499a15e299b453b1d095efed9492329f716d0a"
+        ]
       },
       "overrides": [],
       "dependencies": [
         "ocaml@4.11.2000@d41d8cd9", "@opam/reason@opam:3.6.2@1a34f8a4",
         "@opam/printbox@opam:0.5@82f5d436", "@opam/dune@opam:2.8.2@3d714e5f"
       ],
-      "devDependencies": [ "ocaml@4.11.2000@d41d8cd9" ]
+      "devDependencies": []
     },
     "rench@1.10.0@d41d8cd9": {
       "id": "rench@1.10.0@d41d8cd9",
@@ -164,23 +165,6 @@
         "@esy-ocaml/reason@3.7.0@d41d8cd9"
       ],
       "devDependencies": []
-    },
-    "reason-native-crash-utils@github:onivim/reason-native-crash-utils#788885a@d41d8cd9": {
-      "id":
-        "reason-native-crash-utils@github:onivim/reason-native-crash-utils#788885a@d41d8cd9",
-      "name": "reason-native-crash-utils",
-      "version": "github:onivim/reason-native-crash-utils#788885a",
-      "source": {
-        "type": "install",
-        "source": [ "github:onivim/reason-native-crash-utils#788885a" ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.11.2000@d41d8cd9",
-        "@opam/dune-configurator@opam:2.8.2@c90ff40b",
-        "@opam/dune@opam:2.8.2@3d714e5f"
-      ],
-      "devDependencies": [ "ocaml@4.11.2000@d41d8cd9" ]
     },
     "qs@6.9.6@d41d8cd9": {
       "id": "qs@6.9.6@d41d8cd9",
@@ -2603,6 +2587,24 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [ "ocaml@4.11.2000@d41d8cd9" ]
+    },
+    "@onivim/reason-native-crash-utils@1.0.2@d41d8cd9": {
+      "id": "@onivim/reason-native-crash-utils@1.0.2@d41d8cd9",
+      "name": "@onivim/reason-native-crash-utils",
+      "version": "1.0.2",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/@onivim/reason-native-crash-utils/-/reason-native-crash-utils-1.0.2.tgz#sha1:eca5f2aef9e8164b7d96d8f33cdf166dc65770da"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.11.2000@d41d8cd9",
+        "@opam/dune-configurator@opam:2.8.2@c90ff40b",
+        "@opam/dune@opam:2.8.2@3d714e5f"
+      ],
+      "devDependencies": []
     },
     "@esy-ocaml/substs@0.0.1@d41d8cd9": {
       "id": "@esy-ocaml/substs@0.0.1@d41d8cd9",
