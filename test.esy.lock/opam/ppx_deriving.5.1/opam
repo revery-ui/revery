@@ -14,7 +14,7 @@ build: [
   ["dune" "build" "@doc" "-p" name "-j" jobs] {with-doc}
 ]
 depends: [
-  "ocaml" {>= "4.07.0" & < "4.12"}
+  "ocaml" {>= "4.05.0" & < "4.12"}
   "dune" {>= "1.6.3"}
   "cppo" {build}
   "ocamlfind"

@@ -99,14 +99,14 @@ module WavFilePlaybackExamples = {
           Sdl2.Audio.Device.AllowedChanges.none,
         )
       ) {
-      | Error(err) => Console.error(err)
+      | Error(err) => prerr_endline(err)
       | Ok((device, _obstainedSpec)) => setAudioDevice(_ => Some(device))
       };
     };
 
     let loadWavFile = filename => {
       switch (Sdl2.Audio.Wav.load(filename)) {
-      | Error(err) => Console.error(err)
+      | Error(err) => prerr_endline(err)
       | Ok(data) =>
         setAudioData(_ => Some(data));
         let (spec, _, _) = data;
@@ -140,7 +140,7 @@ module WavFilePlaybackExamples = {
           Sdl2.Audio.Device.pause(device, false);
         } else {
           switch (Sdl2.Audio.queue(device, buf, len)) {
-          | Error(err) => Console.error(err)
+          | Error(err) => prerr_endline(err)
           | Ok(_) => Sdl2.Audio.Device.pause(device, false)
           };
         }

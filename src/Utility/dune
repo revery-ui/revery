@@ -3,5 +3,5 @@
  (public_name Revery.Utility)
  (preprocess
   (pps ppx_deriving.show))
- (libraries threads console.lib str lwt sdl2 skia flex Rench re Revery_Core
-   Revery_UI Revery_TextWrap timber))
+ (libraries threads str lwt sdl2 skia flex Rench re Revery_Core Revery_UI
+   Revery_TextWrap timber))
