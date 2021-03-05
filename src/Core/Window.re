@@ -582,12 +582,12 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   let x =
     switch (options.x) {
     | `Centered => `Absolute((screenBounds.width - width) / 2)
-    | `Absolute(x) => `Absolute(x)
+    | x => x
     };
   let y =
     switch (options.y) {
     | `Centered => `Absolute((screenBounds.height - height) / 2)
-    | `Absolute(y) => `Absolute(y)
+    | x => x
     };
 
   Log.infof(m =>
