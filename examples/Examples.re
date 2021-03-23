@@ -306,10 +306,13 @@ let init = app => {
 
   App.onIdle(app, () => prerr_endline("Idle!"))
   |> (ignore: Revery.App.unsubscribe => unit);
-  App.onBeforeQuit(app, (_code: int) => {
-    prerr_endline("Quitting!");
-    App.AllowQuit
-  })
+  App.onBeforeQuit(
+    app,
+    (_code: int) => {
+      prerr_endline("Quitting!");
+      App.AllowQuit;
+    },
+  )
   |> (ignore: Revery.App.unsubscribe => unit);
 
   let initialExample = ref("Layer");

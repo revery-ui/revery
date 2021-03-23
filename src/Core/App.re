@@ -14,9 +14,9 @@ type quitResponse =
   | PreventQuit;
 
 let mergeQuitResponse = (a: quitResponse, b: quitResponse) => {
-  switch (a,b) {
-    | (AllowQuit, AllowQuit) => AllowQuit
-    | _ => PreventQuit
+  switch (a, b) {
+  | (AllowQuit, AllowQuit) => AllowQuit
+  | _ => PreventQuit
   };
 };
 
@@ -68,16 +68,21 @@ let quit = (~askNicely=false, ~code=0, app: t) => {
     if (!app.isQuitting) {
       Log.info("onBeforeQuit");
       app.isQuitting = true;
-      let quitResponse = Event.Fanout.dispatch(app.onBeforeQuit, mergeQuitResponse, AllowQuit, code);
+      let quitResponse =
+        Event.Fanout.dispatch(
+          app.onBeforeQuit,
+          mergeQuitResponse,
+          AllowQuit,
+          code,
+        );
       app.isQuitting = false;
 
       switch (quitResponse) {
-        | AllowQuit =>
-          Log.info("Quitting");
-          exit(code);
-        | PreventQuit =>
-          Log.info("Quit prevented by event handler");
-      }
+      | AllowQuit =>
+        Log.info("Quitting");
+        exit(code);
+      | PreventQuit => Log.info("Quit prevented by event handler")
+      };
     };
   };
 };
