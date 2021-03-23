@@ -1,7 +1,7 @@
 /* Event.re */
 
 module Fanout = {
-  /* An event where subsccribers can respond with a value */
+  /* An event where subscribers can respond with a value */
   type cb('a, 'b) = 'a => 'b;
 
   type t('a, 'b) = ref(list(cb('a, 'b)));
