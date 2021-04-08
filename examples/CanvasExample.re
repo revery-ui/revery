@@ -40,17 +40,25 @@ module Sample = {
           let stroke = Skia.Paint.make();
           Skia.Paint.setColor(
             stroke,
-            Skia.Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l),
+            Skia.Color.makeArgb(0xFFl, 0xFFl, 0xFFl, 0x00l),
           );
           Skia.Paint.setAntiAlias(stroke, true);
           Skia.Paint.setStyle(stroke, Stroke);
-          Skia.Paint.setStrokeWidth(stroke, 5.);
+          Skia.Paint.setStrokeWidth(stroke, 1.);
+
+          let innerPath = Skia.Path.make();
+          Skia.Path.lineTo(innerPath, 5., 5.);
+          Skia.Path.lineTo(innerPath, 15., -5.);
+          Skia.Path.lineTo(innerPath, 20., 0.);
+
+          let translate = Skia.Matrix.makeScale(20., 20., 20., 20.);
+          let pathEffect =
+            Skia.PathEffect.create2dPath(~matrix=translate, innerPath);
+
+          Skia.Paint.setPathEffect(stroke, pathEffect);
 
           let path = Skia.Path.make();
-          Skia.Path.moveTo(path, 50., 50.);
-          Skia.Path.lineTo(path, 590., 50.);
-          Skia.Path.cubicTo(path, -490., 50., 1130., 430., 50., 430.);
-          Skia.Path.lineTo(path, 590., 430.);
+          Skia.Path.addCircle(path, 125., 125., ~radius=100., ());
           CanvasContext.drawPath(~path, ~paint=stroke, canvasContext);
 
           let maybeSkia =

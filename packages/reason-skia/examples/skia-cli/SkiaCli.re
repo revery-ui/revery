@@ -59,7 +59,24 @@ let draw = canvas => {
     ),
   );
   let rect2 = Rect.makeLtrb(120., 120., 520., 360.);
-  Canvas.drawOval(canvas, rect2, fill);
+
+  let ovalPaint = Skia.Paint.make();
+  Skia.Paint.setColor(
+    ovalPaint,
+    Skia.Color.makeArgb(0xFFl, 0xFFl, 0xFFl, 0x00l),
+  );
+  let innerPath = Skia.Path.make();
+  Skia.Path.lineTo(innerPath, 5., 5.);
+  Skia.Path.lineTo(innerPath, 15., -5.);
+  Skia.Path.lineTo(innerPath, 20., 0.);
+
+  let translate = Skia.Matrix.makeScale(20., 20., 20., 20.);
+  Skia.Paint.setAntiAlias(ovalPaint, true);
+  Skia.Paint.setStyle(ovalPaint, Stroke);
+  Skia.Paint.setStrokeWidth(ovalPaint, 1.);
+  let pathEffect = Skia.PathEffect.create2dPath(~matrix=translate, innerPath);
+  Skia.Paint.setPathEffect(ovalPaint, pathEffect);
+  Canvas.drawOval(canvas, rect2, ovalPaint);
 
   let fill3 = Paint.make();
   Paint.setColor(fill3, Color.makeArgb(0xFFl, 0xFFl, 0xFFl, 0xFFl));
