@@ -44,7 +44,7 @@ module Sample = {
           );
           Skia.Paint.setAntiAlias(stroke, true);
           Skia.Paint.setStyle(stroke, Stroke);
-          Skia.Paint.setStrokeWidth(stroke, 1.);
+          Skia.Paint.setStrokeWidth(stroke, 2.);
 
           let innerPath = Skia.Path.make();
           Skia.Path.lineTo(innerPath, 5., 5.);
