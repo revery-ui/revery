@@ -272,6 +272,264 @@ module M = (F: FOREIGN) => {
       );
   };
 
+  module Rect = {
+    type t = ptr(structure(SkiaTypes.Rect.t));
+    let t = ptr(SkiaTypes.Rect.t);
+
+    let makeEmpty = () => {
+      let rect = allocate_n(SkiaTypes.Rect.t, ~count=1);
+      setf(!@rect, SkiaTypes.Rect.left, 0.);
+      setf(!@rect, SkiaTypes.Rect.top, 0.);
+      setf(!@rect, SkiaTypes.Rect.right, 0.);
+      setf(!@rect, SkiaTypes.Rect.bottom, 0.);
+      rect;
+    };
+    let makeLtrb = (left, top, right, bottom) => {
+      let rect = allocate_n(SkiaTypes.Rect.t, ~count=1);
+      setf(!@rect, SkiaTypes.Rect.left, left);
+      setf(!@rect, SkiaTypes.Rect.top, top);
+      setf(!@rect, SkiaTypes.Rect.right, right);
+      setf(!@rect, SkiaTypes.Rect.bottom, bottom);
+      rect;
+    };
+    let getLeft = rect => {
+      getf(!@rect, SkiaTypes.Rect.left);
+    };
+    let getTop = rect => {
+      getf(!@rect, SkiaTypes.Rect.top);
+    };
+    let getRight = rect => {
+      getf(!@rect, SkiaTypes.Rect.right);
+    };
+    let getBottom = rect => {
+      getf(!@rect, SkiaTypes.Rect.bottom);
+    };
+  };
+
+  module Path = {
+    type t = ptr(structure(SkiaTypes.Path.t));
+    let t = ptr(SkiaTypes.Path.t);
+
+    let allocate = foreign("sk_path_new", void @-> returning(t));
+    let delete = foreign("sk_path_delete", t @-> returning(void));
+
+    type arcSize = SkiaTypes.Path.arcSize;
+    let arcSize = SkiaTypes.Path.arcSize;
+
+    type pathDirection = SkiaTypes.Path.pathDirection;
+    let pathDirection = SkiaTypes.Path.pathDirection;
+
+    let addRoundRect =
+      foreign(
+        "sk_path_add_rounded_rect",
+        t @-> Rect.t @-> float @-> float @-> pathDirection @-> returning(void),
+      );
+    let addCircle =
+      foreign(
+        "sk_path_add_circle",
+        t @-> float @-> float @-> float @-> pathDirection @-> returning(void),
+      );
+    let moveTo =
+      foreign("sk_path_move_to", t @-> float @-> float @-> returning(void));
+    let rMoveTo =
+      foreign("sk_path_rmove_to", t @-> float @-> float @-> returning(void));
+    let lineTo =
+      foreign("sk_path_line_to", t @-> float @-> float @-> returning(void));
+    let rLineTo =
+      foreign("sk_path_rline_to", t @-> float @-> float @-> returning(void));
+    let cubicTo =
+      foreign(
+        "sk_path_cubic_to",
+        t
+        @-> float
+        @-> float
+        @-> float
+        @-> float
+        @-> float
+        @-> float
+        @-> returning(void),
+      );
+    let rCubicTo =
+      foreign(
+        "sk_path_rcubic_to",
+        t
+        @-> float
+        @-> float
+        @-> float
+        @-> float
+        @-> float
+        @-> float
+        @-> returning(void),
+      );
+    let quadTo =
+      foreign(
+        "sk_path_quad_to",
+        t @-> float @-> float @-> float @-> float @-> returning(void),
+      );
+    let rQuadTo =
+      foreign(
+        "sk_path_rquad_to",
+        t @-> float @-> float @-> float @-> float @-> returning(void),
+      );
+    let arcTo =
+      foreign(
+        "sk_path_arc_to",
+        t
+        @-> float
+        @-> float
+        @-> float
+        @-> arcSize
+        @-> pathDirection
+        @-> float
+        @-> float
+        @-> returning(void),
+      );
+    let rArcTo =
+      foreign(
+        "sk_path_rarc_to",
+        t
+        @-> float
+        @-> float
+        @-> float
+        @-> arcSize
+        @-> pathDirection
+        @-> float
+        @-> float
+        @-> returning(void),
+      );
+    let close = foreign("sk_path_close", t @-> returning(void));
+    let getLastPoint =
+      foreign("sk_path_get_last_point", t @-> Point.t @-> returning(bool));
+  };
+
+  module Vector = {
+    type t = ptr(structure(SkiaTypes.Vector.t));
+    let t = ptr(SkiaTypes.Vector.t);
+
+    let make = (x, y) => {
+      let point = allocate_n(SkiaTypes.Vector.t, ~count=1);
+      setf(!@point, SkiaTypes.Vector.x, x);
+      setf(!@point, SkiaTypes.Vector.y, y);
+      point;
+    };
+
+    let getX = point => {
+      getf(!@point, SkiaTypes.Vector.x);
+    };
+    let getY = point => {
+      getf(!@point, SkiaTypes.Vector.y);
+    };
+  };
+
+  module Matrix = {
+    type t = ptr(structure(SkiaTypes.Matrix.t));
+    let t = ptr(SkiaTypes.Matrix.t);
+
+    let make = () => allocate_n(SkiaTypes.Matrix.t, ~count=1);
+
+    let setAll =
+        (
+          matrix,
+          scaleX,
+          skewX,
+          translateX,
+          skewY,
+          scaleY,
+          translateY,
+          perspective0,
+          perspective1,
+          perspective2,
+        ) => {
+      let mat = getf(!@matrix, SkiaTypes.Matrix.mat);
+      CArray.set(mat, 0, scaleX);
+      CArray.set(mat, 1, skewX);
+      CArray.set(mat, 2, translateX);
+      CArray.set(mat, 3, skewY);
+      CArray.set(mat, 4, scaleY);
+      CArray.set(mat, 5, translateY);
+      CArray.set(mat, 6, perspective0);
+      CArray.set(mat, 7, perspective1);
+      CArray.set(mat, 8, perspective2);
+    };
+    let get = (matrix, index) => {
+      let mat = getf(!@matrix, SkiaTypes.Matrix.mat);
+      CArray.get(mat, index);
+    };
+
+    let set = (matrix, index, value) => {
+      let mat = getf(!@matrix, SkiaTypes.Matrix.mat);
+      CArray.set(mat, index, value);
+    };
+
+    let invert =
+      foreign("sk_matrix_try_invert", t @-> t @-> returning(bool));
+    let concat =
+      foreign("sk_matrix_concat", t @-> t @-> t @-> returning(void));
+    let preConcat =
+      foreign("sk_matrix_pre_concat", t @-> t @-> returning(void));
+    let postConcat =
+      foreign("sk_matrix_post_concat", t @-> t @-> returning(void));
+    let mapRect =
+      foreign(
+        "sk_matrix_map_rect",
+        t @-> Rect.t @-> Rect.t @-> returning(void),
+      );
+    let mapPoints =
+      foreign(
+        "sk_matrix_map_points",
+        t @-> Point.t @-> Point.t @-> int @-> returning(void),
+      );
+    let mapVectors =
+      foreign(
+        "sk_matrix_map_vectors",
+        t @-> Vector.t @-> Vector.t @-> int @-> returning(void),
+      );
+    let mapXy =
+      foreign(
+        "sk_matrix_map_xy",
+        t @-> float @-> float @-> Point.t @-> returning(void),
+      );
+    let mapVector =
+      foreign(
+        "sk_matrix_map_vector",
+        t @-> float @-> float @-> Vector.t @-> returning(void),
+      );
+    let mapRadius =
+      foreign("sk_matrix_map_radius", t @-> float @-> returning(float));
+  };
+
+  module PathEffect = {
+    module Style = {
+      type t = SkiaTypes.PathEffect.Style.t;
+      let t = SkiaTypes.PathEffect.Style.t;
+    };
+    type t = ptr(structure(SkiaTypes.PathEffect.t));
+    let t = ptr(SkiaTypes.PathEffect.t);
+
+    let delete = foreign("sk_path_effect_unref", t @-> returning(void));
+    let allocate1d =
+      foreign(
+        "sk_path_effect_create_1d_path",
+        Path.t
+        @-> float
+        @-> float
+        @-> SkiaTypes.PathEffect.Style.t
+        @-> returning(t),
+      );
+
+    let allocate2dLine =
+      foreign(
+        "sk_path_effect_create_2d_line",
+        float @-> Matrix.t @-> returning(t),
+      );
+
+    let allocate2dPath =
+      foreign(
+        "sk_path_effect_create_2d_path",
+        Matrix.t @-> Path.t @-> returning(t),
+      );
+  };
+
   module Paint = {
     type t = ptr(structure(SkiaTypes.Paint.t));
     let t = ptr(SkiaTypes.Paint.t);
@@ -354,6 +612,18 @@ module M = (F: FOREIGN) => {
         t @-> ptr_opt(SkiaTypes.ImageFilter.t) @-> returning(void),
       );
 
+    let setPathEffect =
+      foreign(
+        "sk_paint_set_path_effect",
+        t @-> ptr(SkiaTypes.PathEffect.t) @-> returning(void),
+      );
+
+    let getPathEffect =
+      foreign(
+        "sk_paint_get_path_effect",
+        t @-> returning(ptr(SkiaTypes.PathEffect.t)),
+      );
+
     let getTextEncoding =
       foreign("sk_paint_get_text_encoding", t @-> returning(TextEncoding.t));
 
@@ -365,25 +635,6 @@ module M = (F: FOREIGN) => {
 
     let setShader =
       foreign("sk_paint_set_shader", t @-> Shader.t @-> returning(void));
-  };
-
-  module Vector = {
-    type t = ptr(structure(SkiaTypes.Vector.t));
-    let t = ptr(SkiaTypes.Vector.t);
-
-    let make = (x, y) => {
-      let point = allocate_n(SkiaTypes.Vector.t, ~count=1);
-      setf(!@point, SkiaTypes.Vector.x, x);
-      setf(!@point, SkiaTypes.Vector.y, y);
-      point;
-    };
-
-    let getX = point => {
-      getf(!@point, SkiaTypes.Vector.x);
-    };
-    let getY = point => {
-      getf(!@point, SkiaTypes.Vector.y);
-    };
   };
 
   module IRect = {
@@ -406,117 +657,6 @@ module M = (F: FOREIGN) => {
       setf(!@iRect, SkiaTypes.IRect.bottom, bottom);
       iRect;
     };
-  };
-
-  module Rect = {
-    type t = ptr(structure(SkiaTypes.Rect.t));
-    let t = ptr(SkiaTypes.Rect.t);
-
-    let makeEmpty = () => {
-      let rect = allocate_n(SkiaTypes.Rect.t, ~count=1);
-      setf(!@rect, SkiaTypes.Rect.left, 0.);
-      setf(!@rect, SkiaTypes.Rect.top, 0.);
-      setf(!@rect, SkiaTypes.Rect.right, 0.);
-      setf(!@rect, SkiaTypes.Rect.bottom, 0.);
-      rect;
-    };
-    let makeLtrb = (left, top, right, bottom) => {
-      let rect = allocate_n(SkiaTypes.Rect.t, ~count=1);
-      setf(!@rect, SkiaTypes.Rect.left, left);
-      setf(!@rect, SkiaTypes.Rect.top, top);
-      setf(!@rect, SkiaTypes.Rect.right, right);
-      setf(!@rect, SkiaTypes.Rect.bottom, bottom);
-      rect;
-    };
-    let getLeft = rect => {
-      getf(!@rect, SkiaTypes.Rect.left);
-    };
-    let getTop = rect => {
-      getf(!@rect, SkiaTypes.Rect.top);
-    };
-    let getRight = rect => {
-      getf(!@rect, SkiaTypes.Rect.right);
-    };
-    let getBottom = rect => {
-      getf(!@rect, SkiaTypes.Rect.bottom);
-    };
-  };
-
-  module Matrix = {
-    type t = ptr(structure(SkiaTypes.Matrix.t));
-    let t = ptr(SkiaTypes.Matrix.t);
-
-    let make = () => allocate_n(SkiaTypes.Matrix.t, ~count=1);
-
-    let setAll =
-        (
-          matrix,
-          scaleX,
-          skewX,
-          translateX,
-          skewY,
-          scaleY,
-          translateY,
-          perspective0,
-          perspective1,
-          perspective2,
-        ) => {
-      let mat = getf(!@matrix, SkiaTypes.Matrix.mat);
-      CArray.set(mat, 0, scaleX);
-      CArray.set(mat, 1, skewX);
-      CArray.set(mat, 2, translateX);
-      CArray.set(mat, 3, skewY);
-      CArray.set(mat, 4, scaleY);
-      CArray.set(mat, 5, translateY);
-      CArray.set(mat, 6, perspective0);
-      CArray.set(mat, 7, perspective1);
-      CArray.set(mat, 8, perspective2);
-    };
-    let get = (matrix, index) => {
-      let mat = getf(!@matrix, SkiaTypes.Matrix.mat);
-      CArray.get(mat, index);
-    };
-
-    let set = (matrix, index, value) => {
-      let mat = getf(!@matrix, SkiaTypes.Matrix.mat);
-      CArray.set(mat, index, value);
-    };
-
-    let invert =
-      foreign("sk_matrix_try_invert", t @-> t @-> returning(bool));
-    let concat =
-      foreign("sk_matrix_concat", t @-> t @-> t @-> returning(void));
-    let preConcat =
-      foreign("sk_matrix_pre_concat", t @-> t @-> returning(void));
-    let postConcat =
-      foreign("sk_matrix_post_concat", t @-> t @-> returning(void));
-    let mapRect =
-      foreign(
-        "sk_matrix_map_rect",
-        t @-> Rect.t @-> Rect.t @-> returning(void),
-      );
-    let mapPoints =
-      foreign(
-        "sk_matrix_map_points",
-        t @-> Point.t @-> Point.t @-> int @-> returning(void),
-      );
-    let mapVectors =
-      foreign(
-        "sk_matrix_map_vectors",
-        t @-> Vector.t @-> Vector.t @-> int @-> returning(void),
-      );
-    let mapXy =
-      foreign(
-        "sk_matrix_map_xy",
-        t @-> float @-> float @-> Point.t @-> returning(void),
-      );
-    let mapVector =
-      foreign(
-        "sk_matrix_map_vector",
-        t @-> float @-> float @-> Vector.t @-> returning(void),
-      );
-    let mapRadius =
-      foreign("sk_matrix_map_radius", t @-> float @-> returning(float));
   };
 
   module Matrix44 = {
@@ -653,102 +793,6 @@ module M = (F: FOREIGN) => {
         "sk_rrect_transform",
         t @-> Matrix.t @-> t @-> returning(bool),
       );
-  };
-
-  module Path = {
-    type t = ptr(structure(SkiaTypes.Path.t));
-    let t = ptr(SkiaTypes.Path.t);
-
-    let allocate = foreign("sk_path_new", void @-> returning(t));
-    let delete = foreign("sk_path_delete", t @-> returning(void));
-
-    type arcSize = SkiaTypes.Path.arcSize;
-    let arcSize = SkiaTypes.Path.arcSize;
-
-    type pathDirection = SkiaTypes.Path.pathDirection;
-    let pathDirection = SkiaTypes.Path.pathDirection;
-
-    let addRoundRect =
-      foreign(
-        "sk_path_add_rounded_rect",
-        t @-> Rect.t @-> float @-> float @-> pathDirection @-> returning(void),
-      );
-    let addCircle =
-      foreign(
-        "sk_path_add_circle",
-        t @-> float @-> float @-> float @-> pathDirection @-> returning(void),
-      );
-    let moveTo =
-      foreign("sk_path_move_to", t @-> float @-> float @-> returning(void));
-    let rMoveTo =
-      foreign("sk_path_rmove_to", t @-> float @-> float @-> returning(void));
-    let lineTo =
-      foreign("sk_path_line_to", t @-> float @-> float @-> returning(void));
-    let rLineTo =
-      foreign("sk_path_rline_to", t @-> float @-> float @-> returning(void));
-    let cubicTo =
-      foreign(
-        "sk_path_cubic_to",
-        t
-        @-> float
-        @-> float
-        @-> float
-        @-> float
-        @-> float
-        @-> float
-        @-> returning(void),
-      );
-    let rCubicTo =
-      foreign(
-        "sk_path_rcubic_to",
-        t
-        @-> float
-        @-> float
-        @-> float
-        @-> float
-        @-> float
-        @-> float
-        @-> returning(void),
-      );
-    let quadTo =
-      foreign(
-        "sk_path_quad_to",
-        t @-> float @-> float @-> float @-> float @-> returning(void),
-      );
-    let rQuadTo =
-      foreign(
-        "sk_path_rquad_to",
-        t @-> float @-> float @-> float @-> float @-> returning(void),
-      );
-    let arcTo =
-      foreign(
-        "sk_path_arc_to",
-        t
-        @-> float
-        @-> float
-        @-> float
-        @-> arcSize
-        @-> pathDirection
-        @-> float
-        @-> float
-        @-> returning(void),
-      );
-    let rArcTo =
-      foreign(
-        "sk_path_rarc_to",
-        t
-        @-> float
-        @-> float
-        @-> float
-        @-> arcSize
-        @-> pathDirection
-        @-> float
-        @-> float
-        @-> returning(void),
-      );
-    let close = foreign("sk_path_close", t @-> returning(void));
-    let getLastPoint =
-      foreign("sk_path_get_last_point", t @-> Point.t @-> returning(bool));
   };
 
   module ColorSpace = {

@@ -189,156 +189,6 @@ module Shader: {
     t;
 };
 
-module Paint: {
-  type t;
-  type style = SkiaWrapped.Paint.style;
-
-  let make: unit => t;
-
-  let setColor: (t, Color.t) => unit;
-  let setAntiAlias: (t, bool) => unit;
-
-  let setAutohinted: (t, bool) => unit;
-  let isAutohinted: t => bool;
-
-  let setHinting: (t, Hinting.t) => unit;
-  let getHinting: t => Hinting.t;
-
-  let setFilterQuality: (t, FilterQuality.t) => unit;
-  let getFilterQuality: t => FilterQuality.t;
-
-  let setStyle: (t, style) => unit;
-  let setStrokeWidth: (t, float) => unit;
-  let setImageFilter: (t, option(ImageFilter.t)) => unit;
-  let setTypeface: (t, Typeface.t) => unit;
-  let setLcdRenderText: (t, bool) => unit;
-  let setSubpixelText: (t, bool) => unit;
-  let setTextSize: (t, float) => unit;
-  let setAlpha: (t, float) => unit;
-  let getFontMetrics: (t, FontMetrics.t, float) => float;
-  let measureText: (t, string, option(Rect.t)) => float;
-
-  let setTextEncoding: (t, TextEncoding.t) => unit;
-  let getTextEncoding: t => TextEncoding.t;
-
-  let setShader: (t, Shader.t) => unit;
-};
-
-module IRect: {
-  type t;
-
-  let makeEmpty: unit => t;
-  let makeLtrb: (int32, int32, int32, int32) => t;
-};
-
-module Matrix: {
-  type t;
-
-  let identity: t;
-
-  let make: unit => t;
-  let makeAll:
-    (float, float, float, float, float, float, float, float, float) => t;
-  let makeTranslate: (float, float) => t;
-  let makeScale: (float, float, float, float) => t;
-
-  let setAll:
-    (t, float, float, float, float, float, float, float, float, float) => unit;
-  let get: (t, int) => float;
-  let getScaleX: t => float;
-  let getScaleY: t => float;
-  let getSkewX: t => float;
-  let getSkewY: t => float;
-  let getTranslateX: t => float;
-  let getTranslateY: t => float;
-  let getPerspX: t => float;
-  let getPerspY: t => float;
-
-  let set: (t, int, float) => unit;
-  let setScaleX: (t, float) => unit;
-  let setScaleY: (t, float) => unit;
-  let setSkewX: (t, float) => unit;
-  let setSkewY: (t, float) => unit;
-  let setTranslateX: (t, float) => unit;
-  let setTranslateY: (t, float) => unit;
-  let setPerspX: (t, float) => unit;
-  let setPerspY: (t, float) => unit;
-
-  let setTranslate: (t, float, float) => unit;
-  let setScale: (t, float, float, float, float) => unit;
-  let setSkew: (t, float, float, float, float) => unit;
-  let setIdentity: t => unit;
-  let reset: t => unit;
-
-  let invert: (t, t) => bool;
-  let concat: (t, t, t) => unit;
-  let preConcat: (t, t) => unit;
-  let postConcat: (t, t) => unit;
-  let mapRect: (t, Rect.t, Rect.t) => unit;
-  let mapPoints: (t, Point.t, Point.t, int) => unit;
-  let mapVectors: (t, Vector.t, Vector.t, int) => unit;
-  let mapXy: (t, float, float, Point.t) => unit;
-  let mapVector: (t, float, float, Vector.t) => unit;
-  let mapRadius: (t, float) => float;
-};
-
-module Matrix44: {
-  type t;
-
-  let makeIdentity: unit => t;
-  let makeEmpty: unit => t;
-
-  let setRotateAboutDegrees: (t, float, float, float, float) => unit;
-  let setRotateAboutRadians: (t, float, float, float, float) => unit;
-
-  let setTranslate: (t, float, float, float) => unit;
-  let preTranslate: (t, float, float, float) => unit;
-  let postTranslate: (t, float, float, float) => unit;
-
-  let setScale: (t, float, float, float) => unit;
-  let preScale: (t, float, float, float) => unit;
-  let postScale: (t, float, float, float) => unit;
-
-  let setConcat: (t, t, t) => unit;
-  let preConcat: (t, t) => unit;
-  let postConcat: (t, t) => unit;
-
-  let get: (t, int, int) => float;
-  let set: (t, int, int, float) => unit;
-  let toMatrix: (t, Matrix.t) => unit;
-};
-
-module RRect: {
-  type t;
-
-  type rRectType = SkiaWrapped.RRect.rRectType;
-  type corner = SkiaWrapped.RRect.corner;
-
-  let make: unit => t;
-  let copy: t => t;
-
-  let getType: t => rRectType;
-  let getRect: (t, Rect.t) => unit;
-  let getRadii: (t, corner, Vector.t) => unit;
-  let getWidth: t => float;
-  let getHeight: t => float;
-  let setEmpty: t => unit;
-  let setRect: (t, Rect.t) => unit;
-  let setOval: (t, Rect.t) => unit;
-  let setRectXy: (t, Rect.t, float, float) => unit;
-  let setNinePatch: (t, Rect.t, float, float, float, float) => unit;
-  let setRectRadii:
-    (t, Rect.t, Vector.t, Vector.t, Vector.t, Vector.t) => unit;
-  let inset: (t, float, float) => unit;
-  let outset: (t, float, float) => unit;
-  let offset: (t, float, float) => unit;
-  let contains: (t, Rect.t) => bool;
-  let isValid: t => bool;
-  let transform: (t, Matrix.t, t) => bool;
-};
-
-module ColorSpace: {type t;};
-
 module Path: {
   type t;
 
@@ -401,6 +251,170 @@ module Path: {
 
   let getLastPoint: (t, Point.t) => bool;
 };
+
+module Matrix: {
+  type t;
+
+  let identity: t;
+
+  let make: unit => t;
+  let makeAll:
+    (float, float, float, float, float, float, float, float, float) => t;
+  let makeTranslate: (float, float) => t;
+  let makeScale: (float, float, float, float) => t;
+
+  let setAll:
+    (t, float, float, float, float, float, float, float, float, float) => unit;
+  let get: (t, int) => float;
+  let getScaleX: t => float;
+  let getScaleY: t => float;
+  let getSkewX: t => float;
+  let getSkewY: t => float;
+  let getTranslateX: t => float;
+  let getTranslateY: t => float;
+  let getPerspX: t => float;
+  let getPerspY: t => float;
+
+  let set: (t, int, float) => unit;
+  let setScaleX: (t, float) => unit;
+  let setScaleY: (t, float) => unit;
+  let setSkewX: (t, float) => unit;
+  let setSkewY: (t, float) => unit;
+  let setTranslateX: (t, float) => unit;
+  let setTranslateY: (t, float) => unit;
+  let setPerspX: (t, float) => unit;
+  let setPerspY: (t, float) => unit;
+
+  let setTranslate: (t, float, float) => unit;
+  let setScale: (t, float, float, float, float) => unit;
+  let setSkew: (t, float, float, float, float) => unit;
+  let setIdentity: t => unit;
+  let reset: t => unit;
+
+  let invert: (t, t) => bool;
+  let concat: (t, t, t) => unit;
+  let preConcat: (t, t) => unit;
+  let postConcat: (t, t) => unit;
+  let mapRect: (t, Rect.t, Rect.t) => unit;
+  let mapPoints: (t, Point.t, Point.t, int) => unit;
+  let mapVectors: (t, Vector.t, Vector.t, int) => unit;
+  let mapXy: (t, float, float, Point.t) => unit;
+  let mapVector: (t, float, float, Vector.t) => unit;
+  let mapRadius: (t, float) => float;
+};
+
+module PathEffect: {
+  module Style: {type t = [ | `translate | `rotate | `morph];};
+
+  type t;
+
+  let create1d: (~style: Style.t, ~advance: float, ~phase: float, Path.t) => t;
+  let create2dLine: (~width: float, ~matrix: Matrix.t) => t;
+  let create2dPath: (~matrix: Matrix.t, Path.t) => t;
+  //let createDiscrete: (~length: float, ~deviation: float, unit) => t;
+};
+
+module Paint: {
+  type t;
+  type style = SkiaWrapped.Paint.style;
+
+  let make: unit => t;
+
+  let setColor: (t, Color.t) => unit;
+  let setAntiAlias: (t, bool) => unit;
+
+  let setAutohinted: (t, bool) => unit;
+  let isAutohinted: t => bool;
+
+  let setHinting: (t, Hinting.t) => unit;
+  let getHinting: t => Hinting.t;
+
+  let setFilterQuality: (t, FilterQuality.t) => unit;
+  let getFilterQuality: t => FilterQuality.t;
+
+  let setPathEffect: (t, PathEffect.t) => unit;
+  let getPathEffect: t => PathEffect.t;
+
+  let setStyle: (t, style) => unit;
+  let setStrokeWidth: (t, float) => unit;
+  let setImageFilter: (t, option(ImageFilter.t)) => unit;
+  let setTypeface: (t, Typeface.t) => unit;
+  let setLcdRenderText: (t, bool) => unit;
+  let setSubpixelText: (t, bool) => unit;
+  let setTextSize: (t, float) => unit;
+  let setAlpha: (t, float) => unit;
+  let getFontMetrics: (t, FontMetrics.t, float) => float;
+  let measureText: (t, string, option(Rect.t)) => float;
+
+  let setTextEncoding: (t, TextEncoding.t) => unit;
+  let getTextEncoding: t => TextEncoding.t;
+
+  let setShader: (t, Shader.t) => unit;
+};
+
+module IRect: {
+  type t;
+
+  let makeEmpty: unit => t;
+  let makeLtrb: (int32, int32, int32, int32) => t;
+};
+
+module Matrix44: {
+  type t;
+
+  let makeIdentity: unit => t;
+  let makeEmpty: unit => t;
+
+  let setRotateAboutDegrees: (t, float, float, float, float) => unit;
+  let setRotateAboutRadians: (t, float, float, float, float) => unit;
+
+  let setTranslate: (t, float, float, float) => unit;
+  let preTranslate: (t, float, float, float) => unit;
+  let postTranslate: (t, float, float, float) => unit;
+
+  let setScale: (t, float, float, float) => unit;
+  let preScale: (t, float, float, float) => unit;
+  let postScale: (t, float, float, float) => unit;
+
+  let setConcat: (t, t, t) => unit;
+  let preConcat: (t, t) => unit;
+  let postConcat: (t, t) => unit;
+
+  let get: (t, int, int) => float;
+  let set: (t, int, int, float) => unit;
+  let toMatrix: (t, Matrix.t) => unit;
+};
+
+module RRect: {
+  type t;
+
+  type rRectType = SkiaWrapped.RRect.rRectType;
+  type corner = SkiaWrapped.RRect.corner;
+
+  let make: unit => t;
+  let copy: t => t;
+
+  let getType: t => rRectType;
+  let getRect: (t, Rect.t) => unit;
+  let getRadii: (t, corner, Vector.t) => unit;
+  let getWidth: t => float;
+  let getHeight: t => float;
+  let setEmpty: t => unit;
+  let setRect: (t, Rect.t) => unit;
+  let setOval: (t, Rect.t) => unit;
+  let setRectXy: (t, Rect.t, float, float) => unit;
+  let setNinePatch: (t, Rect.t, float, float, float, float) => unit;
+  let setRectRadii:
+    (t, Rect.t, Vector.t, Vector.t, Vector.t, Vector.t) => unit;
+  let inset: (t, float, float) => unit;
+  let outset: (t, float, float) => unit;
+  let offset: (t, float, float) => unit;
+  let contains: (t, Rect.t) => bool;
+  let isValid: t => bool;
+  let transform: (t, Matrix.t, t) => bool;
+};
+
+module ColorSpace: {type t;};
 
 module ImageInfo: {
   type t;
