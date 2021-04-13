@@ -232,9 +232,6 @@ class textNode (text: string) = {
        */
     (
       switch (_super#getStyle()) {
-      | {width: textWidth, _} as style
-          when textWidth == Layout.Encoding.cssUndefined =>
-        _this#handleTextWrapping(width, style)
       | {textOverflow: Ellipsis | UserDefined(_), _} =>
         _this#textOverflow(float_of_int(width))
       | style => _this#handleTextWrapping(width, style)
