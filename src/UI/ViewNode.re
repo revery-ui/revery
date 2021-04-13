@@ -279,7 +279,7 @@ let makeShadowImageFilter = boxShadow => {
     sigma,
     sigma,
     Color.toSkia(color),
-    DrawShadowAndForeground,
+    DrawShadowOnly,
     None,
     None,
   );
@@ -315,6 +315,13 @@ class viewNode (()) = {
     let color = Color.multiplyAlpha(opacity, style.backgroundColor);
     let colorAlpha = Color.getAlpha(color);
 
+    Skia.RRect.setRectXy(
+      _outerRRect,
+      _helperRect,
+      borderRadius,
+      borderRadius,
+    );
+
     // Draw the shadow before anything else, so we don't clip the border
     let isDrawingShadow = style.boxShadow.blurRadius > 0.1;
 
@@ -330,24 +337,13 @@ class viewNode (()) = {
       let shadowInteriorColor = Color.toSkia(color);
       Skia.Paint.setColor(_fillPaint, shadowInteriorColor);
 
-      Revery_Draw.CanvasContext.drawRect(
-        ~rect=_helperRect,
-        ~paint=_fillPaint,
-        canvas,
-      );
+      Revery_Draw.CanvasContext.drawRRect(canvas, _outerRRect, _fillPaint);
 
       // Reset the image filter, as the `_fillPaint` is stateful - if we don't reset it,
       // then if the style changes such that there should be no shadow drawn, `_fillPaint`
       // will still have the draw-shadow image filter applied.
       Skia.Paint.setImageFilter(_fillPaint, None);
     };
-
-    Skia.RRect.setRectXy(
-      _outerRRect,
-      _helperRect,
-      borderRadius,
-      borderRadius,
-    );
 
     let innerRRect =
       renderBorders(~canvas, ~style, ~outerRRect=_outerRRect, ~opacity);
