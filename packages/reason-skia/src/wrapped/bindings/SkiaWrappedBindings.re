@@ -26,12 +26,16 @@ module M = (F: FOREIGN) => {
   module Stream = {
     type t = ptr(structure(SkiaTypes.Stream.t));
     let t = ptr(SkiaTypes.Stream.t);
+    let data = ptr(SkiaTypes.Data.t);
 
     let hasLength = foreign("sk_stream_has_length", t @-> returning(bool));
 
     let getLength = foreign("sk_stream_get_length", t @-> returning(int));
 
     let delete = foreign("sk_stream_destroy", t @-> returning(void));
+
+    let makeFromData =
+      foreign("sk_memorystream_new_with_skdata", data @-> returning(t));
   };
 
   module Data = {
@@ -50,6 +54,9 @@ module M = (F: FOREIGN) => {
 
     let makeFromStream =
       foreign("sk_data_new_from_stream", Stream.t @-> int @-> returning(t));
+
+    let makeFromString =
+      foreign("sk_data_create_with_cstring", string @-> returning(t));
   };
 
   module String = {
@@ -1120,5 +1127,22 @@ module M = (F: FOREIGN) => {
     let getHeight = foreign("sk_surface_get_height", t @-> returning(int));
     let getProps =
       foreign("sk_surface_get_props", t @-> returning(SurfaceProps.t));
+  };
+
+  module SVG = {
+    type t = ptr(structure(SkiaTypes.SVG.t));
+    let t = ptr(SkiaTypes.SVG.t);
+
+    let makeFromStream =
+      foreign("sk_svgdom_create_from_stream", Stream.t @-> returning(t));
+
+    let render =
+      foreign("sk_svgdom_render", t @-> Canvas.t @-> returning(void));
+
+    let setContainerSize =
+      foreign(
+        "sk_svgdom_set_container_size",
+        t @-> float @-> float @-> returning(void),
+      );
   };
 };
