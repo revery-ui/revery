@@ -2,7 +2,6 @@ opam-version: "2.0"
 
 synopsis: "PPX syntax for Lwt, providing something similar to async/await from JavaScript"
 
-version: "2.0.1"
 license: "MIT"
 homepage: "https://github.com/ocsigen/lwt"
 doc: "https://ocsigen.org/lwt/dev/api/Ppx_lwt"

@@ -20,7 +20,7 @@ depends: [
   "ocaml-compiler-libs"     {>= "v0.11.0"}
   "ocaml-migrate-parsetree" {>= "1.5.0" & < "2.0.0"}
   "ppx_derivers"            {>= "1.0"}
-  "sexplib0"
+  "sexplib0"                {>= "v0.12"}
   "stdlib-shims"
   "ocamlfind"               {with-test}
   "cinaps"                  {with-test & >= "v0.12.1"}
