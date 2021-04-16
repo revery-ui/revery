@@ -110,7 +110,14 @@ let flags = os =>
     @ ccopt("-L" ++ getenv("SKIA_LIB_PATH"))
   };
 
-let cflags = os =>
+let skiaIncludeFlags = {
+  let skiaIncludePath = getenv("SKIA_INCLUDE_PATH");
+  Sys.readdir(skiaIncludePath)
+  |> Array.map(path => "-I" ++ skiaIncludePath ++ "/" ++ path)
+  |> Array.append([|"-I" ++ skiaIncludePath|])
+  |> Array.to_list;
+};
+let cflags = os => {
   switch (os) {
   | Android =>
     []
@@ -122,8 +129,7 @@ let cflags = os =>
     @ ["-landroid"]
     @ ["-lskia"]
     @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+    @ skiaIncludeFlags
     @ ["-L" ++ getenv("SKIA_LIB_PATH")]
     @ ["-L" ++ getenv("SDL2_LIB_PATH")]
     @ ["-L" ++ getenv("JPEG_LIB_PATH")]
@@ -134,26 +140,32 @@ let cflags = os =>
     @ [sdl2FilePath]
     @ ["-lskia"]
     @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+    @ skiaIncludeFlags
     @ ["-L" ++ getenv("SKIA_LIB_PATH")]
     @ ["-L" ++ getenv("SDL2_LIB_PATH")]
     @ ["-L" ++ getenv("JPEG_LIB_PATH")]
     @ ["-lstdc++"]
     @ ["-ljpeg"]
   | IOS
-  | Mac =>
-    []
-    @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+  | Mac => [] @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")] @ skiaIncludeFlags
   | Windows =>
     []
     @ ["-std=c++1y"]
     @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+    @ skiaIncludeFlags
   };
+};
+
+let cppflags = os => {
+  cflags(os)
+  @ {
+    switch (os) {
+    | IOS
+    | Mac => [] @ ["-std=c++14"]
+    | _ => []
+    };
+  };
+};
 
 let libs = os =>
   switch (os) {
@@ -260,6 +272,8 @@ Configurator.main(~name="reason-sdl2", conf => {
   Configurator.Flags.write_sexp("flags.sexp", flags(os));
   Configurator.Flags.write_lines("c_flags.txt", cflags(os));
   Configurator.Flags.write_sexp("c_flags.sexp", cflags(os));
+  Configurator.Flags.write_lines("cpp_flags.txt", cppflags(os));
+  Configurator.Flags.write_sexp("cpp_flags.sexp", cppflags(os));
   Configurator.Flags.write_sexp("c_library_flags.sexp", libs(os));
   Configurator.Flags.write_lines("c_library_flags.txt", libs(os));
   Configurator.Flags.write_sexp(
