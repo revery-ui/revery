@@ -23,10 +23,13 @@ module M = (F: FOREIGN) => {
     let t = uint32_t;
   };
 
+  type data = ptr(structure(SkiaTypes.Data.t));
+  let data = ptr(SkiaTypes.Data.t);
+
   module Stream = {
     type t = ptr(structure(SkiaTypes.Stream.t));
     let t = ptr(SkiaTypes.Stream.t);
-    let data = ptr(SkiaTypes.Data.t);
+    let maybeT = ptr_opt(SkiaTypes.Stream.t);
 
     let hasLength = foreign("sk_stream_has_length", t @-> returning(bool));
 
@@ -34,13 +37,28 @@ module M = (F: FOREIGN) => {
 
     let delete = foreign("sk_stream_destroy", t @-> returning(void));
 
+    let makeFileStream =
+      foreign("sk_filestream_new", string @-> returning(maybeT));
+
+    let deleteFileStream =
+      foreign("sk_filestream_destroy", t @-> returning(void));
+
+    let makeMemoryStreamWithData =
+      foreign(
+        "sk_memorystream_new_with_data",
+        string @-> int @-> bool @-> returning(t),
+      );
+
+    let deleteMemoryStream =
+      foreign("sk_memorystream_destroy", t @-> returning(void));
+
     let makeFromData =
       foreign("sk_memorystream_new_with_skdata", data @-> returning(t));
   };
 
   module Data = {
-    type t = ptr(structure(SkiaTypes.Data.t));
-    let t = ptr(SkiaTypes.Data.t);
+    type t = data;
+    let t = data;
 
     let makeFromFileName =
       foreign(
@@ -1144,5 +1162,11 @@ module M = (F: FOREIGN) => {
         "sk_svgdom_set_container_size",
         t @-> float @-> float @-> returning(void),
       );
+
+    let getContainerWidth =
+      foreign("sk_svgdom_get_container_width", t @-> returning(float));
+
+    let getContainerHeight =
+      foreign("sk_svgdom_get_container_height", t @-> returning(float));
   };
 };

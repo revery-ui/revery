@@ -270,8 +270,42 @@ let draw = canvas => {
   Canvas.drawRectLtwh(canvas, 100., 100., 100., 100., fill);
 };
 
+let drawSvg = canvas => {
+  let drawFromString = () => {
+    let svgStr = {|
+      <svg width="400" height="180">
+        <rect x="50" y="20" width="150" height="150" style="fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />
+      </svg>
+    |};
+
+    let stream =
+      Stream.makeMemoryStreamWithData(svgStr, String.length(svgStr));
+
+    let svg = SVG.makeFromStream(stream);
+    SVG.setContainerSize(svg, 10., 50.);
+
+    Printf.printf(
+      "SVG: string container size: w=%f h=%f\n",
+      SVG.getContainerWidth(svg),
+      SVG.getContainerHeight(svg),
+    );
+
+    SVG.render(svg, canvas);
+  };
+
+  drawFromString();
+};
+
 let surface = makeSurface(640l, 480l) |> Option.get;
+let svgSurface = makeSurface(1280l, 1280l) |> Option.get;
+
 let canvas = Surface.getCanvas(surface);
+let svgCanvas = Surface.getCanvas(svgSurface);
+
 draw(canvas);
+drawSvg(svgCanvas);
+
 emitPng("skia-c-example.png", surface);
+emitPng("skia-svg-example.png", svgSurface);
+
 print_endline("Done!");
