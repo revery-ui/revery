@@ -172,6 +172,9 @@ let libs = os =>
   | Android =>
     []
     @ [
+      "-L" ++ getenv("SDL2_LIB_PATH"),
+      "-L" ++ getenv("SKIA_LIB_PATH"),
+      "-L" ++ getenv("FREETYPE2_LIB_PATH"),
       sdl2FilePath,
       "-lGLESv2",
       "-lGLESv1_CM",
@@ -184,9 +187,6 @@ let libs = os =>
       "-L" ++ getenv("JPEG_LIB_PATH"),
       "-ljpeg",
       "-lstdc++",
-      "-L" ++ getenv("SDL2_LIB_PATH"),
-      "-L" ++ getenv("SKIA_LIB_PATH"),
-      "-L" ++ getenv("FREETYPE2_LIB_PATH"),
     ]
   | IOS =>
     []
@@ -219,6 +219,9 @@ let libs = os =>
   | Linux =>
     []
     @ [
+      "-L" ++ getenv("SDL2_LIB_PATH"),
+      "-L" ++ getenv("SKIA_LIB_PATH"),
+      "-L" ++ getenv("FREETYPE2_LIB_PATH"),
       sdl2FilePath,
       "-lskia",
       "-lfreetype",
@@ -229,9 +232,6 @@ let libs = os =>
       "-ljpeg",
       "-lpthread",
       "-lstdc++",
-      "-L" ++ getenv("SDL2_LIB_PATH"),
-      "-L" ++ getenv("SKIA_LIB_PATH"),
-      "-L" ++ getenv("FREETYPE2_LIB_PATH"),
     ]
   | Mac =>
     []
@@ -259,12 +259,12 @@ let libs = os =>
     @ [getenv("JPEG_LIB_PATH") ++ "/libturbojpeg.a"]
   | Windows =>
     []
+    @ ["-L" ++ getenv("SDL2_LIB_PATH")]
+    @ ["-L" ++ getenv("SKIA_LIB_PATH")]
     @ ["-luser32"]
     @ ["-lskia"]
     @ ["-lSDL2"]
     @ ["-lstdc++"]
-    @ ["-L" ++ getenv("SDL2_LIB_PATH")]
-    @ ["-L" ++ getenv("SKIA_LIB_PATH")]
   };
 
 Configurator.main(~name="reason-sdl2", conf => {
