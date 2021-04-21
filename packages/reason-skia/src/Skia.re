@@ -665,19 +665,10 @@ module Stream = {
   let hasLength = SkiaWrapped.Stream.hasLength;
   let getLength = SkiaWrapped.Stream.getLength;
 
-  let makeFileStream = path => {
-    let maybeStream = SkiaWrapped.Stream.makeFileStream(path);
-    maybeStream
-    |> Option.iter(Gc.finalise(SkiaWrapped.Stream.deleteFileStream));
-    maybeStream;
-  };
+  let makeFileStream = SkiaWrapped.Stream.makeFileStream;
 
-  let makeMemoryStreamWithData = (str, length) => {
-    let stream =
-      SkiaWrapped.Stream.makeMemoryStreamWithData(str, length, true);
-    stream |> Gc.finalise(SkiaWrapped.Stream.deleteMemoryStream);
-    stream;
-  };
+  let makeMemoryStreamWithData = (str, length) =>
+    SkiaWrapped.Stream.makeMemoryStreamWithData(str, length, true);
 
   let makeFromData = SkiaWrapped.Stream.makeFromData;
 };
