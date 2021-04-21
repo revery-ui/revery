@@ -247,6 +247,7 @@ let libs = os =>
       "-ljpeg",
       "-lpthread",
       "-lstdc++",
+      "-fPIC",
     ]
   | Mac =>
     []
