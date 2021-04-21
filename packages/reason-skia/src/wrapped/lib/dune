@@ -27,5 +27,10 @@
   (names skia_generated_stubs raw_bindings)
   (flags
    (:include ../../c_flags.sexp)))
+ (foreign_stubs
+  (language cxx)
+  (names c_api_ext)
+  (flags
+   (:include ../../cpp_flags.sexp)))
  (c_library_flags
   (:include ../../c_library_flags.sexp)))

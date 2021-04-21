@@ -14,19 +14,19 @@
 
 (rule
  (targets libskia_wrapped_c_stubs.a)
- (deps c_stubs.o c_api_ext.o)
+ (deps c_stubs.o)
  (action
   (run ar rcs %{targets} %{deps})))
 
 (rule
  (targets dllskia_wrapped_c_stubs.dll)
- (deps c_stubs.o c_api_ext.o)
+ (deps c_stubs.o)
  (action
   (run %{cc} -shared -o %{targets} %{deps} %{read-lines:c_library_flags.txt})))
 
 (rule
  (targets dllskia_wrapped_c_stubs.so)
- (deps c_stubs.o c_api_ext.o)
+ (deps c_stubs.o)
  (action
   (run %{cc} %{read-lines:c_library_flags.txt} -shared -o %{targets} %{deps})))
 
@@ -37,11 +37,3 @@
   c_flags.txt)
  (action
   (run %{cc} %{read-lines:c_flags.txt} -c %{c})))
-
-(rule
- (targets c_api_ext.o)
- (deps
-  (:cpp c_api_ext.cpp)
-  cpp_flags.txt)
- (action
-  (run %{cxx} %{read-lines:cpp_flags.txt} -c %{cpp})))

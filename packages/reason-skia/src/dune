@@ -1,5 +1,5 @@
 (rule
- (targets c_library_flags.sexp c_flags.sexp flags.sexp)
+ (targets c_library_flags.sexp c_flags.sexp cpp_flags.sexp flags.sexp)
  (deps
   (:discover config/discover.exe))
  (action
