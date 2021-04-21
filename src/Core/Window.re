@@ -560,35 +560,11 @@ let create = (name: string, options: WindowCreateOptions.t) => {
        )
      });
 
-  // Calculate the total bounds of all displays
-  let screenBounds =
-    displays
-    |> List.fold_left(
-         (acc: Sdl2.Rect.t, display) => {
-           let bounds = Sdl2.Display.getBounds(display);
-           Sdl2.Rect.{
-             x: min(acc.x, bounds.x),
-             y: min(acc.y, bounds.y),
-             width: max(acc.width, bounds.x + bounds.width),
-             height: max(acc.height, bounds.y + bounds.height),
-           };
-         },
-         Sdl2.Rect.{x: 0, y: 0, width: 0, height: 0},
-       );
-
   let width = options.width == 0 ? 800 : options.width;
   let height = options.height == 0 ? 480 : options.height;
 
-  let x =
-    switch (options.x) {
-    | `Centered => `Absolute((screenBounds.width - width) / 2)
-    | x => x
-    };
-  let y =
-    switch (options.y) {
-    | `Centered => `Absolute((screenBounds.height - height) / 2)
-    | x => x
-    };
+  let x = options.x;
+  let y = options.x;
 
   Log.infof(m =>
     m("Creating window %s width: %u height: %u", name, width, height)
