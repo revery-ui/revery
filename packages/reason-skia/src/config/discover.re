@@ -145,8 +145,10 @@ let cflags = os => {
   | Linux =>
     []
     @ [sdl2FilePath]
+    @ ["-Wl,--start-group"]
     @ ["-lskia"]
     @ ["-lskiasvg"]
+    @ ["-Wl,--end-group"]
     @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
     @ skiaIncludeFlags
     @ ["-L" ++ getenv("SKIA_LIB_PATH")]
@@ -233,8 +235,10 @@ let libs = os =>
       "-L" ++ getenv("SKIA_LIB_PATH"),
       "-L" ++ getenv("FREETYPE2_LIB_PATH"),
       sdl2FilePath,
+      "-Wl,--start-group",
       "-lskia",
       "-lskiasvg",
+      "-Wl,--end-group",
       "-lfreetype",
       "-lfontconfig",
       "-lz",
