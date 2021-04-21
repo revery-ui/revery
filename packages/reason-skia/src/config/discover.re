@@ -104,6 +104,7 @@ let flags = os =>
     @ cclib("-ljpeg")
     @ ccopt("-I/usr/include")
     @ ccopt("-lstdc++")
+    @ ccopt("-fPIC")
   | Windows =>
     []
     @ cclib("-lskia")
@@ -156,6 +157,7 @@ let cflags = os => {
     @ ["-L" ++ getenv("JPEG_LIB_PATH")]
     @ ["-lstdc++"]
     @ ["-ljpeg"]
+    @ ["-fPIC"]
   | IOS
   | Mac => [] @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")] @ skiaIncludeFlags
   | Windows =>
