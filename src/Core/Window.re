@@ -580,15 +580,7 @@ let create = (name: string, options: WindowCreateOptions.t) => {
   let height = options.height == 0 ? 480 : options.height;
 
   let x = options.x;
-    // switch (options.x) {
-    // | `Centered => `Absolute((screenBounds.width - width) / 2)
-    // | x => x
-    // };
   let y = options.y;
-    // switch (options.y) {
-    // | `Centered => `Absolute((screenBounds.height - height) / 2)
-    // | x => x
-    // };
 
   Log.infof(m =>
     m("Creating window %s width: %u height: %u", name, width, height)
