@@ -1,5 +1,5 @@
 {
-  "checksum": "06bb82c05a1b4b67703e6095fd3b8ee8",
+  "checksum": "fefbaa6abe26aa5562c5f1e37290e22f",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -92,7 +92,7 @@
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "http-server@0.12.3@d41d8cd9",
         "flex@github:jordwalke/flex#6ff12fe@d41d8cd9",
-        "esy-skia@github:revery-ui/esy-skia#5fb5216@d41d8cd9",
+        "esy-skia@github:revery-ui/esy-skia#35eedf1@d41d8cd9",
         "esy-sdl2@2.0.10008@d41d8cd9", "esy-freetype2@2.9.1008@d41d8cd9",
         "esy-angle-prebuilt@1.0.0@d41d8cd9", "@revery/timber@2.0.0@d41d8cd9",
         "@revery/esy-harfbuzz@2.6.8002@d41d8cd9",
@@ -361,7 +361,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "requires-port@1.0.0@d41d8cd9", "follow-redirects@1.13.3@d41d8cd9",
+        "requires-port@1.0.0@d41d8cd9", "follow-redirects@1.14.0@d41d8cd9",
         "eventemitter3@4.0.7@d41d8cd9"
       ],
       "devDependencies": []
@@ -439,14 +439,14 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "follow-redirects@1.13.3@d41d8cd9": {
-      "id": "follow-redirects@1.13.3@d41d8cd9",
+    "follow-redirects@1.14.0@d41d8cd9": {
+      "id": "follow-redirects@1.14.0@d41d8cd9",
       "name": "follow-redirects",
-      "version": "1.13.3",
+      "version": "1.14.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.13.3.tgz#sha1:e5598ad50174c1bc4e872301e82ac2cd97f90267"
+          "archive:https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.0.tgz#sha1:f5d260f95c5f8c105894491feee5dc8993b402fe"
         ]
       },
       "overrides": [],
@@ -482,13 +482,13 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-skia@github:revery-ui/esy-skia#5fb5216@d41d8cd9": {
-      "id": "esy-skia@github:revery-ui/esy-skia#5fb5216@d41d8cd9",
+    "esy-skia@github:revery-ui/esy-skia#35eedf1@d41d8cd9": {
+      "id": "esy-skia@github:revery-ui/esy-skia#35eedf1@d41d8cd9",
       "name": "esy-skia",
-      "version": "github:revery-ui/esy-skia#5fb5216",
+      "version": "github:revery-ui/esy-skia#35eedf1",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/esy-skia#5fb5216" ]
+        "source": [ "github:revery-ui/esy-skia#35eedf1" ]
       },
       "overrides": [],
       "dependencies": [
@@ -952,20 +952,20 @@
       ],
       "devDependencies": [ "ocaml@4.11.2000@d41d8cd9" ]
     },
-    "@opam/tyxml@opam:4.4.0@1dca5713": {
-      "id": "@opam/tyxml@opam:4.4.0@1dca5713",
+    "@opam/tyxml@opam:4.5.0@4676c9e9": {
+      "id": "@opam/tyxml@opam:4.5.0@4676c9e9",
       "name": "@opam/tyxml",
-      "version": "opam:4.4.0",
+      "version": "opam:4.5.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/51/516394dd4a5c31726997c51d66aa31cacb91e3c46d4e16c7699130e204042530#sha256:516394dd4a5c31726997c51d66aa31cacb91e3c46d4e16c7699130e204042530",
-          "archive:https://github.com/ocsigen/tyxml/releases/download/4.4.0/tyxml-4.4.0.tbz#sha256:516394dd4a5c31726997c51d66aa31cacb91e3c46d4e16c7699130e204042530"
+          "archive:https://opam.ocaml.org/cache/sha256/c6/c69accef5df4dd89d38f6aa0baad01e8fda4e9e98bb7dad61bec1452c5716068#sha256:c69accef5df4dd89d38f6aa0baad01e8fda4e9e98bb7dad61bec1452c5716068",
+          "archive:https://github.com/ocsigen/tyxml/releases/download/4.5.0/tyxml-4.5.0.tbz#sha256:c69accef5df4dd89d38f6aa0baad01e8fda4e9e98bb7dad61bec1452c5716068"
         ],
         "opam": {
           "name": "tyxml",
-          "version": "4.4.0",
-          "path": "js.esy.lock/opam/tyxml.4.4.0"
+          "version": "4.5.0",
+          "path": "js.esy.lock/opam/tyxml.4.5.0"
         }
       },
       "overrides": [],
@@ -1289,7 +1289,7 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.11.2000@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
-        "@opam/uucp@opam:13.0.0@e9b515e0", "@opam/tyxml@opam:4.4.0@1dca5713",
+        "@opam/uucp@opam:13.0.0@e9b515e0", "@opam/tyxml@opam:4.5.0@4676c9e9",
         "@opam/dune@opam:2.8.5@83fb0224",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
@@ -1515,7 +1515,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.11.2000@d41d8cd9", "@opam/tyxml@opam:4.4.0@1dca5713",
+        "ocaml@4.11.2000@d41d8cd9", "@opam/tyxml@opam:4.5.0@4676c9e9",
         "@opam/result@opam:1.5@6b753c82", "@opam/fpath@opam:0.7.3@674d8125",
         "@opam/dune@opam:2.8.5@83fb0224", "@opam/cppo@opam:1.6.7@c28ac3ae",
         "@opam/cmdliner@opam:1.0.4@93208aac",
@@ -1523,7 +1523,7 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.11.2000@d41d8cd9", "@opam/tyxml@opam:4.4.0@1dca5713",
+        "ocaml@4.11.2000@d41d8cd9", "@opam/tyxml@opam:4.5.0@4676c9e9",
         "@opam/result@opam:1.5@6b753c82", "@opam/fpath@opam:0.7.3@674d8125",
         "@opam/dune@opam:2.8.5@83fb0224",
         "@opam/cmdliner@opam:1.0.4@93208aac",
@@ -2031,11 +2031,11 @@
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tyxml@opam:4.4.0@1dca5713", "@opam/ptime@opam:0.8.5@0051d642",
+        "@opam/tyxml@opam:4.5.0@4676c9e9", "@opam/ptime@opam:0.8.5@0051d642",
         "@opam/dune@opam:2.8.5@83fb0224", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tyxml@opam:4.4.0@1dca5713", "@opam/ptime@opam:0.8.5@0051d642",
+        "@opam/tyxml@opam:4.5.0@4676c9e9", "@opam/ptime@opam:0.8.5@0051d642",
         "@opam/dune@opam:2.8.5@83fb0224"
       ]
     },
