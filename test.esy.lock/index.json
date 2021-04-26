@@ -1,5 +1,5 @@
 {
-  "checksum": "0a3eb7cab0bcf61bff3404ce0461f5f0",
+  "checksum": "21bb2c387fd091a6c2eae21abcd69b5f",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -32,7 +32,7 @@
         "reperf@1.5.1@d41d8cd9", "rench@1.10.0@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
         "flex@github:jordwalke/flex#6ff12fe@d41d8cd9",
-        "esy-skia@github:revery-ui/esy-skia#33c3763@d41d8cd9",
+        "esy-skia@github:revery-ui/esy-skia#b13a2af59f@d41d8cd9",
         "esy-sdl2@2.0.10008@d41d8cd9", "esy-freetype2@2.9.1008@d41d8cd9",
         "esy-angle-prebuilt@1.0.0@d41d8cd9", "@revery/timber@2.0.0@d41d8cd9",
         "@revery/esy-harfbuzz@2.6.8002@d41d8cd9",
@@ -138,13 +138,13 @@
       ],
       "devDependencies": [ "ocaml@4.11.2000@d41d8cd9" ]
     },
-    "esy-skia@github:revery-ui/esy-skia#33c3763@d41d8cd9": {
-      "id": "esy-skia@github:revery-ui/esy-skia#33c3763@d41d8cd9",
+    "esy-skia@github:revery-ui/esy-skia#b13a2af59f@d41d8cd9": {
+      "id": "esy-skia@github:revery-ui/esy-skia#b13a2af59f@d41d8cd9",
       "name": "esy-skia",
-      "version": "github:revery-ui/esy-skia#33c3763",
+      "version": "github:revery-ui/esy-skia#b13a2af59f",
       "source": {
         "type": "install",
-        "source": [ "github:revery-ui/esy-skia#33c3763" ]
+        "source": [ "github:revery-ui/esy-skia#b13a2af59f" ]
       },
       "overrides": [],
       "dependencies": [
