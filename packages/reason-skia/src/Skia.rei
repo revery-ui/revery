@@ -51,7 +51,6 @@ module Data: {
   let makeFromFileName: string => option(t);
   let makeString: t => string;
   let makeFromStream: (Stream.t, int) => t;
-  let makeFromString: string => t;
 };
 
 module Typeface: {

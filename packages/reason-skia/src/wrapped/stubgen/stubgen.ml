@@ -2,7 +2,6 @@ let prefix = "skia_wrapped_stub"
 
 let prologue = "
 #include \"c_stubs.h\"
-#include \"c_api_ext.h\"
 #include \"gr_context.h\"
 #include \"sk_canvas.h\"
 #include \"sk_data.h\"
