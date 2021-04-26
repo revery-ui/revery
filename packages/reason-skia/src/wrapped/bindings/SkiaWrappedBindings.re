@@ -72,9 +72,6 @@ module M = (F: FOREIGN) => {
 
     let makeFromStream =
       foreign("sk_data_new_from_stream", Stream.t @-> int @-> returning(t));
-
-    let makeFromString =
-      foreign("sk_data_create_with_cstring", string @-> returning(t));
   };
 
   module String = {

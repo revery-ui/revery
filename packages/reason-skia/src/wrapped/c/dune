@@ -1,5 +1,5 @@
 (rule
- (targets c_flags.txt cpp_flags.txt c_library_flags.txt)
+ (targets c_flags.txt c_library_flags.txt)
  (deps
   (:discover ../../config/discover.exe))
  (action

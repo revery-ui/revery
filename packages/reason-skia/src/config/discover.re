@@ -68,7 +68,6 @@ let flags = os =>
     @ cclib("-lfreetype")
     @ cclib("-lz")
     @ cclib("-lskia")
-    @ cclib("-lskiasvg")
     @ cclib("-lGLESv2")
     @ cclib("-lGLESv1_CM")
     @ cclib("-lm")
@@ -93,7 +92,6 @@ let flags = os =>
     @ cclib("-lz")
     @ cclib("-lbz2")
     @ cclib("-lskia")
-    @ cclib("-lskiasvg")
     @ cclib(sdl2FilePath)
     @ ccopt("-L" ++ getenv("FREETYPE2_LIB_PATH"))
     @ ccopt("-L" ++ getenv("SDL2_LIB_PATH"))
@@ -115,10 +113,6 @@ let flags = os =>
 
 let skiaIncludeFlags = {
   let skiaIncludePath = getenv("SKIA_INCLUDE_PATH");
-  let skiaLibPath = getenv("SKIA_LIB_PATH");
-
-  let _ = Sys.command("ranlib " ++ skiaLibPath ++ "/libskia.a");
-
   Sys.readdir(skiaIncludePath)
   |> Array.map(path => "-I" ++ skiaIncludePath ++ "/" ++ path)
   |> Array.append([|"-I" ++ skiaIncludePath|])
@@ -135,7 +129,6 @@ let cflags = os => {
     @ ["-llog"]
     @ ["-landroid"]
     @ ["-lskia"]
-    @ ["-lskiasvg"]
     @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
     @ skiaIncludeFlags
     @ ["-L" ++ getenv("SKIA_LIB_PATH")]
@@ -146,10 +139,7 @@ let cflags = os => {
   | Linux =>
     []
     @ [sdl2FilePath]
-    @ ["-Wl,--start-group"]
     @ ["-lskia"]
-    @ ["-lskiasvg"]
-    @ ["-Wl,--end-group"]
     @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
     @ skiaIncludeFlags
     @ ["-L" ++ getenv("SKIA_LIB_PATH")]
@@ -164,18 +154,9 @@ let cflags = os => {
     []
     @ ["-std=c++1y"]
     @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
+    @ ["-L" ++ getenv("SKIA_LIB_PATH")]
+    @ ["-lskia"]
     @ skiaIncludeFlags
-  };
-};
-
-let cppflags = os => {
-  cflags(os)
-  @ {
-    switch (os) {
-    | IOS
-    | Mac => [] @ ["-std=c++14"]
-    | _ => []
-    };
   };
 };
 
@@ -194,7 +175,6 @@ let libs = os =>
       "-llog",
       "-landroid",
       "-lskia",
-      "-lskiasvg",
       "-lfreetype",
       "-lz",
       "-L" ++ getenv("JPEG_LIB_PATH"),
@@ -227,7 +207,6 @@ let libs = os =>
     @ ["-liconv"]
     @ [sdl2FilePath]
     @ ["-lskia"]
-    @ ["-lskiasvg"]
     @ ["-lstdc++"]
     @ [getenv("JPEG_LIB_PATH") ++ "/libturbojpeg.a"]
   | Linux =>
@@ -237,10 +216,7 @@ let libs = os =>
       "-L" ++ getenv("SKIA_LIB_PATH"),
       "-L" ++ getenv("FREETYPE2_LIB_PATH"),
       sdl2FilePath,
-      "-Wl,--start-group",
       "-lskia",
-      "-lskiasvg",
-      "-Wl,--end-group",
       "-lfreetype",
       "-lfontconfig",
       "-lz",
@@ -273,17 +249,16 @@ let libs = os =>
     @ ["-liconv"]
     @ [sdl2FilePath]
     @ ["-lskia"]
-    @ ["-lskiasvg"]
     @ ["-lstdc++"]
     @ [getenv("JPEG_LIB_PATH") ++ "/libturbojpeg.a"]
   | Windows =>
     []
-    @ ["-L" ++ getenv("SDL2_LIB_PATH")]
-    @ ["-L" ++ getenv("SKIA_LIB_PATH")]
     @ ["-luser32"]
     @ ["-lskia"]
     @ ["-lSDL2"]
     @ ["-lstdc++"]
+    @ ["-L" ++ getenv("SDL2_LIB_PATH")]
+    @ ["-L" ++ getenv("SKIA_LIB_PATH")]
   };
 
 Configurator.main(~name="reason-sdl2", conf => {
@@ -291,8 +266,6 @@ Configurator.main(~name="reason-sdl2", conf => {
   Configurator.Flags.write_sexp("flags.sexp", flags(os));
   Configurator.Flags.write_lines("c_flags.txt", cflags(os));
   Configurator.Flags.write_sexp("c_flags.sexp", cflags(os));
-  Configurator.Flags.write_lines("cpp_flags.txt", cppflags(os));
-  Configurator.Flags.write_sexp("cpp_flags.sexp", cppflags(os));
   Configurator.Flags.write_sexp("c_library_flags.sexp", libs(os));
   Configurator.Flags.write_lines("c_library_flags.txt", libs(os));
   Configurator.Flags.write_sexp(

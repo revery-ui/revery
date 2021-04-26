@@ -696,12 +696,6 @@ module Data = {
     Gc.finalise(SkiaWrapped.Data.delete, data);
     data;
   };
-
-  let makeFromString = str => {
-    let data = SkiaWrapped.Data.makeFromString(str);
-    Gc.finalise(SkiaWrapped.Data.delete, data);
-    data;
-  };
 };
 
 module Typeface = {
