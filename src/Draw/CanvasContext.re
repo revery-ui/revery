@@ -292,7 +292,7 @@ let drawText = (~paint, ~x=0., ~y=0., ~text, v: t) => {
 
 let drawSVG = (~svg, canvasContext) => {
   SVG.render(svg, canvasContext.canvas);
-}
+};
 
 let _topMatrix = Skia.Matrix.make();
 let setMatrix = (v: t, mat: Skia.Matrix.t) => {

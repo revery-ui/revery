@@ -488,11 +488,11 @@ module SVGExample = {
   };
 
   let loadSVG = data => Ok(data);
-    // switch (SVG.fromString(data)) {
-    // | Some(svg) => Ok(svg)
-    // | None => Error("Parse error: empty string")
-    // | exception (Failure(msg)) => Error("Parse error: " ++ msg)
-    // };
+  // switch (SVG.fromString(data)) {
+  // | Some(svg) => Ok(svg)
+  // | None => Error("Parse error: empty string")
+  // | exception (Failure(msg)) => Error("Parse error: " ++ msg)
+  // };
 
   let%component make = () => {
     let%hook (currentExample, setExample) = {
@@ -519,32 +519,39 @@ module SVGExample = {
 
     <View style=Styles.container>
       <Canvas
-        render=((canvasContext, _dimensions)=> {
+        render={(canvasContext, _dimensions) => {
           switch (currentExample) {
           | Ok(svg) =>
-          Skia.({
-    let svgStr = {|
+            Skia.(
+              {
+                let svgStr = {|
       <svg width="400" height="180">
         <rect x="50" y="20" width="150" height="150" style="fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />
       </svg>
     |};
-            let stream = Stream.makeMemoryStreamWithData(svgStr, String.length(svgStr));
+                let stream =
+                  Stream.makeMemoryStreamWithData(
+                    svgStr,
+                    String.length(svgStr),
+                  );
 
-          let svg = SVG.makeFromStream(stream);
-          SVG.setContainerSize(svg, 200., 200.);
+                let svg = SVG.makeFromStream(stream);
+                SVG.setContainerSize(svg, 200., 200.);
 
-          prerr_endline(
-          Printf.sprintf(
-            "SVG: string container size: w=%f h=%f\n",
-            SVG.getContainerWidth(svg),
-            SVG.getContainerHeight(svg),
-          ));
+                prerr_endline(
+                  Printf.sprintf(
+                    "SVG: string container size: w=%f h=%f\n",
+                    SVG.getContainerWidth(svg),
+                    SVG.getContainerHeight(svg),
+                  ),
+                );
 
-          Draw.CanvasContext.drawSVG(~svg, canvasContext);
-          })
+                Draw.CanvasContext.drawSVG(~svg, canvasContext);
+              }
+            )
           | Error(_) => ()
           }
-        })
+        }}
       />
     </View>;
   };
