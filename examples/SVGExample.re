@@ -480,6 +480,8 @@ module SVGExample = {
     let container = [
       backgroundColor(Color.rgba(1., 1., 1., 0.1)),
       flexDirection(`Row),
+      flexGrow(1),
+      position(`Relative),
     ];
 
     let buttons = [width(200), color(Colors.white), marginLeft(10)];
@@ -519,36 +521,66 @@ module SVGExample = {
 
     <View style=Styles.container>
       <Canvas
+        style=Style.[
+          position(`Absolute),
+          top(0),
+          left(0),
+          bottom(0),
+          right(0),
+          backgroundColor(Revery.Colors.black),
+        ]
         render={(canvasContext, _dimensions) => {
           switch (currentExample) {
           | Ok(svg) =>
-            Skia.(
-              {
-                let svgStr = {|
+            Skia.
+              (
+                {
+                  let svgStr = {|
       <svg width="400" height="180">
         <rect x="50" y="20" width="150" height="150" style="fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />
       </svg>
     |};
-                let stream =
-                  Stream.makeMemoryStreamWithData(
-                    svgStr,
-                    String.length(svgStr),
-                  );
+                  let stream =
+                    Stream.makeMemoryStreamWithData(
+                      svgStr,
+                      String.length(svgStr),
+                    );
 
-                let svg = SVG.makeFromStream(stream);
-                SVG.setContainerSize(svg, 200., 200.);
+                  let svg = SVG.makeFromStream(stream);
+                  SVG.setContainerSize(svg, 200., 200.);
 
-                prerr_endline(
-                  Printf.sprintf(
-                    "SVG: string container size: w=%f h=%f\n",
-                    SVG.getContainerWidth(svg),
-                    SVG.getContainerHeight(svg),
-                  ),
-                );
-
-                Draw.CanvasContext.drawSVG(~svg, canvasContext);
-              }
-            )
+                  Draw.CanvasContext.drawSVG(~svg, canvasContext);
+                }
+              )
+              // let layer =
+              //   Draw.CanvasContext.createLayer(
+              //     ~forceCpu=true,
+              //     ~width=1200l,
+              //     ~height=1200l,
+              //     canvasContext,
+              //   );
+              // prerr_endline(
+              //   Printf.sprintf(
+              //     "SVG: string container size: w=%f h=%f\n",
+              //     SVG.getContainerWidth(svg),
+              //     SVG.getContainerHeight(svg),
+              //   ),
+              // );
+              // switch (layer) {
+              // | None => ()
+              // | Some(layer) =>
+              //   prerr_endline("Trying to draw!");
+              //   Draw.CanvasContext.drawSVG(~svg, layer);
+              //   Draw.CanvasContext.flush(layer);
+              //   let paint = Skia.Paint.make();
+              //   Draw.CanvasContext.drawLayer(
+              //     ~paint,
+              //     ~layer,
+              //     ~x=50.,
+              //     ~y=50.,
+              //     canvasContext,
+              //   );
+              // };
           | Error(_) => ()
           }
         }}
