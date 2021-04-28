@@ -302,10 +302,15 @@ let svgSurface = makeSurface(1280l, 1280l) |> Option.get;
 let canvas = Surface.getCanvas(surface);
 let svgCanvas = Surface.getCanvas(svgSurface);
 
+let str = "abcdefg";
+let stream = Stream.makeMemoryStreamWithData(str, String.length(str));
+
 draw(canvas);
 drawSvg(svgCanvas);
 
 emitPng("skia-c-example.png", surface);
-emitPng("skia-svg-example.png", svgSurface);
+// emitPng("skia-svg-example.png", svgSurface);
+
+Gc.full_major();
 
 print_endline("Done!");
