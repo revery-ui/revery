@@ -1147,9 +1147,13 @@ module M = (F: FOREIGN) => {
   module SVG = {
     type t = ptr(structure(SkiaTypes.SVG.t));
     let t = ptr(SkiaTypes.SVG.t);
+    let maybeT = ptr_opt(SkiaTypes.SVG.t);
 
     let makeFromStream =
-      foreign("sk_svgdom_create_from_stream", Stream.t @-> returning(t));
+      foreign(
+        "sk_svgdom_create_from_stream",
+        Stream.t @-> returning(maybeT),
+      );
 
     let render =
       foreign("sk_svgdom_render", t @-> Canvas.t @-> returning(void));

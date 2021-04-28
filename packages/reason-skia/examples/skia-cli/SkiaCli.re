@@ -281,7 +281,7 @@ let drawSvg = canvas => {
     let stream =
       Stream.makeMemoryStreamWithData(svgStr, String.length(svgStr));
 
-    let svg = SVG.makeFromStream(stream);
+    let svg = SVG.makeFromStream(stream) |> Option.get;
     SVG.setContainerSize(svg, 10., 50.);
 
     Printf.printf(

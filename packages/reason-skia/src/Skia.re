@@ -950,10 +950,15 @@ module Surface = {
 };
 
 module SVG = {
-  type t = SkiaWrapped.SVG.t;
-  let makeFromStream = SkiaWrapped.SVG.makeFromStream;
-  let render = SkiaWrapped.SVG.render;
-  let setContainerSize = SkiaWrapped.SVG.setContainerSize;
-  let getContainerWidth = SkiaWrapped.SVG.getContainerWidth;
-  let getContainerHeight = SkiaWrapped.SVG.getContainerHeight;
+  type t = {
+    svg: SkiaWrapped.SVG.t,
+    stream: SkiaWrapped.Stream.t,
+  };
+  let makeFromStream = stream =>
+    SkiaWrapped.SVG.makeFromStream(stream)
+    |> Option.map(svg => {svg, stream});
+  let render = t => SkiaWrapped.SVG.render(t.svg);
+  let setContainerSize = t => SkiaWrapped.SVG.setContainerSize(t.svg);
+  let getContainerWidth = t => SkiaWrapped.SVG.getContainerWidth(t.svg);
+  let getContainerHeight = t => SkiaWrapped.SVG.getContainerHeight(t.svg);
 };

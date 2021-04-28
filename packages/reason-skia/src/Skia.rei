@@ -550,7 +550,7 @@ module Surface: {
 module SVG: {
   type t;
 
-  let makeFromStream: Stream.t => t;
+  let makeFromStream: Stream.t => option(t);
   let render: (t, Canvas.t) => unit;
   let setContainerSize: (t, float, float) => unit;
   let getContainerWidth: t => float;
