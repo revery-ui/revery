@@ -665,7 +665,14 @@ module Stream = {
   let hasLength = SkiaWrapped.Stream.hasLength;
   let getLength = SkiaWrapped.Stream.getLength;
 
-  let makeFileStream = SkiaWrapped.Stream.makeFileStream;
+  let makeFileStream = path => {
+    let maybeStream = SkiaWrapped.Stream.makeFileStream(path);
+    maybeStream
+    |> Option.iter(stream =>
+         Gc.finalise(SkiaWrapped.Stream.deleteFileStream, stream)
+       );
+    maybeStream;
+  };
 
   let makeMemoryStreamWithData = (str, length) => {
     let stream =
@@ -960,7 +967,10 @@ module SVG = {
   };
   let makeFromStream = stream =>
     SkiaWrapped.SVG.makeFromStream(stream)
-    |> Option.map(svg => {svg, stream});
+    |> Option.map(svg => {
+      svg |> Gc.finalise(SkiaWrapped.SVG.delete);
+      {svg, stream};
+    });
   let render = t => SkiaWrapped.SVG.render(t.svg);
   let setContainerSize = t => SkiaWrapped.SVG.setContainerSize(t.svg);
   let getContainerWidth = t => SkiaWrapped.SVG.getContainerWidth(t.svg);

@@ -1169,5 +1169,8 @@ module M = (F: FOREIGN) => {
 
     let getContainerHeight =
       foreign("sk_svgdom_get_container_height", t @-> returning(float));
+
+    let delete =
+      foreign("sk_svgdom_unref", t @-> returning(void));
   };
 };
