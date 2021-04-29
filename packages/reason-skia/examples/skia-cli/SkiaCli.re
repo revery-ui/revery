@@ -272,8 +272,7 @@ let draw = canvas => {
 
 let drawSvg = canvas => {
   let drawFromFile = () => {
-    let stream =
-      Stream.makeFileStream("./assets/ocaml.svg") |> Option.get;
+    let stream = Stream.makeFileStream("./assets/ocaml.svg") |> Option.get;
 
     let svg = SVG.makeFromStream(stream) |> Option.get;
 
@@ -299,8 +298,8 @@ let drawSvg = canvas => {
           <circle id="pointC" cx="400" cy="350" r="3" />
         </g>
       </svg>
-    |}
-    
+    |};
+
     let stream =
       Stream.makeMemoryStreamWithData(svgStr, String.length(svgStr));
 
@@ -332,6 +331,5 @@ emitPng("skia-c-example.png", surface);
 emitPng("skia-svg-example.png", svgSurface);
 
 Gc.full_major();
-
 
 print_endline("Done!");

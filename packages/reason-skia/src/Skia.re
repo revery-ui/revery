@@ -968,9 +968,9 @@ module SVG = {
   let makeFromStream = stream =>
     SkiaWrapped.SVG.makeFromStream(stream)
     |> Option.map(svg => {
-      svg |> Gc.finalise(SkiaWrapped.SVG.delete);
-      {svg, stream};
-    });
+         svg |> Gc.finalise(SkiaWrapped.SVG.delete);
+         {svg, stream};
+       });
   let render = t => SkiaWrapped.SVG.render(t.svg);
   let setContainerSize = t => SkiaWrapped.SVG.setContainerSize(t.svg);
   let getContainerWidth = t => SkiaWrapped.SVG.getContainerWidth(t.svg);
