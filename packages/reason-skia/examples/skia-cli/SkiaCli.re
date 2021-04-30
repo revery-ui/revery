@@ -271,8 +271,8 @@ let draw = canvas => {
 };
 
 let drawSvg = canvas => {
-  let drawFromFile = () => {
-    let stream = Stream.makeFileStream("./assets/ocaml.svg") |> Option.get;
+  let drawFromFile = dX => {
+    let stream = Stream.makeFileStream("./assets/revery.svg") |> Option.get;
 
     let svg = SVG.makeFromStream(stream) |> Option.get;
 
@@ -282,12 +282,15 @@ let drawSvg = canvas => {
       SVG.getContainerHeight(svg),
     );
 
+    Canvas.translate(canvas, dX, 0.);
+
     SVG.render(svg, canvas);
+    SVG.getContainerWidth(svg);
   };
 
-  let drawFromString = () => {
+  let drawFromString = dX => {
     let svgStr = {|
-      <svg>
+      <svg width="100%" height="10%">
         <path id="lineAB" d="M 100 350 l 150 -300" stroke="red" stroke-width="3" fill="none" />
         <path id="lineBC" d="M 250 50 l 150 300" stroke="red" stroke-width="3" fill="none" />
         <path d="M 175 200 l 150 0" stroke="green" stroke-width="3" fill="none" />
@@ -311,11 +314,13 @@ let drawSvg = canvas => {
       SVG.getContainerHeight(svg),
     );
 
+    Canvas.translate(canvas, dX, 0.);
+
     SVG.render(svg, canvas);
+    SVG.getContainerWidth(svg);
   };
 
-  drawFromFile();
-  drawFromString();
+  drawFromFile(0.) |> drawFromString |> ignore;
 };
 
 let surface = makeSurface(640l, 480l) |> Option.get;
