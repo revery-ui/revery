@@ -420,6 +420,12 @@ module M = (T: TYPE) => {
     let t = typedef(t, "sk_image_t");
   };
 
+  module SVG = {
+    type t;
+    let t: typ(structure(t)) = structure("sk_svgdom_t");
+    let t = typedef(t, "sk_svgdom_t");
+  };
+
   type pixelGeometry =
     | Unknown
     | RgbH

@@ -23,20 +23,42 @@ module M = (F: FOREIGN) => {
     let t = uint32_t;
   };
 
+  type data = ptr(structure(SkiaTypes.Data.t));
+  let data = ptr(SkiaTypes.Data.t);
+
   module Stream = {
     type t = ptr(structure(SkiaTypes.Stream.t));
     let t = ptr(SkiaTypes.Stream.t);
+    let maybeT = ptr_opt(SkiaTypes.Stream.t);
 
     let hasLength = foreign("sk_stream_has_length", t @-> returning(bool));
 
     let getLength = foreign("sk_stream_get_length", t @-> returning(int));
 
     let delete = foreign("sk_stream_destroy", t @-> returning(void));
+
+    let makeFileStream =
+      foreign("sk_filestream_new", string @-> returning(maybeT));
+
+    let deleteFileStream =
+      foreign("sk_filestream_destroy", t @-> returning(void));
+
+    let makeMemoryStreamFromString =
+      foreign(
+        "sk_memorystream_new_with_data",
+        string @-> int @-> bool @-> returning(t),
+      );
+
+    let makeMemoryStreamFromData =
+      foreign("sk_memorystream_new_with_skdata", data @-> returning(t));
+
+    let deleteMemoryStream =
+      foreign("sk_memorystream_destroy", t @-> returning(void));
   };
 
   module Data = {
-    type t = ptr(structure(SkiaTypes.Data.t));
-    let t = ptr(SkiaTypes.Data.t);
+    type t = data;
+    let t = data;
 
     let makeFromFileName =
       foreign(
@@ -1120,5 +1142,34 @@ module M = (F: FOREIGN) => {
     let getHeight = foreign("sk_surface_get_height", t @-> returning(int));
     let getProps =
       foreign("sk_surface_get_props", t @-> returning(SurfaceProps.t));
+  };
+
+  module SVG = {
+    type t = ptr(structure(SkiaTypes.SVG.t));
+    let t = ptr(SkiaTypes.SVG.t);
+    let maybeT = ptr_opt(SkiaTypes.SVG.t);
+
+    let makeFromStream =
+      foreign(
+        "sk_svgdom_create_from_stream",
+        Stream.t @-> returning(maybeT),
+      );
+
+    let render =
+      foreign("sk_svgdom_render", t @-> Canvas.t @-> returning(void));
+
+    let setContainerSize =
+      foreign(
+        "sk_svgdom_set_container_size",
+        t @-> float @-> float @-> returning(void),
+      );
+
+    let getContainerWidth =
+      foreign("sk_svgdom_get_container_width", t @-> returning(float));
+
+    let getContainerHeight =
+      foreign("sk_svgdom_get_container_height", t @-> returning(float));
+
+    let delete = foreign("sk_svgdom_unref", t @-> returning(void));
   };
 };

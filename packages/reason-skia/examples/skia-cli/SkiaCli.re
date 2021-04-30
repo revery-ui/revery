@@ -270,8 +270,71 @@ let draw = canvas => {
   Canvas.drawRectLtwh(canvas, 100., 100., 100., 100., fill);
 };
 
+let drawSvg = canvas => {
+  let drawFromFile = dX => {
+    let stream = Stream.makeFileStream("./assets/revery.svg") |> Option.get;
+
+    let svg = SVG.makeFromStream(stream) |> Option.get;
+
+    Printf.printf(
+      "SVG: file container size: w=%f h=%f\n",
+      SVG.getContainerWidth(svg),
+      SVG.getContainerHeight(svg),
+    );
+
+    Canvas.translate(canvas, dX, 0.);
+
+    SVG.render(svg, canvas);
+    SVG.getContainerWidth(svg);
+  };
+
+  let drawFromString = dX => {
+    let svgStr = {|
+      <svg width="100%" height="10%">
+        <path id="lineAB" d="M 100 350 l 150 -300" stroke="red" stroke-width="3" fill="none" />
+        <path id="lineBC" d="M 250 50 l 150 300" stroke="red" stroke-width="3" fill="none" />
+        <path d="M 175 200 l 150 0" stroke="green" stroke-width="3" fill="none" />
+        <path d="M 100 350 q 150 -300 300 0" stroke="blue" stroke-width="5" fill="none" />
+        <g stroke="black" stroke-width="3" fill="black">
+          <circle id="pointA" cx="100" cy="350" r="3" />
+          <circle id="pointB" cx="250" cy="50" r="3" />
+          <circle id="pointC" cx="400" cy="350" r="3" />
+        </g>
+      </svg>
+    |};
+
+    let stream =
+      Stream.makeMemoryStreamFromString(svgStr, String.length(svgStr));
+
+    let svg = SVG.makeFromStream(stream) |> Option.get;
+
+    Printf.printf(
+      "SVG: string container size: w=%f h=%f\n",
+      SVG.getContainerWidth(svg),
+      SVG.getContainerHeight(svg),
+    );
+
+    Canvas.translate(canvas, dX, 0.);
+
+    SVG.render(svg, canvas);
+    SVG.getContainerWidth(svg);
+  };
+
+  drawFromFile(0.) |> drawFromString |> ignore;
+};
+
 let surface = makeSurface(640l, 480l) |> Option.get;
+let svgSurface = makeSurface(1280l, 1280l) |> Option.get;
+
 let canvas = Surface.getCanvas(surface);
+let svgCanvas = Surface.getCanvas(svgSurface);
+
 draw(canvas);
+drawSvg(svgCanvas);
+
 emitPng("skia-c-example.png", surface);
+emitPng("skia-svg-example.png", svgSurface);
+
+Gc.full_major();
+
 print_endline("Done!");

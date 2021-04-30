@@ -19,7 +19,6 @@ build: [
   ["dune" "runtest" "-p" name "-j" jobs] {with-test}
   ["dune" "build" "-p" name "-j" jobs] {with-doc}
 ]
-name: "junit"
 synopsis: "JUnit XML reports generation library"
 description: "JUnit XML reports generation library"
 url {

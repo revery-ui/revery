@@ -657,16 +657,39 @@ module ColorSpace = {
   type t = SkiaWrapped.ColorSpace.t;
 };
 
+type data = SkiaWrapped.data;
+
 module Stream = {
   type t = SkiaWrapped.Stream.t;
 
   let hasLength = SkiaWrapped.Stream.hasLength;
   let getLength = SkiaWrapped.Stream.getLength;
+
+  let makeFileStream = path => {
+    let maybeStream = SkiaWrapped.Stream.makeFileStream(path);
+    maybeStream
+    |> Option.iter(stream =>
+         Gc.finalise(SkiaWrapped.Stream.deleteFileStream, stream)
+       );
+    maybeStream;
+  };
+
+  let makeMemoryStreamFromString = (str, length) => {
+    let stream =
+      SkiaWrapped.Stream.makeMemoryStreamFromString(str, length, true);
+    Gc.finalise(SkiaWrapped.Stream.deleteMemoryStream, stream);
+    stream;
+  };
+
+  let makeMemoryStreamFromData = data => {
+    let stream = SkiaWrapped.Stream.makeMemoryStreamFromData(data);
+    Gc.finalise(SkiaWrapped.Stream.deleteMemoryStream, stream);
+    stream;
+  };
 };
 
 module Data = {
-  type t = SkiaWrapped.Data.t;
-
+  type t = data;
   let makeString = data => {
     let dataPtr =
       Ctypes.from_voidp(Ctypes.char, SkiaWrapped.Data.getData(data));
@@ -939,4 +962,21 @@ module Surface = {
   let getWidth = SkiaWrapped.Surface.getWidth;
   let getHeight = SkiaWrapped.Surface.getHeight;
   let getProps = SkiaWrapped.Surface.getProps;
+};
+
+module SVG = {
+  type t = {
+    svg: SkiaWrapped.SVG.t,
+    stream: SkiaWrapped.Stream.t,
+  };
+  let makeFromStream = stream =>
+    SkiaWrapped.SVG.makeFromStream(stream)
+    |> Option.map(svg => {
+         svg |> Gc.finalise(SkiaWrapped.SVG.delete);
+         {svg, stream};
+       });
+  let render = t => SkiaWrapped.SVG.render(t.svg);
+  let setContainerSize = t => SkiaWrapped.SVG.setContainerSize(t.svg);
+  let getContainerWidth = t => SkiaWrapped.SVG.getContainerWidth(t.svg);
+  let getContainerHeight = t => SkiaWrapped.SVG.getContainerHeight(t.svg);
 };

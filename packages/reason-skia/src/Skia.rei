@@ -1,5 +1,6 @@
 type colorType = SkiaWrapped.colorType;
 type alphaType = SkiaWrapped.alphaType;
+type data = SkiaWrapped.data;
 
 module Color: {
   type t = int32;
@@ -39,15 +40,16 @@ module Stream: {
 
   let hasLength: t => bool;
   let getLength: t => int;
+  let makeFileStream: string => option(t);
+  let makeMemoryStreamFromString: (string, int) => t;
+  let makeMemoryStreamFromData: data => t;
 };
 
 module Data: {
-  type t;
+  type t = data;
 
   let makeFromFileName: string => option(t);
-
   let makeString: t => string;
-
   let makeFromStream: (Stream.t, int) => t;
 };
 
@@ -543,4 +545,14 @@ module Surface: {
   let getWidth: t => int;
   let getHeight: t => int;
   let getProps: t => SurfaceProps.t;
+};
+
+module SVG: {
+  type t;
+
+  let makeFromStream: Stream.t => option(t);
+  let render: (t, Canvas.t) => unit;
+  let setContainerSize: (t, float, float) => unit;
+  let getContainerWidth: t => float;
+  let getContainerHeight: t => float;
 };

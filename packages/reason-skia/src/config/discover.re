@@ -102,6 +102,7 @@ let flags = os =>
     @ cclib("-ljpeg")
     @ ccopt("-I/usr/include")
     @ ccopt("-lstdc++")
+    @ ccopt("-fPIC")
   | Windows =>
     []
     @ cclib("-lskia")
@@ -110,7 +111,14 @@ let flags = os =>
     @ ccopt("-L" ++ getenv("SKIA_LIB_PATH"))
   };
 
-let cflags = os =>
+let skiaIncludeFlags = {
+  let skiaIncludePath = getenv("SKIA_INCLUDE_PATH");
+  Sys.readdir(skiaIncludePath)
+  |> Array.map(path => "-I" ++ skiaIncludePath ++ "/" ++ path)
+  |> Array.append([|"-I" ++ skiaIncludePath|])
+  |> Array.to_list;
+};
+let cflags = os => {
   switch (os) {
   | Android =>
     []
@@ -122,8 +130,7 @@ let cflags = os =>
     @ ["-landroid"]
     @ ["-lskia"]
     @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+    @ skiaIncludeFlags
     @ ["-L" ++ getenv("SKIA_LIB_PATH")]
     @ ["-L" ++ getenv("SDL2_LIB_PATH")]
     @ ["-L" ++ getenv("JPEG_LIB_PATH")]
@@ -134,32 +141,33 @@ let cflags = os =>
     @ [sdl2FilePath]
     @ ["-lskia"]
     @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+    @ skiaIncludeFlags
     @ ["-L" ++ getenv("SKIA_LIB_PATH")]
     @ ["-L" ++ getenv("SDL2_LIB_PATH")]
     @ ["-L" ++ getenv("JPEG_LIB_PATH")]
     @ ["-lstdc++"]
     @ ["-ljpeg"]
+    @ ["-fPIC"]
   | IOS
-  | Mac =>
-    []
-    @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+  | Mac => [] @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")] @ skiaIncludeFlags
   | Windows =>
     []
     @ ["-std=c++1y"]
     @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+    @ ["-L" ++ getenv("SKIA_LIB_PATH")]
+    @ ["-lskia"]
+    @ skiaIncludeFlags
   };
+};
 
 let libs = os =>
   switch (os) {
   | Android =>
     []
     @ [
+      "-L" ++ getenv("SDL2_LIB_PATH"),
+      "-L" ++ getenv("SKIA_LIB_PATH"),
+      "-L" ++ getenv("FREETYPE2_LIB_PATH"),
       sdl2FilePath,
       "-lGLESv2",
       "-lGLESv1_CM",
@@ -172,9 +180,6 @@ let libs = os =>
       "-L" ++ getenv("JPEG_LIB_PATH"),
       "-ljpeg",
       "-lstdc++",
-      "-L" ++ getenv("SDL2_LIB_PATH"),
-      "-L" ++ getenv("SKIA_LIB_PATH"),
-      "-L" ++ getenv("FREETYPE2_LIB_PATH"),
     ]
   | IOS =>
     []
@@ -207,6 +212,9 @@ let libs = os =>
   | Linux =>
     []
     @ [
+      "-L" ++ getenv("SDL2_LIB_PATH"),
+      "-L" ++ getenv("SKIA_LIB_PATH"),
+      "-L" ++ getenv("FREETYPE2_LIB_PATH"),
       sdl2FilePath,
       "-lskia",
       "-lfreetype",
@@ -217,9 +225,7 @@ let libs = os =>
       "-ljpeg",
       "-lpthread",
       "-lstdc++",
-      "-L" ++ getenv("SDL2_LIB_PATH"),
-      "-L" ++ getenv("SKIA_LIB_PATH"),
-      "-L" ++ getenv("FREETYPE2_LIB_PATH"),
+      "-fPIC",
     ]
   | Mac =>
     []
