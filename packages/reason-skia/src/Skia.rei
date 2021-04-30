@@ -40,9 +40,9 @@ module Stream: {
 
   let hasLength: t => bool;
   let getLength: t => int;
-  let makeFromData: data => t;
   let makeFileStream: string => option(t);
-  let makeMemoryStreamWithData: (string, int) => t;
+  let makeMemoryStreamFromString: (string, int) => t;
+  let makeMemoryStreamFromData: data => t;
 };
 
 module Data: {

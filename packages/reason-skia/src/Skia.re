@@ -674,14 +674,18 @@ module Stream = {
     maybeStream;
   };
 
-  let makeMemoryStreamWithData = (str, length) => {
+  let makeMemoryStreamFromString = (str, length) => {
     let stream =
-      SkiaWrapped.Stream.makeMemoryStreamWithData(str, length, true);
+      SkiaWrapped.Stream.makeMemoryStreamFromString(str, length, true);
     Gc.finalise(SkiaWrapped.Stream.deleteMemoryStream, stream);
     stream;
   };
 
-  let makeFromData = SkiaWrapped.Stream.makeFromData;
+  let makeMemoryStreamFromData = data => {
+    let stream = SkiaWrapped.Stream.makeMemoryStreamFromData(data);
+    Gc.finalise(SkiaWrapped.Stream.deleteMemoryStream, stream);
+    stream;
+  };
 };
 
 module Data = {

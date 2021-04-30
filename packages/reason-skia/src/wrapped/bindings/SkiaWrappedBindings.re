@@ -43,17 +43,17 @@ module M = (F: FOREIGN) => {
     let deleteFileStream =
       foreign("sk_filestream_destroy", t @-> returning(void));
 
-    let makeMemoryStreamWithData =
+    let makeMemoryStreamFromString =
       foreign(
         "sk_memorystream_new_with_data",
         string @-> int @-> bool @-> returning(t),
       );
 
+    let makeMemoryStreamFromData =
+      foreign("sk_memorystream_new_with_skdata", data @-> returning(t));
+
     let deleteMemoryStream =
       foreign("sk_memorystream_destroy", t @-> returning(void));
-
-    let makeFromData =
-      foreign("sk_memorystream_new_with_skdata", data @-> returning(t));
   };
 
   module Data = {
