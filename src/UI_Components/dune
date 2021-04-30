@@ -4,4 +4,4 @@
   (pps brisk-reconciler.ppx lwt_ppx))
  (public_name Revery.UI_Components)
  (libraries lwt lwt.unix sdl2 flex omd Revery_Core Revery_Math Revery_UI
-   Revery_UI_Primitives Revery_UI_Hooks Revery_SVG))
+   Revery_UI_Primitives Revery_UI_Hooks))

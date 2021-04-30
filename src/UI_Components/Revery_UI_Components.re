@@ -28,7 +28,6 @@ module Row = Row;
 module ScrollView = ScrollView;
 module Slider = Slider;
 module Stack = Stack;
-module SVGString = SVGString;
 module RadioButtons = RadioButtons;
 module RadioButtonsInt =
   RadioButtons.Make({
