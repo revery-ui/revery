@@ -37,6 +37,7 @@ module RadioButtonsString =
   RadioButtons.Make({
     type t = string;
   });
+module SVG = SVG;
 module ClickableText = ClickableText;
 module Ticker = Ticker;
 module Tree = Tree;
