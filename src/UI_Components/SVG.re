@@ -64,11 +64,6 @@ let make =
         (scale, scale);
       | _ => (1., 1.)
       };
-    let yScale =
-      switch (maybeHeight) {
-      | Some(height) when intrinsicHeight != 0. => height /. intrinsicHeight
-      | _ => 1.
-      };
 
     if (intrinsicHeight == 0. && intrinsicWidth == 0.) {
       SVG.setContainerSize(svg, canvasWidth, canvasHeight);
@@ -76,8 +71,8 @@ let make =
 
     let canvasStyle =
       Style.[
-        width(canvasWidth |> int_of_float),
-        height(canvasHeight |> int_of_float),
+        width(canvasWidth +. 0.5 |> int_of_float),
+        height(canvasHeight +. 0.5 |> int_of_float),
       ];
 
     <Revery_UI_Primitives.Canvas

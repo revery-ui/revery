@@ -397,6 +397,8 @@ module SVGExample = {
       let (_, data) = List.hd(examples);
       Hooks.state(data);
     };
+    let%hook (width, setWidth) = Hooks.state(300.);
+    let%hook (height, setHeight) = Hooks.state(300.);
 
     let buttons =
       List.map(
@@ -406,13 +408,27 @@ module SVGExample = {
     let onChange = data => setExample(_ => data);
 
     <View style=Styles.container>
-      <RadioButtonsString
-        style=Styles.buttons
-        onChange
-        defaultSelected=0
-        buttons
-      />
-      <SVG width=350. height=200. src={`Str(currentExample)} scaleMode=`Fit />
+      <View>
+        <RadioButtonsString
+          style=Styles.buttons
+          onChange
+          defaultSelected=0
+          buttons
+        />
+        <Slider
+          onValueChanged={w => setWidth(_ => w)}
+          maximumValue=300.
+          minimumValue=50.
+          initialValue=width
+        />
+        <Slider
+          onValueChanged={h => setHeight(_ => h)}
+          maximumValue=500.
+          minimumValue=50.
+          initialValue=height
+        />
+      </View>
+      <SVG width height src={`Str(currentExample)} scaleMode=`Fit />
     </View>;
   };
 };
