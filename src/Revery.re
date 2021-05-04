@@ -34,5 +34,3 @@ module Debug = {
 module Utility = {
   include Revery_Utility;
 };
-
-module SVG = Revery_SVG;
