@@ -77,11 +77,14 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Window.onMouseWheel(
       window,
       m => {
+        prerr_endline ("-- Got mouse wheel!");
         let evt =
           Revery_Core.Events.InternalMouseWheel({
             deltaX: m.deltaX,
             deltaY: m.deltaY,
             keymod: m.keymod,
+            mouseX: m.mouseX,
+            mouseY: m.mouseY,
           });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },

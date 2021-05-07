@@ -113,7 +113,7 @@ let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =
   | InternalMouseDown(_) => Cursor.get(c)
   | InternalMouseMove(e) => (e.mouseX, e.mouseY)
   | InternalMouseUp(_) => Cursor.get(c)
-  | InternalMouseWheel(_) => Cursor.get(c)
+  | InternalMouseWheel(e) => (e.mouseX, e.mouseY)
   | InternalMouseEnter(_) => Cursor.get(c)
   | InternalMouseLeave(_) => Cursor.get(c)
   | InternalMouseOver(_) => Cursor.get(c)
@@ -209,6 +209,11 @@ let isMouseMoveEv =
   fun
   | MouseMove(_) => true
   | _ => false;
+
+let isMouseWheelEv =
+fun
+| MouseWheel(_) => true
+| _ => false;
 
 let storedNodesUnderCursor = ref([]);
 
@@ -364,35 +369,37 @@ let rec handleMouseEnterDiff = (deepestNode, evtParams, ~newNodes=[], ()) => {
 };
 
 let dispatch =
-    (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node) => {
+    (cursor: Cursor.t, evt: Events.internalMouseEvents, rootNode: Node.node) => {
   let eventToSend = internalToExternalEvent(cursor, evt);
   Log.tracef(m =>
     m(
       "Dispatching event from node %i: %s",
-      node#getInternalId(),
+      rootNode#getInternalId(),
       NodeEvents.show_event(eventToSend),
     )
   );
 
-  if (node#hasRendered()) {
+  if (rootNode#hasRendered()) {
     let (mouseX, mouseY) = getPositionFromMouseEvent(cursor, evt);
 
     if (isMouseDownEv(eventToSend)) {
-      switch (getFirstFocusable(node, mouseX, mouseY)) {
-      | Some(node) => Focus.focus(node)
+      switch (getFirstFocusable(rootNode, mouseX, mouseY)) {
+      | Some(node) => Focus.focus(rootNode)
       | None => Focus.loseFocus()
       };
     };
 
     if (Capture.isSet()) {
+      prerr_endline ("Capture set?");
       Capture.dispatch(eventToSend);
     } else {
-      let deepestNode = getTopMostNode(node, mouseX, mouseY);
+      let currentTopNode = getTopMostNode(rootNode, mouseX, mouseY);
+      prerr_endline ("Capture NOT set - top most node: " ++ string_of_int(rootNode#getInternalId()));
 
-      if (isMouseMoveEv(eventToSend)) {
+      let deepestNode = if (isMouseMoveEv(eventToSend)) {
         let mouseMoveEventParams = getMouseMoveEventParams(cursor, evt);
 
-        switch (deepestNode) {
+        switch (currentTopNode) {
         | None =>
           // if no node found, call bubbled MouseOut on deepestStoredNode if there's some stored nodes
           // And recursively send mouseLeave events to storedNodes if they exist
@@ -418,6 +425,16 @@ let dispatch =
             }
           }
         };
+
+        currentTopNode;
+      } else if(isMouseWheelEv(eventToSend)) {
+        // Sometimes, we can get mouse wheel events even if the current item isn't focused.
+        // So let's double check the node under the cursor
+        prerr_endline ("Mouse wheel event - getting another node")
+        getTopMostNode(rootNode, mouseX, mouseY)
+        
+      } else {
+        currentTopNode
       };
 
       switch (deepestNode) {
@@ -425,6 +442,7 @@ let dispatch =
       | Some(node) =>
         let bbox = node#getBoundingBox();
         DebugDraw.setActive(bbox);
+        prerr_endline ("--Trying to bubble: " ++ string_of_int(node#getInternalId()));
         bubble(node, eventToSend);
         let cursor = node#getCursorStyle();
         Event.dispatch(onCursorChanged, cursor);

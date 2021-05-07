@@ -26,6 +26,8 @@ type mouseMoveEvent = {
 type mouseWheelEvent = {
   deltaX: float,
   deltaY: float,
+  mouseX: float,
+  mouseY: float,
   keymod: Key.Keymod.t,
 };
 
