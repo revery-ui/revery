@@ -211,9 +211,9 @@ let isMouseMoveEv =
   | _ => false;
 
 let isMouseWheelEv =
-fun
-| MouseWheel(_) => true
-| _ => false;
+  fun
+  | MouseWheel(_) => true
+  | _ => false;
 
 let storedNodesUnderCursor = ref([]);
 
@@ -394,45 +394,52 @@ let dispatch =
     } else {
       let currentTopNode = getTopMostNode(rootNode, mouseX, mouseY);
 
-      let deepestNode = if (isMouseMoveEv(eventToSend)) {
-        let mouseMoveEventParams = getMouseMoveEventParams(cursor, evt);
+      let deepestNode =
+        if (isMouseMoveEv(eventToSend)) {
+          let mouseMoveEventParams = getMouseMoveEventParams(cursor, evt);
 
-        switch (currentTopNode) {
-        | None =>
-          // if no node found, call bubbled MouseOut on deepestStoredNode if there's some stored nodes
-          // And recursively send mouseLeave events to storedNodes if they exist
-          switch (storedNodesUnderCursor^) {
-          | [] => ()
-          | [node, ..._] => bubble(node, MouseOut(mouseMoveEventParams))
+          switch (currentTopNode) {
+          | None =>
+            // if no node found, call bubbled MouseOut on deepestStoredNode if there's some stored nodes
+            // And recursively send mouseLeave events to storedNodes if they exist
+            switch (storedNodesUnderCursor^) {
+            | [] => ()
+            | [node, ..._] => bubble(node, MouseOut(mouseMoveEventParams))
+            };
+
+            sendMouseLeaveEvents(
+              storedNodesUnderCursor^,
+              mouseMoveEventParams,
+            );
+
+          | Some(deepNode) =>
+            switch (storedNodesUnderCursor^) {
+            | [] =>
+              // If some deepNode is found and there are no storedNodes
+              // Traverse the tree and call MouseEnter on each  node -  https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
+              // And call bubbled MouseOver on deepNode
+              sendMouseEnterEvents(deepNode, mouseMoveEventParams);
+              bubble(deepNode, MouseOver(mouseMoveEventParams));
+            | [node, ..._] =>
+              // Only handle diff if the deepestStoredNode !==  the deepestFoundNode
+              if (node#getInternalId() != deepNode#getInternalId()) {
+                handleMouseEnterDiff(deepNode, mouseMoveEventParams, ());
+              }
+            }
           };
 
-          sendMouseLeaveEvents(storedNodesUnderCursor^, mouseMoveEventParams);
-
-        | Some(deepNode) =>
-          switch (storedNodesUnderCursor^) {
-          | [] =>
-            // If some deepNode is found and there are no storedNodes
-            // Traverse the tree and call MouseEnter on each  node -  https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
-            // And call bubbled MouseOver on deepNode
-            sendMouseEnterEvents(deepNode, mouseMoveEventParams);
-            bubble(deepNode, MouseOver(mouseMoveEventParams));
-          | [node, ..._] =>
-            // Only handle diff if the deepestStoredNode !==  the deepestFoundNode
-            if (node#getInternalId() != deepNode#getInternalId()) {
-              handleMouseEnterDiff(deepNode, mouseMoveEventParams, ());
-            }
-          }
+          currentTopNode;
+        } else if (isMouseWheelEv(eventToSend)) {
+          // Sometimes, we can get mouse wheel events even if the current item isn't focused.
+          // So let's double check the node under the cursor
+          getTopMostNode(
+            rootNode,
+            mouseX,
+            mouseY,
+          );
+        } else {
+          currentTopNode;
         };
-
-        currentTopNode;
-      } else if(isMouseWheelEv(eventToSend)) {
-        // Sometimes, we can get mouse wheel events even if the current item isn't focused.
-        // So let's double check the node under the cursor
-        getTopMostNode(rootNode, mouseX, mouseY)
-        
-      } else {
-        currentTopNode
-      };
 
       switch (deepestNode) {
       | None => ()
