@@ -390,11 +390,9 @@ let dispatch =
     };
 
     if (Capture.isSet()) {
-      prerr_endline ("Capture set?");
       Capture.dispatch(eventToSend);
     } else {
       let currentTopNode = getTopMostNode(rootNode, mouseX, mouseY);
-      prerr_endline ("Capture NOT set - top most node: " ++ string_of_int(rootNode#getInternalId()));
 
       let deepestNode = if (isMouseMoveEv(eventToSend)) {
         let mouseMoveEventParams = getMouseMoveEventParams(cursor, evt);
@@ -430,7 +428,6 @@ let dispatch =
       } else if(isMouseWheelEv(eventToSend)) {
         // Sometimes, we can get mouse wheel events even if the current item isn't focused.
         // So let's double check the node under the cursor
-        prerr_endline ("Mouse wheel event - getting another node")
         getTopMostNode(rootNode, mouseX, mouseY)
         
       } else {
@@ -442,7 +439,6 @@ let dispatch =
       | Some(node) =>
         let bbox = node#getBoundingBox();
         DebugDraw.setActive(bbox);
-        prerr_endline ("--Trying to bubble: " ++ string_of_int(node#getInternalId()));
         bubble(node, eventToSend);
         let cursor = node#getCursorStyle();
         Event.dispatch(onCursorChanged, cursor);

@@ -403,7 +403,5 @@ let init = app => {
   ();
 };
 
-Revery_Draw.DebugDraw.enable();
-
 Printexc.record_backtrace(true);
 App.start(init);

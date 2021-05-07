@@ -220,7 +220,6 @@ let%component make =
           : empty;
 
       let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
-        prerr_endline ("-- SCROLLVIEW - scroll");
         let horizontalScroll =
           wheelEvent.shiftKey || abs_float(wheelEvent.deltaX) > 0.;
 

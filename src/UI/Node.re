@@ -336,14 +336,11 @@ class node (()) = {
         NodeEvents.show_event(evt),
       )
     );
-    prerr_endline (Printf.sprintf("Trying to handle event - %d: %s ", _internalId, NodeEvents.show_event(evt)));
     switch (evt, _this#getEvents()) {
     | (MouseDown(c), {onMouseDown: Some(cb), _}) => cb(c)
     | (MouseMove(c), {onMouseMove: Some(cb), _}) => cb(c)
     | (MouseUp(c), {onMouseUp: Some(cb), _}) => cb(c)
-    | (MouseWheel(c), {onMouseWheel: Some(cb), _}) => 
-    prerr_endline (Printf.sprintf("--- calling cb for mousewheel - %d", _internalId));
-    cb(c)
+    | (MouseWheel(c), {onMouseWheel: Some(cb), _}) => cb(c)
     | (MouseEnter(c), {onMouseEnter: Some(cb), _}) => cb(c)
     | (MouseLeave(c), {onMouseLeave: Some(cb), _}) => cb(c)
     | (MouseOver(c), {onMouseOver: Some(cb), _}) => cb(c)

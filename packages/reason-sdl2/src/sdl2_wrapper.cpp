@@ -795,10 +795,6 @@ extern "C" {
         case SDL_MOUSEWHEEL:
             v = caml_alloc(1, 1);
 
-            int x, y;
-            SDL_GetGlobalMouseState(&x, &y);
-            fprintf(stderr, "LAST MOUSE STATE: %d, %d\n", x, y);
-
             vInner = caml_alloc(4, 0);
             Store_field(vInner, 0, Val_int(event->wheel.windowID));
             Store_field(vInner, 1, Val_int(event->wheel.x));
