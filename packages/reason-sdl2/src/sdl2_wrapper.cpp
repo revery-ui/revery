@@ -2044,6 +2044,20 @@ extern "C" {
         CAMLreturn(Val_int(SDL_CaptureMouse(enabled)));
     }
 
+    CAMLprim value resdl_SDL_GetGlobalMouseState(value vUnit) {
+        CAMLparam0();
+        CAMLlocal1(ret);
+
+        int x, y;
+        SDL_GetGlobalMouseState(&x, &y);
+
+        ret = caml_alloc(2, 0);
+        Store_field(ret, 0, Val_int(x));
+        Store_field(ret, 1, Val_int(y));
+
+        CAMLreturn(ret);
+    }
+
     CAMLprim value resdl_PassThrough(value v) {
         return v;
     };

@@ -372,6 +372,8 @@ module MouseButton = {
 
 module Mouse = {
   external capture: bool => int = "resdl_SDL_CaptureMouse";
+  external getGlobalPosition: unit => (int, int) =
+    "resdl_SDL_GetGlobalMouseState";
 };
 
 module Scancode = {

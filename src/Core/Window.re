@@ -411,9 +411,13 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
   Log.tracef(m => m("Window.handleEvent: %s", Sdl2.Event.show(sdlEvent)));
   switch (sdlEvent) {
   | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
+    let (windowX, windowY) = Sdl2.Window.getPosition(v.sdlWindow);
+    let (mouseX, mouseY) = Sdl2.Mouse.getGlobalPosition();
     let wheelEvent: Events.mouseWheelEvent = {
       deltaX: float(deltaX),
       deltaY: float(deltaY),
+      mouseX: float(mouseX - windowX),
+      mouseY: float(mouseY - windowY),
       keymod: Sdl2.Keymod.getState(),
     };
     Event.dispatch(v.onMouseWheel, wheelEvent);
