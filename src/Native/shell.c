@@ -15,6 +15,7 @@
 #elif USE_GTK
 #include "ReveryGtk.h"
 #endif
+#include "utilities.h"
 
 CAMLprim value revery_openURL(value vURL) {
     CAMLparam1(vURL);
