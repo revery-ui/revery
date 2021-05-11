@@ -41,7 +41,7 @@
     "@opam/dune-configurator": "*",
     "@opam/reason": "^3.6.2",
     "@opam/lru": "bryphe/lru:lru.opam#2708c70",
-    "@opam/lwt": "^4.0.0",
+    "@opam/lwt": "^5.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/markup": "0.8.2",
     "@opam/ppx_deriving": "*",
@@ -65,12 +65,11 @@
     "@reason-native/rely": "^3.2.1"
   },
   "resolutions": {
-    "@opam/conf-pkg-config": "1.2"
+    "@esy-ocaml/reason": "EduardoRFS/reason:reason.json#35aa4df3de0daa60bdc1133dcf97855decac48f7"
   },
   "devDependencies": {
-    "ocaml": "~4.11",
+    "ocaml": "4.12.x",
     "esy-astyle": "zbaylin/esy-astyle#59bc21a",
-    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#5df0ce2",
-    "@opam/ocamlformat": "^0.15.0"
+    "@opam/ocaml-lsp-server": "*"
   }
 }
