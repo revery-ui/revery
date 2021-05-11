@@ -86,20 +86,24 @@ const char **revery_open_files_cocoa(
             We NULL terminate it so we can get the size in the main function
         */
         int size = [urls count];
+        int actualSize = 0;
         const char **ret = malloc((size + 1) * sizeof(char *));
         // Copy the NSArray to the C-array
         for (int i = 0; i < size; i++) {
             NSString *tmp = [[urls objectAtIndex:i] path];
-            const char *sz= [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            const char *sz= [tmp cStringUsingEncoding:NSUTF8StringEncoding];
             // According to the Objective-C docs, the returned string
             // is only guaranteed to be valid for the lifetime of
             // the [NSString]:
             // https://developer.apple.com/documentation/foundation/nsstring/1408489-cstringusingencoding?language=objc
             // So we need to make a copy here...
-            ret[i] = strdup(sz);
+            if (sz != NULL) {
+                ret[actualSize] = strdup(sz);
+                actualSize++;
+            }
         }
         [urls release];
-        ret[size] = NULL;
+        ret[actualSize] = NULL;
         [keyWindow makeKeyWindow];
         return ret;
     } else {
