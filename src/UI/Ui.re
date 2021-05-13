@@ -35,7 +35,13 @@ type mouseBehavior =
 
 let getActiveWindow = () => _activeWindow^;
 
-let start = (window: Window.t, element: React.element(React.reveryNode)) => {
+let start =
+    (
+      ~onBeforeRender=() => (),
+      ~onAfterRender=() => (),
+      window: Window.t,
+      element: React.element(React.reveryNode),
+    ) => {
   let uiDirty = ref(true);
   let forceLayout = ref(true);
   let latestElement = ref(element);
@@ -171,6 +177,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
   Window.setRenderCallback(
     window,
     () => {
+      onBeforeRender();
       /*
        * The dirty flag needs to be cleared before rendering,
        * as some events during rendering might trigger a 'dirty',
@@ -191,6 +198,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
       if (forceRerender) {
         uiDirty := true;
       };
+      onAfterRender();
     },
   );
 
