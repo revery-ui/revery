@@ -16,7 +16,6 @@ type node = reveryNode;
 let onStale: Event.t(unit) = Event.create();
 
 let insertNode = (~parent: node, ~child: node, ~position) => {
-  child#markLayoutDirty();
   parent#addChild(child, position);
   parent;
 };
@@ -26,10 +25,7 @@ let deleteNode = (~parent: node, ~child: node, ~position as _) => {
   parent;
 };
 
-let moveNode = (~parent, ~child, ~from, ~to_) => {
-  prerr_endline(
-    Printf.sprintf("MoveNode %d: %d -> %d", child#getInternalId(), from, to_),
-  );
+let moveNode = (~parent, ~child as _, ~from as _, ~to_ as _) => {
   parent;
 };
 

@@ -177,7 +177,6 @@ let start =
     window,
     () => {
       onBeforeRender();
-      prerr_endline("On before render");
       /*
        * The dirty flag needs to be cleared before rendering,
        * as some events during rendering might trigger a 'dirty',
@@ -198,7 +197,6 @@ let start =
       if (forceRerender) {
         uiDirty := true;
       };
-      prerr_endline("On after render");
       onAfterRender();
     },
   );
