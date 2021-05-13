@@ -77,6 +77,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Window.onMouseWheel(
       window,
       m => {
+        let scaleAndZoomFactor = Window.getScaleAndZoom(window);
         let evt =
           Revery_Core.Events.InternalMouseWheel({
             deltaX: m.deltaX,
