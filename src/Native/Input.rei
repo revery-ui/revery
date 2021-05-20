@@ -18,3 +18,5 @@ module Button: {
   let displayIn: (t, Sdl2.Window.t) => unit;
   let remove: t => unit;
 };
+
+let openEmojiPanel: unit => unit;

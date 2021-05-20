@@ -34,4 +34,8 @@ void revery_buttonSetColor_cocoa(NSButton *nsButton, double red, double green, d
     [nsButton setAttributedTitle:styledTitle];
 }
 
+void revery_openEmojiPanel_cocoa() {
+    [NSApp orderFrontCharacterPalette:nil];
+}
+
 #endif
