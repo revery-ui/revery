@@ -70,6 +70,13 @@ module Example = {
           title="Set value"
           onClick={() => setValue(state => {...state, first: "New value"})}
         />
+        <Button
+          height=50
+          width=100
+          fontSize=15.
+          title="Emoji"
+          onClick={() => Native.Input.openEmojiPanel()}
+        />
       </View>
       <Padding padding=20>
         <View
