@@ -84,3 +84,5 @@ module Button = {
 
   [%%endif];
 };
+
+external openEmojiPanel: unit => unit = "revery_openEmojiPanel";

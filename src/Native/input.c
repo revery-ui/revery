@@ -56,3 +56,13 @@ CAMLprim value revery_buttonSetColor(value vButton, value vRed, value vGreen, va
 
     CAMLreturn(Val_unit);
 }
+
+CAMLprim value revery_openEmojiPanel() {
+    CAMLparam0();
+
+#ifdef USE_COCOA
+    revery_openEmojiPanel_cocoa();
+#endif
+
+    CAMLreturn(Val_unit);
+}
