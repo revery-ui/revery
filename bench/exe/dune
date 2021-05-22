@@ -1,11 +1,10 @@
 (executable
-    (name bench)
-    (public_name ReveryBench)
-    (libraries ReveryBench.lib Skia_Bench)
-    (package ReveryBench)
-)
+ (name bench)
+ (public_name ReveryBench)
+ (libraries ReveryBench.lib Skia_Bench)
+ (package ReveryBench))
 
 (install
-    (section bin)
-    (package ReveryBench)
-    (files TestFont.ttf))
+ (section bin)
+ (package ReveryBench)
+ (files TestFont.ttf))

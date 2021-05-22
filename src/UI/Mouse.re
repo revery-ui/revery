@@ -113,7 +113,7 @@ let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =
   | InternalMouseDown(_) => Cursor.get(c)
   | InternalMouseMove(e) => (e.mouseX, e.mouseY)
   | InternalMouseUp(_) => Cursor.get(c)
-  | InternalMouseWheel(_) => Cursor.get(c)
+  | InternalMouseWheel(e) => (e.mouseX, e.mouseY)
   | InternalMouseEnter(_) => Cursor.get(c)
   | InternalMouseLeave(_) => Cursor.get(c)
   | InternalMouseOver(_) => Cursor.get(c)
@@ -123,21 +123,79 @@ let getPositionFromMouseEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =
 let internalToExternalEvent = (c: Cursor.t, evt: Events.internalMouseEvents) =>
   switch (evt) {
   | InternalMouseDown(evt) =>
-    MouseDown({mouseX: c.x, mouseY: c.y, button: evt.button})
+    MouseDown({
+      mouseX: c.x,
+      mouseY: c.y,
+      button: evt.button,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   | InternalMouseUp(evt) =>
-    MouseUp({mouseX: c.x, mouseY: c.y, button: evt.button})
+    MouseUp({
+      mouseX: c.x,
+      mouseY: c.y,
+      button: evt.button,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   | InternalMouseMove(evt) =>
-    MouseMove({mouseX: evt.mouseX, mouseY: evt.mouseY})
+    MouseMove({
+      mouseX: evt.mouseX,
+      mouseY: evt.mouseY,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   | InternalMouseWheel(evt) =>
-    MouseWheel({deltaX: evt.deltaX, deltaY: evt.deltaY})
+    MouseWheel({
+      deltaX: evt.deltaX,
+      deltaY: evt.deltaY,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   | InternalMouseEnter(evt) =>
-    MouseEnter({mouseX: evt.mouseX, mouseY: evt.mouseY})
+    MouseEnter({
+      mouseX: evt.mouseX,
+      mouseY: evt.mouseY,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   | InternalMouseLeave(evt) =>
-    MouseLeave({mouseX: evt.mouseX, mouseY: evt.mouseY})
+    MouseLeave({
+      mouseX: evt.mouseX,
+      mouseY: evt.mouseY,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   | InternalMouseOver(evt) =>
-    MouseOver({mouseX: evt.mouseX, mouseY: evt.mouseY})
+    MouseOver({
+      mouseX: evt.mouseX,
+      mouseY: evt.mouseY,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   | InternalMouseOut(evt) =>
-    MouseOut({mouseX: evt.mouseX, mouseY: evt.mouseY})
+    MouseOut({
+      mouseX: evt.mouseX,
+      mouseY: evt.mouseY,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    })
   };
 
 let onCursorChanged: Event.t(MouseCursors.t) = Event.create();
@@ -152,13 +210,52 @@ let isMouseMoveEv =
   | MouseMove(_) => true
   | _ => false;
 
+let isMouseWheelEv =
+  fun
+  | MouseWheel(_) => true
+  | _ => false;
+
 let storedNodesUnderCursor = ref([]);
 
 let getMouseMoveEventParams =
     (cursor: Cursor.t, evt: Events.internalMouseEvents) =>
   switch (evt) {
-  | InternalMouseMove(evt) => {mouseX: evt.mouseX, mouseY: evt.mouseY}
-  | _ => {mouseX: cursor.x, mouseY: cursor.y}
+  | InternalMouseMove(evt) => {
+      mouseX: evt.mouseX,
+      mouseY: evt.mouseY,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    }
+  | InternalMouseDown(evt)
+  | InternalMouseUp(evt) => {
+      mouseX: cursor.x,
+      mouseY: cursor.y,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    }
+  | InternalMouseWheel(evt) => {
+      mouseX: cursor.x,
+      mouseY: cursor.y,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    }
+  | InternalMouseEnter(evt)
+  | InternalMouseLeave(evt)
+  | InternalMouseOver(evt)
+  | InternalMouseOut(evt) => {
+      mouseX: cursor.x,
+      mouseY: cursor.y,
+      ctrlKey: Key.Keymod.isControlDown(evt.keymod),
+      altKey: Key.Keymod.isAltDown(evt.keymod),
+      shiftKey: Key.Keymod.isShiftDown(evt.keymod),
+      guiKey: Key.Keymod.isGuiDown(evt.keymod),
+    }
   };
 
 let rec sendMouseLeaveEvents = (listOfNodes, evtParams) => {
@@ -272,21 +369,21 @@ let rec handleMouseEnterDiff = (deepestNode, evtParams, ~newNodes=[], ()) => {
 };
 
 let dispatch =
-    (cursor: Cursor.t, evt: Events.internalMouseEvents, node: Node.node) => {
+    (cursor: Cursor.t, evt: Events.internalMouseEvents, rootNode: Node.node) => {
   let eventToSend = internalToExternalEvent(cursor, evt);
   Log.tracef(m =>
     m(
       "Dispatching event from node %i: %s",
-      node#getInternalId(),
+      rootNode#getInternalId(),
       NodeEvents.show_event(eventToSend),
     )
   );
 
-  if (node#hasRendered()) {
+  if (rootNode#hasRendered()) {
     let (mouseX, mouseY) = getPositionFromMouseEvent(cursor, evt);
 
     if (isMouseDownEv(eventToSend)) {
-      switch (getFirstFocusable(node, mouseX, mouseY)) {
+      switch (getFirstFocusable(rootNode, mouseX, mouseY)) {
       | Some(node) => Focus.focus(node)
       | None => Focus.loseFocus()
       };
@@ -295,38 +392,54 @@ let dispatch =
     if (Capture.isSet()) {
       Capture.dispatch(eventToSend);
     } else {
-      let deepestNode = getTopMostNode(node, mouseX, mouseY);
+      let currentTopNode = getTopMostNode(rootNode, mouseX, mouseY);
 
-      if (isMouseMoveEv(eventToSend)) {
-        let mouseMoveEventParams = getMouseMoveEventParams(cursor, evt);
+      let deepestNode =
+        if (isMouseMoveEv(eventToSend)) {
+          let mouseMoveEventParams = getMouseMoveEventParams(cursor, evt);
 
-        switch (deepestNode) {
-        | None =>
-          // if no node found, call bubbled MouseOut on deepestStoredNode if there's some stored nodes
-          // And recursively send mouseLeave events to storedNodes if they exist
-          switch (storedNodesUnderCursor^) {
-          | [] => ()
-          | [node, ..._] => bubble(node, MouseOut(mouseMoveEventParams))
+          switch (currentTopNode) {
+          | None =>
+            // if no node found, call bubbled MouseOut on deepestStoredNode if there's some stored nodes
+            // And recursively send mouseLeave events to storedNodes if they exist
+            switch (storedNodesUnderCursor^) {
+            | [] => ()
+            | [node, ..._] => bubble(node, MouseOut(mouseMoveEventParams))
+            };
+
+            sendMouseLeaveEvents(
+              storedNodesUnderCursor^,
+              mouseMoveEventParams,
+            );
+
+          | Some(deepNode) =>
+            switch (storedNodesUnderCursor^) {
+            | [] =>
+              // If some deepNode is found and there are no storedNodes
+              // Traverse the tree and call MouseEnter on each  node -  https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
+              // And call bubbled MouseOver on deepNode
+              sendMouseEnterEvents(deepNode, mouseMoveEventParams);
+              bubble(deepNode, MouseOver(mouseMoveEventParams));
+            | [node, ..._] =>
+              // Only handle diff if the deepestStoredNode !==  the deepestFoundNode
+              if (node#getInternalId() != deepNode#getInternalId()) {
+                handleMouseEnterDiff(deepNode, mouseMoveEventParams, ());
+              }
+            }
           };
 
-          sendMouseLeaveEvents(storedNodesUnderCursor^, mouseMoveEventParams);
-
-        | Some(deepNode) =>
-          switch (storedNodesUnderCursor^) {
-          | [] =>
-            // If some deepNode is found and there are no storedNodes
-            // Traverse the tree and call MouseEnter on each  node -  https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
-            // And call bubbled MouseOver on deepNode
-            sendMouseEnterEvents(deepNode, mouseMoveEventParams);
-            bubble(deepNode, MouseOver(mouseMoveEventParams));
-          | [node, ..._] =>
-            // Only handle diff if the deepestStoredNode !==  the deepestFoundNode
-            if (node#getInternalId() != deepNode#getInternalId()) {
-              handleMouseEnterDiff(deepNode, mouseMoveEventParams, ());
-            }
-          }
+          currentTopNode;
+        } else if (isMouseWheelEv(eventToSend)) {
+          // Sometimes, we can get mouse wheel events even if the current item isn't focused.
+          // So let's double check the node under the cursor
+          getTopMostNode(
+            rootNode,
+            mouseX,
+            mouseY,
+          );
+        } else {
+          currentTopNode;
         };
-      };
 
       switch (deepestNode) {
       | None => ()

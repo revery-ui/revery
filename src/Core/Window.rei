@@ -93,9 +93,12 @@ let setPosition: (t, int, int) => unit;
 let setTitle: (t, string) => unit;
 let setZoom: (t, float) => unit;
 let setVsync: (t, Vsync.t) => unit;
+let setUnsavedWork: (t, bool) => unit;
 
 let render: t => unit;
 let handleEvent: (Sdl2.Event.t, t) => unit;
+
+let getTitlebarHeight: t => float;
 
 /**
   [create(name, options)] creates a new Revery application window.

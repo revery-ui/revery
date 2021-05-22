@@ -70,6 +70,13 @@ module Example = {
           title="Set value"
           onClick={() => setValue(state => {...state, first: "New value"})}
         />
+        <Button
+          height=50
+          width=100
+          fontSize=15.
+          title="Emoji"
+          onClick={() => Native.Input.openEmojiPanel()}
+        />
       </View>
       <Padding padding=20>
         <View
@@ -114,12 +121,12 @@ module Example = {
             placeholderColor=Colors.plum
             cursorColor=Colors.white
             autofocus=true
-            onFocus={() => Console.log("Input example focused")}
-            onBlur={() => Console.log("Input example blurred")}
+            onFocus={() => print_endline("Input example focused")}
+            onBlur={() => print_endline("Input example blurred")}
             onChange={(value, _) =>
               setValue(state => {...state, second: value})
             }
-            onKeyDown={event => Console.log(event)}
+            onKeyDown={_ => print_endline("key event")}
             style=Style.[
               backgroundColor(Colors.paleVioletRed),
               color(Colors.white),

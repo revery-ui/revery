@@ -51,8 +51,12 @@ let setCanIdle: (unit => bool, t) => unit;
 
 type unsubscribe = unit => unit;
 
+type quitResponse =
+  | AllowQuit
+  | PreventQuit;
+
 /** [onBeforeQuit(app, f) registers a callback [f] that is called prior to quitting] */
-let onBeforeQuit: (t, unit => unit) => unsubscribe;
+let onBeforeQuit: (t, int => quitResponse) => unsubscribe;
 
 /** [onIdle(app, f) registers a callback [f] that is called when the application is idle.
 

@@ -45,19 +45,38 @@ let draw = canvas => {
   Paint.setColor(fill, Color.makeArgb(0xCCl, 0x00l, 0xFFl, 0x00l));
   Paint.setImageFilter(
     fill,
-    ImageFilter.makeDropShadow(
-      10.,
-      10.,
-      3.,
-      3.,
-      Color.makeArgb(0xAAl, 0x00l, 0x00l, 0x00l),
-      DrawShadowAndForeground,
-      None,
-      None,
+    Some(
+      ImageFilter.makeDropShadow(
+        10.,
+        10.,
+        3.,
+        3.,
+        Color.makeArgb(0xAAl, 0x00l, 0x00l, 0x00l),
+        DrawShadowAndForeground,
+        None,
+        None,
+      ),
     ),
   );
   let rect2 = Rect.makeLtrb(120., 120., 520., 360.);
-  Canvas.drawOval(canvas, rect2, fill);
+
+  let ovalPaint = Skia.Paint.make();
+  Skia.Paint.setColor(
+    ovalPaint,
+    Skia.Color.makeArgb(0xFFl, 0xFFl, 0xFFl, 0x00l),
+  );
+  let innerPath = Skia.Path.make();
+  Skia.Path.lineTo(innerPath, 5., 5.);
+  Skia.Path.lineTo(innerPath, 15., -5.);
+  Skia.Path.lineTo(innerPath, 20., 0.);
+
+  let translate = Skia.Matrix.makeScale(20., 20., 20., 20.);
+  Skia.Paint.setAntiAlias(ovalPaint, true);
+  Skia.Paint.setStyle(ovalPaint, Stroke);
+  Skia.Paint.setStrokeWidth(ovalPaint, 1.);
+  let pathEffect = Skia.PathEffect.create2dPath(~matrix=translate, innerPath);
+  Skia.Paint.setPathEffect(ovalPaint, pathEffect);
+  Canvas.drawOval(canvas, rect2, ovalPaint);
 
   let fill3 = Paint.make();
   Paint.setColor(fill3, Color.makeArgb(0xFFl, 0xFFl, 0xFFl, 0xFFl));
@@ -110,6 +129,9 @@ let draw = canvas => {
     );
   };
 
+  // Turn off drop shadow
+  Paint.setImageFilter(fill, None);
+
   // Validate loading a non-existent file returns None, but doesn't crash
   let nonExistentData = Data.makeFromFileName("file-that-does-not-exist.png");
   switch (nonExistentData) {
@@ -135,6 +157,14 @@ let draw = canvas => {
   switch (maybeImg) {
   | None => failwith("Unable to load image: uv.png")
   | Some(img) =>
+    print_endline(
+      Printf.sprintf(
+        "%s Image dimensions: %dx%d",
+        imgPath,
+        Skia.Image.width(img),
+        Skia.Image.height(img),
+      ),
+    );
     let imgFill = Paint.make();
     Paint.setAlpha(imgFill, 0.0);
     Canvas.drawImage(canvas, img, 250., 250., Some(imgFill));
@@ -240,8 +270,71 @@ let draw = canvas => {
   Canvas.drawRectLtwh(canvas, 100., 100., 100., 100., fill);
 };
 
-let surface = makeSurface(640l, 480l);
+let drawSvg = canvas => {
+  let drawFromFile = dX => {
+    let stream = Stream.makeFileStream("./assets/revery.svg") |> Option.get;
+
+    let svg = SVG.makeFromStream(stream) |> Option.get;
+
+    Printf.printf(
+      "SVG: file container size: w=%f h=%f\n",
+      SVG.getContainerWidth(svg),
+      SVG.getContainerHeight(svg),
+    );
+
+    Canvas.translate(canvas, dX, 0.);
+
+    SVG.render(svg, canvas);
+    SVG.getContainerWidth(svg);
+  };
+
+  let drawFromString = dX => {
+    let svgStr = {|
+      <svg width="100%" height="10%">
+        <path id="lineAB" d="M 100 350 l 150 -300" stroke="red" stroke-width="3" fill="none" />
+        <path id="lineBC" d="M 250 50 l 150 300" stroke="red" stroke-width="3" fill="none" />
+        <path d="M 175 200 l 150 0" stroke="green" stroke-width="3" fill="none" />
+        <path d="M 100 350 q 150 -300 300 0" stroke="blue" stroke-width="5" fill="none" />
+        <g stroke="black" stroke-width="3" fill="black">
+          <circle id="pointA" cx="100" cy="350" r="3" />
+          <circle id="pointB" cx="250" cy="50" r="3" />
+          <circle id="pointC" cx="400" cy="350" r="3" />
+        </g>
+      </svg>
+    |};
+
+    let stream =
+      Stream.makeMemoryStreamFromString(svgStr, String.length(svgStr));
+
+    let svg = SVG.makeFromStream(stream) |> Option.get;
+
+    Printf.printf(
+      "SVG: string container size: w=%f h=%f\n",
+      SVG.getContainerWidth(svg),
+      SVG.getContainerHeight(svg),
+    );
+
+    Canvas.translate(canvas, dX, 0.);
+
+    SVG.render(svg, canvas);
+    SVG.getContainerWidth(svg);
+  };
+
+  drawFromFile(0.) |> drawFromString |> ignore;
+};
+
+let surface = makeSurface(640l, 480l) |> Option.get;
+let svgSurface = makeSurface(1280l, 1280l) |> Option.get;
+
 let canvas = Surface.getCanvas(surface);
+let svgCanvas = Surface.getCanvas(svgSurface);
+
 draw(canvas);
+drawSvg(svgCanvas);
+
 emitPng("skia-c-example.png", surface);
+emitPng("skia-svg-example.png", svgSurface);
+
+Gc.full_major();
+
 print_endline("Done!");

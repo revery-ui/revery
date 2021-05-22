@@ -9,11 +9,13 @@ module NativeFileExamples = {
     let%hook (fileListOpt, setFileListOpt) = Hooks.state(None);
     let%hook (allowMultiple, setAllowMultiple) = Hooks.state(false);
     let%hook (showHidden, setShowHidden) = Hooks.state(false);
+    let%hook (openFolders, setOpenFolders) = Hooks.state(false);
 
     let openFile = () => {
       let o =
         Dialog.openFiles(
           ~allowMultiple,
+          ~canChooseDirectories=openFolders,
           ~showHidden,
           ~title="Revery Open File Example",
           ~buttonText=
@@ -57,6 +59,14 @@ module NativeFileExamples = {
           checked=showHidden
           checkedColor=Colors.green
           onChange={() => setShowHidden(sh => !sh)}
+        />
+      </Row>
+      <Row>
+        <Text style=optionStyle text="Open folders?" />
+        <Checkbox
+          checked=openFolders
+          checkedColor=Colors.green
+          onChange={() => setOpenFolders(ofv => !ofv)}
         />
       </Row>
       <Button title="Open File" onClick=openFile />

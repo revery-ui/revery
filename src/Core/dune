@@ -4,5 +4,5 @@
  (preprocess
   (pps ppx_deriving.show ppx_optcomp))
  (preprocessor_deps ../Native/config.h)
- (libraries threads console.lib str lwt sdl2 skia flex Rench re Revery_Native
+ (libraries threads str lwt sdl2 skia flex Rench re Revery_Native
    Revery_TextWrap timber Revery_Zed))

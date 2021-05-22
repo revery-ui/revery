@@ -7,8 +7,6 @@
 
 #include "ReveryAppDelegate_func.h"
 
-#define UNUSED(x) (void)(x)
-
 // Implementation of ReveryAppDelegate
 @implementation ReveryAppDelegate
 
@@ -39,7 +37,6 @@
 */
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
     [_sdlDelegate applicationDidFinishLaunching:notification];
-    [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
 }
 
 /* didActivateNotification

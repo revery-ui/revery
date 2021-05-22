@@ -177,6 +177,26 @@ module M = (T: TYPE) => {
     };
   };
 
+  module PathEffect = {
+    module Style = {
+      type t = [ | `translate | `rotate | `morph];
+
+      let t: T.typ(t) =
+        skiaCEnum(
+          "sk_path_effect_1d_style_t",
+          [
+            (`translate, "TRANSLATE_SK_PATH_EFFECT_1D_STYLE"),
+            (`rotate, "ROTATE_SK_PATH_EFFECT_1D_STYLE"),
+            (`morph, "MORPH_SK_PATH_EFFECT_1D_STYLE"),
+          ],
+        );
+    };
+
+    type t;
+    let t: typ(structure(t)) = structure("sk_path_effect_t");
+    let t = typedef(t, "sk_path_effect_t");
+  };
+
   module Paint = {
     type t;
     let t: typ(structure(t)) = structure("sk_paint_t");
@@ -398,6 +418,12 @@ module M = (T: TYPE) => {
     type t;
     let t: typ(structure(t)) = structure("sk_image_t");
     let t = typedef(t, "sk_image_t");
+  };
+
+  module SVG = {
+    type t;
+    let t: typ(structure(t)) = structure("sk_svgdom_t");
+    let t = typedef(t, "sk_svgdom_t");
   };
 
   type pixelGeometry =

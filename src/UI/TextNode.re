@@ -36,7 +36,8 @@ class textNode (text: string) = {
   pub! draw = (parentContext: NodeDrawContext.t) => {
     let style = _super#getStyle();
 
-    let {color, lineHeight, _} = style;
+    let {color: maybeColor, lineHeight, _} = style;
+    let color = Option.value(maybeColor, ~default=Colors.white);
     let opacity = parentContext.opacity *. style.opacity;
     let colorWithAppliedOpacity = Color.multiplyAlpha(opacity, color);
 
@@ -231,9 +232,6 @@ class textNode (text: string) = {
        */
     (
       switch (_super#getStyle()) {
-      | {width: textWidth, _} as style
-          when textWidth == Layout.Encoding.cssUndefined =>
-        _this#handleTextWrapping(width, style)
       | {textOverflow: Ellipsis | UserDefined(_), _} =>
         _this#textOverflow(float_of_int(width))
       | style => _this#handleTextWrapping(width, style)

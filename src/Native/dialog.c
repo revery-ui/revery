@@ -4,10 +4,9 @@
 #include <caml/callback.h>
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
+#include <caml/threads.h>
 
 #include "caml_values.h"
-
-#define UNUSED(x) (void)(x)
 
 #include <string.h>
 
@@ -19,6 +18,7 @@
 #elif USE_GTK
 #include "ReveryGtk.h"
 #endif
+#include "utilities.h"
 
 CAMLprim value revery_alertSupported() {
 #if defined(USE_WIN32) || defined(USE_COCOA) || defined(USE_GTK)
@@ -31,7 +31,7 @@ CAMLprim value revery_alertSupported() {
 CAMLprim value revery_alert(value vWindow, value vMessage) {
     CAMLparam2(vWindow, vMessage);
     const char *szMessage = String_val(vMessage);
-    void *pWin = (void *)vWindow;
+    void *pWin = (void *)revery_unwrapPointer(vWindow);
 
 #ifdef USE_WIN32
     revery_alert_win32(pWin, szMessage);
@@ -103,10 +103,19 @@ CAMLprim value revery_alertOpenFiles_native(
 
     char **fileList = NULL;
 
-#ifdef USE_COCOA
+#ifdef USE_WIN32
+    fileList = revery_open_files_win32(startDirectory, canChooseFiles,
+                                       canChooseDirectories, title);
+    (void)fileTypesSize;
+    (void)allowMultiple;
+    (void)showHidden;
+    (void)buttonText;
+#elif USE_COCOA
+    caml_release_runtime_system();
     fileList = revery_open_files_cocoa(
                    startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
                    canChooseDirectories, showHidden, buttonText, title);
+    caml_acquire_runtime_system();
 #elif USE_GTK
     fileList = revery_open_files_gtk(
                    startDirectory, fileTypes, fileTypesSize, allowMultiple, canChooseFiles,
@@ -131,6 +140,7 @@ CAMLprim value revery_alertOpenFiles_native(
 
         for (int i = 0; i < len; i++) {
             Store_field(camlArr, i, caml_copy_string(fileList[i]));
+            free(fileList[i]);
         }
 
         free(fileList);

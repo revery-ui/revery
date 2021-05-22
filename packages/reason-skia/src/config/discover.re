@@ -31,6 +31,8 @@ let detect_system_header = {|
   #endif
 |};
 
+let sdl2FilePath = Sys.getenv("SDL2_LIB_PATH") ++ "/libSDL2.a";
+
 let get_os = t => {
   let header = {
     let file = Filename.temp_file("discover", "os.h");
@@ -66,7 +68,6 @@ let flags = os =>
     @ cclib("-lfreetype")
     @ cclib("-lz")
     @ cclib("-lskia")
-    @ cclib("-lSDL2")
     @ cclib("-lGLESv2")
     @ cclib("-lGLESv1_CM")
     @ cclib("-lm")
@@ -91,7 +92,7 @@ let flags = os =>
     @ cclib("-lz")
     @ cclib("-lbz2")
     @ cclib("-lskia")
-    @ cclib("-lSDL2")
+    @ cclib(sdl2FilePath)
     @ ccopt("-L" ++ getenv("FREETYPE2_LIB_PATH"))
     @ ccopt("-L" ++ getenv("SDL2_LIB_PATH"))
     @ ccopt("-L" ++ getenv("SKIA_LIB_PATH"))
@@ -101,6 +102,7 @@ let flags = os =>
     @ cclib("-ljpeg")
     @ ccopt("-I/usr/include")
     @ ccopt("-lstdc++")
+    @ ccopt("-fPIC")
   | Windows =>
     []
     @ cclib("-lskia")
@@ -109,11 +111,18 @@ let flags = os =>
     @ ccopt("-L" ++ getenv("SKIA_LIB_PATH"))
   };
 
-let cflags = os =>
+let skiaIncludeFlags = {
+  let skiaIncludePath = getenv("SKIA_INCLUDE_PATH");
+  Sys.readdir(skiaIncludePath)
+  |> Array.map(path => "-I" ++ skiaIncludePath ++ "/" ++ path)
+  |> Array.append([|"-I" ++ skiaIncludePath|])
+  |> Array.to_list;
+};
+let cflags = os => {
   switch (os) {
   | Android =>
     []
-    @ ["-lSDL2"]
+    @ [sdl2FilePath]
     @ ["-lGLESv2"]
     @ ["-lGLESv1_CM"]
     @ ["-lm"]
@@ -121,8 +130,7 @@ let cflags = os =>
     @ ["-landroid"]
     @ ["-lskia"]
     @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+    @ skiaIncludeFlags
     @ ["-L" ++ getenv("SKIA_LIB_PATH")]
     @ ["-L" ++ getenv("SDL2_LIB_PATH")]
     @ ["-L" ++ getenv("JPEG_LIB_PATH")]
@@ -130,36 +138,37 @@ let cflags = os =>
     @ ["-ljpeg"]
   | Linux =>
     []
-    @ ["-lSDL2"]
+    @ [sdl2FilePath]
     @ ["-lskia"]
     @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+    @ skiaIncludeFlags
     @ ["-L" ++ getenv("SKIA_LIB_PATH")]
     @ ["-L" ++ getenv("SDL2_LIB_PATH")]
     @ ["-L" ++ getenv("JPEG_LIB_PATH")]
     @ ["-lstdc++"]
     @ ["-ljpeg"]
+    @ ["-fPIC"]
   | IOS
-  | Mac =>
-    []
-    @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+  | Mac => [] @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")] @ skiaIncludeFlags
   | Windows =>
     []
     @ ["-std=c++1y"]
     @ ["-I" ++ getenv("SDL2_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH")]
-    @ ["-I" ++ getenv("SKIA_INCLUDE_PATH") ++ "/c"]
+    @ ["-L" ++ getenv("SKIA_LIB_PATH")]
+    @ ["-lskia"]
+    @ skiaIncludeFlags
   };
+};
 
 let libs = os =>
   switch (os) {
   | Android =>
     []
     @ [
-      "-lSDL2",
+      "-L" ++ getenv("SDL2_LIB_PATH"),
+      "-L" ++ getenv("SKIA_LIB_PATH"),
+      "-L" ++ getenv("FREETYPE2_LIB_PATH"),
+      sdl2FilePath,
       "-lGLESv2",
       "-lGLESv1_CM",
       "-lm",
@@ -171,9 +180,6 @@ let libs = os =>
       "-L" ++ getenv("JPEG_LIB_PATH"),
       "-ljpeg",
       "-lstdc++",
-      "-L" ++ getenv("SDL2_LIB_PATH"),
-      "-L" ++ getenv("SKIA_LIB_PATH"),
-      "-L" ++ getenv("FREETYPE2_LIB_PATH"),
     ]
   | IOS =>
     []
@@ -199,14 +205,17 @@ let libs = os =>
     @ framework("IOKit")
     @ framework("Metal")
     @ ["-liconv"]
-    @ ["-lSDL2"]
+    @ [sdl2FilePath]
     @ ["-lskia"]
     @ ["-lstdc++"]
     @ [getenv("JPEG_LIB_PATH") ++ "/libturbojpeg.a"]
   | Linux =>
     []
     @ [
-      "-lSDL2",
+      "-L" ++ getenv("SDL2_LIB_PATH"),
+      "-L" ++ getenv("SKIA_LIB_PATH"),
+      "-L" ++ getenv("FREETYPE2_LIB_PATH"),
+      sdl2FilePath,
       "-lskia",
       "-lfreetype",
       "-lfontconfig",
@@ -216,9 +225,7 @@ let libs = os =>
       "-ljpeg",
       "-lpthread",
       "-lstdc++",
-      "-L" ++ getenv("SDL2_LIB_PATH"),
-      "-L" ++ getenv("SKIA_LIB_PATH"),
-      "-L" ++ getenv("FREETYPE2_LIB_PATH"),
+      "-fPIC",
     ]
   | Mac =>
     []
@@ -240,7 +247,7 @@ let libs = os =>
     @ framework("IOKit")
     @ framework("Metal")
     @ ["-liconv"]
-    @ ["-lSDL2"]
+    @ [sdl2FilePath]
     @ ["-lskia"]
     @ ["-lstdc++"]
     @ [getenv("JPEG_LIB_PATH") ++ "/libturbojpeg.a"]

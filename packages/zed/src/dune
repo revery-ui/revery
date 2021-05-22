@@ -4,4 +4,4 @@
  (wrapped false)
  (flags
   (:standard -safe-string))
- (libraries bytes react uucp uutf result charInfo_width))
+ (libraries bytes uucp uutf result charInfo_width))

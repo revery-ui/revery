@@ -20,14 +20,21 @@ type internalKeyboardEvent =
 type mouseMoveEvent = {
   mouseX: float,
   mouseY: float,
+  keymod: Key.Keymod.t,
 };
 
 type mouseWheelEvent = {
   deltaX: float,
   deltaY: float,
+  mouseX: float,
+  mouseY: float,
+  keymod: Key.Keymod.t,
 };
 
-type mouseButtonEvent = {button: MouseButton.t};
+type mouseButtonEvent = {
+  button: MouseButton.t,
+  keymod: Key.Keymod.t,
+};
 
 type internalMouseEvents =
   | InternalMouseDown(mouseButtonEvent)
@@ -43,6 +50,7 @@ type fileDropEvent = {
   mouseX: float,
   mouseY: float,
   paths: list(string),
+  keymod: Key.Keymod.t,
 };
 
 type internalFileDropEvents =

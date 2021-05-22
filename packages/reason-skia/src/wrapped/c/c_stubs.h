@@ -1,6 +1,7 @@
 #include "gr_context.h"
 #include "sk_canvas.h"
 #include "sk_paint.h"
+#include "sk_patheffect.h"
 #include "sk_shader.h"
 #include "sk_types.h"
 

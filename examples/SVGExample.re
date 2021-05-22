@@ -4,94 +4,6 @@ open Revery.UI.Components;
 
 let examples = [
   (
-    "Kitchen Sink",
-    {|
-      <svg viewBox="0 0 200 200">
-        <g id="grid">
-          <!-- Vertical -->
-          <line x1="50" y1="0" x2="50" y2="500" stroke="#888" />
-          <line x1="100" y1="0" x2="100" y2="500" stroke="#888" />
-          <line x1="150" y1="0" x2="150" y2="500" stroke="#888" />
-          <line x1="200" y1="0" x2="200" y2="500" stroke="#888" />
-          <line x1="250" y1="0" x2="250" y2="500" stroke="#888" />
-          <line x1="300" y1="0" x2="300" y2="500" stroke="#888" />
-          <line x1="350" y1="0" x2="350" y2="500" stroke="#888" />
-          <line x1="400" y1="0" x2="400" y2="500" stroke="#888" />
-          <line x1="450" y1="0" x2="450" y2="500" stroke="#888" />
-
-          <!-- Horizontal -->
-          <line x1="0" y1="50" x2="500" y2="50" stroke="#555" />
-          <line x1="0" y1="100" x2="500" y2="100" stroke="#555" />
-          <line x1="0" y1="150" x2="500" y2="150" stroke="#555" />
-          <line x1="0" y1="200" x2="500" y2="200" stroke="#555" />
-          <line x1="0" y1="250" x2="500" y2="250" stroke="#555" />
-          <line x1="0" y1="300" x2="500" y2="300" stroke="#555" />
-          <line x1="0" y1="350" x2="500" y2="350" stroke="#555" />
-          <line x1="0" y1="400" x2="500" y2="400" stroke="#555" />
-          <line x1="0" y1="450" x2="500" y2="450" stroke="#555" />
-        </g>
-        <g>
-          <rect x="10" y="10" rx="10" ry="5" width="50" height="50" fill="#00f" stroke="#fff" />
-          <circle cx="10" cy="10" r="30" fill="#f00" />
-          <ellipse cx="100" cy="50" rx="100" ry="50" fill="#fff" />
-        </g>
-        <g>
-          <path fill="none" stroke="#ff0"
-            d="M 10,10 L 10 40 M 10 10 L 40,10" />
-          <path stroke="#f0f"
-            d="M 50,50 l 0 30 M 50 50 l 30,0" />
-          <path stroke="#0ff"
-            d="M 10,10 h 10
-              m  0,10 h 10
-              m  0,10 h 10
-              M 40,20 h 10
-              m  0,10 h 10
-              m  0,10 h 10
-              m  0,10 h 10
-              M 50,50 h 10
-              m-20,10 h 10
-              m-20,10 h 10
-              m-20,10 h 10" />
-          <x path stroke="#f00"
-                d="M 10,90
-                  C 30,90 25,10 50,10
-                  S 70,90 90,90" />
-          <x path stroke="#f00"
-                d="M 110,90
-                  c 20,0 15,-80 40,-80
-                  s 20,80 40,80" />
-          <path stroke="#f00" stroke-width="0.3"
-                d="M 10,90
-                  C 30,90 25,10 50,10
-                  C 75,10 70,90 90,90" />
-        </g>
-        <g id="arc">
-          <path fill="none" stroke="#f00"
-                d="M 6,10
-                  A 6 4 10 1 0 14,10" />
-
-          <path fill="none" stroke="#0f0"
-                d="M 6,10
-                  A 6 4 10 1 1 14,10" />
-
-          <path fill="none" stroke="#f0f"
-                d="M 6,10
-                  A 6 4 10 0 1 14,10" />
-
-          <path fill="none" stroke="#faa"
-                d="M 6,10
-                  A 6 4 10 0 0 14,10" />
-        </g>
-        <g id="polygon">
-          <polygon points="0,100 50,25 50,75 100,0" fill="lime"/>
-
-          <polygon points="100,100 150,25 150,75 200,0"
-                    fill="none" stroke="white" />
-        </g>
-      </svg>
-    |},
-  ),
-  (
     "<polygon>",
     {|
       <!-- Source: https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polygon -->
@@ -326,11 +238,6 @@ let examples = [
   (
     "<path> - quadratic bezier 2",
     {|
-     <!-- Source: https://www.w3.org/TR/SVG11/images/paths/quad01.svg -->
-
-      <?xml version="1.0" standalone="no"?>
-      <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
-        "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
       <svg width="12cm" height="6cm" viewBox="0 0 1200 600"
           xmlns="http://www.w3.org/2000/svg" version="1.1">
         <title>Example quad01 - quadratic Bézier commands in path data</title>
@@ -483,48 +390,45 @@ module SVGExample = {
     ];
 
     let buttons = [width(200), color(Colors.white), marginLeft(10)];
-
-    let example = [width(350), height(350)];
   };
-
-  let loadSVG = data =>
-    switch (SVG.fromString(data)) {
-    | Some(svg) => Ok(svg)
-    | None => Error("Parse error: empty string")
-    | exception (Failure(msg)) => Error("Parse error: " ++ msg)
-    };
 
   let%component make = () => {
     let%hook (currentExample, setExample) = {
-      let initialState =
-        switch (examples) {
-        | [(_, data), ..._] => loadSVG(data)
-        | [] => Error("No examples!")
-        };
-      Hooks.state(initialState);
+      let (_, data) = List.hd(examples);
+      Hooks.state(data);
     };
+    let%hook (width, setWidth) = Hooks.state(300.);
+    let%hook (height, setHeight) = Hooks.state(300.);
 
     let buttons =
       List.map(
         ((text, value)) => RadioButtonsString.{text, value},
         examples,
       );
-    let onChange = data => setExample(_ => loadSVG(data));
-
-    let example =
-      switch (currentExample) {
-      | Ok(svg) => <SVGString style=Styles.example contents=svg />
-      | Error(message) => <Text text=message />
-      };
+    let onChange = data => setExample(_ => data);
 
     <View style=Styles.container>
-      <RadioButtonsString
-        style=Styles.buttons
-        onChange
-        defaultSelected=0
-        buttons
-      />
-      example
+      <View>
+        <RadioButtonsString
+          style=Styles.buttons
+          onChange
+          defaultSelected=0
+          buttons
+        />
+        <Slider
+          onValueChanged={w => setWidth(_ => w)}
+          maximumValue=300.
+          minimumValue=50.
+          initialValue=width
+        />
+        <Slider
+          onValueChanged={h => setHeight(_ => h)}
+          maximumValue=500.
+          minimumValue=50.
+          initialValue=height
+        />
+      </View>
+      <SVG width height src={`Str(currentExample)} scaleMode=`Fit />
     </View>;
   };
 };

@@ -40,17 +40,25 @@ module Sample = {
           let stroke = Skia.Paint.make();
           Skia.Paint.setColor(
             stroke,
-            Skia.Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l),
+            Skia.Color.makeArgb(0xFFl, 0xFFl, 0xFFl, 0x00l),
           );
           Skia.Paint.setAntiAlias(stroke, true);
           Skia.Paint.setStyle(stroke, Stroke);
-          Skia.Paint.setStrokeWidth(stroke, 5.);
+          Skia.Paint.setStrokeWidth(stroke, 2.);
+
+          let innerPath = Skia.Path.make();
+          Skia.Path.lineTo(innerPath, 5., 5.);
+          Skia.Path.lineTo(innerPath, 15., -5.);
+          Skia.Path.lineTo(innerPath, 20., 0.);
+
+          let translate = Skia.Matrix.makeScale(20., 20., 20., 20.);
+          let pathEffect =
+            Skia.PathEffect.create2dPath(~matrix=translate, innerPath);
+
+          Skia.Paint.setPathEffect(stroke, pathEffect);
 
           let path = Skia.Path.make();
-          Skia.Path.moveTo(path, 50., 50.);
-          Skia.Path.lineTo(path, 590., 50.);
-          Skia.Path.cubicTo(path, -490., 50., 1130., 430., 50., 430.);
-          Skia.Path.lineTo(path, 590., 430.);
+          Skia.Path.addCircle(path, 125., 125., ~radius=100., ());
           CanvasContext.drawPath(~path, ~paint=stroke, canvasContext);
 
           let maybeSkia =
@@ -94,11 +102,22 @@ module Sample = {
           CanvasContext.drawOval(~rect, ~paint=fill, canvasContext);
           let red = Skia.Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l);
           let blue = Skia.Color.makeArgb(0xFFl, 0x00l, 0x00l, 0xFFl);
+          // Test out some layers...
+
+          let layer =
+            CanvasContext.createLayer(
+              ~width=128l,
+              ~height=128l,
+              canvasContext,
+            )
+            |> Option.get;
+
+          // Draw a circle onto our new layer...
           let paint = Skia.Paint.make();
           let linearGradient =
             Skia.Shader.makeLinearGradient2(
-              ~startPoint=Skia.Point.make(200.0, 200.0),
-              ~stopPoint=Skia.Point.make(220.0, 220.0),
+              ~startPoint=Skia.Point.make(16., 16.0),
+              ~stopPoint=Skia.Point.make(48.0, 48.0),
               ~startColor=red,
               ~stopColor=blue,
               ~tileMode=`clamp,
@@ -108,11 +127,43 @@ module Sample = {
             paint,
             Skia.Color.makeArgb(0xFFl, 0x00l, 0xFFl, 0x00l),
           );
+
           CanvasContext.drawCircle(
-            ~x=225.,
-            ~y=225.,
-            ~radius=100.,
+            ~x=32.,
+            ~y=32.,
+            ~radius=16.,
             ~paint,
+            layer,
+          );
+
+          // And then draw the layer a bunch of places!
+          let paint = Skia.Paint.make();
+          CanvasContext.drawLayer(
+            ~paint,
+            ~layer,
+            ~x=300.,
+            ~y=300.,
+            canvasContext,
+          );
+          CanvasContext.drawLayer(
+            ~paint,
+            ~layer,
+            ~x=264.,
+            ~y=264.,
+            canvasContext,
+          );
+          CanvasContext.drawLayer(
+            ~paint,
+            ~layer,
+            ~x=264.,
+            ~y=300.,
+            canvasContext,
+          );
+          CanvasContext.drawLayer(
+            ~paint,
+            ~layer,
+            ~x=300.,
+            ~y=264.,
             canvasContext,
           );
         }}

@@ -79,7 +79,7 @@ describe("Style API tests", ({test, _}) => {
     expect.int(styles.margin).toBe(4);
     let found = List.find(style => style == `Margin(4), result);
     expect.equal(found, `Margin(4));
-    expect.equal(styles.color, blue);
+    expect.equal(styles.color, Some(blue));
   });
 
   test(

@@ -35,9 +35,27 @@ let render =
   let canvasScalingFactor = pixelRatio *. scaleAndZoomFactor;
 
   let zoomFactor = Window.getZoom(window);
+
+  Log.tracef(m =>
+    m(
+      "-- RENDER: pixelRatio: %f scaleAndZoom: %f zoom: %f canvasScaling: %f",
+      pixelRatio,
+      scaleAndZoomFactor,
+      zoomFactor,
+      canvasScalingFactor,
+    )
+  );
+
   let adjustedHeight =
     float_of_int(size.height) /. zoomFactor |> int_of_float;
   let adjustedWidth = float_of_int(size.width) /. zoomFactor |> int_of_float;
+  Log.tracef(m =>
+    m(
+      "-- RENDER: adjustedWidth: %d adjustedHeight: %d",
+      adjustedWidth,
+      adjustedHeight,
+    )
+  );
 
   RenderContainer.updateCanvas(window, renderContainer);
 
@@ -59,8 +77,6 @@ let render =
 
   /* Render */
   Performance.bench("draw", () => {
-    /* Do a first pass for all 'opaque' geometry */
-    /* This helps reduce the overhead for the more expensive alpha pass, next */
     switch (renderContainer.canvas^) {
     | None => ()
     | Some(canvas) =>
@@ -72,20 +88,30 @@ let render =
           0.,
         );
       CanvasContext.setRootTransform(skiaRoot, canvas);
+      let debug = DebugDraw.isEnabled();
       let drawContext =
-        NodeDrawContext.create(~canvas, ~zIndex=0, ~opacity=1.0, ());
+        NodeDrawContext.create(
+          ~canvasScalingFactor,
+          ~dpi=pixelRatio,
+          ~debug,
+          ~canvas,
+          ~zIndex=0,
+          ~opacity=1.0,
+          (),
+        );
 
       let backgroundColor = Window.getBackgroundColor(window);
       CanvasContext.clear(~color=backgroundColor |> Color.toSkia, canvas);
-      // let drawContext = NodeDrawContext.create(~zIndex=0, ~opacity=1.0, ());
 
       rootNode#draw(drawContext);
 
       CanvasContext.setMatrix(canvas, Skia.Matrix.identity);
-      //DebugDraw.enable();
-      //DebugDraw.draw(canvas);
 
-      if (Window.shouldShowFPSCounter(window)) {
+      if (debug) {
+        DebugDraw.draw(canvas);
+      };
+
+      if (Window.shouldShowFPSCounter(window) || debug) {
         let w = float_of_int(adjustedWidth);
         let (x, y) = (w -. 64., 32.);
         let paint = Skia.Paint.make();
@@ -106,4 +132,7 @@ let render =
     }
   });
   Log.trace("END: Render frame");
+
+  let forceDirty = DebugDraw.isEnabled();
+  forceDirty;
 };

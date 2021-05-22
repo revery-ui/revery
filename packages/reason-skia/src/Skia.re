@@ -169,6 +169,9 @@ module Paint = {
   let setTypeface = SkiaWrapped.Paint.setTypeface;
   let getFontMetrics = SkiaWrapped.Paint.getFontMetrics;
   let setImageFilter = SkiaWrapped.Paint.setImageFilter;
+  let setPathEffect = SkiaWrapped.Paint.setPathEffect;
+  let getPathEffect = SkiaWrapped.Paint.getPathEffect;
+
   let setTextEncoding = SkiaWrapped.Paint.setTextEncoding;
   let getTextEncoding = SkiaWrapped.Paint.getTextEncoding;
 
@@ -257,125 +260,6 @@ module Shader = {
       }
     );
   };
-};
-
-module Matrix = {
-  type t = SkiaWrapped.Matrix.t;
-
-  let make = SkiaWrapped.Matrix.make;
-  let setAll = SkiaWrapped.Matrix.setAll;
-  let get = SkiaWrapped.Matrix.get;
-  let set = SkiaWrapped.Matrix.set;
-
-  module CI = Cstubs_internals;
-
-  [@noalloc]
-  external _setScale:
-    (
-      CI.fatptr(_),
-      [@unboxed] float,
-      [@unboxed] float,
-      [@unboxed] float,
-      [@unboxed] float
-    ) =>
-    unit =
-    "reason_skia_matrix_set_scale_byte" "reason_skia_matrix_set_scale";
-
-  [@noalloc]
-  external _setTranslate:
-    (CI.fatptr(_), [@unboxed] float, [@unboxed] float) => unit =
-    "reason_skia_matrix_set_translate_byte" "reason_skia_matrix_set_translate";
-
-  let setScale = (mat, scaleX, scaleY, pivotX, pivotY) =>
-    _setScale(CI.cptr(mat), scaleX, scaleY, pivotX, pivotY);
-
-  let setTranslate = (matrix, translateX, translateY) =>
-    _setTranslate(CI.cptr(matrix), translateX, translateY);
-
-  let makeAll =
-      (
-        scaleX,
-        skewX,
-        translateX,
-        skewY,
-        scaleY,
-        translateY,
-        perspective0,
-        perspective1,
-        perspective2,
-      ) => {
-    let matrix = make();
-    setAll(
-      matrix,
-      scaleX,
-      skewX,
-      translateX,
-      skewY,
-      scaleY,
-      translateY,
-      perspective0,
-      perspective1,
-      perspective2,
-    );
-    matrix;
-  };
-  let makeScale = (scaleX, scaleY, pivotX, pivotY) => {
-    let matrix = make();
-    setScale(matrix, scaleX, scaleY, pivotX, pivotY);
-    matrix;
-  };
-  let makeTranslate = (translateX, translateY) => {
-    let matrix = make();
-    setTranslate(matrix, translateX, translateY);
-    matrix;
-  };
-
-  let getScaleX = matrix => get(matrix, 0);
-  let getScaleY = matrix => get(matrix, 4);
-  let getSkewX = matrix => get(matrix, 1);
-  let getSkewY = matrix => get(matrix, 3);
-  let getTranslateX = matrix => get(matrix, 2);
-  let getTranslateY = matrix => get(matrix, 5);
-  let getPerspX = matrix => get(matrix, 6);
-  let getPerspY = matrix => get(matrix, 7);
-
-  let setScaleX = (matrix, scaleX) => set(matrix, 0, scaleX);
-  let setScaleY = (matrix, scaleY) => set(matrix, 4, scaleY);
-  let setSkewX = (matrix, skewX) => set(matrix, 1, skewX);
-  let setSkewY = (matrix, skewY) => set(matrix, 3, skewY);
-  let setTranslateX = (matrix, translateX) => set(matrix, 2, translateX);
-  let setTranslateY = (matrix, translateY) => set(matrix, 5, translateY);
-  let setPerspX = (matrix, perspectiveX) => set(matrix, 6, perspectiveX);
-  let setPerspY = (matrix, perspectiveY) => set(matrix, 7, perspectiveY);
-  let setSkew = (matrix, skewX, skewY, pivotX, pivotY) =>
-    setAll(
-      matrix,
-      1.,
-      skewX,
-      -. skewX *. pivotY,
-      skewY,
-      1.,
-      -. skewY *. pivotX,
-      0.,
-      0.,
-      1.,
-    );
-  let setIdentity = matrix =>
-    setAll(matrix, 1., 0., 0., 0., 1., 0., 0., 0., 1.);
-  let reset = setIdentity;
-
-  let invert = SkiaWrapped.Matrix.invert;
-  let concat = SkiaWrapped.Matrix.concat;
-  let preConcat = SkiaWrapped.Matrix.preConcat;
-  let postConcat = SkiaWrapped.Matrix.postConcat;
-  let mapRect = SkiaWrapped.Matrix.mapRect;
-  let mapPoints = SkiaWrapped.Matrix.mapPoints;
-  let mapVectors = SkiaWrapped.Matrix.mapVectors;
-  let mapXy = SkiaWrapped.Matrix.mapXy;
-  let mapVector = SkiaWrapped.Matrix.mapVector;
-  let mapRadius = SkiaWrapped.Matrix.mapRadius;
-
-  let identity = makeAll(1., 0., 0., 0., 1., 0., 0., 0., 1.);
 };
 
 module Matrix44 = {
@@ -623,20 +507,189 @@ module Path = {
   let getLastPoint = SkiaWrapped.Path.getLastPoint;
 };
 
+module Matrix = {
+  type t = SkiaWrapped.Matrix.t;
+
+  let make = SkiaWrapped.Matrix.make;
+  let setAll = SkiaWrapped.Matrix.setAll;
+  let get = SkiaWrapped.Matrix.get;
+  let set = SkiaWrapped.Matrix.set;
+
+  module CI = Cstubs_internals;
+
+  [@noalloc]
+  external _setScale:
+    (
+      CI.fatptr(_),
+      [@unboxed] float,
+      [@unboxed] float,
+      [@unboxed] float,
+      [@unboxed] float
+    ) =>
+    unit =
+    "reason_skia_matrix_set_scale_byte" "reason_skia_matrix_set_scale";
+
+  [@noalloc]
+  external _setTranslate:
+    (CI.fatptr(_), [@unboxed] float, [@unboxed] float) => unit =
+    "reason_skia_matrix_set_translate_byte" "reason_skia_matrix_set_translate";
+
+  let setScale = (mat, scaleX, scaleY, pivotX, pivotY) =>
+    _setScale(CI.cptr(mat), scaleX, scaleY, pivotX, pivotY);
+
+  let setTranslate = (matrix, translateX, translateY) =>
+    _setTranslate(CI.cptr(matrix), translateX, translateY);
+
+  let makeAll =
+      (
+        scaleX,
+        skewX,
+        translateX,
+        skewY,
+        scaleY,
+        translateY,
+        perspective0,
+        perspective1,
+        perspective2,
+      ) => {
+    let matrix = make();
+    setAll(
+      matrix,
+      scaleX,
+      skewX,
+      translateX,
+      skewY,
+      scaleY,
+      translateY,
+      perspective0,
+      perspective1,
+      perspective2,
+    );
+    matrix;
+  };
+  let makeScale = (scaleX, scaleY, pivotX, pivotY) => {
+    let matrix = make();
+    setScale(matrix, scaleX, scaleY, pivotX, pivotY);
+    matrix;
+  };
+  let makeTranslate = (translateX, translateY) => {
+    let matrix = make();
+    setTranslate(matrix, translateX, translateY);
+    matrix;
+  };
+
+  let getScaleX = matrix => get(matrix, 0);
+  let getScaleY = matrix => get(matrix, 4);
+  let getSkewX = matrix => get(matrix, 1);
+  let getSkewY = matrix => get(matrix, 3);
+  let getTranslateX = matrix => get(matrix, 2);
+  let getTranslateY = matrix => get(matrix, 5);
+  let getPerspX = matrix => get(matrix, 6);
+  let getPerspY = matrix => get(matrix, 7);
+
+  let setScaleX = (matrix, scaleX) => set(matrix, 0, scaleX);
+  let setScaleY = (matrix, scaleY) => set(matrix, 4, scaleY);
+  let setSkewX = (matrix, skewX) => set(matrix, 1, skewX);
+  let setSkewY = (matrix, skewY) => set(matrix, 3, skewY);
+  let setTranslateX = (matrix, translateX) => set(matrix, 2, translateX);
+  let setTranslateY = (matrix, translateY) => set(matrix, 5, translateY);
+  let setPerspX = (matrix, perspectiveX) => set(matrix, 6, perspectiveX);
+  let setPerspY = (matrix, perspectiveY) => set(matrix, 7, perspectiveY);
+  let setSkew = (matrix, skewX, skewY, pivotX, pivotY) =>
+    setAll(
+      matrix,
+      1.,
+      skewX,
+      -. skewX *. pivotY,
+      skewY,
+      1.,
+      -. skewY *. pivotX,
+      0.,
+      0.,
+      1.,
+    );
+  let setIdentity = matrix =>
+    setAll(matrix, 1., 0., 0., 0., 1., 0., 0., 0., 1.);
+  let reset = setIdentity;
+
+  let invert = SkiaWrapped.Matrix.invert;
+  let concat = SkiaWrapped.Matrix.concat;
+  let preConcat = SkiaWrapped.Matrix.preConcat;
+  let postConcat = SkiaWrapped.Matrix.postConcat;
+  let mapRect = SkiaWrapped.Matrix.mapRect;
+  let mapPoints = SkiaWrapped.Matrix.mapPoints;
+  let mapVectors = SkiaWrapped.Matrix.mapVectors;
+  let mapXy = SkiaWrapped.Matrix.mapXy;
+  let mapVector = SkiaWrapped.Matrix.mapVector;
+  let mapRadius = SkiaWrapped.Matrix.mapRadius;
+
+  let identity = makeAll(1., 0., 0., 0., 1., 0., 0., 0., 1.);
+};
+
+module PathEffect = {
+  module Style = {
+    type t = SkiaWrapped.PathEffect.Style.t;
+  };
+
+  type t = SkiaWrapped.PathEffect.t;
+
+  let create1d = (~style, ~advance, ~phase, path) => {
+    let pathEffect =
+      SkiaWrapped.PathEffect.allocate1d(path, advance, phase, style);
+    Gc.finalise(SkiaWrapped.PathEffect.delete, pathEffect);
+    pathEffect;
+  };
+
+  let create2dLine = (~width, ~matrix: Matrix.t) => {
+    let pathEffect = SkiaWrapped.PathEffect.allocate2dLine(width, matrix);
+    Gc.finalise(SkiaWrapped.PathEffect.delete, pathEffect);
+    pathEffect;
+  };
+
+  let create2dPath = (~matrix: Matrix.t, path) => {
+    let pathEffect = SkiaWrapped.PathEffect.allocate2dPath(matrix, path);
+    Gc.finalise(SkiaWrapped.PathEffect.delete, pathEffect);
+    pathEffect;
+  };
+};
+
 module ColorSpace = {
   type t = SkiaWrapped.ColorSpace.t;
 };
+
+type data = SkiaWrapped.data;
 
 module Stream = {
   type t = SkiaWrapped.Stream.t;
 
   let hasLength = SkiaWrapped.Stream.hasLength;
   let getLength = SkiaWrapped.Stream.getLength;
+
+  let makeFileStream = path => {
+    let maybeStream = SkiaWrapped.Stream.makeFileStream(path);
+    maybeStream
+    |> Option.iter(stream =>
+         Gc.finalise(SkiaWrapped.Stream.deleteFileStream, stream)
+       );
+    maybeStream;
+  };
+
+  let makeMemoryStreamFromString = (str, length) => {
+    let stream =
+      SkiaWrapped.Stream.makeMemoryStreamFromString(str, length, true);
+    Gc.finalise(SkiaWrapped.Stream.deleteMemoryStream, stream);
+    stream;
+  };
+
+  let makeMemoryStreamFromData = data => {
+    let stream = SkiaWrapped.Stream.makeMemoryStreamFromData(data);
+    Gc.finalise(SkiaWrapped.Stream.deleteMemoryStream, stream);
+    stream;
+  };
 };
 
 module Data = {
-  type t = SkiaWrapped.Data.t;
-
+  type t = data;
   let makeString = data => {
     let dataPtr =
       Ctypes.from_voidp(Ctypes.char, SkiaWrapped.Data.getData(data));
@@ -723,6 +776,9 @@ module Image = {
     Gc.finalise(SkiaWrapped.Data.delete, data);
     data;
   };
+
+  let width = SkiaWrapped.Image.width;
+  let height = SkiaWrapped.Image.height;
 };
 
 type pixelGeometry = SkiaWrapped.pixelGeometry;
@@ -827,14 +883,18 @@ module Surface = {
     );
 
   let makeRaster = (imageInfo, rowBytes, surfaceProps) => {
-    let surface =
+    let maybeSurface =
       SkiaWrapped.Surface.allocateRaster(
         imageInfo,
         Unsigned.Size_t.of_int(rowBytes),
         surfaceProps,
       );
-    Gc.finalise(SkiaWrapped.Surface.delete, surface);
-    surface;
+    switch (maybeSurface) {
+    | Some(surface) as surf =>
+      Gc.finalise(SkiaWrapped.Surface.delete, surface);
+      surf;
+    | None => None
+    };
   };
   let makeRenderTarget =
       (
@@ -889,6 +949,9 @@ module Surface = {
     };
   };
 
+  let draw = (~paint=None, ~canvas, ~x, ~y, surface) =>
+    SkiaWrapped.Surface.draw(surface, canvas, x, y, paint);
+
   let getCanvas = SkiaWrapped.Surface.getCanvas;
   let makeImageSnapshot = surface => {
     let imageSnapshot = SkiaWrapped.Surface.allocateImageSnapshot(surface);
@@ -899,4 +962,21 @@ module Surface = {
   let getWidth = SkiaWrapped.Surface.getWidth;
   let getHeight = SkiaWrapped.Surface.getHeight;
   let getProps = SkiaWrapped.Surface.getProps;
+};
+
+module SVG = {
+  type t = {
+    svg: SkiaWrapped.SVG.t,
+    stream: SkiaWrapped.Stream.t,
+  };
+  let makeFromStream = stream =>
+    SkiaWrapped.SVG.makeFromStream(stream)
+    |> Option.map(svg => {
+         svg |> Gc.finalise(SkiaWrapped.SVG.delete);
+         {svg, stream};
+       });
+  let render = t => SkiaWrapped.SVG.render(t.svg);
+  let setContainerSize = t => SkiaWrapped.SVG.setContainerSize(t.svg);
+  let getContainerWidth = t => SkiaWrapped.SVG.getContainerWidth(t.svg);
+  let getContainerHeight = t => SkiaWrapped.SVG.getContainerHeight(t.svg);
 };

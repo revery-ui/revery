@@ -279,7 +279,7 @@ let makeShadowImageFilter = boxShadow => {
     sigma,
     sigma,
     Color.toSkia(color),
-    DrawShadowAndForeground,
+    DrawShadowOnly,
     None,
     None,
   );
@@ -288,7 +288,12 @@ let makeShadowImageFilter = boxShadow => {
 class viewNode (()) = {
   as _this;
   inherit (class node)() as _super;
-  val _fillPaint = Skia.Paint.make();
+  val _fillPaint = {
+    let paint = Skia.Paint.make();
+    // Set antialias for fill paint, so that rounded edges for the inner rectangle look OK
+    Skia.Paint.setAntiAlias(paint, true);
+    paint;
+  };
   val _outerRRect = Skia.RRect.make();
   val _helperRect = Skia.Rect.makeLtrb(0., 0., 0., 0.);
   pub! draw = (parentContext: NodeDrawContext.t) => {
@@ -306,6 +311,10 @@ class viewNode (()) = {
 
     let borderRadius = style.borderRadius;
     Skia.Rect.Mutable.setLtrb(~out=_helperRect, 0., 0., width, height);
+
+    let color = Color.multiplyAlpha(opacity, style.backgroundColor);
+    let colorAlpha = Color.getAlpha(color);
+
     Skia.RRect.setRectXy(
       _outerRRect,
       _helperRect,
@@ -313,26 +322,33 @@ class viewNode (()) = {
       borderRadius,
     );
 
+    // Draw the shadow before anything else, so we don't clip the border
+    let isDrawingShadow = style.boxShadow.blurRadius > 0.1;
+
+    if (isDrawingShadow) {
+      let shadowImageFilter = makeShadowImageFilter(style.boxShadow);
+      Skia.Paint.setImageFilter(_fillPaint, Some(shadowImageFilter));
+
+      // This isn't perfect - we're redrawing the background color again, later,
+      // which might cause issues when the background color is non-opaque.
+      // The issue is, to use the `setImageFilter` stratey for rendering a shadow,
+      // we need to render _something_. We could consider instead drawing a blurred, offset
+      // rectangle underneath...
+      let shadowInteriorColor = Color.toSkia(color);
+      Skia.Paint.setColor(_fillPaint, shadowInteriorColor);
+
+      Revery_Draw.CanvasContext.drawRRect(canvas, _outerRRect, _fillPaint);
+
+      // Reset the image filter, as the `_fillPaint` is stateful - if we don't reset it,
+      // then if the style changes such that there should be no shadow drawn, `_fillPaint`
+      // will still have the draw-shadow image filter applied.
+      Skia.Paint.setImageFilter(_fillPaint, None);
+    };
+
     let innerRRect =
       renderBorders(~canvas, ~style, ~outerRRect=_outerRRect, ~opacity);
 
-    let color = Color.multiplyAlpha(opacity, style.backgroundColor);
-    let colorAlpha = Color.getAlpha(color);
     if (colorAlpha > 0.001) {
-      // switch (style.boxShadow) {
-      // | {xOffset: 0., yOffset: 0., blurRadius: 0., spreadRadius: 0., color: _} =>
-      // ()
-      // | boxShadow => {
-      if (style.boxShadow.blurRadius != 0.) {
-        /*  print_endline(
-              "drawing shadow..." ++ string_of_float(style.boxShadow.blurRadius),
-            );*/
-        let shadowImageFilter = makeShadowImageFilter(style.boxShadow);
-        Skia.Paint.setImageFilter(_fillPaint, shadowImageFilter);
-      };
-      // }
-      // };
-
       let skiaColor = Color.toSkia(color);
       Skia.Paint.setColor(_fillPaint, skiaColor);
 

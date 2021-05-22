@@ -10,7 +10,7 @@ module Data = {
     Surface.makeRaster(imageInfo, 0, None);
   };
 
-  let surface = makeSurface(800l, 600l);
+  let surface = makeSurface(800l, 600l) |> Option.get;
   let canvas = Surface.getCanvas(surface);
   let paint = Paint.make();
 };

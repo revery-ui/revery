@@ -36,17 +36,20 @@ module Logo = {
   let%component make = () => {
     let%hook (shouldRotate, setShouldRotate) = Hooks.state(true);
     let%hook ((rotationX, rotationY), _animationState, resetRotation) =
-      Hooks.animation(rotationAnimation, ~active=shouldRotate);
+      Hooks.animation(
+        ~name="Rotation Animation",
+        rotationAnimation,
+        ~active=shouldRotate,
+      );
     let%hook (opacity, setOpacity) = Hooks.state(1.0);
-    let%hook transitionedOpacity = Hooks.transition(opacity);
+    let%hook transitionedOpacity =
+      Hooks.transition(~name="Opacity Transition Animation", opacity);
 
     <View>
       <Opacity opacity=transitionedOpacity>
         <Image
           src={`File("outrun-logo.png")}
           style=Style.[
-            width(512),
-            height(256),
             transform([
               Transform.RotateY(Angle.from_radians(rotationY)),
               Transform.RotateX(Angle.from_radians(rotationX)),
@@ -94,6 +97,7 @@ module AnimatedText = {
   let%component make = (~text: string, ~delay: Time.t, ()) => {
     let%hook (animatedOpacity, _state, _reset) =
       Hooks.animation(
+        ~name="Text Opacity Animation",
         Animation.(
           animate(Time.seconds(1))
           |> delay(Time.seconds(1))
@@ -103,6 +107,7 @@ module AnimatedText = {
       );
     let%hook (translate, _state, _reset) =
       Hooks.animation(
+        ~name="Text Translate Animation",
         Animation.animate(Time.ms(500))
         |> Animation.delay(delay)
         |> Animation.ease(Easing.easeOut)

@@ -1,5 +1,4 @@
 (library
-    (name Harfbuzz_Test)
-    (ocamlopt_flags -linkall -g)
-    (libraries rely.lib rely.internal
-    reason-harfbuzz))
+ (name Harfbuzz_Test)
+ (ocamlopt_flags -linkall -g)
+ (libraries rely.lib rely.internal reason-harfbuzz))

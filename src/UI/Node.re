@@ -315,9 +315,13 @@ class node (()) = {
     child#_setParent(Some((_this :> node)));
     _this#markLayoutDirty();
   };
+  pub cleanup = () => {
+    List.iter(c => c#cleanup(), _children);
+  };
   pub removeChild = (n: node) => {
     _children =
       List.filter(c => c#getInternalId() != n#getInternalId(), _children);
+    n#cleanup();
     n#_setParent(None);
     _this#markLayoutDirty();
   };

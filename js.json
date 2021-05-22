@@ -13,8 +13,7 @@
       "@opam/js_of_ocaml": "*",
       "@opam/js_of_ocaml-compiler": "*",
       "@opam/js_of_ocaml-lwt": "*",
-      "http-server": "*",
-      "@opam/merlin-extend": "0.4"
+      "http-server": "*"
     }
   }
 }

@@ -35,7 +35,13 @@ type mouseBehavior =
 
 let getActiveWindow = () => _activeWindow^;
 
-let start = (window: Window.t, element: React.element(React.reveryNode)) => {
+let start =
+    (
+      ~onBeforeRender=() => (),
+      ~onAfterRender=() => (),
+      window: Window.t,
+      element: React.element(React.reveryNode),
+    ) => {
   let uiDirty = ref(true);
   let forceLayout = ref(true);
   let latestElement = ref(element);
@@ -67,6 +73,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
           Revery_Core.Events.InternalMouseMove({
             mouseX: m.mouseX /. scaleAndZoomFactor,
             mouseY: m.mouseY /. scaleAndZoomFactor,
+            keymod: m.keymod,
           });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
@@ -76,7 +83,15 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Window.onMouseWheel(
       window,
       m => {
-        let evt = Revery_Core.Events.InternalMouseWheel(m);
+        let scaleAndZoomFactor = Window.getScaleAndZoom(window);
+        let evt =
+          Revery_Core.Events.InternalMouseWheel({
+            deltaX: m.deltaX,
+            deltaY: m.deltaY,
+            keymod: m.keymod,
+            mouseX: m.mouseX /. scaleAndZoomFactor,
+            mouseY: m.mouseY /. scaleAndZoomFactor,
+          });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
@@ -85,7 +100,11 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Window.onMouseDown(
       window,
       m => {
-        let evt = Revery_Core.Events.InternalMouseDown({button: m.button});
+        let evt =
+          Revery_Core.Events.InternalMouseDown({
+            button: m.button,
+            keymod: m.keymod,
+          });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
@@ -114,7 +133,11 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
     Window.onMouseUp(
       window,
       m => {
-        let evt = Revery_Core.Events.InternalMouseUp({button: m.button});
+        let evt =
+          Revery_Core.Events.InternalMouseUp({
+            button: m.button,
+            keymod: m.keymod,
+          });
         Mouse.dispatch(mouseCursor, evt, rootNode);
       },
     );
@@ -130,6 +153,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
             mouseX: f.mouseX /. scaleAndZoomFactor,
             mouseY: f.mouseY /. scaleAndZoomFactor,
             paths: f.paths,
+            keymod: f.keymod,
           });
         FileDrop.dispatch(evt, rootNode);
       },
@@ -153,6 +177,7 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
   Window.setRenderCallback(
     window,
     () => {
+      onBeforeRender();
       /*
        * The dirty flag needs to be cleared before rendering,
        * as some events during rendering might trigger a 'dirty',
@@ -169,7 +194,11 @@ let start = (window: Window.t, element: React.element(React.reveryNode)) => {
       forceLayout := false;
 
       _activeWindow := Some(window);
-      Render.render(~forceLayout=fl, ui, latestElement^);
+      let forceRerender = Render.render(~forceLayout=fl, ui, latestElement^);
+      if (forceRerender) {
+        uiDirty := true;
+      };
+      onAfterRender();
     },
   );
 

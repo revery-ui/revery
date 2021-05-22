@@ -24,6 +24,7 @@ let make:
     ~children: Revery_UI.element=?,
     ~onTick: tickFunction=?,
     ~tickRate: Revery_Core.Time.t=?,
+    ~name: string=?,
     unit
   ) =>
   Brisk_reconciler.element(Revery_UI.viewNode);

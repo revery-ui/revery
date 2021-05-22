@@ -11,10 +11,12 @@ module Selector = Selector;
 module RichText = RichText;
 
 class node = class Node.node;
+class layerNode = class LayerNode.layerNode;
 class viewNode = class ViewNode.viewNode;
 class textNode = class TextNode.textNode;
 class imageNode = class ImageNode.imageNode;
 class canvasNode = class CanvasNode.canvasNode;
+class nativeButtonNode = class NativeButtonNode.nativeButtonNode;
 module NodeDrawContext = NodeDrawContext;
 
 module Keyboard = Keyboard;
@@ -27,6 +29,8 @@ module React = React;
 module Focus = Focus;
 module Dimensions = Dimensions;
 module Offset = Offset;
+
+module RenderCondition = RenderCondition;
 
 type element = React.element(node);
 

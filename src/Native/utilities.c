@@ -22,16 +22,27 @@ void revery_caml_call(camlValue f) {
     revery_caml_call_n(f, 1, args);
 }
 
-CAMLprim value revery_wrapPointer(void *data) {
-    CAMLparam0();
-    CAMLlocal1(result);
-
-    result = caml_alloc(1, Abstract_tag);
-    Store_field(data, 0, (value)data);
-
-    CAMLreturn(result);
+/* Create an OCaml value encapsulating the pointer p */
+value revery_wrapPointer(void *p) {
+    value v = caml_alloc(1, Abstract_tag);
+    *((void **) Data_abstract_val(v)) = p;
+    return v;
 }
 
-void *revery_extractPointer(camlValue data) {
-    return (void *)Field(data, 0);
+/* Extract the pointer encapsulated in the given OCaml value */
+void *revery_unwrapPointer(value v) {
+    return *((void **) Data_abstract_val(v));
+}
+
+/* Create an OCaml value encapsulating the pointer p
+    None when p == NULL, Some(p) when p != NULL
+*/
+CAMLprim value revery_wrapOptionalPointer(void *p) {
+    CAMLparam0();
+    if (p != NULL) {
+        value v = revery_wrapPointer(p);
+        CAMLreturn(Val_some(v));
+    } else {
+        CAMLreturn(Val_none);
+    }
 }

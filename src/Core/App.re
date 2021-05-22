@@ -9,13 +9,24 @@ module Log = AppLog;
 type delegatedFunc = unit => unit;
 type unsubscribe = unit => unit;
 
+type quitResponse =
+  | AllowQuit
+  | PreventQuit;
+
+let mergeQuitResponse = (a: quitResponse, b: quitResponse) => {
+  switch (a, b) {
+  | (AllowQuit, AllowQuit) => AllowQuit
+  | _ => PreventQuit
+  };
+};
+
 type t = {
   mutable idleCount: int,
   mutable isFirstRender: bool,
   mutable isQuitting: bool,
   windows: Hashtbl.t(int, Window.t),
   onIdle: Event.t(unit),
-  onBeforeQuit: Event.t(unit),
+  onBeforeQuit: Event.Fanout.t(int, quitResponse),
   onFileOpen: Event.t(string),
   mutable canIdle: unit => bool,
 };
@@ -57,12 +68,22 @@ let quit = (~askNicely=false, ~code=0, app: t) => {
     if (!app.isQuitting) {
       Log.info("onBeforeQuit");
       app.isQuitting = true;
-      let _: unit = Event.dispatch(app.onBeforeQuit, ());
+      let quitResponse =
+        Event.Fanout.dispatch(
+          app.onBeforeQuit,
+          mergeQuitResponse,
+          AllowQuit,
+          code,
+        );
       app.isQuitting = false;
-    };
 
-    Log.info("Quitting");
-    exit(code);
+      switch (quitResponse) {
+      | AllowQuit =>
+        Log.info("Quitting");
+        exit(code);
+      | PreventQuit => Log.info("Quit prevented by event handler")
+      };
+    };
   };
 };
 
@@ -90,7 +111,7 @@ let setCanIdle = (f, app: t) => {
   app.canIdle = f;
 };
 
-let onBeforeQuit = app => Event.subscribe(app.onBeforeQuit);
+let onBeforeQuit = app => Event.Fanout.subscribe(app.onBeforeQuit);
 let onIdle = app => Event.subscribe(app.onIdle);
 let onFileOpen = app => Event.subscribe(app.onFileOpen);
 

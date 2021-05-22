@@ -68,9 +68,9 @@ module WindowMetrics: {
         // Mac and iOS is easy... there isn't any scaling factor.  The window is automatically
         // proportioned for us. The scaling is handled by the ratio of size / framebufferSize.
         | IOS
-        | Mac => 1.0
+        | Mac(_) => 1.0
         // On Windows, we need to try a Win32 API to get the scale factor
-        | Windows =>
+        | Windows(_) =>
           let scale = Sdl2.Window.getWin32ScaleFactor(sdlWindow);
           Log.tracef(m =>
             m("_getScaleFactor - from getWin32ScaleFactor: %f", scale)
@@ -86,7 +86,7 @@ module WindowMetrics: {
         //     https://github.com/mosra/magnum/commit/ae31c3cd82ba53454b8ab49d3f9d8ca385560d4b
         //     https://github.com/glfw/glfw/blob/250b94cd03e6f947ba516869c7f3b277f8d0cacc/src/x11_init.c#L938
         //     https://wiki.archlinux.org/index.php/HiDPI
-        | Linux =>
+        | Linux(_) =>
           switch (Rench.Environment.getEnvironmentVariable("GDK_SCALE")) {
           | None => 1.0
           | Some(v) =>
@@ -147,7 +147,10 @@ module WindowMetrics: {
     };
   };
 
-  let setZoom = (zoom, metrics) => {...metrics, zoom, isDirty: true};
+  let setZoom = (zoom, metrics) => {
+    Log.tracef(m => m("Setting zoom: %f", zoom));
+    {...metrics, zoom, isDirty: true};
+  };
   let markDirty = metrics => {...metrics, isDirty: true};
 };
 
@@ -235,7 +238,7 @@ type t = {
 module Internal = {
   let setTitlebarStyle = (w: Sdl2.Window.t, style: WindowStyles.titlebar) => {
     switch (Environment.os) {
-    | Mac =>
+    | Mac(_) =>
       switch (style) {
       | Transparent => Sdl2.Window.setMacTitlebarTransparent(w)
       | Hidden => Sdl2.Window.setMacTitlebarHidden(w)
@@ -245,9 +248,9 @@ module Internal = {
     | Browser
     // NOTE: may work for IOS?
     | IOS
-    | Linux
+    | Linux(_)
     | Unknown
-    | Windows => ()
+    | Windows(_) => ()
     };
   };
 
@@ -354,6 +357,9 @@ let setTitle = (v: t, title: string) => {
   Sdl2.Window.setTitle(v.sdlWindow, title);
 };
 
+let getTitlebarHeight = (v: t) =>
+  Sdl2.Window.getMacTitlebarHeight(v.sdlWindow);
+
 let setSize = (~width: int, ~height: int, win: t) => {
   Log.tracef(m => m("setSize - calling with: %ux%u", width, height));
   // On platforms that return a non-unit scale factor (Windows and Linux),
@@ -374,6 +380,10 @@ let setMinimumSize = (~width: int, ~height: int, win: t) => {
 
 let setZoom = (window, zoom) => {
   window.metrics = WindowMetrics.setZoom(max(zoom, 0.1), window.metrics);
+};
+
+let setUnsavedWork = (window, truth) => {
+  Revery_Native.Window.setUnsavedWork(window.sdlWindow, truth);
 };
 
 let render = window => {
@@ -398,11 +408,17 @@ let render = window => {
 };
 
 let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
+  Log.tracef(m => m("Window.handleEvent: %s", Sdl2.Event.show(sdlEvent)));
   switch (sdlEvent) {
   | Sdl2.Event.MouseWheel({deltaX, deltaY, _}) =>
+    let (windowX, windowY) = Sdl2.Window.getPosition(v.sdlWindow);
+    let (mouseX, mouseY) = Sdl2.Mouse.getGlobalPosition();
     let wheelEvent: Events.mouseWheelEvent = {
       deltaX: float(deltaX),
       deltaY: float(deltaY),
+      mouseX: float(mouseX - windowX),
+      mouseY: float(mouseY - windowY),
+      keymod: Sdl2.Keymod.getState(),
     };
     Event.dispatch(v.onMouseWheel, wheelEvent);
 
@@ -410,16 +426,26 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
     let mouseEvent: Events.mouseMoveEvent = {
       mouseX: float(x),
       mouseY: float(y),
+      keymod: Sdl2.Keymod.getState(),
     };
     Event.dispatch(v.onMouseMove, mouseEvent);
 
   | Sdl2.Event.MouseButtonUp(event) =>
-    Event.dispatch(v.onMouseUp, {button: MouseButton.convert(event.button)})
+    Event.dispatch(
+      v.onMouseUp,
+      {
+        button: MouseButton.convert(event.button),
+        keymod: Sdl2.Keymod.getState(),
+      },
+    )
 
   | Sdl2.Event.MouseButtonDown(event) =>
     Event.dispatch(
       v.onMouseDown,
-      {button: MouseButton.convert(event.button)},
+      {
+        button: MouseButton.convert(event.button),
+        keymod: Sdl2.Keymod.getState(),
+      },
     )
 
   | Sdl2.Event.KeyDown({keycode, keymod, scancode, repeat, _}) =>
@@ -492,7 +518,12 @@ let handleEvent = (sdlEvent: Sdl2.Event.t, v: t) => {
       v.dropState = None;
       Event.dispatch(
         v.onFileDropped,
-        {mouseX: float(x), mouseY: float(y), paths: List.rev(list)},
+        {
+          mouseX: float(x),
+          mouseY: float(y),
+          paths: List.rev(list),
+          keymod: Sdl2.Keymod.getState(),
+        },
       );
     }
   | Sdl2.Event.Quit => ()
@@ -533,35 +564,11 @@ let create = (name: string, options: WindowCreateOptions.t) => {
        )
      });
 
-  // Calculate the total bounds of all displays
-  let screenBounds =
-    displays
-    |> List.fold_left(
-         (acc: Sdl2.Rect.t, display) => {
-           let bounds = Sdl2.Display.getBounds(display);
-           Sdl2.Rect.{
-             x: min(acc.x, bounds.x),
-             y: min(acc.y, bounds.y),
-             width: max(acc.width, bounds.x + bounds.width),
-             height: max(acc.height, bounds.y + bounds.height),
-           };
-         },
-         Sdl2.Rect.{x: 0, y: 0, width: 0, height: 0},
-       );
-
   let width = options.width == 0 ? 800 : options.width;
   let height = options.height == 0 ? 480 : options.height;
 
-  let x =
-    switch (options.x) {
-    | `Centered => `Absolute((screenBounds.width - width) / 2)
-    | `Absolute(x) => `Absolute(x)
-    };
-  let y =
-    switch (options.y) {
-    | `Centered => `Absolute((screenBounds.height - height) / 2)
-    | `Absolute(y) => `Absolute(y)
-    };
+  let x = options.x;
+  let y = options.y;
 
   Log.infof(m =>
     m("Creating window %s width: %u height: %u", name, width, height)

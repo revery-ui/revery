@@ -3,7 +3,7 @@ module Tick = Revery_Core.Tick;
 
 module Hooks = Revery_UI.React.Hooks;
 
-let tick = (~tickRate=Time.seconds(1), onTick) => {
+let tick = (~tickRate=Time.seconds(1), ~name, onTick) => {
   // Because Tick.interval is only called once, initiallly, with the initial
   // onTick function, to execute the latest onTick function we either have to
   // dispose and recreate it for every call, or use a mutable variable to replace
@@ -15,7 +15,7 @@ let tick = (~tickRate=Time.seconds(1), onTick) => {
     Hooks.effect(
       OnMount,
       () => {
-        let dispose = Tick.interval(t => onTickRef^(t), tickRate);
+        let dispose = Tick.interval(~name, t => onTickRef^(t), tickRate);
 
         Some(dispose);
       },

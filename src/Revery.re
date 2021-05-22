@@ -4,9 +4,6 @@
  */
 include Revery_Core;
 
-/* Courtesy of @reason-native/console - a console-like API for native! */
-module Console = Console;
-
 module Font = Revery_Font;
 module Draw = Revery_Draw;
 module Math = Revery_Math;
@@ -28,6 +25,12 @@ module Platform = {
   include Platform;
 };
 
-module Utility = Revery_Utility;
+module Debug = {
+  let enable = Revery_Draw.DebugDraw.enable;
+  let disable = Revery_Draw.DebugDraw.disable;
+  let isEnabled = Revery_Draw.DebugDraw.isEnabled;
+};
 
-module SVG = Revery_SVG;
+module Utility = {
+  include Revery_Utility;
+};

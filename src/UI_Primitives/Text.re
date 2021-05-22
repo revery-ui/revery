@@ -48,7 +48,7 @@ let%nativeComponent make =
       node#setEvents(events);
       node#setStyle(styles);
       node#setSmoothing(smoothing);
-      Obj.magic(node);
+      (node :> node);
     },
     configureInstance: (~isFirstRender as _, node) => {
       let styles = create(~style, ());

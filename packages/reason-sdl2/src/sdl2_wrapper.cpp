@@ -15,6 +15,7 @@
 #include "stb_image.h"
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_audio.h>
 #include <SDL2/SDL_main.h>
 #include <SDL2/SDL_config.h>
 #include <SDL2/SDL_syswm.h>
@@ -57,6 +58,18 @@ static value Val_error(value v) {
 }
 
 extern "C" {
+    /* Create an OCaml value encapsulating the pointer p */
+    value resdl_wrapPointer(void *p) {
+        value v = caml_alloc(1, Abstract_tag);
+        *((void **) Data_abstract_val(v)) = p;
+        return v;
+    }
+
+    /* Extract the pointer encapsulated in the given OCaml value */
+    void *resdl_unwrapPointer(value v) {
+        return *((void **) Data_abstract_val(v));
+    }
+
     CAMLprim value resdl_SDL_EnableScreenSaver() {
         CAMLparam0();
         SDL_EnableScreenSaver();
@@ -81,21 +94,24 @@ extern "C" {
         return Val_unit;
     }
     CAMLprim value resdl_SDL_DestroyWindow(value vWin) {
-        SDL_Window *win = (SDL_Window *)vWin;
+        CAMLparam1(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_DestroyWindow(win);
-        return Val_unit;
+        CAMLreturn(Val_unit);
     }
 
     SDL_HitTestResult resdl_hit_test(SDL_Window *win, const SDL_Point *area,
                                      void *data) {
 
+        CAMLparam0();
+        CAMLlocal2(vWin, vRet);
         static const value *hitTestCallback = NULL;
         if (hitTestCallback == NULL) {
             hitTestCallback = caml_named_value("__sdl2_caml_hittest__");
         }
-        value vWin = (value)win;
-        value vRet = caml_callback3(*hitTestCallback, vWin, Val_int(area->x),
-                                    Val_int(area->y));
+        vWin = resdl_wrapPointer(win);
+        vRet = caml_callback3(*hitTestCallback, vWin, Val_int(area->x),
+                              Val_int(area->y));
         SDL_HitTestResult result;
         switch (Int_val(vRet)) {
         case 0:
@@ -133,19 +149,21 @@ extern "C" {
             break;
         }
 
-        return result;
+        CAMLreturnT(SDL_HitTestResult, result);
     };
 
     CAMLprim value resdl_SDL_EnableHitTest(value vWin) {
-        SDL_Window *win = (SDL_Window *)vWin;
+        CAMLparam1(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SetWindowHitTest(win, resdl_hit_test, NULL);
-        return Val_unit;
+        CAMLreturn(Val_unit);
     }
 
     CAMLprim value resdl_SDL_DisableHitTest(value vWin) {
-        SDL_Window *win = (SDL_Window *)vWin;
+        CAMLparam1(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SetWindowHitTest(win, NULL, NULL);
-        return Val_unit;
+        CAMLreturn(Val_unit);
     }
 
     CAMLprim value resdl_SDL_Delay(value delay) {
@@ -202,8 +220,9 @@ extern "C" {
 
     CAMLprim value resdl_SDL_GetNativeWindow(value vWin) {
         CAMLparam1(vWin);
+        CAMLlocal1(vNativeWindow);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SysWMinfo wmInfo;
         SDL_VERSION(&wmInfo.version);
         SDL_GetWindowWMInfo(win, &wmInfo);
@@ -244,7 +263,9 @@ extern "C" {
             break;
         }
 
-        CAMLreturn((value)pNativeWindow);
+        vNativeWindow = resdl_wrapPointer(pNativeWindow);
+
+        CAMLreturn(vNativeWindow);
     };
 
 #ifdef WIN32
@@ -323,7 +344,7 @@ extern "C" {
         CAMLparam1(vWin);
 
 #ifdef SDL_VIDEO_DRIVER_COCOA
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SysWMinfo wmInfo;
         SDL_VERSION(&wmInfo.version);
         SDL_GetWindowWMInfo(win, &wmInfo);
@@ -339,7 +360,7 @@ extern "C" {
         CAMLparam1(vWin);
 
 #ifdef SDL_VIDEO_DRIVER_COCOA
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SysWMinfo wmInfo;
         SDL_VERSION(&wmInfo.version);
         SDL_GetWindowWMInfo(win, &wmInfo);
@@ -353,12 +374,31 @@ extern "C" {
         CAMLreturn(Val_unit);
     }
 
+    CAMLprim value resdl_SDL_GetMacTitlebarHeight(value vWin) {
+        CAMLparam1(vWin);
+        double titlebarHeight = 0.0;
+
+#ifdef SDL_VIDEO_DRIVER_COCOA
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
+        SDL_SysWMinfo wmInfo;
+        SDL_VERSION(&wmInfo.version);
+        SDL_GetWindowWMInfo(win, &wmInfo);
+        NSWindow *nWindow = wmInfo.info.cocoa.window;
+
+        // Sourced from: https://stackoverflow.com/a/59323932/12701512
+        CGFloat windowFrameHeight = CGRectGetHeight([nWindow contentView].frame);
+        CGFloat contentLayoutRectHeight = CGRectGetHeight([nWindow contentLayoutRect]);
+        titlebarHeight = (double)(windowFrameHeight - contentLayoutRectHeight);
+#endif
+        CAMLreturn(caml_copy_double(titlebarHeight));
+    }
+
     CAMLprim value resdl_SDL_SetMacBackgroundColor(value vWin, value r, value g,
             value b, value a) {
         CAMLparam5(vWin, r, g, b, a);
 
 #ifdef SDL_VIDEO_DRIVER_COCOA
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SysWMinfo wmInfo;
         SDL_VERSION(&wmInfo.version);
         SDL_GetWindowWMInfo(win, &wmInfo);
@@ -414,7 +454,7 @@ extern "C" {
         CAMLparam1(vWin);
 
 #ifdef WIN32
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         HWND hwnd = getHWNDFromSDLWindow(win);
         HMONITOR hmon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTOPRIMARY);
 
@@ -467,9 +507,9 @@ extern "C" {
 
         ret = caml_alloc(4, 0);
         Store_field(ret, 0, Val_int(current.format));
-        Store_field(ret, 1, current.w);
-        Store_field(ret, 2, current.h);
-        Store_field(ret, 3, current.refresh_rate);
+        Store_field(ret, 1, Val_int(current.w));
+        Store_field(ret, 2, Val_int(current.h));
+        Store_field(ret, 3, Val_int(current.refresh_rate));
         CAMLreturn(ret);
     };
 
@@ -484,9 +524,9 @@ extern "C" {
 
         ret = caml_alloc(4, 0);
         Store_field(ret, 0, Val_int(current.format));
-        Store_field(ret, 1, current.w);
-        Store_field(ret, 2, current.h);
-        Store_field(ret, 3, current.refresh_rate);
+        Store_field(ret, 1, Val_int(current.w));
+        Store_field(ret, 2, Val_int(current.h));
+        Store_field(ret, 3, Val_int(current.refresh_rate));
         CAMLreturn(ret);
     };
 
@@ -560,16 +600,16 @@ extern "C" {
         CAMLreturn(ret);
     }
 
-    CAMLprim value resdl_SDL_GetWindowDisplayIndex(value w) {
-        CAMLparam1(w);
-        SDL_Window *win = (SDL_Window *)w;
+    CAMLprim value resdl_SDL_GetWindowDisplayIndex(value vWin) {
+        CAMLparam1(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         int idx = SDL_GetWindowDisplayIndex(win);
         CAMLreturn(Val_int(idx));
     };
 
     CAMLprim value resdl_SDL_GetWindowPixelFormat(value vWin) {
         CAMLparam1(vWin);
-        SDL_Window *pWin = (SDL_Window *)vWin;
+        SDL_Window *pWin = (SDL_Window *)resdl_unwrapPointer(vWin);
         Uint32 format = SDL_GetWindowPixelFormat(pWin);
         CAMLreturn(Val_int(format));
     };
@@ -580,8 +620,10 @@ extern "C" {
         return Val_unit;
     };
 
-    CAMLprim value resdl_SDL_GL_Setup(value w) {
-        SDL_Window *win = (SDL_Window *)w;
+    CAMLprim value resdl_SDL_GL_Setup(value vWin) {
+        CAMLparam1(vWin);
+        CAMLlocal1(vCtx);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_GLContext ctx = SDL_GL_CreateContext(win);
 
         if (!ctx) {
@@ -589,7 +631,9 @@ extern "C" {
                             SDL_GetError());
         }
 
-        return (value)ctx;
+        vCtx = resdl_wrapPointer(ctx);
+
+        CAMLreturn(vCtx);
     }
 
     typedef const GLubyte *(*glGetStringFunc)(GLenum);
@@ -655,10 +699,11 @@ extern "C" {
         CAMLreturn(Val_int(ret));
     }
 
-    CAMLprim value resdl_SDL_GL_MakeCurrent(value vWindow, value vContext) {
-        CAMLparam2(vWindow, vContext);
-        SDL_Window *win = (SDL_Window *)vWindow;
-        SDL_GLContext ctx = (SDL_GLContext)vContext;
+    CAMLprim value resdl_SDL_GL_MakeCurrent(value vWin, value vContext) {
+        CAMLparam2(vWin, vContext);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
+
+        SDL_GLContext ctx = (SDL_GLContext)resdl_unwrapPointer(vContext);
 
         SDL_GL_MakeCurrent(win, ctx);
         CAMLreturn(Val_unit);
@@ -1055,7 +1100,7 @@ extern "C" {
     CAMLprim value resdl_SDL_GetWindowSize(value vWindow) {
         CAMLparam1(vWindow);
         CAMLlocal1(ret);
-        SDL_Window *win = (SDL_Window *)vWindow;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWindow);
         int width, height = 0;
         SDL_GetWindowSize(win, &width, &height);
         ret = caml_alloc(2, 0);
@@ -1068,7 +1113,7 @@ extern "C" {
         CAMLparam1(vWindow);
         CAMLlocal1(position);
 
-        SDL_Window *win = (SDL_Window *)vWindow;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWindow);
         int x, y = 0;
 
         SDL_GetWindowPosition(win, &x, &y);
@@ -1083,7 +1128,7 @@ extern "C" {
     CAMLprim value resdl_SDL_GL_GetDrawableSize(value vWindow) {
         CAMLparam1(vWindow);
         CAMLlocal1(ret);
-        SDL_Window *win = (SDL_Window *)vWindow;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWindow);
         int width, height = 0;
         SDL_GL_GetDrawableSize(win, &width, &height);
         ret = caml_alloc(2, 0);
@@ -1095,8 +1140,8 @@ extern "C" {
     CAMLprim value resdl_SDL_SetWindowIcon(value vWindow, value vIcon) {
         CAMLparam2(vWindow, vIcon);
 
-        SDL_Window *win = (SDL_Window *)vWindow;
-        SDL_Surface *surface = (SDL_Surface *)vIcon;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWindow);
+        SDL_Surface *surface = (SDL_Surface *)resdl_unwrapPointer(vIcon);
         SDL_SetWindowIcon(win, surface);
 
         CAMLreturn(Val_unit);
@@ -1106,7 +1151,7 @@ extern "C" {
             value vTransparency) {
         CAMLparam2(vWindow, vTransparency);
 
-        SDL_Window *win = (SDL_Window *)vWindow;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWindow);
         double transparency = Double_val(vTransparency);
 
         int result;
@@ -1121,6 +1166,7 @@ extern "C" {
 
     CAMLprim value resdl_SDL_CreateSystemCursor(value vCursor) {
         CAMLparam1(vCursor);
+        CAMLlocal1(vCursorRet);
 
         SDL_Cursor *cursor = NULL;
 
@@ -1165,7 +1211,8 @@ extern "C" {
         }
 
         cursor = SDL_CreateSystemCursor(id);
-        CAMLreturn((value)cursor);
+        vCursorRet = resdl_wrapPointer(cursor);
+        CAMLreturn(vCursorRet);
     }
 
     CAMLprim value resdl_SDL_StartTextInput() {
@@ -1201,9 +1248,197 @@ extern "C" {
 
     CAMLprim value resdl_SDL_SetCursor(value vCursor) {
         CAMLparam1(vCursor);
-        SDL_Cursor *cursor = (SDL_Cursor *)vCursor;
+        SDL_Cursor *cursor = (SDL_Cursor *)resdl_unwrapPointer(vCursor);
         SDL_SetCursor(cursor);
         CAMLreturn(Val_unit);
+    }
+
+    static SDL_AudioFormat SDL_AudioFormat_val(value tag) {
+        switch (Int_val(tag)) {
+        case 0:
+            return AUDIO_S8;
+        case 1:
+            return AUDIO_U8;
+        case 2:
+            return AUDIO_S16LSB;
+        case 3:
+            return AUDIO_S16MSB;
+        case 4:
+            return AUDIO_U16LSB;
+        case 5:
+            return AUDIO_U16MSB;
+        case 6:
+            return AUDIO_S32LSB;
+        case 7:
+            return AUDIO_S32MSB;
+        case 8:
+            return AUDIO_F32LSB;
+        case 9:
+            return AUDIO_F32MSB;
+        default:
+            return 0;
+        }
+    }
+
+    CAMLprim value Val_SDL_AudioFormat(SDL_AudioFormat format) {
+        CAMLparam0();
+        int tag;
+        switch (format) {
+        case AUDIO_S8:
+            tag = 0;
+            break;
+        case AUDIO_U8:
+            tag = 1;
+            break;
+        case AUDIO_S16LSB:
+            tag = 2;
+            break;
+        case AUDIO_S16MSB:
+            tag = 3;
+            break;
+        case AUDIO_U16LSB:
+            tag = 4;
+            break;
+        case AUDIO_U16MSB:
+            tag = 5;
+            break;
+        case AUDIO_S32LSB:
+            tag = 6;
+            break;
+        case AUDIO_S32MSB:
+            tag = 7;
+            break;
+        case AUDIO_F32LSB:
+            tag = 8;
+            break;
+        case AUDIO_F32MSB:
+            tag = 9;
+            break;
+        }
+        CAMLreturn(Val_int(tag));
+    }
+
+    CAMLprim value Val_SDL_AudioSpec(SDL_AudioSpec spec) {
+        CAMLparam0();
+        CAMLlocal1(ret);
+        ret = caml_alloc(7, 0);
+        Store_field(ret, 0, Val_int(spec.freq));
+        Store_field(ret, 1, Val_SDL_AudioFormat(spec.format));
+        Store_field(ret, 2, Val_int(spec.channels));
+        Store_field(ret, 3, Val_int(spec.silence));
+        Store_field(ret, 4, Val_int(spec.samples));
+        Store_field(ret, 5, Val_int(spec.padding));
+        Store_field(ret, 6, Val_int(spec.size));
+        CAMLreturn(ret);
+    }
+
+    CAMLprim value resdl_SDL_LoadWAV(value vPath) {
+        CAMLparam1(vPath);
+        CAMLlocal3(ret, vSpec, vTup3);
+        SDL_AudioSpec spec;
+        Uint8 *audioBuf;
+        Uint32 audioLen;
+        SDL_LoadWAV(String_val(vPath), &spec, &audioBuf, &audioLen);
+        if (audioBuf == NULL) {
+            ret = Val_error(caml_copy_string(SDL_GetError()));
+            CAMLreturn(ret);
+        }
+        vSpec = Val_SDL_AudioSpec(spec);
+        vTup3 = caml_alloc_tuple(3);
+        Store_field(vTup3, 0, vSpec);
+        Store_field(vTup3, 1, resdl_wrapPointer(audioBuf));
+        Store_field(vTup3, 2, Val_int(audioLen));
+        ret = Val_ok(vTup3);
+        CAMLreturn(ret);
+    }
+
+    CAMLprim value resdl_SDL_OpenAudioDevice(
+        value vDeviceNameOpt,
+        value vIsCapture,
+        value vWant,
+        value vAllowedChanges) {
+        CAMLparam4(vDeviceNameOpt, vIsCapture, vWant, vAllowedChanges);
+        CAMLlocal3(ret, vHave, vTup2);
+        const char *deviceName = Is_block(vDeviceNameOpt)
+                                 ? String_val(Field(vDeviceNameOpt, 0))
+                                 : NULL;
+        int isCapture = Bool_val(vIsCapture);
+        SDL_AudioSpec want = {0};
+        want.freq = Int_val(Field(vWant, 0));
+        want.format = SDL_AudioFormat_val(Field(vWant, 1));
+        want.channels = Int_val(Field(vWant, 2));
+        want.silence = Int_val(Field(vWant, 3));
+        want.samples = Int_val(Field(vWant, 4));
+        want.padding = Int_val(Field(vWant, 5));
+        want.size = Int_val(Field(vWant, 6));
+        SDL_AudioSpec have = {0};
+        int allowedChanges = Int_val(vAllowedChanges);
+        SDL_AudioDeviceID device = SDL_OpenAudioDevice(
+                                       deviceName,
+                                       isCapture,
+                                       &want,
+                                       &have,
+                                       allowedChanges);
+        if (device == 0) {
+            ret = Val_error(caml_copy_string(SDL_GetError()));
+            CAMLreturn(ret);
+        }
+        vHave = Val_SDL_AudioSpec(have);
+        vTup2 = caml_alloc_tuple(2);
+        Store_field(vTup2, 0, Val_int(device));
+        Store_field(vTup2, 1, vHave);
+        ret = Val_ok(vTup2);
+        CAMLreturn(ret);
+    }
+
+    CAMLprim value resdl_SDL_CloseAudioDevice(value vDevice) {
+        CAMLparam1(vDevice);
+        SDL_AudioDeviceID device = Int_val(vDevice);
+        SDL_CloseAudioDevice(device);
+        CAMLreturn(Val_unit);
+    }
+
+    CAMLprim value resdl_SDL_GetAudioDeviceStatus(value vDevice) {
+        CAMLparam1(vDevice);
+        SDL_AudioDeviceID device = Int_val(vDevice);
+        SDL_AudioStatus status = SDL_GetAudioDeviceStatus(device);
+        CAMLreturn(Val_int(status));
+    }
+
+    CAMLprim value resdl_SDL_PauseAudioDevice(value vDevice, value vPauseOn) {
+        CAMLparam2(vDevice, vPauseOn);
+        SDL_AudioDeviceID device = Int_val(vDevice);
+        int pauseOn = Bool_val(vPauseOn);
+        SDL_PauseAudioDevice(device, pauseOn);
+        CAMLreturn(Val_unit);
+    }
+
+    CAMLprim value resdl_SDL_QueueAudio(value vDevice, value vBuf, value vLen) {
+        CAMLparam3(vDevice, vBuf, vLen);
+        CAMLlocal1(ret);
+        SDL_AudioDeviceID device = Int_val(vDevice);
+        const void *buf = resdl_unwrapPointer(vBuf);
+        Uint32 len = Int_val(vLen);
+        if (SDL_QueueAudio(device, buf, len) < 0) {
+            ret = Val_error(caml_copy_string(SDL_GetError()));
+            CAMLreturn(ret);
+        }
+        ret = Val_ok(Val_unit);
+        CAMLreturn(ret);
+    }
+
+    CAMLprim value resdl_SDL_ClearQueuedAudio(value vDevice) {
+        CAMLparam1(vDevice);
+        SDL_AudioDeviceID device = Int_val(vDevice);
+        SDL_ClearQueuedAudio(device);
+        CAMLreturn(Val_unit);
+    }
+
+    CAMLprim value resdl_SDL_GetQueuedAudioSize(value vDevice) {
+        CAMLparam1(vDevice);
+        SDL_AudioDeviceID device = Int_val(vDevice);
+        Uint32 bytes = SDL_GetQueuedAudioSize(device);
+        CAMLreturn(Val_int(bytes));
     }
 
     CAMLprim value resdl_SDL_CreateRGBSurfaceFromImage(value vPath) {
@@ -1252,19 +1487,20 @@ extern "C" {
                 ret = Val_error(caml_copy_string(SDL_GetError()));
                 stbi_image_free(data);
             } else {
-                ret = Val_ok((value)surf);
+                ret = Val_ok(resdl_wrapPointer(surf));
             }
         }
 
         CAMLreturn(ret);
     };
 
-    CAMLprim value resdl_SDL_GL_SwapWindow(value w) {
-        SDL_Window *win = (SDL_Window *)w;
+    CAMLprim value resdl_SDL_GL_SwapWindow(value vWin) {
+        CAMLparam1(vWin);
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         caml_release_runtime_system();
         SDL_GL_SwapWindow(win);
         caml_acquire_runtime_system();
-        return Val_unit;
+        CAMLreturn(Val_unit);
     }
 
     SDL_HitTestResult hittest(SDL_Window *win, const SDL_Point *area, void *data) {
@@ -1274,7 +1510,7 @@ extern "C" {
     CAMLprim value resdl_SDL_SetWindowSize(value vWin, value vW, value vH) {
         CAMLparam3(vWin, vW, vH);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         int w = Int_val(vW);
         int h = Int_val(vH);
         SDL_SetWindowSize(win, w, h);
@@ -1285,7 +1521,7 @@ extern "C" {
     CAMLprim value resdl_SDL_SetWindowMinimumSize(value vWin, value vW, value vH) {
         CAMLparam3(vWin, vW, vH);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         int w = Int_val(vW);
         int h = Int_val(vH);
         SDL_SetWindowMinimumSize(win, w, h);
@@ -1296,7 +1532,7 @@ extern "C" {
     CAMLprim value resdl_SDL_SetWindowTitle(value vWin, value vTitle) {
         CAMLparam2(vWin, vTitle);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         const char *title = (const char *)String_val(vTitle);
         SDL_SetWindowTitle(win, title);
 
@@ -1306,7 +1542,7 @@ extern "C" {
     CAMLprim value resdl_SDL_SetWindowPosition(value vWin, value vX, value vY) {
         CAMLparam3(vWin, vX, vY);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         int x = Int_val(vX);
         int y = Int_val(vY);
         SDL_SetWindowPosition(win, x, y);
@@ -1317,7 +1553,7 @@ extern "C" {
     CAMLprim value resdl_SDL_WindowCenter(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_SetWindowPosition(win, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
         CAMLreturn(Val_unit);
@@ -1327,6 +1563,7 @@ extern "C" {
                                           value vWidth, value vHeight, value vAcceleration) {
         CAMLparam5(vName, vX, vY, vWidth, vHeight);
         CAMLxparam1(vAcceleration);
+        CAMLlocal1(vWindow);
 
         int x;
         if (vX == hash_variant("Centered")) {
@@ -1396,7 +1633,7 @@ extern "C" {
                             SDL_GetError());
         }
 
-        value vWindow = (value)win;
+        vWindow = resdl_wrapPointer(win);
         CAMLreturn(vWindow);
     }
 
@@ -1414,7 +1651,7 @@ extern "C" {
     CAMLprim value resdl_SDL_SetWindowBordered(value vWin, value vBordered) {
         CAMLparam2(vWin, vBordered);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_bool bordered = Int_val(vBordered) == 1 ? SDL_TRUE : SDL_FALSE;
 
         SDL_SetWindowBordered(win, bordered);
@@ -1424,7 +1661,7 @@ extern "C" {
     CAMLprim value resdl_SDL_SetWindowResizable(value vWin, value vResizable) {
         CAMLparam2(vWin, vResizable);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_bool resize = Int_val(vResizable) == 1 ? SDL_TRUE : SDL_FALSE;
 
         SDL_SetWindowResizable(win, resize);
@@ -1434,7 +1671,7 @@ extern "C" {
     CAMLprim value resdl_SDL_HideWindow(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_HideWindow(win);
 
         CAMLreturn(Val_unit);
@@ -1443,7 +1680,7 @@ extern "C" {
     CAMLprim value resdl_SDL_MaximizeWindow(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_MaximizeWindow(win);
 
         CAMLreturn(Val_unit);
@@ -1452,7 +1689,7 @@ extern "C" {
     CAMLprim value resdl_SDL_IsWindowMaximized(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         Uint32 flags = SDL_GetWindowFlags(win);
         bool hasMaximizedFlag = (flags & SDL_WINDOW_MAXIMIZED) != 0;
 
@@ -1462,7 +1699,7 @@ extern "C" {
     CAMLprim value resdl_SDL_IsWindowFullscreen(value vWin) {
         CAMLparam1(vWin);
         // SDL's fullscreen window flags don't work on macOS
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         bool isFullscreen;
 #ifdef SDL_VIDEO_DRIVER_COCOA
         SDL_SysWMinfo wmInfo;
@@ -1481,7 +1718,7 @@ extern "C" {
     CAMLprim value resdl_SDL_MinimizeWindow(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_MinimizeWindow(win);
 
         CAMLreturn(Val_unit);
@@ -1490,7 +1727,7 @@ extern "C" {
     CAMLprim value resdl_SDL_RaiseWindow(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_RaiseWindow(win);
 
         CAMLreturn(Val_unit);
@@ -1499,7 +1736,7 @@ extern "C" {
     CAMLprim value resdl_SDL_RestoreWindow(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_RestoreWindow(win);
 
         CAMLreturn(Val_unit);
@@ -1508,7 +1745,7 @@ extern "C" {
     CAMLprim value resdl_SDL_ShowWindow(value vWin) {
         CAMLparam1(vWin);
 
-        SDL_Window *win = (SDL_Window *)vWin;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWin);
         SDL_ShowWindow(win);
 
         CAMLreturn(Val_unit);
@@ -1516,7 +1753,7 @@ extern "C" {
 
     CAMLprim value resdl_SDL_GetWindowId(value vWindow) {
         CAMLparam1(vWindow);
-        SDL_Window *win = (SDL_Window *)vWindow;
+        SDL_Window *win = (SDL_Window *)resdl_unwrapPointer(vWindow);
         int id = SDL_GetWindowID(win);
         CAMLreturn(Val_int(id));
     }
@@ -1605,7 +1842,7 @@ extern "C" {
 
         SDL_LogSetOutputFunction(&resdl_onLog, NULL);
 
-        int ret = SDL_Init(SDL_INIT_VIDEO);
+        int ret = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
         if (ret < 0) {
             SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "SDL_Init failed: %s\n",
@@ -1793,7 +2030,7 @@ extern "C" {
         SDL_Window *win = NULL;
 
         if (Is_block(vWindow)) {
-            win = (SDL_Window *)Field(vWindow, 0);
+            win = (SDL_Window *)resdl_unwrapPointer(Field(vWindow, 0));
         }
 
         SDL_ShowSimpleMessageBox(flags, title, msg, win);
@@ -1805,6 +2042,20 @@ extern "C" {
         CAMLparam0();
         SDL_bool enabled = Int_val(vEnabled) == 1 ? SDL_TRUE : SDL_FALSE;
         CAMLreturn(Val_int(SDL_CaptureMouse(enabled)));
+    }
+
+    CAMLprim value resdl_SDL_GetGlobalMouseState(value vUnit) {
+        CAMLparam0();
+        CAMLlocal1(ret);
+
+        int x, y;
+        SDL_GetGlobalMouseState(&x, &y);
+
+        ret = caml_alloc(2, 0);
+        Store_field(ret, 0, Val_int(x));
+        Store_field(ret, 1, Val_int(y));
+
+        CAMLreturn(ret);
     }
 
     CAMLprim value resdl_PassThrough(value v) {

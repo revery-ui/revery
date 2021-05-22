@@ -59,7 +59,7 @@ module PointerEvents = {
 
 type t = {
   backgroundColor: Color.t,
-  color: Color.t,
+  color: option(Color.t),
   width: int,
   height: int,
   position: LayoutTypes.positionType,
@@ -116,7 +116,6 @@ let make =
     (
       ~textOverflow=TextOverflow.Overflow,
       ~backgroundColor: Color.t=Colors.transparentBlack,
-      ~color: Color.t=Colors.white,
       ~width=Encoding.cssUndefined,
       ~height=Encoding.cssUndefined,
       ~flexBasis=Encoding.cssUndefined,
@@ -172,6 +171,7 @@ let make =
                    color: Colors.black,
                  },
       ~cursor=?,
+      ~color=?,
       _unit: unit,
     ) => {
   let ret: t = {
@@ -308,7 +308,7 @@ type coreStyleProps = [
   | `AlignSelf(LayoutTypes.align)
   | `Position(LayoutTypes.positionType)
   | `BackgroundColor(Color.t)
-  | `Color(Color.t)
+  | `Color(option(Color.t))
   | `Width(int)
   | `Height(int)
   | `Top(int)
@@ -505,6 +505,7 @@ let alignSelf = a => `AlignSelf(alignment(a));
 
 let cursor = c => `Cursor(Some(c));
 
+let opacity = o => `Opacity(o);
 let transform = t => `Transform(t);
 let boxShadow = (~xOffset, ~yOffset, ~spreadRadius, ~blurRadius, ~color) =>
   `BoxShadow(BoxShadow.{xOffset, yOffset, spreadRadius, blurRadius, color});
@@ -516,7 +517,7 @@ let overflow = o =>
   | `Scroll => `Overflow(LayoutTypes.Scroll)
   };
 
-let color = o => `Color(o);
+let color = o => `Color(Some(o));
 let backgroundColor = o => `BackgroundColor(o);
 
 /*
@@ -669,8 +670,8 @@ let merge = (~source, ~target) =>
               | (`BorderVertical(_), `BorderVertical(_)) => targetStyle
               | (`BorderRadius(_), `BorderRadius(_)) => targetStyle
               | (`Transform(_), `Transform(_)) => targetStyle
-              | (`PointerEvents(_), `PointerEvents(_)) => targetStyle
               | (`Opacity(_), `Opacity(_)) => targetStyle
+              | (`PointerEvents(_), `PointerEvents(_)) => targetStyle
               | (`BoxShadow(_), `BoxShadow(_)) => targetStyle
               | (newRule, _) => newRule
               }

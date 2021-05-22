@@ -35,13 +35,13 @@ type t = {
     or [`Absolute(x)], where [x] is the horizontal pixel coordinate of the left
     edge of the [Window]
     */
-  x: [ | `Centered | `Absolute(int)],
+  x: [ | `Undefined | `Centered | `Absolute(int)],
   /**
     [y] is the initial horizontal position of the [Window], either [`Centered]
     or [`Absolute(x)], where [y] is the vertical pixel coordinate of the top
     edge of the [Window]
     */
-  y: [ | `Centered | `Absolute(int)],
+  y: [ | `Undefined | `Centered | `Absolute(int)],
   /**
     [width] is the initial horizontal size of the [Window], with display scaling applied.
     */
