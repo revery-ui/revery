@@ -1026,9 +1026,7 @@ extern "C" {
         CAMLlocal2(ret, evt);
         SDL_Event e;
 
-        caml_release_runtime_system();
         int result = SDL_PollEvent(&e);
-        caml_acquire_runtime_system();
 
         if (result == 0) {
             ret = Val_none;
@@ -1045,9 +1043,7 @@ extern "C" {
         CAMLlocal2(ret, evt);
         SDL_Event e;
 
-        caml_release_runtime_system();
         int result = SDL_WaitEvent(&e);
-        caml_acquire_runtime_system();
 
         if (result == 1) {
             evt = Val_SDL_Event(&e);
@@ -1075,9 +1071,7 @@ extern "C" {
         int timeout = Int_val(vTimeout);
         SDL_Event e;
 
-        caml_release_runtime_system();
         int result = SDL_WaitEventTimeout(&e, timeout);
-        caml_acquire_runtime_system();
 
         if (result == 1) {
             evt = Val_SDL_Event(&e);
