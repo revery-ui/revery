@@ -85,6 +85,7 @@ let examples = [
     render: _ => NativeMenuExample.render(),
     source: "NativeMenuExample.re",
   },
+  {name: "Native: Tray", render: _w => Tray.render(), source: "Tray.re"},
   {
     name: "Native: Inputs",
     render: _ => NativeInputExample.render(),
@@ -394,14 +395,6 @@ let init = app => {
       print_endline(Printf.sprintf("Moved: %d x %d", x, y))
     );
 
-  Native.Tray.make(
-    ~imagePath=Environment.getAssetPath("outrun-logo.png"),
-    (),
-  )
-  |> ignore;
-
-  Native.Tray.make() |> Native.Tray.setTitle(~text="Hello Revery!");
-  
   print_endline(
     Printf.sprintf("Operating system: %s", Environment.osString),
   );
