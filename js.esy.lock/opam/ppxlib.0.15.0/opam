@@ -7,7 +7,7 @@ dev-repo: "git+https://github.com/ocaml-ppx/ppxlib.git"
 doc: "https://ocaml-ppx.github.io/ppxlib/"
 license: "MIT"
 build: [
-  ["dune" "subst"] {pinned}
+  ["dune" "subst"] {dev}
   ["dune" "build" "-p" name "-j" jobs]
 ]
 run-test: [

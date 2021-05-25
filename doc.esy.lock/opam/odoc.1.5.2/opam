@@ -40,7 +40,7 @@ depends: [
 ]
 
 build: [
-  ["dune" "subst"] {pinned}
+  ["dune" "subst"] {dev}
   ["dune" "build" "-p" name "-j" jobs]
 ]
 x-commit-hash: "c0df8ce2171fa9645a41f371429aa3ddc16de5c1"

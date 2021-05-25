@@ -6,7 +6,7 @@ homepage:     "https://github.com/ocaml/merlin"
 bug-reports:  "https://github.com/ocaml/merlin/issues"
 dev-repo: "git+https://github.com/ocaml/merlin.git"
 build: [
-  ["dune" "subst"] {pinned}
+  ["dune" "subst"] {dev}
   ["dune" "build" "-p" name "-j" jobs]
 ]
 depends: [

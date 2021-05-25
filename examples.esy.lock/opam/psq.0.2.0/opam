@@ -7,7 +7,7 @@ license: "ISC"
 dev-repo: "git+https://github.com/pqwy/psq.git"
 bug-reports: "https://github.com/pqwy/psq/issues"
 synopsis: "Functional Priority Search Queues"
-build: [ [ "dune" "subst" ] {pinned}
+build: [ [ "dune" "subst" ] {dev}
          [ "dune" "build" "-p" name "-j" jobs ]
          [ "dune" "runtest" "-p" name ] {with-test & ocaml:version >= "4.07.0"} ]
 depends: [
