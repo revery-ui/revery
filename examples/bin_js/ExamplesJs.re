@@ -7,6 +7,8 @@ module ScrollViewExample = ScrollView;
 open Revery.UI;
 open Revery.UI.Components;
 
+print_endline("Hello, world!");
+
 let bgColor = Color.hex("#212733");
 let activeBackgroundColor = Color.hex("#2E3440");
 let inactiveBackgroundColor = Color.hex("#272d39");
