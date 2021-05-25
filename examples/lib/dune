@@ -1,0 +1,6 @@
+(library
+ (name ExamplesLib)
+ (preprocess
+  (pps brisk-reconciler.ppx lwt_ppx))
+ (public_name ReveryExamples.lib)
+ (libraries ExampleStubs skia str Revery Revery_Lwt flex timber))

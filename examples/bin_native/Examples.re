@@ -1,4 +1,5 @@
 open Revery;
+open ExamplesLib;
 open ExampleStubs;
 
 module SliderExample = Slider;

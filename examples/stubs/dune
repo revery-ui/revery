@@ -1,5 +1,6 @@
 (library
  (name ExampleStubs)
+ (public_name ReveryExamples.stubs)
  (foreign_stubs
   (language c)
   (names example_stubs)
