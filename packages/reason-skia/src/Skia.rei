@@ -1,6 +1,19 @@
-type colorType = SkiaWrapped.colorType;
-type alphaType = SkiaWrapped.alphaType;
-type data = SkiaWrapped.data;
+type colorType = [
+  | `Unknown
+  | `Alpha8
+  | `Rgb565
+  | `Argb4444
+  | `Rgba8888
+  | `Rgb888x
+  | `Bgra8888
+  | `Rgba1010102
+  | `Rgb101010x
+  | `Gray8
+  | `RgbaF16
+];
+
+type alphaType = [ | `Unknown | `Opaque | `Premul | `Unpremul];
+type data;
 
 module Color: {
   type t = int32;
@@ -22,7 +35,7 @@ module Color: {
 
 module FontStyle: {
   type t;
-  type slant = SkiaWrapped.FontStyle.slant;
+  type slant = [ | `Upright | `Italic | `Oblique];
 
   let make: (int, int, slant) => t;
 
@@ -31,9 +44,9 @@ module FontStyle: {
   let getWidth: t => int;
 };
 
-module FilterQuality: {type t = SkiaWrapped.FilterQuality.t;};
-module Hinting: {type t = SkiaWrapped.Hinting.t;};
-module TextEncoding: {type t = SkiaWrapped.TextEncoding.t;};
+module FilterQuality: {type t = [ | `none | `low | `medium | `high];};
+module Hinting: {type t;};
+module TextEncoding: {type t = [ | `Utf8 | `Utf16 | `Utf32 | `GlyphId];};
 
 module Stream: {
   type t;
@@ -75,7 +88,7 @@ module FontManager: {
 };
 
 module FontMetrics: {
-  type t = SkiaWrapped.FontMetrics.t;
+  type t;
 
   let make: unit => t;
   let getAscent: t => float;
@@ -94,7 +107,7 @@ module ImageFilter: {
   module CropRect: {type t;};
 
   module DropShadow: {
-    type shadowMode = SkiaWrapped.ImageFilter.DropShadow.shadowMode;
+    type shadowMode = [ | `DrawShadowAndForeground | `DrawShadowOnly];
 
     let make:
       (
@@ -162,7 +175,7 @@ module Vector: {
 module Shader: {
   type t;
 
-  type tileMode = SkiaWrapped.Shader.tileMode;
+  type tileMode = [ | `clamp | `repeat | `mirror];
 
   let makeEmpty: unit => t;
 
@@ -196,25 +209,13 @@ module Path: {
 
   let make: unit => t;
 
+  type arcSize = [ | `small | `large];
+  type pathDirection = [ | `cw | `ccw];
+
   let addRoundRect:
-    (
-      t,
-      Rect.t,
-      float,
-      float,
-      ~direction: SkiaWrapped.Path.pathDirection=?,
-      unit
-    ) =>
-    unit;
+    (t, Rect.t, float, float, ~direction: pathDirection=?, unit) => unit;
   let addCircle:
-    (
-      t,
-      float,
-      float,
-      ~radius: float,
-      ~direction: SkiaWrapped.Path.pathDirection=?,
-      unit
-    ) =>
+    (t, float, float, ~radius: float, ~direction: pathDirection=?, unit) =>
     unit;
 
   let moveTo: (t, float, float) => unit;
@@ -226,29 +227,9 @@ module Path: {
   let quadTo: (t, float, float, float, float) => unit;
   let rQuadTo: (t, float, float, float, float) => unit;
   let arcTo:
-    (
-      t,
-      float,
-      float,
-      float,
-      SkiaWrapped.Path.arcSize,
-      SkiaWrapped.Path.pathDirection,
-      float,
-      float
-    ) =>
-    unit;
+    (t, float, float, float, arcSize, pathDirection, float, float) => unit;
   let rArcTo:
-    (
-      t,
-      float,
-      float,
-      float,
-      SkiaWrapped.Path.arcSize,
-      SkiaWrapped.Path.pathDirection,
-      float,
-      float
-    ) =>
-    unit;
+    (t, float, float, float, arcSize, pathDirection, float, float) => unit;
   let close: t => unit;
 
   let getLastPoint: (t, Point.t) => bool;
@@ -318,7 +299,7 @@ module PathEffect: {
 
 module Paint: {
   type t;
-  type style = SkiaWrapped.Paint.style;
+  type style = [ | `Fill | `Stroke | `StrokeAndFill];
 
   let make: unit => t;
 
@@ -390,8 +371,16 @@ module Matrix44: {
 module RRect: {
   type t;
 
-  type rRectType = SkiaWrapped.RRect.rRectType;
-  type corner = SkiaWrapped.RRect.corner;
+  type rRectType = [
+    | `Empty
+    | `Rect
+    | `Oval
+    | `Simple
+    | `NinePatch
+    | `Complex
+  ];
+
+  type corner = [ | `UpperLeft | `UpperRight | `LowerLeft | `LowerRight];
 
   let make: unit => t;
   let copy: t => t;
@@ -416,6 +405,8 @@ module RRect: {
   let transform: (t, Matrix.t, t) => bool;
 };
 
+type pixelGeometry = [ | `Unknown | `RgbH | `BgrH | `RgbV | `BgrV];
+
 module ColorSpace: {type t;};
 
 module ImageInfo: {
@@ -434,10 +425,8 @@ module Image: {
   let height: t => int;
 };
 
-type pixelGeometry = SkiaWrapped.pixelGeometry;
-
 module Gr: {
-  type surfaceOrigin = SkiaWrapped.Gr.surfaceOrigin;
+  type surfaceOrigin = [ | `TopLeft | `BottomLeft];
 
   module Gl: {
     module Interface: {
@@ -451,7 +440,7 @@ module Gr: {
     module FramebufferInfo: {
       type t;
 
-      let make: (Unsigned.UInt.t, Unsigned.UInt.t) => t;
+      let make: (int, int) => t;
     };
   };
 
@@ -468,7 +457,7 @@ module Gr: {
   };
 };
 
-type clipOp = SkiaWrapped.clipOp;
+type clipOp = [ | `Difference | `Intersect];
 
 module Canvas: {
   type t;
@@ -507,7 +496,7 @@ module Canvas: {
 module SurfaceProps: {
   type t;
 
-  let make: (Unsigned.UInt32.t, pixelGeometry) => t;
+  let make: (int, pixelGeometry) => t;
 };
 
 module Surface: {

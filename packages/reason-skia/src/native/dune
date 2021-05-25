@@ -1,0 +1,16 @@
+(rule
+ (targets c_library_flags.sexp c_flags.sexp flags.sexp)
+ (deps
+  (:discover ../config/discover.exe))
+ (action
+  (run %{discover})))
+
+(library
+ (name skia_native)
+ (public_name reason-skia.native)
+ (implements reason-skia)
+ (library_flags
+  (:include flags.sexp))
+ (c_library_flags
+  (:include c_library_flags.sexp))
+ (libraries SkiaWrapped))

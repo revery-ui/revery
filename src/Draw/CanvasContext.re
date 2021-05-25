@@ -54,11 +54,7 @@ let create = (gpuContext, window: Revery_Core.Window.t) => {
     Log.debug("Skia context created successfully.");
     let framebufferId = Sdl2.Gl.getFramebufferBinding();
     Log.debug(Printf.sprintf("Framebuffer binding %d.", framebufferId));
-    let framebufferInfo =
-      Gr.Gl.FramebufferInfo.make(
-        Unsigned.UInt.of_int(framebufferId),
-        Unsigned.UInt.of_int(0x8058),
-      );
+    let framebufferInfo = Gr.Gl.FramebufferInfo.make(framebufferId, 0x8058);
 
     let framebufferSize = Window.getFramebufferSize(window);
     let backendRenderTarget =
@@ -69,13 +65,13 @@ let create = (gpuContext, window: Revery_Core.Window.t) => {
         8,
         framebufferInfo,
       );
-    let surfaceProps = SurfaceProps.make(Unsigned.UInt32.of_int(0), RgbH);
+    let surfaceProps = SurfaceProps.make(0, `RgbH);
     switch (
       Surface.makeFromBackendRenderTarget(
         glContext,
         backendRenderTarget,
-        BottomLeft,
-        Rgba8888,
+        `BottomLeft,
+        `Rgba8888,
         None,
         Some(surfaceProps),
       )
@@ -119,7 +115,7 @@ let createLayer = (~forceCpu=false, ~width, ~height, context: t) => {
       height;
     };
 
-  let imageInfo = ImageInfo.make(width, height, Rgba8888, Premul, None);
+  let imageInfo = ImageInfo.make(width, height, `Rgba8888, `Premul, None);
 
   let createCpuSurface = () => {
     Log.tracef(m => m("Created CPU surface: %ld x %ld", width, height));
@@ -128,13 +124,13 @@ let createLayer = (~forceCpu=false, ~width, ~height, context: t) => {
 
   let createGpuSurface = gpuContext => {
     Log.trace("Trying to create GPU surface...");
-    let surfaceProps = SurfaceProps.make(Unsigned.UInt32.of_int(0), RgbH);
+    let surfaceProps = SurfaceProps.make(0, `RgbH);
     Skia.Surface.makeRenderTarget(
       gpuContext,
       false,
       imageInfo,
       0,
-      BottomLeft,
+      `BottomLeft,
       Some(surfaceProps),
       false,
     );
@@ -305,16 +301,16 @@ let concat = (transform, context) => {
 };
 
 let clipRect =
-    (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rect: Skia.Rect.t) => {
+    (v: t, ~clipOp: clipOp=`Intersect, ~antiAlias=false, rect: Skia.Rect.t) => {
   Canvas.clipRect(v.canvas, rect, clipOp, antiAlias);
 };
 
 let clipRRect =
-    (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, rRect: Skia.RRect.t) => {
+    (v: t, ~clipOp: clipOp=`Intersect, ~antiAlias=false, rRect: Skia.RRect.t) => {
   Canvas.clipRRect(v.canvas, rRect, clipOp, antiAlias);
 };
 
 let clipPath =
-    (v: t, ~clipOp: clipOp=Intersect, ~antiAlias=false, path: Skia.Path.t) => {
+    (v: t, ~clipOp: clipOp=`Intersect, ~antiAlias=false, path: Skia.Path.t) => {
   Canvas.clipPath(v.canvas, path, clipOp, antiAlias);
 };

@@ -43,7 +43,7 @@ module Sample = {
             Skia.Color.makeArgb(0xFFl, 0xFFl, 0xFFl, 0x00l),
           );
           Skia.Paint.setAntiAlias(stroke, true);
-          Skia.Paint.setStyle(stroke, Stroke);
+          Skia.Paint.setStyle(stroke, `Stroke);
           Skia.Paint.setStrokeWidth(stroke, 2.);
 
           let innerPath = Skia.Path.make();
@@ -78,7 +78,7 @@ module Sample = {
               |> FontCache.shape(font)
               |> ShapeResult.getGlyphStrings;
 
-            Skia.Paint.setTextEncoding(textPaint, GlyphId);
+            Skia.Paint.setTextEncoding(textPaint, `GlyphId);
 
             shapedText
             |> List.iter(((typeface, string)) => {

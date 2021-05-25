@@ -17,8 +17,8 @@ let create = (options: WindowCreateOptions.t) => {
     Skia.ImageInfo.make(
       options.width |> Int32.of_int,
       options.height |> Int32.of_int,
-      Rgba8888,
-      Premul,
+      `Rgba8888,
+      `Premul,
       None,
     );
   let surface = Skia.Surface.makeRaster(imageInfo, 0, None) |> Option.get;

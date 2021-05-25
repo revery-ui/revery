@@ -34,11 +34,7 @@ let createSkiaGraphicsContext = (_window: Sdl2.Window.t) => {
 
 let createSkiaSurface =
     (window: Sdl2.Window.t, skiaContext: Skia.Gr.Context.t) => {
-  let framebufferInfo =
-    Gr.Gl.FramebufferInfo.make(
-      Unsigned.UInt.of_int(0),
-      Unsigned.UInt.of_int(0x8058),
-    );
+  let framebufferInfo = Gr.Gl.FramebufferInfo.make(0, 0x8058);
 
   let framebufferSize = Sdl2.Gl.getDrawableSize(window);
   let backendRenderTarget =
@@ -50,13 +46,13 @@ let createSkiaSurface =
       framebufferInfo,
     );
 
-  let surfaceProps = SurfaceProps.make(Unsigned.UInt32.of_int(0), RgbH);
+  let surfaceProps = SurfaceProps.make(0, `RgbH);
   switch (
     Surface.makeFromBackendRenderTarget(
       skiaContext,
       backendRenderTarget,
-      BottomLeft,
-      Rgba8888,
+      `BottomLeft,
+      `Rgba8888,
       None,
       Some(surfaceProps),
     )

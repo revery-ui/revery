@@ -1,7 +1,7 @@
 open Skia;
 
 let makeSurface = (width, height) => {
-  let imageInfo = ImageInfo.make(width, height, Rgba8888, Premul, None);
+  let imageInfo = ImageInfo.make(width, height, `Rgba8888, `Premul, None);
   Surface.makeRaster(imageInfo, 0, None);
 };
 
@@ -26,7 +26,7 @@ let draw = canvas => {
   let stroke = Paint.make();
   Paint.setColor(stroke, Color.makeArgb(0xFFl, 0xFFl, 0x00l, 0x00l));
   Paint.setAntiAlias(stroke, true);
-  Paint.setStyle(stroke, Stroke);
+  Paint.setStyle(stroke, `Stroke);
   Paint.setStrokeWidth(stroke, 5.);
 
   let path = Path.make();
@@ -52,7 +52,7 @@ let draw = canvas => {
         3.,
         3.,
         Color.makeArgb(0xAAl, 0x00l, 0x00l, 0x00l),
-        DrawShadowAndForeground,
+        `DrawShadowAndForeground,
         None,
         None,
       ),
@@ -72,7 +72,7 @@ let draw = canvas => {
 
   let translate = Skia.Matrix.makeScale(20., 20., 20., 20.);
   Skia.Paint.setAntiAlias(ovalPaint, true);
-  Skia.Paint.setStyle(ovalPaint, Stroke);
+  Skia.Paint.setStyle(ovalPaint, `Stroke);
   Skia.Paint.setStrokeWidth(ovalPaint, 1.);
   let pathEffect = Skia.PathEffect.create2dPath(~matrix=translate, innerPath);
   Skia.Paint.setPathEffect(ovalPaint, pathEffect);
@@ -194,7 +194,7 @@ let draw = canvas => {
     Paint.setTextSize(fill, 30.);
     Paint.setTypeface(fill, typeFace);
     Paint.setSubpixelText(fill, true);
-    Paint.setTextEncoding(fill, GlyphId);
+    Paint.setTextEncoding(fill, `GlyphId);
 
     let glyphsToString = glyphs => {
       let len = List.length(glyphs);

@@ -478,7 +478,8 @@ module RRect = {
 
 module Path = {
   type t = SkiaWrapped.Path.t;
-  type pathDirection = SkiaWrapped.Path.pathDirection;
+  type arcSize = [ | `small | `large];
+  type pathDirection = [ | `cw | `ccw];
 
   let make = () => {
     let path = SkiaWrapped.Path.allocate();
@@ -798,7 +799,12 @@ module Gr = {
     module FramebufferInfo = {
       type t = SkiaWrapped.Gr.Gl.FramebufferInfo.t;
 
-      let make = SkiaWrapped.Gr.Gl.FramebufferInfo.make;
+      let make = (x, y) => {
+        SkiaWrapped.Gr.Gl.FramebufferInfo.make(
+          Unsigned.UInt.of_int(x),
+          Unsigned.UInt.of_int(y),
+        );
+      };
     };
   };
 
@@ -873,7 +879,12 @@ module Canvas = {
 module SurfaceProps = {
   type t = SkiaWrapped.SurfaceProps.t;
 
-  let make = SkiaWrapped.SurfaceProps.make;
+  let make = (size, pixelGeometry) => {
+    SkiaWrapped.SurfaceProps.make(
+      Unsigned.UInt32.of_int(size),
+      pixelGeometry,
+    );
+  };
 };
 
 module Surface = {

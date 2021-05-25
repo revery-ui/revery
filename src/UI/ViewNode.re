@@ -127,7 +127,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
 
       Revery_Draw.CanvasContext.clipRRect(
         canvas,
-        ~clipOp=Difference,
+        ~clipOp=`Difference,
         innerRRect,
       );
 
@@ -163,7 +163,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
 
       Revery_Draw.CanvasContext.clipRRect(
         canvas,
-        ~clipOp=Difference,
+        ~clipOp=`Difference,
         innerRRect,
       );
 
@@ -199,7 +199,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
 
       Revery_Draw.CanvasContext.clipRRect(
         canvas,
-        ~clipOp=Difference,
+        ~clipOp=`Difference,
         innerRRect,
       );
 
@@ -235,7 +235,7 @@ let renderBorders = (~canvas, ~style, ~outerRRect, ~opacity) => {
 
       Revery_Draw.CanvasContext.clipRRect(
         canvas,
-        ~clipOp=Difference,
+        ~clipOp=`Difference,
         innerRRect,
       );
 
@@ -279,7 +279,7 @@ let makeShadowImageFilter = boxShadow => {
     sigma,
     sigma,
     Color.toSkia(color),
-    DrawShadowOnly,
+    `DrawShadowOnly,
     None,
     None,
   );

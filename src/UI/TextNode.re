@@ -27,7 +27,7 @@ class textNode (text: string) = {
   val mutable _features: list(Feature.t) = [];
   val _textPaint = {
     let paint = Skia.Paint.make();
-    Skia.Paint.setTextEncoding(paint, GlyphId);
+    Skia.Paint.setTextEncoding(paint, `GlyphId);
     Skia.Paint.setLcdRenderText(paint, true);
     Skia.Paint.setAntiAlias(paint, true);
     paint;

@@ -10,13 +10,13 @@ let emitPng = (path, surface) => {
 };
 
 let makeSurface = (width, height) => {
-  let imageInfo = ImageInfo.make(width, height, Rgba8888, Premul, None);
+  let imageInfo = ImageInfo.make(width, height, `Rgba8888, `Premul, None);
   Surface.makeRaster(imageInfo, 0, None);
 };
 
 let draw = canvas => {
   let fontManager = FontManager.makeDefault();
-  let style = FontStyle.make(400, 5, Upright);
+  let style = FontStyle.make(400, 5, `Upright);
   let maybeTypeface =
     FontManager.matchFamilyStyle(fontManager, "Arial", style);
   let fill = Paint.make();

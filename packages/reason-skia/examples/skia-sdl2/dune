@@ -3,7 +3,7 @@
  (package ReveryExamples)
  (public_names SkiaSdl)
  (modes native byte)
- (libraries reason-skia sdl2 lwt integers reason-skia.wrapped.bindings
+ (libraries reason-skia reason-skia.native sdl2 lwt integers reason-skia.wrapped.bindings
    reason-skia.wrapped))
 
 (install

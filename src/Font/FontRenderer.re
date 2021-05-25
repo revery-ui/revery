@@ -5,7 +5,7 @@ type measureResult = {
 
 let measure = {
   let paint = Skia.Paint.make();
-  Skia.Paint.setTextEncoding(paint, GlyphId);
+  Skia.Paint.setTextEncoding(paint, `GlyphId);
 
   (~smoothing: Smoothing.t, ~features=[], font, size, text: string) => {
     let {height, _}: FontMetrics.t = FontCache.getMetrics(font, size);

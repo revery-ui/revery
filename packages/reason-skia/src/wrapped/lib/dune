@@ -26,6 +26,6 @@
   (language c)
   (names skia_generated_stubs raw_bindings)
   (flags
-   (:include ../../c_flags.sexp)))
+   (:include ../../native/c_flags.sexp)))
  (c_library_flags
-  (:include ../../c_library_flags.sexp)))
+  (:include ../../native/c_library_flags.sexp)))

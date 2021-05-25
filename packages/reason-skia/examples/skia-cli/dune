@@ -3,7 +3,7 @@
  (package ReveryExamples)
  (public_names SkiaCli)
  (modes native byte)
- (libraries reason-skia reason-skia.wrapped.bindings reason-skia.wrapped
+ (libraries reason-skia reason-skia.native reason-skia.wrapped.bindings reason-skia.wrapped
    reason-native-crash-utils.asan))
 
 (install

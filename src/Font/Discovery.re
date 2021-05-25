@@ -15,7 +15,7 @@ let find =
     Skia.FontStyle.make(
       FontWeight.toInt(weight),
       FontWidth.toInt(width),
-      italic ? Italic : Upright,
+      italic ? `Italic : `Upright,
     );
   Skia.FontManager.matchFamilyStyle(FontManager.instance, family, style);
 };
