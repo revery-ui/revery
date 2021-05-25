@@ -1,0 +1,13 @@
+(executables
+ (names ExamplesJs)
+ (preprocess
+  (pps brisk-reconciler.ppx lwt_ppx))
+ (modes js)
+ (js_of_ocaml (flags --pretty))
+(libraries js_of_ocaml ExamplesLib skia skia_js str Revery Revery_Lwt flex timber))
+
+
+(install
+ (section bin)
+ (package ReveryExampleJs)
+ (files ExamplesJs.bc.js index.html))

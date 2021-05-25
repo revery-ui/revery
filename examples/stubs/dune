@@ -1,9 +1,0 @@
-(library
- (name ExampleStubs)
- (public_name ReveryExamples.stubs)
- (foreign_stubs
-  (language c)
-  (names example_stubs)
-  (flags :standard -Wall -Wextra -Werror))
- (js_of_ocaml
-  (javascript_files example_stubs.js)))

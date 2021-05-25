@@ -4,9 +4,15 @@
     "run": "esy '@js' x bash -c 'http-server #{self.bin}'"
   },
   "override": {
-    "build": ["dune build --root . -j4"],
+    "build": [
+      "dune build -p reason-harfbuzz,reason-skia,reason-sdl2,Revery,ReveryExamples,ReveryExampleJs -j4"
+    ],
     "install": [
+      "esy-installer reason-harfbuzz.install",
+      "esy-installer reason-sdl2.install",
+      "esy-installer reason-skia.install",
       "esy-installer Revery.install",
+      "esy-installer ReveryExamples.install",
       "esy-installer ReveryExampleJs.install"
     ],
     "dependencies": {
