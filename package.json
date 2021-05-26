@@ -22,6 +22,7 @@
         "scope": "global"
       }
     },
+    "buildsInSource": "_build",
     "build": "dune build -p reason-harfbuzz,reason-skia,reason-sdl2,Revery",
     "install": [
       "esy-installer reason-harfbuzz.install",
@@ -39,6 +40,9 @@
     "@opam/ctypes": "0.15.1",
     "@opam/dune": "^2.5.0",
     "@opam/dune-configurator": "*",
+    "@opam/js_of_ocaml": "*",
+    "@opam/js_of_ocaml-compiler": "*",
+    "@opam/js_of_ocaml-lwt": "*",
     "@opam/reason": "^3.6.2",
     "@opam/lru": "bryphe/lru:lru.opam#2708c70",
     "@opam/lwt": "^5.0.0",

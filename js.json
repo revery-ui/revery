@@ -1,12 +1,15 @@
 {
   "source": "./package.json",
   "scripts": {
-    "run": "esy '@js' x bash -c 'http-server #{self.bin}'"
+    "run": "esy '@js' x bash -c 'http-server #{self.bin}'",
+    "build:watch": "dune build -w -p reason-harfbuzz,reason-skia,reason-sdl2,Revery,ReveryExamples,ReveryExampleJs",
+    "watch": "concurrently -n w:esy-watch,w:http-server \"esy '@js' build:watch\" \"live-server _build/install/default/bin\""
   },
   "override": {
     "build": [
       "dune build -p reason-harfbuzz,reason-skia,reason-sdl2,Revery,ReveryExamples,ReveryExampleJs -j4"
     ],
+    "buildsInSource": "_build",
     "install": [
       "esy-installer reason-harfbuzz.install",
       "esy-installer reason-sdl2.install",
@@ -18,8 +21,7 @@
     "dependencies": {
       "@opam/js_of_ocaml": "*",
       "@opam/js_of_ocaml-compiler": "*",
-      "@opam/js_of_ocaml-lwt": "*",
-      "http-server": "*"
+      "@opam/js_of_ocaml-lwt": "*"
     }
   }
 }

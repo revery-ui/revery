@@ -1,6 +1,7 @@
 (library
  (name sdl2)
  (public_name reason-sdl2)
+ (js_of_ocaml (javascript_files sdl2_stubs.js))
  (library_flags
   (:include flags.sexp))
  (c_library_flags

@@ -15,20 +15,34 @@
 
 <body>
     <script src="gl-matrix-min.js"></script>
-    <script>
-        // Compiled Examples.bc.js does a check for require,
-        // but it's not needed during runtime.
-        window.require = false;
-    </script>
-    <script>
-        // If we're hosted in an iframe, we'll listen to changes and 'postMessage' them out
-        if (window.parent) {
-            window["__revery_playground_example_notify_changed"] = (s) => {
-                window.parent.postMessage({ type: "example.switch", payload: s }, "*");
+    <canvas id=foo width=300 height=300></canvas>
+    <script type="text/javascript" src="https://unpkg.com/canvaskit-wasm@0.19.0/bin/canvaskit.js"></script>
+    <script type="text/javascript">
+        const ckLoaded = CanvasKitInit({
+            locateFile: (file) => 'https://unpkg.com/canvaskit-wasm@0.19.0/bin/' + file
+        });
+        ckLoaded.then((CanvasKit) => {
+            const surface = CanvasKit.MakeCanvasSurface('foo');
+
+            const paint = new CanvasKit.Paint();
+            paint.setColor(CanvasKit.Color4f(0.9, 0, 0, 1.0));
+            paint.setStyle(CanvasKit.PaintStyle.Stroke);
+            paint.setAntiAlias(true);
+            const rr = CanvasKit.RRectXY(CanvasKit.LTRBRect(10, 60, 210, 260), 25, 15);
+
+            function draw(canvas) {
+                canvas.clear(CanvasKit.WHITE);
+                canvas.drawRRect(rr, paint);
             }
-        }
+            surface.drawOnce(draw);
+
+            window.CanvasKit = CanvasKit;
+
+            let appScript = document.createElement("script");
+            appScript.setAttribute("src", "ExamplesJs.bc.js");
+            document.body.appendChild(appScript);
+        });
     </script>
-    <script src="ExamplesJs.bc.js"></script>
 </body>
 
 </html>

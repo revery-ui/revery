@@ -300,7 +300,8 @@ module ExampleHost = {
 let init = app => {
   Revery.App.initConsole();
 
-  Timber.App.enable(Timber.Reporter.console());
+  let enableColors = !Revery.Environment.webGL;
+  Timber.App.enable(Timber.Reporter.console(~enableColors));
   Timber.App.setLevel(Timber.Level.perf);
 
   App.onIdle(app, () => prerr_endline("Idle!"))

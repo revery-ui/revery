@@ -104,92 +104,98 @@ function caml_glfwGetCursorPos(w) {
 
 // Provides: resdl_SDL_CreateSystemCursor
 function resdl_SDL_CreateSystemCursor(shape) {
-  switch (shape) {
-  case 0: return "default";
-  case 1: return "text";
-  case 3: return "crosshair";
-  case 4: return "wait";
-  case 5: return "nwse-resize";
-  case 6: return "nesw-resize";
-  case 7: return "we-resize";
-  case 8: return "ns-resize";
-  case 9: return "resize";
-  case 10: return "not-allowed";
-  case 11: return "pointer";
-  default:
-    joo_global_object.console.warn("Unsupported cursor shape.");
-    return "default";
-  }
+    switch (shape) {
+        case 0: return "default";
+        case 1: return "text";
+        case 3: return "crosshair";
+        case 4: return "wait";
+        case 5: return "nwse-resize";
+        case 6: return "nesw-resize";
+        case 7: return "we-resize";
+        case 8: return "ns-resize";
+        case 9: return "resize";
+        case 10: return "not-allowed";
+        case 11: return "pointer";
+        default:
+            joo_global_object.console.warn("Unsupported cursor shape.");
+            return "default";
+    }
 }
 
 // Provides: resdl_SDL_EnableScreenSaver
 function resdl_SDL_EnableScreenSaver() {
-  // no op
+    // no op
 }
 
 // Provides: resdl_SDL_DisableScreenSaver
 function resdl_SDL_DisableScreenSaver() {
-  // no op
+    // no op
 }
 
 // Provides: resdl_SDL_IsScreenSaverEnabled
 function resdl_SDL_IsScreenSaverEnabled() {
-  return false;
+    return false;
 }
 
 // Provides: resdl_SDL_GL_SetSwapInterval
 function resdl_SDL_GL_SetSwapInterval() {
-  // no op
+    // no op
 }
 
 // Provides: resdl_SDL_PushEvent
 function resdl_SDL_PushEvent() {
-  // no op
+    // no op
 }
 
 // Provides: resdl_SDL_GL_MakeCurrent
 function resdl_SDL_GL_MakeCurrent() {
-  // no op
+    // no op
+}
+
+// Provides: resdl_SDL_GL_GetString
+// Requires: caml_js_to_string
+function resdl_SDL_GL_GetString() {
+    return caml_js_to_string("Not implemented")
 }
 
 // Provides: resdl_SDL_SetWin32ProcessDPIAware
 function resdl_SDL_SetWin32ProcessDPIAware() {
-  // no op
+    // no op
 }
 
 // Provides: resdl_SDL_GetWin32ScaleFactor
 function resdl_SDL_GetWin32ScaleFactor() {
-  return 1;
+    return 1;
 }
 
 // Provides: resdl_SDL_GetWindowDisplayIndex
 function resdl_SDL_GetWindowDisplayIndex() {
-  return 0;
+    return 0;
 }
 
 // Provides: resdl_SDL_GetDisplayDPI
 function resdl_SDL_GetDisplayDPI() {
-  return 96;
+    return 96;
 }
 
 // Provides: resdl_SDL_GetDesktopDisplayMode
 function resdl_SDL_GetDesktopDisplayMode() {
-  return [0, 100, 200, 0];
+    return [0, 100, 200, 0];
 }
 
 // Provides: resdl_SDL_WindowCenter
 function resdl_SDL_WindowCenter() {
-  //no-op
+    //no-op
 }
 
 // Provides: caml_glfwDestroyCursor
 function caml_glfwDestroyCursor(cursor) {
-  // no op
+    // no op
 }
 
 // Provides: resdl_SDL_SetCursor
 function resdl_SDL_SetCursor(cursor) {
-  joo_global_object._activeWindow.canvas.style.cursor = cursor;
+    joo_global_object._activeWindow.canvas.style.cursor = cursor;
 }
 
 // Provides: resdl_SDL_SetWindowMinimumSize
@@ -226,11 +232,11 @@ function caml_glfwGetMonitorPos() {
 
 // Provides: caml_glfwGetMonitorPhysicalSize
 function caml_glfwGetMonitorPhysicalSize() {
-  var win = joo_global_object.window;
-  var dpi = 96;
-  var widthMM = (win.innerWidth * 25.4) / dpi;
-  var heightMM = (win.innerHeight * 25.4) / dpi;
-  return [0, widthMM, heightMM];
+    var win = joo_global_object.window;
+    var dpi = 96;
+    var widthMM = (win.innerWidth * 25.4) / dpi;
+    var heightMM = (win.innerHeight * 25.4) / dpi;
+    return [0, widthMM, heightMM];
 };
 
 // Provides: resdl_SDL_GetWindowSize
@@ -342,20 +348,20 @@ function resdl_SDL_CreateWindow(width, height, title) {
         }
     };
 
-    var notifyMouseButton = function(mouseEvent, pressMode) {
+    var notifyMouseButton = function (mouseEvent, pressMode) {
         joo_global_object._pushEvent(
-        [pressMode, 
-            [0, 
-                w.id, 
-                0, 
-                0, 
-                joo_global_object._mouseState.x, 
-                joo_global_object._mouseState.y]]);
+            [pressMode,
+                [0,
+                    w.id,
+                    0,
+                    0,
+                    joo_global_object._mouseState.x,
+                    joo_global_object._mouseState.y]]);
     };
 
-    var notifyMouseMove = function(x, y) {
+    var notifyMouseMove = function (x, y) {
         joo_global_object._pushEvent(
-        [0, [0, w.id, x, y]]
+            [0, [0, w.id, x, y]]
         );
     };
 
@@ -383,6 +389,12 @@ function resdl_SDL_CreateWindow(width, height, title) {
 
     joo_global_object._activeWindows.push(w);
     return w;
+};
+
+//Provides: resdl_SDL_CreateWindow_byte
+//Requires: resdl_SDL_CreateWindow
+function resdl_SDL_CreateWindow_byte(width, height, title) {
+    return resdl_SDL_CreateWindow(width, height, title)
 };
 
 // Provides: resdl_SDL_SetWindowPosition
@@ -611,4 +623,41 @@ function resdl_SDL_WaitTimeoutEvent() {
 // Provides: resdl_SDL_GL_SwapWindow
 function resdl_SDL_GL_SwapWindow() {
     // no op
+}
+
+// Provides: resdl_SDL_main
+function resdl_SDL_main(argc, argv, cb) {
+    cb();
+}
+
+// Provides: resdl_SDL_GetNumVideoDisplays
+function resdl_SDL_GetNumVideoDisplays() {
+    return 1;
+}
+
+// Provides: resdl_SDL_GetDisplayBounds
+function resdl_SDL_GetDisplayBounds(idx) {
+    return { x: 0, y: 0, width: 100, height: 200 }
+}
+
+// Provides: resdl_SDL_GetCurrentDisplayMode
+function resdl_SDL_GetCurrentDisplayMode(idx) {
+    return { pixelFormat: 0, width: -1, height: -1, refreshRate: -1 }
+}
+
+// Provides: resdl_SDL_GetPixelFormatName
+// Requires: caml_js_to_string
+function resdl_SDL_GetPixelFormatName(idx) {
+    return caml_js_to_string("WebGL: Unknown Pixel Format");
+}
+
+// Provides: resdl_SDL_GetDisplayName
+// Requires: caml_js_to_string
+function resdl_SDL_GetDisplayName(idx) {
+    return caml_js_to_string("Browser Window");
+}
+
+// Provides: resdl_SDL_GetWindowPixelFormat
+function resdl_SDL_GetWindowPixelFormat() {
+    return 0;
 }

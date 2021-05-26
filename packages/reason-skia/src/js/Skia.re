@@ -1,3 +1,4 @@
+print_endline("Hello, world!");
 type colorType = [
   | `Unknown
   | `Alpha8
@@ -20,18 +21,20 @@ type data = string;
 module Color = {
   type t = int32;
 
-  let makeArgb = (a, r, g, b) => failwith("TODO");
+  external makeArgb: (int32, int32, int32, int32) => t =
+    "canvaskit_color_int_makeArgb";
   let getA = color => failwith("TODO");
   let getR = color => failwith("TODO");
   let getG = color => failwith("TODO");
   let getB = color => failwith("TODO");
 
   module Float = {
-    let makeArgb = (a, r, g, b) => failwith("TODO");
-    let getA = color => failwith("TODO");
-    let getR = color => failwith("TODO");
-    let getG = color => failwith("TODO");
-    let getB = color => failwith("TODO");
+    external makeArgb: (float, float, float, float) => t =
+      "canvaskit_color_float_makeArgb";
+    external getA: t => float = "canvaskit_color_float_getA";
+    external getR: t => float = "canvaskit_color_float_getR";
+    external getG: t => float = "canvaskit_color_float_getG";
+    external getB: t => float = "canvaskit_color_float_getB";
   };
 };
 
@@ -102,7 +105,7 @@ module Typeface = {
 module FontManager = {
   type t;
 
-  let makeDefault = () => failwith("TODO");
+  external makeDefault: unit => t = "canvaskit_fontManager_makeDefault";
 
   let matchFamilyStyle = (fontManager, text, style) => failwith("TODO");
 
@@ -150,7 +153,8 @@ module Rect = {
 
   let makeEmpty = () => failwith("FAIL");
 
-  let makeLtrb = (top, left, right, bottom) => failwith("TODO");
+  external makeLtrb: (float, float, float, float) => t =
+    "canvaskit_rect_makeLtrb";
 
   let getTop = rect => failwith("TODO");
   let getLeft = rect => failwith("TODO");
@@ -239,11 +243,12 @@ module Path = {
 module Matrix = {
   type t;
 
-  let make = () => failwith("TODO");
+  external make: unit => t = "canvaskit_matrix_make";
 
-  let setIdentity = matrix => failwith("TODO");
+  external setIdentity: t => unit = "canvaskit_matrix_setIdentity";
 
-  let identity = make() |> setIdentity;
+  // The 'make' implementation always returns identity...
+  let identity = make();
 
   let makeAll = (m0, m1, m2, m3, m4, m5, m6, m7, m8) => failwith("TODO");
 
@@ -337,9 +342,9 @@ module Paint = {
 
   type style = [ | `Fill | `Stroke | `StrokeAndFill];
 
-  let make = () => failwith("TODO");
+  external make: unit => t = "canvaskit_paint_make";
 
-  let setColor = (paint, color) => failwith("TODO");
+  external setColor: (t, Color.t) => unit = "canvaskit_paint_setColor";
 
   let setAntiAlias = (paint, antiAliased) => failwith("TODO");
 
@@ -378,9 +383,14 @@ module Paint = {
 
   let measureText = (paint, string, maybeRect) => failwith("TODO");
 
-  let setTextEncoding = (paint, encoding) => failwith("TODO");
+  let setTextEncoding = (paint, encoding) => {
+    ();
+      // noop
+  };
 
-  let getTextEncoding = paint => failwith("TODO");
+  let getTextEncoding = paint => {
+    `Utf8;
+  };
 
   let setShader = (paint, shader) => failwith("TODO");
 };

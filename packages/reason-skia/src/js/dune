@@ -1,4 +1,7 @@
 (library
  (name skia_js)
  (public_name reason-skia.js)
+ (foreign_stubs (language c) (names bindings))
+    (js_of_ocaml
+        (javascript_files bindings.js))
  (implements reason-skia))
