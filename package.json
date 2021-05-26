@@ -56,7 +56,7 @@
     "@onivim/reason-native-crash-utils": "^1.0.2",
     "@revery/esy-harfbuzz": "^2.6.8002",
     "esy-sdl2": "^2.0.10008",
-    "esy-skia": "revery-ui/esy-skia#c648995",
+    "esy-skia": "revery-ui/esy-skia#f643236",
     "flex": "jordwalke/flex#6ff12fe",
     "reperf": "^1.5.1",
     "rench": "^1.10.0",
