@@ -1553,6 +1553,24 @@ extern "C" {
         CAMLreturn(Val_unit);
     }
 
+    int resdl_eventWatcher(void *data, SDL_Event *event) {
+        if (event->type == SDL_WINDOWEVENT &&
+                event->window.event == SDL_WINDOWEVENT_RESIZED) {
+            value args[] = {Val_unit};
+
+            static const value *resizeCallback = NULL;
+            if (resizeCallback == NULL) {
+                resizeCallback = caml_named_value("__sdl2_caml_resize__");
+            }
+
+            if (resizeCallback) {
+                caml_callbackN(*resizeCallback, 1, args);
+            }
+        }
+
+        return 0;
+    }
+
     CAMLprim value resdl_SDL_CreateWindow(value vName, value vX, value vY,
                                           value vWidth, value vHeight, value vAcceleration) {
         CAMLparam5(vName, vX, vY, vWidth, vHeight);
@@ -1626,6 +1644,8 @@ extern "C" {
             SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "SDL_CreateWindow failed: %s\n",
                             SDL_GetError());
         }
+
+        SDL_AddEventWatch(resdl_eventWatcher, NULL);
 
         vWindow = resdl_wrapPointer(win);
         CAMLreturn(vWindow);

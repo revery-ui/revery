@@ -905,6 +905,7 @@ let _nativeLoop = renderFn => {
 };
 
 let renderLoop = (renderFunction: renderFunction) => {
+  Callback.register("__sdl2_caml_resize__", renderFunction);
   switch (Sys.backend_type) {
   | Native => _nativeLoop(renderFunction)
   | Bytecode => _nativeLoop(renderFunction)
