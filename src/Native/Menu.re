@@ -105,6 +105,8 @@ open {
        external c_getMenuBarHandle: unit => t = "revery_getMenuBarHandle";
        external c_create: string => t = "revery_menuCreate";
        external c_nth: (t, int) => option(Item.t) = "revery_menuNth";
+       external c_displayIn: (t, Sdl2.Window.nativeWindow, int, int) => unit =
+         "revery_menuDisplayIn";
      };
 
 external addItem: (t, Item.t) => unit = "revery_menuAddItem";
@@ -115,6 +117,9 @@ let addSubmenu = (~parent, ~child) => c_addSubmenu(parent, child);
 let removeSubmenu = (~parent, ~child) => c_removeSubmenu(parent, child);
 let insertSubmenuAt = (~parent, ~child, ~idx) =>
   c_insertSubmenuAt(parent, child, idx);
+
+let displayIn = (~x, ~y, menu, window) =>
+  c_displayIn(menu, window |> Sdl2.Window.getNativeWindow, x, y);
 
 %if
 defined(USE_COCOA);
