@@ -64,6 +64,8 @@ typings/
 # dune build folder
 _esy/
 
+_build/
+
 # install files
 *.install
 

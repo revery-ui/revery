@@ -346,7 +346,7 @@ module Paint = {
 
   external setColor: (t, Color.t) => unit = "canvaskit_paint_setColor";
 
-  let setAntiAlias = (paint, antiAliased) => failwith("TODO");
+  external setAntiAlias: (t, bool) => unit = "canvaskit_paint_setAntiAlias";
 
   let setAutohinted = (paint, autoHinted) => failwith("TODO");
 
@@ -371,7 +371,8 @@ module Paint = {
 
   let setTypeface = (paint, typeface) => failwith("TODO");
 
-  let setLcdRenderText = (paint, lcd) => failwith("TODO");
+  external setLcdRenderText: (t, bool) => unit =
+    "canvaskit_paint_setLcdRenderText";
 
   let setSubpixelText = (paint, subpixel) => failwith("TODO");
 
@@ -451,7 +452,7 @@ module RRect = {
 
   type corner = [ | `UpperLeft | `UpperRight | `LowerLeft | `LowerRight];
 
-  let make = () => failwith("TODO");
+  external make: unit => t = "canvaskit_rrect_make";
 
   let copy = rrect => failwith("TODO");
 

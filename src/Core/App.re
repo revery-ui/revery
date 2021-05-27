@@ -298,10 +298,13 @@ let start = init => {
 
   AppLog.infof(m => m("Operating in locale : %s", Environment.userLocale));
 
+  let isJsoo = Environment.webGL;
   let appLoop = () => {
     _flushEvents();
 
-    runGtkIteration();
+    if (!isJsoo) {
+      runGtkIteration();
+    };
 
     Tick.Default.pump();
 

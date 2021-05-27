@@ -1,5 +1,5 @@
 {
-  "checksum": "11ef70af198b14ceeb2dae2d9820ae57",
+  "checksum": "7fa0532902857c020a20b12f901a1f14",
   "root": "revery@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -12,65 +12,6 @@
         "type": "install",
         "source": [
           "github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "url-join@2.0.5@d41d8cd9": {
-      "id": "url-join@2.0.5@d41d8cd9",
-      "name": "url-join",
-      "version": "2.0.5",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/url-join/-/url-join-2.0.5.tgz#sha1:5af22f18c052a000a48d7b82c5e9c2e2feeda728"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "union@0.5.0@d41d8cd9": {
-      "id": "union@0.5.0@d41d8cd9",
-      "name": "union",
-      "version": "0.5.0",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/union/-/union-0.5.0.tgz#sha1:b2c11be84f60538537b846edb9ba266ba0090075"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [ "qs@6.10.1@d41d8cd9" ],
-      "devDependencies": []
-    },
-    "side-channel@1.0.4@d41d8cd9": {
-      "id": "side-channel@1.0.4@d41d8cd9",
-      "name": "side-channel",
-      "version": "1.0.4",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/side-channel/-/side-channel-1.0.4.tgz#sha1:efce5c8fdc104ee751b25c58d4290011fa5ea2cf"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "object-inspect@1.10.3@d41d8cd9", "get-intrinsic@1.1.1@d41d8cd9",
-        "call-bind@1.0.2@d41d8cd9"
-      ],
-      "devDependencies": []
-    },
-    "secure-compare@3.0.1@d41d8cd9": {
-      "id": "secure-compare@3.0.1@d41d8cd9",
-      "name": "secure-compare",
-      "version": "3.0.1",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/secure-compare/-/secure-compare-3.0.1.tgz#sha1:f1a0329b308b221fae37b9974f3d578d0ca999e3"
         ]
       },
       "overrides": [],
@@ -90,7 +31,6 @@
       "dependencies": [
         "reperf@1.5.1@d41d8cd9", "rench@1.10.0@d41d8cd9",
         "rebez@github:jchavarri/rebez#03fa3b7@d41d8cd9",
-        "http-server@0.12.3@d41d8cd9",
         "flex@github:jordwalke/flex#6ff12fe@d41d8cd9",
         "esy-skia@github:revery-ui/esy-skia#6106223@d41d8cd9",
         "esy-sdl2@2.0.10008@d41d8cd9", "esy-freetype2@2.9.1008@d41d8cd9",
@@ -121,20 +61,6 @@
         "esy-astyle@github:zbaylin/esy-astyle#59bc21a@d41d8cd9",
         "@opam/ocaml-lsp-server@opam:1.6.1@7a845a2b"
       ]
-    },
-    "requires-port@1.0.0@d41d8cd9": {
-      "id": "requires-port@1.0.0@d41d8cd9",
-      "name": "requires-port",
-      "version": "1.0.0",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/requires-port/-/requires-port-1.0.0.tgz#sha1:925d2601d39ac485e091cf0da5c6e694dc3dcaff"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
     },
     "reperf@1.5.1@d41d8cd9": {
       "id": "reperf@1.5.1@d41d8cd9",
@@ -185,51 +111,6 @@
       ],
       "devDependencies": []
     },
-    "qs@6.10.1@d41d8cd9": {
-      "id": "qs@6.10.1@d41d8cd9",
-      "name": "qs",
-      "version": "6.10.1",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/qs/-/qs-6.10.1.tgz#sha1:4931482fa8d647a5aab799c5271d2133b981fb6a"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [ "side-channel@1.0.4@d41d8cd9" ],
-      "devDependencies": []
-    },
-    "portfinder@1.0.28@d41d8cd9": {
-      "id": "portfinder@1.0.28@d41d8cd9",
-      "name": "portfinder",
-      "version": "1.0.28",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/portfinder/-/portfinder-1.0.28.tgz#sha1:67c4622852bd5374dd1dd900f779f53462fac778"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "mkdirp@0.5.5@d41d8cd9", "debug@3.2.7@d41d8cd9",
-        "async@2.6.3@d41d8cd9"
-      ],
-      "devDependencies": []
-    },
-    "opener@1.5.2@d41d8cd9": {
-      "id": "opener@1.5.2@d41d8cd9",
-      "name": "opener",
-      "version": "1.5.2",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/opener/-/opener-1.5.2.tgz#sha1:5d37e1f35077b9dcac4301372271afdeb2a13598"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
     "ocaml@4.12.0@d41d8cd9": {
       "id": "ocaml@4.12.0@d41d8cd9",
       "name": "ocaml",
@@ -238,214 +119,6 @@
         "type": "install",
         "source": [
           "archive:https://registry.npmjs.org/ocaml/-/ocaml-4.12.0.tgz#sha1:2a979f37535faaded8aa3fdf82b6f16f2c71e284"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "object-inspect@1.10.3@d41d8cd9": {
-      "id": "object-inspect@1.10.3@d41d8cd9",
-      "name": "object-inspect",
-      "version": "1.10.3",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/object-inspect/-/object-inspect-1.10.3.tgz#sha1:c2aa7d2d09f50c99375704f7a0adf24c5782d369"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "ms@2.1.3@d41d8cd9": {
-      "id": "ms@2.1.3@d41d8cd9",
-      "name": "ms",
-      "version": "2.1.3",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/ms/-/ms-2.1.3.tgz#sha1:574c8138ce1d2b5861f0b44579dbadd60c6615b2"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "mkdirp@0.5.5@d41d8cd9": {
-      "id": "mkdirp@0.5.5@d41d8cd9",
-      "name": "mkdirp",
-      "version": "0.5.5",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.5.tgz#sha1:d91cefd62d1436ca0f41620e251288d420099def"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [ "minimist@1.2.5@d41d8cd9" ],
-      "devDependencies": []
-    },
-    "minimist@1.2.5@d41d8cd9": {
-      "id": "minimist@1.2.5@d41d8cd9",
-      "name": "minimist",
-      "version": "1.2.5",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/minimist/-/minimist-1.2.5.tgz#sha1:67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "mime@1.6.0@d41d8cd9": {
-      "id": "mime@1.6.0@d41d8cd9",
-      "name": "mime",
-      "version": "1.6.0",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/mime/-/mime-1.6.0.tgz#sha1:32cd9e5c64553bd58d19a568af452acff04981b1"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "lodash@4.17.21@d41d8cd9": {
-      "id": "lodash@4.17.21@d41d8cd9",
-      "name": "lodash",
-      "version": "4.17.21",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz#sha1:679591c564c3bffaae8454cf0b3df370c3d6911c"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "http-server@0.12.3@d41d8cd9": {
-      "id": "http-server@0.12.3@d41d8cd9",
-      "name": "http-server",
-      "version": "0.12.3",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/http-server/-/http-server-0.12.3.tgz#sha1:ba0471d0ecc425886616cb35c4faf279140a0d37"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "union@0.5.0@d41d8cd9", "secure-compare@3.0.1@d41d8cd9",
-        "portfinder@1.0.28@d41d8cd9", "opener@1.5.2@d41d8cd9",
-        "minimist@1.2.5@d41d8cd9", "http-proxy@1.18.1@d41d8cd9",
-        "ecstatic@3.3.2@d41d8cd9", "corser@2.0.1@d41d8cd9",
-        "colors@1.4.0@d41d8cd9", "basic-auth@1.1.0@d41d8cd9"
-      ],
-      "devDependencies": []
-    },
-    "http-proxy@1.18.1@d41d8cd9": {
-      "id": "http-proxy@1.18.1@d41d8cd9",
-      "name": "http-proxy",
-      "version": "1.18.1",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/http-proxy/-/http-proxy-1.18.1.tgz#sha1:401541f0534884bbf95260334e72f88ee3976549"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "requires-port@1.0.0@d41d8cd9", "follow-redirects@1.14.1@d41d8cd9",
-        "eventemitter3@4.0.7@d41d8cd9"
-      ],
-      "devDependencies": []
-    },
-    "he@1.2.0@d41d8cd9": {
-      "id": "he@1.2.0@d41d8cd9",
-      "name": "he",
-      "version": "1.2.0",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/he/-/he-1.2.0.tgz#sha1:84ae65fa7eafb165fddb61566ae14baf05664f0f"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "has-symbols@1.0.2@d41d8cd9": {
-      "id": "has-symbols@1.0.2@d41d8cd9",
-      "name": "has-symbols",
-      "version": "1.0.2",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/has-symbols/-/has-symbols-1.0.2.tgz#sha1:165d3070c00309752a1236a479331e3ac56f1423"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "has@1.0.3@d41d8cd9": {
-      "id": "has@1.0.3@d41d8cd9",
-      "name": "has",
-      "version": "1.0.3",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/has/-/has-1.0.3.tgz#sha1:722d7cbfc1f6aa8241f16dd814e011e1f41e8796"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [ "function-bind@1.1.1@d41d8cd9" ],
-      "devDependencies": []
-    },
-    "get-intrinsic@1.1.1@d41d8cd9": {
-      "id": "get-intrinsic@1.1.1@d41d8cd9",
-      "name": "get-intrinsic",
-      "version": "1.1.1",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.1.1.tgz#sha1:15f59f376f855c446963948f0d24cd3637b4abc6"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "has-symbols@1.0.2@d41d8cd9", "has@1.0.3@d41d8cd9",
-        "function-bind@1.1.1@d41d8cd9"
-      ],
-      "devDependencies": []
-    },
-    "function-bind@1.1.1@d41d8cd9": {
-      "id": "function-bind@1.1.1@d41d8cd9",
-      "name": "function-bind",
-      "version": "1.1.1",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/function-bind/-/function-bind-1.1.1.tgz#sha1:a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "follow-redirects@1.14.1@d41d8cd9": {
-      "id": "follow-redirects@1.14.1@d41d8cd9",
-      "name": "follow-redirects",
-      "version": "1.14.1",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.1.tgz#sha1:d9114ded0a1cfdd334e164e6662ad02bfd91ff43"
         ]
       },
       "overrides": [],
@@ -466,20 +139,6 @@
         "@esy-ocaml/reason@github:EduardoRFS/reason:reason.json#35aa4df3de0daa60bdc1133dcf97855decac48f7@d41d8cd9"
       ],
       "devDependencies": [ "ocaml@4.12.0@d41d8cd9" ]
-    },
-    "eventemitter3@4.0.7@d41d8cd9": {
-      "id": "eventemitter3@4.0.7@d41d8cd9",
-      "name": "eventemitter3",
-      "version": "4.0.7",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/eventemitter3/-/eventemitter3-4.0.7.tgz#sha1:2de9b68f6528d5644ef5c59526a1b4a07306169f"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
     },
     "esy-skia@github:revery-ui/esy-skia#6106223@d41d8cd9": {
       "id": "esy-skia@github:revery-ui/esy-skia#6106223@d41d8cd9",
@@ -591,109 +250,6 @@
       },
       "overrides": [],
       "dependencies": [],
-      "devDependencies": []
-    },
-    "ecstatic@3.3.2@d41d8cd9": {
-      "id": "ecstatic@3.3.2@d41d8cd9",
-      "name": "ecstatic",
-      "version": "3.3.2",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/ecstatic/-/ecstatic-3.3.2.tgz#sha1:6d1dd49814d00594682c652adb66076a69d46c48"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "url-join@2.0.5@d41d8cd9", "minimist@1.2.5@d41d8cd9",
-        "mime@1.6.0@d41d8cd9", "he@1.2.0@d41d8cd9"
-      ],
-      "devDependencies": []
-    },
-    "debug@3.2.7@d41d8cd9": {
-      "id": "debug@3.2.7@d41d8cd9",
-      "name": "debug",
-      "version": "3.2.7",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/debug/-/debug-3.2.7.tgz#sha1:72580b7e9145fb39b6676f9c5e5fb100b934179a"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [ "ms@2.1.3@d41d8cd9" ],
-      "devDependencies": []
-    },
-    "corser@2.0.1@d41d8cd9": {
-      "id": "corser@2.0.1@d41d8cd9",
-      "name": "corser",
-      "version": "2.0.1",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/corser/-/corser-2.0.1.tgz#sha1:8eda252ecaab5840dcd975ceb90d9370c819ff87"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "colors@1.4.0@d41d8cd9": {
-      "id": "colors@1.4.0@d41d8cd9",
-      "name": "colors",
-      "version": "1.4.0",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/colors/-/colors-1.4.0.tgz#sha1:c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "call-bind@1.0.2@d41d8cd9": {
-      "id": "call-bind@1.0.2@d41d8cd9",
-      "name": "call-bind",
-      "version": "1.0.2",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/call-bind/-/call-bind-1.0.2.tgz#sha1:b1d4e89e688119c3c9a903ad30abb2f6a919be3c"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "get-intrinsic@1.1.1@d41d8cd9", "function-bind@1.1.1@d41d8cd9"
-      ],
-      "devDependencies": []
-    },
-    "basic-auth@1.1.0@d41d8cd9": {
-      "id": "basic-auth@1.1.0@d41d8cd9",
-      "name": "basic-auth",
-      "version": "1.1.0",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/basic-auth/-/basic-auth-1.1.0.tgz#sha1:45221ee429f7ee1e5035be3f51533f1cdfd29884"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [],
-      "devDependencies": []
-    },
-    "async@2.6.3@d41d8cd9": {
-      "id": "async@2.6.3@d41d8cd9",
-      "name": "async",
-      "version": "2.6.3",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://registry.npmjs.org/async/-/async-2.6.3.tgz#sha1:d72625e2344a3656e3a3ad4fa749fa83299d82ff"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [ "lodash@4.17.21@d41d8cd9" ],
       "devDependencies": []
     },
     "@revery/timber@2.0.0@d41d8cd9": {

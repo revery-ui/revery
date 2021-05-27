@@ -39,6 +39,11 @@ function canvaskit_paint_setColor(paint, color) {
     paint.setColor(color);
 }
 
+// Provides: canvaskit_paint_setAntiAlias
+function canvaskit_paint_setAntiAlias(paint, antiAlias) {
+    paint.setAntiAlias(antiAlias);
+}
+
 // Provides: canvaskit_color_float_getA
 function canvaskit_color_float_getA(color) {
     return color[0]
@@ -69,6 +74,21 @@ function canvaskit_paint_make() {
     return new CanvasKit.Paint();
 }
 
+// Provides: canvaskit_paint_setLcdRenderText
+function canvaskit_paint_setLcdRenderText() {
+    // Noop in browser
+    return;
+}
+
+// Provides: canvaskit_rrect_make
+function canvaskit_rrect_make() {
+    return CanvasKit.RRectXY(
+        CanvasKit.LTRBRect(1, 1, 2, 2),
+        1,
+        1
+    );
+}
+
 // Provides: caml_thread_initialize
 function caml_thread_initialize() {
     // noop
@@ -79,14 +99,35 @@ function caml_mutex_new() {
     // noop
 }
 
+// Provides: caml_mutex_lock
+function caml_mutex_lock() {
+    // noop
+}
+
+// Provides: caml_mutex_unlock
+function caml_mutex_unlock() {
+    // noop
+}
+
 // Provides: revery_getUserLocale
+// Requires: caml_js_to_string
 function revery_getUserLocale() {
     // TODO?
-    return "en-us"
+    return caml_js_to_string("en-us")
 }
 
 // Provides: timber_prerr_native
 // Requires: caml_js_from_string
 function timber_prerr_native(str) {
     console.log(caml_js_from_string(str));
+}
+
+// Provides: revery_initializeWindow
+function revery_initializeWindow(win) {
+    return;
+}
+
+// Provides: revery_initializeApp
+function revery_initializeApp(app) {
+    return;
 }

@@ -661,3 +661,68 @@ function resdl_SDL_GetDisplayName(idx) {
 function resdl_SDL_GetWindowPixelFormat() {
     return 0;
 }
+
+// Provides: resdl_SDL_GetTicks
+function resdl_SDL_GetTicks() {
+    return new Date().getTime();
+}
+
+// Provides: resdl_SDL_SetWindowTransparency
+function resdl_SDL_SetWindowTransparency(win) {
+    return;
+}
+
+// Provides: resdl_SDL_ModLeftShift
+function resdl_SDL_ModLeftShift(mod) {
+    return false;
+}
+
+// Provides: resdl_SDL_ModRightShift
+function resdl_SDL_ModRightShift(mod) {
+    return false;
+}
+
+// Provides: resdl_SDL_ModLeftControl
+function resdl_SDL_ModLeftControl(mod) {
+    return false;
+}
+
+// Provides: resdl_SDL_ModRightControl
+function resdl_SDL_ModRightControl(mod) {
+    return false;
+}
+
+// Provides: resdl_SDL_ModLeftAlt
+function resdl_SDL_ModLeftAlt(mod) {
+    return false;
+}
+
+// Provides: resdl_SDL_ModRightAlt
+function resdl_SDL_ModRightAlt(mod) {
+    return false;
+}
+
+// Provides: resdl_SDL_ModRightGui
+function resdl_SDL_ModRightGui(mod) {
+    return false;
+}
+
+// Provides: resdl_SDL_ModLeftGui
+function resdl_SDL_ModLeftGui(mod) {
+    return false;
+}
+
+// Provides: resdl_SDL_ModNumLockDown
+function resdl_SDL_ModNumLockDown(mod) {
+    return false;
+}
+
+// Provides: resdl_SDL_ModCapsLockDown
+function resdl_SDL_ModCapsLockDown(mod) {
+    return false;
+}
+
+// Provides: resdl_SDL_ModAltGrDown
+function resdl_SDL_ModAltGrDown(mod) {
+    return false;
+}

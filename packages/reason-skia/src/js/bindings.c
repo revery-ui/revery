@@ -21,8 +21,12 @@ STUB(canvaskit_fontManager_makeDefault);
 
 STUB(canvaskit_paint_make);
 STUB(canvaskit_paint_setColor);
+STUB(canvaskit_paint_setAntiAlias);
+STUB(canvaskit_paint_setLcdRenderText);
 
 STUB(canvaskit_rect_makeLtrb);
+
+STUB(canvaskit_rrect_make);
 
 STUB(caml_thread_initialize);
 STUB(caml_mutex_new);
