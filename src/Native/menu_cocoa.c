@@ -39,6 +39,9 @@ NSMenuItem *revery_menuItemCreate_cocoa(const char *title, struct KeyEquivalent 
         if (keyEquivalent->shift) {
             modifierFlags |= NSEventModifierFlagShift;
         }
+        if (keyEquivalent->ctrl) {
+            modifierFlags |= NSEventModifierFlagControl;
+        }
         [nsMenuItem setKeyEquivalentModifierMask:modifierFlags];
     }
 

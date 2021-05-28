@@ -48,10 +48,37 @@ module View = {
           ~title="Item 1.2",
           ~onClick=menuCallback("Item 1.2"),
           ~keyEquivalent=
-            Menu.KeyEquivalent.ofString("b") |> Menu.KeyEquivalent.enableShift,
+            Menu.KeyEquivalent.ofString("b")
+            |> (ke => Menu.KeyEquivalent.enableShift(ke, true)),
+          (),
+        );
+      let item13 =
+        Menu.Item.create(
+          ~title="Item 1.3",
+          ~onClick=menuCallback("Item 1.3"),
+          ~keyEquivalent=
+            Menu.KeyEquivalent.ofString("Space")
+            |> (ke => Menu.KeyEquivalent.enableCtrl(ke, true)),
+          (),
+        );
+      let item14 =
+        Menu.Item.create(
+          ~title="Item 1.4",
+          ~onClick=menuCallback("Item 1.4"),
+          ~keyEquivalent=Menu.KeyEquivalent.ofString("ESC"),
+          (),
+        );
+      let item15 =
+        Menu.Item.create(
+          ~title="Item 1.5",
+          ~onClick=menuCallback("Item 1.5"),
+          ~keyEquivalent=Menu.KeyEquivalent.ofString("Tab"),
           (),
         );
       Menu.addItem(menu2, item12);
+      Menu.addItem(menu2, item13);
+      Menu.addItem(menu2, item14);
+      Menu.addItem(menu2, item15);
 
       let menu3 = Menu.create("Test 3");
       Menu.addSubmenu(~parent=menuBar, ~child=menu3);
@@ -62,9 +89,10 @@ module View = {
       let item311 =
         Menu.Item.create(
           ~title="Item 3.1.1",
-          ~onClick=menuCallback("Item 1.3"),
+          ~onClick=menuCallback("Item 3.1.1"),
           ~keyEquivalent=
-            Menu.KeyEquivalent.ofString("c") |> Menu.KeyEquivalent.enableAlt,
+            Menu.KeyEquivalent.ofString("c")
+            |> (ke => Menu.KeyEquivalent.enableAlt(ke, true)),
           (),
         );
 
@@ -73,7 +101,7 @@ module View = {
       let item312 =
         Menu.Item.create(
           ~title="Item 3.1.2",
-          ~onClick=menuCallback("Item 1.4"),
+          ~onClick=menuCallback("Item 3.1.2"),
           (),
         );
 
@@ -82,7 +110,7 @@ module View = {
       let item313 =
         Menu.Item.create(
           ~title="Item 3.1.3",
-          ~onClick=menuCallback("Item 1.5"),
+          ~onClick=menuCallback("Item 3.1.3"),
           (),
         );
 

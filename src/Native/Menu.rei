@@ -5,11 +5,9 @@ module KeyEquivalent: {
 
   let ofString: string => t;
 
-  let enableAlt: t => t;
-  let disableAlt: t => t;
-
-  let enableShift: t => t;
-  let disableShift: t => t;
+  let enableAlt: (t, bool) => t;
+  let enableShift: (t, bool) => t;
+  let enableCtrl: (t, bool) => t;
 };
 
 module Item: {
