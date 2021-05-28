@@ -9,7 +9,7 @@ module Internal = {
 };
 
 module View = {
-  let make = () => {
+  let make = (~window, ()) => {
     let onClickCreateMenu = () => {
       incr(Internal.nonce);
       let currentNonce = Internal.nonce^;
@@ -48,10 +48,37 @@ module View = {
           ~title="Item 1.2",
           ~onClick=menuCallback("Item 1.2"),
           ~keyEquivalent=
-            Menu.KeyEquivalent.ofString("b") |> Menu.KeyEquivalent.enableShift,
+            Menu.KeyEquivalent.ofString("b")
+            |> (ke => Menu.KeyEquivalent.enableShift(ke, true)),
+          (),
+        );
+      let item13 =
+        Menu.Item.create(
+          ~title="Item 1.3",
+          ~onClick=menuCallback("Item 1.3"),
+          ~keyEquivalent=
+            Menu.KeyEquivalent.ofString("Space")
+            |> (ke => Menu.KeyEquivalent.enableCtrl(ke, true)),
+          (),
+        );
+      let item14 =
+        Menu.Item.create(
+          ~title="Item 1.4",
+          ~onClick=menuCallback("Item 1.4"),
+          ~keyEquivalent=Menu.KeyEquivalent.ofString("ESC"),
+          (),
+        );
+      let item15 =
+        Menu.Item.create(
+          ~title="Item 1.5",
+          ~onClick=menuCallback("Item 1.5"),
+          ~keyEquivalent=Menu.KeyEquivalent.ofString("Tab"),
           (),
         );
       Menu.addItem(menu2, item12);
+      Menu.addItem(menu2, item13);
+      Menu.addItem(menu2, item14);
+      Menu.addItem(menu2, item15);
 
       let menu3 = Menu.create("Test 3");
       Menu.addSubmenu(~parent=menuBar, ~child=menu3);
@@ -62,9 +89,10 @@ module View = {
       let item311 =
         Menu.Item.create(
           ~title="Item 3.1.1",
-          ~onClick=menuCallback("Item 1.3"),
+          ~onClick=menuCallback("Item 3.1.1"),
           ~keyEquivalent=
-            Menu.KeyEquivalent.ofString("c") |> Menu.KeyEquivalent.enableAlt,
+            Menu.KeyEquivalent.ofString("c")
+            |> (ke => Menu.KeyEquivalent.enableAlt(ke, true)),
           (),
         );
 
@@ -73,7 +101,7 @@ module View = {
       let item312 =
         Menu.Item.create(
           ~title="Item 3.1.2",
-          ~onClick=menuCallback("Item 1.4"),
+          ~onClick=menuCallback("Item 3.1.2"),
           (),
         );
 
@@ -82,7 +110,7 @@ module View = {
       let item313 =
         Menu.Item.create(
           ~title="Item 3.1.3",
-          ~onClick=menuCallback("Item 1.5"),
+          ~onClick=menuCallback("Item 3.1.3"),
           (),
         );
 
@@ -98,6 +126,33 @@ module View = {
       print_endline("Render time: " ++ string_of_float(delta));
     };
 
+    let onMouseUp = (evt: NodeEvents.mouseButtonEventParams) =>
+      if (evt.button == MouseButton.BUTTON_RIGHT) {
+        let menu = Menu.create("Right click");
+        let item1 =
+          Menu.Item.create(
+            ~title="Click me 1",
+            ~onClick=
+              (~fromKeyPress as _, ()) => print_endline("You clicked me!"),
+            (),
+          );
+        let item2 =
+          Menu.Item.create(
+            ~title="Click me 2",
+            ~onClick=
+              (~fromKeyPress as _, ()) => print_endline("You clicked me!"),
+            (),
+          );
+        Menu.addItem(menu, item1);
+        Menu.addItem(menu, item2);
+        Menu.displayIn(
+          ~x=int_of_float(evt.mouseX),
+          ~y=int_of_float(evt.mouseY),
+          menu,
+          window |> Revery.Window.getSdlWindow,
+        );
+      };
+
     let containerStyle =
       Style.[
         position(`Absolute),
@@ -109,10 +164,11 @@ module View = {
         right(0),
       ];
 
-    <View style=containerStyle>
+    <View style=containerStyle onMouseUp>
       <Button title="Create Menu" onClick=onClickCreateMenu />
+      <Text text="Or right click anywhere!" italic=true />
     </View>;
   };
 };
 
-let render = () => <View />;
+let render = window => <View window />;

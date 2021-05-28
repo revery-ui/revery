@@ -39,6 +39,9 @@ NSMenuItem *revery_menuItemCreate_cocoa(const char *title, struct KeyEquivalent 
         if (keyEquivalent->shift) {
             modifierFlags |= NSEventModifierFlagShift;
         }
+        if (keyEquivalent->ctrl) {
+            modifierFlags |= NSEventModifierFlagControl;
+        }
         [nsMenuItem setKeyEquivalentModifierMask:modifierFlags];
     }
 
@@ -102,6 +105,19 @@ void revery_menuInsertSubmenuAt_cocoa(NSMenu *parent, NSMenu *child, int idx) {
 
 void revery_menuClear_cocoa(NSMenu *nsMenu) {
     [nsMenu removeAllItems];
+}
+
+void revery_menuDisplayIn_cocoa(NSMenu *nsMenu, NSWindow *nsWindow, int x, int y) {
+    NSView *nsView = [nsWindow contentView];
+    CGRect frame = [nsView frame];
+
+    float adjY = frame.size.height - (float)y;
+
+    CGPoint point;
+    point.x = (float)x;
+    point.y = adjY;
+
+    [nsMenu popUpMenuPositioningItem:nil atLocation:point inView:nsView];
 }
 
 NSMenuItem *revery_menuItemCreateSeparator_cocoa() {

@@ -56,6 +56,7 @@ void convertCamlKeyEquivalent(value vKeyEquivalent, struct KeyEquivalent *keyEqu
     keyEquivalent->str = String_val(Field(vKeyEquivalent, 0));
     keyEquivalent->alt = Bool_val(Field(vKeyEquivalent, 1));
     keyEquivalent->shift = Bool_val(Field(vKeyEquivalent, 2));
+    keyEquivalent->ctrl = Bool_val(Field(vKeyEquivalent, 3));
 }
 
 CAMLprim value revery_menuItemCreate(value vTitle, value vKeyEquivalent) {
@@ -226,6 +227,25 @@ CAMLprim value revery_menuClear(value vMenu) {
     revery_menuClear_cocoa(menu);
 #else
     UNUSED(menu);
+#endif
+
+    CAMLreturn(Val_unit);
+}
+
+CAMLprim value revery_menuDisplayIn(value vMenu, value vWindow, value vX, value vY) {
+    CAMLparam4(vMenu, vWindow, vX, vY);
+
+    void *menu = revery_unwrapPointer(vMenu);
+    void *window = revery_unwrapPointer(vWindow);
+    int x = Int_val(vX);
+    int y = Int_val(vY);
+#ifdef USE_COCOA
+    revery_menuDisplayIn_cocoa(menu, window, x, y);
+#else
+    UNUSED(menu);
+    UNUSED(window);
+    UNUSED(x);
+    UNUSED(y);
 #endif
 
     CAMLreturn(Val_unit);

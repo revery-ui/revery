@@ -8,15 +8,33 @@ module KeyEquivalent = {
     str: string,
     alt: bool,
     shift: bool,
+    ctrl: bool,
   };
 
-  let ofString = str => {str, alt: false, shift: false};
+  let strToKey = str =>
+    switch (str) {
+    | "Space"
+    | "space" => " "
+    | "ESC"
+    | "esc"
+    | "Escape"
+    | "escape" => 0x1b |> Char.chr |> String.make(1)
+    | "TAB"
+    | "Tab"
+    | "tab" => "\t"
+    | key => key
+    };
 
-  let enableAlt = t => {...t, alt: true};
-  let disableAlt = t => {...t, alt: false};
+  let ofString = str => {
+    str: strToKey(str),
+    alt: false,
+    shift: false,
+    ctrl: false,
+  };
 
-  let enableShift = t => {...t, shift: true};
-  let disableShift = t => {...t, shift: false};
+  let enableAlt = (t, truth) => {...t, alt: truth};
+  let enableShift = (t, truth) => {...t, shift: truth};
+  let enableCtrl = (t, truth) => {...t, ctrl: truth};
 };
 
 module Item = {
@@ -105,6 +123,8 @@ open {
        external c_getMenuBarHandle: unit => t = "revery_getMenuBarHandle";
        external c_create: string => t = "revery_menuCreate";
        external c_nth: (t, int) => option(Item.t) = "revery_menuNth";
+       external c_displayIn: (t, Sdl2.Window.nativeWindow, int, int) => unit =
+         "revery_menuDisplayIn";
      };
 
 external addItem: (t, Item.t) => unit = "revery_menuAddItem";
@@ -115,6 +135,9 @@ let addSubmenu = (~parent, ~child) => c_addSubmenu(parent, child);
 let removeSubmenu = (~parent, ~child) => c_removeSubmenu(parent, child);
 let insertSubmenuAt = (~parent, ~child, ~idx) =>
   c_insertSubmenuAt(parent, child, idx);
+
+let displayIn = (~x, ~y, menu, window) =>
+  c_displayIn(menu, window |> Sdl2.Window.getNativeWindow, x, y);
 
 %if
 defined(USE_COCOA);

@@ -5,11 +5,9 @@ module KeyEquivalent: {
 
   let ofString: string => t;
 
-  let enableAlt: t => t;
-  let disableAlt: t => t;
-
-  let enableShift: t => t;
-  let disableShift: t => t;
+  let enableAlt: (t, bool) => t;
+  let enableShift: (t, bool) => t;
+  let enableCtrl: (t, bool) => t;
 };
 
 module Item: {
@@ -46,3 +44,4 @@ let addSubmenu: (~parent: t, ~child: t) => unit;
 let removeSubmenu: (~parent: t, ~child: t) => unit;
 let insertSubmenuAt: (~parent: t, ~child: t, ~idx: int) => unit;
 let clear: t => unit;
+let displayIn: (~x: int, ~y: int, t, Sdl2.Window.t) => unit;
