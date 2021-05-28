@@ -11,7 +11,26 @@ module KeyEquivalent = {
     ctrl: bool,
   };
 
-  let ofString = str => {str, alt: false, shift: false, ctrl: false};
+  let strToKey = str =>
+    switch (str) {
+    | "Space"
+    | "space" => " "
+    | "ESC"
+    | "esc"
+    | "Escape"
+    | "escape" => 0x1b |> Char.chr |> String.make(1)
+    | "TAB"
+    | "Tab"
+    | "tab" => "\t"
+    | key => key
+    };
+
+  let ofString = str => {
+    str: strToKey(str),
+    alt: false,
+    shift: false,
+    ctrl: false,
+  };
 
   let enableAlt = (t, truth) => {...t, alt: truth};
   let enableShift = (t, truth) => {...t, shift: truth};
