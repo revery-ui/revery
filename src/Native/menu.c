@@ -56,6 +56,7 @@ void convertCamlKeyEquivalent(value vKeyEquivalent, struct KeyEquivalent *keyEqu
     keyEquivalent->str = String_val(Field(vKeyEquivalent, 0));
     keyEquivalent->alt = Bool_val(Field(vKeyEquivalent, 1));
     keyEquivalent->shift = Bool_val(Field(vKeyEquivalent, 2));
+    keyEquivalent->ctrl = Bool_val(Field(vKeyEquivalent, 3));
 }
 
 CAMLprim value revery_menuItemCreate(value vTitle, value vKeyEquivalent) {

@@ -8,15 +8,14 @@ module KeyEquivalent = {
     str: string,
     alt: bool,
     shift: bool,
+    ctrl: bool,
   };
 
-  let ofString = str => {str, alt: false, shift: false};
+  let ofString = str => {str, alt: false, shift: false, ctrl: false};
 
-  let enableAlt = t => {...t, alt: true};
-  let disableAlt = t => {...t, alt: false};
-
-  let enableShift = t => {...t, shift: true};
-  let disableShift = t => {...t, shift: false};
+  let enableAlt = (t, truth) => {...t, alt: truth};
+  let enableShift = (t, truth) => {...t, shift: truth};
+  let enableCtrl = (t, truth) => {...t, ctrl: truth};
 };
 
 module Item = {
