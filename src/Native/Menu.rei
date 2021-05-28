@@ -46,3 +46,4 @@ let addSubmenu: (~parent: t, ~child: t) => unit;
 let removeSubmenu: (~parent: t, ~child: t) => unit;
 let insertSubmenuAt: (~parent: t, ~child: t, ~idx: int) => unit;
 let clear: t => unit;
+let displayIn: (~x: int, ~y: int, t, Sdl2.Window.t) => unit;

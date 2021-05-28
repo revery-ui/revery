@@ -231,6 +231,25 @@ CAMLprim value revery_menuClear(value vMenu) {
     CAMLreturn(Val_unit);
 }
 
+CAMLprim value revery_menuDisplayIn(value vMenu, value vWindow, value vX, value vY) {
+    CAMLparam4(vMenu, vWindow, vX, vY);
+
+    void *menu = revery_unwrapPointer(vMenu);
+    void *window = revery_unwrapPointer(vWindow);
+    int x = Int_val(vX);
+    int y = Int_val(vY);
+#ifdef USE_COCOA
+    revery_menuDisplayIn_cocoa(menu, window, x, y);
+#else
+    UNUSED(menu);
+    UNUSED(window);
+    UNUSED(x);
+    UNUSED(y);
+#endif
+
+    CAMLreturn(Val_unit);
+}
+
 CAMLprim value revery_menuItemCreateSeparator() {
     CAMLparam0();
     CAMLlocal1(vSeparator);

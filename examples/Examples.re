@@ -82,7 +82,7 @@ let examples = [
   },
   {
     name: "Native: OSX Menu",
-    render: _ => NativeMenuExample.render(),
+    render: w => NativeMenuExample.render(w),
     source: "NativeMenuExample.re",
   },
   {

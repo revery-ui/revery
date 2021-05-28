@@ -9,7 +9,7 @@ module Internal = {
 };
 
 module View = {
-  let make = () => {
+  let make = (~window, ()) => {
     let onClickCreateMenu = () => {
       incr(Internal.nonce);
       let currentNonce = Internal.nonce^;
@@ -98,6 +98,33 @@ module View = {
       print_endline("Render time: " ++ string_of_float(delta));
     };
 
+    let onMouseUp = (evt: NodeEvents.mouseButtonEventParams) =>
+      if (evt.button == MouseButton.BUTTON_RIGHT) {
+        let menu = Menu.create("Right click");
+        let item1 =
+          Menu.Item.create(
+            ~title="Click me 1",
+            ~onClick=
+              (~fromKeyPress as _, ()) => print_endline("You clicked me!"),
+            (),
+          );
+        let item2 =
+          Menu.Item.create(
+            ~title="Click me 2",
+            ~onClick=
+              (~fromKeyPress as _, ()) => print_endline("You clicked me!"),
+            (),
+          );
+        Menu.addItem(menu, item1);
+        Menu.addItem(menu, item2);
+        Menu.displayIn(
+          ~x=int_of_float(evt.mouseX),
+          ~y=int_of_float(evt.mouseY),
+          menu,
+          window |> Revery.Window.getSdlWindow,
+        );
+      };
+
     let containerStyle =
       Style.[
         position(`Absolute),
@@ -109,10 +136,11 @@ module View = {
         right(0),
       ];
 
-    <View style=containerStyle>
+    <View style=containerStyle onMouseUp>
       <Button title="Create Menu" onClick=onClickCreateMenu />
+      <Text text="Or right click anywhere!" italic=true />
     </View>;
   };
 };
 
-let render = () => <View />;
+let render = window => <View window />;
