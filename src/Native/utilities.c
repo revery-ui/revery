@@ -12,9 +12,14 @@
 */
 void revery_caml_call_n(camlValue f, int argCount, camlValue *args) {
     caml_c_thread_register();
-    caml_acquire_runtime_system();
+    // With the change to remove the acquire/release runtime calls in:
+    // https://github.com/revery-ui/revery/pull/1072
+    // it seems that this acquire/release pair is no longer required
+    // (...and will crash).
+
+    // caml_acquire_runtime_system();
     caml_callbackN(f, argCount, args);
-    caml_release_runtime_system();
+    //caml_release_runtime_system();
 }
 
 void revery_caml_call(camlValue f) {
