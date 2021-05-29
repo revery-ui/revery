@@ -23,7 +23,7 @@ jobs:
 - job: Linux
   timeoutInMinutes: 0
   pool:
-    vmImage: 'ubuntu-18.04'
+    vmImage: 'ubuntu-20.04'
 
   variables:
     STAGING_DIRECTORY: $(Build.StagingDirectory)
@@ -45,7 +45,7 @@ jobs:
   displayName: 'Linux - CentOS - Docker Image'
   timeoutInMinutes: 0
   pool:
-    vmImage: 'ubuntu-18.04'
+    vmImage: 'ubuntu-20.04'
 
   variables:
     STAGING_DIRECTORY: $(Build.StagingDirectory)
