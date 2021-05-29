@@ -18,7 +18,7 @@ depends: [
 dev-repo: "git+https://github.com/yoriyuki/Camomile.git"
 build: [
   ["ocaml" "configure.ml" "--share" "%{share}%/camomile"]
-  ["dune" "subst"] {pinned}
+  ["dune" "subst"] {dev}
   ["dune" "build" "-p" name "-j" jobs
     "@install"
     "@doc" {with-doc}

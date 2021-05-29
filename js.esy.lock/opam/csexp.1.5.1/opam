@@ -20,7 +20,7 @@ module of this library is parameterised by the type of S-expressions.
 maintainer: ["Jeremie Dimino <jeremie@dimino.org>"]
 authors: [
   "Quentin Hocquet <mefyl@gruntech.org>"
-  "Jane Street Group, LLC <opensource@janestreet.com>"
+  "Jane Street Group, LLC"
   "Jeremie Dimino <jeremie@dimino.org>"
 ]
 license: "MIT"
