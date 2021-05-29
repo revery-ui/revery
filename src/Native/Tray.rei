@@ -29,7 +29,7 @@ let setTitle: (t, ~text: string) => t;
 /**
  * remove
  *
- * Takes a [t] and removes it.
+ * Given a [t] removes the tray item from the tray.
  *  *
  * Example:
  *   tray |> Tray.remove;
