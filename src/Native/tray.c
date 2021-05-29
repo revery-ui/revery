@@ -19,15 +19,15 @@
 
 #include "utilities.h"
 
-CAMLprim value revery_makeTrayHandle(value imagePath_v) {
-    CAMLparam1(imagePath_v);
+CAMLprim value revery_makeTrayHandle(value vImagePath) {
+    CAMLparam1(vImagePath);
     CAMLlocal1(result);
 
 #ifdef USE_COCOA
     NSStatusItem *statusItem = [NSStatusBar.systemStatusBar statusItemWithLength:NSVariableStatusItemLength];
 
-    if (imagePath_v != Val_none) {
-        const char *imagePath = String_val(Some_val(imagePath_v));
+    if (vImagePath != Val_none) {
+        const char *imagePath = String_val(Some_val(vImagePath));
 
         NSImage *nsImage = revery_makeImageFromAbsolutePath_cocoa(imagePath);
 
@@ -47,19 +47,15 @@ CAMLprim value revery_makeTrayHandle(value imagePath_v) {
     CAMLreturn(result);
 }
 
-CAMLprim value revery_setTrayTitle(value trayHandle_v, value title_v) {
-    CAMLparam2(trayHandle_v, title_v);
+CAMLprim value revery_setTrayTitle(value vTrayHandle, value vTitle) {
+    CAMLparam2(vTrayHandle, vTitle);
     CAMLlocal1(result);
 #ifdef USE_COCOA
-    NSStatusItem* statusItem = (NSStatusItem*)(void*)Field(trayHandle_v, 0);
+    void* statusItem = revery_unwrapPointer(vTrayHandle);
 
-    const char *title = String_val(title_v);
+    const char *title = String_val(vTitle);
 
-    NSString *nsTitle =
-        [NSString stringWithCString:title encoding:NSUTF8StringEncoding];
-
-    statusItem.button.image = NULL;
-    statusItem.button.title = nsTitle;
+    revery_setTrayTitle_cocoa(statusItem, title);
 
     result = revery_wrapPointer(statusItem);
 
@@ -72,12 +68,12 @@ CAMLprim value revery_setTrayTitle(value trayHandle_v, value title_v) {
     CAMLreturn(result);
 }
 
-void revery_removeTrayItem(value trayHandle_v) {
-    CAMLparam1(trayHandle_v);
+void revery_removeTrayItem(value vTrayHandle) {
+    CAMLparam1(vTrayHandle);
 #ifdef USE_COCOA
-    NSStatusItem* statusItem = (NSStatusItem *)revery_unwrapPointer(trayHandle_v);
+    void* statusItem = revery_unwrapPointer(vTrayHandle);
 
-    [[NSStatusBar systemStatusBar] removeStatusItem: statusItem];
+    revery_removeStatusItem_cocoa(statusItem);
 
     CAMLreturn0;
 #elif USE_WIN32
