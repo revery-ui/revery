@@ -2,14 +2,28 @@ open Revery;
 open Revery.UI;
 open Revery.UI.Components;
 
-let make = () => {
-  Native.Tray.make(
-    ~imagePath=Environment.getAssetPath("outrun-logo.png"),
-    (),
-  )
-  |> ignore;
+let%component make = () => {
+  let%hook () =
+    Hooks.effect(
+      OnMount,
+      () => {
+        let trayImage =
+          Native.Tray.make(
+            ~imagePath=Environment.getAssetPath("outrun-logo.png"),
+            (),
+          );
 
-  Native.Tray.make() |> Native.Tray.setTitle(~text="Hello Revery!");
+        let trayText =
+          Native.Tray.make() |> Native.Tray.setTitle(~text="Hello Revery!");
+
+        Some(
+          () => {
+            trayImage |> Native.Tray.remove;
+            trayText |> Native.Tray.remove;
+          },
+        );
+      },
+    );
 
   <Center>
     <Text

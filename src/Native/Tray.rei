@@ -17,10 +17,22 @@ let make: (~imagePath: string=?, unit) => t;
  * setTitle
  *
  * Takes a [title] of string and sets the tray's text to it.
+ * Returns the updated tray item.
  *  *
  * Examples:
- *   tray |> Tray.setTitle(~text="Hello Revery!");
- *   Tray.make() |> Tray.setTitle(~text="Hello Revery!");
- *   Tray.setTitle(tray, ~text="Hello World!");
+ *   tray |> Tray.setTitle(~text="Hello Revery!") |> ignore;
+ *   let tray = Tray.make() |> Tray.setTitle(~text="Hello Revery!");
+ *   Tray.setTitle(tray, ~text="Hello World!") |> ignore;
  */
-let setTitle: (t, ~text: string) => unit;
+let setTitle: (t, ~text: string) => t;
+
+/**
+ * remove
+ *
+ * Takes a [t] and removes it.
+ *  *
+ * Example:
+ *   tray |> Tray.remove;
+ *   Tray.remove(tray);
+ */
+let remove: t => unit;

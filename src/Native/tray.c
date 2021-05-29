@@ -7,8 +7,6 @@
 
 #include "caml_values.h"
 
-#define UNUSED(x) (void)(x)
-
 #include "config.h"
 #ifdef USE_WIN32
 #include "ReveryWin32.h"
@@ -18,6 +16,8 @@
 #elif USE_GTK
 #include "ReveryGtk.h"
 #endif
+
+#include "utilities.h"
 
 CAMLprim value revery_makeTrayHandle(value imagePath_v) {
     CAMLparam1(imagePath_v);
@@ -36,8 +36,7 @@ CAMLprim value revery_makeTrayHandle(value imagePath_v) {
         UNUSED(imagePath);
     }
 
-    result = caml_alloc(1, Abstract_tag);
-    Store_field(result, 0, (long)statusItem);
+    result = revery_wrapPointer(statusItem);
 
     CAMLreturn(result);
 #elif USE_WIN32
@@ -48,8 +47,9 @@ CAMLprim value revery_makeTrayHandle(value imagePath_v) {
     CAMLreturn(result);
 }
 
-void revery_setTrayTitle(value trayHandle_v, value title_v) {
+CAMLprim value revery_setTrayTitle(value trayHandle_v, value title_v) {
     CAMLparam2(trayHandle_v, title_v);
+    CAMLlocal1(result);
 #ifdef USE_COCOA
     NSStatusItem* statusItem = (NSStatusItem*)(void*)Field(trayHandle_v, 0);
 
@@ -60,6 +60,24 @@ void revery_setTrayTitle(value trayHandle_v, value title_v) {
 
     statusItem.button.image = NULL;
     statusItem.button.title = nsTitle;
+
+    result = revery_wrapPointer(statusItem);
+
+    CAMLreturn(result);
+#elif USE_WIN32
+    result = caml_alloc(sizeof(NULL), Abstract_tag);
+#else
+    result = caml_alloc(sizeof(NULL), Abstract_tag);
+#endif
+    CAMLreturn(result);
+}
+
+void revery_removeTrayItem(value trayHandle_v) {
+    CAMLparam1(trayHandle_v);
+#ifdef USE_COCOA
+    NSStatusItem* statusItem = (NSStatusItem *)revery_unwrapPointer(trayHandle_v);
+
+    [[NSStatusBar systemStatusBar] removeStatusItem: statusItem];
 
     CAMLreturn0;
 #elif USE_WIN32
