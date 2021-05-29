@@ -301,6 +301,7 @@ function resdl_SDL_ShowWindow(w) {
 //Provides: resdl_SDL_CreateWindow
 function resdl_SDL_CreateWindow(width, height, title) {
     var canvas = document.createElement("canvas");
+    canvas.id = "revery-canvas";
     canvas.style.position = "absolute";
     canvas.style.top = "0px";
     canvas.style.bottom = "0px";
@@ -725,4 +726,9 @@ function resdl_SDL_ModCapsLockDown(mod) {
 // Provides: resdl_SDL_ModAltGrDown
 function resdl_SDL_ModAltGrDown(mod) {
     return false;
+}
+
+// Provides: resdl_SDL_GL_GetFramebufferBinding
+function resdl_SDL_GL_GetFramebufferBinding() {
+    return 0;
 }

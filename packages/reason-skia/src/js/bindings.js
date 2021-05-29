@@ -64,6 +64,101 @@ function canvaskit_color_float_getB(color) {
     return color[3]
 };
 
+// Provides: canvaskit_gr_backendRenderTarget_makeGl
+function canvaskit_gr_backendRenderTarget_makeGl(
+    width,
+    height,
+    _flags,
+    _flags2,
+    _framebufferInfo
+) {
+    return { width: width, height: height };
+};
+
+// Provides: canvaskit_gr_gl_interface_makeNative
+function canvaskit_gr_gl_interface_makeNative() {
+    var elem = document.getElementById("foo");
+    console.log(elem);
+    var handle = CanvasKit.GetWebGLContext(elem);
+    return { handle: handle };
+}
+
+// Provides: canvaskit_gr_context_makeGl
+function canvaskit_gr_context_makeGl(glInterface) {
+    var ret = CanvasKit.MakeGrContext(glInterface.handle);
+    // Wrap in (Some)...
+    return [0, ret];
+};
+
+// Provides: canvaskit_imageInfo_make
+function canvaskit_imageInfo_make(width, height, _colorType, _alphaType, _maybeColorSpace) {
+    return { width: width, height: height };
+}
+
+// Provides: canvaskit_surface_makeRenderTarget_byte
+function canvaskit_surface_makeRenderTarget_byte(
+    graphicsContext,
+    _flag,
+    imageInfo,
+    _framebufferId,
+    _position,
+    _props,
+    _flag2
+) {
+    return CanvasKit.MakeRenderTarget(
+        graphicsContext,
+        imageInfo.width,
+        imageInfo.height
+    )
+};
+
+// Provides: canvaskit_surface_makeRenderTarget
+// Requires: canvaskit_surface_makeRenderTarget_byte
+function canvaskit_surface_makeRenderTarget(
+    graphicsContext,
+    _flag,
+    imageInfo,
+    _framebufferId,
+    _position,
+    _props,
+    _flag2
+) {
+    return canvaskit_surface_makeRenderTarget_byte(graphicsContext, _flag, imageInfo, _framebufferId, _position, _props, _flag2);
+};
+
+// Provides: canvaskit_surface_makeFromBackendRenderTarget_byte
+function canvaskit_surface_makeFromBackendRenderTarget_byte(
+    graphicsContext,
+    renderTarget,
+    _surfaceOrigin,
+    _colorType,
+    _maybeColorSpace,
+    _maybeSurfaceProps
+) {
+    return CanvasKit.MakeOnScreenGLSurface(graphicsContext,
+        renderTarget.width, renderTarget.height, CanvasKit.ColorSpace.SRGB);
+}
+
+// Provides: canvaskit_surface_makeFromBackendRenderTarget
+// Requires: canvaskit_surface_makeFromBackendRenderTarget_byte
+function canvaskit_surface_makeFromBackendRenderTarget(
+    graphicsContext,
+    renderTarget,
+    _surfaceOrigin,
+    _colorType,
+    _maybeColorSpace,
+    _maybeSurfaceProps
+) {
+    return [0, canvaskit_surface_makeFromBackendRenderTarget_byte(
+        graphicsContext,
+        renderTarget,
+        _surfaceOrigin,
+        _colorType,
+        _maybeColorSpace,
+        _maybeSurfaceProps
+    )]
+}
+
 // Provides: canvaskit_fontManager_makeDefault
 function canvaskit_fontManager_makeDefault() {
     return null;
@@ -87,6 +182,15 @@ function canvaskit_rrect_make() {
         1,
         1
     );
+}
+
+// Provides: canvaskit_surface_getCanvas
+function canvaskit_surface_getCanvas(surface) {
+    // TODO: Remove
+    // surface.drawOnce(function (canvas) {
+    //     canvas.clear(CanvasKit.MAGENTA);
+    // })
+    return surface.getCanvas();
 }
 
 // Provides: caml_thread_initialize

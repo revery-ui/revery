@@ -500,8 +500,9 @@ module ColorSpace = {
 module ImageInfo = {
   type t;
 
-  let make = (width, height, colorType, alphaType, maybeColorspace) =>
-    failwith("TODO");
+  external make:
+    (int32, int32, colorType, alphaType, option(ColorSpace.t)) => t =
+    "canvaskit_imageInfo_make";
 };
 
 module Image = {
@@ -523,7 +524,8 @@ module Gr = {
     module Interface = {
       type t;
 
-      let makeNative = () => failwith("TODO");
+      external makeNative: unit => option(t) =
+        "canvaskit_gr_gl_interface_makeNative";
 
       let makeSdl2 = () => failwith("TODO");
 
@@ -531,22 +533,25 @@ module Gr = {
     };
 
     module FramebufferInfo = {
-      type t;
+      // Not used in JSOO strategy...
+      type t = unit;
 
-      let make = (width, height) => failwith("TODO");
+      let make = (id, flags) => ();
     };
   };
 
   module Context = {
     type t;
 
-    let makeGl = maybeInterface => failwith("TODO");
+    external makeGl: option(Gl.Interface.t) => option(t) =
+      "canvaskit_gr_context_makeGl";
   };
 
   module BackendRenderTarget = {
     type t;
 
-    let makeGl = (i0, i1, i2, i3, frameBufferInfo) => failwith("TODO");
+    external makeGl: (int, int, int, int, Gl.FramebufferInfo.t) => t =
+      "canvaskit_gr_backendRenderTarget_makeGl";
   };
 };
 
@@ -611,9 +616,10 @@ module Canvas = {
 };
 
 module SurfaceProps = {
-  type t;
+  // Not used in JSOO, currently...
+  type t = unit;
 
-  let make = (idx, pixelGeometry) => failwith("TODO");
+  let make = (idx, pixelGeometry) => ();
 };
 
 module Surface = {
@@ -621,26 +627,38 @@ module Surface = {
 
   let makeRaster = (imageInfo, maybeProps) => failwith("TODO");
 
-  let makeRenderTarget =
-      (grContext, flag, imageInfo, i, surfaceOrigin, maybeProps, flag2) =>
-    failwith("TODO");
+  external makeRenderTarget:
+    (
+      Gr.Context.t,
+      bool,
+      ImageInfo.t,
+      int,
+      Gr.surfaceOrigin,
+      option(SurfaceProps.t),
+      bool
+    ) =>
+    option(t) =
+    "canvaskit_surface_makeRenderTarget"
+    "canvaskit_surface_makeRenderTarget_byte";
 
-  let makeFromBackendRenderTarget =
-      (
-        grContxt,
-        grBackendRenderTarget,
-        surfaceOrigin,
-        colorType,
-        maybeColorSpace,
-        maybeSurfaceProps,
-      ) =>
-    failwith("TODO");
+  external makeFromBackendRenderTarget:
+    (
+      Gr.Context.t,
+      Gr.BackendRenderTarget.t,
+      Gr.surfaceOrigin,
+      colorType,
+      option(ColorSpace.t),
+      option(SurfaceProps.t)
+    ) =>
+    option(t) =
+    "canvaskit_surface_makeFromBackendRenderTarget"
+    "canvaskit_surface_makeFromBackendRenderTarget_byte";
 
   let draw = (~paint=None, ~canvas, ~x, ~y, surface) => failwith("TODO");
 
   let makeImageSnapshot = surface => failwith("TODO");
 
-  let getCanvas = surface => failwith("TODO");
+  external getCanvas: t => Canvas.t = "canvaskit_surface_getCanvas";
 
   let getWidth = surface => failwith("TODO");
 

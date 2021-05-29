@@ -316,7 +316,7 @@ let init = app => {
   )
   |> (ignore: Revery.App.unsubscribe => unit);
 
-  let initialExample = ref("Canvas Example");
+  let initialExample = ref("Button");
   let decorated = ref(true);
   let forceScaleFactor = ref(None);
   let showFPSCounter = ref(false);
