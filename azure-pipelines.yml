@@ -23,7 +23,7 @@ jobs:
 - job: Linux
   timeoutInMinutes: 0
   pool:
-    vmImage: 'ubuntu-18.04'
+    vmImage: 'ubuntu-20.04'
 
   variables:
     STAGING_DIRECTORY: $(Build.StagingDirectory)
@@ -33,7 +33,7 @@ jobs:
 
   steps:
   - script: sudo apt-get update
-  - script: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-utils mesa-utils-extra ragel libgtk-3-dev nasm
+  - script: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-utils mesa-utils-extra ragel libgtk-3-dev nasm libxxf86vm-dev
   - template: .ci/use-node.yml
   - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
@@ -45,7 +45,7 @@ jobs:
   displayName: 'Linux - CentOS - Docker Image'
   timeoutInMinutes: 0
   pool:
-    vmImage: 'ubuntu-18.04'
+    vmImage: 'ubuntu-20.04'
 
   variables:
     STAGING_DIRECTORY: $(Build.StagingDirectory)
