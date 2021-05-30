@@ -20,7 +20,7 @@ one [2] should be applicable to Pp as well.
 """
 maintainer: ["Jeremie Dimino <jeremie@dimino.org>"]
 authors: [
-  "Jane Street Group, LLC <opensource@janestreet.com>"
+  "Jane Street Group, LLC"
   "Jeremie Dimino <jeremie@dimino.org>"
 ]
 license: "MIT"
