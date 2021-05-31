@@ -25,6 +25,7 @@ CAMLprim value revery_makeTrayHandle(value vImagePath) {
 
 #ifdef USE_COCOA
     NSStatusItem *statusItem = [NSStatusBar.systemStatusBar statusItemWithLength:NSVariableStatusItemLength];
+    [(NSObject *)statusItem retain];
 
     if (vImagePath != Val_none) {
         const char *imagePath = String_val(Some_val(vImagePath));
