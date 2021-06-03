@@ -1645,7 +1645,13 @@ extern "C" {
                             SDL_GetError());
         }
 
+// Only add the resize-event-watcher for OSX, since it's the platform that requires this to get
+// real-time resize notifications + re-renders.
+// This change caused a crash in Linux + Wayland: https://github.com/onivim/oni2/issues/3646
+// (with the crash callstack pointing to an error acquiring runtime lock after rendering)
+#ifdef __APPLE__
         SDL_AddEventWatch(resdl_eventWatcher, NULL);
+#endif
 
         vWindow = resdl_wrapPointer(win);
         CAMLreturn(vWindow);
