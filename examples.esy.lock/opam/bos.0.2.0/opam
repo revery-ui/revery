@@ -17,7 +17,7 @@ depends: [
   "astring"
   "fpath"
   "fmt" {>= "0.8.0"}
-  "logs"
+  "logs" {>= "0.5.0"}
   "mtime" {with-test}
 ]
 build: [[
