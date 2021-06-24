@@ -14,15 +14,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-
-/* revery_appDelegate_openFile
-  This must be two functions:
-    - one that acquires the CAML runtime
-    - one that uses the CAML macros for proper memory management
-  If you are implementing any functions similar to this, please
-  keep this same structure! It is to prevent segmentation faults/
-  other memory errors on runtime.
- */
 CAMLprim value _revery_appDelegate_openFile(const char *path) {
     CAMLparam0();
     CAMLlocal1(vPath);
@@ -38,11 +29,9 @@ CAMLprim value _revery_appDelegate_openFile(const char *path) {
     }
     CAMLreturn(Val_unit);
 }
+
 void revery_appDelegate_openFile(const char *path) {
-    caml_c_thread_register();
-    caml_acquire_runtime_system();
     _revery_appDelegate_openFile(path);
-    caml_release_runtime_system();
 }
 
 #endif
