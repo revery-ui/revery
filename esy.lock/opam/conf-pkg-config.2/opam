@@ -19,11 +19,11 @@ post-messages: [
 depexts: [
   ["pkg-config"] {os-family = "debian"}
   ["pkgconf"] {os-distribution = "arch"}
-  ["pkgconfig"] {os-distribution = "fedora"}
+  ["pkgconf-pkg-config"] {os-distribution = "fedora"}
   ["pkgconfig"] {os-distribution = "centos" & os-version <= "7"}
-  ["pkgconfig"] {os-distribution = "mageia"}
+  ["pkgconf-pkg-config"] {os-distribution = "mageia"}
   ["pkgconfig"] {os-distribution = "rhel" & os-version <= "7"}
-  ["pkgconfig"] {os-distribution = "ol"}
+  ["pkgconfig"] {os-distribution = "ol" & os-version <= "7"}
   ["pkgconf"] {os-distribution = "alpine"}
   ["pkgconfig"] {os-distribution = "nixos"}
   ["devel/pkgconf"] {os = "openbsd"}
@@ -32,6 +32,7 @@ depexts: [
   ["pkgconf"] {os = "freebsd"}
   ["pkgconf-pkg-config"] {os-distribution = "rhel" & os-version >= "8"}
   ["pkgconf-pkg-config"] {os-distribution = "centos" & os-version >= "8"}
+  ["pkgconf-pkg-config"] {os-distribution = "ol" & os-version >= "8"}
   ["system:pkgconf"] {os = "win32" & os-distribution = "cygwinports"}
 ]
 synopsis: "Check if pkg-config is installed and create an opam switch local pkgconfig folder"

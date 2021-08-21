@@ -17,11 +17,12 @@ bug-reports: "https://github.com/ocaml/ocaml-lsp/issues"
 depends: [
   "dune" {>= "2.7"}
   "yojson"
-  "ppx_yojson_conv_lib" {>= "v0.14.0"}
+  "re"
+  "ppx_yojson_conv_lib" {>= "v0.14"}
   "dune-build-info"
   "dot-merlin-reader"
   "pp" {>= "1.1.2"}
-  "csexp" {>= "1.4.0"}
+  "csexp" {>= "1.4"}
   "result" {>= "1.5"}
   "ocamlformat" {with-test}
   "odoc" {with-doc}
@@ -39,12 +40,12 @@ build: [
     "--release"
   ]
 ]
-x-commit-hash: "e97fa4c6862732926190cf2dd0965ae2705f365d"
+x-commit-hash: "c728032b4717c265aa364314288d67bd722b9ce9"
 url {
   src:
-    "https://github.com/ocaml/ocaml-lsp/releases/download/1.6.1/jsonrpc-1.6.1.tbz"
+    "https://github.com/ocaml/ocaml-lsp/releases/download/1.7.0/jsonrpc-1.7.0.tbz"
   checksum: [
-    "sha256=bccc0d7194714a4c40c362766ad9095d3c58505a1d4f1dc4becd9b3d1bda8209"
-    "sha512=199bee8c74aec6822bc83bf9a7c3757206bdaa55a19cd1f5cf480127618a078baa1e917f6a90a6135a5277e4eb87977e685c10e6503f546997e6b985949e190f"
+    "sha256=ca43b6608366ddf891d7c1e1cc38de2c7f93a6da0511de164959db1f88fc42ed"
+    "sha512=43a00604f25bd1d3e93bfd43f1ef9c4cad9aa392c15a5db0c5ba0264f396e7ca6f60a0293467609402e87aeec441a05e7ee2990b37c98dc27b92a22afbebfd02"
   ]
 }

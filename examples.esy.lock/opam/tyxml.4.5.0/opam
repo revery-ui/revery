@@ -4,7 +4,7 @@ description:
   "TyXML provides a set of convenient combinators that uses the OCaml type system to ensure the validity of the generated documents. TyXML can be used with any representation of HTML and SVG: the textual one, provided directly by this package, or DOM trees (`js_of_ocaml-tyxml`) virtual DOM (`virtual-dom`) and reactive or replicated trees (`eliom`). You can also create your own representation and use it to instantiate a new set of combinators."
 maintainer: ["dev@ocsigen.org"]
 authors: ["The ocsigen team"]
-license: "LGPL-2.1-only with OCaml-LGPL-linking-exception"
+license: "LGPL-2.1-only WITH OCaml-LGPL-linking-exception"
 homepage: "https://github.com/ocsigen/tyxml"
 doc: "https://ocsigen.org/tyxml/latest/manual/intro"
 bug-reports: "https://github.com/ocsigen/tyxml/issues"

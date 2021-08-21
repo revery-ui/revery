@@ -6,7 +6,7 @@ to use old style ppx rewriters with jbuilder.
 """
 maintainer: ["Jérémie Dimino <jeremie@dimino.org>"]
 authors: ["Jérémie Dimino <jeremie@dimino.org>"]
-license: "BSD3"
+license: "BSD-3-Clause"
 homepage: "https://github.com/jeremiedimino/ppxfind"
 doc: "https://jeremiedimino.github.io/ppxfind/"
 bug-reports: "https://github.com/jeremiedimino/ppxfind/issues"

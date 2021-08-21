@@ -4,7 +4,7 @@ authors: [
   "Frédéric Bour <frederic.bour@lakaban.net>"
   "Jérémie Dimino <jeremie@dimino.org>"
 ]
-license: "LGPL-2.1 with OCaml linking exception"
+license: "LGPL-2.1-only WITH OCaml-LGPL-linking-exception"
 homepage: "https://github.com/ocaml-ppx/ocaml-migrate-parsetree"
 bug-reports: "https://github.com/ocaml-ppx/ocaml-migrate-parsetree/issues"
 dev-repo: "git+https://github.com/ocaml-ppx/ocaml-migrate-parsetree.git"
@@ -18,6 +18,9 @@ depends: [
   "ppx_derivers"
   "dune" {>= "1.9.0"}
   "ocaml" {>= "4.02.3" & < "4.13"}
+]
+conflicts: [
+  "base-effects"
 ]
 synopsis: "Convert OCaml parsetrees between different versions"
 description: """

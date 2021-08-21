@@ -1,7 +1,6 @@
 opam-version: "2.0"
 
 synopsis: "Promises and event-driven I/O"
-
 license: "MIT"
 homepage: "https://github.com/ocsigen/lwt"
 doc: "https://ocsigen.org/lwt"
@@ -58,9 +57,9 @@ Meanwhile, OCaml code, including code creating and waiting on promises, runs in
 a single thread by default. This reduces the need for locks or other
 synchronization primitives. Code can be run in parallel on an opt-in basis."
 url {
-  src: "https://github.com/ocsigen/lwt/archive/refs/tags/5.4.1.tar.gz"
+  src: "https://github.com/ocsigen/lwt/archive/refs/tags/5.4.2.tar.gz"
   checksum: [
-    "md5=5a8d2a83ee9314781f137d147a4c62ae"
-    "sha512=b872b7abe546c431ba62fe466423d7ace8e487ebd85ea5e859f462eb4c0a6884b242d9efd4a557b6da3ae699b0b695e0a783f89a1d1147cba7d99c4ae9d2db17"
+    "md5=ba3659a8918d8e7cb0f4ef9a83945f90"
+    "sha512=9f46fb2e56dc7bd57a12d5ab4dc68719947a1462f336087a95e991d087bb9b5b8dee2592d0f7d35abc507d9a641dd221c44c949c81d00e26c673a067d94ba3f4"
   ]
 }
