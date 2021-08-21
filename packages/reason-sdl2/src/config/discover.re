@@ -146,14 +146,7 @@ let flags = os =>
     @ cclib("-subsystem windows");
   };
 
-let c_library_flags = os =>
-  switch (os) {
-  | Android
-  | IOS
-  | Mac
-  | Linux => [libFilePath]
-  | Windows => ["-L" ++ libFolderPath, "-lSDL2"]
-  };
+let c_library_flags = ["-L" ++ libFolderPath, "-lSDL2"];
 
 let cxx_flags = os =>
   switch (os) {
@@ -167,7 +160,7 @@ let cxx_flags = os =>
 
 Configurator.main(~name="reason-sdl2", conf => {
   let os = get_os(conf);
-  Configurator.Flags.write_sexp("c_library_flags.sexp", c_library_flags(os));
+  Configurator.Flags.write_sexp("c_library_flags.sexp", c_library_flags);
   Configurator.Flags.write_sexp("c_flags.sexp", c_flags(os));
   Configurator.Flags.write_sexp("cxx_flags.sexp", cxx_flags(os));
   Configurator.Flags.write_sexp("flags.sexp", flags(os));

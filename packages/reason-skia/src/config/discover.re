@@ -247,10 +247,10 @@ let libs = os =>
     @ framework("IOKit")
     @ framework("Metal")
     @ ["-liconv"]
-    @ [sdl2FilePath]
+    @ ["-lSDL2"]
     @ ["-lskia"]
     @ ["-lstdc++"]
-    @ [getenv("JPEG_LIB_PATH") ++ "/libturbojpeg.a"]
+    @ ["-lturbojpeg"]
   | Windows =>
     []
     @ ["-luser32"]
