@@ -196,9 +196,9 @@ module M = (F: FOREIGN) => {
     let getUnderlinePosition = metrics =>
       getf(!@metrics, SkiaTypes.FontMetrics.underlinePosition);
     let getMaxCharacterWidth = metrics =>
-      getf(!@metrics, SkiaTypes.FontMetrics.maxCharacterWidth);
+      getf(!@metrics, SkiaTypes.FontMetrics.maxCharWidth);
     let getAvgCharacterWidth = metrics =>
-      getf(!@metrics, SkiaTypes.FontMetrics.avgCharacterWidth);
+      getf(!@metrics, SkiaTypes.FontMetrics.avgCharWidth);
   };
 
   module ImageFilter = {
@@ -596,9 +596,6 @@ module M = (F: FOREIGN) => {
 
     let setAutohinted =
       foreign("sk_paint_set_autohinted", t @-> bool @-> returning(void));
-
-    let isAutohinted =
-      foreign("sk_paint_is_autohinted", t @-> returning(bool));
 
     let getHinting =
       foreign("sk_paint_get_hinting", t @-> returning(Hinting.t));

@@ -139,8 +139,6 @@ module M = (T: TYPE) => {
     let underlinePosition = field(t, "fUnderlinePosition", float);
     let strikeoutThickness = field(t, "fStrikeoutThickness", float);
     let strikeoutPosition = field(t, "fStrikeoutPosition", float);
-    let maxCharacterWidth = field(t, "fMaxCharWidth", float);
-    let avgCharacterWidth = field(t, "fAvgCharWidth", float);
     seal(t);
     let t = typedef(t, "sk_fontmetrics_t");
   };
@@ -440,7 +438,7 @@ module M = (T: TYPE) => {
         (RgbH, "RGB_H_SK_PIXELGEOMETRY"),
         (BgrH, "BGR_H_SK_PIXELGEOMETRY"),
         (RgbV, "RGB_V_SK_PIXELGEOMETRY"),
-        (BgrV, "RGB_V_SK_PIXELGEOMETRY"),
+        (BgrV, "BGR_V_SK_PIXELGEOMETRY"),
       ],
     );
 
