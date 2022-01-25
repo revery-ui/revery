@@ -30,7 +30,7 @@
       "esy-installer Revery.install",
       "bash -c \"#{os == 'windows' ? 'cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll \\'$cur__bin\\'': ':'}\"",
       "bash -c \"cp #{esy-skia.bin}/skia.dll \\'$cur__bin\\' #{os == 'windows' ? '' : '2>/dev/null || true'}\"",
-      "bash -c \"cp #{esy-sdl2.bin}/*.dll \\'$cur__bin\\' #{os == 'windows' ? '' : '2>/dev/null || true'}\"",
+      "eson",
       "bash -c \"cp #{esy-angle-prebuilt.bin}/*.dll \\'$cur__bin\\' #{os == 'windows' ? '' : '2>/dev/null || true'}\""
     ]
   },
@@ -44,8 +44,9 @@
     "@opam/lwt": "^5.0.0",
     "@opam/lwt_ppx": "^1.1.0",
     "@opam/markup": "0.8.2",
+    "@opam/ocamlfind": "*",
     "@opam/ppx_deriving": "*",
-    "@opam/ppx_optcomp": "v0.14.0",
+    "@opam/ppx_optcomp": "*",
     "@opam/omd": "ocaml/omd:omd.opam#1535e3c",
     "@opam/uucp": "*",
     "@opam/uutf": "*",
@@ -54,9 +55,9 @@
     "esy-angle-prebuilt": "1.0.0",
     "esy-freetype2": "^2.9.1008",
     "@onivim/reason-native-crash-utils": "^1.0.2",
-    "@revery/esy-harfbuzz": "^2.6.8002",
-    "esy-skia": "revery-ui/esy-skia#1c81aac",
-    "esy-sdl2": "^2.0.14000",
+    "@revery/esy-harfbuzz": "danvonk/esy-harfbuzz#f753bbea296a8c551b92a74fb617afde4ea456fe",
+    "esy-skia": "danvonk/esy-skia#10498b2b5f9de88b9eff84a94660c4e741325d18",
+    "esy-sdl2": "*",
     "flex": "jordwalke/flex#6ff12fe",
     "reperf": "^1.5.1",
     "rench": "^1.10.0",
@@ -65,7 +66,10 @@
     "@reason-native/rely": "^3.2.1"
   },
   "resolutions": {
-    "@esy-ocaml/reason": "EduardoRFS/reason:reason.json#35aa4df3de0daa60bdc1133dcf97855decac48f7"
+    "@esy-ocaml/reason": "EduardoRFS/reason:reason.json#35aa4df3de0daa60bdc1133dcf97855decac48f7",
+    "ocaml": "danvonk/ocaml:package.json#f6cf31a43c2b4c8ca3990c0f750c49e6210bea20",
+    "@opam/ocamlfind": "1.9.1",
+    "esy-m4": "danvonk/esy-m4:package.json#13a9ab4ab997a6370eabce34d58f48f8d481033b"
   },
   "devDependencies": {
     "ocaml": "4.12.x",
