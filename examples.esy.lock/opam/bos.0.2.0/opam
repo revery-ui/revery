@@ -13,7 +13,7 @@ depends: [
   "ocamlbuild" {build}
   "topkg" {build & >= "0.9.0"}
   "base-unix"
-  "rresult" {>= "0.4.0"}
+  "rresult" {>= "0.4.0" & < "0.7.0"}
   "astring"
   "fpath"
   "fmt" {>= "0.8.0"}

@@ -5,7 +5,7 @@ license: "MIT"
 homepage: "https://github.com/facebook/reason"
 doc: "http://reasonml.github.io/"
 bug-reports: "https://github.com/facebook/reason/issues"
-dev-repo: "git://github.com/facebook/reason.git"
+dev-repo: "git+https://github.com/facebook/reason.git"
 tags: [ "syntax" ]
 build: [
   ["dune" "build" "-p" name "-j" jobs]

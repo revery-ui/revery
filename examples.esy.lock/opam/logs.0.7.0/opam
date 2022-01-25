@@ -21,7 +21,9 @@ depopts: [
   "base-threads"
 ]
 conflicts: [
-  "js_of_ocaml" { < "3.3.0" } ]
+   "cmdliner" {< "0.9.8"}
+   "js_of_ocaml" { < "3.3.0" }
+]
 
 build: [[
   "ocaml" "pkg/pkg.ml" "build"
