@@ -148,27 +148,39 @@ module BuildContext = {
     buildContext.invalidated = [element, ...buildContext.invalidated];
 };
 
-module Element = {
-  type t('spec) = {
-    spec: 'spec,
-    mutable state: option(Univ.t),
-    mutable layout: option(Layout.t),
-    mutable position: option(position),
-    mutable children: option(list(t('spec))),
-  };
+// module Element = {
+//   type t('spec) = {V
+//     spec: 'spec,
+//     mutable state: option(Univ.t),
+//     mutable layout: option(Layout.t),
+//     mutable position: option(position),
+//     mutable children: option(list(t('spec))),
+//     mutable data,
+//   }
 
-  let contains = (x, y, element) =>
-    switch (element) {
-    | {position: Some(position), layout: Some(layout), _} =>
-      x >= position.x
-      && y >= position.y
-      && x < position.x
-      + layout.width
-      && y < position.y
-      + layout.height
-    | _ => false
-    };
-};
+//   and data =
+//     | TextData({
+//         skiaface: Skia.Typeface.t,
+//         hbface: Harfbuzz.hb_face,
+//         paint: Skia.Paint.t,
+//         metrics: Skia.FontMetrics.t,
+//         fontHeight: float,
+//         lines: list(string),
+//       })
+//     | NoData;
+
+//   let contains = (x, y, element) =>
+//     switch (element) {
+//     | {position: Some(position), layout: Some(layout), _} =>
+//       x >= position.x
+//       && y >= position.y
+//       && x < position.x
+//       + layout.width
+//       && y < position.y
+//       + layout.height
+//     | _ => false
+//     };
+// };
 
 //module Test = {
 //  let hvoerState = State.create(false);
@@ -202,6 +214,120 @@ module Element = {
 //    </tick>
 //};
 
+module TextElement = {
+  [@deriving show({with_path: false})]
+  type props = {
+    text: string,
+    fontFamily: string,
+    size: float,
+    weight: int,
+    italic: bool,
+    color: [@opaque] Skia.Color.t,
+    lineHeight: float,
+  };
+
+  type t = {
+    props,
+    paint: Skia.Paint.t,
+    skiaface: Skia.Typeface.t,
+    hbface: Harfbuzz.hb_face,
+    metrics: Skia.FontMetrics.t,
+    fontHeight: float,
+    mutable state,
+  }
+
+  and state =
+    | New
+    | LaidOut({lines: list(string)});
+
+  let init =
+      ({fontFamily, size, weight, italic, color, _} as props) =>
+    switch (Font.resolve(~italic, weight, fontFamily)) {
+    | Error(msg) =>
+      Console.error(msg);
+      failwith(msg) //TODO
+
+    | Ok((skiaface, hbface)) =>
+      let paint = Skia.Paint.make();
+      Skia.Paint.setColor(paint, color);
+      Skia.Paint.setTextEncoding(paint, GlyphId);
+      Skia.Paint.setLcdRenderText(paint, true);
+      Skia.Paint.setAntiAlias(paint, true);
+      Skia.Paint.setTextSize(paint, size);
+      Skia.Paint.setTypeface(paint, skiaface);
+
+      let metrics = Skia.FontMetrics.make();
+      let fontHeight = Skia.Paint.getFontMetrics(paint, metrics, 1.0);
+
+      {props, paint, skiaface, hbface, metrics, fontHeight, state: New};
+    };
+
+  let layout = ({text, _}, {paint, hbface, fontHeight, _} as data, constraints: BoxConstraints.t) => {
+    // TODO: Optimize shaping
+    let lines =
+      TextWrap.wrap(
+        ~max_width=float(constraints.width.max),
+        ~width_of_token=
+          text => {
+            let text = Font.shape(hbface, text);
+            Skia.Paint.measureText(paint, text, None);
+          },
+        text,
+      );
+    let lines = List.map(Font.shape(hbface), lines);
+    data.state = LaidOut({lines: lines});
+
+    Layout.{
+      width: constraints.width.max,
+      height:
+        int_of_float(fontHeight *. float(List.length(lines))),
+    };
+  };
+
+  let render = ({props, paint, metrics, fontHeight, state, _}, canvas) => {
+    let lines = 
+      switch (state) {
+      | LaidOut({lines}) => lines
+      | New => []
+      };
+
+    List.iteri(
+      (i, line) => {
+        let ascentPx = Skia.FontMetrics.getAscent(metrics);
+        let lineHeight = fontHeight *. props.lineHeight;
+
+        // TODO: cache
+        let baselineY = ascentPx *. (-1.0) +. lineHeight *. float(i);
+
+        Skia.Canvas.drawText(canvas, line, 0., baselineY, paint);
+      },
+      lines,
+    );
+  };
+};
+
+module EffectElement = {
+  type props = {
+    equal: (Univ.t, Univ.t) => bool,
+    mount: (~invalidate: unit => unit) => Univ.t,
+    render: (~invalidate: unit => unit, Univ.t) => t,
+    unmount: Univ.t => unit,
+  };
+
+  type t = {
+    props,
+    mutable state: Univ.t,
+    mutable invalidated: bool
+  };
+
+  let init = ({mount, _} as props) => {
+    let rec data = {
+      state: mount(~invalidate=() => data.invalidated = true);
+    };
+    data
+  }
+};
+
 // WIDGET
 
 module Widget = {
@@ -226,16 +352,7 @@ module Widget = {
   [@deriving show({with_path: false})]
   //  [@warning "-30"]
   type t =
-    | Text({
-        text: string,
-        fontFamily: string,
-        size: float,
-        weight: int,
-        italic: bool,
-        color: [@opaque] Skia.Color.t,
-        lineHeight: float,
-      })
-      : t
+    | Text(TextElement.props): t
     | ConstrainedBox({
         constraints: BoxConstraints.t,
         child: [@opaque] t,
@@ -261,40 +378,59 @@ module Widget = {
       })
       : t
     | Container(layoutType, list((size, [@opaque] t))): t
-    | Effect({
-        equal: (Univ.t, Univ.t) => bool,
-        mount: (~invalidate: unit => unit) => Univ.t,
-        render: (~invalidate: unit => unit, Univ.t) => t,
-        unmount: Univ.t => unit,
-      })
-      : t;
+    | Effect(Effect.props): t;
 };
 
-module WidgetElement = {
-  type t = Element.t(Widget.t);
 
-  let invalidate = (element: t) => {
-    element.state = None;
+module WidgetElement = {
+  type t = {
+    spec: Widget.t,
+    kind,
+    mutable layout: option(Layout.t),
+    mutable position: option(position),
+    mutable children: option(list(t)),
+  }
+
+  and kind =
+    | Text(TextElement.t)
+    | Effect(Univ.t)
+    | Other;
+
+  let contains = (x, y, element) =>
+    switch (element) {
+    | {position: Some(position), layout: Some(layout), _} =>
+      x >= position.x
+      && y >= position.y
+      && x < position.x
+      + layout.width
+      && y < position.y
+      + layout.height
+    | _ => false
+    };
+
+  let invalidate = (_element: t) => {
+    () // TODO
   };
 
   let fromSpec = (spec: Widget.t) => {
+    let kind =
+      switch (spec) {
+      | Text(props) =>
+        Text(TextElement.init(props));
+
+      | Effect({mount, _}) =>
+
+      | _ => Other
+      };
+
     let element =
-      Element.{
+      {
         spec,
-        state: None,
+        kind,
         layout: None,
         position: None,
         children: None,
       };
-
-    switch (spec) {
-    | Effect({mount, _}) =>
-      let invalidate = () => invalidate(element);
-      let initialState = mount(~invalidate);
-      element.state = Some(initialState);
-
-    | _ => ()
-    };
 
     element;
   };
@@ -332,54 +468,26 @@ module WidgetElement = {
       children;
     };
 
-  let rec performLayout = (constraints, element: t) =>
+  let rec performLayout = (constraints: BoxConstraints.t, element: t) =>
     switch (element.layout) {
     | Some(_) => ()
     | None =>
       let childElements = ensureChildren(element);
 
-      switch (element.spec) {
-      | Text({text, fontFamily, size, weight, italic, color, _}) =>
-        // TODO: cache
-        switch (Font.resolve(~italic, weight, fontFamily)) {
-        | Error(msg) =>
-          Console.error(msg);
-          element.layout = Some(Layout.min(constraints));
-        | Ok((skiaface, hbface)) =>
-          // TODO: cache
-          let paint = Skia.Paint.make();
-          Skia.Paint.setColor(paint, color);
-          Skia.Paint.setTextEncoding(paint, GlyphId);
-          Skia.Paint.setLcdRenderText(paint, true);
-          Skia.Paint.setAntiAlias(paint, true);
-          Skia.Paint.setTextSize(paint, size);
-          Skia.Paint.setTypeface(paint, skiaface);
-
-          let width_of_token = text => {
-            let text = Font.shape(hbface, text);
-            Skia.Paint.measureText(paint, text, None);
-          };
-
-          let lines =
-            TextWrap.wrap(
-              ~max_width=float(constraints.width.max),
-              ~width_of_token,
-              text,
-            );
-
-          // TODO: cache
-          let metrics = Skia.FontMetrics.make();
-          let lineHeight = Skia.Paint.getFontMetrics(paint, metrics, 1.0);
-
-          element.layout =
-            Some(
-              Layout.{
-                width: constraints.width.max,
-                height:
-                  int_of_float(lineHeight *. float(List.length(lines))),
-              },
-            );
-        }
+      switch (element.kind) {
+      | Text(data) =>
+        // TODO: invalidate
+        element.kind =
+          Text.init(
+            ~text,
+            ~fontFamily,
+            ~size,
+            ~weight,
+            ~italic,
+            ~color,
+            ~width=float(constraints.width.max),
+          );
+        element.layout = Some(Text.layout);
 
       | Container(/*Column, */ _) =>
         element.layout = Some(Layout.max(constraints));
@@ -494,60 +602,8 @@ module WidgetElement = {
     Skia.Canvas.setMatrix(canvas, transform);
 
     switch (element.spec) {
-    | Text({
-        text,
-        fontFamily,
-        size,
-        weight,
-        italic,
-        color,
-        lineHeight: lineHeightFactor,
-      }) =>
-      // TODO: cache
-      switch (Font.resolve(~italic, weight, fontFamily)) {
-      | Error(msg) => Console.error(msg)
-      | Ok((skiaface, hbface)) =>
-        // TODO: cache
-        let paint = Skia.Paint.make();
-        Skia.Paint.setColor(paint, color);
-        Skia.Paint.setTextEncoding(paint, GlyphId);
-        Skia.Paint.setLcdRenderText(paint, true);
-        Skia.Paint.setAntiAlias(paint, true);
-        Skia.Paint.setTextSize(paint, size);
-        Skia.Paint.setTypeface(paint, skiaface);
-
-        let width_of_token = text => {
-          let text = Font.shape(hbface, text);
-          Skia.Paint.measureText(paint, text, None);
-        };
-
-        // TODO: cache
-        let lines =
-          TextWrap.wrap(
-            ~max_width=float(layout.width),
-            ~width_of_token,
-            text,
-          );
-
-        List.iteri(
-          (i, line) => {
-            // TODO: cache
-            let metrics = Skia.FontMetrics.make();
-            let fontHeight = Skia.Paint.getFontMetrics(paint, metrics, 1.0);
-            let ascentPx = Skia.FontMetrics.getAscent(metrics);
-            let lineHeight = fontHeight *. lineHeightFactor;
-
-            // TODO: cache
-            let baselineY = ascentPx *. (-1.0) +. lineHeight *. float(i);
-
-            // TODO: cache
-            let text = Font.shape(hbface, line);
-
-            Skia.Canvas.drawText(canvas, text, 0., baselineY, paint);
-          },
-          lines,
-        );
-      }
+    | Text({lineHeight: lineHeightFactor, _}) =>
+      Text.render();
 
     | Box({color, _}) =>
       let paint = Skia.Paint.make();
@@ -578,7 +634,7 @@ module WidgetElement = {
       switch (elements) {
       | [] => latest
       | [element, ..._]
-          when Element.contains(x - offsetX, y - offsetY, element) =>
+          when contains(x - offsetX, y - offsetY, element) =>
         let position = Option.get(element.position);
         let offsetX = offsetX + position.x;
         let offsetY = offsetY + position.y;
